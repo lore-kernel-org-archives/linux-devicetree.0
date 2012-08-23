@@ -1,87 +1,70 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
-Date: Wed, 22 Aug 2012 20:42:37 -0500
-Message-ID: <50358A8D.3090803@gmail.com>
-References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
- <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/7] mfd: add imx syscon driver based on regmap
+Date: Wed, 22 Aug 2012 23:16:33 -0600
+Message-ID: <5035BCB1.8000801@wwwdotorg.org>
+References: <1345619928-15446-1-git-send-email-b29396@freescale.com> <1345619928-15446-2-git-send-email-b29396@freescale.com> <20120822082940.GJ4011@b20223-02.ap.freescale.net> <20120822105729.GB10057@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345642590-29905-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120822105729.GB10057@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: Zhao Richard-B20223 <B20223@freescale.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lrg@ti.com" <lrg@ti.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "paul.liu@linaro.org" <paul.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2012 08:36 AM, Shawn Guo wrote:
-> For those SoCs that have hundreds of clock outputs, their clock
-> DT bindings could reasonably define #clock-cells as 1 and require
-> the client device specify the index of the clock it consumes in the
-> cell of its "clocks" phandle.
-> 
-> Add a generic of_clk_src_onecell_get() function for this purpose.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+On 08/22/2012 04:57 AM, Dong Aisheng wrote:
+> On Wed, Aug 22, 2012 at 04:29:41PM +0800, Zhao Richard-B20223 wrote:
+>> On Wed, Aug 22, 2012 at 03:18:42PM +0800, Dong Aisheng wrote:
+>>> Add regmap based imx syscon driver.
+>>> This is usually used for access misc bits in registers which does not belong
+>>> to a specific module, for example, IOMUXC GPR and ANATOP.
+>>> With this driver, we provide a standard API for client driver to call to
+>>> access registers which are registered into syscon.
 
-I have some reservations about how generic this will end up being, but
-we have to start somewhere. So, for the series:
-
-Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
->  drivers/clk/clk.c            |   14 ++++++++++++++
->  include/linux/clk-provider.h |    5 +++++
->  2 files changed, 19 insertions(+), 0 deletions(-)
+>>> +static int imx_syscon_match(struct device *dev, void *data)
+>>> +{
+>>> +	struct imx_syscon *syscon = dev_get_drvdata(dev);
+>>> +	struct device_node *dn = data;
+>>> +
+>>> +	return (syscon->dev->of_node == dn) ? 1 : 0;
+>>> +}
+>>> +
+>>> +int imx_syscon_write(struct device_node *np, u32 reg, u32 val)
+>>
+>> For API function, is it better to use struct device rather not np?
+>>  - it won't need to search dev in below code every time it access
+>>    registers.
+>
+> The purpose is not require client driver to know the implementation details
+> of imx_syscon_{read/write} API, it's more easy to use since client only
+> needs pass the device node to which it wants to read/write.
 > 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index efdfd00..308f058 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -1582,6 +1582,20 @@ struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
->  }
->  EXPORT_SYMBOL_GPL(of_clk_src_simple_get);
->  
-> +struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data)
-> +{
-> +	struct clk_onecell_data *clk_data = data;
-> +	unsigned int idx = clkspec->args[0];
-> +
-> +	if (idx >= clk_data->clk_num) {
-> +		pr_err("%s: invalid clock index %d\n", __func__, idx);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	return clk_data->clks[idx];
-> +}
-> +EXPORT_SYMBOL_GPL(of_clk_src_onecell_get);
-> +
->  /**
->   * of_clk_add_provider() - Register a clock provider for a node
->   * @np: Device node pointer associated with clock provider
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 77335fa..8fe6ec7 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -360,6 +360,11 @@ int of_clk_add_provider(struct device_node *np,
->  void of_clk_del_provider(struct device_node *np);
->  struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
->  				  void *data);
-> +struct clk_onecell_data {
-> +	struct clk **clks;
-> +	unsigned int clk_num;
-> +};
-> +struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data);
->  const char *of_clk_get_parent_name(struct device_node *np, int index);
->  void of_clk_init(const struct of_device_id *matches);
->  
-> 
+> For search dev, it doesn't look like a big issue since it only search devices
+> attached on the driver which is very quick.
+> And hide it in common API does not require every client driver to write
+> duplicated codes.
+
+You could still implement a function:
+
+struct device *imx_syscon_lookup(struct device_node *np)
+
+... and require all clients to call that, and pass the dev to the other
+functions. That'd still keep all the lookup code in one place, but
+prevent it having to run every time, no matter how small it is.
+
+I think such an API is required anyway, since client drivers need some
+way to determine whether the imx_syscon driver is available yet, and if
+not defer their probe until it is.
+
+So, clients would do:
+
+foo->syscon_dev = imx_syscon_lookup(np);
+if (!foo->syscon_dev)
+    return -EPROBE_DEFER;
+
+rather than:
+
+foo->syscon_np = np;
+
+Not too much overhead/boiler-plate in each client driver.
