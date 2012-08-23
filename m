@@ -1,36 +1,107 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to Devicetree ***
-Date: Thu, 23 Aug 2012 10:40:16 +0000
-Message-ID: <201208231040.16702.arnd@arndb.de>
-References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
+From: Michael Grzeschik <m.grzeschik@pengutronix.de>
+Subject: [PATCH] ARM: dts: imx: add imx5x usb entries
+Date: Thu, 23 Aug 2012 12:35:57 +0200
+Message-ID: <1345718157-7927-1-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345707346-9035-1-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, shawn.guo@linaro.org, richard.zhao@linaro.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 23 August 2012, Tony Prisk wrote:
-> Patchset based on Arnd's arm-soc/for-next branch.
-> 
-> 
-> Could I get this reviewed, hopefully for inclusion into v3.7.
+Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
+---
+ arch/arm/boot/dts/imx51.dtsi |   28 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx53.dtsi |   28 ++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
 
-I can take them into the arm-soc tree if there are no new comments.
-For the last two patches, you need to get an Acked-by comment from the
-gpio and clk maintainers, respectively, or you should send them
-the patches for inclusion in those subsystem trees.
-
-	Arnd
+diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+index aba28dc..4ec015f 100644
+--- a/arch/arm/boot/dts/imx51.dtsi
++++ b/arch/arm/boot/dts/imx51.dtsi
+@@ -130,6 +130,34 @@
+ 				};
+ 			};
+ 
++			usb@73f80000 {
++				compatible = "fsl,imx51-usb", "fsl,imx27-usb";
++				reg = <0x73f80000 0x0200>;
++				interrupts = <18>;
++				status = "disabled";
++			};
++
++			usb@73f80200 {
++				compatible = "fsl,imx51-usb", "fsl,imx27-usb";
++				reg = <0x73f80200 0x0200>;
++				interrupts = <14>;
++				status = "disabled";
++			};
++
++			usb@73f80400 {
++				compatible = "fsl,imx51-usb", "fsl,imx27-usb";
++				reg = <0x73f80400 0x0200>;
++				interrupts = <16>;
++				status = "disabled";
++			};
++
++			usb@73f80600 {
++				compatible = "fsl,imx51-usb", "fsl,imx27-usb";
++				reg = <0x73f80600 0x0200>;
++				interrupts = <17>;
++				status = "disabled";
++			};
++
+ 			gpio1: gpio@73f84000 {
+ 				compatible = "fsl,imx51-gpio", "fsl,imx35-gpio";
+ 				reg = <0x73f84000 0x4000>;
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index cd37165..24280a4 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -135,6 +135,34 @@
+ 				};
+ 			};
+ 
++			usb@53f80000 {
++				compatible = "fsl,imx53-usb", "fsl,imx27-usb";
++				reg = <0x53f80000 0x0200>;
++				interrupts = <18>;
++				status = "disabled";
++			};
++
++			usb@53f80200 {
++				compatible = "fsl,imx53-usb", "fsl,imx27-usb";
++				reg = <0x53f80200 0x0200>;
++				interrupts = <14>;
++				status = "disabled";
++			};
++
++			usb@53f80400 {
++				compatible = "fsl,imx53-usb", "fsl,imx27-usb";
++				reg = <0x53f80400 0x0200>;
++				interrupts = <16>;
++				status = "disabled";
++			};
++
++			usb@53f80600 {
++				compatible = "fsl,imx53-usb", "fsl,imx27-usb";
++				reg = <0x53f80600 0x0200>;
++				interrupts = <17>;
++				status = "disabled";
++			};
++
+ 			gpio1: gpio@53f84000 {
+ 				compatible = "fsl,imx53-gpio", "fsl,imx35-gpio";
+ 				reg = <0x53f84000 0x4000>;
+-- 
+1.7.10.4
