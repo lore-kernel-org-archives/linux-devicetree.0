@@ -1,487 +1,167 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH 1/2] powerpc/mpc5200: add dts files for ifm camera machines
-Date: Fri, 24 Aug 2012 17:39:38 +0200
-Message-ID: <1345822779-32020-1-git-send-email-agust@denx.de>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [RFC RESEND 2/4] ARM: OMAP3: Dynamically disable secure timer
+ nodes for secure devices
+Date: Fri, 24 Aug 2012 15:56:13 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EA980D4@DBDE01.ent.ti.com>
+References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
+ <1342218413-30116-3-git-send-email-jon-hunter@ti.com>
+ <502B6838.9080907@ti.com> <502D2686.4090107@ti.com>
+ <79CD15C6BA57404B839C016229A409A83EA91D63@DBDE01.ent.ti.com>
+ <502E37E9.3060201@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org, dzu@denx.de
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <502E37E9.3060201@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hunter, Jon" <jon-hunter@ti.com>
+Cc: "DebBarma, Tarun Kanti" <tarun.kanti@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Walmsley <paul@pwsan.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add common o2d dtsi file to reuse it for other configurations.
-Add machine compatible string to mpc5200 simple platform file.
-Add dts files for O2D, O2I, O2MNT, O2DNT2, O2D300 and O3DNT boards.
+On Fri, Aug 17, 2012 at 17:54:09, Hunter, Jon wrote:
+> 
+> On 08/17/2012 12:32 AM, Hiremath, Vaibhav wrote:
+> > On Thu, Aug 16, 2012 at 22:27:42, Hunter, Jon wrote:
+> >>
+> >> On 08/15/2012 04:13 AM, Vaibhav Hiremath wrote:
+> >>>
+> >>>
+> >>> On 7/14/2012 3:56 AM, Jon Hunter wrote:
+> >>>> OMAP3 devices may or may not have security features enabled. Security enabled
+> >>>> devices are known as high-secure (HS) and devices without security are known as
+> >>>> general purpose (GP).
+> >>>>
+> >>>> For OMAP3 devices there are 12 general purpose timers available. On secure
+> >>>> devices the 12th timer is reserved for secure usage and so cannot be used by
+> >>>> the kernel, where as for a GP device it is available. We can detect the OMAP
+> >>>> device type, secure or GP, at runtime via an on-chip register. Today, when not
+> >>>> using DT, we do not register the 12th timer as a linux device if the device is
+> >>>> secure.
+> >>>>
+> >>>> When using device tree, device tree is going to register all the timer devices
+> >>>> it finds in the device tree blob. To prevent device tree from registering 12th
+> >>>> timer on a secure OMAP3 device we can add a status property to the timer
+> >>>> binding with the value "disabled" at boot time. Note that timer 12 on a OMAP3
+> >>>> device has a property "ti,timer-secure" to indicate that it will not be
+> >>>> available on a secure device and so for secure OMAP3 devices, we search for
+> >>>> timers with this property and then disable them. Using the prom_add_property()
+> >>>> function to dynamically add a property was a recommended approach suggested by
+> >>>> Rob Herring [1].
+> >>>>
+> >>>> I have tested this on an OMAP3 GP device and faking it to pretend to be a
+> >>>> secure device to ensure that any timers marked with "ti,timer-secure" are not
+> >>>> registered on boot. I have also made sure that all timers are registered as
+> >>>> expected on a GP device by default.
+> >>>>
+> >>>> [1] http://comments.gmane.org/gmane.linux.ports.arm.omap/79203
+> >>>>
+> >>>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> >>>> ---
+> >>>>  arch/arm/mach-omap2/board-generic.c |    1 +
+> >>>>  arch/arm/mach-omap2/common.h        |    1 +
+> >>>>  arch/arm/mach-omap2/timer.c         |   36 +++++++++++++++++++++++++++++++++++
+> >>>>  3 files changed, 38 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+> >>>> index 6f93a20..20124d7 100644
+> >>>> --- a/arch/arm/mach-omap2/board-generic.c
+> >>>> +++ b/arch/arm/mach-omap2/board-generic.c
+> >>>> @@ -40,6 +40,7 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
+> >>>>  static void __init omap_generic_init(void)
+> >>>>  {
+> >>>>  	omap_sdrc_init(NULL, NULL);
+> >>>> +	omap_dmtimer_init();
+> >>>>  
+> >>>>  	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
+> >>>>  }
+> >>>> diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+> >>>> index 1f65b18..d6a4875 100644
+> >>>> --- a/arch/arm/mach-omap2/common.h
+> >>>> +++ b/arch/arm/mach-omap2/common.h
+> >>>> @@ -326,6 +326,7 @@ extern void omap_sdrc_init(struct omap_sdrc_params *sdrc_cs0,
+> >>>>  				      struct omap_sdrc_params *sdrc_cs1);
+> >>>>  struct omap2_hsmmc_info;
+> >>>>  extern int omap4_twl6030_hsmmc_init(struct omap2_hsmmc_info *controllers);
+> >>>> +extern void omap_dmtimer_init(void);
+> >>>>  
+> >>>>  #endif /* __ASSEMBLER__ */
+> >>>>  #endif /* __ARCH_ARM_MACH_OMAP2PLUS_COMMON_H */
+> >>>> diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
+> >>>> index 13d20c8..e3b9931 100644
+> >>>> --- a/arch/arm/mach-omap2/timer.c
+> >>>> +++ b/arch/arm/mach-omap2/timer.c
+> >>>> @@ -36,6 +36,7 @@
+> >>>>  #include <linux/clocksource.h>
+> >>>>  #include <linux/clockchips.h>
+> >>>>  #include <linux/slab.h>
+> >>>> +#include <linux/of.h>
+> >>>>  
+> >>>>  #include <asm/mach/time.h>
+> >>>>  #include <plat/dmtimer.h>
+> >>>> @@ -482,6 +483,41 @@ static int __init omap2_dm_timer_init(void)
+> >>>>  }
+> >>>>  arch_initcall(omap2_dm_timer_init);
+> >>>>  
+> >>>> +static struct property timer_disabled = {
+> >>>> +	.name = "status",
+> >>>> +	.length = sizeof("disabled"),
+> >>>> +	.value = "disabled",
+> >>>> +};
+> >>>> +
+> >>>> +static struct of_device_id omap3_timer_match[] __initdata = {
+> >>>> +	{ .compatible = "ti,omap3-timer", },
+> >>>> +	{ }
+> >>>> +};
+> >>>> +
+> >>>> +/**
+> >>>> + * omap_dmtimer_init - initialisation function when device tree is used
+> >>>> + *
+> >>>> + * For secure OMAP3 devices, timers with device type "timer-secure" cannot
+> >>>> + * be used by the kernel as they are reserved. Therefore, to prevent the
+> >>>> + * kernel registering these devices remove them dynamically from the device
+> >>>> + * tree on boot.
+> >>>> + */
+> >>>> +void __init omap_dmtimer_init(void)
+> >>>> +{
+> >>>> +	struct device_node *np;
+> >>>> +
+> >>>> +	if (!cpu_is_omap34xx())
+> >>>> +		return;
+> >>>> +
+> >>>
+> >>> Sorry for responding so late, but why only omap34xx check here?
+> >>> Isn't this applicable to all omap & non-omap devices?
+> >>
+> >> It is only applicable to omap3 devices as far as omap is concerned.
+> >>
+> >> By non-omap, you are referring to the AMxxx stuff?
+> >>
+> >> Do AMxxx devices even support security (ie. secure boot and have secure
+> >> peripherals)? If not then this will work for AMxxx devices too.
+> >>
+> > 
+> > Yes it does. 
+> > 
+> > AM33xx has 8 timers and Timer-0 is a secure timer. As in case of OMAP3, we 
+> > do not even register timer-0 to kernel.
+> 
+> Ok, however, please note that the omap3 timer 12 is a special case,
+> because on a non-secure device it is available for general purpose use
+> and only reserved for secure use on a secure device.
+> 
+> For omap4/5 timer 12 is always a secure timer and so we never register
+> it for any device (secure or non-secure) by using the "ti,timer-secure"
+> property in DT.
+> 
+> So, for AM33xx, is timer0 always reserved for secure used on non-secure
+> and secure devices? If so, then timer0 just needs to add the
+> "ti,timer-secure" property in device-tree file and it will not be
+> registered and no change is needed in the above code.
+> 
 
-Signed-off-by: Anatolij Gustschin <agust@denx.de>
----
- arch/powerpc/boot/dts/o2d.dts                |   33 ++++++
- arch/powerpc/boot/dts/o2d.dtsi               |  139 ++++++++++++++++++++++++++
- arch/powerpc/boot/dts/o2d300.dts             |   52 ++++++++++
- arch/powerpc/boot/dts/o2dnt2.dts             |   48 +++++++++
- arch/powerpc/boot/dts/o2i.dts                |   33 ++++++
- arch/powerpc/boot/dts/o2mnt.dts              |   33 ++++++
- arch/powerpc/boot/dts/o3dnt.dts              |   48 +++++++++
- arch/powerpc/platforms/52xx/mpc5200_simple.c |    1 +
- 8 files changed, 387 insertions(+), 0 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/o2d.dts
- create mode 100644 arch/powerpc/boot/dts/o2d.dtsi
- create mode 100644 arch/powerpc/boot/dts/o2d300.dts
- create mode 100644 arch/powerpc/boot/dts/o2dnt2.dts
- create mode 100644 arch/powerpc/boot/dts/o2i.dts
- create mode 100644 arch/powerpc/boot/dts/o2mnt.dts
- create mode 100644 arch/powerpc/boot/dts/o3dnt.dts
+I think you may be right here, AM33XX secure timer is similar to omap4, so
+Just "ti,timer-secure" property should be enough.
 
-diff --git a/arch/powerpc/boot/dts/o2d.dts b/arch/powerpc/boot/dts/o2d.dts
-new file mode 100644
-index 0000000..460064b
---- /dev/null
-+++ b/arch/powerpc/boot/dts/o2d.dts
-@@ -0,0 +1,33 @@
-+/*
-+ * O2D Device Tree Source
-+ *
-+ * Copyright (C) 2012 DENX Software Engineering
-+ * Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+/include/ "o2d.dtsi"
-+
-+/ {
-+	model = "ifm,o2d";
-+	compatible = "ifm,o2d";
-+
-+	localbus {
-+		flash@0,0 {
-+			partition@60000 {
-+				label = "kernel";
-+				reg = <0x00060000 0x00260000>;
-+				read-only;
-+			};
-+			/* o2d specific partitions */
-+                        partition@2c0000 {
-+                                label = "o2d user defined";
-+                                reg = <0x002c0000 0x00d40000>;
-+                        };
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/o2d.dtsi b/arch/powerpc/boot/dts/o2d.dtsi
-new file mode 100644
-index 0000000..3444eb8
---- /dev/null
-+++ b/arch/powerpc/boot/dts/o2d.dtsi
-@@ -0,0 +1,139 @@
-+/*
-+ * O2D base Device Tree Source
-+ *
-+ * Copyright (C) 2012 DENX Software Engineering
-+ * Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+/include/ "mpc5200b.dtsi"
-+
-+/ {
-+	model = "ifm,o2d";
-+	compatible = "ifm,o2d";
-+
-+	memory {
-+		reg = <0x00000000 0x04000000>;	// 64MB
-+	};
-+
-+	soc5200@f0000000 {
-+
-+		gpio_simple: gpio@b00 {
-+		};
-+
-+		timer@600 {	// General Purpose Timer
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+			fsl,has-wdt;
-+			fsl,wdt-on-boot = <0>;
-+		};
-+
-+		timer@610 {
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+		};
-+
-+		timer7: timer@670 {
-+		};
-+
-+		rtc@800 {
-+			status = "disabled";
-+		};
-+
-+		psc@2000 {		// PSC1
-+			compatible = "fsl,mpc5200b-psc-spi","fsl,mpc5200-psc-spi";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			cell-index = <0>;
-+
-+			spidev@0 {
-+				compatible = "spidev";
-+				spi-max-frequency = <250000>;
-+				reg = <0>;
-+			};
-+		};
-+
-+		psc@2200 {		// PSC2
-+			status = "disabled";
-+		};
-+
-+		psc@2400 {		// PSC3
-+			status = "disabled";
-+		};
-+
-+		psc@2600 {		// PSC4
-+			compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
-+		};
-+
-+		psc@2800 {		// PSC5
-+			compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
-+		};
-+
-+		psc@2c00 {		// PSC6
-+			status = "disabled";
-+		};
-+
-+		ethernet@3000 {
-+			phy-handle = <&phy0>;
-+		};
-+
-+		mdio@3000 {
-+			phy0: ethernet-phy@0 {
-+				reg = <0>;
-+			};
-+		};
-+
-+		sclpc@3c00 {
-+			compatible = "fsl,mpc5200-lpbfifo";
-+			reg = <0x3c00 0x60>;
-+			interrupts = <3 23 0>;
-+		};
-+	};
-+
-+	localbus {
-+		ranges = <0 0 0xff000000 0x01000000
-+			  3 0 0xe3000000 0x00100000>;
-+
-+		// flash device at LocalPlus Bus CS0
-+		flash@0,0 {
-+			compatible = "cfi-flash";
-+			reg = <0 0 0x01000000>;
-+			bank-width = <1>;
-+			device-width = <2>;
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+			no-unaligned-direct-access;
-+
-+			/* common layout for all machines */
-+			partition@0 {
-+				label = "u-boot";
-+				reg = <0x00000000 0x00040000>;
-+				read-only;
-+			};
-+			partition@40000 {
-+				label = "env";
-+				reg = <0x00040000 0x00020000>;
-+				read-only;
-+			};
-+		};
-+
-+		csi@3,0 {
-+			compatible = "ifm,o2d-csi";
-+			reg = <3 0 0x00100000>;
-+			ifm,csi-clk-handle = <&timer7>;
-+			gpios = <&gpio_simple 23 0	/* imag_capture */
-+				 &gpio_simple 26 0	/* imag_reset */
-+				 &gpio_simple 29 0>;	/* imag_master_en */
-+
-+			interrupts = <1 1 2>;		/* IRQ1, edge falling */
-+
-+			ifm,csi-addr-bus-width = <24>;
-+			ifm,csi-data-bus-width = <8>;
-+			ifm,csi-wait-cycles = <0>;
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/o2d300.dts b/arch/powerpc/boot/dts/o2d300.dts
-new file mode 100644
-index 0000000..29affe0
---- /dev/null
-+++ b/arch/powerpc/boot/dts/o2d300.dts
-@@ -0,0 +1,52 @@
-+/*
-+ * O2D300 Device Tree Source
-+ *
-+ * Copyright (C) 2012 DENX Software Engineering
-+ * Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+/include/ "o2d.dtsi"
-+
-+/ {
-+	model = "ifm,o2d300";
-+	compatible = "ifm,o2d";
-+
-+	localbus {
-+		ranges = <0 0 0xfc000000 0x02000000
-+			  3 0 0xe3000000 0x00100000>;
-+		flash@0,0 {
-+			compatible = "cfi-flash";
-+			reg = <0 0 0x02000000>;
-+			bank-width = <2>;
-+			device-width = <2>;
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+
-+			partition@40000 {
-+				label = "env_1";
-+				reg = <0x00040000 0x00020000>;
-+				read-only;
-+			};
-+			partition@60000 {
-+				label = "env_2";
-+				reg = <0x00060000 0x00020000>;
-+				read-only;
-+			};
-+			partition@80000 {
-+				label = "kernel";
-+				reg = <0x00080000 0x00260000>;
-+				read-only;
-+			};
-+			/* o2d300 specific partitions */
-+			partition@2e0000 {
-+				label = "o2d300 user defined";
-+				reg = <0x002e0000 0x01d20000>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/o2dnt2.dts b/arch/powerpc/boot/dts/o2dnt2.dts
-new file mode 100644
-index 0000000..a0f5b97
---- /dev/null
-+++ b/arch/powerpc/boot/dts/o2dnt2.dts
-@@ -0,0 +1,48 @@
-+/*
-+ * O2DNT2 Device Tree Source
-+ *
-+ * Copyright (C) 2012 DENX Software Engineering
-+ * Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+/include/ "o2d.dtsi"
-+
-+/ {
-+	model = "ifm,o2dnt2";
-+	compatible = "ifm,o2d";
-+
-+	memory {
-+		reg = <0x00000000 0x08000000>;  // 128MB
-+	};
-+
-+	localbus {
-+		ranges = <0 0 0xfc000000 0x02000000
-+			  3 0 0xe3000000 0x00100000>;
-+
-+		flash@0,0 {
-+			compatible = "cfi-flash";
-+			reg = <0 0 0x02000000>;
-+			bank-width = <2>;
-+			device-width = <2>;
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+
-+			partition@60000 {
-+				label = "kernel";
-+				reg = <0x00060000 0x00260000>;
-+				read-only;
-+			};
-+
-+			/* o2dnt2 specific partitions */
-+			partition@2c0000 {
-+				label = "o2dnt2 user defined";
-+				reg = <0x002c0000 0x01d40000>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/o2i.dts b/arch/powerpc/boot/dts/o2i.dts
-new file mode 100644
-index 0000000..e3cc99d
---- /dev/null
-+++ b/arch/powerpc/boot/dts/o2i.dts
-@@ -0,0 +1,33 @@
-+/*
-+ * O2I Device Tree Source
-+ *
-+ * Copyright (C) 2012 DENX Software Engineering
-+ * Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+/include/ "o2d.dtsi"
-+
-+/ {
-+	model = "ifm,o2i";
-+	compatible = "ifm,o2d";
-+
-+	localbus {
-+		flash@0,0 {
-+			partition@60000 {
-+				label = "kernel";
-+				reg = <0x00060000 0x00260000>;
-+				read-only;
-+			};
-+			/* o2i specific partitions */
-+			partition@2c0000 {
-+				label = "o2i user defined";
-+				reg = <0x002c0000 0x00d40000>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/o2mnt.dts b/arch/powerpc/boot/dts/o2mnt.dts
-new file mode 100644
-index 0000000..2fa4349
---- /dev/null
-+++ b/arch/powerpc/boot/dts/o2mnt.dts
-@@ -0,0 +1,33 @@
-+/*
-+ * O2MNT Device Tree Source
-+ *
-+ * Copyright (C) 2012 DENX Software Engineering
-+ * Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+/include/ "o2d.dtsi"
-+
-+/ {
-+	model = "ifm,o2mnt";
-+	compatible = "ifm,o2d";
-+
-+	localbus {
-+		flash@0,0 {
-+			partition@60000 {
-+				label = "kernel";
-+				reg = <0x00060000 0x00260000>;
-+				read-only;
-+			};
-+			/* add o2mnt specific partitions */
-+                        partition@2c0000 {
-+                                label = "o2mnt user defined";
-+                                reg = <0x002c0000 0x00d40000>;
-+                        };
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/o3dnt.dts b/arch/powerpc/boot/dts/o3dnt.dts
-new file mode 100644
-index 0000000..acce493
---- /dev/null
-+++ b/arch/powerpc/boot/dts/o3dnt.dts
-@@ -0,0 +1,48 @@
-+/*
-+ * O3DNT Device Tree Source
-+ *
-+ * Copyright (C) 2012 DENX Software Engineering
-+ * Anatolij Gustschin <agust@denx.de>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+/include/ "o2d.dtsi"
-+
-+/ {
-+	model = "ifm,o3dnt";
-+	compatible = "ifm,o2d";
-+
-+	memory {
-+		reg = <0x00000000 0x04000000>;  // 64MB
-+	};
-+
-+	localbus {
-+		ranges = <0 0 0xfc000000 0x01000000
-+			  3 0 0xe3000000 0x00100000>;
-+
-+		flash@0,0 {
-+			compatible = "cfi-flash";
-+			reg = <0 0 0x01000000>;
-+			bank-width = <2>;
-+			device-width = <2>;
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+
-+			partition@60000 {
-+				label = "kernel";
-+				reg = <0x00060000 0x00260000>;
-+				read-only;
-+			};
-+
-+			/* o3dnt specific partitions */
-+			partition@2c0000 {
-+				label = "o3dnt user defined";
-+				reg = <0x002c0000 0x00d40000>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/platforms/52xx/mpc5200_simple.c b/arch/powerpc/platforms/52xx/mpc5200_simple.c
-index c0aa040..9cf3602 100644
---- a/arch/powerpc/platforms/52xx/mpc5200_simple.c
-+++ b/arch/powerpc/platforms/52xx/mpc5200_simple.c
-@@ -52,6 +52,7 @@ static void __init mpc5200_simple_setup_arch(void)
- static const char *board[] __initdata = {
- 	"anonymous,a4m072",
- 	"anon,charon",
-+	"ifm,o2d",
- 	"intercontrol,digsy-mtc",
- 	"manroland,mucmc52",
- 	"manroland,uc101",
--- 
-1.7.1
+Thanks,
+Vaibhav
