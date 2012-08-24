@@ -1,7 +1,7 @@
 From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 Subject: Re: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to Devicetree ***
-Date: Fri, 24 Aug 2012 19:14:18 +1200
-Message-ID: <1345792458.23550.0.camel@gitbox>
+Date: Fri, 24 Aug 2012 19:18:12 +1200
+Message-ID: <1345792692.23550.3.camel@gitbox>
 References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
  <201208231322.23077.arnd@arndb.de> <1345758702.2061.6.camel@gitbox>
  <201208240540.12316.arnd@arndb.de> <1345787536.23177.3.camel@gitbox>
@@ -60,7 +60,15 @@ On Fri, 2012-08-24 at 09:54 +0400, Alexey Charkov wrote:
 > Best,
 > Alexey
 > 
-I knew we kept you around for a reason :)
+Actually - that doesn't resolve the problem unless it all goes in via
+the same tree still because the clock patch can only drop the #define if
+the arch-vt8500 patch exists still - same as problem #2 I mentioned.
 
-Cheers,
+If the clock patch goes via Mikes tree he will need the arch-vt8500
+patch as well - don't think it can be avoided.
+
+Still easier to send the whole lot via arm-soc, then at least we can
+resolve the patch conflicts without having to apply the patches twice.
+
+Regards
 Tony P
