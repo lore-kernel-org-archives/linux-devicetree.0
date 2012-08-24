@@ -1,74 +1,49 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: Re: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to Devicetree ***
-Date: Fri, 24 Aug 2012 19:18:12 +1200
-Message-ID: <1345792692.23550.3.camel@gitbox>
-References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
- <201208231322.23077.arnd@arndb.de> <1345758702.2061.6.camel@gitbox>
- <201208240540.12316.arnd@arndb.de> <1345787536.23177.3.camel@gitbox>
- <CABjd4Yxxf5XDc6gs0WABZgF3SOd89J7CfjsU9uitOg4qpQ4WEQ@mail.gmail.com>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH v4 1/3] Runtime Interpreted Power Sequences
+Date: Fri, 24 Aug 2012 18:24:54 +0900
+Message-ID: <6044581.2jEzZBWCu1@percival>
+References: <1345097337-24170-1-git-send-email-acourbot@nvidia.com> <20120821091306.GA4819@avionic-0098.mockup.avionic-design.de> <1345542860.4085.40.camel@deskari>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CABjd4Yxxf5XDc6gs0WABZgF3SOd89J7CfjsU9uitOg4qpQ4WEQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org" <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1345542860.4085.40.camel@deskari>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Stephen Warren <swarren@nvidia.com>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2012-08-24 at 09:54 +0400, Alexey Charkov wrote:
-> 2012/8/24 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>:
-> > On Fri, 2012-08-24 at 05:40 +0000, Arnd Bergmann wrote:
-> >> On Thursday 23 August 2012, Tony Prisk wrote:
-> >> > I was about to say that if Mike has any issues with the driver that I
-> >> > can fix the patch conflict at the same time, but I just realised that
-> >> > its more work than I originally thought :)
-> >> >
-> >> > I was going to move the arch-vt8500 part of the clocks patch back into
-> >> > the clocks patch - but that will just move the issue from arm-soc to
-> >> > clocks because Mike's branch won't have the arch-vt8500 patch so the
-> >> > patch will fail.
-> >>
-> >> But that's ok, because without the arch-v8500 part, nothing uses
-> >> the vt8500-clock driver, so nothing breaks. You can introduce broken
-> >> code in the meantime as long as it's impossible to enable and it will
-> >> work afterwards.
-> >>
-> >>       Arnd
-> >
-> > You lost me a little bit there :)
-> > If it stays as is now, the arch-vt8500 patch will introduce an
-> > unresolved symbol.
-> > If I move the clock code from the arch-vt8500 patch to the clock patch,
-> > then the clock patch won't apply because it needs the arch-vt8500 patch
-> > first and Mike won't have that patch, but it would be fine if both
-> > patches went in via your tree.
+On Tuesday 21 August 2012 17:54:20 Tomi Valkeinen wrote:
+> > However this also means we'll essentially just be moving the board code.
 > 
-> Why don't you add a #define in the first patch that makes your
-> to-be-unresolved symbol a no-op and then drop it within the clock
-> patch?
 > 
-> Best,
-> Alexey
-> 
-Actually - that doesn't resolve the problem unless it all goes in via
-the same tree still because the clock patch can only drop the #define if
-the arch-vt8500 patch exists still - same as problem #2 I mentioned.
+> What do you mean "just"? Wasn't the point of the whole "arm board file
+> mess" to get rid of the code from the board files? If the code in the
+> board file is device specific code, not board specific, then the driver
+> of the device is a logical place to place it.
 
-If the clock patch goes via Mikes tree he will need the arch-vt8500
-patch as well - don't think it can be avoided.
+I think Tomi has a point here - these sequences were not belonging to the 
+board code in the first place. They are definitely tied to the device, hence 
+should have been handled by the driver all along, with the board code 
+assigning the correct resources to the device (like the vast majority of 
+device drivers do).
 
-Still easier to send the whole lot via arm-soc, then at least we can
-resolve the patch conflicts without having to apply the patches twice.
+> And as I said, I don't have any problems with some kind of generic power
+> sequences. So the code in the board file could be moved and converted to
+> use the power sequences, if that is better than just plain c code.
 
-Regards
-Tony P
+My concern now is, provided that all drivers to their job and handle how their 
+devices are switched on and off, when (if at all) are encoded power sequences 
+better than their equivalent C code? There is the matching database size issue 
+that you mentionned, is it a sufficient concern to justify a new kernel feature?
+
+On the other hand some devices like panels are typically not used in many 
+different appliances, so maybe it is not worth to separate them from their 
+board definition. As Mark mentionned, having .dtsi files for the DT (and their 
+equivalent .h for kernels that use platform data) might be a good middle 
+ground.
+
+But the line is really tight between what is code and what is data here.
+
+Alex.
+
