@@ -1,83 +1,74 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 4/7] regulator: anatop-regulator: convert to use
- imx-syscon to access anatop register
-Date: Fri, 24 Aug 2012 10:37:50 +0800
-Message-ID: <20120824023749.GC5822@shlinux2.ap.freescale.net>
-References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
- <1345619928-15446-5-git-send-email-b29396@freescale.com>
- <5035BDBF.9020602@wwwdotorg.org>
- <20120823061202.GM4011@b20223-02.ap.freescale.net>
- <50366EEA.2070200@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Thu, 23 Aug 2012 21:34:41 -0600
+Message-ID: <5036F651.4020700@wwwdotorg.org>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com> <5035445B.6000500@wwwdotorg.org> <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com> <50366E44.4030606@wwwdotorg.org> <50369305.6050304@gmail.com> <50369FEE.8000003@wwwdotorg.org> <5036B639.20608@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50366EEA.2070200-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5036B639.20608@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 24, 2012 at 01:56:58AM +0800, Stephen Warren wrote:
-> On 08/23/2012 12:12 AM, Richard Zhao wrote:
-> > On Wed, Aug 22, 2012 at 11:21:03PM -0600, Stephen Warren wrote:
-> >> On 08/22/2012 01:18 AM, Dong Aisheng wrote:
-> >>> Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>
-> >>> diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-> >>
-> >>> @@ -109,7 +110,11 @@ static int __devinit anatop_regulator_probe(struct platform_device *pdev)
-> >>>  	rdesc->ops = &anatop_rops;
-> >>>  	rdesc->type = REGULATOR_VOLTAGE;
-> >>>  	rdesc->owner = THIS_MODULE;
-> >>> -	sreg->mfd = anatopmfd;
-> >>> +
-> >>> +	sreg->anatop = of_parse_phandle(np, "fsl,anatop", 0);
-> >>> +	if (!sreg->anatop)
-> >>> +		return -ENODEV;
-> >>
-> >> In fact, that imx_syscon_lookup function I proposed could even do the
-> >> of_parse_phandle() internally, so perhaps:
-> >>
-> >> foo->syscon_dev = imx_syscon_lookup(np, "fsl,anatop", 0);
-> >> if (IS_ERR(foo->syscon_dev))
-> >>     return PTR_ERR(foo->syscon_dev);
-> >>
-> >> with imx_syscon_lookup() internally knowing when to return EPROBE_DEFER
-> >> rather than any other permanent error code (e.g. for missing property,
-> >> bad phandle, etc.)
-> >
-> > In some case that we access register in machine code, we don't have any
-> > phandle. The node is got by find compatible or by path.
+On 08/23/2012 05:01 PM, Sebastian Hesselbarth wrote:
+> On 08/23/2012 11:26 PM, Stephen Warren wrote:
+>> As you may have guessed, I strongly prefer the hard-coded static table
+>> based approach, or at least separating the definition of known
+>> pins/groups/functions from the configuration nodes that define which
+>> particular mux settings to actually use.
+>>
+>> Puting this all a little more simply, the pinctrl core wants to generate
+>> a list of all known functions. It is a single global/unified list. It
+>> first calls pinmux_ops.get_functions_count() to find out how many
+>> functions there are in the list, then pinmux_ops.get_function_name() for
+>> each one to find its name, then pinmux_ops.get_function_groups() to find
+>> out which groups allow that function to be mux'd onto them.
 > 
-> That sounds a little odd; why not just use a phandle consistently
-> everywhere?
-Maybe for some places we do not have that device node, e.g:
-arch/arm/mach-imx/mach-imx6q.c
-
+> Ok, now this becomes a little bit more clear to me.
 > 
-> Either way though, I could imagine still putting all the lookup code
-> into the syscon driver; just have different functions for the different
-> lookup methods:
+> Consider uart1 on dove is muxable to:
+> mpp2 uart1(rts), mpp3 uart1(cts), mpp21 uart1(rts), mpp22 uart1(cts),
+> and finally mpp_uart1(rx and tx).
 > 
-> imx_syscon_lookup_by_phandle(np, char *property_name)
-Probably we do not need the left two lookup, below seems also ok if needed:
-np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-anatop");
-regmap = imx_syscon_lookup_by_phandle(np, property_name)
-Then we do not need to handle how to find the compatible node.
+> So possible, valid combinations for uart1 would be:
+> (a) mpp_uart1;
+> (b) mpp_uart1, mpp2, mpp3;
+> (c) mpp_uart1, mpp21, mpp22;
+> (d) mpp_uart1, mpp2, mpp22;
+> (e) mpp_uart1, mpp21, mpp3;
+> 
+> Now what we currently do is, use DT to setup all known functions with e.g.
+> marvell,pins = "mpp_uart1", "mpp2", "mpp22" and marvell,function = "uart1".
+> This requires to count all pinctrl DT node children to count the known
+> functions that can ever be muxed to. It will never allow to mux uart1 to sw
+> flow control during run-time when there was no DT child node for it.
 
-> imx_syscon_lookup_by_compatible(char *compatible
-> imx_syscon_lookup_by_path(char *node_path)
+In the example above, there is a single function named "uart1". If this
+was all the HW supported, I'd expect the driver's
+pinmux_ops.get_functions_count() to return 1,
+pinmux_ops.get_function_name(0) to return "uart1", and
+pinmux_ops.get_function_name(n>0) to return an error.
 
-Regards
-Dong Aisheng
+In practice, I assume there are many other options that can be muxed
+onto mpp2/3/21/22/uart1, so they'd be included in the list as well.
+
+> But you are proposing to scan the list passed from SoC specific driver
+> for all
+> possible marvell,function ("uart1", "uart2", "sdio0", ...) and build up
+> lists
+> of pingroups that can be used with this specific marvell,function; or
+> even build
+> up lists of pingroups that allow uart1(rts), and another one for
+> uart1(cts), ...?
+
+I don't expect any scanning, no. I'd expect that tables provided by the
+SoC-specific drivers to be:
+
+* A table of pins
+* A table of groups
+* A table of functions
+
+No scanning involved.
