@@ -1,50 +1,70 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH] [v2] netdev/phy: add MDIO bus multiplexer driven by a
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] [v3] netdev/phy: add MDIO bus multiplexer driven by a
  memory-mapped device
-Date: Fri, 24 Aug 2012 14:18:02 -0500
-Message-ID: <5037D36A.50705@freescale.com>
-References: <5037C815.4020906@wwwdotorg.org> <5037C9AF.3060903@freescale.com> <5037CE45.4010309@wwwdotorg.org> <20120824.150740.9047511945034908.davem@davemloft.net>
+Date: Fri, 24 Aug 2012 13:51:31 -0600
+Message-ID: <5037DB43.60704@wwwdotorg.org>
+References: <1345835453-8611-1-git-send-email-timur@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20120824.150740.9047511945034908.davem@davemloft.net>
+In-Reply-To: <1345835453-8611-1-git-send-email-timur@freescale.com>
 Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: swarren@wwwdotorg.org, timur@freescale.com, afleming@freescale.com, ddaney.cavm@gmail.com, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Timur Tabi <timur@freescale.com>
+Cc: Andy Fleming <afleming@freescale.com>, David Miller <davem@davemloft.net>, ddaney.cavm@gmail.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/24/2012 02:07 PM, David Miller wrote:
-> From: Stephen Warren <swarren@wwwdotorg.org>
-> Date: Fri, 24 Aug 2012 12:56:05 -0600
+On 08/24/2012 01:10 PM, Timur Tabi wrote:
+> Add support for an MDIO bus multiplexer controlled by a simple memory-mapped
+> device, like an FPGA.  The device must be memory-mapped and contain only
+> 8-bit registers (which keeps things simple).
 > 
->> In the I2C case, the address spaces are disjoint, so there's never any
->> mapping between them, so there's no need for ranges.
->>
->> Any time the child address space is intended to be part of the parent's
->> address space, I believe ranges is supposed to be specified, perhaps
->> even mandatory, even if the translation is 1:1.
+> Tested on a Freescale P5020DS board which uses the "PIXIS" FPGA attached
+> to the localbus.
 
-Yes, it's mandatory (even if the kernel lets you get away without it for
-the sake of some broken Apple firmware, IIRC).  If the translation is an
-identity map you can use an empty "ranges;".
+> +++ b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
 
-> Regardless, you really can't just generically translate ranges
-> in some universal way and expect it to work in all cases.
-> 
-> You need bus specific drivers to deal with various special
-> cases.
-> 
-> See the *_map() methods implemented in:
-> 
-> 	arch/sparc/kernel/of_device_64.c
-> 
-> for example.
+> +Properties for an MDIO bus multiplexer controlled by a memory-mapped device
+> +
+> +This is a special case of a MDIO bus multiplexer.  A memory-mapped device,
+> +like an FPGA, is used to control which child bus is connected.  The mdio-mux
+> +node must be a child of the memory-mapped device.  The driver currently only
+> +supports devices with eight-bit registers.
 
-We don't expect it to work in all cases.  We expect it to work if the
-bus node is on the whitelist for which we create devices on
-platform_bus, there's a platform driver that binds against it, and that
-driver calls of_iomap() or equivalent because the binding says that reg
-refers to something that is memory mapped.
+That last sentence seems like a property of the driver, not the binding;
+I could easily anticipate allowing the size to be 1 or 2 or 4, and a
+driver adapter to that in the future.
 
--Scott
+Otherwise, this binding looks great now.
+
+> +++ b/drivers/net/phy/mdio-mux-mmioreg.c
+
+> +static int mdio_mux_mmioreg_switch_fn(int current_child, int desired_child,
+> +				      void *data)
+> +{
+> +	struct mdio_mux_mmioreg_state *s = data;
+> +
+> +	if (current_child ^ desired_child) {
+> +		void *p = ioremap(s->phys, 1);
+> +		uint8_t x, y;
+> +
+> +		if (!p)
+> +			return -ENOMEM;
+
+Why not map it during probe?
+
+> +		x = ioread8(p);
+> +		y = (x & ~s->mask) | desired_child;
+> +		if (x != y) {
+
+Isn't that always true, given if (current_child ^ desired_child) above?
+
+> +			iowrite8((x & ~s->mask) | desired_child, p);
+> +			pr_debug("%s: %02x -> %02x\n", __func__, x, y);
+> +		}
+> +
+> +		iounmap(p);
+> +	}
+> +
+> +	return 0;
+> +}
