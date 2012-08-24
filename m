@@ -1,73 +1,39 @@
-From: Timur Tabi <timur@freescale.com>
-Subject: Re: [PATCH] [v3] netdev/phy: add MDIO bus multiplexer driven by a
- memory-mapped device
-Date: Fri, 24 Aug 2012 15:00:32 -0500
-Message-ID: <5037DD60.8090206@freescale.com>
-References: <1345835453-8611-1-git-send-email-timur@freescale.com> <5037DB43.60704@wwwdotorg.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm/dts: omap5: Add mmc controller nodes and board data
+Date: Fri, 24 Aug 2012 13:02:22 -0700
+Message-ID: <20120824200221.GW11011@atomide.com>
+References: <1344323901-20342-1-git-send-email-balajitk@ti.com>
+ <201208070830.01776.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5037DB43.60704@wwwdotorg.org>
-Sender: netdev-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Andy Fleming <afleming@freescale.com>, David Miller <davem@davemloft.net>, ddaney.cavm@gmail.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201208070830.01776.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote:
-
->> +This is a special case of a MDIO bus multiplexer.  A memory-mapped device,
->> +like an FPGA, is used to control which child bus is connected.  The mdio-mux
->> +node must be a child of the memory-mapped device.  The driver currently only
->> +supports devices with eight-bit registers.
+* Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [120807 02:21]:
+> On Tuesday 07 August 2012, Balaji T K wrote:
+> > 
+> > Add OMAP MMC related device tree data for OMAP5.
+> > 
+> > Signed-off-by: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
+> > ---
 > 
-> That last sentence seems like a property of the driver, not the binding;
-> I could easily anticipate allowing the size to be 1 or 2 or 4, and a
-> driver adapter to that in the future.
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-True, but I couldn't think of a better place to mention this.  Adding
-support for multi-byte registers also requires handling the endianness of
-those registers.  I have that problem with the mdio-mux-gpio driver.  That
-driver assumes that the GPIO bits are numbered in little-endian order, so
-my device tree on my big-endian CPU (PowerPC) lists the GPIO pins in
-reverse order.
+Applying this into omap devel-dt branch. 
 
-> Otherwise, this binding looks great now.
-
-Do you still want me to scrub any references to the register size
-requirement from the document?
-
->> +++ b/drivers/net/phy/mdio-mux-mmioreg.c
-> 
->> +static int mdio_mux_mmioreg_switch_fn(int current_child, int desired_child,
->> +				      void *data)
->> +{
->> +	struct mdio_mux_mmioreg_state *s = data;
->> +
->> +	if (current_child ^ desired_child) {
->> +		void *p = ioremap(s->phys, 1);
->> +		uint8_t x, y;
->> +
->> +		if (!p)
->> +			return -ENOMEM;
-> 
-> Why not map it during probe?
-
-I thought about that, but I generally don't like mappings that exist for
-all eternity even though they're rarely used.  Once the interface is up,
-we don't expect any bus muxing to occur.
-
-> 
->> +		x = ioread8(p);
->> +		y = (x & ~s->mask) | desired_child;
->> +		if (x != y) {
-> 
-> Isn't that always true, given if (current_child ^ desired_child) above?
-
-If current_child == -1, but the bus is already muxed properly, then
-there's no point in setting it.  Do you want me to remove the test, or add
-a comment?
-
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+Tony
