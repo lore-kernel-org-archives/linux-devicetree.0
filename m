@@ -1,84 +1,54 @@
-From: Tabi Timur-B04825 <B04825@freescale.com>
-Subject: Re: [PATCH] [v2] netdev/phy: add MDIO bus multiplexer driven by a
- memory-mapped device
-Date: Fri, 24 Aug 2012 00:28:10 +0000
-Message-ID: <6AE080B68D46FC4BA2D2769E68D765B7059D1DC7@039-SN2MPN1-022.039d.mgd.msft.net>
-References: <1345751071-23128-1-git-send-email-timur@freescale.com>
- <5036B4BD.70208@wwwdotorg.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: RFC: New release for DTC?
+Date: Fri, 24 Aug 2012 11:36:25 +1000
+Message-ID: <20120824013625.GA8067@truffula.fritz.box>
+References: <201208232015.39613.yann.morin.1998@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5036B4BD.70208@wwwdotorg.org>
-Content-Language: en-US
-Content-ID: <FE3D0CC80C53094A9E3CCA0E219E43EA@mgd.freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Fleming Andy-AFLEMING <afleming@freescale.com>, David Miller <davem@davemloft.net>, "ddaney.cavm@gmail.com" <ddaney.cavm@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201208232015.39613.yann.morin.1998-GANU6spQydw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote:
-> On 08/23/2012 01:44 PM, Timur Tabi wrote:
->> Add support for an MDIO bus multiplexer controlled by a simple memory-mapped
->> device, like an FPGA.  The device must be memory-mapped and contain only
->> 8-bit registers (which keeps things simple).
->
->> +++ b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
->
->> +	/* The FPGA node */
->> +	fpga: board-control@3,0 {
->> +		compatible = "fsl,p5020ds-fpga", "fsl,fpga-ngpixis";
->> +		reg = <3 0 0x30>;
->
-> Why not add the following here:
->
-> 	#address-cells = <1>:
-> 	#size-cells = <1>;
-> 	ranges = <...>;
+On Thu, Aug 23, 2012 at 08:15:39PM +0200, Yann E. MORIN wrote:
+> Hello All!
+> 
+> Following advice from Jon Loeliger, I would suggest that a new release
+> of DTC be tagged and packaged.
+> 
+> It is important for some projects to rely on a released version, rather
+> than use a random cset from the repository. Comes to mind, the automated
+> build-systems, such as buildroot.
+> 
+> Of course, I can help, if need be! ;-)
+> 
+> Are there any others who think that a release would make sense?
 
-I forgot to add them in the txt file.  They are in the real device tree.
+This has been a bit of a perrenial problem.  dtc development has been
+sufficiently gradual that there haven't been many obvious points for
+making new releases.  dtc developers (i.e. Jon and my, mostly) don't
+feel much pain from the lack of releases, since the git snapshots
+generally work well (thanks to limited scope and a good testsuite).
 
->
->> +
->> +		mdio-mux-emi2 {
->> +			compatible = "mdio-mux-mmioreg", "mdio-mux";
->> +			mdio-parent-bus = <&xmdio0>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			reg = <9>; // BRDCFG1
->
-> Then, that'd have to be <9 1>;
-
-Actually, I had #size-cells = <0>.
-
->
-> That way, ...
->
->> diff --git a/drivers/net/phy/mdio-mux-mmioreg.c b/drivers/net/phy/mdio-mux-mmioreg.c
->
->> +static int __devinit mdio_mux_mmioreg_probe(struct platform_device *pdev)
->
->> +	/* The MMIO device is the parent of this device */
->> +	np2 = of_get_parent(np);
->> +	if (!np2) {
->> +		dev_err(&pdev->dev, "could not find parent MMIO device\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	ret = of_address_to_resource(np2, 0, &res);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "could not obtain memory map for node %s\n",
->> +			np2->full_name);
->> +		return ret;
->> +	}
->> +	s->phys = res.start;
->
-> You could simplify all that into just "of_iomap(np, 0)", and all the
-> address translation etc. happens entirely automatically, in the standard
-> fashion for DT.
-
-Ah!  You're right.  I don't need to look for the parent node.  Duh.
+I wonder if we should move to a model of just making a release every 3
+or 6 months from whatever happens to be in the tree at the time
+(barring obvious known breakage, of course).
 
 -- 
-Timur Tabi
-Linux kernel developer at Freescale
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
