@@ -1,88 +1,84 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: physmap_of: Add "no-unaligned-direct-access" DT
- property
-Date: Fri, 24 Aug 2012 18:08:44 +0300
-Message-ID: <1345820924.2848.320.camel@sauron.fi.intel.com>
-References: <1345209752-22938-1-git-send-email-sr@denx.de>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH 2/2] dt/misc: add bindings documentation for ifm camera sensor
+ interface
+Date: Fri, 24 Aug 2012 17:39:39 +0200
+Message-ID: <1345822779-32020-2-git-send-email-agust@denx.de>
+References: <1345822779-32020-1-git-send-email-agust@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9003120099762644844=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345209752-22938-1-git-send-email-sr-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephan Gatzka <Stephan.Gatzka-bZ2w1f/VHjk@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1345822779-32020-1-git-send-email-agust@denx.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: devicetree-discuss@lists.ozlabs.org, dzu@denx.de
 List-Id: devicetree@vger.kernel.org
 
+IFM O2D cameras use special sensor bus interface glue-logic to
+connect camera sensors to mpc5200 LocalPlus bus. Add device tree
+bindings documentation for it.
 
---===============9003120099762644844==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-SXi7hJe3oqhDPZFOVX6r"
+Signed-off-by: Anatolij Gustschin <agust@denx.de>
+---
+ Documentation/devicetree/bindings/misc/ifm-csi.txt |   41 ++++++++++++++++++++
+ 1 files changed, 41 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/ifm-csi.txt
 
-
---=-SXi7hJe3oqhDPZFOVX6r
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2012-08-17 at 15:22 +0200, Stefan Roese wrote:
-> On some platforms (e.g. MPC5200) a direct 1:1 mapping may cause
-> problems with JFFS2 usage, as the local bus (LPB) doesn't support
-> unaligned accesses as implemented in the JFFS2 code via memcpy().
-> By defining "no-unaligned-direct-access", the flash will not be
-> exposed directly to the MTD users (e.g. JFFS2) any more.
->=20
-> Signed-off-by: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-
-Pushed to l2-mtd.git, thanks!
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-SXi7hJe3oqhDPZFOVX6r
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJQN5j8AAoJECmIfjd9wqK0mIIP+wZdIF3Yp0dnJcmuS7QabS4W
-2ZvgAcU5azo9ZYtaVS6+DfsJcRMmfPqu0vfny7ScjgydzUqww2lbitn8OL3xW9Oo
-Su1u+WuBSVagR++GVw1RyetwlcgPAMvxSArlyIqNNpfPxMB5+KsKi0JxnSD4mw0m
-swpTN9Fcq+/QfyWn2wEruIJov99nvofCTLOVVT1FXxIlvxiSYxGjXUkd40NKzJBA
-eLvB9SGFiVEdyeLgPXNGe5gnQbjdK8uI1NBLYoeSgzd/KuYG9ezqzJ5JEHGc4mwO
-n+tBFrR160EF4clDNB//m5t8ltkCnvaHOoAOVo3SACiUSt9rrGHxFxObIsOeBV+U
-Jw4k75y8r9bDedBMAM8F0J5jJxiw29Y7yPw5B03I/iTrjBKhaJqVTUldQibgle8H
-XLwvTZ/9nlzcwgIZqijcmmn4hfOgZNwJwV2V2qD+TWEnzu9T0YY8b6+uY8EimAkl
-zxAvz8pRHnltxIENxh9dJHn30LDRqDYEEGgLzHM0DhN6YzXSqr1fM8NlqgJ4LZbK
-2FsxWeI0nZHFlVsMGrfTMx5wi3qdB/2bcZ+XLgm2Br8BR47dNv8VUvtp1Ojuzd+l
-1EBSwGT+r14Y7af2wqJNuChKzhdBt+Ds3KIkq6TySLuA4l4UJTHm1fw3AYMLsRXe
-da7WHb7oJfIQqiPVHXx5
-=Lz4X
------END PGP SIGNATURE-----
-
---=-SXi7hJe3oqhDPZFOVX6r--
-
-
---===============9003120099762644844==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============9003120099762644844==--
+diff --git a/Documentation/devicetree/bindings/misc/ifm-csi.txt b/Documentation/devicetree/bindings/misc/ifm-csi.txt
+new file mode 100644
+index 0000000..5bdfffb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/ifm-csi.txt
+@@ -0,0 +1,41 @@
++IFM camera sensor interface on mpc5200 LocalPlus bus
++
++Required properties:
++- compatible: "ifm,o2d-csi"
++- reg: specifies sensor chip select number and associated address range
++- interrupts: external interrupt line number and interrupt sense mode
++  of the interrupt line signaling frame valid events
++- gpios: three gpio-specifiers for "capture", "reset" and "master enable"
++  GPIOs (strictly in this order).
++- ifm,csi-clk-handle: the phandle to a node in the DT describing the sensor
++  clock generator. This node is usually a general purpose timer controller.
++- ifm,csi-addr-bus-width: address bus width (valid values are 16, 24, 25)
++- ifm,csi-data-bus-width: data bus width (valid values are 8 and 16)
++- ifm,csi-wait-cycles: sensor bus wait cycles
++
++Optional properties:
++- ifm,csi-byte-swap: if this property is present, the byte swapping on
++  the bus will be enabled.
++
++Example:
++
++	csi@3,0 {
++		compatible = "ifm,o2d-csi";
++		reg = <3 0 0x00100000>;		/* CS 3, 1 MiB range */
++		interrupts = <1 1 2>;		/* IRQ1, edge falling */
++
++		ifm,csi-clk-handle = <&timer7>;
++		gpios = <&gpio_simple 23 0	/* image_capture */
++			 &gpio_simple 26 0	/* image_reset */
++			 &gpio_simple 29 0>;	/* image_master_en */
++
++		ifm,csi-addr-bus-width = <24>;
++		ifm,csi-data-bus-width = <8>;
++		ifm,csi-wait-cycles = <0>;
++	};
++
++The base address of the used chip select is specified in the
++ranges property of the parent localbus node, for example:
++
++	ranges = <0 0 0xff000000 0x01000000
++		  3 0 0xe3000000 0x00100000>;
+-- 
+1.7.1
