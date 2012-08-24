@@ -1,40 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to Devicetree ***
-Date: Fri, 24 Aug 2012 05:40:12 +0000
-Message-ID: <201208240540.12316.arnd@arndb.de>
-References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
- <201208231322.23077.arnd@arndb.de> <1345758702.2061.6.camel@gitbox>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] mmc: dt: Add card-detection properties to core binding.
+Date: Fri, 24 Aug 2012 13:44:51 +0800
+Message-ID: <20120824054449.GP24242@S2101-09.ap.freescale.net>
+References: <87pq6k46jg.fsf@octavius.laptop.org>
+ <5033B0F0.7050506@gmail.com>
+ <CAJuYYwR+oCQUcgoy6ZuHp0XAa+EAj9d-FvLtwsQcP3muFMrKLA@mail.gmail.com>
+ <20120822055151.GT24242@S2101-09.ap.freescale.net>
+ <877gsr5iz1.fsf@octavius.laptop.org>
+ <CAJuYYwQz00ZzB5MxRG66XEPZApAtS6bwJAafmw3b=7DD7u+Crg@mail.gmail.com>
+ <87y5l7421h.fsf@octavius.laptop.org>
+ <CAJuYYwQLUs5qb8NqtPf3=ytNHJ_VdnN8Z4yWwyk2+OTftdWFXw@mail.gmail.com>
+ <87393f3rkj.fsf@octavius.laptop.org>
+ <874nnu245s.fsf_-_@octavius.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1345758702.2061.6.camel@gitbox>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Prisk <linux@prisktech.co.nz>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "FlorianSchandinat@gmx.de" <FlorianSchandinat@gmx.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "vt8500-wm8505-linux-kernel@googlegroups.com" <vt8500-wm8505-linux-kernel@googl>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <874nnu245s.fsf_-_@octavius.laptop.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Ball <cjb@laptop.org>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, Rob Herring <robherring2@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, patches@linaro.org, Wolfram Sang <w.sang@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 23 August 2012, Tony Prisk wrote:
-> I was about to say that if Mike has any issues with the driver that I
-> can fix the patch conflict at the same time, but I just realised that
-> its more work than I originally thought :)
+On Wed, Aug 22, 2012 at 02:05:35PM -0400, Chris Ball wrote:
+> Signed-off-by: Chris Ball <cjb@laptop.org>
+
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
+
+Will move sdhci-esdhc-imx driver to this soon.
+
+Regards,
+Shawn
+
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> I was going to move the arch-vt8500 part of the clocks patch back into
-> the clocks patch - but that will just move the issue from arm-soc to
-> clocks because Mike's branch won't have the arch-vt8500 patch so the
-> patch will fail.
-
-But that's ok, because without the arch-v8500 part, nothing uses
-the vt8500-clock driver, so nothing breaks. You can introduce broken
-code in the meantime as long as it's impossible to enable and it will
-work afterwards.
-
-	Arnd
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 8a6811f..8e2e0ba 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -9,12 +9,17 @@ Interpreted by the OF core:
+>  Required properties:
+>  - bus-width: Number of data lines, can be <1>, <4>, or <8>
+>  
+> +Card detection:
+> +If no property below is supplied, standard SDHCI card detect is used.
+> +Only one of the properties in this section should be supplied:
+> +  - broken-cd: There is no card detection available; polling must be used.
+> +  - cd-gpios: Specify GPIOs for card detection, see gpio binding
+> +  - non-removable: non-removable slot (like eMMC); assume always present.
+> +
+>  Optional properties:
+> -- cd-gpios: Specify GPIOs for card detection, see gpio binding
+>  - wp-gpios: Specify GPIOs for write protection, see gpio binding
+>  - cd-inverted: when present, polarity on the cd gpio line is inverted
+>  - wp-inverted: when present, polarity on the wp gpio line is inverted
+> -- non-removable: non-removable slot (like eMMC)
+>  - max-frequency: maximum operating clock frequency
+>  
+>  Example:
+> -- 
+> Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+> One Laptop Per Child
