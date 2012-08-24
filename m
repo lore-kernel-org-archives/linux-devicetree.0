@@ -1,148 +1,40 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: Re: [PATCH 1/1] clk: add DT support for clock gating control
-Date: Fri, 24 Aug 2012 16:29:19 +1200
-Message-ID: <1345782559.20538.22.camel@gitbox>
-References: <1341767726-25630-1-git-send-email-sebastian.hesselbarth@googlemail.com>
-	 <20120824023135.4547.2534@nucleus>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to Devicetree ***
+Date: Fri, 24 Aug 2012 05:40:12 +0000
+Message-ID: <201208240540.12316.arnd@arndb.de>
+References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
+ <201208231322.23077.arnd@arndb.de> <1345758702.2061.6.camel@gitbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120824023135.4547.2534@nucleus>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@ti.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@googlemail.com>, Grant Likely <grant.likely@secretlab.ca>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1345758702.2061.6.camel@gitbox>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Prisk <linux@prisktech.co.nz>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "FlorianSchandinat@gmx.de" <FlorianSchandinat@gmx.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "vt8500-wm8505-linux-kernel@googlegroups.com" <vt8500-wm8505-linux-kernel@googl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2012-08-23 at 19:31 -0700, Mike Turquette wrote:
-> Quoting Sebastian Hesselbarth (2012-07-08 10:15:26)
-> > This patch adds support for using clock gates (clk-gate) from DT based
-> > on Rob Herrings DT clk binding support for 3.6.
-> > 
-> > It adds a helper function to clk-gate to allocate all resources required by
-> > a set of individual clock gates, i.e. register base address and lock. Each
-> > clock gate is described as a child of the clock-gating-control in DT and
-> > also created by the helper function.
-> > 
+On Thursday 23 August 2012, Tony Prisk wrote:
+> I was about to say that if Mike has any issues with the driver that I
+> can fix the patch conflict at the same time, but I just realised that
+> its more work than I originally thought :)
 > 
-> Hi Sebastian,
-> 
-> Thanks for submitting this.  I'd prefer for Rob or someone with a more vested
-> interest in DT to review your binding.  I have some comments on the code below.
-> 
-> <snip>
-> > diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-> > index 578465e..1e88907 100644
-> > --- a/drivers/clk/clk-gate.c
-> > +++ b/drivers/clk/clk-gate.c
-> > @@ -15,6 +15,9 @@
-> >  #include <linux/io.h>
-> >  #include <linux/err.h>
-> >  #include <linux/string.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_platform.h>
-> >  
-> >  /**
-> >   * DOC: basic gatable clock which can gate and ungate it's ouput
-> > @@ -148,3 +151,84 @@ struct clk *clk_register_gate(struct device *dev, const char *name,
-> >  
-> >         return clk;
-> >  }
-> > +
-> > +#ifdef CONFIG_OF
-> > +/**
-> > + * of_clock_gating_control_setup() - Setup function for clock gate control
-> > + *   This is a helper for using clk-gate from OF device tree. It allocates
-> > + *   a common lock for a base register and creates the individual clk-gates.
-> > + */
-> > +void __init of_clock_gating_control_setup(struct device_node *np)
-> > +{
-> > +       struct device_node *child;
-> > +       const char *pclk_name;
-> > +       void __iomem *base;
-> > +       spinlock_t *lockp;
-> > +       unsigned int rnum;
-> > +       u64 addr;
-> > +
-> > +       pclk_name = of_clk_get_parent_name(np, 0);
-> > +       if (!pclk_name) {
-> > +               pr_debug("%s: unable to get parent clock for %s\n",
-> > +                       __func__, np->full_name);
-> > +               return;
-> > +       }
-> > +
-> > +       lockp = kzalloc(sizeof(spinlock_t), GFP_KERNEL);
-> > +       if (!lockp) {
-> > +               pr_debug("%s: unable to allocate spinlock for %s\n",
-> > +                        __func__, np->full_name);
-> > +               return;
-> > +       }
-> > +
-> > +       spin_lock_init(lockp);
-> 
-> The spinlocks for the basic clock types have always been optional.  This
-> code should reflect that and not assume the spinlock.
-> 
-> Also I wonder if the assumption is true that a single spinlock
-> corresponding to a device_node is always the right thing for every
-> platform.  What about a 32-bit register that contains some gating bits
-> and a 3-bit wide field for a mux which we perform read-modify-write
-> operations on?
-> 
-> You'll have to pardon my DT ignorance.  My concerns above may be totally
-> crazy with respect to DT.
+> I was going to move the arch-vt8500 part of the clocks patch back into
+> the clocks patch - but that will just move the issue from arm-soc to
+> clocks because Mike's branch won't have the arch-vt8500 patch so the
+> patch will fail.
 
-This also requires you to split your gated clocks in seperate nodes by
-register if you don't want unrelated clocks locking each other out.
-Also, you need a method of 'sharing' the lock outside of the gated-clock
-for use by other clock types that may share the same register.
+But that's ok, because without the arch-v8500 part, nothing uses
+the vt8500-clock driver, so nothing breaks. You can introduce broken
+code in the meantime as long as it's impossible to enable and it will
+work afterwards.
 
-> 
-> > +       base = of_iomap(np, 0);
-> > +       rnum = sizeof(resource_size_t) * 8;
-> > +       addr = of_translate_address(np, of_get_property(np, "reg", NULL));
-> > +
-> > +       pr_debug("create clock gate control %s\n", np->full_name);
-> 
-> There are some inconsistent prints here.  How about leading this trace
-> with a __func__ like you do below for the error messages?
-> 
-> > +
-> > +       for_each_child_of_node(np, child) {
-> > +               struct clk *cg;
-> > +               const char *cg_name;
-> > +               const char *cg_pclk_name;
-> > +               u32 propval[2];
-> > +               unsigned int rbit;
-> > +
-> > +               if (of_property_read_u32_array(child, "reg", propval, 2)) {
-> > +                       pr_debug("%s: wrong #reg on %s\n",
-> > +                                __func__, child->full_name);
-> > +                       continue;
-> > +               }
-Are you assuming that all gated-clocks will be contained within a parent
-node with:
-#address-cells = <1>;
-#size-cells = <1>;
-with no other types of clocks? This generally isn't how people are
-writing their device tree files.
-
-Looking through the current dts files, the platforms that are using
-clocks to any real degree are using address=1, size=0.
-The only ones I see with 1/1 are only defining a fixed-clock and don't
-use the reg property anyway so could just as well be 1/0.
-
-It might be better to pass the bit field as a separate property rather
-than requiring people change their reg property to suit.
-
-myclock {
-	reg = <0x0120>;
-	enable-bit = <22>;
-};
-
-
-Regards
-
-Tony Prisk
-
+	Arnd
