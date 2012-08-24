@@ -1,16 +1,18 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] [v2] netdev/phy: add MDIO bus multiplexer driven by a
- memory-mapped device
-Date: Thu, 23 Aug 2012 20:46:30 -0600
-Message-ID: <5036EB06.7060807@wwwdotorg.org>
-References: <1345751071-23128-1-git-send-email-timur@freescale.com>
- <5036B4BD.70208@wwwdotorg.org>
- <6AE080B68D46FC4BA2D2769E68D765B7059D1DC7@039-SN2MPN1-022.039d.mgd.msft.net>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/7] mfd: add imx syscon driver based on regmap
+Date: Fri, 24 Aug 2012 10:28:09 +0800
+Message-ID: <20120824022807.GA5822@shlinux2.ap.freescale.net>
+References: <1345619928-15446-1-git-send-email-b29396@freescale.com>
+ <1345619928-15446-2-git-send-email-b29396@freescale.com>
+ <20120822160241.GR7995@opensource.wolfsonmicro.com>
+ <20120823072629.GG10057@shlinux2.ap.freescale.net>
+ <20120823110647.GU7995@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <6AE080B68D46FC4BA2D2769E68D765B7059D1DC7-RL0Hj/+nBVC81RJBUSuqCa4g8xLGJsHaLnY5E4hWTkheoWH0uzbU5w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120823110647.GU7995-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,51 +23,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Fleming Andy-AFLEMING <afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2012 06:28 PM, Tabi Timur-B04825 wrote:
-> Stephen Warren wrote:
->> On 08/23/2012 01:44 PM, Timur Tabi wrote:
->>> Add support for an MDIO bus multiplexer controlled by a simple memory-mapped
->>> device, like an FPGA.  The device must be memory-mapped and contain only
->>> 8-bit registers (which keeps things simple).
->>
->>> +++ b/Documentation/devicetree/bindings/net/mdio-mux-mmioreg.txt
->>
->>> +	/* The FPGA node */
->>> +	fpga: board-control@3,0 {
->>> +		compatible = "fsl,p5020ds-fpga", "fsl,fpga-ngpixis";
->>> +		reg = <3 0 0x30>;
->>
->> Why not add the following here:
->>
->> 	#address-cells = <1>:
->> 	#size-cells = <1>;
->> 	ranges = <...>;
+On Thu, Aug 23, 2012 at 07:06:47PM +0800, Mark Brown wrote:
+> On Thu, Aug 23, 2012 at 03:26:30PM +0800, Dong Aisheng wrote:
+> > On Thu, Aug 23, 2012 at 12:02:41AM +0800, Mark Brown wrote:
 > 
-> I forgot to add them in the txt file.  They are in the real device tree.
+> > > It'd be good to provide a way of retrieving the regmap so that drivers
+> > > for subsystems with generic regmap code could use the framework features
+> > > (regulator is one example that I just mentioned in my other mail).
 > 
->>
->>> +
->>> +		mdio-mux-emi2 {
->>> +			compatible = "mdio-mux-mmioreg", "mdio-mux";
->>> +			mdio-parent-bus = <&xmdio0>;
->>> +			#address-cells = <1>;
->>> +			#size-cells = <0>;
->>> +			reg = <9>; // BRDCFG1
->>
->> Then, that'd have to be <9 1>;
+> > Do you mean something like:
+> > regmap = syscon_regmap_dev_lookup(np, "fsl,anatop");
+> > regmap_write(regmap, reg, val);
 > 
-> Actually, I had #size-cells = <0>.
+> > Then drivers can use generic regmap framework features rather than depend
+> > on what imx-syscon implemented, is that correct?
+> 
+> Yes, this is mainly for cases where the subsystem has helper functions
+> that can work with regmap.
 
-I think that if you have #size-cells=<0>, then you'll see the following
-error message when attempting to translate the address into the parent's
-address space:
+Okay, then imx-syscon only implements regmap register mechanism and regmap
+lookup mechanism, for accessors, client driver can directly use the generic
+regmap API defined in include/linux/regmap.h.
 
-prom_parse: Bad cell count for /board-control@3,0/mdio-mux-emi2
+Then it looks to me the driver is more like a generic feature which may also be
+needed for other SoCs, IIRC, Tegra ahb and ux500 PRCMU,
 
-I fixed that error for cases where actual address translation isn't
-required (i.e. coming up with the platform device name), but IIRC it'll
-still trigger if you actually want to translate the address.
+Do you think if we should implement it in a more generic way at first?
+e.g, drop 'imx-' prefix first.
+
+Linus,
+You're the first guy to raise the idea that we could implement a syscon
+framework to generic register access, what's your comment on this?
+
+Regards
+Dong Aisheng
