@@ -1,81 +1,49 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] [v3] netdev/phy: add MDIO bus multiplexer driven by a
- memory-mapped device
-Date: Fri, 24 Aug 2012 14:04:51 -0600
-Message-ID: <5037DE63.5010701@wwwdotorg.org>
-References: <1345835453-8611-1-git-send-email-timur@freescale.com> <5037DB43.60704@wwwdotorg.org> <5037DD60.8090206@freescale.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH-V2] arm/dts: AM33XX: Set the default status of module
+ to "disabled" state
+Date: Fri, 24 Aug 2012 13:07:36 -0700
+Message-ID: <20120824200736.GX11011@atomide.com>
+References: <1345029805-27987-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5037DD60.8090206@freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: Timur Tabi <timur@freescale.com>
-Cc: Andy Fleming <afleming@freescale.com>, David Miller <davem@davemloft.net>, ddaney.cavm@gmail.com, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345029805-27987-1-git-send-email-hvaibhav-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/24/2012 02:00 PM, Timur Tabi wrote:
-> Stephen Warren wrote:
+* Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org> [120815 04:24]:
+> Ideally in common SoC dtsi file should set all modules
+> to "disabled" state and it should get enabled in respective
+> EVM/Board dts file as per usage.
 > 
->>> +This is a special case of a MDIO bus multiplexer.  A memory-mapped device,
->>> +like an FPGA, is used to control which child bus is connected.  The mdio-mux
->>> +node must be a child of the memory-mapped device.  The driver currently only
->>> +supports devices with eight-bit registers.
->>
->> That last sentence seems like a property of the driver, not the binding;
->> I could easily anticipate allowing the size to be 1 or 2 or 4, and a
->> driver adapter to that in the future.
+> This patch sets default status of all modules to "disabled"
+> state in am33xx.dtsi file. Currently there are no modules
+> supported as part of Bone and EVM dts support, so care
+> to add entry "status = "okay"" while adding support for any
+> module.
 > 
-> True, but I couldn't think of a better place to mention this.  Adding
-> support for multi-byte registers also requires handling the endianness of
-> those registers.  I have that problem with the mdio-mux-gpio driver.  That
-> driver assumes that the GPIO bits are numbered in little-endian order, so
-> my device tree on my big-endian CPU (PowerPC) lists the GPIO pins in
-> reverse order.
+> Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes from V1:
+> 	- Fixed indentation issue caused due to extra spaces.
 
-True. One could always simply assume that the registers are native
-endian by default, and then if ever they need not to be, add optional
-properties to the binding.
+Thanks applying into devel-dt branch.
 
->> Otherwise, this binding looks great now.
-> 
-> Do you still want me to scrub any references to the register size
-> requirement from the document?
-
-I don't feel too strongly about it. It seems cleaner to, but not a big deal.
-
->>> +++ b/drivers/net/phy/mdio-mux-mmioreg.c
->>
->>> +static int mdio_mux_mmioreg_switch_fn(int current_child, int desired_child,
->>> +				      void *data)
->>> +{
->>> +	struct mdio_mux_mmioreg_state *s = data;
->>> +
->>> +	if (current_child ^ desired_child) {
->>> +		void *p = ioremap(s->phys, 1);
->>> +		uint8_t x, y;
->>> +
->>> +		if (!p)
->>> +			return -ENOMEM;
->>
->> Why not map it during probe?
-> 
-> I thought about that, but I generally don't like mappings that exist for
-> all eternity even though they're rarely used.  Once the interface is up,
-> we don't expect any bus muxing to occur.
-> 
->>
->>> +		x = ioread8(p);
->>> +		y = (x & ~s->mask) | desired_child;
->>> +		if (x != y) {
->>
->> Isn't that always true, given if (current_child ^ desired_child) above?
-> 
-> If current_child == -1, but the bus is already muxed properly, then
-> there's no point in setting it.  Do you want me to remove the test, or add
-> a comment?
-
-Ah right, I suppose that is true. It almost doesn't seem worth writing
-the code to ignore that special case, since presumably the register
-write is idempotent, but since it's already there you can feel free not
-to rip it out!
+Tony
