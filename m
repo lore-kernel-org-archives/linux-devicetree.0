@@ -1,53 +1,51 @@
-From: Kevin Cernekee <cernekee@gmail.com>
-Subject: Re: [PATCH V5] mtd: m25p80: Make fast read configurable via DT
-Date: Sat, 25 Aug 2012 15:06:46 -0700
-Message-ID: <CAJiQ=7BCaV7jx9yjJiEQ8RUuqHdUV0x7_gxZM97KKytVVS3ZUA@mail.gmail.com>
-References: <1345923416-9293-1-git-send-email-marex@denx.de>
- <CAJiQ=7BAH_87jrDCG=Jbw7ezsezFWrBv+eUkoH5jGmeV9tQiYQ@mail.gmail.com>
- <201208252240.54932.marex@denx.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH REPOST] dtc: integrate gpp
+Date: Sat, 25 Aug 2012 16:26:01 -0600
+Message-ID: <d30e7f01-ead2-4b37-9bf9-ac4b5c18f936@email.android.com>
+References: <1345608667-16494-1-git-send-email-swarren@wwwdotorg.org>
+ <20120825084523.GD6060@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <201208252240.54932.marex@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marex@denx.de>
-Cc: David Woodhouse <david.woodhouse@intel.com>, dedekind1@gmail.com, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-mtd@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120825084523.GD6060-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 25, 2012 at 1:40 PM, Marek Vasut <marex@denx.de> wrote:
->> Are there any modern SPI flash parts that can't handle FAST_READ, or
->> is this mostly for compatibility with legacy systems?
+
+
+Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+
+>On 22:11 Tue 21 Aug     , Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> 
+>> I figured the easiest way to get named constants into dtc would be to
+>> re-use an existing C pre-processor implemntation. Surprisingly, I
+>could
+>> not find many /good/ possibilities for this. I eventually found one
+>called
+>> gpp. This patch is an extremely quick-and-dirty integration of gpp
+>into
+>> dtc in order to solicit some feedback. What do people think of this
+>> approach in general?
 >
-> We have to support all possibilities, not only "modern systems" .
+>I'm not sure it's rely the right way
+>
+>I does the support but we may just use gcc for as it's done for linker
+>script
+>but I will agree that with this dtc is standalone
 
-If the !FAST_READ option only exists to support a tiny number of rare,
-ancient flash chips, then it's probably worth pointing that out to the
-user in the help text.  Similar to "most users will say 'N' here" in
-Kconfig.  Or the help text for CONFIG_MTD_NAND_MUSEUM_IDS.
-
-> Good, but I don't see it supported in the driver, how is this different from
-> MX25L256E?
-
-> They can be added as additional DT props, that should be easy.
-
-It's easy to add new features to m25p80, but it's hard to change DT
-properties once they are widely used.  They will be baked into
-bootloader images and could be utilized by non-Linux operating
-systems.
-
-If we already know today that a boolean property is insufficient for
-current generations of SPI flash chips, it would not be a good thing
-to write it in stone now and be forced to hack around it later.
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+A C-compiler's pre-processor gets confused by property names starting with #, which gpp at least can be configured not to (outside column 1 at least)
+-- 
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
