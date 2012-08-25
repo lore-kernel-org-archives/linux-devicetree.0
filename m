@@ -1,165 +1,53 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] gpio: samsung: add devicetree init for s3c24xx arches
-Date: Sat, 25 Aug 2012 23:53:59 +0200
-Message-ID: <201208252353.59345.heiko@sntech.de>
+From: Kevin Cernekee <cernekee@gmail.com>
+Subject: Re: [PATCH V5] mtd: m25p80: Make fast read configurable via DT
+Date: Sat, 25 Aug 2012 15:06:46 -0700
+Message-ID: <CAJiQ=7BCaV7jx9yjJiEQ8RUuqHdUV0x7_gxZM97KKytVVS3ZUA@mail.gmail.com>
+References: <1345923416-9293-1-git-send-email-marex@denx.de>
+ <CAJiQ=7BAH_87jrDCG=Jbw7ezsezFWrBv+eUkoH5jGmeV9tQiYQ@mail.gmail.com>
+ <201208252240.54932.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <201208252240.54932.marex@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>
+Cc: David Woodhouse <david.woodhouse@intel.com>, dedekind1@gmail.com, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Until now the Exynos-SoC was the only Samsung-SoC supporting the GPIOs
-via the device tree. This patch implements dt-support for the
-s3c24xx arches.
+On Sat, Aug 25, 2012 at 1:40 PM, Marek Vasut <marex@denx.de> wrote:
+>> Are there any modern SPI flash parts that can't handle FAST_READ, or
+>> is this mostly for compatibility with legacy systems?
+>
+> We have to support all possibilities, not only "modern systems" .
 
-The controllers contain only 3 cells, as the underlying gpio controller
-does not support controlling the drive strength on a gpio level.
+If the !FAST_READ option only exists to support a tiny number of rare,
+ancient flash chips, then it's probably worth pointing that out to the
+user in the help text.  Similar to "most users will say 'N' here" in
+Kconfig.  Or the help text for CONFIG_MTD_NAND_MUSEUM_IDS.
 
-Tested with the gpio-keys driver on a s3c2416 based machine.
+> Good, but I don't see it supported in the driver, how is this different from
+> MX25L256E?
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio-samsung.txt      |   38 ++++++++++++
- drivers/gpio/gpio-samsung.c                        |   63 ++++++++++++++++++++
- 2 files changed, 101 insertions(+), 0 deletions(-)
+> They can be added as additional DT props, that should be easy.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-index 5375625..ce6a7d4 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-@@ -39,3 +39,41 @@ Example:
- 		#gpio-cells = <4>;
- 		gpio-controller;
- 	};
-+
-+
-+Samsung S3C24XX GPIO Controller
-+
-+Required properties:
-+- compatible: Compatible property value should be "samsung,s3c24xx-gpio".
-+
-+- reg: Physical base address of the controller and length of memory mapped
-+  region.
-+
-+- #gpio-cells: Should be 3. The syntax of the gpio specifier used by client nodes
-+  should be the following with values derived from the SoC user manual.
-+     <[phandle of the gpio controller node]
-+      [pin number within the gpio controller]
-+      [mux function]
-+      [flags and pull up/down]
-+
-+  Values for gpio specifier:
-+  - Pin number: depending on the controller a number from 0 up to 15.
-+  - Flags and Pull Up/Down: 0 - Pull Up/Down Disabled.
-+                            1 - Pull Down Enabled.
-+                            3 - Pull Up Enabled.
-+          Bit 16 (0x00010000) - Input is active low.
-+
-+- gpio-controller: Specifies that the node is a gpio controller.
-+- #address-cells: should be 1.
-+- #size-cells: should be 1.
-+
-+Example:
-+
-+	gpa: gpio-controller@56000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "samsung,s3c24xx-gpio";
-+		reg = <0x56000000 0x10>;
-+		#gpio-cells = <3>;
-+		gpio-controller;
-+	};
-diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
-index a150d2e..80a2817 100644
---- a/drivers/gpio/gpio-samsung.c
-+++ b/drivers/gpio/gpio-samsung.c
-@@ -938,6 +938,67 @@ static void __init samsung_gpiolib_add(struct samsung_gpio_chip *chip)
- 		s3c_gpiolib_track(chip);
- }
- 
-+#if defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF)
-+static int s3c24xx_gpio_xlate(struct gpio_chip *gc,
-+			const struct of_phandle_args *gpiospec, u32 *flags)
-+{
-+	unsigned int pin;
-+
-+	if (WARN_ON(gc->of_gpio_n_cells < 3))
-+		return -EINVAL;
-+
-+	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
-+		return -EINVAL;
-+
-+	if (gpiospec->args[0] > gc->ngpio)
-+		return -EINVAL;
-+
-+	pin = gc->base + gpiospec->args[0];
-+
-+	if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(gpiospec->args[1])))
-+		pr_warn("gpio_xlate: failed to set pin function\n");
-+	if (s3c_gpio_setpull(pin, gpiospec->args[2] & 0xffff))
-+		pr_warn("gpio_xlate: failed to set pin pull up/down\n");
-+
-+	if (flags)
-+		*flags = gpiospec->args[2] >> 16;
-+
-+	return gpiospec->args[0];
-+}
-+
-+static const struct of_device_id s3c24xx_gpio_dt_match[] __initdata = {
-+	{ .compatible = "samsung,s3c24xx-gpio", },
-+	{}
-+};
-+
-+static __init void s3c24xx_gpiolib_attach_ofnode(struct samsung_gpio_chip *chip,
-+						 u64 base, u64 offset)
-+{
-+	struct gpio_chip *gc =  &chip->chip;
-+	u64 address;
-+
-+	if (!of_have_populated_dt())
-+		return;
-+
-+	address = chip->base ? base + ((u32)chip->base & 0xfff) : base + offset;
-+	gc->of_node = of_find_matching_node_by_address(NULL,
-+			s3c24xx_gpio_dt_match, address);
-+	if (!gc->of_node) {
-+		pr_info("gpio: device tree node not found for gpio controller"
-+			" with base address %08llx\n", address);
-+		return;
-+	}
-+	gc->of_gpio_n_cells = 3;
-+	gc->of_xlate = s3c24xx_gpio_xlate;
-+}
-+#elif defined(CONFIG_PLAT_S3C24XX)
-+static __init void s3c24xx_gpiolib_attach_ofnode(struct samsung_gpio_chip *chip,
-+						 u64 base, u64 offset)
-+{
-+	return;
-+}
-+#endif /* defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF) */
-+
- static void __init s3c24xx_gpiolib_add_chips(struct samsung_gpio_chip *chip,
- 					     int nr_chips, void __iomem *base)
- {
-@@ -962,6 +1023,8 @@ static void __init s3c24xx_gpiolib_add_chips(struct samsung_gpio_chip *chip,
- 			gc->direction_output = samsung_gpiolib_2bit_output;
- 
- 		samsung_gpiolib_add(chip);
-+
-+		s3c24xx_gpiolib_attach_ofnode(chip, S3C24XX_PA_GPIO, i * 0x10);
- 	}
- }
- 
--- 
-1.7.2.3
+It's easy to add new features to m25p80, but it's hard to change DT
+properties once they are widely used.  They will be baked into
+bootloader images and could be utilized by non-Linux operating
+systems.
+
+If we already know today that a boolean property is insufficient for
+current generations of SPI flash chips, it would not be a good thing
+to write it in stone now and be forced to hack around it later.
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
