@@ -1,48 +1,45 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 1/2] mfd: dt: tps6586x: Add power off control
-Date: Fri, 24 Aug 2012 21:34:26 -0600
-Message-ID: <503847C2.3080400@wwwdotorg.org>
-References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com> <1345424876-4365-2-git-send-email-bilhuang@nvidia.com> <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de> <A7051F87A141B744BCAF487D48E5B3BDF5BA982847@HKMAIL02.nvidia.com> <A7051F87A141B744BCAF487D48E5B3BDF5BA98284B@HKMAIL02.nvidia.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 01/11] pinctrl: mvebu: pinctrl driver core
+Date: Sat, 25 Aug 2012 10:22:31 +0200
+Message-ID: <20120825082231.GG9886@lunn.ch>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1344689809-6223-2-git-send-email-sebastian.hesselbarth@gmail.com>
+ <CACRpkda0wUW4E3y=ucGRFu5fwwyFWo2dc=4qBaH6CFSOW2ZL_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <A7051F87A141B744BCAF487D48E5B3BDF5BA98284B@HKMAIL02.nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bill Huang <bilhuang@nvidia.com>
-Cc: 'Thierry Reding' <thierry.reding@avionic-design.de>, "'sameo@linux.intel.com'" <sameo@linux.intel.com>, "'grant.likely@secretlab.ca'" <grant.likely@secretlab.ca>, "'rob.herring@calxeda.com'" <rob.herring@calxeda.com>, "'rob@landley.net'" <rob@landley.net>, "'broonie@opensource.wolfsonmicro.com'" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Xin Xie <xxie@nvidia.com>, "'lrg@slimlogic.co.uk'" <lrg@slimlogic.co.uk>, "'jhovold@gmail.com'" <jhovold@gmail.com>, "'kyle.manna@fuel7.com'" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "'devicetree-discuss@lists.ozlabs.org'" <devicetree-discuss@lists.ozlabs.org>, "'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkda0wUW4E3y=ucGRFu5fwwyFWo2dc=4qBaH6CFSOW2ZL_A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/24/2012 06:36 PM, Bill Huang wrote:
->>> On Sun, Aug 19, 2012 at 06:07:55PM -0700, Bill Huang wrote:
->>>> Add DT property "ti,system-power-controller" telling whether or not
->>>> this pmic is in charge of controlling the system power, so the power
->>>> off routine can be hooked up to system call "pm_power_off".
-...
->>> I've seen the following while trying this patch applied on top of next-20120817:
->>>
->>> [   40.581151] Power down.
->>> [   41.583160] ------------[ cut here ]------------
->>> [   41.587784] WARNING: at /home/thierry.reding/src/kernel/linux-ipmp.git/drivers/i2c/busses/i2c-
->>> tegra.c:525 tegra_i2c_xfer+0x21c/0x29c()
-...
->> Thanks Thierry, I can repro this on Tegra20 inconsistently and found, if current cpu is not cpu0 when
->> doing "machine_shutdown" (it will call "smp_send_stop"), i2c controller will failed to do any
->> transaction (looks like gic interrupt will be disabled), I'll debug further to find out the root cause.
->>
->> By the way, Tegra30 is good since it will always be cpu0 when doing "machine_shutdown", I still don't
->> know why it makes the difference against Tegra20 since I'm not familiar with those cpu stuffs and what
->> make it behave differently, I'll study a bit, thanks.
->
-> I've sent the shutdown issue for discussion in ARM list: Shutdown problem in SMP system happened on Tegra20.
-> The cause of the i2c timeout is pretty clear now and it is not directly related to this patch, so is this
-> patch series acceptable? Any thoughts or comment? Thanks.
+On Mon, Aug 20, 2012 at 11:09:51AM +0200, Linus Walleij wrote:
+> On Sat, Aug 11, 2012 at 2:56 PM, Sebastian Hesselbarth
+> <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > This patch adds a pinctrl driver core for Marvell SoCs plus DT
+> > binding documentation. This core driver will be used by SoC family
+> > specific drivers, i.e. Armada XP, Armada 370, Dove, Kirkwood, aso.
+> 
+> Thanks for dealing with this, much appreaciated!
+> 
+> Are you taking this patch series through some Marvell tree or do you want
+> me to carry it in the pinctrl tree?
 
-I tend to agree; power off never worked without this patch, and
-sometimes does with the patch, due to nothing wrong with this patch.
+Hi Linus
 
-Bill, please do follow up on getting the underlying Tegra issue solved
-somehow though. IIRC, Joseph Lo or Prashant has a patch which enabled
-the config option that Russell mentioned, so the fix may just be to wait
-for that patch to get finalized, but please double-check that solves it.
-Thanks!
+We can carry it thought the Marvell tree. 
+
+   Andrew
