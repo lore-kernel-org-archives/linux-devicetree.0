@@ -1,48 +1,48 @@
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv4 0/9] *** ARM: Update arch-vt8500 to Devicetree ***
-Date: Fri, 24 Aug 2012 21:32:02 -0600
-Message-ID: <50384732.9060304@nvidia.com>
-References: <1345707346-9035-1-git-send-email-linux@prisktech.co.nz>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 1/2] mfd: dt: tps6586x: Add power off control
+Date: Fri, 24 Aug 2012 21:34:26 -0600
+Message-ID: <503847C2.3080400@wwwdotorg.org>
+References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com> <1345424876-4365-2-git-send-email-bilhuang@nvidia.com> <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de> <A7051F87A141B744BCAF487D48E5B3BDF5BA982847@HKMAIL02.nvidia.com> <A7051F87A141B744BCAF487D48E5B3BDF5BA98284B@HKMAIL02.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345707346-9035-1-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <A7051F87A141B744BCAF487D48E5B3BDF5BA98284B@HKMAIL02.nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bill Huang <bilhuang@nvidia.com>
+Cc: 'Thierry Reding' <thierry.reding@avionic-design.de>, "'sameo@linux.intel.com'" <sameo@linux.intel.com>, "'grant.likely@secretlab.ca'" <grant.likely@secretlab.ca>, "'rob.herring@calxeda.com'" <rob.herring@calxeda.com>, "'rob@landley.net'" <rob@landley.net>, "'broonie@opensource.wolfsonmicro.com'" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Xin Xie <xxie@nvidia.com>, "'lrg@slimlogic.co.uk'" <lrg@slimlogic.co.uk>, "'jhovold@gmail.com'" <jhovold@gmail.com>, "'kyle.manna@fuel7.com'" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "'devicetree-discuss@lists.ozlabs.org'" <devicetree-discuss@lists.ozlabs.org>, "'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2012 01:35 AM, Tony Prisk wrote:
-> This patchset updates arch-vt8500 to devicetree and removes all the old-style
-> code. Support for WM8650 has also been added.
-> 
-> Example dts/dtsi files are given for the three currently supported models.
-> 
-> Major changes:
-> 
-> GPIO code has been converted to a platform_device and rewritten as WM8505
-> support was broken. Add support for WM8650 gpio controller.
-> 
-> UHCI support was missing. Added this as a generic non-pci uhci controller as
-> it doesn't require anything special. Should be usable by any system that doesn't
-> have special requirements to get the UHCI controller working.
-> 
-> Framebuffer code patched to support WM8650. The bindings for this are of concern
-> but there doesn't seem to be a formalized binding yet. This patch is based off
-> Sascha Hauer's current patch on the dri-devel mailing list and should be easily
-> patched out when its finalized.
-> 
-> Patchset based on Arnd's arm-soc/for-next branch.
+On 08/24/2012 06:36 PM, Bill Huang wrote:
+>>> On Sun, Aug 19, 2012 at 06:07:55PM -0700, Bill Huang wrote:
+>>>> Add DT property "ti,system-power-controller" telling whether or not
+>>>> this pmic is in charge of controlling the system power, so the power
+>>>> off routine can be hooked up to system call "pm_power_off".
+...
+>>> I've seen the following while trying this patch applied on top of next-20120817:
+>>>
+>>> [   40.581151] Power down.
+>>> [   41.583160] ------------[ cut here ]------------
+>>> [   41.587784] WARNING: at /home/thierry.reding/src/kernel/linux-ipmp.git/drivers/i2c/busses/i2c-
+>>> tegra.c:525 tegra_i2c_xfer+0x21c/0x29c()
+...
+>> Thanks Thierry, I can repro this on Tegra20 inconsistently and found, if current cpu is not cpu0 when
+>> doing "machine_shutdown" (it will call "smp_send_stop"), i2c controller will failed to do any
+>> transaction (looks like gic interrupt will be disabled), I'll debug further to find out the root cause.
+>>
+>> By the way, Tegra30 is good since it will always be cpu0 when doing "machine_shutdown", I still don't
+>> know why it makes the difference against Tegra20 since I'm not familiar with those cpu stuffs and what
+>> make it behave differently, I'll study a bit, thanks.
+>
+> I've sent the shutdown issue for discussion in ARM list: Shutdown problem in SMP system happened on Tegra20.
+> The cause of the i2c timeout is pretty clear now and it is not directly related to this patch, so is this
+> patch series acceptable? Any thoughts or comment? Thanks.
 
-I believe all the issues I pointed out are fixed in this series. I'm not
-sure I reviewed it in enough detail to ack it, but I'm fine with what I saw.
+I tend to agree; power off never worked without this patch, and
+sometimes does with the patch, due to nothing wrong with this patch.
+
+Bill, please do follow up on getting the underlying Tegra issue solved
+somehow though. IIRC, Joseph Lo or Prashant has a patch which enabled
+the config option that Russell mentioned, so the fix may just be to wait
+for that patch to get finalized, but please double-check that solves it.
+Thanks!
