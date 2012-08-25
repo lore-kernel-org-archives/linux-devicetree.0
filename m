@@ -1,50 +1,53 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4] mtd: m25p80: Make fast read configurable via DT
-Date: Sat, 25 Aug 2012 16:06:48 +0200
-Message-ID: <201208251606.48789.marex@denx.de>
-References: <1345729313-10831-1-git-send-email-marex@denx.de>
- <1345899551.1815.10.camel@kyv>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Sat, 25 Aug 2012 17:53:50 +0200
+Message-ID: <5038F50E.7030807@gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com> <5035445B.6000500@wwwdotorg.org> <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com> <50366E44.4030606@wwwdotorg.org> <50369305.6050304@gmail.com> <50369FEE.8000003@wwwdotorg.org> <5036B639.20608@gmail.com> <5036F651.4020700@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345899551.1815.10.camel@kyv>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5036F651.4020700@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Artem Bityutskiy,
+On 08/24/2012 05:34 AM, Stephen Warren wrote:
+> On 08/23/2012 05:01 PM, Sebastian Hesselbarth wrote:
+>> So possible, valid combinations for uart1 would be:
+>> (a) mpp_uart1;
+>> (b) mpp_uart1, mpp2, mpp3;
+>> (c) mpp_uart1, mpp21, mpp22;
+>> (d) mpp_uart1, mpp2, mpp22;
+>> (e) mpp_uart1, mpp21, mpp3;
+>>  [...]
+> In the example above, there is a single function named "uart1". If this
+> was all the HW supported, I'd expect the driver's
+> pinmux_ops.get_functions_count() to return 1,
+> pinmux_ops.get_function_name(0) to return "uart1", and
+> pinmux_ops.get_function_name(n>0) to return an error.
+>
+> In practice, I assume there are many other options that can be muxed
+> onto mpp2/3/21/22/uart1, so they'd be included in the list as well.
+>
+> I don't expect any scanning, no. I'd expect that tables provided by the
+> SoC-specific drivers to be:
+>
+> * A table of pins
+> * A table of groups
+> * A table of functions
+>
+> No scanning involved.
 
-> On Thu, 2012-08-23 at 15:41 +0200, Marek Vasut wrote:
-> > Add DT property "m25p,fast-read" that signalises the particular
-> > chip supports "fast read" opcode.
-> > 
-> > Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> > Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > Cc: David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> 
-> Does not compile if (I think) OF is not enabled.
-> 
-> drivers/mtd/devices/m25p80.c: In function 'm25p_probe':
-> drivers/mtd/devices/m25p80.c:920:2: error: implicit declaration of function
-> 'of_property_read_bool' [-Werror=implicit-function-declaration] cc1: some
-> warnings being treated as errors
-> make[4]: *** [drivers/mtd/devices/m25p80.o] Error 1
+Stephen,
 
-Argh, of course. Wrapping that part in ifdef CONFIG_OF should do the trick. So 
-much for having CONFIG_OF on all the time.
+now I do understand but in the current driver we pass pingroups associated
+with the available functions, i.e. "mpp2" with "uart1", "uart2", "sdio0", aso.
+IMHO for the above three functions it would be better to have functions associated
+with the corresponding groups, i.e. "uart1" with "mpp_uart1", "mpp2", "mpp3", aso.
 
-Thanks!
+That would require some larger rework of the driver and therefore I just
+wanted to make sure, that I hit your expectations/explanations.
 
-Best regards,
-Marek Vasut
+Sebastian
