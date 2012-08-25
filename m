@@ -1,14 +1,11 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] usb: otg: add device tree support to otg library
-Date: Sat, 25 Aug 2012 20:13:58 +0200
-Message-ID: <503915E6.2020508@pengutronix.de>
-References: <1345742574-19088-1-git-send-email-mkl@pengutronix.de>
- <1345742574-19088-3-git-send-email-mkl@pengutronix.de>
- <20120824064628.GP4011@b20223-02.ap.freescale.net>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH V5] mtd: m25p80: Make fast read configurable via DT
+Date: Sat, 25 Aug 2012 21:36:56 +0200
+Message-ID: <1345923416-9293-1-git-send-email-marex@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2986984805152433020=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120824064628.GP4011-iWYTGMXpHj9ITqJhDdzsOjpauB2SiJktrE5yTffgRl4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,302 +16,165 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Discussions <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---===============2986984805152433020==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig061ADC92BB08045D277A8AAC"
+Add DT property "m25p,fast-read" that signalises the particular
+chip supports "fast read" opcode.
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig061ADC92BB08045D277A8AAC
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mtd/m25p80.txt |   29 ++++++++++++++++++
+ drivers/mtd/devices/m25p80.c                     |   34 +++++++++++++---------
+ 2 files changed, 50 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/m25p80.txt
 
-On 08/24/2012 08:46 AM, Richard Zhao wrote:
-> Did you try both enableing and disabing DT pass build?
+V2: Add documentation for the DT property.
+V3: Use of_property_get_bool() instead of of_find_property().
+V4: Adjust the documentation's "compatible:" section, make it not
+    Linux-specific, but keep the reference to Linux's list of
+    supported devices. Also, use the default name, spansion,m25p80
+    in the example.
+V5: Enclose of_property_read_bool() into CONFIG_OF for systems that do not
+    use OF / Device Tree .
 
-Impossible on mx28 :) The platform always selects USE_DT, but on imx it
-builds without DT support.
-
-> On Thu, Aug 23, 2012 at 07:22:53PM +0200, Marc Kleine-Budde wrote:
->> From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>
->> This patch adds an API to get usb phy by passing a device node phandle=
- value.
->> The new added devm_usb_get_phy_by_phandle() function will return a poi=
-nter to
->> the phy on success, -EPROBE_DEFER if there is a device_node for the ph=
-andle,
->> but the phy has not been added, or a ERR_PTR() otherwise.
->>
->> Since it's possible to obtain a phy by phandle, the checks in usb_add_=
-phy() for
->> a valid phy type is removed (now it's just a debug message if a user t=
-ries to
->> add a phy with undefined type). This also allows to add multiple phys =
-of same
->> type.
->>
->> Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>  drivers/usb/otg/otg.c   |   96 ++++++++++++++++++++++++++++++++++++++=
-++-------
->>  include/linux/usb/otg.h |    8 ++++
->>  2 files changed, 90 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/usb/otg/otg.c b/drivers/usb/otg/otg.c
->> index 98c430e..23618de 100644
->> --- a/drivers/usb/otg/otg.c
->> +++ b/drivers/usb/otg/otg.c
->> @@ -15,6 +15,7 @@
->>  #include <linux/device.h>
->>  #include <linux/module.h>
->>  #include <linux/slab.h>
->> +#include <linux/of.h>
->> =20
->>  #include <linux/usb/otg.h>
->> =20
->> @@ -36,6 +37,21 @@ static struct usb_phy *__usb_find_phy(struct list_h=
-ead *list,
->>  	return ERR_PTR(-ENODEV);
->>  }
->> =20
->> +static struct usb_phy *__of_usb_find_phy(struct list_head *list,
->> +	struct device_node *node)
->> +{
->> +	struct usb_phy  *phy;
->> +
->> +	list_for_each_entry(phy, list, head) {
->> +		if (node !=3D phy->dev->of_node)
->> +			continue;
->> +
->> +		return phy;
->> +	}
->> +
->> +	return ERR_PTR(-ENODEV);
->> +}
->> +
->>  static void devm_usb_phy_release(struct device *dev, void *res)
->>  {
->>  	struct usb_phy *phy =3D *(struct usb_phy **)res;
->> @@ -112,6 +128,66 @@ err0:
->>  EXPORT_SYMBOL(usb_get_phy);
->> =20
->>  /**
->> + * devm_usb_get_phy_by_phandle - find the USB PHY by phandle
->> + * @dev - device that requests this phy
->> + * @phandle - name of the property holding the phy phandle value
->> + *
->> + * Returns the phy driver associated with the given phandle value,
->> + * after getting a refcount to it, -ENODEV if there is no such phy or=
-
->> + * -EPROBE_DEFER if there is a phandle to the phy, but the device is
->> + * not yet loaded. While at that, it also associates the device with
->> + * the phy using devres. On driver detach, release function is invoke=
-d
->> + * on the devres data, then, devres data is freed.
->> + *
->> + * For use by USB host and peripheral drivers.
->> + */
->> +struct usb_phy *devm_usb_get_phy_by_phandle(struct device *dev,
->> +	const char *phandle)
-
-> Since it's already a common function, we may give phandler property
-> a common name too. So we will not need phandle argument.
-> Please also don't forget to document the devm_xxx and dt binding.
-
-Good point. This is the device tree snippet from imx28.dtsi:
-
->         usb0: usb@80080000 {
->                 compatible =3D "fsl,imx28-usb", "fsl,imx27-usb";
->                 reg =3D <0x80080000 0x10000>;
->                 interrupts =3D <93>;
->                 fsl,usbphy =3D <&usbphy0>;
-                  ^^^^
-
-What about removing the "fsl,", so it just would be "usbphy".
-
->                 status =3D "disabled";
->         };
-
->> +{
->> +	struct usb_phy	*phy =3D NULL, **ptr;
->> +	unsigned long	flags;
->> +	struct device_node *node;
->> +
->> +	if (!dev->of_node) {
->> +		dev_dbg(dev, "device does not have a device node entry\n");
->> +		return ERR_PTR(-EINVAL);
->> +	}
->> +
->> +	node =3D of_parse_phandle(dev->of_node, phandle, 0);
->> +	if (!node) {
->> +		dev_dbg(dev, "failed to get %s phandle in %s node\n", phandle,
->> +			dev->of_node->full_name);
->> +		return ERR_PTR(-ENODEV);
->> +	}
->> +
->> +	ptr =3D devres_alloc(devm_usb_phy_release, sizeof(*ptr), GFP_KERNEL)=
-;
->> +	if (!ptr) {
->> +		dev_dbg(dev, "failed to allocate memory for devres\n");
->> +		return ERR_PTR(-ENOMEM);
->> +	}
->> +
->> +	spin_lock_irqsave(&phy_lock, flags);
->> +
->> +	phy =3D __of_usb_find_phy(&phy_list, node);
->> +	if (IS_ERR(phy) || !try_module_get(phy->dev->driver->owner)) {
->> +		phy =3D ERR_PTR(-EPROBE_DEFER);
->> +		devres_free(ptr);
->> +		goto err0;
->> +	}
->> +
->> +	*ptr =3D phy;
->> +	devres_add(dev, ptr);
->> +
->> +	get_device(phy->dev);
->> +
->> +err0:
->> +	spin_unlock_irqrestore(&phy_lock, flags);
->> +
->> +	return phy;
->> +}
->> +EXPORT_SYMBOL(devm_usb_get_phy_by_phandle);
->> +
->> +/**
->>   * devm_usb_put_phy - release the USB PHY
->>   * @dev - device that wants to release this phy
->>   * @phy - the phy returned by devm_usb_get_phy()
->> @@ -158,32 +234,24 @@ EXPORT_SYMBOL(usb_put_phy);
->>   */
->>  int usb_add_phy(struct usb_phy *x, enum usb_phy_type type)
->>  {
->> -	int		ret =3D 0;
->>  	unsigned long	flags;
->>  	struct usb_phy	*phy;
->> =20
->> -	if (x && x->type !=3D USB_PHY_TYPE_UNDEFINED) {
->> -		dev_err(x->dev, "not accepting initialized PHY %s\n", x->label);
->> -		return -EINVAL;
-
-> why do you remove re-intialize check? Maybe you can add a
-> USB_PHY_TYPE_DT and below logic will be more clear.
-
-I don't know why this check is removed in Kishon's original patch. From
-my point of view all these checks can be removed. Kishon can you explain
-the rationale behind this?
-
-regards, Marc
-
->> -	}
->> +	if (x && x->type !=3D USB_PHY_TYPE_UNDEFINED)
->> +		dev_dbg(x->dev, "add a phy with undefined type %s\n", x->label);
->> =20
->>  	spin_lock_irqsave(&phy_lock, flags);
->> =20
->> -	list_for_each_entry(phy, &phy_list, head) {
->> -		if (phy->type =3D=3D type) {
->> -			ret =3D -EBUSY;
->> -			dev_err(x->dev, "transceiver type %s already exists\n",
->> +	list_for_each_entry(phy, &phy_list, head)
->> +		if (phy->type =3D=3D type)
->> +			dev_dbg(x->dev, "transceiver type %s already exists\n",
->>  						usb_phy_type_string(type));
->> -			goto out;
->> -		}
->> -	}
->> =20
->>  	x->type =3D type;
->>  	list_add_tail(&x->head, &phy_list);
->> =20
->> -out:
->>  	spin_unlock_irqrestore(&phy_lock, flags);
->> -	return ret;
->> +	return 0;
->>  }
->>  EXPORT_SYMBOL(usb_add_phy);
->> =20
->> diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
->> index 45824be..602d6b4 100644
->> --- a/include/linux/usb/otg.h
->> +++ b/include/linux/usb/otg.h
->> @@ -190,6 +190,8 @@ usb_phy_shutdown(struct usb_phy *x)
->>  extern struct usb_phy *usb_get_phy(enum usb_phy_type type);
->>  extern struct usb_phy *devm_usb_get_phy(struct device *dev,
->>  	enum usb_phy_type type);
->> +extern struct usb_phy *devm_usb_get_phy_by_phandle(struct device *dev=
-,
->> +	const char *phandle);
->>  extern void usb_put_phy(struct usb_phy *);
->>  extern void devm_usb_put_phy(struct device *dev, struct usb_phy *x);
->>  extern const char *otg_state_string(enum usb_otg_state state);
->> @@ -205,6 +207,12 @@ static inline struct usb_phy *devm_usb_get_phy(st=
-ruct device *dev,
->>  	return NULL;
->>  }
->> =20
->> +static inline struct usb_phy *devm_usb_get_phy_by_phandle(struct devi=
-ce *dev,
->> +	const char *phandle)
->> +{
->> +	return NULL;
->> +}
->> +
->>  static inline void usb_put_phy(struct usb_phy *x)
->>  {
->>  }
-> =20
-> Thanks
-> Richard
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in=
-
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
-
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig061ADC92BB08045D277A8AAC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org/
-
-iEYEARECAAYFAlA5Fe0ACgkQjTAFq1RaXHMxNACbBFkWKJOQF1fh1tG+Idvmoo9r
-cjIAniJWA+VeHAk1rUn2V61WDI4DFY1A
-=ddwb
------END PGP SIGNATURE-----
-
---------------enig061ADC92BB08045D277A8AAC--
-
---===============2986984805152433020==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2986984805152433020==--
+diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Documentation/devicetree/bindings/mtd/m25p80.txt
+new file mode 100644
+index 0000000..701bb58
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
+@@ -0,0 +1,29 @@
++* MTD SPI driver for ST M25Pxx (and similar) serial flash chips
++
++Required properties:
++- #address-cells, #size-cells : Must be present if the device has sub-nodes
++  representing partitions.
++- compatible : Should be the manufacturer and the name of the chip. Bear in mind
++               the DT binding is not Linux-only, but in case of Linux, see the
++               "m25p_ids" table in drivers/mtd/devices/m25p80.c for the list of
++               supported chips.
++- reg : Chip-Select number
++- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
++
++Optional properties:
++- m25p,fast-read : Use the "fast read" opcode to read data from the chip instead
++                   of the usual "read" opcode. This opcode isn not supported by
++                   all chips and support for it can not be detected at runtime.
++                   Refer to your chips' datasheet to check if this is supported
++                   by your chip.
++
++Example:
++
++	flash: m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,m25p80";
++		reg = <0>;
++		spi-max-frequency = <40000000>;
++		m25p,fast-read;
++	};
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index d16f75c..c433051 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -73,14 +73,6 @@
+ #define	MAX_READY_WAIT_JIFFIES	(40 * HZ)	/* M25P16 specs 40s max chip erase */
+ #define	MAX_CMD_SIZE		5
+ 
+-#ifdef CONFIG_M25PXX_USE_FAST_READ
+-#define OPCODE_READ 	OPCODE_FAST_READ
+-#define FAST_READ_DUMMY_BYTE 1
+-#else
+-#define OPCODE_READ 	OPCODE_NORM_READ
+-#define FAST_READ_DUMMY_BYTE 0
+-#endif
+-
+ #define JEDEC_MFR(_jedec_id)	((_jedec_id) >> 16)
+ 
+ /****************************************************************************/
+@@ -93,6 +85,7 @@ struct m25p {
+ 	u16			addr_width;
+ 	u8			erase_opcode;
+ 	u8			*command;
++	bool			fast_read;
+ };
+ 
+ static inline struct m25p *mtd_to_m25p(struct mtd_info *mtd)
+@@ -342,6 +335,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	struct m25p *flash = mtd_to_m25p(mtd);
+ 	struct spi_transfer t[2];
+ 	struct spi_message m;
++	uint8_t opcode;
+ 
+ 	pr_debug("%s: %s from 0x%08x, len %zd\n", dev_name(&flash->spi->dev),
+ 			__func__, (u32)from, len);
+@@ -354,7 +348,7 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	 * Should add 1 byte DUMMY_BYTE.
+ 	 */
+ 	t[0].tx_buf = flash->command;
+-	t[0].len = m25p_cmdsz(flash) + FAST_READ_DUMMY_BYTE;
++	t[0].len = m25p_cmdsz(flash) + (flash->fast_read ? 1 : 0);
+ 	spi_message_add_tail(&t[0], &m);
+ 
+ 	t[1].rx_buf = buf;
+@@ -376,12 +370,14 @@ static int m25p80_read(struct mtd_info *mtd, loff_t from, size_t len,
+ 	 */
+ 
+ 	/* Set up the write data buffer. */
+-	flash->command[0] = OPCODE_READ;
++	opcode = flash->fast_read ? OPCODE_FAST_READ : OPCODE_NORM_READ;
++	flash->command[0] = opcode;
+ 	m25p_addr2cmd(flash, from, flash->command);
+ 
+ 	spi_sync(flash->spi, &m);
+ 
+-	*retlen = m.actual_length - m25p_cmdsz(flash) - FAST_READ_DUMMY_BYTE;
++	*retlen = m.actual_length - m25p_cmdsz(flash) -
++			(flash->fast_read ? 1 : 0);
+ 
+ 	mutex_unlock(&flash->lock);
+ 
+@@ -804,9 +800,10 @@ static int __devinit m25p_probe(struct spi_device *spi)
+ 	struct flash_info		*info;
+ 	unsigned			i;
+ 	struct mtd_part_parser_data	ppdata;
++	struct device_node		*np = spi->dev.of_node;
+ 
+ #ifdef CONFIG_MTD_OF_PARTS
+-	if (!of_device_is_available(spi->dev.of_node))
++	if (!of_device_is_available(np))
+ 		return -ENODEV;
+ #endif
+ 
+@@ -858,7 +855,8 @@ static int __devinit m25p_probe(struct spi_device *spi)
+ 	flash = kzalloc(sizeof *flash, GFP_KERNEL);
+ 	if (!flash)
+ 		return -ENOMEM;
+-	flash->command = kmalloc(MAX_CMD_SIZE + FAST_READ_DUMMY_BYTE, GFP_KERNEL);
++	flash->command = kmalloc(MAX_CMD_SIZE + (flash->fast_read ? 1 : 0),
++					GFP_KERNEL);
+ 	if (!flash->command) {
+ 		kfree(flash);
+ 		return -ENOMEM;
+@@ -915,6 +913,16 @@ static int __devinit m25p_probe(struct spi_device *spi)
+ 	flash->page_size = info->page_size;
+ 	flash->mtd.writebufsize = flash->page_size;
+ 
++	flash->fast_read = false;
++#ifdef CONFIG_OF
++	if (np && of_property_read_bool(np, "m25p,fast-read"))
++		flash->fast_read = true;
++#endif
++
++#ifdef CONFIG_M25PXX_USE_FAST_READ
++	flash->fast_read = true;
++#endif
++
+ 	if (info->addr_width)
+ 		flash->addr_width = info->addr_width;
+ 	else {
+-- 
+1.7.10.4
