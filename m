@@ -1,107 +1,56 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v4 7/9] mmc: dw_mmc: prepare functions in dw_mmc-pltfm for reuse
-Date: Sun, 26 Aug 2012 17:22:05 +0530
-Message-ID: <1345981927-26359-8-git-send-email-thomas.abraham@linaro.org>
-References: <1345981927-26359-1-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1345981927-26359-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH REPOST] dtc: integrate gpp
+Date: Sun, 26 Aug 2012 17:16:45 +0200
+Message-ID: <20120826151645.GE6060@game.jcrosoft.org>
+References: <1345608667-16494-1-git-send-email-swarren@wwwdotorg.org>
+ <20120825084523.GD6060@game.jcrosoft.org>
+ <d30e7f01-ead2-4b37-9bf9-ac4b5c18f936@email.android.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d30e7f01-ead2-4b37-9bf9-ac4b5c18f936-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Platform implementations of dw-mshc controller may choose to extend the features
-of the standard dw-mshc controller such as adding additional clocking options or
-modifying the bus interface. Support for such implementation specific extensions
-can be incorporated into dw_mmc-pltfm, but including multiple such platform
-specific implementations would convolute the existing dw_mmc-pltfm code.
+On 16:26 Sat 25 Aug     , Stephen Warren wrote:
+> 
+> 
+> Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> 
+> >On 22:11 Tue 21 Aug     , Stephen Warren wrote:
+> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >> 
+> >> I figured the easiest way to get named constants into dtc would be to
+> >> re-use an existing C pre-processor implemntation. Surprisingly, I
+> >could
+> >> not find many /good/ possibilities for this. I eventually found one
+> >called
+> >> gpp. This patch is an extremely quick-and-dirty integration of gpp
+> >into
+> >> dtc in order to solicit some feedback. What do people think of this
+> >> approach in general?
+> >
+> >I'm not sure it's rely the right way
+> >
+> >I does the support but we may just use gcc for as it's done for linker
+> >script
+> >but I will agree that with this dtc is standalone
+> 
+> A C-compiler's pre-processor gets confused by property names starting with #, which gpp at least can be configured not to (outside column 1 at least)
+ok fine by me
 
-Instead, it would be better to create implementation specific platform drivers
-to support implementation specific features. Such platforms drivers can reuse
-the existing infrastructure in dw_mmc-pltfm for resource identification and
-controller registration and provide support for implementation specific
-features. So, allow the infrastructure in dw_mmc-pltfm to be reused by other
-implementation specific platform drivers.
-
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- drivers/mmc/host/dw_mmc-pltfm.c |   14 +++++++++++---
- drivers/mmc/host/dw_mmc-pltfm.h |   19 +++++++++++++++++++
- 2 files changed, 30 insertions(+), 3 deletions(-)
- create mode 100644 drivers/mmc/host/dw_mmc-pltfm.h
-
-diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mmc-pltfm.c
-index 25c5f11..57df3eb 100644
---- a/drivers/mmc/host/dw_mmc-pltfm.c
-+++ b/drivers/mmc/host/dw_mmc-pltfm.c
-@@ -23,7 +23,7 @@
- 
- #include "dw_mmc.h"
- 
--static int dw_mci_pltfm_probe(struct platform_device *pdev)
-+int dw_mci_pltfm_register(struct platform_device *pdev)
- {
- 	struct dw_mci *host;
- 	struct resource	*regs;
-@@ -52,8 +52,14 @@ static int dw_mci_pltfm_probe(struct platform_device *pdev)
- 	ret = dw_mci_probe(host);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(dw_mci_pltfm_register);
-+
-+static int dw_mci_pltfm_probe(struct platform_device *pdev)
-+{
-+	return dw_mci_pltfm_register(pdev);
-+}
- 
--static int __exit dw_mci_pltfm_remove(struct platform_device *pdev)
-+int __exit dw_mci_pltfm_remove(struct platform_device *pdev)
- {
- 	struct dw_mci *host = platform_get_drvdata(pdev);
- 
-@@ -61,6 +67,7 @@ static int __exit dw_mci_pltfm_remove(struct platform_device *pdev)
- 	dw_mci_remove(host);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(dw_mci_pltfm_remove);
- 
- #ifdef CONFIG_PM_SLEEP
- /*
-@@ -94,7 +101,8 @@ static int dw_mci_pltfm_resume(struct device *dev)
- #define dw_mci_pltfm_resume	NULL
- #endif /* CONFIG_PM_SLEEP */
- 
--static SIMPLE_DEV_PM_OPS(dw_mci_pltfm_pmops, dw_mci_pltfm_suspend, dw_mci_pltfm_resume);
-+SIMPLE_DEV_PM_OPS(dw_mci_pltfm_pmops, dw_mci_pltfm_suspend, dw_mci_pltfm_resume);
-+EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
- 
- static const struct of_device_id dw_mci_pltfm_match[] = {
- 	{ .compatible = "snps,dw-mshc", },
-diff --git a/drivers/mmc/host/dw_mmc-pltfm.h b/drivers/mmc/host/dw_mmc-pltfm.h
-new file mode 100644
-index 0000000..5618608
---- /dev/null
-+++ b/drivers/mmc/host/dw_mmc-pltfm.h
-@@ -0,0 +1,19 @@
-+/*
-+ * Synopsys DesignWare Multimedia Card Interface Platform driver
-+ *
-+ * Copyright (C) 2012, Samsung Electronics Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef _DW_MMC_PLTFM_H_
-+#define _DW_MMC_PLTFM_H_
-+
-+extern int dw_mci_pltfm_register(struct platform_device *pdev);
-+extern int __exit dw_mci_pltfm_remove(struct platform_device *pdev);
-+extern const struct dev_pm_ops dw_mci_pltfm_pmops;
-+
-+#endif /* _DW_MMC_PLTFM_H_ */
--- 
-1.6.6.rc2
-
+Best Regards,
+J.
