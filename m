@@ -1,99 +1,310 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 03/11] pinctrl: mvebu: kirkwood pinctrl driver
-Date: Mon, 27 Aug 2012 13:02:32 -0700
-Message-ID: <503BD258.8050209@wwwdotorg.org>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1344689809-6223-4-git-send-email-sebastian.hesselbarth@gmail.com> <CACRpkdbG4jkFcVP_6AmAZzciffQCamKXw7PcFnTdccyq7AMa8A@mail.gmail.com> <343192fa3698ed0575444a5603ed734d@codethink.co.uk> <503BC830.7090705@gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 1/7] mfd: add syscon driver based on regmap
+Date: Tue, 28 Aug 2012 06:08:32 +0800
+Message-ID: <20120827220830.GB2281@r65073-Latitude-D630>
+References: <1346052285-4344-1-git-send-email-b29396@freescale.com>
+ <1346052285-4344-2-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <503BC830.7090705@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1346052285-4344-2-git-send-email-b29396@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2012 12:19 PM, Sebastian Hesselbarth wrote:
-> On 08/27/2012 03:43 PM, Ben Dooks wrote:
->> On 20/08/2012 06:49, Linus Walleij wrote:
->>> On Sat, Aug 11, 2012 at 2:56 PM, Sebastian Hesselbarth
->>> <sebastian.hesselbarth@gmail.com> wrote:
->>> (...)
->>>> diff --git a/drivers/pinctrl/pinctrl-kirkwood.c
->>>> b/drivers/pinctrl/pinctrl-kirkwood.c
->>>> +static struct mvebu_pinctrl_soc_info kirkwood_pinctrl_info;
->>>> +
->>>> +static struct of_device_id kirkwood_pinctrl_of_match[] __devinitdata
->>>> = {
->>>> + { .compatible = "marvell,88f6180-pinctrl",
->>>> + .data = (void *)VARIANT_MV88F6180 },
->>>> + { .compatible = "marvell,88f6190-pinctrl",
->>>> + .data = (void *)VARIANT_MV88F6190 },
->>>> + { .compatible = "marvell,88f6192-pinctrl",
->>>> + .data = (void *)VARIANT_MV88F6192 },
->>>> + { .compatible = "marvell,88f6281-pinctrl",
->>>> + .data = (void *)VARIANT_MV88F6281 },
->>>> + { .compatible = "marvell,88f6282-pinctrl",
->>>> + .data = (void *)VARIANT_MV88F6282 },
->>>> + { }
->>>> +};
->>>
->>> I'm thinking this variant should maybe be an enum... unless it is
->>> strongly established somewhere in Orion/Marvell stuff.
->>>
->>>> +static int __devinit kirkwood_pinctrl_probe(struct platform_device
->>>> *pdev)
->>>> +{
->>>> + struct mvebu_pinctrl_soc_info *soc = &kirkwood_pinctrl_info;
->>>> + const struct of_device_id *match =
->>>> + of_match_device(kirkwood_pinctrl_of_match, &pdev->dev);
->>>> +
->>>> + if (match) {
->>>> + soc->variant = (unsigned)match->data & 0xff;
->>>> + switch (soc->variant) {
->>>> + case VARIANT_MV88F6180:
->>>> + soc->controls = mv88f6180_mpp_controls;
->>>> + soc->ncontrols = ARRAY_SIZE(mv88f6180_mpp_controls);
->>>> + soc->modes = mv88f6xxx_mpp_modes;
->>>> + soc->nmodes = ARRAY_SIZE(mv88f6xxx_mpp_modes);
->>>> + soc->gpioranges = mv88f6180_gpio_ranges;
->>>> + soc->ngpioranges = ARRAY_SIZE(mv88f6180_gpio_ranges);
->>>> + break;
->>>> + case VARIANT_MV88F6190:
->>>> + case VARIANT_MV88F6192:
->>>> + soc->controls = mv88f619x_mpp_controls;
->>>> + soc->ncontrols = ARRAY_SIZE(mv88f619x_mpp_controls);
->>>> + soc->modes = mv88f6xxx_mpp_modes;
->>>> + soc->nmodes = ARRAY_SIZE(mv88f6xxx_mpp_modes);
->>>> + soc->gpioranges = mv88f619x_gpio_ranges;
->>>> + soc->ngpioranges = ARRAY_SIZE(mv88f619x_gpio_ranges);
->>>> + break;
->>>> + case VARIANT_MV88F6281:
->>>> + case VARIANT_MV88F6282:
->>>> + soc->controls = mv88f628x_mpp_controls;
->>>> + soc->ncontrols = ARRAY_SIZE(mv88f628x_mpp_controls);
->>>> + soc->modes = mv88f6xxx_mpp_modes;
->>>> + soc->nmodes = ARRAY_SIZE(mv88f6xxx_mpp_modes);
->>>> + soc->gpioranges = mv88f628x_gpio_ranges;
->>>> + soc->ngpioranges = ARRAY_SIZE(mv88f628x_gpio_ranges);
->>>> + break;
->>>> + }
->>>> + pdev->dev.platform_data = soc;
->>>> + }
->>>> + return mvebu_pinctrl_probe(pdev);
->>>> +}
->>
->> Why not have structures defining the soc-> parameters and use that in the
->> of_match list?
+On Mon, Aug 27, 2012 at 03:24:39PM +0800, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
 > 
-> Ben,
+> Add regmap based syscon driver.
+> This is usually used for access misc bits in registers which does not belong
+> to a specific module, for example, IMX IOMUXC GPR and ANATOP.
+> With this driver, client can use generic regmap API to access registers
+> which are registered into syscon.
 > 
-> functionally it is equivalent and IMHO using soc structs doesn't improve
-> readability here. I there any other good reason to have structs for each
-> soc?
+> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> ---
+> ChangeLog:
+> v1->v2:
+>  * provide a way of retrieving the regmap, suggested by Mark Brown.
+>  * delete imx-syscon io accessors and using generic regmap API for client drivers.
+>  * change to a more generic name for other SoCs to use.
+> ---
+>  .../devicetree/bindings/mfd/imx-syscon.txt         |   11 ++
 
-Well, it does change from 6 assignments down to one, and remove the need
-for a switch statement - i.e. all of the code quoted above becomes just
-roughly:
+So, this file should be renamed as well.
 
-*soc = *match->data;
+>  drivers/mfd/Kconfig                                |    7 +
+>  drivers/mfd/Makefile                               |    1 +
+>  drivers/mfd/syscon.c                               |  169 ++++++++++++++++++++
+>  include/linux/mfd/syscon.h                         |   22 +++
+>  5 files changed, 210 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/imx-syscon.txt b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
+> new file mode 100644
+> index 0000000..c1a13b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
+> @@ -0,0 +1,11 @@
+> +* System Controller Registers R/W driver
+> +
+> +Required properties:
+> +- compatible: Should contain "syscon".
+> +- reg: the register range can be access from syscon
+> +
+> +Examples:
+> +gpr: iomuxc-gpr@020e0000 {
+> +	compatible = "fsl,imx6q-iomuxc", "syscon";
+> +	reg = <0x020e0000 0x38>;
+> +};
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index b1a1462..4a6c48e 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -993,6 +993,13 @@ config MFD_ANATOP
+>  	  MFD controller. This controller embeds regulator and
+>  	  thermal devices for Freescale i.MX platforms.
+>  
+> +config MFD_SYSCON
+> +        bool "System Controller Register R/W Based on Regmap"
+> +        select REGMAP_MMIO
+> +        help
+> +          Select this option to enable accessing system control registers
+> +	  via regmap.
+> +
+>  config MFD_PALMAS
+>  	bool "Support for the TI Palmas series chips"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 79dd22d..8384bc9 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -131,4 +131,5 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+>  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+>  obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
+>  obj-$(CONFIG_MFD_ANATOP)	+= anatop-mfd.o
+> +obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
+>  obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> new file mode 100644
+> index 0000000..da2464f
+> --- /dev/null
+> +++ b/drivers/mfd/syscon.c
+> @@ -0,0 +1,169 @@
+> +/*
+> + * System Control Driver
+> + *
+> + * Copyright (C) 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012 Linaro Ltd.
+> + *
+> + * Author: Dong Aisheng <dong.aisheng@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +static struct platform_driver syscon_driver;
+> +
+> +struct syscon {
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	struct regmap *regmap;
+> +};
+> +
+> +static int syscon_match(struct device *dev, void *data)
+> +{
+> +	struct syscon *syscon = dev_get_drvdata(dev);
+> +	struct device_node *dn = data;
+> +
+> +	return (syscon->dev->of_node == dn) ? 1 : 0;
+> +}
+> +
+> +static struct regmap *syscon_node_to_regmap(struct device_node *np)
+> +{
+> +	struct syscon *syscon;
+> +	struct device *dev;
+> +
+> +	dev = driver_find_device(&syscon_driver.driver, NULL, np,
+> +				 syscon_match);
+> +	of_node_put(np);
+> +
+> +	if (!dev)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	syscon = dev_get_drvdata(dev);
+> +
+> +	return syscon->regmap;
+> +}
+> +
+> +struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
+> +{
+> +	struct device_node *syscon_np;
+> +
+> +	syscon_np = of_find_compatible_node(NULL, NULL, s);
+> +	if (!syscon_np)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return syscon_node_to_regmap(syscon_np);
+> +}
+> +
+> +struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+> +					const char *property)
+> +{
+> +	struct device_node *syscon_np;
+> +
+> +	syscon_np = of_parse_phandle(np, property, 0);
+> +	if (!syscon_np)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return syscon_node_to_regmap(syscon_np);
+> +}
+
+The above two APIs are all about finding the device_node for syscon,
+and can be done by clients in whatever way that is easy for them.
+Then we can save these APIs and export syscon_node_to_regmap directly.
+
+> +
+> +static const struct of_device_id of_syscon_match[] = {
+> +	{ .compatible = "syscon", },
+> +	{ },
+> +};
+> +
+> +static struct regmap_config syscon_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +};
+> +
+> +static int __devinit syscon_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct syscon *syscon;
+> +	struct resource res;
+> +	int ret;
+> +
+> +	if (!np)
+> +		return -ENOENT;
+> +
+> +	syscon = devm_kzalloc(&pdev->dev, sizeof(struct syscon),
+> +			    GFP_KERNEL);
+> +	if (!syscon)
+> +		return -ENOMEM;
+> +
+> +	syscon->base = of_iomap(np, 0);
+> +	if (!syscon->base)
+> +		return -EADDRNOTAVAIL;
+> +
+> +	ret = of_address_to_resource(np, 0, &res);
+> +	if (ret)
+> +		return ret;
+> +
+> +	syscon_regmap_config.max_register = res.end - res.start - 3;
+> +	syscon->regmap = devm_regmap_init_mmio(&pdev->dev, syscon->base,
+> +					&syscon_regmap_config);
+> +	if (IS_ERR(syscon->regmap)) {
+> +		dev_err(&pdev->dev, "regmap init failed\n");
+> +		return PTR_ERR(syscon->regmap);
+> +	}
+> +
+> +	regcache_cache_only(syscon->regmap, false);
+> +
+> +	syscon->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, syscon);
+> +
+> +	dev_info(dev, "syscon regmap start 0x%x end 0x%x registered\n",
+> +		res.start, res.end);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __devexit syscon_remove(struct platform_device *pdev)
+> +{
+> +	struct syscon *syscon;
+> +
+> +	syscon = platform_get_drvdata(pdev);
+> +	iounmap(syscon->base);
+> +	platform_set_drvdata(pdev, NULL);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver syscon_driver = {
+> +	.driver = {
+> +		.name = "syscon",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = of_syscon_match,
+> +	},
+> +	.probe		= syscon_probe,
+> +	.remove		= syscon_remove,
+> +};
+> +
+> +static int __init syscon_init(void)
+> +{
+> +	return platform_driver_register(&syscon_driver);
+> +}
+> +postcore_initcall(syscon_init);
+> +
+> +static void __exit anatop_exit(void)
+
+s/anatop_exit/syscon_exit
+
+> +{
+> +	platform_driver_unregister(&syscon_driver);
+> +}
+> +module_exit(anatop_exit);
+
+Ditto.
+
+Regards,
+Shawn
+
+> +
+> +MODULE_AUTHOR("Dong Aisheng <dong.aisheng@linaro.org>");
+> +MODULE_DESCRIPTION("System Control driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+> new file mode 100644
+> index 0000000..990d7cf
+> --- /dev/null
+> +++ b/include/linux/mfd/syscon.h
+> @@ -0,0 +1,22 @@
+> +/*
+> + * System Control Driver
+> + *
+> + * Copyright (C) 2012 Freescale Semiconductor, Inc.
+> + * Copyright (C) 2012 Linaro Ltd.
+> + *
+> + * Author: Dong Aisheng <dong.aisheng@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#ifndef __LINUX_MFD_SYSCON_H__
+> +#define __LINUX_MFD_SYSCON_H__
+> +
+> +extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+> +extern struct regmap *syscon_regmap_lookup_by_phandle(
+> +					struct device_node *np,
+> +					const char *property);
+> +#endif /* __LINUX_MFD_SYSCON_H__ */
+> -- 
+> 1.7.0.4
+> 
+> 
