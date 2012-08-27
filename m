@@ -1,49 +1,298 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH v3 0/6] omap-am33xx rtc dt support
-Date: Mon, 27 Aug 2012 07:35:43 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93E9BA4EB@DBDE01.ent.ti.com>
-References: <cover.1343383616.git.afzal@ti.com> <50256797.3020505@ti.com>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v2 1/7] mfd: add syscon driver based on regmap
+Date: Mon, 27 Aug 2012 15:24:39 +0800
+Message-ID: <1346052285-4344-2-git-send-email-b29396@freescale.com>
+References: <1346052285-4344-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50256797.3020505@ti.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Hilman, Kevin" <khilman@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1346052285-4344-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxlc3NhbmRybywNCg0KT24gU2F0LCBBdWcgMTEsIDIwMTIgYXQgMDE6Mjc6MTEsIE5vcmks
-IFNla2hhciB3cm90ZToNCj4gT24gNy8yNy8yMDEyIDU6NTMgUE0sIEFmemFsIE1vaGFtbWVkIHdy
-b3RlOg0KDQo+ID4gVGhpcyBzZXJpZXMgbWFrZXMgcnRjLW9tYXAgZHJpdmVyIERUIGNhcGFibGUs
-IGFkZHMgQU0zM3h4DQo+ID4gUlRDIERUIHN1cHBvcnQgYWxvbmcgd2l0aCBhIGZldyBlbmNoYW5j
-bWVudHMgdG8gdGhlIGRyaXZlci4NCj4gPiANCj4gPiBydGMtb21hcCBkcml2ZXIgaXMgbWFkZSBp
-bnRlbGxpZ2VudCBlbm91Z2ggdG8gaGFuZGxlIGtpY2tlcg0KPiA+IG1lY2hhbmlzbS4gVGhpcyBo
-ZWxwcyBpbiByZW1vdmluZyBraWNrZXIgbWVjaGFuaXNtIHN1cHBvcnQNCj4gPiBkb25lIGZvciBE
-YVZpbmNpIGF0IHBsYXRmb3JtIGxldmVsLg0KPiA+IA0KPiA+IFRoaXMgaGFzIGJlZW4gdGVzdGVk
-IG9uIEJlYWdsZWJvbmUgKEFNMzN4eCBwbGF0Zm9ybSkgYW5kIG9uDQo+ID4gRGFWaW5jaSBEQTg1
-MCBFVk0uDQo+ID4gDQo+ID4gVGhpcyBzZXJpZXMgaXMgYmFzZWQgb3ZlciBsaW51eC1vbWFwIG1h
-c3RlciBhbmQgY2FuIGJlDQo+ID4gZGlyZWN0bHkgYXBwbGllZCBvdmVyIGxpbnV4LW5leHQsIGV4
-Y2VwdCBmb3INCj4gPiBbUEFUQ0ggNi82XSBhcm0vZHRzOiBhbTMzeHggcnRjIG5vZGUuDQo+ID4g
-DQo+ID4gUEFUQ0ggNi82IHNob3VsZCBnbyB0aHJvdWdoIGxpbnV4LW9tYXAgdHJlZSBhbmQgbmVl
-ZHMNCj4gPiBodHRwOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtb21hcEB2Z2VyLmtlcm5l
-bC5vcmcvbXNnNzE2NDQuaHRtbA0KPiA+IChhcm0vZHRzOiBhbTMzeHggd2R0IG5vZGUpIHRvIGdl
-dCBhcHBsaWVkIGNsZWFubHkNCj4gDQo+IEkgdGVzdGVkIHBhdGNoZXMgMS01IG9uIEFNMTh4IEVW
-TSB1c2luZyBydGN3YWtlIGFuZCBod2Nsb2NrIGNvbW1hbmRzLg0KPiBBbHNvIHRlc3RlZCBvbiBE
-VCBlbmFibGVkIEFNMTh4IEVWTSB1c2luZyBod2Nsb2NrLg0KPiANCj4gRm9yIHBhdGNoZWQgMS01
-Og0KPiANCj4gQWNrZWQtYnk6IFNla2hhciBOb3JpIDxuc2VraGFyQHRpLmNvbT4NCj4gDQo+IEFs
-ZXNzYW5kcm8sDQo+IA0KPiBJIGFzc3VtZSB5b3Ugd291bGQgd2FudCBtZSB0byBxdWV1ZSAyLzYg
-dGhyb3VnaCBEYVZpbmNpIHRyZWUuIFRoYXQgcGF0Y2gNCj4gZGVwZW5kcyBvbiAxLzYgYmVpbmcg
-YWNjZXB0ZWQgYW5kIG1lcmdlZCBieSB5b3UuIExldCBtZSBrbm93IGhvdyB5b3UNCj4gd2FudCB0
-byBtb3ZlIGZvcndhcmQgaGVyZS4NCg0KQ2FuIHlvdSBwbGVhc2UgaGVscCAxLTUgcGF0Y2hlcyBp
-biB0aGlzIHNlcmllcyB0byBnZXQgaW50byBtYWlubGluZS4NCjEtNSBvZiB0aGlzIHNlcmllcyBp
-cyBhIHByZXJlcXVpc2l0ZSBmb3IgYWRkaW5nIFJUQyBzdXBwb3J0IGZvciBBTTMzNVgNClNvQydz
-LCB3aGljaCBpcyBwcmVzZW50IGluIGJlYWdsZWJvbmUsIEFNMzM1WCBFVk0uDQoNCkFsc28gdGhp
-cyBzZXJpZXMgZG9lcyBjbGVhbnVwIG9uIERhVmluY2kgcGxhdGZvcm0gYnkgbW92aW5nIGtpY2tl
-ciBoYW5kbGluZw0KbWVjaGFuaXNtIHRvIGRyaXZlci4gQW5kIHdlIGhhdmUgQWNrIGZyb20gRGFW
-aW5jaSBtYWludGFpbmVyIG9uIDEtNSBvZiB0aGlzDQpzZXJpZXMuDQoNClBhdGNoIDYvNiBhZGRz
-IEFNMzM1WCBSVEMgRFQgc3VwcG9ydCwgbm90IHN1cmUgd2hldGhlciB5b3UgY2FuIHRha2UgNi82
-DQpvciBUb255IHNob3VsZCBiZSB0YWtpbmcgaXQuDQoNClRoZSBzZXJpZXMgYXBwbGllcyBjbGVh
-bmx5IG92ZXIgbGludXgtbmV4dCAobm93IGluY2x1ZGluZyA2LzYpDQoNClJlZ2FyZHMNCkFmemFs
-DQo=
+From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Add regmap based syscon driver.
+This is usually used for access misc bits in registers which does not belong
+to a specific module, for example, IMX IOMUXC GPR and ANATOP.
+With this driver, client can use generic regmap API to access registers
+which are registered into syscon.
+
+Reviwed-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog:
+v1->v2:
+ * provide a way of retrieving the regmap, suggested by Mark Brown.
+ * delete imx-syscon io accessors and using generic regmap API for client drivers.
+ * change to a more generic name for other SoCs to use.
+---
+ .../devicetree/bindings/mfd/imx-syscon.txt         |   11 ++
+ drivers/mfd/Kconfig                                |    7 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/syscon.c                               |  169 ++++++++++++++++++++
+ include/linux/mfd/syscon.h                         |   22 +++
+ 5 files changed, 210 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/imx-syscon.txt b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
+new file mode 100644
+index 0000000..c1a13b4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
+@@ -0,0 +1,11 @@
++* System Controller Registers R/W driver
++
++Required properties:
++- compatible: Should contain "syscon".
++- reg: the register range can be access from syscon
++
++Examples:
++gpr: iomuxc-gpr@020e0000 {
++	compatible = "fsl,imx6q-iomuxc", "syscon";
++	reg = <0x020e0000 0x38>;
++};
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index b1a1462..4a6c48e 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -993,6 +993,13 @@ config MFD_ANATOP
+ 	  MFD controller. This controller embeds regulator and
+ 	  thermal devices for Freescale i.MX platforms.
+ 
++config MFD_SYSCON
++        bool "System Controller Register R/W Based on Regmap"
++        select REGMAP_MMIO
++        help
++          Select this option to enable accessing system control registers
++	  via regmap.
++
+ config MFD_PALMAS
+ 	bool "Support for the TI Palmas series chips"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 79dd22d..8384bc9 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -131,4 +131,5 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+ obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+ obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
+ obj-$(CONFIG_MFD_ANATOP)	+= anatop-mfd.o
++obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
+ obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+new file mode 100644
+index 0000000..da2464f
+--- /dev/null
++++ b/drivers/mfd/syscon.c
+@@ -0,0 +1,169 @@
++/*
++ * System Control Driver
++ *
++ * Copyright (C) 2012 Freescale Semiconductor, Inc.
++ * Copyright (C) 2012 Linaro Ltd.
++ *
++ * Author: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++static struct platform_driver syscon_driver;
++
++struct syscon {
++	struct device *dev;
++	void __iomem *base;
++	struct regmap *regmap;
++};
++
++static int syscon_match(struct device *dev, void *data)
++{
++	struct syscon *syscon = dev_get_drvdata(dev);
++	struct device_node *dn = data;
++
++	return (syscon->dev->of_node == dn) ? 1 : 0;
++}
++
++static struct regmap *syscon_node_to_regmap(struct device_node *np)
++{
++	struct syscon *syscon;
++	struct device *dev;
++
++	dev = driver_find_device(&syscon_driver.driver, NULL, np,
++				 syscon_match);
++	of_node_put(np);
++
++	if (!dev)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	syscon = dev_get_drvdata(dev);
++
++	return syscon->regmap;
++}
++
++struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
++{
++	struct device_node *syscon_np;
++
++	syscon_np = of_find_compatible_node(NULL, NULL, s);
++	if (!syscon_np)
++		return ERR_PTR(-ENODEV);
++
++	return syscon_node_to_regmap(syscon_np);
++}
++
++struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
++					const char *property)
++{
++	struct device_node *syscon_np;
++
++	syscon_np = of_parse_phandle(np, property, 0);
++	if (!syscon_np)
++		return ERR_PTR(-ENODEV);
++
++	return syscon_node_to_regmap(syscon_np);
++}
++
++static const struct of_device_id of_syscon_match[] = {
++	{ .compatible = "syscon", },
++	{ },
++};
++
++static struct regmap_config syscon_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++};
++
++static int __devinit syscon_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct syscon *syscon;
++	struct resource res;
++	int ret;
++
++	if (!np)
++		return -ENOENT;
++
++	syscon = devm_kzalloc(&pdev->dev, sizeof(struct syscon),
++			    GFP_KERNEL);
++	if (!syscon)
++		return -ENOMEM;
++
++	syscon->base = of_iomap(np, 0);
++	if (!syscon->base)
++		return -EADDRNOTAVAIL;
++
++	ret = of_address_to_resource(np, 0, &res);
++	if (ret)
++		return ret;
++
++	syscon_regmap_config.max_register = res.end - res.start - 3;
++	syscon->regmap = devm_regmap_init_mmio(&pdev->dev, syscon->base,
++					&syscon_regmap_config);
++	if (IS_ERR(syscon->regmap)) {
++		dev_err(&pdev->dev, "regmap init failed\n");
++		return PTR_ERR(syscon->regmap);
++	}
++
++	regcache_cache_only(syscon->regmap, false);
++
++	syscon->dev = &pdev->dev;
++	platform_set_drvdata(pdev, syscon);
++
++	dev_info(dev, "syscon regmap start 0x%x end 0x%x registered\n",
++		res.start, res.end);
++
++	return 0;
++}
++
++static int __devexit syscon_remove(struct platform_device *pdev)
++{
++	struct syscon *syscon;
++
++	syscon = platform_get_drvdata(pdev);
++	iounmap(syscon->base);
++	platform_set_drvdata(pdev, NULL);
++
++	return 0;
++}
++
++static struct platform_driver syscon_driver = {
++	.driver = {
++		.name = "syscon",
++		.owner = THIS_MODULE,
++		.of_match_table = of_syscon_match,
++	},
++	.probe		= syscon_probe,
++	.remove		= syscon_remove,
++};
++
++static int __init syscon_init(void)
++{
++	return platform_driver_register(&syscon_driver);
++}
++postcore_initcall(syscon_init);
++
++static void __exit anatop_exit(void)
++{
++	platform_driver_unregister(&syscon_driver);
++}
++module_exit(anatop_exit);
++
++MODULE_AUTHOR("Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
++MODULE_DESCRIPTION("System Control driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+new file mode 100644
+index 0000000..990d7cf
+--- /dev/null
++++ b/include/linux/mfd/syscon.h
+@@ -0,0 +1,22 @@
++/*
++ * System Control Driver
++ *
++ * Copyright (C) 2012 Freescale Semiconductor, Inc.
++ * Copyright (C) 2012 Linaro Ltd.
++ *
++ * Author: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#ifndef __LINUX_MFD_SYSCON_H__
++#define __LINUX_MFD_SYSCON_H__
++
++extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
++extern struct regmap *syscon_regmap_lookup_by_phandle(
++					struct device_node *np,
++					const char *property);
++#endif /* __LINUX_MFD_SYSCON_H__ */
+-- 
+1.7.0.4
