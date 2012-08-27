@@ -1,59 +1,51 @@
-From: Bill Huang <bilhuang@nvidia.com>
-Subject: RE: [PATCH v2 1/2] mfd: dt: tps6586x: Add power off control
-Date: Mon, 27 Aug 2012 13:40:51 +0800
-Message-ID: <A7051F87A141B744BCAF487D48E5B3BDF5BA98284E@HKMAIL02.nvidia.com>
-References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
- <1345424876-4365-2-git-send-email-bilhuang@nvidia.com>
- <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de>
- <A7051F87A141B744BCAF487D48E5B3BDF5BA982847@HKMAIL02.nvidia.com>
- <A7051F87A141B744BCAF487D48E5B3BDF5BA98284B@HKMAIL02.nvidia.com>
- <503847C2.3080400@wwwdotorg.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] DT: export of_irq_to_resource_table()
+Date: Mon, 27 Aug 2012 02:01:51 -0500
+Message-ID: <503B1B5F.3000804@gmail.com>
+References: <1345965189-14548-1-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <503847C2.3080400@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Stephen Warren' <swarren@wwwdotorg.org>
-Cc: 'Thierry Reding' <thierry.reding@avionic-design.de>, "'sameo@linux.intel.com'" <sameo@linux.intel.com>, "'grant.likely@secretlab.ca'" <grant.likely@secretlab.ca>, "'rob.herring@calxeda.com'" <rob.herring@calxeda.com>, "'rob@landley.net'" <rob@landley.net>, "'broonie@opensource.wolfsonmicro.com'" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Xin Xie <xxie@nvidia.com>, "'lrg@slimlogic.co.uk'" <lrg@slimlogic.co.uk>, "'jhovold@gmail.com'" <jhovold@gmail.com>, "'kyle.manna@fuel7.com'" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "'devicetree-discuss@lists.ozlabs.org'" <devicetree-discuss@lists.ozlabs.org>, "'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1345965189-14548-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-nvpublic
-> On 08/24/2012 06:36 PM, Bill Huang wrote:
-> >>> On Sun, Aug 19, 2012 at 06:07:55PM -0700, Bill Huang wrote:
-> >>>> Add DT property "ti,system-power-controller" telling whether or not
-> >>>> this pmic is in charge of controlling the system power, so the
-> >>>> power off routine can be hooked up to system call "pm_power_off".
-> ...
-> >>> I've seen the following while trying this patch applied on top of next-20120817:
-> >>>
-> >>> [   40.581151] Power down.
-> >>> [   41.583160] ------------[ cut here ]------------
-> >>> [   41.587784] WARNING: at /home/thierry.reding/src/kernel/linux-ipmp.git/drivers/i2c/busses/i2c-
-> >>> tegra.c:525 tegra_i2c_xfer+0x21c/0x29c()
-> ...
-> >> Thanks Thierry, I can repro this on Tegra20 inconsistently and found,
-> >> if current cpu is not cpu0 when doing "machine_shutdown" (it will
-> >> call "smp_send_stop"), i2c controller will failed to do any transaction (looks like gic interrupt
-> will be disabled), I'll debug further to find out the root cause.
-> >>
-> >> By the way, Tegra30 is good since it will always be cpu0 when doing
-> >> "machine_shutdown", I still don't know why it makes the difference
-> >> against Tegra20 since I'm not familiar with those cpu stuffs and what make it behave differently,
-> I'll study a bit, thanks.
-> >
-> > I've sent the shutdown issue for discussion in ARM list: Shutdown problem in SMP system happened on
-> Tegra20.
-> > The cause of the i2c timeout is pretty clear now and it is not
-> > directly related to this patch, so is this patch series acceptable? Any thoughts or comment? Thanks.
+On 08/26/2012 02:13 AM, John Crispin wrote:
+> Trivial patch that exports the of_irq_to_resource_table() symbol so that
+> modules can use it.
 > 
-> I tend to agree; power off never worked without this patch, and sometimes does with the patch, due to
-> nothing wrong with this patch.
-> 
-> Bill, please do follow up on getting the underlying Tegra issue solved somehow though. IIRC, Joseph Lo
-> or Prashant has a patch which enabled the config option that Russell mentioned, so the fix may just be
-> to wait for that patch to get finalized, but please double-check that solves it.
-> Thanks!
+> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> ---
 
-As per the shutdown issue discussion, enabling CONFIG_PM_SLEEP_SMP is the only solution and I've confirmed that fix the issue, thanks. 
+Applied for 3.7
+
+Rob
+
+>  drivers/of/irq.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index ff8ab7b..a23ec77 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -392,6 +392,7 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+>  
+>  	return i;
+>  }
+> +EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
+>  
+>  struct intc_desc {
+>  	struct list_head	list;
+> 
