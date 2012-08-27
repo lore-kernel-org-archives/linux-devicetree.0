@@ -1,14 +1,15 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] gpio: samsung: add devicetree init for s3c24xx arches
-Date: Mon, 27 Aug 2012 10:01:03 +0200
-Message-ID: <201208271001.05026.heiko@sntech.de>
-References: <201208252353.59345.heiko@sntech.de>
- <CAJuYYwQBOP7-D0fepDsCr+43ASKQ3CmMBMH-M79QH7r=xS85Eg@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] video: drm: exynos: Add device tree support
+Date: Mon, 27 Aug 2012 10:04:51 +0200
+Message-ID: <20120827080451.GA26594@pengutronix.de>
+References: <1345111689-14601-1-git-send-email-l.krishna@samsung.com>
+ <1345111689-14601-3-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAJuYYwQBOP7-D0fepDsCr+43ASKQ3CmMBMH-M79QH7r=xS85Eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345111689-14601-3-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,264 +20,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-linux <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Thu, Aug 16, 2012 at 03:38:09PM +0530, Leela Krishna Amudala wrote:
+> Add device tree based discovery support for DRM-FIMD driver.
+> 
+> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/fb/drm-fimd.txt |   80 +++++++++++++++++
+>  drivers/gpu/drm/exynos/exynos_drm_fimd.c          |   95 ++++++++++++++++++++-
+>  2 files changed, 173 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/fb/drm-fimd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fb/drm-fimd.txt b/Documentation/devicetree/bindings/fb/drm-fimd.txt
+> new file mode 100644
+> index 0000000..8ad8814
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fb/drm-fimd.txt
+> @@ -0,0 +1,80 @@
+> +* Samsung Display Controller using DRM frame work
+> +
+> +The display controller is used to transfer image data from memory to an
+> +external LCD driver interface. It supports various color formats such as
+> +rgb and yuv.
+> +
+> +Required properties:
+> + - compatible: Should be "samsung,exynos5-drm" for fimd using DRM frame work.
+> + - reg: physical base address of the controller and length of memory
+> +   mapped region.
+> + - interrupts: Three interrupts should be specified. The interrupts should be
+> +   specified in the following order.
+> +   - VSYNC interrupt
+> +   - FIFO level interrupt
+> +   - FIMD System Interrupt
+> +
+> + - samsung,fimd-display: This property should specify the phandle of the
+> +   display device node which holds the video interface timing with the
+> +   below mentioned properties.
+> +
+> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
+> +     horizontal timing includes four parameters in the following order.
+> +
+> +     - horizontal back porch (in number of lcd clocks)
+> +     - horizontal front porch (in number of lcd clocks)
+> +     - hsync pulse width (in number of lcd clocks)
+> +     - Display panels X resolution.
+> +
+> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
+> +     vertical timing includes four parameters in the following order.
+> +
+> +     - vertical back porch (in number of lcd lines)
+> +     - vertical front porch (in number of lcd lines)
+> +     - vsync pulse width (in number of lcd clocks)
+> +     - Display panels Y resolution.
 
-thanks for your review:
+I started an approach to add a common description for displays:
 
-Am Montag, 27. August 2012, 06:20:49 schrieb Thomas Abraham:
-> Hi Heiko,
-> =
+https://patchwork.kernel.org/patch/1154751/https://patchwork.kernel.org/patch/1154751/
 
-> On 26 August 2012 03:23, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> > Until now the Exynos-SoC was the only Samsung-SoC supporting the GPIOs
-> > via the device tree. This patch implements dt-support for the
-> > s3c24xx arches.
-> > =
+There are still comments to this approach, but I think rather than
+inventing SoC specific bindings we should use a common binding.
 
-> > The controllers contain only 3 cells, as the underlying gpio controller
-> > does not support controlling the drive strength on a gpio level.
-> > =
+Sascha
 
-> > Tested with the gpio-keys driver on a s3c2416 based machine.
-> > =
-
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> > =
-
-> >  .../devicetree/bindings/gpio/gpio-samsung.txt      |   38 ++++++++++++
-> >  drivers/gpio/gpio-samsung.c                        |   63
-> >  ++++++++++++++++++++ 2 files changed, 101 insertions(+), 0 deletions(-)
-> > =
-
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-> > b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt index
-> > 5375625..ce6a7d4 100644
-> > --- a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-> > =
-
-> > @@ -39,3 +39,41 @@ Example:
-> >                 #gpio-cells =3D <4>;
-> >                 gpio-controller;
-> >         =
-
-> >         };
-> > =
-
-> > +
-> > +
-> > +Samsung S3C24XX GPIO Controller
-> > +
-> > +Required properties:
-> > +- compatible: Compatible property value should be
-> > "samsung,s3c24xx-gpio".
-> =
-
-> This is debatable, but I would choose to be specific here and use
-> "samsing,s3c2416-gpio". For instance, SoC's in s3c24xx family have
-> differing value for pull none/down/up.
-
-Hmmm, but the logic to drive the gpio controller is the same for all arches=
-. =
-
-The only difference is the number to use for the different pull up/down =
-
-settings. So I think the "samsung,s3c24xx-gpio" is ok but the documentation =
-
-should simply reflect the different pull settings.
-
-
-> > +
-> > +- reg: Physical base address of the controller and length of memory
-> > mapped +  region.
-> > +
-> > +- #gpio-cells: Should be 3. The syntax of the gpio specifier used by
-> > client nodes +  should be the following with values derived from the SoC
-> > user manual. +     <[phandle of the gpio controller node]
-> > +      [pin number within the gpio controller]
-> > +      [mux function]
-> > +      [flags and pull up/down]
-> > +
-> > +  Values for gpio specifier:
-> > +  - Pin number: depending on the controller a number from 0 up to 15.
-> > +  - Flags and Pull Up/Down: 0 - Pull Up/Down Disabled.
-> > +                            1 - Pull Down Enabled.
-> > +                            3 - Pull Up Enabled.
-> =
-
-> As per s3c2416 user manual, 2 is used for Pull Up and 3 is listed as
-> reserved value. Any particular reason to use 3 here for pull up and
-> not 2 as per the user manual?
-
-Sorry, copy and paste error :-)
-
-
-> > +          Bit 16 (0x00010000) - Input is active low.
-> > +
-> > +- gpio-controller: Specifies that the node is a gpio controller.
-> > +- #address-cells: should be 1.
-> > +- #size-cells: should be 1.
-> =
-
-> It would be informative to add information about the 'mux function'
-> cell here as well. Specifically, on how to handle the banks that have
-> an extended GPxSEL register that allow additional pin function
-> selection.
-
-Will add a mux function description.
-
-Until now I've never realised the existence of the GPxSEL registers, so tha=
-nks =
-
-for the pointer :-).
-
-But is this used in the driver at all? All the setcfg/getcfg functions in =
-
-gpio-samsung.c only handle the GPxCON registers - I haven't found code to =
-
-handle the GPxSEL registers at all. So my guess is that this was never =
-
-implemented - or that I'm blind ;-) .
-
-
-> > +
-> > +Example:
-> > +
-> > +       gpa: gpio-controller@56000000 {
-> > +               #address-cells =3D <1>;
-> > +               #size-cells =3D <1>;
-> > +               compatible =3D "samsung,s3c24xx-gpio";
-> > +               reg =3D <0x56000000 0x10>;
-> > +               #gpio-cells =3D <3>;
-> > +               gpio-controller;
-> > +       };
-> > diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
-> > index a150d2e..80a2817 100644
-> > --- a/drivers/gpio/gpio-samsung.c
-> > +++ b/drivers/gpio/gpio-samsung.c
-> > @@ -938,6 +938,67 @@ static void __init samsung_gpiolib_add(struct
-> > samsung_gpio_chip *chip)
-> > =
-
-> >                 s3c_gpiolib_track(chip);
-> >  =
-
-> >  }
-> > =
-
-> > +#if defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF)
-> > +static int s3c24xx_gpio_xlate(struct gpio_chip *gc,
-> > +                       const struct of_phandle_args *gpiospec, u32
-> > *flags) +{
-> > +       unsigned int pin;
-> > +
-> > +       if (WARN_ON(gc->of_gpio_n_cells < 3))
-> > +               return -EINVAL;
-> > +
-> > +       if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
-> > +               return -EINVAL;
-> > +
-> > +       if (gpiospec->args[0] > gc->ngpio)
-> > +               return -EINVAL;
-> > +
-> > +       pin =3D gc->base + gpiospec->args[0];
-> > +
-> > +       if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(gpiospec->args[1])))
-> > +               pr_warn("gpio_xlate: failed to set pin function\n");
-> > +       if (s3c_gpio_setpull(pin, gpiospec->args[2] & 0xffff))
-> > +               pr_warn("gpio_xlate: failed to set pin pull up/down\n");
-> > +
-> > +       if (flags)
-> > +               *flags =3D gpiospec->args[2] >> 16;
-> > +
-> > +       return gpiospec->args[0];
-> > +}
-> > +
-> > +static const struct of_device_id s3c24xx_gpio_dt_match[] __initdata =
-=3D {
-> > +       { .compatible =3D "samsung,s3c24xx-gpio", },
-> > +       {}
-> > +};
-> > +
-> > +static __init void s3c24xx_gpiolib_attach_ofnode(struct
-> > samsung_gpio_chip *chip, +                                              =
-
-> >  u64 base, u64 offset) +{
-> > +       struct gpio_chip *gc =3D  &chip->chip;
-> > +       u64 address;
-> > +
-> > +       if (!of_have_populated_dt())
-> > +               return;
-> > +
-> > +       address =3D chip->base ? base + ((u32)chip->base & 0xfff) : bas=
-e +
-> > offset; +       gc->of_node =3D of_find_matching_node_by_address(NULL,
-> > +                       s3c24xx_gpio_dt_match, address);
-> > +       if (!gc->of_node) {
-> > +               pr_info("gpio: device tree node not found for gpio
-> > controller" +                       " with base address %08llx\n",
-> > address); +               return;
-> > +       }
-> > +       gc->of_gpio_n_cells =3D 3;
-> > +       gc->of_xlate =3D s3c24xx_gpio_xlate;
-> > +}
-> > +#elif defined(CONFIG_PLAT_S3C24XX)
-> > +static __init void s3c24xx_gpiolib_attach_ofnode(struct
-> > samsung_gpio_chip *chip, +                                              =
-
-> >  u64 base, u64 offset) +{
-> > +       return;
-> > +}
-> > +#endif /* defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF) */
-> > +
-> > =
-
-> >  static void __init s3c24xx_gpiolib_add_chips(struct samsung_gpio_chip
-> >  *chip,
-> >  =
-
-> >                                              int nr_chips, void __iomem
-> >                                              *base)
-> >  =
-
-> >  {
-> > =
-
-> > @@ -962,6 +1023,8 @@ static void __init s3c24xx_gpiolib_add_chips(struct
-> > samsung_gpio_chip *chip,
-> > =
-
-> >                         gc->direction_output =3D
-> >                         samsung_gpiolib_2bit_output;
-> >                 =
-
-> >                 samsung_gpiolib_add(chip);
-> > =
-
-> > +
-> > +               s3c24xx_gpiolib_attach_ofnode(chip, S3C24XX_PA_GPIO, i *
-> > 0x10);
-> > =
-
-> >         }
-> >  =
-
-> >  }
-> > =
-
-> > --
-> > 1.7.2.3
-> =
-
-> Overall, this is patch looks fine.
-> =
-
-> Reviewed-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-
-Heiko
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
