@@ -1,45 +1,94 @@
-From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH] ARM: AM33XX: clock: Add dcan clock aliases for device-tree
-Date: Mon, 27 Aug 2012 18:38:36 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EA99446@DBDE01.ent.ti.com>
-References: <1346061842-28714-1-git-send-email-hvaibhav@ti.com>
- <alpine.DEB.2.00.1208271717420.26953@utopia.booyaka.com>
- <79CD15C6BA57404B839C016229A409A83EA99396@DBDE01.ent.ti.com>
- <alpine.DEB.2.00.1208271836270.26953@utopia.booyaka.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 03/11] pinctrl: mvebu: kirkwood pinctrl driver
+Date: Mon, 27 Aug 2012 21:19:12 +0200
+Message-ID: <503BC830.7090705@gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1344689809-6223-4-git-send-email-sebastian.hesselbarth@gmail.com> <CACRpkdbG4jkFcVP_6AmAZzciffQCamKXw7PcFnTdccyq7AMa8A@mail.gmail.com> <343192fa3698ed0575444a5603ed734d@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.00.1208271836270.26953-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <343192fa3698ed0575444a5603ed734d@codethink.co.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2012 at 00:06:45, Paul Walmsley wrote:
-> On Mon, 27 Aug 2012, Hiremath, Vaibhav wrote:
-> 
-> > On Mon, Aug 27, 2012 at 22:50:12, Paul Walmsley wrote:
-> >
-> > > Is the dcan driver present in v3.6-rc kernels?  
-> > 
-> > Multiple versions have been submitted already, I have validated using them.
-> > Irrespective of this, it is independent change and required for the driver.
-> 
-> OK, will queue it for 3.7.
-> 
+On 08/27/2012 03:43 PM, Ben Dooks wrote:
+> On 20/08/2012 06:49, Linus Walleij wrote:
+>> On Sat, Aug 11, 2012 at 2:56 PM, Sebastian Hesselbarth
+>> <sebastian.hesselbarth@gmail.com> wrote:
+>> (...)
+>>> diff --git a/drivers/pinctrl/pinctrl-kirkwood.c
+>>> b/drivers/pinctrl/pinctrl-kirkwood.c
+>>> +static struct mvebu_pinctrl_soc_info kirkwood_pinctrl_info;
+>>> +
+>>> +static struct of_device_id kirkwood_pinctrl_of_match[] __devinitdata
+>>> = {
+>>> + { .compatible = "marvell,88f6180-pinctrl",
+>>> + .data = (void *)VARIANT_MV88F6180 },
+>>> + { .compatible = "marvell,88f6190-pinctrl",
+>>> + .data = (void *)VARIANT_MV88F6190 },
+>>> + { .compatible = "marvell,88f6192-pinctrl",
+>>> + .data = (void *)VARIANT_MV88F6192 },
+>>> + { .compatible = "marvell,88f6281-pinctrl",
+>>> + .data = (void *)VARIANT_MV88F6281 },
+>>> + { .compatible = "marvell,88f6282-pinctrl",
+>>> + .data = (void *)VARIANT_MV88F6282 },
+>>> + { }
+>>> +};
+>>
+>> I'm thinking this variant should maybe be an enum... unless it is
+>> strongly established somewhere in Orion/Marvell stuff.
+>>
+>>> +static int __devinit kirkwood_pinctrl_probe(struct platform_device
+>>> *pdev)
+>>> +{
+>>> + struct mvebu_pinctrl_soc_info *soc = &kirkwood_pinctrl_info;
+>>> + const struct of_device_id *match =
+>>> + of_match_device(kirkwood_pinctrl_of_match, &pdev->dev);
+>>> +
+>>> + if (match) {
+>>> + soc->variant = (unsigned)match->data & 0xff;
+>>> + switch (soc->variant) {
+>>> + case VARIANT_MV88F6180:
+>>> + soc->controls = mv88f6180_mpp_controls;
+>>> + soc->ncontrols = ARRAY_SIZE(mv88f6180_mpp_controls);
+>>> + soc->modes = mv88f6xxx_mpp_modes;
+>>> + soc->nmodes = ARRAY_SIZE(mv88f6xxx_mpp_modes);
+>>> + soc->gpioranges = mv88f6180_gpio_ranges;
+>>> + soc->ngpioranges = ARRAY_SIZE(mv88f6180_gpio_ranges);
+>>> + break;
+>>> + case VARIANT_MV88F6190:
+>>> + case VARIANT_MV88F6192:
+>>> + soc->controls = mv88f619x_mpp_controls;
+>>> + soc->ncontrols = ARRAY_SIZE(mv88f619x_mpp_controls);
+>>> + soc->modes = mv88f6xxx_mpp_modes;
+>>> + soc->nmodes = ARRAY_SIZE(mv88f6xxx_mpp_modes);
+>>> + soc->gpioranges = mv88f619x_gpio_ranges;
+>>> + soc->ngpioranges = ARRAY_SIZE(mv88f619x_gpio_ranges);
+>>> + break;
+>>> + case VARIANT_MV88F6281:
+>>> + case VARIANT_MV88F6282:
+>>> + soc->controls = mv88f628x_mpp_controls;
+>>> + soc->ncontrols = ARRAY_SIZE(mv88f628x_mpp_controls);
+>>> + soc->modes = mv88f6xxx_mpp_modes;
+>>> + soc->nmodes = ARRAY_SIZE(mv88f6xxx_mpp_modes);
+>>> + soc->gpioranges = mv88f628x_gpio_ranges;
+>>> + soc->ngpioranges = ARRAY_SIZE(mv88f628x_gpio_ranges);
+>>> + break;
+>>> + }
+>>> + pdev->dev.platform_data = soc;
+>>> + }
+>>> + return mvebu_pinctrl_probe(pdev);
+>>> +}
+>
+> Why not have structures defining the soc-> parameters and use that in the
+> of_match list?
 
-Thanks Paul.
+Ben,
 
-Thanks,
-Vaibhav
+functionally it is equivalent and IMHO using soc structs doesn't improve
+readability here. I there any other good reason to have structs for each
+soc?
+
+Sebastian
