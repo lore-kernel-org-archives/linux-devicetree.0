@@ -1,92 +1,62 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] video: drm: exynos: Add device tree support
-Date: Mon, 27 Aug 2012 10:04:51 +0200
-Message-ID: <20120827080451.GA26594@pengutronix.de>
-References: <1345111689-14601-1-git-send-email-l.krishna@samsung.com>
- <1345111689-14601-3-git-send-email-l.krishna@samsung.com>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [PATCH] gpio: samsung: add devicetree init for s3c24xx arches
+Date: Mon, 27 Aug 2012 11:57:04 +0300
+Message-ID: <CA+E=qVfV1DL1ikjVnLd7qTeCx9C8Z7dGvhh_9NSgxPYrOCJ=0g@mail.gmail.com>
+References: <201208252353.59345.heiko@sntech.de> <CAJuYYwQBOP7-D0fepDsCr+43ASKQ3CmMBMH-M79QH7r=xS85Eg@mail.gmail.com>
+ <201208271001.05026.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1345111689-14601-3-git-send-email-l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201208271001.05026.heiko@sntech.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Linus Walleij <linus.walleij@stericsson.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, arm-linux <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 16, 2012 at 03:38:09PM +0530, Leela Krishna Amudala wrote:
-> Add device tree based discovery support for DRM-FIMD driver.
-> 
-> Signed-off-by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/fb/drm-fimd.txt |   80 +++++++++++++++++
->  drivers/gpu/drm/exynos/exynos_drm_fimd.c          |   95 ++++++++++++++++++++-
->  2 files changed, 173 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/fb/drm-fimd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fb/drm-fimd.txt b/Documentation/devicetree/bindings/fb/drm-fimd.txt
-> new file mode 100644
-> index 0000000..8ad8814
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fb/drm-fimd.txt
-> @@ -0,0 +1,80 @@
-> +* Samsung Display Controller using DRM frame work
-> +
-> +The display controller is used to transfer image data from memory to an
-> +external LCD driver interface. It supports various color formats such as
-> +rgb and yuv.
-> +
-> +Required properties:
-> + - compatible: Should be "samsung,exynos5-drm" for fimd using DRM frame work.
-> + - reg: physical base address of the controller and length of memory
-> +   mapped region.
-> + - interrupts: Three interrupts should be specified. The interrupts should be
-> +   specified in the following order.
-> +   - VSYNC interrupt
-> +   - FIFO level interrupt
-> +   - FIMD System Interrupt
-> +
-> + - samsung,fimd-display: This property should specify the phandle of the
-> +   display device node which holds the video interface timing with the
-> +   below mentioned properties.
-> +
-> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
-> +     horizontal timing includes four parameters in the following order.
-> +
-> +     - horizontal back porch (in number of lcd clocks)
-> +     - horizontal front porch (in number of lcd clocks)
-> +     - hsync pulse width (in number of lcd clocks)
-> +     - Display panels X resolution.
-> +
-> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
-> +     vertical timing includes four parameters in the following order.
-> +
-> +     - vertical back porch (in number of lcd lines)
-> +     - vertical front porch (in number of lcd lines)
-> +     - vsync pulse width (in number of lcd clocks)
-> +     - Display panels Y resolution.
+Hi,
 
-I started an approach to add a common description for displays:
+On Mon, Aug 27, 2012 at 11:01 AM, Heiko St=C3=BCbner <heiko@sntech.de> =
+wrote:
+> Hi Thomas,
+>
+> thanks for your review:
+>
+> Hmmm, but the logic to drive the gpio controller is the same for all =
+arches.
+> The only difference is the number to use for the different pull up/do=
+wn
+> settings. So I think the "samsung,s3c24xx-gpio" is ok but the documen=
+tation
+> should simply reflect the different pull settings.
+>
 
-https://patchwork.kernel.org/patch/1154751/https://patchwork.kernel.org/patch/1154751/
+Also s3c2410 and s3c2440 has different count of GPIOs. And that could
+be a problem on machines
+with GPIO-expanders (h1940 machine)
 
-There are still comments to this approach, but I think rather than
-inventing SoC specific bindings we should use a common binding.
+>> It would be informative to add information about the 'mux function'
+>> cell here as well. Specifically, on how to handle the banks that hav=
+e
+>> an extended GPxSEL register that allow additional pin function
+>> selection.
+>
+> Will add a mux function description.
+>
+> Until now I've never realised the existence of the GPxSEL registers, =
+so thanks
+> for the pointer :-).
+>
+> But is this used in the driver at all? All the setcfg/getcfg function=
+s in
+> gpio-samsung.c only handle the GPxCON registers - I haven't found cod=
+e to
+> handle the GPxSEL registers at all. So my guess is that this was neve=
+r
+> implemented - or that I'm blind ;-) .
 
-Sascha
+There're no GPxSEL registers on s3c2410/s3c2440/s3c2442. Is it
+something s3c2412/sec2416 specific?
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards
+Vasily
