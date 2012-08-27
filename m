@@ -1,62 +1,41 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 0/7] add syscon driver based on regmap for general
- registers access
-Date: Mon, 27 Aug 2012 15:24:38 +0800
-Message-ID: <1346052285-4344-1-git-send-email-b29396@freescale.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH v2 3/7] ARM: imx6q: add anatop support into syscon
+Date: Mon, 27 Aug 2012 15:24:41 +0800
+Message-ID: <1346052285-4344-4-git-send-email-b29396@freescale.com>
+References: <1346052285-4344-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1346052285-4344-1-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series mainly adds an syscon driver which is used to access
-general system controller registers like FSL IOMUXC GPR and ANATOP,
-after that, we convert all the exist private access general registers code to use
-standard API from regmap to access registers.
-Finally we remove the old mfd anatop driver which is only for anatop register
-access.
+From: Dong Aisheng <dong.aisheng@linaro.org>
 
-The patch series is based on linus's tree 3.6-rc3 since commit 9160338.
+There're a few anatop registers need to be accessed by different modules.
+Add anatop registers into syscon support for easy access.
 
-Dong Aisheng (7):
-  mfd: add syscon driver based on regmap
-  ARM: imx6q: add iomuxc gpr support into syscon
-  ARM: imx6q: add anatop support into syscon
-  regulator: anatop-regulator: convert to use syscon to access anatop
-    register
-  ARM: imx6q: convert to use syscon to access anatop registers
-  ARM: dts: imx6q: add simple-bus compatible string for anatop
-  mfd: anatop-mfd: remove anatop driver
+Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+---
+ arch/arm/boot/dts/imx6q.dtsi |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/mfd/imx-syscon.txt         |   11 +
- arch/arm/boot/dts/imx6q.dtsi                       |   15 +-
- arch/arm/mach-imx/Kconfig                          |    2 +-
- arch/arm/mach-imx/mach-imx6q.c                     |   43 ++--
- drivers/mfd/Kconfig                                |   13 +-
- drivers/mfd/Makefile                               |    2 +-
- drivers/mfd/anatop-mfd.c                           |  124 --------
- drivers/mfd/syscon.c                               |  169 +++++++++++
- drivers/regulator/Kconfig                          |    2 +-
- drivers/regulator/anatop-regulator.c               |   25 +-
- include/linux/fsl/imx6q-iomuxc-gpr.h               |  319 ++++++++++++++++++++
- include/linux/mfd/anatop.h                         |   40 ---
- include/linux/mfd/syscon.h                         |   22 ++
- 13 files changed, 576 insertions(+), 211 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/imx-syscon.txt
- delete mode 100644 drivers/mfd/anatop-mfd.c
- create mode 100644 drivers/mfd/syscon.c
- create mode 100644 include/linux/fsl/imx6q-iomuxc-gpr.h
- delete mode 100644 include/linux/mfd/anatop.h
- create mode 100644 include/linux/mfd/syscon.h
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index bea21bc..db3fa15 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -378,8 +378,8 @@
+ 				interrupts = <0 87 0x04 0 88 0x04>;
+ 			};
+ 
+-			anatop@020c8000 {
+-				compatible = "fsl,imx6q-anatop";
++			anatop: anatop@020c8000 {
++				compatible = "fsl,imx6q-anatop", "syscon";
+ 				reg = <0x020c8000 0x1000>;
+ 				interrupts = <0 49 0x04 0 54 0x04 0 127 0x04>;
+ 
+-- 
+1.7.0.4
