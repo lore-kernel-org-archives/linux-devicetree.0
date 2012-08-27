@@ -1,310 +1,203 @@
 From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2 1/7] mfd: add syscon driver based on regmap
-Date: Tue, 28 Aug 2012 06:08:32 +0800
-Message-ID: <20120827220830.GB2281@r65073-Latitude-D630>
+Subject: Re: [PATCH v2 4/7] regulator: anatop-regulator: convert to use
+ syscon to access anatop register
+Date: Tue, 28 Aug 2012 06:15:35 +0800
+Message-ID: <20120827221532.GC2281@r65073-Latitude-D630>
 References: <1346052285-4344-1-git-send-email-b29396@freescale.com>
- <1346052285-4344-2-git-send-email-b29396@freescale.com>
+ <1346052285-4344-5-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1346052285-4344-2-git-send-email-b29396@freescale.com>
+In-Reply-To: <1346052285-4344-5-git-send-email-b29396@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Dong Aisheng <b29396@freescale.com>
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2012 at 03:24:39PM +0800, Dong Aisheng wrote:
+On Mon, Aug 27, 2012 at 03:24:42PM +0800, Dong Aisheng wrote:
 > From: Dong Aisheng <dong.aisheng@linaro.org>
 > 
-> Add regmap based syscon driver.
-> This is usually used for access misc bits in registers which does not belong
-> to a specific module, for example, IMX IOMUXC GPR and ANATOP.
-> With this driver, client can use generic regmap API to access registers
-> which are registered into syscon.
+> Using syscon to access anatop register.
 > 
-> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 > Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
 > ---
-> ChangeLog:
-> v1->v2:
->  * provide a way of retrieving the regmap, suggested by Mark Brown.
->  * delete imx-syscon io accessors and using generic regmap API for client drivers.
->  * change to a more generic name for other SoCs to use.
+> ChangeLog v1-v2:
+>  * update to use generic regmap api
 > ---
->  .../devicetree/bindings/mfd/imx-syscon.txt         |   11 ++
-
-So, this file should be renamed as well.
-
->  drivers/mfd/Kconfig                                |    7 +
->  drivers/mfd/Makefile                               |    1 +
->  drivers/mfd/syscon.c                               |  169 ++++++++++++++++++++
->  include/linux/mfd/syscon.h                         |   22 +++
->  5 files changed, 210 insertions(+), 0 deletions(-)
+>  arch/arm/boot/dts/imx6q.dtsi         |    6 ++++++
+>  drivers/regulator/Kconfig            |    2 +-
+>  drivers/regulator/anatop-regulator.c |   25 +++++++++++++++----------
+>  3 files changed, 22 insertions(+), 11 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/imx-syscon.txt b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
-> new file mode 100644
-> index 0000000..c1a13b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/imx-syscon.txt
-> @@ -0,0 +1,11 @@
-> +* System Controller Registers R/W driver
-> +
-> +Required properties:
-> +- compatible: Should contain "syscon".
-> +- reg: the register range can be access from syscon
-> +
-> +Examples:
-> +gpr: iomuxc-gpr@020e0000 {
-> +	compatible = "fsl,imx6q-iomuxc", "syscon";
-> +	reg = <0x020e0000 0x38>;
-> +};
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index b1a1462..4a6c48e 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -993,6 +993,13 @@ config MFD_ANATOP
->  	  MFD controller. This controller embeds regulator and
->  	  thermal devices for Freescale i.MX platforms.
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index db3fa15..da2bb71 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -395,6 +395,7 @@
+>  					anatop-min-bit-val = <4>;
+>  					anatop-min-voltage = <800000>;
+>  					anatop-max-voltage = <1375000>;
+> +					fsl,anatop = <&anatop>;
+>  				};
 >  
-> +config MFD_SYSCON
-> +        bool "System Controller Register R/W Based on Regmap"
-> +        select REGMAP_MMIO
-> +        help
-> +          Select this option to enable accessing system control registers
-> +	  via regmap.
-> +
->  config MFD_PALMAS
->  	bool "Support for the TI Palmas series chips"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 79dd22d..8384bc9 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -131,4 +131,5 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
->  obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
->  obj-$(CONFIG_MFD_ANATOP)	+= anatop-mfd.o
-> +obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
->  obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> new file mode 100644
-> index 0000000..da2464f
-> --- /dev/null
-> +++ b/drivers/mfd/syscon.c
-> @@ -0,0 +1,169 @@
-> +/*
-> + * System Control Driver
-> + *
-> + * Copyright (C) 2012 Freescale Semiconductor, Inc.
-> + * Copyright (C) 2012 Linaro Ltd.
-> + *
-> + * Author: Dong Aisheng <dong.aisheng@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
+>  				regulator-3p0@120 {
+> @@ -409,6 +410,7 @@
+>  					anatop-min-bit-val = <0>;
+>  					anatop-min-voltage = <2625000>;
+>  					anatop-max-voltage = <3400000>;
+> +					fsl,anatop = <&anatop>;
+>  				};
+>  
+>  				regulator-2p5@130 {
+> @@ -423,6 +425,7 @@
+>  					anatop-min-bit-val = <0>;
+>  					anatop-min-voltage = <2000000>;
+>  					anatop-max-voltage = <2750000>;
+> +					fsl,anatop = <&anatop>;
+>  				};
+>  
+>  				regulator-vddcore@140 {
+> @@ -437,6 +440,7 @@
+>  					anatop-min-bit-val = <1>;
+>  					anatop-min-voltage = <725000>;
+>  					anatop-max-voltage = <1450000>;
+> +					fsl,anatop = <&anatop>;
+>  				};
+>  
+>  				regulator-vddpu@140 {
+> @@ -451,6 +455,7 @@
+>  					anatop-min-bit-val = <1>;
+>  					anatop-min-voltage = <725000>;
+>  					anatop-max-voltage = <1450000>;
+> +					fsl,anatop = <&anatop>;
+>  				};
+>  
+>  				regulator-vddsoc@140 {
+> @@ -465,6 +470,7 @@
+>  					anatop-min-bit-val = <1>;
+>  					anatop-min-voltage = <725000>;
+>  					anatop-max-voltage = <1450000>;
+> +					fsl,anatop = <&anatop>;
+>  				};
+>  			};
+>  
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 4e932cc..2ae1d97 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -112,7 +112,7 @@ config REGULATOR_DA9052
+>  
+>  config REGULATOR_ANATOP
+>  	tristate "Freescale i.MX on-chip ANATOP LDO regulators"
+> -	depends on MFD_ANATOP
+> +	depends on MFD_SYSCON
+>  	help
+>  	  Say y here to support Freescale i.MX on-chip ANATOP LDOs
+>  	  regulators. It is recommended that this option be
+> diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
+> index ce0fe72..71586a7 100644
+> --- a/drivers/regulator/anatop-regulator.c
+> +++ b/drivers/regulator/anatop-regulator.c
+> @@ -21,19 +21,20 @@
+>  #include <linux/slab.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+> +#include <linux/mfd/syscon.h>
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> -#include <linux/mfd/anatop.h>
 > +#include <linux/regmap.h>
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/of_regulator.h>
+>  
+>  struct anatop_regulator {
+>  	const char *name;
+>  	u32 control_reg;
+> -	struct anatop *mfd;
+> +	struct regmap *anatop;
+>  	int vol_bit_shift;
+>  	int vol_bit_width;
+>  	int min_bit_val;
+> @@ -43,7 +44,7 @@ struct anatop_regulator {
+>  	struct regulator_init_data *initdata;
+>  };
+>  
+> -static int anatop_set_voltage_sel(struct regulator_dev *reg, unsigned selector)
+> +static int anatop_regmap_set_voltage_sel(struct regulator_dev *reg, unsigned selector)
+>  {
+>  	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
+>  	u32 val, mask;
+> @@ -56,12 +57,13 @@ static int anatop_set_voltage_sel(struct regulator_dev *reg, unsigned selector)
+>  	mask = ((1 << anatop_reg->vol_bit_width) - 1) <<
+>  		anatop_reg->vol_bit_shift;
+>  	val <<= anatop_reg->vol_bit_shift;
+> -	anatop_write_reg(anatop_reg->mfd, anatop_reg->control_reg, val, mask);
+> +	regmap_update_bits(anatop_reg->anatop, anatop_reg->control_reg,
+> +				mask, val);
+>  
+>  	return 0;
+>  }
+>  
+> -static int anatop_get_voltage_sel(struct regulator_dev *reg)
+> +static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
+>  {
+>  	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
+>  	u32 val, mask;
+> @@ -69,7 +71,7 @@ static int anatop_get_voltage_sel(struct regulator_dev *reg)
+>  	if (!anatop_reg->control_reg)
+>  		return -ENOTSUPP;
+>  
+> -	val = anatop_read_reg(anatop_reg->mfd, anatop_reg->control_reg);
+> +	regmap_read(anatop_reg->anatop, anatop_reg->control_reg, &val);
+>  	mask = ((1 << anatop_reg->vol_bit_width) - 1) <<
+>  		anatop_reg->vol_bit_shift;
+>  	val = (val & mask) >> anatop_reg->vol_bit_shift;
+> @@ -78,8 +80,8 @@ static int anatop_get_voltage_sel(struct regulator_dev *reg)
+>  }
+>  
+>  static struct regulator_ops anatop_rops = {
+> -	.set_voltage_sel = anatop_set_voltage_sel,
+> -	.get_voltage_sel = anatop_get_voltage_sel,
+> +	.set_voltage_sel = anatop_regmap_set_voltage_sel,
+> +	.get_voltage_sel = anatop_regmap_get_voltage_sel,
+>  	.list_voltage = regulator_list_voltage_linear,
+>  	.map_voltage = regulator_map_voltage_linear,
+>  };
+> @@ -92,7 +94,6 @@ static int __devinit anatop_regulator_probe(struct platform_device *pdev)
+>  	struct regulator_dev *rdev;
+>  	struct anatop_regulator *sreg;
+>  	struct regulator_init_data *initdata;
+> -	struct anatop *anatopmfd = dev_get_drvdata(pdev->dev.parent);
+>  	struct regulator_config config = { };
+>  	int ret = 0;
+>  
+> @@ -109,7 +110,11 @@ static int __devinit anatop_regulator_probe(struct platform_device *pdev)
+>  	rdesc->ops = &anatop_rops;
+>  	rdesc->type = REGULATOR_VOLTAGE;
+>  	rdesc->owner = THIS_MODULE;
+> -	sreg->mfd = anatopmfd;
 > +
-> +static struct platform_driver syscon_driver;
+> +	sreg->anatop = syscon_regmap_lookup_by_phandle(np, "fsl,anatop");
+> +	if (IS_ERR(sreg->anatop))
+> +		return PTR_ERR(sreg->anatop);
 > +
-> +struct syscon {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	struct regmap *regmap;
-> +};
-> +
-> +static int syscon_match(struct device *dev, void *data)
-> +{
-> +	struct syscon *syscon = dev_get_drvdata(dev);
-> +	struct device_node *dn = data;
-> +
-> +	return (syscon->dev->of_node == dn) ? 1 : 0;
-> +}
-> +
-> +static struct regmap *syscon_node_to_regmap(struct device_node *np)
-> +{
-> +	struct syscon *syscon;
-> +	struct device *dev;
-> +
-> +	dev = driver_find_device(&syscon_driver.driver, NULL, np,
-> +				 syscon_match);
-> +	of_node_put(np);
-> +
-> +	if (!dev)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	syscon = dev_get_drvdata(dev);
-> +
-> +	return syscon->regmap;
-> +}
-> +
-> +struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
-> +{
-> +	struct device_node *syscon_np;
-> +
-> +	syscon_np = of_find_compatible_node(NULL, NULL, s);
-> +	if (!syscon_np)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return syscon_node_to_regmap(syscon_np);
-> +}
-> +
-> +struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
-> +					const char *property)
-> +{
-> +	struct device_node *syscon_np;
-> +
-> +	syscon_np = of_parse_phandle(np, property, 0);
-> +	if (!syscon_np)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return syscon_node_to_regmap(syscon_np);
-> +}
 
-The above two APIs are all about finding the device_node for syscon,
-and can be done by clients in whatever way that is easy for them.
-Then we can save these APIs and export syscon_node_to_regmap directly.
+All the anatop regulators are child nodes of anatop.  It looks a little
+odd to use phandle there.  of_get_parent should just works.
 
-> +
-> +static const struct of_device_id of_syscon_match[] = {
-> +	{ .compatible = "syscon", },
-> +	{ },
-> +};
-> +
-> +static struct regmap_config syscon_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +};
-> +
-> +static int __devinit syscon_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct syscon *syscon;
-> +	struct resource res;
-> +	int ret;
-> +
-> +	if (!np)
-> +		return -ENOENT;
-> +
-> +	syscon = devm_kzalloc(&pdev->dev, sizeof(struct syscon),
-> +			    GFP_KERNEL);
-> +	if (!syscon)
-> +		return -ENOMEM;
-> +
-> +	syscon->base = of_iomap(np, 0);
-> +	if (!syscon->base)
-> +		return -EADDRNOTAVAIL;
-> +
-> +	ret = of_address_to_resource(np, 0, &res);
-> +	if (ret)
-> +		return ret;
-> +
-> +	syscon_regmap_config.max_register = res.end - res.start - 3;
-> +	syscon->regmap = devm_regmap_init_mmio(&pdev->dev, syscon->base,
-> +					&syscon_regmap_config);
-> +	if (IS_ERR(syscon->regmap)) {
-> +		dev_err(&pdev->dev, "regmap init failed\n");
-> +		return PTR_ERR(syscon->regmap);
-> +	}
-> +
-> +	regcache_cache_only(syscon->regmap, false);
-> +
-> +	syscon->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, syscon);
-> +
-> +	dev_info(dev, "syscon regmap start 0x%x end 0x%x registered\n",
-> +		res.start, res.end);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __devexit syscon_remove(struct platform_device *pdev)
-> +{
-> +	struct syscon *syscon;
-> +
-> +	syscon = platform_get_drvdata(pdev);
-> +	iounmap(syscon->base);
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver syscon_driver = {
-> +	.driver = {
-> +		.name = "syscon",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_syscon_match,
-> +	},
-> +	.probe		= syscon_probe,
-> +	.remove		= syscon_remove,
-> +};
-> +
-> +static int __init syscon_init(void)
-> +{
-> +	return platform_driver_register(&syscon_driver);
-> +}
-> +postcore_initcall(syscon_init);
-> +
-> +static void __exit anatop_exit(void)
-
-s/anatop_exit/syscon_exit
-
-> +{
-> +	platform_driver_unregister(&syscon_driver);
-> +}
-> +module_exit(anatop_exit);
-
-Ditto.
-
-Regards,
-Shawn
-
-> +
-> +MODULE_AUTHOR("Dong Aisheng <dong.aisheng@linaro.org>");
-> +MODULE_DESCRIPTION("System Control driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-> new file mode 100644
-> index 0000000..990d7cf
-> --- /dev/null
-> +++ b/include/linux/mfd/syscon.h
-> @@ -0,0 +1,22 @@
-> +/*
-> + * System Control Driver
-> + *
-> + * Copyright (C) 2012 Freescale Semiconductor, Inc.
-> + * Copyright (C) 2012 Linaro Ltd.
-> + *
-> + * Author: Dong Aisheng <dong.aisheng@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#ifndef __LINUX_MFD_SYSCON_H__
-> +#define __LINUX_MFD_SYSCON_H__
-> +
-> +extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
-> +extern struct regmap *syscon_regmap_lookup_by_phandle(
-> +					struct device_node *np,
-> +					const char *property);
-> +#endif /* __LINUX_MFD_SYSCON_H__ */
+>  	ret = of_property_read_u32(np, "anatop-reg-offset",
+>  				   &sreg->control_reg);
+>  	if (ret) {
 > -- 
 > 1.7.0.4
 > 
 > 
+
+-- 
+Regards,
+Shawn
