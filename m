@@ -1,51 +1,49 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] DT: export of_irq_to_resource_table()
-Date: Mon, 27 Aug 2012 02:01:51 -0500
-Message-ID: <503B1B5F.3000804@gmail.com>
-References: <1345965189-14548-1-git-send-email-blogic@openwrt.org>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH v3 0/6] omap-am33xx rtc dt support
+Date: Mon, 27 Aug 2012 07:35:43 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93E9BA4EB@DBDE01.ent.ti.com>
+References: <cover.1343383616.git.afzal@ti.com> <50256797.3020505@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345965189-14548-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50256797.3020505@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Hilman, Kevin" <khilman@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/26/2012 02:13 AM, John Crispin wrote:
-> Trivial patch that exports the of_irq_to_resource_table() symbol so that
-> modules can use it.
-> 
-> Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> ---
-
-Applied for 3.7
-
-Rob
-
->  drivers/of/irq.c |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index ff8ab7b..a23ec77 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -392,6 +392,7 @@ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
->  
->  	return i;
->  }
-> +EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
->  
->  struct intc_desc {
->  	struct list_head	list;
-> 
+SGkgQWxlc3NhbmRybywNCg0KT24gU2F0LCBBdWcgMTEsIDIwMTIgYXQgMDE6Mjc6MTEsIE5vcmks
+IFNla2hhciB3cm90ZToNCj4gT24gNy8yNy8yMDEyIDU6NTMgUE0sIEFmemFsIE1vaGFtbWVkIHdy
+b3RlOg0KDQo+ID4gVGhpcyBzZXJpZXMgbWFrZXMgcnRjLW9tYXAgZHJpdmVyIERUIGNhcGFibGUs
+IGFkZHMgQU0zM3h4DQo+ID4gUlRDIERUIHN1cHBvcnQgYWxvbmcgd2l0aCBhIGZldyBlbmNoYW5j
+bWVudHMgdG8gdGhlIGRyaXZlci4NCj4gPiANCj4gPiBydGMtb21hcCBkcml2ZXIgaXMgbWFkZSBp
+bnRlbGxpZ2VudCBlbm91Z2ggdG8gaGFuZGxlIGtpY2tlcg0KPiA+IG1lY2hhbmlzbS4gVGhpcyBo
+ZWxwcyBpbiByZW1vdmluZyBraWNrZXIgbWVjaGFuaXNtIHN1cHBvcnQNCj4gPiBkb25lIGZvciBE
+YVZpbmNpIGF0IHBsYXRmb3JtIGxldmVsLg0KPiA+IA0KPiA+IFRoaXMgaGFzIGJlZW4gdGVzdGVk
+IG9uIEJlYWdsZWJvbmUgKEFNMzN4eCBwbGF0Zm9ybSkgYW5kIG9uDQo+ID4gRGFWaW5jaSBEQTg1
+MCBFVk0uDQo+ID4gDQo+ID4gVGhpcyBzZXJpZXMgaXMgYmFzZWQgb3ZlciBsaW51eC1vbWFwIG1h
+c3RlciBhbmQgY2FuIGJlDQo+ID4gZGlyZWN0bHkgYXBwbGllZCBvdmVyIGxpbnV4LW5leHQsIGV4
+Y2VwdCBmb3INCj4gPiBbUEFUQ0ggNi82XSBhcm0vZHRzOiBhbTMzeHggcnRjIG5vZGUuDQo+ID4g
+DQo+ID4gUEFUQ0ggNi82IHNob3VsZCBnbyB0aHJvdWdoIGxpbnV4LW9tYXAgdHJlZSBhbmQgbmVl
+ZHMNCj4gPiBodHRwOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtb21hcEB2Z2VyLmtlcm5l
+bC5vcmcvbXNnNzE2NDQuaHRtbA0KPiA+IChhcm0vZHRzOiBhbTMzeHggd2R0IG5vZGUpIHRvIGdl
+dCBhcHBsaWVkIGNsZWFubHkNCj4gDQo+IEkgdGVzdGVkIHBhdGNoZXMgMS01IG9uIEFNMTh4IEVW
+TSB1c2luZyBydGN3YWtlIGFuZCBod2Nsb2NrIGNvbW1hbmRzLg0KPiBBbHNvIHRlc3RlZCBvbiBE
+VCBlbmFibGVkIEFNMTh4IEVWTSB1c2luZyBod2Nsb2NrLg0KPiANCj4gRm9yIHBhdGNoZWQgMS01
+Og0KPiANCj4gQWNrZWQtYnk6IFNla2hhciBOb3JpIDxuc2VraGFyQHRpLmNvbT4NCj4gDQo+IEFs
+ZXNzYW5kcm8sDQo+IA0KPiBJIGFzc3VtZSB5b3Ugd291bGQgd2FudCBtZSB0byBxdWV1ZSAyLzYg
+dGhyb3VnaCBEYVZpbmNpIHRyZWUuIFRoYXQgcGF0Y2gNCj4gZGVwZW5kcyBvbiAxLzYgYmVpbmcg
+YWNjZXB0ZWQgYW5kIG1lcmdlZCBieSB5b3UuIExldCBtZSBrbm93IGhvdyB5b3UNCj4gd2FudCB0
+byBtb3ZlIGZvcndhcmQgaGVyZS4NCg0KQ2FuIHlvdSBwbGVhc2UgaGVscCAxLTUgcGF0Y2hlcyBp
+biB0aGlzIHNlcmllcyB0byBnZXQgaW50byBtYWlubGluZS4NCjEtNSBvZiB0aGlzIHNlcmllcyBp
+cyBhIHByZXJlcXVpc2l0ZSBmb3IgYWRkaW5nIFJUQyBzdXBwb3J0IGZvciBBTTMzNVgNClNvQydz
+LCB3aGljaCBpcyBwcmVzZW50IGluIGJlYWdsZWJvbmUsIEFNMzM1WCBFVk0uDQoNCkFsc28gdGhp
+cyBzZXJpZXMgZG9lcyBjbGVhbnVwIG9uIERhVmluY2kgcGxhdGZvcm0gYnkgbW92aW5nIGtpY2tl
+ciBoYW5kbGluZw0KbWVjaGFuaXNtIHRvIGRyaXZlci4gQW5kIHdlIGhhdmUgQWNrIGZyb20gRGFW
+aW5jaSBtYWludGFpbmVyIG9uIDEtNSBvZiB0aGlzDQpzZXJpZXMuDQoNClBhdGNoIDYvNiBhZGRz
+IEFNMzM1WCBSVEMgRFQgc3VwcG9ydCwgbm90IHN1cmUgd2hldGhlciB5b3UgY2FuIHRha2UgNi82
+DQpvciBUb255IHNob3VsZCBiZSB0YWtpbmcgaXQuDQoNClRoZSBzZXJpZXMgYXBwbGllcyBjbGVh
+bmx5IG92ZXIgbGludXgtbmV4dCAobm93IGluY2x1ZGluZyA2LzYpDQoNClJlZ2FyZHMNCkFmemFs
+DQo=
