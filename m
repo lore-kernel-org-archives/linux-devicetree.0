@@ -1,132 +1,83 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH] clk: add DT fixed-factor-clock binding support
-Date: Wed, 29 Aug 2012 00:53:02 +0200
-Message-ID: <1346194382-11405-2-git-send-email-gregory.clement@free-electrons.com>
-References: <1346194382-11405-1-git-send-email-gregory.clement@free-electrons.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] mfd: add syscon driver based on regmap
+Date: Tue, 28 Aug 2012 15:54:00 -0700
+Message-ID: <503D4C08.8040605@wwwdotorg.org>
+References: <1346145005-17961-1-git-send-email-b29396@freescale.com>
+ <1346145005-17961-2-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1346194382-11405-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@ti.com>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Shawn Guo <shawn.guo@freescale.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1346145005-17961-2-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for DT "fixed-factor-clock" binding to the common fixed
-factor clock support.
+On 08/28/2012 02:09 AM, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Add regmap based syscon driver.
+> This is usually used for access misc bits in registers which does not belong
+> to a specific module, for example, IMX IOMUXC GPR and ANATOP.
+> With this driver, client can use generic regmap API to access registers
+> which are registered into syscon.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Mike Turquette <mturquette@ti.com>
-Cc: Shawn Guo <shawn.guo@freescale.com>
----
- .../bindings/clock/fixed-factor-clock.txt          |   24 ++++++++++++++
- drivers/clk/clk-fixed-factor.c                     |   34 ++++++++++++++++++++
- include/linux/clk-provider.h                       |    2 ++
- 3 files changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-new file mode 100644
-index 0000000..7ed236f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-@@ -0,0 +1,24 @@
-+Binding for simple fixed factor rate clock sources.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be "fixed-factor-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- div: fixed divider.
-+- mult: fixed multiplier.
-+- clocks: parent clock.
-+
-+Optional properties:
-+- clock-output-names : From common clock binding.
-+
-+Example:
-+	clock {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&parentclk>;
-+		#clock-cells = <0>;
-+		div = <2>;
-+		mult = <1>;
-+	};
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index a489985..8fdf5e9 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -11,6 +11,7 @@
- #include <linux/clk-provider.h>
- #include <linux/slab.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- 
- /*
-  * DOC: basic fixed multiplier and divider clock that cannot gate
-@@ -93,3 +94,36 @@ struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
- 
- 	return clk;
- }
-+#ifdef CONFIG_OF
-+/**
-+ * of_fixed_factor_clk_setup() - Setup function for simple fixed factor clock
-+ */
-+void __init of_fixed_factor_clk_setup(struct device_node *node)
-+{
-+	struct clk *clk;
-+	const char *clk_name = node->name;
-+	const char *parent_name;
-+	u32 div, mult;
-+
-+	if (of_property_read_u32(node, "div", &div)) {
-+		pr_err("%s Fixed factor clock <%s> must have a div property\n",
-+			__func__, node->name);
-+		return;
-+	}
-+
-+	if (of_property_read_u32(node, "mult", &mult)) {
-+		pr_err("%s Fixed factor clock <%s> must have a mult property\n",
-+			__func__, node->name);
-+		return;
-+	}
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+	parent_name = of_clk_get_parent_name(node, 0);
-+
-+	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
-+					mult, div);
-+	if (clk)
-+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+EXPORT_SYMBOL_GPL(of_fixed_factor_clk_setup);
-+#endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 77335fa..796e68b 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -314,6 +314,8 @@ struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
- 		unsigned int mult, unsigned int div);
- 
-+void of_fixed_factor_clk_setup(struct device_node *node);
-+
- /**
-  * clk_register - allocate a new clock, register it and return an opaque cookie
-  * @dev: device that is registering this clock
--- 
-1.7.9.5
+> +* System Controller Registers R/W driver
+
+I think the binding document could use some information about what a
+"syscon" actually is, especially since the compatible value is something
+generic like "syscon" rather than something with a vendor-specific
+prefix. How about:
+
+A system controller node represents a register region containing a set
+of miscellaneous registers. The registers are not cohesive enough to
+represent as any specific type of device. The typical use-case is for
+some other node's driver, or platform-specific code, to acquire a
+reference to the syscon node (e.g. by phandle, node path, or search
+using a specific compatible value), interrogate the node (or associated
+OS driver) to determine the location of the registers, and access the
+registers directly.
+
+> +Required properties:
+> +- compatible: Should contain "syscon".
+> +- reg: the register range can be access from syscon
+> +
+> +Examples:
+> +gpr: iomuxc-gpr@020e0000 {
+> +	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+> +	reg = <0x020e0000 0x38>;
+> +};
+
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+
+> +config MFD_SYSCON
+> +        bool "System Controller Register R/W Based on Regmap"
+> +        select REGMAP_MMIO
+> +        help
+> +          Select this option to enable accessing system control registers
+> +	  via regmap.
+
+I think the indentation is off there.
+
+> +static int __devinit syscon_probe(struct platform_device *pdev)
+...
+> +	regcache_cache_only(syscon->regmap, false);
+
+Isn't that the default?
+
+Aside from that, I don't have any particular comments on this series, so
+please consider it,
+
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
