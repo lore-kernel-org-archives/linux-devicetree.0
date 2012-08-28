@@ -1,28 +1,111 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH v2 5/7] ARM: imx6q: convert to use syscon to access
- anatop registers
-Date: Tue, 28 Aug 2012 13:33:37 +0800
-Message-ID: <20120828053336.GF5822@shlinux2.ap.freescale.net>
-References: <1346052285-4344-1-git-send-email-b29396@freescale.com>
- <1346052285-4344-6-git-send-email-b29396@freescale.com>
- <20120828032309.GW4011@b20223-02.ap.freescale.net>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: Re: [PATCH v3 3/4] arm/dts: AM33XX: Configure pinmuxs for D_CAN1
+ on AM335x-EVM
+Date: Tue, 28 Aug 2012 11:51:32 +0530
+Message-ID: <503C636C.6080708@ti.com>
+References: <1345119610-5247-1-git-send-email-anilkumar@ti.com> <1345119610-5247-4-git-send-email-anilkumar@ti.com> <20120824201447.GY11011@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120828032309.GW4011@b20223-02.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhao Richard-B20223 <B20223@freescale.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lrg@ti.com" <lrg@ti.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120824201447.GY11011@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: AnilKumar Ch <anilkumar@ti.com>, devicetree-discuss@lists.ozlabs.org, mkl@pengutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 28, 2012 at 11:23:10AM +0800, Zhao Richard-B20223 wrote:
-...
-> >  	np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-anatop");
-> np unused.
 
-Correct.
-Will drop it.
 
-Regards
-Dong Aisheng
+On 8/25/2012 1:44 AM, Tony Lindgren wrote:
+> * AnilKumar Ch <anilkumar@ti.com> [120816 05:20]:
+>> Add D_CAN1 pinctrl node to am3358_pinmux master node to export
+>> D_CAN functionality on AM335x EVM according to pinctrl-single
+>> driver.
+>>
+>> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+>> ---
+>> Changes from v2:
+>> 	- Incorporated Vaibhav H's comments on v2
+>> 	  * Added dcan0 instances to am33xx.dtsi file
+>>
+>> Changes from v1:
+>> 	- These two patches separated from c_can DT support
+>> 	  patch series.
+>>
+>>  arch/arm/boot/dts/am335x-evm.dts |   12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+>> index 5dd8a6b..a64c30a 100644
+>> --- a/arch/arm/boot/dts/am335x-evm.dts
+>> +++ b/arch/arm/boot/dts/am335x-evm.dts
+>> @@ -18,6 +18,18 @@
+>>  		reg = <0x80000000 0x10000000>; /* 256 MB */
+>>  	};
+>>  
+>> +	am3358_pinmux: pinmux@44E10800 {
+> 
+> This should be just &am3358_pinmux as you already include it.
+> 
+
+I think it won't work this way, it will result into syntax error.
+The reason being is, unlike OMAP (and like other platforms, like, imx)
+here we are again representing device hierarchy starting from root,
+
+am335x-evm.dts:
+/ {
+
+	ocp {
+		...
+	};
+
+};
+
+Although I am not too familiar with DTS compiler, but below code results
+in syntax error:
+
+am335x-evm.dts:
+/ {
+
+	ocp {
+		...
+		&am3358_pinmux {
+			...
+		};
+	};
+
+};
+
+
+Thanks,
+Vaibhav
+
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&d_can1_pins>;
+>> +
+>> +		d_can1_pins: pinmux_d_can_pins {
+>> +			pinctrl-single,pins = <
+>> +				0x168 0x2	/* uart0_ctsn.d_can1_tx, OUTPUT | MODE2 */
+>> +				0x16C 0x32	/* uart0_rtsn.d_can1_rx, INPUT_PULLUP | MODE2 */
+>> +			>;
+>> +		};
+>> +	};
+>> +
+> 
+> It would better to claim these pins in the dcan driver entry
+> rather than set them as pins enabled by the pinctrl driver.
+> The reason is that in case you want to enable runtime PM related
+> stuff, like some more advanced wake-up features, for the rx pin
+> you can do it in the driver.
+> 
+> Then one nit.. Please lowercase all hex number in this series as that's the style
+> here.
+> 
+> Regards,
+> 
+> Tony
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
