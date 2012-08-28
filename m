@@ -1,14 +1,12 @@
-From: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH RESEND v4 1/3] arm/dts: AM33XX: Add basic pinctrl device tree
- data
-Date: Tue, 28 Aug 2012 13:40:52 +0530
-Message-ID: <1346141454-18786-2-git-send-email-anilkumar@ti.com>
-References: <1346141454-18786-1-git-send-email-anilkumar@ti.com>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v3 0/7] add syscon driver based on regmap for general
+ registers access
+Date: Tue, 28 Aug 2012 17:09:58 +0800
+Message-ID: <1346145005-17961-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346141454-18786-1-git-send-email-anilkumar-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,37 +17,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds basic pinctrl device tree data for AM33XX family of devices.
-This patch is based on the pinctrl-single driver.
+This patch series mainly adds an syscon driver which is used to access
+general system controller registers like FSL IOMUXC GPR and ANATOP,
+after that, we convert all the exist private access general registers code to use
+standard API from regmap to access registers.
+Finally we remove the old mfd anatop driver which is only for anatop register
+access.
 
-Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am33xx.dtsi |    9 +++++++++
- 1 file changed, 9 insertions(+)
+The patch series is based on linus's tree 3.6-rc3 since commit 9160338.
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index dde76f7..dfe9c559 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -40,6 +40,15 @@
- 		};
- 	};
- 
-+	am3358_pinmux: pinmux@44E10800 {
-+		compatible = "pinctrl-single";
-+		reg = <0x44E10800 0x0238>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-single,register-width = <32>;
-+		pinctrl-single,function-mask = <0x7F>;
-+	};
-+
- 	/*
- 	 * XXX: Use a flat representation of the AM33XX interconnect.
- 	 * The real AM33XX interconnect network is quite complex.Since
--- 
-1.7.9.5
+Dong Aisheng (7):
+  mfd: add syscon driver based on regmap
+  ARM: imx6q: add iomuxc gpr support into syscon
+  ARM: imx6q: add anatop support into syscon
+  regulator: anatop-regulator: convert to use syscon to access anatop
+    register
+  ARM: imx6q: convert to use syscon to access anatop registers
+  ARM: dts: imx6q: add simple-bus compatible string for anatop
+  mfd: anatop-mfd: remove anatop driver
+
+ Documentation/devicetree/bindings/mfd/syscon.txt |   11 +
+ arch/arm/boot/dts/imx6q.dtsi                     |    9 +-
+ arch/arm/mach-imx/Kconfig                        |    2 +-
+ arch/arm/mach-imx/mach-imx6q.c                   |   47 ++--
+ drivers/mfd/Kconfig                              |   13 +-
+ drivers/mfd/Makefile                             |    2 +-
+ drivers/mfd/anatop-mfd.c                         |  124 ---------
+ drivers/mfd/syscon.c                             |  172 ++++++++++++
+ drivers/regulator/Kconfig                        |    2 +-
+ drivers/regulator/anatop-regulator.c             |   30 ++-
+ include/linux/fsl/imx6q-iomuxc-gpr.h             |  319 ++++++++++++++++++++++
+ include/linux/mfd/anatop.h                       |   40 ---
+ include/linux/mfd/syscon.h                       |   23 ++
+ 13 files changed, 579 insertions(+), 215 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
+ delete mode 100644 drivers/mfd/anatop-mfd.c
+ create mode 100644 drivers/mfd/syscon.c
+ create mode 100644 include/linux/fsl/imx6q-iomuxc-gpr.h
+ delete mode 100644 include/linux/mfd/anatop.h
+ create mode 100644 include/linux/mfd/syscon.h
