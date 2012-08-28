@@ -1,37 +1,59 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 2/2] arm/dts: Cleanup regulator naming and remove @0,1..
-Date: Tue, 28 Aug 2012 11:51:52 +0530
-Message-ID: <503C6380.4090107@ti.com>
-References: <1343653940-16614-1-git-send-email-rnayak@ti.com> <1343653940-16614-3-git-send-email-rnayak@ti.com> <20120824202725.GA1303@atomide.com>
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 05/14] ARM: at91: add pinctrl support
+Date: Tue, 28 Aug 2012 08:51:44 +0200
+Message-ID: <CACQ1gAiFQAwn34mCYXWi9cTZPLRNiDVHT0qLNtJ4cgL51kRQBw@mail.gmail.com>
+References: <20120810124820.GA20557@game.jcrosoft.org>
+ <1344603731-32667-1-git-send-email-plagnioj@jcrosoft.com>
+ <1344603731-32667-5-git-send-email-plagnioj@jcrosoft.com>
+ <CACRpkdZ2__V06Eo8JH451Sup5Nw2jJXVOH2FOfZBp5nNYpCtbg@mail.gmail.com>
+ <5034FC18.2090400@wwwdotorg.org>
+ <CACQ1gAieByr5vMmyyCuGtS8AgnnRZPPhLZY8sKvwvcQYe5ieUA@mail.gmail.com>
+ <50366D2B.4010807@wwwdotorg.org> <20120825083811.GB7629@game.jcrosoft.org>
+ <CACRpkdYWXZLNdgMhqoMZsaaszZ5Uz9pZ1EO=mrnuY5Der4O+Mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120824202725.GA1303@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, b-cousson@ti.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdYWXZLNdgMhqoMZsaaszZ5Uz9pZ1EO=mrnuY5Der4O+Mw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+2012/8/28 Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> I'm following it now I think, after some discussion here at the kernel summit
+> I have come to the conclusion that the real problem with readability comes
+> from a shortcoming in the device tree compiler, that it cannot handle
+> macros and defines (no preprocessor) so it's currently hard to make
+> it more readable.
+Definitively, I've seen quite some hex (or dec) voodoo with comment
+next to them like that:
+fsl,ssi-dma-events = <25 24 23 22>; /* TX0 RX0 TX1 RX1 */
+linux,code = <102>; /* KEY_HOME */
+linux,code = <158>; /* KEY_BACK */
+fsl,pinmux-ids = <
+		0x0180 /* MX28_PAD_GPMI_RDN__GPMI_RDN */
+		0x0190 /* MX28_PAD_GPMI_WRN__GPMI_WRN */
+		0x01c0 /* MX28_PAD_GPMI_RESETN__GPMI_RESETN */
+		>;
+Those bits of code are crying out "We want defines !"
+(And even bitwise OR would be usefull, instead of having to choose
+between hex voodoo and one bool for each bit in a register)
 
-> * Rajendra Nayak<rnayak@ti.com>  [120730 06:17]:
->> regulators do not have a 'reg' property, hence the regulator@0,
->> regulator@1 do not make sense. get rid of it.
+> But that's not the implementers fault so I'm OK with this looking like
+> this for the moment.
 >
-> Looks like this needs to be refreshed to apply. Care to
-> refresh against current devel-dt branch in case other
-> places need the same change?
+> Yours,
+> Linus Walleij
 
-Looks like devel-dt is missing the PATCH 1/2 from this series,
-which you have already pushed in the -rc for merge.
-With that applied, this ones applies cleanly too.
-
-regards,
-Rajendra
-
->
-> Regards,
->
-> Tony
-
+Best regards,
+Richard.
