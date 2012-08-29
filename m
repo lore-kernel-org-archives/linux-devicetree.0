@@ -1,14 +1,11 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 8/8] ARM/dts: omap5: Add McPDM and DMIC section to the dtsi
- file
-Date: Wed, 29 Aug 2012 16:31:07 +0300
-Message-ID: <1346247067-9632-9-git-send-email-peter.ujfalusi@ti.com>
-References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
+From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Subject: Challenges of migrating to DT
+Date: Wed, 29 Aug 2012 08:48:15 -0600
+Message-ID: <CAMLZHHTPoL5Bfnbg731H7pnF3hORKR1W1St+WnnWsCz3+nvggw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346247067-9632-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,47 +16,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To be able to load the McPDM and DMIC driver when booted with device tree.
+Hi,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/omap5.dtsi |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
+At OLPC we are working hard to migrate from board files to the device
+tree for our existing ARM laptop XO-1.75, and we are also working
+directly with the DT (no board file) from day 1 with development of
+our upcoming XO-4 ARM laptop.
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 57ca7c1..5ab1a36 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -212,6 +212,26 @@
- 			ti,needs-special-reset;
- 		};
- 
-+		mcpdm: mcpdm@40132000 {
-+			compatible = "ti,omap4-mcpdm";
-+			reg = <0x40132000 0x7f>, /* MPU private access */
-+			      <0x49032000 0x7f>; /* L3 Interconnect */
-+			reg-names = "mpu", "dma";
-+			interrupts = <0 112 0x4>;
-+			interrupt-parent = <&gic>;
-+			ti,hwmods = "mcpdm";
-+		};
-+
-+		dmic: dmic@4012e000 {
-+			compatible = "ti,omap4-dmic";
-+			reg = <0x4012e000 0x7f>, /* MPU private access */
-+			      <0x4902e000 0x7f>; /* L3 Interconnect */
-+			reg-names = "mpu", "dma";
-+			interrupts = <0 114 0x4>;
-+			interrupt-parent = <&gic>;
-+			ti,hwmods = "dmic";
-+		};
-+
- 		mcbsp1: mcbsp@40122000 {
- 			compatible = "ti,omap4-mcbsp";
- 			reg = <0x40122000 0xff>, /* MPU private access */
--- 
-1.7.8.6
+While the coding aspect is going fine, we have some open questions
+around the migration aspects and sustainability of our DT efforts. I'm
+wondering if these issues extend to other DT users and if there are
+any experiences that we can learn from.
+
+The root of the issue is that using DT creates a strong bond between
+the firmware (DT provider) and the kernel (DT consumer). However, we
+cannot guarantee that our users stick to specific firmware/DT pair.
+
+1. For our existing XO-1.75 users in the field, our existing DT is not
+good enough to allow a DT-based kernel to boot. When we upgrade these
+systems from board-file-based kernels to DT ones, we can also push a
+firmware update, but we cannot guarantee that the firmware update gets
+installed at the same time as the new kernel. (The firmware will only
+be updated when AC power is available, and it typically isn't
+available at the time when the software update is received from the
+school server).
+
+So this covers the first tricky situation: upgrades. We have an issue
+where we ideally need to support an old, DT-less firmware running
+against a kernel with no board file that looks to do everything from
+the DT.
+
+
+2. For our new XO-4 efforts, we are having to define DT layouts for
+the hardware shipped in the laptop. And while we're working hard to do
+this cleanly, I fear that the upstreaming process will result in some
+(incompatible?) changes to these nodes and layouts. However, we're
+under time pressures and we're a small team; it seems unlikely that
+we'll be able to upstream much of this before our initial shipment to
+real users. So we will again potentially find ourselves in a similar
+situation to above, where "old" software releases (i.e. the one
+shipped to first customers) include a DT that it somehow
+incompatible/insufficient for a new kernel (some time later when we
+upstream things and move to the upstream-refined DT layout).
+
+I know that there is a great deal of help available on this list for
+the upstreaming process, and in an ideal world we'd upstream
+everything before shipping, but in this case reality takes a nasty
+bite (resources-wise this would be difficult to achieve for us) and
+I'm wondering if others have faced similar situations in the past.
+
+
+One solution that initially stands out is appending the DT to the
+kernel image, to break the tricky bond between firmware and kernel.
+But this is probably harder than it sounds; we ship slightly different
+versions of these laptops (with/without touchscreen, different camera
+sensors, ...) and shipping different kernels to cover all the
+different combinations would be painful.
+
+More discussion here:
+http://wiki.laptop.org/go/Device_tree_upgrade_considerations
+
+Thanks
+Daniel
