@@ -1,83 +1,136 @@
-From: Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Subject: Challenges of migrating to DT
-Date: Wed, 29 Aug 2012 08:48:15 -0600
-Message-ID: <CAMLZHHTPoL5Bfnbg731H7pnF3hORKR1W1St+WnnWsCz3+nvggw@mail.gmail.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] USB: chipidea: add imx usbmisc support
+Date: Wed, 29 Aug 2012 22:00:32 +0200
+Message-ID: <503E74E0.6040503@pengutronix.de>
+References: <1346137109-32247-1-git-send-email-richard.zhao@freescale.com> <1346137109-32247-2-git-send-email-richard.zhao@freescale.com> <871uiqkuhb.fsf@ashishki-desk.ger.corp.intel.com> <20120829081020.GX26594@pengutronix.de> <87ehmqj925.fsf@ashishki-desk.ger.corp.intel.com> <20120829110137.GA26594@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enigCB2167000A1D371C83AE8C76"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120829110137.GA26594-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enigCB2167000A1D371C83AE8C76
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-At OLPC we are working hard to migrate from board files to the device
-tree for our existing ARM laptop XO-1.75, and we are also working
-directly with the DT (no board file) from day 1 with development of
-our upcoming XO-4 ARM laptop.
+On 08/29/2012 01:01 PM, Sascha Hauer wrote:
+> On Wed, Aug 29, 2012 at 01:18:10PM +0300, Alexander Shishkin wrote:
+>> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+>>
+>>> On Wed, Aug 29, 2012 at 10:50:08AM +0300, Alexander Shishkin wrote:
+>>>> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+>>>>
+>>>>> i.MX usb controllers shares non-core registers, which may include
+>>>>> SoC specific controls. We take it as a usbmisc device and usbmisc
+>>>>> driver set operations needed by ci13xxx_imx driver.
+>>>>>
+>>>>> For example, Sabrelite board has bad over-current design, we can
+>>>>> usbmisc to disable over-current detect.
+>>>>
+>>>> Why does this have to be part of the usb driver instead of SoC speci=
+fic
+>>>> code? It looks like you've created a whole new device/driver
+>>>> infrastructure just to disable overcurrent for a specific board.
+>>>
+>>> Richards code indeed only handles overcurrent for a specific board, b=
+ut
+>>> there are more bits to configure in the longer run: power pin
+>>> polarities, ULPI/serial mode select and some more.
 
-While the coding aspect is going fine, we have some open questions
-around the migration aspects and sustainability of our DT efforts. I'm
-wondering if these issues extend to other DT users and if there are
-any experiences that we can learn from.
+We already have a patch adding a usbmisc_imx53_init() function to that
+driver.
 
-The root of the issue is that using DT creates a strong bond between
-the firmware (DT provider) and the kernel (DT consumer). However, we
-cannot guarantee that our users stick to specific firmware/DT pair.
+>> Sounds to me like these things that should be taken care of by the phy=
 
-1. For our existing XO-1.75 users in the field, our existing DT is not
-good enough to allow a DT-based kernel to boot. When we upgrade these
-systems from board-file-based kernels to DT ones, we can also push a
-firmware update, but we cannot guarantee that the firmware update gets
-installed at the same time as the new kernel. (The firmware will only
-be updated when AC power is available, and it typically isn't
-available at the time when the software update is received from the
-school server).
+>> driver, which will likely be simpler from both driver's and devicetree=
+'s
+>> perspective.
+>=20
+> Most i.MX SoCs have three instances of the chipidea core. These cores
+> share a single register space for controlling the mentioned bits (the
+> usbmisc register space). The usbmisc looks different on the different
+> SoCs.
+> Indeed they control some phy specific aspects, but the phy itself may
+> also be an external ULPI or UTMI phy with a separate driver. So if we
+> integrate the usbmisc into the phy wouldn't that mean that it has to
+> be integrated into all possible phy drivers?
+>=20
+> From a devicetrees perspective it makes sense to integrate the flags
+> into the chipidea nodes, because there is one node per chipidea core,
+> but only one usbmisc unit for all ports on the SoC. So we can do a:
+>=20
+> 	chipidea@ofs {
+> 		disable-overcurrent =3D <1>;
+> 	};
+>=20
+> instead of
+>=20
+> 	usbmisc@ofs {
+> 		disable-overcurrent-port0 =3D <1>;
+> 		disable-overcurrent-port1 =3D <0>;
+> 		...
+> 	};
 
-So this covers the first tricky situation: upgrades. We have an issue
-where we ideally need to support an old, DT-less firmware running
-against a kernel with no board file that looks to do everything from
-the DT.
++1
+
+IMHO looks much cleaner.
+
+>>>> And the infrastructure boils down to a complex way of passing a call=
+back
+>>>> from imx driver to another imx driver, that only works if they are
+>>>> probed in the right order. I don't see any point in doing it like th=
+is
+>>>> other than inflating the device tree tables even further.
+>>>>
+>>>> Why can't this be part of the SoC code like it is done, for example =
+in
+>>>> arch/arm/mach-omap2/control.c?
+>>>
+>>> The settings are board specific, so there must be some way to configu=
+re
+>>> them in the devicetree.
+>>
+>> But I'm sure there's a way to control board-specific settings/kludges
+>> from devicetree?
+>=20
+> Hm, yes. That's what Richard does, right? I may be misunderstanding you=
+
+> here.
+>=20
+> Sascha
+
+Marc
 
 
-2. For our new XO-4 efforts, we are having to define DT layouts for
-the hardware shipped in the laptop. And while we're working hard to do
-this cleanly, I fear that the upstreaming process will result in some
-(incompatible?) changes to these nodes and layouts. However, we're
-under time pressures and we're a small team; it seems unlikely that
-we'll be able to upstream much of this before our initial shipment to
-real users. So we will again potentially find ourselves in a similar
-situation to above, where "old" software releases (i.e. the one
-shipped to first customers) include a DT that it somehow
-incompatible/insufficient for a new kernel (some time later when we
-upstream things and move to the upstream-refined DT layout).
-
-I know that there is a great deal of help available on this list for
-the upstreaming process, and in an ideal world we'd upstream
-everything before shipping, but in this case reality takes a nasty
-bite (resources-wise this would be difficult to achieve for us) and
-I'm wondering if others have faced similar situations in the past.
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-One solution that initially stands out is appending the DT to the
-kernel image, to break the tricky bond between firmware and kernel.
-But this is probably harder than it sounds; we ship slightly different
-versions of these laptops (with/without touchscreen, different camera
-sensors, ...) and shipping different kernels to cover all the
-different combinations would be painful.
+--------------enigCB2167000A1D371C83AE8C76
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-More discussion here:
-http://wiki.laptop.org/go/Device_tree_upgrade_considerations
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
 
-Thanks
-Daniel
+iEYEARECAAYFAlA+dOQACgkQjTAFq1RaXHOEZQCfUIdIOuiuEEDC/AvI/5ysMJcb
+PGUAnjPIy6QiYdpI/17qwi4y4ACDJQZx
+=+WGS
+-----END PGP SIGNATURE-----
+
+--------------enigCB2167000A1D371C83AE8C76--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
