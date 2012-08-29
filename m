@@ -1,100 +1,54 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] USB: chipidea: add imx usbmisc support
-Date: Wed, 29 Aug 2012 13:01:37 +0200
-Message-ID: <20120829110137.GA26594@pengutronix.de>
-References: <1346137109-32247-1-git-send-email-richard.zhao@freescale.com>
- <1346137109-32247-2-git-send-email-richard.zhao@freescale.com>
- <871uiqkuhb.fsf@ashishki-desk.ger.corp.intel.com>
- <20120829081020.GX26594@pengutronix.de>
- <87ehmqj925.fsf@ashishki-desk.ger.corp.intel.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: [PATCH v4 0/7] add syscon driver based on regmap for general registers access
+Date: Wed, 29 Aug 2012 18:56:51 +0800
+Message-ID: <1346237818-9498-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87ehmqj925.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2012 at 01:18:10PM +0300, Alexander Shishkin wrote:
-> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> 
-> > On Wed, Aug 29, 2012 at 10:50:08AM +0300, Alexander Shishkin wrote:
-> >> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> >> 
-> >> > i.MX usb controllers shares non-core registers, which may include
-> >> > SoC specific controls. We take it as a usbmisc device and usbmisc
-> >> > driver set operations needed by ci13xxx_imx driver.
-> >> >
-> >> > For example, Sabrelite board has bad over-current design, we can
-> >> > usbmisc to disable over-current detect.
-> >> 
-> >> Why does this have to be part of the usb driver instead of SoC specific
-> >> code? It looks like you've created a whole new device/driver
-> >> infrastructure just to disable overcurrent for a specific board.
-> >
-> > Richards code indeed only handles overcurrent for a specific board, but
-> > there are more bits to configure in the longer run: power pin
-> > polarities, ULPI/serial mode select and some more.
-> 
-> Sounds to me like these things that should be taken care of by the phy
-> driver, which will likely be simpler from both driver's and devicetree's
-> perspective.
+This patch series mainly adds an syscon driver which is used to access
+general system controller registers like FSL IOMUXC GPR and ANATOP,
+after that, we convert all the exist private access general registers code to use
+standard API from regmap to access registers.
+Finally we remove the old mfd anatop driver which is only for anatop register
+access.
 
-Most i.MX SoCs have three instances of the chipidea core. These cores
-share a single register space for controlling the mentioned bits (the
-usbmisc register space). The usbmisc looks different on the different
-SoCs.
-Indeed they control some phy specific aspects, but the phy itself may
-also be an external ULPI or UTMI phy with a separate driver. So if we
-integrate the usbmisc into the phy wouldn't that mean that it has to
-be integrated into all possible phy drivers?
+The patch series is based on linus's tree 3.6-rc3 since commit 9160338.
 
->From a devicetrees perspective it makes sense to integrate the flags
-into the chipidea nodes, because there is one node per chipidea core,
-but only one usbmisc unit for all ports on the SoC. So we can do a:
+ChangeLog v3->v4:
+Only '[PATCH v4 1/7] mfd: add syscon driver based on regmap' is changed.
 
-	chipidea@ofs {
-		disable-overcurrent = <1>;
-	};
+Dong Aisheng (7):
+  mfd: add syscon driver based on regmap
+  ARM: imx6q: add iomuxc gpr support into syscon
+  ARM: imx6q: add anatop support into syscon
+  regulator: anatop-regulator: convert to use syscon to access anatop
+    register
+  ARM: imx6q: convert to use syscon to access anatop registers
+  ARM: dts: imx6q: add simple-bus compatible string for anatop
+  mfd: anatop-mfd: remove anatop driver
 
-instead of
-
-	usbmisc@ofs {
-		disable-overcurrent-port0 = <1>;
-		disable-overcurrent-port1 = <0>;
-		...
-	};
-
-> 
-> >
-> >> 
-> >> And the infrastructure boils down to a complex way of passing a callback
-> >> from imx driver to another imx driver, that only works if they are
-> >> probed in the right order. I don't see any point in doing it like this
-> >> other than inflating the device tree tables even further.
-> >> 
-> >> Why can't this be part of the SoC code like it is done, for example in
-> >> arch/arm/mach-omap2/control.c?
-> >
-> > The settings are board specific, so there must be some way to configure
-> > them in the devicetree.
-> 
-> But I'm sure there's a way to control board-specific settings/kludges
-> from devicetree?
-
-Hm, yes. That's what Richard does, right? I may be misunderstanding you
-here.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/mfd/syscon.txt |   20 ++
+ arch/arm/boot/dts/imx6q.dtsi                     |    9 +-
+ arch/arm/mach-imx/Kconfig                        |    2 +-
+ arch/arm/mach-imx/mach-imx6q.c                   |   47 ++--
+ drivers/mfd/Kconfig                              |   13 +-
+ drivers/mfd/Makefile                             |    2 +-
+ drivers/mfd/anatop-mfd.c                         |  124 ---------
+ drivers/mfd/syscon.c                             |  170 ++++++++++++
+ drivers/regulator/Kconfig                        |    2 +-
+ drivers/regulator/anatop-regulator.c             |   30 ++-
+ include/linux/fsl/imx6q-iomuxc-gpr.h             |  319 ++++++++++++++++++++++
+ include/linux/mfd/anatop.h                       |   40 ---
+ include/linux/mfd/syscon.h                       |   23 ++
+ 13 files changed, 586 insertions(+), 215 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
+ delete mode 100644 drivers/mfd/anatop-mfd.c
+ create mode 100644 drivers/mfd/syscon.c
+ create mode 100644 include/linux/fsl/imx6q-iomuxc-gpr.h
+ delete mode 100644 include/linux/mfd/anatop.h
+ create mode 100644 include/linux/mfd/syscon.h
