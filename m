@@ -1,61 +1,44 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] USB: chipidea: add imx usbmisc support
-Date: Wed, 29 Aug 2012 13:18:10 +0300
-Message-ID: <87ehmqj925.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1346137109-32247-1-git-send-email-richard.zhao@freescale.com> <1346137109-32247-2-git-send-email-richard.zhao@freescale.com> <871uiqkuhb.fsf@ashishki-desk.ger.corp.intel.com> <20120829081020.GX26594@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120829081020.GX26594-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v5 0/9] mmc: dw_mmc: add support for device tree based
+ instantiation
+Date: Wed, 29 Aug 2012 16:18:06 +0530
+Message-ID: <1346237295-7116-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+This is the fifth version of the patch series that adds device tree support
+for Synopsis Designware Mobile Storage Host Controller. All the review comments
+from the v4 version have been addressed and rebased on mmc-next branch. Since v4,
+patches 6/9 and 9/9 have been modified. This has been tested on only smdk5250.
 
-> On Wed, Aug 29, 2012 at 10:50:08AM +0300, Alexander Shishkin wrote:
->> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
->> 
->> > i.MX usb controllers shares non-core registers, which may include
->> > SoC specific controls. We take it as a usbmisc device and usbmisc
->> > driver set operations needed by ci13xxx_imx driver.
->> >
->> > For example, Sabrelite board has bad over-current design, we can
->> > usbmisc to disable over-current detect.
->> 
->> Why does this have to be part of the usb driver instead of SoC specific
->> code? It looks like you've created a whole new device/driver
->> infrastructure just to disable overcurrent for a specific board.
->
-> Richards code indeed only handles overcurrent for a specific board, but
-> there are more bits to configure in the longer run: power pin
-> polarities, ULPI/serial mode select and some more.
+Thomas Abraham (9):
+  mmc: dw_mmc: convert copy of struct device in struct dw_mci to a reference
+  mmc: dw_mmc: Use devm_* functions in dw_mmc platform driver
+  mmc: dw_mmc: allow probe to succeed even if one slot is initialized
+  mmc: dw_mmc: lookup for optional biu and ciu clocks
+  mmc: dw_mmc: add quirk to indicate missing write protect line
+  mmc: dw_mmc: add device tree support
+  mmc: dw_mmc: prepare functions in dw_mmc-pltfm for reuse
+  mmc: dw_mmc: add support for implementation specific callbacks
+  mmc: dw_mmc: add support for exynos specific implementation of dw-mshc
 
-Sounds to me like these things that should be taken care of by the phy
-driver, which will likely be simpler from both driver's and devicetree's
-perspective.
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   85 ++++++
+ .../devicetree/bindings/mmc/synposis-dw-mshc.txt   |   79 ++++++
+ drivers/mmc/host/Kconfig                           |    9 +
+ drivers/mmc/host/Makefile                          |    1 +
+ drivers/mmc/host/dw_mmc-exynos.c                   |  243 ++++++++++++++++
+ drivers/mmc/host/dw_mmc-pci.c                      |    2 +-
+ drivers/mmc/host/dw_mmc-pltfm.c                    |   60 +++--
+ drivers/mmc/host/dw_mmc-pltfm.h                    |   20 ++
+ drivers/mmc/host/dw_mmc.c                          |  289 ++++++++++++++++----
+ drivers/mmc/host/dw_mmc.h                          |   22 ++
+ include/linux/mmc/dw_mmc.h                         |   13 +-
+ 11 files changed, 748 insertions(+), 75 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+ create mode 100644 Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
+ create mode 100644 drivers/mmc/host/dw_mmc-exynos.c
+ create mode 100644 drivers/mmc/host/dw_mmc-pltfm.h
 
->
->> 
->> And the infrastructure boils down to a complex way of passing a callback
->> from imx driver to another imx driver, that only works if they are
->> probed in the right order. I don't see any point in doing it like this
->> other than inflating the device tree tables even further.
->> 
->> Why can't this be part of the SoC code like it is done, for example in
->> arch/arm/mach-omap2/control.c?
->
-> The settings are board specific, so there must be some way to configure
-> them in the devicetree.
-
-But I'm sure there's a way to control board-specific settings/kludges
-from devicetree?
-
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
