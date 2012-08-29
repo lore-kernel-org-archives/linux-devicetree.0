@@ -1,214 +1,61 @@
-From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: [RFC PATCH] ARM: OMAP2+: omap-device: Do not overwrite resources
- allocated by OF layer
-Date: Wed, 29 Aug 2012 15:18:11 +0530
-Message-ID: <1346233691-10294-1-git-send-email-hvaibhav@ti.com>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] USB: chipidea: add imx usbmisc support
+Date: Wed, 29 Aug 2012 13:18:10 +0300
+Message-ID: <87ehmqj925.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1346137109-32247-1-git-send-email-richard.zhao@freescale.com> <1346137109-32247-2-git-send-email-richard.zhao@freescale.com> <871uiqkuhb.fsf@ashishki-desk.ger.corp.intel.com> <20120829081020.GX26594@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120829081020.GX26594-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With the new devices (like, AM33XX and OMAP5) we now only support
-DT boot mode of operation and now it is the time to start killing
-slowly the dependency on hwmod, so with this patch, we are starting
-with device resources.
-The idea here is implemented considering to both boot modes -
-  - DT boot mode
-    OF framework will construct the resource structure (currently
-    does for MEM & IRQ resource) and we should respect/use these
-    resources, killing hwmod dependency.
-    If pdev->num_resources > 0, we assume that MEM & IRQ resources
-    have been allocated by OF layer already (through DTB).
+Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
 
-    Once DMA resource is available from OF layer, we should
-    kill filling any resources from hwmod.
+> On Wed, Aug 29, 2012 at 10:50:08AM +0300, Alexander Shishkin wrote:
+>> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+>> 
+>> > i.MX usb controllers shares non-core registers, which may include
+>> > SoC specific controls. We take it as a usbmisc device and usbmisc
+>> > driver set operations needed by ci13xxx_imx driver.
+>> >
+>> > For example, Sabrelite board has bad over-current design, we can
+>> > usbmisc to disable over-current detect.
+>> 
+>> Why does this have to be part of the usb driver instead of SoC specific
+>> code? It looks like you've created a whole new device/driver
+>> infrastructure just to disable overcurrent for a specific board.
+>
+> Richards code indeed only handles overcurrent for a specific board, but
+> there are more bits to configure in the longer run: power pin
+> polarities, ULPI/serial mode select and some more.
 
-  - Non-DT boot mode
-    Here, pdev->num_resources = 0, and we should get all the
-    resources from hwmod (following existing steps)
+Sounds to me like these things that should be taken care of by the phy
+driver, which will likely be simpler from both driver's and devicetree's
+perspective.
 
-Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
----
-This patch is tested on BeagleBone and AM37xEVM.
+>
+>> 
+>> And the infrastructure boils down to a complex way of passing a callback
+>> from imx driver to another imx driver, that only works if they are
+>> probed in the right order. I don't see any point in doing it like this
+>> other than inflating the device tree tables even further.
+>> 
+>> Why can't this be part of the SoC code like it is done, for example in
+>> arch/arm/mach-omap2/control.c?
+>
+> The settings are board specific, so there must be some way to configure
+> them in the devicetree.
 
-Why RFC?
-Still we have function duplication omap_device_fill_resources() and
-omap_device_fill_dma_resources(), we can actually split the function
-into 3 resources and avoid duplication -
-  - omap_device_fill_dma_resources()
-  - omap_device_fill_mem_resources()
-  - omap_device_fill_irq_resources()
+But I'm sure there's a way to control board-specific settings/kludges
+from devicetree?
 
-Actually I wanted to clean it further but thought of getting
-feedback first and then proceed further.
-
- arch/arm/mach-omap2/omap_hwmod.c             |   27 ++++++++++
- arch/arm/plat-omap/include/plat/omap_hwmod.h |    1 +
- arch/arm/plat-omap/omap_device.c             |   72 +++++++++++++++++++++----
- 3 files changed, 88 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index 31ec283..edabfb3 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -3330,6 +3330,33 @@ int omap_hwmod_fill_resources(struct omap_hwmod *oh, struct resource *res)
- }
-
- /**
-+ * omap_hwmod_fill_dma_resources - fill struct resource array with dma data
-+ * @oh: struct omap_hwmod *
-+ * @res: pointer to the array of struct resource to fill
-+ *
-+ * Fill the struct resource array @res with dma resource data from the
-+ * omap_hwmod @oh.  Intended to be called by code that registers
-+ * omap_devices.  See also omap_hwmod_count_resources().  Returns the
-+ * number of array elements filled.
-+ */
-+int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct resource *res)
-+{
-+	int i, sdma_reqs_cnt;
-+	int r = 0;
-+
-+	sdma_reqs_cnt = _count_sdma_reqs(oh);
-+	for (i = 0; i < sdma_reqs_cnt; i++) {
-+		(res + r)->name = (oh->sdma_reqs + i)->name;
-+		(res + r)->start = (oh->sdma_reqs + i)->dma_req;
-+		(res + r)->end = (oh->sdma_reqs + i)->dma_req;
-+		(res + r)->flags = IORESOURCE_DMA;
-+		r++;
-+	}
-+
-+	return r;
-+}
-+
-+/**
-  * omap_hwmod_get_resource_byname - fetch IP block integration data by name
-  * @oh: struct omap_hwmod * to operate on
-  * @type: one of the IORESOURCE_* constants from include/linux/ioport.h
-diff --git a/arch/arm/plat-omap/include/plat/omap_hwmod.h b/arch/arm/plat-omap/include/plat/omap_hwmod.h
-index 9b9646c..0533073 100644
---- a/arch/arm/plat-omap/include/plat/omap_hwmod.h
-+++ b/arch/arm/plat-omap/include/plat/omap_hwmod.h
-@@ -615,6 +615,7 @@ int omap_hwmod_softreset(struct omap_hwmod *oh);
-
- int omap_hwmod_count_resources(struct omap_hwmod *oh);
- int omap_hwmod_fill_resources(struct omap_hwmod *oh, struct resource *res);
-+int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct resource *res);
- int omap_hwmod_get_resource_byname(struct omap_hwmod *oh, unsigned int type,
- 				   const char *name, struct resource *res);
-
-diff --git a/arch/arm/plat-omap/omap_device.c b/arch/arm/plat-omap/omap_device.c
-index c490240..fd15a3a 100644
---- a/arch/arm/plat-omap/omap_device.c
-+++ b/arch/arm/plat-omap/omap_device.c
-@@ -486,6 +486,33 @@ static int omap_device_fill_resources(struct omap_device *od,
- }
-
- /**
-+ * omap_device_fill_dma_resources - fill in array of struct resource with dma resources
-+ * @od: struct omap_device *
-+ * @res: pointer to an array of struct resource to be filled in
-+ *
-+ * Populate one or more empty struct resource pointed to by @res with
-+ * the dma resource data for this omap_device @od.  Used by
-+ * omap_device_alloc() after calling omap_device_count_resources().
-+ *
-+ * Ideally this function would not be needed at all.  If we have
-+ * mechanism to get dma resources from DT.
-+ *
-+ * Returns 0.
-+ */
-+static int omap_device_fill_dma_resources(struct omap_device *od,
-+				      struct resource *res)
-+{
-+	int i, r;
-+
-+	for (i = 0; i < od->hwmods_cnt; i++) {
-+		r = omap_hwmod_fill_dma_resources(od->hwmods[i], res);
-+		res += r;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-  * omap_device_alloc - allocate an omap_device
-  * @pdev: platform_device that will be included in this omap_device
-  * @oh: ptr to the single omap_hwmod that backs this omap_device
-@@ -524,24 +551,45 @@ struct omap_device *omap_device_alloc(struct platform_device *pdev,
- 	od->hwmods = hwmods;
- 	od->pdev = pdev;
-
-+	res_count = omap_device_count_resources(od);
- 	/*
--	 * HACK: Ideally the resources from DT should match, and hwmod
--	 * should just add the missing ones. Since the name is not
--	 * properly populated by DT, stick to hwmod resources only.
-+	 * DT Boot:
-+	 *   OF framework will construct the resource structure (currently
-+	 *   does for MEM & IRQ resource) and we should respect/use these
-+	 *   resources, killing hwmod dependency.
-+	 *   If pdev->num_resources > 0, we assume that MEM & IRQ resources
-+	 *   have been allocated by OF layer already (through DTB).
-+	 *
-+	 * Non-DT Boot:
-+	 *   Here, pdev->num_resources = 0, and we should get all the
-+	 *   resources from hwmod.
-+	 *
-+	 * TODO: Once DMA resource is available from OF layer, we should
-+	 *   kill filling any resources from hwmod.
- 	 */
--	if (pdev->num_resources && pdev->resource)
--		dev_warn(&pdev->dev, "%s(): resources already allocated %d\n",
--			__func__, pdev->num_resources);
--
--	res_count = omap_device_count_resources(od);
--	if (res_count > 0) {
--		dev_dbg(&pdev->dev, "%s(): resources allocated from hwmod %d\n",
--			__func__, res_count);
-+	if (res_count > pdev->num_resources) {
-+		/* Allocate resources memory to account for new resources */
- 		res = kzalloc(sizeof(struct resource) * res_count, GFP_KERNEL);
- 		if (!res)
- 			goto oda_exit3;
-
--		omap_device_fill_resources(od, res);
-+		/*
-+		 * If pdev->num_resources > 0, then assume that,
-+		 * MEM and IRQ resources will only come from DT and only
-+		 * fill DMA resource from hwmod layer.
-+		 */
-+		if (pdev->num_resources && pdev->resource) {
-+			dev_dbg(&pdev->dev, "%s(): resources already allocated %d\n",
-+					__func__, res_count);
-+			memcpy(res, pdev->resource,
-+				sizeof(struct resource) * pdev->num_resources);
-+			omap_device_fill_dma_resources(od,
-+					&res[pdev->num_resources]);
-+		} else {
-+			dev_dbg(&pdev->dev, "%s(): using resources from hwmod %d\n",
-+					__func__, res_count);
-+			omap_device_fill_resources(od, res);
-+		}
-
- 		ret = platform_device_add_resources(pdev, res, res_count);
- 		kfree(res);
+Regards,
 --
-1.7.0.4
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
