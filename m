@@ -1,140 +1,79 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: [PATCH v4 3/3] ARM: dts: Add nodes for dw_mmc controllers for Samsung
- Exynos5250 platforms
-Date: Wed, 29 Aug 2012 16:31:12 +0530
-Message-ID: <1346238072-7324-4-git-send-email-thomas.abraham@linaro.org>
-References: <1346238072-7324-1-git-send-email-thomas.abraham@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1346238072-7324-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
+From: Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] USB: chipidea: add imx usbmisc support
+Date: Wed, 29 Aug 2012 18:57:21 +0800
+Message-ID: <20120829105720.GC25433@b20223-02.ap.freescale.net>
+References: <1346137109-32247-1-git-send-email-richard.zhao@freescale.com>
+ <1346137109-32247-2-git-send-email-richard.zhao@freescale.com>
+ <871uiqkuhb.fsf@ashishki-desk.ger.corp.intel.com>
+ <20120829081020.GX26594@pengutronix.de>
+ <87ehmqj925.fsf@ashishki-desk.ger.corp.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87ehmqj925.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: marex-ynQEQJNshbs@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for the four instances of dw_mmc controllers in Exynos5250
-and enable instance 0 and 2 for the smdk5250 board.
+On Wed, Aug 29, 2012 at 01:18:10PM +0300, Alexander Shishkin wrote:
+> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> 
+> > On Wed, Aug 29, 2012 at 10:50:08AM +0300, Alexander Shishkin wrote:
+> >> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> >> 
+> >> > i.MX usb controllers shares non-core registers, which may include
+> >> > SoC specific controls. We take it as a usbmisc device and usbmisc
+> >> > driver set operations needed by ci13xxx_imx driver.
+> >> >
+> >> > For example, Sabrelite board has bad over-current design, we can
+> >> > usbmisc to disable over-current detect.
+> >> 
+> >> Why does this have to be part of the usb driver instead of SoC specific
+> >> code? It looks like you've created a whole new device/driver
+> >> infrastructure just to disable overcurrent for a specific board.
+> >
+> > Richards code indeed only handles overcurrent for a specific board, but
+> > there are more bits to configure in the longer run: power pin
+> > polarities, ULPI/serial mode select and some more.
+> 
+> Sounds to me like these things that should be taken care of by the phy
+> driver, which will likely be simpler from both driver's and devicetree's
+> perspective.
+No, it's controlled by a set of usb misc registers, which is not in phy
+IP or usb controller IP.
 
-Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   55 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/exynos5250.dtsi         |   32 +++++++++++++++++
- 2 files changed, 87 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 8a5e348..d57e8e0 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -16,6 +16,13 @@
- 	model = "SAMSUNG SMDK5250 board based on EXYNOS5250";
- 	compatible = "samsung,smdk5250", "samsung,exynos5250";
- 
-+	aliases {
-+		mshc0 = &dwmmc_0;
-+		mshc1 = &dwmmc_1;
-+		mshc2 = &dwmmc_2;
-+		mshc3 = &dwmmc_3;
-+	};
-+
- 	memory {
- 		reg = <0x40000000 0x80000000>;
- 	};
-@@ -72,6 +79,54 @@
- 		status = "disabled";
- 	};
- 
-+	dwmmc_0: dwmmc0@12200000 {
-+		num-slots = <1>;
-+		supports-highspeed;
-+		broken-cd;
-+		fifo-depth = <0x80>;
-+		card-detect-delay = <200>;
-+		samsung,dw-mshc-sdr-timing = <2 3 3>;
-+		samsung,dw-mshc-ddr-timing = <1 2 3>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <8>;
-+			gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
-+				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
-+				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
-+				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
-+				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
-+		};
-+	};
-+
-+	dwmmc_1: dwmmc1@12210000 {
-+		status = "disabled";
-+	};
-+
-+	dwmmc_2: dwmmc2@12220000 {
-+		num-slots = <1>;
-+		supports-highspeed;
-+		fifo-depth = <0x80>;
-+		card-detect-delay = <200>;
-+		samsung,dw-mshc-sdr-timing = <2 3 3>;
-+		samsung,dw-mshc-ddr-timing = <1 2 3>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <4>;
-+			samsung,cd-pinmux-gpio = <&gpc3 2 2 3 3>;
-+			gpios = <&gpc3 0 2 0 3>, <&gpc3 1 2 0 3>,
-+				<&gpc3 3 2 3 3>, <&gpc3 4 2 3 3>,
-+				<&gpc3 5 2 3 3>, <&gpc3 6 2 3 3>,
-+				<&gpc4 3 3 3 3>, <&gpc4 3 3 3 3>,
-+				<&gpc4 5 3 3 3>, <&gpc4 6 3 3 3>;
-+		};
-+	};
-+
-+	dwmmc_3: dwmmc3@12230000 {
-+		status = "disabled";
-+	};
-+
- 	spi_0: spi@12d20000 {
- 		status = "disabled";
- 	};
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 004aaa8..f69e389 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -182,6 +182,38 @@
- 		#size-cells = <0>;
- 	};
- 
-+	dwmmc0@12200000 {
-+		compatible = "samsung,exynos5250-dw-mshc";
-+		reg = <0x12200000 0x1000>;
-+		interrupts = <0 75 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	dwmmc1@12210000 {
-+		compatible = "samsung,exynos5250-dw-mshc";
-+		reg = <0x12210000 0x1000>;
-+		interrupts = <0 76 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	dwmmc2@12220000 {
-+		compatible = "samsung,exynos5250-dw-mshc";
-+		reg = <0x12220000 0x1000>;
-+		interrupts = <0 77 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	dwmmc3@12230000 {
-+		compatible = "samsung,exynos5250-dw-mshc";
-+		reg = <0x12230000 0x1000>;
-+		interrupts = <0 78 0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
- 	amba {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.6.6.rc2
+Thanks
+Richard
+> 
+> >
+> >> 
+> >> And the infrastructure boils down to a complex way of passing a callback
+> >> from imx driver to another imx driver, that only works if they are
+> >> probed in the right order. I don't see any point in doing it like this
+> >> other than inflating the device tree tables even further.
+> >> 
+> >> Why can't this be part of the SoC code like it is done, for example in
+> >> arch/arm/mach-omap2/control.c?
+> >
+> > The settings are board specific, so there must be some way to configure
+> > them in the devicetree.
+> 
+> But I'm sure there's a way to control board-specific settings/kludges
+> from devicetree?
+> 
+> Regards,
+> --
+> Alex
+> 
