@@ -1,138 +1,32 @@
-From: "Karicheri, Muralidharan" <m-karicheri2@ti.com>
-Subject: RE: [PATCH] of: add devres version of of_iomap
-Date: Thu, 30 Aug 2012 22:09:40 +0000
-Message-ID: <3E54258959B69E4282D79E01AB1F32B7041AD91C@DFLE12.ent.ti.com>
-References: <1346340744-22218-1-git-send-email-m-karicheri2@ti.com>
- <503FB074.7080702@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: V4L DT @ plumbers (was Re: [RFC v4] V4L DT bindings)
+Date: Fri, 31 Aug 2012 00:30:10 +0200
+Message-ID: <3661005.Emfz1E6cRV@avalon>
+References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange> <503FCB37.5080706@gmail.com> <alpine.DEB.2.00.1208302255210.4516@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <503FB074.7080702@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.00.1208302255210.4516@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Nicolas THERY <nicolas.thery@st.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Willy POISSON <willy.poisson@st.com>, Jean-Marc VOLLE <jean-marc.volle@st.com>, Pierre-yves TALOUD <pierre-yves.taloud@st.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
->> -----Original Message-----
->> From: Rob Herring [mailto:robherring2@gmail.com]
->> Sent: Thursday, August 30, 2012 2:27 PM
->> To: Karicheri, Muralidharan
->> Cc: grant.likely@secretlab.ca; devicetree-discuss@lists.ozlabs.org; linux-
->> kernel@vger.kernel.org
->> Subject: Re: [PATCH] of: add devres version of of_iomap
->> 
->> On 08/30/2012 10:32 AM, Murali Karicheri wrote:
->> > This adds devres version of the of_iomap() to allow resource to be cleaned
->> > through devres.
->> 
->> If you have a struct device, then don't you already have a resource and
->> can just use devm_ioremap in a driver? New drivers should not be using
->> of_iomap.
->> 
+Hi Guennadi,
 
-That is the point. If you do a grep under driver, there are many drivers using the pattern
-like this. This helper function is mean to replace this code.
+On Thursday 30 August 2012 22:58:17 Guennadi Liakhovetski wrote:
+> Hi all
+> 
+> Do we still want to try to organise a short discussion of this while at
+> plumbers? Maybe tomorrow during or around lunch? Or any other time for
+> that matter?
 
->From dma/sirf-dma.c
+I'm certainly interested. I have a meeting tomorrow at a still unknown type, 
+apart from that I'm free.
 
-        ret = of_address_to_resource(dn, 0, &res);
-        if (ret) {
-                dev_err(dev, "Error parsing memory region!\n");
-	       goto error;
-        }
+-- 
+Regards,
 
-        regs_start = res.start;
-        regs_size = resource_size(&res);
+Laurent Pinchart
 
-        base = devm_ioremap(dev, regs_start, regs_size);
-        if (!base) {
-                dev_err(dev, "Error mapping memory region!\n");
-	       goto error;
-        }
-
-Other instances.
-
-edac/mpc85xx_edac.c
-media/video/fsl-viu.c
-mtd/nand/mpc5121_nfc.c
-
-Some of these code uses devm_request_mem_region() as well. Isn't a good idea to add this helper
-that can be called by new drivers to replace this sequence? I could update the patch to do this call
-as well?
-
->> Rob
->> 
->> >
->> > Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->> > ---
->> >  drivers/of/address.c       |   26 ++++++++++++++++++++++++--
->> >  include/linux/of_address.h |    2 ++
->> >  2 files changed, 26 insertions(+), 2 deletions(-)
->> >
->> > diff --git a/drivers/of/address.c b/drivers/of/address.c
->> > index 7e262a6..d3da426 100644
->> > --- a/drivers/of/address.c
->> > +++ b/drivers/of/address.c
->> > @@ -602,10 +602,9 @@ struct device_node
->> *of_find_matching_node_by_address(struct device_node *from,
->> >  	return NULL;
->> >  }
->> >
->> > -
->> >  /**
->> >   * of_iomap - Maps the memory mapped IO for a given device_node
->> > - * @device:	the device whose io range will be mapped
->> > + * @device_node: Ptr to the device node that has the reg property
->> >   * @index:	index of the io range
->> >   *
->> >   * Returns a pointer to the mapped memory
->> > @@ -620,3 +619,26 @@ void __iomem *of_iomap(struct device_node *np, int index)
->> >  	return ioremap(res.start, resource_size(&res));
->> >  }
->> >  EXPORT_SYMBOL(of_iomap);
->> > +
->> > +/**
->> > + * of_devm_iomap - devres version of of_iomap
->> > + * @device:	the device whose io range will be mapped
->> > + * @index:	index of the io range
->> > + *
->> > + * Returns a pointer to the mapped memory
->> > + */
->> > +void __iomem *of_devm_iomap(struct device *dev, int index)
->> > +{
->> > +	struct device_node *np;
->> > +	struct resource res;
->> > +
->> > +	if (!dev)
->> > +		return NULL;
->> > +
->> > +	np = dev->of_node;
->> > +	if (of_address_to_resource(np, index, &res))
->> > +		return NULL;
->> > +
->> > +	return devm_ioremap(dev, res.start, resource_size(&res));
->> > +}
->> > +EXPORT_SYMBOL(of_devm_iomap);
->> > diff --git a/include/linux/of_address.h b/include/linux/of_address.h
->> > index 01b925a..67efa5f 100644
->> > --- a/include/linux/of_address.h
->> > +++ b/include/linux/of_address.h
->> > @@ -3,6 +3,7 @@
->> >  #include <linux/ioport.h>
->> >  #include <linux/errno.h>
->> >  #include <linux/of.h>
->> > +#include <linux/device.h>
->> >
->> >  #ifdef CONFIG_OF_ADDRESS
->> >  extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
->> > @@ -13,6 +14,7 @@ extern struct device_node *of_find_matching_node_by_address(
->> >  					const struct of_device_id *matches,
->> >  					u64 base_address);
->> >  extern void __iomem *of_iomap(struct device_node *device, int index);
->> > +extern void __iomem *of_devm_iomap(struct device *dev, int index);
->> >
->> >  /* Extract an address from a device, returns the region size and
->> >   * the address space flags too. The PCI version uses a BAR number
->> >
