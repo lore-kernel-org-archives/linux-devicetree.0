@@ -1,37 +1,26 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/2] arm/dts: Cleanup regulator naming and remove @0,1..
-Date: Thu, 30 Aug 2012 13:48:26 -0700
-Message-ID: <20120830204825.GE1303@atomide.com>
-References: <1343653940-16614-1-git-send-email-rnayak@ti.com>
- <1343653940-16614-3-git-send-email-rnayak@ti.com>
- <20120824202725.GA1303@atomide.com>
- <503C6380.4090107@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: V4L DT @ plumbers (was Re: [RFC v4] V4L DT bindings)
+Date: Thu, 30 Aug 2012 22:58:17 +0200 (CEST)
+Message-ID: <alpine.DEB.2.00.1208302255210.4516@axis700.grange>
+References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange> <503F8471.5000406@st.com> <503FCB37.5080706@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <503C6380.4090107@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, b-cousson@ti.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <503FCB37.5080706@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Nicolas THERY <nicolas.thery@st.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Willy POISSON <willy.poisson@st.com>, Jean-Marc VOLLE <jean-marc.volle@st.com>, Pierre-yves TALOUD <pierre-yves.taloud@st.com>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Rajendra Nayak <rnayak@ti.com> [120827 23:22]:
-> Hi Tony,
-> 
-> >* Rajendra Nayak<rnayak@ti.com>  [120730 06:17]:
-> >>regulators do not have a 'reg' property, hence the regulator@0,
-> >>regulator@1 do not make sense. get rid of it.
-> >
-> >Looks like this needs to be refreshed to apply. Care to
-> >refresh against current devel-dt branch in case other
-> >places need the same change?
-> 
-> Looks like devel-dt is missing the PATCH 1/2 from this series,
-> which you have already pushed in the -rc for merge.
-> With that applied, this ones applies cleanly too.
+Hi all
 
-Oh OK thanks :) I'll apply it on top of the fix and merge
-into devel-dt.
+Do we still want to try to organise a short discussion of this while at 
+plumbers? Maybe tomorrow during or around lunch? Or any other time for 
+that matter?
 
-Tony
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
