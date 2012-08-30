@@ -1,45 +1,144 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/6] Integrator devicetree support
-Date: Thu, 30 Aug 2012 17:01:18 -0400 (EDT)
-Message-ID: <alpine.LFD.2.02.1208301659070.1784@xanadu.home>
-References: <1345119317-22600-1-git-send-email-linus.walleij@linaro.org>
- <201208161344.55723.arnd@arndb.de>
- <CACRpkdYYgdzAU=nyL7dQbdMLx3z3G+K7ba0uJe1=aX=BLeF_sg@mail.gmail.com>
- <alpine.LFD.2.02.1208191148520.1754@xanadu.home>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: [PATCH 2/2] ARM: allow for ATAGS to be configured out when DT support
+ is selected
+Date: Thu, 30 Aug 2012 17:10:08 -0400
+Message-ID: <1346361008-7320-2-git-send-email-nicolas.pitre@linaro.org>
+References: <1346361008-7320-1-git-send-email-nicolas.pitre@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.02.1208191148520.1754-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1346361008-7320-1-git-send-email-nicolas.pitre@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Will Deacon <will.deacon@arm.com>, arm@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 19 Aug 2012, Nicolas Pitre wrote:
+Now that ATAGS support is well contained, we can easily remove it from
+the kernel build if so desired.  It has to explicitly be disabled, and
+only when DT support is selected.
 
-> On Sun, 19 Aug 2012, Linus Walleij wrote:
-> 
-> > But then we hit #ifdeffing and compiling out a lot of dangerous stuff
-> > in arch/arm/kernel and then I get the creeps. I can try, but I think
-> > this is typical Nico territory for example...
-> 
-> I did post a patch moving all the ATAG stuff to a separate source file a 
-> while ago, exactly for that purpose.  I should try to dig it out and 
-> refresh it.
+Note: disabling kernel ATAGS support does not prevent the usage of
+CONFIG_ARM_ATAG_DTB_COMPAT.
 
-OK... In this case "a while ago" = 2 years!
+Signed-off-by: Nicolas Pitre <nico@linaro.org>
+---
+ arch/arm/Kconfig         | 26 +++++++++++++++++++-------
+ arch/arm/kernel/Makefile |  5 +++--
+ arch/arm/kernel/atags.h  | 11 +++++++++++
+ 3 files changed, 33 insertions(+), 9 deletions(-)
 
-Please see the 2 patches to follow.
-
-
-Nicolas
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index c5f9ae5dbd..5c7302e208 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1891,12 +1891,6 @@ config CC_STACKPROTECTOR
+ 	  neutralized via a kernel panic.
+ 	  This feature requires gcc version 4.2 or above.
+ 
+-config DEPRECATED_PARAM_STRUCT
+-	bool "Provide old way to pass kernel parameters"
+-	help
+-	  This was deprecated in 2001 and announced to live on for 5 years.
+-	  Some old boot loaders still use this way.
+-
+ endmenu
+ 
+ menu "Boot options"
+@@ -1909,6 +1903,23 @@ config USE_OF
+ 	help
+ 	  Include support for flattened device tree machine descriptions.
+ 
++config ATAGS
++	bool "Support for the traditional ATAGS boot data passing" if USE_OF
++	default y
++	help
++	  This is the traditional way of passing data to the kernel at boot
++	  time. If you are solely relying on the flattened device tree (or
++	  the ARM_ATAG_DTB_COMPAT option) then you may unselect this option
++	  to remove ATAGS support from your kernel binary.  If unsure,
++	  leave this to y.
++
++config DEPRECATED_PARAM_STRUCT
++	bool "Provide old way to pass kernel parameters"
++	depends on ATAGS
++	help
++	  This was deprecated in 2001 and announced to live on for 5 years.
++	  Some old boot loaders still use this way.
++
+ # Compressed boot loader in ROM.  Yes, we really want to ask about
+ # TEXT and BSS so we preserve their values in the config files.
+ config ZBOOT_ROM_TEXT
+@@ -2035,6 +2046,7 @@ config CMDLINE
+ choice
+ 	prompt "Kernel command line type" if CMDLINE != ""
+ 	default CMDLINE_FROM_BOOTLOADER
++	depends on ATAGS
+ 
+ config CMDLINE_FROM_BOOTLOADER
+ 	bool "Use bootloader kernel arguments if available"
+@@ -2104,7 +2116,7 @@ config KEXEC
+ 
+ config ATAGS_PROC
+ 	bool "Export atags in procfs"
+-	depends on KEXEC
++	depends on ATAGS && KEXEC
+ 	default y
+ 	help
+ 	  Should the atags used to boot the kernel be exported in an "atags"
+diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
+index 086c9d3bc3..79e346a5d7 100644
+--- a/arch/arm/kernel/Makefile
++++ b/arch/arm/kernel/Makefile
+@@ -15,10 +15,12 @@ CFLAGS_REMOVE_return_address.o = -pg
+ 
+ # Object file lists.
+ 
+-obj-y		:= atags_parse.o elf.o entry-armv.o entry-common.o irq.o opcodes.o \
++obj-y		:= elf.o entry-armv.o entry-common.o irq.o opcodes.o \
+ 		   process.o ptrace.o return_address.o sched_clock.o \
+ 		   setup.o signal.o stacktrace.o sys_arm.o time.o traps.o
+ 
++obj-$(CONFIG_ATAGS)		+= atags_parse.o
++obj-$(CONFIG_ATAGS_PROC)	+= atags_proc.o
+ obj-$(CONFIG_DEPRECATED_PARAM_STRUCT) += atags_compat.o
+ 
+ obj-$(CONFIG_LEDS)		+= leds.o
+@@ -52,7 +54,6 @@ test-kprobes-objs		+= kprobes-test-thumb.o
+ else
+ test-kprobes-objs		+= kprobes-test-arm.o
+ endif
+-obj-$(CONFIG_ATAGS_PROC)	+= atags_proc.o
+ obj-$(CONFIG_OABI_COMPAT)	+= sys_oabi-compat.o
+ obj-$(CONFIG_ARM_THUMBEE)	+= thumbee.o
+ obj-$(CONFIG_KGDB)		+= kgdb.o
+diff --git a/arch/arm/kernel/atags.h b/arch/arm/kernel/atags.h
+index a888fdd381..9edc969233 100644
+--- a/arch/arm/kernel/atags.h
++++ b/arch/arm/kernel/atags.h
+@@ -5,4 +5,15 @@ static inline void save_atags(struct tag *tags) { }
+ #endif
+ 
+ void convert_to_tag_list(struct tag *tags);
++
++#ifdef CONFIG_ATAGS
+ struct machine_desc *setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr);
++#else
++static inline struct machine_desc *
++setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr)
++{
++	early_print("no ATAGS support: can't continue\n");
++	while (true);
++	unreachable();
++}
++#endif
+-- 
+1.7.12.84.gefa6462
