@@ -1,16 +1,16 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: V4L DT @ plumbers (was Re: [RFC v4] V4L DT bindings)
-Date: Fri, 31 Aug 2012 00:39:33 +0200 (CEST)
-Message-ID: <alpine.DEB.2.00.1208310037040.5960@axis700.grange>
-References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange>
- <503FCB37.5080706@gmail.com>
- <alpine.DEB.2.00.1208302255210.4516@axis700.grange>
- <3661005.Emfz1E6cRV@avalon>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/6] ARM: integrator: convert AMBA devices to device tree
+Date: Thu, 30 Aug 2012 16:30:55 -0700
+Message-ID: <CACRpkdYkfgY-dYD1L3_HkhFJL49d9GaSWd8ax2Rqm3BGFFHhdQ@mail.gmail.com>
+References: <1345119373-22774-1-git-send-email-linus.walleij@linaro.org>
+ <20120816124002.GB7439@game.jcrosoft.org>
+ <CACRpkdZDMxk30YTkrumRveR3OuWptSpzNevrAvC2FxYShOZp-A@mail.gmail.com>
+ <20120820080210.GF7439@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <3661005.Emfz1E6cRV@avalon>
+In-Reply-To: <20120820080210.GF7439-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,31 +21,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas THERY <nicolas.thery-qxv4g6HH51o@public.gmane.org>, Willy POISSON <willy.poisson-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Pierre-yves TALOUD <pierre-yves.taloud-qxv4g6HH51o@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Marc VOLLE <jean-marc.volle-qxv4g6HH51o@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 Aug 2012, Laurent Pinchart wrote:
+On Mon, Aug 20, 2012 at 1:02 AM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 00:42 Sun 19 Aug     , Linus Walleij wrote:
 
-> Hi Guennadi,
-> 
-> On Thursday 30 August 2012 22:58:17 Guennadi Liakhovetski wrote:
-> > Hi all
-> > 
-> > Do we still want to try to organise a short discussion of this while at
-> > plumbers? Maybe tomorrow during or around lunch? Or any other time for
-> > that matter?
-> 
-> I'm certainly interested. I have a meeting tomorrow at a still unknown type, 
-> apart from that I'm free.
+> no I mean why
+>> >> +     OF_DEV_AUXDATA("arm,primecell", INTEGRATOR_RTC_BASE,
+>> >> +             "rtc", NULL),
+>> >> +     OF_DEV_AUXDATA("arm,primecell", KMI0_BASE,
+>> >> +             "kmi0", NULL),
+>> >> +     OF_DEV_AUXDATA("arm,primecell", KMI1_BASE,
+>> >> +             "kmi1", NULL),
+>
+> no platform data why do you use the AUXDATA?
+>
+> as the OF_DEV_AUXDATA is deprecated now
 
-How about beginning tomorrow at 11:55 (Nautilus 3 & 4 are still free 
-according to the schedule) and then continuing after the lunch for another 
-hour if needed (first talk in the afternoon tomorrow is at 14:10).
+OK this is to get the right bus names of the devices.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+As I support boot from both device tree and without device tree, I cannot
+change all the names that e.g. the clock framework is tied to.
+
+Once we switch to pure device tree this can be changed at the user
+sites and all auxdata be removed.
+
+Yours,
+Linus Walleij
