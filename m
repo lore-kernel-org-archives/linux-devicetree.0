@@ -1,7 +1,7 @@
 From: Ravi Babu <ravibabu@ti.com>
-Subject: [PATCH v8 08/13] arm/dts: am33xx: Add dt data for usbss
-Date: Thu, 30 Aug 2012 16:20:20 +0530
-Message-ID: <1346323825-24385-9-git-send-email-ravibabu@ti.com>
+Subject: [PATCH v8 12/13] arm/dts: am33xx: add phy phandle to usbss
+Date: Thu, 30 Aug 2012 16:20:24 +0530
+Message-ID: <1346323825-24385-13-git-send-email-ravibabu@ti.com>
 References: <1346323825-24385-1-git-send-email-ravibabu@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,36 +14,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ajay Kumar Gupta <ajay.gupta@ti.com>
 
-Added device tree data for usbss on am33xx. There are two musb controllers
-on am33xx platform so have port0_mode and port1_mode additional data.
+Added NOP PHY phandle to usbss device node as same will be used
+to get the phy from otg framework.
 
 Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
 Signed-off-by: Ravi Babu <ravibabu@ti.com>
 Signed-off-by: Santhapuri, Damodar <damodar.santhapuri@ti.com>
 Signed-off-by: Ravi Babu <ravibabu@ti.com>
 ---
- arch/arm/boot/dts/am33xx.dtsi |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/am33xx.dtsi |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 59509c4..778b95e 100644
+index 789c384..c36b886 100644
 --- a/arch/arm/boot/dts/am33xx.dtsi
 +++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -154,5 +154,16 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c3";
+@@ -172,6 +172,8 @@
+ 			port0_mode = <3>;
+ 			port1_mode = <3>;
+ 			power = <250>;
++			usb0-phy = <&usb0_phy>;
++			usb1-phy = <&usb1_phy>;
  		};
-+
-+		usb_otg_hs: usb_otg_hs {
-+			compatible = "ti,musb-am33xx";
-+			ti,hwmods = "usb_otg_hs";
-+			multipoint = <1>;
-+			num_eps = <16>;
-+			ram_bits = <12>;
-+			port0_mode = <3>;
-+			port1_mode = <3>;
-+			power = <250>;
-+		};
  	};
  };
 -- 
