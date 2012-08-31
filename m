@@ -1,76 +1,72 @@
-From: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v9 13/13] usb: otg: nop: add dt support
-Date: Fri, 31 Aug 2012 16:39:59 +0530
-Message-ID: <1346411399-23964-14-git-send-email-ravibabu@ti.com>
-References: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH v5 0/4] Runtime Interpreted Power Sequences
+Date: Fri, 31 Aug 2012 20:34:02 +0900
+Message-ID: <1346412846-17102-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1346411399-23964-1-git-send-email-ravibabu-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Leela Krishna Amudala <leelakrishna.a@gmail.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Added device tree support for nop transceiver driver and updated the
-Documentation with device tree binding information for am33xx platform.
+New revision taking (hopefully) all the feedback received from the previous
+version into account. It's funny how a 30 lines patch to switch my backlight
+turned into a 1500 lines patchset introducing a new framework. And in the end
+my backlight switches just the same.
 
-Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/usb/am33xx-usb.txt         |    3 +++
- drivers/usb/otg/nop-usb-xceiv.c                    |   10 ++++++++++
- 2 files changed, 13 insertions(+), 0 deletions(-)
+So anyway, the main updates are:
 
-diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-index b0caac3..e2702df 100644
---- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-@@ -14,3 +14,6 @@ AM33XX MUSB GLUE
-    500mA when operating in host mode.
-  - usb0-phy : phandle for usb0 NOP PHY
-  - usb1-phy : phandle for usb1 NOP PHY
-+
-+NOP USB PHY
-+ - compatible : Should be "nop-xceiv-usb"
-diff --git a/drivers/usb/otg/nop-usb-xceiv.c b/drivers/usb/otg/nop-usb-xceiv.c
-index 7e0dba3..fdbc285 100644
---- a/drivers/usb/otg/nop-usb-xceiv.c
-+++ b/drivers/usb/otg/nop-usb-xceiv.c
-@@ -27,6 +27,7 @@
-  */
- 
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/dma-mapping.h>
- #include <linux/usb/otg.h>
-@@ -194,12 +195,21 @@ static int __devexit nop_usb_xceiv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id nop_xceiv_id_table[] = {
-+	{ .compatible = "nop-xceiv-usb" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, nop_xceiv_id_table);
-+#endif
-+
- static struct platform_driver nop_usb_xceiv_driver = {
- 	.probe		= nop_usb_xceiv_probe,
- 	.remove		= __devexit_p(nop_usb_xceiv_remove),
- 	.driver		= {
- 		.name	= "nop_usb_xceiv",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(nop_xceiv_id_table),
- 	},
- };
- 
+* Types of DT steps are now determined by a "type" property and not by the
+  presence of a specific property.
+* Power sequences and their resources are now encapsulated into a "set"
+  structure. I was reluctant to this idea but have to admit now that it is way
+  cleaner.
+* GPIO steps now refer the GPIO phandle directly in the DT instead of by name.
+  The GPIO framework does not work like regulator or PWM in that GPIOs cannot be
+  accessed by name, so it did not make sense anyway. And thanks to that we now
+  have perfect matching between the platform data members and the DT properties,
+  which makes everything more consistent.
+* Moved the implementations of resources into their own file (directly included
+  from the main file) and added an "ops" structure to abstract them. This
+  clearly separates the framework from the resources implementations and should
+  make it easier to add new resources types.
+
+Alexandre Courbot (4):
+  Runtime Interpreted Power Sequences
+  pwm_backlight: use power sequences
+  tegra: dt: add label to tegra20's PWM
+  tegra: ventana: add pwm backlight DT nodes
+
+ .../devicetree/bindings/power_seq/power_seq.txt    | 117 ++++++
+ .../bindings/video/backlight/pwm-backlight.txt     |  67 +++-
+ Documentation/power/power_seq.txt                  | 225 +++++++++++
+ arch/arm/boot/dts/tegra20-ventana.dts              |  59 ++-
+ arch/arm/boot/dts/tegra20.dtsi                     |   2 +-
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/power_seq/Kconfig                    |   2 +
+ drivers/power/power_seq/Makefile                   |   1 +
+ drivers/power/power_seq/power_seq.c                | 446 +++++++++++++++++++++
+ drivers/power/power_seq/power_seq_delay.c          |  51 +++
+ drivers/power/power_seq/power_seq_gpio.c           |  81 ++++
+ drivers/power/power_seq/power_seq_pwm.c            |  85 ++++
+ drivers/power/power_seq/power_seq_regulator.c      |  86 ++++
+ drivers/video/backlight/Kconfig                    |   1 +
+ drivers/video/backlight/pwm_bl.c                   | 179 ++++++---
+ include/linux/power_seq.h                          | 174 ++++++++
+ include/linux/pwm_backlight.h                      |  15 +-
+ 18 files changed, 1537 insertions(+), 56 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_seq/power_seq.txt
+ create mode 100644 Documentation/power/power_seq.txt
+ create mode 100644 drivers/power/power_seq/Kconfig
+ create mode 100644 drivers/power/power_seq/Makefile
+ create mode 100644 drivers/power/power_seq/power_seq.c
+ create mode 100644 drivers/power/power_seq/power_seq_delay.c
+ create mode 100644 drivers/power/power_seq/power_seq_gpio.c
+ create mode 100644 drivers/power/power_seq/power_seq_pwm.c
+ create mode 100644 drivers/power/power_seq/power_seq_regulator.c
+ create mode 100644 include/linux/power_seq.h
+
 -- 
-1.7.0.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.12
