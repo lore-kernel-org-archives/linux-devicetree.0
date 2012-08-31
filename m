@@ -1,28 +1,48 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 7/8] ARM: dts: add twi nodes for atmel SOCs
-Date: Fri, 31 Aug 2012 16:56:20 +0200
-Message-ID: <5040D094.3060306@atmel.com>
-References: <1346404884-18451-1-git-send-email-ludovic.desroches@atmel.com> <1346405077-18620-1-git-send-email-ludovic.desroches@atmel.com> <20120831144105.GB23867@game.jcrosoft.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v4 2/7] ARM: imx6q: add iomuxc gpr support into syscon
+Date: Fri, 31 Aug 2012 10:02:48 +0800
+Message-ID: <20120831020247.GC7726@r65073-Latitude-D630>
+References: <1346237818-9498-1-git-send-email-b29396@freescale.com>
+ <1346237818-9498-3-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120831144105.GB23867-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1346237818-9498-3-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2012 04:41 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> On 11:24 Fri 31 Aug     , ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
->> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>
->> Add twi nodes for atmel SOCs and remove i2c-gpio ones.
-> Only drop the i2c-gpio on the soc that are kn own to have no issue on the hw
-> IP. For hte onther one keep both in the dtsi
+On Wed, Aug 29, 2012 at 06:56:53PM +0800, Dong Aisheng wrote:
+> From: Dong Aisheng <dong.aisheng@linaro.org>
+> 
+> Include headfile for easy using.
+> 
+> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
+> Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
+> ---
+>  arch/arm/boot/dts/imx6q.dtsi         |    5 +
+>  include/linux/fsl/imx6q-iomuxc-gpr.h |  319 ++++++++++++++++++++++++++++++++++
 
-Yes, I agree with this.
+I assume that all the users of this header file are imx6q syscon
+clients.  In that case, this header belongs to mfd/syscon subsystem.
 
-Bye,
+I have been told by people that it was a mistake to create
+include/linux/fsl.  Each header in include/linux should go to
+respective subsystem sub-directory.  For this particular case,
+it should be include/linux/mfd or include/linux/mfd/syscon even
+better, IMO.
+
+<snip>
+
+> +#define IMX6Q_GPR13_SATA_PHY_1_MED		(0x1 << 0)
+> +#define IMX6Q_GPR13_SATA_PHY_1_SLOW		(0x2 << 0)
+> +
+> +#endif /* !__LINUX_IMX6Q_IOMUXC_GPR_H */
+
+Nit: why do we have a "!" there?
+
 -- 
-Nicolas Ferre
+Regards,
+Shawn
