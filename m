@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 8/9] ARM: i.MX6: use generic on-chip SRAM allocator driver for OCRAM
-Date: Fri, 31 Aug 2012 11:27:03 +0200
-Message-ID: <1346405224-20399-9-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v2 7/9] ARM: i.MX53: use generic on-chip SRAM allocator driver for OCRAM
+Date: Fri, 31 Aug 2012 11:27:02 +0200
+Message-ID: <1346405224-20399-8-git-send-email-p.zabel@pengutronix.de>
 References: <1346405224-20399-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1346405224-20399-1-git-send-email-p.zabel@pengutronix.de>
@@ -12,23 +12,23 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6q.dtsi |    4 ++--
+ arch/arm/boot/dts/imx53.dtsi |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 9cb0b50..1e463c4 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -111,8 +111,8 @@
- 		       status = "disabled";
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index 5da342a..2767a92 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -338,8 +338,8 @@
+ 			};
  		};
  
--		ocram@00900000 {
+-		ocram@f8000000 {
 -			compatible = "fsl,imx-ocram";
-+		ocram: ocram@00900000 {
++		ocram: ocram@f8000000 {
 +			compatible = "fsl,imx-ocram", "sram";
- 			reg = <0x00900000 0x3f000>;
+ 			reg = <0xf8000000 0x20000>;
  		};
- 
+ 	};
 -- 
 1.7.10.4
