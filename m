@@ -1,45 +1,100 @@
-From: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2 6/9] misc: Generic on-chip SRAM allocation driver
-Date: Fri, 31 Aug 2012 02:40:50 -0700
-Message-ID: <CAMQu2gxsdeX4z2Zrnb2NW7-gnh2Tyjcxkd2pOMOagkdkHGsgWQ@mail.gmail.com>
-References: <1346405224-20399-1-git-send-email-p.zabel@pengutronix.de>
- <1346405224-20399-7-git-send-email-p.zabel@pengutronix.de> <1346405848.5316.11.camel@coredoba.hi.pengutronix.de>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v8 08/13] arm/dts: am33xx: Add dt data for usbss
+Date: Fri, 31 Aug 2012 12:54:43 +0300
+Message-ID: <20120831095441.GC8270@arwen.pp.htv.fi>
+References: <1346323825-24385-1-git-send-email-ravibabu@ti.com>
+ <1346323825-24385-9-git-send-email-ravibabu@ti.com>
+ <503F50FC.5040200@mvista.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1346405848.5316.11.camel@coredoba.hi.pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Jan_L=FCbbe?= <jlu@pengutronix.de>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UPT3ojh+0CqEDtpF"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <503F50FC.5040200-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, ajayguptaj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2012 at 2:37 AM, Jan L=FCbbe <jlu@pengutronix.de> wrote=
-:
->
-> On Fri, 2012-08-31 at 11:27 +0200, Philipp Zabel wrote:
-> > This driver requests and remaps a memory region as configured in th=
-e
-> > device tree. It serves memory from this region via the genalloc API=
-=2E
-> >
-> > Other drivers can retrieve the genalloc pool from a phandle pointin=
-g
-> > to this drivers' device node in the device tree.
-> >
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > ---
-> >  drivers/misc/Kconfig  |    8 ++++
-> >  drivers/misc/Makefile |    1 +
-> >  drivers/misc/sram.c   |  105
-> > +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 114 insertions(+)
-> >  create mode 100644 drivers/misc/sram.c
->
-> We now have drivers/memory, which seems to be a good place for this.
->
-drivers/memory is created for Memory controller device drivers. SRAM is
-just pool of memory and should belong to some other place.
 
-Regards
-Santosh
+--UPT3ojh+0CqEDtpF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Aug 30, 2012 at 03:39:40PM +0400, Sergei Shtylyov wrote:
+> Hello.
+>=20
+> On 30-08-2012 14:50, Ravi Babu wrote:
+>=20
+> >From: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+>=20
+> >Added device tree data for usbss on am33xx. There are two musb controlle=
+rs
+> >on am33xx platform so have port0_mode and port1_mode additional data.
+>=20
+> >Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+> >Signed-off-by: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
+> >Signed-off-by: Santhapuri, Damodar <damodar.santhapuri-l0cyMroinI0@public.gmane.org>
+> >Signed-off-by: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
+> >---
+> >  arch/arm/boot/dts/am33xx.dtsi |   11 +++++++++++
+> >  1 files changed, 11 insertions(+), 0 deletions(-)
+>=20
+> >diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dt=
+si
+> >index 59509c4..778b95e 100644
+> >--- a/arch/arm/boot/dts/am33xx.dtsi
+> >+++ b/arch/arm/boot/dts/am33xx.dtsi
+> >@@ -154,5 +154,16 @@
+> >  			#size-cells =3D <0>;
+> >  			ti,hwmods =3D "i2c3";
+> >  		};
+> >+
+> >+		usb_otg_hs: usb_otg_hs {
+> >+			compatible =3D "ti,musb-am33xx";
+> >+			ti,hwmods =3D "usb_otg_hs";
+> >+			multipoint =3D <1>;
+> >+			num_eps =3D <16>;
+> >+			ram_bits =3D <12>;
+> >+			port0_mode =3D <3>;
+> >+			port1_mode =3D <3>;
+>=20
+>    Hyphen is preferred traditionally to underscore in the device tree fil=
+es...
+
+Are we having a v2 of this patch ??
+
+--=20
+balbi
+
+--UPT3ojh+0CqEDtpF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQQInhAAoJEIaOsuA1yqREo9IQAKWRD8Vj2x99wRs9L7qa4gur
+vP89SMOjIcUCByjXGdPsWlcr36vN/DusE8Dmderci/B/t7F8OMR08/KLlQm4aX+J
+i0EPwncxMOsfPxDpbkhgglKQCRROzOk71MWg1RzpP4gdFys9xlXIjRaQZ10IJiRv
+Ze39yzDXvJi+CuxjNG/1fWK3r/0pFk6GmVsC6zjvYdMWMStqA6X791hza1kGQIkO
+vcPu3M9LDCTOYkFoaZeUPHoubWCRX7PhYEFlAqzHkZf6cKvcyskC53WzCuSZgLWN
++kXriQVMw5vz1hU8NfA+nYqvwh7jNSDFz/HqpO8iwR9Fuu9CW5xtLicwa65j4JAL
++TSh+dd+FCxVx+Sr/edsEZrF54A9Mo4JJA+hQi8Zv14gRTOTtJPLdAi6qKpbBOn6
+FHl23ELjwkB90KTE1C/781dS59XPmRMe7i3UtNXX1s3hZtIX42+Q4mx16dihHZVZ
+7y/CUPTfkQrMcSZ5US4x/FC1Mn9JWm9RDViF76YDpVPogImp+XSo3ZL+9ieMCnY2
+mWNEbUA6/axHUhEUJxM/nseNREpDR463GuM97BkI1D4BW8q9yvQj7fCXDFdCvqVt
+g6jHOtotBbsTscvNS7PVZQIllaytikINGvEk2t56aWr74MgKJxtnrs5pFJ0u3Z1T
+WHAkA/DIyZAkzJyEdm58
+=wUN+
+-----END PGP SIGNATURE-----
+
+--UPT3ojh+0CqEDtpF--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
