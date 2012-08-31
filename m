@@ -1,105 +1,99 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v5 4/9] mmc: dw_mmc: lookup for optional biu and ciu clocks
-Date: Fri, 31 Aug 2012 12:02:42 +0530
-Message-ID: <CAJuYYwSokqAegg1Z-jovYzanBYR-oZZaL2W=_nOSNVAsrM_PMw@mail.gmail.com>
-References: <1346237295-7116-1-git-send-email-thomas.abraham@linaro.org>
-	<1346237295-7116-5-git-send-email-thomas.abraham@linaro.org>
-	<503F28E7.1060608@samsung.com>
-	<CAJuYYwQtAe7kC4DC5Ao04qU_9TSjcREw7ktuf6KNmgXHAvUzKg@mail.gmail.com>
-	<5040536C.30407@samsung.com>
+From: Nicolas THERY <nicolas.thery@st.com>
+Subject: Re: [RFC v4] V4L DT bindings
+Date: Fri, 31 Aug 2012 08:46:23 +0200
+Message-ID: <50405DBF.9000209@st.com>
+References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange>
+ <503F8471.5000406@st.com> <503FCB37.5080706@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5040536C.30407@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, tgih.jun@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <503FCB37.5080706@gmail.com>
+Content-Language: en-US
+Sender: linux-sh-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Willy POISSON <willy.poisson@st.com>, Jean-Marc VOLLE <jean-marc.volle@st.com>, Pierre-yves TALOUD <pierre-yves.taloud@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31 August 2012 11:32, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> On 08/31/2012 02:29 PM, Thomas Abraham wrote:
->> On 30 August 2012 14:18, Jaehoon Chung <jh80.chung@samsung.com> wrote:
->>> Hi Thomas,
->>>
->>> On 08/29/2012 07:48 PM, Thomas Abraham wrote:
->>>> Some platforms allow for clock gating and control of bus interface unit clock
->>>> and card interface unit clock. Add support for clock lookup of optional biu
->>>> and ciu clocks for clock gating and clock speed determination.
->>>>
->>>> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
->>>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->>>> Acked-by: Will Newton <will.newton@imgtec.com>
->>>> ---
->>>>  drivers/mmc/host/dw_mmc.c  |   42 +++++++++++++++++++++++++++++++++++++++---
->>>>  include/linux/mmc/dw_mmc.h |    4 ++++
->>>>  2 files changed, 43 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->>>> index 227c42e..90c7c7b 100644
->>>> --- a/drivers/mmc/host/dw_mmc.c
->>>> +++ b/drivers/mmc/host/dw_mmc.c
->>>> @@ -1960,18 +1960,38 @@ int dw_mci_probe(struct dw_mci *host)
->>>>               return -ENODEV;
->>>>       }
->>>>
->>>> -     if (!host->pdata->bus_hz) {
->>>> +     host->biu_clk = clk_get(host->dev, "biu");
->>>> +     if (IS_ERR(host->biu_clk))
->>>> +             dev_dbg(host->dev, "biu clock not available\n");
->>>> +     else
->>>> +             clk_prepare_enable(host->biu_clk);
->>> biu is clock for bus interface?
->>> if didn't get "biu_clk" or didn't clk_prepare_enable(), then can we initialize the card?
->>
->> Hi Jaehoon,
->>
->> Yes, the biu clock is for bus interface. The biu and ciu clock lookup
->> and enable here is optional in the above change. If a platform does
->> not define these clocks, then the platform code is responsible for
->> enabling these clocks.
-> If biu_clk is presented...
-> Is there no probability that clk_prepare_enable is failed?
+Hello,
 
-Yes, clk_prepare_enable can fail. I will fix this by setting biu_clk
-and ciu_clk to NULL, in case the clk_prepare_enable fails.
+Thanks for the feedback.
 
+On 2012-08-30 22:21, Sylwester Nawrocki wrote:
+> On 08/30/2012 05:19 PM, Nicolas THERY wrote:
+
+[snip]
+
+>> In imx074@0x1a above, the data-lanes property is<1>,<2>.  Is it
+>> reversed here to show that lanes are swapped between the sensor and the
+>> CSI rx?  If not, how to express lane swapping?
+> 
+> Yes, this indicates lanes remapping at the receiver.
+> 
+> Probably we could make it a single value with length determined by
+> 'bus-width', since we're going to use 'bus-width' for CSI buses as well, 
+> (optionally) in addition to 'clock-lanes' and 'data-lanes' ?
+
+Looks good to me.
+
+[snip]
+
+>> How to express that the positive and negative signals of a given
+>> clock/data lane are inversed?  Is it somehow with the hsync-active
+>> property?
+> 
+> Hmm, I don't think this is covered in this RFC. hsync-active is mostly
+> intended for the parallel buses. We need to come up with new properties
+> to handle CSI data/clock lane polarity swapping. There was a short
+> discussion about that already:
+> http://www.mail-archive.com/linux-media@vger.kernel.org/msg41724.html
+> 
+>> Actually there may be two positive/negative inversion cases to consider:
 >>
->>>> +
->>>> +     host->ciu_clk = clk_get(host->dev, "ciu");
->>>> +     if (IS_ERR(host->ciu_clk))
->>>> +             dev_dbg(host->dev, "ciu clock not available\n");
->>>> +     else
->>>> +             clk_prepare_enable(host->ciu_clk);
->>>> +
->>>> +     if (IS_ERR(host->ciu_clk))
->>>> +             host->bus_hz = host->pdata->bus_hz;
->>>> +     else
->>>> +             host->bus_hz = clk_get_rate(host->ciu_clk);
->>> if clk_get_rate() is incorrect value(ex,400MHz),
->>> then mmc->f_min value is too high.
->>> because mmc->f_min is assigned to DIV_ROUND_UP(host->bus_hz, 510) into dw_mc_init_slot.
->>> Do you have any opinion for solving this?
+>> - the positive/negative signals are inversed both in low-power and
+>>    high-speed modes (e.g. physical lines between sensor module and SoC
+>>    are swapped on the PCB);
 >>
->> One option on Exynos5250 is to use the clock divider in the CLKSEL
->> register to divide the ciu clock to a lower value. For Exynos4, since
->> there is no clock divider in CLKSEL register, the platform code should
->> ensure that the ciu clock has a valid range.
-> I know that can use div-ratio filed at the clksel register.
-> On Exynos5, i known that is used the div-ratio at CLKSEL register.
-> If ciu-clock is 400MHz, host->bus_hz is assigned to 400MHz.
-> 1) host->bus_hz -> 400MHz (at dw-mmc-pltfm.c)
-> 2) mmc->f_min = DIV_ROUND_UP(host->bus_hz, 510) then mmc->f_min is set to 784KHz.
-> 3) then host->bus_hz is re-assigned to value that is divided to div-ratio at CLKSEL register.
->    at this time, host->bus_hz = 100MHz...
->
-> I think this sequence is something wrong.
-> (Is 784KHz too high for init card?)
->
-> It's just my thinking..if my understanding is wrong, let me know plz.
+>> - the positive/negative signals are inversed in high-speed mode only
+>>    (the sensor and CSI rx use opposite polarities in high-speed mode).
+> 
+> Then is this positive/negative LVDS lines swapping separately configurable
+> in hardware for low-power and high-speed mode ? 
 
-You have listed the steps 1 to 3 correctly. So, as per step 3, 100Mhz
-/ 510 ~= 196KHz. Which is well within 400KHz. So do you still see a
-problem here?
+Yes.
 
-Thanks,
-Thomas.
+> What is an advantage of it ?
+
+I suspect our hardware people after years of experience with
+not-so-compliant sensors and weird PCBs have adopted a
+belt-and-suspenders approach and made configurable everything they
+thought could go wrong.
+
+In the "inversion in high-speed mode only" case, that could be because
+the sensor does not use the standard-specified polarity.
+
+> One possible solution would be to have a one to two elements array property,
+> e.g.
+> 
+> lanes-polarity = <0 0 0 0 0>, <1 1 1 1 1>;
+> 
+> where the first entry would indicate lanes polarity for high speed mode and
+> the second one for low power mode. For receivers/transmitters that don't
+> allow to configure the polarities separately for different bus states there
+> could be just one entry. The width of each element could be determined by 
+> value of the 'bus-width' property + 1.
+> 
+> Would it make sense ?
+
+Yes, that looks fine.
+
+Incidentally is it okay to extend DT nodes with manufacturer-specific
+properties?  I'm asking because our CSI rx supports other esoteric
+lane-related configuration knobs, e.g. for impedance tuning.  We'd like
+to put them in the DT but they probably don't warrant an official
+property.
+
+Thanks a lot again.
+
+Best regards,
+Nicolas
