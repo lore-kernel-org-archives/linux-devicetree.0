@@ -1,60 +1,69 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCH v9 01/13] usb: musb: dsps: add phy control logic to glue
-Date: Fri, 31 Aug 2012 21:17:27 +0530
-Message-ID: <CAAe_U6J7LHUkLDTbjDuHsNcKwPdSpN8RwgkZDLsOA9rdaz1LVQ@mail.gmail.com>
-References: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
-	<1346411399-23964-2-git-send-email-ravibabu@ti.com>
-	<20120831122342.GC24861@arwen.pp.htv.fi>
-	<CAAe_U6LaCiEPB9ET26j2xjLtumKzJGu+CtW=fK_02d30Z-3BgQ@mail.gmail.com>
-	<20120831131915.GA25341@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: Re: [PATCH RESEND v4 2/3] arm/dts: AM33XX: Configure pinmuxs for user leds control on Bone
+Date: Fri, 31 Aug 2012 17:53:18 +0200
+Message-ID: <C1D7B7D4-D576-4256-83F3-09689B4087C3@dominion.thruhere.net>
+References: <1346141454-18786-1-git-send-email-anilkumar@ti.com> <1346141454-18786-3-git-send-email-anilkumar@ti.com> <20120830203505.GB1303@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 6.0 \(1486\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120831131915.GA25341@arwen.pp.htv.fi>
+In-Reply-To: <20120830203505.GB1303@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Ravi Babu <ravibabu@ti.com>, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com, Benoit Cousson <b-cousson@ti.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: AnilKumar Ch <anilkumar@ti.com>, wg@grandegger.com, mkl@pengutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2012 at 6:49 PM, Felipe Balbi <balbi@ti.com> wrote:
-> On Fri, Aug 31, 2012 at 06:51:04PM +0530, ABRAHAM, KISHON VIJAY wrote:
->> Hi,
->>
->> On Fri, Aug 31, 2012 at 5:53 PM, Felipe Balbi <balbi@ti.com> wrote:
->> > Hi,
->> >
->> > On Fri, Aug 31, 2012 at 04:39:47PM +0530, Ravi Babu wrote:
->> >> From: Santhapuri, Damodar <damodar.santhapuri@ti.com>
->> >>
->> >> AM335x uses NOP transceiver driver and need to enable builtin PHY
->> >> by writing into usb_ctrl register available in system control
->> >> module register space. This is being added at musb glue driver
->> >> layer untill a separate system control module driver is available.
->> >>
->> >> Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
->> >> Signed-off-by: Santhapuri, Damodar <damodar.santhapuri@ti.com>
->> >> Signed-off-by: Ravi Babu <ravibabu@ti.com>
->> >
->> > Kishon, you were adding a real phy driver for OMAP's internal phy logic
->> > on one of your patches and I believe this will conflict with your
->> > changes, right ?
->>
->> Indeed. My final patch of that series removes some of the functions
->> from omap_phy_internal.c (which was taken care in the phy driver).
->> >
->> > How does this look to you ? Is this at least correct ? I suppose the
->> > correct way would be to actually have the system control module driver
->> > which we have been waiting, right ?
->>
->> Correct. I think once we have the system control module driver in
->> place, we'll have everything wrt control module register writes
->> implemented in correct way.
->
-> So $SUBJECT will pretty much be thrown away once we have SCM driver, in
-> that case it's best to wait a bit longer and apply this series once SCM
-> driver is available and after your series too... you agree ?
 
-Yes. That would be better.
+Op 30 aug. 2012, om 22:35 heeft Tony Lindgren <tony@atomide.com> het volgende geschreven:
 
-Thanks
-Kishon
+> * AnilKumar Ch <anilkumar@ti.com> [120828 01:11]:
+>> Adds GPIO pinctrl nodes to am3358_pinmux master node to control
+>> user leds (USR0, USR1, USR2 and USR3) present on BeagleBone.
+>> 
+>> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+>> ---
+>> arch/arm/boot/dts/am335x-bone.dts |   14 ++++++++++++++
+>> 1 file changed, 14 insertions(+)
+>> 
+>> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+>> index a7906cb..58f5042 100644
+>> --- a/arch/arm/boot/dts/am335x-bone.dts
+>> +++ b/arch/arm/boot/dts/am335x-bone.dts
+>> @@ -18,6 +18,20 @@
+>> 		reg = <0x80000000 0x10000000>; /* 256 MB */
+>> 	};
+>> 
+>> +	am3358_pinmux: pinmux@44E10800 {
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&userled_pins>;
+>> +
+>> +		userled_pins: pinmux_userled_pins {
+>> +			pinctrl-single,pins = <
+>> +				0x54 0x7	/* gpmc_a5.gpio1_21, OUTPUT | MODE7 */
+>> +				0x58 0x17	/* gpmc_a6.gpio1_22, OUTPUT_PULLUP | MODE7 */
+>> +				0x5C 0x7	/* gpmc_a7.gpio1_23, OUTPUT | MODE7 */
+>> +				0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
+>> +			>;
+>> +		};
+>> +	};
+>> +
+> 
+> Looks like this patch should also claim these pins by the led driver.
+> Then the led driver should just do pinctrl_get_select_default(&pdev->dev)
+> in it's probe function to set the pins.
+
+FWIW, I've been using this for a while now:
+
++       leds {
++               compatible = "gpio-leds";
++               heartbeat {
++                       label = "beaglebone::usr0";
++                       gpios = <&gpio2 21 0>;
++                       linux,default-trigger = "heartbeat";
++               };
++
++               mmc {
++                       label = "beaglebone:usr1";
++                       gpios = <&gpio2 22 0>;
++                       linux,default-trigger = "mmc0";
++               };
