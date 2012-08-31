@@ -1,44 +1,26 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio: samsung: add devicetree init for s3c24xx arches
-Date: Sat, 1 Sep 2012 01:07:50 +0200
-Message-ID: <CACRpkdYqYhtHHVw8C5HhDr96V6diV-0M+55xCHnoATOiyDp3Jg@mail.gmail.com>
-References: <201208282355.44268.heiko@sntech.de>
-	<503D4FB1.1020206@samsung.com>
+Subject: Re: [PATCH v2 0/3] MFD/GPIO: Add twl6040 GPO driver
+Date: Sat, 1 Sep 2012 01:10:23 +0200
+Message-ID: <CACRpkdakhoM1-+muCy2F73dEy4Ta4DBsag49cNy16EDRQ5csUw@mail.gmail.com>
+References: <1345119195-7490-1-git-send-email-peter.ujfalusi@ti.com>
+	<503F2F5B.6020304@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <503D4FB1.1020206@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Linus Walleij <linus.walleij@stericsson.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <503F2F5B.6020304@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@stericsson.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2012 at 1:09 AM, Kukjin Kim <kgene.kim@samsung.com> wro=
-te:
-> On 08/28/12 14:55, Heiko St=FCbner wrote:
->>
->> Until now the Exynos-SoC was the only Samsung-SoC supporting the GPI=
-Os
->> via the device tree. This patch implements dt-support for the
->> s3c24xx arches.
->>
->> The controllers contain only 3 cells, as the underlying gpio control=
-ler
->> does not support controlling the drive strength on a gpio level.
->>
->> Tested with the gpio-keys driver on a s3c2416 based machine.
->>
->> Signed-off-by: Heiko Stuebner<heiko@sntech.de>
->> Reviewed-by: Thomas Abraham<thomas.abraham@linaro.org>
->
->
-> Yeah, looks good to me...
->
-> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+On Thu, Aug 30, 2012 at 11:16 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
 
-OK are you taking this into the Samsung tree or shall I take care of it=
-?
+> Hi Samuel, Linus,
+(...)
+> Did you had time to look at this series? Do you want me to resend it?
+
+I have provided my ACK on the GPIO part assuming you're taking this
+series through the MFD tree. There is not more I can do...
 
 Yours,
 Linus Walleij
