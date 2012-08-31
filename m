@@ -1,59 +1,73 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/5] leds: leds-gpio: adopt pinctrl support
-Date: Fri, 31 Aug 2012 09:04:04 -0700
-Message-ID: <20120831160402.GN1303@atomide.com>
-References: <1346405361-29711-1-git-send-email-anilkumar@ti.com>
- <1346405361-29711-5-git-send-email-anilkumar@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: V4L DT @ plumbers (was Re: [RFC v4] V4L DT bindings)
+Date: Fri, 31 Aug 2012 18:05:11 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1208311754360.25088@axis700.grange>
+References: <le0u47eut2t0gh4pxyuu5vse.1346374764563@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1346405361-29711-5-git-send-email-anilkumar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: AnilKumar Ch <anilkumar@ti.com>
-Cc: wg@grandegger.com, mkl@pengutronix.de, bryan.wu@canonical.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <le0u47eut2t0gh4pxyuu5vse.1346374764563-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas THERY <nicolas.thery-qxv4g6HH51o@public.gmane.org>, Willy POISSON <willy.poisson-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pierre-yves TALOUD <pierre-yves.taloud-qxv4g6HH51o@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Marc VOLLE <jean-marc.volle-qxv4g6HH51o@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* AnilKumar Ch <anilkumar@ti.com> [120831 02:30]:
-> Adopt pinctrl support to leds-gpio driver, based on the device
-> pointer (leds-gpio) pinctrl driver configure SoC pins to GPIO
-> mode.
+On Thu, 30 Aug 2012, Hans Verkuil wrote:
+
+> Fine by me!
+
+Good, then let's meet at 11:55 in front of Nautilus 3 / 4 and then see 
+what's available.
+
+Thanks
+Guennadi
+
 > 
-> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> ---
->  drivers/leds/leds-gpio.c |   31 ++++++++++++++++++++++++-------
->  1 file changed, 24 insertions(+), 7 deletions(-)
+>       Hans
 > 
-> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> index c032b21..d98dfb9 100644
-> --- a/drivers/leds/leds-gpio.c
-> +++ b/drivers/leds/leds-gpio.c
-> @@ -20,6 +20,7 @@
->  #include <linux/slab.h>
->  #include <linux/workqueue.h>
->  #include <linux/module.h>
-> +#include <linux/pinctrl/consumer.h>
->  
->  struct gpio_led_data {
->  	struct led_classdev cdev;
-> @@ -236,14 +237,23 @@ static int __devinit gpio_led_probe(struct platform_device *pdev)
->  {
->  	struct gpio_led_platform_data *pdata = pdev->dev.platform_data;
->  	struct gpio_leds_priv *priv;
-> -	int i, ret = 0;
-> +	struct pinctrl *pinctrl;
-> +	int i = 0;
-> +	int ret = 0;
-> +
-> +	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
-> +	if (IS_ERR(pinctrl)) {
-> +		return PTR_ERR(pinctrl);
-> +	}
+> Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org> wrote:
+> 
+> >On Fri, 31 Aug 2012, Laurent Pinchart wrote:
+> >
+> >> Hi Guennadi,
+> >> 
+> >> On Thursday 30 August 2012 22:58:17 Guennadi Liakhovetski wrote:
+> >> > Hi all
+> >> > 
+> >> > Do we still want to try to organise a short discussion of this while at
+> >> > plumbers? Maybe tomorrow during or around lunch? Or any other time for
+> >> > that matter?
+> >> 
+> >> I'm certainly interested. I have a meeting tomorrow at a still unknown type, 
+> >> apart from that I'm free.
+> >
+> >How about beginning tomorrow at 11:55 (Nautilus 3 & 4 are still free 
+> >according to the schedule) and then continuing after the lunch for another 
+> >hour if needed (first talk in the afternoon tomorrow is at 14:10).
+> >
+> >Thanks
+> >Guennadi
+> >---
+> >Guennadi Liakhovetski, Ph.D.
+> >Freelance Open-Source Software Developer
+> >http://www.open-technology.de/
+> >--
+> >To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> >the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-I think you need to just print out a warning here as most systems don't
-have the pinctrl implemented. And some people just do static pinmuxing
-in the bootloader.
-
-Regards,
-
-Tony
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
