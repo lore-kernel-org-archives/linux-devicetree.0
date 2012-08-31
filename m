@@ -1,87 +1,69 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 1/7] mfd: add syscon driver based on regmap
-Date: Fri, 31 Aug 2012 09:26:29 +0800
-Message-ID: <20120831012626.GA7726@r65073-Latitude-D630>
-References: <1346237818-9498-1-git-send-email-b29396@freescale.com>
- <1346237818-9498-2-git-send-email-b29396@freescale.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 3/8] i2c: at91: use an id table for SoC dependent
+ parameters
+Date: Fri, 31 Aug 2012 16:29:44 +0200
+Message-ID: <20120831142944.GA23867@game.jcrosoft.org>
+References: <1346404884-18451-1-git-send-email-ludovic.desroches@atmel.com>
+ <1346404884-18451-4-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1346237818-9498-2-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
+In-Reply-To: <1346404884-18451-4-git-send-email-ludovic.desroches@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ludovic.desroches@atmel.com
+Cc: devicetree-discuss@lists.ozlabs.org, n.voss@weinmann.de, nicolas.ferre@atmel.com, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2012 at 06:56:52PM +0800, Dong Aisheng wrote:
-> +config MFD_SYSCON
-> +        bool "System Controller Register R/W Based on Regmap"
+On 11:21 Fri 31 Aug     , ludovic.desroches@atmel.com wrote:
+> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+> 
+> Use the id_table to store configuration structures which are depending on
+> SoC.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> ---
+>  arch/arm/mach-at91/at91rm9200.c          |  2 +-
+>  arch/arm/mach-at91/at91rm9200_devices.c  | 11 +----
+>  arch/arm/mach-at91/at91sam9260.c         |  3 +-
+>  arch/arm/mach-at91/at91sam9260_devices.c |  8 ++-
+>  arch/arm/mach-at91/at91sam9261.c         |  3 +-
+>  arch/arm/mach-at91/at91sam9261_devices.c | 17 +++----
+>  arch/arm/mach-at91/at91sam9263.c         |  2 +-
+>  arch/arm/mach-at91/at91sam9263_devices.c |  2 +-
+>  arch/arm/mach-at91/at91sam9g45.c         |  4 +-
+>  arch/arm/mach-at91/at91sam9g45_devices.c |  4 +-
+>  arch/arm/mach-at91/at91sam9rl.c          |  4 +-
+>  arch/arm/mach-at91/at91sam9rl_devices.c  |  2 +-
+>  drivers/i2c/busses/i2c-at91.c            | 85 +++++++++++++++++++++++++-------
+>  13 files changed, 95 insertions(+), 52 deletions(-)
+> 
+> diff --git a/arch/arm/mach-at91/at91rm9200.c b/arch/arm/mach-at91/at91rm9200.c
+> index f2112f9..0bc91e5 100644
+> --- a/arch/arm/mach-at91/at91rm9200.c
+> +++ b/arch/arm/mach-at91/at91rm9200.c
+> @@ -187,7 +187,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+>  	CLKDEV_CON_DEV_ID("pclk", "ssc.0", &ssc0_clk),
+>  	CLKDEV_CON_DEV_ID("pclk", "ssc.1", &ssc1_clk),
+>  	CLKDEV_CON_DEV_ID("pclk", "ssc.2", &ssc2_clk),
+> -	CLKDEV_CON_DEV_ID(NULL, "at91_i2c", &twi_clk),
+> +	CLKDEV_CON_DEV_ID(NULL, "at91rm9200_i2c", &twi_clk),
+use i2c-xxx as on other drivers
 
-If the driver only compiles and works for device tree probe, we should
-have the following?
+and I do not like to have platform_device_id
 
-	depends on OF
+as we need to touch the driver to add a new soc
 
-> +        select REGMAP_MMIO
-> +        help
-> +	  Select this option to enable accessing system control registers
-> +	  via regmap.
-> +
+please use platform data
 
-<snip>
-
-> +struct regmap *syscon_node_to_regmap(struct device_node *np)
-> +{
-> +	struct syscon *syscon;
-> +	struct device *dev;
-> +
-> +	dev = driver_find_device(&syscon_driver.driver, NULL, np,
-> +				 syscon_match);
-> +	of_node_put(np);
-
-This looks a little unnatural to me.  Function syscon_node_to_regmap
-becomes an API visible to clients, who might never know that np will
-be put inside the API.  I'm saying the client may also call of_node_put
-to put the node they get.
-
-I think of_node_put should be moved out from here and put into
-syscon_node_to_regmap and syscon_regmap_lookup_by_compatible.
-
-Regards,
-Shawn
-
-> +
-> +	if (!dev)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	syscon = dev_get_drvdata(dev);
-> +
-> +	return syscon->regmap;
-> +}
-> +EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
-> +
-> +struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
-> +{
-> +	struct device_node *syscon_np;
-> +
-> +	syscon_np = of_find_compatible_node(NULL, NULL, s);
-> +	if (!syscon_np)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return syscon_node_to_regmap(syscon_np);
-> +}
-> +EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_compatible);
-> +
-> +struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
-> +					const char *property)
-> +{
-> +	struct device_node *syscon_np;
-> +
-> +	syscon_np = of_parse_phandle(np, property, 0);
-> +	if (!syscon_np)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return syscon_node_to_regmap(syscon_np);
-> +}
-> +EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
+Best Regards,
+J.
