@@ -1,72 +1,66 @@
-From: "Poddar, Sourav" <sourav.poddar@ti.com>
-Subject: Re: [PATCHv3 0/4] Add device tree data for omap5
-Date: Fri, 31 Aug 2012 15:51:20 +0530
-Message-ID: <CAKdam573NqiCd2=CQ2kg1g+VqjS6z8g=QbPfMZZbm8P98yDP_A@mail.gmail.com>
-References: <1344961473-13675-1-git-send-email-sourav.poddar@ti.com>
-	<CAKdam57L8txFtE9ahy3u3vLW0XRP5z4QaNQKVFj9KaEFZE1qvg@mail.gmail.com>
-	<503229F5.4030405@ti.com>
-	<CAKdam543ATO96rbhgCWKtGUGRQ_+=KSyAk-nGBknjC+BvJSmOw@mail.gmail.com>
-	<504084B9.3000701@ti.com>
+From: Ravi Babu <ravibabu@ti.com>
+Subject: [PATCH v9 11/13] usb: musb: dsps: get the PHY using phandle api
+Date: Fri, 31 Aug 2012 16:39:57 +0530
+Message-ID: <1346411399-23964-12-git-send-email-ravibabu@ti.com>
+References: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <504084B9.3000701@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+From: Santhapuri, Damodar <damodar.santhapuri@ti.com>
 
-On Fri, Aug 31, 2012 at 3:02 PM, Benoit Cousson <b-cousson@ti.com> wrote:
-> Hi Sourav,
->
-> While rebasing your series on top of Tony's lo/devel-dt, I realized that the keypad nodes are not located at the correct place :-(
->
-> At the moment they are just floating at the top level of the dts while they belong to the ocp bus and thus should be put there.
->
-My bad, never realised always used it at the top level. Sorry for the
-inconvenience.
-> I fixed that since it was trivial and cleaned as well the changelog and the comments to aligned then properly. I added as well the physical address to the node name and a label for easy reference at board level.
->
-Thanks for fixing it up.
-> I did some basic test on my OMAP4 sdp, but that all I can do so far.
->
-> Could you just check if this is still fine for OMAP5 before I ask Tony to pull that.
->
-I just booted the below mentioned branch and its booting fine on omap5. Did
-some keypad functionality test also and keypad seems to be working
-fine on omap5.
-> I based that on top of Tony's DT patches due to conflict with the existing MMC patch in it.
->
->
->
-> The following changes since commit 85d7ff9b907685b6469058888f1d961b3e8d47ad:
->   Olof Johansson (1):
->         ARM: omap: add dtb targets
->
-> are available in the git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.7/dts
->
-> Sourav Poddar (6):
->       arm/dts: omap5-evm: Add I2C support
->       arm/dts: omap5-evm: Add tmp102 sensor support
->       arm/dts: omap5-evm: Add keypad data
->       arm/dts: omap5-evm: Add bmp085 sensor support
->       arm/dts: omap4-sdp: Add keypad data
->       Documentation: dt: i2c: trivial-devices: Update for tmp102
->
->  .../devicetree/bindings/i2c/trivial-devices.txt    |    1 +
->  arch/arm/boot/dts/omap4-sdp.dts                    |   70 ++++++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi                       |    5 ++
->  arch/arm/boot/dts/omap5-evm.dts                    |   33 +++++++++
->  arch/arm/boot/dts/omap5.dtsi                       |   40 +++++++++++
->  5 files changed, 149 insertions(+), 0 deletions(-)
->
-> Regards,
-> Benoit
->
+AM33xx has two PHY of same type used by each musb controller so
+use phandle of phy nodes to get the phy pointer.
 
-Thanks,
-Sourav
+Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Signed-off-by: Santhapuri, Damodar <damodar.santhapuri@ti.com>
+Signed-off-by: Ravi Babu <ravibabu@ti.com>
+---
+ .../devicetree/bindings/usb/am33xx-usb.txt         |    2 ++
+ drivers/usb/musb/musb_dsps.c                       |    5 ++++-
+ 2 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+index ca8fa56..b0caac3 100644
+--- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
++++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+@@ -12,3 +12,5 @@ AM33XX MUSB GLUE
+    represents PERIPHERAL.
+  - power : Should be "250". This signifies the controller can supply upto
+    500mA when operating in host mode.
++ - usb0-phy : phandle for usb0 NOP PHY
++ - usb1-phy : phandle for usb1 NOP PHY
+diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
+index eb6bfec..992cd50 100644
+--- a/drivers/usb/musb/musb_dsps.c
++++ b/drivers/usb/musb/musb_dsps.c
+@@ -409,9 +409,11 @@ static int dsps_musb_init(struct musb *musb)
+ {
+ 	struct device *dev = musb->controller;
+ 	struct platform_device *pdev = to_platform_device(dev);
++	struct platform_device *parent_pdev = to_platform_device(dev->parent);
+ 	struct dsps_glue *glue = dev_get_drvdata(dev->parent);
+ 	const struct dsps_musb_wrapper *wrp = glue->wrp;
+ 	void __iomem *reg_base = musb->ctrl_base;
++	char name[10];
+ 	u32 rev, val;
+ 	int status;
+ 
+@@ -419,7 +421,8 @@ static int dsps_musb_init(struct musb *musb)
+ 	musb->mregs += wrp->musb_core_offset;
+ 
+ 	/* Get the NOP PHY */
+-	musb->xceiv = usb_get_phy(USB_PHY_TYPE_USB2);
++	sprintf(name, "usb%d-phy", pdev->id);
++	musb->xceiv = devm_usb_get_phy_by_phandle(&parent_pdev->dev, name);
+ 	if (IS_ERR_OR_NULL(musb->xceiv))
+ 		return -ENODEV;
+ 
+-- 
+1.7.0.4
+
