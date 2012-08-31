@@ -1,32 +1,85 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: V4L DT @ plumbers (was Re: [RFC v4] V4L DT bindings)
-Date: Thu, 30 Aug 2012 17:59:24 -0700
-Message-ID: <le0u47eut2t0gh4pxyuu5vse.1346374764563@email.android.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: add devres version of of_iomap
+Date: Thu, 30 Aug 2012 21:53:03 -0500
+Message-ID: <5040270F.6060302@gmail.com>
+References: <1346340744-22218-1-git-send-email-m-karicheri2@ti.com>
+ <503FB074.7080702@gmail.com>
+ <3E54258959B69E4282D79E01AB1F32B7041AD91C@DFLE12.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Nicolas THERY <nicolas.thery@st.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Willy POISSON <willy.poisson@st.com>, Jean-Marc VOLLE <jean-marc.volle@st.com>, Pierre-yves TALOUD <pierre-yves.taloud@st.com>, Mauro Carvalho Chehab <mchehab@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <3E54258959B69E4282D79E01AB1F32B7041AD91C-GR6MelrUkc+IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RmluZSBieSBtZSEKCiAgICAgIEhhbnMKCkd1ZW5uYWRpIExpYWtob3ZldHNraSA8Zy5saWFraG92
-ZXRza2lAZ214LmRlPiB3cm90ZToKCj5PbiBGcmksIDMxIEF1ZyAyMDEyLCBMYXVyZW50IFBpbmNo
-YXJ0IHdyb3RlOgo+Cj4+IEhpIEd1ZW5uYWRpLAo+PiAKPj4gT24gVGh1cnNkYXkgMzAgQXVndXN0
-IDIwMTIgMjI6NTg6MTcgR3Vlbm5hZGkgTGlha2hvdmV0c2tpIHdyb3RlOgo+PiA+IEhpIGFsbAo+
-PiA+IAo+PiA+IERvIHdlIHN0aWxsIHdhbnQgdG8gdHJ5IHRvIG9yZ2FuaXNlIGEgc2hvcnQgZGlz
-Y3Vzc2lvbiBvZiB0aGlzIHdoaWxlIGF0Cj4+ID4gcGx1bWJlcnM/IE1heWJlIHRvbW9ycm93IGR1
-cmluZyBvciBhcm91bmQgbHVuY2g/IE9yIGFueSBvdGhlciB0aW1lIGZvcgo+PiA+IHRoYXQgbWF0
-dGVyPwo+PiAKPj4gSSdtIGNlcnRhaW5seSBpbnRlcmVzdGVkLiBJIGhhdmUgYSBtZWV0aW5nIHRv
-bW9ycm93IGF0IGEgc3RpbGwgdW5rbm93biB0eXBlLCAKPj4gYXBhcnQgZnJvbSB0aGF0IEknbSBm
-cmVlLgo+Cj5Ib3cgYWJvdXQgYmVnaW5uaW5nIHRvbW9ycm93IGF0IDExOjU1IChOYXV0aWx1cyAz
-ICYgNCBhcmUgc3RpbGwgZnJlZSAKPmFjY29yZGluZyB0byB0aGUgc2NoZWR1bGUpIGFuZCB0aGVu
-IGNvbnRpbnVpbmcgYWZ0ZXIgdGhlIGx1bmNoIGZvciBhbm90aGVyIAo+aG91ciBpZiBuZWVkZWQg
-KGZpcnN0IHRhbGsgaW4gdGhlIGFmdGVybm9vbiB0b21vcnJvdyBpcyBhdCAxNDoxMCkuCj4KPlRo
-YW5rcwo+R3Vlbm5hZGkKPi0tLQo+R3Vlbm5hZGkgTGlha2hvdmV0c2tpLCBQaC5ELgo+RnJlZWxh
-bmNlIE9wZW4tU291cmNlIFNvZnR3YXJlIERldmVsb3Blcgo+aHR0cDovL3d3dy5vcGVuLXRlY2hu
-b2xvZ3kuZGUvCj4tLQo+VG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxp
-bmUgInVuc3Vic2NyaWJlIGxpbnV4LW1lZGlhIiBpbgo+dGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRv
-IG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPk1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6
-Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo=
+On 08/30/2012 05:09 PM, Karicheri, Muralidharan wrote:
+>>> -----Original Message-----
+>>> From: Rob Herring [mailto:robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
+>>> Sent: Thursday, August 30, 2012 2:27 PM
+>>> To: Karicheri, Muralidharan
+>>> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
+>>> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Subject: Re: [PATCH] of: add devres version of of_iomap
+>>>
+>>> On 08/30/2012 10:32 AM, Murali Karicheri wrote:
+>>>> This adds devres version of the of_iomap() to allow resource to be cleaned
+>>>> through devres.
+>>>
+>>> If you have a struct device, then don't you already have a resource and
+>>> can just use devm_ioremap in a driver? New drivers should not be using
+>>> of_iomap.
+>>>
+> 
+> That is the point. If you do a grep under driver, there are many drivers using the pattern
+> like this. This helper function is mean to replace this code.
+> 
+> From dma/sirf-dma.c
+> 
+>         ret = of_address_to_resource(dn, 0, &res);
+>         if (ret) {
+>                 dev_err(dev, "Error parsing memory region!\n");
+> 	       goto error;
+>         }
+> 
+>         regs_start = res.start;
+>         regs_size = resource_size(&res);
+> 
+>         base = devm_ioremap(dev, regs_start, regs_size);
+>         if (!base) {
+>                 dev_err(dev, "Error mapping memory region!\n");
+> 	       goto error;
+>         }
+> 
+
+That's wrong and should be fixed. The resource is already setup and
+available to the probe function.
+
+> Other instances.
+> 
+> edac/mpc85xx_edac.c
+> media/video/fsl-viu.c
+> mtd/nand/mpc5121_nfc.c
+
+All PPC drivers that used the old of_platform_driver and also need to be
+updated.
+
+> 
+> Some of these code uses devm_request_mem_region() as well. Isn't a good idea to add this helper
+> that can be called by new drivers to replace this sequence? I could update the patch to do this call
+> as well?
+
+devm_request_and_ioremap
+
+Rob
