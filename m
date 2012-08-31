@@ -1,42 +1,113 @@
-From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: OMAP2+: Makefile.boot: Add am335x evm and bone targets
-Date: Fri, 31 Aug 2012 23:24:34 +0530
-Message-ID: <1346435674-6207-1-git-send-email-hvaibhav@ti.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [RFC v4] V4L DT bindings
+Date: Fri, 31 Aug 2012 21:38:47 +0200
+Message-ID: <504112C7.4060905@gmail.com>
+References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange> <503F8471.5000406@st.com> <503FCB37.5080706@gmail.com> <50405DBF.9000209@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <50405DBF.9000209@st.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Nicolas THERY <nicolas.thery@st.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Willy POISSON <willy.poisson@st.com>, Jean-Marc VOLLE <jean-marc.volle@st.com>, Pierre-yves TALOUD <pierre-yves.taloud@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds am335x-evm and am335x-bone dtb targets to
-'make dtbs', just like other platforms.
+On 08/31/2012 08:46 AM, Nicolas THERY wrote:
+> Hello,
+> 
+> Thanks for the feedback.
+> 
+> On 2012-08-30 22:21, Sylwester Nawrocki wrote:
+>> On 08/30/2012 05:19 PM, Nicolas THERY wrote:
+> 
+> [snip]
+> 
+>>> In imx074@0x1a above, the data-lanes property is<1>,<2>.  Is it
+>>> reversed here to show that lanes are swapped between the sensor and the
+>>> CSI rx?  If not, how to express lane swapping?
+>>
+>> Yes, this indicates lanes remapping at the receiver.
+>>
+>> Probably we could make it a single value with length determined by
+>> 'bus-width', since we're going to use 'bus-width' for CSI buses as well,
+>> (optionally) in addition to 'clock-lanes' and 'data-lanes' ?
+> 
+> Looks good to me.
+> 
+> [snip]
+> 
+>>> How to express that the positive and negative signals of a given
+>>> clock/data lane are inversed?  Is it somehow with the hsync-active
+>>> property?
+>>
+>> Hmm, I don't think this is covered in this RFC. hsync-active is mostly
+>> intended for the parallel buses. We need to come up with new properties
+>> to handle CSI data/clock lane polarity swapping. There was a short
+>> discussion about that already:
+>> http://www.mail-archive.com/linux-media@vger.kernel.org/msg41724.html
+>>
+>>> Actually there may be two positive/negative inversion cases to consider:
+>>>
+>>> - the positive/negative signals are inversed both in low-power and
+>>>     high-speed modes (e.g. physical lines between sensor module and SoC
+>>>     are swapped on the PCB);
+>>>
+>>> - the positive/negative signals are inversed in high-speed mode only
+>>>     (the sensor and CSI rx use opposite polarities in high-speed mode).
+>>
+>> Then is this positive/negative LVDS lines swapping separately configurable
+>> in hardware for low-power and high-speed mode ?
+> 
+> Yes.
+> 
+>> What is an advantage of it ?
+> 
+> I suspect our hardware people after years of experience with
+> not-so-compliant sensors and weird PCBs have adopted a
+> belt-and-suspenders approach and made configurable everything they
+> thought could go wrong.
+> 
+> In the "inversion in high-speed mode only" case, that could be because
+> the sensor does not use the standard-specified polarity.
 
-Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/mach-omap2/Makefile.boot |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+OK, thanks for the clarification.
 
-diff --git a/arch/arm/mach-omap2/Makefile.boot b/arch/arm/mach-omap2/Makefile.boot
-index 6cf1c2d..1136072 100644
---- a/arch/arm/mach-omap2/Makefile.boot
-+++ b/arch/arm/mach-omap2/Makefile.boot
-@@ -7,3 +7,4 @@ dtb-$(CONFIG_ARCH_OMAP3)	+= omap3-beagle.dtb omap3-evm.dtb
- dtb-$(CONFIG_ARCH_OMAP4)	+= omap4-panda.dtb omap4-pandaES.dtb
- dtb-$(CONFIG_ARCH_OMAP4)	+= omap4-var_som.dtb omap4-sdp.dtb
- dtb-$(CONFIG_SOC_OMAP5)		+= omap5-evm.dtb
-+dtb-$(CONFIG_SOC_AM33XX)	+= am335x-evm.dtb am335x-bone.dtb
--- 
-1.7.0.4
+>> One possible solution would be to have a one to two elements array property,
+>> e.g.
+>>
+>> lanes-polarity =<0 0 0 0 0>,<1 1 1 1 1>;
+>>
+>> where the first entry would indicate lanes polarity for high speed mode and
+>> the second one for low power mode. For receivers/transmitters that don't
+>> allow to configure the polarities separately for different bus states there
+>> could be just one entry. The width of each element could be determined by
+>> value of the 'bus-width' property + 1.
+>>
+>> Would it make sense ?
+> 
+> Yes, that looks fine.
+> 
+> Incidentally is it okay to extend DT nodes with manufacturer-specific
+> properties?  I'm asking because our CSI rx supports other esoteric
+> lane-related configuration knobs, e.g. for impedance tuning.  We'd like
+> to put them in the DT but they probably don't warrant an official
+> property.
+
+My understanding is that it's just fine to have uncommon DT properties, 
+as long as they describe hardware in OS agnostic way. I believe our goal 
+is to define as many common bindings as possible, in order to make it 
+possible to have devices from various manufacturers and their drivers 
+interworking seamlessly, possibly without a need for S/W interfaces 
+modifications. Hence it's useful to list in these discussions as many 
+hardware properties, that may seem device-specific at first glance, 
+as possible. 
+
+I would expect some share of device specific bindings in most of 
+the cases. We're mostly trying to avoid having same things defined 
+in different ways.
+
+--
+
+Regards,
+Sylwester
