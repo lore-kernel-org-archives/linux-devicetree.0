@@ -1,31 +1,34 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 7/7] mfd: anatop-mfd: remove anatop driver
-Date: Fri, 31 Aug 2012 09:39:26 +0800
-Message-ID: <20120831013924.GB7726@r65073-Latitude-D630>
-References: <1346237818-9498-1-git-send-email-b29396@freescale.com>
- <1346237818-9498-8-git-send-email-b29396@freescale.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 7/8] ARM: dts: add twi nodes for atmel SOCs
+Date: Fri, 31 Aug 2012 16:41:05 +0200
+Message-ID: <20120831144105.GB23867@game.jcrosoft.org>
+References: <1346404884-18451-1-git-send-email-ludovic.desroches@atmel.com>
+ <1346405077-18620-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1346237818-9498-8-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dong Aisheng <b29396@freescale.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
+In-Reply-To: <1346405077-18620-1-git-send-email-ludovic.desroches@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ludovic.desroches@atmel.com
+Cc: devicetree-discuss@lists.ozlabs.org, n.voss@weinmann.de, nicolas.ferre@atmel.com, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2012 at 06:56:58PM +0800, Dong Aisheng wrote:
-> -config MFD_ANATOP
-> -	bool "Support for Freescale i.MX on-chip ANATOP controller"
-> -	depends on SOC_IMX6Q
-> -	help
-> -	  Select this option to enable Freescale i.MX on-chip ANATOP
-> -	  MFD controller. This controller embeds regulator and
-> -	  thermal devices for Freescale i.MX platforms.
-> -
+On 11:24 Fri 31 Aug     , ludovic.desroches@atmel.com wrote:
+> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+> 
+> Add twi nodes for atmel SOCs and remove i2c-gpio ones.
+Only drop the i2c-gpio on the soc that are kn own to have no issue on the hw
+IP. For hte onther one keep both in the dtsi
 
-All the occurrences of MFD_ANATOP should be removed too.  I know there
-is one in arch/arm/mach-imx/Kconfig.
-
-Regards,
-Shawn
+Best Regards,
+J.
