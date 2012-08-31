@@ -1,53 +1,32 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: integrator: convert AMBA devices to device tree
-Date: Thu, 30 Aug 2012 16:30:55 -0700
-Message-ID: <CACRpkdYkfgY-dYD1L3_HkhFJL49d9GaSWd8ax2Rqm3BGFFHhdQ@mail.gmail.com>
-References: <1345119373-22774-1-git-send-email-linus.walleij@linaro.org>
- <20120816124002.GB7439@game.jcrosoft.org>
- <CACRpkdZDMxk30YTkrumRveR3OuWptSpzNevrAvC2FxYShOZp-A@mail.gmail.com>
- <20120820080210.GF7439@game.jcrosoft.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: V4L DT @ plumbers (was Re: [RFC v4] V4L DT bindings)
+Date: Thu, 30 Aug 2012 17:59:24 -0700
+Message-ID: <le0u47eut2t0gh4pxyuu5vse.1346374764563@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120820080210.GF7439-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Nicolas THERY <nicolas.thery@st.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Willy POISSON <willy.poisson@st.com>, Jean-Marc VOLLE <jean-marc.volle@st.com>, Pierre-yves TALOUD <pierre-yves.taloud@st.com>, Mauro Carvalho Chehab <mchehab@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 20, 2012 at 1:02 AM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 00:42 Sun 19 Aug     , Linus Walleij wrote:
-
-> no I mean why
->> >> +     OF_DEV_AUXDATA("arm,primecell", INTEGRATOR_RTC_BASE,
->> >> +             "rtc", NULL),
->> >> +     OF_DEV_AUXDATA("arm,primecell", KMI0_BASE,
->> >> +             "kmi0", NULL),
->> >> +     OF_DEV_AUXDATA("arm,primecell", KMI1_BASE,
->> >> +             "kmi1", NULL),
->
-> no platform data why do you use the AUXDATA?
->
-> as the OF_DEV_AUXDATA is deprecated now
-
-OK this is to get the right bus names of the devices.
-
-As I support boot from both device tree and without device tree, I cannot
-change all the names that e.g. the clock framework is tied to.
-
-Once we switch to pure device tree this can be changed at the user
-sites and all auxdata be removed.
-
-Yours,
-Linus Walleij
+RmluZSBieSBtZSEKCiAgICAgIEhhbnMKCkd1ZW5uYWRpIExpYWtob3ZldHNraSA8Zy5saWFraG92
+ZXRza2lAZ214LmRlPiB3cm90ZToKCj5PbiBGcmksIDMxIEF1ZyAyMDEyLCBMYXVyZW50IFBpbmNo
+YXJ0IHdyb3RlOgo+Cj4+IEhpIEd1ZW5uYWRpLAo+PiAKPj4gT24gVGh1cnNkYXkgMzAgQXVndXN0
+IDIwMTIgMjI6NTg6MTcgR3Vlbm5hZGkgTGlha2hvdmV0c2tpIHdyb3RlOgo+PiA+IEhpIGFsbAo+
+PiA+IAo+PiA+IERvIHdlIHN0aWxsIHdhbnQgdG8gdHJ5IHRvIG9yZ2FuaXNlIGEgc2hvcnQgZGlz
+Y3Vzc2lvbiBvZiB0aGlzIHdoaWxlIGF0Cj4+ID4gcGx1bWJlcnM/IE1heWJlIHRvbW9ycm93IGR1
+cmluZyBvciBhcm91bmQgbHVuY2g/IE9yIGFueSBvdGhlciB0aW1lIGZvcgo+PiA+IHRoYXQgbWF0
+dGVyPwo+PiAKPj4gSSdtIGNlcnRhaW5seSBpbnRlcmVzdGVkLiBJIGhhdmUgYSBtZWV0aW5nIHRv
+bW9ycm93IGF0IGEgc3RpbGwgdW5rbm93biB0eXBlLCAKPj4gYXBhcnQgZnJvbSB0aGF0IEknbSBm
+cmVlLgo+Cj5Ib3cgYWJvdXQgYmVnaW5uaW5nIHRvbW9ycm93IGF0IDExOjU1IChOYXV0aWx1cyAz
+ICYgNCBhcmUgc3RpbGwgZnJlZSAKPmFjY29yZGluZyB0byB0aGUgc2NoZWR1bGUpIGFuZCB0aGVu
+IGNvbnRpbnVpbmcgYWZ0ZXIgdGhlIGx1bmNoIGZvciBhbm90aGVyIAo+aG91ciBpZiBuZWVkZWQg
+KGZpcnN0IHRhbGsgaW4gdGhlIGFmdGVybm9vbiB0b21vcnJvdyBpcyBhdCAxNDoxMCkuCj4KPlRo
+YW5rcwo+R3Vlbm5hZGkKPi0tLQo+R3Vlbm5hZGkgTGlha2hvdmV0c2tpLCBQaC5ELgo+RnJlZWxh
+bmNlIE9wZW4tU291cmNlIFNvZnR3YXJlIERldmVsb3Blcgo+aHR0cDovL3d3dy5vcGVuLXRlY2hu
+b2xvZ3kuZGUvCj4tLQo+VG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxp
+bmUgInVuc3Vic2NyaWJlIGxpbnV4LW1lZGlhIiBpbgo+dGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRv
+IG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPk1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6
+Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo=
