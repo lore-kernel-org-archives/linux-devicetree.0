@@ -1,41 +1,81 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: Add heartbeat gpio-leds support to Origen
-Date: Fri, 31 Aug 2012 09:43:50 +0530
-Message-ID: <1346386430-3619-2-git-send-email-sachin.kamat@linaro.org>
-References: <1346386430-3619-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1346386430-3619-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, sachin.kamat@linaro.org, patches@linaro.org, Thomas Abraham <thomas.abraham@linaro.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v5 4/9] mmc: dw_mmc: lookup for optional biu and ciu clocks
+Date: Fri, 31 Aug 2012 10:59:07 +0530
+Message-ID: <CAJuYYwQtAe7kC4DC5Ao04qU_9TSjcREw7ktuf6KNmgXHAvUzKg@mail.gmail.com>
+References: <1346237295-7116-1-git-send-email-thomas.abraham@linaro.org>
+	<1346237295-7116-5-git-send-email-thomas.abraham@linaro.org>
+	<503F28E7.1060608@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <503F28E7.1060608@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, tgih.jun@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Adds heartbeat gpio-leds support to Origen board.
+On 30 August 2012 14:18, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> Hi Thomas,
+>
+> On 08/29/2012 07:48 PM, Thomas Abraham wrote:
+>> Some platforms allow for clock gating and control of bus interface unit clock
+>> and card interface unit clock. Add support for clock lookup of optional biu
+>> and ciu clocks for clock gating and clock speed determination.
+>>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> Acked-by: Will Newton <will.newton@imgtec.com>
+>> ---
+>>  drivers/mmc/host/dw_mmc.c  |   42 +++++++++++++++++++++++++++++++++++++++---
+>>  include/linux/mmc/dw_mmc.h |    4 ++++
+>>  2 files changed, 43 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 227c42e..90c7c7b 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -1960,18 +1960,38 @@ int dw_mci_probe(struct dw_mci *host)
+>>               return -ENODEV;
+>>       }
+>>
+>> -     if (!host->pdata->bus_hz) {
+>> +     host->biu_clk = clk_get(host->dev, "biu");
+>> +     if (IS_ERR(host->biu_clk))
+>> +             dev_dbg(host->dev, "biu clock not available\n");
+>> +     else
+>> +             clk_prepare_enable(host->biu_clk);
+> biu is clock for bus interface?
+> if didn't get "biu_clk" or didn't clk_prepare_enable(), then can we initialize the card?
 
-Cc: Thomas Abraham <thomas.abraham@linaro.org>
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- arch/arm/boot/dts/exynos4210-origen.dts |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+Hi Jaehoon,
 
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index c37edf0..d69a799 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -91,6 +91,14 @@
- 		};
- 	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+		status {
-+			gpios = <&gpx1 3 0 0x10000 2>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
- 	keypad@100A0000 {
- 		status = "disabled";
- 	};
--- 
-1.7.4.1
+Yes, the biu clock is for bus interface. The biu and ciu clock lookup
+and enable here is optional in the above change. If a platform does
+not define these clocks, then the platform code is responsible for
+enabling these clocks.
+
+>> +
+>> +     host->ciu_clk = clk_get(host->dev, "ciu");
+>> +     if (IS_ERR(host->ciu_clk))
+>> +             dev_dbg(host->dev, "ciu clock not available\n");
+>> +     else
+>> +             clk_prepare_enable(host->ciu_clk);
+>> +
+>> +     if (IS_ERR(host->ciu_clk))
+>> +             host->bus_hz = host->pdata->bus_hz;
+>> +     else
+>> +             host->bus_hz = clk_get_rate(host->ciu_clk);
+> if clk_get_rate() is incorrect value(ex,400MHz),
+> then mmc->f_min value is too high.
+> because mmc->f_min is assigned to DIV_ROUND_UP(host->bus_hz, 510) into dw_mc_init_slot.
+> Do you have any opinion for solving this?
+
+One option on Exynos5250 is to use the clock divider in the CLKSEL
+register to divide the ciu clock to a lower value. For Exynos4, since
+there is no clock divider in CLKSEL register, the platform code should
+ensure that the ciu clock has a valid range.
+
+Thanks,
+Thomas.
+
+[...]
