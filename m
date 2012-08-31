@@ -1,113 +1,89 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [RFC v4] V4L DT bindings
-Date: Fri, 31 Aug 2012 21:38:47 +0200
-Message-ID: <504112C7.4060905@gmail.com>
-References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange> <503F8471.5000406@st.com> <503FCB37.5080706@gmail.com> <50405DBF.9000209@st.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
+Date: Fri, 31 Aug 2012 14:41:27 +0800
+Message-ID: <20120831064125.GA3271@r65073-Latitude-D630>
+References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
+ <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <50405DBF.9000209@st.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Nicolas THERY <nicolas.thery@st.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Willy POISSON <willy.poisson@st.com>, Jean-Marc VOLLE <jean-marc.volle@st.com>, Pierre-yves TALOUD <pierre-yves.taloud@st.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345642590-29905-2-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2012 08:46 AM, Nicolas THERY wrote:
-> Hello,
-> 
-> Thanks for the feedback.
-> 
-> On 2012-08-30 22:21, Sylwester Nawrocki wrote:
->> On 08/30/2012 05:19 PM, Nicolas THERY wrote:
-> 
-> [snip]
-> 
->>> In imx074@0x1a above, the data-lanes property is<1>,<2>.  Is it
->>> reversed here to show that lanes are swapped between the sensor and the
->>> CSI rx?  If not, how to express lane swapping?
->>
->> Yes, this indicates lanes remapping at the receiver.
->>
->> Probably we could make it a single value with length determined by
->> 'bus-width', since we're going to use 'bus-width' for CSI buses as well,
->> (optionally) in addition to 'clock-lanes' and 'data-lanes' ?
-> 
-> Looks good to me.
-> 
-> [snip]
-> 
->>> How to express that the positive and negative signals of a given
->>> clock/data lane are inversed?  Is it somehow with the hsync-active
->>> property?
->>
->> Hmm, I don't think this is covered in this RFC. hsync-active is mostly
->> intended for the parallel buses. We need to come up with new properties
->> to handle CSI data/clock lane polarity swapping. There was a short
->> discussion about that already:
->> http://www.mail-archive.com/linux-media@vger.kernel.org/msg41724.html
->>
->>> Actually there may be two positive/negative inversion cases to consider:
->>>
->>> - the positive/negative signals are inversed both in low-power and
->>>     high-speed modes (e.g. physical lines between sensor module and SoC
->>>     are swapped on the PCB);
->>>
->>> - the positive/negative signals are inversed in high-speed mode only
->>>     (the sensor and CSI rx use opposite polarities in high-speed mode).
->>
->> Then is this positive/negative LVDS lines swapping separately configurable
->> in hardware for low-power and high-speed mode ?
-> 
-> Yes.
-> 
->> What is an advantage of it ?
-> 
-> I suspect our hardware people after years of experience with
-> not-so-compliant sensors and weird PCBs have adopted a
-> belt-and-suspenders approach and made configurable everything they
-> thought could go wrong.
-> 
-> In the "inversion in high-speed mode only" case, that could be because
-> the sensor does not use the standard-specified polarity.
-
-OK, thanks for the clarification.
-
->> One possible solution would be to have a one to two elements array property,
->> e.g.
->>
->> lanes-polarity =<0 0 0 0 0>,<1 1 1 1 1>;
->>
->> where the first entry would indicate lanes polarity for high speed mode and
->> the second one for low power mode. For receivers/transmitters that don't
->> allow to configure the polarities separately for different bus states there
->> could be just one entry. The width of each element could be determined by
->> value of the 'bus-width' property + 1.
->>
->> Would it make sense ?
-> 
-> Yes, that looks fine.
-> 
-> Incidentally is it okay to extend DT nodes with manufacturer-specific
-> properties?  I'm asking because our CSI rx supports other esoteric
-> lane-related configuration knobs, e.g. for impedance tuning.  We'd like
-> to put them in the DT but they probably don't warrant an official
-> property.
-
-My understanding is that it's just fine to have uncommon DT properties, 
-as long as they describe hardware in OS agnostic way. I believe our goal 
-is to define as many common bindings as possible, in order to make it 
-possible to have devices from various manufacturers and their drivers 
-interworking seamlessly, possibly without a need for S/W interfaces 
-modifications. Hence it's useful to list in these discussions as many 
-hardware properties, that may seem device-specific at first glance, 
-as possible. 
-
-I would expect some share of device specific bindings in most of 
-the cases. We're mostly trying to avoid having same things defined 
-in different ways.
-
---
+Ping, Mike.
 
 Regards,
-Sylwester
+Shawn
+
+On Wed, Aug 22, 2012 at 09:36:27PM +0800, Shawn Guo wrote:
+> For those SoCs that have hundreds of clock outputs, their clock
+> DT bindings could reasonably define #clock-cells as 1 and require
+> the client device specify the index of the clock it consumes in the
+> cell of its "clocks" phandle.
+> 
+> Add a generic of_clk_src_onecell_get() function for this purpose.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/clk/clk.c            |   14 ++++++++++++++
+>  include/linux/clk-provider.h |    5 +++++
+>  2 files changed, 19 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index efdfd00..308f058 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -1582,6 +1582,20 @@ struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
+>  }
+>  EXPORT_SYMBOL_GPL(of_clk_src_simple_get);
+>  
+> +struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data)
+> +{
+> +	struct clk_onecell_data *clk_data = data;
+> +	unsigned int idx = clkspec->args[0];
+> +
+> +	if (idx >= clk_data->clk_num) {
+> +		pr_err("%s: invalid clock index %d\n", __func__, idx);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	return clk_data->clks[idx];
+> +}
+> +EXPORT_SYMBOL_GPL(of_clk_src_onecell_get);
+> +
+>  /**
+>   * of_clk_add_provider() - Register a clock provider for a node
+>   * @np: Device node pointer associated with clock provider
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 77335fa..8fe6ec7 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -360,6 +360,11 @@ int of_clk_add_provider(struct device_node *np,
+>  void of_clk_del_provider(struct device_node *np);
+>  struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
+>  				  void *data);
+> +struct clk_onecell_data {
+> +	struct clk **clks;
+> +	unsigned int clk_num;
+> +};
+> +struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data);
+>  const char *of_clk_get_parent_name(struct device_node *np, int index);
+>  void of_clk_init(const struct of_device_id *matches);
+>  
+> -- 
+> 1.7.5.4
+> 
