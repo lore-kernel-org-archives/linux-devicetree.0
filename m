@@ -1,73 +1,47 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: V4L DT @ plumbers (was Re: [RFC v4] V4L DT bindings)
-Date: Fri, 31 Aug 2012 18:05:11 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1208311754360.25088@axis700.grange>
-References: <le0u47eut2t0gh4pxyuu5vse.1346374764563@email.android.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <le0u47eut2t0gh4pxyuu5vse.1346374764563-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas THERY <nicolas.thery-qxv4g6HH51o@public.gmane.org>, Willy POISSON <willy.poisson-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pierre-yves TALOUD <pierre-yves.taloud-qxv4g6HH51o@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Marc VOLLE <jean-marc.volle-qxv4g6HH51o@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: [PATCH 0/2] ARM: omap/dts: Add support for Gumstix Overo with Tobi expansion
+Date: Fri, 31 Aug 2012 18:06:10 +0200
+Message-ID: <1346429172-5902-1-git-send-email-florian.vaussard@epfl.ch>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Benoit Cousson <b-cousson@ti.com>, Steve Sakoman <steve@sakoman.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Philippe Retornaz <philippe.retornaz@epfl.ch>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Aug 2012, Hans Verkuil wrote:
+The Gumstix Overo is a computer on module using an OMAP3 processor.
+This module must be plugged into an expansion board.
 
-> Fine by me!
+This patchset adds a first device tree support for the Overo, using the
+Tobi expansion board. The current support is able to boot and mount
+the rootfs from MMC, with a few extra features.
 
-Good, then let's meet at 11:55 in front of Nautilus 3 / 4 and then see 
-what's available.
+The first patch creates the device tree for both the Overo and the
+Tobi expansion board, and updates the dtb build target.
 
-Thanks
-Guennadi
+The second patch updates the omap/dts documentation.
 
-> 
->       Hans
-> 
-> Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org> wrote:
-> 
-> >On Fri, 31 Aug 2012, Laurent Pinchart wrote:
-> >
-> >> Hi Guennadi,
-> >> 
-> >> On Thursday 30 August 2012 22:58:17 Guennadi Liakhovetski wrote:
-> >> > Hi all
-> >> > 
-> >> > Do we still want to try to organise a short discussion of this while at
-> >> > plumbers? Maybe tomorrow during or around lunch? Or any other time for
-> >> > that matter?
-> >> 
-> >> I'm certainly interested. I have a meeting tomorrow at a still unknown type, 
-> >> apart from that I'm free.
-> >
-> >How about beginning tomorrow at 11:55 (Nautilus 3 & 4 are still free 
-> >according to the schedule) and then continuing after the lunch for another 
-> >hour if needed (first talk in the afternoon tomorrow is at 14:10).
-> >
-> >Thanks
-> >Guennadi
-> >---
-> >Guennadi Liakhovetski, Ph.D.
-> >Freelance Open-Source Software Developer
-> >http://www.open-technology.de/
-> >--
-> >To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> >the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+This patchset applies on tony's tree [1], devel-dt branch.
 
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Regards,
+
+Florian
+
+[1] http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap.git;a=summary
+
+
+Florian Vaussard (2):
+  ARM: omap/dts: Add support for Gumstix Overo with Tobi expansion
+    board
+  ARM: omap/dts: update the documentation
+
+ .../devicetree/bindings/arm/omap/omap.txt          |    3 +
+ arch/arm/boot/dts/omap3-overo.dtsi                 |   42 ++++++++++++++++++++
+ arch/arm/boot/dts/omap3-tobi.dts                   |   35 ++++++++++++++++
+ arch/arm/mach-omap2/Makefile.boot                  |    2 +-
+ 4 files changed, 81 insertions(+), 1 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap3-overo.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-tobi.dts
+
+-- 
+1.7.5.4
+
