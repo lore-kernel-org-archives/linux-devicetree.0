@@ -1,34 +1,120 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 8/8] ARM: dts: add twi nodes for atmel boards
-Date: Sat, 1 Sep 2012 11:12:25 +0200
-Message-ID: <20120901091225.GB17540@game.jcrosoft.org>
-References: <1346404884-18451-1-git-send-email-ludovic.desroches@atmel.com>
- <1346405096-18660-1-git-send-email-ludovic.desroches@atmel.com>
- <20120831144228.GC23867@game.jcrosoft.org>
- <5040D31E.8040306@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5040D31E.8040306-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
+From: Koen Kooi <koen@dominion.thruhere.net>
+Subject: Re: [PATCH RESEND v4 2/3] arm/dts: AM33XX: Configure pinmuxs for user leds control on Bone
+Date: Sat, 1 Sep 2012 12:47:35 +0200
+Message-ID: <6D25CE9A-4FA3-4F1E-9549-6A512F2FDCEC@dominion.thruhere.net>
+References: <1346141454-18786-1-git-send-email-anilkumar@ti.com> <1346141454-18786-3-git-send-email-anilkumar@ti.com> <20120830203505.GB1303@atomide.com> <C1D7B7D4-D576-4256-83F3-09689B4087C3@dominion.thruhere.net> <331ABD5ECB02734CA317220B2BBEABC13EA234A9@DBDE01.ent.ti.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain;
+	charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA234A9@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, "wg@grandegger.com" <wg@grandegger.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 17:07 Fri 31 Aug     , Nicolas Ferre wrote:
-> On 08/31/2012 04:42 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> > On 11:24 Fri 31 Aug     , ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
-> >> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >>
-> >> Use the atmel twi instead of gpio for i2c stuff.
-> > NACK as you do not update al the platform at the same time and break the Calao
-> 
-> Yes, Ludovic shall keep i2c-gpio at the side of the new twi driver.
-> 
-> But for the platform, the platform maintainer will have to choose the
-> one or the other.
-agreed the platform maintianer need to choose to switch or not
 
-Best Regards,
-J.
+
+Op 1 sep. 2012 om 09:01 heeft "AnilKumar, Chimata" <anilkumar@ti.com> het volgende geschreven:
+
+> Hi Koen,
+> 
+> On Fri, Aug 31, 2012 at 21:23:18, Koen Kooi wrote:
+>> 
+>> Op 30 aug. 2012, om 22:35 heeft Tony Lindgren <tony@atomide.com> het volgende geschreven:
+>> 
+>>> * AnilKumar Ch <anilkumar@ti.com> [120828 01:11]:
+>>>> Adds GPIO pinctrl nodes to am3358_pinmux master node to control
+>>>> user leds (USR0, USR1, USR2 and USR3) present on BeagleBone.
+>>>> 
+>>>> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+>>>> ---
+>>>> arch/arm/boot/dts/am335x-bone.dts |   14 ++++++++++++++
+>>>> 1 file changed, 14 insertions(+)
+>>>> 
+>>>> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+>>>> index a7906cb..58f5042 100644
+>>>> --- a/arch/arm/boot/dts/am335x-bone.dts
+>>>> +++ b/arch/arm/boot/dts/am335x-bone.dts
+>>>> @@ -18,6 +18,20 @@
+>>>>        reg = <0x80000000 0x10000000>; /* 256 MB */
+>>>>    };
+>>>> 
+>>>> +    am3358_pinmux: pinmux@44E10800 {
+>>>> +        pinctrl-names = "default";
+>>>> +        pinctrl-0 = <&userled_pins>;
+>>>> +
+>>>> +        userled_pins: pinmux_userled_pins {
+>>>> +            pinctrl-single,pins = <
+>>>> +                0x54 0x7    /* gpmc_a5.gpio1_21, OUTPUT | MODE7 */
+>>>> +                0x58 0x17    /* gpmc_a6.gpio1_22, OUTPUT_PULLUP | MODE7 */
+>>>> +                0x5C 0x7    /* gpmc_a7.gpio1_23, OUTPUT | MODE7 */
+>>>> +                0x60 0x17    /* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
+>>>> +            >;
+>>>> +        };
+>>>> +    };
+>>>> +
+>>> 
+>>> Looks like this patch should also claim these pins by the led driver.
+>>> Then the led driver should just do pinctrl_get_select_default(&pdev->dev)
+>>> in it's probe function to set the pins.
+>> 
+>> FWIW, I've been using this for a while now:
+>> 
+>> +       leds {
+>> +               compatible = "gpio-leds";
+>> +               heartbeat {
+>> +                       label = "beaglebone::usr0";
+>> +                       gpios = <&gpio2 21 0>;
+>> +                       linux,default-trigger = "heartbeat";
+>> +               };
+>> +
+>> +               mmc {
+>> +                       label = "beaglebone:usr1";
+>> +                       gpios = <&gpio2 22 0>;
+>> +                       linux,default-trigger = "mmc0";
+>> +               };
+> 
+> Thanks for the inputs, similar data but not exact is added to
+> v5 series.
+> 
+> +        gpio-leds {
+> +            compatible = "gpio-leds";
+> +            pinctrl-names = "default";
+> +            pinctrl-0 = <&userled_pins>;
+> +
+> +            led0 {
+> +                label = "status:green:user0";
+> +                gpios = <&gpio2 21 0>;
+> +                default-state = "off";
+> +            };
+> +
+> +            led1 {
+> +                label = "status:green:user1";
+> +                gpios = <&gpio2 22 0>;
+> +                default-state = "off";
+> +            };
+> +
+> +            led2 {
+> +                label = "status:green:user2";
+> +                gpios = <&gpio2 23 0>;
+> +                default-state = "off";
+> +            };
+> +
+> +            led3 {
+> +                label = "status:green:user3";
+> +                gpios = <&gpio2 24 0>;
+> +                default-state = "off";
+> +            };
+> +        };
+> +
+> 
+> Can you review my v5 patches and tell me if there are any
+> modifications/changes required?
+
+It would be nice to keep de heartbeat and mmc triggers like we have in the 3.2 kernel that ships with the bone
+
+> 
+> Thanks
+> AnilKumar
