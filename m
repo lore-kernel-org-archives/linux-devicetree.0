@@ -1,54 +1,70 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
-Date: Sun, 02 Sep 2012 10:27:29 +0200
-Message-ID: <50431871.1030507@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>	<1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>	<1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com>	<5035445B.6000500@wwwdotorg.org>	<CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>	<50366E44.4030606@wwwdotorg.org>	<50369305.6050304@gmail.com>	<50369FEE.8000003@wwwdotorg.org>	<5036B639.20608@gmail.com>	<5036F651.4020700@wwwdotorg.org>	<5038F50E.7030807@gmail.com>	<503AF8B4.1070206@wwwdotorg.org>
- <CACRpkdYsPadKr1i8m5cCAFUUvJYUnLmc3j8evKM_6rPU5oGzRg@mail.gmail.com>
+From: shiraz hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] spi/pl022: Add chip select handling via GPIO
+Date: Sun, 2 Sep 2012 18:42:49 +0530
+Message-ID: <CAPub14891Bhdt=KNz8SZLS6Ps2snhy9LgOU=yGGMrntcK9xxRA@mail.gmail.com>
+References: <1345643359-16584-1-git-send-email-stigge@antcom.de>
+	<CAPub14-Oot_wJsRTv2AGu3SAAf40+3_wK43=0Swxj+5XjPaDew@mail.gmail.com>
+	<CACRpkdY3atmx4N-Zq2imrgPoukueYiexzndD7bVyQTgV02Vpuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYsPadKr1i8m5cCAFUUvJYUnLmc3j8evKM_6rPU5oGzRg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben.dooks@codethink.co.uk>, Andrew Lunn <andrew@lunn.ch>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CACRpkdY3atmx4N-Zq2imrgPoukueYiexzndD7bVyQTgV02Vpuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, sachin.verma-qxv4g6HH51o@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2012 09:30 AM, Linus Walleij wrote:
-> On Mon, Aug 27, 2012 at 6:33 AM, Stephen Warren<swarren@wwwdotorg.org>  wrote:
->> The pinctrl subsystem does expect a list of functions, and for each
->> function, a list of the groups where it can be selected. I admit that
->> when I think about this, it's slightly backward, since HW typically has
->> a list of pins/groups, and for each, a certain set of functions can be
->> selected. Oh well...
+Hi Linus,
+
+On Sun, Sep 2, 2012 at 12:48 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Sat, Sep 1, 2012 at 1:14 PM, shiraz hashim
+> <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Roland,
+>>
+>> On Wed, Aug 22, 2012 at 7:19 PM, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org> wrote:
+>>> @@ -2016,6 +2030,8 @@ pl022_probe(struct amba_device *adev, co
+>>>         pl022->master_info = platform_info;
+>>>         pl022->adev = adev;
+>>>         pl022->vendor = id->data;
+>>> +       /* Point chipselects to allocated memory beyond the main struct */
+>>> +       pl022->chipselects = (int *) pl022 + sizeof(struct pl022);
+>>
+>> This is going beyond memory allocated for chipselects
+>> as it adds 4 * sizeof(struct pl022) bytes to pl022.
 >
-> I agree that this is how we engineered it, would it create big hassles
-> for you to fix up the driver so it's the other way around Sebastian?
+> Yes that is why the allocation looks like this:
 >
-> I understand that the driver is perfectly working as it is, but from
-> a subsystem maintainer point of view it is annoying if one driver
-> turns the concepts around and it gets hard to maintain.
+> +       master = spi_alloc_master(dev, sizeof(struct pl022) + sizeof(int) *
+> +                                 platform_info->num_chipselect);
+>
 
-Stephen, Linus, Jason,
+The allocation is such because type of chipselects is int.
 
-there is a v3 of the patch under internal review right now.
+The statement for allocation is correct, but
 
-I know Stephen will not like it, but I decided not to have the list of
-functions passed statically from the SoC specific part but generate it
-out of pingroups during probe().
+       pl022->chipselects = (int *) pl022 + sizeof(struct pl022);
 
-As soon as I have confirmation that it still works on the other SoCs,
-I will send the updated patches for public review.
+is not adding  sizeof(struct pl022) bytes to pl022 base (which we want),
+but infact 4 times the size of pl022 (because type of pl022 is now int *).
 
-Maybe Jason can also comment on what branch he wants to have it based
-on, as we all agreed to get it through the Marvell tree.
+Do you get my point ?  This would go way beyond memory allocated
+for chipselects.
 
-Sebastian
+-- 
+regards
+Shiraz Hashim
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
