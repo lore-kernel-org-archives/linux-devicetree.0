@@ -1,67 +1,76 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: allow for ATAGS to be configured out when DT
- support is selected
-Date: Sun, 2 Sep 2012 16:54:49 +0100
-Message-ID: <20120902155449.GF18950@mudshark.cambridge.arm.com>
-References: <1346361008-7320-1-git-send-email-nicolas.pitre@linaro.org>
- <1346361008-7320-2-git-send-email-nicolas.pitre@linaro.org>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/8] i2c: at91: use an id table for SoC dependent parameters
+Date: Sun, 02 Sep 2012 19:21:53 +0200
+Message-ID: <504395B1.2040203@gmail.com>
+References: <1346404884-18451-1-git-send-email-ludovic.desroches@atmel.com> <1346404884-18451-4-git-send-email-ludovic.desroches@atmel.com> <20120831142944.GA23867@game.jcrosoft.org> <5040CF80.8060201@atmel.com> <504122D3.70507@gmail.com> <20120901091054.GA17540@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1346361008-7320-2-git-send-email-nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120901091054.GA17540-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2012 at 10:10:08PM +0100, Nicolas Pitre wrote:
-> Now that ATAGS support is well contained, we can easily remove it from
-> the kernel build if so desired.  It has to explicitly be disabled, and
-> only when DT support is selected.
+On 09/01/2012 11:10 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 22:47 Fri 31 Aug     , Sylwester Nawrocki wrote:
+>> On 08/31/2012 04:51 PM, Nicolas Ferre wrote:
+>>>>> diff --git a/arch/arm/mach-at91/at91rm9200.c b/arch/arm/mach-at91/at91rm9200.c
+>>>>> index f2112f9..0bc91e5 100644
+>>>>> --- a/arch/arm/mach-at91/at91rm9200.c
+>>>>> +++ b/arch/arm/mach-at91/at91rm9200.c
+>>>>> @@ -187,7 +187,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+>>>>>    	CLKDEV_CON_DEV_ID("pclk", "ssc.0",&ssc0_clk),
+>>>>>    	CLKDEV_CON_DEV_ID("pclk", "ssc.1",&ssc1_clk),
+>>>>>    	CLKDEV_CON_DEV_ID("pclk", "ssc.2",&ssc2_clk),
+>>>>> -	CLKDEV_CON_DEV_ID(NULL, "at91_i2c",&twi_clk),
+>>>>> +	CLKDEV_CON_DEV_ID(NULL, "at91rm9200_i2c",&twi_clk),
+>>>> use i2c-xxx as on other drivers
+>>>>
+>>>> and I do not like to have platform_device_id
+>>>
+>>> Me, I like it and find this implementation very elegant.
+>>>
+>>>> as we need to touch the driver to add a new soc
+>>>
+>>> So what? We still keep the compatibility if the new SoC has it
+>>> compatibility assured with previous revision: there is nothing to modify.
+>>
+>> I agree. The driver would need to be touched to support new SoC only if
+>> the IP there have had some differences, which would have needed to be
+>> resolved anyway.
+>>
+>>>> please use platform data
+>>
+>> Using platform data for the dt platforms would have been more troublesome,
+>> wouldn't it ? I like Ludovic's approach which handles both: dt and non-dt
+>> cases in uniform way from the driver's POV.
+> no you will describe it via DT as done on all the other drivers
+
+Yeah, makes sense. However there are drivers that deduce some parameters
+only from the 'compatible' property, let's take drivers/dma/mxs-dma.c as an
+example. I'm just trying to understand if there is a general preference on
+how to handle those things. Of course we could have all detail properties
+listed in a .dtsi file. But since we can derive these from a single property,
+it might be more sensible to avoid parsing ?
+
+>>> No, it does not have to be exposed to the user: these data are highly
+>>> dependent on the actual hardware (IP revision in fact). So, no need to
+>>> mess with platform data.
+> no I really see no point on these list of platform_id it's does not look more
+> nice just more huggly to have x names. This is at the end the same as passing
+> platform data via soc info (add_xx or dtsi)
 > 
-> Note: disabling kernel ATAGS support does not prevent the usage of
-> CONFIG_ARM_ATAG_DTB_COMPAT.
+> And here you just do the same as cpu_is via names.
 > 
-> Signed-off-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/Kconfig         | 26 +++++++++++++++++++-------
->  arch/arm/kernel/Makefile |  5 +++--
->  arch/arm/kernel/atags.h  | 11 +++++++++++
->  3 files changed, 33 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index c5f9ae5dbd..5c7302e208 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1891,12 +1891,6 @@ config CC_STACKPROTECTOR
->  	  neutralized via a kernel panic.
->  	  This feature requires gcc version 4.2 or above.
->  
-> -config DEPRECATED_PARAM_STRUCT
-> -	bool "Provide old way to pass kernel parameters"
-> -	help
-> -	  This was deprecated in 2001 and announced to live on for 5 years.
-> -	  Some old boot loaders still use this way.
-> -
->  endmenu
+> The driver need to read IP revision instead
 
-Since you're in this area, do we need to carry this forward? If somebody is
-using it then obviously we have to keep it but it might be worth asking
-around.
+OK, but wouldn't it be needed to resolve an IP revision at run time, e.g.
+with soc_is_*() anyway ? Having it set at each board doesn't look like an 
+optimal method either.
 
-Back on topic, this looks good to me:
+--
 
-Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-
-Will
+Regards,
+Sylwester
