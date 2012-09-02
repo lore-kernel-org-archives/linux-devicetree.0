@@ -1,66 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] spi/pl022: Add chip select handling via GPIO
-Date: Sun, 2 Sep 2012 09:18:29 +0200
-Message-ID: <CACRpkdY3atmx4N-Zq2imrgPoukueYiexzndD7bVyQTgV02Vpuw@mail.gmail.com>
-References: <1345643359-16584-1-git-send-email-stigge@antcom.de>
-	<CAPub14-Oot_wJsRTv2AGu3SAAf40+3_wK43=0Swxj+5XjPaDew@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Sun, 2 Sep 2012 09:30:45 +0200
+Message-ID: <CACRpkdYsPadKr1i8m5cCAFUUvJYUnLmc3j8evKM_6rPU5oGzRg@mail.gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com>
+	<5035445B.6000500@wwwdotorg.org>
+	<CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>
+	<50366E44.4030606@wwwdotorg.org>
+	<50369305.6050304@gmail.com>
+	<50369FEE.8000003@wwwdotorg.org>
+	<5036B639.20608@gmail.com>
+	<5036F651.4020700@wwwdotorg.org>
+	<5038F50E.7030807@gmail.com>
+	<503AF8B4.1070206@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <CAPub14-Oot_wJsRTv2AGu3SAAf40+3_wK43=0Swxj+5XjPaDew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: shiraz hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.verma-lpHj6iFQ3dU@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <503AF8B4.1070206@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 1, 2012 at 1:14 PM, shiraz hashim
-<shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Roland,
+On Mon, Aug 27, 2012 at 6:33 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/25/2012 08:53 AM, Sebastian Hesselbarth wrote:
+>>
+>> now I do understand but in the current driver we pass pingroups associated
+>> with the available functions, i.e. "mpp2" with "uart1", "uart2",
+>> "sdio0", aso.
+>> IMHO for the above three functions it would be better to have functions
+>> associated
+>> with the corresponding groups, i.e. "uart1" with "mpp_uart1", "mpp2",
+>> "mpp3", aso.
 >
-> On Wed, Aug 22, 2012 at 7:19 PM, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org> wrote:
->> @@ -2016,6 +2030,8 @@ pl022_probe(struct amba_device *adev, co
->>         pl022->master_info = platform_info;
->>         pl022->adev = adev;
->>         pl022->vendor = id->data;
->> +       /* Point chipselects to allocated memory beyond the main struct */
->> +       pl022->chipselects = (int *) pl022 + sizeof(struct pl022);
->
-> This is going beyond memory allocated for chipselects
-> as it adds 4 * sizeof(struct pl022) bytes to pl022.
+> The pinctrl subsystem does expect a list of functions, and for each
+> function, a list of the groups where it can be selected. I admit that
+> when I think about this, it's slightly backward, since HW typically has
+> a list of pins/groups, and for each, a certain set of functions can be
+> selected. Oh well...
 
-Yes that is why the allocation looks like this:
+I agree that this is how we engineered it, would it create big hassles
+for you to fix up the driver so it's the other way around Sebastian?
 
-+       master = spi_alloc_master(dev, sizeof(struct pl022) + sizeof(int) *
-+                                 platform_info->num_chipselect);
-
-> pl022->chipselects = (int *) &pl022[1];
-> can be musch safer.
-
-I see absolutely no sematic difference between these two
-methods to reach the first position beyond the first struct.
-
-If we're gonna be debating this it's a safe sign that this is
-not a good design pattern at all, so then it is better to simply
-devm_kzalloc(sizeof(int) * platform_info->num_chipselect);
-separately.
-
-(But I'm happy with the patch as it is. And the other way
-too, since I'm not very picky.)
+I understand that the driver is perfectly working as it is, but from
+a subsystem maintainer point of view it is annoying if one driver
+turns the concepts around and it gets hard to maintain.
 
 Yours,
 Linus Walleij
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
