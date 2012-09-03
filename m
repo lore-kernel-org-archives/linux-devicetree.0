@@ -1,73 +1,57 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/8] i2c: at91: cleanup and dt support
-Date: Mon, 3 Sep 2012 09:55:05 +0200
-Message-ID: <50446259.8020504@atmel.com>
-References: <1346404884-18451-1-git-send-email-ludovic.desroches@atmel.com>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] mfd: add syscon driver based on regmap
+Date: Mon, 3 Sep 2012 16:02:00 +0800
+Message-ID: <20120903080159.GA1740@shlinux2.ap.freescale.net>
+References: <1346237818-9498-1-git-send-email-b29396@freescale.com>
+ <1346237818-9498-2-git-send-email-b29396@freescale.com>
+ <20120831012626.GA7726@r65073-Latitude-D630>
+ <20120903023102.GA11891@shlinux2.ap.freescale.net>
+ <20120903030858.GF2362@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1346404884-18451-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120903030858.GF2362-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2012 11:21 AM, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
-> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On Mon, Sep 03, 2012 at 11:09:01AM +0800, Shawn Guo wrote:
+> On Mon, Sep 03, 2012 at 10:31:03AM +0800, Dong Aisheng wrote:
+> > > 
+> > > I think of_node_put should be moved out from here and put into
+> > > syscon_node_to_regmap and syscon_regmap_lookup_by_compatible.
+> > > 
+> > I guess no, if you want to move of_node_put into syscon_regmap_lookup_by_phandle,
+> > then syscon_regmap_lookup_by_phandle has the same issue.
 > 
-> Hi,
+> I guess not.  syscon_regmap_lookup_by_phandle itself calls of_parse_phandle,
+> and that's where the refcount gets incremented, so syscon_regmap_lookup_by_phandle
+> should be responsible for calling of_node_put to get the refcount decremented.
 > 
-> This set of patches is based on Nikolaus at91_i2c driver.
-> 
-> Ludovic Desroches (8):
->   i2c: at91: use managed resources
->   i2c: at91: add warning about transmission issues for some devices
->   i2c: at91: use an id table for SoC dependent parameters
->   ARM: at91: do not configure at91sam9g10 twi pio as open-drain
->   i2c: at91: add dt support to i2c-at91
->   ARM: at91: add clocks for I2C DT entries
->   ARM: dts: add twi nodes for atmel SOCs
->   ARM: dts: add twi nodes for atmel boards
+Yes, the of_node_put will be done in syscon_node_to_regmap which is called by
+syscon_regmap_lookup_by_phandle,
+The reason why we do it is as i said in my last reply.
 
-For the whole patch series (with Jean-Christophe remarks about *dts
-modifications*):
+I think one known issue is that syscon_node_to_regmap may not be suitable to
+be used by the driver who still wants to use the regmap node after calling the
+syscon_node_to_regmap.
+I still do not find such using case but i'm not sure whether it may exist.
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Probably the safe way currently to do is just as you said:
+Not put the node in syscon_node_to_regmap and let user decide.
+Ok, i will update it.
 
-
->  .../devicetree/bindings/i2c/atmel-i2c.txt          |  30 +++
->  arch/arm/boot/dts/at91sam9260.dtsi                 |  23 +--
->  arch/arm/boot/dts/at91sam9263.dtsi                 |  23 +--
->  arch/arm/boot/dts/at91sam9263ek.dts                |  20 +-
->  arch/arm/boot/dts/at91sam9g20.dtsi                 |   4 +
->  arch/arm/boot/dts/at91sam9g20ek_common.dtsi        |  28 +--
->  arch/arm/boot/dts/at91sam9g25ek.dts                |  12 ++
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |  33 ++--
->  arch/arm/boot/dts/at91sam9m10g45ek.dts             |   8 +
->  arch/arm/boot/dts/at91sam9n12.dtsi                 |  33 ++--
->  arch/arm/boot/dts/at91sam9n12ek.dts                |   8 +
->  arch/arm/boot/dts/at91sam9x5.dtsi                  |  69 +++----
->  arch/arm/mach-at91/at91rm9200.c                    |   2 +-
->  arch/arm/mach-at91/at91rm9200_devices.c            |  11 +-
->  arch/arm/mach-at91/at91sam9260.c                   |   4 +-
->  arch/arm/mach-at91/at91sam9260_devices.c           |   8 +-
->  arch/arm/mach-at91/at91sam9261.c                   |   3 +-
->  arch/arm/mach-at91/at91sam9261_devices.c           |  31 ++-
->  arch/arm/mach-at91/at91sam9263.c                   |   3 +-
->  arch/arm/mach-at91/at91sam9263_devices.c           |   2 +-
->  arch/arm/mach-at91/at91sam9g45.c                   |   6 +-
->  arch/arm/mach-at91/at91sam9g45_devices.c           |   4 +-
->  arch/arm/mach-at91/at91sam9n12.c                   |   2 +
->  arch/arm/mach-at91/at91sam9rl.c                    |   4 +-
->  arch/arm/mach-at91/at91sam9rl_devices.c            |   2 +-
->  arch/arm/mach-at91/at91sam9x5.c                    |   6 +-
->  drivers/i2c/busses/Kconfig                         |   6 +
->  drivers/i2c/busses/i2c-at91.c                      | 217 +++++++++++++--------
->  28 files changed, 367 insertions(+), 235 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/atmel-i2c.txt
-> 
-
-
--- 
-Nicolas Ferre
+Regards
+Dong Aisheng
