@@ -1,57 +1,58 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mfd: add syscon driver based on regmap
-Date: Mon, 3 Sep 2012 16:02:00 +0800
-Message-ID: <20120903080159.GA1740@shlinux2.ap.freescale.net>
-References: <1346237818-9498-1-git-send-email-b29396@freescale.com>
- <1346237818-9498-2-git-send-email-b29396@freescale.com>
- <20120831012626.GA7726@r65073-Latitude-D630>
- <20120903023102.GA11891@shlinux2.ap.freescale.net>
- <20120903030858.GF2362@S2101-09.ap.freescale.net>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] spi/pl022: Add chip select handling via GPIO
+Date: Mon, 3 Sep 2012 11:10:28 +0200
+Message-ID: <CACRpkdY2_nSUvyhXGwzYcLqVuS+ryuyVbKKmD+yHdxCwYLhdMA@mail.gmail.com>
+References: <1345643359-16584-1-git-send-email-stigge@antcom.de>
+	<CAPub14-Oot_wJsRTv2AGu3SAAf40+3_wK43=0Swxj+5XjPaDew@mail.gmail.com>
+	<CACRpkdY3atmx4N-Zq2imrgPoukueYiexzndD7bVyQTgV02Vpuw@mail.gmail.com>
+	<CAPub14891Bhdt=KNz8SZLS6Ps2snhy9LgOU=yGGMrntcK9xxRA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120903030858.GF2362-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CAPub14891Bhdt=KNz8SZLS6Ps2snhy9LgOU=yGGMrntcK9xxRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: shiraz hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, sachin.verma-qxv4g6HH51o@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 03, 2012 at 11:09:01AM +0800, Shawn Guo wrote:
-> On Mon, Sep 03, 2012 at 10:31:03AM +0800, Dong Aisheng wrote:
-> > > 
-> > > I think of_node_put should be moved out from here and put into
-> > > syscon_node_to_regmap and syscon_regmap_lookup_by_compatible.
-> > > 
-> > I guess no, if you want to move of_node_put into syscon_regmap_lookup_by_phandle,
-> > then syscon_regmap_lookup_by_phandle has the same issue.
-> 
-> I guess not.  syscon_regmap_lookup_by_phandle itself calls of_parse_phandle,
-> and that's where the refcount gets incremented, so syscon_regmap_lookup_by_phandle
-> should be responsible for calling of_node_put to get the refcount decremented.
-> 
-Yes, the of_node_put will be done in syscon_node_to_regmap which is called by
-syscon_regmap_lookup_by_phandle,
-The reason why we do it is as i said in my last reply.
+On Sun, Sep 2, 2012 at 3:12 PM, shiraz hashim
+<shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Linus,
 
-I think one known issue is that syscon_node_to_regmap may not be suitable to
-be used by the driver who still wants to use the regmap node after calling the
-syscon_node_to_regmap.
-I still do not find such using case but i'm not sure whether it may exist.
+>> Yes that is why the allocation looks like this:
+>>
+>> +       master = spi_alloc_master(dev, sizeof(struct pl022) + sizeof(int) *
+>> +                                 platform_info->num_chipselect);
+>>
+>
+> The allocation is such because type of chipselects is int.
+>
+> The statement for allocation is correct, but
+>
+>        pl022->chipselects = (int *) pl022 + sizeof(struct pl022);
+>
+> is not adding  sizeof(struct pl022) bytes to pl022 base (which we want),
+> but infact 4 times the size of pl022 (because type of pl022 is now int *).
+>
+> Do you get my point ?  This would go way beyond memory allocated
+> for chipselects.
 
-Probably the safe way currently to do is just as you said:
-Not put the node in syscon_node_to_regmap and let user decide.
-Ok, i will update it.
+Yes of course ... how could I not see this. Sorry!
 
-Regards
-Dong Aisheng
+Yours,
+Linus Walleij
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
