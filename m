@@ -1,43 +1,127 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] i2c: nomadik: Add Device Tree support to the Nomadik
- I2C driver
-Date: Mon, 3 Sep 2012 16:35:55 +0200
-Message-ID: <CACRpkda0akcLRe3J=fVcyYpxHmkJmVe+c1doXQ4=vOA6iNxe2g@mail.gmail.com>
-References: <1345734087-21803-1-git-send-email-lee.jones@linaro.org>
-	<1345734087-21803-3-git-send-email-lee.jones@linaro.org>
-	<20120831112258.GA2624@pengutronix.de>
-	<20120831122323.GC5962@gmail.com>
-	<CACRpkdZ=C1EV4WO2b=1YLHPNhsDsQdq7Kfnpzm8i7uGRtVjJuQ@mail.gmail.com>
-	<20120903094448.GB11780@pengutronix.de>
-	<20120903100656.GC5782@gmail.com>
-	<CACRpkdb8owKBxawAv4LVVYx5kUgZ9cUSiQ=BV0f3Pf3bHtknuQ@mail.gmail.com>
-	<CAF2Aj3j25w1Nn9O6hV+=i-j1ts_p_Ucswk_M7r04S7i5BzPkHg@mail.gmail.com>
-	<CACRpkdZ5VFhrbONy=0K5MFh4e6BDFckq0yqzjQ2QkW9MgwKqBg@mail.gmail.com>
-	<5044BFD1.10708@nvidia.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] ARM/dts: OMAP2: Add McBSP entries for OMAP2420
+ and OMAP2430 SoC
+Date: Mon, 3 Sep 2012 16:46:53 +0200
+Message-ID: <5044C2DD.5000705@ti.com>
+References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
+ <1346247067-9632-2-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5044BFD1.10708-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1346247067-9632-2-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 3, 2012 at 4:33 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On 09/03/2012 05:58 AM, Linus Walleij wrote:
->> On Mon, Sep 3, 2012 at 1:32 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>
->>> No, this is wrong. Platform data should not override DT.
->>>
->>> If DT is enabled and passed, it should have highest priority.
->
-> No, that's wrong. If platform data is specified, it overrides DT, so
-> that if the DT needs any fixup, it can be provided using platform data.
+Hi Peter,
 
-Thanks Stephen, now there are two of us saying this, Lee please
-follow this design pattern.
+The overall series looks good to me, but I do have a couple of comments.
 
-(Unless Rob/Grant start shouting counter-orders...)
+On 08/29/2012 03:31 PM, Peter Ujfalusi wrote:
+> The McBSP IP within OMAP2420 and 2430 is different we need to create separate
+> dtsi files for them.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/omap2420.dtsi |   39 ++++++++++++++++++
+>  arch/arm/boot/dts/omap2430.dtsi |   83 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 122 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/omap2420.dtsi
+>  create mode 100644 arch/arm/boot/dts/omap2430.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
+> new file mode 100644
+> index 0000000..f375c68
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap2420.dtsi
+> @@ -0,0 +1,39 @@
+> +/*
+> + * Device Tree Source for OMAP2420 SoC
+> + *
+> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
 
-Yours,
-Linus Walleij
+Nit: 2012
+
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +/include/ "omap2.dtsi"
+> +
+> +/ {
+> +	compatible = "ti,omap2420", "ti,omap2";
+> +
+> +	ocp {
+> +		mcbsp1: mcbsp@48074000 {
+> +			compatible = "ti,omap2420-mcbsp";
+> +			reg = <0x48074000 0xff>;
+> +			reg-names = "mpu";
+> +			interrupts = <0 59 0x4>, /* TX interrupt */
+> +				     <0 60 0x4>; /* RX interrupt */
+
+That one is not correct because it does comply with the interrupt
+controller specifier that require only one cell:
+
+		intc: interrupt-controller@48200000 {
+			compatible = "ti,omap2-intc";
+			interrupt-controller;
+			#interrupt-cells = <1>;
+...
+
+The one you are using is for GIC IRQ controller.
+It works probably because we are using hwmod so far :-)
+
+Didn't you get some warning?
+
+In the case of OMAP2 & 3, it is much simpler:
+
+> +			interrupts = <59>, /* TX interrupt */
+> +				     <60>; /* RX interrupt */
+
+That comment is applicable for OMAP2420, OMAP2430, and OMAP3 in general.
+
+> +			interrupt-names = "tx", "rx";
+> +			interrupt-parent = <&intc>;
+> +			ti,hwmods = "mcbsp1";
+> +		};
+> +
+> +		mcbsp2: mcbsp@48076000 {
+> +			compatible = "ti,omap2420-mcbsp";
+> +			reg = <0x48076000 0xff>;
+> +			reg-names = "mpu";
+> +			interrupts = <0 62 0x4>, /* TX interrupt */
+> +				     <0 63 0x4>; /* RX interrupt */
+> +			interrupt-names = "tx", "rx";
+> +			interrupt-parent = <&intc>;
+> +			ti,hwmods = "mcbsp2";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+> new file mode 100644
+> index 0000000..531e346
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap2430.dtsi
+> @@ -0,0 +1,83 @@
+> +/*
+> + * Device Tree Source for OMAP243x SoC
+> + *
+> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+
+2012.
+
+Regards,
+Benoit
