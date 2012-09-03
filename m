@@ -1,90 +1,43 @@
-From: <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 8/8] ARM: dts: add twi nodes for atmel boards
-Date: Mon, 3 Sep 2012 12:20:02 +0200
-Message-ID: <1346667602-8140-1-git-send-email-ludovic.desroches@atmel.com>
-References: <1346667367-7969-1-git-send-email-ludovic.desroches@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/4] pinctrl: add samsung pinctrl and gpiolib driver
+Date: Mon, 3 Sep 2012 13:14:44 +0200
+Message-ID: <CACRpkdbVe77pAYdOw0+_2G2FWVWcn4GKQty6R-LXXEz-OkUdUg@mail.gmail.com>
+References: <1345720529-32315-1-git-send-email-thomas.abraham@linaro.org>
+	<1345720529-32315-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1346667367-7969-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1345720529-32315-2-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, dong.aisheng@linaro.org, swarren@wwwdotorg.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On Thu, Aug 23, 2012 at 1:15 PM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:
 
-Still use i2c-gpio on boards which have a SoC with a TWI IP which
-doesn't have clock stretching in transmission mode.
+> Add a new device tree enabled pinctrl and gpiolib driver for Samsung
+> SoC's. This driver provides a common and extensible framework for all
+> Samsung SoC's to interface with the pinctrl and gpiolib subsystems. This
+> driver supports only device tree based instantiation and hence can be
+> used only on those Samsung platforms that have device tree enabled.
+>
+> This driver is split into two parts: the pinctrl interface and the gpiolib
+> interface. The pinctrl interface registers pinctrl devices with the pinctrl
+> subsystem and gpiolib interface registers gpio chips with the gpiolib
+> subsystem. The information about the pins, pin groups, pin functions and
+> gpio chips, which are SoC specific, are parsed from device tree node.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Kukjin Kim <kgene.kim@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9g25ek.dts    | 12 ++++++++++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts |  8 ++++++++
- arch/arm/boot/dts/at91sam9n12ek.dts    |  8 ++++++++
- 3 files changed, 28 insertions(+)
+Looks good to me, I saw Stephen had some minor comments and
+I expect that you probably fix them before applying to the Samsung
+tree so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-index 7829a4d..3b0adbc 100644
---- a/arch/arm/boot/dts/at91sam9g25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -32,6 +32,18 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
-+
-+			i2c0: i2c@f8010000 {
-+				status = "okay";
-+			};
-+
-+			i2c1: i2c@f8014000 {
-+				status = "okay";
-+			};
-+
-+			i2c2: i2c@f8018000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		usb0: ohci@00600000 {
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index a3633bd..15e1dd4 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -46,6 +46,14 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
-+
-+			i2c0: i2c@fff84000 {
-+				status = "okay";
-+			};
-+
-+			i2c1: i2c@fff88000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index f4e43e3..912b2c2 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -37,6 +37,14 @@
- 			dbgu: serial@fffff200 {
- 				status = "okay";
- 			};
-+
-+			i2c0: i2c@f8010000 {
-+				status = "okay";
-+			};
-+
-+			i2c1: i2c@f8014000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
--- 
-1.7.11.3
+Feel free to push this through ARM SoC, I guess that's the plan?
+
+Yours,
+Linus Walleij
