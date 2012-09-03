@@ -1,207 +1,60 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v1 2/2] [media] s5p-mfc: Add device tree support
-Date: Mon, 03 Sep 2012 22:22:58 +0530
-Message-ID: <1346691178-29580-3-git-send-email-arun.kk@samsung.com>
-References: <1346691178-29580-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1346691178-29580-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-media@vger.kernel.org
-Cc: kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, ch.naveen@samsung.com, arun.kk@samsung.com, thomas.abraham@linaro.org, kmpark@infradead.org, joshi@samsung.com
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] i2c: nomadik: Add Device Tree support to the Nomadik
+ I2C driver
+Date: Mon, 3 Sep 2012 15:19:13 +0200
+Message-ID: <CACRpkdZvWkH2gQQuNvCkNuB-faT8qHAjyiULSqPKrn+FCktvLg@mail.gmail.com>
+References: <1345734087-21803-1-git-send-email-lee.jones@linaro.org>
+	<1345734087-21803-3-git-send-email-lee.jones@linaro.org>
+	<20120831112258.GA2624@pengutronix.de>
+	<20120831122323.GC5962@gmail.com>
+	<CACRpkdZ=C1EV4WO2b=1YLHPNhsDsQdq7Kfnpzm8i7uGRtVjJuQ@mail.gmail.com>
+	<20120903094448.GB11780@pengutronix.de>
+	<20120903100656.GC5782@gmail.com>
+	<CACRpkdb8owKBxawAv4LVVYx5kUgZ9cUSiQ=BV0f3Pf3bHtknuQ@mail.gmail.com>
+	<CAF2Aj3j25w1Nn9O6hV+=i-j1ts_p_Ucswk_M7r04S7i5BzPkHg@mail.gmail.com>
+	<CACRpkdZ5VFhrbONy=0K5MFh4e6BDFckq0yqzjQ2QkW9MgwKqBg@mail.gmail.com>
+	<20120903123424.GA31163@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120903123424.GA31163-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch will add the device tree support for MFC driver.
+On Mon, Sep 3, 2012 at 2:34 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- .../devicetree/bindings/media/s5p-mfc.txt          |   27 +++++
- drivers/media/platform/s5p-mfc/s5p_mfc.c           |  104 +++++++++++++++++---
- 2 files changed, 115 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+> When booting DT booting take a different path and no platform data
+> is passed. We can't boot DT AND register devices with platform data
+> or else we will double probe every device. The only way to pass
+> pdata when booting with DT is with AUX_DATA() and that's a hack to
+> get around things we don't have support for yet. Up until now that
+> has been DMA bindings, clock and pinctrl names and call-backs.
 
-diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-new file mode 100644
-index 0000000..9a74d09
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-@@ -0,0 +1,27 @@
-+* Samsung Multi Format Codec (MFC)
-+
-+Mult Format Codec (MFC) is the IP present in Samsung SoCs which
-+supports high resolution decoding and encoding functionalities.
-+The MFC device driver is a v4l2 driver which can encode/decode
-+video raw/elementary streams and has support for all popular
-+video codecs.
-+
-+Required properties:
-+  - compatible : value should be either one among the following
-+	(a) "samsung,mfc-v5" for MFC v5 present in Exynos4 SoCs
-+	(b) "samsung,mfc-v6" for MFC v6 present in Exynos5 SoCs
-+
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+
-+  - interrupts : MFC interupt number to the CPU.
-+
-+  - samsung,mfc-r : Base address of the first memory bank used by MFC
-+		    for DMA contiguous memory allocation.
-+
-+  - samsung,mfc-r-size : Size of the first memory bank.
-+
-+  - samsung,mfc-l : Base address of the second memory bank used by MFC
-+		    for DMA contiguous memory allocation.
-+
-+  - samsung,mfc-l-size : Size of the second memory bank.
-diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-index 80f0555..365b6f5 100644
---- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
-+++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-@@ -957,6 +957,8 @@ static int match_child(struct device *dev, void *data)
- 	return !strcmp(dev_name(dev), (char *)data);
- }
- 
-+static void *mfc_get_drv_data(struct platform_device *pdev);
-+
- /* MFC probe function */
- static int s5p_mfc_probe(struct platform_device *pdev)
- {
-@@ -964,6 +966,8 @@ static int s5p_mfc_probe(struct platform_device *pdev)
- 	struct video_device *vfd;
- 	struct resource *res;
- 	int ret;
-+	unsigned int base_addr;
-+	unsigned int bank_size;
- 
- 	pr_debug("%s++\n", __func__);
- 	dev = devm_kzalloc(&pdev->dev, sizeof *dev, GFP_KERNEL);
-@@ -980,8 +984,7 @@ static int s5p_mfc_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	dev->variant = (struct s5p_mfc_variant *)
--		platform_get_device_id(pdev)->driver_data;
-+	dev->variant = mfc_get_drv_data(pdev);
- 
- 	ret = s5p_mfc_init_pm(dev);
- 	if (ret < 0) {
-@@ -1011,20 +1014,59 @@ static int s5p_mfc_probe(struct platform_device *pdev)
- 		goto err_res;
- 	}
- 
--	dev->mem_dev_l = device_find_child(&dev->plat_dev->dev, "s5p-mfc-l",
--					   match_child);
--	if (!dev->mem_dev_l) {
--		mfc_err("Mem child (L) device get failed\n");
--		ret = -ENODEV;
--		goto err_res;
--	}
-+	if (pdev->dev.of_node) {
-+		dev->mem_dev_l = kzalloc(sizeof(struct device), GFP_KERNEL);
-+		if (!dev->mem_dev_l) {
-+			mfc_err("Not enough memory\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
-+		of_property_read_u32(pdev->dev.of_node, "samsung,mfc-l",
-+				&base_addr);
-+		of_property_read_u32(pdev->dev.of_node, "samsung,mfc-l-size",
-+				&bank_size);
-+		if (dma_declare_coherent_memory(dev->mem_dev_l, base_addr,
-+				base_addr, bank_size,
-+				DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE) == 0) {
-+			mfc_err("Failed to declare coherent memory for\n"
-+					"MFC device\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
- 
--	dev->mem_dev_r = device_find_child(&dev->plat_dev->dev, "s5p-mfc-r",
--					   match_child);
--	if (!dev->mem_dev_r) {
--		mfc_err("Mem child (R) device get failed\n");
--		ret = -ENODEV;
--		goto err_res;
-+		dev->mem_dev_r = kzalloc(sizeof(struct device), GFP_KERNEL);
-+		if (!dev->mem_dev_r) {
-+			mfc_err("Not enough memory\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
-+		of_property_read_u32(pdev->dev.of_node, "samsung,mfc-r",
-+				&base_addr);
-+		of_property_read_u32(pdev->dev.of_node, "samsung,mfc-r-size",
-+				&bank_size);
-+		if (dma_declare_coherent_memory(dev->mem_dev_r, base_addr,
-+				base_addr, bank_size,
-+				DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE) == 0) {
-+			pr_err("Failed to declare coherent memory for\n"
-+					"MFC device\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
-+	} else {
-+		dev->mem_dev_l = device_find_child(&dev->plat_dev->dev,
-+				"s5p-mfc-l", match_child);
-+		if (!dev->mem_dev_l) {
-+			mfc_err("Mem child (L) device get failed\n");
-+			ret = -ENODEV;
-+			goto err_res;
-+		}
-+		dev->mem_dev_r = device_find_child(&dev->plat_dev->dev,
-+				"s5p-mfc-r", match_child);
-+		if (!dev->mem_dev_r) {
-+			mfc_err("Mem child (R) device get failed\n");
-+			ret = -ENODEV;
-+			goto err_res;
-+		}
- 	}
- 
- 	dev->alloc_ctx[0] = vb2_dma_contig_init_ctx(dev->mem_dev_l);
-@@ -1293,6 +1335,35 @@ static struct platform_device_id mfc_driver_ids[] = {
- };
- MODULE_DEVICE_TABLE(platform, mfc_driver_ids);
- 
-+static const struct of_device_id exynos_mfc_match[] = {
-+	{
-+		.compatible = "samsung,mfc-v5",
-+		.data = &mfc_drvdata_v5,
-+	}, {
-+		.compatible = "samsung,mfc-v6",
-+		.data = &mfc_drvdata_v6,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, exynos_mfc_match);
-+
-+static void *mfc_get_drv_data(struct platform_device *pdev)
-+{
-+	struct s5p_mfc_variant *driver_data = NULL;
-+
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(of_match_ptr(exynos_mfc_match),
-+				pdev->dev.of_node);
-+		if (match)
-+			driver_data = match->data;
-+	} else {
-+		driver_data = (struct s5p_mfc_variant *)
-+			platform_get_device_id(pdev)->driver_data;
-+	}
-+	return driver_data;
-+}
-+
- static struct platform_driver s5p_mfc_driver = {
- 	.probe		= s5p_mfc_probe,
- 	.remove		= __devexit_p(s5p_mfc_remove),
-@@ -1300,7 +1371,8 @@ static struct platform_driver s5p_mfc_driver = {
- 	.driver	= {
- 		.name	= S5P_MFC_NAME,
- 		.owner	= THIS_MODULE,
--		.pm	= &s5p_mfc_pm_ops
-+		.pm	= &s5p_mfc_pm_ops,
-+		.of_match_table = exynos_mfc_match,
- 	},
- };
- 
--- 
-1.7.0.4
+So if we pass some augmented platform data using AUX_DATA()
+that appears as pdata in this case, and gets discarded.
+
+Thus we cannot use AUX_DATA() to override a broken, as in
+"the interrupt number is wrong" device tree.
+
+> If DT is corrupt or missing the kernel will boot using platform
+> data, but np will always be NULL, so we don't have the problem you
+> were alluding to above.
+
+That was not the problem I had in mind.
+
+I had a valid, but incorrect device tree in mind. I.e the device
+is there, but with wrong base address, or wrong IRQ number.
+
+If pdata takes precedence, we can use AUX_DATA() to
+override such errors from the platform, since drivers/of/platform.c
+helpfully pokes in the auxdata as the platform data.
+I thought this was one of the reasons why auxdata exist
+at all.
+
+Or is the proper solution to runtime-patch the device tree
+per se in such cases? How is that actually done then?
+
+Yours,
+Linus Walleij
