@@ -1,30 +1,51 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 4/4] ARM: EXYNOS: skip wakeup interrupt setup if
- pinctrl driver is used
-Date: Mon, 3 Sep 2012 13:17:00 +0200
-Message-ID: <CACRpkda5MkXbePf8B8rY8w3rjowzE8MqtWH_cehOqUoKTTY=9Q@mail.gmail.com>
-References: <1345720529-32315-1-git-send-email-thomas.abraham@linaro.org>
-	<1345720529-32315-5-git-send-email-thomas.abraham@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH resend 2/2] SPI: spi-gpio: Add DT bindings
+Date: Mon, 3 Sep 2012 13:50:34 +0200
+Message-ID: <CACRpkdZfBd99r2CnObZz5iK=72DTf-9J9p6k32JM_6De29JtXg@mail.gmail.com>
+References: <1343854638-32563-1-git-send-email-zonque@gmail.com>
+	<1343854638-32563-2-git-send-email-zonque@gmail.com>
+	<CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw@mail.gmail.com>
+	<501E5FA9.9050905@gmail.com>
+	<CACRpkdaanCLHjuG-+mPUN-FQbE+MJ=4_RRN85jAaL_FccgNCuA@mail.gmail.com>
+	<5043BEC2.2090705@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1345720529-32315-5-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, kgene.kim@samsung.com, dong.aisheng@linaro.org, swarren@wwwdotorg.org, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <5043BEC2.2090705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2012 at 1:15 PM, Thomas Abraham
-<thomas.abraham@linaro.org> wrote:
-
-> Pinctrl driver includes support for configuring the external wakeup
-> interrupts. On exynos platforms that use pinctrl driver, the setup
-> of wakeup interrupts in the exynos platform code can be skipped.
+On Sun, Sep 2, 2012 at 10:17 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 05.08.2012 21:12, Linus Walleij wrote:
+>> On Sun, Aug 5, 2012 at 1:57 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>>>> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>
+>>> Ok, thanks. Mark, did the patches reach you this time? I think they
+>>> should go thru the SPI tree.
+>>
+>> Yeah no problem, Mark is always faster than me ...
 >
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> Hmm, I don't know whether anyone took those patches yet? Mark?
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Mark better take them, ping on Mark.
 
 Yours,
 Linus Walleij
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
