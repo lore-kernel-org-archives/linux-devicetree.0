@@ -1,43 +1,100 @@
-From: Matthias Kaehlcke <matthias.list@kaehlcke.net>
-Subject: [RESEND] Documentation of device tree bindings for mfd devices
-Date: Mon, 3 Sep 2012 18:19:06 +0200
-Message-ID: <20120903161906.GA23844@darwin>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: [PATCH] ARM: dts: OMAP4: Cleanup and move GIC outside of the OCP
+ node
+Date: Mon, 3 Sep 2012 18:20:53 +0200
+Message-ID: <5044D8E5.5010705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: "tony@atomide.com" <tony@atomide.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Remove a useless comment and move GIC controller outside
+of the OCP node since it does use the MPU internal bus and
+not the OCP.
+This will not change the functionality but will reflect the
+reality more accurately.
 
-I wrote a driver for the backlight of the tps65217 PMIC, which is a
-mfd device. The driver has device tree support and I want to document
-the bindings.
+Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+---
 
-It is not clear to me where this documentation should go. Currently
-the bindings of the tps65217 driver are documented in
-Documentation/devicetree/bindings/regulator/tps65217.txt , which
-definitely isn't the right place to add backlight specific
-documentation. The common practice seems to be to document mfd devices
-including their subdevices in Documentation/devicetree/bindings/mfd.
-To follow this convention my steps would be moving tps65217.txt to the
-mfd directory and adding the backlight specific documentation.
+Hi Tony
 
-Please confirm whether this is the correct/preferred way to document
-device tree bindings of mfd devices
+This is a minor cleanup done since Santosh's series is introducing some more MPU devices that does not belong to the TI main OCP interconnect. It makes sense for consistency / accuracy to move GIC to the same location.
 
+Regards,
+Benoit
+
+ arch/arm/boot/dts/omap4.dtsi |   40 ++++++++--------------------------------
+ 1 files changed, 8 insertions(+), 32 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 2b670ab..1853dc7 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -38,6 +38,14 @@
+ 		};
+ 	};
+ 
++	gic: interrupt-controller@48241000 {
++		compatible = "arm,cortex-a9-gic";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = <0x48241000 0x1000>,
++		      <0x48240100 0x0100>;
++	};
++
+ 	L2: l2-cache-controller@48242000 {
+ 		compatible = "arm,pl310-cache";
+ 		reg = <0x48242000 0x1000>;
+@@ -76,30 +84,6 @@
+ 	/*
+ 	 * XXX: Use a flat representation of the OMAP4 interconnect.
+ 	 * The real OMAP interconnect network is quite complex.
+-	 *
+-	 * MPU -+-- MPU_PRIVATE - GIC, L2
+-	 *      |
+-	 *      +----------------+----------+
+-	 *      |                |          |
+-	 *      +            +- EMIF - DDR  |
+-	 *      |            |              |
+-	 *      |            +     +--------+
+-	 *      |            |     |
+-	 *      |            +- L4_ABE - AESS, MCBSP, TIMERs...
+-	 *      |            |
+-	 *      +- L3_MAIN --+- L4_CORE - IPs...
+-	 *                   |
+-	 *                   +- L4_PER - IPs...
+-	 *                   |
+-	 *                   +- L4_CFG -+- L4_WKUP - IPs...
+-	 *                   |          |
+-	 *                   |          +- IPs...
+-	 *                   +- IPU ----+
+-	 *                   |          |
+-	 *                   +- DSP ----+
+-	 *                   |          |
+-	 *                   +- DSS ----+
+-	 *
+ 	 * Since that will not bring real advantage to represent that in DT for
+ 	 * the moment, just use a fake OCP bus entry to represent the whole bus
+ 	 * hierarchy.
+@@ -111,14 +95,6 @@
+ 		ranges;
+ 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
+ 
+-		gic: interrupt-controller@48241000 {
+-			compatible = "arm,cortex-a9-gic";
+-			interrupt-controller;
+-			#interrupt-cells = <3>;
+-			reg = <0x48241000 0x1000>,
+-			      <0x48240100 0x0100>;
+-		};
+-
+ 		gpio1: gpio@4a310000 {
+ 			compatible = "ti,omap4-gpio";
+ 			ti,hwmods = "gpio1";
 -- 
-Matthias Kaehlcke
-Embedded Linux Developer
-Amsterdam
-
-            You can chain me, you can torture me, you can even
-          destroy this body, but you will never imprison my mind
-                            (Mahatma Gandhi)
-                                                                 .''`.
-    using free software / Debian GNU/Linux | http://debian.org  : :'  :
-                                                                `. `'`
-gpg --keyserver pgp.mit.edu --recv-keys 47D8E5D4                  `-
+1.7.0.4
