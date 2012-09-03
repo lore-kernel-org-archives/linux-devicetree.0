@@ -1,75 +1,41 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] i2c: nomadik: Add Device Tree support to the Nomadik
- I2C driver
-Date: Mon, 3 Sep 2012 13:34:31 +0100
-Message-ID: <20120903123424.GA31163@gmail.com>
-References: <1345734087-21803-1-git-send-email-lee.jones@linaro.org>
- <1345734087-21803-3-git-send-email-lee.jones@linaro.org>
- <20120831112258.GA2624@pengutronix.de>
- <20120831122323.GC5962@gmail.com>
- <CACRpkdZ=C1EV4WO2b=1YLHPNhsDsQdq7Kfnpzm8i7uGRtVjJuQ@mail.gmail.com>
- <20120903094448.GB11780@pengutronix.de>
- <20120903100656.GC5782@gmail.com>
- <CACRpkdb8owKBxawAv4LVVYx5kUgZ9cUSiQ=BV0f3Pf3bHtknuQ@mail.gmail.com>
- <CAF2Aj3j25w1Nn9O6hV+=i-j1ts_p_Ucswk_M7r04S7i5BzPkHg@mail.gmail.com>
- <CACRpkdZ5VFhrbONy=0K5MFh4e6BDFckq0yqzjQ2QkW9MgwKqBg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZ5VFhrbONy=0K5MFh4e6BDFckq0yqzjQ2QkW9MgwKqBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v1 0/2] Add MFC device tree support
+Date: Mon, 03 Sep 2012 22:22:56 +0530
+Message-ID: <1346691178-29580-1-git-send-email-arun.kk@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-media@vger.kernel.org
+Cc: kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, ch.naveen@samsung.com, arun.kk@samsung.com, thomas.abraham@linaro.org, kmpark@infradead.org, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 03, 2012 at 01:58:04PM +0200, Linus Walleij wrote:
-> On Mon, Sep 3, 2012 at 1:32 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
-e:
->=20
-> > No, this is wrong. Platform data should not override DT.
-> >
-> > If DT is enabled and passed, it should have highest priority.
->=20
-> Oh is that so.
+This patchset adds device tree support for s5p-mfc driver.
+The first patch adds DT support for both Exynos4 and 5 SoCs
+which has different versions of MFC. The second patch which
+adds DT support for the driver has to be applied over the 
+patchset [1] which adds the MFCv6 support.
 
-:)
+Changelog:
+- Moved board specific DT information to different dtsi file
+- Changed compatible name for the device
+- Addressed other review comments
 
-> Rob: do we have a clear consensus on this? Then we should document
-> it in Documentation/devicetree/usage-model.txt.
->=20
-> (That document isn't part of the binding I believe, so we could defin=
-e
-> Linux-specific behaviours in it.)
->=20
-> I always thought it was the other way around, that pdata took priorit=
-y.
->=20
-> Usecase: hardcoded bootloader passer erroneous DT to a platform.
-> No way out. What to do? Override with pdata.
->=20
-> Yours,
-> Linus Walleij
+[1] http://www.mail-archive.com/linux-media@vger.kernel.org/msg51284.html
 
-Hmmm... I see your point, but this won't work.
+Arun Kumar K (1):
+  [media] s5p-mfc: Add device tree support
 
-When booting DT booting take a different path and no platform data
-is passed. We can't boot DT AND register devices with platform data
-or else we will double probe every device. The only way to pass
-pdata when booting with DT is with AUX_DATA() and that's a hack to
-get around things we don't have support for yet. Up until now that
-has been DMA bindings, clock and pinctrl names and call-backs.
+Naveen Krishna Chatradhi (1):
+  ARM: EXYNOS: Add MFC device tree support
 
-If DT is corrupt or missing the kernel will boot using platform=20
-data, but np will always be NULL, so we don't have the problem you
-were alluding to above.
-
-Let me know if I didn't explain that well enough and I will have
-another go.
-
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ .../devicetree/bindings/media/s5p-mfc.txt          |   27 +++++
+ arch/arm/boot/dts/exynos4210-origen.dts            |    7 ++
+ arch/arm/boot/dts/exynos4210.dtsi                  |    6 +
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    7 ++
+ arch/arm/boot/dts/exynos5250.dtsi                  |    6 +
+ arch/arm/mach-exynos/Kconfig                       |    2 +
+ arch/arm/mach-exynos/clock-exynos5.c               |    2 +-
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |    9 ++
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    9 ++
+ drivers/media/platform/s5p-mfc/s5p_mfc.c           |  104 +++++++++++++++++---
+ 10 files changed, 162 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
