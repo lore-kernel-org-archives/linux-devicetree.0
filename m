@@ -1,44 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
-Date: Mon, 3 Sep 2012 11:32:12 +0200
-Message-ID: <CACRpkdaHm9YZjM7GzZ-VEPgQfn86XrjdO1ZYWMuohCQH1PshZw@mail.gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com>
-	<5035445B.6000500@wwwdotorg.org>
-	<CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>
-	<50366E44.4030606@wwwdotorg.org>
-	<50369305.6050304@gmail.com>
-	<50369FEE.8000003@wwwdotorg.org>
-	<5036B639.20608@gmail.com>
-	<5036F651.4020700@wwwdotorg.org>
-	<5038F50E.7030807@gmail.com>
-	<503AF8B4.1070206@wwwdotorg.org>
-	<CACRpkdYsPadKr1i8m5cCAFUUvJYUnLmc3j8evKM_6rPU5oGzRg@mail.gmail.com>
-	<50431871.1030507@gmail.com>
+From: <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/8] i2c: at91: cleanup and dt support
+Date: Mon, 3 Sep 2012 12:15:59 +0200
+Message-ID: <1346667367-7969-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50431871.1030507@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 2, 2012 at 10:27 AM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-> there is a v3 of the patch under internal review right now.
+Hi,
 
-OK I'll review as you send it out. Will look through the v2 patches to
-see if I missed some comment.
+This set of patches is based on Nikolaus at91_i2c driver.
 
-> I know Stephen will not like it, but I decided not to have the list of
-> functions passed statically from the SoC specific part but generate it
-> out of pingroups during probe().
+Changes:
+v2:
+  - change driver name from xxx_i2c to i2c-xxx
+  - keep i2c-gpio nodes in dtsi files
+  - don't enable TWI on boards whose TWI IP doesn't support clock
+  stretching in tranmission mode
 
-Well, Tony's driver does even nastier things so we need to agree
-to disagree on this point. I for one can live with it.
+Ludovic Desroches (8):
+  i2c: at91: use managed resources
+  i2c: at91: add warning about transmission issues for some devices
+  i2c: at91: use an id table for SoC dependent parameters
+  ARM: at91: do not configure at91sam9g10 twi pio as open-drain
+  i2c: at91: add dt support to i2c-at91
+  ARM: at91: add clocks for I2C DT entries
+  ARM: dts: add twi nodes for atmel SoCs
+  ARM: dts: add twi nodes for atmel boards
 
-Yours,
-Linus Walleij
+ .../devicetree/bindings/i2c/atmel-i2c.txt          |  30 +++
+ arch/arm/boot/dts/at91sam9260.dtsi                 |  10 +
+ arch/arm/boot/dts/at91sam9263.dtsi                 |  10 +
+ arch/arm/boot/dts/at91sam9g20.dtsi                 |   4 +
+ arch/arm/boot/dts/at91sam9g25ek.dts                |  12 ++
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |  20 ++
+ arch/arm/boot/dts/at91sam9m10g45ek.dts             |   8 +
+ arch/arm/boot/dts/at91sam9n12.dtsi                 |  20 ++
+ arch/arm/boot/dts/at91sam9n12ek.dts                |   8 +
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |  30 +++
+ arch/arm/mach-at91/at91rm9200.c                    |   2 +-
+ arch/arm/mach-at91/at91rm9200_devices.c            |  11 +-
+ arch/arm/mach-at91/at91sam9260.c                   |   4 +-
+ arch/arm/mach-at91/at91sam9260_devices.c           |   8 +-
+ arch/arm/mach-at91/at91sam9261.c                   |   3 +-
+ arch/arm/mach-at91/at91sam9261_devices.c           |  31 ++-
+ arch/arm/mach-at91/at91sam9263.c                   |   3 +-
+ arch/arm/mach-at91/at91sam9263_devices.c           |   2 +-
+ arch/arm/mach-at91/at91sam9g45.c                   |   6 +-
+ arch/arm/mach-at91/at91sam9g45_devices.c           |   4 +-
+ arch/arm/mach-at91/at91sam9n12.c                   |   2 +
+ arch/arm/mach-at91/at91sam9rl.c                    |   4 +-
+ arch/arm/mach-at91/at91sam9rl_devices.c            |   2 +-
+ arch/arm/mach-at91/at91sam9x5.c                    |   6 +-
+ drivers/i2c/busses/Kconfig                         |   6 +
+ drivers/i2c/busses/i2c-at91.c                      | 217 +++++++++++++--------
+ 26 files changed, 343 insertions(+), 120 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/atmel-i2c.txt
+
+-- 
+1.7.11.3
