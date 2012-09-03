@@ -1,68 +1,41 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 0/8] ARM/dts: OMAP audio related updates for OMAP2/3/4/5
-Date: Mon, 3 Sep 2012 16:51:57 +0200
-Message-ID: <5044C40D.4060406@ti.com>
-References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] i2c: nomadik: Add Device Tree support to the Nomadik
+ I2C driver
+Date: Mon, 03 Sep 2012 10:09:34 -0500
+Message-ID: <5044C82E.5060207@gmail.com>
+References: <1345734087-21803-1-git-send-email-lee.jones@linaro.org> <1345734087-21803-3-git-send-email-lee.jones@linaro.org> <20120831112258.GA2624@pengutronix.de> <20120831122323.GC5962@gmail.com> <CACRpkdZ=C1EV4WO2b=1YLHPNhsDsQdq7Kfnpzm8i7uGRtVjJuQ@mail.gmail.com> <20120903094448.GB11780@pengutronix.de> <20120903100656.GC5782@gmail.com> <CACRpkdb8owKBxawAv4LVVYx5kUgZ9cUSiQ=BV0f3Pf3bHtknuQ@mail.gmail.com> <CAF2Aj3j25w1Nn9O6hV+=i-j1ts_p_Ucswk_M7r04S7i5BzPkHg@mail.gmail.com> <CACRpkdZ5VFhrbONy=0K5MFh4e6BDFckq0yqzjQ2QkW9MgwKqBg@mail.gmail.com> <5044BFD1.10708@nvidia.com> <CACRpkda0akcLRe3J=fVcyYpxHmkJmVe+c1doXQ4=vOA6iNxe2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkda0akcLRe3J=fVcyYpxHmkJmVe+c1doXQ4=vOA6iNxe2g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-On 08/29/2012 03:30 PM, Peter Ujfalusi wrote:
-> Hello,
+On 09/03/2012 09:35 AM, Linus Walleij wrote:
+> On Mon, Sep 3, 2012 at 4:33 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 09/03/2012 05:58 AM, Linus Walleij wrote:
+>>> On Mon, Sep 3, 2012 at 1:32 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>
+>>>> No, this is wrong. Platform data should not override DT.
+>>>>
+>>>> If DT is enabled and passed, it should have highest priority.
+>>
+>> No, that's wrong. If platform data is specified, it overrides DT, so
+>> that if the DT needs any fixup, it can be provided using platform data.
 > 
-> I have extended and rebased the previous set:
-> 'ARM/dts: omap McBSP and audio support for BeagleBoard'
+> Thanks Stephen, now there are two of us saying this, Lee please
+> follow this design pattern.
 > 
-> Changes since v1:
-> - Rebased on current l-o:devel-dt branch
-> - Two new patch, one for OMAP4 to add reg-names for the mem areas, one for OMAP5
->   to add McPDM and DMIC section
-> 
-> The rest of the series remaind the same: adds the McBSP sections to OMAP2/3/4/5
-> and also enable the audio support for BeagleBoard when booting with DT.
+> (Unless Rob/Grant start shouting counter-orders...)
 
-Beside the OMAP 2&3 interrupt comment, the series looks good to me.
+Ideally, you only use DT or platform_data and you override DT with a new
+DTB. Hopefully we can ultimately remove platform_data or all but parts
+that can't be described in DT (i.e. function callouts).
 
-If you can repost, I'll queue it for Tony for 3.7 along with Sourav's one.
+But if you are handling both, then I agree that platform_data should
+override DT.
 
-BTW, do you have any dependency with ASoC series?
-
-Thanks,
-Benoit
-
-
-> 
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (8):
->   ARM/dts: OMAP2: Add McBSP entries for OMAP2420 and OMAP2430 SoC
->   ARM/dts: omap2420-h4: Include omap2420.dtsi file instead the common
->     omap2
->   ARM/dts: OMAP3: Add McBSP entries
->   ARM/dts: OMAP4: Add McBSP entries
->   ARM/dts: OMAP5: Add McBSP entries
->   ARM/dts: omap3-beagle: Enable audio support
->   ARM/dts: omap4: Add reg-names for McPDM and DMIC
->   ARM/dts: omap5: Add McPDM and DMIC section to the dtsi file
-> 
->  arch/arm/boot/dts/omap2420-h4.dts  |    2 +-
->  arch/arm/boot/dts/omap2420.dtsi    |   39 +++++++++++++++++
->  arch/arm/boot/dts/omap2430.dtsi    |   83 ++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap3-beagle.dts |   14 ++++++
->  arch/arm/boot/dts/omap3.dtsi       |   69 ++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi       |   49 +++++++++++++++++++++
->  arch/arm/boot/dts/omap5.dtsi       |   56 ++++++++++++++++++++++++
->  7 files changed, 311 insertions(+), 1 deletions(-)
->  create mode 100644 arch/arm/boot/dts/omap2420.dtsi
->  create mode 100644 arch/arm/boot/dts/omap2430.dtsi
-> 
-
+Rob
