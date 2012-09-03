@@ -1,199 +1,184 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] genalloc: add a global pool list, allow to find
- pools by phys address
-Date: Mon, 3 Sep 2012 10:09:35 +0800
-Message-ID: <20120903020933.GC2362@S2101-09.ap.freescale.net>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 6/9] misc: Generic on-chip SRAM allocation driver
+Date: Mon, 3 Sep 2012 10:19:53 +0800
+Message-ID: <20120903021950.GD2362@S2101-09.ap.freescale.net>
 References: <1346405224-20399-1-git-send-email-p.zabel@pengutronix.de>
- <1346405224-20399-6-git-send-email-p.zabel@pengutronix.de>
+ <1346405224-20399-7-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1346405224-20399-6-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1346405224-20399-7-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2012 at 11:27:00AM +0200, Philipp Zabel wrote:
-> This patch keeps all created pools in a global list and adds two
-> functions that allow to retrieve the gen_pool pointer from a known
-> physical address and from a device tree node.
+On Fri, Aug 31, 2012 at 11:27:01AM +0200, Philipp Zabel wrote:
+> This driver requests and remaps a memory region as configured in the
+> device tree. It serves memory from this region via the genalloc API.
 > 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Other drivers can retrieve the genalloc pool from a phandle pointing
+> to this drivers' device node in the device tree.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
->  include/linux/genalloc.h |   14 +++++++++
->  lib/genalloc.c           |   77 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 91 insertions(+)
+>  drivers/misc/Kconfig  |    8 ++++
+>  drivers/misc/Makefile |    1 +
+>  drivers/misc/sram.c   |  105 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 114 insertions(+)
+>  create mode 100644 drivers/misc/sram.c
 > 
-> diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
-> index 5e98eeb..46ff435 100644
-> --- a/include/linux/genalloc.h
-> +++ b/include/linux/genalloc.h
-> @@ -33,6 +33,7 @@
->   *  General purpose special memory pool descriptor.
->   */
->  struct gen_pool {
-> +	struct list_head next_pool;	/* pool in global list */
->  	spinlock_t lock;
->  	struct list_head chunks;	/* list of chunks in this pool */
->  	int min_alloc_order;		/* minimum allocation order */
-> @@ -78,4 +79,17 @@ extern void gen_pool_for_each_chunk(struct gen_pool *,
->  	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
->  extern size_t gen_pool_avail(struct gen_pool *);
->  extern size_t gen_pool_size(struct gen_pool *);
-> +extern struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys);
-> +
-> +#ifdef CONFIG_OF
-> +struct device_node;
-
-This should be put above/outside #ifdef, as it's used in #else block
-as well?
-
-> +extern struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-> +	const char *propname, int index);
-> +#else
-> +inline struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-> +	const char *propname, int index)
-> +{
-> +	return NULL;
-> +}
-> +#endif
->  #endif /* __GENALLOC_H__ */
-> diff --git a/lib/genalloc.c b/lib/genalloc.c
-> index 6bc04aa..df2d8f9 100644
-> --- a/lib/genalloc.c
-> +++ b/lib/genalloc.c
-> @@ -34,6 +34,11 @@
->  #include <linux/rculist.h>
->  #include <linux/interrupt.h>
->  #include <linux/genalloc.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +
-> +static LIST_HEAD(pools);
-> +static DEFINE_SPINLOCK(list_lock);
+> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+> index 98a442d..8a55284 100644
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -509,6 +509,14 @@ config USB_SWITCH_FSA9480
+>  	  stereo and mono audio, video, microphone and UART data to use
+>  	  a common connector port.
 >  
->  static int set_bits_ll(unsigned long *addr, unsigned long mask_to_set)
->  {
-> @@ -152,6 +157,9 @@ struct gen_pool *gen_pool_create(int min_alloc_order, int nid)
->  		spin_lock_init(&pool->lock);
->  		INIT_LIST_HEAD(&pool->chunks);
->  		pool->min_alloc_order = min_alloc_order;
-> +		spin_lock(&list_lock);
-> +		list_add_rcu(&pool->next_pool, &pools);
-> +		spin_unlock(&list_lock);
->  	}
->  	return pool;
->  }
-> @@ -234,6 +242,9 @@ void gen_pool_destroy(struct gen_pool *pool)
->  	int order = pool->min_alloc_order;
->  	int bit, end_bit;
->  
-> +	spin_lock(&list_lock);
-> +	list_del_rcu(&pool->next_pool);
-> +	spin_unlock(&list_lock);
->  	list_for_each_safe(_chunk, _next_chunk, &pool->chunks) {
->  		chunk = list_entry(_chunk, struct gen_pool_chunk, next_chunk);
->  		list_del(&chunk->next_chunk);
-> @@ -400,3 +411,69 @@ size_t gen_pool_size(struct gen_pool *pool)
->  	return size;
->  }
->  EXPORT_SYMBOL_GPL(gen_pool_size);
+> +config SRAM
+> +	bool "Generic on-chip SRAM driver\n"
+
+Remove the "\n".
+
+And "depends on HAS_IOMEM"?
+
+> +	select GENERIC_ALLOCATOR
+> +	help
+> +	  This driver allows to declare a memory region to be managed
+> +	  by the genalloc API. It is supposed to be used for small
+> +	  on-chip SRAM areas found on many ARM SoCs.
 > +
-> +/**
-> + * gen_pool_find_by_phys - find a pool by physical start address
-> + * @phys: physical address as added with gen_pool_add_virt
+>  source "drivers/misc/c2port/Kconfig"
+>  source "drivers/misc/eeprom/Kconfig"
+>  source "drivers/misc/cb710/Kconfig"
+> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+> index b88df7a..ccc759a 100644
+> --- a/drivers/misc/Makefile
+> +++ b/drivers/misc/Makefile
+> @@ -50,3 +50,4 @@ obj-y				+= carma/
+>  obj-$(CONFIG_USB_SWITCH_FSA9480) += fsa9480.o
+>  obj-$(CONFIG_ALTERA_STAPL)	+=altera-stapl/
+>  obj-$(CONFIG_INTEL_MEI)		+= mei/
+> +obj-$(CONFIG_SRAM)		+= sram.o
+> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+> new file mode 100644
+> index 0000000..c5cf67e
+> --- /dev/null
+> +++ b/drivers/misc/sram.c
+> @@ -0,0 +1,105 @@
+> +/*
+> + * Generic on-chip SRAM allocation driver
 > + *
-> + * Returns the pool that contains the chunk starting at phys,
-> + * or NULL if not found.
+> + * Copyright (C) 2012 Philipp Zabel, Pengutronix
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, write to the Free Software
+> + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+> + * MA 02110-1301, USA.
 > + */
-> +struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys)
-> +{
-> +	struct gen_pool *pool, *found = NULL;
-> +	struct gen_pool_chunk *chunk;
 > +
-> +	rcu_read_lock();
-> +	list_for_each_entry_rcu(pool, &pools, next_pool) {
-> +		list_for_each_entry_rcu(chunk, &pool->chunks, next_chunk) {
-> +			if (phys == chunk->phys_addr) {
-> +				found = pool;
-> +				break;
-> +			}
-> +		}
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/genalloc.h>
+> +
+> +struct sram_dev {
+> +	struct gen_pool *pool;
+> +};
+> +
+> +static int __devinit sram_probe(struct platform_device *pdev)
+> +{
+> +	void __iomem *virt_base;
+> +	struct sram_dev *sram;
+> +	struct resource *res;
+> +	unsigned long size;
+> +	int ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	size = resource_size(res);
+> +
+> +	virt_base = devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!virt_base)
+> +		return -ENOMEM;
+
+The kerneldoc of devm_request_and_ioremap suggests -EADDRNOTAVAIL.
+
+Regards,
+Shawn
+
+> +
+> +	sram = devm_kzalloc(&pdev->dev, sizeof(*sram), GFP_KERNEL);
+> +	if (!sram)
+> +		return -ENOMEM;
+> +
+> +	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
+> +	if (!sram->pool)
+> +		return -ENOMEM;
+> +
+> +	ret = gen_pool_add_virt(sram->pool, (unsigned long)virt_base,
+> +				res->start, size, -1);
+> +	if (ret < 0) {
+> +		gen_pool_destroy(sram->pool);
+> +		return ret;
 > +	}
-> +	rcu_read_unlock();
 > +
-> +	return found;
+> +	platform_set_drvdata(pdev, sram);
+> +
+> +	dev_dbg(&pdev->dev, "SRAM pool: %ld KiB @ 0x%p\n", size / 1024, virt_base);
+> +
+> +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(gen_pool_find_by_phys);
+> +
+> +static int __devexit sram_remove(struct platform_device *pdev)
+> +{
+> +	struct sram_dev *sram = platform_get_drvdata(pdev);
+> +
+> +	if (gen_pool_avail(sram->pool) < gen_pool_size(sram->pool))
+> +		dev_dbg(&pdev->dev, "removed while SRAM allocated\n");
+> +
+> +	gen_pool_destroy(sram->pool);
+> +
+> +	return 0;
+> +}
 > +
 > +#ifdef CONFIG_OF
-> +/**
-> + * of_get_named_gen_pool - find a pool by the physical address in
-
-"in" what?
-
-> + * @np: device node
-
-@propname
-@index
-
-> + *
-> + * Returns the pool that contains the chunk starting at the physical
-> + * address of the np device node, or NULL if not found.
-> + */
-> +struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-> +	const char *propname, int index)
-> +{
-> +	struct property *prop;
-> +	const __be32 *list;
-> +	int size;
-> +	phandle phandle;
-> +	struct device_node *np_pool;
-> +	const u32 *reg;
-> +	u64 addr;
+> +static struct of_device_id sram_dt_ids[] = {
+> +	{ .compatible = "sram" },
+> +	{ /* sentinel */ }
+> +};
+> +#endif
 > +
-> +	prop = of_find_property(np, propname, &size);
-> +	if (!prop)
-> +		return NULL;
-> +	list = prop->value;
-> +	size /= sizeof(*list);
-> +	phandle = be32_to_cpup(list);
-> +	np_pool = of_find_node_by_phandle(phandle);
-> +	if (!np_pool)
-> +		return NULL;
-
-Helper of_parse_phandle() helps here.
-
-> +	reg = of_get_property(np_pool, "reg", NULL);
-> +	if (!reg)
-> +		return NULL;
-> +	addr = of_translate_address(np_pool, reg);
-> +	if (addr == OF_BAD_ADDR)
-> +		return NULL;
-
-I would suggest use of_address_to_resource instead and then retrieve
-the address from resource->start.
-
-> +	return gen_pool_find_by_phys((phys_addr_t) addr);
-> +}
-> +EXPORT_SYMBOL_GPL(of_get_named_gen_pool);
-> +#endif /* CONFIG_OF */
+> +static struct platform_driver sram_driver = {
+> +	.driver = {
+> +		.name = "sram",
+> +		.of_match_table = of_match_ptr(sram_dt_ids),
+> +	},
+> +	.probe = sram_probe,
+> +	.remove = __devexit_p(sram_remove),
+> +};
+> +
+> +module_platform_driver(sram_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
+> +MODULE_DESCRIPTION("Generic SRAM allocator driver");
 > -- 
 > 1.7.10.4
 > 
-
--- 
-Regards,
-Shawn
