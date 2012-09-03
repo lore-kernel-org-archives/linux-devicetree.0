@@ -1,100 +1,64 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [PATCH] ARM: dts: OMAP4: Cleanup and move GIC outside of the OCP
- node
-Date: Mon, 3 Sep 2012 18:20:53 +0200
-Message-ID: <5044D8E5.5010705@ti.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [PATCH v2 RESEND] ARM: Build dtb files in all target
+Date: Mon,  3 Sep 2012 18:58:07 +0200
+Message-ID: <1346691487-17534-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: "tony@atomide.com" <tony@atomide.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove a useless comment and move GIC controller outside
-of the OCP node since it does use the MPU internal bus and
-not the OCP.
-This will not change the functionality but will reflect the
-reality more accurately.
+Tools like kisskb are good at finding build regressions in the kernel
+sources. However, regressions in the DT desscriptions are not found,
+because generally these build systems don't build the DT binary blobs.
 
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+Extend the ARM all target to build all enabled DTB files.
+
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Reviewed-by: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ arch/arm/Makefile |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Hi Tony
-
-This is a minor cleanup done since Santosh's series is introducing some more MPU devices that does not belong to the TI main OCP interconnect. It makes sense for consistency / accuracy to move GIC to the same location.
-
-Regards,
-Benoit
-
- arch/arm/boot/dts/omap4.dtsi |   40 ++++++++--------------------------------
- 1 files changed, 8 insertions(+), 32 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 2b670ab..1853dc7 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -38,6 +38,14 @@
- 		};
- 	};
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 30eae87..0457ef4 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -268,7 +268,12 @@ else
+ KBUILD_IMAGE := zImage
+ endif
  
-+	gic: interrupt-controller@48241000 {
-+		compatible = "arm,cortex-a9-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0x48241000 0x1000>,
-+		      <0x48240100 0x0100>;
-+	};
+-all:	$(KBUILD_IMAGE)
++# Build the DT binary blobs if we have OF configured
++ifeq ($(CONFIG_USE_OF),y)
++KBUILD_DTBS := dtbs
++endif
 +
- 	L2: l2-cache-controller@48242000 {
- 		compatible = "arm,pl310-cache";
- 		reg = <0x48242000 0x1000>;
-@@ -76,30 +84,6 @@
- 	/*
- 	 * XXX: Use a flat representation of the OMAP4 interconnect.
- 	 * The real OMAP interconnect network is quite complex.
--	 *
--	 * MPU -+-- MPU_PRIVATE - GIC, L2
--	 *      |
--	 *      +----------------+----------+
--	 *      |                |          |
--	 *      +            +- EMIF - DDR  |
--	 *      |            |              |
--	 *      |            +     +--------+
--	 *      |            |     |
--	 *      |            +- L4_ABE - AESS, MCBSP, TIMERs...
--	 *      |            |
--	 *      +- L3_MAIN --+- L4_CORE - IPs...
--	 *                   |
--	 *                   +- L4_PER - IPs...
--	 *                   |
--	 *                   +- L4_CFG -+- L4_WKUP - IPs...
--	 *                   |          |
--	 *                   |          +- IPs...
--	 *                   +- IPU ----+
--	 *                   |          |
--	 *                   +- DSP ----+
--	 *                   |          |
--	 *                   +- DSS ----+
--	 *
- 	 * Since that will not bring real advantage to represent that in DT for
- 	 * the moment, just use a fake OCP bus entry to represent the whole bus
- 	 * hierarchy.
-@@ -111,14 +95,6 @@
- 		ranges;
- 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
++all:	$(KBUILD_IMAGE) $(KBUILD_DTBS)
  
--		gic: interrupt-controller@48241000 {
--			compatible = "arm,cortex-a9-gic";
--			interrupt-controller;
--			#interrupt-cells = <3>;
--			reg = <0x48241000 0x1000>,
--			      <0x48240100 0x0100>;
--		};
--
- 		gpio1: gpio@4a310000 {
- 			compatible = "ti,omap4-gpio";
- 			ti,hwmods = "gpio1";
+ boot := arch/arm/boot
+ 
+@@ -306,7 +311,7 @@ define archhelp
+   echo  '  uImage        - U-Boot wrapped zImage'
+   echo  '  bootpImage    - Combined zImage and initial RAM disk' 
+   echo  '                  (supply initrd image via make variable INITRD=<path>)'
+-  echo  '  dtbs          - Build device tree blobs for enabled boards'
++  echo  '* dtbs          - Build device tree blobs for enabled boards'
+   echo  '  install       - Install uncompressed kernel'
+   echo  '  zinstall      - Install compressed kernel'
+   echo  '  uinstall      - Install U-Boot wrapped compressed kernel'
 -- 
-1.7.0.4
+1.7.10.4
