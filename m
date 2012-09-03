@@ -1,89 +1,91 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH 2/3] gpio-twl4030: new dt properties for BeagleBoard and omap3-EVM
-Date: Mon,  3 Sep 2012 15:54:50 +0200
-Message-ID: <1346680491-4211-3-git-send-email-florian.vaussard@epfl.ch>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH 0/3] gpio-twl4030: add new device tree properties
+Date: Mon, 3 Sep 2012 16:28:09 +0200
+Message-ID: <5044BE79.4040100@ti.com>
 References: <1346680491-4211-1-git-send-email-florian.vaussard@epfl.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
 In-Reply-To: <1346680491-4211-1-git-send-email-florian.vaussard@epfl.ch>
 Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, Florian Vaussard <florian.vaussard@epfl.ch>
+To: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, Vaibhav Hiremath <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree properties for twl4030/gpio, according to the
-platform data of corresponding boards. This enables the led
-connected to LEDB output for both boards, as well as
-pullups/pulldowns on GPIO for the BeagleBoard.
++ Vaibhav for the omap3-evm
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
----
- arch/arm/boot/dts/omap3-beagle.dts |   20 ++++++++++++++++++++
- arch/arm/boot/dts/omap3-evm.dts    |   13 +++++++++++++
- 2 files changed, 33 insertions(+), 0 deletions(-)
+Hi Florian,
 
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index cdcb98c..16bff8b 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -17,6 +17,14 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x20000000>; /* 512 MB */
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pmu_stat {
-+			label = "beagleboard::pmu_stat";
-+			gpios = <&twl_gpio 19 0>; /* LEDB */
-+		};
-+	};
- };
- 
- &i2c1 {
-@@ -67,3 +75,15 @@
- &mmc3 {
- 	status = "disabled";
- };
-+
-+&twl_gpio {
-+	ti,use-leds = "true";
-+	/* pullups: BIT(1) */
-+	ti,pullups = <2>;
-+	/*
-+	 * pulldowns:
-+	 * BIT(2), BIT(6), BIT(7), BIT(8), BIT(13)
-+	 * BIT(15), BIT(16), BIT(17)
-+	 */
-+	ti,pulldowns = <238020>;
-+};
-diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
-index f349ee9..f1e18fe 100644
---- a/arch/arm/boot/dts/omap3-evm.dts
-+++ b/arch/arm/boot/dts/omap3-evm.dts
-@@ -17,6 +17,15 @@
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		ledb {
-+			label = "omap3evm::ledb";
-+			gpios = <&twl_gpio 19 0>; /* LEDB */
-+			linux,default-trigger = "default-on";
-+		};
-+	};
- };
- 
- &i2c1 {
-@@ -46,3 +55,7 @@
- 		reg = <0x5c>;
- 	};
- };
-+
-+&twl_gpio {
-+	ti,use-leds = "true";
-+};
--- 
-1.7.5.4
+On 09/03/2012 03:54 PM, Florian Vaussard wrote:
+> A number of platform data are missing when using twl4030/gpio from a
+> device tree.
+
+Yeah, I know, I was too lazy when I did the DT conversion at that time :-)
+
+Many thanks for completing the work.
+
+>  This patchset adds the missing properties, updates
+> existing device trees and updates the documentation of bindings.
+> It mainly enables LEDA and LEDB outputs, as well as pullups /
+> pulldowns on GPIOs.
+> 
+> The 1st patch changes the device driver.
+> The 2nd patch updates the device trees for BeagleBoard and omap3-evm.
+> The 3rd patch updates the documentation of bindings.
+
+OK, that's a nit, but in general, you'd better introduce the binding
+before using it.
+
+The binding documentation could/should be updated along with the driver
+change that does introduce the binding. You could just merged patch #1
+and #3.
+
+> Tested:
+> - Boot tested on Gumstix Overo for "ti,use-leds". Corresponding
+>   patch is not provided, as the device tree is not yet merged.
+>   The support can be found in the git tree [1], branch
+>   omap3-devel-dt-overo.
+> - Device trees for BeagleBoard and omap3-evm were compiled, but not
+>   tested on hardware.
+> 
+> Would someone be willing to test on BeagleBoard / omap3-evm?
+
+I'll try to do it on Beagle. This is the least I can do since I did not
+do the job myself :-)
+
+I added vaibhav as well since I do not have any omap3-evm board.
+
+> 
+> Regards,
+> Florian
+> 
+> [1] https://github.com/vaussard/linux.git (not safe for merge)
+> 
+> 
+> Florian Vaussard (3):
+>   gpio-twl4030: get platform data from device tree
+>   gpio-twl4030: new dt properties for BeagleBoard and omap3-EVM
+
+Nit #2: the DTS file does not belong to the gpio subsystem. So you
+should prefix them using the *convention* for ARM DTS patches:
+
+arm/dts: omap3: Add gpio-twl4030 properties for BeagleBoard and omap3-EVM
+
+Or maybe "ARM: dts: " because it looks like most people are using that
+nowadays.
+
+The convention for the gpio directory is similar:
+gpio/twl4030: get platform data from device tree
+
+>   gpio-twl4030: updates the bindings for new dt properties
+> 
+>  .../devicetree/bindings/gpio/gpio-twl4030.txt      |    6 ++
+>  arch/arm/boot/dts/omap3-beagle.dts                 |   20 +++++
+>  arch/arm/boot/dts/omap3-evm.dts                    |   13 +++
+>  drivers/gpio/gpio-twl4030.c                        |   86 +++++++++++++------
+>  4 files changed, 98 insertions(+), 27 deletions(-)
+
+Thanks,
+Benoit
 
