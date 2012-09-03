@@ -1,38 +1,155 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 0/9] Add device tree support for on-chip SRAM
-Date: Mon, 03 Sep 2012 17:42:34 +0200
-Message-ID: <1346686954.2391.13.camel@pizza.hi.pengutronix.de>
-References: <1346405224-20399-1-git-send-email-p.zabel@pengutronix.de>
-	 <20120903015343.GB2362@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v3 1/4] genalloc: add a global pool list, allow to find pools by phys address
+Date: Mon,  3 Sep 2012 18:02:05 +0200
+Message-ID: <1346688128-22395-2-git-send-email-p.zabel@pengutronix.de>
+References: <1346688128-22395-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120903015343.GB2362@S2101-09.ap.freescale.net>
+In-Reply-To: <1346688128-22395-1-git-send-email-p.zabel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+This patch keeps all created pools in a global list and adds two
+functions that allow to retrieve the gen_pool pointer from a known
+physical address and from a device tree node.
 
-Am Montag, den 03.09.2012, 09:53 +0800 schrieb Shawn Guo:
-> I do not understand the point of introducing those imx patches, 1 ~ 4
-> and 7, 8.  They are all unnecessary churns to me.  IMO, 4 patches are
-> enough.
-> 
->  * genalloc: add a global pool list, allow to find pools by phys address
->  * misc: Generic on-chip SRAM allocation driver
->  * ARM i.MX: remove IRAM_ALLOC facility
->  * ARM: dts: add sram for imx53 and imx6q
-> 
-> Regards,
-> Shawn
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes since v2:
+ - Moved struct device_node declaration out of #ifdef CONFIG_OF.
+ - Simplified of_get_named_gen_pool using of_parse_phandle and
+   of_address_to_resource.
+---
+ include/linux/genalloc.h |   14 ++++++++++
+ lib/genalloc.c           |   67 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 81 insertions(+)
 
-Thanks, I thought that first making the iram_alloc API work would
-decouple this a bit from the coda vpu patches that depend on sram
-support on imx53/6q. I'll work in your comments and reduce the patch
-count as you propose.
-
-regards
-Philipp
+diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
+index 5e98eeb..d498c43 100644
+--- a/include/linux/genalloc.h
++++ b/include/linux/genalloc.h
+@@ -33,6 +33,7 @@
+  *  General purpose special memory pool descriptor.
+  */
+ struct gen_pool {
++	struct list_head next_pool;	/* pool in global list */
+ 	spinlock_t lock;
+ 	struct list_head chunks;	/* list of chunks in this pool */
+ 	int min_alloc_order;		/* minimum allocation order */
+@@ -78,4 +79,17 @@ extern void gen_pool_for_each_chunk(struct gen_pool *,
+ 	void (*)(struct gen_pool *, struct gen_pool_chunk *, void *), void *);
+ extern size_t gen_pool_avail(struct gen_pool *);
+ extern size_t gen_pool_size(struct gen_pool *);
++extern struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys);
++
++struct device_node;
++#ifdef CONFIG_OF
++extern struct gen_pool *of_get_named_gen_pool(struct device_node *np,
++	const char *propname, int index);
++#else
++inline struct gen_pool *of_get_named_gen_pool(struct device_node *np,
++	const char *propname, int index)
++{
++	return NULL;
++}
++#endif
+ #endif /* __GENALLOC_H__ */
+diff --git a/lib/genalloc.c b/lib/genalloc.c
+index 6bc04aa..90699ac 100644
+--- a/lib/genalloc.c
++++ b/lib/genalloc.c
+@@ -34,6 +34,11 @@
+ #include <linux/rculist.h>
+ #include <linux/interrupt.h>
+ #include <linux/genalloc.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++
++static LIST_HEAD(pools);
++static DEFINE_SPINLOCK(list_lock);
+ 
+ static int set_bits_ll(unsigned long *addr, unsigned long mask_to_set)
+ {
+@@ -152,6 +157,9 @@ struct gen_pool *gen_pool_create(int min_alloc_order, int nid)
+ 		spin_lock_init(&pool->lock);
+ 		INIT_LIST_HEAD(&pool->chunks);
+ 		pool->min_alloc_order = min_alloc_order;
++		spin_lock(&list_lock);
++		list_add_rcu(&pool->next_pool, &pools);
++		spin_unlock(&list_lock);
+ 	}
+ 	return pool;
+ }
+@@ -234,6 +242,9 @@ void gen_pool_destroy(struct gen_pool *pool)
+ 	int order = pool->min_alloc_order;
+ 	int bit, end_bit;
+ 
++	spin_lock(&list_lock);
++	list_del_rcu(&pool->next_pool);
++	spin_unlock(&list_lock);
+ 	list_for_each_safe(_chunk, _next_chunk, &pool->chunks) {
+ 		chunk = list_entry(_chunk, struct gen_pool_chunk, next_chunk);
+ 		list_del(&chunk->next_chunk);
+@@ -400,3 +411,59 @@ size_t gen_pool_size(struct gen_pool *pool)
+ 	return size;
+ }
+ EXPORT_SYMBOL_GPL(gen_pool_size);
++
++/**
++ * gen_pool_find_by_phys - find a pool by physical start address
++ * @phys: physical address as added with gen_pool_add_virt
++ *
++ * Returns the pool that contains the chunk starting at phys,
++ * or NULL if not found.
++ */
++struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys)
++{
++	struct gen_pool *pool, *found = NULL;
++	struct gen_pool_chunk *chunk;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(pool, &pools, next_pool) {
++		list_for_each_entry_rcu(chunk, &pool->chunks, next_chunk) {
++			if (phys == chunk->phys_addr) {
++				found = pool;
++				break;
++			}
++		}
++	}
++	rcu_read_unlock();
++
++	return found;
++}
++EXPORT_SYMBOL_GPL(gen_pool_find_by_phys);
++
++#ifdef CONFIG_OF
++/**
++ * of_get_named_gen_pool - find a pool by phandle property
++ * @np: device node
++ * @propname: property name containing phandle(s)
++ * @index: index into the phandle array
++ *
++ * Returns the pool that contains the chunk starting at the physical
++ * address of the device tree node pointed at by the phandle property,
++ * or NULL if not found.
++ */
++struct gen_pool *of_get_named_gen_pool(struct device_node *np,
++	const char *propname, int index)
++{
++	struct device_node *np_pool;
++	struct resource res;
++	int ret;
++
++	np_pool = of_parse_phandle(np, propname, index);
++	if (!np_pool)
++		return NULL;
++	ret = of_address_to_resource(np_pool, 0, &res);
++	if (ret < 0)
++		return NULL;
++	return gen_pool_find_by_phys((phys_addr_t) res.start);
++}
++EXPORT_SYMBOL_GPL(of_get_named_gen_pool);
++#endif /* CONFIG_OF */
+-- 
+1.7.10.4
