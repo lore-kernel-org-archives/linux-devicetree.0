@@ -1,59 +1,35 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6 v2] ARM: integrator: check PL010 device name rather
- than base address
-Date: Mon, 3 Sep 2012 21:40:23 +0200
-Message-ID: <CACRpkdYMjJFHscO1BztOFBRMf+YZo+jO5pCrEiGeeeU_Oh_rfw@mail.gmail.com>
-References: <1346471760-23993-1-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-2-git-send-email-linus.walleij@linaro.org>
- <201209011832.47805.arnd@arndb.de>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Mon, 3 Sep 2012 15:47:35 -0400
+Message-ID: <20120903194735.GO19437@titan.lakedaemon.net>
+References: <CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>
+ <50366E44.4030606@wwwdotorg.org>
+ <50369305.6050304@gmail.com>
+ <50369FEE.8000003@wwwdotorg.org>
+ <5036B639.20608@gmail.com>
+ <5036F651.4020700@wwwdotorg.org>
+ <5038F50E.7030807@gmail.com>
+ <503AF8B4.1070206@wwwdotorg.org>
+ <CACRpkdYsPadKr1i8m5cCAFUUvJYUnLmc3j8evKM_6rPU5oGzRg@mail.gmail.com>
+ <50431871.1030507@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201209011832.47805.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50431871.1030507@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben.dooks@codethink.co.uk>, Andrew Lunn <andrew@lunn.ch>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 1, 2012 at 8:32 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Saturday 01 September 2012, Linus Walleij wrote:
->> In the PL010 UART callback a comparison against the base address is
->> done to figure out which UART is doing the callback. This does not
->> play well with device tree, so let's check the dev_name() of the
->> device instead.
->>
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Hmm, I think the dev_name would also not be that nice, because it changes
-> after the conversion to DT is complete.
+On Sun, Sep 02, 2012 at 10:27:29AM +0200, Sebastian Hesselbarth wrote:
+> Maybe Jason can also comment on what branch he wants to have it based
+> on, as we all agreed to get it through the Marvell tree.
 
-Hmmmm yeah. I do tie down the name to "uart0" using auxdata.
+Please base against:
 
-(...)
->> +++ b/arch/arm/mach-integrator/core.c
->> @@ -100,7 +100,7 @@ static void integrator_uart_set_mctrl(struct amba_device *dev, void __iomem *bas
->>  {
->>         unsigned int ctrls = 0, ctrlc = 0, rts_mask, dtr_mask;
->>
->> -       if (dev == &uart0_device) {
->> +       if (!strcmp(dev_name(&dev->dev), "uart0")) {
->>                 rts_mask = 1 << 4;
->>                 dtr_mask = 1 << 5;
->>         } else {
->
-> Maybe it's possible to compare the base pointer against INTEGRATOR_UART0_BASE instead?
+git://git.infradead.org/users/jcooper/linux.git boards-for-v3.7-v2
 
-Nope, that is an ioremapped() base, I have no clue what it may be.
+thx,
 
-Yours,
-Linus Walleij
+Jason.
