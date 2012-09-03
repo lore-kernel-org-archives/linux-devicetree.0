@@ -1,148 +1,59 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH] Crypto: CESA: Add support for DT based instantiation.
-Date: Mon,  3 Sep 2012 20:29:34 +0200
-Message-ID: <1346696974-23443-1-git-send-email-andrew@lunn.ch>
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-crypto@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux ARM <linux-arm-kernel@lists.infradead.org>, sebastian.hesselbarth@googlemail.com, Andrew Lunn <andrew@lunn.ch>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/6 v2] ARM: integrator: check PL010 device name rather
+ than base address
+Date: Mon, 3 Sep 2012 21:40:23 +0200
+Message-ID: <CACRpkdYMjJFHscO1BztOFBRMf+YZo+jO5pCrEiGeeeU_Oh_rfw@mail.gmail.com>
+References: <1346471760-23993-1-git-send-email-linus.walleij@linaro.org>
+ <1346471760-23993-2-git-send-email-linus.walleij@linaro.org>
+ <201209011832.47805.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201209011832.47805.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on work by Michael Waller and Jason Cooper.
+On Sat, Sep 1, 2012 at 8:32 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Saturday 01 September 2012, Linus Walleij wrote:
+>> In the PL010 UART callback a comparison against the base address is
+>> done to figure out which UART is doing the callback. This does not
+>> play well with device tree, so let's check the dev_name() of the
+>> device instead.
+>>
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Hmm, I think the dev_name would also not be that nice, because it changes
+> after the conversion to DT is complete.
 
-Added support for getting the interrupt number and address of SRAM
-from DT.
+Hmmmm yeah. I do tie down the name to "uart0" using auxdata.
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
----
- .../devicetree/bindings/crypto/mv_cesa.txt         |   20 ++++++++++++++++++++
- arch/arm/boot/dts/kirkwood.dtsi                    |   12 +++++++++++-
- arch/arm/mach-kirkwood/board-dt.c                  |    2 +-
- drivers/crypto/mv_cesa.c                           |   17 +++++++++++++++--
- 4 files changed, 47 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/crypto/mv_cesa.txt
+(...)
+>> +++ b/arch/arm/mach-integrator/core.c
+>> @@ -100,7 +100,7 @@ static void integrator_uart_set_mctrl(struct amba_device *dev, void __iomem *bas
+>>  {
+>>         unsigned int ctrls = 0, ctrlc = 0, rts_mask, dtr_mask;
+>>
+>> -       if (dev == &uart0_device) {
+>> +       if (!strcmp(dev_name(&dev->dev), "uart0")) {
+>>                 rts_mask = 1 << 4;
+>>                 dtr_mask = 1 << 5;
+>>         } else {
+>
+> Maybe it's possible to compare the base pointer against INTEGRATOR_UART0_BASE instead?
 
-diff --git a/Documentation/devicetree/bindings/crypto/mv_cesa.txt b/Documentation/devicetree/bindings/crypto/mv_cesa.txt
-new file mode 100644
-index 0000000..47229b1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/mv_cesa.txt
-@@ -0,0 +1,20 @@
-+Marvell Cryptographic Engines And Security Accelerator
-+
-+Required properties:
-+- compatible : should be "marvell,orion-crypto"
-+- reg : base physical address of the engine and length of memory mapped
-+        region, followed by base physical address of sram and its memory
-+        length
-+- reg-names : "regs" , "sram";
-+- interrupts : interrupt number
-+
-+Examples:
-+
-+	crypto@30000 {
-+		compatible = "marvell,orion-crypto";
-+		reg = <0x30000 0x10000>,
-+		      <0x4000000 0x800>;
-+		reg-names = "regs" , "sram";
-+		interrupts = <22>;
-+		status = "okay";
-+	};
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index b36bb85..fbaf728 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -14,7 +14,8 @@
- 
- 	ocp@f1000000 {
- 		compatible = "simple-bus";
--		ranges = <0 0xf1000000 0x4000000>;
-+		ranges = <0x00000000 0xf1000000 0x4000000
-+		          0xf5000000 0xf5000000 0x0000400>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-@@ -113,5 +114,14 @@
- 			clock-frequency = <100000>;
- 			status = "disabled";
- 		};
-+
-+		crypto@30000 {
-+			compatible = "marvell,orion-crypto";
-+			reg = <0x30000 0x10000>,
-+			      <0xf5000000 0x800>;
-+			reg-names = "regs", "sram";
-+			interrupts = <22>;
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index 16b767e..007661c 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -34,6 +34,7 @@ struct of_dev_auxdata kirkwood_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("marvell,orion-sata", 0xf1080000, "sata_mv.0", NULL),
- 	OF_DEV_AUXDATA("marvell,orion-nand", 0xf4000000, "orion_nand", NULL),
- 	OF_DEV_AUXDATA("marvell,orion-ehci", 0xf1050000, "orion-ehci.0", NULL),
-+	OF_DEV_AUXDATA("marvell,orion-crypto", 0xf1030000, "mv_crypto", NULL),
- 	{},
- };
- 
-@@ -61,7 +62,6 @@ static void __init kirkwood_dt_init(void)
- 	/* internal devices that every board has */
- 	kirkwood_xor0_init();
- 	kirkwood_xor1_init();
--	kirkwood_crypto_init();
- 
- #ifdef CONFIG_KEXEC
- 	kexec_reinit = kirkwood_enable_pcie;
-diff --git a/drivers/crypto/mv_cesa.c b/drivers/crypto/mv_cesa.c
-index 21c1a87..24ccae4 100644
---- a/drivers/crypto/mv_cesa.c
-+++ b/drivers/crypto/mv_cesa.c
-@@ -19,6 +19,9 @@
- #include <linux/clk.h>
- #include <crypto/internal/hash.h>
- #include <crypto/sha.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_irq.h>
- 
- #include "mv_cesa.h"
- 
-@@ -1062,7 +1065,10 @@ static int mv_probe(struct platform_device *pdev)
- 		goto err_unmap_reg;
- 	}
- 
--	irq = platform_get_irq(pdev, 0);
-+	if (pdev->dev.of_node)
-+		irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-+	else
-+		irq = platform_get_irq(pdev, 0);
- 	if (irq < 0 || irq == NO_IRQ) {
- 		ret = irq;
- 		goto err_unmap_sram;
-@@ -1170,12 +1176,19 @@ static int mv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id mv_cesa_of_match_table[] = {
-+	{ .compatible = "marvell,orion-crypto", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mv_cesa_of_match_table);
-+
- static struct platform_driver marvell_crypto = {
- 	.probe		= mv_probe,
--	.remove		= mv_remove,
-+	.remove		= __devexit_p(mv_remove),
- 	.driver		= {
- 		.owner	= THIS_MODULE,
- 		.name	= "mv_crypto",
-+		.of_match_table = of_match_ptr(mv_cesa_of_match_table),
- 	},
- };
- MODULE_ALIAS("platform:mv_crypto");
--- 
-1.7.10.4
+Nope, that is an ioremapped() base, I have no clue what it may be.
+
+Yours,
+Linus Walleij
