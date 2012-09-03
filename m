@@ -1,67 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/6 v2] ARM: integrator: initial device tree support
-Date: Sun, 02 Sep 2012 17:59:10 -0500
-Message-ID: <5043E4BE.1060508@gmail.com>
-References: <1346471760-23993-1-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-2-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-3-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-4-git-send-email-linus.walleij@linaro.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 0/9] Add device tree support for on-chip SRAM
+Date: Mon, 3 Sep 2012 09:53:46 +0800
+Message-ID: <20120903015343.GB2362@S2101-09.ap.freescale.net>
+References: <1346405224-20399-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346471760-23993-4-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1346405224-20399-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/31/2012 10:55 PM, Linus Walleij wrote:
-> This is initial device tree support for the ARM Integrator family,
-> we create a very basic device tree, #ifdef out the non-DT machines
-> when compiling for device tree.
+I do not understand the point of introducing those imx patches, 1 ~ 4
+and 7, 8.  They are all unnecessary churns to me.  IMO, 4 patches are
+enough.
+
+ * genalloc: add a global pool list, allow to find pools by phys address
+ * misc: Generic on-chip SRAM allocation driver
+ * ARM i.MX: remove IRAM_ALLOC facility
+ * ARM: dts: add sram for imx53 and imx6q
+
+Regards,
+Shawn
+
+On Fri, Aug 31, 2012 at 11:26:55AM +0200, Philipp Zabel wrote:
+> These patches add support to configure on-chip SRAM via device-tree
+> node and to obtain the resulting genalloc pool from a phandle pointing
+> at the node.
+> This allows drivers to allocate SRAM with the genalloc API without
+> hard-coding the genalloc pool address.
 > 
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> The on-chip SRAM on i.MX53 and i.MX6q is registered via device tree and
+> changed to use the simple generic SRAM driver:
+> 
+> 		ocram: ocram@00900000 {
+> 			compatible = "fsl,imx-ocram", "sram";
+> 			reg = <0x00900000 0x3f000>;
+>  		};
+> 
+> A driver that needs to allocate SRAM buffers, like the video processing
+> unit on i.MX53, can retrieve the genalloc pool from a phandle in the
+> device tree using of_get_named_gen_pool(node, "iram", 0) from patch 5:
+> 
+> 		vpu@63ff4000 {
+> 			/* ... */
+> 			iram = <&ocram>;
+>  		};
+> 
+> Changes since v1:
+>  - Added a generic SRAM driver in drivers/misc that does nothing but
+>    request/ioremap its given memory region and serve it via the genalloc
+>    API.
+>  - Renamed the i.MX device tree nodes from "iram" to "ocram".
+> 
+> regards
+> Philipp
+> 
 > ---
-> ChangeLog v1->v2:
-> - Also switch over clocksource and clockevent to device tree.
->   Else the IRQ mapping goes bananas.
-> ---
-
-snip
-
-> +++ b/arch/arm/boot/dts/integratorcp.dts
-> @@ -0,0 +1,69 @@
-> +/*
-> + * Device Tree for the ARM Integrator/CP platform
-> + */
-> +
-> +/dts-v1/;
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	model = "ARM Integrator/CP";
-> +	compatible = "arm,integrator-cp";
-> +	ranges;
-> +
-> +	aliases {
-> +		arm,integrator-clocksource = &timer2;
-> +		arm,integrator-clockevent = &timer1;
-
-This is linux specific and a common issue we need a solution for. Grant
-had done something for versatile and we discussed it some, but nothing
-ever got close to finalized. IIRC, Grant's solution was just add a
-"linux,clockevent" or "linux,clocksource" to the nodes that are to be
-used. But he wasn't really happy with it. Perhaps using these names as
-aliases would be better.
-
-Rob
+>  arch/arm/boot/dts/imx53.dtsi          |    5 ++
+>  arch/arm/boot/dts/imx6q.dtsi          |    5 ++
+>  arch/arm/plat-mxc/Kconfig             |    4 --
+>  arch/arm/plat-mxc/Makefile            |    1 -
+>  arch/arm/plat-mxc/include/mach/iram.h |   41 -------------
+>  arch/arm/plat-mxc/iram_alloc.c        |   73 -----------------------
+>  drivers/misc/Kconfig                  |    8 +++
+>  drivers/misc/Makefile                 |    1 +
+>  drivers/misc/sram.c                   |  105 +++++++++++++++++++++++++++++++++
+>  include/linux/genalloc.h              |   14 +++++
+>  lib/genalloc.c                        |   77 ++++++++++++++++++++++++
+>  11 files changed, 215 insertions(+), 119 deletions(-)
+> 
