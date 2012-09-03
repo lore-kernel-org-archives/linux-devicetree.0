@@ -1,58 +1,44 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] spi/pl022: Add chip select handling via GPIO
-Date: Mon, 3 Sep 2012 11:10:28 +0200
-Message-ID: <CACRpkdY2_nSUvyhXGwzYcLqVuS+ryuyVbKKmD+yHdxCwYLhdMA@mail.gmail.com>
-References: <1345643359-16584-1-git-send-email-stigge@antcom.de>
-	<CAPub14-Oot_wJsRTv2AGu3SAAf40+3_wK43=0Swxj+5XjPaDew@mail.gmail.com>
-	<CACRpkdY3atmx4N-Zq2imrgPoukueYiexzndD7bVyQTgV02Vpuw@mail.gmail.com>
-	<CAPub14891Bhdt=KNz8SZLS6Ps2snhy9LgOU=yGGMrntcK9xxRA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Mon, 3 Sep 2012 11:32:12 +0200
+Message-ID: <CACRpkdaHm9YZjM7GzZ-VEPgQfn86XrjdO1ZYWMuohCQH1PshZw@mail.gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1345623750-10645-2-git-send-email-sebastian.hesselbarth@gmail.com>
+	<5035445B.6000500@wwwdotorg.org>
+	<CABJ1b_Tdr80DGqb-FRzwDbF3m7g6fBguk5GtRAfRUYx5Sqy_cA@mail.gmail.com>
+	<50366E44.4030606@wwwdotorg.org>
+	<50369305.6050304@gmail.com>
+	<50369FEE.8000003@wwwdotorg.org>
+	<5036B639.20608@gmail.com>
+	<5036F651.4020700@wwwdotorg.org>
+	<5038F50E.7030807@gmail.com>
+	<503AF8B4.1070206@wwwdotorg.org>
+	<CACRpkdYsPadKr1i8m5cCAFUUvJYUnLmc3j8evKM_6rPU5oGzRg@mail.gmail.com>
+	<50431871.1030507@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <CAPub14891Bhdt=KNz8SZLS6Ps2snhy9LgOU=yGGMrntcK9xxRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: shiraz hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, sachin.verma-qxv4g6HH51o@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50431871.1030507@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 2, 2012 at 3:12 PM, shiraz hashim
-<shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Linus,
+On Sun, Sep 2, 2012 at 10:27 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
 
->> Yes that is why the allocation looks like this:
->>
->> +       master = spi_alloc_master(dev, sizeof(struct pl022) + sizeof(int) *
->> +                                 platform_info->num_chipselect);
->>
->
-> The allocation is such because type of chipselects is int.
->
-> The statement for allocation is correct, but
->
->        pl022->chipselects = (int *) pl022 + sizeof(struct pl022);
->
-> is not adding  sizeof(struct pl022) bytes to pl022 base (which we want),
-> but infact 4 times the size of pl022 (because type of pl022 is now int *).
->
-> Do you get my point ?  This would go way beyond memory allocated
-> for chipselects.
+> there is a v3 of the patch under internal review right now.
 
-Yes of course ... how could I not see this. Sorry!
+OK I'll review as you send it out. Will look through the v2 patches to
+see if I missed some comment.
+
+> I know Stephen will not like it, but I decided not to have the list of
+> functions passed statically from the SoC specific part but generate it
+> out of pingroups during probe().
+
+Well, Tony's driver does even nastier things so we need to agree
+to disagree on this point. I for one can live with it.
 
 Yours,
 Linus Walleij
-
-------------------------------------------------------------------------------
-Live Security Virtual Conference
-Exclusive live event will cover all the ways today's security and 
-threat landscape has changed and how IT managers can respond. Discussions 
-will include endpoint security, mobile security and the latest in malware 
-threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
