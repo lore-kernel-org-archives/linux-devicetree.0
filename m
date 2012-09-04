@@ -1,84 +1,128 @@
-From: "B, Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v9 01/13] usb: musb: dsps: add phy control logic to glue
-Date: Tue, 4 Sep 2012 18:34:19 +0000
-Message-ID: <6C6B28D4DC342643927BEAFCE8707BF63E9F58FC@DBDE01.ent.ti.com>
-References: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
- <1346411399-23964-2-git-send-email-ravibabu@ti.com>
- <20120831122342.GC24861@arwen.pp.htv.fi>
- <CAAe_U6LaCiEPB9ET26j2xjLtumKzJGu+CtW=fK_02d30Z-3BgQ@mail.gmail.com>
- <20120831131915.GA25341@arwen.pp.htv.fi>
- <6C6B28D4DC342643927BEAFCE8707BF63E9F56A7@DBDE01.ent.ti.com>
- <20120904143505.GH14348@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120904143505.GH14348-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>
-Cc: "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v5 4/9] mmc: dw_mmc: lookup for optional biu and ciu clocks
+Date: Wed, 05 Sep 2012 01:16:08 +0530
+Message-ID: <1346787968-23709-1-git-send-email-thomas.abraham@linaro.org>
+References: <CAJuYYwQ50HCSrDgxrvhRh5X2ECxi_g=_akoa6o9FYCQ5GqHUCQ@mail.gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwQ50HCSrDgxrvhRh5X2ECxi_g=_akoa6o9FYCQ5GqHUCQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Some platforms allow for clock gating and control of bus interface unit clock
+and card interface unit clock. Add support for clock lookup of optional biu
+and ciu clocks for clock gating and clock speed determination.
 
-> > > > >> AM335x uses NOP transceiver driver and need to enable
-> > > builtin PHY
-> > > > >> by writing into usb_ctrl register available in 
-> system control 
-> > > > >> module register space. This is being added at musb 
-> glue driver 
-> > > > >> layer untill a separate system control module driver is
-> > > available.
-> > > > >>
-> > > > >> Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
-> > > > >> Signed-off-by: Santhapuri, Damodar 
-> <damodar.santhapuri-l0cyMroinI0@public.gmane.org>
-> > > > >> Signed-off-by: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
-> > > > >
-> > > > > Kishon, you were adding a real phy driver for OMAP's internal 
-> > > > > phy logic on one of your patches and I believe this will
-> > > conflict with
-> > > > > your changes, right ?
-> > > > 
-> > > > Indeed. My final patch of that series removes some of the 
-> > > > functions from omap_phy_internal.c (which was taken 
-> care in the phy driver).
-> > > > >
-> > > > > How does this look to you ? Is this at least correct ? I
-> > > suppose the
-> > > > > correct way would be to actually have the system 
-> control module 
-> > > > > driver which we have been waiting, right ?
-> > > > 
-> > > > Correct. I think once we have the system control module 
-> driver in 
-> > > > place, we'll have everything wrt control module register writes 
-> > > > implemented in correct way.
-> > > 
-> > > So $SUBJECT will pretty much be thrown away once we have 
-> SCM driver, 
-> > > in that case it's best to wait a bit longer and apply this series 
-> > > once SCM driver is available and after your series too... 
-> you agree 
-> > > ?
-> > > 
-> > 
-> > Felipe, I am sure there are patches in this series[0/13], which are 
-> > not dependent on this patch or control module, Can we pull in those 
-> > patches (all dual instances support patches)? So that I can re-work 
-> > and submit again?
-> 
-> sure, will do, don't worry :-)
+Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Acked-by: Will Newton <will.newton@imgtec.com>
+---
+ drivers/mmc/host/dw_mmc.c  |   50 +++++++++++++++++++++++++++++++++++++++++--
+ include/linux/mmc/dw_mmc.h |    4 +++
+ 2 files changed, 51 insertions(+), 3 deletions(-)
 
-Thanks.
-Then shall I rework patches [3/13 to 13/13] and re-submit only musb dual instances patches which 
-are independent of control module. 
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 227c42e..e8c8491 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -1960,13 +1960,40 @@ int dw_mci_probe(struct dw_mci *host)
+ 		return -ENODEV;
+ 	}
+ 
+-	if (!host->pdata->bus_hz) {
++	host->biu_clk = clk_get(host->dev, "biu");
++	if (IS_ERR(host->biu_clk)) {
++		dev_dbg(host->dev, "biu clock not available\n");
++	} else {
++		ret = clk_prepare_enable(host->biu_clk);
++		if (ret) {
++			dev_err(host->dev, "failed to enable biu clock\n");
++			return ret;
++		}
++	}
++
++	host->ciu_clk = clk_get(host->dev, "ciu");
++	if (IS_ERR(host->ciu_clk)) {
++		dev_dbg(host->dev, "ciu clock not available\n");
++	} else {
++		ret = clk_prepare_enable(host->ciu_clk);
++		if (ret) {
++			dev_err(host->dev, "failed to enable ciu clock\n");
++			goto err_clk_biu;
++		}
++	}
++
++	if (IS_ERR(host->ciu_clk))
++		host->bus_hz = host->pdata->bus_hz;
++	else
++		host->bus_hz = clk_get_rate(host->ciu_clk);
++
++	if (!host->bus_hz) {
+ 		dev_err(host->dev,
+ 			"Platform data must supply bus speed\n");
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto err_clk_ciu;
+ 	}
+ 
+-	host->bus_hz = host->pdata->bus_hz;
+ 	host->quirks = host->pdata->quirks;
+ 
+ 	spin_lock_init(&host->lock);
+@@ -2116,6 +2143,17 @@ err_dmaunmap:
+ 		regulator_disable(host->vmmc);
+ 		regulator_put(host->vmmc);
+ 	}
++
++err_clk_ciu:
++	if (!IS_ERR(host->ciu_clk)) {
++		clk_disable_unprepare(host->ciu_clk);
++		clk_put(host->ciu_clk);
++	}
++err_clk_biu:
++	if (!IS_ERR(host->biu_clk)) {
++		clk_disable_unprepare(host->biu_clk);
++		clk_put(host->biu_clk);
++	}
+ 	return ret;
+ }
+ EXPORT_SYMBOL(dw_mci_probe);
+@@ -2149,6 +2187,12 @@ void dw_mci_remove(struct dw_mci *host)
+ 		regulator_put(host->vmmc);
+ 	}
+ 
++	if (!IS_ERR(host->ciu_clk))
++		clk_disable_unprepare(host->ciu_clk);
++	if (!IS_ERR(host->biu_clk))
++		clk_disable_unprepare(host->biu_clk);
++	clk_put(host->ciu_clk);
++	clk_put(host->biu_clk);
+ }
+ EXPORT_SYMBOL(dw_mci_remove);
+ 
+diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+index a37a573..787ad56 100644
+--- a/include/linux/mmc/dw_mmc.h
++++ b/include/linux/mmc/dw_mmc.h
+@@ -78,6 +78,8 @@ struct mmc_data;
+  * @data_offset: Set the offset of DATA register according to VERID.
+  * @dev: Device associated with the MMC controller.
+  * @pdata: Platform data associated with the MMC controller.
++ * @biu_clk: Pointer to bus interface unit clock instance.
++ * @ciu_clk: Pointer to card interface unit clock instance.
+  * @slot: Slots sharing this MMC controller.
+  * @fifo_depth: depth of FIFO.
+  * @data_shift: log2 of FIFO item size.
+@@ -158,6 +160,8 @@ struct dw_mci {
+ 	u16			data_offset;
+ 	struct device		*dev;
+ 	struct dw_mci_board	*pdata;
++	struct clk		*biu_clk;
++	struct clk		*ciu_clk;
+ 	struct dw_mci_slot	*slot[MAX_MCI_SLOTS];
+ 
+ 	/* FIFO push and pull */
+-- 
+1.6.6.rc2
 
-> 
-> --
-> balbi
-> --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
