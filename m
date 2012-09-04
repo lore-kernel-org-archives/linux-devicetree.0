@@ -1,43 +1,103 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6 v2] ARM: integrator: initial device tree support
-Date: Tue, 4 Sep 2012 09:19:10 +0200
-Message-ID: <CACRpkdbXSaBNystUv9RTmDKrmV=OakFF49LPkoQtoi9FnaXmDg@mail.gmail.com>
-References: <1346471760-23993-1-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-3-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-4-git-send-email-linus.walleij@linaro.org>
- <201209011841.58977.arnd@arndb.de>
- <CACRpkdZhJyqeeXV_Zcfi7S01oH1Kw95qvAmOqrMKwhSLb-mX=Q@mail.gmail.com>
- <20120903215505.GB31511@n2100.arm.linux.org.uk>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: Re: [PATCH 2/3] gpio-twl4030: new dt properties for BeagleBoard and
+ omap3-EVM
+Date: Tue, 4 Sep 2012 12:57:27 +0530
+Message-ID: <5045AD5F.2030503@ti.com>
+References: <1346680491-4211-1-git-send-email-florian.vaussard@epfl.ch> <1346680491-4211-3-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120903215505.GB31511-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1346680491-4211-3-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 3, 2012 at 11:55 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> [Me]
->> Currently I would make it impossible to use ATAGs if I do this since
->> the symbol does not exist, so I really need to base such an
->> approach in a tree which has CONFIG_ATAG in the first place.
->
-> I've just merged that patch though.
 
-OK great, Arnd do you have a Russell baseline in ARM SoC or is it
-easier if I try to submit this series directly to Russell?
 
-Yours,
-Linus Walleij
+On 9/3/2012 7:24 PM, Florian Vaussard wrote:
+> Add device tree properties for twl4030/gpio, according to the
+> platform data of corresponding boards. This enables the led
+> connected to LEDB output for both boards, as well as
+> pullups/pulldowns on GPIO for the BeagleBoard.
+> 
+> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> ---
+>  arch/arm/boot/dts/omap3-beagle.dts |   20 ++++++++++++++++++++
+>  arch/arm/boot/dts/omap3-evm.dts    |   13 +++++++++++++
+>  2 files changed, 33 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+> index cdcb98c..16bff8b 100644
+> --- a/arch/arm/boot/dts/omap3-beagle.dts
+> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+> @@ -17,6 +17,14 @@
+>  		device_type = "memory";
+>  		reg = <0x80000000 0x20000000>; /* 512 MB */
+>  	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pmu_stat {
+> +			label = "beagleboard::pmu_stat";
+> +			gpios = <&twl_gpio 19 0>; /* LEDB */
+> +		};
+> +	};
+>  };
+>  
+>  &i2c1 {
+> @@ -67,3 +75,15 @@
+>  &mmc3 {
+>  	status = "disabled";
+>  };
+> +
+> +&twl_gpio {
+> +	ti,use-leds = "true";
+> +	/* pullups: BIT(1) */
+> +	ti,pullups = <2>;
+> +	/*
+> +	 * pulldowns:
+> +	 * BIT(2), BIT(6), BIT(7), BIT(8), BIT(13)
+> +	 * BIT(15), BIT(16), BIT(17)
+> +	 */
+> +	ti,pulldowns = <238020>;
+
+Consider changing above value to hex presentation.
+Otherwise looks ok to me, also I have tested it on OMAP3EVM.
+
+Tested-&-Acked-By: Vaibhav Hiremath <hvaibhav@ti.com>
+
+Thanks,
+Vaibhav
+
+> +};
+> diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
+> index f349ee9..f1e18fe 100644
+> --- a/arch/arm/boot/dts/omap3-evm.dts
+> +++ b/arch/arm/boot/dts/omap3-evm.dts
+> @@ -17,6 +17,15 @@
+>  		device_type = "memory";
+>  		reg = <0x80000000 0x10000000>; /* 256 MB */
+>  	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		ledb {
+> +			label = "omap3evm::ledb";
+> +			gpios = <&twl_gpio 19 0>; /* LEDB */
+> +			linux,default-trigger = "default-on";
+> +		};
+> +	};
+>  };
+>  
+>  &i2c1 {
+> @@ -46,3 +55,7 @@
+>  		reg = <0x5c>;
+>  	};
+>  };
+> +
+> +&twl_gpio {
+> +	ti,use-leds = "true";
+> +};
+> 
