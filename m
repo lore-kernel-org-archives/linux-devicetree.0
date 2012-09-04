@@ -1,77 +1,72 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH v5 1/4] mfd: add syscon driver based on regmap
-Date: Tue, 04 Sep 2012 16:16:59 +0400
-Message-ID: <5045F13B.8060409@mvista.com>
-References: <1346728811-25788-1-git-send-email-b29396@freescale.com> <1346728811-25788-2-git-send-email-b29396@freescale.com> <20120904113545.GD4657@jack.whiskey>
+From: "B, Ravi" <ravibabu-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v9 01/13] usb: musb: dsps: add phy control logic to glue
+Date: Tue, 4 Sep 2012 14:04:15 +0000
+Message-ID: <6C6B28D4DC342643927BEAFCE8707BF63E9F56A7@DBDE01.ent.ti.com>
+References: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
+ <1346411399-23964-2-git-send-email-ravibabu@ti.com>
+ <20120831122342.GC24861@arwen.pp.htv.fi>
+ <CAAe_U6LaCiEPB9ET26j2xjLtumKzJGu+CtW=fK_02d30Z-3BgQ@mail.gmail.com>
+ <20120831131915.GA25341@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120904113545.GD4657@jack.whiskey>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi@etezian.org>
-Cc: Dong Aisheng <b29396@freescale.com>, linus.walleij@stericsson.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, s.hauer@pengutronix.de, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, richard.zhao@freescale.com, kernel@pengutronix.de, shawn.guo@linaro.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org, sameo@linux.intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120831131915.GA25341-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+> On Fri, Aug 31, 2012 at 06:51:04PM +0530, ABRAHAM, KISHON VIJAY wrote:
+> > Hi,
+> > 
+> > On Fri, Aug 31, 2012 at 5:53 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> > > Hi,
+> > >
+> > > On Fri, Aug 31, 2012 at 04:39:47PM +0530, Ravi Babu wrote:
+> > >> From: Santhapuri, Damodar <damodar.santhapuri-l0cyMroinI0@public.gmane.org>
+> > >>
+> > >> AM335x uses NOP transceiver driver and need to enable 
+> builtin PHY 
+> > >> by writing into usb_ctrl register available in system control 
+> > >> module register space. This is being added at musb glue driver 
+> > >> layer untill a separate system control module driver is 
+> available.
+> > >>
+> > >> Signed-off-by: Ajay Kumar Gupta <ajay.gupta-l0cyMroinI0@public.gmane.org>
+> > >> Signed-off-by: Santhapuri, Damodar <damodar.santhapuri-l0cyMroinI0@public.gmane.org>
+> > >> Signed-off-by: Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>
+> > >
+> > > Kishon, you were adding a real phy driver for OMAP's internal phy 
+> > > logic on one of your patches and I believe this will 
+> conflict with 
+> > > your changes, right ?
+> > 
+> > Indeed. My final patch of that series removes some of the functions 
+> > from omap_phy_internal.c (which was taken care in the phy driver).
+> > >
+> > > How does this look to you ? Is this at least correct ? I 
+> suppose the 
+> > > correct way would be to actually have the system control module 
+> > > driver which we have been waiting, right ?
+> > 
+> > Correct. I think once we have the system control module driver in 
+> > place, we'll have everything wrt control module register writes 
+> > implemented in correct way.
+> 
+> So $SUBJECT will pretty much be thrown away once we have SCM 
+> driver, in that case it's best to wait a bit longer and apply 
+> this series once SCM driver is available and after your 
+> series too... you agree ?
+> 
 
-On 04-09-2012 15:35, Andi Shyti wrote:
+Felipe, I am sure there are patches in this series[0/13], which are not dependent on this patch or control module,
+Can we pull in those patches (all dual instances support patches)? So that I can re-work and submit again? 
 
->> +static int __devinit syscon_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
-
-> Do we really need this variable? Anyway you are using it only
-> once in the dev_info.
-
-    But Dong definitely could use it more than once, so it seems useful.
-
->> +	struct device_node *np = dev->of_node;
->> +	struct syscon *syscon;
->> +	struct resource res;
->> +	int ret;
->> +
->> +	if (!np)
->> +		return -ENOENT;
->> +
->> +	syscon = devm_kzalloc(&pdev->dev, sizeof(struct syscon),
->> +			    GFP_KERNEL);
->> +	if (!syscon)
->> +		return -ENOMEM;
->> +
->> +	syscon->base = of_iomap(np, 0);
->> +	if (!syscon->base)
->> +		return -EADDRNOTAVAIL;
->> +
->> +	ret = of_address_to_resource(np, 0, &res);
->> +	if (ret)
->> +		return ret;
->> +
->> +	syscon_regmap_config.max_register = res.end - res.start - 3;
->> +	syscon->regmap = devm_regmap_init_mmio(&pdev->dev, syscon->base,
->> +					&syscon_regmap_config);
->> +	if (IS_ERR(syscon->regmap)) {
->> +		dev_err(&pdev->dev, "regmap init failed\n");
->> +		return PTR_ERR(syscon->regmap);
->> +	}
->> +
->> +	syscon->dev = &pdev->dev;
->> +	platform_set_drvdata(pdev, syscon);
->> +
->> +	dev_info(dev, "syscon regmap start 0x%x end 0x%x registered\n",
->> +		res.start, res.end);
->> +
->> +	return 0;
-
-> in case of error you are not freeing syscon.
-
-    It's allocated using devm_kzalloc(), so is freed automaticelly upon probe 
-error.
-
-> Moreover, in my opinion, some dev_err more should not heart
-
-    Hurt, you mean?
-
-> Andi
-
-WBR, Sergei
+> --
+> balbi
+> --
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
