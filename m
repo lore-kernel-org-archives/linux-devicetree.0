@@ -1,327 +1,137 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v5 1/4] mfd: add syscon driver based on regmap
-Date: Tue, 4 Sep 2012 11:20:08 +0800
-Message-ID: <1346728811-25788-2-git-send-email-b29396@freescale.com>
-References: <1346728811-25788-1-git-send-email-b29396@freescale.com>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: Re: [PATCH v2 1/8] ARM/dts: OMAP2: Add McBSP entries for OMAP2420
+ and OMAP2430 SoC
+Date: Tue, 4 Sep 2012 09:12:43 +0530
+Message-ID: <504578B3.3090804@ti.com>
+References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com> <1346247067-9632-2-git-send-email-peter.ujfalusi@ti.com> <5044C2DD.5000705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346728811-25788-1-git-send-email-b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5044C2DD.5000705@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Add regmap based syscon driver.
-This is usually used for access misc bits in registers which does not belong
-to a specific module, for example, IMX IOMUXC GPR and ANATOP.
-With this driver, client can use generic regmap API to access registers
-which are registered into syscon.
 
-Reviewed-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Signed-off-by: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog:
-v4->v5:
- * depends on OF
- * do not call of_node_put in syscon_node_to_regmap
-v3->v4:
- * add more description about syscon(provided by Stephen Warren) in binding doc.
- * fix a minor code indent error and remove set cache type code since the cache
-   is disabled by default.
-v2->v3:
- * export regmap lookup APIs including syscon_node_to_regmap
- * fix a few typo
-v1->v2:
- * provide a way of retrieving the regmap, suggested by Mark Brown.
- * delete imx-syscon io accessors and using generic regmap API for client drivers.
- * change to a more generic name for other SoCs to use.
----
- Documentation/devicetree/bindings/mfd/syscon.txt |   20 +++
- drivers/mfd/Kconfig                              |    8 +
- drivers/mfd/Makefile                             |    1 +
- drivers/mfd/syscon.c                             |  176 ++++++++++++++++++++++
- include/linux/mfd/syscon.h                       |   23 +++
- 5 files changed, 228 insertions(+), 0 deletions(-)
+On 9/3/2012 8:16 PM, Benoit Cousson wrote:
+> Hi Peter,
+> 
+> The overall series looks good to me, but I do have a couple of comments.
+> 
+> On 08/29/2012 03:31 PM, Peter Ujfalusi wrote:
+>> The McBSP IP within OMAP2420 and 2430 is different we need to create separate
+>> dtsi files for them.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  arch/arm/boot/dts/omap2420.dtsi |   39 ++++++++++++++++++
+>>  arch/arm/boot/dts/omap2430.dtsi |   83 +++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 122 insertions(+), 0 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/omap2420.dtsi
+>>  create mode 100644 arch/arm/boot/dts/omap2430.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
+>> new file mode 100644
+>> index 0000000..f375c68
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap2420.dtsi
+>> @@ -0,0 +1,39 @@
+>> +/*
+>> + * Device Tree Source for OMAP2420 SoC
+>> + *
+>> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> 
+> Nit: 2012
+> 
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public License
+>> + * version 2.  This program is licensed "as is" without any warranty of any
+>> + * kind, whether express or implied.
+>> + */
+>> +
+>> +/include/ "omap2.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "ti,omap2420", "ti,omap2";
+>> +
+>> +	ocp {
+>> +		mcbsp1: mcbsp@48074000 {
+>> +			compatible = "ti,omap2420-mcbsp";
+>> +			reg = <0x48074000 0xff>;
+>> +			reg-names = "mpu";
+>> +			interrupts = <0 59 0x4>, /* TX interrupt */
+>> +				     <0 60 0x4>; /* RX interrupt */
+> 
+> That one is not correct because it does comply with the interrupt
+> controller specifier that require only one cell:
+> 
+> 		intc: interrupt-controller@48200000 {
+> 			compatible = "ti,omap2-intc";
+> 			interrupt-controller;
+> 			#interrupt-cells = <1>;
+> ...
+> 
+> The one you are using is for GIC IRQ controller.
+> It works probably because we are using hwmod so far :-)
+> 
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-new file mode 100644
-index 0000000..fe8150b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -0,0 +1,20 @@
-+* System Controller Registers R/W driver
-+
-+System controller node represents a register region containing a set
-+of miscellaneous registers. The registers are not cohesive enough to
-+represent as any specific type of device. The typical use-case is for
-+some other node's driver, or platform-specific code, to acquire a
-+reference to the syscon node (e.g. by phandle, node path, or search
-+using a specific compatible value), interrogate the node (or associated
-+OS driver) to determine the location of the registers, and access the
-+registers directly.
-+
-+Required properties:
-+- compatible: Should contain "syscon".
-+- reg: the register region can be accessed from syscon
-+
-+Examples:
-+gpr: iomuxc-gpr@020e0000 {
-+	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
-+	reg = <0x020e0000 0x38>;
-+};
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index b1a1462..82247b7 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -993,6 +993,14 @@ config MFD_ANATOP
- 	  MFD controller. This controller embeds regulator and
- 	  thermal devices for Freescale i.MX platforms.
- 
-+config MFD_SYSCON
-+	bool "System Controller Register R/W Based on Regmap"
-+	depends on OF
-+	select REGMAP_MMIO
-+	help
-+	  Select this option to enable accessing system control registers
-+	  via regmap.
-+
- config MFD_PALMAS
- 	bool "Support for the TI Palmas series chips"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 79dd22d..8384bc9 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -131,4 +131,5 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
- obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
- obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
- obj-$(CONFIG_MFD_ANATOP)	+= anatop-mfd.o
-+obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
- obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-new file mode 100644
-index 0000000..661a7dc
---- /dev/null
-+++ b/drivers/mfd/syscon.c
-@@ -0,0 +1,176 @@
-+/*
-+ * System Control Driver
-+ *
-+ * Copyright (C) 2012 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2012 Linaro Ltd.
-+ *
-+ * Author: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+static struct platform_driver syscon_driver;
-+
-+struct syscon {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct regmap *regmap;
-+};
-+
-+static int syscon_match(struct device *dev, void *data)
-+{
-+	struct syscon *syscon = dev_get_drvdata(dev);
-+	struct device_node *dn = data;
-+
-+	return (syscon->dev->of_node == dn) ? 1 : 0;
-+}
-+
-+struct regmap *syscon_node_to_regmap(struct device_node *np)
-+{
-+	struct syscon *syscon;
-+	struct device *dev;
-+
-+	dev = driver_find_device(&syscon_driver.driver, NULL, np,
-+				 syscon_match);
-+	if (!dev)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	syscon = dev_get_drvdata(dev);
-+
-+	return syscon->regmap;
-+}
-+EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
-+
-+struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
-+{
-+	struct device_node *syscon_np;
-+	struct regmap *regmap;
-+
-+	syscon_np = of_find_compatible_node(NULL, NULL, s);
-+	if (!syscon_np)
-+		return ERR_PTR(-ENODEV);
-+
-+	regmap = syscon_node_to_regmap(syscon_np);
-+	of_node_put(syscon_np);
-+
-+	return regmap;
-+}
-+EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_compatible);
-+
-+struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
-+					const char *property)
-+{
-+	struct device_node *syscon_np;
-+	struct regmap *regmap;
-+
-+	syscon_np = of_parse_phandle(np, property, 0);
-+	if (!syscon_np)
-+		return ERR_PTR(-ENODEV);
-+
-+	regmap = syscon_node_to_regmap(syscon_np);
-+	of_node_put(syscon_np);
-+
-+	return regmap;
-+}
-+EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
-+
-+static const struct of_device_id of_syscon_match[] = {
-+	{ .compatible = "syscon", },
-+	{ },
-+};
-+
-+static struct regmap_config syscon_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static int __devinit syscon_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct syscon *syscon;
-+	struct resource res;
-+	int ret;
-+
-+	if (!np)
-+		return -ENOENT;
-+
-+	syscon = devm_kzalloc(&pdev->dev, sizeof(struct syscon),
-+			    GFP_KERNEL);
-+	if (!syscon)
-+		return -ENOMEM;
-+
-+	syscon->base = of_iomap(np, 0);
-+	if (!syscon->base)
-+		return -EADDRNOTAVAIL;
-+
-+	ret = of_address_to_resource(np, 0, &res);
-+	if (ret)
-+		return ret;
-+
-+	syscon_regmap_config.max_register = res.end - res.start - 3;
-+	syscon->regmap = devm_regmap_init_mmio(&pdev->dev, syscon->base,
-+					&syscon_regmap_config);
-+	if (IS_ERR(syscon->regmap)) {
-+		dev_err(&pdev->dev, "regmap init failed\n");
-+		return PTR_ERR(syscon->regmap);
-+	}
-+
-+	syscon->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, syscon);
-+
-+	dev_info(dev, "syscon regmap start 0x%x end 0x%x registered\n",
-+		res.start, res.end);
-+
-+	return 0;
-+}
-+
-+static int __devexit syscon_remove(struct platform_device *pdev)
-+{
-+	struct syscon *syscon;
-+
-+	syscon = platform_get_drvdata(pdev);
-+	iounmap(syscon->base);
-+	platform_set_drvdata(pdev, NULL);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver syscon_driver = {
-+	.driver = {
-+		.name = "syscon",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_syscon_match,
-+	},
-+	.probe		= syscon_probe,
-+	.remove		= __devexit_p(syscon_remove),
-+};
-+
-+static int __init syscon_init(void)
-+{
-+	return platform_driver_register(&syscon_driver);
-+}
-+postcore_initcall(syscon_init);
-+
-+static void __exit syscon_exit(void)
-+{
-+	platform_driver_unregister(&syscon_driver);
-+}
-+module_exit(syscon_exit);
-+
-+MODULE_AUTHOR("Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
-+MODULE_DESCRIPTION("System Control driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-new file mode 100644
-index 0000000..6aeb6b8
---- /dev/null
-+++ b/include/linux/mfd/syscon.h
-@@ -0,0 +1,23 @@
-+/*
-+ * System Control Driver
-+ *
-+ * Copyright (C) 2012 Freescale Semiconductor, Inc.
-+ * Copyright (C) 2012 Linaro Ltd.
-+ *
-+ * Author: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __LINUX_MFD_SYSCON_H__
-+#define __LINUX_MFD_SYSCON_H__
-+
-+extern struct regmap *syscon_node_to_regmap(struct device_node *np);
-+extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
-+extern struct regmap *syscon_regmap_lookup_by_phandle(
-+					struct device_node *np,
-+					const char *property);
-+#endif /* __LINUX_MFD_SYSCON_H__ */
--- 
-1.7.0.4
+I think now we should kill the resource overwrite path, and should
+respect and use resources passed from DT.
+
+Benoit,
+Did you get a chance to validate patch submitted towards this??
+
+https://patchwork.kernel.org/patch/1384351/
+
+Thanks,
+Vaibhav
+> Didn't you get some warning?
+> 
+> In the case of OMAP2 & 3, it is much simpler:
+> 
+>> +			interrupts = <59>, /* TX interrupt */
+>> +				     <60>; /* RX interrupt */
+> 
+> That comment is applicable for OMAP2420, OMAP2430, and OMAP3 in general.
+> 
+>> +			interrupt-names = "tx", "rx";
+>> +			interrupt-parent = <&intc>;
+>> +			ti,hwmods = "mcbsp1";
+>> +		};
+>> +
+>> +		mcbsp2: mcbsp@48076000 {
+>> +			compatible = "ti,omap2420-mcbsp";
+>> +			reg = <0x48076000 0xff>;
+>> +			reg-names = "mpu";
+>> +			interrupts = <0 62 0x4>, /* TX interrupt */
+>> +				     <0 63 0x4>; /* RX interrupt */
+>> +			interrupt-names = "tx", "rx";
+>> +			interrupt-parent = <&intc>;
+>> +			ti,hwmods = "mcbsp2";
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+>> new file mode 100644
+>> index 0000000..531e346
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap2430.dtsi
+>> @@ -0,0 +1,83 @@
+>> +/*
+>> + * Device Tree Source for OMAP243x SoC
+>> + *
+>> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> 
+> 2012.
+> 
+> Regards,
+> Benoit
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
