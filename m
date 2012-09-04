@@ -1,62 +1,73 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 1/4] pinctrl: add samsung pinctrl and gpiolib driver
-Date: Wed, 05 Sep 2012 06:45:16 +0900
-Message-ID: <226e01cd8ae6$928010b0$b7803210$%kim@samsung.com>
-References: <1345720529-32315-1-git-send-email-thomas.abraham@linaro.org>
- <1345720529-32315-2-git-send-email-thomas.abraham@linaro.org>
- <CACRpkdbVe77pAYdOw0+_2G2FWVWcn4GKQty6R-LXXEz-OkUdUg@mail.gmail.com>
- <CAJuYYwTD+vMg=YjUj4G0E-uakk=Y_SD+cUU22QSx0yRC50V75w@mail.gmail.com>
+Subject: RE: [PATCH v4 0/2] Add device tree and clock support for G-Scaler
+Date: Wed, 05 Sep 2012 07:07:00 +0900
+Message-ID: <227001cd8ae9$9b76ce40$d2646ac0$%kim@samsung.com>
+References: <1344852144-25598-1-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwTD+vMg=YjUj4G0E-uakk=Y_SD+cUU22QSx0yRC50V75w@mail.gmail.com>
+In-reply-to: <1344852144-25598-1-git-send-email-shaik.ameer@samsung.com>
 Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Linus Walleij' <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, dong.aisheng@linaro.org, swarren@wwwdotorg.org, patches@linaro.org
+To: 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, joshi@samsung.com, shaik.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Thomas Abraham wrote:
+Shaik Ameer Basha wrote:
 > 
-> On 3 September 2012 16:44, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Thu, Aug 23, 2012 at 1:15 PM, Thomas Abraham
-> > <thomas.abraham@linaro.org> wrote:
-> >
-> >> Add a new device tree enabled pinctrl and gpiolib driver for Samsung
-> >> SoC's. This driver provides a common and extensible framework for all
-> >> Samsung SoC's to interface with the pinctrl and gpiolib subsystems.
-> This
-> >> driver supports only device tree based instantiation and hence can be
-> >> used only on those Samsung platforms that have device tree enabled.
-> >>
-> >> This driver is split into two parts: the pinctrl interface and the
-> gpiolib
-> >> interface. The pinctrl interface registers pinctrl devices with the
-> pinctrl
-> >> subsystem and gpiolib interface registers gpio chips with the gpiolib
-> >> subsystem. The information about the pins, pin groups, pin functions
-> and
-> >> gpio chips, which are SoC specific, are parsed from device tree node.
-> >>
-> >> Cc: Linus Walleij <linus.walleij@linaro.org>
-> >> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> >> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> >
-> > Looks good to me, I saw Stephen had some minor comments and
-> > I expect that you probably fix them before applying to the Samsung
-> > tree so:
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Feel free to push this through ARM SoC, I guess that's the plan?
+> This patch series adds clock support for G-Scaler and device node
+>  entries for G-Scaler on exynos5.
 > 
-> Hi Linus,
+> This patch is based on Kukjin Kim's (linux-samsung) for-next branch.
+>
+https://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
 > 
-> Thanks for reviewing the Samsung pinctrl driver patches. I will do the
-> changes that Stephen has listed and resubmit. I will request Samsung
-> maintainer to consider the support for pinctrl driver for 3.7.
+> changes since v3:
+> - Addressed review comments from Kukjin Kim
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11658.html
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11659.html
 > 
-Looks OK, I will apply updated patches Thomas said into Samsung tree.
+> changes since v2:
+> - Addressed review comments from Sylwester Nawrocki
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11372.html
+> - Addressed review comments from Kukjin Kim and Sunyoung Kang
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11377.html
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11429.html
+> 
+> changes since v1:
+> - Addressed review comments from Sylwester Nawrocki
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11177.html
+> - Addressed review comments from Sachin Kamat
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11176.html
+>     http://www.mail-archive.com/linux-samsung-
+> soc@vger.kernel.org/msg11178.html
+> 
+> Shaik Ameer Basha (2):
+>   ARM: EXYNOS: Add clock support for G-Scaler
+>   ARM: EXYNOS: Adds G-Scaler device from Device Tree
+> 
+>  .../devicetree/bindings/media/exynos5-gsc.txt      |   32 +++++++
+>  arch/arm/boot/dts/exynos5250.dtsi                  |   28 +++++++
+>  arch/arm/mach-exynos/clock-exynos5.c               |   86
+> ++++++++++++++++++++
+>  arch/arm/mach-exynos/include/mach/map.h            |    5 +
+>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 ++
+>  5 files changed, 159 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/exynos5-
+> gsc.txt
+
+Looks OK, will apply this series.
+
+BTW, just wondering...the sign-chain is right? Hoping you know, if sign-off
+has been added without their handling on the patches, it's wrong.
 
 Thanks.
 
