@@ -1,254 +1,111 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: [PATCH v5 3/4] regulator: anatop-regulator: convert to use syscon to access anatop register
-Date: Tue, 4 Sep 2012 11:20:10 +0800
-Message-ID: <1346728811-25788-4-git-send-email-b29396@freescale.com>
-References: <1346728811-25788-1-git-send-email-b29396@freescale.com>
+From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 0/3] gpio-twl4030: add new device tree properties
+Date: Tue, 4 Sep 2012 04:51:36 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EAA073E@DBDE01.ent.ti.com>
+References: <1346680491-4211-1-git-send-email-florian.vaussard@epfl.ch>
+ <5044BE79.4040100@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1346728811-25788-1-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5044BE79.4040100-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <dong.aisheng@linaro.org>
+On Mon, Sep 03, 2012 at 19:58:09, Cousson, Benoit wrote:
+> + Vaibhav for the omap3-evm
+> 
 
-Using syscon to access anatop register.
+Reviewing and testing it now...
 
-Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
----
-ChangeLog v4->v5:
- * merge patch 3,4,5,6 to avoid break bisect.
-ChangeLog v2->v3:
- * update to use syscon_node_to_regmap and use of_get_parent to get anatop node.
-ChangeLog v1-v2:
- * update to use generic regmap api
----
- arch/arm/boot/dts/imx6q.dtsi         |    4 +-
- arch/arm/mach-imx/Kconfig            |    2 +-
- arch/arm/mach-imx/mach-imx6q.c       |   47 +++++++++++++---------------------
- drivers/regulator/Kconfig            |    2 +-
- drivers/regulator/anatop-regulator.c |   30 ++++++++++++++-------
- 5 files changed, 42 insertions(+), 43 deletions(-)
+Thanks,
+Vaibhav
 
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index bea21bc..52ed4d1 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -378,8 +378,8 @@
- 				interrupts = <0 87 0x04 0 88 0x04>;
- 			};
- 
--			anatop@020c8000 {
--				compatible = "fsl,imx6q-anatop";
-+			anatop: anatop@020c8000 {
-+				compatible = "fsl,imx6q-anatop", "syscon", "simple-bus";
- 				reg = <0x020c8000 0x1000>;
- 				interrupts = <0 49 0x04 0 54 0x04 0 127 0x04>;
- 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index afd542a..7bba253 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -839,7 +839,7 @@ config SOC_IMX6Q
- 	select HAVE_IMX_MMDC
- 	select HAVE_IMX_SRC
- 	select HAVE_SMP
--	select MFD_ANATOP
-+	select MFD_SYSCON
- 	select PINCTRL
- 	select PINCTRL_IMX6Q
- 
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 045b3f6..eaf56b4 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -24,8 +24,9 @@
- #include <linux/of_platform.h>
- #include <linux/pinctrl/machine.h>
- #include <linux/phy.h>
-+#include <linux/regmap.h>
- #include <linux/micrel_phy.h>
--#include <linux/mfd/anatop.h>
-+#include <linux/mfd/syscon.h>
- #include <asm/cpuidle.h>
- #include <asm/smp_twd.h>
- #include <asm/hardware/cache-l2x0.h>
-@@ -120,20 +121,7 @@ static void __init imx6q_sabrelite_init(void)
- 
- static void __init imx6q_usb_init(void)
- {
--	struct device_node *np;
--	struct platform_device *pdev = NULL;
--	struct anatop *adata = NULL;
--
--	np = of_find_compatible_node(NULL, NULL, "fsl,imx6q-anatop");
--	if (np)
--		pdev = of_find_device_by_node(np);
--	if (pdev)
--		adata = platform_get_drvdata(pdev);
--	if (!adata) {
--		if (np)
--			of_node_put(np);
--		return;
--	}
-+	struct regmap *anatop;
- 
- #define HW_ANADIG_USB1_CHRG_DETECT		0x000001b0
- #define HW_ANADIG_USB2_CHRG_DETECT		0x00000210
-@@ -141,20 +129,21 @@ static void __init imx6q_usb_init(void)
- #define BM_ANADIG_USB_CHRG_DETECT_EN_B		0x00100000
- #define BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B	0x00080000
- 
--	/*
--	 * The external charger detector needs to be disabled,
--	 * or the signal at DP will be poor
--	 */
--	anatop_write_reg(adata, HW_ANADIG_USB1_CHRG_DETECT,
--			BM_ANADIG_USB_CHRG_DETECT_EN_B
--			| BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B,
--			~0);
--	anatop_write_reg(adata, HW_ANADIG_USB2_CHRG_DETECT,
--			BM_ANADIG_USB_CHRG_DETECT_EN_B |
--			BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B,
--			~0);
--
--	of_node_put(np);
-+	anatop = syscon_regmap_lookup_by_compatible("fsl,imx6q-anatop");
-+	if (!IS_ERR(anatop)) {
-+		/*
-+		 * The external charger detector needs to be disabled,
-+		 * or the signal at DP will be poor
-+		 */
-+		regmap_write(anatop, HW_ANADIG_USB1_CHRG_DETECT,
-+				BM_ANADIG_USB_CHRG_DETECT_EN_B
-+				| BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B);
-+		regmap_write(anatop, HW_ANADIG_USB2_CHRG_DETECT,
-+				BM_ANADIG_USB_CHRG_DETECT_EN_B |
-+				BM_ANADIG_USB_CHRG_DETECT_CHK_CHRG_B);
-+	} else {
-+		pr_warn("failed to find fsl,imx6q-anatop regmap\n");
-+	}
- }
- 
- static void __init imx6q_init_machine(void)
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 4e932cc..2ae1d97 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -112,7 +112,7 @@ config REGULATOR_DA9052
- 
- config REGULATOR_ANATOP
- 	tristate "Freescale i.MX on-chip ANATOP LDO regulators"
--	depends on MFD_ANATOP
-+	depends on MFD_SYSCON
- 	help
- 	  Say y here to support Freescale i.MX on-chip ANATOP LDOs
- 	  regulators. It is recommended that this option be
-diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-index ce0fe72..346e5f6 100644
---- a/drivers/regulator/anatop-regulator.c
-+++ b/drivers/regulator/anatop-regulator.c
-@@ -21,19 +21,20 @@
- #include <linux/slab.h>
- #include <linux/device.h>
- #include <linux/module.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
--#include <linux/mfd/anatop.h>
-+#include <linux/regmap.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/of_regulator.h>
- 
- struct anatop_regulator {
- 	const char *name;
- 	u32 control_reg;
--	struct anatop *mfd;
-+	struct regmap *anatop;
- 	int vol_bit_shift;
- 	int vol_bit_width;
- 	int min_bit_val;
-@@ -43,7 +44,8 @@ struct anatop_regulator {
- 	struct regulator_init_data *initdata;
- };
- 
--static int anatop_set_voltage_sel(struct regulator_dev *reg, unsigned selector)
-+static int anatop_regmap_set_voltage_sel(struct regulator_dev *reg,
-+					unsigned selector)
- {
- 	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
- 	u32 val, mask;
-@@ -56,12 +58,13 @@ static int anatop_set_voltage_sel(struct regulator_dev *reg, unsigned selector)
- 	mask = ((1 << anatop_reg->vol_bit_width) - 1) <<
- 		anatop_reg->vol_bit_shift;
- 	val <<= anatop_reg->vol_bit_shift;
--	anatop_write_reg(anatop_reg->mfd, anatop_reg->control_reg, val, mask);
-+	regmap_update_bits(anatop_reg->anatop, anatop_reg->control_reg,
-+				mask, val);
- 
- 	return 0;
- }
- 
--static int anatop_get_voltage_sel(struct regulator_dev *reg)
-+static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
- {
- 	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
- 	u32 val, mask;
-@@ -69,7 +72,7 @@ static int anatop_get_voltage_sel(struct regulator_dev *reg)
- 	if (!anatop_reg->control_reg)
- 		return -ENOTSUPP;
- 
--	val = anatop_read_reg(anatop_reg->mfd, anatop_reg->control_reg);
-+	regmap_read(anatop_reg->anatop, anatop_reg->control_reg, &val);
- 	mask = ((1 << anatop_reg->vol_bit_width) - 1) <<
- 		anatop_reg->vol_bit_shift;
- 	val = (val & mask) >> anatop_reg->vol_bit_shift;
-@@ -78,8 +81,8 @@ static int anatop_get_voltage_sel(struct regulator_dev *reg)
- }
- 
- static struct regulator_ops anatop_rops = {
--	.set_voltage_sel = anatop_set_voltage_sel,
--	.get_voltage_sel = anatop_get_voltage_sel,
-+	.set_voltage_sel = anatop_regmap_set_voltage_sel,
-+	.get_voltage_sel = anatop_regmap_get_voltage_sel,
- 	.list_voltage = regulator_list_voltage_linear,
- 	.map_voltage = regulator_map_voltage_linear,
- };
-@@ -88,11 +91,11 @@ static int __devinit anatop_regulator_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
-+	struct device_node *anatop_np;
- 	struct regulator_desc *rdesc;
- 	struct regulator_dev *rdev;
- 	struct anatop_regulator *sreg;
- 	struct regulator_init_data *initdata;
--	struct anatop *anatopmfd = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
- 	int ret = 0;
- 
-@@ -109,7 +112,14 @@ static int __devinit anatop_regulator_probe(struct platform_device *pdev)
- 	rdesc->ops = &anatop_rops;
- 	rdesc->type = REGULATOR_VOLTAGE;
- 	rdesc->owner = THIS_MODULE;
--	sreg->mfd = anatopmfd;
-+
-+	anatop_np = of_get_parent(np);
-+	if (!anatop_np)
-+		return -ENODEV;
-+	sreg->anatop = syscon_node_to_regmap(anatop_np);
-+	if (IS_ERR(sreg->anatop))
-+		return PTR_ERR(sreg->anatop);
-+
- 	ret = of_property_read_u32(np, "anatop-reg-offset",
- 				   &sreg->control_reg);
- 	if (ret) {
--- 
-1.7.0.4
+
+> Hi Florian,
+> 
+> On 09/03/2012 03:54 PM, Florian Vaussard wrote:
+> > A number of platform data are missing when using twl4030/gpio from a
+> > device tree.
+> 
+> Yeah, I know, I was too lazy when I did the DT conversion at that time :-)
+> 
+> Many thanks for completing the work.
+> 
+> >  This patchset adds the missing properties, updates
+> > existing device trees and updates the documentation of bindings.
+> > It mainly enables LEDA and LEDB outputs, as well as pullups /
+> > pulldowns on GPIOs.
+> > 
+> > The 1st patch changes the device driver.
+> > The 2nd patch updates the device trees for BeagleBoard and omap3-evm.
+> > The 3rd patch updates the documentation of bindings.
+> 
+> OK, that's a nit, but in general, you'd better introduce the binding
+> before using it.
+> 
+> The binding documentation could/should be updated along with the driver
+> change that does introduce the binding. You could just merged patch #1
+> and #3.
+> 
+> > Tested:
+> > - Boot tested on Gumstix Overo for "ti,use-leds". Corresponding
+> >   patch is not provided, as the device tree is not yet merged.
+> >   The support can be found in the git tree [1], branch
+> >   omap3-devel-dt-overo.
+> > - Device trees for BeagleBoard and omap3-evm were compiled, but not
+> >   tested on hardware.
+> > 
+> > Would someone be willing to test on BeagleBoard / omap3-evm?
+> 
+> I'll try to do it on Beagle. This is the least I can do since I did not
+> do the job myself :-)
+> 
+> I added vaibhav as well since I do not have any omap3-evm board.
+> 
+> > 
+> > Regards,
+> > Florian
+> > 
+> > [1] https://github.com/vaussard/linux.git (not safe for merge)
+> > 
+> > 
+> > Florian Vaussard (3):
+> >   gpio-twl4030: get platform data from device tree
+> >   gpio-twl4030: new dt properties for BeagleBoard and omap3-EVM
+> 
+> Nit #2: the DTS file does not belong to the gpio subsystem. So you
+> should prefix them using the *convention* for ARM DTS patches:
+> 
+> arm/dts: omap3: Add gpio-twl4030 properties for BeagleBoard and omap3-EVM
+> 
+> Or maybe "ARM: dts: " because it looks like most people are using that
+> nowadays.
+> 
+> The convention for the gpio directory is similar:
+> gpio/twl4030: get platform data from device tree
+> 
+> >   gpio-twl4030: updates the bindings for new dt properties
+> > 
+> >  .../devicetree/bindings/gpio/gpio-twl4030.txt      |    6 ++
+> >  arch/arm/boot/dts/omap3-beagle.dts                 |   20 +++++
+> >  arch/arm/boot/dts/omap3-evm.dts                    |   13 +++
+> >  drivers/gpio/gpio-twl4030.c                        |   86 +++++++++++++------
+> >  4 files changed, 98 insertions(+), 27 deletions(-)
+> 
+> Thanks,
+> Benoit
+> 
+> 
