@@ -1,277 +1,164 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 6/6 v2] ARM: integrator: convert platform devices to Device
- Tree
-Date: Wed,  5 Sep 2012 21:29:19 +0200
-Message-ID: <1346873359-17363-1-git-send-email-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH 8/9] ARM: msm: Add DT support for 8960
+Date: Wed,  5 Sep 2012 12:28:58 -0700
+Message-ID: <1346873339-10927-9-git-send-email-sboyd@codeaurora.org>
+References: <1346873339-10927-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1346873339-10927-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This moves the physmap flash and SMSC91x ethernet devices
-over to the device tree, moving the static board code down
-into the #ifndef CONFIG_OF section.
+Add basic support to boot 8960 with device tree. For now just
+support a basic machine with a uart device.
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
-ChangeLog v1->v2:
-- Move flash device definition to the common "integrator.dtsi"
-  file.
----
- arch/arm/boot/dts/integrator.dtsi        |  5 ++
- arch/arm/boot/dts/integratorcp.dts       |  7 +++
- arch/arm/mach-integrator/integrator_ap.c | 36 ++++++-------
- arch/arm/mach-integrator/integrator_cp.c | 92 ++++++++++++++++----------------
- 4 files changed, 77 insertions(+), 63 deletions(-)
+ arch/arm/boot/dts/msm8960-cdp.dts | 41 ++++++++++++++++++++++++++++++++
+ arch/arm/mach-msm/Kconfig         |  1 +
+ arch/arm/mach-msm/Makefile        |  1 +
+ arch/arm/mach-msm/Makefile.boot   |  1 +
+ arch/arm/mach-msm/board-dt-8960.c | 49 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 93 insertions(+)
+ create mode 100644 arch/arm/boot/dts/msm8960-cdp.dts
+ create mode 100644 arch/arm/mach-msm/board-dt-8960.c
 
-diff --git a/arch/arm/boot/dts/integrator.dtsi b/arch/arm/boot/dts/integrator.dtsi
-index 9bcc09d..813b91d 100644
---- a/arch/arm/boot/dts/integrator.dtsi
-+++ b/arch/arm/boot/dts/integrator.dtsi
-@@ -31,6 +31,11 @@
- 		clear-mask = <0xffffffff>;
- 	};
- 
-+	flash@24000000 {
-+		compatible = "cfi-flash";
-+		reg = <0x24000000 0x02000000>;
+diff --git a/arch/arm/boot/dts/msm8960-cdp.dts b/arch/arm/boot/dts/msm8960-cdp.dts
+new file mode 100644
+index 0000000..76635d5
+--- /dev/null
++++ b/arch/arm/boot/dts/msm8960-cdp.dts
+@@ -0,0 +1,41 @@
++/dts-v1/;
++
++/include/ "skeleton.dtsi"
++
++/ {
++	model = "Qualcomm MSM8960 CDP";
++	compatible = "qcom,msm8960-cdp", "qcom,msm8960";
++	interrupt-parent = <&intc>;
++
++	intc: interrupt-controller@02000000 {
++		compatible = "qcom,msm-qgic2";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		reg = < 0x02000000 0x1000 >,
++		      < 0x02002000 0x1000 >;
 +	};
 +
- 	fpga {
- 		compatible = "arm,amba-bus", "simple-bus";
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/integratorcp.dts b/arch/arm/boot/dts/integratorcp.dts
-index 7bd4946..2dd5e4e 100644
---- a/arch/arm/boot/dts/integratorcp.dts
-+++ b/arch/arm/boot/dts/integratorcp.dts
-@@ -52,6 +52,13 @@
- 		valid-mask = <0x00000fff>;
- 	};
- 
-+	ethernet@c8000000 {
-+		compatible = "smsc,lan91c111";
-+		reg = <0xc8000000 0x10>;
-+		interrupt-parent = <&pic>;
-+		interrupts = <27>;
++	timer@0200a004 {
++		compatible = "qcom,msm-gpt", "qcom,msm-timer";
++		interrupts = <1 2 0x301>;
++		reg = <0x0200a004 0x10>;
++		clock-frequency = <32768>;
++		cpu-offset = <0x80000>;
 +	};
 +
- 	fpga {
- 		/*
- 		 * These PrimeCells are at the same location and using
-diff --git a/arch/arm/mach-integrator/integrator_ap.c b/arch/arm/mach-integrator/integrator_ap.c
-index 8cd0560..ff1255a 100644
---- a/arch/arm/mach-integrator/integrator_ap.c
-+++ b/arch/arm/mach-integrator/integrator_ap.c
-@@ -256,22 +256,6 @@ static struct physmap_flash_data ap_flash_data = {
- 	.set_vpp	= ap_flash_set_vpp,
- };
++	timer@0200a024 {
++		compatible = "qcom,msm-dgt", "qcom,msm-timer";
++		interrupts = <1 1 0x301>;
++		reg = <0x0200a024 0x10>,
++		      <0x0200a034 0x4>;
++		clock-frequency = <6750000>;
++		cpu-offset = <0x80000>;
++	};
++
++	serial@19c400000 {
++		compatible = "qcom,msm-hsuart", "qcom,msm-uart";
++		reg = <0x16440000 0x1000>,
++		      <0x16400000 0x1000>;
++		interrupts = <0 154 0x0>;
++	};
++};
+diff --git a/arch/arm/mach-msm/Kconfig b/arch/arm/mach-msm/Kconfig
+index cd78427..2e5a27e 100644
+--- a/arch/arm/mach-msm/Kconfig
++++ b/arch/arm/mach-msm/Kconfig
+@@ -56,6 +56,7 @@ config ARCH_MSM8960
+ 	select MSM_V2_TLMM
+ 	select MSM_GPIOMUX
+ 	select MSM_SCM if SMP
++	select USE_OF
  
--static struct resource cfi_flash_resource = {
--	.start		= INTEGRATOR_FLASH_BASE,
--	.end		= INTEGRATOR_FLASH_BASE + INTEGRATOR_FLASH_SIZE - 1,
--	.flags		= IORESOURCE_MEM,
--};
--
--static struct platform_device cfi_flash_device = {
--	.name		= "physmap-flash",
--	.id		= 0,
--	.dev		= {
--		.platform_data	= &ap_flash_data,
--	},
--	.num_resources	= 1,
--	.resource	= &cfi_flash_resource,
--};
--
- /*
-  * Where is the timer (VA)?
-  */
-@@ -476,6 +460,8 @@ static struct of_dev_auxdata ap_auxdata_lookup[] __initdata = {
- 		"kmi0", NULL),
- 	OF_DEV_AUXDATA("arm,primecell", KMI1_BASE,
- 		"kmi1", NULL),
-+	OF_DEV_AUXDATA("cfi-flash", INTEGRATOR_FLASH_BASE,
-+		"physmap-flash", &ap_flash_data),
- 	{ /* sentinel */ },
- };
+ endchoice
  
-@@ -487,8 +473,6 @@ static void __init ap_init_of(void)
- 	of_platform_populate(NULL, of_default_bus_match_table,
- 			ap_auxdata_lookup, NULL);
+diff --git a/arch/arm/mach-msm/Makefile b/arch/arm/mach-msm/Makefile
+index c4f5169..bc2a3cc 100644
+--- a/arch/arm/mach-msm/Makefile
++++ b/arch/arm/mach-msm/Makefile
+@@ -27,6 +27,7 @@ obj-$(CONFIG_ARCH_MSM7X30) += board-msm7x30.o devices-msm7x30.o
+ obj-$(CONFIG_ARCH_QSD8X50) += board-qsd8x50.o devices-qsd8x50.o
+ obj-$(CONFIG_ARCH_MSM8X60) += board-dt-8660.o
+ obj-$(CONFIG_ARCH_MSM8960) += board-msm8960.o devices-msm8960.o
++obj-$(CONFIG_ARCH_MSM8960) += board-dt-8960.o
  
--	platform_device_register(&cfi_flash_device);
--
- 	sc_dec = readl(VA_SC_BASE + INTEGRATOR_SC_DEC_OFFSET);
- 	for (i = 0; i < 4; i++) {
- 		struct lm_device *lmdev;
-@@ -537,6 +521,22 @@ MACHINE_END
-  * for eventual deletion.
-  */
+ obj-$(CONFIG_ARCH_MSM7X30) += gpiomux-v1.o gpiomux.o
+ obj-$(CONFIG_ARCH_QSD8X50) += gpiomux-8x50.o gpiomux-v1.o gpiomux.o
+diff --git a/arch/arm/mach-msm/Makefile.boot b/arch/arm/mach-msm/Makefile.boot
+index 8de0678..f7d6ae9 100644
+--- a/arch/arm/mach-msm/Makefile.boot
++++ b/arch/arm/mach-msm/Makefile.boot
+@@ -3,3 +3,4 @@ params_phys-y		:= 0x10000100
+ initrd_phys-y		:= 0x10800000
  
-+static struct resource cfi_flash_resource = {
-+	.start		= INTEGRATOR_FLASH_BASE,
-+	.end		= INTEGRATOR_FLASH_BASE + INTEGRATOR_FLASH_SIZE - 1,
-+	.flags		= IORESOURCE_MEM,
+ dtb-$(CONFIG_ARCH_MSM8X60) += msm8660-surf.dtb
++dtb-$(CONFIG_ARCH_MSM8960) += msm8960-cdp.dtb
+diff --git a/arch/arm/mach-msm/board-dt-8960.c b/arch/arm/mach-msm/board-dt-8960.c
+new file mode 100644
+index 0000000..8df99b8f
+--- /dev/null
++++ b/arch/arm/mach-msm/board-dt-8960.c
+@@ -0,0 +1,49 @@
++/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/init.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++
++#include <asm/hardware/gic.h>
++#include <asm/mach/arch.h>
++
++#include "common.h"
++
++static const struct of_device_id msm_dt_gic_match[] __initconst = {
++	{ .compatible = "qcom,msm-qgic2", .data = gic_of_init },
++	{ }
 +};
 +
-+static struct platform_device cfi_flash_device = {
-+	.name		= "physmap-flash",
-+	.id		= 0,
-+	.dev		= {
-+		.platform_data	= &ap_flash_data,
-+	},
-+	.num_resources	= 1,
-+	.resource	= &cfi_flash_resource,
++static void __init msm_dt_init_irq(void)
++{
++	of_irq_init(msm_dt_gic_match);
++}
++
++static void __init msm_dt_init(void)
++{
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++}
++
++static const char * const msm8960_dt_match[] __initconst = {
++	"qcom,msm8960-cdp",
++	NULL
 +};
 +
- static void __init ap_init_timer(void)
- {
- 	struct clk *clk;
-diff --git a/arch/arm/mach-integrator/integrator_cp.c b/arch/arm/mach-integrator/integrator_cp.c
-index f032238..f51363e 100644
---- a/arch/arm/mach-integrator/integrator_cp.c
-+++ b/arch/arm/mach-integrator/integrator_cp.c
-@@ -52,12 +52,9 @@
- #include "common.h"
- 
- #define INTCP_PA_FLASH_BASE		0x24000000
--#define INTCP_FLASH_SIZE		SZ_32M
- 
- #define INTCP_PA_CLCD_BASE		0xc0000000
- 
--#define INTCP_ETH_SIZE			0x10
--
- #define INTCP_VA_CTRL_BASE		IO_ADDRESS(INTEGRATOR_CP_CTL_BASE)
- #define INTCP_FLASHPROG			0x04
- #define CINTEGRATOR_FLASHPROG_FLVPPEN	(1 << 0)
-@@ -184,47 +181,6 @@ static struct physmap_flash_data intcp_flash_data = {
- 	.set_vpp	= intcp_flash_set_vpp,
- };
- 
--static struct resource intcp_flash_resource = {
--	.start		= INTCP_PA_FLASH_BASE,
--	.end		= INTCP_PA_FLASH_BASE + INTCP_FLASH_SIZE - 1,
--	.flags		= IORESOURCE_MEM,
--};
--
--static struct platform_device intcp_flash_device = {
--	.name		= "physmap-flash",
--	.id		= 0,
--	.dev		= {
--		.platform_data	= &intcp_flash_data,
--	},
--	.num_resources	= 1,
--	.resource	= &intcp_flash_resource,
--};
--
--static struct resource smc91x_resources[] = {
--	[0] = {
--		.start	= INTEGRATOR_CP_ETH_BASE,
--		.end	= INTEGRATOR_CP_ETH_BASE + INTCP_ETH_SIZE - 1,
--		.flags	= IORESOURCE_MEM,
--	},
--	[1] = {
--		.start	= IRQ_CP_ETHINT,
--		.end	= IRQ_CP_ETHINT,
--		.flags	= IORESOURCE_IRQ,
--	},
--};
--
--static struct platform_device smc91x_device = {
--	.name		= "smc91x",
--	.id		= 0,
--	.num_resources	= ARRAY_SIZE(smc91x_resources),
--	.resource	= smc91x_resources,
--};
--
--static struct platform_device *intcp_devs[] __initdata = {
--	&intcp_flash_device,
--	&smc91x_device,
--};
--
- /*
-  * It seems that the card insertion interrupt remains active after
-  * we've acknowledged it.  We therefore ignore the interrupt, and
-@@ -375,6 +331,8 @@ static struct of_dev_auxdata intcp_auxdata_lookup[] __initdata = {
- 		"aaci", &mmc_data),
- 	OF_DEV_AUXDATA("arm,primecell", INTCP_PA_CLCD_BASE,
- 		"clcd", &clcd_data),
-+	OF_DEV_AUXDATA("cfi-flash", INTCP_PA_FLASH_BASE,
-+		"physmap-flash", &intcp_flash_data),
- 	{ /* sentinel */ },
- };
- 
-@@ -382,7 +340,6 @@ static void __init intcp_init_of(void)
- {
- 	of_platform_populate(NULL, of_default_bus_match_table,
- 			intcp_auxdata_lookup, NULL);
--	platform_add_devices(intcp_devs, ARRAY_SIZE(intcp_devs));
- }
- 
- static const char * intcp_dt_board_compat[] = {
-@@ -412,6 +369,51 @@ MACHINE_END
-  * for eventual deletion.
-  */
- 
-+#define INTCP_FLASH_SIZE		SZ_32M
-+
-+static struct resource intcp_flash_resource = {
-+	.start		= INTCP_PA_FLASH_BASE,
-+	.end		= INTCP_PA_FLASH_BASE + INTCP_FLASH_SIZE - 1,
-+	.flags		= IORESOURCE_MEM,
-+};
-+
-+static struct platform_device intcp_flash_device = {
-+	.name		= "physmap-flash",
-+	.id		= 0,
-+	.dev		= {
-+		.platform_data	= &intcp_flash_data,
-+	},
-+	.num_resources	= 1,
-+	.resource	= &intcp_flash_resource,
-+};
-+
-+#define INTCP_ETH_SIZE			0x10
-+
-+static struct resource smc91x_resources[] = {
-+	[0] = {
-+		.start	= INTEGRATOR_CP_ETH_BASE,
-+		.end	= INTEGRATOR_CP_ETH_BASE + INTCP_ETH_SIZE - 1,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start	= IRQ_CP_ETHINT,
-+		.end	= IRQ_CP_ETHINT,
-+		.flags	= IORESOURCE_IRQ,
-+	},
-+};
-+
-+static struct platform_device smc91x_device = {
-+	.name		= "smc91x",
-+	.id		= 0,
-+	.num_resources	= ARRAY_SIZE(smc91x_resources),
-+	.resource	= smc91x_resources,
-+};
-+
-+static struct platform_device *intcp_devs[] __initdata = {
-+	&intcp_flash_device,
-+	&smc91x_device,
-+};
-+
- #define INTCP_VA_CIC_BASE		__io_address(INTEGRATOR_HDR_BASE + 0x40)
- #define INTCP_VA_PIC_BASE		__io_address(INTEGRATOR_IC_BASE)
- #define INTCP_VA_SIC_BASE		__io_address(INTEGRATOR_CP_SIC_BASE)
++DT_MACHINE_START(MSM8960_DT, "Qualcomm MSM (Flattened Device Tree)")
++	.map_io = msm_map_msm8960_io,
++	.init_irq = msm_dt_init_irq,
++	.timer = &msm_dt_timer,
++	.init_machine = msm_dt_init,
++	.dt_compat = msm8960_dt_match,
++	.handle_irq = gic_handle_irq,
++MACHINE_END
 -- 
-1.7.11.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
