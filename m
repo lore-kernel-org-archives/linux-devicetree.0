@@ -1,42 +1,43 @@
-From: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Wed, 5 Sep 2012 10:32:07 +0530
-Message-ID: <CAMQu2gwjqhi2EJ_3yk+0k9gRWDaGu4yG+V7E4BJ2G3Ki7uGk6g@mail.gmail.com>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
- <1344577046-14847-4-git-send-email-shawn.guo@linaro.org> <201209050118.39045.rjw@sisk.pl>
- <20120905011219.GN2362@S2101-09.ap.freescale.net>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: allow for ATAGS to be configured out when DT
+ support is selected
+Date: Tue, 4 Sep 2012 22:24:32 -0700
+Message-ID: <20120905052432.GH6747@quad.lixom.net>
+References: <1346361008-7320-1-git-send-email-nicolas.pitre@linaro.org>
+ <1346361008-7320-2-git-send-email-nicolas.pitre@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <20120905011219.GN2362@S2101-09.ap.freescale.net>
-Sender: cpufreq-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, AnilKumar Ch <anilkumar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1346361008-7320-2-git-send-email-nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn,
+On Thu, Aug 30, 2012 at 05:10:08PM -0400, Nicolas Pitre wrote:
+> Now that ATAGS support is well contained, we can easily remove it from
+> the kernel build if so desired.  It has to explicitly be disabled, and
+> only when DT support is selected.
+> 
+> Note: disabling kernel ATAGS support does not prevent the usage of
+> CONFIG_ARM_ATAG_DTB_COMPAT.
+> 
+> Signed-off-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-On Wed, Sep 5, 2012 at 6:42 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
-> On Wed, Sep 05, 2012 at 01:18:38AM +0200, Rafael J. Wysocki wrote:
->> On Friday, August 10, 2012, Shawn Guo wrote:
->> > It adds a generic cpufreq driver for CPU0 frequency management based on
->> > clk, regulator, OPP and device tree support.  It can support both
->> > uniprocessor (UP) and those symmetric multiprocessor (SMP) systems which
->> > share clock and voltage across all CPUs.
->> >
->> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
->>
->> I seem to recall that this has been discussed with several people and
->> undergone some changes as a result of comments.  Would it be possible
->> to get some ACKs from the people involved?
->>
->
-> Mark, Santosh,
->
-> Reviewed-by, please?
->
-As commented already, the name of file was bit odd to me
-otherwise, patch itself is fine by me.
+Nice!
 
-FWIW ,
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+
+
+-Olof
