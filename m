@@ -1,236 +1,48 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: [PATCH v6 4/4] mfd: anatop-mfd: remove anatop driver
-Date: Wed, 5 Sep 2012 10:57:16 +0800
-Message-ID: <1346813836-28736-5-git-send-email-b29396@freescale.com>
-References: <1346813836-28736-1-git-send-email-b29396@freescale.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH resend 2/2] SPI: spi-gpio: Add DT bindings
+Date: Tue, 4 Sep 2012 20:24:03 -0700
+Message-ID: <20120905032402.GA5076@opensource.wolfsonmicro.com>
+References: <1343854638-32563-1-git-send-email-zonque@gmail.com>
+	<1343854638-32563-2-git-send-email-zonque@gmail.com>
+	<CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw@mail.gmail.com>
+	<501E5FA9.9050905@gmail.com>
+	<CACRpkdaanCLHjuG-+mPUN-FQbE+MJ=4_RRN85jAaL_FccgNCuA@mail.gmail.com>
+	<5043BEC2.2090705@gmail.com>
+	<CACRpkdZfBd99r2CnObZz5iK=72DTf-9J9p6k32JM_6De29JtXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1346813836-28736-1-git-send-email-b29396@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, shawn.guo@linaro.org, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZfBd99r2CnObZz5iK=72DTf-9J9p6k32JM_6De29JtXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dong Aisheng <dong.aisheng@linaro.org>
+On Mon, Sep 03, 2012 at 01:50:34PM +0200, Linus Walleij wrote:
+> On Sun, Sep 2, 2012 at 10:17 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-The anatop registers are accessed via syscon now, no one will use
-mfd anatop driver anymore, remove it.
+> > Hmm, I don't know whether anyone took those patches yet? Mark?
 
-Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-Signed-off-by: Dong Aisheng <dong.aisheng@linaro.org>
----
- drivers/mfd/Kconfig        |    8 ---
- drivers/mfd/Makefile       |    1 -
- drivers/mfd/anatop-mfd.c   |  124 --------------------------------------------
- include/linux/mfd/anatop.h |   40 --------------
- 4 files changed, 0 insertions(+), 173 deletions(-)
+> Mark better take them, ping on Mark.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 82247b7..0b5c0cc 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -985,14 +985,6 @@ config MFD_STA2X11
- 	depends on STA2X11
- 	select MFD_CORE
- 
--config MFD_ANATOP
--	bool "Support for Freescale i.MX on-chip ANATOP controller"
--	depends on SOC_IMX6Q
--	help
--	  Select this option to enable Freescale i.MX on-chip ANATOP
--	  MFD controller. This controller embeds regulator and
--	  thermal devices for Freescale i.MX platforms.
--
- config MFD_SYSCON
- 	bool "System Controller Register R/W Based on Regmap"
- 	depends on OF
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 8384bc9..0f10a95 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -130,6 +130,5 @@ obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
- obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
- obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
- obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
--obj-$(CONFIG_MFD_ANATOP)	+= anatop-mfd.o
- obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
- obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
-diff --git a/drivers/mfd/anatop-mfd.c b/drivers/mfd/anatop-mfd.c
-deleted file mode 100644
-index 5576e07..0000000
---- a/drivers/mfd/anatop-mfd.c
-+++ /dev/null
-@@ -1,124 +0,0 @@
--/*
-- * Anatop MFD driver
-- *
-- * Copyright (C) 2012 Ying-Chun Liu (PaulLiu) <paul.liu@linaro.org>
-- * Copyright (C) 2012 Linaro
-- *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *   (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License as published by
-- *  the Free Software Foundation; either version 2 of the License, or
-- *  (at your option) any later version.
-- *
-- *  This program is distributed in the hope that it will be useful,
-- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- *  GNU General Public License for more details.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-- *
-- */
--
--#include <linux/io.h>
--#include <linux/module.h>
--#include <linux/platform_device.h>
--#include <linux/of.h>
--#include <linux/of_platform.h>
--#include <linux/of_address.h>
--#include <linux/mfd/anatop.h>
--
--u32 anatop_read_reg(struct anatop *adata, u32 addr)
--{
--	return readl(adata->ioreg + addr);
--}
--EXPORT_SYMBOL_GPL(anatop_read_reg);
--
--void anatop_write_reg(struct anatop *adata, u32 addr, u32 data, u32 mask)
--{
--	u32 val;
--
--	data &= mask;
--
--	spin_lock(&adata->reglock);
--	val = readl(adata->ioreg + addr);
--	val &= ~mask;
--	val |= data;
--	writel(val, adata->ioreg + addr);
--	spin_unlock(&adata->reglock);
--}
--EXPORT_SYMBOL_GPL(anatop_write_reg);
--
--static const struct of_device_id of_anatop_match[] = {
--	{ .compatible = "fsl,imx6q-anatop", },
--	{ },
--};
--
--static int __devinit of_anatop_probe(struct platform_device *pdev)
--{
--	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node;
--	void *ioreg;
--	struct anatop *drvdata;
--
--	ioreg = of_iomap(np, 0);
--	if (!ioreg)
--		return -EADDRNOTAVAIL;
--	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
--	if (!drvdata)
--		return -ENOMEM;
--	drvdata->ioreg = ioreg;
--	spin_lock_init(&drvdata->reglock);
--	platform_set_drvdata(pdev, drvdata);
--	of_platform_populate(np, NULL, NULL, dev);
--
--	return 0;
--}
--
--static int __devexit of_anatop_remove(struct platform_device *pdev)
--{
--	struct anatop *drvdata;
--	drvdata = platform_get_drvdata(pdev);
--	iounmap(drvdata->ioreg);
--
--	return 0;
--}
--
--static struct platform_driver anatop_of_driver = {
--	.driver = {
--		.name = "anatop-mfd",
--		.owner = THIS_MODULE,
--		.of_match_table = of_anatop_match,
--	},
--	.probe		= of_anatop_probe,
--	.remove		= of_anatop_remove,
--};
--
--static int __init anatop_init(void)
--{
--	return platform_driver_register(&anatop_of_driver);
--}
--postcore_initcall(anatop_init);
--
--static void __exit anatop_exit(void)
--{
--	platform_driver_unregister(&anatop_of_driver);
--}
--module_exit(anatop_exit);
--
--MODULE_AUTHOR("Ying-Chun Liu (PaulLiu) <paul.liu@linaro.org>");
--MODULE_DESCRIPTION("ANATOP MFD driver");
--MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/anatop.h b/include/linux/mfd/anatop.h
-deleted file mode 100644
-index 7f92acf..0000000
---- a/include/linux/mfd/anatop.h
-+++ /dev/null
-@@ -1,40 +0,0 @@
--/*
-- * anatop.h - Anatop MFD driver
-- *
-- *  Copyright (C) 2012 Ying-Chun Liu (PaulLiu) <paul.liu@linaro.org>
-- *  Copyright (C) 2012 Linaro
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-- */
--
--#ifndef __LINUX_MFD_ANATOP_H
--#define __LINUX_MFD_ANATOP_H
--
--#include <linux/spinlock.h>
--
--/**
-- * anatop - MFD data
-- * @ioreg: ioremap register
-- * @reglock: spinlock for register read/write
-- */
--struct anatop {
--	void *ioreg;
--	spinlock_t reglock;
--};
--
--extern u32 anatop_read_reg(struct anatop *, u32);
--extern void anatop_write_reg(struct anatop *, u32, u32, u32);
--
--#endif /*  __LINUX_MFD_ANATOP_H */
--- 
-1.7.0.4
+IIRC I did reply saying that the patches didn't apply for me, in any
+case I don't have them any more - can you please check that they apply
+against my -next branch and resend?
+
+  git://git.kernel.org/pub/scm/kernel/git/broonie/misc.git spi-next
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
