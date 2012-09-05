@@ -1,85 +1,160 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH v6 2/3] arm/dts: AM33XX: Configure pinmuxs for user leds control on Bone
-Date: Wed, 5 Sep 2012 17:10:59 +0530
-Message-ID: <1346845260-10978-3-git-send-email-anilkumar@ti.com>
-References: <1346845260-10978-1-git-send-email-anilkumar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v3 1/8] ARM/dts: omap2: Add McBSP entries for OMAP2420 and OMAP2430 SoC
+Date: Wed,  5 Sep 2012 14:58:49 +0300
+Message-ID: <1346846336-27321-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1346846336-27321-1-git-send-email-peter.ujfalusi@ti.com>
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1346845260-10978-1-git-send-email-anilkumar@ti.com>
+In-Reply-To: <1346846336-27321-1-git-send-email-peter.ujfalusi@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: wg@grandegger.com, mkl@pengutronix.de, bryan.wu@canonical.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, AnilKumar Ch <anilkumar@ti.com>
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Adds GPIO pinctrl nodes to am3358_pinmux master node to control
-user leds (USR0, USR1, USR2 and USR3) present on BeagleBone.
+The McBSP IP within OMAP2420 and 2430 is different we need to create separate
+dtsi files for them.
 
-[koen@dominion.thruhere.net: led0, led1 suggested by koen]
-Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/am335x-bone.dts |   43 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/arm/boot/dts/omap2420.dtsi | 39 +++++++++++++++++++
+ arch/arm/boot/dts/omap2430.dtsi | 83 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 122 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap2420.dtsi
+ create mode 100644 arch/arm/boot/dts/omap2430.dtsi
 
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index c634f87..822efe6 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -18,11 +18,54 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- 
-+	am3358_pinmux: pinmux@44e10800 {
-+		userled_pins: pinmux_userled_pins {
-+			pinctrl-single,pins = <
-+				0x54 0x7	/* gpmc_a5.gpio1_21, OUTPUT | MODE7 */
-+				0x58 0x17	/* gpmc_a6.gpio1_22, OUTPUT_PULLUP | MODE7 */
-+				0x5c 0x7	/* gpmc_a7.gpio1_23, OUTPUT | MODE7 */
-+				0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
-+			>;
+diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
+new file mode 100644
+index 0000000..6174d3d
+--- /dev/null
++++ b/arch/arm/boot/dts/omap2420.dtsi
+@@ -0,0 +1,39 @@
++/*
++ * Device Tree Source for OMAP2420 SoC
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/include/ "omap2.dtsi"
++
++/ {
++	compatible = "ti,omap2420", "ti,omap2";
++
++	ocp {
++		mcbsp1: mcbsp@48074000 {
++			compatible = "ti,omap2420-mcbsp";
++			reg = <0x48074000 0xff>;
++			reg-names = "mpu";
++			interrupts = <59>, /* TX interrupt */
++				     <60>; /* RX interrupt */
++			interrupt-names = "tx", "rx";
++			interrupt-parent = <&intc>;
++			ti,hwmods = "mcbsp1";
++		};
++
++		mcbsp2: mcbsp@48076000 {
++			compatible = "ti,omap2420-mcbsp";
++			reg = <0x48076000 0xff>;
++			reg-names = "mpu";
++			interrupts = <62>, /* TX interrupt */
++				     <63>; /* RX interrupt */
++			interrupt-names = "tx", "rx";
++			interrupt-parent = <&intc>;
++			ti,hwmods = "mcbsp2";
 +		};
 +	};
++};
+diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+new file mode 100644
+index 0000000..59a639a
+--- /dev/null
++++ b/arch/arm/boot/dts/omap2430.dtsi
+@@ -0,0 +1,83 @@
++/*
++ * Device Tree Source for OMAP243x SoC
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
- 	ocp {
- 		uart1: serial@44e09000 {
- 			status = "okay";
- 		};
- 
-+		leds {
-+			compatible = "gpio-leds";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&userled_pins>;
++/include/ "omap2.dtsi"
 +
-+			heartbeat {
-+				label = "beaglebone:green:usr0";
-+				gpios = <&gpio2 21 0>;
-+				linux,default-trigger = "heartbeat";
-+				default-state = "off";
-+			};
++/ {
++	compatible = "ti,omap2430", "ti,omap2";
 +
-+			mmc {
-+				label = "beaglebone:green:usr1";
-+				gpios = <&gpio2 22 0>;
-+				linux,default-trigger = "mmc0";
-+				default-state = "off";
-+			};
-+
-+			led2 {
-+				label = "beaglebone:green:usr2";
-+				gpios = <&gpio2 23 0>;
-+				default-state = "off";
-+			};
-+
-+			led3 {
-+				label = "beaglebone:green:usr3";
-+				gpios = <&gpio2 24 0>;
-+				default-state = "off";
-+			};
++	ocp {
++		mcbsp1: mcbsp@48074000 {
++			compatible = "ti,omap2430-mcbsp";
++			reg = <0x48074000 0xff>;
++			reg-names = "mpu";
++			interrupts = <64>, /* OCP compliant interrupt */
++				     <59>, /* TX interrupt */
++				     <60>, /* RX interrupt */
++				     <61>; /* RX overflow interrupt */
++			interrupt-names = "common", "tx", "rx", "rx_overflow";
++			interrupt-parent = <&intc>;
++			ti,buffer-size = <128>;
++			ti,hwmods = "mcbsp1";
 +		};
 +
- 		i2c1: i2c@44e0b000 {
- 			status = "okay";
- 			clock-frequency = <400000>;
++		mcbsp2: mcbsp@48076000 {
++			compatible = "ti,omap2430-mcbsp";
++			reg = <0x48076000 0xff>;
++			reg-names = "mpu";
++			interrupts = <16>, /* OCP compliant interrupt */
++				     <62>, /* TX interrupt */
++				     <63>; /* RX interrupt */
++			interrupt-names = "common", "tx", "rx";
++			interrupt-parent = <&intc>;
++			ti,buffer-size = <128>;
++			ti,hwmods = "mcbsp2";
++		};
++
++		mcbsp3: mcbsp@4808c000 {
++			compatible = "ti,omap2430-mcbsp";
++			reg = <0x4808c000 0xff>;
++			reg-names = "mpu";
++			interrupts = <17>, /* OCP compliant interrupt */
++				     <89>, /* TX interrupt */
++				     <90>; /* RX interrupt */
++			interrupt-names = "common", "tx", "rx";
++			interrupt-parent = <&intc>;
++			ti,buffer-size = <128>;
++			ti,hwmods = "mcbsp3";
++		};
++
++		mcbsp4: mcbsp@4808e000 {
++			compatible = "ti,omap2430-mcbsp";
++			reg = <0x4808e000 0xff>;
++			reg-names = "mpu";
++			interrupts = <18>, /* OCP compliant interrupt */
++				     <54>, /* TX interrupt */
++				     <55>; /* RX interrupt */
++			interrupt-names = "common", "tx", "rx";
++			interrupt-parent = <&intc>;
++			ti,buffer-size = <128>;
++			ti,hwmods = "mcbsp4";
++		};
++
++		mcbsp5: mcbsp@48096000 {
++			compatible = "ti,omap2430-mcbsp";
++			reg = <0x48096000 0xff>;
++			reg-names = "mpu";
++			interrupts = <19>, /* OCP compliant interrupt */
++				     <81>, /* TX interrupt */
++				     <82>; /* RX interrupt */
++			interrupt-names = "common", "tx", "rx";
++			interrupt-parent = <&intc>;
++			ti,buffer-size = <128>;
++			ti,hwmods = "mcbsp5";
++		};
++	};
++};
 -- 
-1.7.9.5
+1.7.12
 
