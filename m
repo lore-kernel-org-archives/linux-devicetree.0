@@ -1,106 +1,48 @@
-From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Subject: RE: [PATCH v2 1/8] ARM/dts: OMAP2: Add McBSP entries for OMAP2420
- and OMAP2430 SoC
-Date: Wed, 5 Sep 2012 06:11:24 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EAA7C99@DBDE01.ent.ti.com>
-References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
- <1346247067-9632-2-git-send-email-peter.ujfalusi@ti.com>
- <5044C2DD.5000705@ti.com> <504578B3.3090804@ti.com> <5045D557.30404@ti.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] i2c: nomadik: Add Device Tree support to the Nomadik
+ I2C driver
+Date: Wed, 5 Sep 2012 07:41:07 +0100
+Message-ID: <20120905064106.GA4233@gmail.com>
+References: <20120831122323.GC5962@gmail.com>
+ <5044C82E.5060207@gmail.com>
+ <20120903152012.GH31163@gmail.com>
+ <201209041428.21409.arnd@arndb.de>
+ <CACRpkdZESujO=2BU3jeKiX3Cm+JY2UPEXwGkro75FWa5Gio5YQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5045D557.30404@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZESujO=2BU3jeKiX3Cm+JY2UPEXwGkro75FWa5Gio5YQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alessandro Rubini <rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 04, 2012 at 15:47:59, Cousson, Benoit wrote:
-> Hi Vaibhav,
-> 
-> On 09/04/2012 05:42 AM, Vaibhav Hiremath wrote:
-> > On 9/3/2012 8:16 PM, Benoit Cousson wrote:
-> >> Hi Peter,
-> >>
-> >> The overall series looks good to me, but I do have a couple of comments.
-> >>
-> >> On 08/29/2012 03:31 PM, Peter Ujfalusi wrote:
-> >>> The McBSP IP within OMAP2420 and 2430 is different we need to create separate
-> >>> dtsi files for them.
-> >>>
-> >>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >>> ---
-> >>>  arch/arm/boot/dts/omap2420.dtsi |   39 ++++++++++++++++++
-> >>>  arch/arm/boot/dts/omap2430.dtsi |   83 +++++++++++++++++++++++++++++++++++++++
-> >>>  2 files changed, 122 insertions(+), 0 deletions(-)
-> >>>  create mode 100644 arch/arm/boot/dts/omap2420.dtsi
-> >>>  create mode 100644 arch/arm/boot/dts/omap2430.dtsi
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
-> >>> new file mode 100644
-> >>> index 0000000..f375c68
-> >>> --- /dev/null
-> >>> +++ b/arch/arm/boot/dts/omap2420.dtsi
-> >>> @@ -0,0 +1,39 @@
-> >>> +/*
-> >>> + * Device Tree Source for OMAP2420 SoC
-> >>> + *
-> >>> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-> >>
-> >> Nit: 2012
-> >>
-> >>> + *
-> >>> + * This file is licensed under the terms of the GNU General Public License
-> >>> + * version 2.  This program is licensed "as is" without any warranty of any
-> >>> + * kind, whether express or implied.
-> >>> + */
-> >>> +
-> >>> +/include/ "omap2.dtsi"
-> >>> +
-> >>> +/ {
-> >>> +	compatible = "ti,omap2420", "ti,omap2";
-> >>> +
-> >>> +	ocp {
-> >>> +		mcbsp1: mcbsp@48074000 {
-> >>> +			compatible = "ti,omap2420-mcbsp";
-> >>> +			reg = <0x48074000 0xff>;
-> >>> +			reg-names = "mpu";
-> >>> +			interrupts = <0 59 0x4>, /* TX interrupt */
-> >>> +				     <0 60 0x4>; /* RX interrupt */
-> >>
-> >> That one is not correct because it does comply with the interrupt
-> >> controller specifier that require only one cell:
-> >>
-> >> 		intc: interrupt-controller@48200000 {
-> >> 			compatible = "ti,omap2-intc";
-> >> 			interrupt-controller;
-> >> 			#interrupt-cells = <1>;
-> >> ...
-> >>
-> >> The one you are using is for GIC IRQ controller.
-> >> It works probably because we are using hwmod so far :-)
-> >>
-> > 
-> > I think now we should kill the resource overwrite path, and should
-> > respect and use resources passed from DT.
-> > 
-> > Benoit,
-> > Did you get a chance to validate patch submitted towards this??
-> 
-> Not yet, but we discussed that with Peter and since he does have these
-> patches for DT, he'll be able to test your series with the McBSP changes.
-> 
+On Tue, Sep 04, 2012 at 07:27:10PM +0200, Linus Walleij wrote:
+> On Tue, Sep 4, 2012 at 4:28 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>=20
+> > In this particular case, we don't have a single board file providin=
+g a
+> > struct nmk_i2c_controller definition for platform data, so the best=
+ way
+> > to handle this IMHO is to remove the header file with the platform
+> > data definition, and just encode the defaults in the driver.
+>=20
+> Alessandro Rubini is actively working on bridging this (and
+> other amba_device primecells) to PCI, that is the reason why it
+> was recently converted to an amba_device. How is he then supposed to
+> get the proper parameters into the driver? Note that the PCI ID
+> is no help at all since the parameters depend on what is connected
+> to the I2C bus, not on what it itself is connected to. Isn't platform=
+ data
+> used in such cases?
 
-Great.
+So why can't Alessandro continue to use Platform Data in the normal way=
+?
 
-> I still want to update a couple of DTS to test that on some other IPs.
-> 
-
-Ohh ok. Please let me know if I can help you here by any means.
-I am equipped with AM37xEVM, BeagleBoard and Panda.
-
-Thanks,
-Vaibhav
-
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
