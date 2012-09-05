@@ -1,209 +1,211 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] misc/at25, dt: Improve at25 SPI eeprom device tree
- bindings.
-Date: Wed, 05 Sep 2012 17:57:33 -0500
-Message-ID: <5047D8DD.10604@gmail.com>
-References: <1345662238-15211-1-git-send-email-ddaney.cavm@gmail.com>
- <1345662238-15211-2-git-send-email-ddaney.cavm@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC v5] V4L DT bindings
+Date: Wed, 05 Sep 2012 17:23:18 -0600
+Message-ID: <5047DEE6.9020607@wwwdotorg.org>
+References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange> <Pine.LNX.4.64.1209051030230.16676@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1345662238-15211-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1209051030230.16676@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Hans Verkuil <hverkuil@xs4all.nl>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/22/2012 02:03 PM, David Daney wrote:
-> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+On 09/05/2012 04:57 AM, Guennadi Liakhovetski wrote:
+> Hi all
 > 
-> Commit 002176db (misc: at25: Parse dt settings) added device tree
-> bindings the differ significantly in style from the I2C EEPROM
-> bindings and don't seem well vetted.  Here I deprecate (but still
-> support) the "at25,*" properties, and add what I hope is a better
-> alternative.  These new bindings also happen to be deployed in the
-> field and were previously submitted for consideration here:
+> Version 5 of this RFC is a result of a discussion of its version 4, which 
+> took place during the recent Linux Plumbers conference in San Diego. 
+> Changes are:
 > 
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-May/015556.html
+> (1) remove bus-width properties from device (bridge and client) top level. 
+> This has actually already been decided upon during our discussions with 
+> Sylwester, I just forgot to actually remove them, sorry.
 > 
-> The advantages of the new bindings are that they are similar to the
-> I2C EEPROMs and they don't conflate read-only and the address width
-> modes in a binary encoded blob.
-> 
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Cc: Alexandre Pereira da Silva <aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Cc: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> Cc: Axel Lin <axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> (2) links are now grouped under "ports." This should help better describe 
+> device connection topology by making clearer, which interfaces links are 
+> attached to. (help needed: in my notes I see "port" optional if only one 
+> port is present, but I seem to remember, that the final decision was - 
+> make ports compulsory for uniformity. Which one is true?)
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+I'd tend to make the port node compulsory.
 
+A related question: What code is going to parse all the port/link
+sub-nodes in a device? And, how does it know which sub-nodes are ports,
+and which are something else entirely? Perhaps the algorithm is that all
+port nodes must be named "port"?
+
+If there were (optionally) no port node, I think the answer to that
+question would be a lot more complex, hence why I advocate for it always
+being there.
+
+> (3) "videolink" is renamed to just "link."
+> 
+> (4) "client" is renamed to "remote" and is now used on both sides of 
+> links.
+> 
+> (5) clock-names in clock consumer nodes (e.g., camera sensors) should 
+> reflect clock input pin names from respective datasheets
+> 
+> (6) also serial bus description should be placed under respective link 
+> nodes.
+> 
+> (7) reference remote link DT nodes in "remote" properties, not to the 
+> parent.
+> 
+> (8) use standard names for "SoC-external" (e.g., i2c) devices on their 
+> respective busses. "Sensor" has been proposed, maybe "camera" is a better 
+> match though.
+> 
+> Thanks
+> Guennadi
 > ---
->  Documentation/devicetree/bindings/misc/at25.txt | 34 +++++++---
->  drivers/misc/eeprom/at25.c                      | 83 +++++++++++++++++--------
->  2 files changed, 82 insertions(+), 35 deletions(-)
+> Guennadi Liakhovetski, Ph.D.
+> Freelance Open-Source Software Developer
+> http://www.open-technology.de/
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/at25.txt b/Documentation/devicetree/bindings/misc/at25.txt
-> index ab3c327..1d34471 100644
-> --- a/Documentation/devicetree/bindings/misc/at25.txt
-> +++ b/Documentation/devicetree/bindings/misc/at25.txt
-> @@ -1,21 +1,35 @@
-> -Atmel AT25 eeprom
-> +EEPROMs (SPI) compatible with Atmel at25.
->  
->  Required properties:
->  - compatible : "atmel,at25".
->  - reg : chip select number
->  - spi-max-frequency : max spi frequency to use
-> +- pagesize : size of the eeprom page
-> +- size : total eeprom size in bytes
-> +- address-width : number of address bits (one of 8, 16, or 24)
->  
-> +Optional properties:
-> +- spi-cpha : SPI shifted clock phase, as per spi-bus bindings.
-> +- spi-cpol : SPI inverse clock polarity, as per spi-bus bindings.
-> +- read-only : this parameter-less property disables writes to the eeprom
-> +
-> +Obsolete legacy properties are can be used in place of "size", "pagesize",
-> +"address-width", and "read-only":
->  - at25,byte-len : total eeprom size in bytes
->  - at25,addr-mode : addr-mode flags, as defined in include/linux/spi/eeprom.h
->  - at25,page-size : size of the eeprom page
->  
-> -Examples:
-> -at25@0 {
-> -	compatible = "atmel,at25";
-> -	reg = <0>
-> -	spi-max-frequency = <5000000>;
-> +Additional compatible properties are also allowed.
-> +
-> +Example:
-> +	at25@0 {
-> +		compatible = "atmel,at25", "st,m95256";
-> +		reg = <0>
-> +		spi-max-frequency = <5000000>;
-> +		spi-cpha;
-> +		spi-cpol;
->  
-> -	at25,byte-len = <0x8000>;
-> -	at25,addr-mode = <2>;
-> -	at25,page-size = <64>;
-> -};
-> +		pagesize = <64>;
-> +		size = <32768>;
-> +		address-width = <16>;
-> +	};
-> diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-> index 25003d6..4ed93dd 100644
-> --- a/drivers/misc/eeprom/at25.c
-> +++ b/drivers/misc/eeprom/at25.c
-> @@ -302,6 +302,61 @@ static ssize_t at25_mem_write(struct memory_accessor *mem, const char *buf,
->  
->  /*-------------------------------------------------------------------------*/
->  
-> +static int at25_np_to_chip(struct device *dev,
-> +			   struct device_node *np,
-> +			   struct spi_eeprom *chip)
-> +{
-> +	u32 val;
-> +
-> +	memset(chip, 0, sizeof(*chip));
-> +	strncpy(chip->name, np->name, sizeof(chip->name));
-> +
-> +	if (of_property_read_u32(np, "size", &val) == 0 ||
-> +	    of_property_read_u32(np, "at25,byte-len", &val) == 0) {
-> +		chip->byte_len = val;
-> +	} else {
-> +		dev_err(dev, "Error: missing \"size\" property\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (of_property_read_u32(np, "pagesize", &val) == 0 ||
-> +	    of_property_read_u32(np, "at25,page-size", &val) == 0) {
-> +		chip->page_size = (u16)val;
-> +	} else {
-> +		dev_err(dev, "Error: missing \"pagesize\" property\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (of_property_read_u32(np, "at25,addr-mode", &val) == 0) {
-> +		chip->flags = (u16)val;
-> +	} else {
-> +		if (of_property_read_u32(np, "address-width", &val)) {
-> +			dev_err(dev,
-> +				"Error: missing \"address-width\" property\n");
-> +			return -ENODEV;
-> +		}
-> +		switch (val) {
-> +		case 8:
-> +			chip->flags |= EE_ADDR1;
-> +			break;
-> +		case 16:
-> +			chip->flags |= EE_ADDR2;
-> +			break;
-> +		case 24:
-> +			chip->flags |= EE_ADDR3;
-> +			break;
-> +		default:
-> +			dev_err(dev,
-> +				"Error: bad \"address-width\" property: %u\n",
-> +				val);
-> +			return -ENODEV;
-> +		}
-> +		if (of_find_property(np, "read-only", NULL))
-> +			chip->flags |= EE_READONLY;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int at25_probe(struct spi_device *spi)
->  {
->  	struct at25_data	*at25 = NULL;
-> @@ -314,33 +369,11 @@ static int at25_probe(struct spi_device *spi)
->  	/* Chip description */
->  	if (!spi->dev.platform_data) {
->  		if (np) {
-> -			u32 val;
-> -
-> -			memset(&chip, 0, sizeof(chip));
-> -			strncpy(chip.name, np->name, 10);
-> -
-> -			err = of_property_read_u32(np, "at25,byte-len", &val);
-> -			if (err) {
-> -				dev_dbg(&spi->dev, "invalid chip dt description\n");
-> -				goto fail;
-> -			}
-> -			chip.byte_len = val;
-> -
-> -			err = of_property_read_u32(np, "at25,addr-mode", &val);
-> -			if (err) {
-> -				dev_dbg(&spi->dev, "invalid chip dt description\n");
-> -				goto fail;
-> -			}
-> -			chip.flags = (u16)val;
-> -
-> -			err = of_property_read_u32(np, "at25,page-size", &val);
-> -			if (err) {
-> -				dev_dbg(&spi->dev, "invalid chip dt description\n");
-> +			err = at25_np_to_chip(&spi->dev, np, &chip);
-> +			if (err)
->  				goto fail;
-> -			}
-> -			chip.page_size = (u16)val;
->  		} else {
-> -			dev_dbg(&spi->dev, "no chip description\n");
-> +			dev_err(&spi->dev, "Error: no chip description\n");
->  			err = -ENODEV;
->  			goto fail;
->  		}
+> // Describe an imaginary configuration: a CEU serving either a parallel ov7725
+> // sensor, or a serial imx074 sensor, connected over a CSI-2 SoC interface
 > 
+> 	ceu0: ceu@0xfe910000 {
+> 		compatible = "renesas,sh-mobile-ceu";
+> 		reg = <0xfe910000 0xa0>;
+> 		interrupts = <0x880>;
+> 
+> 		mclk: master_clock {
+> 			compatible = "renesas,ceu-clock";
+> 			#clock-cells = <1>;
+> 			clock-frequency = <50000000>;	/* max clock frequency */
+> 			clock-output-names = "mclk";
+> 		};
+> 
+> 		...
+> 		port@0 {
+
+Since there's only 1 port node here, you can drop the "@0" here.
+
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			ov772x_1_1: link@1 {
+
+This isn't a comment on the binding definition, but on the example
+itself. The label names ("ov772x_1_1" here and "csi2_0" below) feel
+backwards to me; I'd personally use label names that describe the object
+being labelled, rather than the object that's linked to the node being
+labelled. In other words, "ceu0_1" here, and "ov772x_1" at the far end
+of this link. But, these are just arbitrary names, so you can name/label
+everything whatever you want and it'll still work.
+
+> 				reg = <1>;		/* local pad # */
+> 				remote = <&ceu0_1>;	/* remote phandle and pad # */
+> 				bus-width = <8>;	/* used data lines */
+> 				data-shift = <0>;	/* lines 7:0 are used */
+> 	
+> 				/* If [hv]sync-active are missing, embedded bt.605 sync is used */
+> 				hsync-active = <1>;	/* active high */
+> 				vsync-active = <1>;	/* active high */
+> 				pclk-sample = <1>;	/* rising */
+> 			};
+> 
+> 			csi2_0: link@0 {
+> 				reg = <0>;
+> 				remote = <&ceu0_2>;
+> 				immutable;
+> 			};
+> 		};
+> 	};
+> 
+> 	i2c0: i2c@0xfff20000 {
+> 		...
+> 		ov772x_1: camera@0x21 {
+> 			compatible = "omnivision,ov772x";
+> 			reg = <0x21>;
+> 			vddio-supply = <&regulator1>;
+> 			vddcore-supply = <&regulator2>;
+> 
+> 			clock-frequency = <20000000>;
+> 			clocks = <&mclk 0>;
+> 			clock-names = "xclk";
+> 
+> 			...
+> 			port {
+> 				/* With 1 link per port no need in addresses */
+> 				ceu0_1: link@0 {
+
+You can drop "@0" there too.
+
+> 					bus-width = <8>;
+> 					remote = <&ov772x_1_1>;
+> 					hsync-active = <1>;
+> 					hsync-active = <0>;	/* who came up with an inverter here?... */
+> 					pclk-sample = <1>;
+> 				};
+> 			};
+> 		};
+> 
+> 		imx074: camera@0x1a {
+> 			compatible = "sony,imx074";
+> 			reg = <0x1a>;
+> 			vddio-supply = <&regulator1>;
+> 			vddcore-supply = <&regulator2>;
+> 
+> 			clock-frequency = <30000000>;	/* shared clock with ov772x_1 */
+> 			clocks = <&mclk 0>;
+> 			clock-names = "sysclk";		/* assuming this is the name in the datasheet */
+> 			...
+> 			port {
+> 				csi2_1: link@0 {
+
+You can drop "@0" there too.
+
+> 					clock-lanes = <0>;
+> 					data-lanes = <1>, <2>;
+> 					remote = <&imx074_1>;
+> 				};
+> 			};
+> 		};
+> 		...
+> 	};
+> 
+> 	csi2: csi2@0xffc90000 {
+> 		compatible = "renesas,sh-mobile-csi2";
+> 		reg = <0xffc90000 0x1000>;
+> 		interrupts = <0x17a0>;
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 		...
+> 		port {
+> 			compatible = "renesas,csi2c";	/* one of CSI2I and CSI2C */
+> 			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S, PHY_M has port address 0, is unused */
+> 
+> 			imx074_1: link@1 {
+
+You can drop "@1" there too.
+
+> 				client = <&imx074 0>;
+> 				clock-lanes = <0>;
+> 				data-lanes = <2>, <1>;
+> 				remote = <&csi2_1>;
+> 			};
+> 		};
+> 		port {
+
+There are two nodes named "port" here; I think they should be "port@1"
+and "port@2" based on the reg properties.
+
+> 			reg = <2>;			/* port 2: link to the CEU */
+> 			ceu0_2: link@0 {
+
+You can drop "@0" there too.
+
+> 				immutable;
+> 				remote = <&csi2_0>;
+> 			};
+> 		};
+> 	};
+
+Aside from those minor comments, I think the overall structure of the
+bindings looks good.
