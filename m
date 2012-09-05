@@ -1,82 +1,115 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Wed, 5 Sep 2012 09:12:21 +0800
-Message-ID: <20120905011219.GN2362@S2101-09.ap.freescale.net>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
- <1344577046-14847-4-git-send-email-shawn.guo@linaro.org>
- <201209050118.39045.rjw@sisk.pl>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: Re: [PATCH] ARM: EXYNOS: Add MFC device tree support
+Date: Wed, 05 Sep 2012 11:42:44 +0900
+Message-ID: <5046BC24.8010704@samsung.com>
+References: <31269552.67881346148504997.JavaMail.weblogic@epml04>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201209050118.39045.rjw-KKrjLPT3xs0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <31269552.67881346148504997.JavaMail.weblogic@epml04>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: arun.kk@samsung.com
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2012 at 01:18:38AM +0200, Rafael J. Wysocki wrote:
-> On Friday, August 10, 2012, Shawn Guo wrote:
-> > It adds a generic cpufreq driver for CPU0 frequency management based on
-> > clk, regulator, OPP and device tree support.  It can support both
-> > uniprocessor (UP) and those symmetric multiprocessor (SMP) systems which
-> > share clock and voltage across all CPUs.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 08/28/2012 07:08 PM, Arun Kumar K wrote:
+
+> Hi Karol,
+> Thanks for your comments. 
+> Please find my response inline.
+
+Hi... and sorry for so much delayed response.
+
+>>> +
+>>> +static void __init exynos5_reserve(void)
+>>> +{
+>>> +     s5p_mfc_reserve_mem(0x43000000, 8 << 20, 0x51000000, 8 << 20);
+>>
+>>
+>> I think it would make sense to make this memory reservation dependent
+>> on "mfc*" node being present in DTS.  It's to early to use of_* functions
+>> (because tree is not populated at this stage) but fdt_* family of functions
+>> work just fine.
+>>
 > 
-> I seem to recall that this has been discussed with several people and
-> undergone some changes as a result of comments.  Would it be possible
-> to get some ACKs from the people involved?
-> 
+> As I can see the fdt_* functions are not used in any of the ARM based SoC
+> init codes. Though I can see some references in powerpc.
+> The implementation and includes are present in arch/arm/boot/compressed/
+> which I think cannot be used directly in mach-exynos unless we make some
+> comon makefile changes. 
 
-Mark, Santosh,
 
-Reviewed-by, please?
+It looks like I was writing from memory, and I actually mixed things 
+up.  To be clear this time - we can't use regular device tree handling
+functions in reserve() as it's too early.  Namely, flattened device tree
+is not yet converted to kernel's-natural representation.  However, 
+I think we can scan fdt just fine.  To do so one just needs to use
+functions declared here
 
-AnilKumar,
+  #include <linux/of_fdt.h>
 
-Tested-by, please?
+Actual architecture-independent code is in drivers/of/fdt.c.  This
+provides of_fdt_ family of functions. Please see below for example.
 
-<snip>
 
-> > --- /dev/null
-> > +++ b/drivers/cpufreq/cpufreq-cpu0.c
-> > @@ -0,0 +1,271 @@
-> > +/*
-> > + * Copyright (C) 2012 Freescale Semiconductor, Inc.
-> > + *
-> > + * Reuse some codes from drivers/cpufreq/omap-cpufreq.c
-> 
-> What do you mean by "reuse" here?
-> 
-cpu0_set_target() function is almost a copy of omap_target() from
-drivers/cpufreq/omap-cpufreq.c.  I should probably just say so?
+> Please clarify whether its ok to use fdt_* functions to parse the dts in 
+> exynos machine init or please point me to some sample implementations
+> which I can refer to.
 
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> 
-> The kernel is just GPLv2 (not later) and it will stay this way.  Please
-> update this comment accordingly.
-> 
-Okay.
 
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
+It should be ok to use anything that works on flattened device tree
+rather than its uncompressed version.  I've experimented a bit and
+something like this worked for me just fine (it was around 3.3-kernel
+timeframe, but I don't think that fdt api has changed):
 
--- 
+[mach-exynos4-dt.c]
+
+#include <linux/of_fdt.h>
+
+int fdt_find_compat(unsigned long node, const char *uname, int depth, void *data)
+{
+        if (of_flat_dt_is_compatible(node, (char *)data))
+                return 1;
+
+        return 0;
+}
+
+static void __init exynos4210_dt_reserve(void)
+{
+        /* Reserve memory for MFC only if it's available */
+        if (of_scan_flat_dt(fdt_find_compat, "samsung,s5pv210-mfc")) {
+                printk(KERN_NOTICE "exynos4-dt: mfc device node found - setting up memory area for dma\n");
+                s5p_mfc_reserve_mem(0x43000000, 8 << 20, 0x51000000, 8 << 20);
+        }
+}
+
+[.dts]
+
+ codec@some-addr {
+      compatible = "samsung,s5pv210-mfc";
+ };
+
+
+So, in above code fragment I just check if mfc was defined in dts.
+This could probably stay as it is.
+
+Then I allocate _predefined_ region - and this part should be fixed.
+
+If you have nodes like "mfc-r-size"/offset, then you could just get
+this information directly from (f)dt rather than hardcoding it in the code.
+Precisely, after we find compatible node we could do something like
+following (untested):
+
+unsigned long lsize, loff, rsize, roff len;
+__be32 *prop;
+
+prop = of_get_flat_dt_prop(node, "samsung,mfc-l-size", &len);
+if (!prop)
+   return;
+lsize = of_read_ulong(prop, len/4);
+...
+
 Regards,
-Shawn
+-- 
+Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
