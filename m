@@ -1,76 +1,28 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 4/9] ARM: msm: Move 8660 to DT timer
-Date: Wed,  5 Sep 2012 12:28:54 -0700
-Message-ID: <1346873339-10927-5-git-send-email-sboyd@codeaurora.org>
-References: <1346873339-10927-1-git-send-email-sboyd@codeaurora.org>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH v3 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Wed, 5 Sep 2012 22:18:50 +0200
+Message-ID: <201209052218.50634.rjw@sisk.pl>
+References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org> <201209051538.12916.rjw@sisk.pl> <20120905135937.GA2362@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1346873339-10927-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20120905135937.GA2362@S2101-09.ap.freescale.net>
+Sender: cpufreq-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Shilimkar Santosh <santosh.shilimkar@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, AnilKumar Ch <anilkumar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the timer entry and point the machine descriptor to the
-device tree based msm timer.
+On Wednesday, September 05, 2012, Shawn Guo wrote:
+> On Wed, Sep 05, 2012 at 03:38:12PM +0200, Rafael J. Wysocki wrote:
+> > Well, what about actually avoiding the code duplication?  That is,
+> > can you make OMAP be a user of your new core function and drop the
+> > OMAP-specific one, perhaps?
+> > 
+> I would expect that the driver will replace the omap-cpufreq driver
+> completely at some point, where omap becomes a DT only platform.
 
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- arch/arm/boot/dts/msm8660-surf.dts | 17 +++++++++++++++++
- arch/arm/mach-msm/board-msm8x60.c  |  2 +-
- 2 files changed, 18 insertions(+), 1 deletion(-)
+That's fine, but why do we need two almost identical functions to start with?
 
-diff --git a/arch/arm/boot/dts/msm8660-surf.dts b/arch/arm/boot/dts/msm8660-surf.dts
-index 45bc4bb..93a15ab 100644
---- a/arch/arm/boot/dts/msm8660-surf.dts
-+++ b/arch/arm/boot/dts/msm8660-surf.dts
-@@ -15,6 +15,23 @@
- 		      < 0x02081000 0x1000 >;
- 	};
- 
-+	timer@02000004 {
-+		compatible = "qcom,msm-gpt", "qcom,msm-timer";
-+		interrupts = <1 1 0x301>;
-+		reg = <0x02000004 0x10>;
-+		clock-frequency = <32768>;
-+		cpu-offset = <0x40000>;
-+	};
-+
-+	timer@02000024 {
-+		compatible = "qcom,msm-dgt", "qcom,msm-timer";
-+		interrupts = <1 0 0x301>;
-+		reg = <0x02000024 0x10>,
-+		      <0x02000034 0x4>;
-+		clock-frequency = <6750000>;
-+		cpu-offset = <0x40000>;
-+	};
-+
- 	serial@19c400000 {
- 		compatible = "qcom,msm-hsuart", "qcom,msm-uart";
- 		reg = <0x19c40000 0x1000>,
-diff --git a/arch/arm/mach-msm/board-msm8x60.c b/arch/arm/mach-msm/board-msm8x60.c
-index 97db3cd..64c981d 100644
---- a/arch/arm/mach-msm/board-msm8x60.c
-+++ b/arch/arm/mach-msm/board-msm8x60.c
-@@ -154,7 +154,7 @@ DT_MACHINE_START(MSM_DT, "Qualcomm MSM (Flattened Device Tree)")
- 	.handle_irq = gic_handle_irq,
- 	.init_machine = msm8x60_dt_init,
- 	.init_late = msm8x60_init_late,
--	.timer = &msm8x60_timer,
-+	.timer = &msm_dt_timer,
- 	.dt_compat = msm8x60_fluid_match,
- MACHINE_END
- #endif /* CONFIG_OF */
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Rafael
