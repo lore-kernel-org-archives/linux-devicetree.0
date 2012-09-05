@@ -1,67 +1,29 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v3 1/4] pinctrl: add samsung pinctrl and gpiolib driver
-Date: Wed, 05 Sep 2012 15:50:40 +0200
-Message-ID: <k27lbg$hrj$1@ger.gmane.org>
-References: <1345720529-32315-1-git-send-email-thomas.abraham@linaro.org>
- <1345720529-32315-2-git-send-email-thomas.abraham@linaro.org>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Wed, 5 Sep 2012 21:59:40 +0800
+Message-ID: <20120905135937.GA2362@S2101-09.ap.freescale.net>
+References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
+ <201209050118.39045.rjw@sisk.pl>
+ <20120905011219.GN2362@S2101-09.ap.freescale.net>
+ <201209051538.12916.rjw@sisk.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201209051538.12916.rjw@sisk.pl>
+Sender: cpufreq-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Shilimkar Santosh <santosh.shilimkar@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, AnilKumar Ch <anilkumar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-Thomas Abraham wrote:
-> Add a new device tree enabled pinctrl and gpiolib driver for Samsung
-> SoC's. This driver provides a common and extensible framework for all
-> Samsung SoC's to interface with the pinctrl and gpiolib subsystems. This
-> driver supports only device tree based instantiation and hence can be
-> used only on those Samsung platforms that have device tree enabled.
+On Wed, Sep 05, 2012 at 03:38:12PM +0200, Rafael J. Wysocki wrote:
+> Well, what about actually avoiding the code duplication?  That is,
+> can you make OMAP be a user of your new core function and drop the
+> OMAP-specific one, perhaps?
 > 
-> This driver is split into two parts: the pinctrl interface and the gpiolib
-> interface. The pinctrl interface registers pinctrl devices with the
-> pinctrl subsystem and gpiolib interface registers gpio chips with the
-> gpiolib subsystem. The information about the pins, pin groups, pin
-> functions and gpio chips, which are SoC specific, are parsed from device
-> tree node.
-> 
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+I would expect that the driver will replace the omap-cpufreq driver
+completely at some point, where omap becomes a DT only platform.
 
-Does the driver provide any kind of compatibility with current gpiolib 
-users?
-
-Let me show an example of what I mean. We have a fixed voltage regulator 
-defined in device tree of an imaginary board
-
-	vemmc_reg: voltage-regulator@0 {
-	        compatible = "regulator-fixed";
-		regulator-name = "VMEM_VDD_2.8V";
-		regulator-min-microvolt = <2800000>;
-		regulator-max-microvolt = <2800000>;
-		gpio = <&gpk0 2 1 0 0>;
-		enable-active-high;
-	};
-
-The gpio pin used to control status of the regulator is defined using the 
-gpio property and regulator-fixed driver uses of_get_named_gpio to get the 
-pin number from device tree.
-
-Is this kind of setup also valid when using your pinctrl driver?
-
-Best regards,
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
+Regards,
+Shawn
