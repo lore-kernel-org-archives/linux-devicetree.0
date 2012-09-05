@@ -1,122 +1,67 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH RESEND v5 3/3] arm/dts: AM33XX: Add D_CAN device tree data
-Date: Wed, 05 Sep 2012 15:46:58 +0200
-Message-ID: <504757D2.90601@pengutronix.de>
-References: <1346845260-10978-1-git-send-email-anilkumar@ti.com>
- <1346845260-10978-4-git-send-email-anilkumar@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v3 1/4] pinctrl: add samsung pinctrl and gpiolib driver
+Date: Wed, 05 Sep 2012 15:50:40 +0200
+Message-ID: <k27lbg$hrj$1@ger.gmane.org>
+References: <1345720529-32315-1-git-send-email-thomas.abraham@linaro.org>
+ <1345720529-32315-2-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2089826236823169267=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346845260-10978-4-git-send-email-anilkumar-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---===============2089826236823169267==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig29B910F3C5904AF20D082085"
+Hi Thomas,
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig29B910F3C5904AF20D082085
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Thomas Abraham wrote:
+> Add a new device tree enabled pinctrl and gpiolib driver for Samsung
+> SoC's. This driver provides a common and extensible framework for all
+> Samsung SoC's to interface with the pinctrl and gpiolib subsystems. This
+> driver supports only device tree based instantiation and hence can be
+> used only on those Samsung platforms that have device tree enabled.
+> 
+> This driver is split into two parts: the pinctrl interface and the gpiolib
+> interface. The pinctrl interface registers pinctrl devices with the
+> pinctrl subsystem and gpiolib interface registers gpio chips with the
+> gpiolib subsystem. The information about the pins, pin groups, pin
+> functions and gpio chips, which are SoC specific, are parsed from device
+> tree node.
+> 
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Kukjin Kim <kgene.kim@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 
-On 09/05/2012 01:41 PM, AnilKumar Ch wrote:
-> Add Bosch D_CAN controller device tree data to AM33XX dtsi
-> file by adding d_can device nodes with all the necessary
-> parameters.
->=20
-> Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am33xx.dtsi |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.d=
-tsi
-> index bf5f713..ab744d6 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -177,5 +177,23 @@
->  			compatible =3D "ti,omap3-wdt";
->  			ti,hwmods =3D "wd_timer2";
->  		};
-> +
-> +		dcan0: d_can@481cc000 {
-> +			compatible =3D "bosch,d_can";
+Does the driver provide any kind of compatibility with current gpiolib 
+users?
 
-On imx/mxs we also add a compatible for the current hardware, this may
-look like this:
+Let me show an example of what I mean. We have a fixed voltage regulator 
+defined in device tree of an imaginary board
 
-			compatible =3D "ti,am33xx-can", "bosch,d_can";
+	vemmc_reg: voltage-regulator@0 {
+	        compatible = "regulator-fixed";
+		regulator-name = "VMEM_VDD_2.8V";
+		regulator-min-microvolt = <2800000>;
+		regulator-max-microvolt = <2800000>;
+		gpio = <&gpk0 2 1 0 0>;
+		enable-active-high;
+	};
 
-But I don't know if this is a generic policy or just an imx/mxs thing :)
+The gpio pin used to control status of the regulator is defined using the 
+gpio property and regulator-fixed driver uses of_get_named_gpio to get the 
+pin number from device tree.
 
-Marc
+Is this kind of setup also valid when using your pinctrl driver?
 
-> +			ti,hwmods =3D "d_can0";
-> +			reg =3D <0x481cc000 0x2000>;
-> +			interrupts =3D <52>;
-> +			interrupt-parent =3D <&intc>;
-> +			status =3D "disabled";
-> +		};
-> +
-> +		dcan1: d_can@481d0000 {
-> +			compatible =3D "bosch,d_can";
-> +			ti,hwmods =3D "d_can1";
-> +			reg =3D <0x481d0000 0x2000>;
-> +			interrupts =3D <55>;
-> +			interrupt-parent =3D <&intc>;
-> +			status =3D "disabled";
-> +		};
->  	};
->  };
->=20
-
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig29B910F3C5904AF20D082085
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
-
-iEYEARECAAYFAlBHV9UACgkQjTAFq1RaXHN+BQCfVsJm0ab5HWiYeElf9AzSXv0u
-KSsAnj7KhzT3553Cup8CCWuZLQIXmQMP
-=OStK
------END PGP SIGNATURE-----
-
---------------enig29B910F3C5904AF20D082085--
-
---===============2089826236823169267==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2089826236823169267==--
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
