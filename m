@@ -1,41 +1,78 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6 v2] ARM: integrator: initial device tree support
-Date: Wed, 5 Sep 2012 07:47:01 +0200
-Message-ID: <CACRpkdaerxxe+idaEfDH4byPDwUi0YyLthFsRsup1KYOP3SCCw@mail.gmail.com>
-References: <1346471760-23993-1-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-3-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-4-git-send-email-linus.walleij@linaro.org>
- <201209011841.58977.arnd@arndb.de>
- <CACRpkdZhJyqeeXV_Zcfi7S01oH1Kw95qvAmOqrMKwhSLb-mX=Q@mail.gmail.com>
- <20120903215505.GB31511@n2100.arm.linux.org.uk>
- <CACRpkdbXSaBNystUv9RTmDKrmV=OakFF49LPkoQtoi9FnaXmDg@mail.gmail.com>
- <20120905053402.GI6747@quad.lixom.net>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v6 0/4] add syscon driver based on regmap for general
+ registers access
+Date: Wed, 5 Sep 2012 13:54:12 +0800
+Message-ID: <20120905055410.GZ2362@S2101-09.ap.freescale.net>
+References: <1346813836-28736-1-git-send-email-b29396@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120905053402.GI6747-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1346813836-28736-1-git-send-email-b29396@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@stericsson.com, s.hauer@pengutronix.de, kernel@pengutronix.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, richard.zhao@freescale.com, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 5, 2012 at 7:34 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+Hi Samuel,
 
-> So, Linus, it's up to you (and Russell) what you prefer, but I'd be
-> happy to take it through arm-soc if we get a stable base.
+The series needs to go via mfd or arm-soc tree as a whole.  In case
+you want to take it through mfd tree, here is my ack.
 
-I'll fix up the usage of CONFIG_ATAGS in this patch and put it into
-Russell's tracker to minimize the hazzle.
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
 
-Yours,
-Linus Walleij
+Otherwise, I can take it via arm-soc tree with your ack.
+
+Regards,
+Shawn
+
+On Wed, Sep 05, 2012 at 10:57:12AM +0800, Dong Aisheng wrote:
+> This patch series mainly adds an syscon driver which is used to access
+> general system controller registers like FSL IOMUXC GPR and ANATOP,
+> after that, we convert all the exist private access general registers code to use
+> standard API from regmap to access registers.
+> Finally we remove the old mfd anatop driver which is only for anatop register
+> access.
+> 
+> The patch series is based on linus's tree 3.6-rc4 since commit 5b716ac.
+> 
+> ChangeLog v5->v6:
+>  * put node after call syscon_node_to_regmap in anatop regulator driver
+>  * using dev instead of &pdev->dev in syscon probe
+> ChangeLog v4->v5:
+>  * change syscon driver depends on OF
+>  * do not call of_node_put in syscon_node_to_regmap
+>  * renamed: include/linux/fsl/imx6q-iomuxc-gpr.h ->
+> 	    include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> ChangeLog v3->v4:
+> Only '[PATCH v4 1/7] mfd: add syscon driver based on regmap' is changed.
+> 
+> Dong Aisheng (4):
+>   mfd: add syscon driver based on regmap
+>   ARM: imx6q: add iomuxc gpr support into syscon
+>   regulator: anatop-regulator: convert to use syscon to access anatop
+>     register
+>   mfd: anatop-mfd: remove anatop driver
+> 
+>  Documentation/devicetree/bindings/mfd/syscon.txt |   20 ++
+>  arch/arm/boot/dts/imx6q.dtsi                     |    9 +-
+>  arch/arm/mach-imx/Kconfig                        |    2 +-
+>  arch/arm/mach-imx/mach-imx6q.c                   |   47 ++--
+>  drivers/mfd/Kconfig                              |   12 +-
+>  drivers/mfd/Makefile                             |    2 +-
+>  drivers/mfd/anatop-mfd.c                         |  124 ---------
+>  drivers/mfd/syscon.c                             |  176 ++++++++++++
+>  drivers/regulator/Kconfig                        |    2 +-
+>  drivers/regulator/anatop-regulator.c             |   31 ++-
+>  include/linux/mfd/anatop.h                       |   40 ---
+>  include/linux/mfd/syscon.h                       |   23 ++
+>  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h      |  319 ++++++++++++++++++++++
+>  13 files changed, 593 insertions(+), 214 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
+>  delete mode 100644 drivers/mfd/anatop-mfd.c
+>  create mode 100644 drivers/mfd/syscon.c
+>  delete mode 100644 include/linux/mfd/anatop.h
+>  create mode 100644 include/linux/mfd/syscon.h
+>  create mode 100644 include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> 
+> 
