@@ -1,50 +1,134 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 1/8] ARM/dts: OMAP2: Add McBSP entries for OMAP2420
- and OMAP2430 SoC
-Date: Wed, 05 Sep 2012 11:23:58 +0300
-Message-ID: <50470C1E.7090300@ti.com>
-References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com> <1346247067-9632-2-git-send-email-peter.ujfalusi@ti.com> <5044C2DD.5000705@ti.com> <504578B3.3090804@ti.com> <5045D557.30404@ti.com> <79CD15C6BA57404B839C016229A409A83EAA7C99@DBDE01.ent.ti.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v5 4/9] mmc: dw_mmc: lookup for optional biu and ciu clocks
+Date: Wed, 05 Sep 2012 17:30:38 +0900
+Message-ID: <50470DAE.4020300@samsung.com>
+References: <CAJuYYwQ50HCSrDgxrvhRh5X2ECxi_g=_akoa6o9FYCQ5GqHUCQ@mail.gmail.com>
+ <1346787968-23709-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A83EAA7C99@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1346787968-23709-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 09/05/2012 04:46 AM, Thomas Abraham wrote:
+> Some platforms allow for clock gating and control of bus interface unit clock
+> and card interface unit clock. Add support for clock lookup of optional biu
+> and ciu clocks for clock gating and clock speed determination.
+> 
+> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> Acked-by: Will Newton <will.newton@imgtec.com>
+> ---
+>  drivers/mmc/host/dw_mmc.c  |   50 +++++++++++++++++++++++++++++++++++++++++--
+>  include/linux/mmc/dw_mmc.h |    4 +++
+>  2 files changed, 51 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 227c42e..e8c8491 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -1960,13 +1960,40 @@ int dw_mci_probe(struct dw_mci *host)
+>  		return -ENODEV;
+>  	}
+>  
+> -	if (!host->pdata->bus_hz) {
+> +	host->biu_clk = clk_get(host->dev, "biu");
+> +	if (IS_ERR(host->biu_clk)) {
+> +		dev_dbg(host->dev, "biu clock not available\n");
+> +	} else {
+> +		ret = clk_prepare_enable(host->biu_clk);
+> +		if (ret) {
+> +			dev_err(host->dev, "failed to enable biu clock\n");
+> +			return ret;
+didn't clk_put() for biu_clk? 
+> +		}
+> +	}
+> +
+> +	host->ciu_clk = clk_get(host->dev, "ciu");
+> +	if (IS_ERR(host->ciu_clk)) {
+> +		dev_dbg(host->dev, "ciu clock not available\n");
+> +	} else {
+> +		ret = clk_prepare_enable(host->ciu_clk);
+> +		if (ret) {
+> +			dev_err(host->dev, "failed to enable ciu clock\n");
+> +			goto err_clk_biu;
+> +		}
+> +	}
+> +
+> +	if (IS_ERR(host->ciu_clk))
+> +		host->bus_hz = host->pdata->bus_hz;
+> +	else
+> +		host->bus_hz = clk_get_rate(host->ciu_clk);
+> +
+> +	if (!host->bus_hz) {
+>  		dev_err(host->dev,
+>  			"Platform data must supply bus speed\n");
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto err_clk_ciu;
+>  	}
+>  
+> -	host->bus_hz = host->pdata->bus_hz;
+>  	host->quirks = host->pdata->quirks;
+>  
+>  	spin_lock_init(&host->lock);
+> @@ -2116,6 +2143,17 @@ err_dmaunmap:
+>  		regulator_disable(host->vmmc);
+>  		regulator_put(host->vmmc);
+>  	}
+> +
+> +err_clk_ciu:
+> +	if (!IS_ERR(host->ciu_clk)) {
+> +		clk_disable_unprepare(host->ciu_clk);
+> +		clk_put(host->ciu_clk);
+> +	}
+> +err_clk_biu:
+I think right that is located the clk_put(host->ciu_clk) at here
+> +	if (!IS_ERR(host->biu_clk)) {
+> +		clk_disable_unprepare(host->biu_clk);
+> +		clk_put(host->biu_clk);
+> +	}
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(dw_mci_probe);
+> @@ -2149,6 +2187,12 @@ void dw_mci_remove(struct dw_mci *host)
+>  		regulator_put(host->vmmc);
+>  	}
+>  
+> +	if (!IS_ERR(host->ciu_clk))
+> +		clk_disable_unprepare(host->ciu_clk);
+> +	if (!IS_ERR(host->biu_clk))
+> +		clk_disable_unprepare(host->biu_clk);
+> +	clk_put(host->ciu_clk);
+> +	clk_put(host->biu_clk);
+>  }
+>  EXPORT_SYMBOL(dw_mci_remove);
+>  
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index a37a573..787ad56 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -78,6 +78,8 @@ struct mmc_data;
+>   * @data_offset: Set the offset of DATA register according to VERID.
+>   * @dev: Device associated with the MMC controller.
+>   * @pdata: Platform data associated with the MMC controller.
+> + * @biu_clk: Pointer to bus interface unit clock instance.
+> + * @ciu_clk: Pointer to card interface unit clock instance.
+>   * @slot: Slots sharing this MMC controller.
+>   * @fifo_depth: depth of FIFO.
+>   * @data_shift: log2 of FIFO item size.
+> @@ -158,6 +160,8 @@ struct dw_mci {
+>  	u16			data_offset;
+>  	struct device		*dev;
+>  	struct dw_mci_board	*pdata;
+> +	struct clk		*biu_clk;
+> +	struct clk		*ciu_clk;
+>  	struct dw_mci_slot	*slot[MAX_MCI_SLOTS];
+>  
+>  	/* FIFO push and pull */
+> 
 
-On 09/05/2012 09:11 AM, Hiremath, Vaibhav wrote:
->> Not yet, but we discussed that with Peter and since he does have the=
-se
->> patches for DT, he'll be able to test your series with the McBSP cha=
-nges.
->>
->=20
-> Great.
-
-With his series and your patch for omap-hwmod audio was probing and wor=
-king on
-OMAP3/4/5 without issues.
-
->=20
->> I still want to update a couple of DTS to test that on some other IP=
-s.
->>
->=20
-> Ohh ok. Please let me know if I can help you here by any means.
-> I am equipped with AM37xEVM, BeagleBoard and Panda.
-
-You can try this series and your patch on top of linux-next on Panda. N=
-ot all
-patches are in which needed for BeagleBoard at the moment.
-
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
