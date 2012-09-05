@@ -1,46 +1,48 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Wed, 5 Sep 2012 16:34:18 -0700
-Message-ID: <20120905233416.GP1303@atomide.com>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
- <CAK5ve-Jqc1xpXa0VM7=+MN1cvm=8ysg9W9WRiG66yq7GRfh+Gw@mail.gmail.com>
- <201209050513.08588.marex@denx.de>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: patch "misc/at25, dt: Improve at25 SPI eeprom device tree
+ bindings." added to char-misc tree
+Date: Wed, 5 Sep 2012 16:34:20 -0700
+Message-ID: <20120905233420.GA6104@kroah.com>
+References: <13468794411229@kroah.org>
+ <5047C546.1020804@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201209050513.08588.marex@denx.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: Bryan Wu <bryan.wu@canonical.com>, AnilKumar Ch <anilkumar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
+In-Reply-To: <5047C546.1020804-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, axel.lin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Marek Vasut <marex@denx.de> [120904 20:13]:
-> Dear Bryan Wu,
+On Wed, Sep 05, 2012 at 02:33:58PM -0700, David Daney wrote:
+> On 09/05/2012 02:10 PM, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org wrote:
+> >
+> >This is a note to let you know that I've just added the patch titled
+> >
+> >     misc/at25, dt: Improve at25 SPI eeprom device tree bindings.
 > 
-> > On Sat, Sep 1, 2012 at 4:16 PM, AnilKumar Ch <anilkumar@ti.com> wrote:
-> > > Adopt pinctrl support to leds-gpio driver based on leds-gpio
-> > > device pointer, pinctrl driver configure SoC pins to GPIO
-> > > mode according to definitions provided in .dts file.
-> > 
-> > Thanks for this, actually Marek Vasut submitted a similar patch
-> > before. I'm pretty fine with this patch.
-> 
-> Thanks for submitting this actually ... I didn't have time to properly 
-> investigate this.
-> 
-> > But without proper DT setting, it will also give us warning I think.
-> > or we can provide some dummy functions as a temp solution as Shawn
-> > pointed out before.
-> 
-> But this driver is also used on hardware that's not yet coverted to DT, so I'd 
-> say dev_warn() if CONFIG_OF is enabled and otherwise simply go on ? Actually, 
-> can we not skip whole this pinctrl thing if CONFIG_OF is disabled? Actually (2), 
-> what's the relationship between OF and pinctrl?
+> It is perhaps obvious that I think the patch should be merged (as I
+> wrote it and sent it to you).  However, I think there is a bit of
+> process problem here.  Patches that affect device tree bindings are
+> part of the de facto kernel ABI, and as such, need proper vetting.
+> It is my opinion that neither the original patch, nor this one
+> correcting it, should have been committed without either Grant or
+> Rob giving an Acked-by.
 
-The warning should be pinctrl related as the pinctrl drivers may not be
-device tree based drivers.
+Then next time, please do a RFC or something that indicates that I
+shouldn't be applying a patch without such an Ack.
 
-Regards,
+If you want, I will gladly revert this :)
 
-Tony
+greg k-h
