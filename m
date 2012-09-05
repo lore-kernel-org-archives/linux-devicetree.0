@@ -1,74 +1,82 @@
-From: Bill Huang <bilhuang@nvidia.com>
-Subject: RE: [PATCH v2 1/2] mfd: dt: tps6586x: Add power off control
-Date: Wed, 5 Sep 2012 08:28:47 +0800
-Message-ID: <A7051F87A141B744BCAF487D48E5B3BDF5BA98285C@HKMAIL02.nvidia.com>
-References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
- <1345424876-4365-2-git-send-email-bilhuang@nvidia.com>
- <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de>
- <A7051F87A141B744BCAF487D48E5B3BDF5BA982847@HKMAIL02.nvidia.com>
- <A7051F87A141B744BCAF487D48E5B3BDF5BA98284B@HKMAIL02.nvidia.com>
- <503847C2.3080400@wwwdotorg.org>
- <A7051F87A141B744BCAF487D48E5B3BDF5BA98284E@HKMAIL02.nvidia.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
+Date: Wed, 5 Sep 2012 09:12:21 +0800
+Message-ID: <20120905011219.GN2362@S2101-09.ap.freescale.net>
+References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
+ <1344577046-14847-4-git-send-email-shawn.guo@linaro.org>
+ <201209050118.39045.rjw@sisk.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <A7051F87A141B744BCAF487D48E5B3BDF5BA98284E@HKMAIL02.nvidia.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Bill Huang <bilhuang@nvidia.com>
-Cc: 'Thierry Reding' <thierry.reding@avionic-design.de>, "'sameo@linux.intel.com'" <sameo@linux.intel.com>, "'grant.likely@secretlab.ca'" <grant.likely@secretlab.ca>, "'rob.herring@calxeda.com'" <rob.herring@calxeda.com>, "'rob@landley.net'" <rob@landley.net>, "'broonie@opensource.wolfsonmicro.com'" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Xin Xie <xxie@nvidia.com>, "'lrg@slimlogic.co.uk'" <lrg@slimlogic.co.uk>, "'jhovold@gmail.com'" <jhovold@gmail.com>, "'kyle.manna@fuel7.com'" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "'devicetree-discuss@lists.ozlabs.org'" <devicetree-discuss@lists.ozlabs.org>, "'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201209050118.39045.rjw-KKrjLPT3xs0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> nvpublic
-> > On 08/24/2012 06:36 PM, Bill Huang wrote:
-> > >>> On Sun, Aug 19, 2012 at 06:07:55PM -0700, Bill Huang wrote:
-> > >>>> Add DT property "ti,system-power-controller" telling whether or
-> > >>>> not this pmic is in charge of controlling the system power, so
-> > >>>> the power off routine can be hooked up to system call "pm_power_off".
-> > ...
-> > >>> I've seen the following while trying this patch applied on top of next-20120817:
-> > >>>
-> > >>> [   40.581151] Power down.
-> > >>> [   41.583160] ------------[ cut here ]------------
-> > >>> [   41.587784] WARNING: at /home/thierry.reding/src/kernel/linux-
-> ipmp.git/drivers/i2c/busses/i2c-
-> > >>> tegra.c:525 tegra_i2c_xfer+0x21c/0x29c()
-> > ...
-> > >> Thanks Thierry, I can repro this on Tegra20 inconsistently and
-> > >> found, if current cpu is not cpu0 when doing "machine_shutdown" (it
-> > >> will call "smp_send_stop"), i2c controller will failed to do any
-> > >> transaction (looks like gic interrupt
-> > will be disabled), I'll debug further to find out the root cause.
-> > >>
-> > >> By the way, Tegra30 is good since it will always be cpu0 when doing
-> > >> "machine_shutdown", I still don't know why it makes the difference
-> > >> against Tegra20 since I'm not familiar with those cpu stuffs and
-> > >> what make it behave differently,
-> > I'll study a bit, thanks.
-> > >
-> > > I've sent the shutdown issue for discussion in ARM list: Shutdown
-> > > problem in SMP system happened on
-> > Tegra20.
-> > > The cause of the i2c timeout is pretty clear now and it is not
-> > > directly related to this patch, so is this patch series acceptable? Any thoughts or comment?
-> Thanks.
-> >
-> > I tend to agree; power off never worked without this patch, and
-> > sometimes does with the patch, due to nothing wrong with this patch.
-> >
-> > Bill, please do follow up on getting the underlying Tegra issue solved
-> > somehow though. IIRC, Joseph Lo or Prashant has a patch which enabled
-> > the config option that Russell mentioned, so the fix may just be to wait for that patch to get
-> finalized, but please double-check that solves it.
-> > Thanks!
+On Wed, Sep 05, 2012 at 01:18:38AM +0200, Rafael J. Wysocki wrote:
+> On Friday, August 10, 2012, Shawn Guo wrote:
+> > It adds a generic cpufreq driver for CPU0 frequency management based on
+> > clk, regulator, OPP and device tree support.  It can support both
+> > uniprocessor (UP) and those symmetric multiprocessor (SMP) systems which
+> > share clock and voltage across all CPUs.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> As per the shutdown issue discussion, enabling CONFIG_PM_SLEEP_SMP is the only solution and I've
-> confirmed that fix the issue, thanks.
+> I seem to recall that this has been discussed with several people and
+> undergone some changes as a result of comments.  Would it be possible
+> to get some ACKs from the people involved?
+> 
 
-Hi sameo,
+Mark, Santosh,
 
-Is there any concern on this patch series?
+Reviewed-by, please?
 
-Thanks,
-Bill
+AnilKumar,
+
+Tested-by, please?
+
+<snip>
+
+> > --- /dev/null
+> > +++ b/drivers/cpufreq/cpufreq-cpu0.c
+> > @@ -0,0 +1,271 @@
+> > +/*
+> > + * Copyright (C) 2012 Freescale Semiconductor, Inc.
+> > + *
+> > + * Reuse some codes from drivers/cpufreq/omap-cpufreq.c
+> 
+> What do you mean by "reuse" here?
+> 
+cpu0_set_target() function is almost a copy of omap_target() from
+drivers/cpufreq/omap-cpufreq.c.  I should probably just say so?
+
+> > + *
+> > + * The code contained herein is licensed under the GNU General Public
+> > + * License. You may obtain a copy of the GNU General Public License
+> > + * Version 2 or later at the following locations:
+> 
+> The kernel is just GPLv2 (not later) and it will stay this way.  Please
+> update this comment accordingly.
+> 
+Okay.
+
+> > + *
+> > + * http://www.opensource.org/licenses/gpl-license.html
+> > + * http://www.gnu.org/copyleft/gpl.html
+> > + */
+
+-- 
+Regards,
+Shawn
