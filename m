@@ -1,38 +1,74 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH v3 2/3] PM / OPP: Initialize OPP table from device tree
-Date: Wed, 5 Sep 2012 01:27:19 +0200
-Message-ID: <201209050127.19919.rjw@sisk.pl>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org> <20120817005210.GD24242@S2101-09.ap.freescale.net> <502DA401.7040408@gmail.com>
+From: Bill Huang <bilhuang@nvidia.com>
+Subject: RE: [PATCH v2 1/2] mfd: dt: tps6586x: Add power off control
+Date: Wed, 5 Sep 2012 08:28:47 +0800
+Message-ID: <A7051F87A141B744BCAF487D48E5B3BDF5BA98285C@HKMAIL02.nvidia.com>
+References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
+ <1345424876-4365-2-git-send-email-bilhuang@nvidia.com>
+ <20120820113423.GA5996@avionic-0098.mockup.avionic-design.de>
+ <A7051F87A141B744BCAF487D48E5B3BDF5BA982847@HKMAIL02.nvidia.com>
+ <A7051F87A141B744BCAF487D48E5B3BDF5BA98284B@HKMAIL02.nvidia.com>
+ <503847C2.3080400@wwwdotorg.org>
+ <A7051F87A141B744BCAF487D48E5B3BDF5BA98284E@HKMAIL02.nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <502DA401.7040408@gmail.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Shilimkar Santosh <santosh.shilimkar@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <A7051F87A141B744BCAF487D48E5B3BDF5BA98284E@HKMAIL02.nvidia.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Bill Huang <bilhuang@nvidia.com>
+Cc: 'Thierry Reding' <thierry.reding@avionic-design.de>, "'sameo@linux.intel.com'" <sameo@linux.intel.com>, "'grant.likely@secretlab.ca'" <grant.likely@secretlab.ca>, "'rob.herring@calxeda.com'" <rob.herring@calxeda.com>, "'rob@landley.net'" <rob@landley.net>, "'broonie@opensource.wolfsonmicro.com'" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Xin Xie <xxie@nvidia.com>, "'lrg@slimlogic.co.uk'" <lrg@slimlogic.co.uk>, "'jhovold@gmail.com'" <jhovold@gmail.com>, "'kyle.manna@fuel7.com'" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "'devicetree-discuss@lists.ozlabs.org'" <devicetree-discuss@lists.ozlabs.org>, "'linux-doc@vger.kernel.org'" <linux-doc@vger.kernel.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, August 17, 2012, Rob Herring wrote:
-> On 08/16/2012 07:52 PM, Shawn Guo wrote:
-> > On Thu, Aug 16, 2012 at 11:05:54PM +0200, Rafael J. Wysocki wrote:
-> >> On Friday, August 10, 2012, Shawn Guo wrote:
-> >>> With a lot of devices booting from device tree nowadays, it requires
-> >>> that OPP table can be initialized from device tree.  The patch adds
-> >>> a helper function of_init_opp_table together with a binding doc for
-> >>> that purpose.
-> >>>
-> >>> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> >>
-> >> I need an ACK from whoever maintains the DT bindings for that.
-> >>
-> > Rob, please?
+> nvpublic
+> > On 08/24/2012 06:36 PM, Bill Huang wrote:
+> > >>> On Sun, Aug 19, 2012 at 06:07:55PM -0700, Bill Huang wrote:
+> > >>>> Add DT property "ti,system-power-controller" telling whether or
+> > >>>> not this pmic is in charge of controlling the system power, so
+> > >>>> the power off routine can be hooked up to system call "pm_power_off".
+> > ...
+> > >>> I've seen the following while trying this patch applied on top of next-20120817:
+> > >>>
+> > >>> [   40.581151] Power down.
+> > >>> [   41.583160] ------------[ cut here ]------------
+> > >>> [   41.587784] WARNING: at /home/thierry.reding/src/kernel/linux-
+> ipmp.git/drivers/i2c/busses/i2c-
+> > >>> tegra.c:525 tegra_i2c_xfer+0x21c/0x29c()
+> > ...
+> > >> Thanks Thierry, I can repro this on Tegra20 inconsistently and
+> > >> found, if current cpu is not cpu0 when doing "machine_shutdown" (it
+> > >> will call "smp_send_stop"), i2c controller will failed to do any
+> > >> transaction (looks like gic interrupt
+> > will be disabled), I'll debug further to find out the root cause.
+> > >>
+> > >> By the way, Tegra30 is good since it will always be cpu0 when doing
+> > >> "machine_shutdown", I still don't know why it makes the difference
+> > >> against Tegra20 since I'm not familiar with those cpu stuffs and
+> > >> what make it behave differently,
+> > I'll study a bit, thanks.
+> > >
+> > > I've sent the shutdown issue for discussion in ARM list: Shutdown
+> > > problem in SMP system happened on
+> > Tegra20.
+> > > The cause of the i2c timeout is pretty clear now and it is not
+> > > directly related to this patch, so is this patch series acceptable? Any thoughts or comment?
+> Thanks.
+> >
+> > I tend to agree; power off never worked without this patch, and
+> > sometimes does with the patch, due to nothing wrong with this patch.
+> >
+> > Bill, please do follow up on getting the underlying Tegra issue solved
+> > somehow though. IIRC, Joseph Lo or Prashant has a patch which enabled
+> > the config option that Russell mentioned, so the fix may just be to wait for that patch to get
+> finalized, but please double-check that solves it.
+> > Thanks!
 > 
-> Acked-by: Rob Herring <rob.herring@calxeda.com>
+> As per the shutdown issue discussion, enabling CONFIG_PM_SLEEP_SMP is the only solution and I've
+> confirmed that fix the issue, thanks.
 
-Applied to the linux-next branch of the linux-pm.git tree as v3.7 material.
+Hi sameo,
+
+Is there any concern on this patch series?
 
 Thanks,
-Rafael
-
+Bill
