@@ -1,229 +1,86 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND-2 2/2] SPI: spi-gpio: Add DT bindings
-Date: Wed,  5 Sep 2012 11:04:36 +0200
-Message-ID: <1346835876-14401-2-git-send-email-zonque@gmail.com>
-References: <1346835876-14401-1-git-send-email-zonque@gmail.com>
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: Re: [PATCH] ARM: EXYNOS: Add MFC device tree support
+Date: Wed, 05 Sep 2012 09:15:21 +0000 (GMT)
+Message-ID: <15525795.211061346836521012.JavaMail.weblogic@epml27>
+Reply-To: arun.kk@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346835876-14401-1-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT bindings to the spi-gpio driver and some
-documentation about how to use it.
-
-Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/spi-gpio.txt | 29 +++++++
- drivers/spi/spi-gpio.c                             | 99 +++++++++++++++++++++-
- 2 files changed, 125 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-gpio.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-new file mode 100644
-index 0000000..8a824be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-@@ -0,0 +1,29 @@
-+SPI-GPIO devicetree bindings
-+
-+Required properties:
-+
-+ - compatible: should be set to "spi-gpio"
-+ - #address-cells: should be set to <0x1>
-+ - ranges
-+ - gpio-sck: GPIO spec for the SCK line to use
-+ - gpio-miso: GPIO spec for the MISO line to use
-+ - gpio-mosi: GPIO spec for the MOSI line to use
-+ - cs-gpios: GPIOs to use for chipselect lines
-+ - num-chipselects: number of chipselect lines
-+
-+Example:
-+
-+	spi {
-+		compatible = "spi-gpio";
-+		#address-cells = <0x1>;
-+		ranges;
-+
-+		gpio-sck = <&gpio 95 0>;
-+		gpio-miso = <&gpio 98 0>;
-+		gpio-mosi = <&gpio 97 0>;
-+		cs-gpios = <&gpio 125 0>;
-+		num-chipselects = <1>;
-+
-+		/* clients */
-+	};
-+
-diff --git a/drivers/spi/spi-gpio.c b/drivers/spi/spi-gpio.c
-index ff7263c..aed1615 100644
---- a/drivers/spi/spi-gpio.c
-+++ b/drivers/spi/spi-gpio.c
-@@ -22,6 +22,8 @@
- #include <linux/init.h>
- #include <linux/platform_device.h>
- #include <linux/gpio.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/spi/spi.h>
- #include <linux/spi/spi_bitbang.h>
-@@ -232,13 +234,27 @@ static void spi_gpio_chipselect(struct spi_device *spi, int is_active)
- 
- static int spi_gpio_setup(struct spi_device *spi)
- {
--	unsigned int		cs = (unsigned int) spi->controller_data;
-+	unsigned int		cs;
- 	int			status = 0;
- 	struct spi_gpio		*spi_gpio = spi_to_spi_gpio(spi);
-+	struct device_node	*np = spi->master->dev.of_node;
- 
- 	if (spi->bits_per_word > 32)
- 		return -EINVAL;
- 
-+	if (np) {
-+		/*
-+		 * In DT environments, the CS GPIOs have already been
-+		 * initialized from the "cs-gpios" property of the node.
-+		 */
-+		cs = spi_gpio->cs_gpios[spi->chip_select];
-+	} else {
-+		/*
-+		 * ... otherwise, take it from spi->controller_data
-+		 */
-+		cs = (unsigned int) spi->controller_data;
-+	}
-+
- 	if (!spi->controller_state) {
- 		if (cs != SPI_GPIO_NO_CHIPSELECT) {
- 			status = gpio_request(cs, dev_name(&spi->dev));
-@@ -250,6 +266,7 @@ static int spi_gpio_setup(struct spi_device *spi)
- 	}
- 	if (!status) {
- 		status = spi_bitbang_setup(spi);
-+		/* in case it was initialized from static board data */
- 		spi_gpio->cs_gpios[spi->chip_select] = cs;
- 	}
- 
-@@ -326,6 +343,55 @@ done:
- 	return value;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id spi_gpio_dt_ids[] = {
-+	{ .compatible = "spi-gpio" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, spi_gpio_dt_ids);
-+
-+static int spi_gpio_probe_dt(struct platform_device *pdev)
-+{
-+	int ret;
-+	u32 tmp;
-+	struct spi_gpio_platform_data	*pdata;
-+	struct device_node *np = pdev->dev.of_node;
-+	const struct of_device_id *of_id =
-+			of_match_device(spi_gpio_dt_ids, &pdev->dev);
-+
-+	if (!of_id)
-+		return 0;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	pdata->sck = of_get_named_gpio(np, "gpio-sck", 0);
-+	pdata->miso = of_get_named_gpio(np, "gpio-miso", 0);
-+	pdata->mosi = of_get_named_gpio(np, "gpio-mosi", 0);
-+
-+	ret = of_property_read_u32(np, "num-chipselects", &tmp);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "num-chipselects property not found\n");
-+		goto error_free;
-+	}
-+
-+	pdata->num_chipselect = tmp;
-+	pdev->dev.platform_data = pdata;
-+
-+	return 1;
-+
-+error_free:
-+	devm_kfree(&pdev->dev, pdata);
-+	return ret;
-+}
-+#else
-+static inline int spi_probe_dt(struct platform_device *)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int __devinit spi_gpio_probe(struct platform_device *pdev)
- {
- 	int				status;
-@@ -333,6 +399,13 @@ static int __devinit spi_gpio_probe(struct platform_device *pdev)
- 	struct spi_gpio			*spi_gpio;
- 	struct spi_gpio_platform_data	*pdata;
- 	u16 master_flags = 0;
-+	bool use_of = 0;
-+
-+	status = spi_gpio_probe_dt(pdev);
-+	if (status < 0)
-+		return status;
-+	if (status > 0)
-+		use_of = 1;
- 
- 	pdata = pdev->dev.platform_data;
- #ifdef GENERIC_BITBANG
-@@ -362,6 +435,23 @@ static int __devinit spi_gpio_probe(struct platform_device *pdev)
- 	master->num_chipselect = SPI_N_CHIPSEL;
- 	master->setup = spi_gpio_setup;
- 	master->cleanup = spi_gpio_cleanup;
-+#ifdef CONFIG_OF
-+	master->dev.of_node = pdev->dev.of_node;
-+
-+	if (use_of) {
-+		int i;
-+		struct device_node *np = pdev->dev.of_node;
-+
-+		/*
-+		 * In DT environments, take the CS GPIO from the "cs-gpios"
-+		 * property of the node.
-+		 */
-+
-+		for (i = 0; i < SPI_N_CHIPSEL; i++)
-+			spi_gpio->cs_gpios[i] =
-+				of_get_named_gpio(np, "cs-gpios", i);
-+	}
-+#endif
- 
- 	spi_gpio->bitbang.master = spi_master_get(master);
- 	spi_gpio->bitbang.chipselect = spi_gpio_chipselect;
-@@ -422,8 +512,11 @@ static int __devexit spi_gpio_remove(struct platform_device *pdev)
- MODULE_ALIAS("platform:" DRIVER_NAME);
- 
- static struct platform_driver spi_gpio_driver = {
--	.driver.name	= DRIVER_NAME,
--	.driver.owner	= THIS_MODULE,
-+	.driver = {
-+		.name	= DRIVER_NAME,
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(spi_gpio_dt_ids),
-+	},
- 	.probe		= spi_gpio_probe,
- 	.remove		= __devexit_p(spi_gpio_remove),
- };
--- 
-1.7.11.4
+SGkgS2Fyb2wsDQpUaGFuayB5b3UgdmVyeSBtdWNoIGZvciB0aGUgZGV0YWlsZWQgZXhwbGFuYXRp
+b24uDQpJdHMgaW5kZWVkIHZlcnkgd2VsbCBleHBsYWluZWQgYW5kIHNlZW1zIGxpa2UgYSBncmVh
+dCBhcHByb2FjaCANCnRvIHJlbW92ZSB0aGUgaGFyZCBjb2RpbmdzLg0KSSB3aWxsIGdvIGFoZWFk
+IHdpdGggdGhpcyBpbXBsZW1lbnRhdGlvbiBhbmQgcG9zdCB0aGUgdXBkYXRlZCBwYXRjaC4NCg0K
+UmVnYXJkcw0KQXJ1bg0KDQpPbiBXZWQsIFNlcCA1LCAyMDEyIGF0IDg6MTIgQU0sIEthcm9sIExl
+d2FuZG93c2tpIDxrLmxld2FuZG93c2tAc2Ftc3VuZy5jb20+IHdyb3RlOg0KPiBPbiAwOC8yOC8y
+MDEyIDA3OjA4IFBNLCBBcnVuIEt1bWFyIEsgd3JvdGU6DQo+DQo+PiBIaSBLYXJvbCwNCj4+IFRo
+YW5rcyBmb3IgeW91ciBjb21tZW50cy4NCj4+IFBsZWFzZSBmaW5kIG15IHJlc3BvbnNlIGlubGlu
+ZS4NCj4NCj4gSGkuLi4gYW5kIHNvcnJ5IGZvciBzbyBtdWNoIGRlbGF5ZWQgcmVzcG9uc2UuDQo+
+DQo+Pj4+ICsNCj4+Pj4gK3N0YXRpYyB2b2lkIF9faW5pdCBleHlub3M1X3Jlc2VydmUodm9pZCkN
+Cj4+Pj4gK3sNCj4+Pj4gKyAgICAgczVwX21mY19yZXNlcnZlX21lbSgweDQzMDAwMDAwLCA4IDw8
+IDIwLCAweDUxMDAwMDAwLCA4IDw8IDIwKTsNCj4+Pg0KPj4+DQo+Pj4gSSB0aGluayBpdCB3b3Vs
+ZCBtYWtlIHNlbnNlIHRvIG1ha2UgdGhpcyBtZW1vcnkgcmVzZXJ2YXRpb24gZGVwZW5kZW50DQo+
+Pj4gb24gIm1mYyoiIG5vZGUgYmVpbmcgcHJlc2VudCBpbiBEVFMuICBJdCdzIHRvIGVhcmx5IHRv
+IHVzZSBvZl8qIGZ1bmN0aW9ucw0KPj4+IChiZWNhdXNlIHRyZWUgaXMgbm90IHBvcHVsYXRlZCBh
+dCB0aGlzIHN0YWdlKSBidXQgZmR0XyogZmFtaWx5IG9mIGZ1bmN0aW9ucw0KPj4+IHdvcmsganVz
+dCBmaW5lLg0KPj4+DQo+Pg0KPj4gQXMgSSBjYW4gc2VlIHRoZSBmZHRfKiBmdW5jdGlvbnMgYXJl
+IG5vdCB1c2VkIGluIGFueSBvZiB0aGUgQVJNIGJhc2VkIFNvQw0KPj4gaW5pdCBjb2Rlcy4gVGhv
+dWdoIEkgY2FuIHNlZSBzb21lIHJlZmVyZW5jZXMgaW4gcG93ZXJwYy4NCj4+IFRoZSBpbXBsZW1l
+bnRhdGlvbiBhbmQgaW5jbHVkZXMgYXJlIHByZXNlbnQgaW4gYXJjaC9hcm0vYm9vdC9jb21wcmVz
+c2VkLw0KPj4gd2hpY2ggSSB0aGluayBjYW5ub3QgYmUgdXNlZCBkaXJlY3RseSBpbiBtYWNoLWV4
+eW5vcyB1bmxlc3Mgd2UgbWFrZSBzb21lDQo+PiBjb21vbiBtYWtlZmlsZSBjaGFuZ2VzLg0KPg0K
+Pg0KPiBJdCBsb29rcyBsaWtlIEkgd2FzIHdyaXRpbmcgZnJvbSBtZW1vcnksIGFuZCBJIGFjdHVh
+bGx5IG1peGVkIHRoaW5ncw0KPiB1cC4gIFRvIGJlIGNsZWFyIHRoaXMgdGltZSAtIHdlIGNhbid0
+IHVzZSByZWd1bGFyIGRldmljZSB0cmVlIGhhbmRsaW5nDQo+IGZ1bmN0aW9ucyBpbiByZXNlcnZl
+KCkgYXMgaXQncyB0b28gZWFybHkuICBOYW1lbHksIGZsYXR0ZW5lZCBkZXZpY2UgdHJlZQ0KPiBp
+cyBub3QgeWV0IGNvbnZlcnRlZCB0byBrZXJuZWwncy1uYXR1cmFsIHJlcHJlc2VudGF0aW9uLiAg
+SG93ZXZlciwNCj4gSSB0aGluayB3ZSBjYW4gc2NhbiBmZHQganVzdCBmaW5lLiAgVG8gZG8gc28g
+b25lIGp1c3QgbmVlZHMgdG8gdXNlDQo+IGZ1bmN0aW9ucyBkZWNsYXJlZCBoZXJlDQo+DQo+ICAg
+I2luY2x1ZGUgPGxpbnV4L29mX2ZkdC5oPg0KPg0KPiBBY3R1YWwgYXJjaGl0ZWN0dXJlLWluZGVw
+ZW5kZW50IGNvZGUgaXMgaW4gZHJpdmVycy9vZi9mZHQuYy4gIFRoaXMNCj4gcHJvdmlkZXMgb2Zf
+ZmR0XyBmYW1pbHkgb2YgZnVuY3Rpb25zLiBQbGVhc2Ugc2VlIGJlbG93IGZvciBleGFtcGxlLg0K
+Pg0KPg0KPj4gUGxlYXNlIGNsYXJpZnkgd2hldGhlciBpdHMgb2sgdG8gdXNlIGZkdF8qIGZ1bmN0
+aW9ucyB0byBwYXJzZSB0aGUgZHRzIGluDQo+PiBleHlub3MgbWFjaGluZSBpbml0IG9yIHBsZWFz
+ZSBwb2ludCBtZSB0byBzb21lIHNhbXBsZSBpbXBsZW1lbnRhdGlvbnMNCj4+IHdoaWNoIEkgY2Fu
+IHJlZmVyIHRvLg0KPg0KPg0KPiBJdCBzaG91bGQgYmUgb2sgdG8gdXNlIGFueXRoaW5nIHRoYXQg
+d29ya3Mgb24gZmxhdHRlbmVkIGRldmljZSB0cmVlDQo+IHJhdGhlciB0aGFuIGl0cyB1bmNvbXBy
+ZXNzZWQgdmVyc2lvbi4gIEkndmUgZXhwZXJpbWVudGVkIGEgYml0IGFuZA0KPiBzb21ldGhpbmcg
+bGlrZSB0aGlzIHdvcmtlZCBmb3IgbWUganVzdCBmaW5lIChpdCB3YXMgYXJvdW5kIDMuMy1rZXJu
+ZWwNCj4gdGltZWZyYW1lLCBidXQgSSBkb24ndCB0aGluayB0aGF0IGZkdCBhcGkgaGFzIGNoYW5n
+ZWQpOg0KPg0KPiBbbWFjaC1leHlub3M0LWR0LmNdDQo+DQo+ICNpbmNsdWRlIDxsaW51eC9vZl9m
+ZHQuaD4NCj4NCj4gaW50IGZkdF9maW5kX2NvbXBhdCh1bnNpZ25lZCBsb25nIG5vZGUsIGNvbnN0
+IGNoYXIgKnVuYW1lLCBpbnQgZGVwdGgsIHZvaWQgKmRhdGEpDQo+IHsNCj4gICAgICAgICBpZiAo
+b2ZfZmxhdF9kdF9pc19jb21wYXRpYmxlKG5vZGUsIChjaGFyICopZGF0YSkpDQo+ICAgICAgICAg
+ICAgICAgICByZXR1cm4gMTsNCj4NCj4gICAgICAgICByZXR1cm4gMDsNCj4gfQ0KPg0KPiBzdGF0
+aWMgdm9pZCBfX2luaXQgZXh5bm9zNDIxMF9kdF9yZXNlcnZlKHZvaWQpDQo+IHsNCj4gICAgICAg
+ICAvKiBSZXNlcnZlIG1lbW9yeSBmb3IgTUZDIG9ubHkgaWYgaXQncyBhdmFpbGFibGUgKi8NCj4g
+ICAgICAgICBpZiAob2Zfc2Nhbl9mbGF0X2R0KGZkdF9maW5kX2NvbXBhdCwgInNhbXN1bmcsczVw
+djIxMC1tZmMiKSkgew0KPiAgICAgICAgICAgICAgICAgcHJpbnRrKEtFUk5fTk9USUNFICJleHlu
+b3M0LWR0OiBtZmMgZGV2aWNlIG5vZGUgZm91bmQgLSBzZXR0aW5nIHVwIG1lbW9yeSBhcmVhIGZv
+ciBkbWFcbiIpOw0KPiAgICAgICAgICAgICAgICAgczVwX21mY19yZXNlcnZlX21lbSgweDQzMDAw
+MDAwLCA4IDw8IDIwLCAweDUxMDAwMDAwLCA4IDw8IDIwKTsNCj4gICAgICAgICB9DQo+IH0NCj4N
+Cj4gWy5kdHNdDQo+DQo+ICBjb2RlY0Bzb21lLWFkZHIgew0KPiAgICAgICBjb21wYXRpYmxlID0g
+InNhbXN1bmcsczVwdjIxMC1tZmMiOw0KPiAgfTsNCj4NCj4NCj4gU28sIGluIGFib3ZlIGNvZGUg
+ZnJhZ21lbnQgSSBqdXN0IGNoZWNrIGlmIG1mYyB3YXMgZGVmaW5lZCBpbiBkdHMuDQo+IFRoaXMg
+Y291bGQgcHJvYmFibHkgc3RheSBhcyBpdCBpcy4NCj4NCj4gVGhlbiBJIGFsbG9jYXRlIF9wcmVk
+ZWZpbmVkXyByZWdpb24gLSBhbmQgdGhpcyBwYXJ0IHNob3VsZCBiZSBmaXhlZC4NCj4NCj4gSWYg
+eW91IGhhdmUgbm9kZXMgbGlrZSAibWZjLXItc2l6ZSIvb2Zmc2V0LCB0aGVuIHlvdSBjb3VsZCBq
+dXN0IGdldA0KPiB0aGlzIGluZm9ybWF0aW9uIGRpcmVjdGx5IGZyb20gKGYpZHQgcmF0aGVyIHRo
+YW4gaGFyZGNvZGluZyBpdCBpbiB0aGUgY29kZS4NCj4gUHJlY2lzZWx5LCBhZnRlciB3ZSBmaW5k
+IGNvbXBhdGlibGUgbm9kZSB3ZSBjb3VsZCBkbyBzb21ldGhpbmcgbGlrZQ0KPiBmb2xsb3dpbmcg
+KHVudGVzdGVkKToNCj4NCj4gdW5zaWduZWQgbG9uZyBsc2l6ZSwgbG9mZiwgcnNpemUsIHJvZmYg
+bGVuOw0KPiBfX2JlMzIgKnByb3A7DQo+DQo+IHByb3AgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5v
+ZGUsICJzYW1zdW5nLG1mYy1sLXNpemUiLCAmbGVuKTsNCj4gaWYgKCFwcm9wKQ0KPiAgICByZXR1
+cm47DQo+IGxzaXplID0gb2ZfcmVhZF91bG9uZyhwcm9wLCBsZW4vNCk7DQo+IC4uLg0KPg0KPiBS
+ZWdhcmRzLA0KPiAtLQ0KPiBLYXJvbCBMZXdhbmRvd3NraSB8IFNhbXN1bmcgUG9sYW5kIFImRCBD
+ZW50ZXIgfCBMaW51eC9QbGF0Zm9ybQ0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMg
+bGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtc2Ftc3VuZy1zb2MiIGluDQo+
+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnDQo+IE1v
+cmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWlu
+Zm8uaHRtbA==
