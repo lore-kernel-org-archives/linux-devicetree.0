@@ -1,87 +1,45 @@
-From: Shaik Ameer Basha <shaik.samsung@gmail.com>
-Subject: Re: [PATCH v4 0/2] Add device tree and clock support for G-Scaler
-Date: Wed, 5 Sep 2012 09:09:57 +0530
-Message-ID: <CAOD6ATrzuXqkpKYNE3mWxjekN41U32oF0Kx4zYVbwykMNd7ziw@mail.gmail.com>
-References: <1344852144-25598-1-git-send-email-shaik.ameer@samsung.com>
-	<227001cd8ae9$9b76ce40$d2646ac0$%kim@samsung.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] misc: Generic on-chip SRAM allocation driver
+Date: Wed, 5 Sep 2012 12:03:19 +0800
+Message-ID: <20120905040317.GX2362@S2101-09.ap.freescale.net>
+References: <1346688128-22395-1-git-send-email-p.zabel@pengutronix.de>
+ <1346688128-22395-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <227001cd8ae9$9b76ce40$d2646ac0$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, joshi@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1346688128-22395-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin Kim,
+On Mon, Sep 03, 2012 at 06:02:06PM +0200, Philipp Zabel wrote:
+> +static struct platform_driver sram_driver = {
+> +	.driver = {
+> +		.name = "sram",
+> +		.of_match_table = of_match_ptr(sram_dt_ids),
+> +	},
+> +	.probe = sram_probe,
+> +	.remove = __devexit_p(sram_remove),
+> +};
+> +
+> +module_platform_driver(sram_driver);
 
-On Wed, Sep 5, 2012 at 3:37 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Shaik Ameer Basha wrote:
->>
->> This patch series adds clock support for G-Scaler and device node
->>  entries for G-Scaler on exynos5.
->>
->> This patch is based on Kukjin Kim's (linux-samsung) for-next branch.
->>
-> https://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
->>
->> changes since v3:
->> - Addressed review comments from Kukjin Kim
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11658.html
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11659.html
->>
->> changes since v2:
->> - Addressed review comments from Sylwester Nawrocki
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11372.html
->> - Addressed review comments from Kukjin Kim and Sunyoung Kang
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11377.html
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11429.html
->>
->> changes since v1:
->> - Addressed review comments from Sylwester Nawrocki
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11177.html
->> - Addressed review comments from Sachin Kamat
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11176.html
->>     http://www.mail-archive.com/linux-samsung-
->> soc@vger.kernel.org/msg11178.html
->>
->> Shaik Ameer Basha (2):
->>   ARM: EXYNOS: Add clock support for G-Scaler
->>   ARM: EXYNOS: Adds G-Scaler device from Device Tree
->>
->>  .../devicetree/bindings/media/exynos5-gsc.txt      |   32 +++++++
->>  arch/arm/boot/dts/exynos5250.dtsi                  |   28 +++++++
->>  arch/arm/mach-exynos/clock-exynos5.c               |   86
->> ++++++++++++++++++++
->>  arch/arm/mach-exynos/include/mach/map.h            |    5 +
->>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 ++
->>  5 files changed, 159 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/media/exynos5-
->> gsc.txt
->
-> Looks OK, will apply this series.
->
-> BTW, just wondering...the sign-chain is right? Hoping you know, if sign-off
-> has been added without their handling on the patches, it's wrong.
->
+I think we'd better make it a postcore_initcall time driver, so that
+it can be ensured that when the client drivers call gen_pool_* API
+the pool has been created by sram_driver. 
 
-This sign-chain is fine. Please apply this series to your tree.
-
-Thanks,
-Shaik Ameer Basha
-
-> Thanks.
->
-> Best regards,
-> Kgene.
-> --
-> Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-> SW Solution Development Team, Samsung Electronics Co., Ltd.
->
+-- 
+Regards,
+Shawn
