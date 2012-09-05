@@ -1,134 +1,53 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v5 4/9] mmc: dw_mmc: lookup for optional biu and ciu clocks
-Date: Wed, 05 Sep 2012 17:30:38 +0900
-Message-ID: <50470DAE.4020300@samsung.com>
-References: <CAJuYYwQ50HCSrDgxrvhRh5X2ECxi_g=_akoa6o9FYCQ5GqHUCQ@mail.gmail.com>
- <1346787968-23709-1-git-send-email-thomas.abraham@linaro.org>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH resend 2/2] SPI: spi-gpio: Add DT bindings
+Date: Wed, 05 Sep 2012 11:04:22 +0200
+Message-ID: <50471596.3030500@gmail.com>
+References: <1343854638-32563-1-git-send-email-zonque@gmail.com>
+	<1343854638-32563-2-git-send-email-zonque@gmail.com>
+	<CACRpkdYY9oFAJ5qdhY-hD+YAnhO3DxxhY_VQGS4sKuimLxWaHw@mail.gmail.com>
+	<501E5FA9.9050905@gmail.com>
+	<CACRpkdaanCLHjuG-+mPUN-FQbE+MJ=4_RRN85jAaL_FccgNCuA@mail.gmail.com>
+	<5043BEC2.2090705@gmail.com>
+	<CACRpkdZfBd99r2CnObZz5iK=72DTf-9J9p6k32JM_6De29JtXg@mail.gmail.com>
+	<20120905032402.GA5076@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1346787968-23709-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20120905032402.GA5076-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2012 04:46 AM, Thomas Abraham wrote:
-> Some platforms allow for clock gating and control of bus interface unit clock
-> and card interface unit clock. Add support for clock lookup of optional biu
-> and ciu clocks for clock gating and clock speed determination.
+On 05.09.2012 05:24, Mark Brown wrote:
+> On Mon, Sep 03, 2012 at 01:50:34PM +0200, Linus Walleij wrote:
+>> On Sun, Sep 2, 2012 at 10:17 PM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > 
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> Acked-by: Will Newton <will.newton@imgtec.com>
-> ---
->  drivers/mmc/host/dw_mmc.c  |   50 +++++++++++++++++++++++++++++++++++++++++--
->  include/linux/mmc/dw_mmc.h |    4 +++
->  2 files changed, 51 insertions(+), 3 deletions(-)
+>>> Hmm, I don't know whether anyone took those patches yet? Mark?
 > 
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 227c42e..e8c8491 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -1960,13 +1960,40 @@ int dw_mci_probe(struct dw_mci *host)
->  		return -ENODEV;
->  	}
->  
-> -	if (!host->pdata->bus_hz) {
-> +	host->biu_clk = clk_get(host->dev, "biu");
-> +	if (IS_ERR(host->biu_clk)) {
-> +		dev_dbg(host->dev, "biu clock not available\n");
-> +	} else {
-> +		ret = clk_prepare_enable(host->biu_clk);
-> +		if (ret) {
-> +			dev_err(host->dev, "failed to enable biu clock\n");
-> +			return ret;
-didn't clk_put() for biu_clk? 
-> +		}
-> +	}
-> +
-> +	host->ciu_clk = clk_get(host->dev, "ciu");
-> +	if (IS_ERR(host->ciu_clk)) {
-> +		dev_dbg(host->dev, "ciu clock not available\n");
-> +	} else {
-> +		ret = clk_prepare_enable(host->ciu_clk);
-> +		if (ret) {
-> +			dev_err(host->dev, "failed to enable ciu clock\n");
-> +			goto err_clk_biu;
-> +		}
-> +	}
-> +
-> +	if (IS_ERR(host->ciu_clk))
-> +		host->bus_hz = host->pdata->bus_hz;
-> +	else
-> +		host->bus_hz = clk_get_rate(host->ciu_clk);
-> +
-> +	if (!host->bus_hz) {
->  		dev_err(host->dev,
->  			"Platform data must supply bus speed\n");
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto err_clk_ciu;
->  	}
->  
-> -	host->bus_hz = host->pdata->bus_hz;
->  	host->quirks = host->pdata->quirks;
->  
->  	spin_lock_init(&host->lock);
-> @@ -2116,6 +2143,17 @@ err_dmaunmap:
->  		regulator_disable(host->vmmc);
->  		regulator_put(host->vmmc);
->  	}
-> +
-> +err_clk_ciu:
-> +	if (!IS_ERR(host->ciu_clk)) {
-> +		clk_disable_unprepare(host->ciu_clk);
-> +		clk_put(host->ciu_clk);
-> +	}
-> +err_clk_biu:
-I think right that is located the clk_put(host->ciu_clk) at here
-> +	if (!IS_ERR(host->biu_clk)) {
-> +		clk_disable_unprepare(host->biu_clk);
-> +		clk_put(host->biu_clk);
-> +	}
->  	return ret;
->  }
->  EXPORT_SYMBOL(dw_mci_probe);
-> @@ -2149,6 +2187,12 @@ void dw_mci_remove(struct dw_mci *host)
->  		regulator_put(host->vmmc);
->  	}
->  
-> +	if (!IS_ERR(host->ciu_clk))
-> +		clk_disable_unprepare(host->ciu_clk);
-> +	if (!IS_ERR(host->biu_clk))
-> +		clk_disable_unprepare(host->biu_clk);
-> +	clk_put(host->ciu_clk);
-> +	clk_put(host->biu_clk);
->  }
->  EXPORT_SYMBOL(dw_mci_remove);
->  
-> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-> index a37a573..787ad56 100644
-> --- a/include/linux/mmc/dw_mmc.h
-> +++ b/include/linux/mmc/dw_mmc.h
-> @@ -78,6 +78,8 @@ struct mmc_data;
->   * @data_offset: Set the offset of DATA register according to VERID.
->   * @dev: Device associated with the MMC controller.
->   * @pdata: Platform data associated with the MMC controller.
-> + * @biu_clk: Pointer to bus interface unit clock instance.
-> + * @ciu_clk: Pointer to card interface unit clock instance.
->   * @slot: Slots sharing this MMC controller.
->   * @fifo_depth: depth of FIFO.
->   * @data_shift: log2 of FIFO item size.
-> @@ -158,6 +160,8 @@ struct dw_mci {
->  	u16			data_offset;
->  	struct device		*dev;
->  	struct dw_mci_board	*pdata;
-> +	struct clk		*biu_clk;
-> +	struct clk		*ciu_clk;
->  	struct dw_mci_slot	*slot[MAX_MCI_SLOTS];
->  
->  	/* FIFO push and pull */
+>> Mark better take them, ping on Mark.
 > 
+> IIRC I did reply saying that the patches didn't apply for me, in any
+> case I don't have them any more - can you please check that they apply
+> against my -next branch and resend?
 
+Sure, will do. They applied cleanly on top of the spi-next branch
+though. Nevermind :)
+
+
+Daniel
+
+------------------------------------------------------------------------------
+Live Security Virtual Conference
+Exclusive live event will cover all the ways today's security and 
+threat landscape has changed and how IT managers can respond. Discussions 
+will include endpoint security, mobile security and the latest in malware 
+threats. http://www.accelacomm.com/jaw/sfrnl04242012/114/50122263/
