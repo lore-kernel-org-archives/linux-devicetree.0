@@ -1,29 +1,79 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Wed, 5 Sep 2012 21:59:40 +0800
-Message-ID: <20120905135937.GA2362@S2101-09.ap.freescale.net>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
- <201209050118.39045.rjw@sisk.pl>
- <20120905011219.GN2362@S2101-09.ap.freescale.net>
- <201209051538.12916.rjw@sisk.pl>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [PATCH v2 1/8] ARM/dts: OMAP2: Add McBSP entries for OMAP2420
+ and OMAP2430 SoC
+Date: Wed, 5 Sep 2012 14:41:11 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EAA8779@DBDE01.ent.ti.com>
+References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
+ <1346247067-9632-2-git-send-email-peter.ujfalusi@ti.com>
+ <5044C2DD.5000705@ti.com> <504578B3.3090804@ti.com> <5045D557.30404@ti.com>
+ <79CD15C6BA57404B839C016229A409A83EAA7C99@DBDE01.ent.ti.com>
+ <50470C1E.7090300@ti.com>
+ <79CD15C6BA57404B839C016229A409A83EAA8014@DBDE01.ent.ti.com>
+ <5047544B.60105@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201209051538.12916.rjw@sisk.pl>
-Sender: cpufreq-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Shilimkar Santosh <santosh.shilimkar@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, AnilKumar Ch <anilkumar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5047544B.60105@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2012 at 03:38:12PM +0200, Rafael J. Wysocki wrote:
-> Well, what about actually avoiding the code duplication?  That is,
-> can you make OMAP be a user of your new core function and drop the
-> OMAP-specific one, perhaps?
+On Wed, Sep 05, 2012 at 19:01:55, Cousson, Benoit wrote:
+> Hi Vaibhav,
 > 
-I would expect that the driver will replace the omap-cpufreq driver
-completely at some point, where omap becomes a DT only platform.
+> On 09/05/2012 11:15 AM, Hiremath, Vaibhav wrote:
+> > On Wed, Sep 05, 2012 at 13:53:58, Ujfalusi, Peter wrote:
+> >> Hi,
+> >>
+> >> On 09/05/2012 09:11 AM, Hiremath, Vaibhav wrote:
+> >>>> Not yet, but we discussed that with Peter and since he does have these
+> >>>> patches for DT, he'll be able to test your series with the McBSP changes.
+> >>>>
+> >>>
+> >>> Great.
+> >>
+> >> With his series and your patch for omap-hwmod audio was probing and working on
+> >> OMAP3/4/5 without issues.
+> >>
+> > Peter,
+> > Care to provide your Tested-By??
+> > 
+> > Benoit,
+> > Can we merge this patch now?
+> 
+> Yes, I'll include it in the pull request along with DTS patches.
+> 
+> I've just tested it as well on OMAP4 by hacking the DTS for GPIO.
+> I'll try to update at least all the OMAP4 IPs as well with the proper
+> DTS resources for 3.7.
+> 
 
--- 
-Regards,
-Shawn
+Thanks Benoit,
+
+There are other patches which are pending,
+
+arm/dts: AM33XX: Convert all hex numbers to lower-case
+https://patchwork.kernel.org/patch/1377351/
+arm/dts: AM33XX: Specify reg and interrupt property for all nodes
+https://patchwork.kernel.org/patch/1377361/
+
+
+Probably your Ack is required for,
+
+ARM: AM33XX: clock: Add dcan clock aliases for device-tree
+https://patchwork.kernel.org/patch/1377061/
+
+
+
+RTC:
+I am not sure how to deal with RTC DT support, as I understand the list is very unresponsive there.
+http://www.mail-archive.com/davinci-linux-open-source@linux.davincidsp.com/msg23253.html
+
+
+
+Thanks,
+Vaibhav
+
