@@ -1,45 +1,48 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] i2c: nomadik: Add Device Tree support to the Nomadik
- I2C driver
-Date: Wed, 5 Sep 2012 08:53:54 +0200
-Message-ID: <CACRpkdaeNXU6ye2uO0cVPnVMVABVq7UoEG=0C_sES+csiYObdA@mail.gmail.com>
-References: <20120831122323.GC5962@gmail.com>
-	<5044C82E.5060207@gmail.com>
-	<20120903152012.GH31163@gmail.com>
-	<201209041428.21409.arnd@arndb.de>
-	<CACRpkdZESujO=2BU3jeKiX3Cm+JY2UPEXwGkro75FWa5Gio5YQ@mail.gmail.com>
-	<20120905064106.GA4233@gmail.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] dma: tegra: use list_move_tail instead of list_del/list_add_tail
+Date: Wed, 5 Sep 2012 15:08:56 +0800
+Message-ID: <CAPgLHd9DHDY9-oxFRK6coarc8JqKGporKSXTFG5fkRioZz6xFw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120905064106.GA4233-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alessandro Rubini <rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, djbw@fb.com, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 5, 2012 at 8:41 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Sep 04, 2012 at 07:27:10PM +0200, Linus Walleij wrote:
->> On Tue, Sep 4, 2012 at 4:28 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>
->> > In this particular case, we don't have a single board file providing a
->> > struct nmk_i2c_controller definition for platform data, so the best way
->> > to handle this IMHO is to remove the header file with the platform
->> > data definition, and just encode the defaults in the driver.
->>
->> Alessandro Rubini is actively working on bridging this (and
->> other amba_device primecells) to PCI, that is the reason why it
->> was recently converted to an amba_device. How is he then supposed to
->> get the proper parameters into the driver? Note that the PCI ID
->> is no help at all since the parameters depend on what is connected
->> to the I2C bus, not on what it itself is connected to. Isn't platform data
->> used in such cases?
->
-> So why can't Alessandro continue to use Platform Data in the normal way?
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-He probably can, this is not an argument about that, what I am worried
-about is Arnd's suggestion to delete the platform data header if there
-are potential users of it.
+Using list_move_tail() instead of list_del() + list_add_tail().
 
-Yours,
-Linus Walleij
+spatch with a semantic match is used to found this problem.
+(http://coccinelle.lip6.fr/)
+
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/dma/tegra20-apb-dma.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 24acd71..6ed3f43 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -475,8 +475,7 @@ static void tegra_dma_abort_all(struct tegra_dma_channel *tdc)
+ 	while (!list_empty(&tdc->pending_sg_req)) {
+ 		sgreq = list_first_entry(&tdc->pending_sg_req,
+ 						typeof(*sgreq), node);
+-		list_del(&sgreq->node);
+-		list_add_tail(&sgreq->node, &tdc->free_sg_req);
++		list_move_tail(&sgreq->node, &tdc->free_sg_req);
+ 		if (sgreq->last_sg) {
+ 			dma_desc = sgreq->dma_desc;
+ 			dma_desc->dma_status = DMA_ERROR;
+@@ -570,8 +569,7 @@ static void handle_cont_sngl_cycle_dma_done(struct tegra_dma_channel *tdc,
+ 
+ 	/* If not last req then put at end of pending list */
+ 	if (!list_is_last(&sgreq->node, &tdc->pending_sg_req)) {
+-		list_del(&sgreq->node);
+-		list_add_tail(&sgreq->node, &tdc->pending_sg_req);
++		list_move_tail(&sgreq->node, &tdc->pending_sg_req);
+ 		sgreq->configured = false;
+ 		st = handle_continuous_head_request(tdc, sgreq, to_terminate);
+ 		if (!st)
