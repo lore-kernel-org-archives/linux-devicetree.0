@@ -1,115 +1,80 @@
-From: Karol Lewandowski <k.lewandowsk@samsung.com>
-Subject: Re: [PATCH] ARM: EXYNOS: Add MFC device tree support
-Date: Wed, 05 Sep 2012 11:42:44 +0900
-Message-ID: <5046BC24.8010704@samsung.com>
-References: <31269552.67881346148504997.JavaMail.weblogic@epml04>
+From: Bryan Wu <bryan.wu@canonical.com>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Wed, 5 Sep 2012 11:06:22 +0800
+Message-ID: <CAK5ve-Jqc1xpXa0VM7=+MN1cvm=8ysg9W9WRiG66yq7GRfh+Gw@mail.gmail.com>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <31269552.67881346148504997.JavaMail.weblogic@epml04>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: arun.kk@samsung.com
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: AnilKumar Ch <anilkumar@ti.com>, Marek Vasut <marex@denx.de>, Shawn Guo <shawn.guo@linaro.org>
+Cc: rpurdie@rpsys.net, tony@atomide.com, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2012 07:08 PM, Arun Kumar K wrote:
+On Sat, Sep 1, 2012 at 4:16 PM, AnilKumar Ch <anilkumar@ti.com> wrote:
+> Adopt pinctrl support to leds-gpio driver based on leds-gpio
+> device pointer, pinctrl driver configure SoC pins to GPIO
+> mode according to definitions provided in .dts file.
+>
 
-> Hi Karol,
-> Thanks for your comments. 
-> Please find my response inline.
+Thanks for this, actually Marek Vasut submitted a similar patch
+before. I'm pretty fine with this patch.
+But without proper DT setting, it will also give us warning I think.
+or we can provide some dummy functions as a temp solution as Shawn
+pointed out before.
 
-Hi... and sorry for so much delayed response.
+-Bryan
 
->>> +
->>> +static void __init exynos5_reserve(void)
->>> +{
->>> +     s5p_mfc_reserve_mem(0x43000000, 8 << 20, 0x51000000, 8 << 20);
->>
->>
->> I think it would make sense to make this memory reservation dependent
->> on "mfc*" node being present in DTS.  It's to early to use of_* functions
->> (because tree is not populated at this stage) but fdt_* family of functions
->> work just fine.
->>
-> 
-> As I can see the fdt_* functions are not used in any of the ARM based SoC
-> init codes. Though I can see some references in powerpc.
-> The implementation and includes are present in arch/arm/boot/compressed/
-> which I think cannot be used directly in mach-exynos unless we make some
-> comon makefile changes. 
-
-
-It looks like I was writing from memory, and I actually mixed things 
-up.  To be clear this time - we can't use regular device tree handling
-functions in reserve() as it's too early.  Namely, flattened device tree
-is not yet converted to kernel's-natural representation.  However, 
-I think we can scan fdt just fine.  To do so one just needs to use
-functions declared here
-
-  #include <linux/of_fdt.h>
-
-Actual architecture-independent code is in drivers/of/fdt.c.  This
-provides of_fdt_ family of functions. Please see below for example.
-
-
-> Please clarify whether its ok to use fdt_* functions to parse the dts in 
-> exynos machine init or please point me to some sample implementations
-> which I can refer to.
-
-
-It should be ok to use anything that works on flattened device tree
-rather than its uncompressed version.  I've experimented a bit and
-something like this worked for me just fine (it was around 3.3-kernel
-timeframe, but I don't think that fdt api has changed):
-
-[mach-exynos4-dt.c]
-
-#include <linux/of_fdt.h>
-
-int fdt_find_compat(unsigned long node, const char *uname, int depth, void *data)
-{
-        if (of_flat_dt_is_compatible(node, (char *)data))
-                return 1;
-
-        return 0;
-}
-
-static void __init exynos4210_dt_reserve(void)
-{
-        /* Reserve memory for MFC only if it's available */
-        if (of_scan_flat_dt(fdt_find_compat, "samsung,s5pv210-mfc")) {
-                printk(KERN_NOTICE "exynos4-dt: mfc device node found - setting up memory area for dma\n");
-                s5p_mfc_reserve_mem(0x43000000, 8 << 20, 0x51000000, 8 << 20);
-        }
-}
-
-[.dts]
-
- codec@some-addr {
-      compatible = "samsung,s5pv210-mfc";
- };
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> ---
+> Changes from v1:
+>         - Seperated from "Add DT for AM33XX devices" patch series
+>         - Incorporated Tony's comments on v1
+>           * Changed to warning message instead od error return
+>
+>  drivers/leds/leds-gpio.c |    7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
+> index c032b21..ad577f4 100644
+> --- a/drivers/leds/leds-gpio.c
+> +++ b/drivers/leds/leds-gpio.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/module.h>
+> +#include <linux/pinctrl/consumer.h>
+>
+>  struct gpio_led_data {
+>         struct led_classdev cdev;
+> @@ -236,8 +237,14 @@ static int __devinit gpio_led_probe(struct platform_device *pdev)
+>  {
+>         struct gpio_led_platform_data *pdata = pdev->dev.platform_data;
+>         struct gpio_leds_priv *priv;
+> +       struct pinctrl *pinctrl;
+>         int i, ret = 0;
+>
+> +       pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
+> +       if (IS_ERR(pinctrl))
+> +               dev_warn(&pdev->dev,
+> +                       "pins are not configured from the driver\n");
+> +
+>         if (pdata && pdata->num_leds) {
+>                 priv = devm_kzalloc(&pdev->dev,
+>                                 sizeof_gpio_leds_priv(pdata->num_leds),
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-leds" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
-So, in above code fragment I just check if mfc was defined in dts.
-This could probably stay as it is.
 
-Then I allocate _predefined_ region - and this part should be fixed.
-
-If you have nodes like "mfc-r-size"/offset, then you could just get
-this information directly from (f)dt rather than hardcoding it in the code.
-Precisely, after we find compatible node we could do something like
-following (untested):
-
-unsigned long lsize, loff, rsize, roff len;
-__be32 *prop;
-
-prop = of_get_flat_dt_prop(node, "samsung,mfc-l-size", &len);
-if (!prop)
-   return;
-lsize = of_read_ulong(prop, len/4);
-...
-
-Regards,
 -- 
-Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
+Bryan Wu <bryan.wu@canonical.com>
+Kernel Developer    +86.186-168-78255 Mobile
+Canonical Ltd.      www.canonical.com
+Ubuntu - Linux for human beings | www.ubuntu.com
