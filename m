@@ -1,68 +1,66 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v5 1/5] arm/dts: AM33XX: Add basic pinctrl device tree data
-Date: Thu, 6 Sep 2012 06:17:29 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA27D93@DBDE01.ent.ti.com>
-References: <1346405361-29711-1-git-send-email-anilkumar@ti.com>
- <1346405361-29711-2-git-send-email-anilkumar@ti.com>
- <20120905233205.GO1303@atomide.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH V3 1/2] drm/exynos: add platform_device_id table and driver
+	data for exynos5 drm fimd
+Date: Wed, 05 Sep 2012 09:52:54 +0200
+Message-ID: <1560378.upcWAQYQSz@amdc1227>
+References: <1345111689-14601-1-git-send-email-l.krishna@samsung.com>
+	<1345111689-14601-2-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120905233205.GO1303-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-reply-to: <1345111689-14601-2-git-send-email-l.krishna@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 06, 2012 at 05:02:05, Tony Lindgren wrote:
-> * AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org> [120831 02:30]:
-> > Adds basic pinctrl device tree data for AM33XX family of devices.
-> > This patch is based on the pinctrl-single driver.
-> > 
-> > Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/am33xx.dtsi |    9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> > index be43511..bf5f713 100644
-> > --- a/arch/arm/boot/dts/am33xx.dtsi
-> > +++ b/arch/arm/boot/dts/am33xx.dtsi
-> > @@ -40,6 +40,15 @@
-> >  		};
-> >  	};
-> >  
-> > +	am3358_pinmux: pinmux@44e10800 {
-> > +		compatible = "pinctrl-single";
-> > +		reg = <0x44e10800 0x0238>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		pinctrl-single,register-width = <32>;
-> > +		pinctrl-single,function-mask = <0x7f>;
-> > +	};
-> > +
-> 
-> Is this controller the same for all am33xx? If so, please use
-> am33xx_pinmux naming. Note that some padconf registers may not
-> be listed for all the variants, but the registers may still be
-> there for all the variants. So a generic entry is a better
-> choice here as otherwise you'l need to include am33xx.dtsi into
-> am3358.dtsi.
-> 
+Hi Leela,
 
-Controller is same for all am33xx devices, I will spin a patch
-by renaming to am33xx_****
+See my comments inline.
 
-Thanks
-AnilKumar
+On Thursday 16 of August 2012 12:08:08 Leela Krishna Amudala wrote:
+> +enum fimd_version_type {
+> +	VERSION_8, /* FIMD_VERSION8 */
+> +};
+> +
+> +struct drm_fimd_driver_data {
+> +	enum fimd_version_type fimd_ver;
+> +};
+> +
+> +struct drm_fimd_driver_data exynos5_drm_fimd_driver_data = {
+> +	.fimd_ver = VERSION_8,
+> +};
+
+I think that the approach with timing_base, as suggested by Joonyoung Shim, 
+would be much cleaner.
+
+> +static struct platform_device_id exynos_drm_fimd_driver_ids[] = {
+> +	{
+> +		.name		= "exynos4-fb",
+> +	}, {
+> +		.name		= "exynos5-drm-fimd",
+> +		.driver_data	= (unsigned long)&exynos5_drm_fimd_driver_data,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, exynos_drm_fimd_driver_ids);
+
+If I see correctly, this will crash on a null pointer dereference on 
+Exynos4 without DT, because of NULL driver_data.
+
+P.S. I think you should CC linux-arm-kernel and linux-samsung-soc lists 
+when submitting patches related to ARM and Samsung SoCs.
+
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
