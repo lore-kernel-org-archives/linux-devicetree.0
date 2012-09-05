@@ -1,247 +1,83 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [RFC PATCH] ARM: OMAP2+: omap-device: Do not overwrite resources
- allocated by OF layer
-Date: Wed, 05 Sep 2012 12:20:06 +0300
-Message-ID: <50471946.1020101@ti.com>
-References: <1346233691-10294-1-git-send-email-hvaibhav@ti.com>
+From: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Re: [PATCH V3 1/2] drm/exynos: add platform_device_id table and
+ driver data for exynos5 drm fimd
+Date: Wed, 05 Sep 2012 09:24:22 +0000 (GMT)
+Message-ID: <30084300.216361346837061532.JavaMail.weblogic@epml22>
+Reply-To: l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1346233691-10294-1-git-send-email-hvaibhav@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vaibhav Hiremath <hvaibhav@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+MIME-version: 1.0
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, In-Ki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2012 12:48 PM, Vaibhav Hiremath wrote:
-> With the new devices (like, AM33XX and OMAP5) we now only support
-> DT boot mode of operation and now it is the time to start killing
-> slowly the dependency on hwmod, so with this patch, we are starting
-> with device resources.
-> The idea here is implemented considering to both boot modes -
->   - DT boot mode
->     OF framework will construct the resource structure (currently
->     does for MEM & IRQ resource) and we should respect/use these
->     resources, killing hwmod dependency.
->     If pdev->num_resources > 0, we assume that MEM & IRQ resources
->     have been allocated by OF layer already (through DTB).
->=20
->     Once DMA resource is available from OF layer, we should
->     kill filling any resources from hwmod.
->=20
->   - Non-DT boot mode
->     Here, pdev->num_resources =3D 0, and we should get all the
->     resources from hwmod (following existing steps)
->=20
-> Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Cc: Kevin Hilman <khilman@ti.com>
-> ---
-> This patch is tested on BeagleBone and AM37xEVM.
+Hi Tomasz,
+Please find the inline comments.
+Will post the next version today.
 
-I tried this on OMAP3 (with McBSP/twl4030-audio/omap-twl4030 DT boot), =
-OMAP4
-(McPDM, DMIC DT), and on OMAP5 (McPDM, DMIC DT).
-I have sent the patches needed for the dtsi files to probe the audio re=
-lated
-IPs with this patch.
+Thanks.
+Leela Krishna Amudala.
+------- Original Message -------
+Sender : Tomasz Figa<t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> Junior Software Engineer/SPRC-Linux Platform (SSD)/Samsung Electronics
+Date : Sep 05, 2012 13:22 (GMT+05:30)
+Title : Re: [PATCH V3 1/2] drm/exynos: add platform_device_id table and driver data for exynos5 drm fimd
 
-Tested-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Hi Leela,
 
->=20
-> Why RFC?
-> Still we have function duplication omap_device_fill_resources() and
-> omap_device_fill_dma_resources(), we can actually split the function
-> into 3 resources and avoid duplication -
->   - omap_device_fill_dma_resources()
->   - omap_device_fill_mem_resources()
->   - omap_device_fill_irq_resources()
->=20
-> Actually I wanted to clean it further but thought of getting
-> feedback first and then proceed further.
->=20
->  arch/arm/mach-omap2/omap_hwmod.c             |   27 ++++++++++
->  arch/arm/plat-omap/include/plat/omap_hwmod.h |    1 +
->  arch/arm/plat-omap/omap_device.c             |   72 ++++++++++++++++=
-+++++----
->  3 files changed, 88 insertions(+), 12 deletions(-)
->=20
-> diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/o=
-map_hwmod.c
-> index 31ec283..edabfb3 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod.c
-> @@ -3330,6 +3330,33 @@ int omap_hwmod_fill_resources(struct omap_hwmo=
-d *oh, struct resource *res)
->  }
->=20
->  /**
-> + * omap_hwmod_fill_dma_resources - fill struct resource array with d=
-ma data
-> + * @oh: struct omap_hwmod *
-> + * @res: pointer to the array of struct resource to fill
-> + *
-> + * Fill the struct resource array @res with dma resource data from t=
-he
-> + * omap_hwmod @oh.  Intended to be called by code that registers
-> + * omap_devices.  See also omap_hwmod_count_resources().  Returns th=
-e
-> + * number of array elements filled.
-> + */
-> +int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct reso=
-urce *res)
-> +{
-> +	int i, sdma_reqs_cnt;
-> +	int r =3D 0;
-> +
-> +	sdma_reqs_cnt =3D _count_sdma_reqs(oh);
-> +	for (i =3D 0; i < sdma_reqs_cnt; i++) {
-> +		(res + r)->name =3D (oh->sdma_reqs + i)->name;
-> +		(res + r)->start =3D (oh->sdma_reqs + i)->dma_req;
-> +		(res + r)->end =3D (oh->sdma_reqs + i)->dma_req;
-> +		(res + r)->flags =3D IORESOURCE_DMA;
-> +		r++;
-> +	}
-> +
-> +	return r;
-> +}
-> +
-> +/**
->   * omap_hwmod_get_resource_byname - fetch IP block integration data =
-by name
->   * @oh: struct omap_hwmod * to operate on
->   * @type: one of the IORESOURCE_* constants from include/linux/iopor=
-t.h
-> diff --git a/arch/arm/plat-omap/include/plat/omap_hwmod.h b/arch/arm/=
-plat-omap/include/plat/omap_hwmod.h
-> index 9b9646c..0533073 100644
-> --- a/arch/arm/plat-omap/include/plat/omap_hwmod.h
-> +++ b/arch/arm/plat-omap/include/plat/omap_hwmod.h
-> @@ -615,6 +615,7 @@ int omap_hwmod_softreset(struct omap_hwmod *oh);
->=20
->  int omap_hwmod_count_resources(struct omap_hwmod *oh);
->  int omap_hwmod_fill_resources(struct omap_hwmod *oh, struct resource=
- *res);
-> +int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct reso=
-urce *res);
->  int omap_hwmod_get_resource_byname(struct omap_hwmod *oh, unsigned i=
-nt type,
->  				   const char *name, struct resource *res);
->=20
-> diff --git a/arch/arm/plat-omap/omap_device.c b/arch/arm/plat-omap/om=
-ap_device.c
-> index c490240..fd15a3a 100644
-> --- a/arch/arm/plat-omap/omap_device.c
-> +++ b/arch/arm/plat-omap/omap_device.c
-> @@ -486,6 +486,33 @@ static int omap_device_fill_resources(struct oma=
-p_device *od,
->  }
->=20
->  /**
-> + * omap_device_fill_dma_resources - fill in array of struct resource=
- with dma resources
-> + * @od: struct omap_device *
-> + * @res: pointer to an array of struct resource to be filled in
-> + *
-> + * Populate one or more empty struct resource pointed to by @res wit=
-h
-> + * the dma resource data for this omap_device @od.  Used by
-> + * omap_device_alloc() after calling omap_device_count_resources().
-> + *
-> + * Ideally this function would not be needed at all.  If we have
-> + * mechanism to get dma resources from DT.
-> + *
-> + * Returns 0.
-> + */
-> +static int omap_device_fill_dma_resources(struct omap_device *od,
-> +				      struct resource *res)
-> +{
-> +	int i, r;
-> +
-> +	for (i =3D 0; i < od->hwmods_cnt; i++) {
-> +		r =3D omap_hwmod_fill_dma_resources(od->hwmods[i], res);
-> +		res +=3D r;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
->   * omap_device_alloc - allocate an omap_device
->   * @pdev: platform_device that will be included in this omap_device
->   * @oh: ptr to the single omap_hwmod that backs this omap_device
-> @@ -524,24 +551,45 @@ struct omap_device *omap_device_alloc(struct pl=
-atform_device *pdev,
->  	od->hwmods =3D hwmods;
->  	od->pdev =3D pdev;
->=20
-> +	res_count =3D omap_device_count_resources(od);
->  	/*
-> -	 * HACK: Ideally the resources from DT should match, and hwmod
-> -	 * should just add the missing ones. Since the name is not
-> -	 * properly populated by DT, stick to hwmod resources only.
-> +	 * DT Boot:
-> +	 *   OF framework will construct the resource structure (currently
-> +	 *   does for MEM & IRQ resource) and we should respect/use these
-> +	 *   resources, killing hwmod dependency.
-> +	 *   If pdev->num_resources > 0, we assume that MEM & IRQ resources
-> +	 *   have been allocated by OF layer already (through DTB).
-> +	 *
-> +	 * Non-DT Boot:
-> +	 *   Here, pdev->num_resources =3D 0, and we should get all the
-> +	 *   resources from hwmod.
-> +	 *
-> +	 * TODO: Once DMA resource is available from OF layer, we should
-> +	 *   kill filling any resources from hwmod.
->  	 */
-> -	if (pdev->num_resources && pdev->resource)
-> -		dev_warn(&pdev->dev, "%s(): resources already allocated %d\n",
-> -			__func__, pdev->num_resources);
-> -
-> -	res_count =3D omap_device_count_resources(od);
-> -	if (res_count > 0) {
-> -		dev_dbg(&pdev->dev, "%s(): resources allocated from hwmod %d\n",
-> -			__func__, res_count);
-> +	if (res_count > pdev->num_resources) {
-> +		/* Allocate resources memory to account for new resources */
->  		res =3D kzalloc(sizeof(struct resource) * res_count, GFP_KERNEL);
->  		if (!res)
->  			goto oda_exit3;
->=20
-> -		omap_device_fill_resources(od, res);
-> +		/*
-> +		 * If pdev->num_resources > 0, then assume that,
-> +		 * MEM and IRQ resources will only come from DT and only
-> +		 * fill DMA resource from hwmod layer.
-> +		 */
-> +		if (pdev->num_resources && pdev->resource) {
-> +			dev_dbg(&pdev->dev, "%s(): resources already allocated %d\n",
-> +					__func__, res_count);
-> +			memcpy(res, pdev->resource,
-> +				sizeof(struct resource) * pdev->num_resources);
-> +			omap_device_fill_dma_resources(od,
-> +					&res[pdev->num_resources]);
-> +		} else {
-> +			dev_dbg(&pdev->dev, "%s(): using resources from hwmod %d\n",
-> +					__func__, res_count);
-> +			omap_device_fill_resources(od, res);
-> +		}
->=20
->  		ret =3D platform_device_add_resources(pdev, res, res_count);
->  		kfree(res);
-> --
-> 1.7.0.4
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+See my comments inline.
 
+On Thursday 16 of August 2012 12:08:08 Leela Krishna Amudala wrote:
+> +enum fimd_version_type {
+> + VERSION_8, /* FIMD_VERSION8 */
+> +};
+> +
+> +struct drm_fimd_driver_data {
+> + enum fimd_version_type fimd_ver;
+> +};
+> +
+> +struct drm_fimd_driver_data exynos5_drm_fimd_driver_data = {
+> + .fimd_ver = VERSION_8,
+> +};
 
---=20
-P=E9ter
+I think that the approach with timing_base, as suggested by Joonyoung Shim, 
+would be much cleaner.
+
+Leela: Okay, will go with timing_base approach only
+
+> +static struct platform_device_id exynos_drm_fimd_driver_ids[] = {
+> + {
+> + .name = "exynos4-fb",
+> + }, {
+> + .name = "exynos5-drm-fimd",
+> + .driver_data = (unsigned long)&exynos5_drm_fimd_driver_data,
+> + },
+> + {},
+> +};
+> +MODULE_DEVICE_TABLE(platform, exynos_drm_fimd_driver_ids);
+
+If I see correctly, this will crash on a null pointer dereference on 
+Exynos4 without DT, because of NULL driver_data.
+
+Leela: yes, you are right, will take care of this
+
+P.S. I think you should CC linux-arm-kernel and linux-samsung-soc lists 
+when submitting patches related to ARM and Samsung SoCs.
+
+Leela: Okay, will do it next time.
+
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
