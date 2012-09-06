@@ -1,128 +1,123 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/6 v2] ARM: integrator: initial device tree support
-Date: Thu, 06 Sep 2012 10:35:49 -0500
-Message-ID: <5048C2D5.1020808@gmail.com>
-References: <1346471760-23993-1-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-2-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-3-git-send-email-linus.walleij@linaro.org>
- <1346471760-23993-4-git-send-email-linus.walleij@linaro.org>
- <5043E4BE.1060508@gmail.com>
- <CACRpkdbTRCUnx1JjCQ+WT4PoxtDG38MP=ctUp6TBPd64xQ39jw@mail.gmail.com>
- <5048A31E.2090704@gmail.com>
- <CACRpkdYy2CZXXA+kkEaOTznaucxXEwiwSn-5ux0ByHjXrsm-2A@mail.gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 7/9] ARM: davinci: add support for am1808 based EnBW CMC board
+Date: Thu, 6 Sep 2012 21:08:32 +0530
+Message-ID: <1346945914-7802-8-git-send-email-nsekhar@ti.com>
+References: <1346945914-7802-1-git-send-email-nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdYy2CZXXA+kkEaOTznaucxXEwiwSn-5ux0ByHjXrsm-2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1346945914-7802-1-git-send-email-nsekhar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2012 08:56 AM, Linus Walleij wrote:
-> On Thu, Sep 6, 2012 at 3:20 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> [Me]
->>> I can of course skip the aliases and go for the timer nodes
->>> I want directly, but that isn't any helpful for people reading the
->>> device tree, is it?
->>
->> Well, the dts doesn't really need to describe how Linux is using things.
-> 
-> The arm,integrator-clocksource and arm,integrator-clockevent
-> are renamed arm,timer-primary and arm,timer-secondary in the
-> last patch set.
-> 
-> Are you OK with this for now, going forward? I'd be happy to
-> take a round refactoring it for the next cycle as outlined
-> below.
-> 
->> I'd like to get to common DT code for sp804 so all platforms just have a
->> call to sp804_dt_init() which does all the initialization.
-> 
-> The Integrator/AP does not have the SP804 timer, it has a
-> precursor with similar, yet different register setup. The
-> driver is in the integrator_ab. core file.
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 
-Right, that was really just an example. We have the general problem that
-platforms have N timers and how do we assign them to clk source and clk
-event. I'm fine with aliases if we decide that other options have issues
-or are not worth the complexity. A "linux,X" property really needs to be
-a last resort.
+This board supports:
 
-> (I could look into merging this SP804 ancestor into the SP804
-> driver with some flag or so, but that would be a different
-> TODO item.)
-> 
-> The Integrator/CP has the SP804 however.
-> 
->>> Maybe primary-timer, secondary-timer is sufficiently
->>> good and neutral aliases?
->>
->> That doesn't distinguish clk-event vs. clk-source. Perhaps we can use
->> presence of interrupt to distinguish that.
-> 
-> They all have interrupts in the Integrator case so all timers
-> are equal. But I vaguely recall someone whisper bad things about
-> timer0.
+- AM1808 based board
+- 64 MiB DDR ram
+- 2 MiB Nor flash
+- 128 MiB NAND flash
+- use internal RTC
+- I2C support
+- hwmon lm75 support
+- UBI/UBIFS support
+- MMC support
+- USB OTG support
 
-Then that is a "feature" of the h/w. So perhaps a "arm,timer-horked"
-should be added as a property. Certainly wouldn't be the first timer
-with that feature. :)
+This patch adds the basic DTS file enabling the serial ports.
+Other features will be added in due course of time.
 
->> It shouldn't really matter
->> which timer Linux picks as long as the h/w has the necessary features.
-> 
-> That is true, what I've been doing so far is just a 1-to-1 mapping
-> to current usage without much massaging of the abstract resource
-> concept.
-> 
->> We just need to make sure dts describes those features. Some of the
->> things we have to deal with:
->>
->> Highbank has interrupt for timer0, but not on timer1, so timer0 must be
->> clk-event. It also users timer1 for sched clock, but ARM Ltd platforms
->> use a different timer.
-> 
-> So I guess this SP804? They just didn't route the IRQ line
-> I guess... :-(
-> 
->> Realview and Versatile use timer0 for clk-event and timer3 for clk-src.
->> Is there something broken with timer1 and timer2? It is certainly
->> possible the h/w has the clock tied off for 1 of the 2 timers.
-> 
-> Integrator use timer2 for clockevent and timer1 for clocksource,
-> and legends tell that timer0 should be avoided. But I guess
-> I could try to find out by experience, I fear that it could work
-> but be instable so that it appears to work but in reality does not...
-> 
->> VExpress CA9 has broken timers on the core tile (at least they were
->> ifdef'ed out before the last clean-up). We could just remove/disable
->> them in the dts so they are not used.
-> 
-> There is something about the DT ambition here (or for that matter
-> the boardfile ambition). On the RealView PB1176 there is
-> a broken DMA engine, we just deleted it from the resource
-> list. Other people might want to have all available resources
-> listed but marked "broken" in the DT for completeness.
-> 
-> The latter has the upside of providing hints to the next
-> engineer who would otherwise come around and ask why
-> the hardware in the refman is not listed in the DT and start
-> to try to add it and find out it is broken. Knowing it's there
-> and it's broken is encoding real knowledge at the expense
-> of a few DT bytes.
-> 
+Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
+Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+[nsekhar-l0cyMroinI0@public.gmane.org: modified after dtsi refactoring and added binding
+documentation]
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/davinci.txt |    4 +++
+ arch/arm/boot/dts/da850-enbw-cmc.dts              |   30 +++++++++++++++++++++
+ arch/arm/mach-davinci/da8xx-dt.c                  |    1 +
+ 3 files changed, 35 insertions(+)
+ create mode 100644 arch/arm/boot/dts/da850-enbw-cmc.dts
 
-Yes, saving that information somewhere is useful.
-
-Rob
+diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+index 2dda756..cfaeda4 100644
+--- a/Documentation/devicetree/bindings/arm/davinci.txt
++++ b/Documentation/devicetree/bindings/arm/davinci.txt
+@@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
+ Required root node properties:
+     - compatible = "ti,da850-evm", "ti,da850";
+ 
++EnBW AM1808 based CMC board
++Required root node properties:
++    - compatible = "enbw,cmc", "ti,da850;
++
+ Generic DaVinci Boards
+ ----------------------
+ 
+diff --git a/arch/arm/boot/dts/da850-enbw-cmc.dts b/arch/arm/boot/dts/da850-enbw-cmc.dts
+new file mode 100644
+index 0000000..422fdb3
+--- /dev/null
++++ b/arch/arm/boot/dts/da850-enbw-cmc.dts
+@@ -0,0 +1,30 @@
++/*
++ * Device Tree for AM1808 EnBW CMC board
++ *
++ * Copyright 2012 DENX Software Engineering GmbH
++ * Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++/dts-v1/;
++/include/ "da850.dtsi"
++
++/ {
++	compatible = "enbw,cmc", "ti,da850";
++	model = "EnBW CMC";
++
++	soc {
++		serial0: serial@1c42000 {
++			status = "okay";
++		};
++		serial1: serial@1d0c000 {
++			status = "okay";
++		};
++		serial2: serial@1d0d000 {
++			status = "okay";
++		};
++	};
++};
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 94b09fd..37c27af 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -47,6 +47,7 @@ static void __init da850_init_machine(void)
+ }
+ 
+ static const char *da850_boards_compat[] __initdata = {
++	"enbw,cmc",
+ 	"ti,da850-evm",
+ 	"ti,da850",
+ 	NULL,
+-- 
+1.7.10.1
