@@ -1,77 +1,105 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 08/14] Input: twl4030-vibra: Support for
- DT booted kernel
-Date: Thu, 6 Sep 2012 09:19:33 -0700
-Message-ID: <20120906161933.GA18562@core.coreip.homeip.net>
-References: <1346933541-21547-1-git-send-email-peter.ujfalusi@ti.com>
- <1346933541-21547-9-git-send-email-peter.ujfalusi@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/3] arm: omap: hwmod: add a new addr space in otg for
+ writing to control module
+Date: Thu, 6 Sep 2012 20:13:03 +0300
+Message-ID: <20120906171301.GC17754@arwen.pp.htv.fi>
+References: <1346943331-18120-1-git-send-email-kishon@ti.com>
+ <1346943331-18120-2-git-send-email-kishon@ti.com>
+ <5048C2A2.2020104@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eHhjakXzOLJAF9wJ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1346933541-21547-9-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>, alsa-devel@alsa-project.org, Samuel Ortiz <sameo@linux.intel.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org, Benoit Cousson <b-cousson@ti.com>
+In-Reply-To: <5048C2A2.2020104@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
 
-On Thu, Sep 06, 2012 at 03:12:15PM +0300, Peter Ujfalusi wrote:
-> Add support when the kernel has been booted with DT blob. In this case the
-> pdata is NULL, we need to reach up to the core node and check if the codec
-> part has been enabled to determine if we need to coexist with the codec or
-> not.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/input/misc/twl4030-vibra.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/misc/twl4030-vibra.c b/drivers/input/misc/twl4030-vibra.c
-> index fc0ed9b..15620f8 100644
-> --- a/drivers/input/misc/twl4030-vibra.c
-> +++ b/drivers/input/misc/twl4030-vibra.c
-> @@ -26,6 +26,7 @@
->  #include <linux/module.h>
->  #include <linux/jiffies.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of.h>
->  #include <linux/workqueue.h>
->  #include <linux/i2c/twl.h>
->  #include <linux/mfd/twl4030-audio.h>
-> @@ -194,13 +195,28 @@ static int twl4030_vibra_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(twl4030_vibra_pm_ops,
->  			 twl4030_vibra_suspend, twl4030_vibra_resume);
->  
-> +static bool twl4030_vibra_check_coexist(struct twl4030_vibra_data *pdata,
-> +			      struct device_node *node)
-> +{
-> +	if (pdata && pdata->coexist)
-> +		return true;
-> +
-> +#ifdef CONFIG_OF
-> +	if (of_find_node_by_name(node, "codec"))
-> +		return true;
-> +#endif
+--eHhjakXzOLJAF9wJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In patch 6 you added a stub for of_find_node_by_name(), so do you really
-need this #ifdef?
+Hi,
 
-Otherwise it looks good.
+On Thu, Sep 06, 2012 at 09:04:58PM +0530, Vaibhav Hiremath wrote:
+>=20
+>=20
+> On 9/6/2012 8:25 PM, Kishon Vijay Abraham I wrote:
+> > The mailbox register for usb otg in omap is present in control module.
+> > On detection of any events VBUS or ID, this register should be written
+> > to send the notification to musb core.
+> >=20
+> > Till we have a separate control module driver to write to control modul=
+e,
+> > omap2430 will handle the register writes to control module by itself. So
+> > a new address space to represent this control module register is added
+> > to usb_otg_hs.
+> >=20
+> > Cc: Benoit Cousson <b-cousson@ti.com>
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > ---
+> >  arch/arm/mach-omap2/omap_hwmod_44xx_data.c |    5 +++++
+> >  1 file changed, 5 insertions(+)
+> >=20
+> > diff --git a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c b/arch/arm/mach=
+-omap2/omap_hwmod_44xx_data.c
+> > index 242aee4..02341bc 100644
+> > --- a/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+> > +++ b/arch/arm/mach-omap2/omap_hwmod_44xx_data.c
+> > @@ -5890,6 +5890,11 @@ static struct omap_hwmod_addr_space omap44xx_usb=
+_otg_hs_addrs[] =3D {
+> >  		.pa_end		=3D 0x4a0ab003,
+> >  		.flags		=3D ADDR_TYPE_RT
+> >  	},
+> > +	{
+> > +		.pa_start	=3D 0x4a00233c,
+> > +		.pa_end		=3D 0x4a00233f,
+> > +		.flags		=3D ADDR_TYPE_RT
+> > +	},
+>=20
+> I do not have any objection/comment here, but I believe this is control
+> module address space required for USB module, right?
+> I am not sure this is right way of accessing control module space.
+> Actually Control Module Access required for drivers is one of the
+> blocking issue we have currently.
+>=20
+> Also there was some effort put up by 'Konstantine' to convert Control
+> module to MFD driver, I haven't seen any further update on it. But it
+> would be good to check with him.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+this was an agreement with Benoit since we already lost a couple merge
+windows for this patchset. We agreed to wait until -rc4 for SCM driver
+and if it wasn't ready, we'd go ahead with this and SCM author would fix
+it up on a patch converting users to new SCM driver.
 
-Thanks.
+--=20
+balbi
 
--- 
-Dmitry
+--eHhjakXzOLJAF9wJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQSNmdAAoJEIaOsuA1yqREWOIP/Ah2073wtfbxi2AJtgI6VqGC
+mjsDpMEWfoMJ4CfJGlcL8sQhGczVLY4vsgCSvvdlE5hp6s5PaX5XlzbQUuIQ2v0d
+9wTEiK4IJVmhNsICbMrn0GxUUpsuYoZNEpiN1nJ9au6Yxbygjo28Bw5CGRhqPfnl
+XulKaAzOtOqyHRvJ7v7yfplAaWhwYB4guAvxYQ3v+iTFYGv3V0KzH8LDOKPqDNbR
+DbPzgM2qI4k1iuvX/tsc1/DOvm6L8giAlf4tJt7nIXoLgzy5qlox6nv278qygiWW
+WLP9f/RSvMqNZSOhsEw6NmxfsLy3PYuULoIe4ngDOWB7UUHGhF7SWIZ7jSCtZFvJ
+Czc47ZH6UXgIKHBQ4KOBuqjG1xpGtkRWpGstbk2qZmW3O6/iP88T61s2Bqe+81R0
+lHuOmVzz64BxwSyFHRMQR6TJuFXFgsMZ9tgHISl9dznPh1vb9rXwr9kVGcWiMTpZ
+6ohKIQZIRqx3cIwkkPqvoKbt7dSGKyBkYUekyp61XV33W41ZrCmJi8odQmwM9cge
+IHWPUNgMERpJLYiMc8Cs1vpro9K6WqnT5mBHmfsuY/JtiGInTN7xIBhd5z991/vH
+cGf2w6hBgJmLeOFVTiDTPLE+tPn/NQmZpfNeUlz6sLc+/EBAbCO/x3Zu6odKILcl
+VhGyrpmqmgJHMSaug2OX
+=cQHs
+-----END PGP SIGNATURE-----
+
+--eHhjakXzOLJAF9wJ--
