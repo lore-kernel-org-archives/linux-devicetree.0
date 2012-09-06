@@ -1,59 +1,102 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH V4 2/2] video: drm: exynos: Add device tree support
-Date: Thu, 06 Sep 2012 13:05:31 +0200
-Message-ID: <5048837B.6020903@samsung.com>
-References: <1346859555-13527-1-git-send-email-l.krishna@samsung.com>
- <1346859555-13527-3-git-send-email-l.krishna@samsung.com>
- <CAH9JG2X_3iUTiGWv2cxjiX-s_VUtptVbzxhAJTub70W_2Dxecg@mail.gmail.com>
- <CAAQKjZNmizjZ-=JN9_AysPMPHTOh7eydfE_OCYE6-v0JAJMydw@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v3 00/14] MFD/ASoC/Input: twl4030-audio
+	submodule DT support
+Date: Thu,  6 Sep 2012 15:12:07 +0300
+Message-ID: <1346933541-21547-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAAQKjZNmizjZ-=JN9_AysPMPHTOh7eydfE_OCYE6-v0JAJMydw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: InKi Dae <inki.dae@samsung.com>
-Cc: Kyungmin Park <kmpark@infradead.org>, Leela Krishna Amudala <l.krishna@samsung.com>, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dtor@mail.ru>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On 09/06/2012 09:21 AM, InKi Dae wrote:
->>> +Required properties:
->>> + - compatible: Should be "samsung,exynos5-fimd" or "samsung,exynos4-fb" for
->> Doesn't better to use single word? fimd or fb?. I think 'fb' is used
->> for framebuffer historically.
->> but now it's used both fb and drm, so fimd is neutral and architecture
->> specific.
->>
->> To do this, Modify arch-exynos first and update it at each drivers it properly.
->>
->> Thank you,
->> Kyungmin Park
->>
-> 
-> I agree with Kyungmin but I'd like to use as is. the reason we used
-> 'exynos4-fb' as device name, is for that it uses fimd driver's
-> platform device commonly and gets fimd clock. so I think that dts file
-> should be defined with hardware specific name but not driver name such
-> as 'exynos4-fb'. but with this, we can't get fimd clock with device's
-> name because 'exynos4-fb' is used as device name of fimd clock. so to
-> use 'exynos4-fimd', we should modify the device name of fimd clock
-> from 'exynos4-fb'  to 'exynos4-fimd' and also ids definitions of
-> s3c-fb and drm fimd driver. so my conclusion is that it merges this
+Generated on top of:
+git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git topic/omap
 
-I think it's good moment to put those things in order, i.e. use uniform 
-'compatible' names: "samsung,exynos4-fimd", "samsung,exynos5-fimd". 
-Platform device names are separate issue, but could perhaps be unified 
-at this time as well.
+Changed since v2:
+- Added commit message to patch 2 (as Tero requested it)
+- Fixed patch 6 (dt: Add empty...) since the previous patch caused x86_64 build
+  to fail due to missing struct before device_node.
 
-> patch set as is and then let's modify related things later.
-> any opinions, welcome~ anytime.
-> 
-> Thanks.
-> Inki Dae
+Changes since v1:
+- Get the MCLK frequencey from twl-core driver (via new API)
+- hs_extmute_disable_level parameter has been removed
+- empty of_find_node_by_name() in of.h for !CONFIG_OF builds
 
---
+Mark: the extmute GPIO handling (when it is used) remained in the codec driver
+for now. I can think more on how to add support for this type of mute control.
+If you can point me to other codec needing this it would help on designing
+something which is common enough for other users.
+
+As for now I have a separate series to add GPIO controlled output amps (hp/spk).
+I will send that to review soon. Currently this piece of code does not work when
+booted with device tree since I have done it on n900 which has the GPIO numbers
+as defines. I need to revisit the aproach on how to do it in a dynamic way.
+
+Introl mail from v1:
+
+The following series adds DT support for the twl4030 audio submodule which
+provides audio codec and vibra functionality.
+
+The MFD core driver is probed via DT, it will create the needed child devices
+based on the provided information in the DT blob.
+Child drivers (vibra, ASoC codec) will parse the core's node if needed to get
+the needed parameters for their configuration.
+
+In the ASoC codec driver the hs_extmute callback (which was used to toggle a
+GPIO line) has been removed. The codec driver will receive the GPIO number
+(if it is needed on the platform).
+
+If the series is OK (and no objections from the maintainers), it would be good
+if this can go via audio. Changed files are well contained within the
+twl4030-audio stack so I do not expect merge issues later.
+
+The series has been tested on BeagleBoard (with the McBSP DT series, and with
+the upcoming DT audio support for BeagleBoard).
 
 Regards,
-Sylwester
+Peter
+---
+Peter Ujfalusi (14):
+  MFD: twl4030-audio: Clean up MODULE_* and platform_driver part
+  MFD: twl4030-audio: Convert to use devm_kzalloc
+  MFD: twl4030-audio: Rearange and clean-up the probe function
+  MFD: twl-core: Add API to query the HFCLK rate
+  MFD: twl4030-audio: Get audio MCLK via twl-core API instead of pdata
+  dt: Add empty of_find_node_by_name() function
+  MFD: twl4030-audio: Add DT support
+  Input: twl4030-vibra: Support for DT booted kernel
+  ASoC: twl4030: Move hs_extmute GPIO handling to driver
+  ARM: OMAP/ASoC: Zoom2: Let the codec to handle the hs_extmute GPIO
+  ASoC/MFD: twl4030: Remove set_hs_extmute callback from platform data
+  ASoC: twl4030: Convert to use devm_kzalloc
+  ASoC: twl4030: Add pointer to pdata within the private data
+  ASoC: twl4030: Support for DT booted kernel
+
+ .../devicetree/bindings/mfd/twl4030-audio.txt      |  46 +++++++++
+ arch/arm/mach-omap2/board-zoom-peripherals.c       |   9 +-
+ arch/arm/mach-omap2/include/mach/board-zoom.h      |   2 -
+ drivers/input/misc/twl4030-vibra.c                 |  20 +++-
+ drivers/mfd/twl-core.c                             |  32 ++++++
+ drivers/mfd/twl4030-audio.c                        | 107 ++++++++++++++-------
+ include/linux/i2c/twl.h                            |   3 +-
+ include/linux/of.h                                 |   6 ++
+ sound/soc/codecs/twl4030.c                         | 103 ++++++++++++++++----
+ sound/soc/omap/zoom2.c                             |   4 -
+ 10 files changed, 261 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/twl4030-audio.txt
+
+-- 
+1.7.12
