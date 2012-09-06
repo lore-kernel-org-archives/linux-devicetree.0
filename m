@@ -1,491 +1,67 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 3/3] cpufreq: Add a generic cpufreq-cpu0 driver
-Date: Thu, 6 Sep 2012 15:29:38 +0800
-Message-ID: <20120906072935.GB2362@S2101-09.ap.freescale.net>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
- <201209051538.12916.rjw@sisk.pl>
- <20120905135937.GA2362@S2101-09.ap.freescale.net>
- <201209052218.50634.rjw@sisk.pl>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH RESEND v5 3/3] arm/dts: AM33XX: Add D_CAN device tree data
+Date: Thu, 6 Sep 2012 08:09:39 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA27EEC@DBDE01.ent.ti.com>
+References: <1346845260-10978-1-git-send-email-anilkumar@ti.com>
+ <1346845260-10978-4-git-send-email-anilkumar@ti.com>
+ <504757D2.90601@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201209052218.50634.rjw@sisk.pl>
-Sender: cpufreq-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: cpufreq@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Shilimkar Santosh <santosh.shilimkar@ti.com>, Richard Zhao <richard.zhao@freescale.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, AnilKumar Ch <anilkumar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <504757D2.90601-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2012 at 10:18:50PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, September 05, 2012, Shawn Guo wrote:
-> > On Wed, Sep 05, 2012 at 03:38:12PM +0200, Rafael J. Wysocki wrote:
-> > > Well, what about actually avoiding the code duplication?  That is,
-> > > can you make OMAP be a user of your new core function and drop the
-> > > OMAP-specific one, perhaps?
-> > > 
-> > I would expect that the driver will replace the omap-cpufreq driver
-> > completely at some point, where omap becomes a DT only platform.
+On Wed, Sep 05, 2012 at 19:16:58, Marc Kleine-Budde wrote:
+> On 09/05/2012 01:41 PM, AnilKumar Ch wrote:
+> > Add Bosch D_CAN controller device tree data to AM33XX dtsi
+> > file by adding d_can device nodes with all the necessary
+> > parameters.
+> > 
+> > Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/am33xx.dtsi |   18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> > index bf5f713..ab744d6 100644
+> > --- a/arch/arm/boot/dts/am33xx.dtsi
+> > +++ b/arch/arm/boot/dts/am33xx.dtsi
+> > @@ -177,5 +177,23 @@
+> >  			compatible = "ti,omap3-wdt";
+> >  			ti,hwmods = "wd_timer2";
+> >  		};
+> > +
+> > +		dcan0: d_can@481cc000 {
+> > +			compatible = "bosch,d_can";
 > 
-> That's fine, but why do we need two almost identical functions to start with?
+> On imx/mxs we also add a compatible for the current hardware, this may
+> look like this:
 > 
-Probably because it does not worth the churn considering that any
-particular cpufreq driver having an identical .set_target as this
-generic one should eventually be replaced by this driver completely,
-IMO.
+> 			compatible = "ti,am33xx-can", "bosch,d_can";
+> 
+> But I don't know if this is a generic policy or just an imx/mxs thing :)
+> 
+Marc,
 
-But anyway, it could be another patch which may need more discussion,
-so I just submitted the v4 with leaving this particular comment to be
-addressed in another patch.
+No driver compatible name is ip specific so "ti,am33xx-can" is not
+required, I am not seeing any advantage if we add this name.
 
-I'm unsure this is what you are ordering.  But here is what I come up
-with to address your comment.  Please let me know if this is exactly
-what you are asking for, or you expect something different.
+If there are any changes required for am33xx specific in driver
+then we can add "ti,am33xx-can" name in driver otherwise no use.
 
-Regards,
-Shawn
-
-8<---
- drivers/cpufreq/Kconfig          |    4 ++
- drivers/cpufreq/Kconfig.arm      |    1 +
- drivers/cpufreq/Makefile         |    1 +
- drivers/cpufreq/cpufreq-cpu0.c   |   94 +++++-----------------------------
- drivers/cpufreq/cpufreq.h        |   31 +++++++++++
- drivers/cpufreq/cpufreq_target.c |   99 +++++++++++++++++++++++++++++++++++
- drivers/cpufreq/omap-cpufreq.c   |  105 +++++---------------------------------
- 7 files changed, 163 insertions(+), 172 deletions(-)
- create mode 100644 drivers/cpufreq/cpufreq.h
- create mode 100644 drivers/cpufreq/cpufreq_target.c
-
-diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-index ea512f4..206eec9 100644
---- a/drivers/cpufreq/Kconfig
-+++ b/drivers/cpufreq/Kconfig
-@@ -20,6 +20,9 @@ if CPU_FREQ
- config CPU_FREQ_TABLE
- 	tristate
- 
-+config CPU_FREQ_TARGET
-+	tristate
-+
- config CPU_FREQ_STAT
- 	tristate "CPU frequency translation statistics"
- 	select CPU_FREQ_TABLE
-@@ -183,6 +186,7 @@ config GENERIC_CPUFREQ_CPU0
- 	bool "Generic CPU0 cpufreq driver"
- 	depends on HAVE_CLK && REGULATOR && PM_OPP && OF
- 	select CPU_FREQ_TABLE
-+	select CPU_FREQ_TARGET
- 	help
- 	  This adds a generic cpufreq driver for CPU0 frequency management.
- 	  It supports both uniprocessor (UP) and symmetric multiprocessor (SMP)
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 5961e64..60d81d0 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -7,6 +7,7 @@ config ARM_OMAP2PLUS_CPUFREQ
- 	depends on ARCH_OMAP2PLUS
- 	default ARCH_OMAP2PLUS
- 	select CPU_FREQ_TABLE
-+	select CPU_FREQ_TARGET
- 
- config ARM_S3C2416_CPUFREQ
- 	bool "S3C2416 CPU Frequency scaling support"
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index a378ed2..f7d19d1 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_CONSERVATIVE)	+= cpufreq_conservative.o
- 
- # CPUfreq cross-arch helpers
- obj-$(CONFIG_CPU_FREQ_TABLE)		+= freq_table.o
-+obj-$(CONFIG_CPU_FREQ_TARGET)		+= cpufreq_target.o
- 
- obj-$(CONFIG_GENERIC_CPUFREQ_CPU0)	+= cpufreq-cpu0.o
- 
-diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
-index e915827..51096e8 100644
---- a/drivers/cpufreq/cpufreq-cpu0.c
-+++ b/drivers/cpufreq/cpufreq-cpu0.c
-@@ -1,9 +1,6 @@
- /*
-  * Copyright (C) 2012 Freescale Semiconductor, Inc.
-  *
-- * The OPP code in function cpu0_set_target() is reused from
-- * drivers/cpufreq/omap-cpufreq.c
-- *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-@@ -20,6 +17,7 @@
- #include <linux/opp.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
-+#include "cpufreq.h"
- 
- static unsigned int transition_latency;
- static unsigned int voltage_tolerance; /* in percentage */
-@@ -42,84 +40,18 @@ static unsigned int cpu0_get_speed(unsigned int cpu)
- static int cpu0_set_target(struct cpufreq_policy *policy,
- 			   unsigned int target_freq, unsigned int relation)
- {
--	struct cpufreq_freqs freqs;
--	struct opp *opp;
--	unsigned long freq_Hz, volt = 0, volt_old = 0, tol = 0;
--	unsigned int index, cpu;
--	int ret;
--
--	ret = cpufreq_frequency_table_target(policy, freq_table, target_freq,
--					     relation, &index);
--	if (ret) {
--		pr_err("failed to match target freqency %d: %d\n",
--		       target_freq, ret);
--		return ret;
--	}
--
--	freq_Hz = clk_round_rate(cpu_clk, freq_table[index].frequency * 1000);
--	if (freq_Hz < 0)
--		freq_Hz = freq_table[index].frequency * 1000;
--	freqs.new = freq_Hz / 1000;
--	freqs.old = clk_get_rate(cpu_clk) / 1000;
--
--	if (freqs.old == freqs.new)
--		return 0;
--
--	for_each_online_cpu(cpu) {
--		freqs.cpu = cpu;
--		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
--	}
--
--	if (cpu_reg) {
--		opp = opp_find_freq_ceil(cpu_dev, &freq_Hz);
--		if (IS_ERR(opp)) {
--			pr_err("failed to find OPP for %ld\n", freq_Hz);
--			return PTR_ERR(opp);
--		}
--		volt = opp_get_voltage(opp);
--		tol = volt * voltage_tolerance / 100;
--		volt_old = regulator_get_voltage(cpu_reg);
--	}
--
--	pr_debug("%u MHz, %ld mV --> %u MHz, %ld mV\n",
--		 freqs.old / 1000, volt_old ? volt_old / 1000 : -1,
--		 freqs.new / 1000, volt ? volt / 1000 : -1);
--
--	/* scaling up?  scale voltage before frequency */
--	if (cpu_reg && freqs.new > freqs.old) {
--		ret = regulator_set_voltage_tol(cpu_reg, volt, tol);
--		if (ret) {
--			pr_err("failed to scale voltage up: %d\n", ret);
--			freqs.new = freqs.old;
--			return ret;
--		}
--	}
--
--	ret = clk_set_rate(cpu_clk, freqs.new * 1000);
--	if (ret) {
--		pr_err("failed to set clock rate: %d\n", ret);
--		if (cpu_reg)
--			regulator_set_voltage_tol(cpu_reg, volt_old, tol);
--		return ret;
--	}
--
--	/* scaling down?  scale voltage after frequency */
--	if (cpu_reg && freqs.new < freqs.old) {
--		ret = regulator_set_voltage_tol(cpu_reg, volt, tol);
--		if (ret) {
--			pr_err("failed to scale voltage down: %d\n", ret);
--			clk_set_rate(cpu_clk, freqs.old * 1000);
--			freqs.new = freqs.old;
--			return ret;
--		}
--	}
--
--	for_each_online_cpu(cpu) {
--		freqs.cpu = cpu;
--		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
--	}
--
--	return 0;
-+	struct cpufreq_target_data data;
-+
-+	data.dev = cpu_dev;
-+	data.clk = cpu_clk;
-+	data.reg = cpu_reg;
-+	data.tol = voltage_tolerance;
-+	data.freq_table = freq_table;
-+	data.policy = policy;
-+	data.target_freq = target_freq;
-+	data.relation = relation;
-+
-+	return cpufreq_set_target(&data);
- }
- 
- static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
-diff --git a/drivers/cpufreq/cpufreq.h b/drivers/cpufreq/cpufreq.h
-new file mode 100644
-index 0000000..ae380b3
---- /dev/null
-+++ b/drivers/cpufreq/cpufreq.h
-@@ -0,0 +1,31 @@
-+/*
-+ * Copyright (C) 2012 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef _DRIVERS_CPUFREQ_H
-+#define _DRIVERS_CPUFREQ_H
-+
-+struct device;
-+struct clk;
-+struct regulator;
-+struct cpufreq_frequency_table;
-+struct cpufreq_policy;
-+
-+struct cpufreq_target_data {
-+	struct device *dev;
-+	struct clk *clk;
-+	struct regulator *reg;
-+	unsigned int tol;
-+	struct cpufreq_frequency_table *freq_table;
-+	struct cpufreq_policy *policy;
-+	unsigned int target_freq;
-+	unsigned int relation;
-+};
-+
-+int cpufreq_set_target(struct cpufreq_target_data *data);
-+
-+#endif /* _DRIVERS_CPUFREQ_H */
-diff --git a/drivers/cpufreq/cpufreq_target.c b/drivers/cpufreq/cpufreq_target.c
-new file mode 100644
-index 0000000..02a5584
---- /dev/null
-+++ b/drivers/cpufreq/cpufreq_target.c
-@@ -0,0 +1,99 @@
-+/*
-+ * Copyright (C) 2012 Freescale Semiconductor, Inc.
-+ *
-+ * Based on function omap_target() from drivers/cpufreq/omap-cpufreq.c
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/clk.h>
-+#include <linux/cpufreq.h>
-+#include <linux/module.h>
-+#include <linux/opp.h>
-+#include <linux/regulator/consumer.h>
-+#include "cpufreq.h"
-+
-+int cpufreq_set_target(struct cpufreq_target_data *d)
-+{
-+	struct cpufreq_freqs freqs;
-+	struct opp *opp;
-+	unsigned long freq_Hz, volt = 0, volt_old = 0, tol = 0;
-+	unsigned int index, cpu;
-+	int ret;
-+
-+	ret = cpufreq_frequency_table_target(d->policy, d->freq_table,
-+					     d->target_freq, d->relation,
-+					     &index);
-+	if (ret) {
-+		pr_err("failed to match target freqency %d: %d\n",
-+		       d->target_freq, ret);
-+		return ret;
-+	}
-+
-+	freq_Hz = clk_round_rate(d->clk, d->freq_table[index].frequency * 1000);
-+	if (freq_Hz < 0)
-+		freq_Hz = d->freq_table[index].frequency * 1000;
-+	freqs.new = freq_Hz / 1000;
-+	freqs.old = clk_get_rate(d->clk) / 1000;
-+
-+	if (freqs.old == freqs.new)
-+		return 0;
-+
-+	for_each_online_cpu(cpu) {
-+		freqs.cpu = cpu;
-+		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
-+	}
-+
-+	if (d->reg) {
-+		opp = opp_find_freq_ceil(d->dev, &freq_Hz);
-+		if (IS_ERR(opp)) {
-+			pr_err("failed to find OPP for %ld\n", freq_Hz);
-+			return PTR_ERR(opp);
-+		}
-+		volt = opp_get_voltage(opp);
-+		tol = volt * d->tol / 100;
-+		volt_old = regulator_get_voltage(d->reg);
-+	}
-+
-+	pr_debug("%u MHz, %ld mV --> %u MHz, %ld mV\n",
-+		 freqs.old / 1000, volt_old ? volt_old / 1000 : -1,
-+		 freqs.new / 1000, volt ? volt / 1000 : -1);
-+
-+	/* scaling up?  scale voltage before frequency */
-+	if (d->reg && freqs.new > freqs.old) {
-+		ret = regulator_set_voltage_tol(d->reg, volt, tol);
-+		if (ret) {
-+			pr_err("failed to scale voltage up: %d\n", ret);
-+			freqs.new = freqs.old;
-+			return ret;
-+		}
-+	}
-+
-+	ret = clk_set_rate(d->clk, freqs.new * 1000);
-+	if (ret) {
-+		pr_err("failed to set clock rate: %d\n", ret);
-+		if (d->reg)
-+			regulator_set_voltage_tol(d->reg, volt_old, tol);
-+		return ret;
-+	}
-+
-+	/* scaling down?  scale voltage after frequency */
-+	if (d->reg && freqs.new < freqs.old) {
-+		ret = regulator_set_voltage_tol(d->reg, volt, tol);
-+		if (ret) {
-+			pr_err("failed to scale voltage down: %d\n", ret);
-+			clk_set_rate(d->clk, freqs.old * 1000);
-+			freqs.new = freqs.old;
-+			return ret;
-+		}
-+	}
-+
-+	for_each_online_cpu(cpu) {
-+		freqs.cpu = cpu;
-+		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(cpufreq_set_target);
-diff --git a/drivers/cpufreq/omap-cpufreq.c b/drivers/cpufreq/omap-cpufreq.c
-index 83a78ad..0772df5 100644
---- a/drivers/cpufreq/omap-cpufreq.c
-+++ b/drivers/cpufreq/omap-cpufreq.c
-@@ -37,6 +37,8 @@
- 
- #include <mach/hardware.h>
- 
-+#include "cpufreq.h"
-+
- /* OPP tolerance in percentage */
- #define	OPP_TOLERANCE	4
- 
-@@ -69,97 +71,18 @@ static int omap_target(struct cpufreq_policy *policy,
- 		       unsigned int target_freq,
- 		       unsigned int relation)
- {
--	unsigned int i;
--	int r, ret = 0;
--	struct cpufreq_freqs freqs;
--	struct opp *opp;
--	unsigned long freq, volt = 0, volt_old = 0, tol = 0;
--
--	if (!freq_table) {
--		dev_err(mpu_dev, "%s: cpu%d: no freq table!\n", __func__,
--				policy->cpu);
--		return -EINVAL;
--	}
--
--	ret = cpufreq_frequency_table_target(policy, freq_table, target_freq,
--			relation, &i);
--	if (ret) {
--		dev_dbg(mpu_dev, "%s: cpu%d: no freq match for %d(ret=%d)\n",
--			__func__, policy->cpu, target_freq, ret);
--		return ret;
--	}
--	freqs.new = freq_table[i].frequency;
--	if (!freqs.new) {
--		dev_err(mpu_dev, "%s: cpu%d: no match for freq %d\n", __func__,
--			policy->cpu, target_freq);
--		return -EINVAL;
--	}
--
--	freqs.old = omap_getspeed(policy->cpu);
--	freqs.cpu = policy->cpu;
--
--	if (freqs.old == freqs.new && policy->cur == freqs.new)
--		return ret;
--
--	/* notifiers */
--	for_each_cpu(i, policy->cpus) {
--		freqs.cpu = i;
--		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
--	}
--
--	freq = freqs.new * 1000;
--
--	if (mpu_reg) {
--		opp = opp_find_freq_ceil(mpu_dev, &freq);
--		if (IS_ERR(opp)) {
--			dev_err(mpu_dev, "%s: unable to find MPU OPP for %d\n",
--				__func__, freqs.new);
--			return -EINVAL;
--		}
--		volt = opp_get_voltage(opp);
--		tol = volt * OPP_TOLERANCE / 100;
--		volt_old = regulator_get_voltage(mpu_reg);
--	}
--
--	dev_dbg(mpu_dev, "cpufreq-omap: %u MHz, %ld mV --> %u MHz, %ld mV\n", 
--		freqs.old / 1000, volt_old ? volt_old / 1000 : -1,
--		freqs.new / 1000, volt ? volt / 1000 : -1);
--
--	/* scaling up?  scale voltage before frequency */
--	if (mpu_reg && (freqs.new > freqs.old)) {
--		r = regulator_set_voltage(mpu_reg, volt - tol, volt + tol);
--		if (r < 0) {
--			dev_warn(mpu_dev, "%s: unable to scale voltage up.\n",
--				 __func__);
--			freqs.new = freqs.old;
--			goto done;
--		}
--	}
--
--	ret = clk_set_rate(mpu_clk, freqs.new * 1000);
--
--	/* scaling down?  scale voltage after frequency */
--	if (mpu_reg && (freqs.new < freqs.old)) {
--		r = regulator_set_voltage(mpu_reg, volt - tol, volt + tol);
--		if (r < 0) {
--			dev_warn(mpu_dev, "%s: unable to scale voltage down.\n",
--				 __func__);
--			ret = clk_set_rate(mpu_clk, freqs.old * 1000);
--			freqs.new = freqs.old;
--			goto done;
--		}
--	}
--
--	freqs.new = omap_getspeed(policy->cpu);
--
--done:
--	/* notifiers */
--	for_each_cpu(i, policy->cpus) {
--		freqs.cpu = i;
--		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
--	}
--
--	return ret;
-+	struct cpufreq_target_data data;
-+
-+	data.dev = mpu_dev;
-+	data.clk = mpu_clk;
-+	data.reg = mpu_reg;
-+	data.tol = OPP_TOLERANCE;
-+	data.freq_table = freq_table;
-+	data.policy = policy;
-+	data.target_freq = target_freq;
-+	data.relation = relation;
-+
-+	return cpufreq_set_target(&data);
- }
- 
- static inline void freq_table_free(void)
--- 
-1.7.5.4
-
+Thanks
+AnilKumar
