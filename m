@@ -1,48 +1,99 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 1/4] pinctrl: add samsung pinctrl and gpiolib driver
-Date: Fri, 07 Sep 2012 07:03:53 +0900
-Message-ID: <241701cd8c7b$81022580$83067080$%kim@samsung.com>
-References: <226e01cd8ae6$928010b0$b7803210$%kim@samsung.com>
- <1346826046-30484-1-git-send-email-thomas.abraham@linaro.org>
- <5048DE83.4050203@wwwdotorg.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
+Date: Thu, 06 Sep 2012 15:11:55 -0700
+Message-ID: <20120906221155.20289.73650@nucleus>
+References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
+ <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
+ <20120831064125.GA3271@r65073-Latitude-D630>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5048DE83.4050203@wwwdotorg.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Stephen Warren' <swarren@wwwdotorg.org>, 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, dong.aisheng@linaro.org, patches@linaro.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120831064125.GA3271@r65073-Latitude-D630>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren wrote:
+Quoting Shawn Guo (2012-08-30 23:41:27)
+> Ping, Mike.
 > 
-> On 09/05/2012 12:20 AM, Thomas Abraham wrote:
-> > Add a new device tree enabled pinctrl and gpiolib driver for Samsung
-> > SoC's. This driver provides a common and extensible framework for all
-> > Samsung SoC's to interface with the pinctrl and gpiolib subsystems. This
-> > driver supports only device tree based instantiation and hence can be
-> > used only on those Samsung platforms that have device tree enabled.
-> >
-> > This driver is split into two parts: the pinctrl interface and the
-> gpiolib
-> > interface. The pinctrl interface registers pinctrl devices with the
-> pinctrl
-> > subsystem and gpiolib interface registers gpio chips with the gpiolib
-> > subsystem. The information about the pins, pin groups, pin functions and
-> > gpio chips, which are SoC specific, are parsed from device tree node.
-> >
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Kukjin Kim <kgene.kim@samsung.com>
-> > Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+
+Hi Shawn,
+
+Do you want me to take everything including patch #2?  I'm OK with the
+series but want to make sure it won't cause too much problem for you if
+the DTS and arch/arm changes go through my tree.
+
+Regards,
+Mike
+
+> Regards,
+> Shawn
 > 
-> Acked-by: Stephen Warren <swarren@nvidia.com>
-
-Applied this whole series, thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+> On Wed, Aug 22, 2012 at 09:36:27PM +0800, Shawn Guo wrote:
+> > For those SoCs that have hundreds of clock outputs, their clock
+> > DT bindings could reasonably define #clock-cells as 1 and require
+> > the client device specify the index of the clock it consumes in the
+> > cell of its "clocks" phandle.
+> > 
+> > Add a generic of_clk_src_onecell_get() function for this purpose.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> >  drivers/clk/clk.c            |   14 ++++++++++++++
+> >  include/linux/clk-provider.h |    5 +++++
+> >  2 files changed, 19 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index efdfd00..308f058 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -1582,6 +1582,20 @@ struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_clk_src_simple_get);
+> >  
+> > +struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data)
+> > +{
+> > +     struct clk_onecell_data *clk_data = data;
+> > +     unsigned int idx = clkspec->args[0];
+> > +
+> > +     if (idx >= clk_data->clk_num) {
+> > +             pr_err("%s: invalid clock index %d\n", __func__, idx);
+> > +             return ERR_PTR(-EINVAL);
+> > +     }
+> > +
+> > +     return clk_data->clks[idx];
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_clk_src_onecell_get);
+> > +
+> >  /**
+> >   * of_clk_add_provider() - Register a clock provider for a node
+> >   * @np: Device node pointer associated with clock provider
+> > diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> > index 77335fa..8fe6ec7 100644
+> > --- a/include/linux/clk-provider.h
+> > +++ b/include/linux/clk-provider.h
+> > @@ -360,6 +360,11 @@ int of_clk_add_provider(struct device_node *np,
+> >  void of_clk_del_provider(struct device_node *np);
+> >  struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
+> >                                 void *data);
+> > +struct clk_onecell_data {
+> > +     struct clk **clks;
+> > +     unsigned int clk_num;
+> > +};
+> > +struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data);
+> >  const char *of_clk_get_parent_name(struct device_node *np, int index);
+> >  void of_clk_init(const struct of_device_id *matches);
+> >  
+> > -- 
+> > 1.7.5.4
+> >
