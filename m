@@ -1,66 +1,71 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH V3 1/2] drm/exynos: add platform_device_id table and driver
-	data for exynos5 drm fimd
-Date: Wed, 05 Sep 2012 09:52:54 +0200
-Message-ID: <1560378.upcWAQYQSz@amdc1227>
-References: <1345111689-14601-1-git-send-email-l.krishna@samsung.com>
-	<1345111689-14601-2-git-send-email-l.krishna@samsung.com>
+From: InKi Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH V4 2/2] video: drm: exynos: Add device tree support
+Date: Thu, 6 Sep 2012 16:21:31 +0900
+Message-ID: <CAAQKjZNmizjZ-=JN9_AysPMPHTOh7eydfE_OCYE6-v0JAJMydw@mail.gmail.com>
+References: <1346859555-13527-1-git-send-email-l.krishna@samsung.com>
+	<1346859555-13527-3-git-send-email-l.krishna@samsung.com>
+	<CAH9JG2X_3iUTiGWv2cxjiX-s_VUtptVbzxhAJTub70W_2Dxecg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-reply-to: <1345111689-14601-2-git-send-email-l.krishna@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAH9JG2X_3iUTiGWv2cxjiX-s_VUtptVbzxhAJTub70W_2Dxecg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kyungmin Park <kmpark@infradead.org>
+Cc: Leela Krishna Amudala <l.krishna@samsung.com>, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
+Hi,
 
-See my comments inline.
+2012/9/5 Kyungmin Park <kmpark@infradead.org>:
+> Hi,
+>
+> On Thu, Sep 6, 2012 at 12:39 AM, Leela Krishna Amudala
+> <l.krishna@samsung.com> wrote:
+>> Add device tree based discovery support for DRM-FIMD driver.
+>>
+>> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+>> ---
+>>  Documentation/devicetree/bindings/fb/drm-fimd.txt |   80 +++++++++++++++++
+>>  drivers/gpu/drm/exynos/exynos_drm_fimd.c          |   95 ++++++++++++++++++++-
+>>  2 files changed, 173 insertions(+), 2 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/fb/drm-fimd.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fb/drm-fimd.txt b/Documentation/devicetree/bindings/fb/drm-fimd.txt
+>> new file mode 100644
+>> index 0000000..4ff1829
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fb/drm-fimd.txt
+>> @@ -0,0 +1,80 @@
+>> +* Samsung Display Controller using DRM frame work
+>> +
+>> +The display controller is used to transfer image data from memory to an
+>> +external LCD driver interface. It supports various color formats such as
+>> +rgb and yuv.
+>> +
+>> +Required properties:
+>> + - compatible: Should be "samsung,exynos5-fimd" or "samsung,exynos4-fb" for
+> Doesn't better to use single word? fimd or fb?. I think 'fb' is used
+> for framebuffer historically.
+> but now it's used both fb and drm, so fimd is neutral and architecture
+> specific.
+>
+> To do this, Modify arch-exynos first and update it at each drivers it properly.
+>
+> Thank you,
+> Kyungmin Park
+>
 
-On Thursday 16 of August 2012 12:08:08 Leela Krishna Amudala wrote:
-> +enum fimd_version_type {
-> +	VERSION_8, /* FIMD_VERSION8 */
-> +};
-> +
-> +struct drm_fimd_driver_data {
-> +	enum fimd_version_type fimd_ver;
-> +};
-> +
-> +struct drm_fimd_driver_data exynos5_drm_fimd_driver_data = {
-> +	.fimd_ver = VERSION_8,
-> +};
+I agree with Kyungmin but I'd like to use as is. the reason we used
+'exynos4-fb' as device name, is for that it uses fimd driver's
+platform device commonly and gets fimd clock. so I think that dts file
+should be defined with hardware specific name but not driver name such
+as 'exynos4-fb'. but with this, we can't get fimd clock with device's
+name because 'exynos4-fb' is used as device name of fimd clock. so to
+use 'exynos4-fimd', we should modify the device name of fimd clock
+from 'exynos4-fb'  to 'exynos4-fimd' and also ids definitions of
+s3c-fb and drm fimd driver. so my conclusion is that it merges this
+patch set as is and then let's modify related things later.
+any opinions, welcome~ anytime.
 
-I think that the approach with timing_base, as suggested by Joonyoung Shim, 
-would be much cleaner.
-
-> +static struct platform_device_id exynos_drm_fimd_driver_ids[] = {
-> +	{
-> +		.name		= "exynos4-fb",
-> +	}, {
-> +		.name		= "exynos5-drm-fimd",
-> +		.driver_data	= (unsigned long)&exynos5_drm_fimd_driver_data,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(platform, exynos_drm_fimd_driver_ids);
-
-If I see correctly, this will crash on a null pointer dereference on 
-Exynos4 without DT, because of NULL driver_data.
-
-P.S. I think you should CC linux-arm-kernel and linux-samsung-soc lists 
-when submitting patches related to ARM and Samsung SoCs.
-
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
+Thanks.
+Inki Dae
