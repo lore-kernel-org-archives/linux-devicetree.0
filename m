@@ -1,98 +1,43 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: [PATCH 2/2] ARM: kirkwood: Use devicetree to define DNS-32[05] fan
-Date: Fri,  7 Sep 2012 17:34:35 +0100
-Message-ID: <1347035675-23907-3-git-send-email-jm@lentin.co.uk>
-References: <1347035675-23907-1-git-send-email-jm@lentin.co.uk>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] ARM: add cpufreq transiton notifier to adjust
+ loops_per_jiffy for smp
+Date: Fri, 07 Sep 2012 10:55:00 -0600
+Message-ID: <504A26E4.4070600@wwwdotorg.org>
+References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org> <1344577046-14847-2-git-send-email-shawn.guo@linaro.org> <5049252D.9000802@wwwdotorg.org> <20120907025847.GI26709@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1347035675-23907-1-git-send-email-jm@lentin.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120907025847.GI26709-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove more board-specific code by using devicetree to define the fan
-attached to both boards.
+On 09/06/2012 08:58 PM, Shawn Guo wrote:
+> On Thu, Sep 06, 2012 at 04:35:25PM -0600, Stephen Warren wrote:
+>> I believe this patch is causing issues initializing PCI-Express on Tegra.
+>>
+>> In next-20120906, I cold-booted 10 times. 3 times, PCIe initialized OK,
+>> and 7 times, the driver timed out in arch/arm/mach-tegra/pcie.c function
+>> tegra_pcie_check_link(). With this patch reverted, another 10 cold boot
+>> attempts all succeeded just fine. Similarly, the regression appeared in
+>> next-20120905, and I isolated it to arch/arm/kernel/, and this is the
+>> only patch in that directory between next-20120904 and next-20120905.
+>>
+>> Do you have any idea what the problem might be?
+>>
+>> Looking at the timestamps in dmesg in the failing case, the driver is
+>> waiting the expected (per pcie.c driver code) 1.2 seconds before giving
+>> up on the port, although I suppose if the kernel's idea of real-time is
+>> off, then the dmesg log timestamps might be off too.
+> 
+> Just for identifying the problem, can you test the following change to
+> see if it fixes the failure.
 
-Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
----
- arch/arm/boot/dts/kirkwood-dnskw.dtsi |   10 ++++++++++
- arch/arm/mach-kirkwood/board-dnskw.c  |   25 -------------------------
- 2 files changed, 10 insertions(+), 25 deletions(-)
+Yes, that does solve the problem (well, with s/late_init/late_initcall/).
 
-diff --git a/arch/arm/boot/dts/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-index 7408655..9b32d02 100644
---- a/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-@@ -25,6 +25,16 @@
- 		};
- 	};
- 
-+	gpio_fan {
-+		/* Fan: ADDA AD045HB-G73 40mm 6000rpm@5v */
-+		compatible = "gpio-fan";
-+		gpios = <&gpio1 14 1
-+			 &gpio1 13 1>;
-+		gpio-fan,speed-map = <0    0
-+				      3000 1
-+				      6000 2>;
-+	};
-+
- 	ocp@f1000000 {
- 		sata@80000 {
- 			status = "okay";
-diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
-index 4ab3506..e202a07 100644
---- a/arch/arm/mach-kirkwood/board-dnskw.c
-+++ b/arch/arm/mach-kirkwood/board-dnskw.c
-@@ -67,29 +67,6 @@ static unsigned int dnskw_mpp_config[] __initdata = {
- 	0
- };
- 
--/* Fan: ADDA AD045HB-G73 40mm 6000rpm@5v */
--static struct gpio_fan_speed dnskw_fan_speed[] = {
--	{    0,  0 },
--	{ 3000,	 1 },
--	{ 6000,	 2 },
--};
--static unsigned dnskw_fan_pins[] = {46, 45};
--
--static struct gpio_fan_platform_data dnskw_fan_data = {
--	.num_ctrl	= ARRAY_SIZE(dnskw_fan_pins),
--	.ctrl		= dnskw_fan_pins,
--	.num_speed	= ARRAY_SIZE(dnskw_fan_speed),
--	.speed		= dnskw_fan_speed,
--};
--
--static struct platform_device dnskw_fan_device = {
--	.name	= "gpio-fan",
--	.id	= -1,
--	.dev	= {
--		.platform_data	= &dnskw_fan_data,
--	},
--};
--
- static void dnskw_power_off(void)
- {
- 	gpio_set_value(36, 1);
-@@ -114,8 +91,6 @@ void __init dnskw_init(void)
- 	kirkwood_ehci_init();
- 	kirkwood_ge00_init(&dnskw_ge00_data);
- 
--	platform_device_register(&dnskw_fan_device);
--
- 	/* Register power-off GPIO. */
- 	if (gpio_request(36, "dnskw:power:off") == 0
- 	    && gpio_direction_output(36, 0) == 0)
--- 
-1.7.10.4
+As you imply, that change wouldn't help if cpu-tegra.c was built as a
+module. So, is this something you can work around in your patch?
+
+Thanks for the quick response.
