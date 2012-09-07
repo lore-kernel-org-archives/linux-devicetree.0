@@ -1,100 +1,149 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH V4 2/2] video: drm: exynos: Add device tree support
-Date: Fri, 7 Sep 2012 15:07:06 +0900
-Message-ID: <CAAQKjZN_n5QfBTibk8+jNwvZzPU_yvxJN70F3VrvZN_Pitm9ag@mail.gmail.com>
-References: <1346859555-13527-1-git-send-email-l.krishna@samsung.com>
-	<1346859555-13527-3-git-send-email-l.krishna@samsung.com>
-	<CAH9JG2X_3iUTiGWv2cxjiX-s_VUtptVbzxhAJTub70W_2Dxecg@mail.gmail.com>
-	<CAAQKjZNmizjZ-=JN9_AysPMPHTOh7eydfE_OCYE6-v0JAJMydw@mail.gmail.com>
-	<5048837B.6020903@samsung.com>
-	<CAL1wa8cyhxCObHbMa+8X6DmsD8svt=W8s+JMrPx5cAEoWd4Lig@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v5 4/9] mmc: dw_mmc: lookup for optional biu and ciu clocks
+Date: Fri, 7 Sep 2012 11:56:34 +0530
+Message-ID: <CAJuYYwQhzgntE6dY_pKcEzBVshAwcxi9AMjG9YN0ebqEh8dSeQ@mail.gmail.com>
+References: <CAJuYYwQ50HCSrDgxrvhRh5X2ECxi_g=_akoa6o9FYCQ5GqHUCQ@mail.gmail.com>
+	<1346787968-23709-1-git-send-email-thomas.abraham@linaro.org>
+	<50470DAE.4020300@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1wa8cyhxCObHbMa+8X6DmsD8svt=W8s+JMrPx5cAEoWd4Lig@mail.gmail.com>
+In-Reply-To: <50470DAE.4020300@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, tgih.jun@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Jaehoon,
 
-2012/9/7 Leela Krishna Amudala <l.krishna@samsung.com>:
-> Hi,
+Thanks for reviewing the patch.
+
+On 5 September 2012 14:00, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> On 09/05/2012 04:46 AM, Thomas Abraham wrote:
+>> Some platforms allow for clock gating and control of bus interface unit clock
+>> and card interface unit clock. Add support for clock lookup of optional biu
+>> and ciu clocks for clock gating and clock speed determination.
+>>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> Acked-by: Will Newton <will.newton@imgtec.com>
+>> ---
+>>  drivers/mmc/host/dw_mmc.c  |   50 +++++++++++++++++++++++++++++++++++++++++--
+>>  include/linux/mmc/dw_mmc.h |    4 +++
+>>  2 files changed, 51 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 227c42e..e8c8491 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -1960,13 +1960,40 @@ int dw_mci_probe(struct dw_mci *host)
+>>               return -ENODEV;
+>>       }
+>>
+>> -     if (!host->pdata->bus_hz) {
+>> +     host->biu_clk = clk_get(host->dev, "biu");
+>> +     if (IS_ERR(host->biu_clk)) {
+>> +             dev_dbg(host->dev, "biu clock not available\n");
+>> +     } else {
+>> +             ret = clk_prepare_enable(host->biu_clk);
+>> +             if (ret) {
+>> +                     dev_err(host->dev, "failed to enable biu clock\n");
+>> +                     return ret;
+> didn't clk_put() for biu_clk?
+
+Yes, I missed that. Thanks for pointing this out. I will fix this.
+
+>> +             }
+>> +     }
+>> +
+>> +     host->ciu_clk = clk_get(host->dev, "ciu");
+>> +     if (IS_ERR(host->ciu_clk)) {
+>> +             dev_dbg(host->dev, "ciu clock not available\n");
+>> +     } else {
+>> +             ret = clk_prepare_enable(host->ciu_clk);
+>> +             if (ret) {
+>> +                     dev_err(host->dev, "failed to enable ciu clock\n");
+>> +                     goto err_clk_biu;
+>> +             }
+>> +     }
+>> +
+>> +     if (IS_ERR(host->ciu_clk))
+>> +             host->bus_hz = host->pdata->bus_hz;
+>> +     else
+>> +             host->bus_hz = clk_get_rate(host->ciu_clk);
+>> +
+>> +     if (!host->bus_hz) {
+>>               dev_err(host->dev,
+>>                       "Platform data must supply bus speed\n");
+>> -             return -ENODEV;
+>> +             ret = -ENODEV;
+>> +             goto err_clk_ciu;
+>>       }
+>>
+>> -     host->bus_hz = host->pdata->bus_hz;
+>>       host->quirks = host->pdata->quirks;
+>>
+>>       spin_lock_init(&host->lock);
+>> @@ -2116,6 +2143,17 @@ err_dmaunmap:
+>>               regulator_disable(host->vmmc);
+>>               regulator_put(host->vmmc);
+>>       }
+>> +
+>> +err_clk_ciu:
+>> +     if (!IS_ERR(host->ciu_clk)) {
+>> +             clk_disable_unprepare(host->ciu_clk);
+>> +             clk_put(host->ciu_clk);
+>> +     }
+>> +err_clk_biu:
+> I think right that is located the clk_put(host->ciu_clk) at here
+
+In the next version of this patch, if clk_prepare_enable() fails for
+host->ciu_clk, the put(host->ciu_clk) is also done before returning.
+
+Thanks,
+Thomas.
+
+>> +     if (!IS_ERR(host->biu_clk)) {
+>> +             clk_disable_unprepare(host->biu_clk);
+>> +             clk_put(host->biu_clk);
+>> +     }
+>>       return ret;
+>>  }
+>>  EXPORT_SYMBOL(dw_mci_probe);
+>> @@ -2149,6 +2187,12 @@ void dw_mci_remove(struct dw_mci *host)
+>>               regulator_put(host->vmmc);
+>>       }
+>>
+>> +     if (!IS_ERR(host->ciu_clk))
+>> +             clk_disable_unprepare(host->ciu_clk);
+>> +     if (!IS_ERR(host->biu_clk))
+>> +             clk_disable_unprepare(host->biu_clk);
+>> +     clk_put(host->ciu_clk);
+>> +     clk_put(host->biu_clk);
+>>  }
+>>  EXPORT_SYMBOL(dw_mci_remove);
+>>
+>> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+>> index a37a573..787ad56 100644
+>> --- a/include/linux/mmc/dw_mmc.h
+>> +++ b/include/linux/mmc/dw_mmc.h
+>> @@ -78,6 +78,8 @@ struct mmc_data;
+>>   * @data_offset: Set the offset of DATA register according to VERID.
+>>   * @dev: Device associated with the MMC controller.
+>>   * @pdata: Platform data associated with the MMC controller.
+>> + * @biu_clk: Pointer to bus interface unit clock instance.
+>> + * @ciu_clk: Pointer to card interface unit clock instance.
+>>   * @slot: Slots sharing this MMC controller.
+>>   * @fifo_depth: depth of FIFO.
+>>   * @data_shift: log2 of FIFO item size.
+>> @@ -158,6 +160,8 @@ struct dw_mci {
+>>       u16                     data_offset;
+>>       struct device           *dev;
+>>       struct dw_mci_board     *pdata;
+>> +     struct clk              *biu_clk;
+>> +     struct clk              *ciu_clk;
+>>       struct dw_mci_slot      *slot[MAX_MCI_SLOTS];
+>>
+>>       /* FIFO push and pull */
+>>
 >
-> On Thu, Sep 6, 2012 at 4:35 PM, Sylwester Nawrocki
-> <s.nawrocki@samsung.com> wrote:
->> Hi,
->>
->> On 09/06/2012 09:21 AM, InKi Dae wrote:
->>>>> +Required properties:
->>>>> + - compatible: Should be "samsung,exynos5-fimd" or "samsung,exynos4-fb" for
->>>> Doesn't better to use single word? fimd or fb?. I think 'fb' is used
->>>> for framebuffer historically.
->>>> but now it's used both fb and drm, so fimd is neutral and architecture
->>>> specific.
->>>>
->>>> To do this, Modify arch-exynos first and update it at each drivers it properly.
->>>>
->>>> Thank you,
->>>> Kyungmin Park
->>>>
->>>
->>> I agree with Kyungmin but I'd like to use as is. the reason we used
->>> 'exynos4-fb' as device name, is for that it uses fimd driver's
->>> platform device commonly and gets fimd clock. so I think that dts file
->>> should be defined with hardware specific name but not driver name such
->>> as 'exynos4-fb'. but with this, we can't get fimd clock with device's
->>> name because 'exynos4-fb' is used as device name of fimd clock. so to
->>> use 'exynos4-fimd', we should modify the device name of fimd clock
->>> from 'exynos4-fb'  to 'exynos4-fimd' and also ids definitions of
->>> s3c-fb and drm fimd driver. so my conclusion is that it merges this
->>
->> I think it's good moment to put those things in order, i.e. use uniform
->> 'compatible' names: "samsung,exynos4-fimd", "samsung,exynos5-fimd".
->> Platform device names are separate issue, but could perhaps be unified
->> at this time as well.
->
-> Yes, Platform device name is independent of compatible string.
-> Will change the compatible string to "samsung,exynos4-fimd" and will keep the
-> device name as exynos4-fb for now. Will change the platform device
-> names to exynosX-fimd
-> later.
->
-
-I'm not sure that clk_get is worked well with this change. I think,
-when driver called clk_get(), first of all, it tries to get a clk from
-the registered list of clock providers in the dts file and next in
-legacy way. but now legacy way(needing clock name and device' name)
-would be failed if the dts file has no the list because platform
-device's name differs from device name of clock. so I think we should
-change device name of clock and also ids of related drivers for
-compatibility with non-dt. for this, we need some patch sets, changing
-arch/arm/mach-exynos/common.c and changing
-arch/arm/mach-exynos/clock-exynos4/5.c and changing s3c-fb.c and last
-this patch. if there are no other opinions, I'd like to merge this
-patch set(v5) and next we can update others(maybe common.c,
-clock-exynos4/5.c and s3c-fb.c) later.
-
-Thanks.
-Inki Dae
-
->>
->>> patch set as is and then let's modify related things later.
->>> any opinions, welcome~ anytime.
->>>
->>> Thanks.
->>> Inki Dae
->>
->> --
->>
->> Regards,
->> Sylwester
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
