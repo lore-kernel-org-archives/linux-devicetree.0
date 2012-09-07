@@ -1,106 +1,85 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2] gpio: samsung: add devicetree init for s3c24xx arches
-Date: Fri, 07 Sep 2012 14:38:52 +0900
-Message-ID: <243901cd8cbb$10ad0580$32071080$%kim@samsung.com>
-References: <201208282355.44268.heiko@sntech.de>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v2 1/8] ARM/dts: OMAP2: Add McBSP entries for OMAP2420
+ and OMAP2430 SoC
+Date: Fri, 7 Sep 2012 05:45:17 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA29468@DBDE01.ent.ti.com>
+References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
+ <1346247067-9632-2-git-send-email-peter.ujfalusi@ti.com>
+ <5044C2DD.5000705@ti.com> <504578B3.3090804@ti.com> <5045D557.30404@ti.com>
+ <79CD15C6BA57404B839C016229A409A83EAA7C99@DBDE01.ent.ti.com>
+ <50470C1E.7090300@ti.com>
+ <79CD15C6BA57404B839C016229A409A83EAA8014@DBDE01.ent.ti.com>
+ <5047544B.60105@ti.com>
+ <79CD15C6BA57404B839C016229A409A83EAA8779@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <201208282355.44268.heiko@sntech.de>
-Content-language: ko
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?Q?'Heiko_St=C3=BCbner'?= <heiko@sntech.de>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <rob.herring@calxeda.com>, 'Rob Landley' <rob@landley.net>, 'Linus Walleij' <linus.walleij@stericsson.com>, 'Olof Johansson' <olof@lixom.net>, 'Thomas Abraham' <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EAA8779-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: "Ujfalusi, Peter" <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Heiko St=C3=BCbner wrote:
->=20
-> Until now the Exynos-SoC was the only Samsung-SoC supporting the GPIO=
-s
-> via the device tree. This patch implements dt-support for the
-> s3c24xx arches.
->=20
-> The controllers contain only 3 cells, as the underlying gpio controll=
-er
-> does not support controlling the drive strength on a gpio level.
->=20
-> Tested with the gpio-keys driver on a s3c2416 based machine.
->=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> Reviewed-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
+On Wed, Sep 05, 2012 at 20:11:11, Hiremath, Vaibhav wrote:
+> On Wed, Sep 05, 2012 at 19:01:55, Cousson, Benoit wrote:
+> > Hi Vaibhav,
+> > 
+> > On 09/05/2012 11:15 AM, Hiremath, Vaibhav wrote:
+> > > On Wed, Sep 05, 2012 at 13:53:58, Ujfalusi, Peter wrote:
+> > >> Hi,
+> > >>
+> > >> On 09/05/2012 09:11 AM, Hiremath, Vaibhav wrote:
+> > >>>> Not yet, but we discussed that with Peter and since he does have these
+> > >>>> patches for DT, he'll be able to test your series with the McBSP changes.
+> > >>>>
+> > >>>
+> > >>> Great.
+> > >>
+> > >> With his series and your patch for omap-hwmod audio was probing and working on
+> > >> OMAP3/4/5 without issues.
+> > >>
+> > > Peter,
+> > > Care to provide your Tested-By??
+> > > 
+> > > Benoit,
+> > > Can we merge this patch now?
+> > 
+> > Yes, I'll include it in the pull request along with DTS patches.
+> > 
+> > I've just tested it as well on OMAP4 by hacking the DTS for GPIO.
+> > I'll try to update at least all the OMAP4 IPs as well with the proper
+> > DTS resources for 3.7.
+> > 
+> 
+> Thanks Benoit,
+> 
+> There are other patches which are pending,
+> 
+> arm/dts: AM33XX: Convert all hex numbers to lower-case
+> https://patchwork.kernel.org/patch/1377351/
+> arm/dts: AM33XX: Specify reg and interrupt property for all nodes
+> https://patchwork.kernel.org/patch/1377361/
+>
 
-[...]
+Few more DT patches which are pending
 
-> +#if defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF)
+arm/dts: AM33XX: Add basic pinctrl device tree data
+http://www.spinics.net/lists/linux-omap/msg76684.html
+arm/dts: AM33XX: Configure pinmuxs for user leds control on Bone
+http://www.spinics.net/lists/linux-omap/msg76682.html
+arm/dts: AM33XX: Add D_CAN device tree data
+http://www.spinics.net/lists/linux-omap/msg76683.html
 
-[...]
-
-> +static __init void s3c24xx_gpiolib_attach_ofnode(struct samsung_gpio=
-_chip
-> *chip,
-> +						 u64 base, u64 offset)
-> +{
-
-[...]
-
-> +}
-> +#elif defined(CONFIG_PLAT_S3C24XX)
-
-Heiko, above line breaks building for other samsung stuff except s3c24x=
-x. I fixed with following which has been amended in your patch. If any =
-problems, please let me know.
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
-
-diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
-index 5dcdcda..a006f0d 100644
---- a/drivers/gpio/gpio-samsung.c
-+++ b/drivers/gpio/gpio-samsung.c
-@@ -991,7 +991,7 @@ static __init void s3c24xx_gpiolib_attach_ofnode(st=
-ruct samsun
- 	gc->of_gpio_n_cells =3D 3;
- 	gc->of_xlate =3D s3c24xx_gpio_xlate;
- }
--#elif defined(CONFIG_PLAT_S3C24XX)
-+#else
- static __init void s3c24xx_gpiolib_attach_ofnode(struct samsung_gpio_c=
-hip *chip,
- 						u64 base, u64 offset)
- {
-
-> +static __init void s3c24xx_gpiolib_attach_ofnode(struct samsung_gpio=
-_chip
-> *chip,
-> +						 u64 base, u64 offset)
-> +{
-> +	return;
-> +}
-> +#endif /* defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF) */
-> +
->  static void __init s3c24xx_gpiolib_add_chips(struct samsung_gpio_chi=
-p
-> *chip,
->  					     int nr_chips, void __iomem *base)
->  {
-> @@ -962,6 +1023,8 @@ static void __init s3c24xx_gpiolib_add_chips(str=
-uct
-> samsung_gpio_chip *chip,
->  			gc->direction_output =3D samsung_gpiolib_2bit_output;
->=20
->  		samsung_gpiolib_add(chip);
-> +
-> +		s3c24xx_gpiolib_attach_ofnode(chip, S3C24XX_PA_GPIO, i *
-> 0x10);
->  	}
->  }
->=20
-> --
-> 1.7.2.3
-
+Thanks
+AnilKumar
