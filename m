@@ -1,71 +1,64 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Fri, 7 Sep 2012 10:22:39 +0200
-Message-ID: <201209071022.39537.marex@denx.de>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com> <201209070209.35379.marex@denx.de> <331ABD5ECB02734CA317220B2BBEABC13EA2964C@DBDE01.ent.ti.com>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH v5 2/4] pwm_backlight: use power sequences
+Date: Fri, 7 Sep 2012 17:28:17 +0900
+Message-ID: <2360396.YKI4EihrfI@percival>
+References: <1346412846-17102-1-git-send-email-acourbot@nvidia.com> <1346412846-17102-3-git-send-email-acourbot@nvidia.com> <50478B07.4080708@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA2964C@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Bryan Wu <bryan.wu@canonical.com>, Shawn Guo <shawn.guo@linaro.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50478B07.4080708@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear AnilKumar, Chimata,
-
-> On Fri, Sep 07, 2012 at 05:39:35, Marek Vasut wrote:
-> > Dear Tony Lindgren,
+On Thursday 06 September 2012 01:25:27 Stephen Warren wrote:
+> On 08/31/2012 05:34 AM, Alexandre Courbot wrote:
+> > Make use of the power sequences specified in the device tree or platform
+> > data to control how the backlight is powered on and off.
 > > 
-> > > * Marek Vasut <marex@denx.de> [120905 19:05]:
-> > > > Hi Tony,
-> > > > 
-> > > > > * Marek Vasut <marex@denx.de> [120904 20:13]:
-> > > > > > Dear Bryan Wu,
-> > > > > > 
-> > > > > > > On Sat, Sep 1, 2012 at 4:16 PM, AnilKumar Ch <anilkumar@ti.com> 
-wrote:
-> > > > > > > > Adopt pinctrl support to leds-gpio driver based on leds-gpio
-> > > > > > > > device pointer, pinctrl driver configure SoC pins to GPIO
-> > > > > > > > mode according to definitions provided in .dts file.
-> > > > > > > 
-> > > > > > > Thanks for this, actually Marek Vasut submitted a similar patch
-> > > > > > > before. I'm pretty fine with this patch.
-> > > > > > 
-> > > > > > Thanks for submitting this actually ... I didn't have time to
-> > > > > > properly investigate this.
-> > > > > > 
-> > > > > > > But without proper DT setting, it will also give us warning I
-> > > > > > > think. or we can provide some dummy functions as a temp
-> > > > > > > solution as Shawn pointed out before.
-> > > > > > 
-> > > > > > But this driver is also used on hardware that's not yet coverted
-> > > > > > to DT, so I'd say dev_warn() if CONFIG_OF is enabled and
-> > > > > > otherwise simply go on ? Actually, can we not skip whole this
-> > > > > > pinctrl thing if CONFIG_OF is disabled? Actually (2), what's the
-> > > > > > relationship between OF and pinctrl?
-> > > > > 
-> > > > > The warning should be pinctrl related as the pinctrl drivers may
-> > > > > not be device tree based drivers.
-> > > > 
-> > > > Exactly my concern. Also the warning shouldnt be present on systems
-> > > > where pinctrl is disabled.
-> > > 
-> > > But pinctrl_get_select() returns 0 in include/linux/pinctrl/consumer.h
-> > > if CONFIG_PINCTRL is not selected, so no warning is produced AFAIK ;)
+> > +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
 > > 
-> > Oh all right then.
+> >  Optional properties:
+> > -  - pwm-names: a list of names for the PWM devices specified in the
+> > -               "pwms" property (see PWM binding[0])
+> > +  - pwm-names: name for the PWM device specified in the "pwms" property
+> > (see PWM +      binding[0]). Necessary if power sequences are used
 > 
-> Bryan,
+> So this implies that power sequence are completely optional in the pwm
+> binding...
 > 
-> If this patch looks fine, can you queue this for 3.7?
+> > diff --git a/drivers/video/backlight/Kconfig
+> > b/drivers/video/backlight/Kconfig> 
+> >  config BACKLIGHT_PWM
+> >  
+> >  	tristate "Generic PWM based Backlight Driver"
+> >  	depends on PWM
+> > 
+> > +	select POWER_SEQ
+> 
+> ... but that implies they're basically mandatory.
+> 
+> Briefly looking at the code, power sequences don't appear to be
+> optional, at least for the DT case, so perhaps you just need to update
+> the documentation to make "pwm-names" non-optional?
 
-Looks good to me.
+This has to do with how power sequences are enabled during the build. Instead 
+of providing yet-another-kernel-option, I thought it would be better to make 
+it invisible and let drivers that take advantage of power seqs enable the 
+option by themselves when they are selected. That's why power sequences are 
+unconditionally compiled when pwm-backlight is selected.
 
-> Thanks
-> AnilKumar
+But on the other hand, pwm-backlight already has a DT interface that does not 
+use power sequences, and its current users are still relying on the legacy 
+platform data interface (with one PWM and some callback functions). Making the 
+power sequences mandatory in the DT bindings would make it impossible to use 
+that legacy interface.
 
-Best regards,
-Marek Vasut
+We could make power sequences an option of its own and add #ifdefs to drivers 
+that use it to lift this ambiguity, but I like the transparency of the current 
+way. It also seems hard (illegal?) to get rid of the legacy DT interface.
+
+Alex.
+
