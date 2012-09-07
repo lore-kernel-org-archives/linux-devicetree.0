@@ -1,59 +1,85 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2] gpio: samsung: add devicetree init for s3c24xx arches
-Date: Fri, 7 Sep 2012 09:27:27 +0200
-Message-ID: <201209070927.28405.heiko@sntech.de>
-References: <201208282355.44268.heiko@sntech.de> <243901cd8cbb$10ad0580$32071080$%kim@samsung.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] powerpc/powernv: move the dereference below the NULL test
+Date: Fri, 07 Sep 2012 17:59:41 +1000
+Message-ID: <1347004781.2385.54.camel@pasglop>
+References: <CAPgLHd_w9B8sHg9i9msFLx8FVBypqTtDEVOt1-VBNTW4zwHTMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <243901cd8cbb$10ad0580$32071080$%kim@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <rob.herring@calxeda.com>, 'Rob Landley' <rob@landley.net>, 'Linus Walleij' <linus.walleij@stericsson.com>, 'Olof Johansson' <olof@lixom.net>, 'Thomas Abraham' <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPgLHd_w9B8sHg9i9msFLx8FVBypqTtDEVOt1-VBNTW4zwHTMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 7. September 2012, 07:38:52 schrieb Kukjin Kim:
-> Heiko St=C3=BCbner wrote:
-> > Until now the Exynos-SoC was the only Samsung-SoC supporting the GP=
-IOs
-> > via the device tree. This patch implements dt-support for the
-> > s3c24xx arches.
-> >=20
-> > The controllers contain only 3 cells, as the underlying gpio contro=
-ller
-> > does not support controlling the drive strength on a gpio level.
-> >=20
-> > Tested with the gpio-keys driver on a s3c2416 based machine.
-> >=20
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > Reviewed-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > ---
->=20
-> [...]
->=20
-> > +#if defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF)
->=20
-> [...]
->=20
-> > +static __init void s3c24xx_gpiolib_attach_ofnode(struct
-> > samsung_gpio_chip *chip,
-> > +						 u64 base, u64 offset)
-> > +{
->=20
-> [...]
->=20
-> > +}
-> > +#elif defined(CONFIG_PLAT_S3C24XX)
->=20
-> Heiko, above line breaks building for other samsung stuff except s3c2=
-4xx. I
-> fixed with following which has been amended in your patch. If any
-> problems, please let me know.
+On Fri, 2012-09-07 at 14:45 +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> 
+> The dereference should be moved below the NULL test.
+> 
+> spatch with a semantic match is used to found this.
+> (http://coccinelle.lip6.fr/)
 
-yeah, I see the problem now. Thanks for the fix and sorry to have cause=
-d=20
-additional work.
+I haven't applied this patch yet (there was a similar one recently from
+another semantic checker I believe) because that code is about to be
+deeply reworked (waiting for some dependencies to get in), so this will
+just make the patch harder to apply, and the stuff should never be NULL
+in the first place anyway.
 
+So let's leave that aside for a bit.
 
-Heiko
+Cheers,
+Ben.
+
+> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> ---
+>  arch/powerpc/platforms/powernv/pci.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
+> index be3cfc5..4ba89c1 100644
+> --- a/arch/powerpc/platforms/powernv/pci.c
+> +++ b/arch/powerpc/platforms/powernv/pci.c
+> @@ -287,13 +287,15 @@ static int pnv_pci_read_config(struct pci_bus *bus,
+>  			       int where, int size, u32 *val)
+>  {
+>  	struct pci_controller *hose = pci_bus_to_host(bus);
+> -	struct pnv_phb *phb = hose->private_data;
+> +	struct pnv_phb *phb;
+>  	u32 bdfn = (((uint64_t)bus->number) << 8) | devfn;
+>  	s64 rc;
+>  
+>  	if (hose == NULL)
+>  		return PCIBIOS_DEVICE_NOT_FOUND;
+>  
+> +	phb = hose->private_data;
+> +
+>  	switch (size) {
+>  	case 1: {
+>  		u8 v8;
+> @@ -331,12 +333,14 @@ static int pnv_pci_write_config(struct pci_bus *bus,
+>  				int where, int size, u32 val)
+>  {
+>  	struct pci_controller *hose = pci_bus_to_host(bus);
+> -	struct pnv_phb *phb = hose->private_data;
+> +	struct pnv_phb *phb;
+>  	u32 bdfn = (((uint64_t)bus->number) << 8) | devfn;
+>  
+>  	if (hose == NULL)
+>  		return PCIBIOS_DEVICE_NOT_FOUND;
+>  
+> +	phb = hose->private_data;
+> +
+>  	cfg_dbg("pnv_pci_write_config bus: %x devfn: %x +%x/%x -> %08x\n",
+>  		bus->number, devfn, where, size, val);
+>  	switch (size) {
