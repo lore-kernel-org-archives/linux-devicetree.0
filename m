@@ -1,48 +1,63 @@
-From: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/1] clk: add DT fixed-factor-clock binding support
-Date: Thu, 06 Sep 2012 17:08:19 -0700
-Message-ID: <20120907000819.20289.87301@nucleus>
-References: <1346194382-11405-1-git-send-email-gregory.clement@free-electrons.com>
- <5048CC37.6060509@gmail.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Fri, 7 Sep 2012 02:09:35 +0200
+Message-ID: <201209070209.35379.marex@denx.de>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com> <201209060405.08997.marex@denx.de> <20120906174531.GX1303@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5048CC37.6060509-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120906174531.GX1303@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Bryan Wu <bryan.wu@canonical.com>, AnilKumar Ch <anilkumar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2012-09-06 09:15:51)
-> On 08/28/2012 05:53 PM, Gregory CLEMENT wrote:
-> > Hi,
+Dear Tony Lindgren,
+
+> * Marek Vasut <marex@denx.de> [120905 19:05]:
+> > Hi Tony,
 > > 
-> > During the port of the clock common framework for the armada 370/XP, I
-> > need to get "fixed-factor-clock" using the device tree. For this need
-> > I add support DT for "fixed-factor-clock" in the same way that the
-> > existing support for "fixed-rate-clock". It turned out that finally I
-> > didn't need it anymore, but as the code was written and tested, here
-> > it is.
+> > > * Marek Vasut <marex@denx.de> [120904 20:13]:
+> > > > Dear Bryan Wu,
+> > > > 
+> > > > > On Sat, Sep 1, 2012 at 4:16 PM, AnilKumar Ch <anilkumar@ti.com> wrote:
+> > > > > > Adopt pinctrl support to leds-gpio driver based on leds-gpio
+> > > > > > device pointer, pinctrl driver configure SoC pins to GPIO
+> > > > > > mode according to definitions provided in .dts file.
+> > > > > 
+> > > > > Thanks for this, actually Marek Vasut submitted a similar patch
+> > > > > before. I'm pretty fine with this patch.
+> > > > 
+> > > > Thanks for submitting this actually ... I didn't have time to
+> > > > properly investigate this.
+> > > > 
+> > > > > But without proper DT setting, it will also give us warning I
+> > > > > think. or we can provide some dummy functions as a temp solution
+> > > > > as Shawn pointed out before.
+> > > > 
+> > > > But this driver is also used on hardware that's not yet coverted to
+> > > > DT, so I'd say dev_warn() if CONFIG_OF is enabled and otherwise
+> > > > simply go on ? Actually, can we not skip whole this pinctrl thing if
+> > > > CONFIG_OF is disabled? Actually (2), what's the relationship between
+> > > > OF and pinctrl?
+> > > 
+> > > The warning should be pinctrl related as the pinctrl drivers may not be
+> > > device tree based drivers.
 > > 
+> > Exactly my concern. Also the warning shouldnt be present on systems where
+> > pinctrl is disabled.
 > 
-> It looks fine to me, but I'd like to see a user of it.
-> 
+> But pinctrl_get_select() returns 0 in include/linux/pinctrl/consumer.h if
+> CONFIG_PINCTRL is not selected, so no warning is produced AFAIK ;)
 
-Agreed.  I'll hold off on merging it until someone else depends on it.
+Oh all right then.
 
-Thanks for submitting this Gregory.
+> Or do you get some warning if CONFIG_PINCTRL is not selected for your
+> hardware?
 
-Regards,
-Mike
+No, I don't have much hardware like such anymore :-(
 
-> Rob
+Best regards,
+Marek Vasut
