@@ -1,49 +1,41 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 1/8] ARM/dts: omap2: Add McBSP entries for OMAP2420
- and OMAP2430 SoC
-Date: Fri, 7 Sep 2012 15:29:54 -0700
-Message-ID: <20120907222953.GS1303@atomide.com>
-References: <1346846336-27321-1-git-send-email-peter.ujfalusi@ti.com>
- <1346846336-27321-2-git-send-email-peter.ujfalusi@ti.com>
+From: David Brown <davidb@codeaurora.org>
+Subject: Re: [PATCH 8/9] ARM: msm: Add DT support for 8960
+Date: Fri, 7 Sep 2012 15:58:53 -0700
+Message-ID: <20120907225853.GA21585@codeaurora.org>
+References: <1346873339-10927-1-git-send-email-sboyd@codeaurora.org>
+ <1346873339-10927-9-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1346846336-27321-2-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1346873339-10927-9-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [120905 04:59]:
-> +
-> +	ocp {
-> +		mcbsp1: mcbsp@48074000 {
-> +			compatible = "ti,omap2420-mcbsp";
-> +			reg = <0x48074000 0xff>;
-> +			reg-names = "mpu";
-> +			interrupts = <59>, /* TX interrupt */
-> +				     <60>; /* RX interrupt */
-> +			interrupt-names = "tx", "rx";
-> +			interrupt-parent = <&intc>;
-> +			ti,hwmods = "mcbsp1";
-> +		};
-> +
-> +		mcbsp2: mcbsp@48076000 {
-> +			compatible = "ti,omap2420-mcbsp";
-> +			reg = <0x48076000 0xff>;
-> +			reg-names = "mpu";
-> +			interrupts = <62>, /* TX interrupt */
-> +				     <63>; /* RX interrupt */
-> +			interrupt-names = "tx", "rx";
-> +			interrupt-parent = <&intc>;
-> +			ti,hwmods = "mcbsp2";
-> +		};
-> +	};
+On Wed, Sep 05, 2012 at 12:28:58PM -0700, Stephen Boyd wrote:
 
-Hmm don't you need to specify the interrupt chip and offset for
-the interrupts here?
+> +DT_MACHINE_START(MSM8960_DT, "Qualcomm MSM (Flattened Device Tree)")
 
-Regards,
+The description string should specify the general name of what this is
+suspporting.  Right now, with these patches, it would list
 
-Tony
+  Qualcomm MSM (Flattened Device Tree)
+
+twice as the two targets we support (and isn't helpful when you see
+which one it picks).  I'd put the "MSM" name by itself without
+thinking about it too much.  It wasn't that confusing, since there was
+only one at the time.
+
+Perhaps make the 8660 one "Qualcomm MSM8660 (Flattened Device Tree)"
+and the 8960 one "Qualcomm MSM8960 (Flattened Device Tree)"
+
+I realize that the chip numbers are a bit confusing, so probably best
+to pick a canonical name for the description.
+
+David
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
