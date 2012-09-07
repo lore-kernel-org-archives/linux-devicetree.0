@@ -1,55 +1,52 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
-Date: Thu, 6 Sep 2012 21:09:28 -0500
-Message-ID: <50495758.5080500@ti.com>
-References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com>
- <1342218413-30116-2-git-send-email-jon-hunter@ti.com>
- <5000D647.4090200@gmail.com> <500439A8.1050705@ti.com>
- <500D6CAB.4030504@ti.com> <5048A8F6.6080108@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] ARM: add cpufreq transiton notifier to adjust
+ loops_per_jiffy for smp
+Date: Fri, 7 Sep 2012 10:58:49 +0800
+Message-ID: <20120907025847.GI26709@S2101-09.ap.freescale.net>
+References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
+ <1344577046-14847-2-git-send-email-shawn.guo@linaro.org>
+ <5049252D.9000802@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5048A8F6.6080108-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tarun Kanti DebBarma <tarun.kanti-l0cyMroinI0@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5049252D.9000802-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 09/06/2012 08:45 AM, Rob Herring wrote:
-> On 07/23/2012 10:24 AM, Jon Hunter wrote:
-
-[snip]
-
->> Do you have any inputs on the above? Does it make sense to reserve timer
->> resources for kernel system timers in device-tree?
+On Thu, Sep 06, 2012 at 04:35:25PM -0600, Stephen Warren wrote:
+> I believe this patch is causing issues initializing PCI-Express on Tegra.
 > 
-> This issue is not unique to omap. So if we do specify clockevent and
-> clocksource in dts, then it should be in a common way. I think using
-> "linux,clockevent" either as an alias name or property within the timer
-> node would work. I don't have a strong preference, but I tend to lean
-> toward an alias. Primarily this is because we are already using aliases
-> for similar purposes.
+> In next-20120906, I cold-booted 10 times. 3 times, PCIe initialized OK,
+> and 7 times, the driver timed out in arch/arm/mach-tegra/pcie.c function
+> tegra_pcie_check_link(). With this patch reverted, another 10 cold boot
+> attempts all succeeded just fine. Similarly, the regression appeared in
+> next-20120905, and I isolated it to arch/arm/kernel/, and this is the
+> only patch in that directory between next-20120904 and next-20120905.
 > 
-> However, I still think this could be done by looking at properties.
-> There's not really any reason you can't check properties at timer init
-> stage. The FDT has already been un-flattened. What are the features or
-> lack of features you care about to determine which timer to use?
+> Do you have any idea what the problem might be?
+> 
+> Looking at the timestamps in dmesg in the failing case, the driver is
+> waiting the expected (per pcie.c driver code) 1.2 seconds before giving
+> up on the port, although I suppose if the kernel's idea of real-time is
+> off, then the dmesg log timestamps might be off too.
 
-I agree. Currently, I am looking into implementing something that will
-use timer properties to select the system timers for the kernel and not
-require us to select them in the device-tree. Once I have something
-working I will send out for review.
+Just for identifying the problem, can you test the following change to
+see if it fixes the failure.
 
-Cheers
-Jon
+Regards,
+Shawn
+
+diff --git a/arch/arm/mach-tegra/cpu-tegra.c b/arch/arm/mach-tegra/cpu-tegra.c
+index ceb52db..a3bbdc9 100644
+--- a/arch/arm/mach-tegra/cpu-tegra.c
++++ b/arch/arm/mach-tegra/cpu-tegra.c
+@@ -247,5 +247,5 @@ static void __exit tegra_cpufreq_exit(void)
+ MODULE_AUTHOR("Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>");
+ MODULE_DESCRIPTION("cpufreq driver for Nvidia Tegra2");
+ MODULE_LICENSE("GPL");
+-module_init(tegra_cpufreq_init);
++late_init(tegra_cpufreq_init);
+ module_exit(tegra_cpufreq_exit);
