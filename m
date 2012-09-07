@@ -1,85 +1,35 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v2 1/8] ARM/dts: OMAP2: Add McBSP entries for OMAP2420
- and OMAP2430 SoC
-Date: Fri, 7 Sep 2012 05:45:17 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA29468@DBDE01.ent.ti.com>
-References: <1346247067-9632-1-git-send-email-peter.ujfalusi@ti.com>
- <1346247067-9632-2-git-send-email-peter.ujfalusi@ti.com>
- <5044C2DD.5000705@ti.com> <504578B3.3090804@ti.com> <5045D557.30404@ti.com>
- <79CD15C6BA57404B839C016229A409A83EAA7C99@DBDE01.ent.ti.com>
- <50470C1E.7090300@ti.com>
- <79CD15C6BA57404B839C016229A409A83EAA8014@DBDE01.ent.ti.com>
- <5047544B.60105@ti.com>
- <79CD15C6BA57404B839C016229A409A83EAA8779@DBDE01.ent.ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v4 0/2] Add device tree and clock support for G-Scaler
+Date: Fri, 07 Sep 2012 14:47:55 +0900
+Message-ID: <244001cd8cbc$54609b10$fd21d130$%kim@samsung.com>
+References: <1344852144-25598-1-git-send-email-shaik.ameer@samsung.com>
+ <227001cd8ae9$9b76ce40$d2646ac0$%kim@samsung.com>
+ <CAOD6ATrzuXqkpKYNE3mWxjekN41U32oF0Kx4zYVbwykMNd7ziw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A83EAA8779-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: "Ujfalusi, Peter" <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAOD6ATrzuXqkpKYNE3mWxjekN41U32oF0Kx4zYVbwykMNd7ziw@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Shaik Ameer Basha' <shaik.samsung@gmail.com>
+Cc: 'Shaik Ameer Basha' <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olofj@google.com, thomas.ab@samsung.com, sylvester.nawrocki@gmail.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2012 at 20:11:11, Hiremath, Vaibhav wrote:
-> On Wed, Sep 05, 2012 at 19:01:55, Cousson, Benoit wrote:
-> > Hi Vaibhav,
-> > 
-> > On 09/05/2012 11:15 AM, Hiremath, Vaibhav wrote:
-> > > On Wed, Sep 05, 2012 at 13:53:58, Ujfalusi, Peter wrote:
-> > >> Hi,
-> > >>
-> > >> On 09/05/2012 09:11 AM, Hiremath, Vaibhav wrote:
-> > >>>> Not yet, but we discussed that with Peter and since he does have these
-> > >>>> patches for DT, he'll be able to test your series with the McBSP changes.
-> > >>>>
-> > >>>
-> > >>> Great.
-> > >>
-> > >> With his series and your patch for omap-hwmod audio was probing and working on
-> > >> OMAP3/4/5 without issues.
-> > >>
-> > > Peter,
-> > > Care to provide your Tested-By??
-> > > 
-> > > Benoit,
-> > > Can we merge this patch now?
-> > 
-> > Yes, I'll include it in the pull request along with DTS patches.
-> > 
-> > I've just tested it as well on OMAP4 by hacking the DTS for GPIO.
-> > I'll try to update at least all the OMAP4 IPs as well with the proper
-> > DTS resources for 3.7.
-> > 
+Shaik Ameer Basha wrote:
+> > BTW, just wondering...the sign-chain is right? Hoping you know, if sign-
+> off
+> > has been added without their handling on the patches, it's wrong.
+> >
 > 
-> Thanks Benoit,
+> This sign-chain is fine. Please apply this series to your tree.
 > 
-> There are other patches which are pending,
-> 
-> arm/dts: AM33XX: Convert all hex numbers to lower-case
-> https://patchwork.kernel.org/patch/1377351/
-> arm/dts: AM33XX: Specify reg and interrupt property for all nodes
-> https://patchwork.kernel.org/patch/1377361/
->
+OK, applied.
 
-Few more DT patches which are pending
+Thanks.
 
-arm/dts: AM33XX: Add basic pinctrl device tree data
-http://www.spinics.net/lists/linux-omap/msg76684.html
-arm/dts: AM33XX: Configure pinmuxs for user leds control on Bone
-http://www.spinics.net/lists/linux-omap/msg76682.html
-arm/dts: AM33XX: Add D_CAN device tree data
-http://www.spinics.net/lists/linux-omap/msg76683.html
-
-Thanks
-AnilKumar
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
