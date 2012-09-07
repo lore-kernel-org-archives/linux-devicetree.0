@@ -1,59 +1,51 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
-Date: Fri, 07 Sep 2012 12:24:44 -0700
-Message-ID: <20120907192444.20289.97042@nucleus>
-References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
- <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
- <20120831064125.GA3271@r65073-Latitude-D630>
- <20120906221155.20289.73650@nucleus>
- <20120907002618.GB26709@S2101-09.ap.freescale.net>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [RFC RESEND 1/4] arm/dts: OMAP: Add timer nodes
+Date: Fri, 7 Sep 2012 15:26:44 -0500
+Message-ID: <504A5884.1010805@ti.com>
+References: <1342218413-30116-1-git-send-email-jon-hunter@ti.com> <1342218413-30116-2-git-send-email-jon-hunter@ti.com> <5000D647.4090200@gmail.com> <500439A8.1050705@ti.com> <500D6CAB.4030504@ti.com> <502B67DD.6050904@ti.com> <502D0BEE.3010609@ti.com> <20120830201415.GX1303@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120907002618.GB26709@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120830201415.GX1303@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Vaibhav Hiremath <hvaibhav@ti.com>, Rob Herring <robherring2@gmail.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Shawn Guo (2012-09-06 17:26:20)
-> On Thu, Sep 06, 2012 at 03:11:55PM -0700, Mike Turquette wrote:
-> > Quoting Shawn Guo (2012-08-30 23:41:27)
-> > > Ping, Mike.
-> > > 
-> > 
-> > Hi Shawn,
-> > 
-> > Do you want me to take everything including patch #2?  I'm OK with the
-> > series but want to make sure it won't cause too much problem for you if
-> > the DTS and arch/arm changes go through my tree.
-> > 
-> It will cause conflicts to have those arch/arm changes to go through
-> your tree, so I expect you only take patch #1 and ensure your branch
-> is stable.  I will ask arm-soc people to pull in your branch as
-> dependency, and then I can have other patches go via arm-soc tree.
+Hi Tony,
+
+On 08/30/2012 03:14 PM, Tony Lindgren wrote:
+> * Jon Hunter <jon-hunter@ti.com> [120816 08:05]:
+>> On 08/15/2012 04:11 AM, Vaibhav Hiremath wrote:
+>>>
+>>> Did we get conclude on this? I haven't got anything further on this
+>>> thread, this may block baseport support for the new devices in omap2
+>>> family, like AM33xx and OMAP5.
+>>
+>> Sorry I have been out of the office. However, no update on this so far.
+>> I need to check with Tony if he has any preference for handling this. I
+>> will follow-up with him and keep you posted.
 > 
+> Jon please repost these without the RFC in the subject line
+> assuming the pending comments have been addressed so people
+> can ack them.
 
-Done.  I've taken patch #1 "clk: add of_clk_src_onecell_get() support"
-into clk-next.
+I have been working on updating this series to request timer by their
+capabilities and avoid using a device ID altogether. In the updated
+series using device IDs to request a timer will still work as it does
+today, but not when you boot with DT. I have something working now that
+is booting fine on omap4 with and without DT [1]. However, I need to do
+more thorough testing of the timers in general, probably next week.
 
-Thanks,
-Mike
+Once I have completed my testing I would like to post for review.
+However, since posting the original series I have been working on some
+needed timer fixes/clean-up which I posted this week [2] for review.
+Ideally I should rebase my DT timer work on my timer fixes series but
+wanted to see what you thought first.
 
-> -- 
-> Regards,
-> Shawn
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Cheers
+Jon
+
+[1] https://github.com/jonhunter/linux/tree/dev-dt-timer
+[2] http://marc.info/?l=linux-omap&m=134687188921835&w=2
