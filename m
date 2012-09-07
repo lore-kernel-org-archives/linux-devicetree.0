@@ -1,89 +1,81 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v3 01/10] PCI: Keep pci_fixup_irqs() around after init
-Date: Fri, 7 Sep 2012 10:22:28 -0700
-Message-ID: <CAErSpo4Y4QXfahRkBoJ_jmKy6VAYqOzixTmCPkwSATfO+rzVxg@mail.gmail.com>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de>
- <1343332512-28762-2-git-send-email-thierry.reding@avionic-design.de>
- <CAErSpo7v+i8i=mXCs7ZW8DtGTDN_4AEntwYLqGG8FcCzweySFg@mail.gmail.com>
- <20120815192814.GA12870@avionic-0098.mockup.avionic-design.de>
- <CAErSpo6cjOzJegJqXzmk59DChExcbLK1sOhwyAyQL4FZkTN21A@mail.gmail.com>
- <504A1EA2.9030008@wwwdotorg.org> <20120907170024.GA16114@avionic-0098.mockup.avionic-design.de>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] ARM: dts: OMAP4: Add reg and interrupts for every nodes
+Date: Fri, 7 Sep 2012 20:23:58 +0300
+Message-ID: <20120907172355.GA9208@arwen.pp.htv.fi>
+References: <504A11E4.6000406@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20120907170024.GA16114@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Mitch Bradley <wmb@firmworks.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <504A11E4.6000406@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, santosh Shilimkar <santosh.shilimkar@ti.com>, Felipe Balbi <balbi@ti.com>, Vaibhav Hiremath <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 7, 2012 at 10:00 AM, Thierry Reding
-<thierry.reding@avionic-design.de> wrote:
-> On Fri, Sep 07, 2012 at 10:19:46AM -0600, Stephen Warren wrote:
->> On 08/15/2012 01:42 PM, Bjorn Helgaas wrote:
->> > On Wed, Aug 15, 2012 at 1:28 PM, Thierry Reding
->> > <thierry.reding@avionic-design.de> wrote:
->> >> On Wed, Aug 15, 2012 at 10:06:27AM -0700, Bjorn Helgaas wrote:
->> >>> On Thu, Jul 26, 2012 at 12:55 PM, Thierry Reding
->> >>> <thierry.reding@avionic-design.de> wrote:
->> >>>> When using deferred driver probing, PCI host controller drivers may
->> >>>> actually require this function after the init stage.
->> >>>>
->> >>>> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
->> >>>> ---
->> >>>> Changes in v3:
->> >>>> - none
->> >>>>
->> >>>> Changes in v2:
->> >>>> - use __devinit annotations
->> >>>
->> >>> Your original patch removed __init completely.  Here you change it to
->> >>> __devinit.  That means we decide whether to discard the function based
->> >>> on whether CONFIG_HOTPLUG is supported.  But I think your point is not
->> >>> about hotplug; it's merely that we should be able to scan a PCI bus
->> >>> after init-time.  We ought to be able to do a late PCI scan even if
->> >>> hotplug is not supported.
->> >>>
->> >>> Therefore, I'd be inclined to remove __init completely unless you have
->> >>> another reason for preferring __devinit.
->> >>
->> >> I thought __devinit would resolve to nothing if HOTPLUG is defined and
->> >> __init otherwise. That seemed more appropriate. However you are right
->> >> that it is useful to always have it available, so I'm fine with removing
->> >> the annotations altogether. Do you want me to follow up with a patch? Or
->> >> can you just take the first version? I'm not sure if it still applies.
->> >
->> > You're right about how __devinit works.  It's just that I don't think
->> > hotplug is actually relevant here.  We're trying to make
->> > pci_fixup_irqs() work after init, whether it's because of hotplug or
->> > simply because the arch scans host bridges after init.
->> >
->> > I applied this to my "next" branch.  Thanks!
->>
->> Bjorn, I don't see this patch in next-20120907. Did it get dropped for
->> some reason?
->
-> Yes, it turns out that dropping the annotations causes lots of section
-> mismatches on other architectures. See here[0] for the details. I think
-> the solution to the issue would be to either remove HOTPLUG altogether
-> and drop __devinit and __devexit annotations or update all architectures
-> to fix these warnings. I think Bjorn and I settled on the latter because
-> it's obviously less intrusive. I've been busy building toolchains for
-> all the PCI architectures and I think I have all of them. I'll just need
-> some more time to build, find and fix any remaining section mismatches.
 
-Greg KH is actively removing CONFIG_HOTPLUG altogether -- see
-https://lkml.org/lkml/2012/9/4/489
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That will make __devinit resolve to nothing in all cases, and we'll
-eventually remove __devinit completely.  So we don't want to convert
-__init to __devinit; we have to remove the __init altogether.  I think
-that means we have to update all arches first to avoid the section
-mismatches.
+Hi,
 
-So I think Thierry is on the right track:
-  1) Change all arch pcibios_update_irq() implementations (and
-probably a few other things) to be non-__init
-  2) Change pci_fixup_irqs() to be non-__init
+On Fri, Sep 07, 2012 at 05:25:24PM +0200, Benoit Cousson wrote:
+> Thanks to Vaibhav <hvaibhav@ti.com> omap_device fix
+> (ARM: OMAP: omap_device: Fix up resource names when booted with devicetre=
+),
+> we can now specify reg and interrupts using standard device tree
+> attributes.
+>=20
+> Update the OMAP4 dtsi file with missing reg and interrupts attributes.
+>=20
+> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Felipe Balbi <balbi@ti.com>
+> ---
+>=20
+> Hi Tony,
+>=20
+> This is the first step toward reduction of the hwmod data inside mach-oma=
+p2.
+> OMAP2/3/4 data still need to be there for legacy boards, but it will allow
+> OMAP5/AM33XX pure DT board to reduce the amount of data provided by hwmod.
+>=20
+> DMA is still missing, but I hope that the discussion that happened during
+> LPC will fixed that soon.
 
-Bjorn
+Very nice work. Do you already have a way on omap_device creation to use
+DT data instead of hwmod's ?
+
+cheers
+
+--=20
+balbi
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQSi2rAAoJEIaOsuA1yqREkMMP/jCyBZv8rPSFY/tZ59/8G5qe
+UYDGjRelai0tJLlFVItt6pK0Wi8nEMPB5uQv9j3Ittlbs89UkIl9ycRtleC6MeTC
+oU12YG7QOeHXiQEM0Ji5HX6UdbcRZyIjn4vpMk+HuCg/PMBOFyLI1Syvz3LSslFF
+CH2Waby1A01oszDORANecYDkbDGQ5TO/ucN8KPpA/tJ6081JVc4Q8Z7rrLKtvfRr
+rpRvqk3HBhlLQEkvNTp9oGcTUexT8+ca7T53wqcUKvPvcnm6w9kU/QoAY5xX3Nsk
+t35ZvYvmiGRwdd9L+nUVQeVR9Ed9/tu2LHE8zxJHEZH+Tw6oagwcV2rVO7diUUVn
+BUW9GHlrglA55qz/nro4Lag6NwsdI3a6iLKg2XXuZbDaYjS6bXIhsT1+rWx2o+kE
+xrYVYFts4lrN6hlcGLtUTeV0KsninKCmhR3s4JfOmjUdr/JtOiv6t0awiGmloWTh
+hWQpRIshyJ4OZeWiCeOnAPthtOud2Gx4uG+VQp3e4XahUSj9mDKQsGvTrDo0Ngu+
+s6iawql/f6Rvn8M1m0x1MQsn+IShumRiEtLR0GPvAitmL6uTKGGvk2/mNkvs09Av
+5esOb5W6Bjtx+uft9WHDTBT61/DUpQnEgVGC4aNl5Gx+0QIjdxQQsNpiI83zStW2
+s6WcRoJxJQq1Fw3MfSB8
+=rOAc
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
