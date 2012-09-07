@@ -1,63 +1,47 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Fri, 7 Sep 2012 02:09:35 +0200
-Message-ID: <201209070209.35379.marex@denx.de>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com> <201209060405.08997.marex@denx.de> <20120906174531.GX1303@atomide.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
+Date: Fri, 7 Sep 2012 08:26:20 +0800
+Message-ID: <20120907002618.GB26709@S2101-09.ap.freescale.net>
+References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
+ <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
+ <20120831064125.GA3271@r65073-Latitude-D630>
+ <20120906221155.20289.73650@nucleus>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120906174531.GX1303@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Bryan Wu <bryan.wu@canonical.com>, AnilKumar Ch <anilkumar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120906221155.20289.73650@nucleus>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Tony Lindgren,
-
-> * Marek Vasut <marex@denx.de> [120905 19:05]:
-> > Hi Tony,
+On Thu, Sep 06, 2012 at 03:11:55PM -0700, Mike Turquette wrote:
+> Quoting Shawn Guo (2012-08-30 23:41:27)
+> > Ping, Mike.
 > > 
-> > > * Marek Vasut <marex@denx.de> [120904 20:13]:
-> > > > Dear Bryan Wu,
-> > > > 
-> > > > > On Sat, Sep 1, 2012 at 4:16 PM, AnilKumar Ch <anilkumar@ti.com> wrote:
-> > > > > > Adopt pinctrl support to leds-gpio driver based on leds-gpio
-> > > > > > device pointer, pinctrl driver configure SoC pins to GPIO
-> > > > > > mode according to definitions provided in .dts file.
-> > > > > 
-> > > > > Thanks for this, actually Marek Vasut submitted a similar patch
-> > > > > before. I'm pretty fine with this patch.
-> > > > 
-> > > > Thanks for submitting this actually ... I didn't have time to
-> > > > properly investigate this.
-> > > > 
-> > > > > But without proper DT setting, it will also give us warning I
-> > > > > think. or we can provide some dummy functions as a temp solution
-> > > > > as Shawn pointed out before.
-> > > > 
-> > > > But this driver is also used on hardware that's not yet coverted to
-> > > > DT, so I'd say dev_warn() if CONFIG_OF is enabled and otherwise
-> > > > simply go on ? Actually, can we not skip whole this pinctrl thing if
-> > > > CONFIG_OF is disabled? Actually (2), what's the relationship between
-> > > > OF and pinctrl?
-> > > 
-> > > The warning should be pinctrl related as the pinctrl drivers may not be
-> > > device tree based drivers.
-> > 
-> > Exactly my concern. Also the warning shouldnt be present on systems where
-> > pinctrl is disabled.
 > 
-> But pinctrl_get_select() returns 0 in include/linux/pinctrl/consumer.h if
-> CONFIG_PINCTRL is not selected, so no warning is produced AFAIK ;)
+> Hi Shawn,
+> 
+> Do you want me to take everything including patch #2?  I'm OK with the
+> series but want to make sure it won't cause too much problem for you if
+> the DTS and arch/arm changes go through my tree.
+> 
+It will cause conflicts to have those arch/arm changes to go through
+your tree, so I expect you only take patch #1 and ensure your branch
+is stable.  I will ask arm-soc people to pull in your branch as
+dependency, and then I can have other patches go via arm-soc tree.
 
-Oh all right then.
-
-> Or do you get some warning if CONFIG_PINCTRL is not selected for your
-> hardware?
-
-No, I don't have much hardware like such anymore :-(
-
-Best regards,
-Marek Vasut
+-- 
+Regards,
+Shawn
