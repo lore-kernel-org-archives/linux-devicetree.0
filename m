@@ -1,137 +1,208 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] Runtime Interpreted Power Sequences
-Date: Fri, 07 Sep 2012 10:36:02 -0600
-Message-ID: <504A2272.8040209@wwwdotorg.org>
-References: <1346412846-17102-1-git-send-email-acourbot@nvidia.com>
- <201209061614.54022.heiko@sntech.de> <1887927.1deN8M9siP@percival>
- <201209071108.42083.heiko@sntech.de>
+From: Jamie Lentin <jm@lentin.co.uk>
+Subject: [PATCH 1/2] hwmon: Add devicetree bindings to gpio-fan
+Date: Fri,  7 Sep 2012 17:34:34 +0100
+Message-ID: <1347035675-23907-2-git-send-email-jm@lentin.co.uk>
+References: <1347035675-23907-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201209071108.42083.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1347035675-23907-1-git-send-email-jm@lentin.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree-discuss@lists.ozlabs.org, Jamie Lentin <jm@lentin.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/2012 03:08 AM, Heiko St=FCbner wrote:
-> Am Freitag, 7. September 2012, 10:04:24 schrieb Alex Courbot:
->>> For your power_seq_run function you write that it simply returns an err=
-or
->>> code on failure and looking through it I also just found the error retu=
-rn
->>> statement. This would leave a device half turned on.
->>>
->>> So I'm wondering, if it shouldn't turn off all the things it turned on
->>> until the step that produced the error. All your possible step types
->>> (execpt the delay) are booleans, so it should be possible to simply
->>> negate them when backtracking through the previous steps.
->>
->> Indeed, I think you raised an important point. Right now all step types =
-are
->> invertible, but we cannot rely on that statement to be true forever. For
->> instance, one short-term improvement will be to allow finer regulator
->> control, like voltage setting. In this case, how can we go back to the
->> initial state without recording it?
->>
->> If e.g. the power on sequence fails at step N (of M steps for that
->> sequence), one could try playing the corresponding power off sequence
->> (either completely of from step M - N), but then again we cannot rely on
->> sequences to be perfectly symetrical. Maybe this is more something for t=
-he
->> calling driver to check for and control?
-> =
+Allow a gpio-fan to be defined in devicetree, see binding documentation
+for details.
 
-> Am Freitag, 7. September 2012, 10:15:03 schrieb Mark Brown:
->> On Fri, Sep 07, 2012 at 05:04:24PM +0900, Alex Courbot wrote:
->>> If e.g. the power on sequence fails at step N (of M steps for that
->>> sequence), one could try playing the corresponding power off sequence
->>> (either completely of from step M - N), but then again we cannot rely on
->>> sequences to be perfectly symetrical. Maybe this is more something for
->>> the calling driver to check for and control?
->>
->> That had been my thought too - depending on what the sequence is for it
->> may be that the corrective action is something very different to
->> reversing the sequence, for example a device reset may be required.
-> =
+Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+---
+ .../devicetree/bindings/gpio/gpio-fan.txt          |   25 +++++
+ drivers/hwmon/gpio-fan.c                           |  111 ++++++++++++++++++++
+ 2 files changed, 136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-fan.txt
 
-> If I understood the description correctly, the power sequence should be =
-
-> transparent to the driver, as it implements board specific actions and =
-
-> shouldn't bother the driver with it to much.
-
-Well, the contents/implementation of the sequence should be transparent
-to the driver. The fact that a sequence exists and needs to be executed
-obviously can't be transparent to the driver, since the driver needs to
-call an API to execute the sequence.
-
-I'd assert that requiring the driver to get back to a sane state by
-executing sequence (b) if sequence (a) fails is fairly reasonable, and
-doesn't give the driver any more knowledge of what the sequences are
-than what it already has.
-
-But then I start to wonder: What if the "help something went wrong"
-sequence gets an error...
-
-> Therefore my thoughts went along
-> the lines how gpio_request_array handles this, always producing a sane st=
-ate =
-
-> at the end.
-> =
-
-> Recording the previous state, could be done by making a copy of the curre=
-nt =
-
-> sequence, and just noting the previous values (including voltages etc) in=
- the =
-
-> respective entries. And in the error case running this new sequence from =
-the =
-
-> error point instead to power down again.
-> =
-
-> =
-
-> As both Alex and Mark wrote, reversing the sequence might be the action o=
-f =
-
-> choice only for some devices, but others might need to run a completely =
-
-> different powerdown sequence and still others would need special handling.
-> =
-
-> Would it be possible to encode this in the sequence definition, something=
- like
-> 	on-error =3D "reverse"
-> =
-
-> 	on-error =3D "sequence"
-> 	error-seq =3D <&other_sequence>
-> =
-
-> 	on-error =3D "driver"
-> with better names and types of course.
-> =
-
-> This would keep the power sequence transparent to most drivers and only t=
-he =
-
-> real esoteric ones would need to do their special handling on their own.
-
-Yes, something like that sounds reasonable on the surface. I'm not sure
-about the on-error=3D"driver" case though; if the driver knows nothing
-about the content of the sequences, I'm not sure how the driver could
-possibly do anything other than execute some sequence to recover.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+new file mode 100644
+index 0000000..2dd457a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+@@ -0,0 +1,25 @@
++Bindings for fan connected to GPIO lines
++
++Required properties:
++- compatible : "gpio-fan"
++- gpios: Specifies the pins that map to bits in the control value,
++  ordered MSB-->LSB.
++- gpio-fan,speed-map: A mapping of possible fan RPM speeds and the
++  control value that should be set to achieve them. This array
++  must have the RPM values in ascending order.
++
++Optional properties:
++- alarm-gpios: This pin going active indicates something is wrong with
++  the fan, and a udev event will be fired.
++
++Examples:
++
++	gpio_fan {
++		compatible = "gpio-fan";
++		gpios = <&gpio1 14 1
++			 &gpio1 13 1>;
++		gpio-fan,speed-map = <0    0
++				      3000 1
++				      6000 2>;
++		alarm-gpios = <&gpio1 15 1>;
++	};
+diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
+index 2f4b01b..876ce41 100644
+--- a/drivers/hwmon/gpio-fan.c
++++ b/drivers/hwmon/gpio-fan.c
+@@ -31,6 +31,8 @@
+ #include <linux/hwmon.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio-fan.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
+ 
+ struct gpio_fan_data {
+ 	struct platform_device	*pdev;
+@@ -400,12 +402,120 @@ static ssize_t show_name(struct device *dev,
+ 
+ static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
+ 
++
++#ifdef CONFIG_OF
++/*
++ * Translate OpenFirmware node properties into platform_data
++ */
++static int gpio_fan_get_of_pdata(struct device *dev,
++			    struct gpio_fan_platform_data *pdata)
++{
++	struct device_node *node;
++	struct gpio_fan_speed  *speed;
++	unsigned *ctrl;
++	unsigned i;
++	u32 u;
++	struct property *prop;
++	const __be32 *p;
++
++	node = dev->of_node;
++
++	/* Fill GPIO pin array */
++	pdata->num_ctrl = of_gpio_count(node);
++	ctrl = devm_kzalloc(dev, pdata->num_ctrl * sizeof(unsigned),
++				GFP_KERNEL);
++	if (!ctrl)
++		return -ENOMEM;
++	for (i = 0; i < of_gpio_count(node); i++) {
++		int val;
++
++		val = of_get_gpio(node, i);
++		if (val >= 0)
++			ctrl[i] = val;
++		else
++			return -EINVAL;
++	}
++	pdata->ctrl = ctrl;
++
++	/* Get speed map array size */
++	i = 0;
++	of_property_for_each_u32(node, "gpio-fan,speed-map", prop, p, u)
++		i++;
++	if (i & 1) {
++		dev_err(dev, "gpio-fan,speed-map contains odd number of entries");
++		return -ENODEV;
++	}
++	pdata->num_speed = i >> 1;
++	speed = devm_kzalloc(dev,
++			pdata->num_speed * sizeof(struct gpio_fan_speed),
++			GFP_KERNEL);
++	if (!speed)
++		return -ENOMEM;
++
++	/* Populate speed map */
++	i = 0;
++	of_property_for_each_u32(node, "gpio-fan,speed-map", prop, p, u) {
++		if (i & 1)
++			speed[i >> 1].ctrl_val = (int)u;
++		else
++			speed[i >> 1].rpm = (int)u;
++		i++;
++	}
++	pdata->speed = speed;
++
++	/* Alarm GPIO if one exists */
++	if (of_gpio_named_count(node, "alarm-gpios")) {
++		struct gpio_fan_alarm *alarm;
++		int val;
++		enum of_gpio_flags flags;
++
++		alarm = devm_kzalloc(dev, sizeof(struct gpio_fan_alarm),
++					GFP_KERNEL);
++		if (!alarm)
++			return -ENOMEM;
++
++		val = of_get_named_gpio_flags(node, "alarm-gpios", 0, &flags);
++		if (val >= 0) {
++			alarm->gpio = val;
++			alarm->active_low = flags & OF_GPIO_ACTIVE_LOW;
++		} else
++			return -EINVAL;
++
++		pdata->alarm = alarm;
++	}
++
++	return 0;
++}
++
++static const struct of_device_id of_gpio_fan_match[] = {
++	{ .compatible = "gpio-fan", },
++	{},
++};
++#endif /* CONFIG_OF_GPIO */
++
+ static int __devinit gpio_fan_probe(struct platform_device *pdev)
+ {
+ 	int err;
+ 	struct gpio_fan_data *fan_data;
+ 	struct gpio_fan_platform_data *pdata = pdev->dev.platform_data;
+ 
++#ifdef CONFIG_OF
++	if (!pdata) {
++		struct gpio_fan_platform_data *alt_pdata;
++
++		alt_pdata = devm_kzalloc(&pdev->dev,
++					sizeof(struct gpio_fan_platform_data),
++					GFP_KERNEL);
++		if (!alt_pdata)
++			return -ENOMEM;
++
++		err = gpio_fan_get_of_pdata(&pdev->dev, alt_pdata);
++		if (err)
++			return err;
++		pdata = alt_pdata;
++	}
++#endif /* CONFIG_OF_GPIO */
++
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
+@@ -511,6 +621,7 @@ static struct platform_driver gpio_fan_driver = {
+ 	.driver	= {
+ 		.name	= "gpio-fan",
+ 		.pm	= GPIO_FAN_PM,
++		.of_match_table = of_match_ptr(of_gpio_fan_match),
+ 	},
+ };
+ 
+-- 
+1.7.10.4
