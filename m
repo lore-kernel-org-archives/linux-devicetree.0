@@ -1,132 +1,71 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH v5 1/4] Runtime Interpreted Power Sequences
-Date: Fri, 7 Sep 2012 17:21:52 +0900
-Message-ID: <1380082.Ud3NsnIqpg@percival>
-References: <1346412846-17102-1-git-send-email-acourbot@nvidia.com> <1346412846-17102-2-git-send-email-acourbot@nvidia.com> <504789B1.50205@wwwdotorg.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Fri, 7 Sep 2012 10:22:39 +0200
+Message-ID: <201209071022.39537.marex@denx.de>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com> <201209070209.35379.marex@denx.de> <331ABD5ECB02734CA317220B2BBEABC13EA2964C@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <504789B1.50205@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA2964C@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Bryan Wu <bryan.wu@canonical.com>, Shawn Guo <shawn.guo@linaro.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Dear AnilKumar, Chimata,
 
-Skipping the typos and rephrasing issues (which will all be addressed, 
-thanks!), these issues caught my attention more particularly:
-
-On Thursday 06 September 2012 01:19:45 Stephen Warren wrote:
-> > +"regulator" type required properties:
-> > +  - id: name of the regulator to use. Regulator is obtained by
-> > +        regulator_get(dev, id)
-> > +  - enable / disable: one of these two empty properties must be present
-> > to
-> > +                      enable or disable the resource
-> > +
-> > +"pwm" type required properties:
-> > +  - id: name of the PWM to use. PWM is obtained by pwm_get(dev, id)
-> > +  - enable / disable: one of these two empty properties must be present
-> > to
-> > +                      enable or disable the resource
-> 
-> For those two, would "name" be a better property name than "id"?
-
-IIRC "name" is a reserved property name in the DT (I remember seeing an error 
-message when compiling nodes with a "name" property that did not match the 
-node's name). "id" was the second best candidate in my mind.
-
-> > +"gpio" type required properties:
-> > +  - number: phandle of the GPIO to use.
-> 
-> Naming the property "gpio" would seem more consistent with our GPIO
-> properties.
-
-Ok, although "gpio.gpio" might look strange in the platform data.
-
-> > +  - enable / disable: one of these two empty properties must be present
-> > to
-> > +                      enable or disable the resource
-> 
-> You can't really enable or disable a GPIO (well, perhaps you can, but
-> I'd consider that to affect tri-state rather than value); it's more that
-> you're setting the output value to 0 or 1. I think a "value" or
-> "set-value" property with value <0> or <1> would be better.
-
-Right - will fix that.
-
-> Overall, the general structure of the bindings looks reasonable to me.
-
-Great, maybe we are finally headed to something stable!
-
-> I'm not sure what "pdata" is supposed to point at; platform data applies
-> to the original "struct device", not one of the resources used by the
-> power sequences.
-
-Right - more on this later.
-
-> Hmmm. It'd be nice not to need separate functions for the non-DT and DT
-> cases. That would require that devm_power_seq_set_build() be able to
-> find the power sequence definitions somewhere other than platform data
-> in the non-DT case - that's exactly why the regulator and pinctrl
-> subsystems represent the device<->data mapping table separately from the
-> device's platform data.
-
-Oh, that sounds better indeed - I was still mentally stuck in the previous 
-scheme where power sequences were not accessible from a fixed node of the 
-device. Thanks.
-
-> > +++ b/drivers/power/power_seq/Kconfig
+> On Fri, Sep 07, 2012 at 05:39:35, Marek Vasut wrote:
+> > Dear Tony Lindgren,
 > > 
-> > +config POWER_SEQ
-> > +	bool
+> > > * Marek Vasut <marex@denx.de> [120905 19:05]:
+> > > > Hi Tony,
+> > > > 
+> > > > > * Marek Vasut <marex@denx.de> [120904 20:13]:
+> > > > > > Dear Bryan Wu,
+> > > > > > 
+> > > > > > > On Sat, Sep 1, 2012 at 4:16 PM, AnilKumar Ch <anilkumar@ti.com> 
+wrote:
+> > > > > > > > Adopt pinctrl support to leds-gpio driver based on leds-gpio
+> > > > > > > > device pointer, pinctrl driver configure SoC pins to GPIO
+> > > > > > > > mode according to definitions provided in .dts file.
+> > > > > > > 
+> > > > > > > Thanks for this, actually Marek Vasut submitted a similar patch
+> > > > > > > before. I'm pretty fine with this patch.
+> > > > > > 
+> > > > > > Thanks for submitting this actually ... I didn't have time to
+> > > > > > properly investigate this.
+> > > > > > 
+> > > > > > > But without proper DT setting, it will also give us warning I
+> > > > > > > think. or we can provide some dummy functions as a temp
+> > > > > > > solution as Shawn pointed out before.
+> > > > > > 
+> > > > > > But this driver is also used on hardware that's not yet coverted
+> > > > > > to DT, so I'd say dev_warn() if CONFIG_OF is enabled and
+> > > > > > otherwise simply go on ? Actually, can we not skip whole this
+> > > > > > pinctrl thing if CONFIG_OF is disabled? Actually (2), what's the
+> > > > > > relationship between OF and pinctrl?
+> > > > > 
+> > > > > The warning should be pinctrl related as the pinctrl drivers may
+> > > > > not be device tree based drivers.
+> > > > 
+> > > > Exactly my concern. Also the warning shouldnt be present on systems
+> > > > where pinctrl is disabled.
+> > > 
+> > > But pinctrl_get_select() returns 0 in include/linux/pinctrl/consumer.h
+> > > if CONFIG_PINCTRL is not selected, so no warning is produced AFAIK ;)
+> > 
+> > Oh all right then.
 > 
-> Some kind of help text might be useful?
-
-As this option was not user-visible but automatically enabled by drivers, I 
-did not judge it to be necessary - but after reading your other mail we might 
-need to make it visible and documented after all.
-
-> > +/**
-> > + * struct platform_power_seq_step - platform data for power sequences
-> > steps + * @type:	The type of this step. This decides which member of 
-the
-> > union is + *		valid for this step.
-> > + * @delay:	Used if type == POWER_SEQ_DELAY
-> > + * @regulator:	Used if type == POWER_SEQ_REGULATOR
-> > + * @pwm:	Used if type == POWER_SEQ_PWN
-> > + * @gpio:	Used if type == POWER_SEQ_GPIO
+> Bryan,
 > 
-> In those last 4 line, I think s/type/@type/ since you're referencing
-> another parameter?
+> If this patch looks fine, can you queue this for 3.7?
 
-Absolutely.
+Looks good to me.
 
-> > +struct power_seq_resource {
-> > +	/* relevant for resolving the resource and knowing its type */
-> > +	struct platform_power_seq_step *pdata;
-> 
-> Aha. So this isn't really platform data for the resource, but actually a
-> step definition that referenced it. I think it'd be better to rename
-> this field "step", and amend the documentation above not to refer to
-> "pdata" but explicitly talk about a step definition; the step may have
-> been defined in pdata, but isn't in the DT case.
+> Thanks
+> AnilKumar
 
-This is a little bit confusing, isn't it? The resource identifier is duplicated 
-in the platform data by every step that uses it. To avoid copying that 
-information again into the resource structure, I just use this pointer to the 
-first step that uses this resource. So a step not only contains step 
-information, but also part of it might be used by a resource instance. Ugh, 
-that's horribly confusing, actually.
-
-> Alternatively, why not just copy the step type enum here, rather than
-> referencing the step definition?
-
-On top of the type we will also need the identifier of the resource (string for 
-pwm and regulator, number for GPIO) so we can compare the resource against 
-platform data when building the sequence to avoid allocating it twice. That's 
-a little bit of extra memory, but the gain in clarity is probably worth it.
-
-Alex.
+Best regards,
+Marek Vasut
