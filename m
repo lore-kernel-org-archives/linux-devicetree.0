@@ -1,76 +1,55 @@
-From: Domenico Andreoli <cavokz@gmail.com>
-Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Fri, 7 Sep 2012 13:02:51 +0200
-Message-ID: <20120907110251.GA7968@glitch>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
- <CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v4 0/6] Add device tree support for on-chip SRAM
+Date: Fri,  7 Sep 2012 14:43:42 +0200
+Message-ID: <1347021828-23034-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2012 at 09:10:50AM +0000, AnilKumar, Chimata wrote:
-> Hi Domenico,
+These patches add support to configure on-chip SRAM via device-tree
+node and to obtain the resulting genalloc pool from a phandle pointing
+at the node.
+This allows drivers to allocate SRAM with the genalloc API without
+hard-coding the genalloc pool address.
 
-Hi,
+The on-chip SRAM on i.MX53 and i.MX6q is registered via device tree and
+changed to use the simple generic SRAM driver:
 
-> On Fri, Sep 07, 2012 at 14:18:39, Domenico Andreoli wrote:
-> > On Sat, Sep 1, 2012 at 10:16 AM, AnilKumar Ch <anilkumar@ti.com> wrote:
-> > > Adopt pinctrl support to leds-gpio driver based on leds-gpio
-> > > device pointer, pinctrl driver configure SoC pins to GPIO
-> > > mode according to definitions provided in .dts file.
-> > 
-> > Shouldn't be the interaction with the pinctrl layer left to gpiolib?
-> > 
-> 
-> No, these gpio's are configured specifically for user leds.
+		ocram: ocram@00900000 {
+			compatible = "fsl,imx-ocram", "sram";
+			reg = <0x00900000 0x3f000>;
+ 		};
 
-So there are some special pad configs to make the leds work which are not
-only muxing and direction setting? Because I expect these to be managed
-privately between gpiolib and pinctrl but now I'm not sure any more,
-I'll look the code.
+A driver that needs to allocate SRAM buffers, like the video processing
+unit on i.MX53, can retrieve the genalloc pool from a phandle in the
+device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
 
-> So, leds-gpio driver should have this call, because these gpio
-> pins are used by leds-gpio driver.
-> 
-> +       am33xx_pinmux: pinmux@44e10800 {
-> +               userled_pins: pinmux_userled_pins {
-> +                       pinctrl-single,pins = <
-> +                               0x54 0x7       
-> +                               0x58 0x17       
-> +                               0x5c 0x7        
-> +                               0x60 0x17       
-> +                       >;
-> +               };
-> +       };
-> +
-> 
-> [...]
-> 
-> +               leds {
-> +                       compatible = "gpio-leds";
-> +                       pinctrl-names = "default";
-> +                       pinctrl-0 = <&userled_pins>;
->                                       ^^^^^^^^^^^^
+		vpu@63ff4000 {
+			/* ... */
+			iram = <&ocram>;
+ 		};
 
-I'm surprised to not see any gpio controller (ala irq) involved.
+Changes since v3:
+ - Added devicetree binding documentation
+ - Register platform driver early with postcore_initcall
+ - Added optional SRAM clock support.
 
-> Lets take gpio-keypad driver, in that case we have to configure
-> pins as INPUT mode (generic gpio driver might not know what
-> the end usecase is) and this leds case we configure as OUTPUT
-> mode.
+regards
+Philipp
 
-gpio direction is modeled by gpiolib so, if no other out-of-gpiolib
-capabilities are required for that led gpio, there is no need to directly
-use pinctrl.
-
-maybe I've just got it wrong. sorry.
-
-thanks,
-Domenico
+---
+ Documentation/devicetree/bindings/misc/sram.txt |   17 ++++
+ arch/arm/boot/dts/imx53.dtsi                    |    5 +
+ arch/arm/boot/dts/imx6q.dtsi                    |    5 +
+ arch/arm/mach-imx/clk-imx6q.c                   |    1 +
+ arch/arm/plat-mxc/Kconfig                       |    4 -
+ arch/arm/plat-mxc/Makefile                      |    1 -
+ arch/arm/plat-mxc/include/mach/iram.h           |   41 --------
+ arch/arm/plat-mxc/iram_alloc.c                  |   73 --------------
+ drivers/misc/Kconfig                            |    9 ++
+ drivers/misc/Makefile                           |    1 +
+ drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
+ include/linux/genalloc.h                        |   14 +++
+ lib/genalloc.c                                  |   67 +++++++++++++
+ 13 files changed, 240 insertions(+), 119 deletions(-)
