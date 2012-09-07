@@ -1,52 +1,69 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: add cpufreq transiton notifier to adjust
- loops_per_jiffy for smp
-Date: Fri, 7 Sep 2012 10:58:49 +0800
-Message-ID: <20120907025847.GI26709@S2101-09.ap.freescale.net>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
- <1344577046-14847-2-git-send-email-shawn.guo@linaro.org>
- <5049252D.9000802@wwwdotorg.org>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v6 2/3] arm/dts: AM33XX: Configure pinmuxs for user leds
+ control on Bone
+Date: Fri, 7 Sep 2012 03:23:16 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA291DD@DBDE01.ent.ti.com>
+References: <1346845260-10978-1-git-send-email-anilkumar@ti.com>
+ <1346845260-10978-3-git-send-email-anilkumar@ti.com>
+ <20120906205811.GO1303@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5049252D.9000802-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120906205811.GO1303-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 06, 2012 at 04:35:25PM -0600, Stephen Warren wrote:
-> I believe this patch is causing issues initializing PCI-Express on Tegra.
-> 
-> In next-20120906, I cold-booted 10 times. 3 times, PCIe initialized OK,
-> and 7 times, the driver timed out in arch/arm/mach-tegra/pcie.c function
-> tegra_pcie_check_link(). With this patch reverted, another 10 cold boot
-> attempts all succeeded just fine. Similarly, the regression appeared in
-> next-20120905, and I isolated it to arch/arm/kernel/, and this is the
-> only patch in that directory between next-20120904 and next-20120905.
-> 
-> Do you have any idea what the problem might be?
-> 
-> Looking at the timestamps in dmesg in the failing case, the driver is
-> waiting the expected (per pcie.c driver code) 1.2 seconds before giving
-> up on the port, although I suppose if the kernel's idea of real-time is
-> off, then the dmesg log timestamps might be off too.
+Tony,
 
-Just for identifying the problem, can you test the following change to
-see if it fixes the failure.
+On Fri, Sep 07, 2012 at 02:28:12, Tony Lindgren wrote:
+> * AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org> [120905 04:42]:
+> > Adds GPIO pinctrl nodes to am3358_pinmux master node to control
+> > user leds (USR0, USR1, USR2 and USR3) present on BeagleBone.
+> > 
+> > [koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org: led0, led1 suggested by koen]
+> > Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/am335x-bone.dts |   43 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+> > index c634f87..822efe6 100644
+> > --- a/arch/arm/boot/dts/am335x-bone.dts
+> > +++ b/arch/arm/boot/dts/am335x-bone.dts
+> > @@ -18,11 +18,54 @@
+> >  		reg = <0x80000000 0x10000000>; /* 256 MB */
+> >  	};
+> >  
+> > +	am3358_pinmux: pinmux@44e10800 {
+> > +		userled_pins: pinmux_userled_pins {
+> > +			pinctrl-single,pins = <
+> > +				0x54 0x7	/* gpmc_a5.gpio1_21, OUTPUT | MODE7 */
+> > +				0x58 0x17	/* gpmc_a6.gpio1_22, OUTPUT_PULLUP | MODE7 */
+> > +				0x5c 0x7	/* gpmc_a7.gpio1_23, OUTPUT | MODE7 */
+> > +				0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
+> > +			>;
+> > +		};
+> > +	};
+> > +
+> 
+> Just checking.. am3358_pinmux should be am33xx_pinmux in this patch
+> too as discussed.
+> 
 
-Regards,
-Shawn
+Yes, this is also changed in v7.
 
-diff --git a/arch/arm/mach-tegra/cpu-tegra.c b/arch/arm/mach-tegra/cpu-tegra.c
-index ceb52db..a3bbdc9 100644
---- a/arch/arm/mach-tegra/cpu-tegra.c
-+++ b/arch/arm/mach-tegra/cpu-tegra.c
-@@ -247,5 +247,5 @@ static void __exit tegra_cpufreq_exit(void)
- MODULE_AUTHOR("Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>");
- MODULE_DESCRIPTION("cpufreq driver for Nvidia Tegra2");
- MODULE_LICENSE("GPL");
--module_init(tegra_cpufreq_init);
-+late_init(tegra_cpufreq_init);
- module_exit(tegra_cpufreq_exit);
+Thanks
+AnilKumar
