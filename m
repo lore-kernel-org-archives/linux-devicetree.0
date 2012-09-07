@@ -1,64 +1,64 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH Resend 1/2] ARM: dts: Use active low flag for gpio-keys on Origen
-Date: Fri,  7 Sep 2012 14:36:09 +0530
-Message-ID: <1347008770-11421-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, sachin.kamat@linaro.org, kgene.kim@samsung.com
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Fri, 7 Sep 2012 09:10:50 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+ <CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Domenico Andreoli <cavokz@gmail.com>
+Cc: "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit: f447ed8b31d (gpio: samsung: add flags specifier to
-device-tree binding) adds a flag to represent active low state
-for gpio line. Since gpio-keys on Origen board are active low,
-using this flag to represent the same.
+Hi Domenico,
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-Reviewed-by: Thomas Abraham <thomas.abraham@linaro.org>
----
- arch/arm/boot/dts/exynos4210-origen.dts |   10 +++++-----
- 1 files changed, 5 insertions(+), 5 deletions(-)
+On Fri, Sep 07, 2012 at 14:18:39, Domenico Andreoli wrote:
+> On Sat, Sep 1, 2012 at 10:16 AM, AnilKumar Ch <anilkumar@ti.com> wrote:
+> > Adopt pinctrl support to leds-gpio driver based on leds-gpio
+> > device pointer, pinctrl driver configure SoC pins to GPIO
+> > mode according to definitions provided in .dts file.
+> 
+> Shouldn't be the interaction with the pinctrl layer left to gpiolib?
+> 
 
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index 0c49caa..c37edf0 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -62,31 +62,31 @@
- 
- 		up {
- 			label = "Up";
--			gpios = <&gpx2 0 0 0 2>;
-+			gpios = <&gpx2 0 0 0x10000 2>;
- 			linux,code = <103>;
- 		};
- 
- 		down {
- 			label = "Down";
--			gpios = <&gpx2 1 0 0 2>;
-+			gpios = <&gpx2 1 0 0x10000 2>;
- 			linux,code = <108>;
- 		};
- 
- 		back {
- 			label = "Back";
--			gpios = <&gpx1 7 0 0 2>;
-+			gpios = <&gpx1 7 0 0x10000 2>;
- 			linux,code = <158>;
- 		};
- 
- 		home {
- 			label = "Home";
--			gpios = <&gpx1 6 0 0 2>;
-+			gpios = <&gpx1 6 0 0x10000 2>;
- 			linux,code = <102>;
- 		};
- 
- 		menu {
- 			label = "Menu";
--			gpios = <&gpx1 5 0 0 2>;
-+			gpios = <&gpx1 5 0 0x10000 2>;
- 			linux,code = <139>;
- 		};
- 	};
--- 
-1.7.4.1
+No, these gpio's are configured specifically for user leds.
+
+So, leds-gpio driver should have this call, because these gpio
+pins are used by leds-gpio driver.
+
++       am33xx_pinmux: pinmux@44e10800 {
++               userled_pins: pinmux_userled_pins {
++                       pinctrl-single,pins = <
++                               0x54 0x7       
++                               0x58 0x17       
++                               0x5c 0x7        
++                               0x60 0x17       
++                       >;
++               };
++       };
++
+
+[...]
+
++               leds {
++                       compatible = "gpio-leds";
++                       pinctrl-names = "default";
++                       pinctrl-0 = <&userled_pins>;
+                                      ^^^^^^^^^^^^
+
+This devm_pinctrl_get_select_default() call in leds-gpio driver
+will internally take userled_pins node and configure those pins
+according to the above definitions.
+
+Lets take gpio-keypad driver, in that case we have to configure
+pins as INPUT mode (generic gpio driver might not know what
+the end usecase is) and this leds case we configure as OUTPUT
+mode.
+
+Thanks
+AnilKumar
