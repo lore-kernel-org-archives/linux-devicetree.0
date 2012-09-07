@@ -1,62 +1,50 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 08/10] of/address: Handle #address-cells > 2 specially
-Date: Fri, 07 Sep 2012 11:32:50 -0500
-Message-ID: <504A21B2.3030507@gmail.com>
-References: <1343332512-28762-1-git-send-email-thierry.reding@avionic-design.de> <1343332512-28762-9-git-send-email-thierry.reding@avionic-design.de> <50183DA3.8020308@gmail.com> <20120815200655.GC12870@avionic-0098.mockup.avionic-design.de> <504A1FA4.9040302@wwwdotorg.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Fri, 7 Sep 2012 09:35:42 -0700
+Message-ID: <20120907163542.GU1303@atomide.com>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+ <CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
+ <20120907110251.GA7968@glitch>
+ <331ABD5ECB02734CA317220B2BBEABC13EA29BF3@DBDE01.ent.ti.com>
+ <20120907160025.GB14330@glitch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <504A1FA4.9040302-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120907160025.GB14330@glitch>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>, "bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-68IGFXMjmZ7QT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/2012 11:24 AM, Stephen Warren wrote:
-> On 08/15/2012 02:06 PM, Thierry Reding wrote:
->> On Tue, Jul 31, 2012 at 03:18:43PM -0500, Rob Herring wrote:
->>> On 07/26/2012 02:55 PM, Thierry Reding wrote:
->>>> When a bus specifies #address-cells > 2, of_bus_default_map()
->>>> now assumes that the mapping isn't for a physical address but
->>>> rather an identifier that needs to match exactly.
->>>>
->>>> This is required by bindings that use multiple cells to
->>>> translate a resource to the parent bus (device index, type,
->>>> ...).
->>>>
->>>> See here for the discussion:
->>>>
->>>> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-June/016577.html
->>>>
->>>>
->>>>
-> Originally-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>>> Signed-off-by: Thierry Reding
->>>> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
->>>
->>> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> Hi Rob,
->>
->> Were you going to take this through your DT tree? I'm trying to
->> reduce the number of patches in this series to make it more
->> manageable and split it into smaller chunks. There are also a
->> couple of issues that need to be resolved so I don't know if I can
->> get the whole series into shape for 3.7.
->>
->> However if you don't think this patch is useful to be applied by
->> itself I can also carry it until the complete series is ready.
+* Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [120907 09:01]:
 > 
-> Rob,
+> So is this the preferred way to attach gpio users to gpio provides in DT
+> whenever gpios are muxed?
 > 
-> Are you able to take this patch now for 3.7, or should it be held off
-> until the Tegra PCIe driver is re-written and requires this
-> functionality (in which case I'd expect to take this through the Tegra
-> tree at that time).
-> 
-> For reference, it's at http://patchwork.ozlabs.org/patch/173497/.
+> I would well see these info hidden in the gpio controller so, at least
+> for gpios, no magic numbers would be required in the DT (except the gpio
+> number relative to the owning controller).
 
-Applied for 3.7.
+In the pure GPIO pins only case it could be all done in the GPIO controller,
+but it's probably best to have the pins muxed by the drivers using them.
 
-Rob
+Some drivers doing runtime PM may need to dynamically toggle the pins
+for idle mode to stop leakage, enable wakeup events for rx pins etc.
+Probably no need for that in the gpio leds case, but it would be confusing
+to have some pins claimed by the GPIO driver and some by the drivers
+using the pins.
+
+Regards,
+
+Tony
