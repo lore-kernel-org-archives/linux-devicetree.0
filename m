@@ -1,61 +1,50 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] powerpc/powernv: move the dereference below the NULL test
-Date: Fri, 7 Sep 2012 14:45:55 +0800
-Message-ID: <CAPgLHd_w9B8sHg9i9msFLx8FVBypqTtDEVOt1-VBNTW4zwHTMQ@mail.gmail.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] usb: gadget: at91_udc: move the dereference below the NULL test
+Date: Fri, 7 Sep 2012 14:54:25 +0800
+Message-ID: <CAPgLHd9qouNBdAfoDhP8qc4T4PrcPS=v6u9M+20rv0oyt34e5Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: benh@kernel.crashing.org, paulus@samba.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
 The dereference should be moved below the NULL test.
 
 spatch with a semantic match is used to found this.
 (http://coccinelle.lip6.fr/)
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 ---
- arch/powerpc/platforms/powernv/pci.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/at91_udc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-index be3cfc5..4ba89c1 100644
---- a/arch/powerpc/platforms/powernv/pci.c
-+++ b/arch/powerpc/platforms/powernv/pci.c
-@@ -287,13 +287,15 @@ static int pnv_pci_read_config(struct pci_bus *bus,
- 			       int where, int size, u32 *val)
+diff --git a/drivers/usb/gadget/at91_udc.c b/drivers/usb/gadget/at91_udc.c
+index c9e66df..d95f6b0 100644
+--- a/drivers/usb/gadget/at91_udc.c
++++ b/drivers/usb/gadget/at91_udc.c
+@@ -469,7 +469,7 @@ static int at91_ep_enable(struct usb_ep *_ep,
+ 				const struct usb_endpoint_descriptor *desc)
  {
- 	struct pci_controller *hose = pci_bus_to_host(bus);
--	struct pnv_phb *phb = hose->private_data;
-+	struct pnv_phb *phb;
- 	u32 bdfn = (((uint64_t)bus->number) << 8) | devfn;
- 	s64 rc;
+ 	struct at91_ep	*ep = container_of(_ep, struct at91_ep, ep);
+-	struct at91_udc	*udc = ep->udc;
++	struct at91_udc *udc;
+ 	u16		maxpacket;
+ 	u32		tmp;
+ 	unsigned long	flags;
+@@ -484,6 +484,7 @@ static int at91_ep_enable(struct usb_ep *_ep,
+ 		return -EINVAL;
+ 	}
  
- 	if (hose == NULL)
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
-+	phb = hose->private_data;
-+
- 	switch (size) {
- 	case 1: {
- 		u8 v8;
-@@ -331,12 +333,14 @@ static int pnv_pci_write_config(struct pci_bus *bus,
- 				int where, int size, u32 val)
- {
- 	struct pci_controller *hose = pci_bus_to_host(bus);
--	struct pnv_phb *phb = hose->private_data;
-+	struct pnv_phb *phb;
- 	u32 bdfn = (((uint64_t)bus->number) << 8) | devfn;
- 
- 	if (hose == NULL)
- 		return PCIBIOS_DEVICE_NOT_FOUND;
- 
-+	phb = hose->private_data;
-+
- 	cfg_dbg("pnv_pci_write_config bus: %x devfn: %x +%x/%x -> %08x\n",
- 		bus->number, devfn, where, size, val);
- 	switch (size) {
++	udc = ep->udc;
+ 	if (!udc->driver || udc->gadget.speed == USB_SPEED_UNKNOWN) {
+ 		DBG("bogus device state\n");
+ 		return -ESHUTDOWN;
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
