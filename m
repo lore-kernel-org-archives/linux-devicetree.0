@@ -1,64 +1,35 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Fri, 7 Sep 2012 09:10:50 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
- <CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+From: "yongjun_wei@trendmicro.com.cn" <yongjun_wei@trendmicro.com.cn>
+Subject: RE: [PATCH] block: move the dereference below the NULL test
+Date: Fri, 7 Sep 2012 08:47:16 +0000
+Message-ID: <A360F954C61C69449463B060666371121CDCB094@CDCEXMBX01.tw.trendnet.org>
+References: <CAPgLHd_T_ApNEibN_VYHzs9fA9YahFwjkfj2T4+UYtPdhzC3zA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+Content-Type: text/plain;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd_T_ApNEibN_VYHzs9fA9YahFwjkfj2T4+UYtPdhzC3zA@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Domenico Andreoli <cavokz@gmail.com>
-Cc: "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Domenico,
-
-On Fri, Sep 07, 2012 at 14:18:39, Domenico Andreoli wrote:
-> On Sat, Sep 1, 2012 at 10:16 AM, AnilKumar Ch <anilkumar@ti.com> wrote:
-> > Adopt pinctrl support to leds-gpio driver based on leds-gpio
-> > device pointer, pinctrl driver configure SoC pins to GPIO
-> > mode according to definitions provided in .dts file.
-> 
-> Shouldn't be the interaction with the pinctrl layer left to gpiolib?
-> 
-
-No, these gpio's are configured specifically for user leds.
-
-So, leds-gpio driver should have this call, because these gpio
-pins are used by leds-gpio driver.
-
-+       am33xx_pinmux: pinmux@44e10800 {
-+               userled_pins: pinmux_userled_pins {
-+                       pinctrl-single,pins = <
-+                               0x54 0x7       
-+                               0x58 0x17       
-+                               0x5c 0x7        
-+                               0x60 0x17       
-+                       >;
-+               };
-+       };
-+
-
-[...]
-
-+               leds {
-+                       compatible = "gpio-leds";
-+                       pinctrl-names = "default";
-+                       pinctrl-0 = <&userled_pins>;
-                                      ^^^^^^^^^^^^
-
-This devm_pinctrl_get_select_default() call in leds-gpio driver
-will internally take userled_pins node and configure those pins
-according to the above definitions.
-
-Lets take gpio-keypad driver, in that case we have to configure
-pins as INPUT mode (generic gpio driver might not know what
-the end usecase is) and this leds case we configure as OUTPUT
-mode.
-
-Thanks
-AnilKumar
+U29ycnksIEkgc2VlIHRoZSBwYXRjaCBmaXggdGhpcyBpc3N1ZSBoYXMgYWxyZWFkeSBleGlzdHMg
+aW4gdGhlIG1haWxsaXN0LA0KcGxlYXNlIGlnbm9yZSBpdCwgdGhhbmtzLg0KDQotLS0tLU9yaWdp
+bmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogV2VpIFlvbmdqdW4gW21haWx0bzp3ZWl5ai5sa0BnbWFp
+bC5jb21dIA0KU2VudDogMjAxMsTqOdTCN8jVIDE1OjA0DQpUbzogZ3JhbnQubGlrZWx5QHNlY3Jl
+dGxhYi5jYTsgcm9iLmhlcnJpbmdAY2FseGVkYS5jb20NCkNjOiBZb25nanVuIFdlaSAoUkQtQ04p
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
+b3psYWJzLm9yZw0KU3ViamVjdDogW1BBVENIXSBibG9jazogbW92ZSB0aGUgZGVyZWZlcmVuY2Ug
+YmVsb3cgdGhlIE5VTEwgdGVzdA0KDQpGcm9tOiBXZWkgWW9uZ2p1biA8eW9uZ2p1bl93ZWlAdHJl
+bmRtaWNyby5jb20uY24+DQoNClRoZSBkZXJlZmVyZW5jZSBzaG91bGQgYmUgbW92ZWQgYmVsb3cg
+dGhlIE5VTEwgdGVzdC4NCg0Kc3BhdGNoIHdpdGggYSBzZW1hbnRpYyBtYXRjaCBpcyB1c2VkIHRv
+IGZvdW5kIHRoaXMuDQooaHR0cDovL2NvY2NpbmVsbGUubGlwNi5mci8pDQoNCg0KDQpUUkVORCBN
+SUNSTyBFTUFJTCBOT1RJQ0UNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlbWFp
+bCBhbmQgYW55IGF0dGFjaG1lbnRzIGlzIGNvbmZpZGVudGlhbCBhbmQgbWF5IGJlIHN1YmplY3Qg
+dG8gY29weXJpZ2h0IG9yIG90aGVyIGludGVsbGVjdHVhbCBwcm9wZXJ0eSBwcm90ZWN0aW9uLiBJ
+ZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCB5b3UgYXJlIG5vdCBhdXRob3Jp
+emVkIHRvIHVzZSBvciBkaXNjbG9zZSB0aGlzIGluZm9ybWF0aW9uLCBhbmQgd2UgcmVxdWVzdCB0
+aGF0IHlvdSBub3RpZnkgdXMgYnkgcmVwbHkgbWFpbCBvciB0ZWxlcGhvbmUgYW5kIGRlbGV0ZSB0
+aGUgb3JpZ2luYWwgbWVzc2FnZSBmcm9tIHlvdXIgbWFpbCBzeXN0ZW0u
