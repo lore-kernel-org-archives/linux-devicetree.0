@@ -1,23 +1,22 @@
 From: Benoit Cousson <b-cousson@ti.com>
 Subject: Re: [RFC PATCH] ARM: OMAP2+: omap-device: Do not overwrite resources
  allocated by OF layer
-Date: Fri, 7 Sep 2012 19:47:37 +0200
-Message-ID: <504A3339.1020506@ti.com>
+Date: Fri, 7 Sep 2012 20:03:43 +0200
+Message-ID: <504A36FF.3020303@ti.com>
 References: <1346233691-10294-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1346233691-10294-1-git-send-email-hvaibhav@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Vaibhav Hiremath <hvaibhav@ti.com>
 Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Vaibhav,
 
-The following patch is hacing some checkpatch issues. 
-
+The following patch is having some checkpatch issues.
 CHECK: Alignment should match open parenthesis
 #169: FILE: arch/arm/plat-omap/omap_device.c:591:
 +			dev_dbg(&pdev->dev, "%s(): resources already allocated %d\n",
@@ -41,13 +40,16 @@ CHECK: Alignment should match open parenthesis
 total: 0 errors, 0 warnings, 4 checks, 130 lines checked
 
 
-Since I was in a nice mood, because the week-end is almost there, I fixed them myself.
+Since I was in a nice mood, because the week-end is almost there, I
+fixed them myself.
 
-Please note that I had to rename the API becasue it was way too long to do a proper alignement.
+Please note that I had to rename the API becasue it was way too long to
+do a proper alignement.
 
  omap_device_fill_dma_resources -> _od_fill_dma_resources
 
-In fact I realized that some private APIs should probably be renamed as well like that for
+In fact I realized that some private APIs should probably be renamed as
+well like that for
 consistency.
 
 Just let me know if you have any issue with that version.
@@ -59,7 +61,8 @@ Benoit
 >From b82b04e8eb27abe0cfe9cd7bf4fee8bb1bb9b013 Mon Sep 17 00:00:00 2001
 From: Vaibhav Hiremath <hvaibhav@ti.com>
 Date: Wed, 29 Aug 2012 15:18:11 +0530
-Subject: [PATCH] ARM: OMAP: omap_device: Do not overwrite resources allocated by OF layer
+Subject: [PATCH] ARM: OMAP: omap_device: Do not overwrite resources
+allocated by OF layer
 
 With the new devices (like, AM33XX and OMAP5) we now only support
 DT boot mode of operation and now it is the time to start killing
@@ -89,17 +92,19 @@ Signed-off-by: Benoit Cousson <b-cousson@ti.com>
 ---
  arch/arm/mach-omap2/omap_hwmod.c             |   27 ++++++++++
  arch/arm/plat-omap/include/plat/omap_hwmod.h |    1 +
- arch/arm/plat-omap/omap_device.c             |   71 +++++++++++++++++++++----
+ arch/arm/plat-omap/omap_device.c             |   71
++++++++++++++++++++++----
  3 files changed, 87 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+diff --git a/arch/arm/mach-omap2/omap_hwmod.c
+b/arch/arm/mach-omap2/omap_hwmod.c
 index 6ca8e51..7768804 100644
 --- a/arch/arm/mach-omap2/omap_hwmod.c
 +++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -3158,6 +3158,33 @@ int omap_hwmod_fill_resources(struct omap_hwmod *oh, struct resource *res)
+@@ -3158,6 +3158,33 @@ int omap_hwmod_fill_resources(struct omap_hwmod
+*oh, struct resource *res)
  }
- 
- /**
+  /**
 + * omap_hwmod_fill_dma_resources - fill struct resource array with dma data
 + * @oh: struct omap_hwmod *
 + * @res: pointer to the array of struct resource to fill
@@ -109,7 +114,8 @@ index 6ca8e51..7768804 100644
 + * omap_devices.  See also omap_hwmod_count_resources().  Returns the
 + * number of array elements filled.
 + */
-+int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct resource *res)
++int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct
+resource *res)
 +{
 +	int i, sdma_reqs_cnt;
 +	int r = 0;
@@ -130,27 +136,30 @@ index 6ca8e51..7768804 100644
   * omap_hwmod_get_resource_byname - fetch IP block integration data by name
   * @oh: struct omap_hwmod * to operate on
   * @type: one of the IORESOURCE_* constants from include/linux/ioport.h
-diff --git a/arch/arm/plat-omap/include/plat/omap_hwmod.h b/arch/arm/plat-omap/include/plat/omap_hwmod.h
+diff --git a/arch/arm/plat-omap/include/plat/omap_hwmod.h
+b/arch/arm/plat-omap/include/plat/omap_hwmod.h
 index 6132972..5857b9c 100644
 --- a/arch/arm/plat-omap/include/plat/omap_hwmod.h
 +++ b/arch/arm/plat-omap/include/plat/omap_hwmod.h
 @@ -615,6 +615,7 @@ int omap_hwmod_softreset(struct omap_hwmod *oh);
- 
- int omap_hwmod_count_resources(struct omap_hwmod *oh);
+  int omap_hwmod_count_resources(struct omap_hwmod *oh);
  int omap_hwmod_fill_resources(struct omap_hwmod *oh, struct resource *res);
-+int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct resource *res);
- int omap_hwmod_get_resource_byname(struct omap_hwmod *oh, unsigned int type,
++int omap_hwmod_fill_dma_resources(struct omap_hwmod *oh, struct
+resource *res);
+ int omap_hwmod_get_resource_byname(struct omap_hwmod *oh, unsigned int
+type,
  				   const char *name, struct resource *res);
- 
-diff --git a/arch/arm/plat-omap/omap_device.c b/arch/arm/plat-omap/omap_device.c
+ diff --git a/arch/arm/plat-omap/omap_device.c
+b/arch/arm/plat-omap/omap_device.c
 index ff57b5a..6f5c580 100644
 --- a/arch/arm/plat-omap/omap_device.c
 +++ b/arch/arm/plat-omap/omap_device.c
-@@ -494,6 +494,33 @@ static int omap_device_fill_resources(struct omap_device *od,
+@@ -494,6 +494,33 @@ static int omap_device_fill_resources(struct
+omap_device *od,
  }
- 
- /**
-+ * _od_fill_dma_resources - fill in array of struct resource with dma resources
+  /**
++ * _od_fill_dma_resources - fill in array of struct resource with dma
+resources
 + * @od: struct omap_device *
 + * @res: pointer to an array of struct resource to be filled in
 + *
@@ -180,11 +189,11 @@ index ff57b5a..6f5c580 100644
   * omap_device_alloc - allocate an omap_device
   * @pdev: platform_device that will be included in this omap_device
   * @oh: ptr to the single omap_hwmod that backs this omap_device
-@@ -532,24 +559,44 @@ struct omap_device *omap_device_alloc(struct platform_device *pdev,
+@@ -532,24 +559,44 @@ struct omap_device *omap_device_alloc(struct
+platform_device *pdev,
  	od->hwmods = hwmods;
  	od->pdev = pdev;
- 
-+	res_count = omap_device_count_resources(od);
+ +	res_count = omap_device_count_resources(od);
  	/*
 -	 * HACK: Ideally the resources from DT should match, and hwmod
 -	 * should just add the missing ones. Since the name is not
@@ -216,8 +225,7 @@ index ff57b5a..6f5c580 100644
  		res = kzalloc(sizeof(struct resource) * res_count, GFP_KERNEL);
  		if (!res)
  			goto oda_exit3;
- 
--		omap_device_fill_resources(od, res);
+ -		omap_device_fill_resources(od, res);
 +		/*
 +		 * If pdev->num_resources > 0, then assume that,
 +		 * MEM and IRQ resources will only come from DT and only
@@ -234,8 +242,7 @@ index ff57b5a..6f5c580 100644
 +				__func__, res_count);
 +			omap_device_fill_resources(od, res);
 +		}
- 
- 		ret = platform_device_add_resources(pdev, res, res_count);
+  		ret = platform_device_add_resources(pdev, res, res_count);
  		kfree(res);
 -- 
 1.7.0.4
@@ -435,4 +442,3 @@ On 08/29/2012 11:48 AM, Vaibhav Hiremath wrote:
 > --
 > 1.7.0.4
 > 
-
