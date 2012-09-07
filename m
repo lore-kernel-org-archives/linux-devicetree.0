@@ -1,52 +1,71 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Fri, 7 Sep 2012 14:46:33 -0700
-Message-ID: <20120907214633.GO1303@atomide.com>
+Date: Fri, 7 Sep 2012 23:57:59 +0200
+Message-ID: <CACRpkdbz7CQtaj9e-1kcRVszpCSoqKz=19YT68sTMF9SOyWa8w@mail.gmail.com>
 References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
- <201209050513.08588.marex@denx.de>
- <20120905233416.GP1303@atomide.com>
- <201209060405.08997.marex@denx.de>
- <20120906174531.GX1303@atomide.com>
- <CACRpkdYgcYAFy7bBn3XNcrkSoCpeA8yNaa9LZNd4w33Zp3Jjnw@mail.gmail.com>
+	<CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+	<331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
+	<20120907110251.GA7968@glitch>
+	<331ABD5ECB02734CA317220B2BBEABC13EA29BF3@DBDE01.ent.ti.com>
+	<20120907160025.GB14330@glitch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYgcYAFy7bBn3XNcrkSoCpeA8yNaa9LZNd4w33Zp3Jjnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bryan Wu <bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120907160025.GB14330@glitch>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>, "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120907 14:40]:
-> On Thu, Sep 6, 2012 at 7:45 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> 
-> >> > The warning should be pinctrl related as the pinctrl drivers may not be
-> >> > device tree based drivers.
-> >>
-> >> Exactly my concern. Also the warning shouldnt be present on systems where
-> >> pinctrl is disabled.
-> >
-> > But pinctrl_get_select() returns 0 in include/linux/pinctrl/consumer.h if
-> > CONFIG_PINCTRL is not selected, so no warning is produced AFAIK ;)
-> 
-> This is correct, nothing to worry about.
-> 
-> The one troublesome case is if a pinctrl driver is present but not
-> being used, then you might need to call pinctrl_provide_dummies().
+On Fri, Sep 7, 2012 at 6:00 PM, Domenico Andreoli <cavokz@gmail.com> wrote:
+> On Fri, Sep 07, 2012 at 02:30:59PM +0000, AnilKumar, Chimata wrote:
 
-Thanks that's good to know.
+>> How can gpio driver knows that leds-gpio driver require
+>> these 4 pins?
+>
+> because leds-gpio requests each gpio (specified in the DT against a specific
+> gpio controller) before assuming it is available?  gpiolib then asks to
+> pinctrl if those pins are available for gpio and possibly reserve them
+> (configuring the mux, if necessary) for the device.
 
-Regards,
+So this is not an either-or situation but a both-and case.
 
-Tony
+So all muxing and configuration of pins can be handled by
+the pinctrl handle, and that may require setting up a single
+pinctrl function for every single pin, and that list can get long.
+But it works fine.
+
+In that case you don't write your pinctrl driver to do anything
+special with the GPIO callbacks, leave  the
+.gpio_request_enable(), .gpio_disable_free() and
+.gpio_set_direction() callbacks in the vtable undefined.
+
+If all you need to to is to multiplex the pins into GPIO mode,
+then the gpio_get() call on this driver *can* call through to
+pinctrl_request_gpio() which will in turn fall through to the
+above pinmux driver calls (.gpio_request_enable, etc).
+
+Likewise for pinctrl_free_gpio(), pinctrl_gpio_direction_input()
+and pinctrl_gpio_direction_output().
+
+But that's as far as it goes! The GPIO abstraction cannot
+call through to e.g. set some specific biasing on the pins
+(pull up etc). Doing that would require us to reimplement
+every interface that pinctrl already has again in the
+GPIO layer, which is not a good idea.
+
+So the pinctrl handle can be used for such config, and it
+can also be used for multiplexing if that is desired - if not
+done by the fall through functions pinctrl_gpio_*().
+
+You can use a combination of both too, Stephen patched
+pinctrl some time back so that a pin can be muxed for a
+certain function and used as GPIO at the same time, so
+these two are now orthogonal, it's a bit relaxed and gives some
+feeling of loss of control but was necessary for certain
+usecases. (For example we can snoop on a I2C pin using
+its corresponding GPIO registers in the U300...)
+
+There is some flexibility here, I hope it's not too confusing :-/
+
+Yours,
+Linus Walleij
