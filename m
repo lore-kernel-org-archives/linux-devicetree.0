@@ -1,71 +1,38 @@
 From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Fri, 7 Sep 2012 23:57:59 +0200
-Message-ID: <CACRpkdbz7CQtaj9e-1kcRVszpCSoqKz=19YT68sTMF9SOyWa8w@mail.gmail.com>
+Date: Fri, 7 Sep 2012 23:59:23 +0200
+Message-ID: <CACRpkdZbyUFvYuou015ge+k8zroNtL9s9HFKsVC5OJV8NHEorg@mail.gmail.com>
 References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
 	<CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
 	<331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
 	<20120907110251.GA7968@glitch>
 	<331ABD5ECB02734CA317220B2BBEABC13EA29BF3@DBDE01.ent.ti.com>
 	<20120907160025.GB14330@glitch>
+	<20120907163542.GU1303@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120907160025.GB14330@glitch>
+In-Reply-To: <20120907163542.GU1303@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>, "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@wwwdotorg.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: "AnilKumar, Chimata" <anilkumar@ti.com>, "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 7, 2012 at 6:00 PM, Domenico Andreoli <cavokz@gmail.com> wrote:
-> On Fri, Sep 07, 2012 at 02:30:59PM +0000, AnilKumar, Chimata wrote:
+On Fri, Sep 7, 2012 at 6:35 PM, Tony Lindgren <tony@atomide.com> wrote:
 
->> How can gpio driver knows that leds-gpio driver require
->> these 4 pins?
->
-> because leds-gpio requests each gpio (specified in the DT against a specific
-> gpio controller) before assuming it is available?  gpiolib then asks to
-> pinctrl if those pins are available for gpio and possibly reserve them
-> (configuring the mux, if necessary) for the device.
+> In the pure GPIO pins only case it could be all done in the GPIO controller,
+> but it's probably best to have the pins muxed by the drivers using them.
 
-So this is not an either-or situation but a both-and case.
+Yes, that's an easier way to say the long unreadable thing I just
+posted ...
 
-So all muxing and configuration of pins can be handled by
-the pinctrl handle, and that may require setting up a single
-pinctrl function for every single pin, and that list can get long.
-But it works fine.
+> Some drivers doing runtime PM may need to dynamically toggle the pins
+> for idle mode to stop leakage, enable wakeup events for rx pins etc.
+> Probably no need for that in the gpio leds case, but it would be confusing
+> to have some pins claimed by the GPIO driver and some by the drivers
+> using the pins.
 
-In that case you don't write your pinctrl driver to do anything
-special with the GPIO callbacks, leave  the
-.gpio_request_enable(), .gpio_disable_free() and
-.gpio_set_direction() callbacks in the vtable undefined.
-
-If all you need to to is to multiplex the pins into GPIO mode,
-then the gpio_get() call on this driver *can* call through to
-pinctrl_request_gpio() which will in turn fall through to the
-above pinmux driver calls (.gpio_request_enable, etc).
-
-Likewise for pinctrl_free_gpio(), pinctrl_gpio_direction_input()
-and pinctrl_gpio_direction_output().
-
-But that's as far as it goes! The GPIO abstraction cannot
-call through to e.g. set some specific biasing on the pins
-(pull up etc). Doing that would require us to reimplement
-every interface that pinctrl already has again in the
-GPIO layer, which is not a good idea.
-
-So the pinctrl handle can be used for such config, and it
-can also be used for multiplexing if that is desired - if not
-done by the fall through functions pinctrl_gpio_*().
-
-You can use a combination of both too, Stephen patched
-pinctrl some time back so that a pin can be muxed for a
-certain function and used as GPIO at the same time, so
-these two are now orthogonal, it's a bit relaxed and gives some
-feeling of loss of control but was necessary for certain
-usecases. (For example we can snoop on a I2C pin using
-its corresponding GPIO registers in the U300...)
-
-There is some flexibility here, I hope it's not too confusing :-/
+True. drivers/tty/serial/amba-pl011.c provides a simple example.
 
 Yours,
 Linus Walleij
