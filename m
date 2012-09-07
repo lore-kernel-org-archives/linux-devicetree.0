@@ -1,85 +1,66 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] powerpc/powernv: move the dereference below the NULL test
-Date: Fri, 07 Sep 2012 17:59:41 +1000
-Message-ID: <1347004781.2385.54.camel@pasglop>
-References: <CAPgLHd_w9B8sHg9i9msFLx8FVBypqTtDEVOt1-VBNTW4zwHTMQ@mail.gmail.com>
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Fri, 7 Sep 2012 07:59:55 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA2964C@DBDE01.ent.ti.com>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+ <201209060405.08997.marex@denx.de> <20120906174531.GX1303@atomide.com>
+ <201209070209.35379.marex@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPgLHd_w9B8sHg9i9msFLx8FVBypqTtDEVOt1-VBNTW4zwHTMQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201209070209.35379.marex@denx.de>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Marek Vasut <marex@denx.de>, Tony Lindgren <tony@atomide.com>
+Cc: Bryan Wu <bryan.wu@canonical.com>, Shawn Guo <shawn.guo@linaro.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2012-09-07 at 14:45 +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On Fri, Sep 07, 2012 at 05:39:35, Marek Vasut wrote:
+> Dear Tony Lindgren,
 > 
-> The dereference should be moved below the NULL test.
+> > * Marek Vasut <marex@denx.de> [120905 19:05]:
+> > > Hi Tony,
+> > > 
+> > > > * Marek Vasut <marex@denx.de> [120904 20:13]:
+> > > > > Dear Bryan Wu,
+> > > > > 
+> > > > > > On Sat, Sep 1, 2012 at 4:16 PM, AnilKumar Ch <anilkumar@ti.com> wrote:
+> > > > > > > Adopt pinctrl support to leds-gpio driver based on leds-gpio
+> > > > > > > device pointer, pinctrl driver configure SoC pins to GPIO
+> > > > > > > mode according to definitions provided in .dts file.
+> > > > > > 
+> > > > > > Thanks for this, actually Marek Vasut submitted a similar patch
+> > > > > > before. I'm pretty fine with this patch.
+> > > > > 
+> > > > > Thanks for submitting this actually ... I didn't have time to
+> > > > > properly investigate this.
+> > > > > 
+> > > > > > But without proper DT setting, it will also give us warning I
+> > > > > > think. or we can provide some dummy functions as a temp solution
+> > > > > > as Shawn pointed out before.
+> > > > > 
+> > > > > But this driver is also used on hardware that's not yet coverted to
+> > > > > DT, so I'd say dev_warn() if CONFIG_OF is enabled and otherwise
+> > > > > simply go on ? Actually, can we not skip whole this pinctrl thing if
+> > > > > CONFIG_OF is disabled? Actually (2), what's the relationship between
+> > > > > OF and pinctrl?
+> > > > 
+> > > > The warning should be pinctrl related as the pinctrl drivers may not be
+> > > > device tree based drivers.
+> > > 
+> > > Exactly my concern. Also the warning shouldnt be present on systems where
+> > > pinctrl is disabled.
+> > 
+> > But pinctrl_get_select() returns 0 in include/linux/pinctrl/consumer.h if
+> > CONFIG_PINCTRL is not selected, so no warning is produced AFAIK ;)
 > 
-> spatch with a semantic match is used to found this.
-> (http://coccinelle.lip6.fr/)
-
-I haven't applied this patch yet (there was a similar one recently from
-another semantic checker I believe) because that code is about to be
-deeply reworked (waiting for some dependencies to get in), so this will
-just make the patch harder to apply, and the stuff should never be NULL
-in the first place anyway.
-
-So let's leave that aside for a bit.
-
-Cheers,
-Ben.
-
-> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
-> ---
->  arch/powerpc/platforms/powernv/pci.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> Oh all right then.
 > 
-> diff --git a/arch/powerpc/platforms/powernv/pci.c b/arch/powerpc/platforms/powernv/pci.c
-> index be3cfc5..4ba89c1 100644
-> --- a/arch/powerpc/platforms/powernv/pci.c
-> +++ b/arch/powerpc/platforms/powernv/pci.c
-> @@ -287,13 +287,15 @@ static int pnv_pci_read_config(struct pci_bus *bus,
->  			       int where, int size, u32 *val)
->  {
->  	struct pci_controller *hose = pci_bus_to_host(bus);
-> -	struct pnv_phb *phb = hose->private_data;
-> +	struct pnv_phb *phb;
->  	u32 bdfn = (((uint64_t)bus->number) << 8) | devfn;
->  	s64 rc;
->  
->  	if (hose == NULL)
->  		return PCIBIOS_DEVICE_NOT_FOUND;
->  
-> +	phb = hose->private_data;
-> +
->  	switch (size) {
->  	case 1: {
->  		u8 v8;
-> @@ -331,12 +333,14 @@ static int pnv_pci_write_config(struct pci_bus *bus,
->  				int where, int size, u32 val)
->  {
->  	struct pci_controller *hose = pci_bus_to_host(bus);
-> -	struct pnv_phb *phb = hose->private_data;
-> +	struct pnv_phb *phb;
->  	u32 bdfn = (((uint64_t)bus->number) << 8) | devfn;
->  
->  	if (hose == NULL)
->  		return PCIBIOS_DEVICE_NOT_FOUND;
->  
-> +	phb = hose->private_data;
-> +
->  	cfg_dbg("pnv_pci_write_config bus: %x devfn: %x +%x/%x -> %08x\n",
->  		bus->number, devfn, where, size, val);
->  	switch (size) {
+
+Bryan,
+
+If this patch looks fine, can you queue this for 3.7?
+
+Thanks
+AnilKumar
