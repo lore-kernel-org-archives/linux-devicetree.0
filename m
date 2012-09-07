@@ -1,34 +1,29 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/5] arm/dts: Add pinctrl driver entries for omap2/3/4
-Date: Fri, 7 Sep 2012 10:10:47 +0200
-Message-ID: <CACRpkdZOJURpX=NqAOemKiOXvKQp5brUqpkB7YOdZvAosHD2eg@mail.gmail.com>
-References: <20120906185615.1172.23588.stgit@muffinssi.local>
-	<20120906185824.1172.95748.stgit@muffinssi.local>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v5 1/4] Runtime Interpreted Power Sequences
+Date: Fri, 7 Sep 2012 16:15:03 +0800
+Message-ID: <20120907081501.GA17749@opensource.wolfsonmicro.com>
+References: <1346412846-17102-1-git-send-email-acourbot@nvidia.com>
+ <1346412846-17102-2-git-send-email-acourbot@nvidia.com>
+ <201209061614.54022.heiko@sntech.de>
+ <1887927.1deN8M9siP@percival>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120906185824.1172.95748.stgit@muffinssi.local>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1887927.1deN8M9siP@percival>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alex Courbot <acourbot@nvidia.com>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 6, 2012 at 8:58 PM, Tony Lindgren <tony@atomide.com> wrote:
+On Fri, Sep 07, 2012 at 05:04:24PM +0900, Alex Courbot wrote:
 
-> Add pinctrl driver entries for omap2+. These all use
-> the generic pinctrl-single driver for the padconf
-> registers.
->
-> Note that as 2420 and 2430 have different padmux
-> registers, we now need to include omap2420.dtsi from
-> omap2420-h4.dts.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> If e.g. the power on sequence fails at step N (of M steps for that sequence), 
+> one could try playing the corresponding power off sequence (either completely 
+> of from step M - N), but then again we cannot rely on sequences to be 
+> perfectly symetrical. Maybe this is more something for the calling driver to 
+> check for and control?
 
-FWIW:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+That had been my thought too - depending on what the sequence is for it
+may be that the corrective action is something very different to
+reversing the sequence, for example a device reset may be required.
