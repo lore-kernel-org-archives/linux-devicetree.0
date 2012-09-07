@@ -1,67 +1,81 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 0/2] gpio-twl4030: add new device tree properties
-Date: Fri, 7 Sep 2012 10:55:43 +0200
-Message-ID: <5049B68F.4040003@ti.com>
-References: <1346831186-29947-1-git-send-email-florian.vaussard@epfl.ch> <50476496.7050107@ti.com> <20120906205123.GL1303@atomide.com>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v5 1/4] Runtime Interpreted Power Sequences
+Date: Fri, 7 Sep 2012 11:08:41 +0200
+Message-ID: <201209071108.42083.heiko@sntech.de>
+References: <1346412846-17102-1-git-send-email-acourbot@nvidia.com> <201209061614.54022.heiko@sntech.de> <1887927.1deN8M9siP@percival>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120906205123.GL1303@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Florian Vaussard <florian.vaussard@epfl.ch>, Linus Walleij <linus.walleij@linaro.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Vaibhav Hiremath <hvaibhav@ti.com>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1887927.1deN8M9siP@percival>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alex Courbot <acourbot@nvidia.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2012 10:51 PM, Tony Lindgren wrote:
-> * Benoit Cousson <b-cousson@ti.com> [120905 07:42]:
->> Hi Florian,
->>
->> On 09/05/2012 09:46 AM, Florian Vaussard wrote:
->>> Hello,
->>>
->>> A number of platform data are missing when using twl4030/gpio from a
->>> device tree. This patchset adds the missing properties, updates the 
->>> documentation with the new bindings, and updates existing device trees.
->>> It mainly enables LEDA and LEDB outputs, as well as pullups /
->>> pulldowns on GPIOs.
->>>
->>> The 1st patch changes the device driver and updates the documentation.
->>> The 2nd patch updates the device trees for BeagleBoard and omap3-evm.
->>>
->>> Changes since v1: 
->>> - Patches on driver and documentation merged into the same patch
->>> - Put device trees' values in hexadecimal
->>> - Handle bool property using of_property_read_bool()
->>> - Prefix the patches with the correct convention
->>
->> Thanks for the update.
->>
->>> Tested on Gumstix Overo. V1 was tested on omap3-evm by Vaibhav Hiremath.
->>
->> I've just tested it on beagle xM. I can play with D12 led using:
->>
->> echo 255 > /sys/class/leds/beagleboard\:\:pmu_stat/brightness
->>
->> Tested-by: Benoit Cousson <b-cousson@ti.com>
->>
->>
->>> BTW: who will merge this?
->>
->> Since Linus already acked it, Tony can merge it.
->>
->>
->> Tony,
->>
->> I can add that series in my DTS series for 3.7 if you want.
+Am Freitag, 7. September 2012, 10:04:24 schrieb Alex Courbot:
+> > For your power_seq_run function you write that it simply returns an error
+> > code on failure and looking through it I also just found the error return
+> > statement. This would leave a device half turned on.
+> > 
+> > So I'm wondering, if it shouldn't turn off all the things it turned on
+> > until the step that produced the error. All your possible step types
+> > (execpt the delay) are booleans, so it should be possible to simply
+> > negate them when backtracking through the previous steps.
 > 
-> Yes please do thanks.
+> Indeed, I think you raised an important point. Right now all step types are
+> invertible, but we cannot rely on that statement to be true forever. For
+> instance, one short-term improvement will be to allow finer regulator
+> control, like voltage setting. In this case, how can we go back to the
+> initial state without recording it?
+>
+> If e.g. the power on sequence fails at step N (of M steps for that
+> sequence), one could try playing the corresponding power off sequence
+> (either completely of from step M - N), but then again we cannot rely on
+> sequences to be perfectly symetrical. Maybe this is more something for the
+> calling driver to check for and control?
 
-On top of that series, I realized that beagle was missing the other
-LEDs. So I've just posted the support for the two missing ones.
+Am Freitag, 7. September 2012, 10:15:03 schrieb Mark Brown:
+> On Fri, Sep 07, 2012 at 05:04:24PM +0900, Alex Courbot wrote:
+> > If e.g. the power on sequence fails at step N (of M steps for that
+> > sequence), one could try playing the corresponding power off sequence
+> > (either completely of from step M - N), but then again we cannot rely on
+> > sequences to be perfectly symetrical. Maybe this is more something for
+> > the calling driver to check for and control?
+> 
+> That had been my thought too - depending on what the sequence is for it
+> may be that the corrective action is something very different to
+> reversing the sequence, for example a device reset may be required.
 
-[PATCH] ARM: dts: omap3-beagle: Add heartbeat and mmc LEDs support
 
-Regards,
-Benoit
+If I understood the description correctly, the power sequence should be 
+transparent to the driver, as it implements board specific actions and 
+shouldn't bother the driver with it to much. Therefore my thoughts went along 
+the lines how gpio_request_array handles this, always producing a sane state 
+at the end.
 
+Recording the previous state, could be done by making a copy of the current 
+sequence, and just noting the previous values (including voltages etc) in the 
+respective entries. And in the error case running this new sequence from the 
+error point instead to power down again.
+
+
+As both Alex and Mark wrote, reversing the sequence might be the action of 
+choice only for some devices, but others might need to run a completely 
+different powerdown sequence and still others would need special handling.
+
+Would it be possible to encode this in the sequence definition, something like
+	on-error = "reverse"
+
+	on-error = "sequence"
+	error-seq = <&other_sequence>
+
+	on-error = "driver"
+with better names and types of course.
+
+This would keep the power sequence transparent to most drivers and only the 
+real esoteric ones would need to do their special handling on their own.
+
+
+Heiko
