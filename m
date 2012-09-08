@@ -1,55 +1,86 @@
-From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Sat, 8 Sep 2012 11:51:00 -0600
-Message-ID: <CAErSpo42AME4nJqdVk9cC2EcTfu96r+yxmmOB=hXNi6jh-c+XA@mail.gmail.com>
-References: <50201E1D.5060200@wwwdotorg.org> <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de>
- <50294BCA.1070807@wwwdotorg.org> <CAErSpo7og1XgOSv_mFCQ=hP7pq0j3gXWh2QFL2wBJjz7kcAq=g@mail.gmail.com>
- <502AA96B.2050709@wwwdotorg.org> <20120814195834.GA10431@avionic-0098.mockup.avionic-design.de>
- <CAErSpo4Bm_Ryx=OK+svjqAwD4N8v0vrheLVdc-N1ijx8i_-N3w@mail.gmail.com>
- <502AD82F.3080702@wwwdotorg.org> <502AE485.8060307@wwwdotorg.org>
- <504A848B.1090703@wwwdotorg.org> <20120908000430.GF13739@n2100.arm.linux.org.uk>
+From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Sun, 9 Sep 2012 01:44:35 +0200
+Message-ID: <20120908234435.GA13519@glitch>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+ <CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
+ <20120907110251.GA7968@glitch>
+ <331ABD5ECB02734CA317220B2BBEABC13EA29BF3@DBDE01.ent.ti.com>
+ <20120907160025.GB14330@glitch>
+ <CACRpkdbz7CQtaj9e-1kcRVszpCSoqKz=19YT68sTMF9SOyWa8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120908000430.GF13739-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbz7CQtaj9e-1kcRVszpCSoqKz=19YT68sTMF9SOyWa8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-68IGFXMjmZ7QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 7, 2012 at 6:04 PM, Russell King - ARM Linux
-<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Fri, Sep 07, 2012 at 05:34:35PM -0600, Stephen Warren wrote:
->> I guess it's a pretty basic premise of the current PCI code that all the
->> PCI scanning happens well before any device drivers are registered,
->> which in turn means that device_add() doesn't trigger the device's
->> probe() until much later, after all the fixups and resource assignments
->> are done?
+On Fri, Sep 07, 2012 at 11:57:59PM +0200, Linus Walleij wrote:
+> On Fri, Sep 7, 2012 at 6:00 PM, Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Fri, Sep 07, 2012 at 02:30:59PM +0000, AnilKumar, Chimata wrote:
+> 
+> >> How can gpio driver knows that leds-gpio driver require
+> >> these 4 pins?
+> >
+> > because leds-gpio requests each gpio (specified in the DT against a specific
+> > gpio controller) before assuming it is available?  gpiolib then asks to
+> > pinctrl if those pins are available for gpio and possibly reserve them
+> > (configuring the mux, if necessary) for the device.
+> 
+> So this is not an either-or situation but a both-and case.
 >
-> Are you saying that the PCI layer is again screwed up after all my
-> hard work several years ago to ensure that PCI devices are properly
-> setup _before_ they're made available to the PCI drivers then?  That
-> was around the time I was looking at Cardbus stuff, ensuring that that
-> worked with the same guarantees.
+...
+> 
+> If all you need to to is to multiplex the pins into GPIO mode,
+> then the gpio_get() call on this driver *can* call through to
+> pinctrl_request_gpio() which will in turn fall through to the
+> above pinmux driver calls (.gpio_request_enable, etc).
+
+So if the GPIO driver doesn't coordinate with the pinctrl driver, it's
+all left to the GPIO user to configure the pin before using it, right?
+
+I can understand the concerns of Tony, whether a pin must be requested
+or not before the gpio then depends on the GPIO driver implementation,
+which may or may not call through the pinctrl layer, isn't it?.
+
+> But that's as far as it goes! The GPIO abstraction cannot
+> call through to e.g. set some specific biasing on the pins
+> (pull up etc). Doing that would require us to reimplement
+> every interface that pinctrl already has again in the
+> GPIO layer, which is not a good idea.
+
+Yes, clear. Never meant that, I thought that the pinctrl was anyway
+available for stuff not modeled by the GPIO layer, as you say below.
+
+> So the pinctrl handle can be used for such config, and it
+> can also be used for multiplexing if that is desired - if not
+> done by the fall through functions pinctrl_gpio_*().
+> 
+> You can use a combination of both too, Stephen patched
+> pinctrl some time back so that a pin can be muxed for a
+> certain function and used as GPIO at the same time, so
+> these two are now orthogonal, it's a bit relaxed and gives some
+> feeling of loss of control but was necessary for certain
+> usecases. (For example we can snoop on a I2C pin using
+> its corresponding GPIO registers in the U300...)
 >
-> Not amused.
->
-> What is wrong with the "probe devices, apply fixups, setup resources,
-> apply more fixups, publish" process that it's had to be yet again
-> broken?
+> There is some flexibility here, I hope it's not too confusing :-/
 
-It seems that there are some bugs in the PCI layer, no doubt
-introduced after all your hard work.  We'll do our best to fix them.
+Thank you for clarifying :)
 
-The particular issue of pci_fixup_irqs() has been on my list for a
-while, and we talked about it at the recent PCI mini-summit.  It's
-clearly broken that we do this with for_each_pci_dev() once at
-boot-time because that does nothing for hot-added devices.  It's also
-broken that it is called after device_add() because the core shouldn't
-touch the device after it's available to drivers.
-
-This should get fixed reasonably soon, probably not in v3.6, but
-hopefully in v3.7.  It's not completely trivial because many arches
-have the same problem, and we need to fix all of them.
-
-Bjorn
+Regards,
+Domenico
