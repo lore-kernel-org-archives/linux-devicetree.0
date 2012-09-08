@@ -1,14 +1,15 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH Resend 1/2] ARM: dts: Use active low flag for gpio-keys on
+Subject: RE: [PATCH Resend 2/2] ARM: dts: Add heartbeat gpio-leds support to
  Origen
-Date: Sat, 08 Sep 2012 11:30:48 +0900
-Message-ID: <24d601cd8d69$f4f3e700$dedbb500$%kim@samsung.com>
+Date: Sat, 08 Sep 2012 11:31:12 +0900
+Message-ID: <24d701cd8d6a$03804480$0a80cd80$%kim@samsung.com>
 References: <1347008770-11421-1-git-send-email-sachin.kamat@linaro.org>
+ <1347008770-11421-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1347008770-11421-1-git-send-email-sachin.kamat@linaro.org>
+In-reply-to: <1347008770-11421-2-git-send-email-sachin.kamat@linaro.org>
 Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
@@ -17,58 +18,32 @@ List-Id: devicetree@vger.kernel.org
 
 Sachin Kamat wrote:
 > 
-> Commit: f447ed8b31d (gpio: samsung: add flags specifier to
-> device-tree binding) adds a flag to represent active low state
-> for gpio line. Since gpio-keys on Origen board are active low,
-> using this flag to represent the same.
+> Adds heartbeat gpio-leds support to Origen board.
 > 
 > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Reviewed-by: Thomas Abraham <thomas.abraham@linaro.org>
 > ---
->  arch/arm/boot/dts/exynos4210-origen.dts |   10 +++++-----
->  1 files changed, 5 insertions(+), 5 deletions(-)
+>  arch/arm/boot/dts/exynos4210-origen.dts |    8 ++++++++
+>  1 files changed, 8 insertions(+), 0 deletions(-)
 > 
 > diff --git a/arch/arm/boot/dts/exynos4210-origen.dts
 > b/arch/arm/boot/dts/exynos4210-origen.dts
-> index 0c49caa..c37edf0 100644
+> index c37edf0..d69a799 100644
 > --- a/arch/arm/boot/dts/exynos4210-origen.dts
 > +++ b/arch/arm/boot/dts/exynos4210-origen.dts
-> @@ -62,31 +62,31 @@
-> 
->  		up {
->  			label = "Up";
-> -			gpios = <&gpx2 0 0 0 2>;
-> +			gpios = <&gpx2 0 0 0x10000 2>;
->  			linux,code = <103>;
+> @@ -91,6 +91,14 @@
 >  		};
+>  	};
 > 
->  		down {
->  			label = "Down";
-> -			gpios = <&gpx2 1 0 0 2>;
-> +			gpios = <&gpx2 1 0 0x10000 2>;
->  			linux,code = <108>;
->  		};
-> 
->  		back {
->  			label = "Back";
-> -			gpios = <&gpx1 7 0 0 2>;
-> +			gpios = <&gpx1 7 0 0x10000 2>;
->  			linux,code = <158>;
->  		};
-> 
->  		home {
->  			label = "Home";
-> -			gpios = <&gpx1 6 0 0 2>;
-> +			gpios = <&gpx1 6 0 0x10000 2>;
->  			linux,code = <102>;
->  		};
-> 
->  		menu {
->  			label = "Menu";
-> -			gpios = <&gpx1 5 0 0 2>;
-> +			gpios = <&gpx1 5 0 0x10000 2>;
->  			linux,code = <139>;
->  		};
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		status {
+> +			gpios = <&gpx1 3 0 0x10000 2>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +
+>  	keypad@100A0000 {
+>  		status = "disabled";
 >  	};
 > --
 > 1.7.4.1
