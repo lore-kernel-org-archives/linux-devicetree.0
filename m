@@ -1,40 +1,55 @@
-From: Marco Stornelli <marco.stornelli@gmail.com>
-Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
- Device Tree.
-Date: Sat, 08 Sep 2012 10:27:15 +0200
-Message-ID: <504B0163.5070804@gmail.com>
-References: <1347042576-17675-1-git-send-email-bfreed@chromium.org> <20120908052907.GA4724@lizard> <504AF27C.9090601@gmail.com> <20120908080607.GA22071@lizard>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
+Date: Sat, 8 Sep 2012 11:51:00 -0600
+Message-ID: <CAErSpo42AME4nJqdVk9cC2EcTfu96r+yxmmOB=hXNi6jh-c+XA@mail.gmail.com>
+References: <50201E1D.5060200@wwwdotorg.org> <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de>
+ <50294BCA.1070807@wwwdotorg.org> <CAErSpo7og1XgOSv_mFCQ=hP7pq0j3gXWh2QFL2wBJjz7kcAq=g@mail.gmail.com>
+ <502AA96B.2050709@wwwdotorg.org> <20120814195834.GA10431@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo4Bm_Ryx=OK+svjqAwD4N8v0vrheLVdc-N1ijx8i_-N3w@mail.gmail.com>
+ <502AD82F.3080702@wwwdotorg.org> <502AE485.8060307@wwwdotorg.org>
+ <504A848B.1090703@wwwdotorg.org> <20120908000430.GF13739@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120908080607.GA22071@lizard>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Bryan Freed <bfreed@chromium.org>, John Stultz <john.stultz@linaro.org>, linux-kernel@vger.kernel.org, keescook@chromium.org, sboyd@codeaurora.org, gregkh@linuxfoundation.org, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120908000430.GF13739-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Il 08/09/2012 10:06, Anton Vorontsov ha scritto:
-> On Sat, Sep 08, 2012 at 09:23:40AM +0200, Marco Stornelli wrote: [...]
->>>> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->>>> +   if (pdata == NULL)
->>>
->>> I wonder why people prefer to not write !pdata, which is more natural
->>> when reading the code.. :-)
->>
->> I think it's the same for sizeof, it's much more readable
->> sizeof(struct ramoops_platform_data).
+On Fri, Sep 7, 2012 at 6:04 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Fri, Sep 07, 2012 at 05:34:35PM -0600, Stephen Warren wrote:
+>> I guess it's a pretty basic premise of the current PCI code that all the
+>> PCI scanning happens well before any device drivers are registered,
+>> which in turn means that device_add() doesn't trigger the device's
+>> probe() until much later, after all the fixups and resource assignments
+>> are done?
 >
-> Well, sizeof(struct...) is against Linux coding style.  And there are
-> good reasons for this rule, it's all in the CodingStyle file. Thus,
-> it's not about personal preferences. But speaking of personal
-> preferences, I don't find sizeof(struct...) more readable. :-)
+> Are you saying that the PCI layer is again screwed up after all my
+> hard work several years ago to ensure that PCI devices are properly
+> setup _before_ they're made available to the PCI drivers then?  That
+> was around the time I was looking at Cardbus stuff, ensuring that that
+> worked with the same guarantees.
 >
-> Thanks!
-> Anton.
+> Not amused.
 >
+> What is wrong with the "probe devices, apply fixups, setup resources,
+> apply more fixups, publish" process that it's had to be yet again
+> broken?
 
-Yes, I know, but indeed it's only a personal preference as the check 
-==NULL instead of !pdata. :)
+It seems that there are some bugs in the PCI layer, no doubt
+introduced after all your hard work.  We'll do our best to fix them.
 
-Marco
+The particular issue of pci_fixup_irqs() has been on my list for a
+while, and we talked about it at the recent PCI mini-summit.  It's
+clearly broken that we do this with for_each_pci_dev() once at
+boot-time because that does nothing for hot-added devices.  It's also
+broken that it is called after device_add() because the core shouldn't
+touch the device after it's available to drivers.
+
+This should get fixed reasonably soon, probably not in v3.6, but
+hopefully in v3.7.  It's not completely trivial because many arches
+have the same problem, and we need to fix all of them.
+
+Bjorn
