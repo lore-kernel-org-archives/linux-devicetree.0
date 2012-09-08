@@ -1,64 +1,77 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Fri, 07 Sep 2012 23:53:08 -0600
-Message-ID: <504ADD44.6040501@wwwdotorg.org>
-References: <50201E1D.5060200@wwwdotorg.org>
- <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de>
- <50294BCA.1070807@wwwdotorg.org>
- <CAErSpo7og1XgOSv_mFCQ=hP7pq0j3gXWh2QFL2wBJjz7kcAq=g@mail.gmail.com>
- <502AA96B.2050709@wwwdotorg.org>
- <20120814195834.GA10431@avionic-0098.mockup.avionic-design.de>
- <CAErSpo4Bm_Ryx=OK+svjqAwD4N8v0vrheLVdc-N1ijx8i_-N3w@mail.gmail.com>
- <502AD82F.3080702@wwwdotorg.org> <502AE485.8060307@wwwdotorg.org>
- <504A848B.1090703@wwwdotorg.org>
- <20120908000430.GF13739@n2100.arm.linux.org.uk>
+From: Marco Stornelli <marco.stornelli@gmail.com>
+Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
+ Device Tree.
+Date: Sat, 08 Sep 2012 09:23:40 +0200
+Message-ID: <504AF27C.9090601@gmail.com>
+References: <1347042576-17675-1-git-send-email-bfreed@chromium.org> <20120908052907.GA4724@lizard>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120908000430.GF13739-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120908052907.GA4724@lizard>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anton Vorontsov <anton.vorontsov@linaro.org>
+Cc: Bryan Freed <bfreed@chromium.org>, John Stultz <john.stultz@linaro.org>, linux-kernel@vger.kernel.org, keescook@chromium.org, sboyd@codeaurora.org, gregkh@linuxfoundation.org, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/2012 06:04 PM, Russell King - ARM Linux wrote:
-> On Fri, Sep 07, 2012 at 05:34:35PM -0600, Stephen Warren wrote:
->> I guess it's a pretty basic premise of the current PCI code that all the
->> PCI scanning happens well before any device drivers are registered,
->> which in turn means that device_add() doesn't trigger the device's
->> probe() until much later, after all the fixups and resource assignments
->> are done?
-> 
-> Are you saying that the PCI layer is again screwed up after all my
-> hard work several years ago to ensure that PCI devices are properly
-> setup _before_ they're made available to the PCI drivers then?  That
-> was around the time I was looking at Cardbus stuff, ensuring that that
-> worked with the same guarantees.
-> 
-> Not amused.
-> 
-> What is wrong with the "probe devices, apply fixups, setup resources,
-> apply more fixups, publish" process that it's had to be yet again
-> broken?
+Il 08/09/2012 07:29, Anton Vorontsov ha scritto:
+> On Fri, Sep 07, 2012 at 11:29:36AM -0700, Bryan Freed wrote:
+>> When called with a non-zero of_node, fill out a new ramoops_platform_data
+>> with data from the specified Flattened Device Tree node.
+>> Update ramoops documentation with the new FDT interface.
+>> Update devicetree/binding documentation with pstore/ramoops.txt.
+>
+> Thanks for your work, Bryan! There were a few issues, I fixed
+> them myself but I need your confirmation if you're OK w/ all
+> the changes.
+>
+> First of, the Signed-off-by tag is missing, but I see it in v5.
+> I also see that v5 had an Ack from Kees Cook, you did not preserve it,
+> but generally it's a good idea to do so (if vX -> v(X+1) changes
+> aren't drastic).
+>
+> [...]
+>> +Optional properties:
+>> +- record-size: Specifies the size of each record in preserved memory.
+>> +- console-size: Specifies the size of the console log.
+>> +- ftrace-size: Specifies the size of the ftrace log.
+>> +- ecc-size: Specifies the size of each record's ECC buffer.
+>> +- dump-oops: Specifies to dump oops in addition to panics.
+>
+> Personally, I don't see how this fits into device tree. It doesn't
+> describe hardware, instead it's more a configuration stuff, which
+> usually we try to not put into the device tree.
+>
+> It would be better to have a sane defaults in ramoops, instead of
+> introducing more "virtual" stuff in the device tree. That is, feel
+> free to change defaults if they seem to be not enough for most your
+> setups.
+>
+> The only property that I see which is truly hardware-specific is
+> ecc-size. E.g. if we're pretty sure that a specific hw does not
+> need ecc, it's OK to avoid it. And some hw setups might require
+> bigger ECC sizes, so it's OK to have it in the device-tree.
+>
+>> static struct ramoops_platform_data * __init
+>> of_ramoops_platform_data(struct device *dev)
+>
+> You call this function from __devinit section, so using __init
+> is an error.
+>
+> WARNING: fs/pstore/ramoops.o(.devinit.text+0x37): Section mismatch in reference from the function ramoops_probe() to the function .init.text:of_ramoops_platform_data()
+> The function __devinit ramoops_probe() references
+>
+> I changed this to __devnit.
+>
+> [...]
+>> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>> +	if (pdata == NULL)
+>
+> I wonder why people prefer to not write !pdata, which is more
+> natural when reading the code.. :-)
+>
 
-I must admit, I'm having a hard time finding when the code worked like
-that; ARM's bios32.c:pcibios_init_hw() seems to have always called
-pci_scan_root_bus(), or ops function hw->scan(), which at least in the 1
-PCIe controller driver I looked at, in turn always called either
-pci_scan_root_bus() or another similar function that I believe always
-called pci_bus_add_devices(), which is before pci_common_init() could
-assign the resources. Maybe I'm just looking at the wrong PCIe
-controller driver, or not looking back far enough in git history (or
-pre-git)? If you could point out when it was working as you describe
-(which sounds reasonable), I'd be interested in tracing the history from
-there to see when/why it changed.
+I think it's the same for sizeof, it's much more readable
+sizeof(struct ramoops_platform_data).
+
+Marco
