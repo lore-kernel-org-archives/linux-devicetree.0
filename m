@@ -1,33 +1,53 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
-Date: Sat, 8 Sep 2012 01:04:30 +0100
-Message-ID: <20120908000430.GF13739@n2100.arm.linux.org.uk>
-References: <50201E1D.5060200@wwwdotorg.org> <20120813174003.GA2527@avionic-0098.mockup.avionic-design.de> <50294BCA.1070807@wwwdotorg.org> <CAErSpo7og1XgOSv_mFCQ=hP7pq0j3gXWh2QFL2wBJjz7kcAq=g@mail.gmail.com> <502AA96B.2050709@wwwdotorg.org> <20120814195834.GA10431@avionic-0098.mockup.avionic-design.de> <CAErSpo4Bm_Ryx=OK+svjqAwD4N8v0vrheLVdc-N1ijx8i_-N3w@mail.gmail.com> <502AD82F.3080702@wwwdotorg.org> <502AE485.8060307@wwwdotorg.org> <504A848B.1090703@wwwdotorg.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 8/9] ARM: msm: Add DT support for 8960
+Date: Fri, 07 Sep 2012 17:49:37 -0700
+Message-ID: <504A9621.8020301@codeaurora.org>
+References: <1346873339-10927-1-git-send-email-sboyd@codeaurora.org> <1346873339-10927-9-git-send-email-sboyd@codeaurora.org> <20120907225853.GA21585@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <504A848B.1090703-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20120907225853.GA21585@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: David Brown <davidb@codeaurora.org>
+Cc: Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2012 at 05:34:35PM -0600, Stephen Warren wrote:
-> I guess it's a pretty basic premise of the current PCI code that all the
-> PCI scanning happens well before any device drivers are registered,
-> which in turn means that device_add() doesn't trigger the device's
-> probe() until much later, after all the fixups and resource assignments
-> are done?
+On 09/07/12 15:58, David Brown wrote:
+> On Wed, Sep 05, 2012 at 12:28:58PM -0700, Stephen Boyd wrote:
+>
+>> +DT_MACHINE_START(MSM8960_DT, "Qualcomm MSM (Flattened Device Tree)")
+> The description string should specify the general name of what this is
+> suspporting.  Right now, with these patches, it would list
+>
+>   Qualcomm MSM (Flattened Device Tree)
+>
+> twice as the two targets we support (and isn't helpful when you see
+> which one it picks).  I'd put the "MSM" name by itself without
+> thinking about it too much.  It wasn't that confusing, since there was
+> only one at the time.
+>
+> Perhaps make the 8660 one "Qualcomm MSM8660 (Flattened Device Tree)"
+> and the 8960 one "Qualcomm MSM8960 (Flattened Device Tree)"
+>
+> I realize that the chip numbers are a bit confusing, so probably best
+> to pick a canonical name for the description.
+>
 
-Are you saying that the PCI layer is again screwed up after all my
-hard work several years ago to ensure that PCI devices are properly
-setup _before_ they're made available to the PCI drivers then?  That
-was around the time I was looking at Cardbus stuff, ensuring that that
-worked with the same guarantees.
+I think we don't need to do anything. Basically machine name is always
+"Qualcomm MSM (Flattened Device Tree)" but then the model name in the
+devicetree blob says a more descriptive value "Qualcomm MSM8960 CDP" or
+"Qualcomm MSM8660 SURF", etc. All this info is printed in the kernel log
+upon boot:
 
-Not amused.
+[    0.000000] Machine: Qualcomm MSM (Flattened Device Tree), model: Qualcomm MSM8960 CDP
 
-What is wrong with the "probe devices, apply fixups, setup resources,
-apply more fixups, publish" process that it's had to be yet again
-broken?
+
+In fact, it should be possible to put the two dt board files together at
+some point if we can somehow drive the map_io routine from devicetree.
+In this case we could even have the same machine descriptor used for
+both machines.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
