@@ -1,90 +1,51 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH Resend 1/2] ARM: dts: Use active low flag for gpio-keys on
- Origen
-Date: Sat, 08 Sep 2012 11:32:42 +0900
-Message-ID: <24d801cd8d6a$38b2e3b0$aa18ab10$%kim@samsung.com>
-References: <1347008770-11421-1-git-send-email-sachin.kamat@linaro.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCHv2 1/4] mfd: smsc: Add support for smsc gpio io/keypad
+ driver
+Date: Sat, 8 Sep 2012 04:12:38 +0100
+Message-ID: <20120908031237.GA31018@sirena.org.uk>
+References: <1346844964-24839-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: 
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1346844964-24839-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Kukjin Kim wrote:
-> 
-> Sachin Kamat wrote:
-> >
-> > Commit: f447ed8b31d (gpio: samsung: add flags specifier to
-> > device-tree binding) adds a flag to represent active low state
-> > for gpio line. Since gpio-keys on Origen board are active low,
-> > using this flag to represent the same.
-> >
-> > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> > Reviewed-by: Thomas Abraham <thomas.abraham@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/exynos4210-origen.dts |   10 +++++-----
-> >  1 files changed, 5 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos4210-origen.dts
-> > b/arch/arm/boot/dts/exynos4210-origen.dts
-> > index 0c49caa..c37edf0 100644
-> > --- a/arch/arm/boot/dts/exynos4210-origen.dts
-> > +++ b/arch/arm/boot/dts/exynos4210-origen.dts
-> > @@ -62,31 +62,31 @@
-> >
-> >  		up {
-> >  			label = "Up";
-> > -			gpios = <&gpx2 0 0 0 2>;
-> > +			gpios = <&gpx2 0 0 0x10000 2>;
-> >  			linux,code = <103>;
-> >  		};
-> >
-> >  		down {
-> >  			label = "Down";
-> > -			gpios = <&gpx2 1 0 0 2>;
-> > +			gpios = <&gpx2 1 0 0x10000 2>;
-> >  			linux,code = <108>;
-> >  		};
-> >
-> >  		back {
-> >  			label = "Back";
-> > -			gpios = <&gpx1 7 0 0 2>;
-> > +			gpios = <&gpx1 7 0 0x10000 2>;
-> >  			linux,code = <158>;
-> >  		};
-> >
-> >  		home {
-> >  			label = "Home";
-> > -			gpios = <&gpx1 6 0 0 2>;
-> > +			gpios = <&gpx1 6 0 0x10000 2>;
-> >  			linux,code = <102>;
-> >  		};
-> >
-> >  		menu {
-> >  			label = "Menu";
-> > -			gpios = <&gpx1 5 0 0 2>;
-> > +			gpios = <&gpx1 5 0 0x10000 2>;
-> >  			linux,code = <139>;
-> >  		};
-> >  	};
-> > --
-> > 1.7.4.1
-> 
-> Applied, thanks.
-> 
-Note, since this is not a bug fix, queued this for v3.7.
+On Wed, Sep 05, 2012 at 05:06:04PM +0530, Sourav Poddar wrote:
 
-If any problem, let me know.
+> +static struct regmap_config smsc_regmap_config = {
+> +		.reg_bits = 8,
+> +		.val_bits = 8,
+> +		.max_register = SMSC_MAX_REGISTER - 1;
 
-Thanks.
+That max_register setup looks very odd...
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+> +		.cache_type = REGCACHE_COMPRESSED,
+> +};
+
+Are you sure the compressed type is sensible?  It would normally only
+make sense with a large number of closely packed registers but this
+device has 8 bit register values.
+
+> +#ifdef CONFIG_OF
+> +	of_property_read_u32(node, "clock", &smsc->clk);
+> +#endif
+
+> +	ret = regmap_write(smsc->regmap, SMSC_CLK_CTRL, smsc->clk);
+> +	if (ret)
+> +		goto err;
+
+What happens on non-DT systems?
+
+> +static int smsc_i2c_remove(struct i2c_client *i2c)
+> +{
+> +	return 0;
+> +}
+
+Remove empty functions, though it's rather surprising that there's
+nothing at all to do here..  Normally an MFD would at least remove its
+children.
+
