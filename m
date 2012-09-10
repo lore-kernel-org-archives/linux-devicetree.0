@@ -1,121 +1,44 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] regulator: gpio-regulator: add DT bindings
-Date: Mon, 10 Sep 2012 13:40:36 -0600
-Message-ID: <504E4234.9090300@wwwdotorg.org>
-References: <1347289429-18713-1-git-send-email-zonque@gmail.com>
+From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: dts: AM33xx: Correct gpio labels to match docs
+Date: Mon, 10 Sep 2012 15:45:10 -0400
+Message-ID: <1347306312-31533-1-git-send-email-mporter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1347289429-18713-1-git-send-email-zonque@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, lrg@ti.com, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2012 09:03 AM, Daniel Mack wrote:
-> Add DT bindings for the gpio-regulator driver and some documentation on
-> how to use it.
+Changes since v1:
+	- Series now applies on top of Anil's AM33XX DTS series
+ 
+This series applies on top of the for_3.7/dts/ branch and Anil's
+"[v7,2/3] arm/dts: AM33XX: Configure pinmuxs for user leds control on Bone"
+patch that is part of the overall series adding led and pinctrl DTS data
+for AM33xx.
 
-> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-> @@ -0,0 +1,58 @@
-> +Device tree bindings for GPIO controlled voltages
-> +
-> +Voltage or current regulators on boards that are controlled by GPIOs can
-> +be used by the gpio-regulator driver.
-> +
-> +Required properties:
-> +
-> + - "compatible":	must be set to "gpio-regulator"
-> + - "regulator-name": 	must be set to a string describing the name of this
-> +			regulator.
+It is intended to correct the current labeling of gpios in the DTS before
+too many more drivers are submitted for AM33xx that have gpios not matching
+the docs.
 
-I'd expect the "gpios" property to be listed here.
+Matt Porter (2):
+  ARM: dts: AM33XX: fix gpio node numbering to match hardware
+  ARM: dts: AM33XX: adjust leds to use the corrected gpio label
 
-> +Optional properties:
-> +
-> + - "startup-delay":		Start-up time in microseconds
-> + - "enable-high":		Polarity of enable GPIO. Active high if
-> +				defined, otherwise active low
+ arch/arm/boot/dts/am335x-bone.dts |    8 ++++----
+ arch/arm/boot/dts/am33xx.dtsi     |    8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-fixed-regulator.txt already has an "enable-active-high" property; it'd
-be nice to be consistent.
-
-> + - "enabled-at-boot":		If set, the regulator has been enabled at boot
-> +				time
-
-Isn't that regulator-boot-on, as defined in regulator.txt that you
-mentioned?
-
-> + - "regulator-type-voltage":	The regulator controls a voltage
-> + - "regulator-type-current":	The regulator controls a current
-
-I wonder if it'd be better to differentiate this using different
-compatible values instead?
-
-> + - "states":			An array of possible states, describing the
-> +				GPIO states to reach a given value
-> +	- "value":		The value of the state, in microvolts or
-> +				microamperes
-
-A name like "microvolts", "voltage", "microamps", or "current" might be
-more descriptive here.
-
-> +	- "gpios":		bitfield of gpio target-states for the value
-> +				The n-th bit in the bitfield describes the
-> +				state of the n-th GPIO from the gpios-array
-
-"gpios" sounds like the name of a property that defines which GPIOs are
-used, rather than the value of those GPIOs. Perhaps "gpio-values" instead?
-
-Actually, I wonder if we really even need to represent that values
-explicitly; rather than have a big set of nodes, perhaps you can instead
-have a single property that lists the voltage (or current) that each
-combination of GPIO values gives; something like:
-
-reg_gpio {
-    ...
-    gpios = <&ggpio 23 0 &gpio 24 0>;
-    voltages = <0 1000000 2000000 3000000>;
-};
-
-(As inspiration for that, I looked at
-Documentation/devicetree/bindings/net/mdio-mux-gpio.txt which doesn't
-have a property defining the value of the GPIOs for each combination,
-but rather a node per valid combination).
-
-Perhaps represent and invalid GPIO combination with 0xffffffff?
-
-> +Also, all properties described in
-> +Documentation/devicetree/bindings/regulator/regulator.txt are supported as
-> +well.
-> +
-> +Example:
-> +
-> +	reg_gpio {
-> +		compatible = "gpio-regulator";
-> +		regulator-name = "voltage";
-> +		regulator-enable-high;
-> +		regulator-type-voltage;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +
-> +		gpios = <&gpio 23 0>;
-> +
-> +		states {
-> +			state-on {
-> +				value = <3300000>;
-> +				gpios = <0x1>;
-> +			};
-> +
-> +			state-off {
-> +				value = <0>;
-> +				gpios = <0x0>;
-> +			};
-> +		};
-> +	};
-
-That particular example only has on/off states, and so might be better
-covered using the existing fixed-regulator, with optional GPIO control.
-Perhaps an example using 2 GPIOs for 4 voltage states would be more useful?
+-- 
+1.7.9.5
