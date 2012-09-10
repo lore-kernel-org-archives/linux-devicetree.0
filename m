@@ -1,111 +1,53 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v3 0/9] pinctrl: mvebu: pinctrl driver
-Date: Mon, 10 Sep 2012 10:39:37 +0200
-Message-ID: <1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio/twl4030: get platform data from device tree
+Date: Mon, 10 Sep 2012 10:40:06 +0200
+Message-ID: <504DA766.1080304@epfl.ch>
+References: <1346831186-29947-1-git-send-email-florian.vaussard@epfl.ch>
+ <1346831186-29947-2-git-send-email-florian.vaussard@epfl.ch>
+ <504A2FF2.7070607@ti.com> <504DA20D.7020903@epfl.ch>
+ <504DA503.5050901@ti.com>
+Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <504DA503.5050901-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a core pinctrl driver for Marvell MVEBU SoCs and
-SoC specific stubs for Armada 370, Armada XP, Dove, and Kirkwood.
-The SoC specific stubs use the pinctrl-mvebu core driver that handles
-pinctrl API and register accesses for common pinctrl registers.
+Hello Benoit,
 
-As especially Dove has some pinctrl registers that do not match the
-common pinctrl register layout the core driver has been extended by
-some callbacks to allow uncommon Dove pinctrl registers.
+>>
+>> I fixed them since it was trivial, but next time you should ensure
+>> that the patch pass checkpatch before posting.
+>> Sorry for these errors. I however checked my patches before submitting,
+>> and had no such warnings. I redone, and remarked that these warnings
+>> appear only with the "--strict" option, which is not enabled by default.
+>> Is this the recommended  guideline? Thus why not enabling it by default?
+> That's a pretty good question :-)
+>
+> Maybe the --strict is more a nice to have than a strong requirement?
+> Anyway, we'd better run checkpatch with --strict and thus fix any
+> cosmetic details that might be in the patch.
 
-DT binding documentation is added for all supported SoCs but as
-Dove and Kirkwood are not yet ready for full DT support, the pinctrl
-driver is only activated for Armada 370 and XP.
+Good to know, I will use --strict for the next submissions.
 
-The driver has been tested on Dove, 88f6281 variant of Kirkwood,
-Armada 370, and XP.
+> Cool, I love chocolate. That being said, I'm not sure how tasteful 
+> will be the *virtual* chocolate. Regards, Benoit 
 
-Changelog:
-v2:
-- rebased on git://git.infradead.org/users/jcooper/linux.git boards-for-3.7
-- removed arch/arm/*/Kconfig patches that enable PINCTRL_ on MACH_MVEBU
-  (those will be sent as a different patch set)
-- reworked patches wrt reviews from Andrew Lunn and Linus Walleij
+Even *virtual*, Swiss chocolate will be the most tasteful (hope no Belgium
+friends will see this thread) :-)
 
-v3:
-- parse functions from SoC specific pin groups instead of DT node
-- move kirkwood variants to DT match data
-- respect Armada XP variant in DTs
-- cleaned whitespaces in DTs
-- rebased to jcooper/boards-for-v3.7-v2
-
-Sebastian Hesselbarth (3):
-  pinctrl: mvebu: pinctrl driver core
-  pinctrl: mvebu: dove pinctrl driver
-  pinctrl: mvebu: kirkwood pinctrl driver
-
-Thomas Petazzoni (6):
-  pinctrl: mvebu: add pinctrl driver for Armada 370
-  pinctrl: mvebu: add pinctrl driver for Armada XP
-  ARM: mvebu: add pinctrl device in DT for Armada 370/XP SoCs
-  ARM: mvebu: Add pinctrl support to Armada XP SoCs
-  ARM: mvebu: Add pinctrl support to Armada 370 SoC
-  ARM: mvebu: adjust Armada XP evaluation board DTS
-
- .../pinctrl/marvell,armada-370-pinctrl.txt         |   95 +++
- .../bindings/pinctrl/marvell,armada-xp-pinctrl.txt |  100 +++
- .../bindings/pinctrl/marvell,dove-pinctrl.txt      |   72 ++
- .../bindings/pinctrl/marvell,kirkwood-pinctrl.txt  |  279 ++++++++
- .../bindings/pinctrl/marvell,mvebu-pinctrl.txt     |   45 ++
- arch/arm/Kconfig                                   |    1 +
- arch/arm/boot/dts/armada-370-xp.dtsi               |    7 +
- arch/arm/boot/dts/armada-370.dtsi                  |    4 +
- arch/arm/boot/dts/armada-xp-db.dts                 |    4 +-
- arch/arm/boot/dts/armada-xp-mv78230.dtsi           |   27 +
- arch/arm/boot/dts/armada-xp-mv78260.dtsi           |   27 +
- arch/arm/boot/dts/armada-xp-mv78460.dtsi           |   27 +
- drivers/pinctrl/Kconfig                            |   22 +
- drivers/pinctrl/Makefile                           |    5 +
- drivers/pinctrl/pinctrl-armada-370.c               |  421 ++++++++++++
- drivers/pinctrl/pinctrl-armada-xp.c                |  468 +++++++++++++
- drivers/pinctrl/pinctrl-dove.c                     |  622 +++++++++++++++++
- drivers/pinctrl/pinctrl-kirkwood.c                 |  473 +++++++++++++
- drivers/pinctrl/pinctrl-mvebu.c                    |  705 ++++++++++++++++++++
- drivers/pinctrl/pinctrl-mvebu.h                    |  192 ++++++
- 20 files changed, 3594 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-370-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,armada-xp-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,dove-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt
- create mode 100644 arch/arm/boot/dts/armada-xp-mv78230.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-mv78260.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-mv78460.dtsi
- create mode 100644 drivers/pinctrl/pinctrl-armada-370.c
- create mode 100644 drivers/pinctrl/pinctrl-armada-xp.c
- create mode 100644 drivers/pinctrl/pinctrl-dove.c
- create mode 100644 drivers/pinctrl/pinctrl-kirkwood.c
- create mode 100644 drivers/pinctrl/pinctrl-mvebu.c
- create mode 100644 drivers/pinctrl/pinctrl-mvebu.h
----
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
--- 
-1.7.10.4
-
+Regards,
+Florian
