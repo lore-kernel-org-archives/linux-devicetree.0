@@ -1,98 +1,58 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 1/8] ARM/dts: omap2: Add McBSP entries for OMAP2420
- and OMAP2430 SoC
-Date: Mon, 10 Sep 2012 14:05:25 +0300
-Message-ID: <504DC975.5070609@ti.com>
-References: <1346846336-27321-1-git-send-email-peter.ujfalusi@ti.com> <1346846336-27321-2-git-send-email-peter.ujfalusi@ti.com> <20120907222953.GS1303@atomide.com> <504D9FBC.9030609@ti.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH 0/2] ARM: omap/dts: Add support for Gumstix Overo with
+ Tobi expansion
+Date: Mon, 10 Sep 2012 13:38:16 +0200
+Message-ID: <504DD128.1000803@ti.com>
+References: <1346429172-5902-1-git-send-email-florian.vaussard@epfl.ch> <20120906205227.GM1303@atomide.com> <504DB202.5050500@epfl.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <504D9FBC.9030609@ti.com>
+In-Reply-To: <504DB202.5050500@epfl.ch>
 Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+To: florian.vaussard@epfl.ch
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steve Sakoman <steve@sakoman.com>, Philippe Retornaz <philippe.retornaz@epfl.ch>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+On 09/10/2012 11:25 AM, Florian Vaussard wrote:
+> Le 06/09/2012 22:52, Tony Lindgren a =E9crit :
+>> * Florian Vaussard <florian.vaussard@epfl.ch> [120831 09:07]:
+>>> The Gumstix Overo is a computer on module using an OMAP3 processor.
+>>> This module must be plugged into an expansion board.
+>>>
+>>> This patchset adds a first device tree support for the Overo, using=
+ the
+>>> Tobi expansion board. The current support is able to boot and mount
+>>> the rootfs from MMC, with a few extra features.
+>>>
+>>> The first patch creates the device tree for both the Overo and the
+>>> Tobi expansion board, and updates the dtb build target.
+>>>
+>>> The second patch updates the omap/dts documentation.
+>>>
+>>> This patchset applies on tony's tree [1], devel-dt branch.
+>> Great, I'm assuming Benoit will pick this up as well.
+>=20
+> What is the status Benoit?
 
-On 09/10/2012 11:07 AM, Benoit Cousson wrote:
-> Hi Tony,
->=20
-> On 09/08/2012 12:29 AM, Tony Lindgren wrote:
->> * Peter Ujfalusi <peter.ujfalusi@ti.com> [120905 04:59]:
->>> +
->>> +	ocp {
->>> +		mcbsp1: mcbsp@48074000 {
->>> +			compatible =3D "ti,omap2420-mcbsp";
->>> +			reg =3D <0x48074000 0xff>;
->>> +			reg-names =3D "mpu";
->>> +			interrupts =3D <59>, /* TX interrupt */
->>> +				     <60>; /* RX interrupt */
->>> +			interrupt-names =3D "tx", "rx";
->>> +			interrupt-parent =3D <&intc>;
->>> +			ti,hwmods =3D "mcbsp1";
->>> +		};
->>> +
->>> +		mcbsp2: mcbsp@48076000 {
->>> +			compatible =3D "ti,omap2420-mcbsp";
->>> +			reg =3D <0x48076000 0xff>;
->>> +			reg-names =3D "mpu";
->>> +			interrupts =3D <62>, /* TX interrupt */
->>> +				     <63>; /* RX interrupt */
->>> +			interrupt-names =3D "tx", "rx";
->>> +			interrupt-parent =3D <&intc>;
->>> +			ti,hwmods =3D "mcbsp2";
->>> +		};
->>> +	};
->>
->> Hmm don't you need to specify the interrupt chip and offset for
->> the interrupts here?
->=20
-> Mmm, I'm not sure to get your question, there is the link to the
-> interrupt-parent.
->=20
-> The interrupt number is relative to the parent interrupt domain. So e=
-ven
-> if the INTC IRQ offset start at 32 instead of 0, DT IRQ mechanism wil=
-l
-> convert that to the proper hwirq thanks to irqdomain.
-> In that case we should always provide interrupt number relative to th=
-e
-> interrupt controller HW number and not assuming any Linux IRQ number
-> offset like before.
->=20
->=20
-> And in fact the interrupt-parent is not even needed, by default if wi=
-ll
-> look to the parent to get the interrupt-controller.
+Patches looks good to me. I just adding them right now in my for_3.7/dt=
+s tree.
 
-This is true, but it makes the 'code' a bit more readable if I (we) spe=
-cify
-the interrupt-parent.
+I've just slightly changed the subjects:
 
->=20
-> Extract from [1]
->=20
-> interrupt-parent:
-> "Because the hierarchy of the nodes in the interrupt tree might not
-> match the device tree, the interrupt-parent property is available to
-> make the definition of an interrupt parent explicit.
-> The value is the phandle to the interrupt parent. If this property is
-> missing from a device, its interrupt parent is assumed to be its devi=
-ce
-> tree parent."
->=20
-> [1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.=
-0.pdf
->=20
-> Regards,
-> Benoit
->=20
+Documentation: dt: Update the OMAP documentation with Overo/Toby
+ARM: dts: OMAP3: Add support for Gumstix Overo with Tobi expansion boar=
+d
 
+If you want to give it a try, here is the branch that contains all the =
+DTS series I
+already pulled. It includes your gpio-twl4030 patches as well.
 
---=20
-P=E9ter
+git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.gi=
+t for_3.7/dts
+
+Regards,
+Benoit
 --
 To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
 n
