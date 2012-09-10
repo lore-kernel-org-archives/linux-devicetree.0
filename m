@@ -1,16 +1,15 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] hwmon: Add devicetree bindings to gpio-fan
-Date: Mon, 10 Sep 2012 17:28:14 +0200
-Message-ID: <20120910152814.GA6050@lunn.ch>
-References: <1347035675-23907-1-git-send-email-jm@lentin.co.uk>
- <1347285112-13542-1-git-send-email-jm@lentin.co.uk>
- <1347285112-13542-2-git-send-email-jm@lentin.co.uk>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Mon, 10 Sep 2012 08:39:23 -0700
+Message-ID: <CACRpkdah7h7YqenftcPgRtoS7RE3t47MnAkn9+ZAuF7P-vM4dg@mail.gmail.com>
+References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1347266386-16229-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1347285112-13542-2-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+In-Reply-To: <1347266386-16229-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,40 +20,34 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2012 at 02:51:51PM +0100, Jamie Lentin wrote:
-> Allow a gpio-fan to be defined in devicetree, see binding documentation
-> for details.
-> 
-> Changes since V1:-
-> * Don't hide return codes [Guenter Roeck]
-> * Remove typecast noise [Guenter Roeck]
-> * Use of_find_property instead of counting u32s [Guenter Roeck]
-> * Don't count GPIOs twice [Andrew Lunn]
-> * Use of_prop_next_u32 to get records in a more obvious fashion
-> * Use CONFIG_OF_GPIO instead of CONFIG_OF
-> * Apply __devinitdata to of_gpio_fan_match [Andrew Lunn]
-> 
-> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+On Mon, Sep 10, 2012 at 1:39 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> This patch adds a pinctrl driver core for Marvell SoCs plus DT
+> binding documentation. This core driver will be used by SoC family
+> specific drivers, i.e. Armada XP, Armada 370, Dove, Kirkwood, aso.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  .../devicetree/bindings/gpio/gpio-fan.txt          |   25 +++++
->  drivers/hwmon/gpio-fan.c                           |  116 ++++++++++++++++++++
->  2 files changed, 141 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-fan.txt
+> v2:
+> - restructured Kconfig to have a common PINCTRL_MVEBU that are selected by
+>   SoC specific drivers.
+> - cleaned pinctrl-mvebu and replaced 'magic numbers' by defines
+> - make use of of_iomap instead of get_resource/ioremap
+> - extended include documentation and checked with scripts/kernel-doc
+> - cleaned devicetree binding documentation
+>
+> v3:
+> - list of functions is now built out of pin groups passed to core driver
+>   instead of parsing DT node.
 
-Hi Jamie
+Looks good to me.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thanks for addressing all the issues raised. However...
-
-Anything before the --- ends up in the changelog entry. Anything
-afterwards does not.
-
-The changes you made to address review comments is not something for
-the changelog, so Changes since V1:- should be after the --- .
-
-There is more detail in Documentation/SubmittingPatches
-
-      Andrew
+Yours,
+Linus Walleij
