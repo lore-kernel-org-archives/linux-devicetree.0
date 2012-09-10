@@ -1,43 +1,77 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
-Date: Mon, 10 Sep 2012 14:25:43 +0800
-Message-ID: <20120910062535.GU26709@S2101-09.ap.freescale.net>
-References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
- <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
- <20120831064125.GA3271@r65073-Latitude-D630>
- <20120906221155.20289.73650@nucleus>
- <20120907002618.GB26709@S2101-09.ap.freescale.net>
- <20120907192444.20289.97042@nucleus>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v3 1/8] ARM/dts: omap2: Add McBSP entries for OMAP2420
+ and OMAP2430 SoC
+Date: Mon, 10 Sep 2012 10:07:24 +0200
+Message-ID: <504D9FBC.9030609@ti.com>
+References: <1346846336-27321-1-git-send-email-peter.ujfalusi@ti.com> <1346846336-27321-2-git-send-email-peter.ujfalusi@ti.com> <20120907222953.GS1303@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120907192444.20289.97042@nucleus>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120907222953.GS1303@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2012 at 12:24:44PM -0700, Mike Turquette wrote:
-> Done.  I've taken patch #1 "clk: add of_clk_src_onecell_get() support"
-> into clk-next.
+Hi Tony,
+
+On 09/08/2012 12:29 AM, Tony Lindgren wrote:
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [120905 04:59]:
+>> +
+>> +	ocp {
+>> +		mcbsp1: mcbsp@48074000 {
+>> +			compatible = "ti,omap2420-mcbsp";
+>> +			reg = <0x48074000 0xff>;
+>> +			reg-names = "mpu";
+>> +			interrupts = <59>, /* TX interrupt */
+>> +				     <60>; /* RX interrupt */
+>> +			interrupt-names = "tx", "rx";
+>> +			interrupt-parent = <&intc>;
+>> +			ti,hwmods = "mcbsp1";
+>> +		};
+>> +
+>> +		mcbsp2: mcbsp@48076000 {
+>> +			compatible = "ti,omap2420-mcbsp";
+>> +			reg = <0x48076000 0xff>;
+>> +			reg-names = "mpu";
+>> +			interrupts = <62>, /* TX interrupt */
+>> +				     <63>; /* RX interrupt */
+>> +			interrupt-names = "tx", "rx";
+>> +			interrupt-parent = <&intc>;
+>> +			ti,hwmods = "mcbsp2";
+>> +		};
+>> +	};
 > 
-Thanks, Mike.
+> Hmm don't you need to specify the interrupt chip and offset for
+> the interrupts here?
 
-I'm still waiting for a stable branch like clk-3.7, which I can ask
-arm-soc folks to pull as a dependency.  I have some imx and mxs 3.7
-material currently pending on this.
+Mmm, I'm not sure to get your question, there is the link to the
+interrupt-parent.
 
--- 
+The interrupt number is relative to the parent interrupt domain. So even
+if the INTC IRQ offset start at 32 instead of 0, DT IRQ mechanism will
+convert that to the proper hwirq thanks to irqdomain.
+In that case we should always provide interrupt number relative to the
+interrupt controller HW number and not assuming any Linux IRQ number
+offset like before.
+
+
+And in fact the interrupt-parent is not even needed, by default if will
+look to the parent to get the interrupt-controller.
+
+Extract from [1]
+
+interrupt-parent:
+"Because the hierarchy of the nodes in the interrupt tree might not
+match the device tree, the interrupt-parent property is available to
+make the definition of an interrupt parent explicit.
+The value is the phandle to the interrupt parent. If this property is
+missing from a device, its interrupt parent is assumed to be its device
+tree parent."
+
+[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
+
 Regards,
-Shawn
+Benoit
+
