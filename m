@@ -1,16 +1,14 @@
-From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: OMAP3: Add gpio-twl4030 properties for Overo
-Date: Mon, 10 Sep 2012 15:49:38 +0200
-Message-ID: <504DEFF2.5060007@ti.com>
-References: <1347282996-31190-1-git-send-email-florian.vaussard@epfl.ch>
- <1347282996-31190-2-git-send-email-florian.vaussard@epfl.ch>
- <504DEA4E.7080109@ti.com> <504DEC36.4020704@epfl.ch>
- <504DEDB4.1070804@ti.com>
+From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: [PATCH V2 0/2] hwmon: kirkwood: Add DT bindings to gpio-fan for
+ DNS-32[05]
+Date: Mon, 10 Sep 2012 14:51:50 +0100
+Message-ID: <1347285112-13542-1-git-send-email-jm@lentin.co.uk>
+References: <1347035675-23907-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <504DEDB4.1070804-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1347035675-23907-1-git-send-email-jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,49 +19,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Steve Sakoman <steve-4Uf0gMDude1BDgjK7y7TUQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2012 03:40 PM, Benoit Cousson wrote:
-> On 09/10/2012 03:33 PM, Florian Vaussard wrote:
->>>> Support the blue LED connected to the LEDB pin of the TWL4030
->>>> on the Gumstix Overo.
->>>>
->>>> Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
->>>> ---
->>>>   arch/arm/boot/dts/omap3-overo.dtsi |   15 +++++++++++++++
->>>>   1 files changed, 15 insertions(+), 0 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/omap3-overo.dtsi
->>>> b/arch/arm/boot/dts/omap3-overo.dtsi
->>>> index d6cc5e2..89808ce 100644
->>>> --- a/arch/arm/boot/dts/omap3-overo.dtsi
->>>> +++ b/arch/arm/boot/dts/omap3-overo.dtsi
->>>> @@ -13,6 +13,17 @@
->>>>
->>>>   /include/ "omap3.dtsi"
->>>>
->>>> +/ {
->>>
->>> BTW, I'm just wondering. Cannot we use overo without tobi?
->>>
->>> In that case, the model and compatible should probably be used as well:
->>>
->>>     model = "TI OMAP3 Gumstix Overo";
->>>     compatible = "ti,omap3-overo", "ti,omap3";
->>
->> No, it cannot. The Overo needs to be plugged into an expansion board, at
->> least to get the power. Hence the absence of model and compatible in
->> omap3-overo.dtsi.
-> 
-> OK, cool. I was wondering because we already have a board-overo.c in the
-> kernel, and there is no mention of tobi.
-> 
-> OK, I'm adding that patch on top of the other then.
+Thanks to Guenter & Andrew---all the feedback made sense, and hopefully
+this patchset addresses everything.
 
-I'm just going to update the subject to:
-ARM: dts: omap3-overo: Add support for the blue LED
+This is an attempt at getting DT support into gpio-fan, in a similar
+fashion to gpio-leds and gpio-keys. I guess the most contentious bit is
+going to be the bindings.
 
-regards,
-Benoit
+Tested on a D-Link DNS-320.
+
+Changes since V1:-
+
+* Don't hide return codes [Guenter Roeck]
+* Remove typecast noise [Guenter Roeck]
+* Use of_find_property instead of counting u32s [Guenter Roeck]
+* Don't count GPIOs twice [Andrew Lunn]
+* Use of_prop_next_u32 to get records in a more obvious fashion
+* Use CONFIG_OF_GPIO instead of CONFIG_OF
+* Apply __devinitdata to of_gpio_fan_match [Andrew Lunn]
+
+* Remove useless gpio-fan.h [Andrew Lunn]
+
+Feedback appreciated!
+
+Jamie Lentin (2):
+  hwmon: Add devicetree bindings to gpio-fan
+  ARM: kirkwood: Use devicetree to define DNS-32[05] fan
+
+ .../devicetree/bindings/gpio/gpio-fan.txt          |   25 +++++
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi              |   10 ++
+ arch/arm/mach-kirkwood/board-dnskw.c               |   26 -----
+ drivers/hwmon/gpio-fan.c                           |  116 ++++++++++++++++++++
+ 4 files changed, 151 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-fan.txt
+
+-- 
+1.7.10.4
