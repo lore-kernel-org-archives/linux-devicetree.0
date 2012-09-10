@@ -1,55 +1,239 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH 1/1] ARM: dts: OMAP3: Add gpio-twl4030 properties for
- Overo
-Date: Mon, 10 Sep 2012 15:40:04 +0200
-Message-ID: <504DEDB4.1070804@ti.com>
-References: <1347282996-31190-1-git-send-email-florian.vaussard@epfl.ch> <1347282996-31190-2-git-send-email-florian.vaussard@epfl.ch> <504DEA4E.7080109@ti.com> <504DEC36.4020704@epfl.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <504DEC36.4020704@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: florian.vaussard@epfl.ch
-Cc: Tony Lindgren <tony@atomide.com>, Steve Sakoman <steve@sakoman.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH] regulator: gpio-regulator: add DT bindings
+Date: Mon, 10 Sep 2012 15:41:44 +0200
+Message-ID: <1347284504-13252-1-git-send-email-zonque@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: lrg@ti.com, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2012 03:33 PM, Florian Vaussard wrote:
->>> Support the blue LED connected to the LEDB pin of the TWL4030
->>> on the Gumstix Overo.
->>>
->>> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
->>> ---
->>>   arch/arm/boot/dts/omap3-overo.dtsi |   15 +++++++++++++++
->>>   1 files changed, 15 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/omap3-overo.dtsi
->>> b/arch/arm/boot/dts/omap3-overo.dtsi
->>> index d6cc5e2..89808ce 100644
->>> --- a/arch/arm/boot/dts/omap3-overo.dtsi
->>> +++ b/arch/arm/boot/dts/omap3-overo.dtsi
->>> @@ -13,6 +13,17 @@
->>>
->>>   /include/ "omap3.dtsi"
->>>
->>> +/ {
->>
->> BTW, I'm just wondering. Cannot we use overo without tobi?
->>
->> In that case, the model and compatible should probably be used as well:
->>
->>     model = "TI OMAP3 Gumstix Overo";
->>     compatible = "ti,omap3-overo", "ti,omap3";
-> 
-> No, it cannot. The Overo needs to be plugged into an expansion board, at
-> least to get the power. Hence the absence of model and compatible in
-> omap3-overo.dtsi.
+Add DT bindings for the gpio-regulator driver and some documentation on
+how to use it.
 
-OK, cool. I was wondering because we already have a board-overo.c in the
-kernel, and there is no mention of tobi.
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+---
+ .../bindings/regulator/gpio-regulator.txt          |  58 ++++++++++
+ drivers/regulator/gpio-regulator.c                 | 118 ++++++++++++++++++++-
+ 2 files changed, 175 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/gpio-regulator.txt
 
-OK, I'm adding that patch on top of the other then.
-
-Regards,
-Benoit
-
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+new file mode 100644
+index 0000000..ea3eb09
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -0,0 +1,58 @@
++Device tree bindings for GPIO controlled voltages
++
++Voltage or current regulators on boards that are controlled by GPIOs can
++be used by the gpio-regulator driver.
++
++Required properties:
++
++ - "compatible":	must be set to "gpio-regulator"
++ - "regulator-name": 	must be set to a string describing the name of this
++			regulator.
++
++Optional properties:
++
++ - "startup-delay":		Start-up time in microseconds
++ - "enable-high":		Polarity of enable GPIO. Active high if
++				defined, otherwise active low
++ - "enabled-at-boot":		If set, the regulator has been enabled at boot
++				time
++ - "regulator-type-voltage":	The regulator controls a voltage
++ - "regulator-type-current":	The regulator controls a current
++ - "states":			An array of possible states, describing the
++				GPIO states to reach a given value
++	- "value":		The value of the state, in microvolts or
++				microamperes
++	- "gpios":		bitfield of gpio target-states for the value
++				The n-th bit in the bitfield describes the
++				state of the n-th GPIO from the gpios-array
++
++Also, all properties described in
++Documentation/devicetree/bindings/regulator/regulator.txt are supported as
++well.
++
++Example:
++
++	reg_gpio {
++		compatible = "gpio-regulator";
++		regulator-name = "voltage";
++		regulator-enable-high;
++		regulator-type-voltage;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++
++		gpios = <&gpio 23 0>;
++
++		states {
++			state-on {
++				value = <3300000>;
++				gpios = <0x1>;
++			};
++
++			state-off {
++				value = <0>;
++				gpios = <0x0>;
++			};
++		};
++	};
++
+diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
+index 8b5944f..c44edd0 100644
+--- a/drivers/regulator/gpio-regulator.c
++++ b/drivers/regulator/gpio-regulator.c
+@@ -25,10 +25,14 @@
+ #include <linux/err.h>
+ #include <linux/mutex.h>
+ #include <linux/module.h>
++#include <linux/string.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ #include <linux/regulator/gpio-regulator.h>
++#include <linux/regulator/of_regulator.h>
+ #include <linux/gpio.h>
+ #include <linux/slab.h>
+ 
+@@ -134,13 +138,124 @@ static struct regulator_ops gpio_regulator_current_ops = {
+ 	.set_current_limit = gpio_regulator_set_current_limit,
+ };
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id gpio_regulator_dt_ids[] = {
++	{ .compatible = "gpio-regulator", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, gpio_regulator_dt_ids);
++
++static int gpio_regulator_probe_dt(struct platform_device *pdev)
++{
++	struct device_node *states, *np = pdev->dev.of_node;
++	struct gpio_regulator_config *config;
++	int ret, i;
++
++	if (!np)
++		return 0;
++
++	config = kzalloc(sizeof(config), GFP_KERNEL);
++	if (!config) {
++		ret = -ENOMEM;
++		goto exit;
++	}
++
++	config->nr_gpios = of_gpio_named_count(np, "gpios");
++	config->gpios = kcalloc(config->nr_gpios, sizeof(struct gpio),
++				GFP_KERNEL);
++	if (!config->gpios) {
++		ret = -ENOMEM;
++		goto exit_free_config;
++	}
++
++	for (i = 0; i < config->nr_gpios; i++) {
++		int gpio = of_get_named_gpio(np, "gpios", i);
++
++		config->gpios[i].gpio = gpio;
++		config->gpios[i].flags = GPIOF_DIR_OUT;
++	}
++
++	config->supply_name =
++		kstrdup(of_get_property(np, "regulator-name", NULL),
++			GFP_KERNEL);
++	of_property_read_u32(np, "startup-delay", &config->startup_delay);
++
++	if (of_get_property(np, "enable-high", NULL))
++		config->enable_high = 1;
++	if (of_get_property(np, "enabled-at-boot", NULL))
++		config->enabled_at_boot = 1;
++	if (of_get_property(np, "regulator-type-current", NULL))
++		config->type = REGULATOR_CURRENT;
++	if (of_get_property(np, "regulator-type-voltage", NULL))
++		config->type = REGULATOR_VOLTAGE;
++
++	states = of_find_node_by_name(np, "states");
++
++	if (states) {
++		struct device_node *child = NULL;
++		while ((child = of_get_next_child(states, child)))
++			config->nr_states++;
++
++		config->states = kcalloc(config->nr_states,
++					 sizeof(struct regulator_state),
++					 GFP_KERNEL);
++		if (!config->states) {
++			ret = -ENOMEM;
++			goto exit_free_gpios;
++		}
++
++		i = 0;
++		child = NULL;
++		while ((child = of_get_next_child(states, child))) {
++			u32 value, gpios;
++
++			of_property_read_u32(child, "value", &value);
++			of_property_read_u32(child, "gpios", &gpios);
++
++			config->states[i].value = value;
++			config->states[i].gpios = gpios;
++
++			i++;
++		}
++	}
++
++	config->init_data = of_get_regulator_init_data(&pdev->dev, np);
++
++	pdev->dev.platform_data = config;
++
++	return 0;
++
++exit_free_gpios:
++	kfree(config->gpios);
++exit_free_config:
++	kfree(config);
++exit:
++	return ret;
++}
++#else
++static int gpio_regulator_probe_dt(struct platform_device *dev)
++{
++	return 0;
++}
++#endif
++
+ static int __devinit gpio_regulator_probe(struct platform_device *pdev)
+ {
+-	struct gpio_regulator_config *config = pdev->dev.platform_data;
++	struct gpio_regulator_config *config;
+ 	struct gpio_regulator_data *drvdata;
+ 	struct regulator_config cfg = { };
+ 	int ptr, ret, state;
+ 
++	ret = gpio_regulator_probe_dt(pdev);
++	if (ret < 0)
++		return ret;
++
++	config = pdev->dev.platform_data;
++	if (!config) {
++		dev_err(&pdev->dev, "Platform data missing\n");
++		return -EINVAL;
++	}
++
+ 	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct gpio_regulator_data),
+ 			       GFP_KERNEL);
+ 	if (drvdata == NULL) {
+@@ -276,6 +391,7 @@ static struct platform_driver gpio_regulator_driver = {
+ 	.driver		= {
+ 		.name		= "gpio-regulator",
+ 		.owner		= THIS_MODULE,
++		.of_match_table	= of_match_ptr(gpio_regulator_dt_ids),
+ 	},
+ };
+ 
+-- 
+1.7.11.4
