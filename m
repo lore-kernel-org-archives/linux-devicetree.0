@@ -1,38 +1,60 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH 1/1] ARM: dts: OMAP3: Add gpio-twl4030 properties for
- Overo
-Date: Mon, 10 Sep 2012 16:07:39 +0200
-Message-ID: <504DF42B.1060307@epfl.ch>
-References: <1347282996-31190-1-git-send-email-florian.vaussard@epfl.ch> <1347282996-31190-2-git-send-email-florian.vaussard@epfl.ch> <504DEA4E.7080109@ti.com> <504DEC36.4020704@epfl.ch> <504DEDB4.1070804@ti.com>
-Reply-To: florian.vaussard@epfl.ch
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] mv643xx.c: Add basic device tree support.
+Date: Mon, 10 Sep 2012 14:22:13 +0000
+Message-ID: <201209101422.13875.arnd@arndb.de>
+References: <1344350092-24050-1-git-send-email-ian.molton@codethink.co.uk>
+ <5028D040.60604@codethink.co.uk> <502D201E.9030304@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <504DEDB4.1070804@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Steve Sakoman <steve@sakoman.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <502D201E.9030304-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, dale-1viX+2+OPRFcxvNqPlePQg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->>>
->>> BTW, I'm just wondering. Cannot we use overo without tobi?
->>>
->>> In that case, the model and compatible should probably be used as well:
->>>
->>>      model = "TI OMAP3 Gumstix Overo";
->>>      compatible = "ti,omap3-overo", "ti,omap3";
->>
->> No, it cannot. The Overo needs to be plugged into an expansion board, at
->> least to get the power. Hence the absence of model and compatible in
->> omap3-overo.dtsi.
->
-> OK, cool. I was wondering because we already have a board-overo.c in the
-> kernel, and there is no mention of tobi.
+On Thursday 16 August 2012, Ian Molton wrote:
+> Ping :)
+> 
+> Can we get some consensus on the right approach here? I'm loathe to code
+> this if its going to be rejected.
+> 
+> I'd prefer the driver to be properly split so we dont have the MDIO
+> driver mapping the ethernet drivers address spaces, but if thats not
+> going to be merged, I'm not feeling like doing the work for nothing.
+> 
+> If the driver is to use the overlapping-address mapped-by-the-mdio
+> scheme, then so be it, but I could do with knowing.
+> 
+> Another point against the latter scheme is that the MDIO driver could
+> sensibly be used (the block is identical) on the ArmadaXP, which has 4
+> ethernet blocks rather than two, yet grouped in two pairs with a
+> discontiguous address range.
+> 
+> I'd like to get this moved along as soon as possible though.
 
-In board-overo.c, the various features of each expansion board are
-configured using CONFIG_* options, which is not possible when booting
-with a device tree.
+Following up on the old discussion, I talked briefly about this
+issue with BenH at the kernel summit. The outcome basically is that
+it's a bit sad to have incompatible bindings, but it's not the end
+of the world,and it's more important to do it right this time.
 
-Regards,
-Florian
+Just make sure that you use different values for the 'compatible'
+strings and then do what you need to get the ARM hardware working.
+
+Ideally, the new binding should be written in a way that powerpc
+machines can use the same one, but the existing ones all use
+an version of Open Firmware that is not going to get updated
+and it's also not too likely that we are going to see new
+powerpc machines based on this chip.
+
+	Arnd
