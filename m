@@ -1,242 +1,113 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH v2] regulator: gpio-regulator: add DT bindings
-Date: Mon, 10 Sep 2012 17:03:49 +0200
-Message-ID: <1347289429-18713-1-git-send-email-zonque@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: lrg@ti.com, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Mon, 10 Sep 2012 08:23:51 -0700
+Message-ID: <CACRpkdZySZqf-gPoQLGgMZ_B9m+8+Jbr4b6aA+j_OFDCHc2cGg@mail.gmail.com>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+	<CADjby3UyhW=Ok8Zy57MVUz65gd-=4z2PhE6uqd7F8xtaDXcWfQ@mail.gmail.com>
+	<331ABD5ECB02734CA317220B2BBEABC13EA29819@DBDE01.ent.ti.com>
+	<20120907110251.GA7968@glitch>
+	<331ABD5ECB02734CA317220B2BBEABC13EA29BF3@DBDE01.ent.ti.com>
+	<20120907160025.GB14330@glitch>
+	<CACRpkdbz7CQtaj9e-1kcRVszpCSoqKz=19YT68sTMF9SOyWa8w@mail.gmail.com>
+	<20120908234435.GA13519@glitch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120908234435.GA13519@glitch>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, "AnilKumar, Chimata" <anilkumar@ti.com>, "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.com>, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the gpio-regulator driver and some documentation on
-how to use it.
+On Sun, Sep 9, 2012 at 1:44 AM, Domenico Andreoli <cavokz@gmail.com> wrote:
+> On Fri, Sep 07, 2012 at 11:57:59PM +0200, Linus Walleij wrote:
+>>
+>> If all you need to to is to multiplex the pins into GPIO mode,
+>> then the gpio_get() call on this driver *can* call through to
+>> pinctrl_request_gpio() which will in turn fall through to the
+>> above pinmux driver calls (.gpio_request_enable, etc).
+>
+> So if the GPIO driver doesn't coordinate with the pinctrl driver, it's
+> all left to the GPIO user to configure the pin before using it, right?
 
-Signed-off-by: Daniel Mack <zonque@gmail.com>
+Yes, more or less, or should I say that certain aspects of pinctrl
+are orthogonal to GPIO and the two mostly do not know of each
+other due to a separation of concerns.
+
+So the driver may need to tie things up and request its pinctrl
+and GPIOs independently.
+
+> I can understand the concerns of Tony, whether a pin must be requested
+> or not before the gpio then depends on the GPIO driver implementation,
+> which may or may not call through the pinctrl layer, isn't it?.
+
+Yes that is a sematic limitation, indeed.
+
+I think the best way of trying to eliminate that is to bring the two
+subsystems closer (which is some long-term project) but in the
+meantime we could propose a documentation fixup to make the
+semantics clear, what about this:
+
+>From a92d754367861cf564c09e0b15746e02f0a96f3f Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 10 Sep 2012 17:22:00 +0200
+Subject: [PATCH] pinctrl: document semantics vs GPIO
+
+The semantics of the interactions between GPIO and pinctrl may be
+unclear, e.g. which one do you request first? This amends the
+documentation to make this clear.
+
+Reported-by: Domenico Andreoli <cavokz@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-v1 -> v2
-  Fixed wrong kzalloc() size.
+ Documentation/pinctrl.txt | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
- .../bindings/regulator/gpio-regulator.txt          |  58 ++++++++++
- drivers/regulator/gpio-regulator.c                 | 118 ++++++++++++++++++++-
- 2 files changed, 175 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+diff --git a/Documentation/pinctrl.txt b/Documentation/pinctrl.txt
+index 1479aca..941e783 100644
+--- a/Documentation/pinctrl.txt
++++ b/Documentation/pinctrl.txt
+@@ -289,6 +289,29 @@ Interaction with the GPIO subsystem
+ The GPIO drivers may want to perform operations of various types on the same
+ physical pins that are also registered as pin controller pins.
 
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-new file mode 100644
-index 0000000..ea3eb09
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -0,0 +1,58 @@
-+Device tree bindings for GPIO controlled voltages
++First and foremost, the two subsystems can be used as completely orthogonal,
++so say that your driver is fetching its resources like this:
 +
-+Voltage or current regulators on boards that are controlled by GPIOs can
-+be used by the gpio-regulator driver.
++#include <linux/pinctrl/consumer.h>
++#include <linux/gpio.h>
 +
-+Required properties:
++struct pinctrl *pinctrl;
++int gpio;
 +
-+ - "compatible":	must be set to "gpio-regulator"
-+ - "regulator-name": 	must be set to a string describing the name of this
-+			regulator.
++pinctrl = devm_pinctrl_get_select_default(&dev);
++gpio = devm_gpio_request(&dev, 14, "foo");
 +
-+Optional properties:
++Here we first request a certain pin state and then request GPIO 14 to be
++used. If you're using the subsystems orthogonally like this, always get
++your pinctrl handle and select the desired pinctrl state BEFORE requesting
++the GPIO. This is a semantic convention to avoid situations that can be
++electrically unpleasant, you may certainly want to mux in and bias pins
++a certain way before the GPIO subsystems starts to deal with them.
 +
-+ - "startup-delay":		Start-up time in microseconds
-+ - "enable-high":		Polarity of enable GPIO. Active high if
-+				defined, otherwise active low
-+ - "enabled-at-boot":		If set, the regulator has been enabled at boot
-+				time
-+ - "regulator-type-voltage":	The regulator controls a voltage
-+ - "regulator-type-current":	The regulator controls a current
-+ - "states":			An array of possible states, describing the
-+				GPIO states to reach a given value
-+	- "value":		The value of the state, in microvolts or
-+				microamperes
-+	- "gpios":		bitfield of gpio target-states for the value
-+				The n-th bit in the bitfield describes the
-+				state of the n-th GPIO from the gpios-array
++But there are also situations where it makes sense for the GPIO subsystem
++to communicate with with the pinctrl subsystem, using the latter as a
++back-end.
 +
-+Also, all properties described in
-+Documentation/devicetree/bindings/regulator/regulator.txt are supported as
-+well.
+ Since the pin controller subsystem have its pinspace local to the pin
+ controller we need a mapping so that the pin control subsystem can figure out
+ which pin controller handles control of a certain GPIO pin. Since a single
+@@ -359,6 +382,7 @@ will get an pin number into its handled number
+range. Further it is also passed
+ the range ID value, so that the pin controller knows which range it should
+ deal with.
+
 +
-+Example:
-+
-+	reg_gpio {
-+		compatible = "gpio-regulator";
-+		regulator-name = "voltage";
-+		regulator-enable-high;
-+		regulator-type-voltage;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+
-+		gpios = <&gpio 23 0>;
-+
-+		states {
-+			state-on {
-+				value = <3300000>;
-+				gpios = <0x1>;
-+			};
-+
-+			state-off {
-+				value = <0>;
-+				gpios = <0x0>;
-+			};
-+		};
-+	};
-+
-diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-index 8b5944f..d34ec68 100644
---- a/drivers/regulator/gpio-regulator.c
-+++ b/drivers/regulator/gpio-regulator.c
-@@ -25,10 +25,14 @@
- #include <linux/err.h>
- #include <linux/mutex.h>
- #include <linux/module.h>
-+#include <linux/string.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
- #include <linux/regulator/gpio-regulator.h>
-+#include <linux/regulator/of_regulator.h>
- #include <linux/gpio.h>
- #include <linux/slab.h>
- 
-@@ -134,13 +138,124 @@ static struct regulator_ops gpio_regulator_current_ops = {
- 	.set_current_limit = gpio_regulator_set_current_limit,
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id gpio_regulator_dt_ids[] = {
-+	{ .compatible = "gpio-regulator", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_regulator_dt_ids);
-+
-+static int gpio_regulator_probe_dt(struct platform_device *pdev)
-+{
-+	struct device_node *states, *np = pdev->dev.of_node;
-+	struct gpio_regulator_config *config;
-+	int ret, i;
-+
-+	if (!np)
-+		return 0;
-+
-+	config = kzalloc(sizeof(*config), GFP_KERNEL);
-+	if (!config) {
-+		ret = -ENOMEM;
-+		goto exit;
-+	}
-+
-+	config->nr_gpios = of_gpio_named_count(np, "gpios");
-+	config->gpios = kcalloc(config->nr_gpios, sizeof(struct gpio),
-+				GFP_KERNEL);
-+	if (!config->gpios) {
-+		ret = -ENOMEM;
-+		goto exit_free_config;
-+	}
-+
-+	for (i = 0; i < config->nr_gpios; i++) {
-+		int gpio = of_get_named_gpio(np, "gpios", i);
-+
-+		config->gpios[i].gpio = gpio;
-+		config->gpios[i].flags = GPIOF_DIR_OUT;
-+	}
-+
-+	config->supply_name =
-+		kstrdup(of_get_property(np, "regulator-name", NULL),
-+			GFP_KERNEL);
-+	of_property_read_u32(np, "startup-delay", &config->startup_delay);
-+
-+	if (of_get_property(np, "enable-high", NULL))
-+		config->enable_high = 1;
-+	if (of_get_property(np, "enabled-at-boot", NULL))
-+		config->enabled_at_boot = 1;
-+	if (of_get_property(np, "regulator-type-current", NULL))
-+		config->type = REGULATOR_CURRENT;
-+	if (of_get_property(np, "regulator-type-voltage", NULL))
-+		config->type = REGULATOR_VOLTAGE;
-+
-+	states = of_find_node_by_name(np, "states");
-+
-+	if (states) {
-+		struct device_node *child = NULL;
-+		while ((child = of_get_next_child(states, child)))
-+			config->nr_states++;
-+
-+		config->states = kcalloc(config->nr_states,
-+					 sizeof(struct regulator_state),
-+					 GFP_KERNEL);
-+		if (!config->states) {
-+			ret = -ENOMEM;
-+			goto exit_free_gpios;
-+		}
-+
-+		i = 0;
-+		child = NULL;
-+		while ((child = of_get_next_child(states, child))) {
-+			u32 value, gpios;
-+
-+			of_property_read_u32(child, "value", &value);
-+			of_property_read_u32(child, "gpios", &gpios);
-+
-+			config->states[i].value = value;
-+			config->states[i].gpios = gpios;
-+
-+			i++;
-+		}
-+	}
-+
-+	config->init_data = of_get_regulator_init_data(&pdev->dev, np);
-+
-+	pdev->dev.platform_data = config;
-+
-+	return 0;
-+
-+exit_free_gpios:
-+	kfree(config->gpios);
-+exit_free_config:
-+	kfree(config);
-+exit:
-+	return ret;
-+}
-+#else
-+static int gpio_regulator_probe_dt(struct platform_device *dev)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int __devinit gpio_regulator_probe(struct platform_device *pdev)
- {
--	struct gpio_regulator_config *config = pdev->dev.platform_data;
-+	struct gpio_regulator_config *config;
- 	struct gpio_regulator_data *drvdata;
- 	struct regulator_config cfg = { };
- 	int ptr, ret, state;
- 
-+	ret = gpio_regulator_probe_dt(pdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	config = pdev->dev.platform_data;
-+	if (!config) {
-+		dev_err(&pdev->dev, "Platform data missing\n");
-+		return -EINVAL;
-+	}
-+
- 	drvdata = devm_kzalloc(&pdev->dev, sizeof(struct gpio_regulator_data),
- 			       GFP_KERNEL);
- 	if (drvdata == NULL) {
-@@ -276,6 +391,7 @@ static struct platform_driver gpio_regulator_driver = {
- 	.driver		= {
- 		.name		= "gpio-regulator",
- 		.owner		= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(gpio_regulator_dt_ids),
- 	},
- };
- 
+ PINMUX interfaces
+ =================
+
 -- 
-1.7.11.4
+1.7.11.3
+
+
+Yours,
+Linus Walleij
