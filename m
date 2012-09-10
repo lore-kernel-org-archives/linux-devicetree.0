@@ -1,53 +1,121 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Mon, 10 Sep 2012 21:40:12 +0200
-Message-ID: <CACRpkdbSY-aH_Vf3Q4h-ufz35m6=vVXCEecGGS-WOsG7vmPZ0g@mail.gmail.com>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2] regulator: gpio-regulator: add DT bindings
+Date: Mon, 10 Sep 2012 13:40:36 -0600
+Message-ID: <504E4234.9090300@wwwdotorg.org>
+References: <1347289429-18713-1-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: AnilKumar Ch <anilkumar@ti.com>, tony@atomide.com
-Cc: bryan.wu@canonical.com, rpurdie@rpsys.net, devicetree-discuss@lists.ozlabs.org, linux-leds@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1347289429-18713-1-git-send-email-zonque@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, lrg@ti.com, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 1, 2012 at 10:16 AM, AnilKumar Ch <anilkumar@ti.com> wrote:
+On 09/10/2012 09:03 AM, Daniel Mack wrote:
+> Add DT bindings for the gpio-regulator driver and some documentation on
+> how to use it.
 
-> Adopt pinctrl support to leds-gpio driver based on leds-gpio
-> device pointer, pinctrl driver configure SoC pins to GPIO
-> mode according to definitions provided in .dts file.
->
-> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> @@ -0,0 +1,58 @@
+> +Device tree bindings for GPIO controlled voltages
+> +
+> +Voltage or current regulators on boards that are controlled by GPIOs can
+> +be used by the gpio-regulator driver.
+> +
+> +Required properties:
+> +
+> + - "compatible":	must be set to "gpio-regulator"
+> + - "regulator-name": 	must be set to a string describing the name of this
+> +			regulator.
 
-So looking back at this after Stephen posed a real good
-question, when you say "configure SoC pins to GPIO
-mode", does that mean anything else than to mux them into
-GPIO mode?
+I'd expect the "gpios" property to be listed here.
 
-In that case, have you considered augmenting
-pinctrl-single.c to implement .gpio_request_enable()
-.gpio_disable_free() and maybe also .gpio_set_direction()
-in its struct pinmux_ops pinmux backend?
+> +Optional properties:
+> +
+> + - "startup-delay":		Start-up time in microseconds
+> + - "enable-high":		Polarity of enable GPIO. Active high if
+> +				defined, otherwise active low
 
-If not, why?
+fixed-regulator.txt already has an "enable-active-high" property; it'd
+be nice to be consistent.
 
-Currently it looks like this:
+> + - "enabled-at-boot":		If set, the regulator has been enabled at boot
+> +				time
 
-static int pcs_request_gpio(struct pinctrl_dev *pctldev,
-                        struct pinctrl_gpio_range *range, unsigned offset)
-{
-        return -ENOTSUPP;
-}
+Isn't that regulator-boot-on, as defined in regulator.txt that you
+mentioned?
 
-static struct pinmux_ops pcs_pinmux_ops = {
-        .get_functions_count = pcs_get_functions_count,
-        .get_function_name = pcs_get_function_name,
-        .get_function_groups = pcs_get_function_groups,
-        .enable = pcs_enable,
-        .disable = pcs_disable,
-        .gpio_request_enable = pcs_request_gpio,
+> + - "regulator-type-voltage":	The regulator controls a voltage
+> + - "regulator-type-current":	The regulator controls a current
+
+I wonder if it'd be better to differentiate this using different
+compatible values instead?
+
+> + - "states":			An array of possible states, describing the
+> +				GPIO states to reach a given value
+> +	- "value":		The value of the state, in microvolts or
+> +				microamperes
+
+A name like "microvolts", "voltage", "microamps", or "current" might be
+more descriptive here.
+
+> +	- "gpios":		bitfield of gpio target-states for the value
+> +				The n-th bit in the bitfield describes the
+> +				state of the n-th GPIO from the gpios-array
+
+"gpios" sounds like the name of a property that defines which GPIOs are
+used, rather than the value of those GPIOs. Perhaps "gpio-values" instead?
+
+Actually, I wonder if we really even need to represent that values
+explicitly; rather than have a big set of nodes, perhaps you can instead
+have a single property that lists the voltage (or current) that each
+combination of GPIO values gives; something like:
+
+reg_gpio {
+    ...
+    gpios = <&ggpio 23 0 &gpio 24 0>;
+    voltages = <0 1000000 2000000 3000000>;
 };
 
-Yours,
-Linus Walleij
+(As inspiration for that, I looked at
+Documentation/devicetree/bindings/net/mdio-mux-gpio.txt which doesn't
+have a property defining the value of the GPIOs for each combination,
+but rather a node per valid combination).
+
+Perhaps represent and invalid GPIO combination with 0xffffffff?
+
+> +Also, all properties described in
+> +Documentation/devicetree/bindings/regulator/regulator.txt are supported as
+> +well.
+> +
+> +Example:
+> +
+> +	reg_gpio {
+> +		compatible = "gpio-regulator";
+> +		regulator-name = "voltage";
+> +		regulator-enable-high;
+> +		regulator-type-voltage;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +
+> +		gpios = <&gpio 23 0>;
+> +
+> +		states {
+> +			state-on {
+> +				value = <3300000>;
+> +				gpios = <0x1>;
+> +			};
+> +
+> +			state-off {
+> +				value = <0>;
+> +				gpios = <0x0>;
+> +			};
+> +		};
+> +	};
+
+That particular example only has on/off states, and so might be better
+covered using the existing fixed-regulator, with optional GPIO control.
+Perhaps an example using 2 GPIOs for 4 voltage states would be more useful?
