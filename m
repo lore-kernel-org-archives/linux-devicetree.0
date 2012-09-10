@@ -1,42 +1,42 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v3 1/3] ARM: add cpufreq transiton notifier to adjust
- loops_per_jiffy for smp
-Date: Mon, 10 Sep 2012 09:17:45 +0800
-Message-ID: <20120910011741.GP26709@S2101-09.ap.freescale.net>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org>
- <1344577046-14847-2-git-send-email-shawn.guo@linaro.org>
- <5049252D.9000802@wwwdotorg.org>
- <20120907025847.GI26709@S2101-09.ap.freescale.net>
- <504A26E4.4070600@wwwdotorg.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
+Date: Mon, 10 Sep 2012 14:25:43 +0800
+Message-ID: <20120910062535.GU26709@S2101-09.ap.freescale.net>
+References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
+ <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
+ <20120831064125.GA3271@r65073-Latitude-D630>
+ <20120906221155.20289.73650@nucleus>
+ <20120907002618.GB26709@S2101-09.ap.freescale.net>
+ <20120907192444.20289.97042@nucleus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <504A26E4.4070600@wwwdotorg.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, Kevin Hilman <khilman@ti.com>, Nishanth Menon <nm@ti.com>, Mike Turquette <mturquette@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, cpufreq@vger.kernel.org, Shilimkar Santosh <santosh.shilimkar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Richard Zhao <richard.zhao@freescale.com>, Richard Zhao <richard.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+In-Reply-To: <20120907192444.20289.97042@nucleus>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2012 at 10:55:00AM -0600, Stephen Warren wrote:
-> Yes, that does solve the problem (well, with s/late_init/late_initcall/).
+On Fri, Sep 07, 2012 at 12:24:44PM -0700, Mike Turquette wrote:
+> Done.  I've taken patch #1 "clk: add of_clk_src_onecell_get() support"
+> into clk-next.
 > 
-> As you imply, that change wouldn't help if cpu-tegra.c was built as a
-> module.
+Thanks, Mike.
 
-I doubt that.  Have you confirmed it with testing?  When you install
-module cpu-tegra, the pcie initialization has been done, right?
-
-> So, is this something you can work around in your patch?
-> 
-Before we head to a solution, we need to identify the cause.
-
-One thing I note is there is no loops_per_jiffy updating in cpu-tegra
-driver.  But if I understand correctly, the driver is running on
-MP system.  It should update loops_per_jiffy when cpu frequency
-changes, right?  I'm worrying about that the timeout in tegra pcie
-driver just happens to work with a wrong loops_per_jiffy, but becomes
-broken when loops_per_jiffy gets correct.
+I'm still waiting for a stable branch like clk-3.7, which I can ask
+arm-soc folks to pull as a dependency.  I have some imx and mxs 3.7
+material currently pending on this.
 
 -- 
 Regards,
