@@ -1,48 +1,55 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
+From: Benoit Cousson <b-cousson@ti.com>
 Subject: Re: [PATCH 1/1] ARM: dts: OMAP3: Add gpio-twl4030 properties for
  Overo
-Date: Mon, 10 Sep 2012 15:33:42 +0200
-Message-ID: <504DEC36.4020704@epfl.ch>
-References: <1347282996-31190-1-git-send-email-florian.vaussard@epfl.ch> <1347282996-31190-2-git-send-email-florian.vaussard@epfl.ch> <504DEA4E.7080109@ti.com>
-Reply-To: florian.vaussard@epfl.ch
+Date: Mon, 10 Sep 2012 15:40:04 +0200
+Message-ID: <504DEDB4.1070804@ti.com>
+References: <1347282996-31190-1-git-send-email-florian.vaussard@epfl.ch> <1347282996-31190-2-git-send-email-florian.vaussard@epfl.ch> <504DEA4E.7080109@ti.com> <504DEC36.4020704@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <504DEA4E.7080109@ti.com>
+In-Reply-To: <504DEC36.4020704@epfl.ch>
 Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
+To: florian.vaussard@epfl.ch
 Cc: Tony Lindgren <tony@atomide.com>, Steve Sakoman <steve@sakoman.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->> Support the blue LED connected to the LEDB pin of the TWL4030
->> on the Gumstix Overo.
+On 09/10/2012 03:33 PM, Florian Vaussard wrote:
+>>> Support the blue LED connected to the LEDB pin of the TWL4030
+>>> on the Gumstix Overo.
+>>>
+>>> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+>>> ---
+>>>   arch/arm/boot/dts/omap3-overo.dtsi |   15 +++++++++++++++
+>>>   1 files changed, 15 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap3-overo.dtsi
+>>> b/arch/arm/boot/dts/omap3-overo.dtsi
+>>> index d6cc5e2..89808ce 100644
+>>> --- a/arch/arm/boot/dts/omap3-overo.dtsi
+>>> +++ b/arch/arm/boot/dts/omap3-overo.dtsi
+>>> @@ -13,6 +13,17 @@
+>>>
+>>>   /include/ "omap3.dtsi"
+>>>
+>>> +/ {
 >>
->> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
->> ---
->>   arch/arm/boot/dts/omap3-overo.dtsi |   15 +++++++++++++++
->>   1 files changed, 15 insertions(+), 0 deletions(-)
+>> BTW, I'm just wondering. Cannot we use overo without tobi?
 >>
->> diff --git a/arch/arm/boot/dts/omap3-overo.dtsi b/arch/arm/boot/dts/omap3-overo.dtsi
->> index d6cc5e2..89808ce 100644
->> --- a/arch/arm/boot/dts/omap3-overo.dtsi
->> +++ b/arch/arm/boot/dts/omap3-overo.dtsi
->> @@ -13,6 +13,17 @@
+>> In that case, the model and compatible should probably be used as well:
 >>
->>   /include/ "omap3.dtsi"
->>
->> +/ {
->
-> BTW, I'm just wondering. Cannot we use overo without tobi?
->
-> In that case, the model and compatible should probably be used as well:
->
-> 	model = "TI OMAP3 Gumstix Overo";
-> 	compatible = "ti,omap3-overo", "ti,omap3";
+>>     model = "TI OMAP3 Gumstix Overo";
+>>     compatible = "ti,omap3-overo", "ti,omap3";
+> 
+> No, it cannot. The Overo needs to be plugged into an expansion board, at
+> least to get the power. Hence the absence of model and compatible in
+> omap3-overo.dtsi.
 
-No, it cannot. The Overo needs to be plugged into an expansion board, at
-least to get the power. Hence the absence of model and compatible in
-omap3-overo.dtsi.
+OK, cool. I was wondering because we already have a board-overo.c in the
+kernel, and there is no mention of tobi.
+
+OK, I'm adding that patch on top of the other then.
 
 Regards,
-Florian
+Benoit
+
