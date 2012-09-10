@@ -1,46 +1,65 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: add cpufreq transiton notifier to adjust
- loops_per_jiffy for smp
-Date: Mon, 10 Sep 2012 11:17:50 -0600
-Message-ID: <504E20BE.8050107@wwwdotorg.org>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org> <1344577046-14847-2-git-send-email-shawn.guo@linaro.org> <5049252D.9000802@wwwdotorg.org> <20120907025847.GI26709@S2101-09.ap.freescale.net> <504A26E4.4070600@wwwdotorg.org> <20120910011741.GP26709@S2101-09.ap.freescale.net>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v2 1/4] clk: add of_clk_src_onecell_get() support
+Date: Mon, 10 Sep 2012 10:32:26 -0700
+Message-ID: <20120910173226.20289.88000@nucleus>
+References: <1345642590-29905-1-git-send-email-shawn.guo@linaro.org>
+ <1345642590-29905-2-git-send-email-shawn.guo@linaro.org>
+ <20120831064125.GA3271@r65073-Latitude-D630>
+ <20120906221155.20289.73650@nucleus>
+ <20120907002618.GB26709@S2101-09.ap.freescale.net>
+ <20120907192444.20289.97042@nucleus>
+ <20120910062535.GU26709@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120910011741.GP26709-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120910062535.GU26709@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, arnd.bergmann@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2012 07:17 PM, Shawn Guo wrote:
-> On Fri, Sep 07, 2012 at 10:55:00AM -0600, Stephen Warren wrote:
->> Yes, that does solve the problem (well, with s/late_init/late_initcall/).
->>
->> As you imply, that change wouldn't help if cpu-tegra.c was built as a
->> module.
+Quoting Shawn Guo (2012-09-09 23:25:43)
+> On Fri, Sep 07, 2012 at 12:24:44PM -0700, Mike Turquette wrote:
+> > Done.  I've taken patch #1 "clk: add of_clk_src_onecell_get() support"
+> > into clk-next.
+> > 
+> Thanks, Mike.
 > 
-> I doubt that.  Have you confirmed it with testing?  When you install
-> module cpu-tegra, the pcie initialization has been done, right?
+> I'm still waiting for a stable branch like clk-3.7, which I can ask
+> arm-soc folks to pull as a dependency.  I have some imx and mxs 3.7
+> material currently pending on this.
+> 
 
-Never mind, the code can't be built as a module anyway.
+Hi Shawn,
 
-Aside from that, I misinterpreted your test patch, and thought that it
-was moving the Tegra cpufreq driver initialization earlier, but it's
-actually moving it later, and in fact by chance after PCIe
-initialization, which explains why it solves the issue.
+I didn't realize you were waiting on a stable branch.  It seemed that no
+one used my clk-3.6 stable branch during the last cycle so I got lazy
+and decided not to have a clk-3.7 this time around.  However my current
+clk-next HEAD is stable so creating one is easy enough... done!
 
-I think the root of the problem is that cpufreq is lowering the CPU
-frequency, yet the patch which converted Tegra to the common clock
-framework removed the code that actually changes the CPU clock rate. So,
-cpufreq thinks the CPU is running at e.g. 216MHz, but it's actually
-still running at 1.0GHz, and hence re-calculating the delay loops breaks
-things, since delays aren't as long as the system thinks they are. The
-variability is due to whether lowering the CPU frequency just happens to
-occur before or after the PCIe controller is initialized.
+Now that I have a clk-3.7 stable branch I'll plan on merging clk-next
+into clk-3.7 periodically as stability dictates.
 
-Prashant, are you able to fix the clock driver deficiency within the
-next 2-3 days or so (so I can include the fix in the pull requests I
-send for 3.7, which need to be sent before the end of the week)? Or, do
-we need to disable cpufreq for Tegra because of this?
+Arnd, how does the "arm-soc dependency" thing work?  Do I still issue a
+pull request to Linus for 3.7?
+
+Regards,
+Mike
+
+> -- 
+> Regards,
+> Shawn
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
