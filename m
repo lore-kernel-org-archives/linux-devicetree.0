@@ -1,7 +1,7 @@
 From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: [PATCH V2 2/2] ARM: kirkwood: Use devicetree to define DNS-32[05] fan
-Date: Mon, 10 Sep 2012 14:51:52 +0100
-Message-ID: <1347285112-13542-3-git-send-email-jm@lentin.co.uk>
+Subject: [PATCH V2 1/2] hwmon: Add devicetree bindings to gpio-fan
+Date: Mon, 10 Sep 2012 14:51:51 +0100
+Message-ID: <1347285112-13542-2-git-send-email-jm@lentin.co.uk>
 References: <1347035675-23907-1-git-send-email-jm@lentin.co.uk>
  <1347285112-13542-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
@@ -23,89 +23,204 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Her
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove more board-specific code by using devicetree to define the fan
-attached to both boards.
+Allow a gpio-fan to be defined in devicetree, see binding documentation
+for details.
 
 Changes since V1:-
-* Remove now-useless gpio-fan.h [Andrew Lunn]
+* Don't hide return codes [Guenter Roeck]
+* Remove typecast noise [Guenter Roeck]
+* Use of_find_property instead of counting u32s [Guenter Roeck]
+* Don't count GPIOs twice [Andrew Lunn]
+* Use of_prop_next_u32 to get records in a more obvious fashion
+* Use CONFIG_OF_GPIO instead of CONFIG_OF
+* Apply __devinitdata to of_gpio_fan_match [Andrew Lunn]
 
 Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 ---
- arch/arm/boot/dts/kirkwood-dnskw.dtsi |   10 ++++++++++
- arch/arm/mach-kirkwood/board-dnskw.c  |   26 --------------------------
- 2 files changed, 10 insertions(+), 26 deletions(-)
+ .../devicetree/bindings/gpio/gpio-fan.txt          |   25 +++++
+ drivers/hwmon/gpio-fan.c                           |  116 ++++++++++++++++++++
+ 2 files changed, 141 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-fan.txt
 
-diff --git a/arch/arm/boot/dts/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-index 7408655..9b32d02 100644
---- a/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-@@ -25,6 +25,16 @@
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+new file mode 100644
+index 0000000..2dd457a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+@@ -0,0 +1,25 @@
++Bindings for fan connected to GPIO lines
++
++Required properties:
++- compatible : "gpio-fan"
++- gpios: Specifies the pins that map to bits in the control value,
++  ordered MSB-->LSB.
++- gpio-fan,speed-map: A mapping of possible fan RPM speeds and the
++  control value that should be set to achieve them. This array
++  must have the RPM values in ascending order.
++
++Optional properties:
++- alarm-gpios: This pin going active indicates something is wrong with
++  the fan, and a udev event will be fired.
++
++Examples:
++
 +	gpio_fan {
-+		/* Fan: ADDA AD045HB-G73 40mm 6000rpm@5v */
 +		compatible = "gpio-fan";
 +		gpios = <&gpio1 14 1
 +			 &gpio1 13 1>;
 +		gpio-fan,speed-map = <0    0
 +				      3000 1
 +				      6000 2>;
++		alarm-gpios = <&gpio1 15 1>;
 +	};
-+
- 	ocp@f1000000 {
- 		sata@80000 {
- 			status = "okay";
-diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
-index 4ab3506..6ac7a8d 100644
---- a/arch/arm/mach-kirkwood/board-dnskw.c
-+++ b/arch/arm/mach-kirkwood/board-dnskw.c
-@@ -19,7 +19,6 @@
- #include <linux/of.h>
+diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
+index 2f4b01b..f0a803b 100644
+--- a/drivers/hwmon/gpio-fan.c
++++ b/drivers/hwmon/gpio-fan.c
+@@ -31,6 +31,8 @@
+ #include <linux/hwmon.h>
  #include <linux/gpio.h>
- #include <linux/input.h>
--#include <linux/gpio-fan.h>
- #include <linux/leds.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-@@ -67,29 +66,6 @@ static unsigned int dnskw_mpp_config[] __initdata = {
- 	0
+ #include <linux/gpio-fan.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
+ 
+ struct gpio_fan_data {
+ 	struct platform_device	*pdev;
+@@ -400,14 +402,127 @@ static ssize_t show_name(struct device *dev,
+ 
+ static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
+ 
++
++#ifdef CONFIG_OF_GPIO
++/*
++ * Translate OpenFirmware node properties into platform_data
++ */
++static int gpio_fan_get_of_pdata(struct device *dev,
++			    struct gpio_fan_platform_data *pdata)
++{
++	struct device_node *node;
++	struct gpio_fan_speed  *speed;
++	unsigned *ctrl;
++	unsigned i;
++	u32 u;
++	struct property *prop;
++	const __be32 *p;
++
++	node = dev->of_node;
++
++	/* Fill GPIO pin array */
++	pdata->num_ctrl = of_gpio_count(node);
++	ctrl = devm_kzalloc(dev, pdata->num_ctrl * sizeof(unsigned),
++				GFP_KERNEL);
++	if (!ctrl)
++		return -ENOMEM;
++	for (i = 0; i < pdata->num_ctrl; i++) {
++		int val;
++
++		val = of_get_gpio(node, i);
++		if (val < 0)
++			return val;
++		ctrl[i] = val;
++	}
++	pdata->ctrl = ctrl;
++
++	/* Get number of RPM/ctrl_val pairs in speed map */
++	prop = of_find_property(node, "gpio-fan,speed-map", &i);
++	if (!prop) {
++		dev_err(dev, "gpio-fan,speed-map node missing from DT");
++		return -ENODEV;
++	}
++	i = i / sizeof(u32);
++	if (i == 0 || i & 1) {
++		dev_err(dev, "gpio-fan,speed-map contains zero/odd number of entries");
++		return -ENODEV;
++	}
++	pdata->num_speed = i / 2;
++
++	/*
++	 * Populate speed map
++	 * Speed map is in the form <RPM ctrl_val RPM ctrl_val ...>
++	 * this needs splitting into pairs to create gpio_fan_speed structs
++	 */
++	speed = devm_kzalloc(dev,
++			pdata->num_speed * sizeof(struct gpio_fan_speed),
++			GFP_KERNEL);
++	if (!speed)
++		return -ENOMEM;
++	p = NULL;
++	for (i = 0; i < pdata->num_speed; i++) {
++		p = of_prop_next_u32(prop, p, &u);
++		if (!p)
++			return -ENODEV;
++		speed[i].rpm = u;
++		p = of_prop_next_u32(prop, p, &u);
++		if (!p)
++			return -ENODEV;
++		speed[i].ctrl_val = u;
++	}
++	pdata->speed = speed;
++
++	/* Alarm GPIO if one exists */
++	if (of_gpio_named_count(node, "alarm-gpios")) {
++		struct gpio_fan_alarm *alarm;
++		int val;
++		enum of_gpio_flags flags;
++
++		alarm = devm_kzalloc(dev, sizeof(struct gpio_fan_alarm),
++					GFP_KERNEL);
++		if (!alarm)
++			return -ENOMEM;
++
++		val = of_get_named_gpio_flags(node, "alarm-gpios", 0, &flags);
++		if (val < 0)
++			return val;
++		alarm->gpio = val;
++		alarm->active_low = flags & OF_GPIO_ACTIVE_LOW;
++
++		pdata->alarm = alarm;
++	}
++
++	return 0;
++}
++
++static struct of_device_id of_gpio_fan_match[] __devinitdata = {
++	{ .compatible = "gpio-fan", },
++	{},
++};
++#endif /* CONFIG_OF_GPIO */
++
+ static int __devinit gpio_fan_probe(struct platform_device *pdev)
+ {
+ 	int err;
+ 	struct gpio_fan_data *fan_data;
+ 	struct gpio_fan_platform_data *pdata = pdev->dev.platform_data;
+ 
++#ifdef CONFIG_OF_GPIO
++	if (!pdata) {
++		pdata = devm_kzalloc(&pdev->dev,
++					sizeof(struct gpio_fan_platform_data),
++					GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++
++		err = gpio_fan_get_of_pdata(&pdev->dev, pdata);
++		if (err)
++			return err;
++	}
++#else /* CONFIG_OF_GPIO */
+ 	if (!pdata)
+ 		return -EINVAL;
++#endif /* CONFIG_OF_GPIO */
+ 
+ 	fan_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
+ 				GFP_KERNEL);
+@@ -511,6 +626,7 @@ static struct platform_driver gpio_fan_driver = {
+ 	.driver	= {
+ 		.name	= "gpio-fan",
+ 		.pm	= GPIO_FAN_PM,
++		.of_match_table = of_match_ptr(of_gpio_fan_match),
+ 	},
  };
  
--/* Fan: ADDA AD045HB-G73 40mm 6000rpm@5v */
--static struct gpio_fan_speed dnskw_fan_speed[] = {
--	{    0,  0 },
--	{ 3000,	 1 },
--	{ 6000,	 2 },
--};
--static unsigned dnskw_fan_pins[] = {46, 45};
--
--static struct gpio_fan_platform_data dnskw_fan_data = {
--	.num_ctrl	= ARRAY_SIZE(dnskw_fan_pins),
--	.ctrl		= dnskw_fan_pins,
--	.num_speed	= ARRAY_SIZE(dnskw_fan_speed),
--	.speed		= dnskw_fan_speed,
--};
--
--static struct platform_device dnskw_fan_device = {
--	.name	= "gpio-fan",
--	.id	= -1,
--	.dev	= {
--		.platform_data	= &dnskw_fan_data,
--	},
--};
--
- static void dnskw_power_off(void)
- {
- 	gpio_set_value(36, 1);
-@@ -114,8 +90,6 @@ void __init dnskw_init(void)
- 	kirkwood_ehci_init();
- 	kirkwood_ge00_init(&dnskw_ge00_data);
- 
--	platform_device_register(&dnskw_fan_device);
--
- 	/* Register power-off GPIO. */
- 	if (gpio_request(36, "dnskw:power:off") == 0
- 	    && gpio_direction_output(36, 0) == 0)
 -- 
 1.7.10.4
