@@ -1,40 +1,42 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH 0/2] ARM: omap/dts: Add support for Gumstix Overo with
- Tobi expansion
-Date: Mon, 10 Sep 2012 14:53:40 +0200
-Message-ID: <504DE2D4.8030705@epfl.ch>
-References: <1346429172-5902-1-git-send-email-florian.vaussard@epfl.ch> <20120906205227.GM1303@atomide.com> <504DB202.5050500@epfl.ch> <504DD128.1000803@ti.com>
-Reply-To: florian.vaussard@epfl.ch
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: [PATCH 0/1] ARM: dts: OMAP3: Add gpio-twl4030 properties for Overo
+Date: Mon, 10 Sep 2012 15:16:35 +0200
+Message-ID: <1347282996-31190-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <504DD128.1000803@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Steve Sakoman <steve@sakoman.com>, Philippe Retornaz <philippe.retornaz@epfl.ch>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Sakoman <steve-4Uf0gMDude1BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->
-> Patches looks good to me. I just adding them right now in my for_3.7/dts tree.
->
-> I've just slightly changed the subjects:
->
-> Documentation: dt: Update the OMAP documentation with Overo/Toby
-> ARM: dts: OMAP3: Add support for Gumstix Overo with Tobi expansion board
->
-> If you want to give it a try, here is the branch that contains all the DTS series I
-> already pulled. It includes your gpio-twl4030 patches as well.
->
-> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.7/dts
+Hello,
 
-Boot as expected on Gumstix Overo with Tobi expansion board.
+This patch adds the support for the blue LED connected to the LEDB
+pin of the TWL4030 on the Gumstix Overo when booting from the device
+tree.
 
-I will submit a patch to support the blue LED connected to the TWL4030, 
-as the DTS support was merged in your branch.
-
-And of course I will continue on getting features to work with 
-devicetree for the Overo.
+Build on top of Benoit's for_3.7/dts tree.
 
 Regards,
 Florian
+
+
+Florian Vaussard (1):
+  ARM: dts: OMAP3: Add gpio-twl4030 properties for Overo
+
+ arch/arm/boot/dts/omap3-overo.dtsi |   15 +++++++++++++++
+ 1 files changed, 15 insertions(+), 0 deletions(-)
+
+-- 
+1.7.5.4
