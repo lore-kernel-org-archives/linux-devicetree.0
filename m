@@ -1,57 +1,65 @@
-From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH] ARM: OMAP2+: Makefile.boot: Add am335x evm and bone
- targets
-Date: Tue, 11 Sep 2012 06:55:57 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EAB0764@DBDE01.ent.ti.com>
-References: <1346435674-6207-1-git-send-email-hvaibhav@ti.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH] arm/dts: omap: Add omap-usb2 dt data
+Date: Tue, 11 Sep 2012 10:23:25 +0200
+Message-ID: <504EF4FD.2080001@ti.com>
+References: <1347343932-3656-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1346435674-6207-1-git-send-email-hvaibhav-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1347343932-3656-1-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, arnd@arndb.de, akpm@linux-foundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rnayak@ti.com, tony@atomide.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, rob@landley.net, linux@arm.linux.org.uk, ohad@wizery.com, linus.walleij@linaro.org, myungjoo.ham@samsung.com, rusty@rustcorp.com.au, swarren@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2012 at 23:24:34, Hiremath, Vaibhav wrote:
-> This adds am335x-evm and am335x-bone dtb targets to
-> 'make dtbs', just like other platforms.
+Hi Kishon,
+
+On 09/11/2012 08:12 AM, Kishon Vijay Abraham I wrote:
+> Add omap-usb2 data node in omap4 device tree file. Since omap-usb2 is
+> connected to ocp2scp, omap-usb2 dt data is added as a child node
+> of ocp2scp.
+
+Could you add more details about the omap-usb2?
+
+You must update the Documentation binding with that compatible name.
+Is it already part of the driver serie? The MUSB driver is referring to
+"ti,musb-omap2430" only.
+
 > 
-> Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  arch/arm/mach-omap2/Makefile.boot |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
+> Applies on
+> git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git for-next
+>  arch/arm/boot/dts/omap4.dtsi |    5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/arch/arm/mach-omap2/Makefile.boot b/arch/arm/mach-omap2/Makefile.boot
-> index 6cf1c2d..1136072 100644
-> --- a/arch/arm/mach-omap2/Makefile.boot
-> +++ b/arch/arm/mach-omap2/Makefile.boot
-> @@ -7,3 +7,4 @@ dtb-$(CONFIG_ARCH_OMAP3)	+= omap3-beagle.dtb omap3-evm.dtb
->  dtb-$(CONFIG_ARCH_OMAP4)	+= omap4-panda.dtb omap4-pandaES.dtb
->  dtb-$(CONFIG_ARCH_OMAP4)	+= omap4-var_som.dtb omap4-sdp.dtb
->  dtb-$(CONFIG_SOC_OMAP5)		+= omap5-evm.dtb
-> +dtb-$(CONFIG_SOC_AM33XX)	+= am335x-evm.dtb am335x-bone.dtb
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 8a780b2..bdc21f1 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -302,6 +302,11 @@
+>  			#size-cells = <1>;
+>  			ranges;
+>  			ti,hwmods = "ocp2scp_usb_phy";
 
-Tony,
+There is no ocp2scp_usb_phy in the current omap4.dtsi?
+What base did you used?
 
-Gentle reminder on this patch !!!
+You have to use lo/devel-dt branch as a base. All the latest DTS patches
+an in there for 3.7.
 
-Thanks,
-Vaibhav
+Regards,
+Benoit
 
-> -- 
-> 1.7.0.4
+> +			usb2phy@4a0ad080 {
+> +				compatible = "ti,omap-usb2";
+> +				reg = <0x4a0ad080 0x58>,
+> +				      <0x4a002300 0x4>;
+> +			};
+>  		};
+>  	};
+>  };
 > 
-> 
+
