@@ -1,68 +1,47 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH] arm/dts: Add omap3-beagle.dts
-Date: Tue, 11 Sep 2012 13:57:30 +0200
-Message-ID: <504F272A.7010402@ti.com>
-References: <1347317870-13419-1-git-send-email-jon-hunter@ti.com> <504F208C.8030507@ti.com>
+From: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] ARM: add cpufreq transiton notifier to adjust
+ loops_per_jiffy for smp
+Date: Tue, 11 Sep 2012 17:29:05 +0530
+Message-ID: <504F2789.1070006@nvidia.com>
+References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org> <1344577046-14847-2-git-send-email-shawn.guo@linaro.org> <5049252D.9000802@wwwdotorg.org> <20120907025847.GI26709@S2101-09.ap.freescale.net> <504A26E4.4070600@wwwdotorg.org> <20120910011741.GP26709@S2101-09.ap.freescale.net> <504E20BE.8050107@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <504F208C.8030507@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <504E20BE.8050107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2012 01:29 PM, Benoit Cousson wrote:
-> Hi Jon,
-> 
-> On 09/11/2012 12:57 AM, Jon Hunter wrote:
->> Add a minimal dts for original OMAP3430/3530 version of the Beagle board. This
->> version of the Beagle board has 256MB of DDR and features the same TWL4030
->> power management IC (PMIC) as the Beagle board XM.
-> 
-> Thanks for the patch.
-> 
->> Given that the Beagle and Beagle-XM boards use the same PMIC, move the
->> definition of the VSIM regulator into the TWL4030.dtsi file so that we do not
->> need to duplicate in the Beagle board dts file.
-> 
-> Good, catch, regulator definition has indeed nothing to do outside the
-> twl4030.dtsi.
-> 
->> This has been boot tested on an OMAP3530 Beagle board and verifing that the
->> SD/MMC interface is working with a SD card.
->>
->> This patch is generated on top of Tony's patch for adding the Beagle board XM
->> dts file [1].
-> 
-> Tony has just updated his devel-dt with the DTS series I pushed plus the
-> beagle-xm introduction, so I'm gonna put this one on top and built a
-> for_3.7/dts_part2 branch sinec there are a couplf of USB / AM33xx pending.
+On Monday 10 September 2012 10:47 PM, Stephen Warren wrote:
+> On 09/09/2012 07:17 PM, Shawn Guo wrote:
+>> On Fri, Sep 07, 2012 at 10:55:00AM -0600, Stephen Warren wrote:
+>>> Yes, that does solve the problem (well, with s/late_init/late_initcall/).
+>>>
+>>> As you imply, that change wouldn't help if cpu-tegra.c was built as a
+>>> module.
+>> I doubt that.  Have you confirmed it with testing?  When you install
+>> module cpu-tegra, the pcie initialization has been done, right?
+> Never mind, the code can't be built as a module anyway.
+>
+> Aside from that, I misinterpreted your test patch, and thought that it
+> was moving the Tegra cpufreq driver initialization earlier, but it's
+> actually moving it later, and in fact by chance after PCIe
+> initialization, which explains why it solves the issue.
+>
+> I think the root of the problem is that cpufreq is lowering the CPU
+> frequency, yet the patch which converted Tegra to the common clock
+> framework removed the code that actually changes the CPU clock rate. So,
+> cpufreq thinks the CPU is running at e.g. 216MHz, but it's actually
+> still running at 1.0GHz, and hence re-calculating the delay loops breaks
+> things, since delays aren't as long as the system thinks they are. The
+> variability is due to whether lowering the CPU frequency just happens to
+> occur before or after the PCIe controller is initialized.
+>
+> Prashant, are you able to fix the clock driver deficiency within the
+> next 2-3 days or so (so I can include the fix in the pull requests I
+> send for 3.7, which need to be sent before the end of the week)? Or, do
+> we need to disable cpufreq for Tegra because of this?
 
-OK, so in fact, it does not apply very well due to all the changes I
-introduced in my for_3.7/dts pull and then the beagle is now missing all
-the LEDs support recently added.
-
-So you should refresh that patch taking the latest devel-dt branch as a
-base and copying the latest beagle-xm.dts file.
-
->> diff --git a/arch/arm/mach-omap2/Makefile.boot b/arch/arm/mach-omap2/Makefile.boot
->> index 0e602b7..a469a55 100644
->> --- a/arch/arm/mach-omap2/Makefile.boot
->> +++ b/arch/arm/mach-omap2/Makefile.boot
->> @@ -3,7 +3,8 @@ params_phys-y		:= 0x80000100
->>  initrd_phys-y		:= 0x80800000
->>  
->>  dtb-$(CONFIG_SOC_OMAP2420)	+= omap2420-h4.dtb
->> -dtb-$(CONFIG_ARCH_OMAP3)	+= omap3-beagle-xm.dtb omap3-evm.dtb
->> +dtb-$(CONFIG_ARCH_OMAP3)	+= omap3-beagle.dtb omap3-beagle-xm.dtb \
->> +				   omap3-evm.dtb
-
-You'd better duplicate the whole line like it is done for OMAP4 instead
-of using the "\"
-
-+dtb-$(CONFIG_ARCH_OMAP3)	+= omap3-evm.dtb
-
-Regards,
-Benoit
+Your fix looks good to me except the concern I have mentioned in reply to that patch.
