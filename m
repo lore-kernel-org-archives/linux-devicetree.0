@@ -1,54 +1,86 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH v2 0/2] mfd: dt: add power off support for Tegra20/Tegra30
-Date: Tue, 11 Sep 2012 18:08:11 +0200
-Message-ID: <20120911160811.GU3647@sortiz-mobl>
-References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
- <A7051F87A141B744BCAF487D48E5B3BDF5BBE83B1A@HKMAIL02.nvidia.com>
- <20120911104635.GB28904@avionic-0098.mockup.avionic-design.de>
- <504F557B.9020600@wwwdotorg.org>
+From: Ravi Babu <ravibabu@ti.com>
+Subject: [PATCH v10 0/5] usb: musb: adding multi instance support
+Date: Tue, 11 Sep 2012 21:43:14 +0530
+Message-ID: <1347379999-26061-1-git-send-email-ravibabu@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <504F557B.9020600@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Bill Huang <bilhuang@nvidia.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, Xin Xie <xxie@nvidia.com>, "lrg@slimlogic.co.uk" <lrg@slimlogic.co.uk>, "jhovold@gmail.com" <jhovold@gmail.com>, "kyle.manna@fuel7.com" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-omap@vger.kernel.org, balbi@ti.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+This series of patches adds multi instances support in musb driver
 
-On Tue, Sep 11, 2012 at 09:15:07AM -0600, Stephen Warren wrote:
-> On 09/11/2012 04:46 AM, Thierry Reding wrote:
-> > On Tue, Sep 11, 2012 at 06:25:14PM +0800, Bill Huang wrote:
-> >> Hi all,
-> >> 
-> >> Could somebody review this?
-> > 
-> > Given that I haven't been able to test yet (due to time
-> > constraints) with PM_SLEEP_SMP enabled, I don't want to give you a
-> > Tested-by, but the code looks okay to me, so for both patches:
-> > 
-> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> 
-> I have tested this with PM_SLEEP_SMP enabled, and it solved the
-> problem. I think I already gave my Tested-by, but if not:
-> 
-> Tested-by: Stephen Warren <swarren@wwwdotorg.org>
-> 
-> I hope that this gets applied to the MFD tree early enough (i.e.
-> within the next 2-3 days or so) that I can rely on the binding be
-> accepted, and hence apply patches to Tegra's device tree to enable
-> this functionality for 3.7.
-> 
-> Bill, given this was posted about 3 weeks ago, perhaps repost the
-> series in case Samuel doesn't have it any more, and hence can't apply it.
-No need for that. Sorry for the delay, I just applied and pushed those 2
-patches.
+AM33xx and TI81xx has dual musb controller and has two usb PHY of same type.
 
-Cheers,
-Samuel.
+The series applies to felipe/musb branch
+	+ Vaibhav baseport patches on his tree at [4]
+	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
+	+ Kishon's patch on phandle at [2]
+	+ Damodar's recent patch at [3] 
+	+ Ajay's & Damodar's patches at [5] and [6] included in this series
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+1. http://git.kernel.org/?p=linux/kernel/git/balbi/usb.git;a=summary
+2. http://marc.info/?l=linux-usb&m=134070369306112&w=2
+3. http://marc.info/?l=linux-usb&m=134200284230689&w=2
+4. https://github.com/hvaibhav/am335x-linux/commits/am335x-upstream-staging
+5. http://marc.info/?l=linux-usb&m=134200285530701&w=2
+6. http://marc.info/?l=linux-usb&m=134208820028625&w=2
+
+Changes from v9:
+	- patches rebased on felipe/musb 
+	- DT and xceiv patches not included in this series
+Changes from v8:
+	- included Sergei's comment, removing underscore in device tree file
+	- removed duplicated signoff from patches
+Changes from v7:
+	- patches rebased on felipe/master branch & verified
+	- included additional two patches 0001 & 0002 as part of this series
+	  which are already submitted [5] & [6] 
+Changes from v6:
+	- Removed parent_pdev to get glue and used dev_get_getdrv() as per
+	  Felipe's comment
+	- use pr_debug() instead of pr_info() as per Felipe's comment
+Changes from v5:
+	- Removed musb->id as per Felipe's comment
+	- used nop_ida as per Felipe's comment
+Changes from v4:
+	- Fixed Felipe's comment for adding EXPORT_SYMBOL_GPL()
+	- Fixed Felipe's comment on using dev_set_mask()
+Changes from v3:
+	- Fixed Kishon's comment on removing "id" from phy struct and
+	  removing unneeded "#else" part.
+Changes from v2:
+	- Fixed Sergei's comment on not using address prefix in musb_dsps
+	  glue and nop transceiver dt dats.
+	- Also removed the "ti" string in compatible property for nop data.
+Changes from v1:
+	- Defined musb_ida to manage core ids based on Felipe's comment
+	  in [PATCH 01/11]
+
+	
+Ajay Kumar Gupta (3):
+  usb: musb: kill global and static for multi instance
+  usb: musb: dsps: add dt support
+  usb: musb: dsps: remove explicit NOP device creation
+
+B, Ravi (2):
+  usb: musb: add musb_ida for multi instance support
+  usb: musb: am335x: add support for dual instance
+
+ .../devicetree/bindings/usb/am33xx-usb.txt         |   14 ++
+ drivers/usb/musb/am35x.c                           |   42 ++++--
+ drivers/usb/musb/blackfin.c                        |   26 +++-
+ drivers/usb/musb/da8xx.c                           |   34 +++--
+ drivers/usb/musb/davinci.c                         |   34 +++--
+ drivers/usb/musb/musb_core.c                       |   53 +++++--
+ drivers/usb/musb/musb_core.h                       |    6 +
+ drivers/usb/musb/musb_debugfs.c                    |    8 +-
+ drivers/usb/musb/musb_dsps.c                       |  167 ++++++++++++++------
+ drivers/usb/musb/omap2430.c                        |   26 +++-
+ drivers/usb/musb/tusb6010.c                        |   26 +++-
+ drivers/usb/musb/ux500.c                           |   33 +++--
+ 12 files changed, 338 insertions(+), 131 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/am33xx-usb.txt
+
