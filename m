@@ -1,47 +1,49 @@
-From: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] ARM: add cpufreq transiton notifier to adjust
- loops_per_jiffy for smp
-Date: Tue, 11 Sep 2012 17:29:05 +0530
-Message-ID: <504F2789.1070006@nvidia.com>
-References: <1344577046-14847-1-git-send-email-shawn.guo@linaro.org> <1344577046-14847-2-git-send-email-shawn.guo@linaro.org> <5049252D.9000802@wwwdotorg.org> <20120907025847.GI26709@S2101-09.ap.freescale.net> <504A26E4.4070600@wwwdotorg.org> <20120910011741.GP26709@S2101-09.ap.freescale.net> <504E20BE.8050107@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <504E20BE.8050107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shilimkar Santosh <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Richard Zhao <richard.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] usb: gadget: at91_udc: dt: fix platform_data check
+Date: Tue, 11 Sep 2012 14:07:47 +0200
+Message-ID: <1347365267-7507-1-git-send-email-fabio.porcedda@gmail.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 September 2012 10:47 PM, Stephen Warren wrote:
-> On 09/09/2012 07:17 PM, Shawn Guo wrote:
->> On Fri, Sep 07, 2012 at 10:55:00AM -0600, Stephen Warren wrote:
->>> Yes, that does solve the problem (well, with s/late_init/late_initcall/).
->>>
->>> As you imply, that change wouldn't help if cpu-tegra.c was built as a
->>> module.
->> I doubt that.  Have you confirmed it with testing?  When you install
->> module cpu-tegra, the pcie initialization has been done, right?
-> Never mind, the code can't be built as a module anyway.
->
-> Aside from that, I misinterpreted your test patch, and thought that it
-> was moving the Tegra cpufreq driver initialization earlier, but it's
-> actually moving it later, and in fact by chance after PCIe
-> initialization, which explains why it solves the issue.
->
-> I think the root of the problem is that cpufreq is lowering the CPU
-> frequency, yet the patch which converted Tegra to the common clock
-> framework removed the code that actually changes the CPU clock rate. So,
-> cpufreq thinks the CPU is running at e.g. 216MHz, but it's actually
-> still running at 1.0GHz, and hence re-calculating the delay loops breaks
-> things, since delays aren't as long as the system thinks they are. The
-> variability is due to whether lowering the CPU frequency just happens to
-> occur before or after the PCIe controller is initialized.
->
-> Prashant, are you able to fix the clock driver deficiency within the
-> next 2-3 days or so (so I can include the fix in the pull requests I
-> send for 3.7, which need to be sent before the end of the week)? Or, do
-> we need to disable cpufreq for Tegra because of this?
+Don't fail the initialization check for the platform_data
+if there is avaiable an associated device tree node.
 
-Your fix looks good to me except the concern I have mentioned in reply to that patch.
+This patch fix the dt support introduced in 3.4-rc1 by commit
+("d1494a3 USB: at91: Device udc add dt support").
+
+Tested on a at91sam9260 based board (PRO3-EVK).
+
+Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> [v3.4+]
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+---
+v2:
+  - better description
+  - add stable tag
+
+ drivers/usb/gadget/at91_udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/at91_udc.c b/drivers/usb/gadget/at91_udc.c
+index 1e35963..660fd53 100644
+--- a/drivers/usb/gadget/at91_udc.c
++++ b/drivers/usb/gadget/at91_udc.c
+@@ -1699,7 +1699,7 @@ static int __devinit at91udc_probe(struct platform_device *pdev)
+ 	int		retval;
+ 	struct resource	*res;
+ 
+-	if (!dev->platform_data) {
++	if (!dev->platform_data && !pdev->dev.of_node) {
+ 		/* small (so we copy it) but critical! */
+ 		DBG("missing platform_data\n");
+ 		return -ENODEV;
+-- 
+1.7.11.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
