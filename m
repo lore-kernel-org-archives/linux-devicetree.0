@@ -1,92 +1,56 @@
-From: "B, Ravi" <ravibabu@ti.com>
-Subject: RE: [PATCH v9 00/13] usb: musb: adding multi instance support
-Date: Tue, 11 Sep 2012 10:45:44 +0000
-Message-ID: <6C6B28D4DC342643927BEAFCE8707BF63E9FCB6C@DBDE01.ent.ti.com>
-References: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
- <20120911091731.GA18907@arwen.pp.htv.fi>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2 0/2] mfd: dt: add power off support for Tegra20/Tegra30
+Date: Tue, 11 Sep 2012 12:46:35 +0200
+Message-ID: <20120911104635.GB28904@avionic-0098.mockup.avionic-design.de>
+References: <1345424876-4365-1-git-send-email-bilhuang@nvidia.com>
+ <A7051F87A141B744BCAF487D48E5B3BDF5BBE83B1A@HKMAIL02.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20120911091731.GA18907@arwen.pp.htv.fi>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Balbi, Felipe" <balbi@ti.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <A7051F87A141B744BCAF487D48E5B3BDF5BBE83B1A@HKMAIL02.nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bill Huang <bilhuang@nvidia.com>
+Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, Laxman Dewangan <ldewangan@nvidia.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, Xin Xie <xxie@nvidia.com>, "lrg@slimlogic.co.uk" <lrg@slimlogic.co.uk>, "jhovold@gmail.com" <jhovold@gmail.com>, "kyle.manna@fuel7.com" <kyle.manna@fuel7.com>, Rhyland Klein <rklein@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> 
-> Hi,
-> 
-> On Fri, Aug 31, 2012 at 04:39:46PM +0530, Ravi Babu wrote:
-> > This series of patches adds,
-> > a) Multi instances support in musb driver
-> > b) DT support for musb_dsps glue layer
-> > c) DT support for NOP transceiver
-> > 
-> > AM33xx and TI81xx has dual musb controller and has two usb 
-> PHY of same type.
-> > This patch series uses 'phandle' based API 
-> > devm_usb_get_phy_by_phandle() to get the PHY of same type. This API 
-> > support is being added by Kishon's patch discussed at [1]
-> > 
-> > The series applies to felipe/master [1] branch
-> > 	+ Vaibhav baseport patches on his tree at [4]
-> > 	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
-> > 	+ Kishon's patch on phandle at [2]
-> > 	+ Damodar's recent patch at [3] 
-> > 	+ Ajay's & Damodar's patches at [5] and [6] included in 
-> this series
-> > 
-> > 1. http://git.kernel.org/?p=linux/kernel/git/balbi/usb.git;a=summary
-> > 2. http://marc.info/?l=linux-usb&m=134070369306112&w=2
-> > 3. http://marc.info/?l=linux-usb&m=134200284230689&w=2
-> > 4. 
-> > 
-> https://github.com/hvaibhav/am335x-linux/commits/am335x-upstream-stagi
-> > ng 5. http://marc.info/?l=linux-usb&m=134200285530701&w=2
-> > 6. http://marc.info/?l=linux-usb&m=134208820028625&w=2
-> > 
-> > Changes from v8:
-> > 	- included Sergei's comment, removing underscore in 
-> device tree file
-> > 	- removed duplicated signoff from patches Changes from v7:
-> > 	- patches rebased on felipe/master branch & verified
-> > 	- included additional two patches 0001 & 0002 as part 
-> of this series
-> > 	  which are already submitted [5] & [6] Changes from v6:
-> > 	- Removed parent_pdev to get glue and used 
-> dev_get_getdrv() as per
-> > 	  Felipe's comment
-> > 	- use pr_debug() instead of pr_info() as per Felipe's 
-> comment Changes 
-> > from v5:
-> > 	- Removed musb->id as per Felipe's comment
-> > 	- used nop_ida as per Felipe's comment Changes from v4:
-> > 	- Fixed Felipe's comment for adding EXPORT_SYMBOL_GPL()
-> > 	- Fixed Felipe's comment on using dev_set_mask() 
-> Changes from v3:
-> > 	- Fixed Kishon's comment on removing "id" from phy struct and
-> > 	  removing unneeded "#else" part.
-> > Changes from v2:
-> > 	- Fixed Sergei's comment on not using address prefix in 
-> musb_dsps
-> > 	  glue and nop transceiver dt dats.
-> > 	- Also removed the "ti" string in compatible property 
-> for nop data.
-> > Changes from v1:
-> > 	- Defined musb_ida to manage core ids based on Felipe's comment
-> > 	  in [PATCH 01/11]
-> 
-> I tried appliying this, but this doesn't apply. Please rebase 
-> on my musb branch. Unfortunately there's no time anymore to 
-> wait otherwise the entire musb branch will miss this merge window.
-> 
-> I'm sorry
 
-Felipe, patch set is ready, I will re-send the patches shortly by today.
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> --
-> balbi
-> 
+On Tue, Sep 11, 2012 at 06:25:14PM +0800, Bill Huang wrote:
+> Hi all,=20
+>=20
+> Could somebody review this?
+
+Given that I haven't been able to test yet (due to time constraints)
+with PM_SLEEP_SMP enabled, I don't want to give you a Tested-by, but the
+code looks okay to me, so for both patches:
+
+Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+
+--KFztAG8eRSV9hGtP
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQTxaLAAoJEN0jrNd/PrOhMrAP/3TFBm/FzXFsRyBM/mz16nQN
+dVHPyIUTpkCt5sJW9/c+WDkJFOsx0yYrIIV9GsGxXFsPMn766svA8IFmihZmYrSG
+ckWJovr+fEcOCOqsddAQ/GgW16WrVrshkSDPJFrlWzszvt6PdAQQkY9h+FgZXHE4
+qDKFgpStkjmBahzyEG0BZrBexcvCq/X/QOfgSQpvl17rqnWdSBmxzVWEfODYveOW
+zkjJ/Q7SYlaO58ncuDrp0ERRePzfbgZkHZSyp62BqRbQZ5QvGAdLWaDqTnwnTvmL
+4MuD1VpqCOo2hbtVfpuKM7HspVUvWwbUMFQvrhxAOaHoDkdqj8F2reCEeLF5paCI
+T6pZ1R6Lpuy7aRyHQI19NO2dLvAp9hDK1saHGE9S5YXRyq9qXnxso73kpaVGxacw
+kj8/y7avVGBO8VxUXHm4S0dSGFKFW9uMVf8Nej45C6ujPrdqPDaa8qjK8jXc4Iq6
+Tw7bQNY14w6k/IVC6IR78WjvVSEO+08762C9kkube2dUy0lWXYlH0R7ffSWAHIH8
+bFDHhVUhWk1jL0evIIHiLRhyu10VpRSOyMU3xlCRGt1Rpwxy7CcVHmfwAZaF39BP
+WFFNIHoAE9ZTdzJ8veh8X4mZWxHkCXanh03gbEK9xGmYi5Kz9vjBhSKCK63/4vfF
+D/hzEKEzf8Vlu5reNX4U
+=Bn20
+-----END PGP SIGNATURE-----
+
+--KFztAG8eRSV9hGtP--
