@@ -1,240 +1,165 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC v5] V4L DT bindings
-Date: Tue, 11 Sep 2012 16:02:43 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1209111555010.22084@axis700.grange>
-References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange>
- <Pine.LNX.4.64.1209051030230.16676@axis700.grange> <5047DEE6.9020607@wwwdotorg.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Tue, 11 Sep 2012 16:44:09 +0200
+Message-ID: <20120911164409.4c030bd8@skate>
+References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1347266386-16229-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5047DEE6.9020607@wwwdotorg.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Hans Verkuil <hverkuil@xs4all.nl>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1347266386-16229-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen
+Hello Sebastian,
 
-Thanks for the review.
+Sorry for getting back to you so late about this patch set. I have been
+very busy with other things.
 
-On Wed, 5 Sep 2012, Stephen Warren wrote:
+Le Mon, 10 Sep 2012 10:39:38 +0200,
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> a =C3=A9crit :
 
-> On 09/05/2012 04:57 AM, Guennadi Liakhovetski wrote:
-> > Hi all
-> > 
-> > Version 5 of this RFC is a result of a discussion of its version 4, which 
-> > took place during the recent Linux Plumbers conference in San Diego. 
-> > Changes are:
-> > 
-> > (1) remove bus-width properties from device (bridge and client) top level. 
-> > This has actually already been decided upon during our discussions with 
-> > Sylwester, I just forgot to actually remove them, sorry.
-> > 
-> > (2) links are now grouped under "ports." This should help better describe 
-> > device connection topology by making clearer, which interfaces links are 
-> > attached to. (help needed: in my notes I see "port" optional if only one 
-> > port is present, but I seem to remember, that the final decision was - 
-> > make ports compulsory for uniformity. Which one is true?)
-> 
-> I'd tend to make the port node compulsory.
-> 
-> A related question: What code is going to parse all the port/link
-> sub-nodes in a device?
+> v3:
+> - list of functions is now built out of pin groups passed to core dri=
+ver
+>   instead of parsing DT node.
 
-I think we'll have to make a generic V4L DT parser. We certainly don't 
-want each driver reimplement this.
+Even though I have gone through your discussion with Stephen Warren on
+this, I don't get what you have done exactly, and I'm even more puzzled
+by the following piece of code:
 
-> And, how does it know which sub-nodes are ports,
-> and which are something else entirely? Perhaps the algorithm is that all
-> port nodes must be named "port"?
+> +static int __devinit _add_function(const char **funcs, const char *n=
+ame)
+> +{
+> +	int n =3D 0;
+> +
+> +	while (funcs[n]) {
+> +		/* function already there */
+> +		if (strcmp(funcs[n], name) =3D=3D 0)
+> +			return -EEXIST;
+> +		n++;
+> +	}
+> +	funcs[n] =3D name;
+> +	return 0;
+> +}
+> +
+> +static int __devinit mvebu_pinctrl_build_functions(struct platform_d=
+evice *pdev,
+> +						   struct mvebu_pinctrl *pctl)
+> +{
+> +	const char **prefunc =3D kzalloc(sizeof(char *), GFP_KERNEL);
+> +	int num =3D 0;
+> +	int n, s;
+> +
+> +	for (n =3D 0; n < pctl->num_groups; n++) {
+> +		struct mvebu_pinctrl_group *grp =3D &pctl->groups[n];
+> +		for (s =3D 0; s < grp->num_settings; s++) {
+> +			/* skip unsupported settings on this variant */
+> +			if (pctl->variant &&
+> +			    !(pctl->variant & grp->settings[s].variant))
+> +				continue;
+> +
+> +			/* check for unique functions */
+> +			if (_add_function(prefunc, grp->settings[s].name))
+> +				continue;
+> +
+> +			num++;
+> +		}
+> +	}
+> +	return 0;
+> +}
 
-Yes, that was the idea. Is anything speaking against it?
+What is this supposed to do? It allocates an array prefunc, whose
+reference is only stored in a local variable, and anywhere else, so
+basically it does nothing except leaking memory unless I got it wrong.
 
-> If there were (optionally) no port node, I think the answer to that
-> question would be a lot more complex, hence why I advocate for it always
-> being there.
+Moreover, this array has only one entry, while the loop accesses
+several entries, which probably explains the crash I'm seeing at boot
+time:
 
-Ok, fine with me.
+Unable to handle kernel paging request at virtual address ff74edca
+pgd =3D ef290000
+[ff74edca] *pgd=3D00000000
+Internal error: Oops: 15 [#1] ARM
+Modules linked in:
+CPU: 0    Not tainted  (3.6.0-rc1-00021-g1dd75c4-dirty #336)
+PC is at strcmp+0x0/0x30
+LR is at mvebu_pinctrl_build_functions.isra.1+0x78/0xd0
+pc : [<c011b600>]    lr : [<c021fbf8>]    psr: a0000013
+sp : ef02de80  ip : 00000000  fp : c02a7e28
+r10: 000002a0  r9 : ef0e4924  r8 : 00000018
+r7 : ef2742d0  r6 : ef0cb2b0  r5 : 00000020  r4 : 00000002
+r3 : ff74edca  r2 : ef0e4920  r1 : c02a7e28  r0 : ff74edca
+=46lags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+Control: 10c53c7d  Table: 2f290059  DAC: 00000015
+Process swapper (pid: 1, stack limit =3D 0xef02c268)
+Stack: (0xef02de80 to 0xef02e000)
+de80: ef0879c8 ef0e4900 00000043 00000043 ef2742d0 c054dd68 00000002 c0=
+57486c
+dea0: 00000000 ef0879c8 ef0cb748 c02200f0 ef086348 c054c948 c055b550 c0=
+576230
+dec0: c054c6e0 ef0879c8 00000000 c054c6e0 c03008a0 c02f5c88 00000000 c0=
+14ed28
+dee0: c014ed14 c014da3c ef0879c8 c054c6e0 ef0879fc 00000000 c02e91e0 c0=
+14dd30
+df00: c054c6e0 c014dca4 00000000 c014c5e0 ef00554c ef0266f0 c054c6e0 c0=
+551708
+df20: ef274340 c014d380 c02a7da0 c055bf40 c054c6e0 ef02c000 c055bf40 00=
+000000
+df40: c02e91e0 c014e1e0 00000000 c02fdb4c ef02c000 c055bf40 00000000 c0=
+2e91e0
+df60: c02f5c88 c00085c0 c02d1768 00000006 00000044 c02f5c88 00000044 00=
+000006
+df80: 00000006 c02e91e0 c1857e15 00000000 00000000 c02fdb4c 00000006 c0=
+2fdb2c
+dfa0: c055bf40 c02e91e0 c03008a0 00000044 00000000 c02e9838 00000006 00=
+000006
+dfc0: c02e91e0 c030066c c030066c c030066c c000a04c 00000013 00000000 00=
+000000
+dfe0: 00000000 c02e98cc 00000000 00000000 c02e986c c000a04c be8ff7c8 e8=
+dfff5e
+[<c011b600>] (strcmp+0x0/0x30) from [<c021fbf8>] (mvebu_pinctrl_build_f=
+unctions.isra.1+0x78/0xd0)
+[<c021fbf8>] (mvebu_pinctrl_build_functions.isra.1+0x78/0xd0) from [<c0=
+2200f0>] (mvebu_pinctrl_probe+0x4a0/0x564)
+[<c02200f0>] (mvebu_pinctrl_probe+0x4a0/0x564) from [<c014ed28>] (platf=
+orm_drv_probe+0x14/0x18)
+[<c014ed28>] (platform_drv_probe+0x14/0x18) from [<c014da3c>] (really_p=
+robe+0x60/0x1e4)
+[<c014da3c>] (really_probe+0x60/0x1e4) from [<c014dd30>] (__driver_atta=
+ch+0x8c/0x90)
+[<c014dd30>] (__driver_attach+0x8c/0x90) from [<c014c5e0>] (bus_for_eac=
+h_dev+0x50/0x7c)
+[<c014c5e0>] (bus_for_each_dev+0x50/0x7c) from [<c014d380>] (bus_add_dr=
+iver+0x168/0x22c)
+[<c014d380>] (bus_add_driver+0x168/0x22c) from [<c014e1e0>] (driver_reg=
+ister+0x78/0x144)
+[<c014e1e0>] (driver_register+0x78/0x144) from [<c00085c0>] (do_one_ini=
+tcall+0x34/0x174)
+[<c00085c0>] (do_one_initcall+0x34/0x174) from [<c02e9838>] (do_basic_s=
+etup+0x90/0xc4)
+[<c02e9838>] (do_basic_setup+0x90/0xc4) from [<c02e98cc>] (kernel_init+=
+0x60/0xf4)
+[<c02e98cc>] (kernel_init+0x60/0xf4) from [<c000a04c>] (kernel_thread_e=
+xit+0x0/0x8)
+Code: e3530000 e4c23001 1afffffb e12fff1e (e4d03001)=20
+---[ end trace a80e01be2a5f5b89 ]---
+Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x000000=
+0b
 
-All other your comments address various issues with specific DT node 
-instances, not with the design itself. I'll address them in the next 
-version, which I'm also planning to accompany with a proper 
-Documentation/devicetree/bindings patch.
+I'd like to fix that myself, but I really don't understand what the
+"functions" word mean now in this v3, as compared to v1/v2 of this
+patch set. Could you enlighten me on this?
 
-Thanks
-Guennadi
+Thanks!
 
-> > (3) "videolink" is renamed to just "link."
-> > 
-> > (4) "client" is renamed to "remote" and is now used on both sides of 
-> > links.
-> > 
-> > (5) clock-names in clock consumer nodes (e.g., camera sensors) should 
-> > reflect clock input pin names from respective datasheets
-> > 
-> > (6) also serial bus description should be placed under respective link 
-> > nodes.
-> > 
-> > (7) reference remote link DT nodes in "remote" properties, not to the 
-> > parent.
-> > 
-> > (8) use standard names for "SoC-external" (e.g., i2c) devices on their 
-> > respective busses. "Sensor" has been proposed, maybe "camera" is a better 
-> > match though.
-> > 
-> > Thanks
-> > Guennadi
-> > ---
-> > Guennadi Liakhovetski, Ph.D.
-> > Freelance Open-Source Software Developer
-> > http://www.open-technology.de/
-> > 
-> > // Describe an imaginary configuration: a CEU serving either a parallel ov7725
-> > // sensor, or a serial imx074 sensor, connected over a CSI-2 SoC interface
-> > 
-> > 	ceu0: ceu@0xfe910000 {
-> > 		compatible = "renesas,sh-mobile-ceu";
-> > 		reg = <0xfe910000 0xa0>;
-> > 		interrupts = <0x880>;
-> > 
-> > 		mclk: master_clock {
-> > 			compatible = "renesas,ceu-clock";
-> > 			#clock-cells = <1>;
-> > 			clock-frequency = <50000000>;	/* max clock frequency */
-> > 			clock-output-names = "mclk";
-> > 		};
-> > 
-> > 		...
-> > 		port@0 {
-> 
-> Since there's only 1 port node here, you can drop the "@0" here.
-> 
-> > 			#address-cells = <1>;
-> > 			#size-cells = <0>;
-> > 
-> > 			ov772x_1_1: link@1 {
-> 
-> This isn't a comment on the binding definition, but on the example
-> itself. The label names ("ov772x_1_1" here and "csi2_0" below) feel
-> backwards to me; I'd personally use label names that describe the object
-> being labelled, rather than the object that's linked to the node being
-> labelled. In other words, "ceu0_1" here, and "ov772x_1" at the far end
-> of this link. But, these are just arbitrary names, so you can name/label
-> everything whatever you want and it'll still work.
-> 
-> > 				reg = <1>;		/* local pad # */
-> > 				remote = <&ceu0_1>;	/* remote phandle and pad # */
-> > 				bus-width = <8>;	/* used data lines */
-> > 				data-shift = <0>;	/* lines 7:0 are used */
-> > 	
-> > 				/* If [hv]sync-active are missing, embedded bt.605 sync is used */
-> > 				hsync-active = <1>;	/* active high */
-> > 				vsync-active = <1>;	/* active high */
-> > 				pclk-sample = <1>;	/* rising */
-> > 			};
-> > 
-> > 			csi2_0: link@0 {
-> > 				reg = <0>;
-> > 				remote = <&ceu0_2>;
-> > 				immutable;
-> > 			};
-> > 		};
-> > 	};
-> > 
-> > 	i2c0: i2c@0xfff20000 {
-> > 		...
-> > 		ov772x_1: camera@0x21 {
-> > 			compatible = "omnivision,ov772x";
-> > 			reg = <0x21>;
-> > 			vddio-supply = <&regulator1>;
-> > 			vddcore-supply = <&regulator2>;
-> > 
-> > 			clock-frequency = <20000000>;
-> > 			clocks = <&mclk 0>;
-> > 			clock-names = "xclk";
-> > 
-> > 			...
-> > 			port {
-> > 				/* With 1 link per port no need in addresses */
-> > 				ceu0_1: link@0 {
-> 
-> You can drop "@0" there too.
-> 
-> > 					bus-width = <8>;
-> > 					remote = <&ov772x_1_1>;
-> > 					hsync-active = <1>;
-> > 					hsync-active = <0>;	/* who came up with an inverter here?... */
-> > 					pclk-sample = <1>;
-> > 				};
-> > 			};
-> > 		};
-> > 
-> > 		imx074: camera@0x1a {
-> > 			compatible = "sony,imx074";
-> > 			reg = <0x1a>;
-> > 			vddio-supply = <&regulator1>;
-> > 			vddcore-supply = <&regulator2>;
-> > 
-> > 			clock-frequency = <30000000>;	/* shared clock with ov772x_1 */
-> > 			clocks = <&mclk 0>;
-> > 			clock-names = "sysclk";		/* assuming this is the name in the datasheet */
-> > 			...
-> > 			port {
-> > 				csi2_1: link@0 {
-> 
-> You can drop "@0" there too.
-> 
-> > 					clock-lanes = <0>;
-> > 					data-lanes = <1>, <2>;
-> > 					remote = <&imx074_1>;
-> > 				};
-> > 			};
-> > 		};
-> > 		...
-> > 	};
-> > 
-> > 	csi2: csi2@0xffc90000 {
-> > 		compatible = "renesas,sh-mobile-csi2";
-> > 		reg = <0xffc90000 0x1000>;
-> > 		interrupts = <0x17a0>;
-> > 		#address-cells = <1>;
-> > 		#size-cells = <0>;
-> > 		...
-> > 		port {
-> > 			compatible = "renesas,csi2c";	/* one of CSI2I and CSI2C */
-> > 			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S, PHY_M has port address 0, is unused */
-> > 
-> > 			imx074_1: link@1 {
-> 
-> You can drop "@1" there too.
-> 
-> > 				client = <&imx074 0>;
-> > 				clock-lanes = <0>;
-> > 				data-lanes = <2>, <1>;
-> > 				remote = <&csi2_1>;
-> > 			};
-> > 		};
-> > 		port {
-> 
-> There are two nodes named "port" here; I think they should be "port@1"
-> and "port@2" based on the reg properties.
-> 
-> > 			reg = <2>;			/* port 2: link to the CEU */
-> > 			ceu0_2: link@0 {
-> 
-> You can drop "@0" there too.
-> 
-> > 				immutable;
-> > 				remote = <&csi2_0>;
-> > 			};
-> > 		};
-> > 	};
-> 
-> Aside from those minor comments, I think the overall structure of the
-> bindings looks good.
-> 
-
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Thomas
+--=20
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
