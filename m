@@ -1,115 +1,128 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] mfd: max8907: add power off control
-Date: Tue, 11 Sep 2012 13:19:41 -0600
-Message-ID: <1347391181-31005-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, bilhuang@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Subject: Re: [PATCH v3 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Tue, 11 Sep 2012 16:17:13 -0600
+Message-ID: <504FB869.60201@wwwdotorg.org>
+References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347266386-16229-2-git-send-email-sebastian.hesselbarth@gmail.com> <20120911164409.4c030bd8@skate>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120911164409.4c030bd8@skate>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+On 09/11/2012 08:44 AM, Thomas Petazzoni wrote:
+> Hello Sebastian,
+>=20
+> Sorry for getting back to you so late about this patch set. I have be=
+en
+> very busy with other things.
+>=20
+> Le Mon, 10 Sep 2012 10:39:38 +0200,
+> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> a =C3=A9crit =
+:
+>=20
+>> v3:
+>> - list of functions is now built out of pin groups passed to core dr=
+iver
+>>   instead of parsing DT node.
+>=20
+> Even though I have gone through your discussion with Stephen Warren o=
+n
+> this, I don't get what you have done exactly, and I'm even more puzzl=
+ed
+> by the following piece of code:
+>=20
+>> +static int __devinit _add_function(const char **funcs, const char *=
+name)
+>> +{
+>> +	int n =3D 0;
+>> +
+>> +	while (funcs[n]) {
+>> +		/* function already there */
+>> +		if (strcmp(funcs[n], name) =3D=3D 0)
+>> +			return -EEXIST;
+>> +		n++;
+>> +	}
+>> +	funcs[n] =3D name;
+>> +	return 0;
+>> +}
+>> +
+>> +static int __devinit mvebu_pinctrl_build_functions(struct platform_=
+device *pdev,
+>> +						   struct mvebu_pinctrl *pctl)
+>> +{
+>> +	const char **prefunc =3D kzalloc(sizeof(char *), GFP_KERNEL);
+>> +	int num =3D 0;
+>> +	int n, s;
+>> +
+>> +	for (n =3D 0; n < pctl->num_groups; n++) {
+>> +		struct mvebu_pinctrl_group *grp =3D &pctl->groups[n];
+>> +		for (s =3D 0; s < grp->num_settings; s++) {
+>> +			/* skip unsupported settings on this variant */
+>> +			if (pctl->variant &&
+>> +			    !(pctl->variant & grp->settings[s].variant))
+>> +				continue;
+>> +
+>> +			/* check for unique functions */
+>> +			if (_add_function(prefunc, grp->settings[s].name))
+>> +				continue;
+>> +
+>> +			num++;
+>> +		}
+>> +	}
+>> +	return 0;
+>> +}
+>=20
+> What is this supposed to do? It allocates an array prefunc, whose
+> reference is only stored in a local variable, and anywhere else, so
+> basically it does nothing except leaking memory unless I got it wrong=
+=2E
 
-Add DT property "maxim,system-power-controller" to indicate whether the
-PMIC is in charge of controlling the system power. If this is set, the
-driver will provide the pm_power_off() function.
+I imagine this is related to the way that the SoC-specific drivers
+provide their configuration to the generic core driver. I'm not sure th=
+e
+data structures used for this purpose are the best design.
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-Note: This is based on my patch "mfd: add MAX8907 core driver", which I don't
-believe is applied yet.
+The pinctrl core expects lists of:
 
- .../devicetree/bindings/regulator/max8907.txt      |    6 ++++++
- drivers/mfd/max8907.c                              |   20 ++++++++++++++++++++
- include/linux/mfd/max8907.h                        |    2 ++
- 3 files changed, 28 insertions(+), 0 deletions(-)
+* Pins
 
-diff --git a/Documentation/devicetree/bindings/regulator/max8907.txt b/Documentation/devicetree/bindings/regulator/max8907.txt
-index 4fd847f..51e683b 100644
---- a/Documentation/devicetree/bindings/regulator/max8907.txt
-+++ b/Documentation/devicetree/bindings/regulator/max8907.txt
-@@ -16,6 +16,10 @@ Required properties:
-   property, with valid values listed below. The content of each sub-node
-   is defined by the standard binding for regulators; see regulator.txt.
- 
-+Optional properties:
-+- maxim,system-power-controller: Boolean property indicating that the PMIC
-+  controls the overall system power.
-+
- Valid regulator-compatible values are:
- 
-   sd1, sd2, sd3, ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10,
-@@ -29,6 +33,8 @@ Example:
- 			reg = <0x3c>;
- 			interrupts = <0 86 0x4>;
- 
-+			maxim,system-power-controller;
-+
- 			mbatt-supply = <&some_reg>;
- 			in-v1-supply = <&mbatt_reg>;
- 			...
-diff --git a/drivers/mfd/max8907.c b/drivers/mfd/max8907.c
-index 5295276..3cc6b04 100644
---- a/drivers/mfd/max8907.c
-+++ b/drivers/mfd/max8907.c
-@@ -176,11 +176,26 @@ static const struct regmap_irq_chip max8907_rtc_irq_chip = {
- 	.num_irqs = ARRAY_SIZE(max8907_rtc_irqs),
- };
- 
-+struct max8907 *max8907_pm_off;
-+static void max8907_power_off(void)
-+{
-+	regmap_update_bits(max8907_pm_off->regmap_gen, MAX8907_REG_RESET_CNFG,
-+			MAX8907_MASK_POWER_OFF, MAX8907_MASK_POWER_OFF);
-+}
-+
- static __devinit int max8907_i2c_probe(struct i2c_client *i2c,
- 				       const struct i2c_device_id *id)
- {
- 	struct max8907 *max8907;
- 	int ret;
-+	struct max8907_platform_data *pdata = dev_get_platdata(&i2c->dev);
-+	bool pm_off = false;
-+
-+	if (pdata)
-+		pm_off = pdata->pm_off;
-+	else if (i2c->dev.of_node)
-+		pm_off = of_property_read_bool(i2c->dev.of_node,
-+					"maxim,system-power-controller");
- 
- 	max8907 = devm_kzalloc(&i2c->dev, sizeof(struct max8907), GFP_KERNEL);
- 	if (!max8907) {
-@@ -251,6 +266,11 @@ static __devinit int max8907_i2c_probe(struct i2c_client *i2c,
- 		goto err_add_devices;
- 	}
- 
-+	if (pm_off && !pm_power_off) {
-+		max8907_pm_off = max8907;
-+		pm_power_off = max8907_power_off;
-+	}
-+
- 	return 0;
- 
- err_add_devices:
-diff --git a/include/linux/mfd/max8907.h b/include/linux/mfd/max8907.h
-index 283531f..b06f7a6 100644
---- a/include/linux/mfd/max8907.h
-+++ b/include/linux/mfd/max8907.h
-@@ -167,6 +167,7 @@
- #define MAX8907_MASK_OUT5V_VINEN	0x10
- #define MAX8907_MASK_OUT5V_ENSRC	0x0E
- #define MAX8907_MASK_OUT5V_EN		0x01
-+#define MAX8907_MASK_POWER_OFF		0x40
- 
- /* Regulator IDs */
- #define MAX8907_MBATT	0
-@@ -231,6 +232,7 @@ enum {
- 
- struct max8907_platform_data {
- 	struct regulator_init_data *init_data[MAX8907_NUM_REGULATORS];
-+	bool pm_off;
- };
- 
- struct regmap_irq_chips_data;
--- 
-1.7.0.4
+* Groups of pins (each being a name and an array of pins in the group)
+
+* Functions that can be muxed onto the groups (each function being a
+global entity rather than something with a pin or group, and each
+function being a name, and an array of groups where the function can be
+selected).
+
+However, the drivers in this patch seem to invert the data-structures a
+little - in other words, instead of defining a global list of functions=
+,
+they define a list of groups, and for each group, list the functions
+that can be selected on to it.
+
+In turn, that probably requires the core mvebu driver to invert these
+data-structures at run-time in order to provide the data the pinctrl
+core needs. I think it'd be better to just have each SoC-specific drive=
+r
+store the data tables in the same format that the pinctrl core needs it=
+,
+so that the mvebu pinctrl core won't have to process the data-structure=
+s
+at all.
+
+In particular, the following data structure is what I'm talking about:
+
++static struct mvebu_mpp_mode dove_mpp_modes[] =3D {
++	MPP_MODE(0,
++		MPP_FUNCTION(0x00, "gpio", NULL),
++		MPP_FUNCTION(0x02, "uart2", "rts"),
++		MPP_FUNCTION(0x03, "sdio0", "cd"),
++		MPP_FUNCTION(0x0f, "lcd0", "pwm"),
++		MPP_FUNCTION(0x10, "pmu", NULL)),
+
+it's defining the functions within the context of a particular group
+("mode" in the drivers terminology, I think...) rather than defining
+functions and groups as separate top-level tables.
