@@ -1,93 +1,92 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] USB: chipidea: add imx usbmisc support
-Date: Tue, 11 Sep 2012 13:42:01 +0300
-Message-ID: <87fw6orgcm.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1346137109-32247-1-git-send-email-richard.zhao@freescale.com> <1346137109-32247-2-git-send-email-richard.zhao@freescale.com> <871uiqkuhb.fsf@ashishki-desk.ger.corp.intel.com> <20120829081020.GX26594@pengutronix.de> <87ehmqj925.fsf@ashishki-desk.ger.corp.intel.com> <20120829110137.GA26594@pengutronix.de> <503E74E0.6040503@pengutronix.de> <20120904141050.GB19897@richard-laptop>
+From: "B, Ravi" <ravibabu@ti.com>
+Subject: RE: [PATCH v9 00/13] usb: musb: adding multi instance support
+Date: Tue, 11 Sep 2012 10:45:44 +0000
+Message-ID: <6C6B28D4DC342643927BEAFCE8707BF63E9FCB6C@DBDE01.ent.ti.com>
+References: <1346411399-23964-1-git-send-email-ravibabu@ti.com>
+ <20120911091731.GA18907@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20120904141050.GB19897@richard-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org, B20596-KZfg59tc24xl57MIdRCFDg@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20120911091731.GA18907@arwen.pp.htv.fi>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Balbi, Felipe" <balbi@ti.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "tony@atomide.com" <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Richard Zhao <linuxzsc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+> 
+> Hi,
+> 
+> On Fri, Aug 31, 2012 at 04:39:46PM +0530, Ravi Babu wrote:
+> > This series of patches adds,
+> > a) Multi instances support in musb driver
+> > b) DT support for musb_dsps glue layer
+> > c) DT support for NOP transceiver
+> > 
+> > AM33xx and TI81xx has dual musb controller and has two usb 
+> PHY of same type.
+> > This patch series uses 'phandle' based API 
+> > devm_usb_get_phy_by_phandle() to get the PHY of same type. This API 
+> > support is being added by Kishon's patch discussed at [1]
+> > 
+> > The series applies to felipe/master [1] branch
+> > 	+ Vaibhav baseport patches on his tree at [4]
+> > 	+ Kishon's multi phy patches on Felipe's branch 'xceiv'
+> > 	+ Kishon's patch on phandle at [2]
+> > 	+ Damodar's recent patch at [3] 
+> > 	+ Ajay's & Damodar's patches at [5] and [6] included in 
+> this series
+> > 
+> > 1. http://git.kernel.org/?p=linux/kernel/git/balbi/usb.git;a=summary
+> > 2. http://marc.info/?l=linux-usb&m=134070369306112&w=2
+> > 3. http://marc.info/?l=linux-usb&m=134200284230689&w=2
+> > 4. 
+> > 
+> https://github.com/hvaibhav/am335x-linux/commits/am335x-upstream-stagi
+> > ng 5. http://marc.info/?l=linux-usb&m=134200285530701&w=2
+> > 6. http://marc.info/?l=linux-usb&m=134208820028625&w=2
+> > 
+> > Changes from v8:
+> > 	- included Sergei's comment, removing underscore in 
+> device tree file
+> > 	- removed duplicated signoff from patches Changes from v7:
+> > 	- patches rebased on felipe/master branch & verified
+> > 	- included additional two patches 0001 & 0002 as part 
+> of this series
+> > 	  which are already submitted [5] & [6] Changes from v6:
+> > 	- Removed parent_pdev to get glue and used 
+> dev_get_getdrv() as per
+> > 	  Felipe's comment
+> > 	- use pr_debug() instead of pr_info() as per Felipe's 
+> comment Changes 
+> > from v5:
+> > 	- Removed musb->id as per Felipe's comment
+> > 	- used nop_ida as per Felipe's comment Changes from v4:
+> > 	- Fixed Felipe's comment for adding EXPORT_SYMBOL_GPL()
+> > 	- Fixed Felipe's comment on using dev_set_mask() 
+> Changes from v3:
+> > 	- Fixed Kishon's comment on removing "id" from phy struct and
+> > 	  removing unneeded "#else" part.
+> > Changes from v2:
+> > 	- Fixed Sergei's comment on not using address prefix in 
+> musb_dsps
+> > 	  glue and nop transceiver dt dats.
+> > 	- Also removed the "ti" string in compatible property 
+> for nop data.
+> > Changes from v1:
+> > 	- Defined musb_ida to manage core ids based on Felipe's comment
+> > 	  in [PATCH 01/11]
+> 
+> I tried appliying this, but this doesn't apply. Please rebase 
+> on my musb branch. Unfortunately there's no time anymore to 
+> wait otherwise the entire musb branch will miss this merge window.
+> 
+> I'm sorry
 
-> On Wed, Aug 29, 2012 at 10:00:32PM +0200, Marc Kleine-Budde wrote:
->> On 08/29/2012 01:01 PM, Sascha Hauer wrote:
->> > On Wed, Aug 29, 2012 at 01:18:10PM +0300, Alexander Shishkin wrote:
->> >> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->> >>
->> >>> On Wed, Aug 29, 2012 at 10:50:08AM +0300, Alexander Shishkin wrote:
->> >>>> Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
->> >>>>
->> >>>>> i.MX usb controllers shares non-core registers, which may include
->> >>>>> SoC specific controls. We take it as a usbmisc device and usbmisc
->> >>>>> driver set operations needed by ci13xxx_imx driver.
->> >>>>>
->> >>>>> For example, Sabrelite board has bad over-current design, we can
->> >>>>> usbmisc to disable over-current detect.
->> >>>>
->> >>>> Why does this have to be part of the usb driver instead of SoC specific
->> >>>> code? It looks like you've created a whole new device/driver
->> >>>> infrastructure just to disable overcurrent for a specific board.
->> >>>
->> >>> Richards code indeed only handles overcurrent for a specific board, but
->> >>> there are more bits to configure in the longer run: power pin
->> >>> polarities, ULPI/serial mode select and some more.
->> 
->> We already have a patch adding a usbmisc_imx53_init() function to that
->> driver.
->> 
->> >> Sounds to me like these things that should be taken care of by the phy
->> >> driver, which will likely be simpler from both driver's and devicetree's
->> >> perspective.
->> > 
->> > Most i.MX SoCs have three instances of the chipidea core. These cores
->> > share a single register space for controlling the mentioned bits (the
->> > usbmisc register space). The usbmisc looks different on the different
->> > SoCs.
->> > Indeed they control some phy specific aspects, but the phy itself may
->> > also be an external ULPI or UTMI phy with a separate driver. So if we
->> > integrate the usbmisc into the phy wouldn't that mean that it has to
->> > be integrated into all possible phy drivers?
->> > 
->> > From a devicetrees perspective it makes sense to integrate the flags
->> > into the chipidea nodes, because there is one node per chipidea core,
->> > but only one usbmisc unit for all ports on the SoC. So we can do a:
->> > 
->> > 	chipidea@ofs {
->> > 		disable-overcurrent = <1>;
->> > 	};
->> > 
->> > instead of
->> > 
->> > 	usbmisc@ofs {
->> > 		disable-overcurrent-port0 = <1>;
->> > 		disable-overcurrent-port1 = <0>;
->> > 		...
->> > 	};
->> 
->> +1
->> 
->> IMHO looks much cleaner.
-> So, Marc agree on the patch too. Maybe you can give a reviewed-by? :)
->
-> Hi Alex,
->
-> What do you think?
+Felipe, patch set is ready, I will re-send the patches shortly by today.
 
-Weeell, as long as this is contained in platform specific code and arm
-bits, I can tolerate it.
-
-What about the other two patches? I guess they can go through arm tree
-so we don't have to send it through Greg, right?
-
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> --
+> balbi
+> 
