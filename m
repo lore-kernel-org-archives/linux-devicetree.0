@@ -1,80 +1,173 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC v5] V4L DT bindings
-Date: Tue, 11 Sep 2012 09:22:59 -0600
-Message-ID: <504F5753.60407@wwwdotorg.org>
-References: <Pine.LNX.4.64.1208242356051.20710@axis700.grange> <Pine.LNX.4.64.1209051030230.16676@axis700.grange> <5047DEE6.9020607@wwwdotorg.org> <Pine.LNX.4.64.1209111555010.22084@axis700.grange>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH] media: add V4L2 DT binding documentation
+Date: Tue, 11 Sep 2012 17:51:08 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1209111746420.22084@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1209111555010.22084@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Hans Verkuil <hverkuil@xs4all.nl>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Hans Verkuil <hverkuil@xs4all.nl>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2012 08:02 AM, Guennadi Liakhovetski wrote:
-> Hi Stephen
-> 
-> Thanks for the review.
-> 
-> On Wed, 5 Sep 2012, Stephen Warren wrote:
-> 
->> On 09/05/2012 04:57 AM, Guennadi Liakhovetski wrote:
->>> Hi all
->>>
->>> Version 5 of this RFC is a result of a discussion of its version 4, which 
->>> took place during the recent Linux Plumbers conference in San Diego. 
->>> Changes are:
->>>
->>> (1) remove bus-width properties from device (bridge and client) top level. 
->>> This has actually already been decided upon during our discussions with 
->>> Sylwester, I just forgot to actually remove them, sorry.
->>>
->>> (2) links are now grouped under "ports." This should help better describe 
->>> device connection topology by making clearer, which interfaces links are 
->>> attached to. (help needed: in my notes I see "port" optional if only one 
->>> port is present, but I seem to remember, that the final decision was - 
->>> make ports compulsory for uniformity. Which one is true?)
->>
->> I'd tend to make the port node compulsory.
->>
->> A related question: What code is going to parse all the port/link
->> sub-nodes in a device?
-> 
-> I think we'll have to make a generic V4L DT parser. We certainly don't 
-> want each driver reimplement this.
-> 
->> And, how does it know which sub-nodes are ports,
->> and which are something else entirely? Perhaps the algorithm is that all
->> port nodes must be named "port"?
-> 
-> Yes, that was the idea. Is anything speaking against it?
+This patch adds a document, describing common V4L2 device tree bindings.
 
-I think that's fine; it's certainly a nice and simple requirement. It's
-just a rule that will have to be thought about when designing bindings
-for all the devices that use this feature, to make sure they don't
-define any other kind of "port" node that would confuse the parser.
+Co-authored-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+---
+ Documentation/devicetree/bindings/media/v4l2.txt |  143 ++++++++++++++++++++++
+ 1 files changed, 143 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/v4l2.txt
 
-I suppose if this ever becomes a problem, an individual binding could
-choose to avoid conflicts by placing the "port" nodes in some specific
-child node of its device node, and the driver would pass the name of
-that node into the common parsing code, which would default to using the
-device's main node when not otherwise specified. However, we should
-avoid the conflicts if we can. In other words:
+diff --git a/Documentation/devicetree/bindings/media/v4l2.txt b/Documentation/devicetree/bindings/media/v4l2.txt
+new file mode 100644
+index 0000000..55da6de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/v4l2.txt
+@@ -0,0 +1,143 @@
++Video4Linux Version 2 (V4L2)
++
++General concept:
++- video pipelines consist of external devices, e.g., camera sensors, controlled
++  over an I2C bus, and SoC internal IP blocks, including video DMA engines and
++  video data processors.
++- this document describes common bindings of all video pipeline devices.
++- SoC internal blocks are described by DT nodes, placed similarly to other SoC
++  blocks.
++- external devices are places on their respective control busses, e.g., I2C
++- data interfaces on all video devices are described by "port" child DT nodes
++- port configuration depends on other devices, participating in the data
++  transfer, and is described by "link" DT nodes, specified as children of
++  all "port" nodes, connected to this bus.
++- if a port can be configured to work with more than one other device on the
++  same bus, a "link" child DT node must be provided for each of them.
++- if more than one port is present on a device or more than one link is
++  connected to a port, a common scheme, using "#address-cells," "#size-cells"
++  and "reg" properties is used.
++
++Optional link properties:
++- remote: phandle to the other endpoint link DT node.
++- data-shift: on parallel data busses, if data-width is used to specify the
++  number of data lines, data-shift can be used to specify which data lines are
++  used, e.g., "data-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
++- hsync-active: 1 or 0 for active-high or -low HSYNC signal polarity
++  respectively.
++- vsync-active: ditto for VSYNC. Note, that if HSYNC and VSYNC polarities are
++  not specified, embedded synchronisation may be required, where supported.
++- pclk-sample: rising (1) or falling (0) edge to sample the pixel clock pin.
++- immutable: used for SoC-internal links, if no configuration is required.
++- data-lanes: array of serial, e.g., MIPI CSI-2, data hardware lane numbers in
++  the ascending order, beginning with logical lane 0.
++- clock-lanes: hardware lane number, used for the clock lane.
++
++Example:
++
++	ceu0: ceu@0xfe910000 {
++		compatible = "renesas,sh-mobile-ceu";
++		reg = <0xfe910000 0xa0>;
++		interrupts = <0x880>;
++
++		mclk: master_clock {
++			compatible = "renesas,ceu-clock";
++			#clock-cells = <1>;
++			clock-frequency = <50000000>;	/* max clock frequency */
++			clock-output-names = "mclk";
++		};
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ceu0_1: link@1 {
++				reg = <1>;		/* local link # */
++				remote = <&ov772x_1_1>;	/* remote phandle */
++				bus-width = <8>;	/* used data lines */
++				data-shift = <0>;	/* lines 7:0 are used */
++	
++				/* If [hv]sync-active are missing, embedded bt.605 sync is used */
++				hsync-active = <1>;	/* active high */
++				vsync-active = <1>;	/* active high */
++				pclk-sample = <1>;	/* rising */
++			};
++
++			ceu0_0: link@0 {
++				reg = <0>;
++				remote = <&csi2_2>;
++				immutable;
++			};
++		};
++	};
++
++	i2c0: i2c@0xfff20000 {
++		...
++		ov772x_1: camera@0x21 {
++			compatible = "omnivision,ov772x";
++			reg = <0x21>;
++			vddio-supply = <&regulator1>;
++			vddcore-supply = <&regulator2>;
++
++			clock-frequency = <20000000>;
++			clocks = <&mclk 0>;
++			clock-names = "xclk";
++
++			port {
++				/* With 1 link per port no need in addresses */
++				ov772x_1_1: link {
++					bus-width = <8>;
++					remote = <&ceu0_1>;
++					hsync-active = <1>;
++					hsync-active = <0>;	/* who came up with an inverter here?... */
++					pclk-sample = <1>;
++				};
++			};
++		};
++
++		imx074: camera@0x1a {
++			compatible = "sony,imx074";
++			reg = <0x1a>;
++			vddio-supply = <&regulator1>;
++			vddcore-supply = <&regulator2>;
++
++			clock-frequency = <30000000>;	/* shared clock with ov772x_1 */
++			clocks = <&mclk 0>;
++			clock-names = "sysclk";		/* assuming this is the name in the datasheet */
++
++			port {
++				imx074_1: link {
++					clock-lanes = <0>;
++					data-lanes = <1>, <2>;
++					remote = <&csi2_1>;
++				};
++			};
++		};
++	};
++
++	csi2: csi2@0xffc90000 {
++		compatible = "renesas,sh-mobile-csi2";
++		reg = <0xffc90000 0x1000>;
++		interrupts = <0x17a0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@1 {
++			compatible = "renesas,csi2c";	/* one of CSI2I and CSI2C */
++			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S, PHY_M has port address 0, is unused */
++
++			csi2_1: link {
++				clock-lanes = <0>;
++				data-lanes = <2>, <1>;
++				remote = <&imx074_1>;
++			};
++		};
++		port@2 {
++			reg = <2>;			/* port 2: link to the CEU */
++
++			csi2_2: link {
++				immutable;
++				remote = <&ceu0_0>;
++			};
++		};
++	};
+-- 
+1.7.2.5
 
-Normal:
-
-/foo {
-    port@0 { ... };
-    port@1 { ... };
-};
-
-If there's ever a need to resolve some conflict with that standard layout:
-
-/foo {
-    media-ports {
-        port@0 { ... };
-        port@1 { ... };
-    };
-};
