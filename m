@@ -1,14 +1,11 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] regulator: gpio-regulator: add DT bindings
-Date: Wed, 12 Sep 2012 10:57:15 +0200
-Message-ID: <50504E6B.9060401@gmail.com>
-References: <1347289429-18713-1-git-send-email-zonque@gmail.com>
- <504E4234.9090300@wwwdotorg.org>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 0/4] Runtime Interpreted Power Sequences
+Date: Wed, 12 Sep 2012 18:57:43 +0900
+Message-ID: <1347443867-18868-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <504E4234.9090300-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,147 +16,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+New revision of the power sequences, taking as usual the feedback that was
+kindly provided about the last version.
 
-On 10.09.2012 21:40, Stephen Warren wrote:
-> On 09/10/2012 09:03 AM, Daniel Mack wrote:
->> Add DT bindings for the gpio-regulator driver and some documentation on
->> how to use it.
-> 
->> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
->> @@ -0,0 +1,58 @@
->> +Device tree bindings for GPIO controlled voltages
->> +
->> +Voltage or current regulators on boards that are controlled by GPIOs can
->> +be used by the gpio-regulator driver.
->> +
->> +Required properties:
->> +
->> + - "compatible":	must be set to "gpio-regulator"
->> + - "regulator-name": 	must be set to a string describing the name of this
->> +			regulator.
-> 
-> I'd expect the "gpios" property to be listed here.
+I think now is a good time to discuss integrating this and to start looking for
+a maintainer who would be willing to merge this into his/her tree (I am
+especially thinking about the power framework maintainers, since this is where
+the code is right now. The second patch in this series enables the pwm_backlight
+driver to be used with the device tree, without relying on board-dependent
+callbacks to support complex power sequences. We also plan to use power
+sequences in other Tegra drivers, and other people have expressed interest in
+this work during earlier reviews. See for instance
 
-Yes, I'll add that.
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-August/018532.html
 
-> 
->> +Optional properties:
->> +
->> + - "startup-delay":		Start-up time in microseconds
->> + - "enable-high":		Polarity of enable GPIO. Active high if
->> +				defined, otherwise active low
-> 
-> fixed-regulator.txt already has an "enable-active-high" property; it'd
-> be nice to be consistent.
+and
 
-Ok.
+https://lkml.org/lkml/2012/9/6/270
 
->> + - "enabled-at-boot":		If set, the regulator has been enabled at boot
->> +				time
-> 
-> Isn't that regulator-boot-on, as defined in regulator.txt that you
-> mentioned?
-> 
->> + - "regulator-type-voltage":	The regulator controls a voltage
->> + - "regulator-type-current":	The regulator controls a current
-> 
-> I wonder if it'd be better to differentiate this using different
-> compatible values instead?
+There is probably some more details to fix and improve, but the current shape
+should be enough to know if we want this and where - therefore any sign from
+a maintainer would be greatly appreciated!
 
-I like this idea. Will make that "gpio-voltage-regulator" and
-"gpio-current-regulator".
+Changes since v5:
+* Removed pointers to platform data from resource structure for better code
+  clarity
+* devm_power_seq_set_build() now automatically checks the DT if no platform
+  data is present, making it possible to remove the explicit DT parsing function
+* Lots of fixes in the documentation which should be clearer now (thanks
+  Stephen!)
 
-> 
->> + - "states":			An array of possible states, describing the
->> +				GPIO states to reach a given value
->> +	- "value":		The value of the state, in microvolts or
->> +				microamperes
-> 
-> A name like "microvolts", "voltage", "microamps", or "current" might be
-> more descriptive here.
+Alexandre Courbot (4):
+  Runtime Interpreted Power Sequences
+  pwm_backlight: use power sequences
+  tegra: dt: add label to tegra20's PWM
+  tegra: ventana: add pwm backlight DT nodes
 
-I'm for "microvolts" and "microamperes". Will change. I just thought it
-might be good to keep as close to the struct member names for making it
-easiest for users to convert over to DT, but you're right, a more
-descriptive property name is certainly better.
+ .../devicetree/bindings/power_seq/power_seq.txt    | 122 ++++++
+ .../bindings/video/backlight/pwm-backlight.txt     |  65 ++-
+ Documentation/power/power_seq.txt                  | 215 ++++++++++
+ arch/arm/boot/dts/tegra20-ventana.dts              |  59 ++-
+ arch/arm/boot/dts/tegra20.dtsi                     |   2 +-
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/power_seq/Kconfig                    |   2 +
+ drivers/power/power_seq/Makefile                   |   1 +
+ drivers/power/power_seq/power_seq.c                | 446 +++++++++++++++++++++
+ drivers/power/power_seq/power_seq_delay.c          |  51 +++
+ drivers/power/power_seq/power_seq_gpio.c           |  91 +++++
+ drivers/power/power_seq/power_seq_pwm.c            |  87 ++++
+ drivers/power/power_seq/power_seq_regulator.c      |  87 ++++
+ drivers/video/backlight/Kconfig                    |   1 +
+ drivers/video/backlight/pwm_bl.c                   | 180 ++++++---
+ include/linux/power_seq.h                          | 172 ++++++++
+ include/linux/pwm_backlight.h                      |  15 +-
+ 18 files changed, 1543 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_seq/power_seq.txt
+ create mode 100644 Documentation/power/power_seq.txt
+ create mode 100644 drivers/power/power_seq/Kconfig
+ create mode 100644 drivers/power/power_seq/Makefile
+ create mode 100644 drivers/power/power_seq/power_seq.c
+ create mode 100644 drivers/power/power_seq/power_seq_delay.c
+ create mode 100644 drivers/power/power_seq/power_seq_gpio.c
+ create mode 100644 drivers/power/power_seq/power_seq_pwm.c
+ create mode 100644 drivers/power/power_seq/power_seq_regulator.c
+ create mode 100644 include/linux/power_seq.h
 
->> +	- "gpios":		bitfield of gpio target-states for the value
->> +				The n-th bit in the bitfield describes the
->> +				state of the n-th GPIO from the gpios-array
-> 
-> "gpios" sounds like the name of a property that defines which GPIOs are
-> used, rather than the value of those GPIOs. Perhaps "gpio-values" instead?
-> 
-> Actually, I wonder if we really even need to represent that values
-> explicitly; rather than have a big set of nodes, perhaps you can instead
-> have a single property that lists the voltage (or current) that each
-> combination of GPIO values gives; something like:
-> 
-> reg_gpio {
->     ...
->     gpios = <&ggpio 23 0 &gpio 24 0>;
->     voltages = <0 1000000 2000000 3000000>;
-> };
-> 
-> (As inspiration for that, I looked at
-> Documentation/devicetree/bindings/net/mdio-mux-gpio.txt which doesn't
-> have a property defining the value of the GPIOs for each combination,
-> but rather a node per valid combination).
-> 
-> Perhaps represent and invalid GPIO combination with 0xffffffff?
-
-Sorry, I don't follow you on this one. How would you specify the
-voltages that way? And The driver allows for arbitrary GPIO patterns to
-be set on the GPIOs in order to reach a specific voltage. Could you give
-me another example how that would look like in your approach?
-
-Once that topic is agreed on, I'll send out a new version.
-
->> +Also, all properties described in
->> +Documentation/devicetree/bindings/regulator/regulator.txt are supported as
->> +well.
->> +
->> +Example:
->> +
->> +	reg_gpio {
->> +		compatible = "gpio-regulator";
->> +		regulator-name = "voltage";
->> +		regulator-enable-high;
->> +		regulator-type-voltage;
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-always-on;
->> +
->> +		gpios = <&gpio 23 0>;
->> +
->> +		states {
->> +			state-on {
->> +				value = <3300000>;
->> +				gpios = <0x1>;
->> +			};
->> +
->> +			state-off {
->> +				value = <0>;
->> +				gpios = <0x0>;
->> +			};
->> +		};
->> +	};
-> 
-> That particular example only has on/off states, and so might be better
-> covered using the existing fixed-regulator, with optional GPIO control.
-> Perhaps an example using 2 GPIOs for 4 voltage states would be more useful?
-
-Yes, that's true. Funny thing is - I forgot about the fixed-regulator's
-feature to control GPIOs and use the driver as in the example that I
-provided :) Anyway, I'll finish the conversion of this one now, as I'm
-on it.
-
-
-Many thanks for your review,
-
-Daniel
+-- 
+1.7.12
