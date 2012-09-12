@@ -1,69 +1,39 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: specify initrd location using 64-bit
-Date: Wed, 12 Sep 2012 15:56:24 -0500
-Message-ID: <5050F6F8.6000008@gmail.com>
-References: <1347465937-7056-1-git-send-email-cyril@ti.com> <5050EF3F.6030003@gmail.com> <alpine.LFD.2.02.1209121629260.28681@xanadu.home>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 6/9] ARM: mvebu: add pinctrl device in DT for Armada
+ 370/XP SoCs
+Date: Wed, 12 Sep 2012 14:57:33 -0600
+Message-ID: <5050F73D.8050701@wwwdotorg.org>
+References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347266386-16229-7-git-send-email-sebastian.hesselbarth@gmail.com> <504FB9D7.3030205@wwwdotorg.org> <20120912085652.21d3232f@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <alpine.LFD.2.02.1209121629260.28681@xanadu.home>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Cyril Chemparathy <cyril@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux@openrisc.net, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, x86@kernel.org, david.daney@cavium.com, benh@kernel.crashing.org, bigeasy@linutronix.de, grant.likely@secretlab.ca, paul.gortmaker@windriver.com, paulus@samba.org, hpa@zytor.com, m.szyprowski@samsung.com, jonas@southpole.se, linux@arm.linux.org.uk, a-jacquiot@ti.com, mingo@redhat.com, suzuki@in.ibm.com, mahesh@linux.vnet.ibm.com, linus.walleij@linaro.org, arnd@arndb.de, msalter@redhat.com, rob.herring@calxeda.com, tglx@linutronix.de, blogic@openwrt.org, dhowells@redhat.com, monstr@monstr.eu, ralf@l
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120912085652.21d3232f@skate>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2012 03:31 PM, Nicolas Pitre wrote:
-> On Wed, 12 Sep 2012, Rob Herring wrote:
-> 
->> On 09/12/2012 11:05 AM, Cyril Chemparathy wrote:
->>> On some PAE architectures, the entire range of physical memory could reside
->>> outside the 32-bit limit.  These systems need the ability to specify the
->>> initrd location using 64-bit numbers.
+On 09/12/2012 12:56 AM, Thomas Petazzoni wrote:
+> Le Tue, 11 Sep 2012 16:23:19 -0600,
+> Stephen Warren <swarren@wwwdotorg.org> a =C3=A9crit :
+>=20
+>> On 09/10/2012 02:39 AM, Sebastian Hesselbarth wrote:
+>>> From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 >>>
->>> This patch globally modifies the early_init_dt_setup_initrd_arch() function to
->>> use 64-bit numbers instead of the current unsigned long.
+>>> The Armada 370 and XP SoCs have configurable muxing for a certain
+>>> number of their pins, controlled through a pinctrl driver.
 >>
->> S-o-B?
->>
->>> ---
->>>  arch/arm/mm/init.c            |    2 +-
->>>  arch/c6x/kernel/devicetree.c  |    3 +--
->>>  arch/microblaze/kernel/prom.c |    3 +--
->>>  arch/mips/kernel/prom.c       |    3 +--
->>>  arch/openrisc/kernel/prom.c   |    3 +--
->>>  arch/powerpc/kernel/prom.c    |    3 +--
->>>  arch/x86/kernel/devicetree.c  |    3 +--
->>>  drivers/of/fdt.c              |   10 ++++++----
->>>  include/linux/of_fdt.h        |    3 +--
->>>  9 files changed, 14 insertions(+), 19 deletions(-)
->>>
->>> diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
->>> index ad722f1..579792c 100644
->>> --- a/arch/arm/mm/init.c
->>> +++ b/arch/arm/mm/init.c
->>> @@ -76,7 +76,7 @@ static int __init parse_tag_initrd2(const struct tag *tag)
->>>  __tagtable(ATAG_INITRD2, parse_tag_initrd2);
->>>  
->>>  #ifdef CONFIG_OF_FLATTREE
->>> -void __init early_init_dt_setup_initrd_arch(unsigned long start, unsigned long end)
->>> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->>
->> phys_initrd_start/size need to change too. Not sure about similar things
->> on other arches.
-> 
-> size ?
+>> Hmmm. I'd be tempted just to put the entire node definition there;
+>> putting in a .dtsi file just to share the reg property doesn't seem
+>> especially useful.
+>=20
+> When you say "here" you're mentioning the SoC-specific .dtsi files (i=
+=2Ee
 
-phys_initrd_size. Arguably, we'll never have a >4GB initrd with a PAE
-system or perhaps run into other issues first (like space to decompress
-it), but technically the DTS could specify one.
+(s/here/there I assume).
 
-Rob
+> the ones in PATCH 7/9 and PATCH 8/9), correct?
+
+Yes, I believe so.
+
