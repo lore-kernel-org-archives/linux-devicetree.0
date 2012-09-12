@@ -1,117 +1,56 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2] ARM: EXYNOS: Add MFC device tree support
-Date: Wed, 12 Sep 2012 22:24:31 +0200
-Message-ID: <5050EF7F.9040802@gmail.com>
-References: <1347456857-27584-1-git-send-email-arun.kk@samsung.com> <1347456857-27584-2-git-send-email-arun.kk@samsung.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH] of: specify initrd location using 64-bit
+Date: Wed, 12 Sep 2012 16:31:29 -0400 (EDT)
+Message-ID: <alpine.LFD.2.02.1209121629260.28681@xanadu.home>
+References: <1347465937-7056-1-git-send-email-cyril@ti.com> <5050EF3F.6030003@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1347456857-27584-2-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, ch.naveen@samsung.com, joshi@samsung.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5050EF3F.6030003@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Cyril Chemparathy <cyril@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux@openrisc.net, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, x86@kernel.org, david.daney@cavium.com, benh@kernel.crashing.org, bigeasy@linutronix.de, grant.likely@secretlab.ca, paul.gortmaker@windriver.com, paulus@samba.org, hpa@zytor.com, m.szyprowski@samsung.com, jonas@southpole.se, linux@arm.linux.org.uk, a-jacquiot@ti.com, mingo@redhat.com, suzuki@in.ibm.com, mahesh@linux.vnet.ibm.com, linus.walleij@linaro.org, arnd@arndb.de, msalter@redhat.com, rob.herring@calxeda.com, tglx@linutronix.de, blogic@openwrt.org, dhowells@redhat.com, monstr@monstr.eu, ralf@linux-mips.org, tj@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Just a few small comments...
+On Wed, 12 Sep 2012, Rob Herring wrote:
 
-On 09/12/2012 03:34 PM, Arun Kumar K wrote:
-> This patch adds device tree entry for MFC v6 in the Exynos5
-> SoC. Makes the required changes in the clock files and adds
-> MFC to the DT device list.
->
-> Signed-off-by: Naveen Krishna Chatradhi<ch.naveen@samsung.com>
-> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
-> ---
-...
-> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> new file mode 100644
-> index 0000000..9a74d09
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> @@ -0,0 +1,27 @@
-> +* Samsung Multi Format Codec (MFC)
-> +
-> +Mult Format Codec (MFC) is the IP present in Samsung SoCs which
+> On 09/12/2012 11:05 AM, Cyril Chemparathy wrote:
+> > On some PAE architectures, the entire range of physical memory could reside
+> > outside the 32-bit limit.  These systems need the ability to specify the
+> > initrd location using 64-bit numbers.
+> > 
+> > This patch globally modifies the early_init_dt_setup_initrd_arch() function to
+> > use 64-bit numbers instead of the current unsigned long.
+> 
+> S-o-B?
+> 
+> > ---
+> >  arch/arm/mm/init.c            |    2 +-
+> >  arch/c6x/kernel/devicetree.c  |    3 +--
+> >  arch/microblaze/kernel/prom.c |    3 +--
+> >  arch/mips/kernel/prom.c       |    3 +--
+> >  arch/openrisc/kernel/prom.c   |    3 +--
+> >  arch/powerpc/kernel/prom.c    |    3 +--
+> >  arch/x86/kernel/devicetree.c  |    3 +--
+> >  drivers/of/fdt.c              |   10 ++++++----
+> >  include/linux/of_fdt.h        |    3 +--
+> >  9 files changed, 14 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+> > index ad722f1..579792c 100644
+> > --- a/arch/arm/mm/init.c
+> > +++ b/arch/arm/mm/init.c
+> > @@ -76,7 +76,7 @@ static int __init parse_tag_initrd2(const struct tag *tag)
+> >  __tagtable(ATAG_INITRD2, parse_tag_initrd2);
+> >  
+> >  #ifdef CONFIG_OF_FLATTREE
+> > -void __init early_init_dt_setup_initrd_arch(unsigned long start, unsigned long end)
+> > +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
+> 
+> phys_initrd_start/size need to change too. Not sure about similar things
+> on other arches.
 
-Mult -> Multi
+size ?
 
-> +supports high resolution decoding and encoding functionalities.
-> +The MFC device driver is a v4l2 driver which can encode/decode
-> +video raw/elementary streams and has support for all popular
-> +video codecs.
-> +
-> +Required properties:
-> +  - compatible : value should be either one among the following
-> +	(a) "samsung,mfc-v5" for MFC v5 present in Exynos4 SoCs
-> +	(b) "samsung,mfc-v6" for MFC v6 present in Exynos5 SoCs
-> +
-> +  - reg : Physical base address of the IP registers and length of memory
-> +	  mapped region.
-> +
-> +  - interrupts : MFC interupt number to the CPU.
 
-interupt -> interrupt
-
-> +
-> +  - samsung,mfc-r : Base address of the first memory bank used by MFC
-> +		    for DMA contiguous memory allocation.
-> +
-> +  - samsung,mfc-r-size : Size of the first memory bank.
-> +
-> +  - samsung,mfc-l : Base address of the second memory bank used by MFC
-> +		    for DMA contiguous memory allocation.
-> +
-...
-> +struct mfc_dt_meminfo {
-> +	unsigned long loff;
-> +	unsigned long lsize;
-> +	unsigned long roff;
-> +	unsigned long rsize;
-> +};
-> +
-> +int fdt_find_mfc_mem(unsigned long node, const char *uname, int depth,
-> +		void *data)
-> +{
-> +	__be32 *prop;
-> +	unsigned long len;
-> +	struct mfc_dt_meminfo *mfc_mem = (struct mfc_dt_meminfo *)data;
-
-No need for explicit cast from void *.
-
-> +	if (of_flat_dt_is_compatible(node, "samsung,mfc-v6")) {
-
-Might be worth to change it to
-
-	if (!of_flat_dt_is_compatible(node, "samsung,mfc-v6"))
-		return 0;
-
-and avoid indentation.
-> +		prop = of_get_flat_dt_prop(node, "samsung,mfc-l",&len);
-> +		if (!prop)
-> +			return 0;
-> +		mfc_mem->loff = of_read_ulong(prop, len/4);
-> +
-> +		prop = of_get_flat_dt_prop(node, "samsung,mfc-l-size",&len);
-> +		if (!prop)
-> +			return 0;
-> +		mfc_mem->lsize = of_read_ulong(prop, len/4);
-> +
-> +		prop = of_get_flat_dt_prop(node, "samsung,mfc-r",&len);
-> +		if (!prop)
-> +			return 0;
-> +		mfc_mem->roff = of_read_ulong(prop, len/4);
-> +
-> +		prop = of_get_flat_dt_prop(node, "samsung,mfc-r-size",&len);
-> +		if (!prop)
-> +			return 0;
-> +		mfc_mem->rsize = of_read_ulong(prop, len/4);
-> +
-> +		return 1;
-> +	}
-> +	return 0;
-> +}
-
---
-Regards,
-Sylwester
+Nicolas
