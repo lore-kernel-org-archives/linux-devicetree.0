@@ -1,60 +1,59 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/9] ARM: davinci: uncompress.h: bail out if uart not
-	initialized
-Date: Wed, 12 Sep 2012 22:05:24 +0530
-Message-ID: <1347467732-1332-2-git-send-email-nsekhar@ti.com>
-References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6 v2] ARM: integrator: initial device tree support
+Date: Wed, 12 Sep 2012 18:52:22 +0200
+Message-ID: <CACRpkdbH1CqDOYGLHu=GdCuHQN67=ZE7RXUx1o+nzp3YydpKHQ@mail.gmail.com>
+References: <1346471760-23993-1-git-send-email-linus.walleij@linaro.org>
+ <5048A31E.2090704@gmail.com>
+ <CACRpkdYy2CZXXA+kkEaOTznaucxXEwiwSn-5ux0ByHjXrsm-2A@mail.gmail.com>
+ <201209061419.07325.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1347467732-1332-1-git-send-email-nsekhar-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201209061419.07325.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Bail out of UART access functions in uncompress.h if the uart
-port is not setup. This will happen when booting from DT since
-machine type matching does not work in this case. This may also
-happen if a correct machine type is not setup by bootloader.
+On Thu, Sep 6, 2012 at 4:19 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 06 September 2012, Linus Walleij wrote:
+>> On Thu, Sep 6, 2012 at 3:20 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > [Me]
+>> >> I can of course skip the aliases and go for the timer nodes
+>> >> I want directly, but that isn't any helpful for people reading the
+>> >> device tree, is it?
+>> >
+>> > Well, the dts doesn't really need to describe how Linux is using things.
+>>
+>> The arm,integrator-clocksource and arm,integrator-clockevent
+>> are renamed arm,timer-primary and arm,timer-secondary in the
+>> last patch set.
+>>
+>> Are you OK with this for now, going forward? I'd be happy to
+>> take a round refactoring it for the next cycle as outlined
+>> below.
+>
+> If the timers are really free for use by anything and you want to
+> encode how Linux uses them, I would suggest naming the aliases
+> "linux.clocksource" and "linux,clockevent" to make it clear that
+> you are not describing the hardware here but rather picking
+> a configuration.
 
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/mach-davinci/include/mach/uncompress.h |    6 ++++++
- 1 file changed, 6 insertions(+)
+So the renaming of the aliases to arm,timer-primary and
+arm-timer-secondary is to be taken as a hint to the OS to use
+these two as primary and secondary respectively.
 
-diff --git a/arch/arm/mach-davinci/include/mach/uncompress.h b/arch/arm/mach-davinci/include/mach/uncompress.h
-index 18cfd49..3a0ff90 100644
---- a/arch/arm/mach-davinci/include/mach/uncompress.h
-+++ b/arch/arm/mach-davinci/include/mach/uncompress.h
-@@ -32,6 +32,9 @@ u32 *uart;
- /* PORT_16C550A, in polled non-fifo mode */
- static void putc(char c)
- {
-+	if (!uart)
-+		return;
-+
- 	while (!(uart[UART_LSR] & UART_LSR_THRE))
- 		barrier();
- 	uart[UART_TX] = c;
-@@ -39,6 +42,9 @@ static void putc(char c)
- 
- static inline void flush(void)
- {
-+	if (!uart)
-+		return;
-+
- 	while (!(uart[UART_LSR] & UART_LSR_THRE))
- 		barrier();
- }
--- 
-1.7.10.1
+linux.foo seems bad in comparison, but if you insist...
+
+Yours,
+Linus Walleij
