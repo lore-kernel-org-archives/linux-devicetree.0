@@ -1,8 +1,7 @@
 From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/9] ARM: davinci: arrange kconfig selects in alphabetical
-	order
-Date: Wed, 12 Sep 2012 22:05:26 +0530
-Message-ID: <1347467732-1332-4-git-send-email-nsekhar@ti.com>
+Subject: [PATCH 6/9] ARM: davinci: da850 evm: add DT data
+Date: Wed, 12 Sep 2012 22:05:29 +0530
+Message-ID: <1347467732-1332-7-git-send-email-nsekhar@ti.com>
 References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,36 +21,77 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Her
 Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Arrange Kconfig selects for DaVinci in alphabetical order.
-This makes it easier to avoid adding duplicate selects.
+Add device tree data for DA850 EVM. At this time, only
+information on serial ports is added.
 
 Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/Kconfig |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/arm/davinci.txt |    4 +++
+ arch/arm/boot/dts/da850-evm.dts                   |   28 +++++++++++++++++++++
+ arch/arm/mach-davinci/da8xx-dt.c                  |    1 +
+ 3 files changed, 33 insertions(+)
+ create mode 100644 arch/arm/boot/dts/da850-evm.dts
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index c5f9ae5..df04b0b 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -963,14 +963,14 @@ config ARCH_NOMADIK
+diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
+index aa4e7a1..2dda756 100644
+--- a/Documentation/devicetree/bindings/arm/davinci.txt
++++ b/Documentation/devicetree/bindings/arm/davinci.txt
+@@ -1,6 +1,10 @@
+ Texas Instruments DaVinci Platforms Device Tree Bindings
+ --------------------------------------------------------
  
- config ARCH_DAVINCI
- 	bool "TI DaVinci"
--	select GENERIC_CLOCKEVENTS
-+	select ARCH_HAS_HOLES_MEMORYMODEL
- 	select ARCH_REQUIRE_GPIOLIB
--	select ZONE_DMA
--	select HAVE_IDE
- 	select CLKDEV_LOOKUP
- 	select GENERIC_ALLOCATOR
-+	select GENERIC_CLOCKEVENTS
- 	select GENERIC_IRQ_CHIP
--	select ARCH_HAS_HOLES_MEMORYMODEL
-+	select HAVE_IDE
-+	select ZONE_DMA
- 	help
- 	  Support for TI's DaVinci platform.
++DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
++Required root node properties:
++    - compatible = "ti,da850-evm", "ti,da850";
++
+ Generic DaVinci Boards
+ ----------------------
  
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+new file mode 100644
+index 0000000..37dc5a3
+--- /dev/null
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -0,0 +1,28 @@
++/*
++ * Device Tree for DA850 EVM board
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation, version 2.
++ */
++/dts-v1/;
++/include/ "da850.dtsi"
++
++/ {
++	compatible = "ti,da850-evm", "ti,da850";
++	model = "DA850/AM1808/OMAP-L138 EVM";
++
++	soc {
++		serial0: serial@1c42000 {
++			status = "okay";
++		};
++		serial1: serial@1d0c000 {
++			status = "okay";
++		};
++		serial2: serial@1d0d000 {
++			status = "okay";
++		};
++	};
++};
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index df393d9..94b09fd 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -47,6 +47,7 @@ static void __init da850_init_machine(void)
+ }
+ 
+ static const char *da850_boards_compat[] __initdata = {
++	"ti,da850-evm",
+ 	"ti,da850",
+ 	NULL,
+ };
 -- 
 1.7.10.1
