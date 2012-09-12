@@ -1,214 +1,165 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v2] ARM: EXYNOS: Add MFC device tree support
-Date: Wed, 12 Sep 2012 19:04:17 +0530
-Message-ID: <1347456857-27584-2-git-send-email-arun.kk@samsung.com>
-References: <1347456857-27584-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1347456857-27584-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, ch.naveen@samsung.com, arun.kk@samsung.com, joshi@samsung.com
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] regulator: gpio-regulator: add DT bindings
+Date: Wed, 12 Sep 2012 10:57:15 +0200
+Message-ID: <50504E6B.9060401@gmail.com>
+References: <1347289429-18713-1-git-send-email-zonque@gmail.com>
+ <504E4234.9090300@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <504E4234.9090300-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree entry for MFC v6 in the Exynos5
-SoC. Makes the required changes in the clock files and adds
-MFC to the DT device list.
+Hi Stephen,
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- .../devicetree/bindings/media/s5p-mfc.txt          |   27 +++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    7 +++
- arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++
- arch/arm/mach-exynos/Kconfig                       |    1 +
- arch/arm/mach-exynos/clock-exynos5.c               |    2 +-
- arch/arm/mach-exynos/mach-exynos5-dt.c             |   56 ++++++++++++++++++++
- 6 files changed, 98 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+On 10.09.2012 21:40, Stephen Warren wrote:
+> On 09/10/2012 09:03 AM, Daniel Mack wrote:
+>> Add DT bindings for the gpio-regulator driver and some documentation on
+>> how to use it.
+> 
+>> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+>> @@ -0,0 +1,58 @@
+>> +Device tree bindings for GPIO controlled voltages
+>> +
+>> +Voltage or current regulators on boards that are controlled by GPIOs can
+>> +be used by the gpio-regulator driver.
+>> +
+>> +Required properties:
+>> +
+>> + - "compatible":	must be set to "gpio-regulator"
+>> + - "regulator-name": 	must be set to a string describing the name of this
+>> +			regulator.
+> 
+> I'd expect the "gpios" property to be listed here.
 
-diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-new file mode 100644
-index 0000000..9a74d09
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-@@ -0,0 +1,27 @@
-+* Samsung Multi Format Codec (MFC)
-+
-+Mult Format Codec (MFC) is the IP present in Samsung SoCs which
-+supports high resolution decoding and encoding functionalities.
-+The MFC device driver is a v4l2 driver which can encode/decode
-+video raw/elementary streams and has support for all popular
-+video codecs.
-+
-+Required properties:
-+  - compatible : value should be either one among the following
-+	(a) "samsung,mfc-v5" for MFC v5 present in Exynos4 SoCs
-+	(b) "samsung,mfc-v6" for MFC v6 present in Exynos5 SoCs
-+
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+
-+  - interrupts : MFC interupt number to the CPU.
-+
-+  - samsung,mfc-r : Base address of the first memory bank used by MFC
-+		    for DMA contiguous memory allocation.
-+
-+  - samsung,mfc-r-size : Size of the first memory bank.
-+
-+  - samsung,mfc-l : Base address of the second memory bank used by MFC
-+		    for DMA contiguous memory allocation.
-+
-+  - samsung,mfc-l-size : Size of the second memory bank.
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 8a5e348..5824c97 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -109,4 +109,11 @@
- 	spi_2: spi@12d40000 {
- 		status = "disabled";
- 	};
-+
-+	mfc {
-+		samsung,mfc-r = <0x43000000>;
-+		samsung,mfc-r-size = <8388608>;
-+		samsung,mfc-l = <0x51000000>;
-+		samsung,mfc-l-size = <8388608>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index b55794b..5df2f99 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -62,6 +62,12 @@
- 		interrupts = <0 42 0>;
- 	};
- 
-+	mfc {
-+		compatible = "samsung,mfc-v6";
-+		reg = <0x11000000 0x10000>;
-+		interrupts = <0 96 0>;
-+	};
-+
- 	rtc {
- 		compatible = "samsung,s3c6410-rtc";
- 		reg = <0x101E0000 0x100>;
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 195b50e..8ddc26a 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -64,6 +64,7 @@ config SOC_EXYNOS5250
- 	select SAMSUNG_DMADEV
- 	select S5P_PM if PM
- 	select S5P_SLEEP if PM
-+	select S5P_DEV_MFC
- 	help
- 	  Enable EXYNOS5250 SoC support
- 
-diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/clock-exynos5.c
-index eb3f4fc..461a721 100644
---- a/arch/arm/mach-exynos/clock-exynos5.c
-+++ b/arch/arm/mach-exynos/clock-exynos5.c
-@@ -669,7 +669,7 @@ static struct clk exynos5_init_clocks_off[] = {
- 		.ctrlbit	= (1 << 25),
- 	}, {
- 		.name		= "mfc",
--		.devname	= "s5p-mfc",
-+		.devname	= "s5p-mfc-v6",
- 		.enable		= exynos5_clk_ip_mfc_ctrl,
- 		.ctrlbit	= (1 << 0),
- 	}, {
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index e707eb1..0f131da 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -11,6 +11,8 @@
- 
- #include <linux/of_platform.h>
- #include <linux/serial_core.h>
-+#include <linux/memblock.h>
-+#include <linux/of_fdt.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/hardware/gic.h>
-@@ -18,6 +20,7 @@
- 
- #include <plat/cpu.h>
- #include <plat/regs-serial.h>
-+#include <plat/mfc.h>
- 
- #include "common.h"
- 
-@@ -64,6 +67,7 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 				"exynos-gsc.2", NULL),
- 	OF_DEV_AUXDATA("samsung,exynos5-gsc", EXYNOS5_PA_GSC3,
- 				"exynos-gsc.3", NULL),
-+	OF_DEV_AUXDATA("samsung,mfc-v6", 0x11000000, "s5p-mfc-v6", NULL),
- 	{},
- };
- 
-@@ -84,6 +88,57 @@ static char const *exynos5250_dt_compat[] __initdata = {
- 	NULL
- };
- 
-+struct mfc_dt_meminfo {
-+	unsigned long loff;
-+	unsigned long lsize;
-+	unsigned long roff;
-+	unsigned long rsize;
-+};
-+
-+int fdt_find_mfc_mem(unsigned long node, const char *uname, int depth,
-+		void *data)
-+{
-+	__be32 *prop;
-+	unsigned long len;
-+	struct mfc_dt_meminfo *mfc_mem = (struct mfc_dt_meminfo *)data;
-+
-+	if (of_flat_dt_is_compatible(node, "samsung,mfc-v6")) {
-+
-+		prop = of_get_flat_dt_prop(node, "samsung,mfc-l", &len);
-+		if (!prop)
-+			return 0;
-+		mfc_mem->loff = of_read_ulong(prop, len/4);
-+
-+		prop = of_get_flat_dt_prop(node, "samsung,mfc-l-size", &len);
-+		if (!prop)
-+			return 0;
-+		mfc_mem->lsize = of_read_ulong(prop, len/4);
-+
-+		prop = of_get_flat_dt_prop(node, "samsung,mfc-r", &len);
-+		if (!prop)
-+			return 0;
-+		mfc_mem->roff = of_read_ulong(prop, len/4);
-+
-+		prop = of_get_flat_dt_prop(node, "samsung,mfc-r-size", &len);
-+		if (!prop)
-+			return 0;
-+		mfc_mem->rsize = of_read_ulong(prop, len/4);
-+
-+		return 1;
-+	}
-+	return 0;
-+}
-+
-+static void __init exynos5_reserve(void)
-+{
-+	struct mfc_dt_meminfo mfc_mem;
-+
-+	/* Reserve memory for MFC only if it's available */
-+	if (of_scan_flat_dt(fdt_find_mfc_mem, &mfc_mem))
-+		s5p_mfc_reserve_mem(mfc_mem.roff, mfc_mem.rsize, mfc_mem.loff,
-+				mfc_mem.lsize);
-+}
-+
- DT_MACHINE_START(EXYNOS5_DT, "SAMSUNG EXYNOS5 (Flattened Device Tree)")
- 	/* Maintainer: Kukjin Kim <kgene.kim@samsung.com> */
- 	.init_irq	= exynos5_init_irq,
-@@ -94,4 +149,5 @@ DT_MACHINE_START(EXYNOS5_DT, "SAMSUNG EXYNOS5 (Flattened Device Tree)")
- 	.timer		= &exynos4_timer,
- 	.dt_compat	= exynos5250_dt_compat,
- 	.restart        = exynos5_restart,
-+	.reserve	= exynos5_reserve,
- MACHINE_END
--- 
-1.7.0.4
+Yes, I'll add that.
+
+> 
+>> +Optional properties:
+>> +
+>> + - "startup-delay":		Start-up time in microseconds
+>> + - "enable-high":		Polarity of enable GPIO. Active high if
+>> +				defined, otherwise active low
+> 
+> fixed-regulator.txt already has an "enable-active-high" property; it'd
+> be nice to be consistent.
+
+Ok.
+
+>> + - "enabled-at-boot":		If set, the regulator has been enabled at boot
+>> +				time
+> 
+> Isn't that regulator-boot-on, as defined in regulator.txt that you
+> mentioned?
+> 
+>> + - "regulator-type-voltage":	The regulator controls a voltage
+>> + - "regulator-type-current":	The regulator controls a current
+> 
+> I wonder if it'd be better to differentiate this using different
+> compatible values instead?
+
+I like this idea. Will make that "gpio-voltage-regulator" and
+"gpio-current-regulator".
+
+> 
+>> + - "states":			An array of possible states, describing the
+>> +				GPIO states to reach a given value
+>> +	- "value":		The value of the state, in microvolts or
+>> +				microamperes
+> 
+> A name like "microvolts", "voltage", "microamps", or "current" might be
+> more descriptive here.
+
+I'm for "microvolts" and "microamperes". Will change. I just thought it
+might be good to keep as close to the struct member names for making it
+easiest for users to convert over to DT, but you're right, a more
+descriptive property name is certainly better.
+
+>> +	- "gpios":		bitfield of gpio target-states for the value
+>> +				The n-th bit in the bitfield describes the
+>> +				state of the n-th GPIO from the gpios-array
+> 
+> "gpios" sounds like the name of a property that defines which GPIOs are
+> used, rather than the value of those GPIOs. Perhaps "gpio-values" instead?
+> 
+> Actually, I wonder if we really even need to represent that values
+> explicitly; rather than have a big set of nodes, perhaps you can instead
+> have a single property that lists the voltage (or current) that each
+> combination of GPIO values gives; something like:
+> 
+> reg_gpio {
+>     ...
+>     gpios = <&ggpio 23 0 &gpio 24 0>;
+>     voltages = <0 1000000 2000000 3000000>;
+> };
+> 
+> (As inspiration for that, I looked at
+> Documentation/devicetree/bindings/net/mdio-mux-gpio.txt which doesn't
+> have a property defining the value of the GPIOs for each combination,
+> but rather a node per valid combination).
+> 
+> Perhaps represent and invalid GPIO combination with 0xffffffff?
+
+Sorry, I don't follow you on this one. How would you specify the
+voltages that way? And The driver allows for arbitrary GPIO patterns to
+be set on the GPIOs in order to reach a specific voltage. Could you give
+me another example how that would look like in your approach?
+
+Once that topic is agreed on, I'll send out a new version.
+
+>> +Also, all properties described in
+>> +Documentation/devicetree/bindings/regulator/regulator.txt are supported as
+>> +well.
+>> +
+>> +Example:
+>> +
+>> +	reg_gpio {
+>> +		compatible = "gpio-regulator";
+>> +		regulator-name = "voltage";
+>> +		regulator-enable-high;
+>> +		regulator-type-voltage;
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-always-on;
+>> +
+>> +		gpios = <&gpio 23 0>;
+>> +
+>> +		states {
+>> +			state-on {
+>> +				value = <3300000>;
+>> +				gpios = <0x1>;
+>> +			};
+>> +
+>> +			state-off {
+>> +				value = <0>;
+>> +				gpios = <0x0>;
+>> +			};
+>> +		};
+>> +	};
+> 
+> That particular example only has on/off states, and so might be better
+> covered using the existing fixed-regulator, with optional GPIO control.
+> Perhaps an example using 2 GPIOs for 4 voltage states would be more useful?
+
+Yes, that's true. Funny thing is - I forgot about the fixed-regulator's
+feature to control GPIOs and use the driver as in the example that I
+provided :) Anyway, I'll finish the conversion of this one now, as I'm
+on it.
+
+
+Many thanks for your review,
+
+Daniel
