@@ -1,11 +1,13 @@
 From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH RESEND 0/9] ARM: davinci: DT boot support for DA850
-Date: Wed, 12 Sep 2012 22:05:23 +0530
-Message-ID: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
+Subject: [PATCH 2/9] ARM: davinci: serial: provide API to initialze UART clocks
+Date: Wed, 12 Sep 2012 22:05:25 +0530
+Message-ID: <1347467732-1332-3-git-send-email-nsekhar@ti.com>
+References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1347467732-1332-1-git-send-email-nsekhar-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
 	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
@@ -19,49 +21,89 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Her
 Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds basic DT boot support for DA850 EVM and EnBW CMC board.
-It applies to master branch of Linux DaVinci tree[1].
+Provide an API to initialize a UART clock. Refactor existing
+davinci_serial_init() to separate out the part which enables
+the clock.
 
-Resending this because I missed copying the DT and Documentation folks
-last time around. Sorry about that. There is no change in patch contents.
+This will later be used to help DA850 DT boot support.
 
-Thanks,
-Sekhar
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/mach-davinci/include/mach/serial.h |    1 +
+ arch/arm/mach-davinci/serial.c              |   39 ++++++++++++++++++---------
+ 2 files changed, 28 insertions(+), 12 deletions(-)
 
-[1] git://gitorious.org/linux-davinci/linux-davinci.git
-
-Heiko Schocher (2):
-  ARM: davinci: da850: add SoC DT data
-  ARM: davinci: add support for am1808 based EnBW CMC board
-
-Sekhar Nori (7):
-  ARM: davinci: uncompress.h: bail out if uart not initialized
-  ARM: davinci: serial: provide API to initialze UART clocks
-  ARM: davinci: arrange kconfig selects in alphabetical order
-  ARM: davinci: da850: add DT boot support
-  ARM: davinci: da850 evm: add DT data
-  ARM: davinci: da850: generate dtbs for da850 boards
-  ARM: davinci: da8xx defconfig: enable DT config options
-
- Documentation/devicetree/bindings/arm/davinci.txt |   17 ++++++
- arch/arm/Kconfig                                  |    9 +--
- arch/arm/boot/dts/da850-enbw-cmc.dts              |   30 ++++++++++
- arch/arm/boot/dts/da850-evm.dts                   |   28 +++++++++
- arch/arm/boot/dts/da850.dtsi                      |   60 +++++++++++++++++++
- arch/arm/configs/da8xx_omapl_defconfig            |    3 +
- arch/arm/mach-davinci/Kconfig                     |    8 +++
- arch/arm/mach-davinci/Makefile                    |    1 +
- arch/arm/mach-davinci/Makefile.boot               |    2 +
- arch/arm/mach-davinci/da8xx-dt.c                  |   66 +++++++++++++++++++++
- arch/arm/mach-davinci/include/mach/serial.h       |    1 +
- arch/arm/mach-davinci/include/mach/uncompress.h   |    6 ++
- arch/arm/mach-davinci/serial.c                    |   39 ++++++++----
- 13 files changed, 254 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci.txt
- create mode 100644 arch/arm/boot/dts/da850-enbw-cmc.dts
- create mode 100644 arch/arm/boot/dts/da850-evm.dts
- create mode 100644 arch/arm/boot/dts/da850.dtsi
- create mode 100644 arch/arm/mach-davinci/da8xx-dt.c
-
+diff --git a/arch/arm/mach-davinci/include/mach/serial.h b/arch/arm/mach-davinci/include/mach/serial.h
+index 46b3cd1..2d9d921 100644
+--- a/arch/arm/mach-davinci/include/mach/serial.h
++++ b/arch/arm/mach-davinci/include/mach/serial.h
+@@ -43,6 +43,7 @@ struct davinci_uart_config {
+ };
+ 
+ extern int davinci_serial_init(struct davinci_uart_config *);
++extern int davinci_serial_setup_clk(unsigned instance, unsigned int *rate);
+ #endif
+ 
+ #endif /* __ASM_ARCH_SERIAL_H */
+diff --git a/arch/arm/mach-davinci/serial.c b/arch/arm/mach-davinci/serial.c
+index 24ddb0d..f262581 100644
+--- a/arch/arm/mach-davinci/serial.c
++++ b/arch/arm/mach-davinci/serial.c
+@@ -70,11 +70,33 @@ static void __init davinci_serial_reset(struct plat_serial8250_port *p)
+ 				 UART_DM646X_SCR_TX_WATERMARK);
+ }
+ 
+-int __init davinci_serial_init(struct davinci_uart_config *info)
++/* Enable UART clock and obtain its rate */
++int __init davinci_serial_setup_clk(unsigned instance, unsigned int *rate)
+ {
+-	int i;
+ 	char name[16];
+-	struct clk *uart_clk;
++	struct clk *clk;
++	struct davinci_soc_info *soc_info = &davinci_soc_info;
++	struct device *dev = &soc_info->serial_dev->dev;
++
++	sprintf(name, "uart%d", instance);
++	clk = clk_get(dev, name);
++	if (IS_ERR(clk)) {
++		pr_err("%s:%d: failed to get UART%d clock\n",
++					__func__, __LINE__, instance);
++		return PTR_ERR(clk);
++	}
++
++	clk_prepare_enable(clk);
++
++	if (rate)
++		*rate = clk_get_rate(clk);
++
++	return 0;
++}
++
++int __init davinci_serial_init(struct davinci_uart_config *info)
++{
++	int i, ret;
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 	struct device *dev = &soc_info->serial_dev->dev;
+ 	struct plat_serial8250_port *p = dev->platform_data;
+@@ -87,16 +109,9 @@ int __init davinci_serial_init(struct davinci_uart_config *info)
+ 		if (!(info->enabled_uarts & (1 << i)))
+ 			continue;
+ 
+-		sprintf(name, "uart%d", i);
+-		uart_clk = clk_get(dev, name);
+-		if (IS_ERR(uart_clk)) {
+-			printk(KERN_ERR "%s:%d: failed to get UART%d clock\n",
+-					__func__, __LINE__, i);
++		ret = davinci_serial_setup_clk(i, &p->uartclk);
++		if (ret)
+ 			continue;
+-		}
+-
+-		clk_prepare_enable(uart_clk);
+-		p->uartclk = clk_get_rate(uart_clk);
+ 
+ 		if (!p->membase && p->mapbase) {
+ 			p->membase = ioremap(p->mapbase, SZ_4K);
 -- 
 1.7.10.1
