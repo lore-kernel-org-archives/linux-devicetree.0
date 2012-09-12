@@ -1,38 +1,30 @@
-From: David Brown <davidb@codeaurora.org>
-Subject: Re: [PATCH 8/9] ARM: msm: Add DT support for 8960
-Date: Wed, 12 Sep 2012 09:23:41 -0700
-Message-ID: <20120912162341.GA22065@codeaurora.org>
-References: <1346873339-10927-1-git-send-email-sboyd@codeaurora.org>
- <1346873339-10927-9-git-send-email-sboyd@codeaurora.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V4 REPOST] mfd: add MAX8907 core driver
+Date: Wed, 12 Sep 2012 10:29:04 -0600
+Message-ID: <5050B850.807@wwwdotorg.org>
+References: <1346973015-7252-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1346873339-10927-9-git-send-email-sboyd@codeaurora.org>
+In-Reply-To: <1346973015-7252-1-git-send-email-swarren@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Gyungoh Yoo <jack.yoo@maxim-ic.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2012 at 12:28:58PM -0700, Stephen Boyd wrote:
+On 09/06/2012 05:10 PM, Stephen Warren wrote:
+> From: Gyungoh Yoo <jack.yoo@maxim-ic.com>
+> 
+> The MAX8907 is an I2C-based power-management IC containing voltage
+> regulators, a reset controller, a real-time clock, and a touch-screen
+> controller.
 
-> diff --git a/arch/arm/boot/dts/msm8960-cdp.dts b/arch/arm/boot/dts/msm8960-cdp.dts
+Samuel,
 
-> +	intc: interrupt-controller@02000000 {
-> +	timer@0200a004 {
-> +	timer@0200a024 {
+This patch as-is won't compile due to the mfd_add_devices() API change.
+Do you want to fix this up when you apply (simply add an extra parameter
+"NULL" to the mfd_add_devices() call), or should I send an updated V5
+for this?
 
-Same here.  Again, I'll fix these when I pull the patch in.
-
-I guess a question: According to
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-February/012412.html
-
-these leading zeros shouldn't be there, but I do find a few hundred of
-them in our existing devicetree files.  There are also a handful that
-have a @0xnnn form of address.
-
-David
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Thanks.
