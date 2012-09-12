@@ -1,69 +1,67 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v3 6/9] ARM: mvebu: add pinctrl device in DT for Armada
- 370/XP SoCs
-Date: Wed, 12 Sep 2012 08:56:52 +0200
-Message-ID: <20120912085652.21d3232f@skate>
-References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1347266386-16229-7-git-send-email-sebastian.hesselbarth@gmail.com>
-	<504FB9D7.3030205@wwwdotorg.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] usb: gadget: at91_udc: dt: fix platform_data check
+Date: Wed, 12 Sep 2012 09:33:53 +0200
+Message-ID: <50503AE1.9060307@atmel.com>
+References: <1347365267-7507-1-git-send-email-fabio.porcedda@gmail.com> <504F2C83.7080706@atmel.com> <20120912061414.GB18563@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <504FB9D7.3030205@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120912061414.GB18563-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le Tue, 11 Sep 2012 16:23:19 -0600,
-Stephen Warren <swarren@wwwdotorg.org> a =C3=A9crit :
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-> On 09/10/2012 02:39 AM, Sebastian Hesselbarth wrote:
-> > From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> >=20
-> > The Armada 370 and XP SoCs have configurable muxing for a certain
-> > number of their pins, controlled through a pinctrl driver.
->=20
-> Hmmm. I'd be tempted just to put the entire node definition there;
-> putting in a .dtsi file just to share the reg property doesn't seem
-> especially useful.
+On 09/12/2012 08:14 AM, Felipe Balbi :
+> Hi,
+> 
+> On Tue, Sep 11, 2012 at 02:20:19PM +0200, Nicolas Ferre wrote:
+>> On 09/11/2012 02:07 PM, Fabio Porcedda :
+>>> Don't fail the initialization check for the platform_data if
+>>> there is avaiable an associated device tree node.
+>>> 
+>>> This patch fix the dt support introduced in 3.4-rc1 by commit 
+>>> ("d1494a3 USB: at91: Device udc add dt support").
+>>> 
+>>> Tested on a at91sam9260 based board (PRO3-EVK).
+>>> 
+>>> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> Cc:
+>>> Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> [v3.4+] Cc: Jean-Christophe
+>>> PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>> 
+>> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> 
+>> Felipe, Greg, can we queue this one for 3.6-final ?
+> 
+> I had already taken the other version before Fabio sent this v2...
+> it's now merged in greg/usb-next branch. I suggest doing a
+> cherry-pick for stable tree and resending the patch once v3.7-rc1
+> is tagged.
 
-When you say "here" you're mentioning the SoC-specific .dtsi files (i.e
-the ones in PATCH 7/9 and PATCH 8/9), correct?
+Sure! No need to move to this v2.
 
-> > The 'compatible' property is defined in the SoC-specific .dtsi file=
-s,
-> > since the compatible string identifies the number of pins and other
-> > SoC-specific properties.
->=20
-> > diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/d=
-ts/armada-370-xp.dtsi
->=20
-> > +		pinctrl@d0018000 {
->=20
-> If this is the only pinctrl instance, you'd typically name the node j=
-ust
-> "pinctrl", since the "@d0018000" isn't needed to get unique node name=
-s.
+We will do as you suggest for the stable branch inclusion.
 
-Ack.
+Thanks, best regards,
+- -- 
+Nicolas Ferre
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
 
-> > +			reg =3D <0xd0018000 0x38>;
-> > +			#address-cells =3D <1>;
-> > +			#size-cells =3D <1>;
-> > +			ranges;
->=20
-> What is "ranges" for; this isn't a memory-mapped bus, right?
-
-Ack.
-
-Best regards,
-
-Thomas
---=20
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+iQEcBAEBAgAGBQJQUDrVAAoJEAf03oE53VmQ8egH/2FTpGw98GJ47MzNKFaZvbGV
+2ZrQTHsO2xOKenG+Chf/0oDkKROzQYgxGjfogDQmfhYPHkdqTdSRL5CD6hZSnhDo
+Qvusw9XmOdikhBcTQKrrSxOyfoo1BcKFH07TunWfM2LXWrHUptk3jMb7Un62QGVa
+wFYeHdkI+gwCbzcN+b9iV/qKYmkpfv71y0uved//OVBxXuBqoKOHTNlAZ1p5OT4r
+GRj0zgq4tes8W1QeXDKOCu1oMqbH1qNqnklFWu0JzoiqhX809t9rYurZTep7YzWO
+5+n1zV80qpMbXeClw/GgHKvt9WmA1afMTyMNryS5PTijEauc6ifidUrikIL+NuQ=
+=w2cu
+-----END PGP SIGNATURE-----
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
