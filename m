@@ -1,95 +1,70 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH] media: add V4L2 DT binding documentation
-Date: Wed, 12 Sep 2012 21:28:34 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1209122111100.28968@axis700.grange>
-References: <Pine.LNX.4.64.1209111746420.22084@axis700.grange>
- <5050DA40.8050105@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5050DA40.8050105@wwwdotorg.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Hans Verkuil <hverkuil@xs4all.nl>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+From: Omar Ramirez Luna <omar.luna@linaro.org>
+Subject: [PATCH v2 0/9] OMAP: iommu: hwmod, reset handling and runtime PM
+Date: Wed, 12 Sep 2012 14:45:43 -0500
+Message-ID: <1347479152-588-1-git-send-email-omar.luna@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Joerg Roedel <joerg.roedel@amd.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Omar Ramirez Luna <omar.luna@linaro.org>, Rajendra Nayak <rnayak@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen
+These patches are needed for remoteproc to work on OMAP4.
 
-On Wed, 12 Sep 2012, Stephen Warren wrote:
+Introduced iommu hwmod support for OMAP3 (iva, isp) and
+OMAP4 (ipu, dsp), along with the corresponding runtime PM
+and routines to deassert reset lines, enable/disable clocks
+and configure sysc registers.
 
-> On 09/11/2012 09:51 AM, Guennadi Liakhovetski wrote:
-> > This patch adds a document, describing common V4L2 device tree bindings.
-> > 
-> > Co-authored-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> 
-> Overall, I think this looks pretty reasonable, so:
+Due to compatibility an ifdef needs to be propagated (previously
+on iommu resource info) to hwmod data in OMAP3, so users of iommu
+and tidspbridge can avoid issues of two modules managing mmu
+data/irqs/resets; this until tidspbridge can be safely migrated
+to iommu framework.
 
-Good, thanks!
+Although IOMMU hwmod patches were already submitted in the past,
+this series adds few more changes, like:
+- New reset handling, based on a series that was accepted
+  but *NOT YET* in mainline.
 
-> Acked-by: Stephen Warren <swarren@wwwdotorg.org>
-> 
-> Just a couple comments:
-> 
-> > +++ b/Documentation/devicetree/bindings/media/v4l2.txt
-> 
-> > +	ceu0: ceu@0xfe910000 {
-> 
-> > +		mclk: master_clock {
-> > +			compatible = "renesas,ceu-clock";
-> > +			#clock-cells = <1>;
-> 
-> Why 1? If there's only 1 clock output from this provider, I don't see a
-> need for any cells, unless there are some configuration flags?
+http://www.mail-archive.com/linux-omap@vger.kernel.org/msg73111.html
+http://www.mail-archive.com/linux-omap@vger.kernel.org/msg75105.html
 
-Yes, indeed, that's also what's suggested in the clock bindings 
-documentation, thanks for pointing out.
+- Fix for compile break if IOMMU_API is not selected.
+- Save and restore context code rework.
+- Device tree bindings for OMAP3 and OMAP4.
 
-> 
-> > +			clock-frequency = <50000000>;	/* max clock frequency */
-> > +			clock-output-names = "mclk";
-> > +		};
-> > +
-> > +		port {
-> ...
-> > +			ceu0_0: link@0 {
-> > +				reg = <0>;
-> > +				remote = <&csi2_2>;
-> > +				immutable;
-> 
-> Did we decide "immutable" was actually needed? Presumably the driver for
-> the HW in question knows the HW isn't configurable, and would simply not
-> attempt to apply any configuration even if the .dts author erroneously
-> provided some?
+Previous work can be found at:
+[v1]
+  http://www.mail-archive.com/linux-omap@vger.kernel.org/msg70447.html
 
-Well, I've been thinking about this today. I think, bridge drivers will 
-call centrally provided helper functions to enumerate links inside ports. 
-While doing that they will want to differentiate between links to external 
-devices with explicit configuration, and links to internal devices, whose 
-configuration drivers might be able to figure out themselves. How should a 
-driver find out what device this link is pointing to? Should it follow the 
-"remote" phandle and then check the "compatible" property? The word 
-"immutable" is a hint, that this is a link to an internal device, but it 
-might either be unneeded or be transformed into something more 
-informative.
+[old iteration without reset, save/restore and device tree]
+  http://www.mail-archive.com/linux-omap@vger.kernel.org/msg60133.html
 
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +	i2c0: i2c@0xfff20000 {
-> ...
-> > +		ov772x_1: camera@0x21 {
-> ...
-> > +			clocks = <&mclk 0>;
-> 
-> So presumably that could just be "clocks = <&mclk>;"?
+Omar Ramirez Luna (9):
+  ARM: OMAP: iommu: fix including iommu.h without IOMMU_API selected
+  ARM: OMAP3: hwmod data: add mmu data for iva and isp
+  ARM: OMAP4: hwmod data: add mmu hwmod for ipu and dsp
+  ARM: OMAP3/4: iommu: migrate to hwmod framework
+  ARM: OMAP3/4: iommu: adapt to runtime pm
+  ARM: OMAP: iommu: pm runtime save and restore context
+  ARM: OMAP: iommu: optimize save and restore routines
+  ARM: OMAP: iommu: add device tree support
+  arm/dts: OMAP3/4: Add iommu nodes
 
-Right.
+ .../devicetree/bindings/arm/omap/iommu.txt         |   10 ++
+ arch/arm/boot/dts/omap3.dtsi                       |   12 +-
+ arch/arm/boot/dts/omap4.dtsi                       |   17 +-
+ arch/arm/mach-omap2/devices.c                      |    2 +-
+ arch/arm/mach-omap2/iommu2.c                       |   74 +++------
+ arch/arm/mach-omap2/omap-iommu.c                   |  168 +++++---------------
+ arch/arm/mach-omap2/omap_hwmod_3xxx_data.c         |  121 ++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c         |  136 +++++++++++++++-
+ arch/arm/plat-omap/include/plat/iommu.h            |   35 +++-
+ arch/arm/plat-omap/include/plat/iommu2.h           |    4 -
+ drivers/iommu/omap-iommu.c                         |  163 +++++++++++++++----
+ 11 files changed, 511 insertions(+), 231 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/iommu.txt
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+-- 
+1.7.9.5
+
