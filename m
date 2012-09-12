@@ -1,89 +1,70 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] i2c: at91: cleanup and dt support
-Date: Wed, 12 Sep 2012 12:16:07 +0200
-Message-ID: <20120912101607.GA2624@pengutronix.de>
-References: <1347432137-25058-1-git-send-email-ludovic.desroches@atmel.com>
- <505041EF.5060204@atmel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <505041EF.5060204-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
+From: Praveen Paneri <p.paneri@samsung.com>
+Subject: [PATCH v5 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Wed, 12 Sep 2012 16:15:52 +0530
+Message-ID: <1347446757-20519-1-git-send-email-p.paneri@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
+Changes from v4:
+Moved header file contents to driver's source file
+Removed unnecessary print message from driver's probe function
+Dropped the Free Software Foundation address from the header
+Changed the platform data code to use __initdata
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes from v3:
+Replaced susbsys_initcall()/module_exit() by module_platform_driver().
+Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
+is registered
+Removed unnecessary devm_usb_put_phy() call from the hsotg driver remove.
 
-On Wed, Sep 12, 2012 at 10:03:59AM +0200, Nicolas Ferre wrote:
-> On 09/12/2012 08:42 AM, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
-> > From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >=20
-> > Hi,
-> >=20
-> > This set of patches is based on Nikolaus at91_i2c driver.
-> >=20
-> > Changes:
-> > v3:
-> >   - only put multi-drive lines in the if...else statement (suggested
-> >   by Warner Losh)
->=20
-> Hi Wolfram,
->=20
-> As said by Ludovic, this series goes on top of Nikolaus' one.
-> My Acked-by is already set on this one, so I think that I have nothing
-> more to do ;-)
->=20
-> BTW, in case you need help to sort all this, do not hesitate to contact
-> us... we can setup a git tree for this...
+Changes from v2:
+Changed the driver filenames to samsung-usbphy
+Changed 's3c' to 'samsung' for platform device as well as platform data
+Moved platform data structure to a separate file
+Rectified coding style related errors
 
-I think I am fine. Patches look good. I wondered a bit about first
-removing the old driver, then adding the new one with regard to
-bisectability. But as the old driver depends on BROKEN, I think this is
-OK to do.
+Changes from v1:
+Rebased patches to latest usb-next branch
+Changed the name 'sec_usbphy' to 'samsung_usbphy'
 
-One thing I'd like to make, though. I'd like to squash the following
-patches into one:
+This patch set introduces a phy driver for samsung SoCs. It uses the existing
+transceiver infrastructure to provide phy control functions. Use of this driver
+can be extended for usb host phy as well. Over the period of time all the phy
+related code for most of the samsung SoCs can be integrated here.
+Removing the existing phy code from mach-s3c64xx. Same can be done for other SoCs
+when they start supporting this phy driver. 
+This driver is tested with smdk6410 and Exynos4210(with DT).
 
-	drivers/i2c/busses/i2c-at91.c: add new driver
-	i2c: at91: use managed resources
-	i2c: at91: add warning about transmission issues for some devices
-	i2c: at91: use an id table for SoC dependent parameters
+Praveen Paneri (5):
+  usb: phy: samsung: Introducing usb phy driver for hsotg
+  usb: s3c-hsotg: Adding phy driver support
+  ARM: S3C64XX: Removing old phy setup code
+  ARM: S3C64XX: Enabling samsung-usbphy driver
+  ARM: Exynos4210: Enabling samsung-usbphy driver
 
-It is especially the last patch I am mostly interested in. The id_table
-approach is what I like, while the original id_entry mechanism looks
-fishy. I'd was good for reviewing to have the patches split like this;
-yet for hitting mainline, I'd prefer to have the driver proper on first
-occasion. I already did the squashing in a test-branch and the result
-looks good to me.
-
-Nikolaus, Ludovic: Are you fine with this?
-
-Thanks,
-
-   Wolfram
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEARECAAYFAlBQYOcACgkQD27XaX1/VRsdhACcCMZpbbT74RBMMnMo40o2jSLN
-kloAoJx5nQusdKiVj5ymLpxnHAepyPhC
-=9tRR
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |    9 +
+ arch/arm/boot/dts/exynos4210.dtsi                  |    5 +
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |    8 +
+ arch/arm/mach-exynos/setup-usb-phy.c               |   13 +
+ arch/arm/mach-s3c64xx/include/mach/map.h           |    2 +
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |   10 +-
+ arch/arm/mach-s3c64xx/mach-smartq.c                |   11 +-
+ arch/arm/mach-s3c64xx/mach-smdk6410.c              |   10 +-
+ arch/arm/mach-s3c64xx/setup-usb-phy.c              |   79 +----
+ arch/arm/plat-samsung/devs.c                       |   28 ++
+ arch/arm/plat-samsung/include/plat/devs.h          |    1 +
+ arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
+ drivers/usb/gadget/s3c-hsotg.c                     |   37 ++-
+ drivers/usb/phy/Kconfig                            |    8 +
+ drivers/usb/phy/Makefile                           |    1 +
+ drivers/usb/phy/samsung-usbphy.c                   |  371 ++++++++++++++++++++
+ include/linux/platform_data/samsung-usbphy.h       |   27 ++
+ 18 files changed, 531 insertions(+), 91 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+ create mode 100644 drivers/usb/phy/samsung-usbphy.c
+ create mode 100644 include/linux/platform_data/samsung-usbphy.h
