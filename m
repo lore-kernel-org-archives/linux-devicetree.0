@@ -1,88 +1,36 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] i2c: at91: cleanup and dt support
-Date: Wed, 12 Sep 2012 10:03:59 +0200
-Message-ID: <505041EF.5060204@atmel.com>
-References: <1347432137-25058-1-git-send-email-ludovic.desroches@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1347432137-25058-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v2] Add MFC device tree support
+Date: Wed, 12 Sep 2012 19:04:16 +0530
+Message-ID: <1347456857-27584-1-git-send-email-arun.kk@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, ch.naveen@samsung.com, arun.kk@samsung.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2012 08:42 AM, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
-> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> 
-> Hi,
-> 
-> This set of patches is based on Nikolaus at91_i2c driver.
-> 
-> Changes:
-> v3:
->   - only put multi-drive lines in the if...else statement (suggested
->   by Warner Losh)
+This patch adds the device tree entries for MFC on Exynos5.
+It incorporates the comment from Karol Lewandowski [1] to parse the
+dt file during machine init.
+This is rebased to the linux-samsung for-next branch.
 
-Hi Wolfram,
+[1] http://permalink.gmane.org/gmane.linux.kernel.samsung-soc/12430
 
-As said by Ludovic, this series goes on top of Nikolaus' one.
-My Acked-by is already set on this one, so I think that I have nothing
-more to do ;-)
+Changelog v2
+- Use fdt functions to parse dtsi file for mfc memory info
 
-BTW, in case you need help to sort all this, do not hesitate to contact
-us... we can setup a git tree for this...
+Changelog v1
+- Moved board specific DT information to different dtsi file
+- Changed compatible name for the device
+- Addressed other review comments
 
-Bye,
+Arun Kumar K (1):
+  ARM: EXYNOS: Add MFC device tree support
 
-
-> v2:
->   - change driver name from xxx_i2c to i2c-xxx
->   - keep i2c-gpio nodes in dtsi files
->   - don't enable TWI on boards whose TWI IP doesn't support clock
->   stretching in tranmission mode
-> 
-> Ludovic Desroches (8):
->   i2c: at91: use managed resources
->   i2c: at91: add warning about transmission issues for some devices
->   i2c: at91: use an id table for SoC dependent parameters
->   ARM: at91: do not configure at91sam9g10 twi pio as open-drain
->   i2c: at91: add dt support to i2c-at91
->   ARM: at91: add clocks for I2C DT entries
->   ARM: dts: add twi nodes for atmel SoCs
->   ARM: dts: add twi nodes for atmel boards
-> 
->  .../devicetree/bindings/i2c/atmel-i2c.txt          |  30 +++
->  arch/arm/boot/dts/at91sam9260.dtsi                 |  10 +
->  arch/arm/boot/dts/at91sam9263.dtsi                 |  10 +
->  arch/arm/boot/dts/at91sam9g20.dtsi                 |   4 +
->  arch/arm/boot/dts/at91sam9g25ek.dts                |  12 ++
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |  20 ++
->  arch/arm/boot/dts/at91sam9m10g45ek.dts             |   8 +
->  arch/arm/boot/dts/at91sam9n12.dtsi                 |  20 ++
->  arch/arm/boot/dts/at91sam9n12ek.dts                |   8 +
->  arch/arm/boot/dts/at91sam9x5.dtsi                  |  30 +++
->  arch/arm/mach-at91/at91rm9200.c                    |   2 +-
->  arch/arm/mach-at91/at91rm9200_devices.c            |  11 +-
->  arch/arm/mach-at91/at91sam9260.c                   |   4 +-
->  arch/arm/mach-at91/at91sam9260_devices.c           |   8 +-
->  arch/arm/mach-at91/at91sam9261.c                   |   3 +-
->  arch/arm/mach-at91/at91sam9261_devices.c           |  23 +--
->  arch/arm/mach-at91/at91sam9263.c                   |   3 +-
->  arch/arm/mach-at91/at91sam9263_devices.c           |   2 +-
->  arch/arm/mach-at91/at91sam9g45.c                   |   6 +-
->  arch/arm/mach-at91/at91sam9g45_devices.c           |   4 +-
->  arch/arm/mach-at91/at91sam9n12.c                   |   2 +
->  arch/arm/mach-at91/at91sam9rl.c                    |   4 +-
->  arch/arm/mach-at91/at91sam9rl_devices.c            |   2 +-
->  arch/arm/mach-at91/at91sam9x5.c                    |   6 +-
->  drivers/i2c/busses/Kconfig                         |   6 +
->  drivers/i2c/busses/i2c-at91.c                      | 217 +++++++++++++--------
->  26 files changed, 338 insertions(+), 117 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/atmel-i2c.txt
-> 
-
-
--- 
-Nicolas Ferre
+ .../devicetree/bindings/media/s5p-mfc.txt          |   27 +++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    7 +++
+ arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++
+ arch/arm/mach-exynos/Kconfig                       |    1 +
+ arch/arm/mach-exynos/clock-exynos5.c               |    2 +-
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |   56 ++++++++++++++++++++
+ 6 files changed, 98 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
