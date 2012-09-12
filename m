@@ -1,56 +1,120 @@
-From: Cyril Chemparathy <cyril@ti.com>
-Subject: Re: [PATCH] of: specify initrd location using 64-bit
-Date: Wed, 12 Sep 2012 14:02:27 -0400
-Message-ID: <5050CE33.9060909@ti.com>
-References: <1347465937-7056-1-git-send-email-cyril@ti.com> <CAMuHMdUuQzD0bq8PifBea2-0Pk7RhmPA0-GAFprsk+vMxMGjGw@mail.gmail.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
+Date: Wed, 12 Sep 2012 19:14:58 +0100
+Message-ID: <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
+References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com>
+	<1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com>
+	<503BFCD8.5090804@gmail.com>
+	<alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CAMuHMdUuQzD0bq8PifBea2-0Pk7RhmPA0-GAFprsk+vMxMGjGw@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux@openrisc.net, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, a-jacquiot@ti.com, arnd@arndb.de, benh@kernel.crashing.org, bigeasy@linutronix.de, blogic@openwrt.org, david.daney@cavium.com, dhowells@redhat.com, grant.likely@secretlab.ca, hpa@zytor.com, jonas@southpole.se, linus.walleij@linaro.org, linux@arm.linux.org.uk, m.szyprowski@samsung.com, mahesh@linux.vnet.ibm.com, mingo@redhat.com, monstr@monstr.eu, msalter@redhat.com, nico@linaro.org, paul.gortmaker@windriver.com, paulus@samba.org, ralf@linux-mips.org, rob.herring@cal
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1208281823270.15568-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Stefano Stabellini <Stefano.Stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Cc: "xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org" <xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Tim (Xen.org)" <tim-LM2mM/qkH7s@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/12/2012 12:16 PM, Geert Uytterhoeven wrote:
-> On Wed, Sep 12, 2012 at 6:05 PM, Cyril Chemparathy <cyril@ti.com> wrote:
->> On some PAE architectures, the entire range of physical memory could reside
->> outside the 32-bit limit.  These systems need the ability to specify the
->> initrd location using 64-bit numbers.
->>
->> This patch globally modifies the early_init_dt_setup_initrd_arch() function to
->> use 64-bit numbers instead of the current unsigned long.
->
->> -void __init early_init_dt_setup_initrd_arch(unsigned long start, unsigned long end)
->> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
->
-> Why not phys_addr_t?
->
+On Wed, 12 Sep 2012, Stefano Stabellini wrote:
+> On Tue, 28 Aug 2012, Rob Herring wrote:
+> > You should look at ePAPR 1.1 which defines hypervisor related bindings.
+> > While it is a PPC doc, we should reuse or extend what makes sense.
+> > 
+> > See section 7.5:
+> > 
+> > https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
+> 
+> Thanks for the link, I wasn't aware of ePAPR.
+> 
+> The hypervisor node defined by ePAPR is not very different from what I
+> am proposing. Should I try to be compatible with the hypervisor
+> specification above (as in compatible = "epapr,hypervisor-1.1")?
+> Or should I just use it as a reference for my own specification?
+> 
+> Personally I would rather avoid full compatibility with ePAPR.
 
-The rest of the memory specific bits of the device-tree code use u64 for 
-addresses, and I kept it the same for consistency.
+In particular reading section 7.5, these are the required properties of
+the ePAPR hypervisor node:
 
-> Gr{oetje,eeting}s,
->
->                          Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                  -- Linus Torvalds
->
+- compatible = "epapr,hypervisor-1.1"
+compared to what I am proposing, it is laking information about what
+hypervisor we are talking about (xen, kvm, vmware, etc) and the version
+of the ABI (xen-4.2).
 
--- 
-Thanks
-- Cyril
+- hcall-instructions
+potentially interesting, but given that for Xen we are quite happy with
+HVC, we are not going to add any secondary hypercall mechanisms,
+therefore at the moment it would just result in a BUG if the specified
+hcall instruction is != HVC. Besides if somebody else wanted to
+implemented the Xen hypercall interface in a different way they could
+just reimplement the hypercall wrappers, that would be easier than
+trying to do it with this property.
+
+- guest-id
+we usually make a point in trying not to tell the guest its own domid
+because if the VM gets migrated to a different host it acquires a new
+domid, therefore it should not rely on it.
+
+- guest-name
+we could pass the guest name here, but I don't see how it could be
+of any use.
+
+
+
+On the other hand, thinking more about what Xen needs in the device
+tree, I think we could improve the current spec by clarifying the
+meaning of the memory region and interrupt properties we currently
+require. I thought about moving them to two separate children node with
+an explicit name:
+
+---
+
+* Xen hypervisor device tree bindings
+
+Xen ARM virtual platforms shall have the following properties and
+children nodes:
+
+- compatible property:
+	compatible = "xen,xen", "xen,xen-<version>";
+  where <version> is the version of the Xen ABI of the platform.
+
+- grant_table child with the following properties:
+    - name:
+	    name = "grant_table";
+	- reg: specifies the base physical address and size of a region in
+	    memory where the grant table should be mapped to, using an
+        HYPERVISOR_memory_op hypercall. 
+
+- events child with the following properties:
+    - name:
+        name = "events";
+	- interrupts: the interrupt used by Xen to inject event notifications.
+
+
+Example:
+hypervisor {
+		compatible = "xen,xen", "xen,xen-4.2";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		#interrupt-cells = <3>;
+		ranges = <0xb0000000 0xb0000000 0x20000>;
+
+		grant_table {
+			name = "grant_table";
+			reg = <0xb0000000 0x20000>;
+		};
+
+		events {
+			name = "events";
+			interrupts = <1 15 0xf08>;
+		};
+	};
