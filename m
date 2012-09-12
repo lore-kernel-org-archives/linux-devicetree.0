@@ -1,120 +1,79 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
-Date: Wed, 12 Sep 2012 19:14:58 +0100
-Message-ID: <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
-References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com>
-	<1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com>
-	<503BFCD8.5090804@gmail.com>
-	<alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2] regulator: gpio-regulator: add DT bindings
+Date: Wed, 12 Sep 2012 12:47:12 -0600
+Message-ID: <5050D8B0.10004@wwwdotorg.org>
+References: <1347289429-18713-1-git-send-email-zonque@gmail.com>
+ <504E4234.9090300@wwwdotorg.org> <50504E6B.9060401@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1208281823270.15568-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Stefano Stabellini <Stefano.Stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: "xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org" <xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Tim (Xen.org)" <tim-LM2mM/qkH7s@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50504E6B.9060401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Sep 2012, Stefano Stabellini wrote:
-> On Tue, 28 Aug 2012, Rob Herring wrote:
-> > You should look at ePAPR 1.1 which defines hypervisor related bindings.
-> > While it is a PPC doc, we should reuse or extend what makes sense.
-> > 
-> > See section 7.5:
-> > 
-> > https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
+On 09/12/2012 02:57 AM, Daniel Mack wrote:
+> On 10.09.2012 21:40, Stephen Warren wrote:
+>> On 09/10/2012 09:03 AM, Daniel Mack wrote:
+>>> Add DT bindings for the gpio-regulator driver and some documentation on
+>>> how to use it.
+...
+>>> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+...
+>>> +	- "gpios":		bitfield of gpio target-states for the value
+>>> +				The n-th bit in the bitfield describes the
+>>> +				state of the n-th GPIO from the gpios-array
+>>
+>> "gpios" sounds like the name of a property that defines which GPIOs are
+>> used, rather than the value of those GPIOs. Perhaps "gpio-values" instead?
+>>
+>> Actually, I wonder if we really even need to represent that values
+>> explicitly; rather than have a big set of nodes, perhaps you can instead
+>> have a single property that lists the voltage (or current) that each
+>> combination of GPIO values gives; something like:
+>>
+>> reg_gpio {
+>>     ...
+>>     gpios = <&ggpio 23 0 &gpio 24 0>;
+>>     voltages = <0 1000000 2000000 3000000>;
+>> };
+>>
+>> (As inspiration for that, I looked at
+>> Documentation/devicetree/bindings/net/mdio-mux-gpio.txt which doesn't
+>> have a property defining the value of the GPIOs for each combination,
+>> but rather a node per valid combination).
+>>
+>> Perhaps represent and invalid GPIO combination with 0xffffffff?
 > 
-> Thanks for the link, I wasn't aware of ePAPR.
+> Sorry, I don't follow you on this one. How would you specify the
+> voltages that way? And The driver allows for arbitrary GPIO patterns to
+> be set on the GPIOs in order to reach a specific voltage. Could you give
+> me another example how that would look like in your approach?
 > 
-> The hypervisor node defined by ePAPR is not very different from what I
-> am proposing. Should I try to be compatible with the hypervisor
-> specification above (as in compatible = "epapr,hypervisor-1.1")?
-> Or should I just use it as a reference for my own specification?
-> 
-> Personally I would rather avoid full compatibility with ePAPR.
+> Once that topic is agreed on, I'll send out a new version.
 
-In particular reading section 7.5, these are the required properties of
-the ePAPR hypervisor node:
+The idea is that you treat the GPIOs as an array of bits. so, two
+entries in the gpios property and you've got two bits in your values.
+Use that value as the index into the "voltages" property. For each
+combination of GPIO values, you have an entry in "voltages" that
+indicates what voltage will be produced. This is much more compact than
+having a node per setting, but perhaps is more wordy if the subset of
+legal GPIO value is much more sparse than all possible 2^n GPIO values.
 
-- compatible = "epapr,hypervisor-1.1"
-compared to what I am proposing, it is laking information about what
-hypervisor we are talking about (xen, kvm, vmware, etc) and the version
-of the ABI (xen-4.2).
+Put another way,
 
-- hcall-instructions
-potentially interesting, but given that for Xen we are quite happy with
-HVC, we are not going to add any secondary hypercall mechanisms,
-therefore at the moment it would just result in a BUG if the specified
-hcall instruction is != HVC. Besides if somebody else wanted to
-implemented the Xen hypercall interface in a different way they could
-just reimplement the hypercall wrappers, that would be easier than
-trying to do it with this property.
-
-- guest-id
-we usually make a point in trying not to tell the guest its own domid
-because if the VM gets migrated to a different host it acquires a new
-domid, therefore it should not rely on it.
-
-- guest-name
-we could pass the guest name here, but I don't see how it could be
-of any use.
-
-
-
-On the other hand, thinking more about what Xen needs in the device
-tree, I think we could improve the current spec by clarifying the
-meaning of the memory region and interrupt properties we currently
-require. I thought about moving them to two separate children node with
-an explicit name:
-
----
-
-* Xen hypervisor device tree bindings
-
-Xen ARM virtual platforms shall have the following properties and
-children nodes:
-
-- compatible property:
-	compatible = "xen,xen", "xen,xen-<version>";
-  where <version> is the version of the Xen ABI of the platform.
-
-- grant_table child with the following properties:
-    - name:
-	    name = "grant_table";
-	- reg: specifies the base physical address and size of a region in
-	    memory where the grant table should be mapped to, using an
-        HYPERVISOR_memory_op hypercall. 
-
-- events child with the following properties:
-    - name:
-        name = "events";
-	- interrupts: the interrupt used by Xen to inject event notifications.
-
-
-Example:
-hypervisor {
-		compatible = "xen,xen", "xen,xen-4.2";
-		#address-cells = <1>;
-		#size-cells = <1>;
-		#interrupt-cells = <3>;
-		ranges = <0xb0000000 0xb0000000 0x20000>;
-
-		grant_table {
-			name = "grant_table";
-			reg = <0xb0000000 0x20000>;
-		};
-
-		events {
-			name = "events";
-			interrupts = <1 15 0xf08>;
-		};
-	};
+GPIO0=0, GPIO1=0 -> index 0 -> voltage 0 in the example above
+GPIO0=0, GPIO1=1 -> index 1 -> voltage 1000000 in the example above
+GPIO0=1, GPIO1=0 -> index 2 -> voltage 2000000 in the example above
+GPIO0=1, GPIO1=1 -> index 3 -> voltage 3000000 in the example above
