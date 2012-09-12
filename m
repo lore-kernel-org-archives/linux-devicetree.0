@@ -1,55 +1,80 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] i2c: at91: cleanup and dt support
-Date: Wed, 12 Sep 2012 14:58:55 +0200
-Message-ID: <20120912125855.GA16547@pengutronix.de>
-References: <1347432137-25058-1-git-send-email-ludovic.desroches@atmel.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/3] Add clock framework for armada 370/XP
+Date: Wed, 12 Sep 2012 16:29:20 +0200
+Message-ID: <1347460163-11946-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1347432137-25058-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Li Li <li.li-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The purpose of this patch set is to add support for clock framework
+for Armada 370 and Armada XP SoCs. All the support is done under the
+directory drivers/clk/mvebu/ as the support for other mvebu SoCs was
+in mind during the writing of the code.
 
-On Wed, Sep 12, 2012 at 08:42:09AM +0200, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
-> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->=20
-> Hi,
->=20
-> This set of patches is based on Nikolaus at91_i2c driver.
+Two kinds of clocks are added:
 
-Pushed both series with the discussed squashing to:
+- The CPU clocks are only for Armada XP (which si multi-core)
 
-	git://git.pengutronix.de/git/wsa/linux.git i2c-embedded/for-next
+- The core clocks are clocks which have their rate fixed during
+  reset.
 
-You might want to have a look if everything looks good to you.
+This patch set is based on the clk-3.7 branch of Mike Turquette as it
+use the patch "clk: add of_clk_src_onecell_get() support" from Shawn
+Guo.
 
-Thanks to everyone involved!
+Many thanks to Thomas Petazzoni and Sebastian Hesselbarth for their
+review and feedback. The device tree bindings were really improved
+with the advices of Sebastian.
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Regards,
 
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+Gregory CLEMENT (3):
+  clk: mvebu: add armada-370-xp specific clocks
+  clk: armada-370-xp: add support for clock framework
+  clocksource: time-armada-370-xp converted to clk framework
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+ .../devicetree/bindings/clock/mvebu-core-clock.txt |   41 +++
+ .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   21 ++
+ arch/arm/boot/dts/armada-370-db.dts                |    4 -
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    1 +
+ arch/arm/boot/dts/armada-370.dtsi                  |   13 +
+ arch/arm/boot/dts/armada-xp.dtsi                   |   49 +++
+ arch/arm/mach-mvebu/Kconfig                        |    5 +
+ arch/arm/mach-mvebu/armada-370-xp.c                |    9 +-
+ arch/arm/mach-mvebu/common.h                       |    1 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/mvebu/Makefile                         |    2 +
+ drivers/clk/mvebu/clk-core.c                       |  312 ++++++++++++++++++++
+ drivers/clk/mvebu/clk-core.h                       |   19 ++
+ drivers/clk/mvebu/clk-cpu.c                        |  144 +++++++++
+ drivers/clk/mvebu/clk-cpu.h                        |   19 ++
+ drivers/clk/mvebu/clk.c                            |   36 +++
+ drivers/clocksource/time-armada-370-xp.c           |   11 +-
+ 17 files changed, 678 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+ create mode 100644 drivers/clk/mvebu/Makefile
+ create mode 100644 drivers/clk/mvebu/clk-core.c
+ create mode 100644 drivers/clk/mvebu/clk-core.h
+ create mode 100644 drivers/clk/mvebu/clk-cpu.c
+ create mode 100644 drivers/clk/mvebu/clk-cpu.h
+ create mode 100644 drivers/clk/mvebu/clk.c
 
-iEYEARECAAYFAlBQhw8ACgkQD27XaX1/VRti7QCgkSo61PMS7soqu/Fd7ctAsVj0
-nogAoJ+fl+RJO2tDYdxhNYBDbhm5+Efi
-=7hXh
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+--
+1.7.9.5
