@@ -1,7 +1,7 @@
 From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 7/9] ARM: davinci: add support for am1808 based EnBW CMC board
-Date: Wed, 12 Sep 2012 22:05:30 +0530
-Message-ID: <1347467732-1332-8-git-send-email-nsekhar@ti.com>
+Subject: [PATCH 4/9] ARM: davinci: da850: add DT boot support
+Date: Wed, 12 Sep 2012 22:05:27 +0530
+Message-ID: <1347467732-1332-5-git-send-email-nsekhar@ti.com>
 References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,106 +18,151 @@ List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open
 Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
 Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Add support for booting DA850 using flattened device
+tree to describe the hardware. At this time only the
+very basic bootup using a serial console is supported.
 
-This board supports:
-
-- AM1808 based board
-- 64 MiB DDR ram
-- 2 MiB Nor flash
-- 128 MiB NAND flash
-- use internal RTC
-- I2C support
-- hwmon lm75 support
-- UBI/UBIFS support
-- MMC support
-- USB OTG support
-
-This patch adds the basic DTS file enabling the serial ports.
-Other features will be added in due course of time.
-
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>
-Cc: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-[nsekhar-l0cyMroinI0@public.gmane.org: modified after dtsi refactoring and added binding
-documentation]
 Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/davinci.txt |    4 +++
- arch/arm/boot/dts/da850-enbw-cmc.dts              |   30 +++++++++++++++++++++
- arch/arm/mach-davinci/da8xx-dt.c                  |    1 +
- 3 files changed, 35 insertions(+)
- create mode 100644 arch/arm/boot/dts/da850-enbw-cmc.dts
+ Documentation/devicetree/bindings/arm/davinci.txt |    9 +++
+ arch/arm/Kconfig                                  |    1 +
+ arch/arm/mach-davinci/Kconfig                     |    8 +++
+ arch/arm/mach-davinci/Makefile                    |    1 +
+ arch/arm/mach-davinci/da8xx-dt.c                  |   64 +++++++++++++++++++++
+ 5 files changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci.txt
+ create mode 100644 arch/arm/mach-davinci/da8xx-dt.c
 
 diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
-index 2dda756..cfaeda4 100644
---- a/Documentation/devicetree/bindings/arm/davinci.txt
-+++ b/Documentation/devicetree/bindings/arm/davinci.txt
-@@ -5,6 +5,10 @@ DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
- Required root node properties:
-     - compatible = "ti,da850-evm", "ti,da850";
- 
-+EnBW AM1808 based CMC board
-+Required root node properties:
-+    - compatible = "enbw,cmc", "ti,da850;
-+
- Generic DaVinci Boards
- ----------------------
- 
-diff --git a/arch/arm/boot/dts/da850-enbw-cmc.dts b/arch/arm/boot/dts/da850-enbw-cmc.dts
 new file mode 100644
-index 0000000..422fdb3
+index 0000000..aa4e7a1
 --- /dev/null
-+++ b/arch/arm/boot/dts/da850-enbw-cmc.dts
-@@ -0,0 +1,30 @@
-+/*
-+ * Device Tree for AM1808 EnBW CMC board
-+ *
-+ * Copyright 2012 DENX Software Engineering GmbH
-+ * Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+/dts-v1/;
-+/include/ "da850.dtsi"
++++ b/Documentation/devicetree/bindings/arm/davinci.txt
+@@ -0,0 +1,9 @@
++Texas Instruments DaVinci Platforms Device Tree Bindings
++--------------------------------------------------------
 +
-+/ {
-+	compatible = "enbw,cmc", "ti,da850";
-+	model = "EnBW CMC";
++Generic DaVinci Boards
++----------------------
 +
-+	soc {
-+		serial0: serial@1c42000 {
-+			status = "okay";
-+		};
-+		serial1: serial@1d0c000 {
-+			status = "okay";
-+		};
-+		serial2: serial@1d0d000 {
-+			status = "okay";
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index 94b09fd..37c27af 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -47,6 +47,7 @@ static void __init da850_init_machine(void)
- }
++DA850/OMAP-L138/AM18x generic board
++Required root node properties:
++    - compatible = "ti,da850";
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index df04b0b..d59765a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -970,6 +970,7 @@ config ARCH_DAVINCI
+ 	select GENERIC_CLOCKEVENTS
+ 	select GENERIC_IRQ_CHIP
+ 	select HAVE_IDE
++	select USE_OF
+ 	select ZONE_DMA
+ 	help
+ 	  Support for TI's DaVinci platform.
+diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+index ab99c3c..5da2148 100644
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -58,6 +58,14 @@ config ARCH_DAVINCI_TNETV107X
  
- static const char *da850_boards_compat[] __initdata = {
-+	"enbw,cmc",
- 	"ti,da850-evm",
- 	"ti,da850",
- 	NULL,
+ comment "DaVinci Board Type"
+ 
++config MACH_DA8XX_DT
++	bool "Support DA8XX platforms using device tree"
++	default y
++	depends on ARCH_DAVINCI_DA8XX
++	help
++	  Say y here to include support for TI DaVinci DA850 based using
++	  Flattened Device Tree. More information at Documentation/devicetree
++
+ config MACH_DAVINCI_EVM
+ 	bool "TI DM644x EVM"
+ 	default ARCH_DAVINCI_DM644x
+diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
+index 2227eff..fb5c1aa 100644
+--- a/arch/arm/mach-davinci/Makefile
++++ b/arch/arm/mach-davinci/Makefile
+@@ -22,6 +22,7 @@ obj-$(CONFIG_AINTC)			+= irq.o
+ obj-$(CONFIG_CP_INTC)			+= cp_intc.o
+ 
+ # Board specific
++obj-$(CONFIG_MACH_DA8XX_DT)		+= da8xx-dt.o
+ obj-$(CONFIG_MACH_DAVINCI_EVM)  	+= board-dm644x-evm.o
+ obj-$(CONFIG_MACH_SFFSDR)		+= board-sffsdr.o
+ obj-$(CONFIG_MACH_NEUROS_OSD2)		+= board-neuros-osd2.o
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+new file mode 100644
+index 0000000..df393d9
+--- /dev/null
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -0,0 +1,64 @@
++/*
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * Modified from mach-omap/omap2/board-generic.c
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/io.h>
++#include <linux/of_irq.h>
++#include <linux/of_platform.h>
++#include <linux/irqdomain.h>
++
++#include <asm/mach/arch.h>
++
++#include <mach/common.h>
++#include <mach/cp_intc.h>
++#include <mach/da8xx.h>
++
++#define DA8XX_NUM_UARTS	3
++
++void __init da8xx_uart_clk_enable(void)
++{
++	int i;
++	for (i = 0; i < DA8XX_NUM_UARTS; i++)
++		davinci_serial_setup_clk(i, NULL);
++}
++
++static struct of_device_id da8xx_irq_match[] __initdata = {
++	{ .compatible = "ti,cp-intc", .data = cp_intc_of_init, },
++	{ }
++};
++
++static void __init da8xx_init_irq(void)
++{
++	of_irq_init(da8xx_irq_match);
++}
++
++#ifdef CONFIG_ARCH_DAVINCI_DA850
++
++static void __init da850_init_machine(void)
++{
++	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++
++	da8xx_uart_clk_enable();
++}
++
++static const char *da850_boards_compat[] __initdata = {
++	"ti,da850",
++	NULL,
++};
++
++DT_MACHINE_START(DA850_DT, "Generic DA850/OMAP-L138/AM18x")
++	.map_io		= da850_init,
++	.init_irq	= da8xx_init_irq,
++	.timer		= &davinci_timer,
++	.init_machine	= da850_init_machine,
++	.dt_compat	= da850_boards_compat,
++	.init_late	= davinci_init_late,
++	.restart	= da8xx_restart,
++MACHINE_END
++
++#endif
 -- 
 1.7.10.1
