@@ -1,107 +1,97 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3 1/9] pinctrl: mvebu: pinctrl driver core
-Date: Wed, 12 Sep 2012 15:10:36 -0600
-Message-ID: <5050FA4C.8040406@wwwdotorg.org>
-References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347266386-16229-2-git-send-email-sebastian.hesselbarth@gmail.com> <20120911164409.4c030bd8@skate> <504FB869.60201@wwwdotorg.org> <20120912085423.21af58d5@skate>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH] media: add V4L2 DT binding documentation
+Date: Wed, 12 Sep 2012 23:17:16 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1209122302410.28968@axis700.grange>
+References: <Pine.LNX.4.64.1209111746420.22084@axis700.grange>
+ <5050DA40.8050105@wwwdotorg.org> <Pine.LNX.4.64.1209122111100.28968@axis700.grange>
+ <5050F653.5070404@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120912085423.21af58d5@skate>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5050F653.5070404@wwwdotorg.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Hans Verkuil <hverkuil@xs4all.nl>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2012 12:54 AM, Thomas Petazzoni wrote:
-> Le Tue, 11 Sep 2012 16:17:13 -0600,
-> Stephen Warren <swarren@wwwdotorg.org> a =C3=A9crit :
->=20
->>
->> +static struct mvebu_mpp_mode dove_mpp_modes[] =3D {
->> +	MPP_MODE(0,
->> +		MPP_FUNCTION(0x00, "gpio", NULL),
->> +		MPP_FUNCTION(0x02, "uart2", "rts"),
->> +		MPP_FUNCTION(0x03, "sdio0", "cd"),
->> +		MPP_FUNCTION(0x0f, "lcd0", "pwm"),
->> +		MPP_FUNCTION(0x10, "pmu", NULL)),
->>
->> it's defining the functions within the context of a particular group
->> ("mode" in the drivers terminology, I think...) rather than defining
->> functions and groups as separate top-level tables.
->=20
-> This data structure really reflects what the datasheet says. Typicall=
-y,
-> for SoCs where each pin is independently muxable (AT91, i.MX23/28,
-> Marvell, and probably many more), the datasheet has a big array, with
-> one line per pin, and then several columns which tell for a given pin=
-,
-> what is "function 0", "function 1", "function 2", "function 3", etc.
->=20
-> So the data structure that Sebastian has implemented in the mvebu
-> driver immediately reflects this. In fact, the pinctrl table code for
-> Armada 370 and Armada XP was semi-automatically generated from CSV da=
-ta
-> of the pinmux functions, directly coming from the datasheets.
+On Wed, 12 Sep 2012, Stephen Warren wrote:
 
-OK, that seems like a reasonable explanation.
+> On 09/12/2012 01:28 PM, Guennadi Liakhovetski wrote:
+> > Hi Stephen
+> > 
+> > On Wed, 12 Sep 2012, Stephen Warren wrote:
+> > 
+> >> On 09/11/2012 09:51 AM, Guennadi Liakhovetski wrote:
+> >>> This patch adds a document, describing common V4L2 device tree bindings.
+> >>>
+> >>> Co-authored-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> >>> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> >>
+> >> Overall, I think this looks pretty reasonable, so:
+> ...
+> >>
+> >>> +			clock-frequency = <50000000>;	/* max clock frequency */
+> >>> +			clock-output-names = "mclk";
+> >>> +		};
+> >>> +
+> >>> +		port {
+> >> ...
+> >>> +			ceu0_0: link@0 {
+> >>> +				reg = <0>;
+> >>> +				remote = <&csi2_2>;
+> >>> +				immutable;
+> >>
+> >> Did we decide "immutable" was actually needed? Presumably the driver for
+> >> the HW in question knows the HW isn't configurable, and would simply not
+> >> attempt to apply any configuration even if the .dts author erroneously
+> >> provided some?
+> > 
+> > Well, I've been thinking about this today. I think, bridge drivers will 
+> 
+> Sorry, I'm not sure what a "bridge" driver is; is it any v4l2 device?
 
-Still, doing data manipulation at run-time when it could easily be done
-by the script that converts your CSV into the driver tables seem
-inefficient at least. I agree with LinusW that it's not a big deal thou=
-gh.
+Right, sorry for not explaining. We call a bridge a device, that's sitting 
+on a bus like USB, PCI or - as in the SoC case - on an internal one and 
+interfacing to, say, a video sensor or a TV decoder or encoder. In the SoC 
+case most primitive bridges just take data from video sensors attached 
+over, say, an 8-bit parallel bus and DMA it into RAM buffers. Some bridges 
+can also perform some data processing.
 
-> Having to
-> create a global list of all possible functions seems useless and
-> painful, since the functions only make sense in the context of one
-> particular pin.
+> > call centrally provided helper functions to enumerate links inside ports. 
+> 
+> Presumably a given driver would only parse the ports/links of its own DT
+> node, and hence would be able to provide a parameter to any helper
+> function that indicated the same information that "immutable" would?
 
-Surely some of your functions can be selected onto 1 of n pins? If
-that's true, then the functions don't only exist within the context of =
-a
-single pin.
+Well, let's drop "immutable" for now, since we don't have a good idea 
+whether we need it or not. If we do need it, we'll add it later, removing 
+a part of a standart is more difficult.
 
-Note that some pinctrl driver authors have decided to create functions
-based on just the mux register values (e.g. mux0, mux1, mux2, mux3 for =
-a
-2-bit field) rather than semantically (e.g. uart1, uart2, i2c1, i2c2),
-in which case, all functions are global and available on any pin. I
-actually somewhat wonder if I shouldn't have done that for Tegra.
+> > While doing that they will want to differentiate between links to external 
+> > devices with explicit configuration, and links to internal devices, whose 
+> > configuration drivers might be able to figure out themselves. How should a 
+> > driver find out what device this link is pointing to? Should it follow the 
+> > "remote" phandle and then check the "compatible" property? The word 
+> > "immutable" is a hint, that this is a link to an internal device, but it 
+> > might either be unneeded or be transformed into something more 
+> > informative.
+> 
+> I would imagine that a given driver would only ever parse its own DT
+> node; the far end of any link is purely the domain of the other driver.
+> I thought that each link node would contain whatever hsync-active,
+> data-lanes, ... properties that were needed to configure the local device?
 
-> Could you be more specific as to what representation you're looking
-> after? You're proposing to "define functions and groups as separate
-> top-level tables", but then how to you map which functions are
-> available for which group,
+I think, information needed to configure a bridge device to connect to a 
+camera sensor, like sync polarities etc., might not be sufficient to 
+configure it to interface to an SoC internal unit, like a MIPI CSI-2 
+interface. I can see 2 possibilities to recognise, that this link is going 
+to an internal device: (1) follow the remote phandle, (2) use a 
+vendor-specific property to specify the remote device type. I guess, you'd 
+prefer the latter?
 
-The definition of a function is a function name (struct
-pinmux_ops.get_function_name) and a list of groups onto which it can be
-selected (struct pinmux_ops.get_function_groups).
-
-The pinctrl core leaves it up to individual drivers how to represent ho=
-w
-to actually program a given group with a given function. ...
-
-> and what is the number of that function is
-> this group (which we need to actually configure the mapping). I'd
-> really like to see (with a short code example) what is your view of h=
-ow
-> pinmux should be handled for SoCs having independently muxable pins.
-
- As an example, see drivers/pinctrl/pinctrl-tegra20.c variable
-tegra20_groups[] where each group definition contains additional
-information beyond the basic information that the pinctrl core requires
-(which is just struct pinctrl_ops get_group_name get_group_pins) - i.e.
-the global function ID that is selected by each of the 4 values you can
-write into that pin's/group's register.
-
-Incidentally, I see that tegra20_groups[] is almost exactly equivalent
-to the data-structure we're talking about here; the difference is that
-the Tegra driver additionally has pre-generated arrays like xio_groups[=
-]
-(the list of groups where function xio can be selected) in order to
-short-circuit the run-time calculations that your driver is doing.
-
-(I don't believe any of this discussion is affected by whether the HW
-muxes at a per-pin level or per-pin-group level; Tegra30 muxes per-pin
-and the driver uses the exact same data-structures as Tegra20 which
-muxes per-group).
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
