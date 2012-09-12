@@ -1,90 +1,70 @@
-From: <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 8/8] ARM: dts: add twi nodes for atmel boards
-Date: Wed, 12 Sep 2012 08:42:17 +0200
-Message-ID: <1347432137-25058-9-git-send-email-ludovic.desroches@atmel.com>
-References: <1347432137-25058-1-git-send-email-ludovic.desroches@atmel.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 1/9] pinctrl: mvebu: pinctrl driver core
+Date: Wed, 12 Sep 2012 08:54:23 +0200
+Message-ID: <20120912085423.21af58d5@skate>
+References: <1345623750-10645-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1347266386-16229-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1347266386-16229-2-git-send-email-sebastian.hesselbarth@gmail.com>
+	<20120911164409.4c030bd8@skate>
+	<504FB869.60201@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1347432137-25058-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <504FB869.60201@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Le Tue, 11 Sep 2012 16:17:13 -0600,
+Stephen Warren <swarren@wwwdotorg.org> a =C3=A9crit :
 
-Still use i2c-gpio on boards which have a SoC with a TWI IP which
-doesn't have clock stretching in transmission mode.
+>=20
+> +static struct mvebu_mpp_mode dove_mpp_modes[] =3D {
+> +	MPP_MODE(0,
+> +		MPP_FUNCTION(0x00, "gpio", NULL),
+> +		MPP_FUNCTION(0x02, "uart2", "rts"),
+> +		MPP_FUNCTION(0x03, "sdio0", "cd"),
+> +		MPP_FUNCTION(0x0f, "lcd0", "pwm"),
+> +		MPP_FUNCTION(0x10, "pmu", NULL)),
+>=20
+> it's defining the functions within the context of a particular group
+> ("mode" in the drivers terminology, I think...) rather than defining
+> functions and groups as separate top-level tables.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9g25ek.dts    | 12 ++++++++++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts |  8 ++++++++
- arch/arm/boot/dts/at91sam9n12ek.dts    |  8 ++++++++
- 3 files changed, 28 insertions(+)
+This data structure really reflects what the datasheet says. Typically,
+for SoCs where each pin is independently muxable (AT91, i.MX23/28,
+Marvell, and probably many more), the datasheet has a big array, with
+one line per pin, and then several columns which tell for a given pin,
+what is "function 0", "function 1", "function 2", "function 3", etc.
 
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-index 96514c1..877c08f 100644
---- a/arch/arm/boot/dts/at91sam9g25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -32,6 +32,18 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
-+
-+			i2c0: i2c@f8010000 {
-+				status = "okay";
-+			};
-+
-+			i2c1: i2c@f8014000 {
-+				status = "okay";
-+			};
-+
-+			i2c2: i2c@f8018000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		usb0: ohci@00600000 {
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index a3633bd..15e1dd4 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -46,6 +46,14 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
-+
-+			i2c0: i2c@fff84000 {
-+				status = "okay";
-+			};
-+
-+			i2c1: i2c@fff88000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index f4e43e3..912b2c2 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -37,6 +37,14 @@
- 			dbgu: serial@fffff200 {
- 				status = "okay";
- 			};
-+
-+			i2c0: i2c@f8010000 {
-+				status = "okay";
-+			};
-+
-+			i2c1: i2c@f8014000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
--- 
-1.7.11.3
+So the data structure that Sebastian has implemented in the mvebu
+driver immediately reflects this. In fact, the pinctrl table code for
+Armada 370 and Armada XP was semi-automatically generated from CSV data
+of the pinmux functions, directly coming from the datasheets. Having to
+create a global list of all possible functions seems useless and
+painful, since the functions only make sense in the context of one
+particular pin.
+
+Could you be more specific as to what representation you're looking
+after? You're proposing to "define functions and groups as separate
+top-level tables", but then how to you map which functions are
+available for which group, and what is the number of that function is
+this group (which we need to actually configure the mapping). I'd
+really like to see (with a short code example) what is your view of how
+pinmux should be handled for SoCs having independently muxable pins.
+
+I really don't understand how a global list of functions make sense:
+the functions make sense on a per-group basis, and this is how the
+hardwaredatasheet defines them. If we could keep this representation,
+it would really be useful.
+
+Thanks!
+
+Thomas
+--=20
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
