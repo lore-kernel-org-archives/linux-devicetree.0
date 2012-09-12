@@ -1,7 +1,7 @@
 From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 5/9] ARM: davinci: da850: add SoC DT data
-Date: Wed, 12 Sep 2012 22:05:28 +0530
-Message-ID: <1347467732-1332-6-git-send-email-nsekhar@ti.com>
+Subject: [PATCH 9/9] ARM: davinci: da8xx defconfig: enable DT config options
+Date: Wed, 12 Sep 2012 22:05:32 +0530
+Message-ID: <1347467732-1332-10-git-send-email-nsekhar@ti.com>
 References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,85 +21,40 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Her
 Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Enable DT related config options in da8xx_omapl_defconfig
 
-Add DT data for DA850 SoC. Only interrupt controller and
-serial port information is being added at this time.
-
-Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-[nsekhar-l0cyMroinI0@public.gmane.org: refactored DT data into SoC specific and
-board specific and include SoC data into .dtsi file]
 Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/da850.dtsi |   60 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 arch/arm/boot/dts/da850.dtsi
+ arch/arm/configs/da8xx_omapl_defconfig |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-new file mode 100644
-index 0000000..640ab75
---- /dev/null
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -0,0 +1,60 @@
-+/*
-+ * Copyright 2012 DENX Software Engineering GmbH
-+ * Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	arm {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		intc: interrupt-controller {
-+			compatible = "ti,cp-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			ti,intc-size = <100>;
-+			reg = <0xfffee000 0x2000>;
-+		};
-+	};
-+	soc {
-+		compatible = "simple-bus";
-+		model = "da850";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x01c00000 0x400000>;
-+
-+		serial0: serial@1c42000 {
-+			compatible = "ns16550a";
-+			reg = <0x42000 0x100>;
-+			clock-frequency = <150000000>;
-+			reg-shift = <2>;
-+			interrupts = <25>;
-+			interrupt-parent = <&intc>;
-+			status = "disabled";
-+		};
-+		serial1: serial@1d0c000 {
-+			compatible = "ns16550a";
-+			reg = <0x10c000 0x100>;
-+			clock-frequency = <150000000>;
-+			reg-shift = <2>;
-+			interrupts = <53>;
-+			interrupt-parent = <&intc>;
-+			status = "disabled";
-+		};
-+		serial2: serial@1d0d000 {
-+			compatible = "ns16550a";
-+			reg = <0x10d000 0x100>;
-+			clock-frequency = <150000000>;
-+			reg-shift = <2>;
-+			interrupts = <61>;
-+			interrupt-parent = <&intc>;
-+			status = "disabled";
-+		};
-+	};
-+};
+diff --git a/arch/arm/configs/da8xx_omapl_defconfig b/arch/arm/configs/da8xx_omapl_defconfig
+index 88ccde0..f292239 100644
+--- a/arch/arm/configs/da8xx_omapl_defconfig
++++ b/arch/arm/configs/da8xx_omapl_defconfig
+@@ -17,6 +17,7 @@ CONFIG_MODVERSIONS=y
+ CONFIG_ARCH_DAVINCI=y
+ CONFIG_ARCH_DAVINCI_DA830=y
+ CONFIG_ARCH_DAVINCI_DA850=y
++CONFIG_MACH_DA8XX_DT=y
+ CONFIG_MACH_MITYOMAPL138=y
+ CONFIG_MACH_OMAPL138_HAWKBOARD=y
+ CONFIG_DAVINCI_RESET_CLOCKS=y
+@@ -26,6 +27,7 @@ CONFIG_PREEMPT=y
+ CONFIG_AEABI=y
+ # CONFIG_OABI_COMPAT is not set
+ CONFIG_LEDS=y
++CONFIG_USE_OF=y
+ CONFIG_ZBOOT_ROM_TEXT=0x0
+ CONFIG_ZBOOT_ROM_BSS=0x0
+ CONFIG_CPU_FREQ=y
+@@ -75,6 +77,7 @@ CONFIG_SERIO_LIBPS2=y
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
+ CONFIG_SERIAL_8250_NR_UARTS=3
++CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_I2C=y
+ CONFIG_I2C_CHARDEV=y
+ CONFIG_I2C_DAVINCI=y
 -- 
 1.7.10.1
