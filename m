@@ -1,109 +1,56 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH 2/2] arm/dts: AM33XX: Add device tree OPP table
-Date: Wed, 12 Sep 2012 19:21:55 +0200
-Message-ID: <5050C4B3.9040107@ti.com>
-References: <1346405840-31058-1-git-send-email-anilkumar@ti.com> <1346405840-31058-3-git-send-email-anilkumar@ti.com>
+From: Cyril Chemparathy <cyril@ti.com>
+Subject: Re: [PATCH] of: specify initrd location using 64-bit
+Date: Wed, 12 Sep 2012 14:02:27 -0400
+Message-ID: <5050CE33.9060909@ti.com>
+References: <1347465937-7056-1-git-send-email-cyril@ti.com> <CAMuHMdUuQzD0bq8PifBea2-0Pk7RhmPA0-GAFprsk+vMxMGjGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1346405840-31058-3-git-send-email-anilkumar@ti.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: AnilKumar Ch <anilkumar@ti.com>, paul Walmsley <paul@pwsan.com>
-Cc: rjw@sisk.pl, linux-pm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <CAMuHMdUuQzD0bq8PifBea2-0Pk7RhmPA0-GAFprsk+vMxMGjGw@mail.gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux@openrisc.net, linuxppc-dev@lists.ozlabs.org, microblaze-uclinux@itee.uq.edu.au, a-jacquiot@ti.com, arnd@arndb.de, benh@kernel.crashing.org, bigeasy@linutronix.de, blogic@openwrt.org, david.daney@cavium.com, dhowells@redhat.com, grant.likely@secretlab.ca, hpa@zytor.com, jonas@southpole.se, linus.walleij@linaro.org, linux@arm.linux.org.uk, m.szyprowski@samsung.com, mahesh@linux.vnet.ibm.com, mingo@redhat.com, monstr@monstr.eu, msalter@redhat.com, nico@linaro.org, paul.gortmaker@windriver.com, paulus@samba.org, ralf@linux-mips.org, rob.herring@cal
 List-Id: devicetree@vger.kernel.org
 
-+ Paul
+On 9/12/2012 12:16 PM, Geert Uytterhoeven wrote:
+> On Wed, Sep 12, 2012 at 6:05 PM, Cyril Chemparathy <cyril@ti.com> wrote:
+>> On some PAE architectures, the entire range of physical memory could reside
+>> outside the 32-bit limit.  These systems need the ability to specify the
+>> initrd location using 64-bit numbers.
+>>
+>> This patch globally modifies the early_init_dt_setup_initrd_arch() function to
+>> use 64-bit numbers instead of the current unsigned long.
+>
+>> -void __init early_init_dt_setup_initrd_arch(unsigned long start, unsigned long end)
+>> +void __init early_init_dt_setup_initrd_arch(u64 start, u64 end)
+>
+> Why not phys_addr_t?
+>
 
-Hi Anil,
+The rest of the memory specific bits of the device-tree code use u64 for 
+addresses, and I kept it the same for consistency.
 
-On 08/31/2012 11:37 AM, AnilKumar Ch wrote:
-> Add DT OPP table for AM33XX family of devices. This data is
-> decoded by OF with of_init_opp_table() helper function.
-> 
-> Also adds cpu0 supply name to the corresponding dts files.
-> cpu0-supply name is used by cpufreq-cpu0 driver to get the
-> regulator pointer for voltage modifications.
-> 
-> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                  -- Linus Torvalds
+>
 
-I've just applied your patch in my for_3.7/dts_part2 branch.
-
-I changed the subject to use "ARM: dts: " prefix seems it seems to be
-the convention nowadays.
-
-I can apply as the well the clock patch if Paul acks it, but it can go
-through Paul as well since there is no strong dependency between them AFAIK.
-
-Thanks,
-Benoit
-
-
-> ---
->  arch/arm/boot/dts/am335x-bone.dts |    6 ++++++
->  arch/arm/boot/dts/am335x-evm.dts  |    6 ++++++
->  arch/arm/boot/dts/am33xx.dtsi     |   15 +++++++++++++++
->  3 files changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-> index ce486fc..2767b5f 100644
-> --- a/arch/arm/boot/dts/am335x-bone.dts
-> +++ b/arch/arm/boot/dts/am335x-bone.dts
-> @@ -13,6 +13,12 @@
->  	model = "TI AM335x BeagleBone";
->  	compatible = "ti,am335x-bone", "ti,am33xx";
->  
-> +	cpus {
-> +		cpu@0 {
-> +			cpu0-supply = <&dcdc2_reg>;
-> +		};
-> +	};
-> +
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x10000000>; /* 256 MB */
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> index baa3276..54d972c 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -13,6 +13,12 @@
->  	model = "TI AM335x EVM";
->  	compatible = "ti,am335x-evm", "ti,am33xx";
->  
-> +	cpus {
-> +		cpu@0 {
-> +			cpu0-supply = <&vdd1_reg>;
-> +		};
-> +	};
-> +
->  	memory {
->  		device_type = "memory";
->  		reg = <0x80000000 0x10000000>; /* 256 MB */
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index ab744d6..2043b53 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -25,6 +25,21 @@
->  	cpus {
->  		cpu@0 {
->  			compatible = "arm,cortex-a8";
-> +
-> +			/*
-> +			 * To consider voltage drop between PMIC and SoC,
-> +			 * tolerance value is reduced to 2% from 4% and
-> +			 * voltage value is increased as a precaution.
-> +			 */
-> +			operating-points = <
-> +				/* kHz    uV */
-> +				720000  1285000
-> +				600000  1225000
-> +				500000  1125000
-> +				275000  1125000
-> +			>;
-> +			voltage-tolerance = <2>; /* 2 percentage */
-> +			clock-latency = <300000>; /* From omap-cpufreq driver */
->  		};
->  	};
->  
-> 
-
+-- 
+Thanks
+- Cyril
