@@ -1,7 +1,8 @@
 From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 4/9] ARM: davinci: da850: add DT boot support
-Date: Wed, 12 Sep 2012 22:05:27 +0530
-Message-ID: <1347467732-1332-5-git-send-email-nsekhar@ti.com>
+Subject: [PATCH 1/9] ARM: davinci: uncompress.h: bail out if uart not
+	initialized
+Date: Wed, 12 Sep 2012 22:05:24 +0530
+Message-ID: <1347467732-1332-2-git-send-email-nsekhar@ti.com>
 References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,148 +22,39 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Her
 Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for booting DA850 using flattened device
-tree to describe the hardware. At this time only the
-very basic bootup using a serial console is supported.
+Bail out of UART access functions in uncompress.h if the uart
+port is not setup. This will happen when booting from DT since
+machine type matching does not work in this case. This may also
+happen if a correct machine type is not setup by bootloader.
 
 Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/davinci.txt |    9 +++
- arch/arm/Kconfig                                  |    1 +
- arch/arm/mach-davinci/Kconfig                     |    8 +++
- arch/arm/mach-davinci/Makefile                    |    1 +
- arch/arm/mach-davinci/da8xx-dt.c                  |   64 +++++++++++++++++++++
- 5 files changed, 83 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/davinci.txt
- create mode 100644 arch/arm/mach-davinci/da8xx-dt.c
+ arch/arm/mach-davinci/include/mach/uncompress.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
-new file mode 100644
-index 0000000..aa4e7a1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/davinci.txt
-@@ -0,0 +1,9 @@
-+Texas Instruments DaVinci Platforms Device Tree Bindings
-+--------------------------------------------------------
+diff --git a/arch/arm/mach-davinci/include/mach/uncompress.h b/arch/arm/mach-davinci/include/mach/uncompress.h
+index 18cfd49..3a0ff90 100644
+--- a/arch/arm/mach-davinci/include/mach/uncompress.h
++++ b/arch/arm/mach-davinci/include/mach/uncompress.h
+@@ -32,6 +32,9 @@ u32 *uart;
+ /* PORT_16C550A, in polled non-fifo mode */
+ static void putc(char c)
+ {
++	if (!uart)
++		return;
 +
-+Generic DaVinci Boards
-+----------------------
-+
-+DA850/OMAP-L138/AM18x generic board
-+Required root node properties:
-+    - compatible = "ti,da850";
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index df04b0b..d59765a 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -970,6 +970,7 @@ config ARCH_DAVINCI
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_IRQ_CHIP
- 	select HAVE_IDE
-+	select USE_OF
- 	select ZONE_DMA
- 	help
- 	  Support for TI's DaVinci platform.
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index ab99c3c..5da2148 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -58,6 +58,14 @@ config ARCH_DAVINCI_TNETV107X
+ 	while (!(uart[UART_LSR] & UART_LSR_THRE))
+ 		barrier();
+ 	uart[UART_TX] = c;
+@@ -39,6 +42,9 @@ static void putc(char c)
  
- comment "DaVinci Board Type"
- 
-+config MACH_DA8XX_DT
-+	bool "Support DA8XX platforms using device tree"
-+	default y
-+	depends on ARCH_DAVINCI_DA8XX
-+	help
-+	  Say y here to include support for TI DaVinci DA850 based using
-+	  Flattened Device Tree. More information at Documentation/devicetree
+ static inline void flush(void)
+ {
++	if (!uart)
++		return;
 +
- config MACH_DAVINCI_EVM
- 	bool "TI DM644x EVM"
- 	default ARCH_DAVINCI_DM644x
-diff --git a/arch/arm/mach-davinci/Makefile b/arch/arm/mach-davinci/Makefile
-index 2227eff..fb5c1aa 100644
---- a/arch/arm/mach-davinci/Makefile
-+++ b/arch/arm/mach-davinci/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_AINTC)			+= irq.o
- obj-$(CONFIG_CP_INTC)			+= cp_intc.o
- 
- # Board specific
-+obj-$(CONFIG_MACH_DA8XX_DT)		+= da8xx-dt.o
- obj-$(CONFIG_MACH_DAVINCI_EVM)  	+= board-dm644x-evm.o
- obj-$(CONFIG_MACH_SFFSDR)		+= board-sffsdr.o
- obj-$(CONFIG_MACH_NEUROS_OSD2)		+= board-neuros-osd2.o
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-new file mode 100644
-index 0000000..df393d9
---- /dev/null
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -0,0 +1,64 @@
-+/*
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * Modified from mach-omap/omap2/board-generic.c
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/io.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/irqdomain.h>
-+
-+#include <asm/mach/arch.h>
-+
-+#include <mach/common.h>
-+#include <mach/cp_intc.h>
-+#include <mach/da8xx.h>
-+
-+#define DA8XX_NUM_UARTS	3
-+
-+void __init da8xx_uart_clk_enable(void)
-+{
-+	int i;
-+	for (i = 0; i < DA8XX_NUM_UARTS; i++)
-+		davinci_serial_setup_clk(i, NULL);
-+}
-+
-+static struct of_device_id da8xx_irq_match[] __initdata = {
-+	{ .compatible = "ti,cp-intc", .data = cp_intc_of_init, },
-+	{ }
-+};
-+
-+static void __init da8xx_init_irq(void)
-+{
-+	of_irq_init(da8xx_irq_match);
-+}
-+
-+#ifdef CONFIG_ARCH_DAVINCI_DA850
-+
-+static void __init da850_init_machine(void)
-+{
-+	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-+
-+	da8xx_uart_clk_enable();
-+}
-+
-+static const char *da850_boards_compat[] __initdata = {
-+	"ti,da850",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(DA850_DT, "Generic DA850/OMAP-L138/AM18x")
-+	.map_io		= da850_init,
-+	.init_irq	= da8xx_init_irq,
-+	.timer		= &davinci_timer,
-+	.init_machine	= da850_init_machine,
-+	.dt_compat	= da850_boards_compat,
-+	.init_late	= davinci_init_late,
-+	.restart	= da8xx_restart,
-+MACHINE_END
-+
-+#endif
+ 	while (!(uart[UART_LSR] & UART_LSR_THRE))
+ 		barrier();
+ }
 -- 
 1.7.10.1
