@@ -1,165 +1,103 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v4 06/10] ARM: mvebu: Add pinctrl support to Armada XP SoCs
-Date: Thu, 13 Sep 2012 17:41:48 +0200
-Message-ID: <1347550912-18021-7-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] Runtime Interpreted Power Sequences
+Date: Thu, 13 Sep 2012 09:44:17 -0600
+Message-ID: <5051FF51.1080800@wwwdotorg.org>
+References: <1347443867-18868-1-git-send-email-acourbot@nvidia.com>
+ <1347443867-18868-2-git-send-email-acourbot@nvidia.com>
+ <50510791.8080302@wwwdotorg.org> <3678448.5nUOr4ZZV4@percival>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <3678448.5nUOr4ZZV4@percival>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+On 09/13/2012 12:02 AM, Alex Courbot wrote:
+> On Thursday 13 September 2012 06:07:13 Stephen Warren wrote:
+>> On 09/12/2012 03:57 AM, Alexandre Courbot wrote:
+>>> Some device drivers (panel backlights especially) need to follow precise
+>>> sequences for powering on and off, involving gpios, regulators, PWMs
+>>> with a precise powering order and delays to respect between each steps.
+>>> These sequences are board-specific, and do not belong to a particular
+>>> driver - therefore they have been performed by board-specific hook
+>>> functions to far.
+>>>
+>>> With the advent of the device tree and of ARM kernels that are not
+>>> board-tied, we cannot rely on these board-specific hooks anymore but
+>>> need a way to implement these sequences in a portable manner. This patch
+>>> introduces a simple interpreter that can execute such power sequences
+>>> encoded either as platform data or within the device tree.
+>>>
+>>> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> diff --git a/Documentation/power/power_seq.txt
+>>> b/Documentation/power/power_seq.txt
+>>>
+>>> +Sometimes, you may want to browse the list of resources allocated by a
+>>> sequence, +for instance to ensure that a resource of a given type is
+>>> present. The +power_seq_set_resources() function returns a list head that
+>>> can be used with +the power_seq_for_each_resource() macro to browse all
+>>> the resources of a set: +
+>>> +  struct list_head *power_seq_set_resources(struct power_seq_set *seqs);
+>>> +  power_seq_for_each_resource(pos, seqs)
+>>> +
+>>> +Here "pos" will be a pointer to a struct power_seq_resource. This
+>>> structure +contains the type of the resource, the information used for
+>>> identifying it, and +the resolved resource itself.
+>>
+>> I don't think you need to include that [power_seq_set_resources] prototype
+>> here?
+> 
+> Why not? I thought it was customary to include the prototypes in the 
+> documentation, and this seems to be the right place for this function.
 
-This commits adds the necessary device tree information to define the
-compatible property for the pinctrl driver instance of Armada XP SoCs.
+It's something used internally to the macro; what the user cares about
+is which macro to use for the functionality you're describing, not any
+prototypes needed by the internal implementation of the macro, which are
+always provided by the appropriate header.
 
-Until now, the device tree representation considered the Armada XP as
-a single SoC. But in fact, there are three different SoCs in the
-Armada XP families, with different number of CPU cores, different
-number of Ethernet interfaces... and different number of muxable pins
-or functions. We therefore introduce three armada-xp-mv78xx0.dtsi for
-the three SoCs of the Armada XP family. The current armada-xp-db.dts
-evaluation board uses the MV78460 variant of the SoC.
+>>> diff --git a/drivers/power/power_seq/power_seq.c
+>>> b/drivers/power/power_seq/power_seq.c
+>>>
+>>> +struct power_seq_step {
+>>> +	/* Copy of the platform data */
+>>> +	struct platform_power_seq_step pdata;
+>>
+>> I'd reword the comment to "Copy of the step", and name the field "step".
+> 
+> That would make a step within a step - doesn't pdata make it more explicit 
+> what this member is for (containing the platform data for this step)?
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
-v3:
-- put specific variant into DT "model"
+Well, it's not always platform data; it could come from device tree.
+Sorry for bike-shedding slightly, but how about just "data",
+"step_data", "config", or "step_config"?
 
-v4:
-- adjust pinctrl DT node of Armada XP SoC
+>>> +static const struct power_seq_res_ops
+>>> power_seq_types[POWER_SEQ_NUM_TYPES] = { +	[POWER_SEQ_DELAY] =
+>>> POWER_SEQ_DELAY_TYPE,
+>>> +	[POWER_SEQ_REGULATOR] = POWER_SEQ_REGULATOR_TYPE,
+>>> +	[POWER_SEQ_PWM] = POWER_SEQ_PWM_TYPE,
+>>> +	[POWER_SEQ_GPIO] = POWER_SEQ_GPIO_TYPE,
+>>> +};
+>>
+>> Ah, I see why you're using #include now.
+> 
+> We could also go with something more dynamic and compile these files 
+> separately, but that would require some registration mechanism which I don't 
+> think is needed for such a simple feature.
 
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm/boot/dts/armada-xp-mv78230.dtsi |   28 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/armada-xp-mv78260.dtsi |   28 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/armada-xp-mv78460.dtsi |   28 ++++++++++++++++++++++++++++
- 3 files changed, 84 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-xp-mv78230.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-mv78260.dtsi
- create mode 100644 arch/arm/boot/dts/armada-xp-mv78460.dtsi
-
-diff --git a/arch/arm/boot/dts/armada-xp-mv78230.dtsi b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-new file mode 100644
-index 0000000..38ede3d
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-mv78230.dtsi
-@@ -0,0 +1,28 @@
-+/*
-+ * Device Tree Include file for Marvell Armada XP family SoC
-+ *
-+ * Copyright (C) 2012 Marvell
-+ *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ *
-+ * Contains definitions specific to the Armada XP MV78230 SoC that are not
-+ * common to all Armada XP SoCs.
-+ */
-+
-+/include/ "armada-xp.dtsi"
-+
-+/ {
-+	model = "Marvell Armada XP MV78230 SoC";
-+	compatible = "marvell,armadaxp-mv78230", "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	soc {
-+		pinctrl {
-+			compatible = "marvell,mv78230-pinctrl";
-+			reg = <0xd0018000 0x38>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/armada-xp-mv78260.dtsi b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-new file mode 100644
-index 0000000..b2eafcd
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-mv78260.dtsi
-@@ -0,0 +1,28 @@
-+/*
-+ * Device Tree Include file for Marvell Armada XP family SoC
-+ *
-+ * Copyright (C) 2012 Marvell
-+ *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ *
-+ * Contains definitions specific to the Armada XP MV78260 SoC that are not
-+ * common to all Armada XP SoCs.
-+ */
-+
-+/include/ "armada-xp.dtsi"
-+
-+/ {
-+	model = "Marvell Armada XP MV78260 SoC";
-+	compatible = "marvell,armadaxp-mv78260", "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	soc {
-+		pinctrl {
-+			compatible = "marvell,mv78260-pinctrl";
-+			reg = <0xd0018000 0x38>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/armada-xp-mv78460.dtsi b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-new file mode 100644
-index 0000000..cf8624d
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-mv78460.dtsi
-@@ -0,0 +1,28 @@
-+/*
-+ * Device Tree Include file for Marvell Armada XP family SoC
-+ *
-+ * Copyright (C) 2012 Marvell
-+ *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ *
-+ * Contains definitions specific to the Armada XP MV78460 SoC that are not
-+ * common to all Armada XP SoCs.
-+ */
-+
-+/include/ "armada-xp.dtsi"
-+
-+/ {
-+	model = "Marvell Armada XP MV78460 SoC";
-+	compatible = "marvell,armadaxp-mv78460", "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	soc {
-+		pinctrl {
-+			compatible = "marvell,mv78460-pinctrl";
-+			reg = <0xd0018000 0x38>;
-+		};
-+	};
-+ };
--- 
-1.7.10.4
+Sure. There are already examples in the kernel of basically what you're
+doing anyway, and it's not like it'd be hard to change this if we want
+to do something different in the future too.
