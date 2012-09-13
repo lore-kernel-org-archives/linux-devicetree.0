@@ -1,62 +1,34 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v6 0/4] Runtime Interpreted Power Sequences
-Date: Thu, 13 Sep 2012 09:48:08 +0300
-Message-ID: <1347518888.7471.38.camel@lappyti>
-References: <1347443867-18868-1-git-send-email-acourbot@nvidia.com>
-	 <1347515447.7471.12.camel@lappyti> <1749811.4qrG1GZfBf@percival>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: [PATCH] of: specify initrd location using 64-bit
+Date: Thu, 13 Sep 2012 08:47:06 +0200
+Message-ID: <5051816A.3050705@linutronix.de>
+References: <1347465937-7056-1-git-send-email-cyril@ti.com> <CAMuHMdUuQzD0bq8PifBea2-0Pk7RhmPA0-GAFprsk+vMxMGjGw@mail.gmail.com> <5050CE33.9060909@ti.com> <5050E965.5080405@linutronix.de> <505107DF.5020105@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-fAdGNzRhttcXPFVhUejd"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1749811.4qrG1GZfBf@percival>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <505107DF.5020105@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Cyril Chemparathy <cyril@ti.com>, linux-mips@linux-mips.org, x86@kernel.org, a-jacquiot@ti.com, mahesh@linux.vnet.ibm.com, linus.walleij@linaro.org, grant.likely@secretlab.ca, paul.gortmaker@windriver.com, paulus@samba.org, hpa@zytor.com, m.szyprowski@samsung.com, jonas@southpole.se, linux@arm.linux.org.uk, linux-c6x-dev@linux-c6x.org, nico@linaro.org, david.daney@cavium.com, mingo@redhat.com, Geert Uytterhoeven <geert@linux-m68k.org>, benh@kernel.crashing.org, suzuki@in.ibm.com, linux@openrisc.net, arnd@arndb.de, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, msalter@redhat.com, rob.herring@calxeda.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, blogic@openwrt.org, dhowells@redhat.com, monstr@monstr.eu, linux-kernel@vger.kernel.org, ralf@linux-mips.org, tj@kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/13/2012 12:08 AM, Rob Herring wrote:
+>> Geert is right here. If it is a physical address, it should be
+>> phys_addr_t.
+>
+> While generally true, for the DT specific code I think it should be a
+> fixed u64. The size of the address is defined by the FDT, not the
+> kernel. It is very likely we could have a FDT that specifies addresses
+> in 64-bit values, but then we boot a kernel is compiled for !LPAE.
+> phys_addr_t is currently sized based on LPAE setting.
 
---=-fAdGNzRhttcXPFVhUejd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+If your kernel is 32bit without PAE and your DTB address is >32ibt than
+you can't handle it. If you don't notice this in your dt code than you
+remap the wrong memory ioremap().
 
-On Thu, 2012-09-13 at 15:23 +0900, Alex Courbot wrote:
+>
+> Rob
+>
 
-> DT support is actually the main point of power sequences, as outside of t=
-he DT=20
-> we can always work the old way and use callbacks. If we were to remove DT=
-=20
-> support, I am not sure this work would still be worth being merged.
-
-Ah, I guess you meant hooks in the driver, not hooks to board files?
-Yes, that would work, but if all the hooks do essentially the same
-things with just minor modifications like sleep-time, it makes more
-sense to have just one piece of code which gets the sequence as data.
-
- Tomi
-
-
---=-fAdGNzRhttcXPFVhUejd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAABAgAGBQJQUYGoAAoJEPo9qoy8lh71l38P/3+BcNUPNUVaUMSBT8HhxKR4
-StxDb/+IIhZUkkauxkGOflFlQdp7oQtkoV28/5+R5khDzbUNCA2shDCLGq22xg3o
-SN44j9UbySCjwbqwLnhCph2B4g+dvVLilS6bYieQaL2oCJAoJVJ54UKLC+DMmGdj
-J+vlHx+byyWEq57/EY7Nk8/qMMHVYRLV+yaSz5vct+AEmQIDNEou6yQHYOEtUml/
-juK/KIE6dR41NEwc/+nhchao5PwUlhdiVGCImtqJS+9h1xLxtFbNYti6fcnxgryK
-1HSBK+jbTVGB09+zwqGiX4/hXGTr3L1ASXGBgMFjq8/I9UQU4u4PJ4RZ2ZhPxxyS
-DFRljioAQbyys5RMwyjqIAvwid3yd3g786WEeSphggB/tUxKRm7HObcaclhgdeEL
-D7N1/UUrbSUPSgNTVndXAW09IQfr4vpAg/V4gUQkRRqDlhkMR5xYHli1DH2L0M8g
-Lgx//ha90WgTCpxRinl+NzUzuByM4L+m75Ud73NntU1Vpgn4PQak5jcdsWkokVfo
-yqioF32iHq4r1i1aI8o8sjFaqYzqLjNGGVc6jVwtJdm1UysyGjy8beRJ59oHWq+r
-C8zxeAmb+IH1/V/uXN366y2KXXsAv8BpO/istze+M4kXMeXxVZBDRXj0aSlqbJiO
-vnWS0FGfYFh47qrNdiwJ
-=vBoM
------END PGP SIGNATURE-----
-
---=-fAdGNzRhttcXPFVhUejd--
-
+Sebastian
