@@ -1,55 +1,91 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
-Date: Thu, 13 Sep 2012 12:12:54 +0100
-Message-ID: <alpine.DEB.2.02.1209131206510.15568@kaball.uk.xensource.com>
-References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com> <1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com> <503BFCD8.5090804@gmail.com> <alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
- <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com> <20120913102616.GA2470@linaro.org>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node by
+ name.
+Date: Thu, 13 Sep 2012 12:10:40 +0100
+Message-ID: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120913102616.GA2470@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: Stefano Stabellini <Stefano.Stabellini@eu.citrix.com>, "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, Ian Campbell <Ian.Campbell@citrix.com>, "arnd@arndb.de" <arnd@arndb.de>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Tim (Xen.org)" <tim@xen.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Sep 2012, Dave Martin wrote:
-> On Wed, Sep 12, 2012 at 07:14:58PM +0100, Stefano Stabellini wrote:
-> > On Wed, 12 Sep 2012, Stefano Stabellini wrote:
-> > - hcall-instructions
-> > potentially interesting, but given that for Xen we are quite happy with
-> > HVC, we are not going to add any secondary hypercall mechanisms,
-> > therefore at the moment it would just result in a BUG if the specified
-> > hcall instruction is != HVC. Besides if somebody else wanted to
-> > implemented the Xen hypercall interface in a different way they could
-> > just reimplement the hypercall wrappers, that would be easier than
-> > trying to do it with this property.
-> 
-> Some thoughts on this:
-> 
-> We decided that embedding machine instructions into the DT is a fairly
-> awful idea when discussing how to describe low-level debug UARTs in the
-> DT.  I don't think it's a lot better in this case (never mind issues
-> like ARM versus Thumb, endianness etc.)
-> 
-> If we are going to attempt to describe the call interface, we should
-> do it symbolically, allowing the hypervisor interface code in the kernel
-> to choose (or, if necessary, generate) the right call wrappers.
-> 
-> We will have this issue for descrbing power firmware interfaces for
-> example: we already know that this functionality might require an SMC
-> or HVC instruction to call it, depending on the platform.
-> 
-> A hypervisor with only one call ABI could leave this to be implicit,
-> providing there is a version number property of similar to allow future
-> changes to be accommodated.
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-I completely agree with Dave.
-I have no problems adding a symbolic property to say "we are using hvc
-with parameters on registers". I just want to avoid having actual
-machine instructions (and potentially dealing with executing them) into
-the DT.
+This patch introduces of_get_child function to get a child node by its
+name in a given parent node.
 
-Maybe we could have a "calling-convention" property that can be "xen"
-or something else. When a new hypervisor vendor comes along it can
-change the value of "calling-convention" to "foo".
+Without this patch each driver code has to iterate the parent and do
+a string compare, However having of_get_child libary function would
+avoid code duplication, errors and is more convenient.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/of/base.c  |   27 +++++++++++++++++++++++++++
+ include/linux/of.h |    2 ++
+ 2 files changed, 29 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4a1c9a..d4b6840 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -391,6 +391,33 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ EXPORT_SYMBOL(of_get_next_available_child);
+ 
+ /**
++ *	of_get_child - Find the child node by name for given parent
++ *	@node:	parent node
++ *	@name:	child name to look for.
++ *
++ *      This function looks for child node for given matching name
++ *
++ *	Returns a node pointer if found, with refcount incremented, use
++ *	of_node_put() on it when done.
++ *	else returns NULL.
++ */
++
++struct device_node *of_get_child(const struct device_node *node,
++				const char *name)
++{
++	struct device_node *child;
++
++	read_lock(&devtree_lock);
++	for_each_child_of_node(node, child)
++		if (child->name && (of_node_cmp(child->name, name) == 0)
++			&& of_node_get(child))
++			break;
++	read_unlock(&devtree_lock);
++	return child;
++}
++EXPORT_SYMBOL(of_get_child);
++
++/**
+  *	of_find_node_by_path - Find a node matching a full OF path
+  *	@path:	The full path to match
+  *
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 1b11632..510e1fe 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -192,6 +192,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+ 					     struct device_node *prev);
+ extern struct device_node *of_get_next_available_child(
+ 	const struct device_node *node, struct device_node *prev);
++extern struct device_node *of_get_child(const struct device_node *node,
++					const char *name);
+ 
+ #define for_each_child_of_node(parent, child) \
+ 	for (child = of_get_next_child(parent, NULL); child != NULL; \
+-- 
+1.7.0.4
