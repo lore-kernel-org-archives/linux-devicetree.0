@@ -1,92 +1,221 @@
-From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
-Date: Thu, 13 Sep 2012 11:29:38 +0100
-Message-ID: <20120913102938.GB2470@linaro.org>
-References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com>
-	<1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com>
-	<503BFCD8.5090804@gmail.com>
-	<alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
-	<alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
-	<50514634.3080303@gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 1/1] ARM: at91: fix missing #interrupt-cells on gpio-controller
+Date: Thu, 13 Sep 2012 12:40:26 +0200
+Message-ID: <1347532826-32733-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50514634.3080303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org" <xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Tim (Xen.org)" <tim-LM2mM/qkH7s@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2012 at 09:34:28PM -0500, Rob Herring wrote:
-> On 09/12/2012 01:14 PM, Stefano Stabellini wrote:
-> > On Wed, 12 Sep 2012, Stefano Stabellini wrote:
-> >> On Tue, 28 Aug 2012, Rob Herring wrote:
-> >>> You should look at ePAPR 1.1 which defines hypervisor related bindings.
-> >>> While it is a PPC doc, we should reuse or extend what makes sense.
-> >>>
-> >>> See section 7.5:
-> >>>
-> >>> https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
-> >>
-> >> Thanks for the link, I wasn't aware of ePAPR.
-> >>
-> >> The hypervisor node defined by ePAPR is not very different from what I
-> >> am proposing. Should I try to be compatible with the hypervisor
-> >> specification above (as in compatible = "epapr,hypervisor-1.1")?
-> >> Or should I just use it as a reference for my own specification?
-> >>
-> >> Personally I would rather avoid full compatibility with ePAPR.
-> > 
-> > In particular reading section 7.5, these are the required properties of
-> > the ePAPR hypervisor node:
-> > 
-> > - compatible = "epapr,hypervisor-1.1"
-> > compared to what I am proposing, it is laking information about what
-> > hypervisor we are talking about (xen, kvm, vmware, etc) and the version
-> > of the ABI (xen-4.2).
-> 
-> compatible properties are often changed. If we do deviate on the rest of
-> the binding, then it needs to be different.
-> 
-> Turns out that powerpc KVM guests use "linux,kvm" and "epapr,hypervisor"
-> doesn't even appear in the kernel.
-> 
-> We also perhaps have to consider the possibility of Xen on PowerPC. Then
-> alignment is more important.
-> 
-> > - hcall-instructions
-> > potentially interesting, but given that for Xen we are quite happy with
-> > HVC, we are not going to add any secondary hypercall mechanisms,
-> > therefore at the moment it would just result in a BUG if the specified
-> > hcall instruction is != HVC. Besides if somebody else wanted to
-> > implemented the Xen hypercall interface in a different way they could
-> > just reimplement the hypercall wrappers, that would be easier than
-> > trying to do it with this property.
-> 
-> It's really about the parameters passed with the HVC. The ePAPR may be a
-> good model for defining this. Just grepping "hypervisor" under
-> arch/powerpc, it's pretty clear hypervisor support happened first and
-> the ePAPR came second. Hopefully we can avoid that for ARM.
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+ arch/arm/boot/dts/at91sam9260.dtsi |    3 +++
+ arch/arm/boot/dts/at91sam9263.dtsi |    5 +++++
+ arch/arm/boot/dts/at91sam9g45.dtsi |    5 +++++
+ arch/arm/boot/dts/at91sam9n12.dtsi |    4 ++++
+ arch/arm/boot/dts/at91sam9x5.dtsi  |    4 ++++
+ 5 files changed, 21 insertions(+)
 
-Do you think it's feasible to standardise on some interoperable ABI for
-kvm and Xen?  This sounds pretty optimistic, but I'm not aware of all
-the technicalities, or what possible third-party hypervisors are out
-there.
-
-If we could do it, it would be good.  But I have my doubts about the
-feasibility and the benefits.  If different hypervisors are significantly
-imcompatible, then having a common low-level ABI doesn't help all that
-much.
-
-Cheers
----Dave
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index 66389c1..7c95f76 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -104,6 +104,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff600 {
+@@ -113,6 +114,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff800 {
+@@ -122,6 +124,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@fffff200 {
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index b460d6c..195019b 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -95,6 +95,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff400 {
+@@ -104,6 +105,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff600 {
+@@ -113,6 +115,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffff800 {
+@@ -122,6 +125,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioE: gpio@fffffa00 {
+@@ -131,6 +135,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@ffffee00 {
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index bafa880..63751b1 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -113,6 +113,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff400 {
+@@ -122,6 +123,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff600 {
+@@ -131,6 +133,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffff800 {
+@@ -140,6 +143,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioE: gpio@fffffa00 {
+@@ -149,6 +153,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@ffffee00 {
+diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+index bfac0df..ef9336a 100644
+--- a/arch/arm/boot/dts/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+@@ -107,6 +107,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff600 {
+@@ -116,6 +117,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff800 {
+@@ -125,6 +127,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffffa00 {
+@@ -134,6 +137,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@fffff200 {
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index 4a18c39..8a387a8 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -115,6 +115,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff600 {
+@@ -124,6 +125,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff800 {
+@@ -133,6 +135,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffffa00 {
+@@ -142,6 +145,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@fffff200 {
+-- 
+1.7.10.4
