@@ -1,53 +1,28 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH 2/2] arm/dts: AM33XX: Add device tree OPP table
-Date: Thu, 13 Sep 2012 06:23:38 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA2DF8C@DBDE01.ent.ti.com>
-References: <1346405840-31058-1-git-send-email-anilkumar@ti.com>
- <1346405840-31058-3-git-send-email-anilkumar@ti.com>
- <5050C4B3.9040107@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v6 0/4] Runtime Interpreted Power Sequences
+Date: Thu, 13 Sep 2012 14:25:53 +0800
+Message-ID: <20120913062552.GB17869@opensource.wolfsonmicro.com>
+References: <1347443867-18868-1-git-send-email-acourbot@nvidia.com>
+ <1347515447.7471.12.camel@lappyti>
+ <1749811.4qrG1GZfBf@percival>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <5050C4B3.9040107@ti.com>
-Content-Language: en-US
-Sender: cpufreq-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>, paul Walmsley <paul@pwsan.com>
-Cc: "rjw@sisk.pl" <rjw@sisk.pl>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1749811.4qrG1GZfBf@percival>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex Courbot <acourbot@nvidia.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Simon Glass <sjg@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2012 at 22:51:55, Cousson, Benoit wrote:
-> + Paul
-> 
-> Hi Anil,
-> 
-> On 08/31/2012 11:37 AM, AnilKumar Ch wrote:
-> > Add DT OPP table for AM33XX family of devices. This data is
-> > decoded by OF with of_init_opp_table() helper function.
-> > 
-> > Also adds cpu0 supply name to the corresponding dts files.
-> > cpu0-supply name is used by cpufreq-cpu0 driver to get the
-> > regulator pointer for voltage modifications.
-> > 
-> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> 
-> I've just applied your patch in my for_3.7/dts_part2 branch.
+On Thu, Sep 13, 2012 at 03:23:06PM +0900, Alex Courbot wrote:
 
-Thanks Benoit,
+> I understand the logic behind handling powering sequences in the device 
+> driver, but as we discussed for some classes of devices this might just not 
+> scale. I don't know how many different panels (each with different powering 
 
-> 
-> I changed the subject to use "ARM: dts: " prefix seems it seems to be
-> the convention nowadays.
-
-I will take care from next time onwards.
-
-> 
-> I can apply as the well the clock patch if Paul acks it, but it can go
-> through Paul as well since there is no strong dependency between them AFAIK.
-
-Paul,
-
-Can you ACK "clock data entry" patch?
-
-Thanks
-AnilKumar
+It would be sensible to make sure that the framework is done in such a
+way that drivers can use it - there will be drivers (perhaps not display
+ones) that have a known power sequence and which could benefit from the
+ability to use library code to implement it based on the user simply
+supplying named resources.
