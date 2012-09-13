@@ -1,15 +1,14 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] Documentation: add description of DT binding for
- the gpio-mvebu driver
-Date: Thu, 13 Sep 2012 15:20:54 -0500
-Message-ID: <50524026.20104@gmail.com>
-References: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1347551658-24449-3-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node
+ by name.
+Date: Thu, 13 Sep 2012 15:32:03 -0500
+Message-ID: <505242C3.7090006@gmail.com>
+References: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1347551658-24449-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1347534640-787-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,76 +19,82 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 10:54 AM, Thomas Petazzoni wrote:
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-
-Grant is pretty much offline right now.
-
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
->  .../devicetree/bindings/gpio/gpio-mvebu.txt        |   45 ++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+On 09/13/2012 06:10 AM, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> new file mode 100644
-> index 0000000..595be9e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-> @@ -0,0 +1,45 @@
-> +* Marvell EBU GPIO controller
+> This patch introduces of_get_child function to get a child node by its
+> name in a given parent node.
+> 
+> Without this patch each driver code has to iterate the parent and do
+> a string compare, However having of_get_child libary function would
+> avoid code duplication, errors and is more convenient.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/of/base.c  |   27 +++++++++++++++++++++++++++
+>  include/linux/of.h |    2 ++
+>  2 files changed, 29 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d4a1c9a..d4b6840 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -391,6 +391,33 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+>  EXPORT_SYMBOL(of_get_next_available_child);
+>  
+>  /**
+> + *	of_get_child - Find the child node by name for given parent
+> + *	@node:	parent node
+> + *	@name:	child name to look for.
+> + *
+> + *      This function looks for child node for given matching name
+> + *
+> + *	Returns a node pointer if found, with refcount incremented, use
+> + *	of_node_put() on it when done.
+> + *	else returns NULL.
+> + */
 > +
-> +Required properties:
+> +struct device_node *of_get_child(const struct device_node *node,
+
+of_get_child_by_name would be more consistent naming with other apis.
+
+> +				const char *name)
+> +{
+> +	struct device_node *child;
 > +
-> +- compatible : Should be "marvell,orion-gpio", "marvell,mv78200-gpio"
-> +  or "marvell,armadaxp-gpio". "marvell,orion-gpio" should be used for
-> +  Orion, Kirkwood, Dove, Discovery (except MV78200) and Armada
-> +  370. "marvell,mv78200-gpio" should be used for the Discovery
-> +  MV78200. "marvel,armadaxp-gpio" should be used for all Armada XP
-> +  SoCs (MV78230, MV78260, MV78460).
+> +	read_lock(&devtree_lock);
+
+I don't think you need the lock here. The for_each takes the lock while
+finding the node.
+
+> +	for_each_child_of_node(node, child)
+> +		if (child->name && (of_node_cmp(child->name, name) == 0)
+> +			&& of_node_get(child))
+> +			break;
+> +	read_unlock(&devtree_lock);
+> +	return child;
+> +}
+> +EXPORT_SYMBOL(of_get_child);
 > +
-> +- reg: Address and length of the register set for the device. Only one
-> +  entry is expected, except for the "marvell,armadaxp-gpio" variant
-> +  for which two entries are expected: one for the general registers,
-> +  one for the per-cpu registers.
-> +
-> +- interrupts: The list of interrupts that are used for all the pins
-> +  managed by this GPIO bank. There can be more than one interrupt
-> +  (example: 1 interrupt per 8 pins on Armada XP, which means 4
-> +  interrupts per bank of 32 GPIOs).
-> +
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +
-> +- #interrupt-cells: specifies the number of celles needed to encode an
-> +   interrupt source
-> +
-> +- gpio-controller: marks the device node as a gpio controller
-> +
-> +- ngpios: number of GPIOs this controller has
-> +
-> +- #gpio-cells: Should be two. The first is the pin number. The second
-> +   is reserved for flags, unused at the moment.
-> +
-> +Example:
-> +
-> +		gpio0: gpio@d0018100 {
-> +			compatible = "marvell,armadaxp-gpio";
-> +			reg = <0xd0018100 0x40>,
-> +			    <0xd0018800 0x30>;
-> +			ngpios = <32>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			interrupts = <16>, <17>, <18>, <19>;
-> +		};
+> +/**
+>   *	of_find_node_by_path - Find a node matching a full OF path
+>   *	@path:	The full path to match
+>   *
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 1b11632..510e1fe 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -192,6 +192,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+>  					     struct device_node *prev);
+>  extern struct device_node *of_get_next_available_child(
+>  	const struct device_node *node, struct device_node *prev);
+> +extern struct device_node *of_get_child(const struct device_node *node,
+> +					const char *name);
+>  
+>  #define for_each_child_of_node(parent, child) \
+>  	for (child = of_get_next_child(parent, NULL); child != NULL; \
 > 
