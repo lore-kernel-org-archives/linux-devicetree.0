@@ -1,221 +1,97 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 1/1] ARM: at91: fix missing #interrupt-cells on gpio-controller
-Date: Thu, 13 Sep 2012 12:40:26 +0200
-Message-ID: <1347532826-32733-1-git-send-email-plagnioj@jcrosoft.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] of: Add videomode helper
+Date: Thu, 13 Sep 2012 13:54:07 +0300
+Message-ID: <1347533647.3014.10.camel@deskari>
+References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Content-Type: multipart/mixed; boundary="===============3613917680682113337=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1341388595-30672-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- arch/arm/boot/dts/at91sam9260.dtsi |    3 +++
- arch/arm/boot/dts/at91sam9263.dtsi |    5 +++++
- arch/arm/boot/dts/at91sam9g45.dtsi |    5 +++++
- arch/arm/boot/dts/at91sam9n12.dtsi |    4 ++++
- arch/arm/boot/dts/at91sam9x5.dtsi  |    4 ++++
- 5 files changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index 66389c1..7c95f76 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -104,6 +104,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioB: gpio@fffff600 {
-@@ -113,6 +114,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioC: gpio@fffff800 {
-@@ -122,6 +124,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			dbgu: serial@fffff200 {
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index b460d6c..195019b 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -95,6 +95,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioB: gpio@fffff400 {
-@@ -104,6 +105,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioC: gpio@fffff600 {
-@@ -113,6 +115,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioD: gpio@fffff800 {
-@@ -122,6 +125,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioE: gpio@fffffa00 {
-@@ -131,6 +135,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			dbgu: serial@ffffee00 {
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index bafa880..63751b1 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -113,6 +113,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioB: gpio@fffff400 {
-@@ -122,6 +123,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioC: gpio@fffff600 {
-@@ -131,6 +133,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioD: gpio@fffff800 {
-@@ -140,6 +143,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioE: gpio@fffffa00 {
-@@ -149,6 +153,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			dbgu: serial@ffffee00 {
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index bfac0df..ef9336a 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -107,6 +107,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioB: gpio@fffff600 {
-@@ -116,6 +117,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioC: gpio@fffff800 {
-@@ -125,6 +127,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioD: gpio@fffffa00 {
-@@ -134,6 +137,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			dbgu: serial@fffff200 {
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 4a18c39..8a387a8 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -115,6 +115,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioB: gpio@fffff600 {
-@@ -124,6 +125,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioC: gpio@fffff800 {
-@@ -133,6 +135,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			pioD: gpio@fffffa00 {
-@@ -142,6 +145,7 @@
- 				#gpio-cells = <2>;
- 				gpio-controller;
- 				interrupt-controller;
-+				#interrupt-cells = <2>;
- 			};
- 
- 			dbgu: serial@fffff200 {
--- 
-1.7.10.4
+--===============3613917680682113337==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-LCiAFC0F/sJEdrIFKl22"
+
+
+--=-LCiAFC0F/sJEdrIFKl22
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2012-07-04 at 09:56 +0200, Sascha Hauer wrote:
+> This patch adds a helper function for parsing videomodes from the devicet=
+ree.
+> The videomode can be either converted to a struct drm_display_mode or a
+> struct fb_videomode.
+
+I have more or less the same generic comment for this as for the power
+sequences series discussed: this would add panel specific information
+into DT data, instead of the driver handling it. But, as also discussed
+in the thread, there are differing opinions on which way is better.
+
+> +int of_get_video_mode(struct device_node *np, struct drm_display_mode *d=
+mode,
+> +		struct fb_videomode *fbmode);
+
+=46rom caller's point of view I think it'd make more sense to have
+separate functions to get drm mode or fb mode. I don't think there's a
+case where the caller would want both.
+
+Then again, even better would be to have a common video mode struct used
+by both fb and drm... But I think that's been on the todo list of
+Laurent for a long time already =3D).
+
+ Tomi
+
+
+--=-LCiAFC0F/sJEdrIFKl22
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAABAgAGBQJQUbtPAAoJEPo9qoy8lh71OSUP/R8z1o0SEDVMiVqlGS25yE09
+V1SkOmMlJDYQmDunTVeQwdcSh8RTGFsGvJcjpAtd+8jkAPXB46OMOJdbN39vWJYb
+DF/b/Up8a0ppAXtU4QOQHNSAb0U8VFtyDDRj+8bMZXKkQb25s3nfrVQnAVJyBeLR
+z6Ngo7NXmgaeQuo6Qlo0F8P5mf2PwtWZvfCU59zcjMPq9A2kw/mGVA1dILRIAqDL
+r7Xpk11HxLhE41vfrTFQ5e+uEbGo3q+u0Fs+ICue5YlCDRMUsBVj5ia7WpyXmyW4
+oC9cF96jYk/g27VfHZkaxGGXLqmtljGVE5QmcQKqf832cU+VHlxhOvplZ30cZHq1
+g+m8LdDwemovaUtlMaKwpGB8ftJk3wxEbQdbuDUqS4lB9dnUGCWJDPk7iLBhVzXe
+QolYH/FCpbQjY3mCnhTBsxspJvWEIFEoSgXVzaMn84EZ698lFKVqLEH3C322q7is
+0cBqdU5VBjujaaMFN4cuUqSXWECURKlmPi+umBmx8a1uGuTKtN1t7mT4jQHoK6If
+jC9byNo8qYqAx+SEN9AlhBXyretnctCGAylhCbgDCS4p4uQHPcrUAuufiqUX+fN5
+KNPYf7bFhslSBrL9/ilCw3hfo0dDGbiz0pk842HUjsVDhwTfCJSyYTDdpgMTzE+q
+0su3GSMUsfbOAVViNcV+
+=CmDx
+-----END PGP SIGNATURE-----
+
+--=-LCiAFC0F/sJEdrIFKl22--
+
+
+--===============3613917680682113337==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3613917680682113337==--
