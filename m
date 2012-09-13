@@ -1,59 +1,65 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node
- by name.
-Date: Thu, 13 Sep 2012 10:43:22 -0500
-Message-ID: <5051FF1A.7060507@gmail.com>
-References: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
- <5051F838.5080002@wwwdotorg.org> <5051FAFA.4040507@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5051FAFA.4040507-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
-Cc: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v4 08/10] ARM: mvebu: adjust Armada XP evaluation board DTS
+Date: Thu, 13 Sep 2012 17:41:50 +0200
+Message-ID: <1347550912-18021-9-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 10:25 AM, Srinivas KANDAGATLA wrote:
-> 
-> On 13/09/12 16:14, Stephen Warren wrote:
->> On 09/13/2012 05:10 AM, Srinivas KANDAGATLA wrote:
->>> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->>>
->>> This patch introduces of_get_child function to get a child node by its
->>> name in a given parent node.
->>>
->>> Without this patch each driver code has to iterate the parent and do
->>> a string compare, However having of_get_child libary function would
->>> avoid code duplication, errors and is more convenient.
->>>
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->> You forgot to Cc the drivers/of maintainers, Grant and Rob. I have here.
-> 
-> Oops...
-> 
->>
->> I can certainly see a use for this in many places; the "runtime
->> interpreted power sequences" patch, and the regulator DT parsing code at
->> least both could benefit from this.
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-I would think the power sequences code would always iterate over the nodes.
+The Armada XP evaluation board is based on the MV78460 Armava XP
+SoC. Now that we have separate .dtsi files for the three different
+SoCs of the Armada XP family, use the appropriate one as include for
+the Armada XP evaluation board .dts file.
 
-> 
-> There are at-least 7-8 places in the current kernel which could use this
-> function directly.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Lior Amsalem <alior@marvell.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/arm/boot/dts/armada-xp-db.dts |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Care to point them out and preferably fix them then. That would be more
-convincing that this is needed.
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index f97040d..b1fc728 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -14,11 +14,11 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "armada-xp.dtsi"
++/include/ "armada-xp-mv78460.dtsi"
+ 
+ / {
+ 	model = "Marvell Armada XP Evaluation Board";
+-	compatible = "marvell,axp-db", "marvell,armadaxp", "marvell,armada-370-xp";
++	compatible = "marvell,axp-db", "marvell,armadaxp-mv78460", "marvell,armadaxp", "marvell,armada-370-xp";
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
+-- 
+1.7.10.4
 
-Rob
