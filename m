@@ -1,85 +1,64 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: Re: [PATCH v2] ARM: EXYNOS: Add MFC device tree support
-Date: Thu, 13 Sep 2012 04:22:09 +0000 (GMT)
-Message-ID: <8407236.410361347510128765.JavaMail.weblogic@epml14>
-Reply-To: arun.kk@samsung.com
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] Runtime Interpreted Power Sequences
+Date: Thu, 13 Sep 2012 08:45:39 +0300
+Message-ID: <1347515139.7471.7.camel@lappyti>
+References: <1347443867-18868-1-git-send-email-acourbot@nvidia.com>
+	 <1347443867-18868-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: base64
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-MIME-version: 1.0
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, Karol Lewandowski <k.lewandowsk@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-X7CYTU1tnldXpuBQcygl"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1347443867-18868-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3lsd2VzdGVyLA0KVGhhbmsgeW91IGZvciB0aGUgY29tbWVudHMuDQpXaWxsIG1ha2UgdGhl
-IG5lY2Vzc2FyeSBjaGFuZ2VzLg0KDQpSZWdhcmRzDQpBcnVuDQoNCk9uIFRodSwgU2VwIDEzLCAy
-MDEyIGF0IDE6NTQgQU0sIFN5bHdlc3RlciBOYXdyb2NraSA8c3lsdmVzdGVyLm5hd3JvY2tpQGdt
-YWlsLmNvbT4gd3JvdGU6DQo+IEp1c3QgYSBmZXcgc21hbGwgY29tbWVudHMuLi4NCj4NCj4NCj4g
-T24gMDkvMTIvMjAxMiAwMzozNCBQTSwgQXJ1biBLdW1hciBLIHdyb3RlOg0KPj4NCj4+IFRoaXMg
-cGF0Y2ggYWRkcyBkZXZpY2UgdHJlZSBlbnRyeSBmb3IgTUZDIHY2IGluIHRoZSBFeHlub3M1DQo+
-PiBTb0MuIE1ha2VzIHRoZSByZXF1aXJlZCBjaGFuZ2VzIGluIHRoZSBjbG9jayBmaWxlcyBhbmQg
-YWRkcw0KPj4gTUZDIHRvIHRoZSBEVCBkZXZpY2UgbGlzdC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
-OiBOYXZlZW4gS3Jpc2huYSBDaGF0cmFkaGk8Y2gubmF2ZWVuQHNhbXN1bmcuY29tPg0KPj4gU2ln
-bmVkLW9mZi1ieTogQXJ1biBLdW1hciBLPGFydW4ua2tAc2Ftc3VuZy5jb20+DQo+PiAtLS0NCj4N
-Cj4gLi4uDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tZWRpYS9zNXAtbWZjLnR4dA0KPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbWVkaWEvczVwLW1mYy50eHQNCj4+DQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4g
-aW5kZXggMDAwMDAwMC4uOWE3NGQwOQ0KPj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3M1cC1tZmMudHh0DQo+PiBAQCAtMCww
-ICsxLDI3IEBADQo+PiArKiBTYW1zdW5nIE11bHRpIEZvcm1hdCBDb2RlYyAoTUZDKQ0KPj4gKw0K
-Pj4gK011bHQgRm9ybWF0IENvZGVjIChNRkMpIGlzIHRoZSBJUCBwcmVzZW50IGluIFNhbXN1bmcg
-U29DcyB3aGljaA0KPg0KPg0KPiBNdWx0IC0+IE11bHRpDQo+DQo+DQo+PiArc3VwcG9ydHMgaGln
-aCByZXNvbHV0aW9uIGRlY29kaW5nIGFuZCBlbmNvZGluZyBmdW5jdGlvbmFsaXRpZXMuDQo+PiAr
-VGhlIE1GQyBkZXZpY2UgZHJpdmVyIGlzIGEgdjRsMiBkcml2ZXIgd2hpY2ggY2FuIGVuY29kZS9k
-ZWNvZGUNCj4+ICt2aWRlbyByYXcvZWxlbWVudGFyeSBzdHJlYW1zIGFuZCBoYXMgc3VwcG9ydCBm
-b3IgYWxsIHBvcHVsYXINCj4+ICt2aWRlbyBjb2RlY3MuDQo+PiArDQo+PiArUmVxdWlyZWQgcHJv
-cGVydGllczoNCj4+ICsgIC0gY29tcGF0aWJsZSA6IHZhbHVlIHNob3VsZCBiZSBlaXRoZXIgb25l
-IGFtb25nIHRoZSBmb2xsb3dpbmcNCj4+ICsgICAgICAgKGEpICJzYW1zdW5nLG1mYy12NSIgZm9y
-IE1GQyB2NSBwcmVzZW50IGluIEV4eW5vczQgU29Dcw0KPj4gKyAgICAgICAoYikgInNhbXN1bmcs
-bWZjLXY2IiBmb3IgTUZDIHY2IHByZXNlbnQgaW4gRXh5bm9zNSBTb0NzDQo+PiArDQo+PiArICAt
-IHJlZyA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgSVAgcmVnaXN0ZXJzIGFuZCBsZW5n
-dGggb2YgbWVtb3J5DQo+PiArICAgICAgICAgbWFwcGVkIHJlZ2lvbi4NCj4+ICsNCj4+ICsgIC0g
-aW50ZXJydXB0cyA6IE1GQyBpbnRlcnVwdCBudW1iZXIgdG8gdGhlIENQVS4NCj4NCj4NCj4gaW50
-ZXJ1cHQgLT4gaW50ZXJydXB0DQo+DQo+DQo+PiArDQo+PiArICAtIHNhbXN1bmcsbWZjLXIgOiBC
-YXNlIGFkZHJlc3Mgb2YgdGhlIGZpcnN0IG1lbW9yeSBiYW5rIHVzZWQgYnkgTUZDDQo+PiArICAg
-ICAgICAgICAgICAgICAgIGZvciBETUEgY29udGlndW91cyBtZW1vcnkgYWxsb2NhdGlvbi4NCj4+
-ICsNCj4+ICsgIC0gc2Ftc3VuZyxtZmMtci1zaXplIDogU2l6ZSBvZiB0aGUgZmlyc3QgbWVtb3J5
-IGJhbmsuDQo+PiArDQo+PiArICAtIHNhbXN1bmcsbWZjLWwgOiBCYXNlIGFkZHJlc3Mgb2YgdGhl
-IHNlY29uZCBtZW1vcnkgYmFuayB1c2VkIGJ5IE1GQw0KPj4gKyAgICAgICAgICAgICAgICAgICBm
-b3IgRE1BIGNvbnRpZ3VvdXMgbWVtb3J5IGFsbG9jYXRpb24uDQo+PiArDQo+DQo+IC4uLg0KPg0K
-Pj4gK3N0cnVjdCBtZmNfZHRfbWVtaW5mbyB7DQo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgbG9m
-ZjsNCj4+ICsgICAgICAgdW5zaWduZWQgbG9uZyBsc2l6ZTsNCj4+ICsgICAgICAgdW5zaWduZWQg
-bG9uZyByb2ZmOw0KPj4gKyAgICAgICB1bnNpZ25lZCBsb25nIHJzaXplOw0KPj4gK307DQo+PiAr
-DQo+PiAraW50IGZkdF9maW5kX21mY19tZW0odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFy
-ICp1bmFtZSwgaW50IGRlcHRoLA0KPj4gKyAgICAgICAgICAgICAgIHZvaWQgKmRhdGEpDQo+PiAr
-ew0KPj4gKyAgICAgICBfX2JlMzIgKnByb3A7DQo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgbGVu
-Ow0KPj4gKyAgICAgICBzdHJ1Y3QgbWZjX2R0X21lbWluZm8gKm1mY19tZW0gPSAoc3RydWN0IG1m
-Y19kdF9tZW1pbmZvICopZGF0YTsNCj4NCj4NCj4gTm8gbmVlZCBmb3IgZXhwbGljaXQgY2FzdCBm
-cm9tIHZvaWQgKi4NCj4NCj4NCj4+ICsgICAgICAgaWYgKG9mX2ZsYXRfZHRfaXNfY29tcGF0aWJs
-ZShub2RlLCAic2Ftc3VuZyxtZmMtdjYiKSkgew0KPg0KPg0KPiBNaWdodCBiZSB3b3J0aCB0byBj
-aGFuZ2UgaXQgdG8NCj4NCj4gICAgICAgICBpZiAoIW9mX2ZsYXRfZHRfaXNfY29tcGF0aWJsZShu
-b2RlLCAic2Ftc3VuZyxtZmMtdjYiKSkNCj4gICAgICAgICAgICAgICAgIHJldHVybiAwOw0KPg0K
-PiBhbmQgYXZvaWQgaW5kZW50YXRpb24uDQo+DQo+PiArICAgICAgICAgICAgICAgcHJvcCA9IG9m
-X2dldF9mbGF0X2R0X3Byb3Aobm9kZSwgInNhbXN1bmcsbWZjLWwiLCZsZW4pOw0KPj4gKyAgICAg
-ICAgICAgICAgIGlmICghcHJvcCkNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAw
-Ow0KPj4gKyAgICAgICAgICAgICAgIG1mY19tZW0tPmxvZmYgPSBvZl9yZWFkX3Vsb25nKHByb3As
-IGxlbi80KTsNCj4+ICsNCj4+ICsgICAgICAgICAgICAgICBwcm9wID0gb2ZfZ2V0X2ZsYXRfZHRf
-cHJvcChub2RlLA0KPj4gInNhbXN1bmcsbWZjLWwtc2l6ZSIsJmxlbik7DQo+PiArICAgICAgICAg
-ICAgICAgaWYgKCFwcm9wKQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIDA7DQo+
-PiArICAgICAgICAgICAgICAgbWZjX21lbS0+bHNpemUgPSBvZl9yZWFkX3Vsb25nKHByb3AsIGxl
-bi80KTsNCj4+ICsNCj4+ICsgICAgICAgICAgICAgICBwcm9wID0gb2ZfZ2V0X2ZsYXRfZHRfcHJv
-cChub2RlLCAic2Ftc3VuZyxtZmMtciIsJmxlbik7DQo+PiArICAgICAgICAgICAgICAgaWYgKCFw
-cm9wKQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIDA7DQo+PiArICAgICAgICAg
-ICAgICAgbWZjX21lbS0+cm9mZiA9IG9mX3JlYWRfdWxvbmcocHJvcCwgbGVuLzQpOw0KPj4gKw0K
-Pj4gKyAgICAgICAgICAgICAgIHByb3AgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5vZGUsDQo+PiAi
-c2Ftc3VuZyxtZmMtci1zaXplIiwmbGVuKTsNCj4+ICsgICAgICAgICAgICAgICBpZiAoIXByb3Ap
-DQo+PiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gMDsNCj4+ICsgICAgICAgICAgICAg
-ICBtZmNfbWVtLT5yc2l6ZSA9IG9mX3JlYWRfdWxvbmcocHJvcCwgbGVuLzQpOw0KPj4gKw0KPj4g
-KyAgICAgICAgICAgICAgIHJldHVybiAxOw0KPj4gKyAgICAgICB9DQo+PiArICAgICAgIHJldHVy
-biAwOw0KPj4gK30NCj4NCj4NCj4gLS0NCj4gUmVnYXJkcywNCj4gU3lsd2VzdGVyDQo+DQo+DQo+
-IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1
-YnNjcmliZSBsaW51eC1zYW1zdW5nLXNvYyINCj4gaW4NCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdl
-IHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAg
-aHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1s
+
+--=-X7CYTU1tnldXpuBQcygl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2012-09-12 at 18:57 +0900, Alexandre Courbot wrote:
+> Some device drivers (panel backlights especially) need to follow precise
+> sequences for powering on and off, involving gpios, regulators, PWMs
+> with a precise powering order and delays to respect between each steps.
+> These sequences are board-specific, and do not belong to a particular
+> driver - therefore they have been performed by board-specific hook
+> functions to far.
+
+The sequences are not board-specific, they are device (backlight, etc.)
+specific. The sequences have been handled in board-specific hook
+functions so far because there hasn't been proper drivers for the
+devices.
+
+If I were to take the same panel (and backlight) you have and install it
+on my board, I would need the same power sequence.
+
+ Tomi
+
+
+--=-X7CYTU1tnldXpuBQcygl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAABAgAGBQJQUXMDAAoJEPo9qoy8lh71ChgP/3m4mVfwgbYy4y0p23b9clXf
+CyGznDlFYfwXfS0GZSWvdsU9MnaY5X8AWFidc6SjtbICMG0IzsPIL4Qv4093izVZ
+/8O8r+6W0tXbvug++jHFFdXao2FZOvbzGRFCkIij3gnZB87SlKgpXL4IXY83Wmf6
+DsZw18x3xeNT72vKB9oG0VGNCF3g475m+nRb0MXPxecLtLAl1XoK04TdyP+6NikJ
+5MQEtKbp86hGh1a1AZiGVl15SYrsR7nVVmbxHsfJC2qQbP4vWdGIFhrjMl8vWq61
+WS57bQ3yP/pIwz1QwapkHoz25+xXjIA9al7LTcBl5svlABfoJjXMyRB9Ini90pqv
+ihYJ+l+sktIPErZLDtvJP4neiMyxxVB3gQ5k2emgvVk2ze1TAEm4AaL3lU1JULX5
+LS3ed/kWT3L6PEu2FQDbL4PnKBbW+0IMIzrMT4Cc1h/IWsThQfbLke1YHJGX211e
+oMGvKHe5gqkoAsOnYzglco6c0MViX5YqR5/MIhcLGbnM0ztX77feSdX0slnWnSn7
+nufo6Vks8qbJmIXVuwxdSXlRpPSwF7sM3+HHRAmwjaZSx8VqcAjsj5eUclPDSLmV
+yxMLMpPWYWZ2PMzA4aFWN1bFjwgy12gs8WNSnVhiZBj61SVxobFqbFDyGx/bqC+S
+8PSrC/MZMcLG9Ys+RvCW
+=SqAz
+-----END PGP SIGNATURE-----
+
+--=-X7CYTU1tnldXpuBQcygl--
