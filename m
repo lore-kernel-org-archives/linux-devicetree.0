@@ -1,17 +1,11 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node
- by name.
-Date: Thu, 13 Sep 2012 16:51:08 +0100
-Message-ID: <505200EC.2090707@st.com>
-References: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
- <5051F838.5080002@wwwdotorg.org> <5051FAFA.4040507@st.com>
- <5051FF1A.7060507@gmail.com>
-Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
+From: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] lis3: lis3lv02d_i2c: Add device tree support
+Date: Thu, 13 Sep 2012 21:24:43 +0530
+Message-ID: <1347551685-19781-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5051FF1A.7060507-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,53 +16,21 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/09/12 16:43, Rob Herring wrote:
-> On 09/13/2012 10:25 AM, Srinivas KANDAGATLA wrote:
->> On 13/09/12 16:14, Stephen Warren wrote:
->>> On 09/13/2012 05:10 AM, Srinivas KANDAGATLA wrote:
->>>> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->>>>
->>>> This patch introduces of_get_child function to get a child node by its
->>>> name in a given parent node.
->>>>
->>>> Without this patch each driver code has to iterate the parent and do
->>>> a string compare, However having of_get_child libary function would
->>>> avoid code duplication, errors and is more convenient.
->>>>
->>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->>> You forgot to Cc the drivers/of maintainers, Grant and Rob. I have here.
->> Oops...
->>
->>> I can certainly see a use for this in many places; the "runtime
->>> interpreted power sequences" patch, and the regulator DT parsing code at
->>> least both could benefit from this.
-> I would think the power sequences code would always iterate over the nodes.
->
->> There are at-least 7-8 places in the current kernel which could use this
->> function directly.
-> Care to point them out and preferably fix them then. That would be more
-> convincing that this is needed.
-I did plan on sending all the 7 patches with this one, But I wanted to
-know overall opinion on introduction of this new function.
+First patch adds device tree support to lis3lv02d_i2c driver and
+second patch adds platform data for lis331dlh driver to am335x
+EVM. These patches were tested on AM335x-EVM.
 
-Here are the instances of the drivers... which can benefit from this
-function..
+AnilKumar Ch (2):
+  lis3: lis3lv02d_i2c: Add device tree support
+  ARM: dts: AM33XX: Add lis331dlh device tree data to am335x-evm
 
-drivers/tty/hvc/hvc_opal.c
-drivers/spi/spi-s3c64xx.c
-drivers/net/ethernet/freescale/fsl_pq_mdio.c
-arch/powerpc/sysdev/qe_lib/qe.c
-arch/powerpc/platforms/powernv/opal.c
-arch/powerpc/kernel/prom.c
+ arch/arm/boot/dts/am335x-evm.dts       |   42 ++++++++++++++++++++++++++++++++
+ drivers/misc/lis3lv02d/lis3lv02d_i2c.c |   13 ++++++++++
+ 2 files changed, 55 insertions(+)
 
-
-
->
-> Rob
->
->
->
+-- 
+1.7.9.5
