@@ -1,41 +1,77 @@
-From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/5] ARM: topology: set the capacity of each cores for
-	big.LITTLE
-Date: Thu, 13 Sep 2012 11:17:20 +0200
-Message-ID: <CAKfTPtCpZS=ALAjwqX5Wb0j5HjrMjv87MEefGC2O5_p7ENeY2w@mail.gmail.com>
-References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
-	<1341919622.3462.124.camel@twins>
-	<CAKfTPtC0BcidJ2ga9c2fdWjrEsfXH48QtSnjv0YOCv7-k3K-Ug@mail.gmail.com>
-	<1341927729.3462.131.camel@twins>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
+Date: Thu, 13 Sep 2012 11:26:16 +0100
+Message-ID: <20120913102616.GA2470@linaro.org>
+References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com>
+ <1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com>
+ <503BFCD8.5090804@gmail.com>
+ <alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
+ <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <1341927729.3462.131.camel@twins>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, Ian Campbell <Ian.Campbell@citrix.com>, "arnd@arndb.de" <arnd@arndb.de>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Tim (Xen.org)" <tim@xen.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10 July 2012 15:42, Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org> wrote:
-> On Tue, 2012-07-10 at 14:35 +0200, Vincent Guittot wrote:
->>
->> May be the last one which enable ARCH_POWER should also go into tip ?
->>
-> OK, I can take it.
+On Wed, Sep 12, 2012 at 07:14:58PM +0100, Stefano Stabellini wrote:
+> On Wed, 12 Sep 2012, Stefano Stabellini wrote:
+> > On Tue, 28 Aug 2012, Rob Herring wrote:
+> > > You should look at ePAPR 1.1 which defines hypervisor related bindings.
+> > > While it is a PPC doc, we should reuse or extend what makes sense.
+> > > 
+> > > See section 7.5:
+> > > 
+> > > https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
+> > 
+> > Thanks for the link, I wasn't aware of ePAPR.
+> > 
+> > The hypervisor node defined by ePAPR is not very different from what I
+> > am proposing. Should I try to be compatible with the hypervisor
+> > specification above (as in compatible = "epapr,hypervisor-1.1")?
+> > Or should I just use it as a reference for my own specification?
+> > 
+> > Personally I would rather avoid full compatibility with ePAPR.
+> 
+> In particular reading section 7.5, these are the required properties of
+> the ePAPR hypervisor node:
+> 
+> - compatible = "epapr,hypervisor-1.1"
+> compared to what I am proposing, it is laking information about what
+> hypervisor we are talking about (xen, kvm, vmware, etc) and the version
+> of the ABI (xen-4.2).
+> 
+> - hcall-instructions
+> potentially interesting, but given that for Xen we are quite happy with
+> HVC, we are not going to add any secondary hypercall mechanisms,
+> therefore at the moment it would just result in a BUG if the specified
+> hcall instruction is != HVC. Besides if somebody else wanted to
+> implemented the Xen hypercall interface in a different way they could
+> just reimplement the hypercall wrappers, that would be easier than
+> trying to do it with this property.
 
-Hi Peter,
+Some thoughts on this:
 
-I can't find the patch that enable ARCH_POWER in the tip tree. Have
-you take it in your tree ?
+We decided that embedding machine instructions into the DT is a fairly
+awful idea when discussing how to describe low-level debug UARTs in the
+DT.  I don't think it's a lot better in this case (never mind issues
+like ARM versus Thumb, endianness etc.)
 
-Regards,
-Vincent
+If we are going to attempt to describe the call interface, we should
+do it symbolically, allowing the hypervisor interface code in the kernel
+to choose (or, if necessary, generate) the right call wrappers.
+
+We will have this issue for descrbing power firmware interfaces for
+example: we already know that this functionality might require an SMC
+or HVC instruction to call it, depending on the platform.
+
+A hypervisor with only one call ABI could leave this to be implicit,
+providing there is a version number property of similar to allow future
+changes to be accommodated.
+
+
+Cheers
+---Dave
