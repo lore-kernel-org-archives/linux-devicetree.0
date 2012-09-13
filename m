@@ -1,146 +1,85 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
-Date: Wed, 12 Sep 2012 21:34:28 -0500
-Message-ID: <50514634.3080303@gmail.com>
-References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com> <1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com> <503BFCD8.5090804@gmail.com> <alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com> <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: Re: [PATCH v2] ARM: EXYNOS: Add MFC device tree support
+Date: Thu, 13 Sep 2012 04:22:09 +0000 (GMT)
+Message-ID: <8407236.410361347510128765.JavaMail.weblogic@epml14>
+Reply-To: arun.kk@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, Ian Campbell <Ian.Campbell@citrix.com>, "arnd@arndb.de" <arnd@arndb.de>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Tim (Xen.org)" <tim@xen.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, Karol Lewandowski <k.lewandowsk@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/12/2012 01:14 PM, Stefano Stabellini wrote:
-> On Wed, 12 Sep 2012, Stefano Stabellini wrote:
->> On Tue, 28 Aug 2012, Rob Herring wrote:
->>> You should look at ePAPR 1.1 which defines hypervisor related bindings.
->>> While it is a PPC doc, we should reuse or extend what makes sense.
->>>
->>> See section 7.5:
->>>
->>> https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
->>
->> Thanks for the link, I wasn't aware of ePAPR.
->>
->> The hypervisor node defined by ePAPR is not very different from what I
->> am proposing. Should I try to be compatible with the hypervisor
->> specification above (as in compatible = "epapr,hypervisor-1.1")?
->> Or should I just use it as a reference for my own specification?
->>
->> Personally I would rather avoid full compatibility with ePAPR.
-> 
-> In particular reading section 7.5, these are the required properties of
-> the ePAPR hypervisor node:
-> 
-> - compatible = "epapr,hypervisor-1.1"
-> compared to what I am proposing, it is laking information about what
-> hypervisor we are talking about (xen, kvm, vmware, etc) and the version
-> of the ABI (xen-4.2).
-
-compatible properties are often changed. If we do deviate on the rest of
-the binding, then it needs to be different.
-
-Turns out that powerpc KVM guests use "linux,kvm" and "epapr,hypervisor"
-doesn't even appear in the kernel.
-
-We also perhaps have to consider the possibility of Xen on PowerPC. Then
-alignment is more important.
-
-> - hcall-instructions
-> potentially interesting, but given that for Xen we are quite happy with
-> HVC, we are not going to add any secondary hypercall mechanisms,
-> therefore at the moment it would just result in a BUG if the specified
-> hcall instruction is != HVC. Besides if somebody else wanted to
-> implemented the Xen hypercall interface in a different way they could
-> just reimplement the hypercall wrappers, that would be easier than
-> trying to do it with this property.
-
-It's really about the parameters passed with the HVC. The ePAPR may be a
-good model for defining this. Just grepping "hypervisor" under
-arch/powerpc, it's pretty clear hypervisor support happened first and
-the ePAPR came second. Hopefully we can avoid that for ARM.
-
-> - guest-id
-> we usually make a point in trying not to tell the guest its own domid
-> because if the VM gets migrated to a different host it acquires a new
-> domid, therefore it should not rely on it.
-> 
-> - guest-name
-> we could pass the guest name here, but I don't see how it could be
-> of any use.
-> 
-
-I have no issue with these being optional.
-
-> 
-> On the other hand, thinking more about what Xen needs in the device
-> tree, I think we could improve the current spec by clarifying the
-> meaning of the memory region and interrupt properties we currently
-> require. I thought about moving them to two separate children node with
-> an explicit name:
-> 
-> ---
-> 
-> * Xen hypervisor device tree bindings
-> 
-
-I really think we need to define ARM hypervisor device tree bindings
-first, then Xen specific bindings as an addition to that. I worry that
-the KVM folks aren't paying attention and then want something different
-later on.
-
-> Xen ARM virtual platforms shall have the following properties and
-> children nodes:
-> 
-> - compatible property:
-> 	compatible = "xen,xen", "xen,xen-<version>";
-
-"xen,xen" should be last as it is less specific.
-
->   where <version> is the version of the Xen ABI of the platform.
-> 
-> - grant_table child with the following properties:
->     - name:
-> 	    name = "grant_table";
-
-What's a grant table?
-
-> 	- reg: specifies the base physical address and size of a region in
-> 	    memory where the grant table should be mapped to, using an
->         HYPERVISOR_memory_op hypercall. 
-> 
-> - events child with the following properties:
->     - name:
->         name = "events";
-> 	- interrupts: the interrupt used by Xen to inject event notifications.
-
-Why a child node? Just an interrupts property alone should be fine. If
-you have cases with different number of interrupts, the compatible
-property can distinguish that.
-
-Rob
-
-> 
-> 
-> Example:
-> hypervisor {
-> 		compatible = "xen,xen", "xen,xen-4.2";
-> 		#address-cells = <1>;
-> 		#size-cells = <1>;
-> 		#interrupt-cells = <3>;
-> 		ranges = <0xb0000000 0xb0000000 0x20000>;
-> 
-> 		grant_table {
-> 			name = "grant_table";
-> 			reg = <0xb0000000 0x20000>;
-> 		};
-> 
-> 		events {
-> 			name = "events";
-> 			interrupts = <1 15 0xf08>;
-> 		};
-> 	};
-> 
+SGkgU3lsd2VzdGVyLA0KVGhhbmsgeW91IGZvciB0aGUgY29tbWVudHMuDQpXaWxsIG1ha2UgdGhl
+IG5lY2Vzc2FyeSBjaGFuZ2VzLg0KDQpSZWdhcmRzDQpBcnVuDQoNCk9uIFRodSwgU2VwIDEzLCAy
+MDEyIGF0IDE6NTQgQU0sIFN5bHdlc3RlciBOYXdyb2NraSA8c3lsdmVzdGVyLm5hd3JvY2tpQGdt
+YWlsLmNvbT4gd3JvdGU6DQo+IEp1c3QgYSBmZXcgc21hbGwgY29tbWVudHMuLi4NCj4NCj4NCj4g
+T24gMDkvMTIvMjAxMiAwMzozNCBQTSwgQXJ1biBLdW1hciBLIHdyb3RlOg0KPj4NCj4+IFRoaXMg
+cGF0Y2ggYWRkcyBkZXZpY2UgdHJlZSBlbnRyeSBmb3IgTUZDIHY2IGluIHRoZSBFeHlub3M1DQo+
+PiBTb0MuIE1ha2VzIHRoZSByZXF1aXJlZCBjaGFuZ2VzIGluIHRoZSBjbG9jayBmaWxlcyBhbmQg
+YWRkcw0KPj4gTUZDIHRvIHRoZSBEVCBkZXZpY2UgbGlzdC4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
+OiBOYXZlZW4gS3Jpc2huYSBDaGF0cmFkaGk8Y2gubmF2ZWVuQHNhbXN1bmcuY29tPg0KPj4gU2ln
+bmVkLW9mZi1ieTogQXJ1biBLdW1hciBLPGFydW4ua2tAc2Ftc3VuZy5jb20+DQo+PiAtLS0NCj4N
+Cj4gLi4uDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9tZWRpYS9zNXAtbWZjLnR4dA0KPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWVkaWEvczVwLW1mYy50eHQNCj4+DQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4g
+aW5kZXggMDAwMDAwMC4uOWE3NGQwOQ0KPj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3M1cC1tZmMudHh0DQo+PiBAQCAtMCww
+ICsxLDI3IEBADQo+PiArKiBTYW1zdW5nIE11bHRpIEZvcm1hdCBDb2RlYyAoTUZDKQ0KPj4gKw0K
+Pj4gK011bHQgRm9ybWF0IENvZGVjIChNRkMpIGlzIHRoZSBJUCBwcmVzZW50IGluIFNhbXN1bmcg
+U29DcyB3aGljaA0KPg0KPg0KPiBNdWx0IC0+IE11bHRpDQo+DQo+DQo+PiArc3VwcG9ydHMgaGln
+aCByZXNvbHV0aW9uIGRlY29kaW5nIGFuZCBlbmNvZGluZyBmdW5jdGlvbmFsaXRpZXMuDQo+PiAr
+VGhlIE1GQyBkZXZpY2UgZHJpdmVyIGlzIGEgdjRsMiBkcml2ZXIgd2hpY2ggY2FuIGVuY29kZS9k
+ZWNvZGUNCj4+ICt2aWRlbyByYXcvZWxlbWVudGFyeSBzdHJlYW1zIGFuZCBoYXMgc3VwcG9ydCBm
+b3IgYWxsIHBvcHVsYXINCj4+ICt2aWRlbyBjb2RlY3MuDQo+PiArDQo+PiArUmVxdWlyZWQgcHJv
+cGVydGllczoNCj4+ICsgIC0gY29tcGF0aWJsZSA6IHZhbHVlIHNob3VsZCBiZSBlaXRoZXIgb25l
+IGFtb25nIHRoZSBmb2xsb3dpbmcNCj4+ICsgICAgICAgKGEpICJzYW1zdW5nLG1mYy12NSIgZm9y
+IE1GQyB2NSBwcmVzZW50IGluIEV4eW5vczQgU29Dcw0KPj4gKyAgICAgICAoYikgInNhbXN1bmcs
+bWZjLXY2IiBmb3IgTUZDIHY2IHByZXNlbnQgaW4gRXh5bm9zNSBTb0NzDQo+PiArDQo+PiArICAt
+IHJlZyA6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgSVAgcmVnaXN0ZXJzIGFuZCBsZW5n
+dGggb2YgbWVtb3J5DQo+PiArICAgICAgICAgbWFwcGVkIHJlZ2lvbi4NCj4+ICsNCj4+ICsgIC0g
+aW50ZXJydXB0cyA6IE1GQyBpbnRlcnVwdCBudW1iZXIgdG8gdGhlIENQVS4NCj4NCj4NCj4gaW50
+ZXJ1cHQgLT4gaW50ZXJydXB0DQo+DQo+DQo+PiArDQo+PiArICAtIHNhbXN1bmcsbWZjLXIgOiBC
+YXNlIGFkZHJlc3Mgb2YgdGhlIGZpcnN0IG1lbW9yeSBiYW5rIHVzZWQgYnkgTUZDDQo+PiArICAg
+ICAgICAgICAgICAgICAgIGZvciBETUEgY29udGlndW91cyBtZW1vcnkgYWxsb2NhdGlvbi4NCj4+
+ICsNCj4+ICsgIC0gc2Ftc3VuZyxtZmMtci1zaXplIDogU2l6ZSBvZiB0aGUgZmlyc3QgbWVtb3J5
+IGJhbmsuDQo+PiArDQo+PiArICAtIHNhbXN1bmcsbWZjLWwgOiBCYXNlIGFkZHJlc3Mgb2YgdGhl
+IHNlY29uZCBtZW1vcnkgYmFuayB1c2VkIGJ5IE1GQw0KPj4gKyAgICAgICAgICAgICAgICAgICBm
+b3IgRE1BIGNvbnRpZ3VvdXMgbWVtb3J5IGFsbG9jYXRpb24uDQo+PiArDQo+DQo+IC4uLg0KPg0K
+Pj4gK3N0cnVjdCBtZmNfZHRfbWVtaW5mbyB7DQo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgbG9m
+ZjsNCj4+ICsgICAgICAgdW5zaWduZWQgbG9uZyBsc2l6ZTsNCj4+ICsgICAgICAgdW5zaWduZWQg
+bG9uZyByb2ZmOw0KPj4gKyAgICAgICB1bnNpZ25lZCBsb25nIHJzaXplOw0KPj4gK307DQo+PiAr
+DQo+PiAraW50IGZkdF9maW5kX21mY19tZW0odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFy
+ICp1bmFtZSwgaW50IGRlcHRoLA0KPj4gKyAgICAgICAgICAgICAgIHZvaWQgKmRhdGEpDQo+PiAr
+ew0KPj4gKyAgICAgICBfX2JlMzIgKnByb3A7DQo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgbGVu
+Ow0KPj4gKyAgICAgICBzdHJ1Y3QgbWZjX2R0X21lbWluZm8gKm1mY19tZW0gPSAoc3RydWN0IG1m
+Y19kdF9tZW1pbmZvICopZGF0YTsNCj4NCj4NCj4gTm8gbmVlZCBmb3IgZXhwbGljaXQgY2FzdCBm
+cm9tIHZvaWQgKi4NCj4NCj4NCj4+ICsgICAgICAgaWYgKG9mX2ZsYXRfZHRfaXNfY29tcGF0aWJs
+ZShub2RlLCAic2Ftc3VuZyxtZmMtdjYiKSkgew0KPg0KPg0KPiBNaWdodCBiZSB3b3J0aCB0byBj
+aGFuZ2UgaXQgdG8NCj4NCj4gICAgICAgICBpZiAoIW9mX2ZsYXRfZHRfaXNfY29tcGF0aWJsZShu
+b2RlLCAic2Ftc3VuZyxtZmMtdjYiKSkNCj4gICAgICAgICAgICAgICAgIHJldHVybiAwOw0KPg0K
+PiBhbmQgYXZvaWQgaW5kZW50YXRpb24uDQo+DQo+PiArICAgICAgICAgICAgICAgcHJvcCA9IG9m
+X2dldF9mbGF0X2R0X3Byb3Aobm9kZSwgInNhbXN1bmcsbWZjLWwiLCZsZW4pOw0KPj4gKyAgICAg
+ICAgICAgICAgIGlmICghcHJvcCkNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAw
+Ow0KPj4gKyAgICAgICAgICAgICAgIG1mY19tZW0tPmxvZmYgPSBvZl9yZWFkX3Vsb25nKHByb3As
+IGxlbi80KTsNCj4+ICsNCj4+ICsgICAgICAgICAgICAgICBwcm9wID0gb2ZfZ2V0X2ZsYXRfZHRf
+cHJvcChub2RlLA0KPj4gInNhbXN1bmcsbWZjLWwtc2l6ZSIsJmxlbik7DQo+PiArICAgICAgICAg
+ICAgICAgaWYgKCFwcm9wKQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIDA7DQo+
+PiArICAgICAgICAgICAgICAgbWZjX21lbS0+bHNpemUgPSBvZl9yZWFkX3Vsb25nKHByb3AsIGxl
+bi80KTsNCj4+ICsNCj4+ICsgICAgICAgICAgICAgICBwcm9wID0gb2ZfZ2V0X2ZsYXRfZHRfcHJv
+cChub2RlLCAic2Ftc3VuZyxtZmMtciIsJmxlbik7DQo+PiArICAgICAgICAgICAgICAgaWYgKCFw
+cm9wKQ0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIDA7DQo+PiArICAgICAgICAg
+ICAgICAgbWZjX21lbS0+cm9mZiA9IG9mX3JlYWRfdWxvbmcocHJvcCwgbGVuLzQpOw0KPj4gKw0K
+Pj4gKyAgICAgICAgICAgICAgIHByb3AgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5vZGUsDQo+PiAi
+c2Ftc3VuZyxtZmMtci1zaXplIiwmbGVuKTsNCj4+ICsgICAgICAgICAgICAgICBpZiAoIXByb3Ap
+DQo+PiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gMDsNCj4+ICsgICAgICAgICAgICAg
+ICBtZmNfbWVtLT5yc2l6ZSA9IG9mX3JlYWRfdWxvbmcocHJvcCwgbGVuLzQpOw0KPj4gKw0KPj4g
+KyAgICAgICAgICAgICAgIHJldHVybiAxOw0KPj4gKyAgICAgICB9DQo+PiArICAgICAgIHJldHVy
+biAwOw0KPj4gK30NCj4NCj4NCj4gLS0NCj4gUmVnYXJkcywNCj4gU3lsd2VzdGVyDQo+DQo+DQo+
+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1
+YnNjcmliZSBsaW51eC1zYW1zdW5nLXNvYyINCj4gaW4NCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdl
+IHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAg
+aHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1s
