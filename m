@@ -1,71 +1,91 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH 1/2] lis3: lis3lv02d_i2c: Add device tree support
-Date: Thu, 13 Sep 2012 21:24:44 +0530
-Message-ID: <1347551685-19781-2-git-send-email-anilkumar@ti.com>
-References: <1347551685-19781-1-git-send-email-anilkumar@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v4] gpio: mvebu: new gpio driver for mvebu platforms
+Date: Thu, 13 Sep 2012 17:54:13 +0200
+Message-ID: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1347551685-19781-1-git-send-email-anilkumar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: gregkh@linuxfoundation.org, eric.piel@tremplin-utc.net, jic23@cam.ac.uk, greg@kroah.com, akpm@linux-foundation.org, broonie@opensource.wolfsonmicro.com, dmitry.torokhov@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, AnilKumar Ch <anilkumar@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Maen Suleiman <maen@marvell.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree matching table support to lis3lv02d_i2c driver. If
-the driver data is passed from device tree, then this driver picks
-up platform data from device node through common/generic lis3lv02d.c
+Grant,
+
+This patch set adds a new GPIO driver for Marvell EBU SoCs, which aims
+at replacing the existing GPIO driver from plat-orion/gpio.c. The
+driver comes with the necessary DT changes to make it work on Armada
+370 and Armada XP, and it has been tested successfully by Sebastian
+Hesselbarth on Dove.
+
+It should also work flawlessly on other Marvell EBU SoCs (Kirkwood,
+Orion, Discovery), but this remains to be tested by the relevant
+maintainers. This isn't however a problem, as those older platforms
+need to explictly be converted over to the new pinctrl-mvebu driver
+and the new gpio driver. Until that, they will happily continue to use
+the old, known-working, gpio driver. So this patch set has no chance
+to break any of the existing Marvell platforms. The old gpio driver is
+scheduled to be removed once all Marvell SoCs have switched to the new
 driver.
 
-Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
----
- drivers/misc/lis3lv02d/lis3lv02d_i2c.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+This new driver reuses a lot of code from the existing
+plat-orion/gpio.c driver, but has a number of advantages:
 
-diff --git a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-index 15255eb..e851ee8 100644
---- a/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-+++ b/drivers/misc/lis3lv02d/lis3lv02d_i2c.c
-@@ -31,6 +31,9 @@
- #include <linux/i2c.h>
- #include <linux/pm_runtime.h>
- #include <linux/delay.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+
- #include "lis3lv02d.h"
- 
- #define DRV_NAME	"lis3lv02d_i2c"
-@@ -102,12 +105,21 @@ static int lis3_i2c_init(struct lis3lv02d *lis3)
- static union axis_conversion lis3lv02d_axis_map =
- 	{ .as_array = { LIS3_DEV_X, LIS3_DEV_Y, LIS3_DEV_Z } };
- 
-+static struct of_device_id lis3lv02d_i2c_dt_ids[] = {
-+	{ .compatible = "st,lis3lv02d-i2c" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, lis3lv02d_i2c_dt_ids);
-+
- static int __devinit lis3lv02d_i2c_probe(struct i2c_client *client,
- 					const struct i2c_device_id *id)
- {
- 	int ret = 0;
- 	struct lis3lv02d_platform_data *pdata = client->dev.platform_data;
- 
-+	if (of_match_device(lis3lv02d_i2c_dt_ids, &client->dev))
-+		lis3_dev.of_node = client->dev.of_node;
-+
- 	if (pdata) {
- 		if ((pdata->driver_features & LIS3_USE_BLOCK_READ) &&
- 			(i2c_check_functionality(client->adapter,
-@@ -255,6 +267,7 @@ static struct i2c_driver lis3lv02d_i2c_driver = {
- 		.name   = DRV_NAME,
- 		.owner  = THIS_MODULE,
- 		.pm     = &lis3_pm_ops,
-+		.of_match_table = of_match_ptr(lis3lv02d_i2c_dt_ids),
- 	},
- 	.probe	= lis3lv02d_i2c_probe,
- 	.remove	= __devexit_p(lis3lv02d_i2c_remove),
--- 
-1.7.9.5
+ *) Support for Armada 370 and Armada XP
+ *) It is integrated with the mvebu pinctrl driver so that GPIO pins
+    are properly muxed, and the GPIO driver knows which GPIO pins are
+    output-only or input-only.
+ *) Properly placed in drivers/gpio
+ *) More extensible mechanism to support platform differences. The
+    plat-orion driver uses a simple mask-offset DT property, which
+    works fine for Discovery MV78200 but not for Armada XP. The new
+    driver uses different compatible strings to identify the different
+    variants of the GPIO controllers.
 
+This patch set should be applied on top of the pinctrl-mvebu patch set
+v4 from Sebastian Hesselbarth, as it depends on it.
+
+Changes since v2:
+ * Use inline functions for the register accessors, and rename them
+   lower-case since they are functions, as suggested by
+   Jean-Christophe Plagnol-Villard.
+ * Use _relaxed() variants of readl/writel, as suggested by
+   Jean-Christophe Plagnol-Villard.
+ * Use switch() instead of long list of if() conditions in
+   mvebu_gpio_irq_set_type(), as suggested by Jean-Christophe
+   Plagnol-Villard.
+ * Add DT aliases gpio0, gpio1, gpio2, and then use of_alias_get_id()
+   to get the number of GPIO bank, and deduce the GPIO base from
+   it. We don't use automatic allocation because we really want the
+   internal SoC GPIOs to have 0-31, 32-63, 64-... numbers (while
+   automatic allocation allocates 224... for the first bank 202... for
+   the second bank, etc.). This strategy was recommended by Uwe
+   Kleine-Koenig and is already used in gpio-mxs.c.
+ * Use gpio-cells = <2> instead of gpio-cells = <1>, as suggested by
+   Olof Johansson. This allows to re-use the default .xlate()
+   function, and therefore make the GPIO DT binding actually work (it
+   was broken in previous versions of this patch set).
+ * Use dev_name() to fill the gpio_chip->name field, instead of
+   manually computing a name. This allows to get rid of the global
+   variable counting GPIO chips.
+ * Rebase on top of the latest pinctrl work from Sebastian
+   Hesselbarth.
+ * Added the Acked-by from Linus Walleij on the DT binding
+   documentation patch.
+
+Changes since v1:
+ * Added fixes for Dove from Sebastian Hesselbarth, and his Tested-by
+   on the driver patch.
+
+Thanks,
+
+Thomas
