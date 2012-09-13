@@ -1,41 +1,101 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of: specify initrd location using 64-bit
-Date: Thu, 13 Sep 2012 16:02:49 -0500
-Message-ID: <505249F9.7050201@gmail.com>
-References: <1347465937-7056-1-git-send-email-cyril@ti.com> <CAMuHMdUuQzD0bq8PifBea2-0Pk7RhmPA0-GAFprsk+vMxMGjGw@mail.gmail.com> <5050CE33.9060909@ti.com> <5050E965.5080405@linutronix.de> <505107DF.5020105@gmail.com> <5051816A.3050705@linutronix.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH V4 2/2] dmaengine: add helper function to request a slave DMA channel
+Date: Thu, 13 Sep 2012 17:00:29 -0500
+Message-ID: <1347573629-21299-3-git-send-email-jon-hunter@ti.com>
+References: <1347573629-21299-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5051816A.3050705@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Cyril Chemparathy <cyril@ti.com>, linux-mips@linux-mips.org, x86@kernel.org, a-jacquiot@ti.com, mahesh@linux.vnet.ibm.com, linus.walleij@linaro.org, grant.likely@secretlab.ca, paul.gortmaker@windriver.com, paulus@samba.org, hpa@zytor.com, m.szyprowski@samsung.com, jonas@southpole.se, linux@arm.linux.org.uk, linux-c6x-dev@linux-c6x.org, nico@linaro.org, david.daney@cavium.com, mingo@redhat.com, Geert Uytterhoeven <geert@linux-m68k.org>, benh@kernel.crashing.org, suzuki@in.ibm.com, linux@openrisc.net, arnd@arndb.de, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, msalter@redhat.com, rob.herring@calxeda.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, blogic@openwrt.org, dhowells@redhat.com, monstr@monstr.eu, linux-kernel@vger.kernel.org, ralf@linux-mips.org, tj@kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1347573629-21299-1-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Cc: Jon Hunter <jon-hunter@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 01:47 AM, Sebastian Andrzej Siewior wrote:
-> On 09/13/2012 12:08 AM, Rob Herring wrote:
->>> Geert is right here. If it is a physical address, it should be
->>> phys_addr_t.
->>
->> While generally true, for the DT specific code I think it should be a
->> fixed u64. The size of the address is defined by the FDT, not the
->> kernel. It is very likely we could have a FDT that specifies addresses
->> in 64-bit values, but then we boot a kernel is compiled for !LPAE.
->> phys_addr_t is currently sized based on LPAE setting.
-> 
-> If your kernel is 32bit without PAE and your DTB address is >32ibt than
-> you can't handle it. If you don't notice this in your dt code than you
-> remap the wrong memory ioremap().
+Currently slave DMA channels are requested by calling dma_request_channel()
+and requires DMA clients to pass various filter parameters to obtain the
+appropriate channel.
 
-The size of the initrd fields are set by #address-cells properties and
-determined when you create the dtb. The address to load the initrd is
-decided by the bootloader/user and set at that point later in time. The
-dtb should not be tied to the kernel you are booting. Obviously, if you
-want to boot a non-PAE kernel, everything has to be placed at <4GB.
+With device-tree being used by architectures such as arm and the addition of
+device-tree helper functions to extract the relevant DMA client information
+from device-tree, add a new function to request a slave DMA channel using
+device-tree. This function is currently a simple wrapper that calls the
+device-tree of_dma_request_slave_channel() function.
 
-I can boot i386 and i386-pae kernels on an i386-pae machines. I expect
-to generally be able to do that on ARM. Perhaps some SOCs like this one
-will not allow that, it is not always true.
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Stephen Warren <swarren@nvidia.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Vinod Koul <vinod.koul@intel.com>
+Cc: Dan Williams <djbw@fb.com>
 
-Rob
+Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+---
+ drivers/dma/dmaengine.c   |   16 ++++++++++++++++
+ include/linux/dmaengine.h |    6 ++++++
+ 2 files changed, 22 insertions(+)
+
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 3491654..9b466da 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -62,6 +62,7 @@
+ #include <linux/rculist.h>
+ #include <linux/idr.h>
+ #include <linux/slab.h>
++#include <linux/of_dma.h>
+ 
+ static DEFINE_MUTEX(dma_list_mutex);
+ static DEFINE_IDR(dma_idr);
+@@ -546,6 +547,21 @@ struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask, dma_filter_fn fn, v
+ }
+ EXPORT_SYMBOL_GPL(__dma_request_channel);
+ 
++/**
++ * dma_request_slave_channel - try to allocate an exclusive slave channel
++ * @dev:	pointer to client device structure
++ * @name:	slave channel name
++ */
++struct dma_chan *dma_request_slave_channel(struct device *dev, char *name)
++{
++	/* If device-tree is present get slave info from here */
++	if (dev->of_node)
++		return of_dma_request_slave_channel(dev->of_node, name);
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(dma_request_slave_channel);
++
+ void dma_release_channel(struct dma_chan *chan)
+ {
+ 	mutex_lock(&dma_list_mutex);
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 9c02a45..9500aa5 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -973,6 +973,7 @@ enum dma_status dma_sync_wait(struct dma_chan *chan, dma_cookie_t cookie);
+ enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *tx);
+ void dma_issue_pending_all(void);
+ struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask, dma_filter_fn fn, void *fn_param);
++struct dma_chan *dma_request_slave_channel(struct device *dev, char *name);
+ void dma_release_channel(struct dma_chan *chan);
+ #else
+ static inline enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *tx)
+@@ -987,6 +988,11 @@ static inline struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask,
+ {
+ 	return NULL;
+ }
++static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
++							 char *name)
++{
++	return NULL
++}
+ static inline void dma_release_channel(struct dma_chan *chan)
+ {
+ }
+-- 
+1.7.9.5
+
