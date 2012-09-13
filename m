@@ -1,100 +1,54 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node
- by name.
-Date: Thu, 13 Sep 2012 15:32:03 -0500
-Message-ID: <505242C3.7090006@gmail.com>
-References: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 2/5] Documentation: add description of DT binding for
+ the gpio-mvebu driver
+Date: Thu, 13 Sep 2012 22:30:59 +0200
+Message-ID: <20120913223059.2d0606b2@skate>
+References: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1347551658-24449-3-git-send-email-thomas.petazzoni@free-electrons.com>
+ <50524026.20104@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1347534640-787-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <50524026.20104@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Maen Suleiman <maen@marvell.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@stericsson.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 06:10 AM, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> 
-> This patch introduces of_get_child function to get a child node by its
-> name in a given parent node.
-> 
-> Without this patch each driver code has to iterate the parent and do
-> a string compare, However having of_get_child libary function would
-> avoid code duplication, errors and is more convenient.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/of/base.c  |   27 +++++++++++++++++++++++++++
->  include/linux/of.h |    2 ++
->  2 files changed, 29 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d4a1c9a..d4b6840 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -391,6 +391,33 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
->  EXPORT_SYMBOL(of_get_next_available_child);
->  
->  /**
-> + *	of_get_child - Find the child node by name for given parent
-> + *	@node:	parent node
-> + *	@name:	child name to look for.
-> + *
-> + *      This function looks for child node for given matching name
-> + *
-> + *	Returns a node pointer if found, with refcount incremented, use
-> + *	of_node_put() on it when done.
-> + *	else returns NULL.
-> + */
-> +
-> +struct device_node *of_get_child(const struct device_node *node,
+Dear Rob Herring,
 
-of_get_child_by_name would be more consistent naming with other apis.
-
-> +				const char *name)
-> +{
-> +	struct device_node *child;
-> +
-> +	read_lock(&devtree_lock);
-
-I don't think you need the lock here. The for_each takes the lock while
-finding the node.
-
-> +	for_each_child_of_node(node, child)
-> +		if (child->name && (of_node_cmp(child->name, name) == 0)
-> +			&& of_node_get(child))
-> +			break;
-> +	read_unlock(&devtree_lock);
-> +	return child;
-> +}
-> +EXPORT_SYMBOL(of_get_child);
-> +
-> +/**
->   *	of_find_node_by_path - Find a node matching a full OF path
->   *	@path:	The full path to match
->   *
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 1b11632..510e1fe 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -192,6 +192,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
->  					     struct device_node *prev);
->  extern struct device_node *of_get_next_available_child(
->  	const struct device_node *node, struct device_node *prev);
-> +extern struct device_node *of_get_child(const struct device_node *node,
-> +					const char *name);
->  
->  #define for_each_child_of_node(parent, child) \
->  	for (child = of_get_next_child(parent, NULL); child != NULL; \
+On Thu, 13 Sep 2012 15:20:54 -0500, Rob Herring wrote:
+> On 09/13/2012 10:54 AM, Thomas Petazzoni wrote:
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > Cc: Linus Walleij <linus.walleij@stericsson.com>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: Jason Cooper <jason@lakedaemon.net>
+> > Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> > ---
 > 
+> Grant is pretty much offline right now.
+
+Yes, I know, but MAINTAINERS does not mention an alternate maintainer
+for the GPIO subsystem. Who is the interim maintainer that will
+ultimately have to ack/nack those patches?
+
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
+
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
