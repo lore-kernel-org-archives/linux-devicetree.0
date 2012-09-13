@@ -1,77 +1,92 @@
-From: Dave Martin <dave.martin@linaro.org>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
-Date: Thu, 13 Sep 2012 11:26:16 +0100
-Message-ID: <20120913102616.GA2470@linaro.org>
+Date: Thu, 13 Sep 2012 11:29:38 +0100
+Message-ID: <20120913102938.GB2470@linaro.org>
 References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com>
- <1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com>
- <503BFCD8.5090804@gmail.com>
- <alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
- <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
+	<1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com>
+	<503BFCD8.5090804@gmail.com>
+	<alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
+	<alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
+	<50514634.3080303@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Cc: "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, Ian Campbell <Ian.Campbell@citrix.com>, "arnd@arndb.de" <arnd@arndb.de>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Tim (Xen.org)" <tim@xen.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+In-Reply-To: <50514634.3080303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org" <xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Tim (Xen.org)" <tim-LM2mM/qkH7s@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2012 at 07:14:58PM +0100, Stefano Stabellini wrote:
-> On Wed, 12 Sep 2012, Stefano Stabellini wrote:
-> > On Tue, 28 Aug 2012, Rob Herring wrote:
-> > > You should look at ePAPR 1.1 which defines hypervisor related bindings.
-> > > While it is a PPC doc, we should reuse or extend what makes sense.
-> > > 
-> > > See section 7.5:
-> > > 
-> > > https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
+On Wed, Sep 12, 2012 at 09:34:28PM -0500, Rob Herring wrote:
+> On 09/12/2012 01:14 PM, Stefano Stabellini wrote:
+> > On Wed, 12 Sep 2012, Stefano Stabellini wrote:
+> >> On Tue, 28 Aug 2012, Rob Herring wrote:
+> >>> You should look at ePAPR 1.1 which defines hypervisor related bindings.
+> >>> While it is a PPC doc, we should reuse or extend what makes sense.
+> >>>
+> >>> See section 7.5:
+> >>>
+> >>> https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
+> >>
+> >> Thanks for the link, I wasn't aware of ePAPR.
+> >>
+> >> The hypervisor node defined by ePAPR is not very different from what I
+> >> am proposing. Should I try to be compatible with the hypervisor
+> >> specification above (as in compatible = "epapr,hypervisor-1.1")?
+> >> Or should I just use it as a reference for my own specification?
+> >>
+> >> Personally I would rather avoid full compatibility with ePAPR.
 > > 
-> > Thanks for the link, I wasn't aware of ePAPR.
+> > In particular reading section 7.5, these are the required properties of
+> > the ePAPR hypervisor node:
 > > 
-> > The hypervisor node defined by ePAPR is not very different from what I
-> > am proposing. Should I try to be compatible with the hypervisor
-> > specification above (as in compatible = "epapr,hypervisor-1.1")?
-> > Or should I just use it as a reference for my own specification?
-> > 
-> > Personally I would rather avoid full compatibility with ePAPR.
+> > - compatible = "epapr,hypervisor-1.1"
+> > compared to what I am proposing, it is laking information about what
+> > hypervisor we are talking about (xen, kvm, vmware, etc) and the version
+> > of the ABI (xen-4.2).
 > 
-> In particular reading section 7.5, these are the required properties of
-> the ePAPR hypervisor node:
+> compatible properties are often changed. If we do deviate on the rest of
+> the binding, then it needs to be different.
 > 
-> - compatible = "epapr,hypervisor-1.1"
-> compared to what I am proposing, it is laking information about what
-> hypervisor we are talking about (xen, kvm, vmware, etc) and the version
-> of the ABI (xen-4.2).
+> Turns out that powerpc KVM guests use "linux,kvm" and "epapr,hypervisor"
+> doesn't even appear in the kernel.
 > 
-> - hcall-instructions
-> potentially interesting, but given that for Xen we are quite happy with
-> HVC, we are not going to add any secondary hypercall mechanisms,
-> therefore at the moment it would just result in a BUG if the specified
-> hcall instruction is != HVC. Besides if somebody else wanted to
-> implemented the Xen hypercall interface in a different way they could
-> just reimplement the hypercall wrappers, that would be easier than
-> trying to do it with this property.
+> We also perhaps have to consider the possibility of Xen on PowerPC. Then
+> alignment is more important.
+> 
+> > - hcall-instructions
+> > potentially interesting, but given that for Xen we are quite happy with
+> > HVC, we are not going to add any secondary hypercall mechanisms,
+> > therefore at the moment it would just result in a BUG if the specified
+> > hcall instruction is != HVC. Besides if somebody else wanted to
+> > implemented the Xen hypercall interface in a different way they could
+> > just reimplement the hypercall wrappers, that would be easier than
+> > trying to do it with this property.
+> 
+> It's really about the parameters passed with the HVC. The ePAPR may be a
+> good model for defining this. Just grepping "hypervisor" under
+> arch/powerpc, it's pretty clear hypervisor support happened first and
+> the ePAPR came second. Hopefully we can avoid that for ARM.
 
-Some thoughts on this:
+Do you think it's feasible to standardise on some interoperable ABI for
+kvm and Xen?  This sounds pretty optimistic, but I'm not aware of all
+the technicalities, or what possible third-party hypervisors are out
+there.
 
-We decided that embedding machine instructions into the DT is a fairly
-awful idea when discussing how to describe low-level debug UARTs in the
-DT.  I don't think it's a lot better in this case (never mind issues
-like ARM versus Thumb, endianness etc.)
-
-If we are going to attempt to describe the call interface, we should
-do it symbolically, allowing the hypervisor interface code in the kernel
-to choose (or, if necessary, generate) the right call wrappers.
-
-We will have this issue for descrbing power firmware interfaces for
-example: we already know that this functionality might require an SMC
-or HVC instruction to call it, depending on the platform.
-
-A hypervisor with only one call ABI could leave this to be implicit,
-providing there is a version number property of similar to allow future
-changes to be accommodated.
-
+If we could do it, it would be good.  But I have my doubts about the
+feasibility and the benefits.  If different hypervisors are significantly
+imcompatible, then having a common low-level ABI doesn't help all that
+much.
 
 Cheers
 ---Dave
