@@ -1,66 +1,183 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] of: Add videomode helper
-Date: Thu, 13 Sep 2012 13:19:54 +0200
-Message-ID: <20120913111954.GH6180@pengutronix.de>
-References: <1341388595-30672-1-git-send-email-s.hauer@pengutronix.de>
- <1347533647.3014.10.camel@deskari>
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
+Date: Thu, 13 Sep 2012 12:33:47 +0100
+Message-ID: <alpine.DEB.2.02.1209131213260.15568@kaball.uk.xensource.com>
+References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com> <1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com> <503BFCD8.5090804@gmail.com> <alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
+ <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com> <50514634.3080303@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1347533647.3014.10.camel@deskari>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50514634.3080303@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Stefano Stabellini <Stefano.Stabellini@eu.citrix.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, Ian Campbell <Ian.Campbell@citrix.com>, "arnd@arndb.de" <arnd@arndb.de>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Tim (Xen.org)" <tim@xen.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 13, 2012 at 01:54:07PM +0300, Tomi Valkeinen wrote:
-> On Wed, 2012-07-04 at 09:56 +0200, Sascha Hauer wrote:
-> > This patch adds a helper function for parsing videomodes from the devicetree.
-> > The videomode can be either converted to a struct drm_display_mode or a
-> > struct fb_videomode.
+On Thu, 13 Sep 2012, Rob Herring wrote:
+> On 09/12/2012 01:14 PM, Stefano Stabellini wrote:
+> > On Wed, 12 Sep 2012, Stefano Stabellini wrote:
+> >> On Tue, 28 Aug 2012, Rob Herring wrote:
+> >>> You should look at ePAPR 1.1 which defines hypervisor related bindings.
+> >>> While it is a PPC doc, we should reuse or extend what makes sense.
+> >>>
+> >>> See section 7.5:
+> >>>
+> >>> https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
+> >>
+> >> Thanks for the link, I wasn't aware of ePAPR.
+> >>
+> >> The hypervisor node defined by ePAPR is not very different from what I
+> >> am proposing. Should I try to be compatible with the hypervisor
+> >> specification above (as in compatible = "epapr,hypervisor-1.1")?
+> >> Or should I just use it as a reference for my own specification?
+> >>
+> >> Personally I would rather avoid full compatibility with ePAPR.
+> > 
+> > In particular reading section 7.5, these are the required properties of
+> > the ePAPR hypervisor node:
+> > 
+> > - compatible = "epapr,hypervisor-1.1"
+> > compared to what I am proposing, it is laking information about what
+> > hypervisor we are talking about (xen, kvm, vmware, etc) and the version
+> > of the ABI (xen-4.2).
 > 
-> I have more or less the same generic comment for this as for the power
-> sequences series discussed: this would add panel specific information
-> into DT data, instead of the driver handling it. But, as also discussed
-> in the thread, there are differing opinions on which way is better.
-
-With the panel timings I think the approach of moving them into DT is
-the best we can do. There are so many displays out there, patching the
-kernel each time a customer comes with some new display is no fun.
-
+> compatible properties are often changed. If we do deviate on the rest of
+> the binding, then it needs to be different.
 > 
-> > +int of_get_video_mode(struct device_node *np, struct drm_display_mode *dmode,
-> > +		struct fb_videomode *fbmode);
+> Turns out that powerpc KVM guests use "linux,kvm" and "epapr,hypervisor"
+> doesn't even appear in the kernel.
 > 
-> From caller's point of view I think it'd make more sense to have
-> separate functions to get drm mode or fb mode. I don't think there's a
-> case where the caller would want both.
+> We also perhaps have to consider the possibility of Xen on PowerPC. Then
+> alignment is more important.
 
-Ok, that makes sense.
+OK. In that case I think that we can just use "xen,xen-4.2".
 
+
+> > - hcall-instructions
+> > potentially interesting, but given that for Xen we are quite happy with
+> > HVC, we are not going to add any secondary hypercall mechanisms,
+> > therefore at the moment it would just result in a BUG if the specified
+> > hcall instruction is != HVC. Besides if somebody else wanted to
+> > implemented the Xen hypercall interface in a different way they could
+> > just reimplement the hypercall wrappers, that would be easier than
+> > trying to do it with this property.
 > 
-> Then again, even better would be to have a common video mode struct used
-> by both fb and drm... But I think that's been on the todo list of
-> Laurent for a long time already =).
+> It's really about the parameters passed with the HVC. The ePAPR may be a
+> good model for defining this. Just grepping "hypervisor" under
+> arch/powerpc, it's pretty clear hypervisor support happened first and
+> the ePAPR came second. Hopefully we can avoid that for ARM.
 
-Yes, indeed. We should go into that direction. We already realized that
-we want to have ranges instead of fixed values for the timings.
+Right. As I wrote in the other email, we could have a new property to
+select the calling convention (and therefore the hypercall wrappers) to
+be used with the hypervisor.
 
-Sascha
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > - guest-id
+> > we usually make a point in trying not to tell the guest its own domid
+> > because if the VM gets migrated to a different host it acquires a new
+> > domid, therefore it should not rely on it.
+> > 
+> > - guest-name
+> > we could pass the guest name here, but I don't see how it could be
+> > of any use.
+> > 
+> 
+> I have no issue with these being optional.
+
+OK, good.
+
+
+> > On the other hand, thinking more about what Xen needs in the device
+> > tree, I think we could improve the current spec by clarifying the
+> > meaning of the memory region and interrupt properties we currently
+> > require. I thought about moving them to two separate children node with
+> > an explicit name:
+> > 
+> > ---
+> > 
+> > * Xen hypervisor device tree bindings
+> > 
+> 
+> I really think we need to define ARM hypervisor device tree bindings
+> first, then Xen specific bindings as an addition to that. I worry that
+> the KVM folks aren't paying attention and then want something different
+> later on.
+
+The problem is that there isn't much in common between Xen and KVM at
+least from the DT point of view. I am not sure what would go into this
+common hypervisor node.
+The three key pieces of information that we are currently passing in the
+DT (xen-4.2, a memory region, a PPI) are Xen specific.
+
+If one day KVM (or another hypervisor vendor) decides to support the Xen
+interface, can't they just have the Xen specific binding with a slightly
+different compatible node?
+For example:
+
+compatible = "linux,kvm", "xen,xen-4.2"
+
+wouldn't that mean "I am KVM but I can support the Xen interface"?
+
+
+> > Xen ARM virtual platforms shall have the following properties and
+> > children nodes:
+> > 
+> > - compatible property:
+> > 	compatible = "xen,xen", "xen,xen-<version>";
+> 
+> "xen,xen" should be last as it is less specific.
+
+Ah OK, thanks.
+
+
+> >   where <version> is the version of the Xen ABI of the platform.
+> > 
+> > - grant_table child with the following properties:
+> >     - name:
+> > 	    name = "grant_table";
+> 
+> What's a grant table?
+
+A Xen specific mechanism to share pages between guests.
+
+
+> > 	- reg: specifies the base physical address and size of a region in
+> > 	    memory where the grant table should be mapped to, using an
+> >         HYPERVISOR_memory_op hypercall. 
+> > 
+> > - events child with the following properties:
+> >     - name:
+> >         name = "events";
+> > 	- interrupts: the interrupt used by Xen to inject event notifications.
+> 
+> Why a child node? Just an interrupts property alone should be fine. If
+> you have cases with different number of interrupts, the compatible
+> property can distinguish that.
+
+I see, that's a good point. In that case maybe it doesn't make sense to
+move the memory region and the interrupt into two different children
+nodes after all. I should probably leave the spec as it was.
+ 
+
+> > 
+> > 
+> > Example:
+> > hypervisor {
+> > 		compatible = "xen,xen", "xen,xen-4.2";
+> > 		#address-cells = <1>;
+> > 		#size-cells = <1>;
+> > 		#interrupt-cells = <3>;
+> > 		ranges = <0xb0000000 0xb0000000 0x20000>;
+> > 
+> > 		grant_table {
+> > 			name = "grant_table";
+> > 			reg = <0xb0000000 0x20000>;
+> > 		};
+> > 
+> > 		events {
+> > 			name = "events";
+> > 			interrupts = <1 15 0xf08>;
+> > 		};
+> > 	};
+> > 
+> 
