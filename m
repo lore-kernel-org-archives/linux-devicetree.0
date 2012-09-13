@@ -1,91 +1,46 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node by
- name.
-Date: Thu, 13 Sep 2012 12:10:40 +0100
-Message-ID: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
+Date: Thu, 13 Sep 2012 12:19:06 +0100
+Message-ID: <alpine.DEB.2.02.1209131215360.15568@kaball.uk.xensource.com>
+References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com>
+	<1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com>
+	<503BFCD8.5090804@gmail.com>
+	<alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
+	<alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com>
+	<50514634.3080303@gmail.com> <20120913102938.GB2470@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <20120913102938.GB2470-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org" <xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "Tim (Xen.org)" <tim-LM2mM/qkH7s@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+On Thu, 13 Sep 2012, Dave Martin wrote:
+> Do you think it's feasible to standardise on some interoperable ABI for
+> kvm and Xen?  This sounds pretty optimistic, but I'm not aware of all
+> the technicalities, or what possible third-party hypervisors are out
+> there.
+> 
+> If we could do it, it would be good.  But I have my doubts about the
+> feasibility and the benefits.  If different hypervisors are significantly
+> imcompatible, then having a common low-level ABI doesn't help all that
+> much.
 
-This patch introduces of_get_child function to get a child node by its
-name in a given parent node.
+It is not really possible because each hypervisor offers a different set
+of hypercalls and has a different calling convention, so there is very
+little we can do to unify them.
 
-Without this patch each driver code has to iterate the parent and do
-a string compare, However having of_get_child libary function would
-avoid code duplication, errors and is more convenient.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
----
- drivers/of/base.c  |   27 +++++++++++++++++++++++++++
- include/linux/of.h |    2 ++
- 2 files changed, 29 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d4a1c9a..d4b6840 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -391,6 +391,33 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
- EXPORT_SYMBOL(of_get_next_available_child);
- 
- /**
-+ *	of_get_child - Find the child node by name for given parent
-+ *	@node:	parent node
-+ *	@name:	child name to look for.
-+ *
-+ *      This function looks for child node for given matching name
-+ *
-+ *	Returns a node pointer if found, with refcount incremented, use
-+ *	of_node_put() on it when done.
-+ *	else returns NULL.
-+ */
-+
-+struct device_node *of_get_child(const struct device_node *node,
-+				const char *name)
-+{
-+	struct device_node *child;
-+
-+	read_lock(&devtree_lock);
-+	for_each_child_of_node(node, child)
-+		if (child->name && (of_node_cmp(child->name, name) == 0)
-+			&& of_node_get(child))
-+			break;
-+	read_unlock(&devtree_lock);
-+	return child;
-+}
-+EXPORT_SYMBOL(of_get_child);
-+
-+/**
-  *	of_find_node_by_path - Find a node matching a full OF path
-  *	@path:	The full path to match
-  *
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 1b11632..510e1fe 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -192,6 +192,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
- 					     struct device_node *prev);
- extern struct device_node *of_get_next_available_child(
- 	const struct device_node *node, struct device_node *prev);
-+extern struct device_node *of_get_child(const struct device_node *node,
-+					const char *name);
- 
- #define for_each_child_of_node(parent, child) \
- 	for (child = of_get_next_child(parent, NULL); child != NULL; \
--- 
-1.7.0.4
+For example many of the current Xen hypercalls are to deal with the grant
+table and event channels, that are Xen specific concepts completely
+missing in KVM.
