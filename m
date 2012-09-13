@@ -1,183 +1,43 @@
-From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Subject: Re: [PATCH v3 06/25] docs: Xen ARM DT bindings
-Date: Thu, 13 Sep 2012 12:33:47 +0100
-Message-ID: <alpine.DEB.2.02.1209131213260.15568@kaball.uk.xensource.com>
-References: <alpine.DEB.2.02.1208161618550.4850@kaball.uk.xensource.com> <1345131377-14713-6-git-send-email-stefano.stabellini@eu.citrix.com> <503BFCD8.5090804@gmail.com> <alpine.DEB.2.02.1208281823270.15568@kaball.uk.xensource.com>
- <alpine.DEB.2.02.1209121849200.15568@kaball.uk.xensource.com> <50514634.3080303@gmail.com>
+From: Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v4 0/5] ARM: topology: set the capacity of each cores
+	for big.LITTLE
+Date: Thu, 13 Sep 2012 14:07:11 +0200
+Message-ID: <1347538031.15764.126.camel@twins>
+References: <1341826026-6504-1-git-send-email-vincent.guittot@linaro.org>
+	<1341919622.3462.124.camel@twins>
+	<CAKfTPtC0BcidJ2ga9c2fdWjrEsfXH48QtSnjv0YOCv7-k3K-Ug@mail.gmail.com>
+	<1341927729.3462.131.camel@twins>
+	<CAKfTPtCpZS=ALAjwqX5Wb0j5HjrMjv87MEefGC2O5_p7ENeY2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50514634.3080303@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Stefano Stabellini <Stefano.Stabellini@eu.citrix.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, Ian Campbell <Ian.Campbell@citrix.com>, "arnd@arndb.de" <arnd@arndb.de>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Tim (Xen.org)" <tim@xen.org>, David Vrabel <david.vrabel@citrix.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <CAKfTPtCpZS=ALAjwqX5Wb0j5HjrMjv87MEefGC2O5_p7ENeY2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yong.zhang0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Sep 2012, Rob Herring wrote:
-> On 09/12/2012 01:14 PM, Stefano Stabellini wrote:
-> > On Wed, 12 Sep 2012, Stefano Stabellini wrote:
-> >> On Tue, 28 Aug 2012, Rob Herring wrote:
-> >>> You should look at ePAPR 1.1 which defines hypervisor related bindings.
-> >>> While it is a PPC doc, we should reuse or extend what makes sense.
-> >>>
-> >>> See section 7.5:
-> >>>
-> >>> https://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.1.pdf
+On Thu, 2012-09-13 at 11:17 +0200, Vincent Guittot wrote:
+> On 10 July 2012 15:42, Peter Zijlstra <a.p.zijlstra-/NLkJaSkS4VmR6Xm/wNWPw@public.gmane.org> wrote:
+> > On Tue, 2012-07-10 at 14:35 +0200, Vincent Guittot wrote:
 > >>
-> >> Thanks for the link, I wasn't aware of ePAPR.
+> >> May be the last one which enable ARCH_POWER should also go into tip ?
 > >>
-> >> The hypervisor node defined by ePAPR is not very different from what I
-> >> am proposing. Should I try to be compatible with the hypervisor
-> >> specification above (as in compatible = "epapr,hypervisor-1.1")?
-> >> Or should I just use it as a reference for my own specification?
-> >>
-> >> Personally I would rather avoid full compatibility with ePAPR.
-> > 
-> > In particular reading section 7.5, these are the required properties of
-> > the ePAPR hypervisor node:
-> > 
-> > - compatible = "epapr,hypervisor-1.1"
-> > compared to what I am proposing, it is laking information about what
-> > hypervisor we are talking about (xen, kvm, vmware, etc) and the version
-> > of the ABI (xen-4.2).
+> > OK, I can take it.
 > 
-> compatible properties are often changed. If we do deviate on the rest of
-> the binding, then it needs to be different.
+> Hi Peter,
 > 
-> Turns out that powerpc KVM guests use "linux,kvm" and "epapr,hypervisor"
-> doesn't even appear in the kernel.
-> 
-> We also perhaps have to consider the possibility of Xen on PowerPC. Then
-> alignment is more important.
-
-OK. In that case I think that we can just use "xen,xen-4.2".
+> I can't find the patch that enable ARCH_POWER in the tip tree. Have
+> you take it in your tree ?
 
 
-> > - hcall-instructions
-> > potentially interesting, but given that for Xen we are quite happy with
-> > HVC, we are not going to add any secondary hypercall mechanisms,
-> > therefore at the moment it would just result in a BUG if the specified
-> > hcall instruction is != HVC. Besides if somebody else wanted to
-> > implemented the Xen hypercall interface in a different way they could
-> > just reimplement the hypercall wrappers, that would be easier than
-> > trying to do it with this property.
-> 
-> It's really about the parameters passed with the HVC. The ePAPR may be a
-> good model for defining this. Just grepping "hypervisor" under
-> arch/powerpc, it's pretty clear hypervisor support happened first and
-> the ePAPR came second. Hopefully we can avoid that for ARM.
-
-Right. As I wrote in the other email, we could have a new property to
-select the calling convention (and therefore the hypercall wrappers) to
-be used with the hypervisor.
-
-
-> > - guest-id
-> > we usually make a point in trying not to tell the guest its own domid
-> > because if the VM gets migrated to a different host it acquires a new
-> > domid, therefore it should not rely on it.
-> > 
-> > - guest-name
-> > we could pass the guest name here, but I don't see how it could be
-> > of any use.
-> > 
-> 
-> I have no issue with these being optional.
-
-OK, good.
-
-
-> > On the other hand, thinking more about what Xen needs in the device
-> > tree, I think we could improve the current spec by clarifying the
-> > meaning of the memory region and interrupt properties we currently
-> > require. I thought about moving them to two separate children node with
-> > an explicit name:
-> > 
-> > ---
-> > 
-> > * Xen hypervisor device tree bindings
-> > 
-> 
-> I really think we need to define ARM hypervisor device tree bindings
-> first, then Xen specific bindings as an addition to that. I worry that
-> the KVM folks aren't paying attention and then want something different
-> later on.
-
-The problem is that there isn't much in common between Xen and KVM at
-least from the DT point of view. I am not sure what would go into this
-common hypervisor node.
-The three key pieces of information that we are currently passing in the
-DT (xen-4.2, a memory region, a PPI) are Xen specific.
-
-If one day KVM (or another hypervisor vendor) decides to support the Xen
-interface, can't they just have the Xen specific binding with a slightly
-different compatible node?
-For example:
-
-compatible = "linux,kvm", "xen,xen-4.2"
-
-wouldn't that mean "I am KVM but I can support the Xen interface"?
-
-
-> > Xen ARM virtual platforms shall have the following properties and
-> > children nodes:
-> > 
-> > - compatible property:
-> > 	compatible = "xen,xen", "xen,xen-<version>";
-> 
-> "xen,xen" should be last as it is less specific.
-
-Ah OK, thanks.
-
-
-> >   where <version> is the version of the Xen ABI of the platform.
-> > 
-> > - grant_table child with the following properties:
-> >     - name:
-> > 	    name = "grant_table";
-> 
-> What's a grant table?
-
-A Xen specific mechanism to share pages between guests.
-
-
-> > 	- reg: specifies the base physical address and size of a region in
-> > 	    memory where the grant table should be mapped to, using an
-> >         HYPERVISOR_memory_op hypercall. 
-> > 
-> > - events child with the following properties:
-> >     - name:
-> >         name = "events";
-> > 	- interrupts: the interrupt used by Xen to inject event notifications.
-> 
-> Why a child node? Just an interrupts property alone should be fine. If
-> you have cases with different number of interrupts, the compatible
-> property can distinguish that.
-
-I see, that's a good point. In that case maybe it doesn't make sense to
-move the memory region and the interrupt into two different children
-nodes after all. I should probably leave the spec as it was.
- 
-
-> > 
-> > 
-> > Example:
-> > hypervisor {
-> > 		compatible = "xen,xen", "xen,xen-4.2";
-> > 		#address-cells = <1>;
-> > 		#size-cells = <1>;
-> > 		#interrupt-cells = <3>;
-> > 		ranges = <0xb0000000 0xb0000000 0x20000>;
-> > 
-> > 		grant_table {
-> > 			name = "grant_table";
-> > 			reg = <0xb0000000 0x20000>;
-> > 		};
-> > 
-> > 		events {
-> > 			name = "events";
-> > 			interrupts = <1 15 0xf08>;
-> > 		};
-> > 	};
-> > 
-> 
+Uhmmm.... how about I say I have now? Sorry about that.
