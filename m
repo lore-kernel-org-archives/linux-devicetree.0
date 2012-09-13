@@ -1,42 +1,52 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node
- by name.
-Date: Thu, 13 Sep 2012 09:14:00 -0600
-Message-ID: <5051F838.5080002@wwwdotorg.org>
-References: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v6 0/4] Runtime Interpreted Power Sequences
+Date: Thu, 13 Sep 2012 09:24:53 -0600
+Message-ID: <5051FAC5.40501@wwwdotorg.org>
+References: <1347443867-18868-1-git-send-email-acourbot@nvidia.com> <4473898.CeAQBgUhKL@percival> <20120913071928.GA20959@opensource.wolfsonmicro.com> <1378218.yLeQheNFT0@percival> <20120913072943.GB20959@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1347534640-787-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120913072943.GB20959@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Alex Courbot <acourbot@nvidia.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 05:10 AM, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+On 09/13/2012 01:29 AM, Mark Brown wrote:
+> On Thu, Sep 13, 2012 at 04:26:34PM +0900, Alex Courbot wrote:
+>> On Thursday 13 September 2012 15:19:30 Mark Brown wrote:
+>>>> On Thursday 13 September 2012 14:25:53 Mark Brown wrote:
+>>>>> It would be sensible to make sure that the framework is done in such a
+>>>>> way that drivers can use it - there will be drivers (perhaps not display
+>>>>> ones) that have a known power sequence and which could benefit from the
+>>>>> ability to use library code to implement it based on the user simply
+>>>>> supplying named resources.
 > 
-> This patch introduces of_get_child function to get a child node by its
-> name in a given parent node.
+>>>> Not sure I understand what you mean, but things should be working this way
+>>>> already - regulators and PWMs are acquired by name using the standard
+>>>> regulator_get() and pwm_get() functions. GPIOs do not, AFAIK, have a way
+>>>> to be referenced by name so their number is used instead.
 > 
-> Without this patch each driver code has to iterate the parent and do
-> a string compare, However having of_get_child libary function would
-> avoid code duplication, errors and is more convenient.
+>>> Right, but the sequencing for enabling them is currently open coded in
+>>> each driver.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>> Mmm then I'm afraid I don't see what you wanted to say initially - could you 
+>> elaborate?
+> 
+> The driver knows the power sequence.  Having to type the same sequence
+> into the DT or platform data for each board using the device wouuld be
+> retarded so we need the drivers to be able to give the sequence to the
+> library if they're going to be able to reuse it (which is a lot of what
+> Tomi is talking about).
 
-You forgot to Cc the drivers/of maintainers, Grant and Rob. I have here.
+I believe that's trivial to implement. The relevant function is:
 
-I can certainly see a use for this in many places; the "runtime
-interpreted power sequences" patch, and the regulator DT parsing code at
-least both could benefit from this.
+struct power_seq_set *devm_power_seq_set_build(struct device *dev,
+		   struct platform_power_seq_set *pseq);
+
+It's up to the driver whether pseq comes from platform data or is
+hard-coded into the driver (or not provided at all, for the DT case).
+So, the only change needed to convert a "hard-coded" driver to this API
+is to convert the current custom data structure (or code) that describes
+the sequence into a struct platform_power_seq_set.
