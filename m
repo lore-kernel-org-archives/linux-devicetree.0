@@ -1,11 +1,12 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 Subject: Re: [PATCH 3.6.0-rc5] dt: introduce of_get_child to get child node
  by name.
-Date: Thu, 13 Sep 2012 09:48:50 -0600
-Message-ID: <50520062.2040107@wwwdotorg.org>
+Date: Thu, 13 Sep 2012 16:51:08 +0100
+Message-ID: <505200EC.2090707@st.com>
 References: <1347534640-787-1-git-send-email-srinivas.kandagatla@st.com>
  <5051F838.5080002@wwwdotorg.org> <5051FAFA.4040507@st.com>
  <5051FF1A.7060507@gmail.com>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -25,9 +26,8 @@ To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 09:43 AM, Rob Herring wrote:
+On 13/09/12 16:43, Rob Herring wrote:
 > On 09/13/2012 10:25 AM, Srinivas KANDAGATLA wrote:
->>
 >> On 13/09/12 16:14, Stephen Warren wrote:
 >>> On 09/13/2012 05:10 AM, Srinivas KANDAGATLA wrote:
 >>>> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
@@ -41,38 +41,34 @@ On 09/13/2012 09:43 AM, Rob Herring wrote:
 >>>>
 >>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 >>> You forgot to Cc the drivers/of maintainers, Grant and Rob. I have here.
->>
 >> Oops...
 >>
->>>
 >>> I can certainly see a use for this in many places; the "runtime
 >>> interpreted power sequences" patch, and the regulator DT parsing code at
 >>> least both could benefit from this.
-> 
 > I would think the power sequences code would always iterate over the nodes.
-
-There are two stages to the power sequences code; the first finds the
-"power-sequences" child node in the device itself (and should use this
-new API), and the next iterates over all children in that node, and then
-all children in those nodes.
-
+>
 >> There are at-least 7-8 places in the current kernel which could use this
 >> function directly.
-> 
 > Care to point them out and preferably fix them then. That would be more
 > convincing that this is needed.
+I did plan on sending all the 7 patches with this one, But I wanted to
+know overall opinion on introduction of this new function.
 
-drivers/mfd/tps6586x:tps6586x_parse_dt()'s call to
-of_find_node_by_name() should be replaced by this function.
+Here are the instances of the drivers... which can benefit from this
+function..
 
-drivers/regulator/max8907-regulator.c:max8907_regulator_parse_dt() has
-the same issue.
+drivers/tty/hvc/hvc_opal.c
+drivers/spi/spi-s3c64xx.c
+drivers/net/ethernet/freescale/fsl_pq_mdio.c
+arch/powerpc/sysdev/qe_lib/qe.c
+arch/powerpc/platforms/powernv/opal.c
+arch/powerpc/kernel/prom.c
 
-drivers/regulator/tps65910-regulator.c:tps65910_parse_dt_reg_data() has
-the same issue.
 
-Perhaps other regulators too; those are just the ones used on my platforms.
 
-At least some of those three will be added during the 3.7 merge window,
-so it'd be hard to fix in this patch without merging in a bunch of
-dependencies first.
+>
+> Rob
+>
+>
+>
