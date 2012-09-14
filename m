@@ -1,63 +1,96 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 7/7] dt/tty/opal: Use of_get_child_by_name to get a named
- child.
-Date: Fri, 14 Sep 2012 09:20:11 +0100
-Message-ID: <1347610811-20739-1-git-send-email-srinivas.kandagatla@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] ARM: dts: AM33XX: Add lis331dlh device tree data to am335x-evm
+Date: Fri, 14 Sep 2012 08:26:06 +0000
+Message-ID: <201209140826.07069.arnd@arndb.de>
+References: <1347551685-19781-1-git-send-email-anilkumar@ti.com> <1347551685-19781-3-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1347551685-19781-3-git-send-email-anilkumar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: AnilKumar Ch <anilkumar@ti.com>
+Cc: gregkh@linuxfoundation.org, eric.piel@tremplin-utc.net, jic23@cam.ac.uk, greg@kroah.com, akpm@linux-foundation.org, broonie@opensource.wolfsonmicro.com, dmitry.torokhov@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+On Thursday 13 September 2012, AnilKumar Ch wrote:
+> Add lis331dlh device tree data to am335x-evm.dts. In AM335x EVM
+> lis331dlh accelerometer is connected to I2C2 bus. So this patch
+> change the status to "okay" to use I2C2 bus. Also added all the
+> required platform data to am335x-evm.
+> 
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> ---
+>  arch/arm/boot/dts/am335x-evm.dts |   42 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> index 9fb59c5..9e5a878 100644
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -47,6 +47,15 @@
+>  			};
+>  		};
+>  
+> +		i2c2: i2c@4802a000 {
+> +			status = "okay";
+> +			clock-frequency = <400000>;
+> +
+> +			lis331dlh: lis331dlh@18 {
+> +				reg = <0x18>;
+> +			};
+> +		};
 
-As follow-up to "dt: introduce of_get_child_by_name to get child node by
-name." patch, This patch removes some of the code duplication in the
-driver by replacing it with of_get_child_by_name instead.
+Why do you put the "reg" property here
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
----
- drivers/tty/hvc/hvc_opal.c |    9 ++-------
- 1 files changed, 2 insertions(+), 7 deletions(-)
+>  		dcan1: d_can@481d0000 {
+>  			status = "okay";
+>  			pinctrl-names = "default";
+> @@ -61,6 +70,39 @@
+>  		regulator-max-microvolt = <5000000>;
+>  		regulator-boot-on;
+>  	};
+> +
+> +	lis3_reg: fixedregulator@1 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lis3_reg";
+> +		regulator-boot-on;
+> +	};
+> +};
+> +&lis331dlh {
+> +	compatible = "st,lis3lv02d-i2c";
 
-diff --git a/drivers/tty/hvc/hvc_opal.c b/drivers/tty/hvc/hvc_opal.c
-index 0d2ea0c..4c7d161 100644
---- a/drivers/tty/hvc/hvc_opal.c
-+++ b/drivers/tty/hvc/hvc_opal.c
-@@ -344,7 +344,7 @@ void __init hvc_opal_init_early(void)
- 			return;
- 		}
- 	} else {
--		struct device_node *opal, *np;
-+		struct device_node *opal;
- 
- 		/* Current OPAL takeover doesn't provide the stdout
- 		 * path, so we hard wire it
-@@ -360,12 +360,7 @@ void __init hvc_opal_init_early(void)
- 		}
- 		if (!opal)
- 			return;
--		for_each_child_of_node(opal, np) {
--			if (!strcmp(np->name, "serial")) {
--				stdout_node = np;
--				break;
--			}
--		}
-+		stdout_node = of_get_child_by_name(opal, "serial");
- 		of_node_put(opal);
- 	}
- 	if (!stdout_node)
--- 
-1.7.0.4
+and all the rest here? At least I would expect the "compatible" property
+to be in the same place above.
+
+Also, I think you should remove the "-i2c" postfix from the name, that
+is already implied by the parent bus.
+
+> +	Vdd-supply = <&lis3_reg>;
+> +	Vdd_IO-supply = <&lis3_reg>;
+> +
+> +	st,click-single-x;
+> +	st,click-single-y;
+> +	st,click-single-z;
+> +	st,click-thresh-x = <10>;
+> +	st,click-thresh-y = <10>;
+> +	st,click-thresh-z = <10>;
+> +	st,irq1-click;
+> +	st,irq2-click;
+> +	st,wakeup-x-lo;
+> +	st,wakeup-x-hi;
+> +	st,wakeup-y-lo;
+> +	st,wakeup-y-hi;
+> +	st,wakeup-z-lo;
+> +	st,wakeup-z-hi;
+> +	st,min-limit-x = <120>;
+> +	st,min-limit-y = <120>;
+> +	st,min-limit-z = <140>;
+> +	st,max-limit-x = <550>;
+> +	st,max-limit-y = <550>;
+> +	st,max-limit-z = <750>;
+
+Is there a binding document that describes all these?
+
+	Arnd
