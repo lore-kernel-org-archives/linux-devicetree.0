@@ -1,33 +1,64 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] arm: mvebu: add DT information for GPIO banks
- on Armada 370 and XP
-Date: Fri, 14 Sep 2012 16:01:35 -0600
-Message-ID: <5053A93F.5030505@wwwdotorg.org>
-References: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1347551658-24449-5-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH V6 0/2] of: Add generic device tree DMA helpers
+Date: Fri, 14 Sep 2012 17:41:55 -0500
+Message-ID: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1347551658-24449-5-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Cc: Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 09:54 AM, Thomas Petazzoni wrote:
-> The gpioX aliases are needed so that the driver can use
-> of_alias_get_id() to get a 0-based number of the GPIO bank, which we
-> then use to compute the base GPIO of the bank being probed. This is
-> similar to what gpio-mxs.c is doing.
+Hi all,
 
-#interrupt-cells is missing from all the gpio nodes here too.
+I apologise for sending out so many updates in quick succession before everyone
+has had chance to review, however, I will be out of office next week and I know
+that several people have been waiting for this. Normally, I would not send out
+a series and disappear for a week, but Arnd agreed to help while I am out.
+
+Arnd,
+Feel free to make any changes you see fit while I am out or correct any balls-up
+I have made!
+
+Cheers
+Jon
+
+This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [2] to add
+some basic device-tree helpers to retrieve a DMA controller device_node and the
+DMA request/channel information.
+
+v6: - minor corrections in DMA binding documentation
+v5: - minor update to binding documentation
+    - added loop to exhaustively search for a slave channel in the case where
+      there could be alternative channels available
+v4: - revert the removal of xlate function from v3
+    - update the proposed binding format and APIs based upon discussions [3]
+v3: - avoid passing an xlate function and instead pass DMA engine parameters
+    - define number of dma channels and requests in dma-controller node
+v2: - remove of_dma_to_resource API
+    - make property #dma-cells required (no fallback anymore)
+    - another check in of_dma_xlate_onenumbercell() function
+
+[1] http://article.gmane.org/gmane.linux.drivers.devicetree/12022
+[2] http://article.gmane.org/gmane.linux.ports.arm.omap/73622
+[3] http://marc.info/?l=linux-omap&m=133582085008539&w=2
+
+Jon Hunter (2):
+  of: Add generic device tree DMA helpers
+  dmaengine: add helper function to request a slave DMA channel
+
+ Documentation/devicetree/bindings/dma/dma.txt |   81 +++++++++
+ drivers/dma/dmaengine.c                       |   16 ++
+ drivers/of/Makefile                           |    2 +-
+ drivers/of/dma.c                              |  219 +++++++++++++++++++++++++
+ include/linux/dmaengine.h                     |    6 +
+ include/linux/of_dma.h                        |   45 +++++
+ 6 files changed, 368 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/dma.txt
+ create mode 100644 drivers/of/dma.c
+ create mode 100644 include/linux/of_dma.h
+
+-- 
+1.7.9.5
+
