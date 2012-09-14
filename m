@@ -1,213 +1,87 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v3] ARM: EXYNOS: Add MFC device tree support
-Date: Fri, 14 Sep 2012 21:08:17 +0530
-Message-ID: <1347637097-15015-2-git-send-email-arun.kk@samsung.com>
-References: <1347637097-15015-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1347637097-15015-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, s.nawrocki@samsung.com, ch.naveen@samsung.com, arun.kk@samsung.com, joshi@samsung.com
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] ARM: dts: AM33XX: Add lis331dlh device tree data to am335x-evm
+Date: Fri, 14 Sep 2012 10:28:37 +0000
+Message-ID: <201209141028.38185.arnd@arndb.de>
+References: <1347551685-19781-1-git-send-email-anilkumar@ti.com> <201209140826.07069.arnd@arndb.de> <331ABD5ECB02734CA317220B2BBEABC13EA2F0AB@DBDE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA2F0AB@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "eric.piel@tremplin-utc.net" <eric.piel@tremplin-utc.net>, "jic23@cam.ac.uk" <jic23@cam.ac.uk>, "greg@kroah.com" <greg@kroah.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree entry for MFC v6 in the Exynos5
-SoC. Makes the required changes in the clock files and adds
-MFC to the DT device list.
+On Friday 14 September 2012, AnilKumar, Chimata wrote:
+>> On Fri, Sep 14, 2012 at 13:56:06, Arnd Bergmann wrote:
+> > On Thursday 13 September 2012, AnilKumar Ch wrote:
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- .../devicetree/bindings/media/s5p-mfc.txt          |   27 ++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    7 +++
- arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++
- arch/arm/mach-exynos/Kconfig                       |    1 +
- arch/arm/mach-exynos/clock-exynos5.c               |    2 +-
- arch/arm/mach-exynos/mach-exynos5-dt.c             |   55 ++++++++++++++++++++
- 6 files changed, 97 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+> > 
+> > Why do you put the "reg" property here
+> 
+> Here I specified reg property because lis331dlh I2C slave address is 0x18.
+> 
+> > 
+> > >  		dcan1: d_can@481d0000 {
+> > >  			status = "okay";
+> > >  			pinctrl-names = "default";
+> > > @@ -61,6 +70,39 @@
+> > >  		regulator-max-microvolt = <5000000>;
+> > >  		regulator-boot-on;
+> > >  	};
+> > > +
+> > > +	lis3_reg: fixedregulator@1 {
+> > > +		compatible = "regulator-fixed";
+> > > +		regulator-name = "lis3_reg";
+> > > +		regulator-boot-on;
+> > > +	};
+> > > +};
+> > > +&lis331dlh {
+> > > +	compatible = "st,lis3lv02d-i2c";
+> > 
+> > and all the rest here? At least I would expect the "compatible" property
+> > to be in the same place above.
+> 
+> This data is appended to above one, to make it readable I moved remaining
+> properties to here.
 
-diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-new file mode 100644
-index 0000000..f95e775
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-@@ -0,0 +1,27 @@
-+* Samsung Multi Format Codec (MFC)
-+
-+Multi Format Codec (MFC) is the IP present in Samsung SoCs which
-+supports high resolution decoding and encoding functionalities.
-+The MFC device driver is a v4l2 driver which can encode/decode
-+video raw/elementary streams and has support for all popular
-+video codecs.
-+
-+Required properties:
-+  - compatible : value should be either one among the following
-+	(a) "samsung,mfc-v5" for MFC v5 present in Exynos4 SoCs
-+	(b) "samsung,mfc-v6" for MFC v6 present in Exynos5 SoCs
-+
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+
-+  - interrupts : MFC interrupt number to the CPU.
-+
-+  - samsung,mfc-r : Base address of the first memory bank used by MFC
-+		    for DMA contiguous memory allocation.
-+
-+  - samsung,mfc-r-size : Size of the first memory bank.
-+
-+  - samsung,mfc-l : Base address of the second memory bank used by MFC
-+		    for DMA contiguous memory allocation.
-+
-+  - samsung,mfc-l-size : Size of the second memory bank.
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 8a5e348..5824c97 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -109,4 +109,11 @@
- 	spi_2: spi@12d40000 {
- 		status = "disabled";
- 	};
-+
-+	mfc {
-+		samsung,mfc-r = <0x43000000>;
-+		samsung,mfc-r-size = <8388608>;
-+		samsung,mfc-l = <0x51000000>;
-+		samsung,mfc-l-size = <8388608>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index b55794b..5df2f99 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -62,6 +62,12 @@
- 		interrupts = <0 42 0>;
- 	};
- 
-+	mfc {
-+		compatible = "samsung,mfc-v6";
-+		reg = <0x11000000 0x10000>;
-+		interrupts = <0 96 0>;
-+	};
-+
- 	rtc {
- 		compatible = "samsung,s3c6410-rtc";
- 		reg = <0x101E0000 0x100>;
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 195b50e..8ddc26a 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -64,6 +64,7 @@ config SOC_EXYNOS5250
- 	select SAMSUNG_DMADEV
- 	select S5P_PM if PM
- 	select S5P_SLEEP if PM
-+	select S5P_DEV_MFC
- 	help
- 	  Enable EXYNOS5250 SoC support
- 
-diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/clock-exynos5.c
-index eb3f4fc..461a721 100644
---- a/arch/arm/mach-exynos/clock-exynos5.c
-+++ b/arch/arm/mach-exynos/clock-exynos5.c
-@@ -669,7 +669,7 @@ static struct clk exynos5_init_clocks_off[] = {
- 		.ctrlbit	= (1 << 25),
- 	}, {
- 		.name		= "mfc",
--		.devname	= "s5p-mfc",
-+		.devname	= "s5p-mfc-v6",
- 		.enable		= exynos5_clk_ip_mfc_ctrl,
- 		.ctrlbit	= (1 << 0),
- 	}, {
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index e707eb1..243ba63 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -11,6 +11,8 @@
- 
- #include <linux/of_platform.h>
- #include <linux/serial_core.h>
-+#include <linux/memblock.h>
-+#include <linux/of_fdt.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/hardware/gic.h>
-@@ -18,6 +20,7 @@
- 
- #include <plat/cpu.h>
- #include <plat/regs-serial.h>
-+#include <plat/mfc.h>
- 
- #include "common.h"
- 
-@@ -64,6 +67,7 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 				"exynos-gsc.2", NULL),
- 	OF_DEV_AUXDATA("samsung,exynos5-gsc", EXYNOS5_PA_GSC3,
- 				"exynos-gsc.3", NULL),
-+	OF_DEV_AUXDATA("samsung,mfc-v6", 0x11000000, "s5p-mfc-v6", NULL),
- 	{},
- };
- 
-@@ -84,6 +88,56 @@ static char const *exynos5250_dt_compat[] __initdata = {
- 	NULL
- };
- 
-+struct mfc_dt_meminfo {
-+	unsigned long loff;
-+	unsigned long lsize;
-+	unsigned long roff;
-+	unsigned long rsize;
-+};
-+
-+int fdt_find_mfc_mem(unsigned long node, const char *uname, int depth,
-+		void *data)
-+{
-+	__be32 *prop;
-+	unsigned long len;
-+	struct mfc_dt_meminfo *mfc_mem = data;
-+
-+	if (!of_flat_dt_is_compatible(node, "samsung,mfc-v6"))
-+		return 0;
-+
-+	prop = of_get_flat_dt_prop(node, "samsung,mfc-l", &len);
-+	if (!prop)
-+		return 0;
-+	mfc_mem->loff = of_read_ulong(prop, len/4);
-+
-+	prop = of_get_flat_dt_prop(node, "samsung,mfc-l-size", &len);
-+	if (!prop)
-+		return 0;
-+	mfc_mem->lsize = of_read_ulong(prop, len/4);
-+
-+	prop = of_get_flat_dt_prop(node, "samsung,mfc-r", &len);
-+	if (!prop)
-+		return 0;
-+	mfc_mem->roff = of_read_ulong(prop, len/4);
-+
-+	prop = of_get_flat_dt_prop(node, "samsung,mfc-r-size", &len);
-+	if (!prop)
-+		return 0;
-+	mfc_mem->rsize = of_read_ulong(prop, len/4);
-+
-+	return 1;
-+}
-+
-+static void __init exynos5_reserve(void)
-+{
-+	struct mfc_dt_meminfo mfc_mem;
-+
-+	/* Reserve memory for MFC only if it's available */
-+	if (of_scan_flat_dt(fdt_find_mfc_mem, &mfc_mem))
-+		s5p_mfc_reserve_mem(mfc_mem.roff, mfc_mem.rsize, mfc_mem.loff,
-+				mfc_mem.lsize);
-+}
-+
- DT_MACHINE_START(EXYNOS5_DT, "SAMSUNG EXYNOS5 (Flattened Device Tree)")
- 	/* Maintainer: Kukjin Kim <kgene.kim@samsung.com> */
- 	.init_irq	= exynos5_init_irq,
-@@ -94,4 +148,5 @@ DT_MACHINE_START(EXYNOS5_DT, "SAMSUNG EXYNOS5 (Flattened Device Tree)")
- 	.timer		= &exynos4_timer,
- 	.dt_compat	= exynos5250_dt_compat,
- 	.restart        = exynos5_restart,
-+	.reserve	= exynos5_reserve,
- MACHINE_END
--- 
-1.7.0.4
+I don't follow how this is making things more readable.
+
+Maybe a more logical way to do this would be use the existing i2c2 label
+and write all the additions as
+
+i2c2: {
+	status = "okay";
+	clock-frequency = <400000>;
+
+	lis331dlh@18 {
+		compatible = "st,lis3lv02d";
+		reg = <0x18>;
+
+		vdd-supply = <&lis3_reg>;
+		vdd-io-supply = <&lis3_reg>;
+		...
+	};
+
+> > Also, I think you should remove the "-i2c" postfix from the name, that
+> > is already implied by the parent bus.
+> 
+> I will remove, but in case of spi the compatible name is lis3lv02d_spi.
+> By mistake I have uses "-i2c" instead of "_i2c".
+
+The normal convention is to use '-', not '_', so that part was ok.
+
+I think naming the other one lis3lv02d_spi was a mistake, it should
+be named 'st,lis3lv02d' independent of the bus IMHO.
+
+> Document is already present, 
+> http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=2f2ff3cc8d930493f9a598b9192706c09403e12e
+> 
+> Some minor changes in docs, in my next version I will update document
+> as well. I will send V3 if there are no comments on v2.
+
+Ok.
+
+	Arnd
