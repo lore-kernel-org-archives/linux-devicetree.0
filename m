@@ -1,44 +1,60 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 00/10] pinctrl: mvebu: pinctrl driver
-Date: Fri, 14 Sep 2012 10:41:45 -0600
-Message-ID: <50535E49.5060903@wwwdotorg.org>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V4 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 14 Sep 2012 12:19:04 -0500
+Message-ID: <50536708.6040508@ti.com>
+References: <1347573629-21299-1-git-send-email-jon-hunter@ti.com> <1347573629-21299-2-git-send-email-jon-hunter@ti.com> <50535B49.7070706@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50535B49.7070706@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Vinod Koul <vinod.koul@intel.com>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2012 09:41 AM, Sebastian Hesselbarth wrote:
-> This patch set adds a core pinctrl driver for Marvell MVEBU SoCs and
-> SoC specific stubs for Armada 370, Armada XP, Dove, and Kirkwood.
-> The SoC specific stubs use the pinctrl-mvebu core driver that handles
-> pinctrl API and register accesses for common pinctrl registers.
-> 
-> As especially Dove has some pinctrl registers that do not match the
-> common pinctrl register layout the core driver has been extended by
-> some callbacks to allow uncommon Dove pinctrl registers.
-> 
-> DT binding documentation is added for all supported SoCs but as
-> Dove and Kirkwood are not yet ready for full DT support, the pinctrl
-> driver is only activated for Armada 370 and XP.
-> 
-> The driver of latest patch v4 has been tested on Dove, Armada 370, 
-> Armada XP, and 88f6281 variant of Kirkwood.
 
-The series,
-Reviewed-by: Stephen Warren <swarren@wwwdotorg.org>
+On 09/14/2012 11:28 AM, Stephen Warren wrote:
+> On 09/13/2012 04:00 PM, Jon Hunter wrote:
+>> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [2]
+>> to add some basic helpers to retrieve a DMA controller device_node and the
+>> DMA request/channel information.
+> 
+>> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+> 
+>> +* Generic DMA Controller and DMA request bindings
+>> +
+>> +Generic binding to provide a way for a driver using DMA Engine to retrieve the
+>> +DMA request or channel information that goes from a hardware device to a DMA
+>> +controller.
+>> +
+>> +
+>> +* DMA controller
+>> +
+>> +Required property:
+>> +- #dma-cells: 		Must be at least 1. Used to provide DMA controller
+>> +			specific information. See DMA client binding below for
+> ...
+>> +* DMA client
+>> +
+>> +Client drivers should specify the DMA property using a phandle to the controller
+>> +followed by DMA controller specific data.
+>> +
+>> +Required property:
+>> +- dmas:			List of one or more DMA specifiers, each consisting of
+>> +			- A phandle pointing to DMA controller node
+>> +			- A single integer cell containing DMA controller
+>> +			  specific information. This typically contains a dma
+>> +			  request line number or a channel number, but can
+>> +			  contain any data that is used required for configuring
+>> +			  a channel.
+> 
+> "A single integer cell" doesn't sound correct; shouldn't this be
+> something like "a number of integer cells, as determined by the
+> #dma-cells property in the node referenced by phandle"?
 
-(Mainly the DT bindings and .dts file edits)
+Thanks for catching that. I had been re-working this a few times and
+must have forgotten to update that.
 
-In past versions of this series, we were had discussions about the best
-way to represent the data tables in the SoC-specific pinctrl drivers. I
-haven't actually looked at the current state in this patchset, but since
-this is an internal implementation detail and doesn't affect the DT
-bindings at all, I figure it's not a big deal right now; if it is ever a
-problem, it can be fixed without affecting anything outside the driver,
-so I won't worry about it:-)
+Cheers
+Jon
