@@ -1,25 +1,231 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
-Date: Thu, 13 Sep 2012 18:39:14 -0500
-Message-ID: <50526EA2.4030600@ti.com>
-References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH 1/1] ARM: at91: fix missing #interrupt-cells on
+ gpio-controller
+Date: Fri, 14 Sep 2012 09:29:10 +0800
+Message-ID: <50528866.6060409@atmel.com>
+References: <1347532826-32733-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1347579091-3794-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1347532826-32733-1-git-send-email-plagnioj@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jean-Christophe PLAGNIOL-VILLARD,
 
-On 09/13/2012 06:31 PM, Jon Hunter wrote:
-> This series adds device-tree support for the timers on OMAP2+ devices
-> including AM33xx.
+On 9/13/2012 18:40, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+>   arch/arm/boot/dts/at91sam9260.dtsi |    3 +++
+>   arch/arm/boot/dts/at91sam9263.dtsi |    5 +++++
+>   arch/arm/boot/dts/at91sam9g45.dtsi |    5 +++++
+>   arch/arm/boot/dts/at91sam9n12.dtsi |    4 ++++
+>   arch/arm/boot/dts/at91sam9x5.dtsi  |    4 ++++
+>   5 files changed, 21 insertions(+)
+>
 
-One more comment. This has been tested on v3.6-rc5 and rebased on top of
-Tony's devel-dt branch.
+Test this on sam9x5ek board with qt1070. It works. Thanks.
 
-Cheers
-Jon
+Tested-by: voice.shen@atmel.com
+
+> diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+> index 66389c1..7c95f76 100644
+> --- a/arch/arm/boot/dts/at91sam9260.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9260.dtsi
+> @@ -104,6 +104,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioB: gpio@fffff600 {
+> @@ -113,6 +114,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioC: gpio@fffff800 {
+> @@ -122,6 +124,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			dbgu: serial@fffff200 {
+> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+> index b460d6c..195019b 100644
+> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+> @@ -95,6 +95,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioB: gpio@fffff400 {
+> @@ -104,6 +105,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioC: gpio@fffff600 {
+> @@ -113,6 +115,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioD: gpio@fffff800 {
+> @@ -122,6 +125,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioE: gpio@fffffa00 {
+> @@ -131,6 +135,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			dbgu: serial@ffffee00 {
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> index bafa880..63751b1 100644
+> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -113,6 +113,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioB: gpio@fffff400 {
+> @@ -122,6 +123,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioC: gpio@fffff600 {
+> @@ -131,6 +133,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioD: gpio@fffff800 {
+> @@ -140,6 +143,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioE: gpio@fffffa00 {
+> @@ -149,6 +153,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			dbgu: serial@ffffee00 {
+> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+> index bfac0df..ef9336a 100644
+> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+> @@ -107,6 +107,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioB: gpio@fffff600 {
+> @@ -116,6 +117,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioC: gpio@fffff800 {
+> @@ -125,6 +127,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioD: gpio@fffffa00 {
+> @@ -134,6 +137,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			dbgu: serial@fffff200 {
+> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+> index 4a18c39..8a387a8 100644
+> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+> @@ -115,6 +115,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioB: gpio@fffff600 {
+> @@ -124,6 +125,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioC: gpio@fffff800 {
+> @@ -133,6 +135,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			pioD: gpio@fffffa00 {
+> @@ -142,6 +145,7 @@
+>   				#gpio-cells = <2>;
+>   				gpio-controller;
+>   				interrupt-controller;
+> +				#interrupt-cells = <2>;
+>   			};
+>
+>   			dbgu: serial@fffff200 {
+>
