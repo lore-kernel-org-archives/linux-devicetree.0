@@ -1,40 +1,47 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH v2 0/4] lis3: lis3lv02d_i2c: Add device tree support
-Date: Fri, 14 Sep 2012 13:36:52 +0530
-Message-ID: <1347610016-10123-1-git-send-email-anilkumar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: gregkh@linuxfoundation.org, eric.piel@tremplin-utc.net, jic23@cam.ac.uk, greg@kroah.com, akpm@linux-foundation.org, broonie@opensource.wolfsonmicro.com, dmitry.torokhov@gmail.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, AnilKumar Ch <anilkumar@ti.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [PATCH v2 0/7] Introduce of_get_child_by_name.
+Date: Fri, 14 Sep 2012 09:17:12 +0100
+Message-ID: <1347610632-20061-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, robherring2@gmail.com, bergner@us.ibm.com, devicetree-discuss@lists.ozlabs.org
+Cc: benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, jassi.brar@samsung.com, afleming@freescale.com, srinivas.kandagatla@st.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-Adds device tree support to lis3lv02d_i2c driver. Along with this
-DT init is moved from core driver to individual drivers, with the
-current implementation some pdata is missing in lis3lv02d_i2c driver.
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-Also adds platform data for lis331dlh driver to am335x-EVM. These
-patches were tested on AM335x-EVM.
+This patch series introduces of_get_child_by_name function to get a 
+child node by its name in a given parent node and also removes code 
+duplication in some of the existing driver code by using of_get_child_by_name.
+
+Normally if a driver want to get a child node it would iterate all the nodes
+of parent and compare its name and then get it.
+This use case is becoming common as device trees are used more, so moving this 
+functionality to a libary function makes sense.
+
+Having of_get_child_by_name libary function would avoid code duplication,
+errors and is more convenient.
 
 Changes from v1:
-	- Moved lis3lv02d_init_dt to individual drivers with
-	  some code clean-up.
-	- Added lis331dlh compatible entry for lis331dlh parts
+	-rename of_get_child to of_get_child_by_name.
+	-remove read lock in of_get_child_by_name.
+	-make use of of_get_child_by_name in the existing kernel code.
 
-AnilKumar Ch (4):
-  lis3: lis3lv02d: remove lis3lv02d driver DT init
-  lis3: lis3lv02d_spi: Add lis3lv02d device tree init
-  lis3: lis3lv02d_i2c: Add lis3lv02d device tree init
-  ARM: dts: AM33XX: Add lis331dlh device tree data to am335x-evm
+Srinivas Kandagatla (7):
+  dt: introduce of_get_child_by_name to get child node by name.
+  dt/powerpc: Use of_get_child_by_name to get a named child.
+  dt/powerpc/powernv: Use of_get_child_by_name to get a named child.
+  dt/powerpc/sysdev: Use of_get_child_by_name to get a named child.
+  dt/net/fsl_pq_mdio: Use of_get_child_by_name to get a named child.
+  dt/s3c64xx/spi: Use of_get_child_by_name to get a named child.
+  dt/tty/opal: Use of_get_child_by_name to get a named child.
 
- arch/arm/boot/dts/am335x-evm.dts       |   42 ++++++++++++++++++++++++++++++++
- drivers/misc/lis3lv02d/lis3lv02d.c     |    8 ++----
- drivers/misc/lis3lv02d/lis3lv02d.h     |    1 +
- drivers/misc/lis3lv02d/lis3lv02d_i2c.c |   19 +++++++++++++++
- drivers/misc/lis3lv02d/lis3lv02d_spi.c |    8 +++---
- 5 files changed, 69 insertions(+), 9 deletions(-)
-
--- 
-1.7.9.5
-
+ arch/powerpc/kernel/prom.c                   |    5 +----
+ arch/powerpc/platforms/powernv/opal.c        |    6 ++----
+ arch/powerpc/sysdev/qe_lib/qe.c              |    5 +----
+ drivers/net/ethernet/freescale/fsl_pq_mdio.c |    5 +----
+ drivers/of/base.c                            |   25 +++++++++++++++++++++++++
+ drivers/spi/spi-s3c64xx.c                    |    4 +---
+ drivers/tty/hvc/hvc_opal.c                   |    9 ++-------
+ include/linux/of.h                           |    2 ++
+ 8 files changed, 35 insertions(+), 26 deletions(-)
