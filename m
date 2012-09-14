@@ -1,122 +1,139 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH 2/2] ARM: dts: AM33XX: Add lis331dlh device tree data to
- am335x-evm
-Date: Fri, 14 Sep 2012 09:18:32 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA2F0AB@DBDE01.ent.ti.com>
-References: <1347551685-19781-1-git-send-email-anilkumar@ti.com>
- <1347551685-19781-3-git-send-email-anilkumar@ti.com>
- <201209140826.07069.arnd@arndb.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V4 1/2] of: Add generic device tree DMA helpers
+Date: Fri, 14 Sep 2012 09:43:49 +0000
+Message-ID: <201209140943.49904.arnd@arndb.de>
+References: <1347573629-21299-1-git-send-email-jon-hunter@ti.com> <1347573629-21299-2-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201209140826.07069.arnd@arndb.de>
-Content-Language: en-US
+In-Reply-To: <1347573629-21299-2-git-send-email-jon-hunter@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "eric.piel@tremplin-utc.net" <eric.piel@tremplin-utc.net>, "jic23@cam.ac.uk" <jic23@cam.ac.uk>, "greg@kroah.com" <greg@kroah.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Thursday 13 September 2012, Jon Hunter wrote:
+> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [2]
+> to add some basic helpers to retrieve a DMA controller device_node and the
+> DMA request/channel information.
 
-Thanks for the review,
+I think we're getting very close now, I only have a few small comments left
+that should all be uncontroversial.
 
-On Fri, Sep 14, 2012 at 13:56:06, Arnd Bergmann wrote:
-> On Thursday 13 September 2012, AnilKumar Ch wrote:
-> > Add lis331dlh device tree data to am335x-evm.dts. In AM335x EVM
-> > lis331dlh accelerometer is connected to I2C2 bus. So this patch
-> > change the status to "okay" to use I2C2 bus. Also added all the
-> > required platform data to am335x-evm.
-> > 
-> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> > ---
-> >  arch/arm/boot/dts/am335x-evm.dts |   42 ++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 42 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> > index 9fb59c5..9e5a878 100644
-> > --- a/arch/arm/boot/dts/am335x-evm.dts
-> > +++ b/arch/arm/boot/dts/am335x-evm.dts
-> > @@ -47,6 +47,15 @@
-> >  			};
-> >  		};
-> >  
-> > +		i2c2: i2c@4802a000 {
-> > +			status = "okay";
-> > +			clock-frequency = <400000>;
-> > +
-> > +			lis331dlh: lis331dlh@18 {
-> > +				reg = <0x18>;
-> > +			};
-> > +		};
-> 
-> Why do you put the "reg" property here
+> +
+> +Client drivers should specify the DMA property using a phandle to the controller
+> +followed by DMA controller specific data.
+> +
+> +Required property:
+> +- dmas:			List of one or more DMA specifiers, each consisting of
+> +			- A phandle pointing to DMA controller node
+> +			- A single integer cell containing DMA controller
+> +			  specific information. This typically contains a dma
+> +			  request line number or a channel number, but can
+> +			  contain any data that is used required for configuring
+> +			  a channel.
+> +- dma-names: 		Contains one identifier string for each dma specifier in
+> +			the dmas property. The specific strings that can be used
+> +			are defined in the binding of the DMA client device.
 
-Here I specified reg property because lis331dlh I2C slave address is 0x18.
+I think here we need to clarify that listing the same name multiple times implies
+having multiple alternatives for the same channel.
 
-> 
-> >  		dcan1: d_can@481d0000 {
-> >  			status = "okay";
-> >  			pinctrl-names = "default";
-> > @@ -61,6 +70,39 @@
-> >  		regulator-max-microvolt = <5000000>;
-> >  		regulator-boot-on;
-> >  	};
-> > +
-> > +	lis3_reg: fixedregulator@1 {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "lis3_reg";
-> > +		regulator-boot-on;
-> > +	};
-> > +};
-> > +&lis331dlh {
-> > +	compatible = "st,lis3lv02d-i2c";
-> 
-> and all the rest here? At least I would expect the "compatible" property
-> to be in the same place above.
+> +Example:
+> +
+> +- One DMA write channel, one DMA read/write channel:
+> +
+> +	i2c1: i2c@1 {
+> +		...
+> +		dmas = <&sdma 2		/* read channel */
+> +			&sdma 3>;	/* write channel */
+> +		dma-names = "rx", "tx"
+> +		...
+> +	};
 
-This data is appended to above one, to make it readable I moved remaining
-properties to here.
+And please add an example documenting this case.
 
-> 
-> Also, I think you should remove the "-i2c" postfix from the name, that
-> is already implied by the parent bus.
+> +/**
+> + * of_dma_find_channel - Find a DMA channel by name
+> + * @np:		device node to look for DMA channels
+> + * @name:	name of desired channel
+> + * @dma_spec:	pointer to DMA specifier as found in the device tree
+> + *
+> + * Find a DMA channel by the name. Returns 0 on success or appropriate
+> + * errno value on error.
+> + */
+> +static int of_dma_find_channel(struct device_node *np, char *name,
+> +			       struct of_phandle_args *dma_spec)
+> +{
+> +	int count, i;
+> +	const char *s;
+> +
+> +	count = of_property_count_strings(np, "dma-names");
+> +	if (count < 0)
+> +		return count;
+> +
+> +	for (i = 0; i < count; i++) {
+> +		of_property_read_string_index(np, "dma-names", i, &s);
+> +
+> +		if (strcmp(name, s))
+> +			continue;
+> +
+> +		return of_parse_phandle_with_args(np, "dmas", "#dma-cells",
+> +							i, dma_spec);
+> +	}
+> +
+> +	return -ENODEV;
+> +}
 
-I will remove, but in case of spi the compatible name is lis3lv02d_spi.
-By mistake I have uses "-i2c" instead of "_i2c".
+I think we should at least keep trying the other channels with the same name when 
+of_parse_phandle_with_args fails. We might want to do something smarter in
+the long run, e.g. to spread channel allocations across the avaialable controllers.
 
-> 
-> > +	Vdd-supply = <&lis3_reg>;
-> > +	Vdd_IO-supply = <&lis3_reg>;
-> > +
-> > +	st,click-single-x;
-> > +	st,click-single-y;
-> > +	st,click-single-z;
-> > +	st,click-thresh-x = <10>;
-> > +	st,click-thresh-y = <10>;
-> > +	st,click-thresh-z = <10>;
-> > +	st,irq1-click;
-> > +	st,irq2-click;
-> > +	st,wakeup-x-lo;
-> > +	st,wakeup-x-hi;
-> > +	st,wakeup-y-lo;
-> > +	st,wakeup-y-hi;
-> > +	st,wakeup-z-lo;
-> > +	st,wakeup-z-hi;
-> > +	st,min-limit-x = <120>;
-> > +	st,min-limit-y = <120>;
-> > +	st,min-limit-z = <140>;
-> > +	st,max-limit-x = <550>;
-> > +	st,max-limit-y = <550>;
-> > +	st,max-limit-z = <750>;
-> 
-> Is there a binding document that describes all these?
+> +/**
+> + * of_dma_request_slave_channel - Get the DMA slave channel
+> + * @np:		device node to get DMA request from
+> + * @name:	name of desired channel
+> + *
+> + * Returns pointer to appropriate dma channel on success or NULL on error.
+> + */
+> +struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+> +					      char *name)
+> +{
+> ...
+> +}
+> +EXPORT_SYMBOL_GPL(of_dma_request_slave_channel);
 
-Document is already present, 
-http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=2f2ff3cc8d930493f9a598b9192706c09403e12e
+I think this no longer needs to be exported, with patch 2 on top.
 
-Some minor changes in docs, in my next version I will update document
-as well. I will send V3 if there are no comments on v2.
+> +/**
+> + * of_dma_simple_xlate - Simple DMA engine translation function
+> + * @dma_spec:	pointer to DMA specifier as found in the device tree
+> + * @of_dma:	pointer to DMA controller data
+> + *
+> + * A simple translation function for devices that use a 32-bit value for the
+> + * filter_param when calling the DMA engine dma_request_channel() function.
+> + * Note that this translation function requires that #dma-cells is equal to 1
+> + * and the argument of the dma specifier is the 32-bit filter_param. Returns
+> + * pointer to appropriate dma channel on success or NULL on error.
+> + */
+> +struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+> +						struct of_dma *ofdma)
+> +{
+> +	int count = dma_spec->args_count;
+> +	struct of_dma_filter_info *info = ofdma->of_dma_data;
+> +
+> +	if (!info || !info->filter_fn)
+> +		return NULL;
+> +
+> +	if (count != 1)
+> +		return NULL;
+> +
+> +	return dma_request_channel(info->dma_cap, info->filter_fn,
+> +			&dma_spec->args[0]);
+> +}
 
-Thanks
-AnilKumar
+But this one does.
+
+	Arnd
