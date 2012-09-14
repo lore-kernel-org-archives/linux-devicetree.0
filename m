@@ -1,13 +1,11 @@
-From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Subject: [PATCH V3 1/2] hwmon: Add devicetree bindings to gpio-fan
-Date: Fri, 14 Sep 2012 17:07:06 +0100
-Message-ID: <1347638826-31797-1-git-send-email-jm@lentin.co.uk>
-References: <20120910184919.GA30872@roeck-us.net>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3] of: Add videomode helper
+Date: Fri, 14 Sep 2012 18:24:02 +0200
+Message-ID: <1347639842-13509-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120910184919.GA30872-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,218 +16,446 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allow a gpio-fan to be defined in devicetree, see binding documentation
-for details.
+This patch adds a helper function for parsing videomodes from the devicetree.
+The videomode can be either converted to a struct drm_display_mode or a
+struct fb_videomode.
 
-Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
-Changes since V2:-
-* Correct error message terminology
-* Check of_gpio_count returns some GPIOs [Guenter Roeck]
-* Whitespace fix [Guenter Roeck]
 
-Changes since V1:-
-* Don't hide return codes [Guenter Roeck]
-* Remove typecast noise [Guenter Roeck]
-* Use of_find_property instead of counting u32s [Guenter Roeck]
-* Don't count GPIOs twice [Andrew Lunn]
-* Use of_prop_next_u32 to get records in a more obvious fashion
-* Use CONFIG_OF_GPIO instead of CONFIG_OF
-* Apply __devinitdata to of_gpio_fan_match [Andrew Lunn]
----
- .../devicetree/bindings/gpio/gpio-fan.txt          |   25 ++++
- drivers/hwmon/gpio-fan.c                           |  120 ++++++++++++++++++++
- 2 files changed, 145 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-fan.txt
+Hi!
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+The original patch was done by Sascha Hauer. I reworked his v2 a "little" bit.
+Changes since v2:
+        - use hardware-near property-names
+        - provide a videomode structure
+        - allow ranges for all properties (<min,typ,max>)
+        - functions to get display_mode or fb_videomode
+
+Regards,
+Steffen
+
+ .../devicetree/bindings/video/displaymode          |   74 ++++++
+ drivers/of/Kconfig                                 |    5 +
+ drivers/of/Makefile                                |    1 +
+ drivers/of/of_videomode.c                          |  236 ++++++++++++++++++++
+ include/linux/of_videomode.h                       |   56 +++++
+ 5 files changed, 372 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/displaymode
+ create mode 100644 drivers/of/of_videomode.c
+ create mode 100644 include/linux/of_videomode.h
+
+diff --git a/Documentation/devicetree/bindings/video/displaymode b/Documentation/devicetree/bindings/video/displaymode
 new file mode 100644
-index 0000000..2dd457a
+index 0000000..990ca52
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
-@@ -0,0 +1,25 @@
-+Bindings for fan connected to GPIO lines
++++ b/Documentation/devicetree/bindings/video/displaymode
+@@ -0,0 +1,74 @@
++videomode bindings
++==================
 +
 +Required properties:
-+- compatible : "gpio-fan"
-+- gpios: Specifies the pins that map to bits in the control value,
-+  ordered MSB-->LSB.
-+- gpio-fan,speed-map: A mapping of possible fan RPM speeds and the
-+  control value that should be set to achieve them. This array
-+  must have the RPM values in ascending order.
++ - hactive, vactive: Display resolution
++ - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
++   in pixels
++   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
++   lines
++ - clock: displayclock in Hz
 +
 +Optional properties:
-+- alarm-gpios: This pin going active indicates something is wrong with
-+  the fan, and a udev event will be fired.
++ - width-mm, height-mm: Display dimensions in mm
++ - hsync-active-high (bool): Hsync pulse is active high
++ - vsync-active-high (bool): Vsync pulse is active high
++ - interlaced (bool): This is an interlaced mode
++ - doublescan (bool): This is a doublescan mode
 +
-+Examples:
++There are different ways of describing a display mode. The devicetree representation
++corresponds to the one commonly found in datasheets for displays.
++The description of the display and its mode is split in two parts: first the display
++properties like size in mm and (optionally) multiple subnodes with the supported modes.
 +
-+	gpio_fan {
-+		compatible = "gpio-fan";
-+		gpios = <&gpio1 14 1
-+			 &gpio1 13 1>;
-+		gpio-fan,speed-map = <0    0
-+				      3000 1
-+				      6000 2>;
-+		alarm-gpios = <&gpio1 15 1>;
++Example:
++
++	display@0 {
++		width-mm = <800>;
++		height-mm = <480>;
++		modes {
++			mode0: mode@0 {
++				/* 1920x1080p24 */
++				clock = <52000000>;
++				hactive = <1920>;
++				vactive = <1080>;
++				hfront-porch = <25>;
++				hback-porch = <25>;
++				hsync-len = <25>;
++				vback-porch = <2>;
++				vfront-porch = <2>;
++				vsync-len = <2>;
++				hsync-active-high;
++			};
++		};
 +	};
-diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
-index 2f4b01b..36509ae 100644
---- a/drivers/hwmon/gpio-fan.c
-+++ b/drivers/hwmon/gpio-fan.c
-@@ -31,6 +31,8 @@
- #include <linux/hwmon.h>
- #include <linux/gpio.h>
- #include <linux/gpio-fan.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_gpio.h>
- 
- struct gpio_fan_data {
- 	struct platform_device	*pdev;
-@@ -400,14 +402,131 @@ static ssize_t show_name(struct device *dev,
- 
- static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
- 
 +
-+#ifdef CONFIG_OF_GPIO
++Every property also supports the use of ranges, so the commonly used datasheet
++description with <min typ max>-tuples can be used.
++
++Example:
++
++	mode1: mode@1 {
++		/* 1920x1080p24 */
++		clock = <148500000>;
++		hactive = <1920>;
++		vactive = <1080>;
++		hsync-len = <0 44 60>;
++		hfront-porch = <80 88 95>;
++		hback-porch = <100 148 160>;
++		vfront-porch = <0 4 6>;
++		vback-porch = <0 36 50>;
++		vsync-len = <0 5 6>;
++	};
++
++The videomode can be linked to a connector via phandles. The connector has to
++support the display- and default-mode-property to link to and select a mode.
++
++Example:
++
++	hdmi@00120000 {
++		status = "okay";
++		display = <&benq>;
++		default-mode = <&mode1>;
++	};
++
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index dfba3e6..a3acaa3 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -83,4 +83,9 @@ config OF_MTD
+ 	depends on MTD
+ 	def_bool y
+ 
++config OF_VIDEOMODE
++	def_bool y
++	help
++	  helper to parse videomodes from the devicetree
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index e027f44..80e6db3 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
++obj-$(CONFIG_OF_VIDEOMODE)	+= of_videomode.o
+diff --git a/drivers/of/of_videomode.c b/drivers/of/of_videomode.c
+new file mode 100644
+index 0000000..217edf8
+--- /dev/null
++++ b/drivers/of/of_videomode.c
+@@ -0,0 +1,236 @@
 +/*
-+ * Translate OpenFirmware node properties into platform_data
++ * OF helpers for parsing display modes
++ *
++ * Copyright (c) 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
++ * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
++ *
++ * This file is released under the GPLv2
 + */
-+static int gpio_fan_get_of_pdata(struct device *dev,
-+			    struct gpio_fan_platform_data *pdata)
++#include <linux/of.h>
++#include <linux/fb.h>
++#include <linux/export.h>
++#include <linux/slab.h>
++#include <drm/drmP.h>
++#include <drm/drm_crtc.h>
++#include <linux/of_videomode.h>
++
++/* FIXME */
++static u32 of_video_get_value(struct mode_property *prop)
 +{
-+	struct device_node *node;
-+	struct gpio_fan_speed *speed;
-+	unsigned *ctrl;
-+	unsigned i;
-+	u32 u;
++	return (prop->min >= prop->typ) ? prop->min : prop->typ;
++}
++
++/* read property into new mode_property */
++static int of_video_parse_property(struct device_node *np, char *name,
++				struct mode_property *result)
++{
 +	struct property *prop;
-+	const __be32 *p;
++	int length;
++	int cells;
++	int ret;
 +
-+	node = dev->of_node;
++	prop = of_find_property(np, name, &length);
++	if (!prop)
++		return -EINVAL;
 +
-+	/* Fill GPIO pin array */
-+	pdata->num_ctrl = of_gpio_count(node);
-+	if (!pdata->num_ctrl) {
-+		dev_err(dev, "gpios DT property empty / missing");
-+		return -ENODEV;
++	cells = length / sizeof(u32);
++
++	memset(result, 0, sizeof(*result));
++
++	ret = of_property_read_u32_array(np, name, &result->min, cells);
++	of_video_get_value(result);
++	return ret;
++}
++
++int videomode_to_display_mode(struct display *disp, struct drm_display_mode *dmode, int index)
++{
++	struct videomode *vm;
++
++        memset(dmode, 0, sizeof(*dmode));
++
++	if (index > disp->num_modes)
++		return -EINVAL;
++	vm = disp->modes[index];
++
++	dmode->hdisplay = of_video_get_value(&vm->hactive);
++	dmode->hsync_start = of_video_get_value(&vm->hactive) + of_video_get_value(&vm->hfront_porch);
++	dmode->hsync_end = of_video_get_value(&vm->hactive) + of_video_get_value(&vm->hfront_porch)
++			+ of_video_get_value(&vm->hsync_len);
++	dmode->htotal = of_video_get_value(&vm->hactive) + of_video_get_value(&vm->hfront_porch)
++			+ of_video_get_value(&vm->hsync_len) + of_video_get_value(&vm->hback_porch);
++
++	dmode->vdisplay = of_video_get_value(&vm->vactive);
++	dmode->vsync_start = of_video_get_value(&vm->vactive) + of_video_get_value(&vm->vfront_porch);
++	dmode->vsync_end = of_video_get_value(&vm->vactive) + of_video_get_value(&vm->vfront_porch)
++			+ of_video_get_value(&vm->vsync_len);
++	dmode->vtotal = of_video_get_value(&vm->vactive) + of_video_get_value(&vm->vfront_porch) +
++			of_video_get_value(&vm->vsync_len) + of_video_get_value(&vm->vback_porch);
++
++	dmode->width_mm = disp->width_mm;
++	dmode->height_mm = disp->height_mm;
++
++	dmode->clock = of_video_get_value(&vm->clock) / 1000;
++
++	if (vm->hah)
++		dmode->flags |= DRM_MODE_FLAG_PHSYNC;
++	else
++		dmode->flags |= DRM_MODE_FLAG_NHSYNC;
++	if (vm->vah)
++		dmode->flags |= DRM_MODE_FLAG_PVSYNC;
++	else
++		dmode->flags |= DRM_MODE_FLAG_NVSYNC;
++	if (vm->interlaced)
++		dmode->flags |= DRM_MODE_FLAG_INTERLACE;
++	if (vm->doublescan)
++		dmode->flags |= DRM_MODE_FLAG_DBLSCAN;
++
++	drm_mode_set_name(dmode);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(videomode_to_display_mode);
++
++int videomode_to_fb_mode(struct display *disp, struct fb_videomode *fbmode, int index)
++{
++	struct videomode *vm;
++	memset(fbmode, 0, sizeof(*fbmode));
++
++	vm = disp->modes[index];
++
++	fbmode->xres = of_video_get_value(&vm->hactive);
++	fbmode->left_margin = of_video_get_value(&vm->hback_porch);
++	fbmode->right_margin = of_video_get_value(&vm->hfront_porch);
++	fbmode->hsync_len = of_video_get_value(&vm->hsync_len);
++
++	fbmode->yres = of_video_get_value(&vm->vactive);
++	fbmode->upper_margin = of_video_get_value(&vm->vback_porch);
++	fbmode->lower_margin = of_video_get_value(&vm->vfront_porch);
++	fbmode->vsync_len = of_video_get_value(&vm->vsync_len);
++
++	fbmode->pixclock = KHZ2PICOS(of_video_get_value(&vm->clock) / 1000);
++
++	if (vm->hah)
++		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
++	if (vm->vah)
++		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
++	if (vm->interlaced)
++		fbmode->vmode |= FB_VMODE_INTERLACED;
++	if (vm->doublescan)
++		fbmode->vmode |= FB_VMODE_DOUBLE;
++	return 0;
++}
++EXPORT_SYMBOL_GPL(videomode_to_fb_mode);
++
++int of_get_video_mode(struct device_node *np, struct display *disp)
++{
++	struct device_node *display_np;
++	struct device_node *mode_np;
++	struct device_node *modes_np;
++	char *default_mode;
++
++	int ret = 0;
++
++	memset(disp, 0, sizeof(*disp));
++	disp->modes = kmalloc(sizeof(struct videomode*), GFP_KERNEL);
++	if (!np)
++		return -EINVAL;
++
++	display_np = of_parse_phandle(np, "display", 0);
++
++	if (!display_np)
++		return -EINVAL;
++
++	of_property_read_u32(display_np, "width-mm", &disp->width_mm);
++	of_property_read_u32(display_np, "height-mm", &disp->height_mm);
++
++	mode_np = of_parse_phandle(np, "default-mode", 0);
++
++	if (!mode_np)
++		mode_np = of_find_node_by_name(np, "mode");
++
++	if (!mode_np)
++		return -EINVAL;
++
++	default_mode = (char *)mode_np->full_name;
++
++	modes_np = of_find_node_by_name(np, "modes");
++	for_each_child_of_node(modes_np, mode_np) {
++		struct videomode *vm;
++		vm = kmalloc(sizeof(struct videomode), GFP_KERNEL);
++		disp->modes[disp->num_modes] = kmalloc(sizeof(struct videomode*), GFP_KERNEL);
++
++		ret |= of_video_parse_property(mode_np, "hback-porch", &vm->hback_porch);
++		ret |= of_video_parse_property(mode_np, "hfront-porch", &vm->hfront_porch);
++		ret |= of_video_parse_property(mode_np, "hactive", &vm->hactive);
++		ret |= of_video_parse_property(mode_np, "hsync-len", &vm->hsync_len);
++		ret |= of_video_parse_property(mode_np, "vback-porch", &vm->vback_porch);
++		ret |= of_video_parse_property(mode_np, "vfront-porch", &vm->vfront_porch);
++		ret |= of_video_parse_property(mode_np, "vactive", &vm->vactive);
++		ret |= of_video_parse_property(mode_np, "vsync-len", &vm->vsync_len);
++		ret |= of_video_parse_property(mode_np, "clock", &vm->clock);
++
++		if (ret)
++			return -EINVAL;
++
++		vm->hah = of_property_read_bool(mode_np, "hsync-active-high");
++		vm->vah = of_property_read_bool(mode_np, "vsync-active-high");
++		vm->interlaced = of_property_read_bool(mode_np, "interlaced");
++		vm->doublescan = of_property_read_bool(mode_np, "doublescan");
++
++		if (strcmp(default_mode,mode_np->full_name) == 0) {
++			printk("%s: default_node = %d\n", __func__, disp->num_modes);
++			disp->default_mode = disp->num_modes;
++		}
++
++		disp->modes[disp->num_modes] = vm;
++		disp->num_modes++;
 +	}
-+	ctrl = devm_kzalloc(dev, pdata->num_ctrl * sizeof(unsigned),
-+				GFP_KERNEL);
-+	if (!ctrl)
-+		return -ENOMEM;
-+	for (i = 0; i < pdata->num_ctrl; i++) {
-+		int val;
-+
-+		val = of_get_gpio(node, i);
-+		if (val < 0)
-+			return val;
-+		ctrl[i] = val;
-+	}
-+	pdata->ctrl = ctrl;
-+
-+	/* Get number of RPM/ctrl_val pairs in speed map */
-+	prop = of_find_property(node, "gpio-fan,speed-map", &i);
-+	if (!prop) {
-+		dev_err(dev, "gpio-fan,speed-map DT property missing");
-+		return -ENODEV;
-+	}
-+	i = i / sizeof(u32);
-+	if (i == 0 || i & 1) {
-+		dev_err(dev, "gpio-fan,speed-map contains zero/odd number of entries");
-+		return -ENODEV;
-+	}
-+	pdata->num_speed = i / 2;
-+
-+	/*
-+	 * Populate speed map
-+	 * Speed map is in the form <RPM ctrl_val RPM ctrl_val ...>
-+	 * this needs splitting into pairs to create gpio_fan_speed structs
-+	 */
-+	speed = devm_kzalloc(dev,
-+			pdata->num_speed * sizeof(struct gpio_fan_speed),
-+			GFP_KERNEL);
-+	if (!speed)
-+		return -ENOMEM;
-+	p = NULL;
-+	for (i = 0; i < pdata->num_speed; i++) {
-+		p = of_prop_next_u32(prop, p, &u);
-+		if (!p)
-+			return -ENODEV;
-+		speed[i].rpm = u;
-+		p = of_prop_next_u32(prop, p, &u);
-+		if (!p)
-+			return -ENODEV;
-+		speed[i].ctrl_val = u;
-+	}
-+	pdata->speed = speed;
-+
-+	/* Alarm GPIO if one exists */
-+	if (of_gpio_named_count(node, "alarm-gpios")) {
-+		struct gpio_fan_alarm *alarm;
-+		int val;
-+		enum of_gpio_flags flags;
-+
-+		alarm = devm_kzalloc(dev, sizeof(struct gpio_fan_alarm),
-+					GFP_KERNEL);
-+		if (!alarm)
-+			return -ENOMEM;
-+
-+		val = of_get_named_gpio_flags(node, "alarm-gpios", 0, &flags);
-+		if (val < 0)
-+			return val;
-+		alarm->gpio = val;
-+		alarm->active_low = flags & OF_GPIO_ACTIVE_LOW;
-+
-+		pdata->alarm = alarm;
-+	}
++	of_node_put(display_np);
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(of_get_video_mode);
 +
-+static struct of_device_id of_gpio_fan_match[] __devinitdata = {
-+	{ .compatible = "gpio-fan", },
-+	{},
++int of_video_mode_exists(struct device_node *np)
++{
++	struct device_node *display_np;
++	struct device_node *mode_np;
++
++	if (!np)
++		return -EINVAL;
++
++	display_np = of_parse_phandle(np, "display", 0);
++	if (!display_np)
++		return -EINVAL;
++	mode_np = of_parse_phandle(np, "default-mode", 0);
++	if (mode_np)
++		return 0;
++	return -EINVAL;
++}
++EXPORT_SYMBOL_GPL(of_video_mode_exists);
++
++int of_get_display_mode(struct device_node *np, struct drm_display_mode *dmode, int index)
++{
++	struct display disp;
++
++	of_get_video_mode(np, &disp);
++	if (index == OF_MODE_SELECTION)
++		index = disp.default_mode;
++	if (dmode)
++		videomode_to_display_mode(&disp, dmode, index);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_get_display_mode);
++
++int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fbmode, int index)
++{
++	struct display disp;
++
++	of_get_video_mode(np, &disp);
++
++	if (fbmode)
++		videomode_to_fb_mode(&disp, fbmode, index);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_get_fb_videomode);
+diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
+new file mode 100644
+index 0000000..a6b4da0
+--- /dev/null
++++ b/include/linux/of_videomode.h
+@@ -0,0 +1,56 @@
++/*
++ * Copyright 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ * Copyright 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ *
++ * OF helpers for videomodes.
++ *
++ * This file is released under the GPLv2
++ */
++
++#ifndef __LINUX_OF_VIDEOMODE_H
++#define __LINUX_OF_VIDEOMODE_H
++
++#define OF_MODE_SELECTION -1
++
++struct mode_property {
++	u32 min;
++	u32 typ;
++	u32 max;
 +};
-+#endif /* CONFIG_OF_GPIO */
 +
- static int __devinit gpio_fan_probe(struct platform_device *pdev)
- {
- 	int err;
- 	struct gpio_fan_data *fan_data;
- 	struct gpio_fan_platform_data *pdata = pdev->dev.platform_data;
- 
-+#ifdef CONFIG_OF_GPIO
-+	if (!pdata) {
-+		pdata = devm_kzalloc(&pdev->dev,
-+					sizeof(struct gpio_fan_platform_data),
-+					GFP_KERNEL);
-+		if (!pdata)
-+			return -ENOMEM;
++struct display {
++	u32 width_mm;
++	u32 height_mm;
++	struct videomode **modes;
++	int default_mode;
++	int num_modes;
++};
 +
-+		err = gpio_fan_get_of_pdata(&pdev->dev, pdata);
-+		if (err)
-+			return err;
-+	}
-+#else /* CONFIG_OF_GPIO */
- 	if (!pdata)
- 		return -EINVAL;
-+#endif /* CONFIG_OF_GPIO */
- 
- 	fan_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
- 				GFP_KERNEL);
-@@ -511,6 +630,7 @@ static struct platform_driver gpio_fan_driver = {
- 	.driver	= {
- 		.name	= "gpio-fan",
- 		.pm	= GPIO_FAN_PM,
-+		.of_match_table = of_match_ptr(of_gpio_fan_match),
- 	},
- };
- 
++/* describe videomode in terms of hardware parameters */
++struct videomode {
++	struct mode_property hback_porch;
++	struct mode_property hfront_porch;
++	struct mode_property hactive;
++	struct mode_property hsync_len;
++
++	struct mode_property vback_porch;
++	struct mode_property vfront_porch;
++	struct mode_property vactive;
++	struct mode_property vsync_len;
++
++	struct mode_property clock;
++
++	bool hah;
++	bool vah;
++	bool interlaced;
++	bool doublescan;
++};
++
++int of_video_mode_exists(struct device_node *np);
++int videomode_to_display_mode(struct display *disp, struct drm_display_mode *dmode, int index);
++int videomode_to_fb_mode(struct display *disp, struct fb_videomode *fbmode, int index);
++int of_get_video_mode(struct device_node *np, struct display *disp);
++int of_video_mode_exists(struct device_node *np);
++int of_get_display_mode(struct device_node *np, struct drm_display_mode *dmode, int index);
++int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fbmode, int index);
++#endif /* __LINUX_OF_VIDEOMODE_H */
 -- 
 1.7.10.4
