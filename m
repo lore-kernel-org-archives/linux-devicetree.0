@@ -1,66 +1,87 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] dt/powerpc: Use of_get_child_by_name to get a
- named child.
-Date: Fri, 14 Sep 2012 08:06:52 -0500
-Message-ID: <50532BEC.70201@gmail.com>
-References: <1347610724-20152-1-git-send-email-srinivas.kandagatla@st.com>
+From: Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 06/24] docs: Xen ARM DT bindings
+Date: Fri, 14 Sep 2012 09:01:51 -0400
+Message-ID: <20120914130151.GH25249@phenom.dumpdata.com>
+References: <alpine.DEB.2.02.1209141145150.29232@kaball.uk.xensource.com>
+	<1347621207-11294-6-git-send-email-stefano.stabellini@eu.citrix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1347610724-20152-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1347621207-11294-6-git-send-email-stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Cc: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org, linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tim-LM2mM/qkH7s@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2012 03:18 AM, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+On Fri, Sep 14, 2012 at 12:13:08PM +0100, Stefano Stabellini wrote:
+> Add a doc to describe the Xen ARM device tree bindings
 > 
-> As follow-up to "dt: introduce of_get_child_by_name to get child node by
-> name." patch, This patch removes some of the code duplication in the
-> driver by replacing it with of_get_child_by_name instead.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> Changes in v4:
+> 
+> - "xen,xen" should be last as it is less specific;
+> - update reg property using 2 address-cells and 2 size-cells.
+> 
+> 
+> Signed-off-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> CC: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+> CC: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> CC: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/powerpc/kernel/prom.c |    5 +----
->  1 files changed, 1 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/arm/xen.txt |   22 ++++++++++++++++++++++
+>  1 files changed, 22 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/xen.txt
 > 
-> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index f191bf0..80e5b6c 100644
-> --- a/arch/powerpc/kernel/prom.c
-> +++ b/arch/powerpc/kernel/prom.c
-> @@ -735,7 +735,6 @@ void __init early_init_devtree(void *params)
->   */
->  struct device_node *of_find_next_cache_node(struct device_node *np)
->  {
-> -	struct device_node *child;
->  	const phandle *handle;
->  
->  	handle = of_get_property(np, "l2-cache", NULL);
-> @@ -749,9 +748,7 @@ struct device_node *of_find_next_cache_node(struct device_node *np)
->  	 * beneath CPU nodes.
->  	 */
->  	if (!strcmp(np->type, "cpu"))
-> -		for_each_child_of_node(np, child)
-> -			if (!strcmp(child->type, "cache"))
+> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
+> new file mode 100644
+> index 0000000..1f8f7d4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+> @@ -0,0 +1,22 @@
+> +* Xen hypervisor device tree bindings
+> +
+> +Xen ARM virtual platforms shall have the following properties:
+> +
+> +- compatible:
+> +	compatible = "xen,xen-<version>", "xen,xen";
+> +  where <version> is the version of the Xen ABI of the platform.
+> +
+> +- reg: specifies the base physical address and size of a region in
+> +  memory where the grant table should be mapped to, using an
+> +  HYPERVISOR_memory_op hypercall. 
+> +
+> +- interrupts: the interrupt used by Xen to inject event notifications.
 
-name and type are not the same thing.
+Its singular here.. but in the example its plurar. What if you use
+multiple of the same number ("16 0xf")?
 
-Rob
+> +
+> +
+> +Example:
+> +
+> +hypervisor {
+> +	compatible = "xen,xen-4.3", "xen,xen";
+> +	reg = <0 0xb0000000 0 0x20000>;
 
-> -				return child;
-> +		return of_get_child_by_name(np, "cache");
->  
->  	return NULL;
->  }
-> 
+So two grant tables?
+
+Hm, physical address is zero, and the size is 0xbignumber?
+Or is the '0' denotating a seperator of arguments, so it is
+0xb000.. for physical address and 0x20000 for size?
+
+
+> +	interrupts = <1 15 0xf08>;
+> +};
+> -- 
+> 1.7.2.5
