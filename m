@@ -1,550 +1,235 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH V5 1/2] of: Add generic device tree DMA helpers
-Date: Fri, 14 Sep 2012 17:37:37 +0200
-Message-ID: <50534F41.9070908@atmel.com>
-References: <1347635923-30166-1-git-send-email-jon-hunter@ti.com> <1347635923-30166-2-git-send-email-jon-hunter@ti.com>
+From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Subject: [PATCH V3 1/2] hwmon: Add devicetree bindings to gpio-fan
+Date: Fri, 14 Sep 2012 17:07:06 +0100
+Message-ID: <1347638826-31797-1-git-send-email-jm@lentin.co.uk>
+References: <20120910184919.GA30872@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1347635923-30166-2-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120910184919.GA30872-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2012 05:18 PM, Jon Hunter :
-> This is based upon the work by Benoit Cousson [1] and Nicolas Ferre [2]
-> to add some basic helpers to retrieve a DMA controller device_node and the
-> DMA request/channel information.
-> 
-> Aim of DMA helpers
-> - The purpose of device-tree is to describe the capabilites of the hardware.
->   Thinking about DMA controllers purely from the context of the hardware to
->   begin with, we can describe a device in terms of a DMA controller as
->   follows ...
->   	1. Number of DMA controllers
-> 	2. Number of channels (maybe physical or logical)
-> 	3. Mapping of DMA requests signals to DMA controller
-> 	4. Number of DMA interrupts
-> 	5. Mapping of DMA interrupts to channels
-> - With the above in mind the aim of the DT DMA helper functions is to extract
->   the above information from the DT and provide to the appropriate driver.
->   However, due to the vast number of DMA controllers and not all are using a
->   common driver (such as DMA Engine) it has been seen that this is not a
->   trivial task. In previous discussions on this topic the following concerns
->   have been raised ...
-> 	1. How does the binding support devices with multiple DMA controllers?
->   	2. How to support both legacy DMA controllers not using DMA Engine as
-> 	   well as those that support DMA Engine.
-> 	3. When using with DMA Engine how do we support the various
-> 	   implementations where the opaque filter function parameter differs
-> 	   between implementations?
-> 	4. How do we handle DMA channels that are identified with a string
-> 	   versus a integer?
-> - Hence the design of the DMA helpers has to accomodate the above or align on
->   an agreement what can be or should be supported.
-> 
-> Design of DMA helpers
-> 
-> 1. Registering DMA controllers
-> 
->    In the case of DMA controllers that are using DMA Engine, requesting a
->    channel is performed by calling the following function.
-> 
-> 	struct dma_chan *dma_request_channel(dma_cap_mask_t mask,
-> 			dma_filter_fn filter_fn,
-> 			void *filter_param);
-> 
->    The mask variable is used to match a type of the device controller in a list
->    of controllers. The filter_fn and filter_param are used to identify the
->    required dma channel and return a handle to the dma channel of type dma_chan.
-> 
->    From the examples I have seen, the mask and filter_fn are constant
->    for a given DMA controller and therefore, we can specify these as controller
->    specific data when registering the DMA controller with the device-tree DMA
->    helpers.
-> 
->    The filter_param variable is of an unknown type and is typically specific
->    to the DMA engine implementation for a given DMA controller. To allow some
->    flexibility in the type and formating of this filter_param we employ an
->    xlate to translate the device-tree binding information into the appropriate
->    format. The xlate function used for a DMA controller can also be specified
->    when registering the DMA controller with the device-tree DMA helpers.
-> 
->    Based upon the above, a function for registering the DMA controller with the
->    DMA helpers now looks like the below. The data variable is used to pass a
->    pointer to DMA controller specific data used by the xlate function.
-> 
-> 	int of_dma_controller_register(struct device_node *np,
-> 		struct dma_chan *(*of_dma_xlate)
-> 		(struct of_phandle_args *, struct of_dma *),
-> 		void *data)
-> 
->    For example, in the case where DMA engine is used, we define the following
->    structure (that stores the DMA engine capability mask and filter function)
->    and pass this to the data variable in the above function.
-> 
-> 	struct of_dma_filter_info {
-> 		dma_cap_mask_t  dma_cap;
-> 		dma_filter_fn   filter_fn;
-> 	};
-> 
-> 2. Representing and requesting channel information
-> 
->    Please see the dma binding documentation included in this patch for a
->    description of how DMA controllers and client information should be
->    represented with device-tree. For more information on how this binding
->    came about please see [3]. In addition to this, feedback received from
->    the Linux kernel summit showed a consensus (among those who attended) to
->    use a name to identify DMA client information [4].
-> 
->    A DMA channel can be requested by calling the following function, where name
->    is a required parameter used for identifying a DMA channel. This function
->    has been designed to return a structure of type dma_chan to work with the
->    DMA engine driver. Note that if DMA engine is used then drivers should be
->    using the DMA engine API dma_request_slave_channel() (implemented in part 2
->    of this series, "dmaengine: add helper function to request a slave DMA
->    channel") which will in turn call the below function if device-tree is
->    present. The aim being to have a common DMA engine interface regardless of
->    whether device tree is being used.
-> 
-> 	struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
-> 						      char *name)
-> 
-> 3. Supporting legacy devices not using DMA Engine
-> 
->    These devices present a problem, as there may not be a uniform way to easily
->    support them with regard to device tree. Ideally, these should be migrated
->    to DMA engine. However, if this is not possible, then they should still be
->    able to use this binding, the only constaint imposed by this implementation
->    is that when requesting a DMA channel via of_dma_request_slave_channel(), it
->    will return a type of dma_chan.
-> 
-> This implementation has been tested on OMAP4430 using the kernel v3.6-rc5. I
-> have validated that MMC is working on the PANDA board with this implementation.
-> My development branch for testing on OMAP can be found here [5].
-> 
-> v5: - minor update to binding documentation
->     - added loop to exhaustively search for a slave channel in the case where
->       there could be alternative channels available
-> v4: - revert the removal of xlate function from v3
->     - update the proposed binding format and APIs based upon discussions [3]
-> v3: - avoid passing an xlate function and instead pass DMA engine parameters
->     - define number of dma channels and requests in dma-controller node
-> v2: - remove of_dma_to_resource API
->     - make property #dma-cells required (no fallback anymore)
->     - another check in of_dma_xlate_onenumbercell() function
-> 
-> [1] http://article.gmane.org/gmane.linux.drivers.devicetree/12022
-> [2] http://article.gmane.org/gmane.linux.ports.arm.omap/73622
-> [3] http://marc.info/?l=linux-omap&m=133582085008539&w=2
-> [4] http://pad.linaro.org/arm-mini-summit-2012
-> [5] https://github.com/jonhunter/linux/tree/dev-dt-dma
-> 
-> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+Allow a gpio-fan to be defined in devicetree, see binding documentation
+for details.
 
-I like it a lot.
+Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+---
+Changes since V2:-
+* Correct error message terminology
+* Check of_gpio_count returns some GPIOs [Guenter Roeck]
+* Whitespace fix [Guenter Roeck]
 
-Reviewed-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Changes since V1:-
+* Don't hide return codes [Guenter Roeck]
+* Remove typecast noise [Guenter Roeck]
+* Use of_find_property instead of counting u32s [Guenter Roeck]
+* Don't count GPIOs twice [Andrew Lunn]
+* Use of_prop_next_u32 to get records in a more obvious fashion
+* Use CONFIG_OF_GPIO instead of CONFIG_OF
+* Apply __devinitdata to of_gpio_fan_match [Andrew Lunn]
+---
+ .../devicetree/bindings/gpio/gpio-fan.txt          |   25 ++++
+ drivers/hwmon/gpio-fan.c                           |  120 ++++++++++++++++++++
+ 2 files changed, 145 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-fan.txt
 
-Thanks to all of you for making this happen!
-
-
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Stephen Warren <swarren@nvidia.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Vinod Koul <vinod.koul@intel.com>
-> Cc: Dan Williams <djbw@fb.com>
-> 
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->  Documentation/devicetree/bindings/dma/dma.txt |   80 +++++++++
->  drivers/of/Makefile                           |    2 +-
->  drivers/of/dma.c                              |  219 +++++++++++++++++++++++++
->  include/linux/of_dma.h                        |   45 +++++
->  4 files changed, 345 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/dma.txt
->  create mode 100644 drivers/of/dma.c
->  create mode 100644 include/linux/of_dma.h
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-> new file mode 100644
-> index 0000000..c5f8430
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/dma.txt
-> @@ -0,0 +1,80 @@
-> +* Generic DMA Controller and DMA request bindings
-> +
-> +Generic binding to provide a way for a driver using DMA Engine to retrieve the
-> +DMA request or channel information that goes from a hardware device to a DMA
-> +controller.
-> +
-> +
-> +* DMA controller
-> +
-> +Required property:
-> +- #dma-cells: 		Must be at least 1. Used to provide DMA controller
-> +			specific information. See DMA client binding below for
-> +			more details.
-> +
-> +Optional properties:
-> +- #dma-channels: 	Number of DMA channels supported by the controller.
-> +- #dma-requests: 	Number of DMA requests signals supported by the
-> +			controller.
-> +
-> +Example:
-> +
-> +	dma: dma@48000000 {
-> +		compatible = "ti,omap-sdma"
-> +		reg = <0x48000000 0x1000>;
-> +		interrupts = <0 12 0x4
-> +			      0 13 0x4
-> +			      0 14 0x4
-> +			      0 15 0x4>;
-> +		#dma-cells = <1>;
-> +		#dma-channels = <32>;
-> +		#dma-requests = <127>;
-> +	};
-> +
-> +
-> +* DMA client
-> +
-> +Client drivers should specify the DMA property using a phandle to the controller
-> +followed by DMA controller specific data.
-> +
-> +Required property:
-> +- dmas:			List of one or more DMA specifiers, each consisting of
-> +			- A phandle pointing to DMA controller node
-> +			- A single integer cell containing DMA controller
-> +			  specific information. This typically contains a dma
-> +			  request line number or a channel number, but can
-> +			  contain any data that is used required for configuring
-> +			  a channel.
-> +- dma-names: 		Contains one identifier string for each DMA specifier in
-> +			the dmas property. The specific strings that can be used
-> +			are defined in the binding of the DMA client device.
-> +			Multiple DMA specifiers can be used to represent
-> +			alternatives and in this case the dma-names for those
-> +			DMA specifiers must be identical (see examples).
-> +
-> +Examples:
-> +
-> +1. A device with one DMA read channel, one DMA write channel:
-> +
-> +	i2c1: i2c@1 {
-> +		...
-> +		dmas = <&dma 2		/* read channel */
-> +			&dma 3>;	/* write channel */
-> +		dma-names = "rx", "tx"
-> +		...
-> +	};
-> +
-> +2. A single read-write channel with two alternative dma controllers:
-> +
-> +	dmas = <&dma1 5
-> +		&dma2 7
-> +		&dma3 2>;
-> +	dma-names = "rx-tx", "rx-tx", "rx-tx"
-> +
-> +3. A device with three channels, one of which has two alternatives:
-> +
-> +	dmas = <&dma1 2			/* read channel */
-> +		&dma1 3			/* write channel */
-> +		&dma2 0			/* error read */
-> +		&dma3 0>;		/* alternative error read */
-> +	dma-names = "rx", "tx", "error", "error";
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index e027f44..eafa107 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -1,4 +1,4 @@
-> -obj-y = base.o
-> +obj-y = base.o dma.o
->  obj-$(CONFIG_OF_FLATTREE) += fdt.o
->  obj-$(CONFIG_OF_PROMTREE) += pdt.o
->  obj-$(CONFIG_OF_ADDRESS)  += address.o
-> diff --git a/drivers/of/dma.c b/drivers/of/dma.c
-> new file mode 100644
-> index 0000000..19ad37c
-> --- /dev/null
-> +++ b/drivers/of/dma.c
-> @@ -0,0 +1,219 @@
-> +/*
-> + * Device tree helpers for DMA request / controller
-> + *
-> + * Based on of_gpio.c
-> + *
-> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/rculist.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_dma.h>
-> +
-> +static LIST_HEAD(of_dma_list);
-> +
-> +/**
-> + * of_dma_find_controller - Find a DMA controller in DT DMA helpers list
-> + * @np:		device node of DMA controller
-> + */
-> +static struct of_dma *of_dma_find_controller(struct device_node *np)
-> +{
-> +	struct of_dma *ofdma;
-> +
-> +	if (list_empty(&of_dma_list)) {
-> +		pr_err("empty DMA controller list\n");
-> +		return NULL;
-> +	}
-> +
-> +	list_for_each_entry_rcu(ofdma, &of_dma_list, of_dma_controllers)
-> +		if (ofdma->of_node == np)
-> +			return ofdma;
-> +
-> +	return NULL;
-> +}
-> +
-> +/**
-> + * of_dma_controller_register - Register a DMA controller to DT DMA helpers
-> + * @np:			device node of DMA controller
-> + * @of_dma_xlate:	translation function which converts a phandle
-> + *			arguments list into a dma_chan structure
-> + * @data		pointer to controller specific data to be used by
-> + *			translation function
-> + *
-> + * Returns 0 on success or appropriate errno value on error.
-> + *
-> + * Allocated memory should be freed with appropriate of_dma_controller_free()
-> + * call.
-> + */
-> +int of_dma_controller_register(struct device_node *np,
-> +				struct dma_chan *(*of_dma_xlate)
-> +				(struct of_phandle_args *, struct of_dma *),
-> +				void *data)
-> +{
-> +	struct of_dma	*ofdma;
-> +	int		nbcells;
-> +
-> +	if (!np || !of_dma_xlate) {
-> +		pr_err("%s: not enough information provided\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ofdma = kzalloc(sizeof(*ofdma), GFP_KERNEL);
-> +	if (!ofdma)
-> +		return -ENOMEM;
-> +
-> +	nbcells = be32_to_cpup(of_get_property(np, "#dma-cells", NULL));
-> +	if (!nbcells) {
-> +		pr_err("%s: #dma-cells property is missing or invalid\n",
-> +		       __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ofdma->of_node = np;
-> +	ofdma->of_dma_nbcells = nbcells;
-> +	ofdma->of_dma_xlate = of_dma_xlate;
-> +	ofdma->of_dma_data = data;
-> +
-> +	/* Now queue of_dma controller structure in list */
-> +	list_add_tail_rcu(&ofdma->of_dma_controllers, &of_dma_list);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_dma_controller_register);
-> +
-> +/**
-> + * of_dma_controller_free - Remove a DMA controller from DT DMA helpers list
-> + * @np:		device node of DMA controller
-> + *
-> + * Memory allocated by of_dma_controller_register() is freed here.
-> + */
-> +void of_dma_controller_free(struct device_node *np)
-> +{
-> +	struct of_dma *ofdma;
-> +
-> +	ofdma = of_dma_find_controller(np);
-> +	if (ofdma) {
-> +		list_del_rcu(&ofdma->of_dma_controllers);
-> +		kfree(ofdma);
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(of_dma_controller_free);
-> +
-> +/**
-> + * of_dma_find_channel - Find a DMA channel by name
-> + * @np:		device node to look for DMA channels
-> + * @name:	name of desired channel
-> + * @dma_spec:	pointer to DMA specifier as found in the device tree
-> + *
-> + * Find a DMA channel by the name. Returns 0 on success or appropriate
-> + * errno value on error.
-> + */
-> +static int of_dma_find_channel(struct device_node *np, char *name,
-> +			       struct of_phandle_args *dma_spec)
-> +{
-> +	int count, i;
-> +	const char *s;
-> +
-> +	count = of_property_count_strings(np, "dma-names");
-> +	if (count < 0)
-> +		return count;
-> +
-> +	for (i = 0; i < count; i++) {
-> +		if (of_property_read_string_index(np, "dma-names", i, &s))
-> +			continue;
-> +
-> +		if (strcmp(name, s))
-> +			continue;
-> +
-> +		if (!of_parse_phandle_with_args(np, "dmas", "#dma-cells", i,
-> +						dma_spec))
-> +			return 0;
-> +	}
-> +
-> +	return -ENODEV;
-> +}
-> +
-> +/**
-> + * of_dma_request_slave_channel - Get the DMA slave channel
-> + * @np:		device node to get DMA request from
-> + * @name:	name of desired channel
-> + *
-> + * Returns pointer to appropriate dma channel on success or NULL on error.
-> + */
-> +struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
-> +					      char *name)
-> +{
-> +	struct of_phandle_args	dma_spec;
-> +	struct of_dma		*ofdma;
-> +	struct dma_chan		*chan;
-> +	int			r;
-> +
-> +	if (!np || !name) {
-> +		pr_err("%s: not enough information provided\n", __func__);
-> +		return NULL;
-> +	}
-> +
-> +	do {
-> +		r = of_dma_find_channel(np, name, &dma_spec);
-> +		if (r) {
-> +			pr_err("%s: can't find DMA channel\n", np->full_name);
-> +			return NULL;
-> +		}
-> +
-> +		ofdma = of_dma_find_controller(dma_spec.np);
-> +		if (!ofdma) {
-> +			pr_debug("%s: can't find DMA controller %s\n",
-> +				 np->full_name, dma_spec.np->full_name);
-> +			continue;
-> +		}
-> +
-> +		if (dma_spec.args_count != ofdma->of_dma_nbcells) {
-> +			pr_debug("%s: wrong #dma-cells for %s\n", np->full_name,
-> +				 dma_spec.np->full_name);
-> +			continue;
-> +		}
-> +
-> +		chan = ofdma->of_dma_xlate(&dma_spec, ofdma);
-> +
-> +		of_node_put(dma_spec.np);
-> +
-> +	} while (!chan);
-> +
-> +	return chan;
-> +}
-> +
-> +/**
-> + * of_dma_simple_xlate - Simple DMA engine translation function
-> + * @dma_spec:	pointer to DMA specifier as found in the device tree
-> + * @of_dma:	pointer to DMA controller data
-> + *
-> + * A simple translation function for devices that use a 32-bit value for the
-> + * filter_param when calling the DMA engine dma_request_channel() function.
-> + * Note that this translation function requires that #dma-cells is equal to 1
-> + * and the argument of the dma specifier is the 32-bit filter_param. Returns
-> + * pointer to appropriate dma channel on success or NULL on error.
-> + */
-> +struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
-> +						struct of_dma *ofdma)
-> +{
-> +	int count = dma_spec->args_count;
-> +	struct of_dma_filter_info *info = ofdma->of_dma_data;
-> +
-> +	if (!info || !info->filter_fn)
-> +		return NULL;
-> +
-> +	if (count != 1)
-> +		return NULL;
-> +
-> +	return dma_request_channel(info->dma_cap, info->filter_fn,
-> +			&dma_spec->args[0]);
-> +}
-> +EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
-> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-> new file mode 100644
-> index 0000000..337823d
-> --- /dev/null
-> +++ b/include/linux/of_dma.h
-> @@ -0,0 +1,45 @@
-> +/*
-> + * OF helpers for DMA request / controller
-> + *
-> + * Based on of_gpio.h
-> + *
-> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#ifndef __LINUX_OF_DMA_H
-> +#define __LINUX_OF_DMA_H
-> +
-> +#include <linux/of.h>
-> +#include <linux/dmaengine.h>
-> +
-> +struct device_node;
-> +
-> +struct of_dma {
-> +	struct list_head	of_dma_controllers;
-> +	struct device_node	*of_node;
-> +	int			of_dma_nbcells;
-> +	struct dma_chan		*(*of_dma_xlate)
-> +				(struct of_phandle_args *, struct of_dma *);
-> +	void			*of_dma_data;
-> +};
-> +
-> +struct of_dma_filter_info {
-> +	dma_cap_mask_t	dma_cap;
-> +	dma_filter_fn	filter_fn;
-> +};
-> +
-> +extern int of_dma_controller_register(struct device_node *np,
-> +		struct dma_chan *(*of_dma_xlate)
-> +		(struct of_phandle_args *, struct of_dma *),
-> +		void *data);
-> +extern void of_dma_controller_free(struct device_node *np);
-> +extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
-> +						     char *name);
-> +extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
-> +		struct of_dma *ofdma);
-> +
-> +#endif /* __LINUX_OF_DMA_H */
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-fan.txt b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+new file mode 100644
+index 0000000..2dd457a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-fan.txt
+@@ -0,0 +1,25 @@
++Bindings for fan connected to GPIO lines
++
++Required properties:
++- compatible : "gpio-fan"
++- gpios: Specifies the pins that map to bits in the control value,
++  ordered MSB-->LSB.
++- gpio-fan,speed-map: A mapping of possible fan RPM speeds and the
++  control value that should be set to achieve them. This array
++  must have the RPM values in ascending order.
++
++Optional properties:
++- alarm-gpios: This pin going active indicates something is wrong with
++  the fan, and a udev event will be fired.
++
++Examples:
++
++	gpio_fan {
++		compatible = "gpio-fan";
++		gpios = <&gpio1 14 1
++			 &gpio1 13 1>;
++		gpio-fan,speed-map = <0    0
++				      3000 1
++				      6000 2>;
++		alarm-gpios = <&gpio1 15 1>;
++	};
+diff --git a/drivers/hwmon/gpio-fan.c b/drivers/hwmon/gpio-fan.c
+index 2f4b01b..36509ae 100644
+--- a/drivers/hwmon/gpio-fan.c
++++ b/drivers/hwmon/gpio-fan.c
+@@ -31,6 +31,8 @@
+ #include <linux/hwmon.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio-fan.h>
++#include <linux/of_platform.h>
++#include <linux/of_gpio.h>
+ 
+ struct gpio_fan_data {
+ 	struct platform_device	*pdev;
+@@ -400,14 +402,131 @@ static ssize_t show_name(struct device *dev,
+ 
+ static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
+ 
++
++#ifdef CONFIG_OF_GPIO
++/*
++ * Translate OpenFirmware node properties into platform_data
++ */
++static int gpio_fan_get_of_pdata(struct device *dev,
++			    struct gpio_fan_platform_data *pdata)
++{
++	struct device_node *node;
++	struct gpio_fan_speed *speed;
++	unsigned *ctrl;
++	unsigned i;
++	u32 u;
++	struct property *prop;
++	const __be32 *p;
++
++	node = dev->of_node;
++
++	/* Fill GPIO pin array */
++	pdata->num_ctrl = of_gpio_count(node);
++	if (!pdata->num_ctrl) {
++		dev_err(dev, "gpios DT property empty / missing");
++		return -ENODEV;
++	}
++	ctrl = devm_kzalloc(dev, pdata->num_ctrl * sizeof(unsigned),
++				GFP_KERNEL);
++	if (!ctrl)
++		return -ENOMEM;
++	for (i = 0; i < pdata->num_ctrl; i++) {
++		int val;
++
++		val = of_get_gpio(node, i);
++		if (val < 0)
++			return val;
++		ctrl[i] = val;
++	}
++	pdata->ctrl = ctrl;
++
++	/* Get number of RPM/ctrl_val pairs in speed map */
++	prop = of_find_property(node, "gpio-fan,speed-map", &i);
++	if (!prop) {
++		dev_err(dev, "gpio-fan,speed-map DT property missing");
++		return -ENODEV;
++	}
++	i = i / sizeof(u32);
++	if (i == 0 || i & 1) {
++		dev_err(dev, "gpio-fan,speed-map contains zero/odd number of entries");
++		return -ENODEV;
++	}
++	pdata->num_speed = i / 2;
++
++	/*
++	 * Populate speed map
++	 * Speed map is in the form <RPM ctrl_val RPM ctrl_val ...>
++	 * this needs splitting into pairs to create gpio_fan_speed structs
++	 */
++	speed = devm_kzalloc(dev,
++			pdata->num_speed * sizeof(struct gpio_fan_speed),
++			GFP_KERNEL);
++	if (!speed)
++		return -ENOMEM;
++	p = NULL;
++	for (i = 0; i < pdata->num_speed; i++) {
++		p = of_prop_next_u32(prop, p, &u);
++		if (!p)
++			return -ENODEV;
++		speed[i].rpm = u;
++		p = of_prop_next_u32(prop, p, &u);
++		if (!p)
++			return -ENODEV;
++		speed[i].ctrl_val = u;
++	}
++	pdata->speed = speed;
++
++	/* Alarm GPIO if one exists */
++	if (of_gpio_named_count(node, "alarm-gpios")) {
++		struct gpio_fan_alarm *alarm;
++		int val;
++		enum of_gpio_flags flags;
++
++		alarm = devm_kzalloc(dev, sizeof(struct gpio_fan_alarm),
++					GFP_KERNEL);
++		if (!alarm)
++			return -ENOMEM;
++
++		val = of_get_named_gpio_flags(node, "alarm-gpios", 0, &flags);
++		if (val < 0)
++			return val;
++		alarm->gpio = val;
++		alarm->active_low = flags & OF_GPIO_ACTIVE_LOW;
++
++		pdata->alarm = alarm;
++	}
++
++	return 0;
++}
++
++static struct of_device_id of_gpio_fan_match[] __devinitdata = {
++	{ .compatible = "gpio-fan", },
++	{},
++};
++#endif /* CONFIG_OF_GPIO */
++
+ static int __devinit gpio_fan_probe(struct platform_device *pdev)
+ {
+ 	int err;
+ 	struct gpio_fan_data *fan_data;
+ 	struct gpio_fan_platform_data *pdata = pdev->dev.platform_data;
+ 
++#ifdef CONFIG_OF_GPIO
++	if (!pdata) {
++		pdata = devm_kzalloc(&pdev->dev,
++					sizeof(struct gpio_fan_platform_data),
++					GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++
++		err = gpio_fan_get_of_pdata(&pdev->dev, pdata);
++		if (err)
++			return err;
++	}
++#else /* CONFIG_OF_GPIO */
+ 	if (!pdata)
+ 		return -EINVAL;
++#endif /* CONFIG_OF_GPIO */
+ 
+ 	fan_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_fan_data),
+ 				GFP_KERNEL);
+@@ -511,6 +630,7 @@ static struct platform_driver gpio_fan_driver = {
+ 	.driver	= {
+ 		.name	= "gpio-fan",
+ 		.pm	= GPIO_FAN_PM,
++		.of_match_table = of_match_ptr(of_gpio_fan_match),
+ 	},
+ };
+ 
 -- 
-Nicolas Ferre
+1.7.10.4
