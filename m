@@ -1,133 +1,106 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 2/2] ARM: dts: AM33XX: Add lis331dlh device tree data to
- am335x-evm
-Date: Fri, 14 Sep 2012 11:16:26 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA2F2B1@DBDE01.ent.ti.com>
-References: <1347551685-19781-1-git-send-email-anilkumar@ti.com>
- <201209140826.07069.arnd@arndb.de>
- <331ABD5ECB02734CA317220B2BBEABC13EA2F0AB@DBDE01.ent.ti.com>
- <201209141028.38185.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201209141028.38185.arnd-r2nGTMty4D4@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org" <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org" <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org" <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] usb: gadget: s3c-hsotg: Add device tree support
+Date: Fri, 14 Sep 2012 17:18:58 +0530
+Message-ID: <1347623338-14292-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: balbi-l0cyMroinI0@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+Daniel
+This patch adds device tree support for s3c-hsotg driver
+used for Samsung platforms.
 
-On Fri, Sep 14, 2012 at 15:58:37, Arnd Bergmann wrote:
-> On Friday 14 September 2012, AnilKumar, Chimata wrote:
-> >> On Fri, Sep 14, 2012 at 13:56:06, Arnd Bergmann wrote:
-> > > On Thursday 13 September 2012, AnilKumar Ch wrote:
-> 
-> > > 
-> > > Why do you put the "reg" property here
-> > 
-> > Here I specified reg property because lis331dlh I2C slave address is 0x18.
-> > 
-> > > 
-> > > >  		dcan1: d_can@481d0000 {
-> > > >  			status = "okay";
-> > > >  			pinctrl-names = "default";
-> > > > @@ -61,6 +70,39 @@
-> > > >  		regulator-max-microvolt = <5000000>;
-> > > >  		regulator-boot-on;
-> > > >  	};
-> > > > +
-> > > > +	lis3_reg: fixedregulator@1 {
-> > > > +		compatible = "regulator-fixed";
-> > > > +		regulator-name = "lis3_reg";
-> > > > +		regulator-boot-on;
-> > > > +	};
-> > > > +};
-> > > > +&lis331dlh {
-> > > > +	compatible = "st,lis3lv02d-i2c";
-> > > 
-> > > and all the rest here? At least I would expect the "compatible" property
-> > > to be in the same place above.
-> > 
-> > This data is appended to above one, to make it readable I moved remaining
-> > properties to here.
-> 
-> I don't follow how this is making things more readable.
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/usb/s3c-hsotg.txt          |   16 ++++++++++++++++
+ drivers/usb/gadget/s3c-hsotg.c                     |   20 ++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/s3c-hsotg.txt
 
-Basic lis3 parameter is in i2c2 node to tell the hierarchy of
-nodes and remaining parameters at the bottom. With this way
-we can understand easily what is start & end braces so that
-node hierarchy is cleaner. (This is my view)
-
-> 
-> Maybe a more logical way to do this would be use the existing i2c2 label
-> and write all the additions as
-> 
-> i2c2: {
-> 	status = "okay";
-> 	clock-frequency = <400000>;
-> 
-> 	lis331dlh@18 {
-> 		compatible = "st,lis3lv02d";
-> 		reg = <0x18>;
-> 
-> 		vdd-supply = <&lis3_reg>;
-> 		vdd-io-supply = <&lis3_reg>;
-> 		...
-> 	};
-> 
-
-If this is better/preferable way then I will change.
-
-> > > Also, I think you should remove the "-i2c" postfix from the name, that
-> > > is already implied by the parent bus.
-> > 
-> > I will remove, but in case of spi the compatible name is lis3lv02d_spi.
-> > By mistake I have uses "-i2c" instead of "_i2c".
-
-Then, I will change to 'st,lis3lv02d' in lis3lv02d_i2c driver
-and same will added to .dts file.
-
-Small question here, in my v2 version I have specified both
-the compatible names lis3lv02d and lis331dlh is it fine or
-only one is sufficient?
-
-+static struct of_device_id lis3lv02d_i2c_dt_ids[] = {
-+	{ .compatible = "st,lis3lv02d" },
-+	{ .compatible = "st,lis331dlh" },
-+	{}
+diff --git a/Documentation/devicetree/bindings/usb/s3c-hsotg.txt b/Documentation/devicetree/bindings/usb/s3c-hsotg.txt
+new file mode 100644
+index 0000000..30b26c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/s3c-hsotg.txt
+@@ -0,0 +1,16 @@
++Samsung HSOTG controller s3c-hsotg
++
++Required properties:
++  - compatible : should be "samsung,exynos-hsotg".
++  - reg : should contain at least address and length of the standard HSOTG
++    register set for the device.
++  - interrupts : one HSOTG interrupt should be described here.
++
++Example (Samsung Origen):
++
++	usb@12480000 {
++		compatible = "samsung,exynos-hsotg";
++		reg = <0x12480000 0x20000>;
++		interrupts = <0 71 0>;
++	};
++
+diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
+index b13e0bb..d7f557f 100644
+--- a/drivers/usb/gadget/s3c-hsotg.c
++++ b/drivers/usb/gadget/s3c-hsotg.c
+@@ -28,6 +28,7 @@
+ #include <linux/io.h>
+ #include <linux/slab.h>
+ #include <linux/clk.h>
++#include <linux/of.h>
+ #include <linux/regulator/consumer.h>
+ 
+ #include <linux/usb/ch9.h>
+@@ -3485,6 +3486,8 @@ static void s3c_hsotg_release(struct device *dev)
+ 	kfree(hsotg);
+ }
+ 
++static u64 s3c_hsotg_dma_mask = DMA_BIT_MASK(32);
++
+ /**
+  * s3c_hsotg_probe - probe function for hsotg driver
+  * @pdev: The platform information for the driver
+@@ -3507,6 +3510,14 @@ static int __devinit s3c_hsotg_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
++	/*
++	 * Right now device-tree probed devices don't get dma_mask set.
++	 */
++	if (!pdev->dev.dma_mask)
++		pdev->dev.dma_mask = &s3c_hsotg_dma_mask;
++	if (!pdev->dev.coherent_dma_mask)
++		pdev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
++
+ 	hsotg = devm_kzalloc(&pdev->dev, sizeof(struct s3c_hsotg), GFP_KERNEL);
+ 	if (!hsotg) {
+ 		dev_err(dev, "cannot get memory\n");
+@@ -3701,10 +3712,19 @@ static int __devexit s3c_hsotg_remove(struct platform_device *pdev)
+ #define s3c_hsotg_resume NULL
+ #endif
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id exynos_hsotg_match[] = {
++	{ .compatible = "samsung,exynos-hsotg" },
++	{},
 +};
++MODULE_DEVICE_TABLE(of, exynos_hsotg_match);
++#endif
++
+ static struct platform_driver s3c_hsotg_driver = {
+ 	.driver		= {
+ 		.name	= "s3c-hsotg",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(exynos_hsotg_match),
+ 	},
+ 	.probe		= s3c_hsotg_probe,
+ 	.remove		= __devexit_p(s3c_hsotg_remove),
+-- 
+1.7.4.1
 
-> 
-> The normal convention is to use '-', not '_', so that part was ok.
-> 
-> I think naming the other one lis3lv02d_spi was a mistake, it should
-> be named 'st,lis3lv02d' independent of the bus IMHO.
-
-Yes, initially I expected the same. I think driver name is used
-as a compatible string.
-
-> 
-> > Document is already present, 
-> > http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=2f2ff3cc8d930493f9a598b9192706c09403e12e
-> > 
-> > Some minor changes in docs, in my next version I will update document
-> > as well. I will send V3 if there are no comments on v2.
-> 
-
-Can you just quickly review v2 series? So that I will send
-V3.
-
-Thanks
-AnilKumar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
