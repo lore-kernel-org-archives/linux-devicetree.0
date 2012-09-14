@@ -1,57 +1,64 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] Documentation: add description of DT binding for
- the gpio-mvebu driver
-Date: Fri, 14 Sep 2012 15:17:09 +0200
-Message-ID: <CACRpkdY3ePZLUJsX_X9QGyo6dCDmweUd5Lq7BYnQ4P0uGVj-uQ@mail.gmail.com>
-References: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1347551658-24449-3-git-send-email-thomas.petazzoni@free-electrons.com>
- <50524026.20104@gmail.com> <20120913223059.2d0606b2@skate>
- <50524363.9070100@gmail.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH v2 4/7] dt/powerpc/sysdev: Use of_get_child_by_name to
+ get a named child.
+Date: Fri, 14 Sep 2012 14:15:40 +0100
+Message-ID: <50532DFC.20500@st.com>
+References: <1347610764-20227-1-git-send-email-srinivas.kandagatla@st.com>
+ <50532BB0.3090502@gmail.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50524363.9070100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <50532BB0.3090502@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 13, 2012 at 10:34 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 09/13/2012 03:30 PM, Thomas Petazzoni wrote:
->> Dear Rob Herring,
+
+Thanks for pointing the typo..
+
+On 14/09/12 14:05, Rob Herring wrote:
+> On 09/14/2012 03:19 AM, Srinivas KANDAGATLA wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 >>
->> On Thu, 13 Sep 2012 15:20:54 -0500, Rob Herring wrote:
->>> On 09/13/2012 10:54 AM, Thomas Petazzoni wrote:
->>>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->>>> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
->>>> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
->>>> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
->>>> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>> ---
->>>
->>> Grant is pretty much offline right now.
+>> As follow-up to "dt: introduce of_get_child_by_name to get child node by
+>> name." patch, This patch removes some of the code duplication in the
+>> driver by replacing it with of_get_child_by_name instead.
 >>
->> Yes, I know, but MAINTAINERS does not mention an alternate maintainer
->> for the GPIO subsystem. Who is the interim maintainer that will
->> ultimately have to ack/nack those patches?
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>> ---
+>>  arch/powerpc/sysdev/qe_lib/qe.c |    5 +----
+>>  1 files changed, 1 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/powerpc/sysdev/qe_lib/qe.c b/arch/powerpc/sysdev/qe_lib/qe.c
+>> index b043675..fd1c15d 100644
+>> --- a/arch/powerpc/sysdev/qe_lib/qe.c
+>> +++ b/arch/powerpc/sysdev/qe_lib/qe.c
+>> @@ -568,10 +568,7 @@ struct qe_firmware_info *qe_get_firmware_info(void)
+>>  	}
+>>  
+>>  	/* Find the 'firmware' child node */
+>> -	for_each_child_of_node(qe, fw) {
+>> -		if (strcmp(fw->name, "firmware") == 0)
+>> -			break;
+>> -	}
+>> +	fw = of_get_child_by_name(qe "firmware");
+> Missing comma.
 >
-> Linus W. is.
-
-I stated Reviewed-by: on the GPIO patch, please merge it through the
-Marvell tree (I guess that's the plan?)
-
-Acked-by: on the rest FWIW, I'm no ARM SoC nor DT maintainer...
-
-Yours,
-Linus Walleij
+>>  
+>>  	of_node_put(qe);
+>>  
+>>
+>
+>
