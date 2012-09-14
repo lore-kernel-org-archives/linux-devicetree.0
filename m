@@ -1,39 +1,51 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: [PATCH v2 5/7] dt/net/fsl_pq_mdio: Use of_get_child_by_name to get a named child.
-Date: Fri, 14 Sep 2012 09:19:42 +0100
-Message-ID: <1347610782-20265-1-git-send-email-srinivas.kandagatla@st.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: afleming@freescale.com
-Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, srinivas.kandagatla@st.com, grant.likely@secretlab.ca
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 6/7] dt/s3c64xx/spi: Use of_get_child_by_name to get a
+ named child.
+Date: Fri, 14 Sep 2012 09:19:58 +0100
+Message-ID: <1347610798-20301-1-git-send-email-srinivas.kandagatla@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: jassi.brar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
 As follow-up to "dt: introduce of_get_child_by_name to get child node by
 name." patch, This patch removes some of the code duplication in the
 driver by replacing it with of_get_child_by_name instead.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/net/ethernet/freescale/fsl_pq_mdio.c |    5 +----
- 1 files changed, 1 insertions(+), 4 deletions(-)
+ drivers/spi/spi-s3c64xx.c |    4 +---
+ 1 files changed, 1 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/fsl_pq_mdio.c b/drivers/net/ethernet/freescale/fsl_pq_mdio.c
-index 9527b28..e710c60 100644
---- a/drivers/net/ethernet/freescale/fsl_pq_mdio.c
-+++ b/drivers/net/ethernet/freescale/fsl_pq_mdio.c
-@@ -355,10 +355,7 @@ static int fsl_pq_mdio_probe(struct platform_device *ofdev)
- 		goto err_free_irqs;
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index d1c8441..1fa231b 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -835,9 +835,7 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+ 		return ERR_PTR(-EINVAL);
  	}
  
--	for_each_child_of_node(np, tbi) {
--		if (!strncmp(tbi->type, "tbi-phy", 8))
+-	for_each_child_of_node(slave_np, data_np)
+-		if (!strcmp(data_np->name, "controller-data"))
 -			break;
--	}
-+	tbi = of_get_child_by_name(np, "tbi-phy");
- 
- 	if (tbi) {
- 		const u32 *prop = of_get_property(tbi, "reg", NULL);
++	data_np = of_get_child_by_name(slave_np, "controller-data");
+ 	if (!data_np) {
+ 		dev_err(&spi->dev, "child node 'controller-data' not found\n");
+ 		return ERR_PTR(-EINVAL);
 -- 
 1.7.0.4
