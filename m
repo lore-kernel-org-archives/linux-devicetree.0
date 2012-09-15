@@ -1,29 +1,37 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
-Date: Sat, 15 Sep 2012 01:14:31 +0100
-Message-ID: <20120915001431.GB12445@n2100.arm.linux.org.uk>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com> <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V3 1/2] hwmon: Add devicetree bindings to gpio-fan
+Date: Fri, 14 Sep 2012 19:28:33 -0700
+Message-ID: <20120915022833.GA20375@roeck-us.net>
+References: <20120910184919.GA30872@roeck-us.net>
+ <1347638826-31797-1-git-send-email-jm@lentin.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>
+In-Reply-To: <1347638826-31797-1-git-send-email-jm@lentin.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jamie Lentin <jm@lentin.co.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Jean Delvare <khali@linux-fr.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2012 at 05:41:56PM -0500, Jon Hunter wrote:
-> 3. Supporting legacy devices not using DMA Engine
+On Fri, Sep 14, 2012 at 05:07:06PM +0100, Jamie Lentin wrote:
+> Allow a gpio-fan to be defined in devicetree, see binding documentation
+> for details.
 > 
->    These devices present a problem, as there may not be a uniform way to easily
->    support them with regard to device tree. Ideally, these should be migrated
->    to DMA engine. However, if this is not possible, then they should still be
->    able to use this binding, the only constaint imposed by this implementation
->    is that when requesting a DMA channel via of_dma_request_slave_channel(), it
->    will return a type of dma_chan.
+> Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+> Acked-by: Andrew Lunn <andrew@lunn.ch>
 
-As far as devices not using DMA engine, the answer is we don't support
-their specification in the DT model.  Note that the legacy OMAP DMA
-API is scheduled for removal next year, so it's not going to be around
-that much longer.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
+
+I take it this will go through the arm tree ?
+
+Guenter
