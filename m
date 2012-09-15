@@ -1,54 +1,29 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] Documentation: add description of DT binding
- for the gpio-mvebu driver
-Date: Fri, 14 Sep 2012 19:46:03 -0400
-Message-ID: <20120914234603.GB5469@titan.lakedaemon.net>
-References: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1347551658-24449-3-git-send-email-thomas.petazzoni@free-electrons.com>
- <50524026.20104@gmail.com> <20120913223059.2d0606b2@skate>
- <50524363.9070100@gmail.com>
- <CACRpkdY3ePZLUJsX_X9QGyo6dCDmweUd5Lq7BYnQ4P0uGVj-uQ@mail.gmail.com>
- <20120914165408.4beaefe7@skate>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
+Date: Sat, 15 Sep 2012 01:14:31 +0100
+Message-ID: <20120915001431.GB12445@n2100.arm.linux.org.uk>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com> <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20120914165408.4beaefe7@skate>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2012 at 04:54:08PM +0200, Thomas Petazzoni wrote:
-> Dear Linus Walleij,
+On Fri, Sep 14, 2012 at 05:41:56PM -0500, Jon Hunter wrote:
+> 3. Supporting legacy devices not using DMA Engine
 > 
-> On Fri, 14 Sep 2012 15:17:09 +0200, Linus Walleij wrote:
-> 
-> > >> Yes, I know, but MAINTAINERS does not mention an alternate maintainer
-> > >> for the GPIO subsystem. Who is the interim maintainer that will
-> > >> ultimately have to ack/nack those patches?
-> > >
-> > > Linus W. is.
-> > 
-> > I stated Reviewed-by: on the GPIO patch, please merge it through the
-> > Marvell tree (I guess that's the plan?)
-> 
-> Yes, I guess it's the easiest plan (Jason ? Andrew ?). We however need
-> Acks on the pinctrl patch series as well, since this one depends on it.
+>    These devices present a problem, as there may not be a uniform way to easily
+>    support them with regard to device tree. Ideally, these should be migrated
+>    to DMA engine. However, if this is not possible, then they should still be
+>    able to use this binding, the only constaint imposed by this implementation
+>    is that when requesting a DMA channel via of_dma_request_slave_channel(), it
+>    will return a type of dma_chan.
 
-Yes, that's the plan.  I'm currently waiting for my previous series of
-pull requests to get pulled before I start pulling in anything else.
-
-thx,
-
-Jason.
+As far as devices not using DMA engine, the answer is we don't support
+their specification in the DT model.  Note that the legacy OMAP DMA
+API is scheduled for removal next year, so it's not going to be around
+that much longer.
