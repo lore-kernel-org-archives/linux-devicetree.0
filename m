@@ -1,16 +1,15 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V3 1/2] hwmon: Add devicetree bindings to gpio-fan
-Date: Fri, 14 Sep 2012 23:16:20 -0400
-Message-ID: <20120915031620.GE5469@titan.lakedaemon.net>
-References: <20120910184919.GA30872@roeck-us.net>
- <1347638826-31797-1-git-send-email-jm@lentin.co.uk>
- <20120915022833.GA20375@roeck-us.net>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH V4 REPOST] mfd: add MAX8907 core driver
+Date: Sun, 16 Sep 2012 00:51:42 +0200
+Message-ID: <20120915225142.GI3647@sortiz-mobl>
+References: <1346973015-7252-1-git-send-email-swarren@wwwdotorg.org>
+ <5050B850.807@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20120915022833.GA20375-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <5050B850.807-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,24 +20,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2012 at 07:28:33PM -0700, Guenter Roeck wrote:
-> On Fri, Sep 14, 2012 at 05:07:06PM +0100, Jamie Lentin wrote:
-> > Allow a gpio-fan to be defined in devicetree, see binding documentation
-> > for details.
+Hi Stephen,
+
+On Wed, Sep 12, 2012 at 10:29:04AM -0600, Stephen Warren wrote:
+> On 09/06/2012 05:10 PM, Stephen Warren wrote:
+> > From: Gyungoh Yoo <jack.yoo-4qAbB/aHxuBWk0Htik3J/w@public.gmane.org>
 > > 
-> > Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-> > Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > The MAX8907 is an I2C-based power-management IC containing voltage
+> > regulators, a reset controller, a real-time clock, and a touch-screen
+> > controller.
 > 
-> Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> Samuel,
 > 
-> I take it this will go through the arm tree ?
+> This patch as-is won't compile due to the mfd_add_devices() API change.
+> Do you want to fix this up when you apply (simply add an extra parameter
+> "NULL" to the mfd_add_devices() call), or should I send an updated V5
+> for this?
+I'll fix it up, don't bother sending a v5.
 
-Yes, unless there is an objection.
+Cheers,
+Samuel.
 
-thx,
-
-Jason.
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
