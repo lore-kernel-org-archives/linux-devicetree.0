@@ -1,68 +1,85 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
-Date: Sun, 16 Sep 2012 08:40:15 -0400
-Message-ID: <20120916124015.GI5469@titan.lakedaemon.net>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1347550912-18021-4-git-send-email-sebastian.hesselbarth@gmail.com>
- <20120916074652.GM28177@lunn.ch>
+From: "Karicheri, Muralidharan" <m-karicheri2@ti.com>
+Subject: RE: [PATCH] of: add of_find_child_by_name implementation
+Date: Sun, 16 Sep 2012 22:24:53 +0000
+Message-ID: <3E54258959B69E4282D79E01AB1F32B7041CB0CC@DFLE12.ent.ti.com>
+References: <1346341328-23554-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120916074652.GM28177-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1346341328-23554-1-git-send-email-m-karicheri2@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "Chemparathy, Cyril" <cyril@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 16, 2012 at 09:46:52AM +0200, Andrew Lunn wrote:
-> > +++ b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
-> > @@ -0,0 +1,279 @@
-> > +* Marvell Kirkwood SoC pinctrl driver for mpp
-> > +
-> > +Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
-> > +part and usage.
-> > +
-> > +Required properties:
-> > +- compatible: "marvell,88f6180-pinctrl",
-> > +              "marvell,88f6190-pinctrl", "marvell,88f6192-pinctrl",
-> > +              "marvell,88f6281-pinctrl", "marvell,88f6282-pinctrl"
-> > +
-> > +This driver supports all kirkwood variants, i.e. 88f6180, 88f619x, and 88f628
-> 
-> Hi Sebastian 
-> 
-> The current MPP code determines for itself what chip it is running on.
-> It can then check if a pin configuration is valid for the current
-> run time environment.
-> 
-> Here you are suggesting we have to put into the DT what chip we expect
-> to be on.
-> 
-> What is the advantage of this, over getting the information from the
-> device itself?
+>> -----Original Message-----
+>> From: Karicheri, Muralidharan
+>> Sent: Thursday, August 30, 2012 11:42 AM
+>> To: grant.likely@secretlab.ca; rob.herring@calxeda.com; devicetree-
+>> discuss@lists.ozlabs.org; linux-kernel@vger.kernel.org
+>> Cc: Karicheri, Muralidharan; Chemparathy, Cyril
+>> Subject: [PATCH] of: add of_find_child_by_name implementation
+>> 
+>> This patch adds a helper to find a child node by name.
+>> 
+>> Signed-off-by: Cyril Chemparathy <cyril@ti.com>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> ---
+>>  drivers/of/base.c  |   20 ++++++++++++++++++++
+>>  include/linux/of.h |    2 ++
+>>  2 files changed, 22 insertions(+)
+>> 
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index d4a1c9a..bbdd0d4 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -441,6 +441,26 @@ struct device_node *of_find_node_by_name(struct
+>> device_node *from,
+>>  EXPORT_SYMBOL(of_find_node_by_name);
+>> 
+>>  /**
+>> + *	of_find_child_by_name - Find a child node by its "name" property
+>> + *	@parent:The parent node to search from
+>> + *	@name:	The name string to match against
+>> + *
+>> + *	Returns a node pointer with refcount incremented, use
+>> + *	of_node_put() on it when done.
+>> + */
+>> +struct device_node *of_find_child_by_name(struct device_node *parent,
+>> +					  const char *name)
+>> +{
+>> +	struct device_node *child;
+>> +
+>> +	for_each_child_of_node(parent, child)
+>> +		if (child->name && of_node_cmp(child->name, name) == 0)
+>> +			break;
+>> +	return child;
+>> +}
+>> +EXPORT_SYMBOL(of_find_child_by_name);
+>> +
+>> +/**
+>>   *	of_find_node_by_type - Find a node by its "device_type" property
+>>   *	@from:	The node to start searching from, or NULL to start searching
+>>   *		the entire device tree. The node you pass will not be
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 1b11632..a4cc8e7 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -193,6 +193,8 @@ extern struct device_node *of_get_next_child(const struct
+>> device_node *node,
+>>  extern struct device_node *of_get_next_available_child(
+>>  	const struct device_node *node, struct device_node *prev);
+>> 
+>> +struct device_node *of_find_child_by_name(struct device_node *parent,
+>> +					  const char *name);
+>>  #define for_each_child_of_node(parent, child) \
+>>  	for (child = of_get_next_child(parent, NULL); child != NULL; \
+>>  	     child = of_get_next_child(parent, child))
+>> --
+>> 1.7.9.5
 
-The DT should describe the hardware as accurately as possible.  We can't
-always assume Linux will be the only thing the DT is handed off to.
+Can someone review this? If this is okay, can this be merged to the next branch please?
 
-> If i wanted to mass convert all existing kirkwood DT boards over to
-> use pinctrl, im stuck at the very first step. I've no idea what chip
-> they use, it was not relevant before.
-
-Let's try to do the DT correctly, and create a migration path for
-kirkwood to work first, then migrate to using the DT fully.
-
-thx,
-
-Jason.
+Murali
