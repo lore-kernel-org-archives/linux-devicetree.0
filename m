@@ -1,48 +1,45 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
-Date: Sun, 16 Sep 2012 11:09:11 +0200
-Message-ID: <50559737.8000705@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-4-git-send-email-sebastian.hesselbarth@gmail.com> <20120916074652.GM28177@lunn.ch>
+Subject: Re: [PATCH v3 2/5] Documentation: add description of DT binding for
+ the gpio-mvebu driver
+Date: Sun, 16 Sep 2012 11:11:44 +0200
+Message-ID: <505597D0.6030200@gmail.com>
+References: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1347551658-24449-3-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20120916075601.GN28177@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120916074652.GM28177@lunn.ch>
-Sender: linux-doc-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20120916075601.GN28177@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Maen Suleiman <maen@marvell.com>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@stericsson.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2012 09:46 AM, Andrew Lunn wrote:
->> +Required properties:
->> +- compatible: "marvell,88f6180-pinctrl",
->> +              "marvell,88f6190-pinctrl", "marvell,88f6192-pinctrl",
->> +              "marvell,88f6281-pinctrl", "marvell,88f6282-pinctrl"
+On 09/16/2012 09:56 AM, Andrew Lunn wrote:
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+>> @@ -0,0 +1,45 @@
+>> +* Marvell EBU GPIO controller
+>> ...
+>> +- interrupt-controller: identifies the node as an interrupt controller
 >> +
->> +This driver supports all kirkwood variants, i.e. 88f6180, 88f619x, and 88f628
+>> +- #interrupt-cells: specifies the number of celles needed to encode an
+>> +   interrupt source
 >
-> The current MPP code determines for itself what chip it is running on.
-> It can then check if a pin configuration is valid for the current
-> run time environment.
+> Hi Thomas
 >
-> Here you are suggesting we have to put into the DT what chip we expect
-> to be on.
->
-> What is the advantage of this, over getting the information from the
-> device itself?
+> Should this be #gpio-cells? The example below does not have
+> #interrupt-cells?
 
-Hi Andrew,
-
-there is no advantage over determining the variant on run time except
-that it is statically and (normally) known at boot time. I understand
-that mass converting kirkwood to pinctrl would require to know all
-the different variants.
-
-If there are no objections from the others, I agree to determine the
-variant from the existing kirkwood_id(). I was just unsure if it is
-ok to use platform-specific code with DT here.
-
-Any ideas how to get kirkwood_id() linked into pinctrl-kirkwood with
-the get-rid-of-arch-includes policy?
+It should be both. #gpio-cells to encode pin-offset within the gpio controller
+and polarity, #interrupt-cells to encode irq number.
 
 Sebastian
