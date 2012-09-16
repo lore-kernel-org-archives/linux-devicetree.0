@@ -1,45 +1,68 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 2/5] Documentation: add description of DT binding for
- the gpio-mvebu driver
-Date: Sun, 16 Sep 2012 11:11:44 +0200
-Message-ID: <505597D0.6030200@gmail.com>
-References: <1347551658-24449-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1347551658-24449-3-git-send-email-thomas.petazzoni@free-electrons.com>
- <20120916075601.GN28177@lunn.ch>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
+Date: Sun, 16 Sep 2012 08:40:15 -0400
+Message-ID: <20120916124015.GI5469@titan.lakedaemon.net>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1347550912-18021-4-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20120916074652.GM28177@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20120916075601.GN28177@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Maen Suleiman <maen@marvell.com>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@stericsson.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120916074652.GM28177-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2012 09:56 AM, Andrew Lunn wrote:
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
->> @@ -0,0 +1,45 @@
->> +* Marvell EBU GPIO controller
->> ...
->> +- interrupt-controller: identifies the node as an interrupt controller
->> +
->> +- #interrupt-cells: specifies the number of celles needed to encode an
->> +   interrupt source
->
-> Hi Thomas
->
-> Should this be #gpio-cells? The example below does not have
-> #interrupt-cells?
+On Sun, Sep 16, 2012 at 09:46:52AM +0200, Andrew Lunn wrote:
+> > +++ b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
+> > @@ -0,0 +1,279 @@
+> > +* Marvell Kirkwood SoC pinctrl driver for mpp
+> > +
+> > +Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
+> > +part and usage.
+> > +
+> > +Required properties:
+> > +- compatible: "marvell,88f6180-pinctrl",
+> > +              "marvell,88f6190-pinctrl", "marvell,88f6192-pinctrl",
+> > +              "marvell,88f6281-pinctrl", "marvell,88f6282-pinctrl"
+> > +
+> > +This driver supports all kirkwood variants, i.e. 88f6180, 88f619x, and 88f628
+> 
+> Hi Sebastian 
+> 
+> The current MPP code determines for itself what chip it is running on.
+> It can then check if a pin configuration is valid for the current
+> run time environment.
+> 
+> Here you are suggesting we have to put into the DT what chip we expect
+> to be on.
+> 
+> What is the advantage of this, over getting the information from the
+> device itself?
 
-It should be both. #gpio-cells to encode pin-offset within the gpio controller
-and polarity, #interrupt-cells to encode irq number.
+The DT should describe the hardware as accurately as possible.  We can't
+always assume Linux will be the only thing the DT is handed off to.
 
-Sebastian
+> If i wanted to mass convert all existing kirkwood DT boards over to
+> use pinctrl, im stuck at the very first step. I've no idea what chip
+> they use, it was not relevant before.
+
+Let's try to do the DT correctly, and create a migration path for
+kirkwood to work first, then migrate to using the DT fully.
+
+thx,
+
+Jason.
