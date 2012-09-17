@@ -1,80 +1,78 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
-Date: Mon, 17 Sep 2012 10:32:37 +0200
-Message-ID: <20120917083237.GB21928@lunn.ch>
+Date: Mon, 17 Sep 2012 10:45:15 +0200
+Message-ID: <CACRpkdY-Nyn73EJLvE1RsL4hgMRm6hALtnS-eKAXU7edot2V9A@mail.gmail.com>
 References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
  <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
  <1347550912-18021-4-git-send-email-sebastian.hesselbarth@gmail.com>
- <20120916074652.GM28177@lunn.ch>
- <20120916124015.GI5469@titan.lakedaemon.net>
- <alpine.LFD.2.02.1209162137270.28681@xanadu.home>
- <5056C4EC.1030305@gmail.com>
+ <20120916074652.GM28177@lunn.ch> <50559737.8000705@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5056C4EC.1030305@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Nicolas Pitre <nico@fluxnic.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50559737.8000705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> I had a closer look at how kirkwood probes its id. I mentionend kirkwood_id()
-> earlier but in fact it is kirkwood_pcie_id(). I assume pcie registers are shut
-> down with pcie clk gated? That would require to have pcie running at least at
-> boot-time on all boards.
-> 
-> While it is still possible to grab the id and power down pcie later, I still
-> think that using five different compatible strings is better here. Of course,
-> there is some effort to obtain the kirkwood SoC variant for all boards.
+On Sun, Sep 16, 2012 at 11:09 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 09/16/2012 09:46 AM, Andrew Lunn wrote:
 
-Hi Sebastian
+>> Here you are suggesting we have to put into the DT what chip we expect
+>> to be on.
+>>
+>> What is the advantage of this, over getting the information from the
+>> device itself?
+>
+> If there are no objections from the others, I agree to determine the
+> variant from the existing kirkwood_id(). I was just unsure if it is
+> ok to use platform-specific code with DT here.
+>
+> Any ideas how to get kirkwood_id() linked into pinctrl-kirkwood with
+> the get-rid-of-arch-includes policy?
 
-I did the monkey work last night for converting all existing kirkwood
-DT boards over to pinctrl. I noticed that in all the DT descriptions,
-they all declare themselves as 88f6281. This is probably cut/paste
-from the first board we ever had. For these boards, i doubt it will be
-a problem, finding out what chip is really used, as there are active
-maintainers. The problem comes with old style devices which we want to
-convert. But if we do the monkey work for older boards, we are going
-to have to find testers anyway and they can tell us what SoC is used.
+You found the weak spot between two consolidation tracks.
 
-Having said that, not probing the hardware, having it configurable is
-a source of errors. We already probe the hardware in order to display:
+Getting rid of a broadcast autodetect functions from say
+<mach/foo-id-probe.h> is nominally done by passing the data
+to the driver as platform data instead, and only using
+these functions in the mach-foo folder when populating
+platform data, and thus it can be made into a local
+header, say mach-foo/foo-id-probe.h
 
-Kirkwood: MV88F6282-Rev-A0, TCLK=200000000.
+So the machine/arch code reads these registers to
+populate the platform data and device drivers only
+look at the platform data, which has some enum or
+bool indicating what hardware it's running on, cool.
 
-so we just need to cache this and make it available to anybody who
-wants it.
+But according to the other consolidation track, platform
+data should go into device tree bindings.
 
-I'm surprised we don't have the infrastructure of this already. We
-have info about the CPU, e.g.
+So the conclusion is that the DT must contain the data
+about the platform, so it's not auto-probed by the kernel.
+(I.e. the kernel reads no registers to figure out what hardware
+this is, that stuff comes from the device tree.)
 
-cat /proc/cpuinfo 
-Processor	  : Feroceon 88FR131 rev 1 (v5l)
-BogoMIPS	  : 1587.60
-Features	  : swp half thumb fastmult edsp 
-CPU implementer	  : 0x56
-CPU architecture: 5TE
-CPU variant	  : 0x2
-CPU part	  : 0x131
-CPU revision	  : 1
+DT purists will say that the boot loader should ask the chipset
+what it is with the same register writes and populate the
+DT accordingly, instead of loading a precompiled blob.
+Some may even ponder the crazy concept of amending the
+DT in the kernel at early boot.
 
-Hardware	  : Marvell Kirkwood (Flattened Device Tree)
-Revision	  : 0000
-Serial		    : 0000000000000000
+But in practice someone will give up, encode the stuff in
+the static device tree and autoprobing of the platform
+goes out the window.
 
-but don't seem to have anything about the SoC the CPU is embedded in.
-
-AT91 has at91_get_soc_type(struct at91_socinfo *c) which is what we
-would need for Kirkwood. However, interestingly, its never used
-outside of arch/arm/mach-at91/setup.c!
-
-davinci has a global structure davinci_soc_info which
-gpio/gpio-davinci.c uses.
-
-So we would not be the only architecture making such information
-available. We just need to make sure we do it such that its multi-arch
-kernel compatible.
-
-       Andrew
+Yours,
+Linus Walleij
