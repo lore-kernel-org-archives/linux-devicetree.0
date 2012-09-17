@@ -1,7 +1,7 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 15/16] arm: at91: dt: at91sam9 add nand pinctrl support
-Date: Mon, 17 Sep 2012 17:27:12 +0200
-Message-ID: <1347895633-1763-15-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 10/16] tty: atmel_serial: add pinctrl support
+Date: Mon, 17 Sep 2012 17:27:07 +0200
+Message-ID: <1347895633-1763-10-git-send-email-plagnioj@jcrosoft.com>
 References: <20120917140423.GA17667@game.jcrosoft.org>
  <1347895633-1763-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
@@ -23,154 +23,45 @@ Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagn
 List-Id: devicetree@vger.kernel.org
 
 Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 ---
- arch/arm/boot/dts/at91sam9260.dtsi |   10 ++++++++++
- arch/arm/boot/dts/at91sam9263.dtsi |   10 ++++++++++
- arch/arm/boot/dts/at91sam9g45.dtsi |   10 ++++++++++
- arch/arm/boot/dts/at91sam9n12.dtsi |   10 ++++++++++
- arch/arm/boot/dts/at91sam9x5.dtsi  |   10 ++++++++++
- 5 files changed, 50 insertions(+)
+ drivers/tty/serial/atmel_serial.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index a3d7132..00f96ff 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -207,6 +207,14 @@
- 					};
- 				};
+diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+index 3d7e1ee..65f891b 100644
+--- a/drivers/tty/serial/atmel_serial.c
++++ b/drivers/tty/serial/atmel_serial.c
+@@ -39,6 +39,7 @@
+ #include <linux/atmel_pdc.h>
+ #include <linux/atmel_serial.h>
+ #include <linux/uaccess.h>
++#include <linux/pinctrl/consumer.h>
  
-+				nand {
-+					pinctrl_nand: nand-0 {
-+						atmel,pins =
-+							<2 13 0x0 0x1	/* PC13 gpio RDY pin pull_up */
-+							 2 14 0x0 0x1>;	/* PC14 gpio enable pin pull_up */
-+					};
-+				};
-+
- 				pioA: gpio@fffff400 {
- 					compatible = "atmel,at91rm9200-gpio";
- 					reg = <0xfffff400 0x200>;
-@@ -372,6 +380,8 @@
- 			      >;
- 			atmel,nand-addr-offset = <21>;
- 			atmel,nand-cmd-offset = <22>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_nand>;
- 			gpios = <&pioC 13 0
- 				 &pioC 14 0
- 				 0
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 8bc4ce7..bc3920e 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -154,6 +154,14 @@
- 					};
- 				};
+ #include <asm/io.h>
+ #include <asm/ioctls.h>
+@@ -1773,6 +1774,7 @@ static int __devinit atmel_serial_probe(struct platform_device *pdev)
+ 	struct atmel_uart_data *pdata = pdev->dev.platform_data;
+ 	void *data;
+ 	int ret = -ENODEV;
++	struct pinctrl *pinctrl;
  
-+				nand {
-+					pinctrl_nand: nand-0 {
-+						atmel,pins =
-+							<0 22 0x0 0x1	/* PA22 gpio RDY pin pull_up*/
-+							 3 15 0x0 0x1>;	/* PD15 gpio enable pin pull_up */
-+					};
-+				};
-+
- 				pioA: gpio@fffff200 {
- 					compatible = "atmel,at91rm9200-gpio";
- 					reg = <0xfffff200 0x200>;
-@@ -271,6 +279,8 @@
- 			      >;
- 			atmel,nand-addr-offset = <21>;
- 			atmel,nand-cmd-offset = <22>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_nand>;
- 			gpios = <&pioA 22 0
- 				 &pioD 15 0
- 				 0
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 301458e..1ea95ab 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -186,6 +186,14 @@
- 					};
- 				};
+ 	BUILD_BUG_ON(ATMEL_SERIAL_RINGSIZE & (ATMEL_SERIAL_RINGSIZE - 1));
  
-+				nand {
-+					pinctrl_nand: nand-0 {
-+						atmel,pins =
-+							<2 8 0x0 0x1	/* PC8 gpio RDY pin pull_up*/
-+							 2 14 0x0 0x1>;	/* PC14 gpio enable pin pull_up */
-+					};
-+				};
-+
- 				pioA: gpio@fffff200 {
- 					compatible = "atmel,at91rm9200-gpio";
- 					reg = <0xfffff200 0x200>;
-@@ -344,6 +352,8 @@
- 			      >;
- 			atmel,nand-addr-offset = <21>;
- 			atmel,nand-cmd-offset = <22>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_nand>;
- 			gpios = <&pioC 8 0
- 				 &pioC 14 0
- 				 0
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 699b2f3..56aa1a0 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -189,6 +189,14 @@
- 					};
- 				};
+@@ -1805,6 +1807,12 @@ static int __devinit atmel_serial_probe(struct platform_device *pdev)
  
-+				nand {
-+					pinctrl_nand: nand-0 {
-+						atmel,pins =
-+							<3 5 0x0 0x1	/* PD5 gpio RDY pin pull_up*/
-+							 3 4 0x0 0x1>;	/* PD4 gpio enable pin pull_up */
-+					};
-+				};
-+
- 				pioA: gpio@fffff400 {
- 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
- 					reg = <0xfffff400 0x200>;
-@@ -295,6 +303,8 @@
- 			       >;
- 			atmel,nand-addr-offset = <21>;
- 			atmel,nand-cmd-offset = <22>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_nand>;
- 			gpios = <&pioD 5 0
- 				 &pioD 4 0
- 				 0
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 6482a85..b035fa6 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -195,6 +195,14 @@
- 					};
- 				};
+ 	atmel_init_port(port, pdev);
  
-+				nand {
-+					pinctrl_nand: nand-0 {
-+						atmel,pins =
-+							<3 4 0x0 0x1	/* PD5 gpio RDY pin pull_up */
-+							 3 5 0x0 0x1>;	/* PD4 gpio enable pin pull_up */
-+					};
-+				};
++	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
++	if (IS_ERR(pinctrl)) {
++		ret = PTR_ERR(pinctrl);
++		goto err;
++	}
 +
- 				pioA: gpio@fffff400 {
- 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
- 					reg = <0xfffff400 0x200>;
-@@ -341,6 +349,8 @@
- 			      >;
- 			atmel,nand-addr-offset = <21>;
- 			atmel,nand-cmd-offset = <22>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_nand>;
- 			gpios = <&pioD 5 0
- 				 &pioD 4 0
- 				 0
+ 	if (!atmel_use_dma_rx(&port->uart)) {
+ 		ret = -ENOMEM;
+ 		data = kmalloc(sizeof(struct atmel_uart_char)
 -- 
 1.7.10.4
