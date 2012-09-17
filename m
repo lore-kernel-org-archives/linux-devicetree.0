@@ -1,78 +1,76 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
-Date: Mon, 17 Sep 2012 10:45:15 +0200
-Message-ID: <CACRpkdY-Nyn73EJLvE1RsL4hgMRm6hALtnS-eKAXU7edot2V9A@mail.gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1347550912-18021-4-git-send-email-sebastian.hesselbarth@gmail.com>
- <20120916074652.GM28177@lunn.ch> <50559737.8000705@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50559737.8000705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [PATCH v3 1/5] dt: introduce of_get_child_by_name to get child node by name.
+Date: Mon, 17 Sep 2012 09:57:29 +0100
+Message-ID: <1347872249-3671-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: robherring2@gmail.com, bergner@us.ibm.com, devicetree-discuss@lists.ozlabs.org
+Cc: benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, jassi.brar@samsung.com, afleming@freescale.com, srinivas.kandagatla@st.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 16, 2012 at 11:09 AM, Sebastian Hesselbarth
-<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 09/16/2012 09:46 AM, Andrew Lunn wrote:
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
->> Here you are suggesting we have to put into the DT what chip we expect
->> to be on.
->>
->> What is the advantage of this, over getting the information from the
->> device itself?
->
-> If there are no objections from the others, I agree to determine the
-> variant from the existing kirkwood_id(). I was just unsure if it is
-> ok to use platform-specific code with DT here.
->
-> Any ideas how to get kirkwood_id() linked into pinctrl-kirkwood with
-> the get-rid-of-arch-includes policy?
+This patch introduces of_get_child_by_name function to get a child node
+by its name in a given parent node.
 
-You found the weak spot between two consolidation tracks.
+Without this patch each driver code has to iterate the parent and do
+a string compare, However having of_get_child_by_name libary function would
+avoid code duplication, errors and is more convenient.
 
-Getting rid of a broadcast autodetect functions from say
-<mach/foo-id-probe.h> is nominally done by passing the data
-to the driver as platform data instead, and only using
-these functions in the mach-foo folder when populating
-platform data, and thus it can be made into a local
-header, say mach-foo/foo-id-probe.h
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+---
+ drivers/of/base.c  |   25 +++++++++++++++++++++++++
+ include/linux/of.h |    2 ++
+ 2 files changed, 27 insertions(+), 0 deletions(-)
 
-So the machine/arch code reads these registers to
-populate the platform data and device drivers only
-look at the platform data, which has some enum or
-bool indicating what hardware it's running on, cool.
-
-But according to the other consolidation track, platform
-data should go into device tree bindings.
-
-So the conclusion is that the DT must contain the data
-about the platform, so it's not auto-probed by the kernel.
-(I.e. the kernel reads no registers to figure out what hardware
-this is, that stuff comes from the device tree.)
-
-DT purists will say that the boot loader should ask the chipset
-what it is with the same register writes and populate the
-DT accordingly, instead of loading a precompiled blob.
-Some may even ponder the crazy concept of amending the
-DT in the kernel at early boot.
-
-But in practice someone will give up, encode the stuff in
-the static device tree and autoprobing of the platform
-goes out the window.
-
-Yours,
-Linus Walleij
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4a1c9a..7391f8a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -391,6 +391,31 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ EXPORT_SYMBOL(of_get_next_available_child);
+ 
+ /**
++ *	of_get_child_by_name - Find the child node by name for a given parent
++ *	@node:	parent node
++ *	@name:	child name to look for.
++ *
++ *      This function looks for child node for given matching name
++ *
++ *	Returns a node pointer if found, with refcount incremented, use
++ *	of_node_put() on it when done.
++ *	Returns NULL if node is not found.
++ */
++
++struct device_node *of_get_child_by_name(const struct device_node *node,
++				const char *name)
++{
++	struct device_node *child;
++
++	for_each_child_of_node(node, child)
++		if (child->name && (of_node_cmp(child->name, name) == 0)
++			&& of_node_get(child))
++			break;
++	return child;
++}
++EXPORT_SYMBOL(of_get_child_by_name);
++
++/**
+  *	of_find_node_by_path - Find a node matching a full OF path
+  *	@path:	The full path to match
+  *
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 1b11632..7b8e3cd 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -192,6 +192,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+ 					     struct device_node *prev);
+ extern struct device_node *of_get_next_available_child(
+ 	const struct device_node *node, struct device_node *prev);
++extern struct device_node *of_get_child_by_name(const struct device_node *node,
++					const char *name);
+ 
+ #define for_each_child_of_node(parent, child) \
+ 	for (child = of_get_next_child(parent, NULL); child != NULL; \
+-- 
+1.7.0.4
