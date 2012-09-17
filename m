@@ -1,7 +1,8 @@
 From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [RESEND PATCH v3 0/5]  Introduce of_get_child_by_name.
-Date: Mon, 17 Sep 2012 12:58:12 +0100
-Message-ID: <1347883092-16644-1-git-send-email-srinivas.kandagatla@st.com>
+Subject: [RESEND PATCH v3 5/5] dt/tty/opal: Use of_get_child_by_name to get a
+ named child.
+Date: Mon, 17 Sep 2012 12:58:57 +0100
+Message-ID: <1347883137-16819-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,45 +17,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-This patch series introduces of_get_child_by_name function to get a 
-child node by its name in a given parent node and also removes code 
-duplication in some of the existing driver code by using of_get_child_by_name.
+As follow-up to "dt: introduce of_get_child_by_name to get child node by
+name." patch, This patch removes some of the code duplication in the
+driver by replacing it with of_get_child_by_name instead.
 
-Normally if a driver want to get a child node it would iterate all the nodes
-of parent and compare its name and then get it.
-This use case is becoming common as device trees are used more, so moving this 
-functionality to a libary function makes sense.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/tty/hvc/hvc_opal.c |    9 ++-------
+ 1 files changed, 2 insertions(+), 7 deletions(-)
 
-Having of_get_child_by_name libary function would avoid code duplication,
-errors, proper reference counting and is more convenient.
-
-Changes from v2:
-	- Fixed typo errors.
-	- Removed bogus patches which used "type" instead of "name" 
-	- Fixed reference counting in follow-up patches.
-
-Changes from v1:
-	-rename of_get_child to of_get_child_by_name.
-	-remove read lock in of_get_child_by_name.
-	-make use of of_get_child_by_name in the existing kernel code.
-
-Srinivas Kandagatla (5):
-  dt: introduce of_get_child_by_name to get child node by name.
-  dt/powerpc/powernv: Use of_get_child_by_name to get a named child.
-  dt/powerpc/sysdev: Use of_get_child_by_name to get a named child.
-  dt/s3c64xx/spi: Use of_get_child_by_name to get a named child.
-  dt/tty/opal: Use of_get_child_by_name to get a named child.
-
- arch/powerpc/platforms/powernv/opal.c |    6 +++---
- arch/powerpc/sysdev/qe_lib/qe.c       |    5 +----
- drivers/of/base.c                     |   25 +++++++++++++++++++++++++
- drivers/spi/spi-s3c64xx.c             |    7 ++++---
- drivers/tty/hvc/hvc_opal.c            |    9 ++-------
- include/linux/of.h                    |    2 ++
- 6 files changed, 37 insertions(+), 17 deletions(-)
+diff --git a/drivers/tty/hvc/hvc_opal.c b/drivers/tty/hvc/hvc_opal.c
+index 0d2ea0c..4c7d161 100644
+--- a/drivers/tty/hvc/hvc_opal.c
++++ b/drivers/tty/hvc/hvc_opal.c
+@@ -344,7 +344,7 @@ void __init hvc_opal_init_early(void)
+ 			return;
+ 		}
+ 	} else {
+-		struct device_node *opal, *np;
++		struct device_node *opal;
+ 
+ 		/* Current OPAL takeover doesn't provide the stdout
+ 		 * path, so we hard wire it
+@@ -360,12 +360,7 @@ void __init hvc_opal_init_early(void)
+ 		}
+ 		if (!opal)
+ 			return;
+-		for_each_child_of_node(opal, np) {
+-			if (!strcmp(np->name, "serial")) {
+-				stdout_node = np;
+-				break;
+-			}
+-		}
++		stdout_node = of_get_child_by_name(opal, "serial");
+ 		of_node_put(opal);
+ 	}
+ 	if (!stdout_node)
+-- 
+1.7.0.4
