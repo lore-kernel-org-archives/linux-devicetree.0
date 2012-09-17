@@ -1,66 +1,72 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
-Date: Mon, 17 Sep 2012 08:36:28 +0200
-Message-ID: <5056C4EC.1030305@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-4-git-send-email-sebastian.hesselbarth@gmail.com> <20120916074652.GM28177@lunn.ch> <20120916124015.GI5469@titan.lakedaemon.net> <alpine.LFD.2.02.1209162137270.28681@xanadu.home>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree: clock: mxs: Fix USB PHY clock name
+Date: Mon, 17 Sep 2012 15:05:55 +0800
+Message-ID: <20120917070553.GE6413@S2101-09.ap.freescale.net>
+References: <1347559956-18417-1-git-send-email-fabio.estevam@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.02.1209162137270.28681@xanadu.home>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolas Pitre <nico@fluxnic.net>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1347559956-18417-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2012 03:55 AM, Nicolas Pitre wrote:
-> On Sun, 16 Sep 2012, Jason Cooper wrote:
->> On Sun, Sep 16, 2012 at 09:46:52AM +0200, Andrew Lunn wrote:
->>>> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
->>>> @@ -0,0 +1,279 @@
->>>> +* Marvell Kirkwood SoC pinctrl driver for mpp
->>>> +
->>>> +Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
->>>> +part and usage.
->>>> +
->>>> +Required properties:
->>>> +- compatible: "marvell,88f6180-pinctrl",
->>>> +              "marvell,88f6190-pinctrl", "marvell,88f6192-pinctrl",
->>>> +              "marvell,88f6281-pinctrl", "marvell,88f6282-pinctrl"
->>>> +
->>>> +This driver supports all kirkwood variants, i.e. 88f6180, 88f619x, and 88f628
- >>> ...
->>> If i wanted to mass convert all existing kirkwood DT boards over to
->>> use pinctrl, im stuck at the very first step. I've no idea what chip
->>> they use, it was not relevant before.
->>
->> Let's try to do the DT correctly, and create a migration path for
->> kirkwood to work first, then migrate to using the DT fully.
->
-> Beware beware.
->
-> The DT should of course describe the hardware as accurately as possible.
-> That doesn't necessarily mean it should describe the hardware as
-> _extensively_ as possible.
->
-> And that doesn't mean that all the information found in the DT has to be
-> consumed by the kernel either.
->
-> Any information that can be *probed* at run time has no benefit being
-> stuffed in a DT.  That's true whether it is Linux or another operating
-> system.  The more that can be probed at run time the better.
+On Thu, Sep 13, 2012 at 03:12:36PM -0300, Fabio Estevam wrote:
+> Use a better naming for the USB PHY clock.
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/imx23-clock.txt      |    2 +-
+>  .../devicetree/bindings/clock/imx28-clock.txt      |    4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+We want to keep the clock name consistent between clock driver and
+binding doc.  Can you also update clock driver?
 
-I had a closer look at how kirkwood probes its id. I mentionend kirkwood_id()
-earlier but in fact it is kirkwood_pcie_id(). I assume pcie registers are shut
-down with pcie clk gated? That would require to have pcie running at least at
-boot-time on all boards.
+Regards,
+Shawn
 
-While it is still possible to grab the id and power down pcie later, I still
-think that using five different compatible strings is better here. Of course,
-there is some effort to obtain the kirkwood SoC variant for all boards.
-
-Sebastian
-
-
-
-
+> diff --git a/Documentation/devicetree/bindings/clock/imx23-clock.txt b/Documentation/devicetree/bindings/clock/imx23-clock.txt
+> index a0b867e..baadbb1 100644
+> --- a/Documentation/devicetree/bindings/clock/imx23-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/imx23-clock.txt
+> @@ -52,7 +52,7 @@ clocks and IDs.
+>  	lcdif		38
+>  	etm		39
+>  	usb		40
+> -	usb_pwr		41
+> +	usb_phy		41
+>  
+>  Examples:
+>  
+> diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.txt b/Documentation/devicetree/bindings/clock/imx28-clock.txt
+> index aa2af28..52a49a4 100644
+> --- a/Documentation/devicetree/bindings/clock/imx28-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/imx28-clock.txt
+> @@ -73,8 +73,8 @@ clocks and IDs.
+>  	can1		59
+>  	usb0		60
+>  	usb1		61
+> -	usb0_pwr	62
+> -	usb1_pwr	63
+> +	usb0_phy	62
+> +	usb1_phy	63
+>  	enet_out	64
+>  
+>  Examples:
+> -- 
+> 1.7.9.5
+> 
+> 
