@@ -1,8 +1,7 @@
 From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [RESEND PATCH v3 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get
- a named child.
-Date: Mon, 17 Sep 2012 12:58:47 +0100
-Message-ID: <1347883127-16783-1-git-send-email-srinivas.kandagatla@st.com>
+Subject: [RESEND PATCH v3 0/5]  Introduce of_get_child_by_name.
+Date: Mon, 17 Sep 2012 12:58:12 +0100
+Message-ID: <1347883092-16644-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,57 +16,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-As follow-up to "dt: introduce of_get_child_by_name to get child node by
-name." patch, This patch removes some of the code duplication in the
-driver by replacing it with of_get_child_by_name instead.
+This patch series introduces of_get_child_by_name function to get a 
+child node by its name in a given parent node and also removes code 
+duplication in some of the existing driver code by using of_get_child_by_name.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
----
- drivers/spi/spi-s3c64xx.c |    7 ++++---
- 1 files changed, 4 insertions(+), 3 deletions(-)
+Normally if a driver want to get a child node it would iterate all the nodes
+of parent and compare its name and then get it.
+This use case is becoming common as device trees are used more, so moving this 
+functionality to a libary function makes sense.
 
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index d1c8441..f226f33 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -835,9 +835,7 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
- 		return ERR_PTR(-EINVAL);
- 	}
- 
--	for_each_child_of_node(slave_np, data_np)
--		if (!strcmp(data_np->name, "controller-data"))
--			break;
-+	data_np = of_get_child_by_name(slave_np, "controller-data");
- 	if (!data_np) {
- 		dev_err(&spi->dev, "child node 'controller-data' not found\n");
- 		return ERR_PTR(-EINVAL);
-@@ -847,6 +845,7 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
- 	if (!cs) {
- 		dev_err(&spi->dev, "could not allocate memory for controller"
- 					" data\n");
-+		of_node_put(data_np);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-@@ -855,11 +854,13 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
- 		dev_err(&spi->dev, "chip select gpio is not specified or "
- 					"invalid\n");
- 		kfree(cs);
-+		of_node_put(data_np);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
- 	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
- 	cs->fb_delay = fb_delay;
-+	of_node_put(data_np);
- 	return cs;
- }
- 
--- 
-1.7.0.4
+Having of_get_child_by_name libary function would avoid code duplication,
+errors, proper reference counting and is more convenient.
+
+Changes from v2:
+	- Fixed typo errors.
+	- Removed bogus patches which used "type" instead of "name" 
+	- Fixed reference counting in follow-up patches.
+
+Changes from v1:
+	-rename of_get_child to of_get_child_by_name.
+	-remove read lock in of_get_child_by_name.
+	-make use of of_get_child_by_name in the existing kernel code.
+
+Srinivas Kandagatla (5):
+  dt: introduce of_get_child_by_name to get child node by name.
+  dt/powerpc/powernv: Use of_get_child_by_name to get a named child.
+  dt/powerpc/sysdev: Use of_get_child_by_name to get a named child.
+  dt/s3c64xx/spi: Use of_get_child_by_name to get a named child.
+  dt/tty/opal: Use of_get_child_by_name to get a named child.
+
+ arch/powerpc/platforms/powernv/opal.c |    6 +++---
+ arch/powerpc/sysdev/qe_lib/qe.c       |    5 +----
+ drivers/of/base.c                     |   25 +++++++++++++++++++++++++
+ drivers/spi/spi-s3c64xx.c             |    7 ++++---
+ drivers/tty/hvc/hvc_opal.c            |    9 ++-------
+ include/linux/of.h                    |    2 ++
+ 6 files changed, 37 insertions(+), 17 deletions(-)
