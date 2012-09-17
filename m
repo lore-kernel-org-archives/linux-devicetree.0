@@ -1,8 +1,8 @@
 From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 3/5] dt/powerpc/sysdev: Use of_get_child_by_name to get a
+Subject: [PATCH v3 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get a
  named child.
-Date: Mon, 17 Sep 2012 09:57:52 +0100
-Message-ID: <1347872272-3741-1-git-send-email-srinivas.kandagatla@st.com>
+Date: Mon, 17 Sep 2012 09:58:02 +0100
+Message-ID: <1347872282-3776-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,8 +17,8 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
@@ -29,24 +29,45 @@ driver by replacing it with of_get_child_by_name instead.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 ---
- arch/powerpc/sysdev/qe_lib/qe.c |    5 +----
- 1 files changed, 1 insertions(+), 4 deletions(-)
+ drivers/spi/spi-s3c64xx.c |    7 ++++---
+ 1 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/sysdev/qe_lib/qe.c b/arch/powerpc/sysdev/qe_lib/qe.c
-index b043675..d094e51 100644
---- a/arch/powerpc/sysdev/qe_lib/qe.c
-+++ b/arch/powerpc/sysdev/qe_lib/qe.c
-@@ -568,10 +568,7 @@ struct qe_firmware_info *qe_get_firmware_info(void)
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index d1c8441..f226f33 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -835,9 +835,7 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+ 		return ERR_PTR(-EINVAL);
  	}
  
- 	/* Find the 'firmware' child node */
--	for_each_child_of_node(qe, fw) {
--		if (strcmp(fw->name, "firmware") == 0)
+-	for_each_child_of_node(slave_np, data_np)
+-		if (!strcmp(data_np->name, "controller-data"))
 -			break;
--	}
-+	fw = of_get_child_by_name(qe, "firmware");
++	data_np = of_get_child_by_name(slave_np, "controller-data");
+ 	if (!data_np) {
+ 		dev_err(&spi->dev, "child node 'controller-data' not found\n");
+ 		return ERR_PTR(-EINVAL);
+@@ -847,6 +845,7 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+ 	if (!cs) {
+ 		dev_err(&spi->dev, "could not allocate memory for controller"
+ 					" data\n");
++		of_node_put(data_np);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
  
- 	of_node_put(qe);
+@@ -855,11 +854,13 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+ 		dev_err(&spi->dev, "chip select gpio is not specified or "
+ 					"invalid\n");
+ 		kfree(cs);
++		of_node_put(data_np);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+ 	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
+ 	cs->fb_delay = fb_delay;
++	of_node_put(data_np);
+ 	return cs;
+ }
  
 -- 
 1.7.0.4
