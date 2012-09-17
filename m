@@ -1,72 +1,84 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] devicetree: clock: mxs: Fix USB PHY clock name
-Date: Mon, 17 Sep 2012 15:05:55 +0800
-Message-ID: <20120917070553.GE6413@S2101-09.ap.freescale.net>
-References: <1347559956-18417-1-git-send-email-fabio.estevam@freescale.com>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH v3 4/4] ARM: dts: AM33XX: Add lis331dlh device tree data to am335x-evm
+Date: Mon, 17 Sep 2012 12:53:22 +0530
+Message-ID: <1347866602-2088-5-git-send-email-anilkumar@ti.com>
+References: <1347866602-2088-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1347559956-18417-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1347866602-2088-1-git-send-email-anilkumar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: arnd@arndb.de
+Cc: gregkh@linuxfoundation.org, eric.piel@tremplin-utc.net, jic23@cam.ac.uk, greg@kroah.com, akpm@linux-foundation.org, broonie@opensource.wolfsonmicro.com, dmitry.torokhov@gmail.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, AnilKumar Ch <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 13, 2012 at 03:12:36PM -0300, Fabio Estevam wrote:
-> Use a better naming for the USB PHY clock.
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/imx23-clock.txt      |    2 +-
->  .../devicetree/bindings/clock/imx28-clock.txt      |    4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-We want to keep the clock name consistent between clock driver and
-binding doc.  Can you also update clock driver?
+Add lis331dlh device tree data to am335x-evm.dts. In AM335x EVM
+lis331dlh accelerometer is connected to I2C2 bus. So this patch
+change the status of I2C2 node to "okay" to use I2C2 bus. Also
+added all the required platform data to am335x-evm.
 
-Regards,
-Shawn
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+---
+ arch/arm/boot/dts/am335x-evm.dts |   39 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-> diff --git a/Documentation/devicetree/bindings/clock/imx23-clock.txt b/Documentation/devicetree/bindings/clock/imx23-clock.txt
-> index a0b867e..baadbb1 100644
-> --- a/Documentation/devicetree/bindings/clock/imx23-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/imx23-clock.txt
-> @@ -52,7 +52,7 @@ clocks and IDs.
->  	lcdif		38
->  	etm		39
->  	usb		40
-> -	usb_pwr		41
-> +	usb_phy		41
->  
->  Examples:
->  
-> diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.txt b/Documentation/devicetree/bindings/clock/imx28-clock.txt
-> index aa2af28..52a49a4 100644
-> --- a/Documentation/devicetree/bindings/clock/imx28-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/imx28-clock.txt
-> @@ -73,8 +73,8 @@ clocks and IDs.
->  	can1		59
->  	usb0		60
->  	usb1		61
-> -	usb0_pwr	62
-> -	usb1_pwr	63
-> +	usb0_phy	62
-> +	usb1_phy	63
->  	enet_out	64
->  
->  Examples:
-> -- 
-> 1.7.9.5
-> 
-> 
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 9fb59c5..be309df 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -47,6 +47,39 @@
+ 			};
+ 		};
+ 
++		i2c2: i2c@4802a000 {
++			status = "okay";
++			clock-frequency = <400000>;
++
++			lis331dlh: lis331dlh@18 {
++				compatible = "st,lis331dlh", "st,lis3lv02d";
++				reg = <0x18>;
++				Vdd-supply = <&lis3_reg>;
++				Vdd_IO-supply = <&lis3_reg>;
++
++				st,click-single-x;
++				st,click-single-y;
++				st,click-single-z;
++				st,click-thresh-x = <10>;
++				st,click-thresh-y = <10>;
++				st,click-thresh-z = <10>;
++				st,irq1-click;
++				st,irq2-click;
++				st,wakeup-x-lo;
++				st,wakeup-x-hi;
++				st,wakeup-y-lo;
++				st,wakeup-y-hi;
++				st,wakeup-z-lo;
++				st,wakeup-z-hi;
++				st,min-limit-x = <120>;
++				st,min-limit-y = <120>;
++				st,min-limit-z = <140>;
++				st,max-limit-x = <550>;
++				st,max-limit-y = <550>;
++				st,max-limit-z = <750>;
++			};
++		};
++
+ 		dcan1: d_can@481d0000 {
+ 			status = "okay";
+ 			pinctrl-names = "default";
+@@ -61,6 +94,12 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-boot-on;
+ 	};
++
++	lis3_reg: fixedregulator@1 {
++		compatible = "regulator-fixed";
++		regulator-name = "lis3_reg";
++		regulator-boot-on;
++	};
+ };
+ 
+ /include/ "tps65910.dtsi"
+-- 
+1.7.9.5
+
