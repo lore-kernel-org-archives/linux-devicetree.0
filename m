@@ -1,53 +1,48 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 2/5] dt/powerpc/powernv: Use of_get_child_by_name to get a
- named child.
-Date: Mon, 17 Sep 2012 09:57:40 +0100
-Message-ID: <1347872260-3707-1-git-send-email-srinivas.kandagatla@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [PATCH v3 0/5] Introduce of_get_child_by_name.
+Date: Mon, 17 Sep 2012 09:57:17 +0100
+Message-ID: <1347872237-3632-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: robherring2@gmail.com, bergner@us.ibm.com, devicetree-discuss@lists.ozlabs.org
+Cc: benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, ben-linux@fluff.org, kgene.kim@samsung.com, afleming@freescale.com, srinivas.kandagatla@st.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-As follow-up to "dt: introduce of_get_child_by_name to get child node by
-name." patch, This patch removes some of the code duplication in the
-driver by replacing it with of_get_child_by_name instead.
+This patch series introduces of_get_child_by_name function to get a 
+child node by its name in a given parent node and also removes code 
+duplication in some of the existing driver code by using of_get_child_by_name.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
----
+Normally if a driver want to get a child node it would iterate all the nodes
+of parent and compare its name and then get it.
+This use case is becoming common as device trees are used more, so moving this 
+functionality to a libary function makes sense.
+
+Having of_get_child_by_name libary function would avoid code duplication,
+errors, proper reference counting and is more convenient.
+
+Changes from v2:
+	- Fixed typo errors.
+	- Removed bogus patches which used "type" instead of "name" 
+	- Fixed reference counting in follow-up patches.
+
+Changes from v1:
+	-rename of_get_child to of_get_child_by_name.
+	-remove read lock in of_get_child_by_name.
+	-make use of of_get_child_by_name in the existing kernel code.
+
+Srinivas Kandagatla (5):
+  dt: introduce of_get_child_by_name to get child node by name.
+  dt/powerpc/powernv: Use of_get_child_by_name to get a named child.
+  dt/powerpc/sysdev: Use of_get_child_by_name to get a named child.
+  dt/s3c64xx/spi: Use of_get_child_by_name to get a named child.
+  dt/tty/opal: Use of_get_child_by_name to get a named child.
+
  arch/powerpc/platforms/powernv/opal.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index aaa0dba..fc7ae70 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -294,9 +294,9 @@ static int __init opal_init(void)
- 		consoles = of_node_get(opal_node);
- 
- 	/* Register serial ports */
--	for_each_child_of_node(consoles, np) {
--		if (strcmp(np->name, "serial"))
--			continue;
-+	np = of_get_child_by_name(consoles, "serial");
-+	if (np) {
-+		of_node_put(np);
- 		of_platform_device_create(np, NULL, NULL);
- 	}
- 	of_node_put(consoles);
--- 
-1.7.0.4
+ arch/powerpc/sysdev/qe_lib/qe.c       |    5 +----
+ drivers/of/base.c                     |   25 +++++++++++++++++++++++++
+ drivers/spi/spi-s3c64xx.c             |    7 ++++---
+ drivers/tty/hvc/hvc_opal.c            |    9 ++-------
+ include/linux/of.h                    |    2 ++
+ 6 files changed, 37 insertions(+), 17 deletions(-)
