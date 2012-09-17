@@ -1,76 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave DMA channel
-Date: Mon, 17 Sep 2012 11:59:27 +0000
-Message-ID: <201209171159.27359.arnd@arndb.de>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com> <1347662517-4210-3-git-send-email-jon-hunter@ti.com> <1347852805.1943.130.camel@vkoul-udesk3>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [RESEND PATCH v3 2/5] dt/powerpc/powernv: Use of_get_child_by_name to
+ get a named child.
+Date: Mon, 17 Sep 2012 12:58:29 +0100
+Message-ID: <1347883109-16714-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1347852805.1943.130.camel@vkoul-udesk3>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linux.intel.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Dan Williams <djbw@fb.com>, Russell King <linux@arm.linux.org.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 September 2012, Vinod Koul wrote:
-> On Fri, 2012-09-14 at 17:41 -0500, Jon Hunter wrote:
-> > +/**
-> > + * dma_request_slave_channel - try to allocate an exclusive slave
-> > channel
-> > + * @dev:       pointer to client device structure
-> > + * @name:      slave channel name
-> > + */
-> > +struct dma_chan *dma_request_slave_channel(struct device *dev, char *name)
-> > +{
-> > +       /* If device-tree is present get slave info from here */
-> > +       if (dev->of_node)
-> > +               return of_dma_request_slave_channel(dev->of_node, name);
-> > +
-> Shouldn't this be conditionally compiled only when OF is built. I think
-> this might be problematic for systems which doesn't have device tree.
-> Or perhaps you can declare these symbols as dummy in of_dma.h when
-> device tree is not selected.
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-Right, good point. I'd prefer the dummy functions, since that is in line
-with what a lot of other subsystems do:
+As follow-up to "dt: introduce of_get_child_by_name to get child node by
+name." patch, This patch removes some of the code duplication in the
+driver by replacing it with of_get_child_by_name instead.
 
-#ifdef CONFIG_OF
-extern int of_dma_controller_register(struct device_node *np,
-               struct dma_chan *(*of_dma_xlate)
-               (struct of_phandle_args *, struct of_dma *),
-               void *data);
-extern void of_dma_controller_free(struct device_node *np);
-extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
-                                                    char *name);
-extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
-               struct of_dma *ofdma);
-#else
-static inline int of_dma_controller_register(struct device_node *np,
-               struct dma_chan *(*of_dma_xlate)
-               (struct of_phandle_args *, struct of_dma *),
-               void *data)
-{
-	return -ENODEV;
-}
-static inline void of_dma_controller_free(struct device_node *np)
-{
-}
-static inline struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
-                                                    char *name)
-{
-	return NULL;
-}
-static inline struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
-               struct of_dma *ofdma)
-{
-	return NULL;
-}
-#endif
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ arch/powerpc/platforms/powernv/opal.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-I believe that Jon is on vacation this week, so if this is the only issue
-holding up the merge, maybe you can change this in his patch directly, or
-I can send an updated version if you prefer.
-
-	Arnd
+diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+index aaa0dba..fc7ae70 100644
+--- a/arch/powerpc/platforms/powernv/opal.c
++++ b/arch/powerpc/platforms/powernv/opal.c
+@@ -294,9 +294,9 @@ static int __init opal_init(void)
+ 		consoles = of_node_get(opal_node);
+ 
+ 	/* Register serial ports */
+-	for_each_child_of_node(consoles, np) {
+-		if (strcmp(np->name, "serial"))
+-			continue;
++	np = of_get_child_by_name(consoles, "serial");
++	if (np) {
++		of_node_put(np);
+ 		of_platform_device_create(np, NULL, NULL);
+ 	}
+ 	of_node_put(consoles);
+-- 
+1.7.0.4
