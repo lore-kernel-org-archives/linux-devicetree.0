@@ -1,47 +1,66 @@
-From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
- Device Tree.
-Date: Sun, 16 Sep 2012 23:23:03 -0700
-Message-ID: <20120917062302.GA768@lizard>
-References: <1347042576-17675-1-git-send-email-bfreed@chromium.org>
- <20120908052907.GA4724@lizard>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
+Date: Mon, 17 Sep 2012 08:36:28 +0200
+Message-ID: <5056C4EC.1030305@gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-1-git-send-email-sebastian.hesselbarth@gmail.com> <1347550912-18021-4-git-send-email-sebastian.hesselbarth@gmail.com> <20120916074652.GM28177@lunn.ch> <20120916124015.GI5469@titan.lakedaemon.net> <alpine.LFD.2.02.1209162137270.28681@xanadu.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120908052907.GA4724@lizard>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bryan Freed <bfreed-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marco.stornelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.02.1209162137270.28681@xanadu.home>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolas Pitre <nico@fluxnic.net>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2012 at 10:29:10PM -0700, Anton Vorontsov wrote:
-> On Fri, Sep 07, 2012 at 11:29:36AM -0700, Bryan Freed wrote:
-> > When called with a non-zero of_node, fill out a new ramoops_platform_data
-> > with data from the specified Flattened Device Tree node.
-> > Update ramoops documentation with the new FDT interface.
-> > Update devicetree/binding documentation with pstore/ramoops.txt.
-> 
-> Thanks for your work, Bryan! There were a few issues, I fixed
-> them myself but I need your confirmation if you're OK w/ all
-> the changes.
-[...]
-> So, the resulting patch is down below. But I have not pushed
-> it out yet, I'm waiting for your sign off. If you're OK with the
-> changes, please reply with
-> 'Signed-off-by: Bryan Freed <bfreed-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>'
+On 09/17/2012 03:55 AM, Nicolas Pitre wrote:
+> On Sun, 16 Sep 2012, Jason Cooper wrote:
+>> On Sun, Sep 16, 2012 at 09:46:52AM +0200, Andrew Lunn wrote:
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,kirkwood-pinctrl.txt
+>>>> @@ -0,0 +1,279 @@
+>>>> +* Marvell Kirkwood SoC pinctrl driver for mpp
+>>>> +
+>>>> +Please refer to marvell,mvebu-pinctrl.txt in this directory for common binding
+>>>> +part and usage.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: "marvell,88f6180-pinctrl",
+>>>> +              "marvell,88f6190-pinctrl", "marvell,88f6192-pinctrl",
+>>>> +              "marvell,88f6281-pinctrl", "marvell,88f6282-pinctrl"
+>>>> +
+>>>> +This driver supports all kirkwood variants, i.e. 88f6180, 88f619x, and 88f628
+ >>> ...
+>>> If i wanted to mass convert all existing kirkwood DT boards over to
+>>> use pinctrl, im stuck at the very first step. I've no idea what chip
+>>> they use, it was not relevant before.
+>>
+>> Let's try to do the DT correctly, and create a migration path for
+>> kirkwood to work first, then migrate to using the DT fully.
+>
+> Beware beware.
+>
+> The DT should of course describe the hardware as accurately as possible.
+> That doesn't necessarily mean it should describe the hardware as
+> _extensively_ as possible.
+>
+> And that doesn't mean that all the information found in the DT has to be
+> consumed by the kernel either.
+>
+> Any information that can be *probed* at run time has no benefit being
+> stuffed in a DT.  That's true whether it is Linux or another operating
+> system.  The more that can be probed at run time the better.
 
-Bryan, have you had a chance to look into this?
+I had a closer look at how kirkwood probes its id. I mentionend kirkwood_id()
+earlier but in fact it is kirkwood_pcie_id(). I assume pcie registers are shut
+down with pcie clk gated? That would require to have pcie running at least at
+boot-time on all boards.
 
-Thanks,
-Anton.
+While it is still possible to grab the id and power down pcie later, I still
+think that using five different compatible strings is better here. Of course,
+there is some effort to obtain the kirkwood SoC variant for all boards.
+
+Sebastian
+
+
+
+
