@@ -1,101 +1,42 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RESEND PATCH v3 1/5] dt: introduce of_get_child_by_name to get
- child node by name.
-Date: Mon, 17 Sep 2012 07:59:08 -0500
-Message-ID: <50571E9C.6090208@gmail.com>
-References: <1347883101-16679-1-git-send-email-srinivas.kandagatla@st.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH v6 0/4] add syscon driver based on regmap for general
+ registers access
+Date: Mon, 17 Sep 2012 15:30:54 +0200
+Message-ID: <20120917133054.GT3647@sortiz-mobl>
+References: <1346813836-28736-1-git-send-email-b29396@freescale.com>
+ <20120905055410.GZ2362@S2101-09.ap.freescale.net>
+ <20120917101028.GA13226@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1347883101-16679-1-git-send-email-srinivas.kandagatla@st.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, afleming@freescale.com, ben-linux@fluff.org, bergner@us.ibm.com, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120917101028.GA13226@shlinux2.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dong Aisheng <b29396@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lrg@ti.com" <lrg@ti.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, Zhao Richard-B20223 <B20223@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2012 06:58 AM, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Hi Dong,
 
-Please drop the period on the subject.
-
+On Mon, Sep 17, 2012 at 06:10:29PM +0800, Dong Aisheng wrote:
+> Hi Samuel,
 > 
-> This patch introduces of_get_child_by_name function to get a child node
-> by its name in a given parent node.
-> 
-> Without this patch each driver code has to iterate the parent and do
-> a string compare, However having of_get_child_by_name libary function would
-> avoid code duplication, errors and is more convenient.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> ---
->  drivers/of/base.c  |   25 +++++++++++++++++++++++++
->  include/linux/of.h |    2 ++
->  2 files changed, 27 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d4a1c9a..7391f8a 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -391,6 +391,31 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
->  EXPORT_SYMBOL(of_get_next_available_child);
->  
->  /**
-> + *	of_get_child_by_name - Find the child node by name for a given parent
-> + *	@node:	parent node
-> + *	@name:	child name to look for.
-> + *
-> + *      This function looks for child node for given matching name
-> + *
-> + *	Returns a node pointer if found, with refcount incremented, use
-> + *	of_node_put() on it when done.
-> + *	Returns NULL if node is not found.
-> + */
-> +
+> On Wed, Sep 05, 2012 at 01:54:12PM +0800, Shawn Guo wrote:
+> > Hi Samuel,
+> > 
+> > The series needs to go via mfd or arm-soc tree as a whole.  In case
+> > you want to take it through mfd tree, here is my ack.
+> > 
+> > Acked-by: Shawn Guo <shawn.guo@linaro.org>
+> > 
+> > Otherwise, I can take it via arm-soc tree with your ack.
+> > 
+> Ping...
+All 4 patches applied to my for-next branch. Sorry for the delay.
 
-Remove blank line.
+Cheers,
+Samuel.
 
-> +struct device_node *of_get_child_by_name(const struct device_node *node,
-> +				const char *name)
-> +{
-> +	struct device_node *child;
-> +
-> +	for_each_child_of_node(node, child)
-> +		if (child->name && (of_node_cmp(child->name, name) == 0)
-> +			&& of_node_get(child))
-
-of_get_next_child has already called of_node_get, so you don't need to
-call it here.
-
-> +			break;
-> +	return child;
-> +}
-> +EXPORT_SYMBOL(of_get_child_by_name);
-> +
-> +/**
->   *	of_find_node_by_path - Find a node matching a full OF path
->   *	@path:	The full path to match
->   *
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 1b11632..7b8e3cd 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -192,6 +192,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
->  					     struct device_node *prev);
->  extern struct device_node *of_get_next_available_child(
->  	const struct device_node *node, struct device_node *prev);
-> +extern struct device_node *of_get_child_by_name(const struct device_node *node,
-> +					const char *name);
->  
->  #define for_each_child_of_node(parent, child) \
->  	for (child = of_get_next_child(parent, NULL); child != NULL; \
-> 
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
