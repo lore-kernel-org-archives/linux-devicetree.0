@@ -1,117 +1,88 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] input: qt1070: Add device tree support
-Date: Mon, 17 Sep 2012 11:20:32 +0200
-Message-ID: <5056EB60.8080100@atmel.com>
-References: <1347358459-11598-1-git-send-email-voice.shen@atmel.com>
+From: Dong Aisheng <b29396@freescale.com>
+Subject: Re: [PATCH v6 0/4] add syscon driver based on regmap for general
+ registers access
+Date: Mon, 17 Sep 2012 18:10:29 +0800
+Message-ID: <20120917101028.GA13226@shlinux2.ap.freescale.net>
+References: <1346813836-28736-1-git-send-email-b29396@freescale.com>
+ <20120905055410.GZ2362@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1347358459-11598-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shubhrajyoti-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jm.lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120905055410.GZ2362@S2101-09.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@stericsson.com" <linus.walleij@stericsson.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "lrg@ti.com" <lrg@ti.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, Zhao Richard-B20223 <B20223@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2012 12:14 PM, Bo Shen :
-> Add qt1070 device tree support
-> Using device node to parse irq
+Hi Samuel,
+
+On Wed, Sep 05, 2012 at 01:54:12PM +0800, Shawn Guo wrote:
+> Hi Samuel,
 > 
-> Test this on at91sam9x5ek board
+> The series needs to go via mfd or arm-soc tree as a whole.  In case
+> you want to take it through mfd tree, here is my ack.
 > 
-> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
-> change since v2
->   Using device node to parse irq,
->   Remove gpio relative stuff
+> Acked-by: Shawn Guo <shawn.guo@linaro.org>
 > 
-> change since v1
->   Add gpio relative stuff, gpio_is_valid, gpio_request
-> ---
->  .../devicetree/bindings/input/atmel-qt1070.txt     |   16 ++++++++++++++++
->  drivers/input/keyboard/qt1070.c                    |    9 +++++++++
->  2 files changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/atmel-qt1070.txt
+> Otherwise, I can take it via arm-soc tree with your ack.
 > 
-> diff --git a/Documentation/devicetree/bindings/input/atmel-qt1070.txt b/Documentation/devicetree/bindings/input/atmel-qt1070.txt
-> new file mode 100644
-> index 0000000..e1fc09e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/atmel-qt1070.txt
-> @@ -0,0 +1,16 @@
-> +Atmel qt1070 keyboard interface
+Ping...
 
-Nitpicking: there is usually a "*" at the beginning to give it a
-title-ish look ;-)
+Regards
+Dong Aisheng
 
-Please tell that
-
-> +
-> +Required Properties:
-> +- compatible: Should be "atmel,qt1070"
-> +- reg: I2C slave address
-> +- interrupt-parent: Depends on SoC
-> +- interrupts: The interrupt pin number to the cpu, and trigger mode.
-> +
-> +Example:
-> +
-> +	qt1070@1b {
-
-I think that you need to replace by a generic name for the node name:
-
-qt1070: keyboard@1b {
-	compatible = "atmel,qt1070";
-	[..]
-};
-
-I found "keyboard" to be the most appropriate in the ePAPR.
-
-
-> +		compatible = "atmel,qt1070";
-> +		reg = <0x1b>;
-> +		interrupt-parent = <&pioA>;
-> +		interrupts = <7 0x0>;
-> +	};
-> diff --git a/drivers/input/keyboard/qt1070.c b/drivers/input/keyboard/qt1070.c
-> index ca68f29..60457dc 100644
-> --- a/drivers/input/keyboard/qt1070.c
-> +++ b/drivers/input/keyboard/qt1070.c
-> @@ -249,10 +249,19 @@ static const struct i2c_device_id qt1070_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, qt1070_id);
->  
-> +#ifdef CONFIG_OF
-> +static struct of_device_id atmel_qt1070_of_match[] = {
-> +	{ .compatible = "atmel,qt1070" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, atmel_qt1070_of_match);
-> +#endif
-> +
->  static struct i2c_driver qt1070_driver = {
->  	.driver	= {
->  		.name	= "qt1070",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(atmel_qt1070_of_match),
->  	},
->  	.id_table	= qt1070_id,
->  	.probe		= qt1070_probe,
+> Regards,
+> Shawn
 > 
-
-Otherwise, looks good. So, if you agree on my comments and for next
-revision, you can add my:
-
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Bye,
--- 
-Nicolas Ferre
+> On Wed, Sep 05, 2012 at 10:57:12AM +0800, Dong Aisheng wrote:
+> > This patch series mainly adds an syscon driver which is used to access
+> > general system controller registers like FSL IOMUXC GPR and ANATOP,
+> > after that, we convert all the exist private access general registers code to use
+> > standard API from regmap to access registers.
+> > Finally we remove the old mfd anatop driver which is only for anatop register
+> > access.
+> > 
+> > The patch series is based on linus's tree 3.6-rc4 since commit 5b716ac.
+> > 
+> > ChangeLog v5->v6:
+> >  * put node after call syscon_node_to_regmap in anatop regulator driver
+> >  * using dev instead of &pdev->dev in syscon probe
+> > ChangeLog v4->v5:
+> >  * change syscon driver depends on OF
+> >  * do not call of_node_put in syscon_node_to_regmap
+> >  * renamed: include/linux/fsl/imx6q-iomuxc-gpr.h ->
+> > 	    include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> > ChangeLog v3->v4:
+> > Only '[PATCH v4 1/7] mfd: add syscon driver based on regmap' is changed.
+> > 
+> > Dong Aisheng (4):
+> >   mfd: add syscon driver based on regmap
+> >   ARM: imx6q: add iomuxc gpr support into syscon
+> >   regulator: anatop-regulator: convert to use syscon to access anatop
+> >     register
+> >   mfd: anatop-mfd: remove anatop driver
+> > 
+> >  Documentation/devicetree/bindings/mfd/syscon.txt |   20 ++
+> >  arch/arm/boot/dts/imx6q.dtsi                     |    9 +-
+> >  arch/arm/mach-imx/Kconfig                        |    2 +-
+> >  arch/arm/mach-imx/mach-imx6q.c                   |   47 ++--
+> >  drivers/mfd/Kconfig                              |   12 +-
+> >  drivers/mfd/Makefile                             |    2 +-
+> >  drivers/mfd/anatop-mfd.c                         |  124 ---------
+> >  drivers/mfd/syscon.c                             |  176 ++++++++++++
+> >  drivers/regulator/Kconfig                        |    2 +-
+> >  drivers/regulator/anatop-regulator.c             |   31 ++-
+> >  include/linux/mfd/anatop.h                       |   40 ---
+> >  include/linux/mfd/syscon.h                       |   23 ++
+> >  include/linux/mfd/syscon/imx6q-iomuxc-gpr.h      |  319 ++++++++++++++++++++++
+> >  13 files changed, 593 insertions(+), 214 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/syscon.txt
+> >  delete mode 100644 drivers/mfd/anatop-mfd.c
+> >  create mode 100644 drivers/mfd/syscon.c
+> >  delete mode 100644 include/linux/mfd/anatop.h
+> >  create mode 100644 include/linux/mfd/syscon.h
+> >  create mode 100644 include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+> > 
+> > 
+> 
