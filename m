@@ -1,151 +1,185 @@
-From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Subject: Re: [PATCH v4 06/24] docs: Xen ARM DT bindings
-Date: Mon, 17 Sep 2012 15:12:11 +0100
-Message-ID: <alpine.DEB.2.02.1209171508470.29232@kaball.uk.xensource.com>
-References: <alpine.DEB.2.02.1209141145150.29232@kaball.uk.xensource.com>
-	<1347621207-11294-6-git-send-email-stefano.stabellini@eu.citrix.com>
-	<20120914130151.GH25249@phenom.dumpdata.com>
-	<alpine.DEB.2.02.1209141514590.29232@kaball.uk.xensource.com>
-	<50572692.1090805@gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 05/16] arm: at91: at91sam9x5: fix gpio number per bank
+Date: Mon, 17 Sep 2012 17:27:02 +0200
+Message-ID: <1347895633-1763-5-git-send-email-plagnioj@jcrosoft.com>
+References: <20120917140423.GA17667@game.jcrosoft.org>
+ <1347895633-1763-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <50572692.1090805-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org" <xen-devel-GuqFBffKawuULHF6PoxzQEEOCMrvLtNR@public.gmane.org>, "linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Tim (Xen.org)" <tim-LM2mM/qkH7s@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1347895633-1763-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Sep 2012, Rob Herring wrote:
-> On 09/14/2012 09:26 AM, Stefano Stabellini wrote:
-> > On Fri, 14 Sep 2012, Konrad Rzeszutek Wilk wrote:
-> >> On Fri, Sep 14, 2012 at 12:13:08PM +0100, Stefano Stabellini wrote:
-> >>> Add a doc to describe the Xen ARM device tree bindings
-> >>>
-> >>>
-> >>> Changes in v4:
-> >>>
-> >>> - "xen,xen" should be last as it is less specific;
-> >>> - update reg property using 2 address-cells and 2 size-cells.
-> >>>
-> >>>
-> >>> Signed-off-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-> >>> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> >>> CC: David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-> >>> CC: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> CC: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/arm/xen.txt |   22 ++++++++++++++++++++++
-> >>>  1 files changed, 22 insertions(+), 0 deletions(-)
-> >>>  create mode 100644 Documentation/devicetree/bindings/arm/xen.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
-> >>> new file mode 100644
-> >>> index 0000000..1f8f7d4
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/arm/xen.txt
-> >>> @@ -0,0 +1,22 @@
-> >>> +* Xen hypervisor device tree bindings
-> >>> +
-> >>> +Xen ARM virtual platforms shall have the following properties:
-> >>> +
-> 
-> State that they are part of top-level "hypervisor" node.
+On the at91sam9x5 SoC series, GPIO banks B and D only have 19 and 22
+pins. So add a property to set this parameter.
 
-OK
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/gpio/gpio_atmel.txt        |    5 +++
+ arch/arm/boot/dts/at91sam9x5.dtsi                  |    2 ++
+ arch/arm/mach-at91/gpio.c                          |   33 +++++++++++++-------
+ 3 files changed, 29 insertions(+), 11 deletions(-)
 
-
-> >>> +- compatible:
-> >>> +	compatible = "xen,xen-<version>", "xen,xen";
-> >>> +  where <version> is the version of the Xen ABI of the platform.
-> >>> +
-> >>> +- reg: specifies the base physical address and size of a region in
-> >>> +  memory where the grant table should be mapped to, using an
-> >>> +  HYPERVISOR_memory_op hypercall. 
-> >>> +
-> >>> +- interrupts: the interrupt used by Xen to inject event notifications.
-> >>
-> >> Its singular here.. but in the example its plurar. What if you use
-> >> multiple of the same number ("16 0xf")?
-> > 
-> > The "interrupts" property in the example below is a standard property to
-> > describe interrupts. We just happen to declare only one interrupt.
-> > 
-> > From the device tree point of view it would be possible to declare more
-> > than one interrupt here, but Xen only supports one really.
-> > 
-> > Regarding the three cells used in the example (<1 15 0xf08>), they have
-> > a specific meaning in the GIC context:
-> > 
-> > """
-> >   The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
-> >   interrupts.
-> > 
-> >   The 2nd cell contains the interrupt number for the interrupt type.
-> >   SPI interrupts are in the range [0-987].  PPI interrupts are in the
-> >   range [0-15].
-> > 
-> >   The 3rd cell is the flags, encoded as follows:
-> > 	bits[3:0] trigger type and level flags.
-> > 		1 = low-to-high edge triggered
-> > 		2 = high-to-low edge triggered
-> > 		4 = active high level-sensitive
-> > 		8 = active low level-sensitive
-> > 	bits[15:8] PPI interrupt cpu mask.  Each bit corresponds to each of
-> > 	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
-> > 	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
-> > """
-> > 
-> > So <1 15 0xf08> means the last PPI.
-> 
-> Since it is a PPI, it is handled differently than a normal interrupt.
-> That is fine, but you should somehow state that a GIC node is also required.
-
-Yes, good idea
-
-
-> >>> +
-> >>> +
-> >>> +Example:
-> >>> +
-> >>> +hypervisor {
-> >>> +	compatible = "xen,xen-4.3", "xen,xen";
-> >>> +	reg = <0 0xb0000000 0 0x20000>;
-> >>
-> >> So two grant tables?
-> >>
-> >> Hm, physical address is zero, and the size is 0xbignumber?
-> >> Or is the '0' denotating a seperator of arguments, so it is
-> >> 0xb000.. for physical address and 0x20000 for size?
-> > 
-> > from http://devicetree.org/Device_Tree_Usage:
-> > 
-> > "Each addressable device gets a reg which is a list of tuples in the
-> > form reg = <address1 length1 [address2 length2] [address3 length3] ...
-> > Each tuple represents an address range used by the device. Each address
-> > value is a list of one or more 32 bit integers called cells. Similarly,
-> > the length value can either be a list of cells, or empty."
-> > 
-> > In this case the address is: [0 0xb0000000], that means
-> > 0x00000000b0000000, and the length is [0 0x20000], that means
-> > 0x0000000000020000.
-> 
-> But the size depends on #size-cells and #address-cells. I would expect
-> those to be 1 for a 32-bit guest.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt b/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+index 66efc80..85f8c0d 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio_atmel.txt
+@@ -9,6 +9,10 @@ Required properties:
+   unused).
+ - gpio-controller: Marks the device node as a GPIO controller.
  
-I was looking at the Versatile Express DTS (vexpress-v2p-ca15-tc1.dts)
-that on Linux v3.6-rc5 has:
-
-#address-cells = <2>;
-#size-cells = <2>;
-
-What should I use for the example in this doc?
++optional properties:
++- #gpio-lines: Number of gpio if absent 32.
++
++
+ Example:
+ 	pioA: gpio@fffff200 {
+ 		compatible = "atmel,at91rm9200-gpio";
+@@ -16,5 +20,6 @@ Example:
+ 		interrupts = <2 4>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
++		#gpio-lines = <19>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index bc6cd3f..b3efecb 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -130,6 +130,7 @@
+ 					interrupts = <2 4 1>;
+ 					#gpio-cells = <2>;
+ 					gpio-controller;
++					#gpio-lines = <19>;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+ 				};
+@@ -150,6 +151,7 @@
+ 					interrupts = <3 4 1>;
+ 					#gpio-cells = <2>;
+ 					gpio-controller;
++					#gpio-lines = <22>;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+ 				};
+diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
+index 3b8f463..a34f0ed 100644
+--- a/arch/arm/mach-at91/gpio.c
++++ b/arch/arm/mach-at91/gpio.c
+@@ -33,6 +33,8 @@
+ 
+ #include "generic.h"
+ 
++#define MAX_NB_GPIO_PER_BANK	32
++
+ struct at91_gpio_chip {
+ 	struct gpio_chip	chip;
+ 	struct at91_gpio_chip	*next;		/* Bank sharing same clock */
+@@ -56,7 +58,7 @@ static int at91_gpiolib_direction_input(struct gpio_chip *chip,
+ 					unsigned offset);
+ static int at91_gpiolib_to_irq(struct gpio_chip *chip, unsigned offset);
+ 
+-#define AT91_GPIO_CHIP(name, nr_gpio)					\
++#define AT91_GPIO_CHIP(name)						\
+ 	{								\
+ 		.chip = {						\
+ 			.label		  = name,			\
+@@ -67,16 +69,16 @@ static int at91_gpiolib_to_irq(struct gpio_chip *chip, unsigned offset);
+ 			.set		  = at91_gpiolib_set,		\
+ 			.dbg_show	  = at91_gpiolib_dbg_show,	\
+ 			.to_irq		  = at91_gpiolib_to_irq,	\
+-			.ngpio		  = nr_gpio,			\
++			.ngpio		  = MAX_NB_GPIO_PER_BANK,	\
+ 		},							\
+ 	}
+ 
+ static struct at91_gpio_chip gpio_chip[] = {
+-	AT91_GPIO_CHIP("pioA", 32),
+-	AT91_GPIO_CHIP("pioB", 32),
+-	AT91_GPIO_CHIP("pioC", 32),
+-	AT91_GPIO_CHIP("pioD", 32),
+-	AT91_GPIO_CHIP("pioE", 32),
++	AT91_GPIO_CHIP("pioA"),
++	AT91_GPIO_CHIP("pioB"),
++	AT91_GPIO_CHIP("pioC"),
++	AT91_GPIO_CHIP("pioD"),
++	AT91_GPIO_CHIP("pioE"),
+ };
+ 
+ static int gpio_banks;
+@@ -91,7 +93,7 @@ static unsigned long at91_gpio_caps;
+ 
+ static inline void __iomem *pin_to_controller(unsigned pin)
+ {
+-	pin /= 32;
++	pin /= MAX_NB_GPIO_PER_BANK;
+ 	if (likely(pin < gpio_banks))
+ 		return gpio_chip[pin].regbase;
+ 
+@@ -100,7 +102,7 @@ static inline void __iomem *pin_to_controller(unsigned pin)
+ 
+ static inline unsigned pin_to_mask(unsigned pin)
+ {
+-	return 1 << (pin % 32);
++	return 1 << (pin % MAX_NB_GPIO_PER_BANK);
+ }
+ 
+ 
+@@ -992,6 +994,7 @@ static void __init of_at91_gpio_init_one(struct device_node *np)
+ {
+ 	int alias_idx;
+ 	struct at91_gpio_chip *at91_gpio;
++	uint32_t ngpio;
+ 
+ 	if (!np)
+ 		return;
+@@ -1004,7 +1007,7 @@ static void __init of_at91_gpio_init_one(struct device_node *np)
+ 	}
+ 
+ 	at91_gpio = &gpio_chip[alias_idx];
+-	at91_gpio->chip.base = alias_idx * at91_gpio->chip.ngpio;
++	at91_gpio->chip.base = alias_idx * MAX_NB_GPIO_PER_BANK;
+ 
+ 	at91_gpio->regbase = of_iomap(np, 0);
+ 	if (!at91_gpio->regbase) {
+@@ -1024,6 +1027,14 @@ static void __init of_at91_gpio_init_one(struct device_node *np)
+ 	if (of_device_is_compatible(np, "atmel,at91sam9x5-gpio"))
+ 		at91_gpio_caps |= AT91_GPIO_CAP_PIO3;
+ 
++	if (!of_property_read_u32(np, "#gpio-lines", &ngpio)) {
++		if (ngpio >= MAX_NB_GPIO_PER_BANK)
++			pr_err("at91_gpio.%d, gpio-nb >= %d failback to %d\n",
++			       alias_idx, MAX_NB_GPIO_PER_BANK, MAX_NB_GPIO_PER_BANK);
++		else
++			at91_gpio->chip.ngpio = ngpio;
++	}
++
+ 	/* Setup clock */
+ 	if (at91_gpio_setup_clk(alias_idx))
+ 		goto ioremap_err;
+@@ -1061,7 +1072,7 @@ static void __init at91_gpio_init_one(int idx, u32 regbase, int pioc_hwirq)
+ {
+ 	struct at91_gpio_chip *at91_gpio = &gpio_chip[idx];
+ 
+-	at91_gpio->chip.base = idx * at91_gpio->chip.ngpio;
++	at91_gpio->chip.base = idx * MAX_NB_GPIO_PER_BANK;
+ 	at91_gpio->pioc_hwirq = pioc_hwirq;
+ 	at91_gpio->pioc_idx = idx;
+ 
+-- 
+1.7.10.4
