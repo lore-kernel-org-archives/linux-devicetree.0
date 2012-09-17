@@ -1,14 +1,14 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 03/16] ARM: at91: gpio: implement request
-Date: Mon, 17 Sep 2012 17:27:00 +0200
-Message-ID: <1347895633-1763-3-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 01/16] ARM: at91: fix missing #interrupt-cells on
+ gpio-controller
+Date: Mon, 17 Sep 2012 17:26:58 +0200
+Message-ID: <1347895633-1763-1-git-send-email-plagnioj@jcrosoft.com>
 References: <20120917140423.GA17667@game.jcrosoft.org>
- <1347895633-1763-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1347895633-1763-1-git-send-email-plagnioj@jcrosoft.com>
+In-Reply-To: <20120917140423.GA17667@game.jcrosoft.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,55 +22,203 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Configure the pin as pio when requested.
-
-It is needed to configure the pin as PIO at "request time" when we are
-using DT. Indeed, the muxing via old AT91 API is not allowed anymore if
-we are using the plain gpiolib.
-
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: Bo Shen <voice.shen@atmel.com>
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 ---
- arch/arm/mach-at91/gpio.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/at91sam9260.dtsi |    3 +++
+ arch/arm/boot/dts/at91sam9263.dtsi |    5 +++++
+ arch/arm/boot/dts/at91sam9g45.dtsi |    5 +++++
+ arch/arm/boot/dts/at91sam9n12.dtsi |    4 ++++
+ arch/arm/boot/dts/at91sam9x5.dtsi  |    4 ++++
+ 5 files changed, 21 insertions(+)
 
-diff --git a/arch/arm/mach-at91/gpio.c b/arch/arm/mach-at91/gpio.c
-index be42cf0..3b8f463 100644
---- a/arch/arm/mach-at91/gpio.c
-+++ b/arch/arm/mach-at91/gpio.c
-@@ -46,6 +46,7 @@ struct at91_gpio_chip {
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index 66389c1..7c95f76 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -104,6 +104,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
  
- #define to_at91_gpio_chip(c) container_of(c, struct at91_gpio_chip, chip)
+ 			pioB: gpio@fffff600 {
+@@ -113,6 +114,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
  
-+static int at91_gpiolib_request(struct gpio_chip *chip, unsigned offset);
- static void at91_gpiolib_dbg_show(struct seq_file *s, struct gpio_chip *chip);
- static void at91_gpiolib_set(struct gpio_chip *chip, unsigned offset, int val);
- static int at91_gpiolib_get(struct gpio_chip *chip, unsigned offset);
-@@ -59,6 +60,7 @@ static int at91_gpiolib_to_irq(struct gpio_chip *chip, unsigned offset);
- 	{								\
- 		.chip = {						\
- 			.label		  = name,			\
-+			.request	  = at91_gpiolib_request,	\
- 			.direction_input  = at91_gpiolib_direction_input, \
- 			.direction_output = at91_gpiolib_direction_output, \
- 			.get		  = at91_gpiolib_get,		\
-@@ -862,6 +864,16 @@ void __init at91_gpio_irq_setup(void)
- }
+ 			pioC: gpio@fffff800 {
+@@ -122,6 +124,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
  
- /* gpiolib support */
-+static int at91_gpiolib_request(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct at91_gpio_chip *at91_gpio = to_at91_gpio_chip(chip);
-+	void __iomem *pio = at91_gpio->regbase;
-+	unsigned mask = 1 << offset;
-+
-+	__raw_writel(mask, pio + PIO_PER);
-+	return 0;
-+}
-+
- static int at91_gpiolib_direction_input(struct gpio_chip *chip,
- 					unsigned offset)
- {
+ 			dbgu: serial@fffff200 {
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index b460d6c..195019b 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -95,6 +95,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff400 {
+@@ -104,6 +105,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff600 {
+@@ -113,6 +115,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffff800 {
+@@ -122,6 +125,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioE: gpio@fffffa00 {
+@@ -131,6 +135,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@ffffee00 {
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index bafa880..63751b1 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -113,6 +113,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff400 {
+@@ -122,6 +123,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff600 {
+@@ -131,6 +133,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffff800 {
+@@ -140,6 +143,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioE: gpio@fffffa00 {
+@@ -149,6 +153,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@ffffee00 {
+diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+index bfac0df..ef9336a 100644
+--- a/arch/arm/boot/dts/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+@@ -107,6 +107,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff600 {
+@@ -116,6 +117,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff800 {
+@@ -125,6 +127,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffffa00 {
+@@ -134,6 +137,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@fffff200 {
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index 4a18c39..8a387a8 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -115,6 +115,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioB: gpio@fffff600 {
+@@ -124,6 +125,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioC: gpio@fffff800 {
+@@ -133,6 +135,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			pioD: gpio@fffffa00 {
+@@ -142,6 +145,7 @@
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 				interrupt-controller;
++				#interrupt-cells = <2>;
+ 			};
+ 
+ 			dbgu: serial@fffff200 {
 -- 
 1.7.10.4
