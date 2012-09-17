@@ -1,8 +1,8 @@
 From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get a
- named child.
-Date: Mon, 17 Sep 2012 09:58:02 +0100
-Message-ID: <1347872282-3776-1-git-send-email-srinivas.kandagatla@st.com>
+Subject: [PATCH v3 5/5] dt/tty/opal: Use of_get_child_by_name to get a named
+ child.
+Date: Mon, 17 Sep 2012 09:58:16 +0100
+Message-ID: <1347872296-3812-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,8 +17,8 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
@@ -29,45 +29,35 @@ driver by replacing it with of_get_child_by_name instead.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/spi/spi-s3c64xx.c |    7 ++++---
- 1 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/tty/hvc/hvc_opal.c |    9 ++-------
+ 1 files changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index d1c8441..f226f33 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -835,9 +835,7 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
- 		return ERR_PTR(-EINVAL);
+diff --git a/drivers/tty/hvc/hvc_opal.c b/drivers/tty/hvc/hvc_opal.c
+index 0d2ea0c..4c7d161 100644
+--- a/drivers/tty/hvc/hvc_opal.c
++++ b/drivers/tty/hvc/hvc_opal.c
+@@ -344,7 +344,7 @@ void __init hvc_opal_init_early(void)
+ 			return;
+ 		}
+ 	} else {
+-		struct device_node *opal, *np;
++		struct device_node *opal;
+ 
+ 		/* Current OPAL takeover doesn't provide the stdout
+ 		 * path, so we hard wire it
+@@ -360,12 +360,7 @@ void __init hvc_opal_init_early(void)
+ 		}
+ 		if (!opal)
+ 			return;
+-		for_each_child_of_node(opal, np) {
+-			if (!strcmp(np->name, "serial")) {
+-				stdout_node = np;
+-				break;
+-			}
+-		}
++		stdout_node = of_get_child_by_name(opal, "serial");
+ 		of_node_put(opal);
  	}
- 
--	for_each_child_of_node(slave_np, data_np)
--		if (!strcmp(data_np->name, "controller-data"))
--			break;
-+	data_np = of_get_child_by_name(slave_np, "controller-data");
- 	if (!data_np) {
- 		dev_err(&spi->dev, "child node 'controller-data' not found\n");
- 		return ERR_PTR(-EINVAL);
-@@ -847,6 +845,7 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
- 	if (!cs) {
- 		dev_err(&spi->dev, "could not allocate memory for controller"
- 					" data\n");
-+		of_node_put(data_np);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-@@ -855,11 +854,13 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
- 		dev_err(&spi->dev, "chip select gpio is not specified or "
- 					"invalid\n");
- 		kfree(cs);
-+		of_node_put(data_np);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
- 	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
- 	cs->fb_delay = fb_delay;
-+	of_node_put(data_np);
- 	return cs;
- }
- 
+ 	if (!stdout_node)
 -- 
 1.7.0.4
