@@ -1,53 +1,89 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [RESEND PATCH v3 2/5] dt/powerpc/powernv: Use of_get_child_by_name to
- get a named child.
-Date: Mon, 17 Sep 2012 12:58:29 +0100
-Message-ID: <1347883109-16714-1-git-send-email-srinivas.kandagatla@st.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [RESEND PATCH v3 1/5] dt: introduce of_get_child_by_name to get child
+ node by name.
+Date: Mon, 17 Sep 2012 12:58:21 +0100
+Message-ID: <1347883101-16679-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: robherring2@gmail.com, bergner@us.ibm.com, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, srinivas.kandagatla@st.com, broonie@opensource.wolfsonmicro.com, afleming@freescale.com, ben-linux@fluff.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-As follow-up to "dt: introduce of_get_child_by_name to get child node by
-name." patch, This patch removes some of the code duplication in the
-driver by replacing it with of_get_child_by_name instead.
+This patch introduces of_get_child_by_name function to get a child node
+by its name in a given parent node.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Without this patch each driver code has to iterate the parent and do
+a string compare, However having of_get_child_by_name libary function would
+avoid code duplication, errors and is more convenient.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 ---
- arch/powerpc/platforms/powernv/opal.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/of/base.c  |   25 +++++++++++++++++++++++++
+ include/linux/of.h |    2 ++
+ 2 files changed, 27 insertions(+), 0 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index aaa0dba..fc7ae70 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -294,9 +294,9 @@ static int __init opal_init(void)
- 		consoles = of_node_get(opal_node);
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4a1c9a..7391f8a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -391,6 +391,31 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ EXPORT_SYMBOL(of_get_next_available_child);
  
- 	/* Register serial ports */
--	for_each_child_of_node(consoles, np) {
--		if (strcmp(np->name, "serial"))
--			continue;
-+	np = of_get_child_by_name(consoles, "serial");
-+	if (np) {
-+		of_node_put(np);
- 		of_platform_device_create(np, NULL, NULL);
- 	}
- 	of_node_put(consoles);
+ /**
++ *	of_get_child_by_name - Find the child node by name for a given parent
++ *	@node:	parent node
++ *	@name:	child name to look for.
++ *
++ *      This function looks for child node for given matching name
++ *
++ *	Returns a node pointer if found, with refcount incremented, use
++ *	of_node_put() on it when done.
++ *	Returns NULL if node is not found.
++ */
++
++struct device_node *of_get_child_by_name(const struct device_node *node,
++				const char *name)
++{
++	struct device_node *child;
++
++	for_each_child_of_node(node, child)
++		if (child->name && (of_node_cmp(child->name, name) == 0)
++			&& of_node_get(child))
++			break;
++	return child;
++}
++EXPORT_SYMBOL(of_get_child_by_name);
++
++/**
+  *	of_find_node_by_path - Find a node matching a full OF path
+  *	@path:	The full path to match
+  *
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 1b11632..7b8e3cd 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -192,6 +192,8 @@ extern struct device_node *of_get_next_child(const struct device_node *node,
+ 					     struct device_node *prev);
+ extern struct device_node *of_get_next_available_child(
+ 	const struct device_node *node, struct device_node *prev);
++extern struct device_node *of_get_child_by_name(const struct device_node *node,
++					const char *name);
+ 
+ #define for_each_child_of_node(parent, child) \
+ 	for (child = of_get_next_child(parent, NULL); child != NULL; \
 -- 
 1.7.0.4
