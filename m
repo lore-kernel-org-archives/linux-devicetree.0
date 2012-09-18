@@ -1,17 +1,14 @@
-From: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
-Date: Mon, 17 Sep 2012 16:06:15 -0700
-Message-ID: <20120917230615.GA26502@codeaurora.org>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
- <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
- <20120915001431.GB12445@n2100.arm.linux.org.uk>
- <201209172042.11860.arnd@arndb.de>
+From: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 2/5] dt/powerpc/powernv: Use
+ of_get_child_by_name to get a named child.
+Date: Tue, 18 Sep 2012 11:32:39 +1000
+Message-ID: <1347931959.7046.1.camel@concordia>
+References: <1347883109-16714-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201209172042.11860.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1347883109-16714-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,78 +19,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2012 at 08:42:11PM +0000, Arnd Bergmann wrote:
-> On Saturday 15 September 2012, Russell King - ARM Linux wrote:
-> > 
-> > On Fri, Sep 14, 2012 at 05:41:56PM -0500, Jon Hunter wrote:
-> > > 3. Supporting legacy devices not using DMA Engine
-> > > 
-> > >    These devices present a problem, as there may not be a uniform way to easily
-> > >    support them with regard to device tree. Ideally, these should be migrated
-> > >    to DMA engine. However, if this is not possible, then they should still be
-> > >    able to use this binding, the only constaint imposed by this implementation
-> > >    is that when requesting a DMA channel via of_dma_request_slave_channel(), it
-> > >    will return a type of dma_chan.
-> > 
-> > As far as devices not using DMA engine, the answer is we don't support
-> > their specification in the DT model.  Note that the legacy OMAP DMA
-> > API is scheduled for removal next year, so it's not going to be around
-> > that much longer.
+On Mon, 2012-09-17 at 12:58 +0100, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 > 
-> There are a few platforms using the ISA DMA API (rpc, h720x, shark, footbridge),
-> and I agree that they are unlikely to see OF support, although if they did, it
-> wouldn't be unreasonable to encode their DMA channels using the same binding.
+> As follow-up to "dt: introduce of_get_child_by_name to get child node by
+> name." patch, This patch removes some of the code duplication in the
+> driver by replacing it with of_get_child_by_name instead.
 > 
-> The other ones that are currently around with their own DMA implementation are
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> ---
+>  arch/powerpc/platforms/powernv/opal.c |    6 +++---
+>  1 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> bcmring --> platform is going away
-> samsung --> gradually getting moved to dmaengine, already has its own binding
->             that needs to be replaced with this one, so best do it at the same
->             time.
-> tegra   --> old dma code gone in 3.7
-> pxa/mmp --> dmaengine implementation being worked on, should wait for that.
-> msm     --> dma implementation only used by two drivers (serial and mmc). 
-> 
-> Outside of arch/arm, at least sh, cris, unicore32 and blackfin have their
-> own dma APIs based on the ISA interfaces. I don't currently see any of them
-> moving towards DT, but it's definitely possible. 
-> 
-> Among the above MSM seems to be the most likely candidate to use the binding
-> before moving to DT. The msm_sdcc driver is (like much of the msm platform
-> code) lagging far behind the internel version that qualcomm have, and the
-> device tree binding they are using is incompatible with the common MMC
-> binding (and of course the DMA binding here) as well. For getting MSM up
-> to speed compared with the other platforms, they have to use proper DT
-> bindings as well as proper DMA engine support. Between those two, I'd prefer
-> fixing the DT binding first, in order to limit the amount of changes that
-> have to be done to external device tree files.
+> diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+> index aaa0dba..fc7ae70 100644
+> --- a/arch/powerpc/platforms/powernv/opal.c
+> +++ b/arch/powerpc/platforms/powernv/opal.c
+> @@ -294,9 +294,9 @@ static int __init opal_init(void)
+>  		consoles = of_node_get(opal_node);
+>  
+>  	/* Register serial ports */
+> -	for_each_child_of_node(consoles, np) {
+> -		if (strcmp(np->name, "serial"))
+> -			continue;
+> +	np = of_get_child_by_name(consoles, "serial");
+> +	if (np) {
+> +		of_node_put(np);
+>  		of_platform_device_create(np, NULL, NULL);
 
-There is also a lot of similarity between the mmci hardware and the
-msm_sdcc hardware.  Enough so, that it is probably better for us to
-make the mmci driver work with our hardware, rather than trying to
-keep msm_sdcc going.
+You mustn't drop the reference until after you've finished with np, as
+you have written it the node could be freed before you call
+of_platform_device_create().
 
-There is also an MSM nand device that appears to have not made it in.
-It is heavily dependent on the weird features of the DMA hardware.  I
-don't have any current plans to support this device, since most boards
-using MSMs these days are using mmc/sd instead of bare NAND.
-
-Our DMA hardware is really weird, but should be a bit reasonable.  It
-is also being gradually replaced in newer chips with a different DMA
-framework.
-
-As far as I'm concerned, I consider making our DMA driver(s) use the
-DMA engine API to be part of getting these platforms working with DT.
-
-It is planned, but there are quite a few things that need to be
-tackled first.
-
-David
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+cheers
