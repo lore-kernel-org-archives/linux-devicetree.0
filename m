@@ -1,14 +1,12 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
-Date: Tue, 18 Sep 2012 12:50:05 +0000
-Message-ID: <201209181250.05647.arnd@arndb.de>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
- <201209172042.11860.arnd@arndb.de> <20120917230615.GA26502@codeaurora.org>
+From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/2] ARM: LPC32xx: DTS update for devicetree completion of
+ spi-pl022
+Date: Tue, 18 Sep 2012 15:00:27 +0200
+Message-ID: <1347973228-29839-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120917230615.GA26502-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,31 +17,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 September 2012, David Brown wrote:
-> There is also a lot of similarity between the mmci hardware and the
-> msm_sdcc hardware.  Enough so, that it is probably better for us to
-> make the mmci driver work with our hardware, rather than trying to
-> keep msm_sdcc going.
-> 
-> There is also an MSM nand device that appears to have not made it in.
-> It is heavily dependent on the weird features of the DMA hardware.  I
-> don't have any current plans to support this device, since most boards
-> using MSMs these days are using mmc/sd instead of bare NAND.
-> 
-> Our DMA hardware is really weird, but should be a bit reasonable.  It
-> is also being gradually replaced in newer chips with a different DMA
-> framework.
-> 
-> As far as I'm concerned, I consider making our DMA driver(s) use the
-> DMA engine API to be part of getting these platforms working with DT.
-> 
-> It is planned, but there are quite a few things that need to be
-> tackled first.
+spi-pl022 got a further update to its devicetree support, completing properties
+such that no platform data is necessary anymore. This patch adjusts
+lpc32xx.dtsi accordingly.
 
-Ok, thanks for the information.
+Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 
-	Arnd
+---
+I will do a git pull request for arm-soc.git when the respective change in
+spi-pl022.c is merged.
+
+ arch/arm/boot/dts/lpc32xx.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- linux-2.6.orig/arch/arm/boot/dts/lpc32xx.dtsi
++++ linux-2.6/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -91,6 +91,7 @@
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x20084000 0x1000>;
+ 				interrupts = <0x14 0>;
++				pl022,bus-id = <0>;
+ 			};
+ 
+ 			spi1: spi@20088000 {
+@@ -102,6 +103,7 @@
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x2008c000 0x1000>;
+ 				interrupts = <0x15 0>;
++				pl022,bus-id = <1>;
+ 			};
+ 
+ 			spi2: spi@20090000 {
