@@ -1,7 +1,7 @@
 From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [RESEND PATCH v3 0/5] Introduce of_get_child_by_name
-Date: Tue, 18 Sep 2012 08:08:10 +0100
-Message-ID: <1347952090-24054-1-git-send-email-srinivas.kandagatla@st.com>
+Subject: [PATCH v4 0/5] Introduce of_get_child_by_name
+Date: Tue, 18 Sep 2012 08:10:14 +0100
+Message-ID: <1347952214-24532-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
