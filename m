@@ -1,31 +1,45 @@
-From: Roland Stigge <stigge@antcom.de>
-Subject: Re: [PATCH 09/19] ARM: ux500: Enable SSP (SPI) for HREF when booting
- Device Tree
-Date: Tue, 18 Sep 2012 14:13:05 +0200
-Message-ID: <50586551.5020404@antcom.de>
-References: <1347016499-29354-1-git-send-email-lee.jones@linaro.org> <1347016499-29354-10-git-send-email-lee.jones@linaro.org> <CACRpkdaC_enpxUFNM_wteAQWKER_naUNUH-s1pJtiGzVFSV+og@mail.gmail.com> <505757D8.8090405@antcom.de> <CACRpkdZLdernphVSfwHS43HptS+33=PzorihQ0bBKm689u_oFw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZLdernphVSfwHS43HptS+33=PzorihQ0bBKm689u_oFw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, STEricsson_nomadik_linux@list.st.com, linus.walleij@stericsson.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, spi mailing list <spi-devel-general@lists.sourceforge.net>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH] video: drm: Add match table for drm platform device
+Date: Wed, 19 Sep 2012 00:05:41 +0530
+Message-ID: <1347993341-11340-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, jg1.han@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds match table for drm platform device.
 
-On 09/18/2012 02:08 PM, Linus Walleij wrote:
->> When we have sorted out this driver change (please check the new pl022
->> specific dt property names!), I will provide patches for arm-soc to
->> actually use this new interface via dts files.
-> 
-> OK cool I guess you will do this for the LPC32xx? Or are you testing
-> this on some other platforms?
+Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+---
+ drivers/gpu/drm/exynos/exynos_drm_drv.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-LPC32xx for now. The new code is backwards compatible, so I'd prefer for
-others to adopt and test it on their platforms individually before
-patching everything at once without testing.
-
-Roland
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+index d070719..18abdcc 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+@@ -294,12 +294,21 @@ static int exynos_drm_platform_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id drm_device_dt_match[] = {
++	{ .compatible = "samsung,exynos-drm-device"},
++	{},
++};
++MODULE_DEVICE_TABLE(of, drm_device_dt_match);
++#endif
++
+ static struct platform_driver exynos_drm_platform_driver = {
+ 	.probe		= exynos_drm_platform_probe,
+ 	.remove		= __devexit_p(exynos_drm_platform_remove),
+ 	.driver		= {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "exynos-drm",
++		.of_match_table = of_match_ptr(drm_device_dt_match),
+ 	},
+ };
+ 
+-- 
+1.7.0.4
