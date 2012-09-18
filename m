@@ -1,38 +1,69 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
-Date: Tue, 18 Sep 2012 08:51:59 -0600
-Message-ID: <50588A8F.30203@wwwdotorg.org>
-References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] gpio: Describe interrupt-controller binding
+Date: Tue, 18 Sep 2012 08:55:40 -0600
+Message-ID: <50588B6C.6080402@wwwdotorg.org>
+References: <1347958274-19425-1-git-send-email-thierry.reding@avionic-design.de> <505876F0.6010809@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1347958949-5598-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <505876F0.6010809@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2012 03:02 AM, Bo Shen wrote:
-> When i2c-gpio node number is greater than 1, the second can not sucessfully
-> regiter
+On 09/18/2012 07:28 AM, Rob Herring wrote:
+> On 09/18/2012 03:51 AM, Thierry Reding wrote:
+>> In order to use GPIO controllers as interrupt controllers, they need to
+>> be marked with the DT interrupt-controller property. This commit adds
+>> some documentation about this to the general GPIO binding document.
+>>
+>> Cc: Linus Walleij <linus.walleij@stericsson.com>
+>> Cc: Grant Likely <grant.likely@secretlab.ca>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 > 
-> Using alias method to get the pdev->id, or else the second device will use
-> the same id which will cause fail to register
-
-pdev->id shouldn't be used at all with device tree. Why does
-registration fail without this change?
-
-> diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
-> index e62d2d9..051fbb3 100644
-> --- a/drivers/i2c/busses/i2c-gpio.c
-> +++ b/drivers/i2c/busses/i2c-gpio.c
-> @@ -136,6 +136,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
->  		ret = of_i2c_gpio_probe(pdev->dev.of_node, pdata);
->  		if (ret)
->  			return ret;
-> +		pdev->id = of_alias_get_id(pdev->dev.of_node, "i2c-gpio");
->  	} else {
->  		if (!pdev->dev.platform_data)
->  			return -ENXIO;
+> Applied for 3.7.
 > 
+> Rob
+> 
+>> ---
+>>  Documentation/devicetree/bindings/gpio/gpio.txt | 33 +++++++++++++++++++++++++
+>>  1 file changed, 33 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+>> index 4e16ba4..8d125b0 100644
+>> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+>> @@ -75,4 +75,37 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
+>>  		gpio-controller;
+>>  	};
+>>  
+>> +If the GPIO controller supports the generation of interrupts, it should
+>> +also contain an empty "interrupt-controller" property as well as an
+>> +"#interrupt-cells" property. This is required in order for other nodes
+>> +to use the GPIO controller as their interrupt parent.
+
+Surely this is generic information for any interrupt controller, and
+hence doesn't belong in the GPIO binding?
+
+>> +If #interrupt-cells is 1, the single cell is used to specify the number
+>> +of the GPIO that is to be used as an interrupt.
+>> +
+>> +If #interrupt-cells is 2, the first cell is used to specify the number
+>> +of the GPIO that is to be used as an interrupt, whereas the second cell
+>> +is used to specify any of the following flags:
+>> +  - bits[3:0] trigger type and level flags
+>> +      1 = low-to-high edge triggered
+>> +      2 = high-to-low edge triggered
+>> +      4 = active high level-sensitive
+>> +      8 = active low level-sensitive
+
+That certainly shouldn't be in the generic GPIO binding; the format of
+the interrupt specifier is determined by the binding for the individual
+device that is the interrupt controller. Just because a device is also a
+GPIO controller doesn't mean that it has to conform to a specific format
+for the interrupt specifier.
