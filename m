@@ -1,35 +1,117 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
-Date: Tue, 18 Sep 2012 23:32:21 +0100
-Message-ID: <20120918223221.GG12445@n2100.arm.linux.org.uk>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
- <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
- <20120915001431.GB12445@n2100.arm.linux.org.uk>
- <201209172042.11860.arnd@arndb.de> <5058F35A.8040702@firmworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5058F35A.8040702-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH REPOST] mfd: max8907: add power off control
+Date: Tue, 18 Sep 2012 16:51:19 -0600
+Message-ID: <1348008679-20582-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, bilhuang@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 19, 2012 at 06:19:06AM +0800, Mitch Bradley wrote:
-> Is there ever a point when old architectures leave the Linux tree, or
-> will people have to see grep hits from them until the end of time?
+From: Stephen Warren <swarren@nvidia.com>
 
-That depends on use and the burden of keeping them in the tree.  I'm
-not aware of much activity around Shark, and I'm not aware of Shark
-causing that many problems either...
+Add DT property "maxim,system-power-controller" to indicate whether the
+PMIC is in charge of controlling the system power. If this is set, the
+driver will provide the pm_power_off() function.
+
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+Samuel, I'm not sure if you have this in your list to process or not, nor
+if you prefer a patch to be reposted vs. a response to the original email;
+Mark Brown requested that for him at least I repost rather than reply, so
+I'm giving that a go everywhere.
+
+ .../devicetree/bindings/regulator/max8907.txt      |    6 ++++++
+ drivers/mfd/max8907.c                              |   20 ++++++++++++++++++++
+ include/linux/mfd/max8907.h                        |    2 ++
+ 3 files changed, 28 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/max8907.txt b/Documentation/devicetree/bindings/regulator/max8907.txt
+index 4fd847f..51e683b 100644
+--- a/Documentation/devicetree/bindings/regulator/max8907.txt
++++ b/Documentation/devicetree/bindings/regulator/max8907.txt
+@@ -16,6 +16,10 @@ Required properties:
+   property, with valid values listed below. The content of each sub-node
+   is defined by the standard binding for regulators; see regulator.txt.
+ 
++Optional properties:
++- maxim,system-power-controller: Boolean property indicating that the PMIC
++  controls the overall system power.
++
+ Valid regulator-compatible values are:
+ 
+   sd1, sd2, sd3, ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10,
+@@ -29,6 +33,8 @@ Example:
+ 			reg = <0x3c>;
+ 			interrupts = <0 86 0x4>;
+ 
++			maxim,system-power-controller;
++
+ 			mbatt-supply = <&some_reg>;
+ 			in-v1-supply = <&mbatt_reg>;
+ 			...
+diff --git a/drivers/mfd/max8907.c b/drivers/mfd/max8907.c
+index 6497c98..2303641 100644
+--- a/drivers/mfd/max8907.c
++++ b/drivers/mfd/max8907.c
+@@ -176,11 +176,26 @@ static const struct regmap_irq_chip max8907_rtc_irq_chip = {
+ 	.num_irqs = ARRAY_SIZE(max8907_rtc_irqs),
+ };
+ 
++struct max8907 *max8907_pm_off;
++static void max8907_power_off(void)
++{
++	regmap_update_bits(max8907_pm_off->regmap_gen, MAX8907_REG_RESET_CNFG,
++			MAX8907_MASK_POWER_OFF, MAX8907_MASK_POWER_OFF);
++}
++
+ static __devinit int max8907_i2c_probe(struct i2c_client *i2c,
+ 				       const struct i2c_device_id *id)
+ {
+ 	struct max8907 *max8907;
+ 	int ret;
++	struct max8907_platform_data *pdata = dev_get_platdata(&i2c->dev);
++	bool pm_off = false;
++
++	if (pdata)
++		pm_off = pdata->pm_off;
++	else if (i2c->dev.of_node)
++		pm_off = of_property_read_bool(i2c->dev.of_node,
++					"maxim,system-power-controller");
+ 
+ 	max8907 = devm_kzalloc(&i2c->dev, sizeof(struct max8907), GFP_KERNEL);
+ 	if (!max8907) {
+@@ -251,6 +266,11 @@ static __devinit int max8907_i2c_probe(struct i2c_client *i2c,
+ 		goto err_add_devices;
+ 	}
+ 
++	if (pm_off && !pm_power_off) {
++		max8907_pm_off = max8907;
++		pm_power_off = max8907_power_off;
++	}
++
+ 	return 0;
+ 
+ err_add_devices:
+diff --git a/include/linux/mfd/max8907.h b/include/linux/mfd/max8907.h
+index 283531f..b06f7a6 100644
+--- a/include/linux/mfd/max8907.h
++++ b/include/linux/mfd/max8907.h
+@@ -167,6 +167,7 @@
+ #define MAX8907_MASK_OUT5V_VINEN	0x10
+ #define MAX8907_MASK_OUT5V_ENSRC	0x0E
+ #define MAX8907_MASK_OUT5V_EN		0x01
++#define MAX8907_MASK_POWER_OFF		0x40
+ 
+ /* Regulator IDs */
+ #define MAX8907_MBATT	0
+@@ -231,6 +232,7 @@ enum {
+ 
+ struct max8907_platform_data {
+ 	struct regulator_init_data *init_data[MAX8907_NUM_REGULATORS];
++	bool pm_off;
+ };
+ 
+ struct regmap_irq_chips_data;
+-- 
+1.7.0.4
