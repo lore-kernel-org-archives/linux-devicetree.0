@@ -1,152 +1,28 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpio: Describe interrupt-controller binding
-Date: Tue, 18 Sep 2012 14:00:45 -0500
-Message-ID: <5058C4DD.5010608@gmail.com>
-References: <1347958274-19425-1-git-send-email-thierry.reding@avionic-design.de>
- <505876F0.6010809@gmail.com> <50588B6C.6080402@wwwdotorg.org>
- <20120918180600.GA29360@avionic-0098.mockup.avionic-design.de>
- <5058BA26.20403@wwwdotorg.org>
- <20120918184552.GD29360@avionic-0098.mockup.avionic-design.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: pxa: using for_each_set_bit to simplify the code
+Date: Tue, 18 Sep 2012 23:19:36 +0200
+Message-ID: <CACRpkdaE1gs2Be8pf3J=__igvgWbX1L9L-wvTjjnaEmuHTKoAA@mail.gmail.com>
+References: <CAPgLHd93SqsiFmE7y356VwBJtaac0APE__vk+8dBZnaOyt4org@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120918184552.GD29360-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd93SqsiFmE7y356VwBJtaac0APE__vk+8dBZnaOyt4org@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2012 01:45 PM, Thierry Reding wrote:
-> On Tue, Sep 18, 2012 at 12:15:02PM -0600, Stephen Warren wrote:
->> On 09/18/2012 12:06 PM, Thierry Reding wrote:
->>> On Tue, Sep 18, 2012 at 08:55:40AM -0600, Stephen Warren wrote:
->>>> On 09/18/2012 07:28 AM, Rob Herring wrote:
->>>>> On 09/18/2012 03:51 AM, Thierry Reding wrote:
->>>>>> In order to use GPIO controllers as interrupt controllers,
->>>>>> they need to be marked with the DT interrupt-controller
->>>>>> property. This commit adds some documentation about this to
->>>>>> the general GPIO binding document.
->>>>>>
->>>>>> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org> Cc: Grant
->>>>>> Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> Cc: Rob Herring
->>>>>> <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org> Cc:
->>>>>> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org Cc:
->>>>>> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org Signed-off-by: Thierry Reding
->>>>>> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
->>>>>
->>>>> Applied for 3.7.
->>>>>
->>>>> Rob
->>>>>
->>>>>> --- Documentation/devicetree/bindings/gpio/gpio.txt | 33
->>>>>> +++++++++++++++++++++++++ 1 file changed, 33 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt
->>>>>> b/Documentation/devicetree/bindings/gpio/gpio.txt index
->>>>>> 4e16ba4..8d125b0 100644 ---
->>>>>> a/Documentation/devicetree/bindings/gpio/gpio.txt +++
->>>>>> b/Documentation/devicetree/bindings/gpio/gpio.txt @@ -75,4
->>>>>> +75,37 @@ Example of two SOC GPIO banks defined as
->>>>>> gpio-controller nodes: gpio-controller; };
->>>>>>
->>>>>> +If the GPIO controller supports the generation of
->>>>>> interrupts, it should +also contain an empty
->>>>>> "interrupt-controller" property as well as an 
->>>>>> +"#interrupt-cells" property. This is required in order for
->>>>>> other nodes +to use the GPIO controller as their interrupt
->>>>>> parent.
->>>>
->>>> Surely this is generic information for any interrupt controller,
->>>> and hence doesn't belong in the GPIO binding?
->>>
->>> LinusW requested this in order to avoid having to list these
->>> properties in every GPIO controller.
->>
->> There's no need to list this property in an individual GPIO
->> controller's binding either; it's a standard property for any
->> interrupt controller of any type.
->>
->>> I suppose that having it in an extra binding for interrupt
->>> controllers might make sense as well, but in that case we should
->>> probably provide a reference because the GPIO binding is where 
->>> people are most likely to look for this information.
->>
->> Yes, we probably should have a centralized .txt for the base interrupt
->> controller properties. I guess we don't today because it's probably so
->> old everyone assumes it.
-> 
-> Since each driver binding still needs to document it and in order to
-> avoid needless duplication I think having a central location for this
-> makes a lot of sense.
-> 
->> For some other patches I sent, I created
->> Documentation/devicetree/bindings/interrupt-controller/ - a file in
->> that directory would make sense (bike-shedding: irq.txt, interrupts.txt?)
->>
->> Yes, each individual GPIO binding (that actually is an interrupt
->> controller; some may not be) should probably mention this and refer to
->> whatever documents the interrupt controller properties.
-> 
-> Okay. So how about I add a file interrupts.txt in that directory and put
-> something like what this patch contains into it? Then I can just add a
-> reference to the driver binding that the controller can be used as an
-> interrupt-controller and that a description can be find in this new
-> document.
-> 
->>> There is Documentation/devicetree/bindings/open-pic.txt, which
->>> already lists most of this information, so maybe a reference to
->>> that document will do just as well?
->>
->> I think that's just one random interrupt controller. The common/core
->> properties probably should be separated out.
->>
->>>>>> +If #interrupt-cells is 1, the single cell is used to specify
->>>>>> the number +of the GPIO that is to be used as an interrupt. 
->>>>>> + +If #interrupt-cells is 2, the first cell is used to
->>>>>> specify the number +of the GPIO that is to be used as an
->>>>>> interrupt, whereas the second cell +is used to specify any of
->>>>>> the following flags: +  - bits[3:0] trigger type and level
->>>>>> flags +      1 = low-to-high edge triggered +      2 =
->>>>>> high-to-low edge triggered +      4 = active high
->>>>>> level-sensitive +      8 = active low level-sensitive
->>>>
->>>> That certainly shouldn't be in the generic GPIO binding; the
->>>> format of the interrupt specifier is determined by the binding
->>>> for the individual device that is the interrupt controller. Just
->>>> because a device is also a GPIO controller doesn't mean that it
->>>> has to conform to a specific format for the interrupt specifier.
->>>
->>> I think it does make sense to provide a description of the most
->>> commonly used variants. The above certainly is what the majority is
->>> using and many of those that do not use one of the predefined
->>> irq_domain_xlate_*() functions reimplement them with some
->>> additional checks or conversions.
->>
->> OK, but the document can't say "this is how the IRQ specifier is
->> formatted", when it clearly isn't generally true.
->>
->> The document should say that the format of the IRQ specifier is
->> entirely determined by the individual binding, but that bindings may
->> often choose to re-use the following common format. Each individual
->> binding would then need to document whether it did choose to use that
->> common format, or whether it instead chose something custom.
-> 
-> Yes, that makes sense.
-> 
-> Rob, given the above discussion I think it'd be better if I followed up
-> with a patch that moves this description into a more generic location
-> and we removed this patch.
+On Fri, Sep 14, 2012 at 4:36 AM, Wei Yongjun <weiyj.lk@gmail.com> wrote:
 
-Yes, agreed.
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>
+> Using for_each_set_bit() to simplify the code.
+>
+> spatch with a semantic match is used to found this.
+> (http://coccinelle.lip6.fr/)
+>
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Rob
+Applied with Eric's and Haojian's ACKs.
+Thanks!
+Linus Walleij
