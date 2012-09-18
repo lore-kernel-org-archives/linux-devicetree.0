@@ -1,50 +1,76 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
- DMA channel
-Date: Tue, 18 Sep 2012 15:20:08 +0000
-Message-ID: <201209181520.08845.arnd@arndb.de>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
- <1347938035.1943.162.camel@vkoul-udesk3> <20120918132113.GT27758@beef>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v3 00/10] ARM: tegra: Add PCIe device tree support
+Date: Tue, 18 Sep 2012 09:56:26 -0600
+Message-ID: <CAErSpo5FSAVw0JRyiRB3z90_bS=to0pzLNUgi89959UwpRULWA@mail.gmail.com>
+References: <50294BCA.1070807@wwwdotorg.org> <CAErSpo7og1XgOSv_mFCQ=hP7pq0j3gXWh2QFL2wBJjz7kcAq=g@mail.gmail.com>
+ <502AA96B.2050709@wwwdotorg.org> <20120814195834.GA10431@avionic-0098.mockup.avionic-design.de>
+ <CAErSpo4Bm_Ryx=OK+svjqAwD4N8v0vrheLVdc-N1ijx8i_-N3w@mail.gmail.com>
+ <502AD82F.3080702@wwwdotorg.org> <502AE485.8060307@wwwdotorg.org>
+ <504A848B.1090703@wwwdotorg.org> <20120908000430.GF13739@n2100.arm.linux.org.uk>
+ <CAErSpo42AME4nJqdVk9cC2EcTfu96r+yxmmOB=hXNi6jh-c+XA@mail.gmail.com> <20120918063349.GD1459@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120918132113.GT27758@beef>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20120918063349.GD1459@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>, Myron Stowe <myron.stowe@redhat.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>, Mitch Bradley <wmb@firmworks.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 September 2012, Matt Porter wrote:
-> On Tue, Sep 18, 2012 at 08:43:55AM +0530, Vinod Koul wrote:
-> > 
-> > Now would it make sense to NOT merge these changes for 3.7 and postpone
-> > to 3.8. I can host these patches on a topic branch and merge them when
-> > we are ready. I plan to spend some good amount of time on my work this
-> > week so we should be ready pretty soon.
-> > One these changes are merged, users can start moving to this scheme.
-> 
-> FWIW, I'm already basing the EDMA dmaengine support for OMAP (specifically
-> for AM335x) on using these helpers since AM335x only boots from DT.
+On Tue, Sep 18, 2012 at 12:33 AM, Thierry Reding
+<thierry.reding@avionic-design.de> wrote:
+> On Sat, Sep 08, 2012 at 11:51:00AM -0600, Bjorn Helgaas wrote:
+>> On Fri, Sep 7, 2012 at 6:04 PM, Russell King - ARM Linux
+>> <linux@arm.linux.org.uk> wrote:
+>> > On Fri, Sep 07, 2012 at 05:34:35PM -0600, Stephen Warren wrote:
+>> >> I guess it's a pretty basic premise of the current PCI code that all the
+>> >> PCI scanning happens well before any device drivers are registered,
+>> >> which in turn means that device_add() doesn't trigger the device's
+>> >> probe() until much later, after all the fixups and resource assignments
+>> >> are done?
+>> >
+>> > Are you saying that the PCI layer is again screwed up after all my
+>> > hard work several years ago to ensure that PCI devices are properly
+>> > setup _before_ they're made available to the PCI drivers then?  That
+>> > was around the time I was looking at Cardbus stuff, ensuring that that
+>> > worked with the same guarantees.
+>> >
+>> > Not amused.
+>> >
+>> > What is wrong with the "probe devices, apply fixups, setup resources,
+>> > apply more fixups, publish" process that it's had to be yet again
+>> > broken?
+>>
+>> It seems that there are some bugs in the PCI layer, no doubt
+>> introduced after all your hard work.  We'll do our best to fix them.
+>>
+>> The particular issue of pci_fixup_irqs() has been on my list for a
+>> while, and we talked about it at the recent PCI mini-summit.  It's
+>> clearly broken that we do this with for_each_pci_dev() once at
+>> boot-time because that does nothing for hot-added devices.  It's also
+>> broken that it is called after device_add() because the core shouldn't
+>> touch the device after it's available to drivers.
+>>
+>> This should get fixed reasonably soon, probably not in v3.6, but
+>> hopefully in v3.7.  It's not completely trivial because many arches
+>> have the same problem, and we need to fix all of them.
+>
+> Has there been any progress on this? I've read the PCI mini summit notes
+> that you posted a while ago but it doesn't mention the pci_fixup_irqs()
+> issue. Was there some decision as to how this should be solved? If I
+> understand correctly this should solve the issue that Stephen has been
+> seeing with bogus interrupt assignments, so we'll need this to fix PCIe
+> on Tegra. Is there anything I can do to help move this forward?
 
-I suspect the same thing will be happening for a lot of platforms
-after 3.7-rc1: ux500, lpc32xx, integrator, imx, mxs and probably
-others are all waiting for this so they can complete the move
-to DT-only booting.
+I didn't mention pci_fixup_irqs() by name in the notes, but that's
+part of what I meant by "device setup being done by initcalls" as a
+hot-plug issue.  I know Myron Stowe expressed interest in working on
+that, but I don't think he's had a chance to do anything yet (at
+least, I haven't seen anything yet).
 
-Having some support for the new binding in 3.7 would be a great
-help to reduce interdependencies for the 3.8 merge cycle. Both the
-driver interface and the binding should actually be in a good
-shape now, so I'd very much appriciate it getting merged for 3.7,
-even if the implementation may have to change again in 3.8.
+I don't have time to fix it myself, so moving it forward is just a
+matter of somebody doing the work and posting the patches.  I think
+that code just needs to be moved to some pcibios hook (possibly a new
+one) that's called in the device_add path.
 
-	Arnd
+Bjorn
