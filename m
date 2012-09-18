@@ -1,74 +1,125 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 7/9] ARM: OMAP: iommu: optimize save and restore
- routines
-Date: Tue, 18 Sep 2012 11:04:30 -0700
-Message-ID: <20120918180430.GV11762@atomide.com>
-References: <1347479152-588-1-git-send-email-omar.luna@linaro.org>
- <1347479152-588-8-git-send-email-omar.luna@linaro.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH] gpio: Describe interrupt-controller binding
+Date: Tue, 18 Sep 2012 20:06:00 +0200
+Message-ID: <20120918180600.GA29360@avionic-0098.mockup.avionic-design.de>
+References: <1347958274-19425-1-git-send-email-thierry.reding@avionic-design.de>
+ <505876F0.6010809@gmail.com>
+ <50588B6C.6080402@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1347479152-588-8-git-send-email-omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <50588B6C.6080402@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [120912 12:47]:
-> --- a/arch/arm/plat-omap/include/plat/iommu.h
-> +++ b/arch/arm/plat-omap/include/plat/iommu.h
-> @@ -27,6 +27,13 @@ struct iotlb_entry {
->  	};
->  };
->  
-> +/* context registers */
-> +struct iommu_regs {
-> +	u32 irqen;
-> +	u32 cntl;
-> +	u32 ttb;
-> +};
-> +
->  struct omap_iommu {
->  	const char	*name;
->  	struct module	*owner;
-> @@ -50,7 +57,8 @@ struct omap_iommu {
->  	struct list_head	mmap;
->  	struct mutex		mmap_lock; /* protect mmap */
->  
-> -	void *ctx; /* iommu context: registres saved area */
-> +	struct iommu_regs context;
-> +	int ctx_loss_cnt;
->  	u32 da_start;
->  	u32 da_end;
->  };
-> --- a/arch/arm/plat-omap/include/plat/iommu2.h
-> +++ b/arch/arm/plat-omap/include/plat/iommu2.h
-> @@ -35,8 +35,6 @@
->  #define MMU_READ_RAM		0x6c
->  #define MMU_EMU_FAULT_AD	0x70
->  
-> -#define MMU_REG_SIZE		256
-> -
->  /*
->   * MMU Register bit definitions
->   */
 
-These headers should be moved to include/linux/platform_data/iommu-omap.h
-or something like that. Care to take care of that too?
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I guess there's no reason to have both iommu.h and iommuh2.h?
+On Tue, Sep 18, 2012 at 08:55:40AM -0600, Stephen Warren wrote:
+> On 09/18/2012 07:28 AM, Rob Herring wrote:
+> > On 09/18/2012 03:51 AM, Thierry Reding wrote:
+> >> In order to use GPIO controllers as interrupt controllers, they need to
+> >> be marked with the DT interrupt-controller property. This commit adds
+> >> some documentation about this to the general GPIO binding document.
+> >>
+> >> Cc: Linus Walleij <linus.walleij@stericsson.com>
+> >> Cc: Grant Likely <grant.likely@secretlab.ca>
+> >> Cc: Rob Herring <rob.herring@calxeda.com>
+> >> Cc: devicetree-discuss@lists.ozlabs.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+> >=20
+> > Applied for 3.7.
+> >=20
+> > Rob
+> >=20
+> >> ---
+> >>  Documentation/devicetree/bindings/gpio/gpio.txt | 33 ++++++++++++++++=
++++++++++
+> >>  1 file changed, 33 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documen=
+tation/devicetree/bindings/gpio/gpio.txt
+> >> index 4e16ba4..8d125b0 100644
+> >> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> >> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> >> @@ -75,4 +75,37 @@ Example of two SOC GPIO banks defined as gpio-contr=
+oller nodes:
+> >>  		gpio-controller;
+> >>  	};
+> >> =20
+> >> +If the GPIO controller supports the generation of interrupts, it shou=
+ld
+> >> +also contain an empty "interrupt-controller" property as well as an
+> >> +"#interrupt-cells" property. This is required in order for other nodes
+> >> +to use the GPIO controller as their interrupt parent.
+>=20
+> Surely this is generic information for any interrupt controller, and
+> hence doesn't belong in the GPIO binding?
 
-Regards,
+LinusW requested this in order to avoid having to list these properties
+in every GPIO controller. I suppose that having it in an extra binding
+for interrupt controllers might make sense as well, but in that case we
+should probably provide a reference because the GPIO binding is where
+people are most likely to look for this information.
 
-Tony
+There is Documentation/devicetree/bindings/open-pic.txt, which already
+lists most of this information, so maybe a reference to that document
+will do just as well?
+
+> >> +If #interrupt-cells is 1, the single cell is used to specify the numb=
+er
+> >> +of the GPIO that is to be used as an interrupt.
+> >> +
+> >> +If #interrupt-cells is 2, the first cell is used to specify the number
+> >> +of the GPIO that is to be used as an interrupt, whereas the second ce=
+ll
+> >> +is used to specify any of the following flags:
+> >> +  - bits[3:0] trigger type and level flags
+> >> +      1 =3D low-to-high edge triggered
+> >> +      2 =3D high-to-low edge triggered
+> >> +      4 =3D active high level-sensitive
+> >> +      8 =3D active low level-sensitive
+>=20
+> That certainly shouldn't be in the generic GPIO binding; the format of
+> the interrupt specifier is determined by the binding for the individual
+> device that is the interrupt controller. Just because a device is also a
+> GPIO controller doesn't mean that it has to conform to a specific format
+> for the interrupt specifier.
+
+I think it does make sense to provide a description of the most commonly
+used variants. The above certainly is what the majority is using and
+many of those that do not use one of the predefined irq_domain_xlate_*()
+functions reimplement them with some additional checks or conversions.
+
+Thierry
+
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQWLgIAAoJEN0jrNd/PrOhojMP/11Yf+MFQtyJQLAV4gaqZWUA
+mGrxS4bRqEpqAfLQiT3GzwLHDirrhsHio5lUF81ynk4PBmApW5+8fAlCLhLxRAu1
+6pDq+mexqJuz/U7wUKxzbR72FCRxed/IbZUNaZZ14JkoNyn9XZaX4W1AhWbfuNMn
+qwOX2zXR4BkopD7CfY7BzV0RleKnBKTTDVNfwX2eHdcV4n4XFlzSkW8cJycjqvYs
+3yqCXprX4UwBPUW78fA27UwdeP++a1RU/n/dS0oOcjNTAYdufBh6ke0FuTGiz/l2
+dXvfLZ0pSTGfYUcU8/1y669eppKdjw6Y+y82UjuQ+lPGUhcwsLjEUKcr92Jb/OvQ
+Aagp1nPbNKSFgX1YlfJIqyq+rAfj7yLfDTI6iCYtU+4gLNbx+MzwMyUxXWO5oDLr
+Sr+dzUXCz5lNwn9ChdOkvGdE9QWiDO2xIPBXv+NHbPnRq8MOtF5Wq9XtrkJ1XaGg
+loCZ2Gzgswa2KSMCILn25GfPc0ARBuVFyv1W46hJA1KFAWhUcDMoxlZPVycrB7qN
+9RTFXc/5ue1CRixxQhPG6E2wpf+8hFQCE6PinvV4tSdYob4NvbSuLVKpwNE7i9QD
+30UPHNsqCZOr1urjAvUr3zMccyu4FcOcV4HtCEIuxCLjpH+31o5Mgd9eZ3gtRC3O
+sHryf4ZDviaAh+LjotaC
+=CQA5
+-----END PGP SIGNATURE-----
+
+--4Ckj6UjgE2iN1+kY--
