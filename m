@@ -1,48 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] spi/pl022: Devicetree support w/o platform data
-Date: Tue, 18 Sep 2012 13:13:30 +0000
-Message-ID: <201209181313.30880.arnd@arndb.de>
-References: <1347972540-29667-1-git-send-email-stigge@antcom.de>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
+ DMA channel
+Date: Tue, 18 Sep 2012 09:21:13 -0400
+Message-ID: <20120918132113.GT27758@beef>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
+ <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
+ <1347852805.1943.130.camel@vkoul-udesk3>
+ <201209171159.27359.arnd@arndb.de>
+ <20120917223619.GC12445@n2100.arm.linux.org.uk>
+ <1347938035.1943.162.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1347972540-29667-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Cc: srinivas.bakki-3arQi8VN3Tc@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1347938035.1943.162.camel@vkoul-udesk3>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jon Hunter <jon-hunter@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 September 2012, Roland Stigge wrote:
-> --- linux-2.6.orig/Documentation/devicetree/bindings/spi/spi_pl022.txt
-> +++ linux-2.6/Documentation/devicetree/bindings/spi/spi_pl022.txt
-> @@ -10,6 +10,15 @@ Optional properties:
->  - cs-gpios : should specify GPIOs used for chipselects.
->    The gpios will be referred to as reg = <index> in the SPI child nodes.
->    If unspecified, a single SPI device without a chip select can be used.
-> +- pl022,bus-id : Bus ID (0, 1, ...)
+On Tue, Sep 18, 2012 at 08:43:55AM +0530, Vinod Koul wrote:
+> On Mon, 2012-09-17 at 23:36 +0100, Russell King - ARM Linux wrote:
+> > > 
+> > > I believe that Jon is on vacation this week, so if this is the only issue
+> > > holding up the merge, maybe you can change this in his patch directly, or
+> > > I can send an updated version if you prefer.
+> > 
+> > I worry that too much is going on here too quickly.  We have some people
+> > working on changing the way DMA engine selects channels.  Meanwhile we
+> > have other people trying to create an OF DMA engine API.
+> > 
+> > It seems that Vinod's working on a way for platforms to specify bindings
+> > to the DMA engine code, and the DMA engine code itself selects the
+> > appropriate channel.  This patch, on the other hand, introduces a set of
+> > translation functions which need to be provided by platform code,
+> > which returns the dma_chan pointer.
+> > 
+> > This sounds like a recipe for a total abortion of interfaces.  Only one
+> > of those two activities should be going on at any one time, or if they
+> > have to occur, they need coordination so that the we don't end up with
+> > two totally different schemes.
+> > 
+> > In the mad rush to DTify everything, don't make hasty decisions, because
+> > it is very difficult to change it later - especially something like this
+> > which defines how DT encodes this information.
+> We discussed this in KS and IMHO we need to merge these two approaches.
+> 
+> For DT bindings, I think the binding itself shouldn't change based on my
+> work but I would like these same bindings to help build the DMA engine
+> code mappings.
+> 
+> Now would it make sense to NOT merge these changes for 3.7 and postpone
+> to 3.8. I can host these patches on a topic branch and merge them when
+> we are ready. I plan to spend some good amount of time on my work this
+> week so we should be ready pretty soon.
+> One these changes are merged, users can start moving to this scheme.
 
-I don't understand why we need the bus-id here. My understanding is that
-this is a linux-specific number that should not be necessary when all
-devices are described in the device tree rather than through spi_board_info.
+FWIW, I'm already basing the EDMA dmaengine support for OMAP (specifically
+for AM335x) on using these helpers since AM335x *only* boots from DT.
 
-Can't you just set master->bus_num to -1 when using the DT for probing?
-
-> +- pl022,enable-dma : enables DMA driven transfers (boolean)
-
-Similar thing here: Can't you just set the enable_dma flag when
-a dma channel is provided in the device tree and unset it otherwise?
-
-It also seems a bit pointless to enable DMA mode when you don't provide
-a way to specify the channel at the same time.
-
-	Arnd
+-Matt
