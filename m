@@ -1,116 +1,81 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [PATCH v3] input: qt1070: Add device tree support
-Date: Tue, 18 Sep 2012 10:21:03 +0800
-Message-ID: <5057DA8F.70407@atmel.com>
-References: <1347358459-11598-1-git-send-email-voice.shen@atmel.com> <5056EB60.8080100@atmel.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 06/17] docs: Xen ARM DT bindings
+Date: Mon, 17 Sep 2012 21:59:01 -0500
+Message-ID: <5057E375.2050103@gmail.com>
+References: <alpine.DEB.2.02.1209171215490.29232@kaball.uk.xensource.com> <1347903543-2135-6-git-send-email-stefano.stabellini@eu.citrix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <5056EB60.8080100@atmel.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, dmitry.torokhov@gmail.com, shubhrajyoti@ti.com, linux-input@vger.kernel.org, jm.lin@atmel.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1347903543-2135-6-git-send-email-stefano.stabellini@eu.citrix.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: arnd@arndb.de, linux@arm.linux.org.uk, linaro-dev@lists.linaro.org, linux-arm-kernel@lists.infradead.org, tim@xen.org, Ian.Campbell@citrix.com, konrad.wilk@oracle.com, xen-devel@lists.xensource.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, David Vrabel <david.vrabel@citrix.com>, Dave Martin <dave.martin@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On 09/17/2012 12:38 PM, Stefano Stabellini wrote:
+> Add a doc to describe the Xen ARM device tree bindings
+> 
+> 
+> Changes in v5:
+> 
+> - add a comment about the size of the grant table memory region;
+> - add a comment about the required presence of a GIC node;
+> - specify that the described properties are part of a top-level
+> "hypervisor" node;
+> - specify #address-cells and #size-cells for the example.
+> 
+> 
+> Changes in v4:
+> 
+> - "xen,xen" should be last as it is less specific;
+> - update reg property using 2 address-cells and 2 size-cells.
+> 
+> 
+> Signed-off-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+> CC: devicetree-discuss@lists.ozlabs.org
+> CC: David Vrabel <david.vrabel@citrix.com>
+> CC: Rob Herring <robherring2@gmail.com>
+> CC: Dave Martin <dave.martin@linaro.org>
 
-On 9/17/2012 17:20, Nicolas Ferre wrote:
-> On 09/11/2012 12:14 PM, Bo Shen :
->> Add qt1070 device tree support
->> Using device node to parse irq
->>
->> Test this on at91sam9x5ek board
->>
->> Signed-off-by: Bo Shen <voice.shen@atmel.com>
->> ---
->> change since v2
->>    Using device node to parse irq,
->>    Remove gpio relative stuff
->>
->> change since v1
->>    Add gpio relative stuff, gpio_is_valid, gpio_request
->> ---
->>   .../devicetree/bindings/input/atmel-qt1070.txt     |   16 ++++++++++++++++
->>   drivers/input/keyboard/qt1070.c                    |    9 +++++++++
->>   2 files changed, 25 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/input/atmel-qt1070.txt
->>
->> diff --git a/Documentation/devicetree/bindings/input/atmel-qt1070.txt b/Documentation/devicetree/bindings/input/atmel-qt1070.txt
->> new file mode 100644
->> index 0000000..e1fc09e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/atmel-qt1070.txt
->> @@ -0,0 +1,16 @@
->> +Atmel qt1070 keyboard interface
->
-> Nitpicking: there is usually a "*" at the beginning to give it a
-> title-ish look ;-)
->
-> Please tell that
+This is so minimal now and it doesn't seem to have any overlap with kvm, so:
 
-OK, I will add it. Thanks.
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
->
->> +
->> +Required Properties:
->> +- compatible: Should be "atmel,qt1070"
->> +- reg: I2C slave address
->> +- interrupt-parent: Depends on SoC
->> +- interrupts: The interrupt pin number to the cpu, and trigger mode.
->> +
->> +Example:
->> +
->> +	qt1070@1b {
->
-> I think that you need to replace by a generic name for the node name:
->
-> qt1070: keyboard@1b {
-> 	compatible = "atmel,qt1070";
-> 	[..]
-> };
->
-> I found "keyboard" to be the most appropriate in the ePAPR.
-
-OK. I will modify it like this. Thanks.
-
->
->> +		compatible = "atmel,qt1070";
->> +		reg = <0x1b>;
->> +		interrupt-parent = <&pioA>;
->> +		interrupts = <7 0x0>;
->> +	};
->> diff --git a/drivers/input/keyboard/qt1070.c b/drivers/input/keyboard/qt1070.c
->> index ca68f29..60457dc 100644
->> --- a/drivers/input/keyboard/qt1070.c
->> +++ b/drivers/input/keyboard/qt1070.c
->> @@ -249,10 +249,19 @@ static const struct i2c_device_id qt1070_id[] = {
->>   };
->>   MODULE_DEVICE_TABLE(i2c, qt1070_id);
->>
->> +#ifdef CONFIG_OF
->> +static struct of_device_id atmel_qt1070_of_match[] = {
->> +	{ .compatible = "atmel,qt1070" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, atmel_qt1070_of_match);
->> +#endif
->> +
->>   static struct i2c_driver qt1070_driver = {
->>   	.driver	= {
->>   		.name	= "qt1070",
->>   		.owner	= THIS_MODULE,
->> +		.of_match_table = of_match_ptr(atmel_qt1070_of_match),
->>   	},
->>   	.id_table	= qt1070_id,
->>   	.probe		= qt1070_probe,
->>
->
-> Otherwise, looks good. So, if you agree on my comments and for next
-> revision, you can add my:
->
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->
-> Bye,
->
-
+> ---
+>  Documentation/devicetree/bindings/arm/xen.txt |   25 +++++++++++++++++++++++++
+>  1 files changed, 25 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/xen.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/xen.txt b/Documentation/devicetree/bindings/arm/xen.txt
+> new file mode 100644
+> index 0000000..0f7b9c2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/xen.txt
+> @@ -0,0 +1,25 @@
+> +* Xen hypervisor device tree bindings
+> +
+> +Xen ARM virtual platforms shall have a top-level "hypervisor" node with
+> +the following properties:
+> +
+> +- compatible:
+> +	compatible = "xen,xen-<version>", "xen,xen";
+> +  where <version> is the version of the Xen ABI of the platform.
+> +
+> +- reg: specifies the base physical address and size of a region in
+> +  memory where the grant table should be mapped to, using an
+> +  HYPERVISOR_memory_op hypercall. The memory region is large enough to map
+> +  the whole grant table (it is larger or equal to gnttab_max_grant_frames()).
+> +
+> +- interrupts: the interrupt used by Xen to inject event notifications.
+> +  A GIC node is also required.
+> +
+> +
+> +Example (assuming #address-cells = <2> and #size-cells = <2>):
+> +
+> +hypervisor {
+> +	compatible = "xen,xen-4.3", "xen,xen";
+> +	reg = <0 0xb0000000 0 0x20000>;
+> +	interrupts = <1 15 0xf08>;
+> +};
+> 
