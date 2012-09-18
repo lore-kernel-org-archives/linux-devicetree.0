@@ -1,62 +1,87 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
- DMA channel
-Date: Tue, 18 Sep 2012 09:21:13 -0400
-Message-ID: <20120918132113.GT27758@beef>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
- <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
- <1347852805.1943.130.camel@vkoul-udesk3>
- <201209171159.27359.arnd@arndb.de>
- <20120917223619.GC12445@n2100.arm.linux.org.uk>
- <1347938035.1943.162.camel@vkoul-udesk3>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] gpio: Describe interrupt-controller binding
+Date: Tue, 18 Sep 2012 08:28:16 -0500
+Message-ID: <505876F0.6010809@gmail.com>
+References: <1347958274-19425-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1347938035.1943.162.camel@vkoul-udesk3>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linux.intel.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jon Hunter <jon-hunter@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Dan Williams <djbw@fb.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1347958274-19425-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 18, 2012 at 08:43:55AM +0530, Vinod Koul wrote:
-> On Mon, 2012-09-17 at 23:36 +0100, Russell King - ARM Linux wrote:
-> > > 
-> > > I believe that Jon is on vacation this week, so if this is the only issue
-> > > holding up the merge, maybe you can change this in his patch directly, or
-> > > I can send an updated version if you prefer.
-> > 
-> > I worry that too much is going on here too quickly.  We have some people
-> > working on changing the way DMA engine selects channels.  Meanwhile we
-> > have other people trying to create an OF DMA engine API.
-> > 
-> > It seems that Vinod's working on a way for platforms to specify bindings
-> > to the DMA engine code, and the DMA engine code itself selects the
-> > appropriate channel.  This patch, on the other hand, introduces a set of
-> > translation functions which need to be provided by platform code,
-> > which returns the dma_chan pointer.
-> > 
-> > This sounds like a recipe for a total abortion of interfaces.  Only one
-> > of those two activities should be going on at any one time, or if they
-> > have to occur, they need coordination so that the we don't end up with
-> > two totally different schemes.
-> > 
-> > In the mad rush to DTify everything, don't make hasty decisions, because
-> > it is very difficult to change it later - especially something like this
-> > which defines how DT encodes this information.
-> We discussed this in KS and IMHO we need to merge these two approaches.
+On 09/18/2012 03:51 AM, Thierry Reding wrote:
+> In order to use GPIO controllers as interrupt controllers, they need to
+> be marked with the DT interrupt-controller property. This commit adds
+> some documentation about this to the general GPIO binding document.
 > 
-> For DT bindings, I think the binding itself shouldn't change based on my
-> work but I would like these same bindings to help build the DMA engine
-> code mappings.
+> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+
+Applied for 3.7.
+
+Rob
+
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 33 +++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
-> Now would it make sense to NOT merge these changes for 3.7 and postpone
-> to 3.8. I can host these patches on a topic branch and merge them when
-> we are ready. I plan to spend some good amount of time on my work this
-> week so we should be ready pretty soon.
-> One these changes are merged, users can start moving to this scheme.
-
-FWIW, I'm already basing the EDMA dmaengine support for OMAP (specifically
-for AM335x) on using these helpers since AM335x *only* boots from DT.
-
--Matt
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 4e16ba4..8d125b0 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -75,4 +75,37 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
+>  		gpio-controller;
+>  	};
+>  
+> +If the GPIO controller supports the generation of interrupts, it should
+> +also contain an empty "interrupt-controller" property as well as an
+> +"#interrupt-cells" property. This is required in order for other nodes
+> +to use the GPIO controller as their interrupt parent.
+>  
+> +If #interrupt-cells is 1, the single cell is used to specify the number
+> +of the GPIO that is to be used as an interrupt.
+> +
+> +If #interrupt-cells is 2, the first cell is used to specify the number
+> +of the GPIO that is to be used as an interrupt, whereas the second cell
+> +is used to specify any of the following flags:
+> +  - bits[3:0] trigger type and level flags
+> +      1 = low-to-high edge triggered
+> +      2 = high-to-low edge triggered
+> +      4 = active high level-sensitive
+> +      8 = active low level-sensitive
+> +
+> +Example:
+> +
+> +	gpioext: gpio-controller@41 {
+> +		compatible = "ad,gpio-adnp";
+> +		reg = <0x41>;
+> +
+> +		interrupt-parent = <&gpio>;
+> +		interrupts = <160 1>;
+> +
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +
+> +		nr-gpios = <64>;
+> +	};
+> 
