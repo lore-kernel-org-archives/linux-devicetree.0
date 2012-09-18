@@ -1,60 +1,52 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v6 0/9] mmc: dw_mmc: add support for device tree based instantiation
-Date: Tue, 18 Sep 2012 07:22:51 +0530
-Message-ID: <CAJuYYwRcoOv5X=XK8wiVb9fzSAdY_d=+kvJhqMdiT1Fey0JCLw@mail.gmail.com>
-References: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v6 0/4] add syscon driver based on regmap for general
+ registers access
+Date: Tue, 18 Sep 2012 09:33:34 +0800
+Message-ID: <20120918013333.GB13226@shlinux2.ap.freescale.net>
+References: <1346813836-28736-1-git-send-email-b29396@freescale.com>
+ <20120905055410.GZ2362@S2101-09.ap.freescale.net>
+ <20120917101028.GA13226@shlinux2.ap.freescale.net>
+ <20120917133054.GT3647@sortiz-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120917133054.GT3647@sortiz-mobl>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Zhao Richard-B20223 <B20223-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 September 2012 23:46, Thomas Abraham <thomas.abraham@linaro.org> wrote:
-> This series add device tree support for Synopsis Designware IP - Mobile Storage
-> Host Controller (MSHC). I had addressed all comments for the v5 version of this
-> patch series and had reposted only those patches that were modified. The version
-> number of those reposted patches was maintained as v5 as the changes did not
-> need any major rework.
->
-> This is mainly a repost of the v5 patches with all patches marked as v6. The
-> only new change in this series is adding a comment about bus_hz in platform
-> data structure of the driver as suggested by Seungwon Jeon.
->
-> Thomas Abraham (9):
->   mmc: dw_mmc: convert copy of struct device in struct dw_mci to a reference
->   mmc: dw_mmc: Use devm_* functions in dw_mmc platform driver
->   mmc: dw_mmc: allow probe to succeed even if one slot is initialized
->   mmc: dw_mmc: lookup for optional biu and ciu clocks
->   mmc: dw_mmc: add quirk to indicate missing write protect line
->   mmc: dw_mmc: add device tree support
->   mmc: dw_mmc: prepare functions in dw_mmc-pltfm for reuse
->   mmc: dw_mmc: add support for implementation specific callbacks
->   mmc: dw_mmc: add support for exynos specific implementation of dw-mshc
->
->  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   87 ++++++
->  .../devicetree/bindings/mmc/synposis-dw-mshc.txt   |   79 +++++
->  drivers/mmc/host/Kconfig                           |    9 +
->  drivers/mmc/host/Makefile                          |    1 +
->  drivers/mmc/host/dw_mmc-exynos.c                   |  253 ++++++++++++++++
->  drivers/mmc/host/dw_mmc-pci.c                      |    2 +-
->  drivers/mmc/host/dw_mmc-pltfm.c                    |   60 +++--
->  drivers/mmc/host/dw_mmc-pltfm.h                    |   20 ++
->  drivers/mmc/host/dw_mmc.c                          |  308 +++++++++++++++++---
->  drivers/mmc/host/dw_mmc.h                          |   24 ++
->  include/linux/mmc/dw_mmc.h                         |   15 +-
->  11 files changed, 782 insertions(+), 76 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->  create mode 100644 Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
->  create mode 100644 drivers/mmc/host/dw_mmc-exynos.c
->  create mode 100644 drivers/mmc/host/dw_mmc-pltfm.h
+On Mon, Sep 17, 2012 at 09:30:54PM +0800, Samuel Ortiz wrote:
+> Hi Dong,
+> 
+> On Mon, Sep 17, 2012 at 06:10:29PM +0800, Dong Aisheng wrote:
+> > Hi Samuel,
+> > 
+> > On Wed, Sep 05, 2012 at 01:54:12PM +0800, Shawn Guo wrote:
+> > > Hi Samuel,
+> > > 
+> > > The series needs to go via mfd or arm-soc tree as a whole.  In case
+> > > you want to take it through mfd tree, here is my ack.
+> > > 
+> > > Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > 
+> > > Otherwise, I can take it via arm-soc tree with your ack.
+> > > 
+> > Ping...
+> All 4 patches applied to my for-next branch. Sorry for the delay.
+> 
+Thanks.
 
-Hi Jaehoon, Seungwon,
-
-All the changes you have suggested for this patch series has been
-completed. If you could ack this series, it would be great.
-
-Thanks,
-Thomas.
+Regards
+Dong Aisheng
