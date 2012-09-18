@@ -1,8 +1,8 @@
 From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v4 5/5] dt/tty/opal: Use of_get_child_by_name to get a named
- child
-Date: Tue, 18 Sep 2012 08:11:01 +0100
-Message-ID: <1347952261-24707-1-git-send-email-srinivas.kandagatla@st.com>
+Subject: [PATCH v4 2/5] dt/powerpc/powernv: Use of_get_child_by_name to get a
+ named child
+Date: Tue, 18 Sep 2012 08:10:36 +0100
+Message-ID: <1347952236-24603-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -18,7 +18,7 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
@@ -29,35 +29,26 @@ driver by replacing it with of_get_child_by_name instead.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/tty/hvc/hvc_opal.c |    9 ++-------
- 1 files changed, 2 insertions(+), 7 deletions(-)
+ arch/powerpc/platforms/powernv/opal.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/tty/hvc/hvc_opal.c b/drivers/tty/hvc/hvc_opal.c
-index 0d2ea0c..4c7d161 100644
---- a/drivers/tty/hvc/hvc_opal.c
-+++ b/drivers/tty/hvc/hvc_opal.c
-@@ -344,7 +344,7 @@ void __init hvc_opal_init_early(void)
- 			return;
- 		}
- 	} else {
--		struct device_node *opal, *np;
-+		struct device_node *opal;
+diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
+index aaa0dba..f4a5567 100644
+--- a/arch/powerpc/platforms/powernv/opal.c
++++ b/arch/powerpc/platforms/powernv/opal.c
+@@ -294,10 +294,10 @@ static int __init opal_init(void)
+ 		consoles = of_node_get(opal_node);
  
- 		/* Current OPAL takeover doesn't provide the stdout
- 		 * path, so we hard wire it
-@@ -360,12 +360,7 @@ void __init hvc_opal_init_early(void)
- 		}
- 		if (!opal)
- 			return;
--		for_each_child_of_node(opal, np) {
--			if (!strcmp(np->name, "serial")) {
--				stdout_node = np;
--				break;
--			}
--		}
-+		stdout_node = of_get_child_by_name(opal, "serial");
- 		of_node_put(opal);
+ 	/* Register serial ports */
+-	for_each_child_of_node(consoles, np) {
+-		if (strcmp(np->name, "serial"))
+-			continue;
++	np = of_get_child_by_name(consoles, "serial");
++	if (np) {
+ 		of_platform_device_create(np, NULL, NULL);
++		of_node_put(np);
  	}
- 	if (!stdout_node)
+ 	of_node_put(consoles);
+ 
 -- 
 1.7.0.4
