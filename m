@@ -1,16 +1,11 @@
-From: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] gpio: pxa: using for_each_set_bit to simplify the code
-Date: Tue, 18 Sep 2012 14:39:45 +0800
-Message-ID: <CAMPhdO9xKL48=0FRPrLZ=JP8epF5D=Ta0qheLEMQaL-eoe305w@mail.gmail.com>
-References: <CAPgLHd93SqsiFmE7y356VwBJtaac0APE__vk+8dBZnaOyt4org@mail.gmail.com>
- <CACRpkdYAeChEqeLrz0hQxpXrWp477iXoko01swG8Y=SA7tNh5Q@mail.gmail.com>
- <CAMPhdO_XJ2+=yrkLXVFTR4ykf8QnON7mBXQ2+2xiTor=wY5S+w@mail.gmail.com>
- <CAN1soZzFmRxWUh9Og31O8XoXKwPcNPszCseJDkt_6oNPx7gD-g@mail.gmail.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [RESEND PATCH v3 0/5] Introduce of_get_child_by_name
+Date: Tue, 18 Sep 2012 08:08:10 +0100
+Message-ID: <1347952090-24054-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAN1soZzFmRxWUh9Og31O8XoXKwPcNPszCseJDkt_6oNPx7gD-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,32 +16,48 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bergner-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, afleming-KZfg59tc24xl57MIdRCFDg@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 18, 2012 at 1:56 PM, Haojian Zhuang
-<haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Sep 18, 2012 at 1:43 PM, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Sep 17, 2012 at 6:56 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Fri, Sep 14, 2012 at 4:36 AM, Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
->>>>
->>>> Using for_each_set_bit() to simplify the code.
->>>>
->>>> spatch with a semantic match is used to found this.
->>>> (http://coccinelle.lip6.fr/)
->>>>
->>>> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
->>>
->>> PXA maintainers: does this look OK?
->>
->> I seem to have Acked this already in another mail, if that got lost, here
->> it is:
->>
->> Acked-by: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
-> The another mail thread is for irq, not gpio. I'll apply it today. :)
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-Thanks Haojian!
+This patch series introduces of_get_child_by_name function to get a 
+child node by its name in a given parent node and also removes code 
+duplication in some of the existing driver code by using of_get_child_by_name.
+
+Normally if a driver want to get a child node it would iterate all the nodes
+of parent and compare its name and then get it.
+This use case is becoming common as device trees are used more, so moving this 
+functionality to a libary function makes sense.
+
+Having of_get_child_by_name libary function would avoid code duplication,
+errors, proper reference counting and is more convenient.
+
+Changes from v3:
+	- Removed extra of_get_node from of_get_child_by_name.
+	- reordered of_put_node in hvc_opal.c
+Changes from v2:
+	- Fixed typo errors.
+	- Removed bogus patches which used "type" instead of "name" 
+	- Fixed reference counting in follow-up patches.
+
+Changes from v1:
+	-rename of_get_child to of_get_child_by_name.
+	-remove read lock in of_get_child_by_name.
+	-make use of of_get_child_by_name in the existing kernel code.
+
+Srinivas Kandagatla (5):
+  dt: introduce of_get_child_by_name to get child node by name
+  dt/powerpc/powernv: Use of_get_child_by_name to get a named child
+  dt/powerpc/sysdev: Use of_get_child_by_name to get a named child
+  dt/s3c64xx/spi: Use of_get_child_by_name to get a named child
+  dt/tty/opal: Use of_get_child_by_name to get a named child
+
+ arch/powerpc/platforms/powernv/opal.c |    6 +++---
+ arch/powerpc/sysdev/qe_lib/qe.c       |    5 +----
+ drivers/of/base.c                     |   23 +++++++++++++++++++++++
+ drivers/spi/spi-s3c64xx.c             |    7 ++++---
+ drivers/tty/hvc/hvc_opal.c            |    9 ++-------
+ include/linux/of.h                    |    2 ++
+ 6 files changed, 35 insertions(+), 17 deletions(-)
