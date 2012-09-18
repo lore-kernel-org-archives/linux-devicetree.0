@@ -1,69 +1,50 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] gpio: Describe interrupt-controller binding
-Date: Tue, 18 Sep 2012 08:55:40 -0600
-Message-ID: <50588B6C.6080402@wwwdotorg.org>
-References: <1347958274-19425-1-git-send-email-thierry.reding@avionic-design.de> <505876F0.6010809@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
+ DMA channel
+Date: Tue, 18 Sep 2012 15:20:08 +0000
+Message-ID: <201209181520.08845.arnd@arndb.de>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
+ <1347938035.1943.162.camel@vkoul-udesk3> <20120918132113.GT27758@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <505876F0.6010809@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120918132113.GT27758@beef>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2012 07:28 AM, Rob Herring wrote:
-> On 09/18/2012 03:51 AM, Thierry Reding wrote:
->> In order to use GPIO controllers as interrupt controllers, they need to
->> be marked with the DT interrupt-controller property. This commit adds
->> some documentation about this to the general GPIO binding document.
->>
->> Cc: Linus Walleij <linus.walleij@stericsson.com>
->> Cc: Grant Likely <grant.likely@secretlab.ca>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+On Tuesday 18 September 2012, Matt Porter wrote:
+> On Tue, Sep 18, 2012 at 08:43:55AM +0530, Vinod Koul wrote:
+> > 
+> > Now would it make sense to NOT merge these changes for 3.7 and postpone
+> > to 3.8. I can host these patches on a topic branch and merge them when
+> > we are ready. I plan to spend some good amount of time on my work this
+> > week so we should be ready pretty soon.
+> > One these changes are merged, users can start moving to this scheme.
 > 
-> Applied for 3.7.
-> 
-> Rob
-> 
->> ---
->>  Documentation/devicetree/bindings/gpio/gpio.txt | 33 +++++++++++++++++++++++++
->>  1 file changed, 33 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
->> index 4e16ba4..8d125b0 100644
->> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
->> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
->> @@ -75,4 +75,37 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
->>  		gpio-controller;
->>  	};
->>  
->> +If the GPIO controller supports the generation of interrupts, it should
->> +also contain an empty "interrupt-controller" property as well as an
->> +"#interrupt-cells" property. This is required in order for other nodes
->> +to use the GPIO controller as their interrupt parent.
+> FWIW, I'm already basing the EDMA dmaengine support for OMAP (specifically
+> for AM335x) on using these helpers since AM335x only boots from DT.
 
-Surely this is generic information for any interrupt controller, and
-hence doesn't belong in the GPIO binding?
+I suspect the same thing will be happening for a lot of platforms
+after 3.7-rc1: ux500, lpc32xx, integrator, imx, mxs and probably
+others are all waiting for this so they can complete the move
+to DT-only booting.
 
->> +If #interrupt-cells is 1, the single cell is used to specify the number
->> +of the GPIO that is to be used as an interrupt.
->> +
->> +If #interrupt-cells is 2, the first cell is used to specify the number
->> +of the GPIO that is to be used as an interrupt, whereas the second cell
->> +is used to specify any of the following flags:
->> +  - bits[3:0] trigger type and level flags
->> +      1 = low-to-high edge triggered
->> +      2 = high-to-low edge triggered
->> +      4 = active high level-sensitive
->> +      8 = active low level-sensitive
+Having some support for the new binding in 3.7 would be a great
+help to reduce interdependencies for the 3.8 merge cycle. Both the
+driver interface and the binding should actually be in a good
+shape now, so I'd very much appriciate it getting merged for 3.7,
+even if the implementation may have to change again in 3.8.
 
-That certainly shouldn't be in the generic GPIO binding; the format of
-the interrupt specifier is determined by the binding for the individual
-device that is the interrupt controller. Just because a device is also a
-GPIO controller doesn't mean that it has to conform to a specific format
-for the interrupt specifier.
+	Arnd
