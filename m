@@ -1,11 +1,13 @@
-From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2] spi/pl022: Devicetree support w/o platform data
-Date: Tue, 18 Sep 2012 15:53:53 +0200
-Message-ID: <1347976433-1176-1-git-send-email-stigge@antcom.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2] spi/pl022: Devicetree support w/o platform data
+Date: Tue, 18 Sep 2012 14:43:28 +0000
+Message-ID: <201209181443.29025.arnd@arndb.de>
+References: <1347976433-1176-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1347976433-1176-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,105 +18,19 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: arnd-r2nGTMty4D4@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, srinivas.bakki-3arQi8VN3Tc@public.gmane.org
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Cc: srinivas.bakki-3arQi8VN3Tc@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.wells-3arQi8VN3Tc@public.gmane.org, aletes.xgr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, STEricsson_nomadik_linux-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Even with devicetree support, we needed platform data to provide some data,
-leading to mixed device tree and platform data. This patch makes it possible to
-provide all that information via device tree. Now, the data must be provided
-via platform data _or_ device tree completely.
+On Tuesday 18 September 2012, Roland Stigge wrote:
+> Even with devicetree support, we needed platform data to provide some data,
+> leading to mixed device tree and platform data. This patch makes it possible to
+> provide all that information via device tree. Now, the data must be provided
+> via platform data or device tree completely.
+> 
+> Only in case of DMA where a callback specification is necessary (dma_filter()),
+> platform data is the only option.
+> 
+> Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 
-Only in case of DMA where a callback specification is necessary (dma_filter()),
-platform data is the only option.
-
-Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-
----
-Changes since v1:
-* Removed property pl022,bus-id: Set to -1 (auto) in DT case
-* Removed property pl022,enable-dma: Only useful in platform data (no OF node)
-  case, since dma_filter() callback only possible via platform data
-
- Documentation/devicetree/bindings/spi/spi_pl022.txt |    7 +++
- drivers/spi/spi-pl022.c                             |   39 +++++++++++++++++---
- 2 files changed, 41 insertions(+), 5 deletions(-)
-
---- linux-2.6.orig/Documentation/devicetree/bindings/spi/spi_pl022.txt
-+++ linux-2.6/Documentation/devicetree/bindings/spi/spi_pl022.txt
-@@ -10,6 +10,13 @@ Optional properties:
- - cs-gpios : should specify GPIOs used for chipselects.
-   The gpios will be referred to as reg = <index> in the SPI child nodes.
-   If unspecified, a single SPI device without a chip select can be used.
-+- pl022,autosuspend-delay : delay in ms following transfer completion before
-+			    the runtime power management system suspends the
-+			    device. A setting of 0 indicates no delay and the
-+                            device will be suspended immediately
-+- pl022,rt : indicates the controller should run the message pump with realtime
-+             priority to minimise the transfer latency on the bus (boolean)
-+
- 
- SPI slave nodes must be children of the SPI master node and can
- contain the following properties.
---- linux-2.6.orig/drivers/spi/spi-pl022.c
-+++ linux-2.6/drivers/spi/spi-pl022.c
-@@ -2024,6 +2024,34 @@ static void pl022_cleanup(struct spi_dev
- 	kfree(chip);
- }
- 
-+static struct pl022_ssp_controller *
-+pl022_platform_data_dt_get(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct pl022_ssp_controller *pd;
-+	u32 tmp;
-+
-+	if (!np) {
-+		dev_err(dev, "no dt node defined\n");
-+		return NULL;
-+	}
-+
-+	pd = devm_kzalloc(dev, sizeof(struct pl022_ssp_controller), GFP_KERNEL);
-+	if (!pd) {
-+		dev_err(dev, "cannot allocate platform data memory\n");
-+		return NULL;
-+	}
-+
-+	pd->bus_id = -1;
-+	of_property_read_u32(np, "num-cs", &tmp);
-+	pd->num_chipselect = tmp;
-+	of_property_read_u32(np, "pl022,autosuspend-delay",
-+			     &pd->autosuspend_delay);
-+	pd->rt = of_property_read_bool(np, "pl022,rt");
-+
-+	return pd;
-+}
-+
- static int __devinit
- pl022_probe(struct amba_device *adev, const struct amba_id *id)
- {
-@@ -2036,18 +2064,19 @@ pl022_probe(struct amba_device *adev, co
- 
- 	dev_info(&adev->dev,
- 		 "ARM PL022 driver, device ID: 0x%08x\n", adev->periphid);
--	if (platform_info == NULL) {
--		dev_err(&adev->dev, "probe - no platform data supplied\n");
-+	if (!platform_info && IS_ENABLED(CONFIG_OF))
-+		platform_info = pl022_platform_data_dt_get(dev);
-+
-+	if (!platform_info) {
-+		dev_err(dev, "probe: no platform data defined\n");
- 		status = -ENODEV;
- 		goto err_no_pdata;
- 	}
- 
- 	if (platform_info->num_chipselect) {
- 		num_cs = platform_info->num_chipselect;
--	} else if (IS_ENABLED(CONFIG_OF)) {
--		of_property_read_u32(np, "num-cs", &num_cs);
- 	} else {
--		dev_err(&adev->dev, "probe: no chip select defined\n");
-+		dev_err(dev, "probe: no chip select defined\n");
- 		status = -ENODEV;
- 		goto err_no_pdata;
- 	}
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
