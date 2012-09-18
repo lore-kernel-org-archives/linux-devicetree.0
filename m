@@ -1,33 +1,58 @@
 From: Vinod Koul <vinod.koul@linux.intel.com>
 Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a
  slave DMA channel
-Date: Tue, 18 Sep 2012 08:30:11 +0530
-Message-ID: <1347937211.1943.151.camel@vkoul-udesk3>
+Date: Tue, 18 Sep 2012 08:43:55 +0530
+Message-ID: <1347938035.1943.162.camel@vkoul-udesk3>
 References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
 	 <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
 	 <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>
+	 <20120917223619.GC12445@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201209171159.27359.arnd@arndb.de>
+In-Reply-To: <20120917223619.GC12445@n2100.arm.linux.org.uk>
 Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jon Hunter <jon-hunter@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Dan Williams <djbw@fb.com>, Russell King <linux@arm.linux.org.uk>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jon Hunter <jon-hunter@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2012-09-17 at 11:59 +0000, Arnd Bergmann wrote:
-> On Monday 17 September 2012, Vinod Koul wrote:
+On Mon, 2012-09-17 at 23:36 +0100, Russell King - ARM Linux wrote:
+> > 
+> > I believe that Jon is on vacation this week, so if this is the only issue
+> > holding up the merge, maybe you can change this in his patch directly, or
+> > I can send an updated version if you prefer.
 > 
-> I believe that Jon is on vacation this week, so if this is the only issue
-> holding up the merge, maybe you can change this in his patch directly, or
-> I can send an updated version if you prefer.
-Yes that was my idea as well, we do similar stuff in dmaengine.
+> I worry that too much is going on here too quickly.  We have some people
+> working on changing the way DMA engine selects channels.  Meanwhile we
+> have other people trying to create an OF DMA engine API.
+> 
+> It seems that Vinod's working on a way for platforms to specify bindings
+> to the DMA engine code, and the DMA engine code itself selects the
+> appropriate channel.  This patch, on the other hand, introduces a set of
+> translation functions which need to be provided by platform code,
+> which returns the dma_chan pointer.
+> 
+> This sounds like a recipe for a total abortion of interfaces.  Only one
+> of those two activities should be going on at any one time, or if they
+> have to occur, they need coordination so that the we don't end up with
+> two totally different schemes.
+> 
+> In the mad rush to DTify everything, don't make hasty decisions, because
+> it is very difficult to change it later - especially something like this
+> which defines how DT encodes this information.
+We discussed this in KS and IMHO we need to merge these two approaches.
 
-Okay I think we are good for merging this, I will add the patch for this
-as well.
+For DT bindings, I think the binding itself shouldn't change based on my
+work but I would like these same bindings to help build the DMA engine
+code mappings.
 
-If anyone has objection please speak up _now_
+Now would it make sense to NOT merge these changes for 3.7 and postpone
+to 3.8. I can host these patches on a topic branch and merge them when
+we are ready. I plan to spend some good amount of time on my work this
+week so we should be ready pretty soon.
+One these changes are merged, users can start moving to this scheme.
+
 
 -- 
 ~Vinod
