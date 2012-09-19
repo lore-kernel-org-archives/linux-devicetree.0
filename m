@@ -1,34 +1,53 @@
 From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH REPOST] mfd: max8907: add power off control
-Date: Wed, 19 Sep 2012 13:25:46 +0200
-Message-ID: <20120919112546.GB8138@sortiz-mobl>
-References: <1348008679-20582-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 0/3] MFD/GPIO: Add twl6040 GPO driver
+Date: Wed, 19 Sep 2012 13:26:07 +0200
+Message-ID: <20120919112607.GD8138@sortiz-mobl>
+References: <1345119195-7490-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1348008679-20582-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, bilhuang@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+In-Reply-To: <1345119195-7490-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@stericsson.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Peter,
 
-On Tue, Sep 18, 2012 at 04:51:19PM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
+On Thu, Aug 16, 2012 at 03:13:12PM +0300, Peter Ujfalusi wrote:
+> Hello,
 > 
-> Add DT property "maxim,system-power-controller" to indicate whether the
-> PMIC is in charge of controlling the system power. If this is set, the
-> driver will provide the pm_power_off() function.
+> Changes since v1:
+> - Removed the ti,use-gpo property from DT bindings
+> - Register the GPO driver if we booted with DT blob or in legacy if the pdata
+>   for the GPO driver is present
+> - DT binding Documentation update
 > 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> The Documentation update has reference to the twl6040.dtsi file which will be
+> created to hold the common/static properties for the twl6040.
+> To avoid cross tree merge issues later I have only included the Documentation
+> update to this series and I will send the actual .dtsi/.dts changes via
+> linux-omap. If this is not a problem.
+> 
+> The dependencies for this series are in mainline and I think this series can
+> go via GPIO if Samuel agrees with the changes.
+> 
+> Intro mail from v1:
+> 
+> The following series adds support for the GPO (General Purpose Output) on the
+> twl6040/41 audio chip.
+> The series has been tested on SDP4430, compile tested for x86_64 and x86_32 bit
+> to be sure it does not introduce build breakage.
+> 
+> Regards,
+> Peter
 > ---
-> Samuel, I'm not sure if you have this in your list to process or not, nor
-> if you prefer a patch to be reposted vs. a response to the original email;
-> Mark Brown requested that for him at least I repost rather than reply, so
-> I'm giving that a go everywhere.
-Thanks for reposting. Patch is applied to my for-next branch now.
+> Peter Ujfalusi (3):
+>   mfd: twl6040: Fix GPO mask
+>   mfd: twl6040: Add twl6040-gpio child
+>   gpio: Add basic support for TWL6040 GPOs
+All 3 patches applied, thanks.
 
 Cheers,
 Samuel.
