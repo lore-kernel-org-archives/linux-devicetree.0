@@ -1,64 +1,134 @@
-From: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
-Date: Wed, 19 Sep 2012 17:54:33 +0200
-Message-ID: <20120919175433.3841a954@endymion.delvare>
-References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com>
-	<50588A8F.30203@wwwdotorg.org>
-	<50591C9C.2080809@atmel.com>
-	<5059E484.6090708@wwwdotorg.org>
+From: Ryan Harkin <ryan.harkin@linaro.org>
+Subject: [RFC PATCH 2/3] ARM: vexpress: Add device tree support for CLCD driver
+Date: Wed, 19 Sep 2012 17:04:25 +0100
+Message-ID: <1348070666-9153-3-git-send-email-ryan.harkin@linaro.org>
+References: <1348070666-9153-1-git-send-email-ryan.harkin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5059E484.6090708-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1348070666-9153-1-git-send-email-ryan.harkin@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ryan.harkin@linaro.org, arnd.bergmann@linaro.org, shiraz.hashim@st.com, stigge@antcom.de, pawel.moll@arm.com, tixy@linaro.org, liviu.dudau@arm.com, spear-devel@list.st.com, viresh.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Sep 2012 09:28:04 -0600, Stephen Warren wrote:
-> On 09/18/2012 07:15 PM, Bo Shen wrote:
-> > I add the debug info, and it give the following error without this patch.
-> > 
-> > --<8----------------------------------
-> > adap->name = i2c-gpio-1
-> > i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
-> > adap->name = i2c-gpio-1
-> > i2c-gpio: probe of i2c.3 failed with error -16
-> > -->8----------------------------------
-> > 
-> > With this patch, it successfully registered.
-> > --<8----------------------------------
-> > adap->name = i2c-gpio0
-> > i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
-> > adap->name = i2c-gpio1
-> > i2c-gpio i2c.3: using pins 90 (SDA) and 91 (SCL)
-> > -->8----------------------------------
-> 
-> Yes, that explains why the registration fails, but not why this patch is
-> the correct solution to the problem.
-> 
-> The problematic code appears to be:
-> 
-> snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
-> 
-> Instead, I think that should be something more like:
-> 
-> adap->name = dev_name(&pdev->dev);
+Add support for device tree in the amba-clcd PL111 video driver.
 
-strlcpy(adap->name, dev_name(&pdev->dev), sizeof(adap->name))
+Special case support is added for the A9 CoreTile which uses the "legacy"
+address map and has a PL111 device on-board.  The default case is to configure
+the device on the motherboard.
 
-if anything, as adap->name is a buffer, not a pointer.
+Oscillator support is added for the A9 CoreTile's CLCD driver.
 
-> or perhaps:
-> 
-> if (pdev->dev.of_node)
->   /* named will be based on DT node name */
->   adap->name = dev_name(&pdev->dev);
-> else
->   snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
-> 
-> ?
+Signed-off-by: Ryan Harkin <ryan.harkin@linaro.org>
+---
+ arch/arm/mach-vexpress/v2m.c |   58 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
+diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
+index 37608f2..799e00e 100644
+--- a/arch/arm/mach-vexpress/v2m.c
++++ b/arch/arm/mach-vexpress/v2m.c
+@@ -3,6 +3,7 @@
+  */
+ #include <linux/device.h>
+ #include <linux/amba/bus.h>
++#include <linux/amba/clcd.h>
+ #include <linux/amba/mmci.h>
+ #include <linux/io.h>
+ #include <linux/init.h>
+@@ -37,6 +38,7 @@
+ #include <mach/ct-ca9x4.h>
+ #include <mach/motherboard.h>
+ 
++#include <plat/clcd.h>
+ #include <plat/sched_clock.h>
+ 
+ #include "core.h"
+@@ -541,6 +543,54 @@ MACHINE_END
+ 
+ #if defined(CONFIG_ARCH_VEXPRESS_DT)
+ 
++static struct v2m_osc v2m_dt_clcd_osc = {
++	.rate_min = 10000000,
++	.rate_max = 165000000,
++	.rate_default = 23750000,
++};
++
++static int v2m_dt_clcd_init(void)
++{
++	struct device_node *node;
++	u32 osc;
++	u32 clcd_site;
++	u32 dvimode;
++	const __be32 *prop;
++	int len, na, ns;
++	phys_addr_t reg_base;
++
++	node = of_find_compatible_node(NULL, NULL, "arm,pl111");
++	if (!node)
++		return -ENODEV;
++
++	na = of_n_addr_cells(node);
++	ns = of_n_size_cells(node);
++
++	prop = of_get_property(node, "reg", &len);
++	if (WARN_ON(!prop || len < (na + ns) * sizeof(*prop)))
++		return -EINVAL;
++	reg_base = of_read_number(prop, na);
++
++	switch (reg_base) {
++	case CT_CA9X4_CLCDC:
++		clcd_site = v2m_get_master_site();
++		dvimode = 2;
++		break;
++	default:
++		clcd_site = SYS_CFG_SITE_MB;
++		dvimode = 0;
++		break;
++	}
++
++	if (of_property_read_u32(node, "arm,vexpress-osc", &osc) != 0)
++		return -EINVAL;
++	v2m_dt_clcd_osc.site = clcd_site;
++	v2m_dt_clcd_osc.osc = osc;
++	v2m_cfg_write(SYS_CFG_MUXFPGA | clcd_site, clcd_site);
++	v2m_cfg_write(SYS_CFG_DVIMODE | clcd_site, dvimode);
++	return 0;
++}
++
+ static struct map_desc v2m_rs1_io_desc __initdata = {
+ 	.virtual	= V2M_PERIPH,
+ 	.pfn		= __phys_to_pfn(0x1c000000),
+@@ -598,6 +648,8 @@ void __init v2m_dt_init_early(void)
+ 			pr_warning("vexpress: DT HBI (%x) is not matching "
+ 					"hardware (%x)!\n", dt_hbi, hbi);
+ 	}
++
++	v2m_dt_clcd_init();
+ }
+ 
+ static  struct of_device_id vexpress_irq_match[] __initdata = {
+@@ -631,6 +683,12 @@ static void __init v2m_dt_timer_init(void)
+ 
+ 	if (arch_timer_sched_clock_init() != 0)
+ 		versatile_sched_clock_init(v2m_sysreg_base + V2M_SYS_24MHZ, 24000000);
++
++	if (v2m_dt_clcd_osc.site) {
++		/* core tile clcd controller for A9 */
++		clk = v2m_osc_register("10020000.clcd", &v2m_dt_clcd_osc);
++		clk_register_clkdev(clk, NULL, "10020000.clcd");
++	}
+ }
+ 
+ static struct sys_timer v2m_dt_timer = {
 -- 
-Jean Delvare
+1.7.9.5
