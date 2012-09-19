@@ -1,71 +1,57 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/4] usb: dwc3: Fix gadget pullup in SS mode
-Date: Wed, 19 Sep 2012 20:29:40 +0300
-Message-ID: <20120919172939.GC7784@arwen.pp.htv.fi>
-References: <1348054229-27362-1-git-send-email-kishon@ti.com>
- <1348054229-27362-3-git-send-email-kishon@ti.com>
- <20120919115306.GG3772@arwen.pp.htv.fi>
- <CAEgRx2zOVn0zV39-cuPuj4n4HRgQmywy_NY4KTe0qEgeC+NEkw@mail.gmail.com>
- <20120919160450.GA7510@arwen.pp.htv.fi>
- <CAEgRx2yXStORBknr2hoMcobMO8wFGuKr4bvzZwEQHQQcHVH76Q@mail.gmail.com>
- <20120919172442.GA7784@arwen.pp.htv.fi>
-Reply-To: balbi@ti.com
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/9] ARM: OMAP4: hwmod data: add mmu hwmod for ipu
+ and dsp
+Date: Wed, 19 Sep 2012 20:59:41 +0000 (UTC)
+Message-ID: <alpine.DEB.2.00.1209192059120.5264@utopia.booyaka.com>
+References: <1347479152-588-1-git-send-email-omar.luna@linaro.org>
+ <1347479152-588-4-git-send-email-omar.luna@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120919172442.GA7784@arwen.pp.htv.fi>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: "Sonasath, Moiz" <m-sonasath@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: MULTIPART/MIXED; BOUNDARY="843723315-1854640201-1348088381=:5264"
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1347479152-588-4-git-send-email-omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
---hOcCNbCCxyk/YU74
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--843723315-1854640201-1348088381=:5264
+Content-Type: TEXT/PLAIN; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Hi again,
+Hi Beno=EEt,
 
-On Wed, Sep 19, 2012 at 08:24:44PM +0300, Felipe Balbi wrote:
-> > > at minimum this should've come with a proper revision check anyway.
-> > >
-> >=20
-> > Actually most of it is under a rev check :)
+On Wed, 12 Sep 2012, Omar Ramirez Luna wrote:
+
+> Add mmu hwmod data for ipu and dsp.
 >=20
-> fair enough.
+> Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-one extra comment here. That revision check is not related to the
-silicon errata you mention. That revision check is there because the bit
-definition of that particular register has changed a little bit, so
-we're just handling a slightly different programming model between older
-and newer revisions.
+Care to ack this one?
 
---=20
-balbi
 
---hOcCNbCCxyk/YU74
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+- Paul
+--843723315-1854640201-1348088381=:5264
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-iQIcBAEBAgAGBQJQWgEDAAoJEIaOsuA1yqRE0YMP/0QnYGsHl/TJqh4iyowMnLk4
-mU88PfxHpN1o/KynAj/R+hVpizQaOprohV3r3EFVg9AEF/c4NOY5ZUWh3TkCvQC6
-eAhBPL+hh7ki54C9yfYNJhLXZB/YH6JFSoZ+JrSZT96gbWSWvOf8vSt/mVwQ7cpt
-jYHC6OZKATyKEGs8H+CLrmyEsx04vxMVN33YIr7osVTREd8E2j5ZYlROGsecAd2F
-csgsz+Utuah8NZz+HH2kFfNUVBGNloT8G3dfgD5DnNNI9KBCj1j9Upc6Wgk9FRfV
-XydcvrllD0gCxhJZPJn+x73spmqDUTjL5GBiqS/xoh7n/VNOI2Mx2C8EcgVlm79f
-RXgyYmUw6kHJLMPA4T8mMOOjX3mI3GsDyug9PklNY8lc4fnMjzInW5zWxA3n8hXZ
-3AlvKtsKYf+KKx4jQg09n+YghOOmNmt/mGIJQFqvaz9IeT82JQ90yCdCYqkmOjhF
-zqxjpDarm7CyrFFemURPst2IVbmHVDY35N0gE+1cgHgbh6a3y8MGE1ChvHg7FQrY
-oPPqs0iaxRBZAfxfs/L+r7wGdXxOp1C1+/DVxSYyB2mQXL0mp6bM2FMHquHht/Cn
-pPqrQhXXdlw1OI7q7Fni0Hme0WzgBHbKSu0eo+RApJX7YVyzGy6NX4VZtvW/+weH
-F8O1eYOPrK3snoupRE3x
-=JG2n
------END PGP SIGNATURE-----
-
---hOcCNbCCxyk/YU74--
+--843723315-1854640201-1348088381=:5264--
