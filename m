@@ -1,37 +1,67 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/2] ARM/dts: omap4-panda: Enable GPO functionality for twl6040
-Date: Wed, 19 Sep 2012 12:43:05 +0300
-Message-ID: <1348047785-1681-3-git-send-email-peter.ujfalusi@ti.com>
-References: <1348047785-1681-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1348047785-1681-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] MFD/GPIO: Add twl6040 GPO driver
+Date: Wed, 19 Sep 2012 12:22:00 +0200
+Message-ID: <20120919102200.GI3647@sortiz-mobl>
+References: <1345119195-7490-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1345119195-7490-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the needed properties for twl6040 so the GPO functionality can be used
-by other drivers.
+Hi Peter,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/omap4-panda.dts | 3 +++
- 1 file changed, 3 insertions(+)
+On Thu, Aug 16, 2012 at 03:13:12PM +0300, Peter Ujfalusi wrote:
+> Hello,
+> 
+> Changes since v1:
+> - Removed the ti,use-gpo property from DT bindings
+> - Register the GPO driver if we booted with DT blob or in legacy if the pdata
+>   for the GPO driver is present
+> - DT binding Documentation update
+> 
+> The Documentation update has reference to the twl6040.dtsi file which will be
+> created to hold the common/static properties for the twl6040.
+> To avoid cross tree merge issues later I have only included the Documentation
+> update to this series and I will send the actual .dtsi/.dts changes via
+> linux-omap. If this is not a problem.
+> 
+> The dependencies for this series are in mainline and I think this series can
+> go via GPIO if Samuel agrees with the changes.
+> 
+> Intro mail from v1:
+> 
+> The following series adds support for the GPO (General Purpose Output) on the
+> twl6040/41 audio chip.
+> The series has been tested on SDP4430, compile tested for x86_64 and x86_32 bit
+> to be sure it does not introduce build breakage.
+> 
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (3):
+>   mfd: twl6040: Fix GPO mask
+>   mfd: twl6040: Add twl6040-gpio child
+>   gpio: Add basic support for TWL6040 GPOs
+All 3 patches applied, thanks.
 
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index 20b966e..94adabb 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -71,6 +71,9 @@
- 
- 	twl6040: twl@4b {
- 		compatible = "ti,twl6040";
-+		gpio-controller;
-+		#gpio-cells = <1>;
-+
- 		reg = <0x4b>;
- 		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
- 		interrupts = <0 119 4>; /* IRQ_SYS_2N cascaded to gic */
+Cheers,
+Samuel.
+
 -- 
-1.7.12
-
+Intel Open Source Technology Centre
+http://oss.intel.com/
