@@ -1,129 +1,42 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 1/5] ARM: tegra: define DT bindings for and instantiate timer
-Date: Wed, 19 Sep 2012 15:31:15 -0600
-Message-ID: <1348090279-22631-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] ARM: OMAP3: hwmod data: add mmu data for iva and
+ isp
+Date: Wed, 19 Sep 2012 21:35:06 +0000 (UTC)
+Message-ID: <alpine.DEB.2.00.1209192134490.5264@utopia.booyaka.com>
+References: <1347479152-588-1-git-send-email-omar.luna@linaro.org>
+ <1347479152-588-3-git-send-email-omar.luna@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1347479152-588-3-git-send-email-omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <joerg.roedel-5C7GfCeVMHo@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Wed, 12 Sep 2012, Omar Ramirez Luna wrote:
 
-The Tegra timer provides a number of 29-bit timer channels, a single
-32-bit free running counter, and in the Tegra30 variant, 5 watchdog modules.
-The first two channels may also trigger a legacy watchdog reset.
+> Add mmu hwmod data for iva and isp.
+> 
+> Due to compatibility an ifdef CONFIG_OMAP_IOMMU_IVA2 needs to be
+> propagated (previously on iommu resource info) to hwmod data in OMAP3,
+> so users of iommu and tidspbridge can avoid issues of two modules
+> managing mmu data/irqs/resets; this until tidspbridge can be migrated
+> to iommu framework.
+> 
+> Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Define a DT binding for this HW module, and add the module into the Tegra
-device tree files.
+Thanks, queued for 3.7.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/timer/nvidia,tegra20-timer.txt        |   21 ++++++++++++++++++
- .../bindings/timer/nvidia,tegra30-timer.txt        |   23 ++++++++++++++++++++
- arch/arm/boot/dts/tegra20.dtsi                     |    9 +++++++
- arch/arm/boot/dts/tegra30.dtsi                     |   11 +++++++++
- 4 files changed, 64 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra20-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-
-diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra20-timer.txt b/Documentation/devicetree/bindings/timer/nvidia,tegra20-timer.txt
-new file mode 100644
-index 0000000..e019fdc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nvidia,tegra20-timer.txt
-@@ -0,0 +1,21 @@
-+NVIDIA Tegra20 timer
-+
-+The Tegra20 timer provides four 29-bit timer channels and a single 32-bit free
-+running counter. The first two channels may also trigger a watchdog reset.
-+
-+Required properties:
-+
-+- compatible : should be "nvidia,tegra20-timer".
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : A list of 4 interrupts; one per timer channel.
-+
-+Example:
-+
-+timer {
-+	compatible = "nvidia,tegra20-timer";
-+	reg = <0x60005000 0x60>;
-+	interrupts = <0 0 0x04
-+			0 1 0x04
-+			0 41 0x04
-+			0 42 0x04>;
-+};
-diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-new file mode 100644
-index 0000000..906109d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nvidia,tegra30-timer.txt
-@@ -0,0 +1,23 @@
-+NVIDIA Tegra30 timer
-+
-+The Tegra30 timer provides ten 29-bit timer channels, a single 32-bit free
-+running counter, and 5 watchdog modules. The first two channels may also
-+trigger a legacy watchdog reset.
-+
-+Required properties:
-+
-+- compatible : should be "nvidia,tegra30-timer", "nvidia,tegra20-timer".
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : A list of 6 interrupts; one per each of timer channels 1
-+    through 5, and one for the shared interrupt for the remaining channels.
-+
-+timer {
-+	compatible = "nvidia,tegra30-timer", "nvidia,tegra20-timer";
-+	reg = <0x60005000 0x400>;
-+	interrupts = <0 0 0x04
-+		      0 1 0x04
-+		      0 41 0x04
-+		      0 42 0x04
-+		      0 121 0x04
-+		      0 122 0x04>;
-+};
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 405d167..0fadf4d 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -12,6 +12,15 @@
- 		#interrupt-cells = <3>;
- 	};
- 
-+	timer@60005000 {
-+		compatible = "nvidia,tegra20-timer";
-+		reg = <0x60005000 0x60>;
-+		interrupts = <0 0 0x04
-+			      0 1 0x04
-+			      0 41 0x04
-+			      0 42 0x04>;
-+	};
-+
- 	apbdma: dma {
- 		compatible = "nvidia,tegra20-apbdma";
- 		reg = <0x6000a000 0x1200>;
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 3e4334d..d6f8e4c 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -12,6 +12,17 @@
- 		#interrupt-cells = <3>;
- 	};
- 
-+	timer@60005000 {
-+		compatible = "nvidia,tegra30-timer", "nvidia,tegra20-timer";
-+		reg = <0x60005000 0x400>;
-+		interrupts = <0 0 0x04
-+			      0 1 0x04
-+			      0 41 0x04
-+			      0 42 0x04
-+			      0 121 0x04
-+			      0 122 0x04>;
-+	};
-+
- 	apbdma: dma {
- 		compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
- 		reg = <0x6000a000 0x1400>;
--- 
-1.7.0.4
+- Paul
