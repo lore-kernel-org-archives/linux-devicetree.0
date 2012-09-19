@@ -1,61 +1,42 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
-Date: Wed, 19 Sep 2012 09:15:08 +0800
-Message-ID: <50591C9C.2080809@atmel.com>
-References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com> <50588A8F.30203@wwwdotorg.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v6 0/4] Runtime Interpreted Power Sequences
+Date: Tue, 18 Sep 2012 23:01:16 -0400
+Message-ID: <20120919030116.GN8832@opensource.wolfsonmicro.com>
+References: <1347443867-18868-1-git-send-email-acourbot@nvidia.com>
+ <4473898.CeAQBgUhKL@percival>
+ <20120913071928.GA20959@opensource.wolfsonmicro.com>
+ <1378218.yLeQheNFT0@percival>
+ <20120913072943.GB20959@opensource.wolfsonmicro.com>
+ <5051FAC5.40501@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50588A8F.30203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5051FAC5.40501@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Alex Courbot <acourbot@nvidia.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen Warren,
+On Thu, Sep 13, 2012 at 09:24:53AM -0600, Stephen Warren wrote:
+> On 09/13/2012 01:29 AM, Mark Brown wrote:
 
-On 9/18/2012 22:51, Stephen Warren wrote:
-> On 09/18/2012 03:02 AM, Bo Shen wrote:
->> When i2c-gpio node number is greater than 1, the second can not sucessfully
->> regiter
->>
->> Using alias method to get the pdev->id, or else the second device will use
->> the same id which will cause fail to register
->
-> pdev->id shouldn't be used at all with device tree. Why does
-> registration fail without this change?
+> > The driver knows the power sequence.  Having to type the same sequence
+> > into the DT or platform data for each board using the device wouuld be
+> > retarded so we need the drivers to be able to give the sequence to the
+> > library if they're going to be able to reuse it (which is a lot of what
+> > Tomi is talking about).
 
-I add the debug info, and it give the following error without this patch.
+> I believe that's trivial to implement. The relevant function is:
 
---<8----------------------------------
-adap->name = i2c-gpio-1
-i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
-adap->name = i2c-gpio-1
-i2c-gpio: probe of i2c.3 failed with error -16
--->8----------------------------------
+Right, that's what I'm saying - the code is mostly there now.
 
-With this patch, it successfully registered.
---<8----------------------------------
-adap->name = i2c-gpio0
-i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
-adap->name = i2c-gpio1
-i2c-gpio i2c.3: using pins 90 (SDA) and 91 (SCL)
--->8----------------------------------
+> It's up to the driver whether pseq comes from platform data or is
+> hard-coded into the driver (or not provided at all, for the DT case).
+> So, the only change needed to convert a "hard-coded" driver to this API
+> is to convert the current custom data structure (or code) that describes
+> the sequence into a struct platform_power_seq_set.
 
->
->> diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
->> index e62d2d9..051fbb3 100644
->> --- a/drivers/i2c/busses/i2c-gpio.c
->> +++ b/drivers/i2c/busses/i2c-gpio.c
->> @@ -136,6 +136,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
->>   		ret = of_i2c_gpio_probe(pdev->dev.of_node, pdata);
->>   		if (ret)
->>   			return ret;
->> +		pdev->id = of_alias_get_id(pdev->dev.of_node, "i2c-gpio");
->>   	} else {
->>   		if (!pdev->dev.platform_data)
->>   			return -ENXIO;
->>
->
->
+The framework could still help by providing ways to avoid having to copy
+the structure and fill in the blanks for GPIO numbers (and anything else
+that is numbered rather than named) by hand.
