@@ -1,65 +1,131 @@
-From: Seungwon Jeon <tgih.jun@samsung.com>
-Subject: RE: [PATCH v6 9/9] mmc: dw_mmc: add support for exynos specific
- implementation of dw-mshc
-Date: Wed, 19 Sep 2012 22:42:53 +0900
-Message-ID: <001501cd966c$ab1ef6e0$015ce4a0$%jun@samsung.com>
-References: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
- <1347905803-22742-10-git-send-email-thomas.abraham@linaro.org>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
+Date: Wed, 19 Sep 2012 09:52:08 -0400
+Message-ID: <20120919135208.GA16522@beef>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
+ <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ks_c_5601-1987
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1347905803-22742-10-git-send-email-thomas.abraham@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, patches@linaro.org, 'Thomas Abraham' <thomas.ab@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1347662517-4210-2-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, September 18, 2012, Thomas Abraham <thomas.abraham@linaro.org> wrote:
-> +int dw_mci_exynos_probe(struct platform_device *pdev)
-> +{
-> +	struct dw_mci_drv_data *drv_data;
-> +	const struct of_device_id *match;
-> +
-> +	match = of_match_node(dw_mci_exynos_match, pdev->dev.of_node);
-> +	drv_data = match->data;
-In non-dt case, match has NULL.
-Needed to check "pdev->dev.of_node"
+On Fri, Sep 14, 2012 at 05:41:56PM -0500, Jon Hunter wrote:
 
-Thanks,
-Seungwon Jeon
-> +	return dw_mci_pltfm_register(pdev, drv_data);
-> +}
-> +
-> +static struct platform_driver dw_mci_exynos_pltfm_driver = {
-> +	.probe		= dw_mci_exynos_probe,
-> +	.remove		= __exit_p(dw_mci_pltfm_remove),
-> +	.driver		= {
-> +		.name		= "dwmmc_exynos",
-> +		.of_match_table	= of_match_ptr(dw_mci_exynos_match),
-> +		.pm		= &dw_mci_pltfm_pmops,
-> +	},
-> +};
-> +
-> +module_platform_driver(dw_mci_exynos_pltfm_driver);
-> +
-> +MODULE_DESCRIPTION("Samsung Specific DW-MSHC Driver Extension");
-> +MODULE_AUTHOR("Thomas Abraham <thomas.ab@samsung.com");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:dwmmc-exynos");
-> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-> index 6cb043e..7c6a113 100644
-> --- a/include/linux/mmc/dw_mmc.h
-> +++ b/include/linux/mmc/dw_mmc.h
-> @@ -227,7 +227,7 @@ struct dw_mci_board {
->  	u32 num_slots;
+...
+
+Typo nits in the binding examples below...
+
+>  Documentation/devicetree/bindings/dma/dma.txt |   81 +++++++++
+>  drivers/of/Makefile                           |    2 +-
+>  drivers/of/dma.c                              |  219 +++++++++++++++++++++++++
+>  include/linux/of_dma.h                        |   45 +++++
+>  4 files changed, 346 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/dma.txt
+>  create mode 100644 drivers/of/dma.c
+>  create mode 100644 include/linux/of_dma.h
 > 
->  	u32 quirks; /* Workaround / Quirk flags */
-> -	unsigned int bus_hz; /* Bus speed */
-> +	unsigned int bus_hz; /* Clock speed at the cclk_in pad */
-> 
->  	unsigned int caps;	/* Capabilities */
->  	unsigned int caps2;	/* More capabilities */
-> --
-> 1.6.6.rc2
+> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+> new file mode 100644
+> index 0000000..a4f59a5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/dma.txt
+> @@ -0,0 +1,81 @@
+> +* Generic DMA Controller and DMA request bindings
+> +
+> +Generic binding to provide a way for a driver using DMA Engine to retrieve the
+> +DMA request or channel information that goes from a hardware device to a DMA
+> +controller.
+> +
+> +
+> +* DMA controller
+> +
+> +Required property:
+> +- #dma-cells: 		Must be at least 1. Used to provide DMA controller
+> +			specific information. See DMA client binding below for
+> +			more details.
+> +
+> +Optional properties:
+> +- #dma-channels: 	Number of DMA channels supported by the controller.
+> +- #dma-requests: 	Number of DMA requests signals supported by the
+> +			controller.
+> +
+> +Example:
+> +
+> +	dma: dma@48000000 {
+> +		compatible = "ti,omap-sdma"
+
+; here
+
+> +		reg = <0x48000000 0x1000>;
+> +		interrupts = <0 12 0x4
+> +			      0 13 0x4
+> +			      0 14 0x4
+> +			      0 15 0x4>;
+> +		#dma-cells = <1>;
+> +		#dma-channels = <32>;
+> +		#dma-requests = <127>;
+> +	};
+> +
+> +
+> +* DMA client
+> +
+> +Client drivers should specify the DMA property using a phandle to the controller
+> +followed by DMA controller specific data.
+> +
+> +Required property:
+> +- dmas:			List of one or more DMA specifiers, each consisting of
+> +			- A phandle pointing to DMA controller node
+> +			- A number of integer cells, as determined by the
+> +			  #dma-cells property in the node referenced by phandle
+> +			  containing DMA controller specific information. This
+> +			  typically contains a DMA request line number or a
+> +			  channel number, but can contain any data that is used
+> +			  required for configuring a channel.
+> +- dma-names: 		Contains one identifier string for each DMA specifier in
+> +			the dmas property. The specific strings that can be used
+> +			are defined in the binding of the DMA client device.
+> +			Multiple DMA specifiers can be used to represent
+> +			alternatives and in this case the dma-names for those
+> +			DMA specifiers must be identical (see examples).
+> +
+> +Examples:
+> +
+> +1. A device with one DMA read channel, one DMA write channel:
+> +
+> +	i2c1: i2c@1 {
+> +		...
+> +		dmas = <&dma 2		/* read channel */
+> +			&dma 3>;	/* write channel */
+> +		dma-names = "rx", "tx"
+
+; here too
+
+> +		...
+> +	};
+> +
+> +2. A single read-write channel with three alternative DMA controllers:
+> +
+> +	dmas = <&dma1 5
+> +		&dma2 7
+> +		&dma3 2>;
+> +	dma-names = "rx-tx", "rx-tx", "rx-tx"
+
+again ;
+
+> +
+> +3. A device with three channels, one of which has two alternatives:
+> +
+> +	dmas = <&dma1 2			/* read channel */
+> +		&dma1 3			/* write channel */
+> +		&dma2 0			/* error read */
+> +		&dma3 0>;		/* alternative error read */
+> +	dma-names = "rx", "tx", "error", "error";
+
+Patch for these posted separately.
+
+-Matt
