@@ -1,42 +1,59 @@
-From: Mitch Bradley <wmb@firmworks.com>
-Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
-Date: Thu, 20 Sep 2012 05:25:04 +0800
-Message-ID: <505A3830.7090307@firmworks.com>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com> <1347662517-4210-2-git-send-email-jon-hunter@ti.com> <20120919140705.GB16522@beef> <201209191424.56086.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201209191424.56086.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Matt Porter <mporter@ti.com>, Stephen Warren <swarren@nvidia.com>, Vinod Koul <vinod.koul@intel.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 3/5] ARM: tegra: add TWD to device tree
+Date: Wed, 19 Sep 2012 15:31:17 -0600
+Message-ID: <1348090279-22631-3-git-send-email-swarren@wwwdotorg.org>
+References: <1348090279-22631-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1348090279-22631-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/19/2012 10:24 PM, Arnd Bergmann wrote:
-> On Wednesday 19 September 2012, Matt Porter wrote:
->>> +Optional properties:
->>> +- #dma-channels:     Number of DMA channels supported by the controller.
->>> +- #dma-requests:     Number of DMA requests signals supported by the
->>> +                     controller.
->>
->> Shouldn't these two optional properties drop the prefix #?  By
->> convention adopted from the various original OF/ePAPR/etc specs, the
->> only properties I would expect to see with this prefix are the
->> "*-cells" cell sizes. A quick search indicates this is the case
->> throughout all the current bindings.
-> 
-> I always assumed that the # prefix is used to indicate that we are counting
-> things instead of listing them.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Your assumption is historically correct.  It seems that usage has
-drifted somewhat.
+This will allow timer.c to use twd_local_timer_of_register(), and
+hence not need to hard-code the TWD address or IRQ.
 
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra20.dtsi |    6 ++++++
+ arch/arm/boot/dts/tegra30.dtsi |    6 ++++++
+ 2 files changed, 12 insertions(+), 0 deletions(-)
 
-> 
-> 	Arnd
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 9d22238..723fd43 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -4,6 +4,12 @@
+ 	compatible = "nvidia,tegra20";
+ 	interrupt-parent = <&intc>;
+ 
++	timer@50004600 {
++		compatible = "arm,cortex-a9-twd-timer";
++		reg = <0x50040600 0x20>;
++		interrupts = <1 13 0x304>;
++	};
++
+ 	intc: interrupt-controller {
+ 		compatible = "arm,cortex-a9-gic";
+ 		reg = <0x50041000 0x1000
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index ffb035a..15e61b6 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -4,6 +4,12 @@
+ 	compatible = "nvidia,tegra30";
+ 	interrupt-parent = <&intc>;
+ 
++	timer@50004600 {
++		compatible = "arm,cortex-a9-twd-timer";
++		reg = <0x50040600 0x20>;
++		interrupts = <1 13 0xf04>;
++	};
++
+ 	intc: interrupt-controller {
+ 		compatible = "arm,cortex-a9-gic";
+ 		reg = <0x50041000 0x1000
+-- 
+1.7.0.4
