@@ -1,50 +1,148 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: at91: add at91sam9_wdt driver to at91sam9260
-Date: Wed, 19 Sep 2012 13:57:41 +0200
-Message-ID: <1348055861-7857-3-git-send-email-fabio.porcedda@gmail.com>
-References: <1348055861-7857-1-git-send-email-fabio.porcedda@gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/4] usb: phy: omap-usb3: Decrease the number of
+ transitions to recovery
+Date: Wed, 19 Sep 2012 14:55:20 +0300
+Message-ID: <20120919115518.GH3772@arwen.pp.htv.fi>
+References: <1348054229-27362-1-git-send-email-kishon@ti.com>
+ <1348054229-27362-4-git-send-email-kishon@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348055861-7857-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OfrWf2Fun5Ae4m0Y"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1348054229-27362-4-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Moiz Sonasath <m-sonasath@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Tested on an at91sam9260 board (evk-pro3)
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+--OfrWf2Fun5Ae4m0Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index 66389c1..680b1c8 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -233,6 +233,12 @@
- 					trigger-external;
- 				};
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9-wdt";
-+				reg = <0xfffffd40 0x10>;
-+			};
-+
- 		};
- 
- 		nand0: nand@40000000 {
--- 
-1.7.11.3
+On Wed, Sep 19, 2012 at 05:00:28PM +0530, Kishon Vijay Abraham I wrote:
+> Power-cycling the PHY (partially) decreases the number of transitions to
+> "Recovery" state. Hence changed the power up sequence to a partial
+> power-up before a full power-up of the PHY.
+>=20
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Moiz Sonasath <m-sonasath@ti.com>
+
+this can be amended to patch 1. Why would you introduce a driver with a
+known problem ? ;-)
+
+> ---
+>  drivers/usb/phy/omap-usb3.c  |   43 ++++++++++++++++++++++++++++++++++++=
+------
+>  include/linux/usb/omap_usb.h |    1 +
+>  2 files changed, 38 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/usb/phy/omap-usb3.c b/drivers/usb/phy/omap-usb3.c
+> index 26402d5..fb3c5e6 100644
+> --- a/drivers/usb/phy/omap-usb3.c
+> +++ b/drivers/usb/phy/omap-usb3.c
+> @@ -35,13 +35,15 @@ static struct usb_dpll_params omap_usb3_dpll_params[N=
+UM_SYS_CLKS] =3D {
+>  };
+> =20
+>  /**
+> - * omap5_usb_phy_power - power on/off the serializer using control module
+> + * omap5_usb_phy_partial_powerup - power on the serializer using control=
+ module
+>   * @phy: struct omap_usb *
+> - * @on: 0 to off and 1 to on based on powering on or off the PHY
+>   *
+> - * omap_usb3 can call this API to power on or off the PHY.
+> + * After the dwc3 module is disabled and enabled again the synchronizati=
+on
+> + * between dwc3 and phy goes bad and the device does not get enumerated
+> + * in superspeed mode. After some trials it was found powering up TX and
+> + * part of RX PHY helped to solve the issue.
+>   */
+> -static int omap5_usb_phy_power(struct omap_usb *phy, bool on)
+> +static int omap5_usb_phy_partial_powerup(struct omap_usb *phy)
+>  {
+>  	u32 val;
+>  	unsigned long rate;
+> @@ -58,10 +60,32 @@ static int omap5_usb_phy_power(struct omap_usb *phy, =
+bool on)
+> =20
+>  	val =3D readl(phy->control_dev);
+> =20
+> +	val &=3D ~(USB_PWRCTL_CLK_CMD_MASK | USB_PWRCTL_CLK_FREQ_MASK);
+> +	val |=3D (USB3_PHY_PARTIAL_RX_POWERON | USB3_PHY_TX_RX_POWERON)
+> +		<< USB_PWRCTL_CLK_CMD_SHIFT;
+> +	val |=3D rate << USB_PWRCTL_CLK_FREQ_SHIFT;
+> +
+> +	writel(val, phy->control_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * omap5_usb_phy_power - power on/off the serializer using control module
+> + * @phy: struct omap_usb *
+> + * @on: 0 to off and 1 to on based on powering on or off the PHY
+> + *
+> + * omap_usb3 can call this API to power on or off the PHY.
+> + */
+> +static int omap5_usb_phy_power(struct omap_usb *phy, bool on)
+> +{
+> +	u32 val;
+> +
+> +	val =3D readl(phy->control_dev);
+> +
+>  	if (on) {
+> -		val &=3D ~(USB_PWRCTL_CLK_CMD_MASK | USB_PWRCTL_CLK_FREQ_MASK);
+> +		val &=3D ~USB_PWRCTL_CLK_CMD_MASK;
+>  		val |=3D USB3_PHY_TX_RX_POWERON << USB_PWRCTL_CLK_CMD_SHIFT;
+> -		val |=3D rate << USB_PWRCTL_CLK_FREQ_SHIFT;
+>  	} else {
+>  		val &=3D ~USB_PWRCTL_CLK_CMD_MASK;
+>  		val |=3D USB3_PHY_TX_RX_POWEROFF << USB_PWRCTL_CLK_CMD_SHIFT;
+> @@ -207,6 +231,13 @@ static int omap_usb3_init(struct usb_phy *x)
+>  	struct omap_usb	*phy =3D phy_to_omapusb(x);
+> =20
+>  	omap_usb_dpll_lock(phy);
+> +	omap5_usb_phy_partial_powerup(phy);
+> +	/*
+> +	 * Give enough time for the PHY to partially power-up before
+> +	 * powering it up completely. delay value suggested by the HW
+> +	 * team.
+> +	 */
+> +	mdelay(100);
+
+why 100 ms ? Has this been measured ? Again, 100 ms is a loooooong time.
+Soon enough user will be waiting for a bit over a second to see that
+after connecting usb cable, there's activity. We don't want user to
+notice that kind of thing ;-)
+
+--=20
+balbi
+
+--OfrWf2Fun5Ae4m0Y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQWbKmAAoJEIaOsuA1yqREztcQAJ4r2cZV1/xQcz65WeE8bV7m
+UuKadpo5CrpdR2DESbjPD3vfD5nFQ9k/EToRLwypiC4aA4nFzai9oHrFk3eSfJLf
+hEhgz2q+J8Mcd+wWzkH19P+OlV/IGaeRQczUMVNXYo5XZtuKiTycrgVTA51fb5mE
+f4MwrNi1YQ+ZHrYuB+SdYKXG0yjlLzGrFLEnGmiv9RV1k8Jwkbxh3XGvCGeqRGdv
+c6mPdYwkISZXOIW5etXYu7d443VEnDmnvsbci4lfidd1kbuxMxqAIR+25ACthTwj
+Berrr28OERULcQh9KyTHv0fCOiNK0QFmTrmzZcp6Jk/y7empNnv4tgzcLhy747T8
+y4oRTvDbnPpSbvdl9Ad7s/FdTWWGL9u/IhTxmzGtH49xhctoGQscdaOSZRBSQ1sV
+0jOxNmX75J4LYanFOOwPujabKLPuJKm0XM+agh7868eoexuREl2mYxBrBMCey0IB
+M5n2jMBCmtdBZl5ay7LpUvEVEEnuqDS2leCVcW8nDdNAjST+Gz0rZs1d6nS9ZWVU
+AMeQUWkzommX+JqOPpfml/pdDmq1abI6oyZI0ORk+5j47HYupWk/uiZxiKWeiMSm
+OjBNgc4AewFxthK1trUxTsoj/LPx4Ro9Wumfaipyo8b9R8BAiUcUUFsv3j89d5xx
+EkOcUb/8f6p6mdnTDkqF
+=DSJ2
+-----END PGP SIGNATURE-----
+
+--OfrWf2Fun5Ae4m0Y--
