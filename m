@@ -1,110 +1,59 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 4/4] usb: phy: omap-usb2: enable 960Mhz clock for omap5
-Date: Wed, 19 Sep 2012 14:56:49 +0300
-Message-ID: <20120919115647.GI3772@arwen.pp.htv.fi>
-References: <1348054229-27362-1-git-send-email-kishon@ti.com>
- <1348054229-27362-5-git-send-email-kishon@ti.com>
-Reply-To: balbi@ti.com
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCH v6 0/9] mmc: dw_mmc: add support for device tree based
+ instantiation
+Date: Wed, 19 Sep 2012 22:39:09 +0900
+Message-ID: <001201cd966c$25b18e00$7114aa00$%jun@samsung.com>
+References: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
+ <CAJuYYwRcoOv5X=XK8wiVb9fzSAdY_d=+kvJhqMdiT1Fey0JCLw@mail.gmail.com>
+ <CAJuYYwSBtjtEvTMUw9UNZRTbMoMwLio_YLKbTu=daaamS5t5Lg@mail.gmail.com>
+ <m3y5k6h4qj.fsf@pullcord.laptop.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J2uG6jHjFLimDtBY"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1348054229-27362-5-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ks_c_5601-1987
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <m3y5k6h4qj.fsf@pullcord.laptop.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Chris Ball' <cjb@laptop.org>, 'Thomas Abraham' <thomas.abraham@linaro.org>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+> Hi Thomas,
+> 
+> On Wed, Sep 19 2012, Thomas Abraham wrote:
+> >> Hi Jaehoon, Seungwon,
+> >>
+> >> All the changes you have suggested for this patch series has been
+> >> completed. If you could ack this series, it would be great.
+> >>
+> >> Thanks,
+> >> Thomas.
+> >
+> > Hi Chris,
+> >
+> > I have addressed all the comments received for the v5 of the dw-mmc
+> > device tree support patch series. Will Newton has acked this patch
+> > series. Can this series be merged for v3.7 ?
+> 
+> Yes, looks good; pushed to mmc-next for 3.7.  Jaehoon and Seungwon,
+> if you reply soon with your ACK then I'll add it to this patchset.
 
---J2uG6jHjFLimDtBY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 19, 2012 at 05:00:29PM +0530, Kishon Vijay Abraham I wrote:
-> "usb_otg_ss_refclk960m" is needed by usb2 phy present in omap5. For
-> omap4, the clk_get of this clock will fail since it does not have this
-> clock.
->=20
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb-phy.txt |    3 +++
->  drivers/usb/phy/omap-usb2.c                       |   28 +++++++++++++++=
-+++++-
->  2 files changed, 30 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Document=
-ation/devicetree/bindings/usb/usb-phy.txt
-> index 7c5fd89..d5626de 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> @@ -24,6 +24,9 @@ Required properties:
->  add the address of control module phy power register until a driver for
->  control module is added
-> =20
-> +Optional properties:
-> + - has960mhzclk: should be added if the phy needs 960mhz clock
-> +
->  This is usually a subnode of ocp2scp to which it is connected.
-> =20
->  usb3phy@4a084400 {
-> diff --git a/drivers/usb/phy/omap-usb2.c b/drivers/usb/phy/omap-usb2.c
-> index d36c282..d6612ba 100644
-> --- a/drivers/usb/phy/omap-usb2.c
-> +++ b/drivers/usb/phy/omap-usb2.c
-> @@ -146,6 +146,7 @@ static int __devinit omap_usb2_probe(struct platform_=
-device *pdev)
->  	struct omap_usb			*phy;
->  	struct usb_otg			*otg;
->  	struct resource			*res;
-> +	struct device_node		*np =3D pdev->dev.of_node;
-> =20
->  	phy =3D devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
->  	if (!phy) {
-> @@ -190,6 +191,15 @@ static int __devinit omap_usb2_probe(struct platform=
-_device *pdev)
->  	}
->  	clk_prepare(phy->wkupclk);
-> =20
-> +	if (of_property_read_bool(np, "has960mhzclk")) {
-> +		phy->optclk =3D devm_clk_get(phy->dev, "usb_otg_ss_refclk960m");
-> +		if (IS_ERR(phy->optclk)) {
-> +			dev_err(&pdev->dev, "unable to get refclk960m\n");
-> +			return PTR_ERR(phy->optclk);
-> +		}
-> +		clk_prepare(phy->optclk);
-> +	}
+Also, looks good to me.
+But please check several patches before merging.
+Sorry for late review.
 
-instead, can't you just always try to get the clock but ignore the error
-if it fails ?
+Thanks,
+Seungwon Jeon
 
-If it works you can set a flag to let you know that you can use that
-optional clock.
-
---=20
-balbi
-
---J2uG6jHjFLimDtBY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQWbL/AAoJEIaOsuA1yqREtrUP/2PImIswhxKJFOZKryi1J5i9
-GaPsZarphgZle12njovv8uECnzUxuxfCwYQWPnP8KnQpMnya6AsW+YbWDMun0hc7
-Wcefsg7187QQrsChrLG+ap7X1uiz3sdLv1AMIJ0+uIUkcUica5d77sOofd/iAERm
-WB8y5sLgF7tZ00XE6+7PpoFtvwkF9atFM6T6943vJrISPkKXxA/Sli2vXH/X3w7P
-7KyJZayhDJdmcOiWuJuAlO9rBzux3ebXTanx7kP2MOFAMgTKuQzSaPR+38ib+qS0
-vTf34vFv1s7NJTsvYUQ9b+/VG89bHKO9Yxmb7dq/26qPHclqSI500rZclo8Fjyzl
-hvGZF8qqxIOWRMSdJdP23RSX7MCgQnMEygO/G9Nb4nIpA7EWjKusi3CQB1peo04j
-VIHc3fQKLWVy/FaHH8Gy24hQRR/kaFXoLzLOtgSIaqxnoT1HXooj9nN45u1ZEoj0
-DQKC5rJX+jnjoYU6IJgQqyBGBCYlpBPoiQq9TtlbX4zgyQ5svNU64y9upNQhcjSL
-G3bMYbtZMc6PKBh5Z3/O+/fxZbg8DH96LuNJcxWGgNWSRNNiYKesIbrxjlnuhkA7
-aAopJtJdhxTHpy0qso5GdZnJXO5ZZ/ZHbuMvrkiN/BvDwhguANaMjWpVstc+RlIh
-KMwBS2ETHqITdOm65YMA
-=oCi/
------END PGP SIGNATURE-----
-
---J2uG6jHjFLimDtBY--
+> 
+> Thanks,
+> 
+> - Chris.
+> --
+> Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+> One Laptop Per Child
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
