@@ -1,63 +1,71 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v3] gpio: Add Avionic Design N-bit GPIO expander support
-Date: Wed, 19 Sep 2012 07:40:50 +0200
-Message-ID: <20120919054050.GB611@avionic-0098.mockup.avionic-design.de>
-References: <1347958630-19672-1-git-send-email-thierry.reding@avionic-design.de>
- <CACRpkdY9XK0mN30wk93BFhZ4yZgc-4=Ym5X108OeNQYNrQogQw@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v6 0/9] mmc: dw_mmc: add support for device tree based instantiation
+Date: Wed, 19 Sep 2012 11:57:32 +0530
+Message-ID: <CAJuYYwSBtjtEvTMUw9UNZRTbMoMwLio_YLKbTu=daaamS5t5Lg@mail.gmail.com>
+References: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
+	<CAJuYYwRcoOv5X=XK8wiVb9fzSAdY_d=+kvJhqMdiT1Fey0JCLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY9XK0mN30wk93BFhZ4yZgc-4=Ym5X108OeNQYNrQogQw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Walleij <linus.walleij@stericsson.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAJuYYwRcoOv5X=XK8wiVb9fzSAdY_d=+kvJhqMdiT1Fey0JCLw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, tgih.jun@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On 18 September 2012 07:22, Thomas Abraham <thomas.abraham@linaro.org> wrote:
+> On 17 September 2012 23:46, Thomas Abraham <thomas.abraham@linaro.org> wrote:
+>> This series add device tree support for Synopsis Designware IP - Mobile Storage
+>> Host Controller (MSHC). I had addressed all comments for the v5 version of this
+>> patch series and had reposted only those patches that were modified. The version
+>> number of those reposted patches was maintained as v5 as the changes did not
+>> need any major rework.
+>>
+>> This is mainly a repost of the v5 patches with all patches marked as v6. The
+>> only new change in this series is adding a comment about bus_hz in platform
+>> data structure of the driver as suggested by Seungwon Jeon.
+>>
+>> Thomas Abraham (9):
+>>   mmc: dw_mmc: convert copy of struct device in struct dw_mci to a reference
+>>   mmc: dw_mmc: Use devm_* functions in dw_mmc platform driver
+>>   mmc: dw_mmc: allow probe to succeed even if one slot is initialized
+>>   mmc: dw_mmc: lookup for optional biu and ciu clocks
+>>   mmc: dw_mmc: add quirk to indicate missing write protect line
+>>   mmc: dw_mmc: add device tree support
+>>   mmc: dw_mmc: prepare functions in dw_mmc-pltfm for reuse
+>>   mmc: dw_mmc: add support for implementation specific callbacks
+>>   mmc: dw_mmc: add support for exynos specific implementation of dw-mshc
+>>
+>>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   87 ++++++
+>>  .../devicetree/bindings/mmc/synposis-dw-mshc.txt   |   79 +++++
+>>  drivers/mmc/host/Kconfig                           |    9 +
+>>  drivers/mmc/host/Makefile                          |    1 +
+>>  drivers/mmc/host/dw_mmc-exynos.c                   |  253 ++++++++++++++++
+>>  drivers/mmc/host/dw_mmc-pci.c                      |    2 +-
+>>  drivers/mmc/host/dw_mmc-pltfm.c                    |   60 +++--
+>>  drivers/mmc/host/dw_mmc-pltfm.h                    |   20 ++
+>>  drivers/mmc/host/dw_mmc.c                          |  308 +++++++++++++++++---
+>>  drivers/mmc/host/dw_mmc.h                          |   24 ++
+>>  include/linux/mmc/dw_mmc.h                         |   15 +-
+>>  11 files changed, 782 insertions(+), 76 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/synposis-dw-mshc.txt
+>>  create mode 100644 drivers/mmc/host/dw_mmc-exynos.c
+>>  create mode 100644 drivers/mmc/host/dw_mmc-pltfm.h
+>
+> Hi Jaehoon, Seungwon,
+>
+> All the changes you have suggested for this patch series has been
+> completed. If you could ack this series, it would be great.
+>
+> Thanks,
+> Thomas.
 
---4SFOXa2GPu3tIq4H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Chris,
 
-On Tue, Sep 18, 2012 at 11:29:46PM +0200, Linus Walleij wrote:
-> On Tue, Sep 18, 2012 at 10:57 AM, Thierry Reding
-> <thierry.reding@avionic-design.de> wrote:
->=20
-> > This commit adds a driver for the Avionic Design N-bit GPIO expander.
-> > The expander provides a variable number of GPIO pins with interrupt
-> > support.
->=20
-> And you followed up on absolutely everything I commented so how
-> could I resist this patch ... applied with Rob's ACK!
+I have addressed all the comments received for the v5 of the dw-mmc
+device tree support patch series. Will Newton has acked this patch
+series. Can this series be merged for v3.7 ?
 
-There's this one issue that was discussed in the GPIO binding update
-that I posted earlier and I was going to send an updated patch and then
-make this patch reference the documentation but I can just go and do
-that in a follow-up patch as well.
-
-Thierry
-
---4SFOXa2GPu3tIq4H
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQWVriAAoJEN0jrNd/PrOhPpoP/irc+45R0dQMnNiW4iFbmUd3
-yK9ADFhylnpyfEbtq9LdnxRybQ2bgvwz6IP6lWMPUT7jCsPx9Y4bU0hZNV7DJXuA
-0EkYmfGSH8yXQOt0bT7CQGBS+bpKxP0Kt1rtZbHuxZUC8s9elJY5F6F3lHUFTpFQ
-yYUPqN0INXrfK+JJLdFK+JDi7R6zxEuxTk/EQ0bUkzXTalE6BtupfFc4d8CdURsq
-ad6ntRc4Gm/QlkmrHKxX7wM5+o7K+n1RwXqmuxsVqGApKDb41nLv61COJxxgUxoa
-2qGvbpuvJ+W/ZPL5b1hkbmx5fMYVUxbM6z+zkJj5uwT0vKfdHNaZGTAxdfWcYEfA
-yQzZlCpVv0bs0aWT3zG8I+5yFjNe7eBsjzLO74FwuBD2EjG/4SqZhN3GX3fd+R2b
-lZSN7eQ9FogoulzoHa79dPU5RzBogG9g03JzVy/PjLcOomE+ISgUAC9gvATT3fMC
-J8Qk7/9cFIue38ImePG4Mx1Wd8fW1f0gdLVwcbRqN7Qt1xK8IPFJiMwHX6V7GJBI
-DQE2l0Dav2J4BzTn3cMtRGkvrxoEDvSmSCErYhUXhdCu4xBaw6UJdQbEmT3DwEme
-CK1fcqN0y9/4Geu4rZdhUl4CIHz3TDP/QRja+qZYIuOMmgC9KEAuRfrkA1fzMK/A
-SEhVRkrlwR9TNYje5PDt
-=B6Km
------END PGP SIGNATURE-----
-
---4SFOXa2GPu3tIq4H--
+Thanks,
+Thomas.
