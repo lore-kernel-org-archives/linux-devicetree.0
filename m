@@ -1,42 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V6 1/2] of: Add generic device tree DMA helpers
-Date: Wed, 19 Sep 2012 11:09:16 +0000
-Message-ID: <201209191109.16529.arnd@arndb.de>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com> <201209172042.11860.arnd@arndb.de> <5058F35A.8040702@firmworks.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 08/13] mfd: Versatile Express system registers driver
+Date: Wed, 19 Sep 2012 11:17:45 +0000
+Message-ID: <201209191117.45316.arnd@arndb.de>
+References: <1347977875-16855-1-git-send-email-pawel.moll@arm.com>
+ <201209181524.22620.arnd@arndb.de> <1348052009.11116.55.camel@hornet>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5058F35A.8040702@firmworks.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Vinod Koul <vinod.koul@intel.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, linux-omap <linux-omap@vger.kernel.org>, Alexander Schulz <alex@shark-linux.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348052009.11116.55.camel@hornet>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 18 September 2012, Mitch Bradley wrote:
-> There is a delicious irony here with respect to Shark.  Shark has real
-> Open Firmware.  It's the platform that I used for the first OFW port to
-> ARM.  We (the Shark design team) had a version of NetBSD that would run
-> on Shark without any native drivers, calling into the Open Firmware
-> drivers.  It was very useful for bringup.
+On Wednesday 19 September 2012, Pawel Moll wrote:
+> On Tue, 2012-09-18 at 16:24 +0100, Arnd Bergmann wrote:
+> > On Tuesday 18 September 2012, Pawel Moll wrote:
+> 
+> Yes, but I2C devices are created by of_i2c_register_devices() which
+> knows how to interpret the reg property. And here, as these are normal
+> platform devices now (as you suggested), the of_platform_bus_create()
+> will treat it as a normal address, translate it via ranges and create
+> IORESOURCE_MEM out of it... And that's what I wanted to avoid. Maybe
+> unnecessarily?
 
-Very interesting, thanks for sharing this bit of history. Are you aware
-of other ARM systems using open firmware that we still support in Linux
-(besides the XO-1.75)?
+You are right, this is a bit nasty, it should not attempt to do this.
+Basically the reg parsing logic has a hack to work around apply PowerMac
+firmware that misses some "ranges" properties.
 
-> Is there ever a point when old architectures leave the Linux tree, or
-> will people have to see grep hits from them until the end of time?
-
-As long as someone is interested in keeping an architecture or driver
-alive, it stays. If something is causing problems and we have reason
-to assume it will never be used again with current kernels, we toss
-them out. Russell has recently removed support for ARMv3 CPUs, but
-some of the StrongARM targets (especially SA-1100) are still being
-actively used, so the CPU support is not going away any time soon.
-
-If you have a bunch of Shark machines for testing and would like to
-port it over to device tree passing from its open firmware, you are
-definitely welcome ;-)
+I think we should change the DT parsing code to not create those
+resources if there is a bus that can't be translated.
 
 	Arnd
