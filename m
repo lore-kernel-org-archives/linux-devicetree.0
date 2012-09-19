@@ -1,117 +1,49 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH REPOST] mfd: max8907: add power off control
-Date: Tue, 18 Sep 2012 16:51:19 -0600
-Message-ID: <1348008679-20582-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, bilhuang@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 00/14] MFD/ASoC/Input: twl4030-audio submodule DT
+ support
+Date: Wed, 19 Sep 2012 02:24:39 +0200
+Message-ID: <20120919002439.GB3647@sortiz-mobl>
+References: <1347273992-9107-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1347273992-9107-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+Hi Peter,
 
-Add DT property "maxim,system-power-controller" to indicate whether the
-PMIC is in charge of controlling the system power. If this is set, the
-driver will provide the pm_power_off() function.
+On Mon, Sep 10, 2012 at 01:46:18PM +0300, Peter Ujfalusi wrote:
+> Hello,
+> 
+> Generated on top of:
+> git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git topic/omap
+I applied the first 8 patches, but I'd like to get Mark's ACK for the rest of
+the serie.
+Unless you're expecting Mark to take the whole thing, in which case you can
+add my:
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-Samuel, I'm not sure if you have this in your list to process or not, nor
-if you prefer a patch to be reposted vs. a response to the original email;
-Mark Brown requested that for him at least I repost rather than reply, so
-I'm giving that a go everywhere.
+Acked-by: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
- .../devicetree/bindings/regulator/max8907.txt      |    6 ++++++
- drivers/mfd/max8907.c                              |   20 ++++++++++++++++++++
- include/linux/mfd/max8907.h                        |    2 ++
- 3 files changed, 28 insertions(+), 0 deletions(-)
+to the MFD patches.
+Please let me know how you'd like to proceed.
 
-diff --git a/Documentation/devicetree/bindings/regulator/max8907.txt b/Documentation/devicetree/bindings/regulator/max8907.txt
-index 4fd847f..51e683b 100644
---- a/Documentation/devicetree/bindings/regulator/max8907.txt
-+++ b/Documentation/devicetree/bindings/regulator/max8907.txt
-@@ -16,6 +16,10 @@ Required properties:
-   property, with valid values listed below. The content of each sub-node
-   is defined by the standard binding for regulators; see regulator.txt.
- 
-+Optional properties:
-+- maxim,system-power-controller: Boolean property indicating that the PMIC
-+  controls the overall system power.
-+
- Valid regulator-compatible values are:
- 
-   sd1, sd2, sd3, ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10,
-@@ -29,6 +33,8 @@ Example:
- 			reg = <0x3c>;
- 			interrupts = <0 86 0x4>;
- 
-+			maxim,system-power-controller;
-+
- 			mbatt-supply = <&some_reg>;
- 			in-v1-supply = <&mbatt_reg>;
- 			...
-diff --git a/drivers/mfd/max8907.c b/drivers/mfd/max8907.c
-index 6497c98..2303641 100644
---- a/drivers/mfd/max8907.c
-+++ b/drivers/mfd/max8907.c
-@@ -176,11 +176,26 @@ static const struct regmap_irq_chip max8907_rtc_irq_chip = {
- 	.num_irqs = ARRAY_SIZE(max8907_rtc_irqs),
- };
- 
-+struct max8907 *max8907_pm_off;
-+static void max8907_power_off(void)
-+{
-+	regmap_update_bits(max8907_pm_off->regmap_gen, MAX8907_REG_RESET_CNFG,
-+			MAX8907_MASK_POWER_OFF, MAX8907_MASK_POWER_OFF);
-+}
-+
- static __devinit int max8907_i2c_probe(struct i2c_client *i2c,
- 				       const struct i2c_device_id *id)
- {
- 	struct max8907 *max8907;
- 	int ret;
-+	struct max8907_platform_data *pdata = dev_get_platdata(&i2c->dev);
-+	bool pm_off = false;
-+
-+	if (pdata)
-+		pm_off = pdata->pm_off;
-+	else if (i2c->dev.of_node)
-+		pm_off = of_property_read_bool(i2c->dev.of_node,
-+					"maxim,system-power-controller");
- 
- 	max8907 = devm_kzalloc(&i2c->dev, sizeof(struct max8907), GFP_KERNEL);
- 	if (!max8907) {
-@@ -251,6 +266,11 @@ static __devinit int max8907_i2c_probe(struct i2c_client *i2c,
- 		goto err_add_devices;
- 	}
- 
-+	if (pm_off && !pm_power_off) {
-+		max8907_pm_off = max8907;
-+		pm_power_off = max8907_power_off;
-+	}
-+
- 	return 0;
- 
- err_add_devices:
-diff --git a/include/linux/mfd/max8907.h b/include/linux/mfd/max8907.h
-index 283531f..b06f7a6 100644
---- a/include/linux/mfd/max8907.h
-+++ b/include/linux/mfd/max8907.h
-@@ -167,6 +167,7 @@
- #define MAX8907_MASK_OUT5V_VINEN	0x10
- #define MAX8907_MASK_OUT5V_ENSRC	0x0E
- #define MAX8907_MASK_OUT5V_EN		0x01
-+#define MAX8907_MASK_POWER_OFF		0x40
- 
- /* Regulator IDs */
- #define MAX8907_MBATT	0
-@@ -231,6 +232,7 @@ enum {
- 
- struct max8907_platform_data {
- 	struct regulator_init_data *init_data[MAX8907_NUM_REGULATORS];
-+	bool pm_off;
- };
- 
- struct regmap_irq_chips_data;
+Cheers,
+Samuel.
+
 -- 
-1.7.0.4
+Intel Open Source Technology Centre
+http://oss.intel.com/
