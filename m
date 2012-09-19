@@ -1,142 +1,142 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [RFC PATCH 2/3] ARM: vexpress: Add device tree support for CLCD
- driver
-Date: Wed, 19 Sep 2012 17:11:33 +0100
-Message-ID: <1348071093.11116.68.camel@hornet>
-References: <1348070666-9153-1-git-send-email-ryan.harkin@linaro.org>
- <1348070666-9153-3-git-send-email-ryan.harkin@linaro.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/4] usb: dwc3: Fix gadget pullup in SS mode
+Date: Wed, 19 Sep 2012 20:24:44 +0300
+Message-ID: <20120919172442.GA7784@arwen.pp.htv.fi>
+References: <1348054229-27362-1-git-send-email-kishon@ti.com>
+ <1348054229-27362-3-git-send-email-kishon@ti.com>
+ <20120919115306.GG3772@arwen.pp.htv.fi>
+ <CAEgRx2zOVn0zV39-cuPuj4n4HRgQmywy_NY4KTe0qEgeC+NEkw@mail.gmail.com>
+ <20120919160450.GA7510@arwen.pp.htv.fi>
+ <CAEgRx2yXStORBknr2hoMcobMO8wFGuKr4bvzZwEQHQQcHVH76Q@mail.gmail.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1348070666-9153-3-git-send-email-ryan.harkin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ryan Harkin <ryan.harkin@linaro.org>
-Cc: "stigge@antcom.de" <stigge@antcom.de>, "tixy@linaro.org" <tixy@linaro.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "spear-devel@list.st.com" <spear-devel@list.st.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "shiraz.hashim@st.com" <shiraz.hashim@st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "arnd.bergmann@linaro.org" <arnd.bergmann@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAEgRx2yXStORBknr2hoMcobMO8wFGuKr4bvzZwEQHQQcHVH76Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Sonasath, Moiz" <m-sonasath-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-09-19 at 17:04 +0100, Ryan Harkin wrote:
-> Add support for device tree in the amba-clcd PL111 video driver.
-> 
-> Special case support is added for the A9 CoreTile which uses the "legacy"
-> address map and has a PL111 device on-board.  The default case is to configure
-> the device on the motherboard.
-> 
-> Oscillator support is added for the A9 CoreTile's CLCD driver.
-> 
-> Signed-off-by: Ryan Harkin <ryan.harkin@linaro.org>
-> ---
->  arch/arm/mach-vexpress/v2m.c |   58 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
-> 
-> diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
-> index 37608f2..799e00e 100644
-> --- a/arch/arm/mach-vexpress/v2m.c
-> +++ b/arch/arm/mach-vexpress/v2m.c
-> @@ -3,6 +3,7 @@
->   */
->  #include <linux/device.h>
->  #include <linux/amba/bus.h>
-> +#include <linux/amba/clcd.h>
->  #include <linux/amba/mmci.h>
->  #include <linux/io.h>
->  #include <linux/init.h>
-> @@ -37,6 +38,7 @@
->  #include <mach/ct-ca9x4.h>
->  #include <mach/motherboard.h>
->  
-> +#include <plat/clcd.h>
->  #include <plat/sched_clock.h>
->  
->  #include "core.h"
-> @@ -541,6 +543,54 @@ MACHINE_END
->  
->  #if defined(CONFIG_ARCH_VEXPRESS_DT)
->  
-> +static struct v2m_osc v2m_dt_clcd_osc = {
-> +	.rate_min = 10000000,
-> +	.rate_max = 165000000,
-> +	.rate_default = 23750000,
-> +};
-> +
-> +static int v2m_dt_clcd_init(void)
-> +{
-> +	struct device_node *node;
-> +	u32 osc;
-> +	u32 clcd_site;
-> +	u32 dvimode;
-> +	const __be32 *prop;
-> +	int len, na, ns;
-> +	phys_addr_t reg_base;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "arm,pl111");
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	na = of_n_addr_cells(node);
-> +	ns = of_n_size_cells(node);
-> +
-> +	prop = of_get_property(node, "reg", &len);
-> +	if (WARN_ON(!prop || len < (na + ns) * sizeof(*prop)))
-> +		return -EINVAL;
-> +	reg_base = of_read_number(prop, na);
-> +
-> +	switch (reg_base) {
-> +	case CT_CA9X4_CLCDC:
-> +		clcd_site = v2m_get_master_site();
-> +		dvimode = 2;
-> +		break;
-> +	default:
-> +		clcd_site = SYS_CFG_SITE_MB;
-> +		dvimode = 0;
-> +		break;
-> +	}
-> +
-> +	if (of_property_read_u32(node, "arm,vexpress-osc", &osc) != 0)
-> +		return -EINVAL;
-> +	v2m_dt_clcd_osc.site = clcd_site;
-> +	v2m_dt_clcd_osc.osc = osc;
-> +	v2m_cfg_write(SYS_CFG_MUXFPGA | clcd_site, clcd_site);
-> +	v2m_cfg_write(SYS_CFG_DVIMODE | clcd_site, dvimode);
-> +	return 0;
-> +}
-> +
->  static struct map_desc v2m_rs1_io_desc __initdata = {
->  	.virtual	= V2M_PERIPH,
->  	.pfn		= __phys_to_pfn(0x1c000000),
-> @@ -598,6 +648,8 @@ void __init v2m_dt_init_early(void)
->  			pr_warning("vexpress: DT HBI (%x) is not matching "
->  					"hardware (%x)!\n", dt_hbi, hbi);
->  	}
-> +
-> +	v2m_dt_clcd_init();
->  }
->  
->  static  struct of_device_id vexpress_irq_match[] __initdata = {
-> @@ -631,6 +683,12 @@ static void __init v2m_dt_timer_init(void)
->  
->  	if (arch_timer_sched_clock_init() != 0)
->  		versatile_sched_clock_init(v2m_sysreg_base + V2M_SYS_24MHZ, 24000000);
-> +
-> +	if (v2m_dt_clcd_osc.site) {
-> +		/* core tile clcd controller for A9 */
-> +		clk = v2m_osc_register("10020000.clcd", &v2m_dt_clcd_osc);
-> +		clk_register_clkdev(clk, NULL, "10020000.clcd");
-> +	}
->  }
->  
->  static struct sys_timer v2m_dt_timer = {
 
-When (if ;-) the changes I proposed recently make their way into
-mainline, all this stuff will not be necessary - both clocking and
-display control are sorted there.
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Pawel
+On Wed, Sep 19, 2012 at 11:50:53AM -0500, Sonasath, Moiz wrote:
+> Felipe,
+>=20
+> On Wed, Sep 19, 2012 at 11:04 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+>=20
+> > Hi,
+> >
+> > On Wed, Sep 19, 2012 at 10:02:48AM -0500, Sonasath, Moiz wrote:
+> > > Felipe,
+> > >
+> > > On Wed, Sep 19, 2012 at 6:53 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> > >
+> > > > Hi,
+> > > >
+> > > > On Wed, Sep 19, 2012 at 05:00:27PM +0530, Kishon Vijay Abraham I wr=
+ote:
+> > > > > From: Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
+> > > > >
+> > > > > For the gadget pullup functionality to work in
+> > > > > SS mode it requires a particular sequence of
+> > > > > toggling the run-stop bit. Here is the required
+> > > > > sequence:
+> > > > >
+> > > > > - Set DCTL[31]
+> > > > > - Clear DCTL[31]
+> > > > > - Clear OMAP5430_CONTROL_CORE__PHY_POWER_USB[14]
+> > > > > - Clear DCTL[8:5] =3D 0x00
+> > > > > - Set DCTL[8:5] =3D 0x05
+> > > > > - Wait 25 Ms
+> > > > > - Set DCTL[31]
+> > > > > - Set OMAP5430_CONTROL_CORE__PHY_POWER_USB[14]
+> > > > >
+> > > > > Tested rigourously the gadget pull-up functionality
+> > > > > in bot HS and SS modes.
+> > > > >
+> > > > > Signed-off-by: Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
+> > > > > Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> > > >
+> > > > this needs to split into three patches:
+> > > >
+> > > > add new poweron field, implement it on omap-usb3, use it on
+> > > > dwc3/gadget.c
+> > > >
+> > > > btw, I don't think the changes to run_stop bit are necessary and if
+> > they
+> > > > are, that'd either be a silicon errata or it would've been mentione=
+d on
+> > > > the databook. I don't remember seeing that on the databook so I'm
+> > > > assuming that this is caused by a bad use of the PHY.
+> > > >
+> > > > Why that mdelay(25) ? why 25 ms ? That's quite a long time, actuall=
+y.
+> > > >
+> > >
+> > > Felipe, This is infact a HW bug that the Si-Val team did accept and g=
+ave
+> > us
+> > > this workaround sequence with the precise delay :-)
+> > >
+> > > Supposedly this will be fixed in ES 2.0.
+> >
+> > in that case this doesn't have to go to mainline since we're not
+> > supporting ES1.0 in mainline :-)
+> >
+> > at minimum this should've come with a proper revision check anyway.
+> >
+>=20
+> Actually most of it is under a rev check :)
+
+fair enough.
+
+> Perhaps the last: usb_phy_shutdown(dwc->usb3_phy);
+> in the else part should be in
+> if (dwc->revision <=3D DWC3_REVISION_187A) check
+
+Is this an OMAP errata or Synopsys errata ? If it's a Synopsys errata we
+need to make sure to add the comment above the workaround, if it's an
+OMAP errata, we can't apply the workaround to all users since they might
+not need it, so we need a more clever scheme.
+
+On top of that, if it's an ES1 errata, I rather not have this in
+mainline since we won't support ES1 at all in mainline, which means this
+workaround will be useless in a mainline kernel tree.
+
+--=20
+balbi
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQWf/aAAoJEIaOsuA1yqRE510QAJ3AvIMlr8uitTIc0ZVRHAyS
+WNkErvBdOczMlmL3vNRIzAbwTCRvIfchJ7zGmVjvoIbkgXQxwzxFHU+4ZR9yDKhZ
+bMSc5EZXsTvFUedeB388hU91lTSkW78Osj6AmB7fHomNgPCUNKJS4RZltX6LsaFn
+8f/0ke7vhjWqyZpAR3aHecAqqHKpXQfHhNPCgwuMP0ZMIGuXSDpmetCDBOPKdFWl
+dNJV4lOdLbdDKmyj4A2MjDMYqo/2OST92MoQDeBoTxyEtIO7l33L1F3UrtZCX0J9
+9aew53ADt3Ys08dAZYBH6mOrHNfMiZolR2f3V1qSdrHnymcEICDltXGOWiw+5OCz
+HisL1Yt8o/kn5ZRzD/E+2xsfjWr4Y0qILj00961FQA1TvUws1MD0EvzoyVjQ+Kgc
+KSUxFY3S5fBCyJdHf4k1qZ8MImERHf52r1yhEFkMd1qWv2kUHM3Ga9KGK8HTD1Z2
+yBE/i8/HwAhp40A86JFeV+yjjSw3w1sFOuf8hBX+QRPHzE3QdllUItn6FcEOfl1t
+Wyt8/d/iduuDGxVDbKOuMZXzc9fWo9ighuvYExD4pvdy0MvIZ5jQnzHOXznAXJ1u
+yMUGxxKTRyHzkMqx7C0U9aIF+hb2bODq7ezyCOOn+nrOsZKgaPCxlzhWSWAxSHjr
+NJ9orpBzPOWhlg0ZeBAp
+=pE5w
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
