@@ -1,70 +1,61 @@
-From: Omar Ramirez Luna <omar.luna@linaro.org>
-Subject: Re: [PATCH v2 7/9] ARM: OMAP: iommu: optimize save and restore routines
-Date: Tue, 18 Sep 2012 19:53:34 -0500
-Message-ID: <CALLhW=6p1kJ4PpB-SBnj-mJ+b-e+pAo-ApZhp0edtkD+229FpA@mail.gmail.com>
-References: <1347479152-588-1-git-send-email-omar.luna@linaro.org>
-	<1347479152-588-8-git-send-email-omar.luna@linaro.org>
-	<20120918180430.GV11762@atomide.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
+Date: Wed, 19 Sep 2012 09:15:08 +0800
+Message-ID: <50591C9C.2080809@atmel.com>
+References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com> <50588A8F.30203@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120918180430.GV11762@atomide.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Joerg Roedel <joerg.roedel@amd.com>, Russell King <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50588A8F.30203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Hi Stephen Warren,
 
-On 18 September 2012 13:04, Tony Lindgren <tony@atomide.com> wrote:
-> * Omar Ramirez Luna <omar.luna@linaro.org> [120912 12:47]:
->> --- a/arch/arm/plat-omap/include/plat/iommu.h
->> +++ b/arch/arm/plat-omap/include/plat/iommu.h
->> @@ -27,6 +27,13 @@ struct iotlb_entry {
->>       };
->>  };
+On 9/18/2012 22:51, Stephen Warren wrote:
+> On 09/18/2012 03:02 AM, Bo Shen wrote:
+>> When i2c-gpio node number is greater than 1, the second can not sucessfully
+>> regiter
 >>
->> +/* context registers */
->> +struct iommu_regs {
->> +     u32 irqen;
->> +     u32 cntl;
->> +     u32 ttb;
->> +};
->> +
->>  struct omap_iommu {
->>       const char      *name;
->>       struct module   *owner;
->> @@ -50,7 +57,8 @@ struct omap_iommu {
->>       struct list_head        mmap;
->>       struct mutex            mmap_lock; /* protect mmap */
->>
->> -     void *ctx; /* iommu context: registres saved area */
->> +     struct iommu_regs context;
->> +     int ctx_loss_cnt;
->>       u32 da_start;
->>       u32 da_end;
->>  };
->> --- a/arch/arm/plat-omap/include/plat/iommu2.h
->> +++ b/arch/arm/plat-omap/include/plat/iommu2.h
->> @@ -35,8 +35,6 @@
->>  #define MMU_READ_RAM         0x6c
->>  #define MMU_EMU_FAULT_AD     0x70
->>
->> -#define MMU_REG_SIZE         256
->> -
->>  /*
->>   * MMU Register bit definitions
->>   */
+>> Using alias method to get the pdev->id, or else the second device will use
+>> the same id which will cause fail to register
 >
-> These headers should be moved to include/linux/platform_data/iommu-omap.h
-> or something like that. Care to take care of that too?
+> pdev->id shouldn't be used at all with device tree. Why does
+> registration fail without this change?
+
+I add the debug info, and it give the following error without this patch.
+
+--<8----------------------------------
+adap->name = i2c-gpio-1
+i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+adap->name = i2c-gpio-1
+i2c-gpio: probe of i2c.3 failed with error -16
+-->8----------------------------------
+
+With this patch, it successfully registered.
+--<8----------------------------------
+adap->name = i2c-gpio0
+i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+adap->name = i2c-gpio1
+i2c-gpio i2c.3: using pins 90 (SDA) and 91 (SCL)
+-->8----------------------------------
+
 >
-> I guess there's no reason to have both iommu.h and iommuh2.h?
-
-Agree, can this be made as part of a separate cleanup series? I was
-hoping these could make it for 3.7 so we could have a usable rpmsg for
-omap4.
-
-Regards,
-
-Omar
+>> diff --git a/drivers/i2c/busses/i2c-gpio.c b/drivers/i2c/busses/i2c-gpio.c
+>> index e62d2d9..051fbb3 100644
+>> --- a/drivers/i2c/busses/i2c-gpio.c
+>> +++ b/drivers/i2c/busses/i2c-gpio.c
+>> @@ -136,6 +136,7 @@ static int __devinit i2c_gpio_probe(struct platform_device *pdev)
+>>   		ret = of_i2c_gpio_probe(pdev->dev.of_node, pdata);
+>>   		if (ret)
+>>   			return ret;
+>> +		pdev->id = of_alias_get_id(pdev->dev.of_node, "i2c-gpio");
+>>   	} else {
+>>   		if (!pdev->dev.platform_data)
+>>   			return -ENXIO;
+>>
+>
+>
