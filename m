@@ -1,134 +1,40 @@
-From: Karol Lewandowski <k.lewandowsk@samsung.com>
-Subject: Re: [PATCH v3] ARM: EXYNOS: Add MFC device tree support
-Date: Wed, 19 Sep 2012 11:38:53 +0200
-Message-ID: <505992AD.9080601@samsung.com>
-References: <1347637097-15015-1-git-send-email-arun.kk@samsung.com>
- <1347637097-15015-2-git-send-email-arun.kk@samsung.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] ARM/dts: OMAP4: Enable twl6040 GPO functionality
+Date: Wed, 19 Sep 2012 12:43:03 +0300
+Message-ID: <1348047785-1681-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1347637097-15015-2-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com, ch.naveen@samsung.com, joshi@samsung.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2012 05:38 PM, Arun Kumar K wrote:
+Hello,
 
-> This patch adds device tree entry for MFC v6 in the Exynos5
-> SoC. Makes the required changes in the clock files and adds
-> MFC to the DT device list.
-
-
-Hi!
-
-Thanks for working on this patch. Please allow me to add few
-comments.
-
-
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index b55794b..5df2f99 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -62,6 +62,12 @@
->  		interrupts = <0 42 0>;
->  	};
->  
-> +	mfc {
-
-
-Nitpick - shouldn't node names be generic?  MFC is strictly
-samsung specific, something like "codec"/"video-codec" would make
-more sense (IMVHO). I would prefer to see address too (e.g.
-codec@0x11000000).
-
-However, I do see that rtc below doesn't specify address in node too,
-so maybe I'm missing something here.
-
-
->  
-> +struct mfc_dt_meminfo {
-> +	unsigned long loff;
-> +	unsigned long lsize;
-> +	unsigned long roff;
-> +	unsigned long rsize;
-
-
-  char *compatible;
-
-> +};
-> +
-> +int fdt_find_mfc_mem(unsigned long node, const char *uname, int depth,
-> +		void *data)
-> +{
-> +	__be32 *prop;
-> +	unsigned long len;
-> +	struct mfc_dt_meminfo *mfc_mem = data;
-> +
-> +	if (!of_flat_dt_is_compatible(node, "samsung,mfc-v6"))
-> +		return 0;
-
-
-  if (!of_flat_dt_is_compatible(node, mfc_mem->compatible))
-	return 0;
-
-> +
-> +	prop = of_get_flat_dt_prop(node, "samsung,mfc-l", &len);
-> +	if (!prop)
-> +		return 0;
-> +	mfc_mem->loff = of_read_ulong(prop, len/4);
-> +
-> +	prop = of_get_flat_dt_prop(node, "samsung,mfc-l-size", &len);
-> +	if (!prop)
-> +		return 0;
-> +	mfc_mem->lsize = of_read_ulong(prop, len/4);
-> +
-> +	prop = of_get_flat_dt_prop(node, "samsung,mfc-r", &len);
-> +	if (!prop)
-> +		return 0;
-> +	mfc_mem->roff = of_read_ulong(prop, len/4);
-> +
-> +	prop = of_get_flat_dt_prop(node, "samsung,mfc-r-size", &len);
-> +	if (!prop)
-> +		return 0;
-> +	mfc_mem->rsize = of_read_ulong(prop, len/4);
-> +
-> +	return 1;
-> +}
-
-
-Above function could be reused for mfc-v5 (exynos4-dt.c) if compatible
-string weren't hardcoded. Thus, please consider changing that and
-moving this function to some common(.c?) file - you can see one possible
-solution inline.
-
-> +
-> +static void __init exynos5_reserve(void)
-> +{
-> +	struct mfc_dt_meminfo mfc_mem;
-
-
-        mfc_mem.compatible = "samsung,mfc-v6";
-
-> +
-> +	/* Reserve memory for MFC only if it's available */
-> +	if (of_scan_flat_dt(fdt_find_mfc_mem, &mfc_mem))
-> +		s5p_mfc_reserve_mem(mfc_mem.roff, mfc_mem.rsize, mfc_mem.loff,
-> +				mfc_mem.lsize);
-> +}
-> +
->  DT_MACHINE_START(EXYNOS5_DT, "SAMSUNG EXYNOS5 (Flattened Device Tree)")
->  	/* Maintainer: Kukjin Kim <kgene.kim@samsung.com> */
->  	.init_irq	= exynos5_init_irq,
-> @@ -94,4 +148,5 @@ DT_MACHINE_START(EXYNOS5_DT, "SAMSUNG EXYNOS5 (Flattened Device Tree)")
->  	.timer		= &exynos4_timer,
->  	.dt_compat	= exynos5250_dt_compat,
->  	.restart        = exynos5_restart,
-> +	.reserve	= exynos5_reserve,
->  MACHINE_END
-
+The following two patch is needed for the twl6040 GPO driver (going via MFD
+tree) to work correctly.
 
 Regards,
+Peter
+---
+Peter Ujfalusi (2):
+  ARM/dts: omap4-sdp: Enable GPO functionality for twl6040
+  ARM/dts: omap4-panda: Enable GPO functionality for twl6040
+
+ arch/arm/boot/dts/omap4-panda.dts | 3 +++
+ arch/arm/boot/dts/omap4-sdp.dts   | 3 +++
+ 2 files changed, 6 insertions(+)
+
 -- 
-Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
+1.7.12
