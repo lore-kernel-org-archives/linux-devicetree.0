@@ -1,27 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] of: dma: fix typos in generic dma binding definition
-Date: Wed, 19 Sep 2012 15:26:33 +0000
-Message-ID: <201209191526.33642.arnd@arndb.de>
-References: <1348066188-17937-1-git-send-email-mporter@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
+Date: Wed, 19 Sep 2012 09:28:04 -0600
+Message-ID: <5059E484.6090708@wwwdotorg.org>
+References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com> <50588A8F.30203@wwwdotorg.org> <50591C9C.2080809@atmel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1348066188-17937-1-git-send-email-mporter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50591C9C.2080809-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 19 September 2012, Matt Porter wrote:
+On 09/18/2012 07:15 PM, Bo Shen wrote:
+> Hi Stephen Warren,
 > 
-> Some semicolons were left out in the examples.
+> On 9/18/2012 22:51, Stephen Warren wrote:
+>> On 09/18/2012 03:02 AM, Bo Shen wrote:
+>>> When i2c-gpio node number is greater than 1, the second can not
+>>> sucessfully
+>>> regiter
+>>>
+>>> Using alias method to get the pdev->id, or else the second device
+>>> will use
+>>> the same id which will cause fail to register
+>>
+>> pdev->id shouldn't be used at all with device tree. Why does
+>> registration fail without this change?
 > 
-> The #dma-channels and #dma-requests properties have a prefix
-> that is, by convention, reserved for cell size properties.
-> Rename those properties to dma-channels and dma-requests.
+> I add the debug info, and it give the following error without this patch.
 > 
-> Signed-off-by: Matt Porter <mporter@ti.com>
+> --<8----------------------------------
+> adap->name = i2c-gpio-1
+> i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+> adap->name = i2c-gpio-1
+> i2c-gpio: probe of i2c.3 failed with error -16
+> -->8----------------------------------
+> 
+> With this patch, it successfully registered.
+> --<8----------------------------------
+> adap->name = i2c-gpio0
+> i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+> adap->name = i2c-gpio1
+> i2c-gpio i2c.3: using pins 90 (SDA) and 91 (SCL)
+> -->8----------------------------------
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Yes, that explains why the registration fails, but not why this patch is
+the correct solution to the problem.
+
+The problematic code appears to be:
+
+snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+
+Instead, I think that should be something more like:
+
+adap->name = dev_name(&pdev->dev);
+
+or perhaps:
+
+if (pdev->dev.of_node)
+  /* named will be based on DT node name */
+  adap->name = dev_name(&pdev->dev);
+else
+  snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+
+?
