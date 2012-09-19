@@ -1,60 +1,57 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v4 00/14] MFD/ASoC/Input: twl4030-audio
-	submodule DT support
-Date: Wed, 19 Sep 2012 11:34:17 +0300
-Message-ID: <50598389.6020600@ti.com>
-References: <1347273992-9107-1-git-send-email-peter.ujfalusi@ti.com>
- <20120919002439.GB3647@sortiz-mobl>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH 2/2] gpio: adnp: dt: Reference generic interrupt binding
+Date: Wed, 19 Sep 2012 10:57:36 +0200
+Message-ID: <1348045056-29769-2-git-send-email-thierry.reding@avionic-design.de>
+References: <1348045056-29769-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20120919002439.GB3647@sortiz-mobl>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Tero Kristo <t-kristo@ti.com>, alsa-devel@alsa-project.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dtor@mail.ru>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-omap@vger.kernel.org, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348045056-29769-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
+Instead of having to duplicate the description of the properties needed
+for interrupt support, reference the new standard document.
 
-On 09/19/2012 03:24 AM, Samuel Ortiz wrote:
-> Hi Peter,
-> =
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+This patch should go through LinusW's tree because it already carries
+the patch that created this documentation.
 
-> On Mon, Sep 10, 2012 at 01:46:18PM +0300, Peter Ujfalusi wrote:
->> Hello,
->>
->> Generated on top of:
->> git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git topic/omap
-> I applied the first 8 patches, but I'd like to get Mark's ACK for the res=
-t of
-> the serie.
-> Unless you're expecting Mark to take the whole thing, in which case you c=
-an
-> add my:
-> =
+ Documentation/devicetree/bindings/gpio/gpio-adnp.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> Acked-by: Samuel Ortiz <sameo@linux.intel.com>
-> =
-
-> to the MFD patches.
-> Please let me know how you'd like to proceed.
-
-If Mark is still OK with it I think it would be better to queue this series
-via ASoC so we can keep them in one place (also I think patch 14 needs patc=
-h 6
-in order to not break x86/x86_64 allmodconfig).
-On the other hand if they go separately (1-8 via MFD, 9-14 via ASoC) they w=
-ill
-meet in linux-next where this matters the most.
-
-Thank you,
-P=E9ter
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+index 5a09a21..625eee7 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
+@@ -11,6 +11,10 @@ Required properties:
+ - gpio-controller: Marks the device as a GPIO controller
+ - nr-gpios: The number of pins supported by the controller.
+ 
++The GPIO exander can optionally be used as an interrupt controller, in
++which case it uses the default two cell specifier as described in
++Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
++
+ Example:
+ 
+ 	gpioext: gpio-controller@41 {
+-- 
+1.7.12
