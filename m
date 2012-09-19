@@ -1,55 +1,45 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH v2 08/13] mfd: Versatile Express system registers driver
-Date: Wed, 19 Sep 2012 12:45:49 +0100
-Message-ID: <1348055149.11116.63.camel@hornet>
-References: <1347977875-16855-1-git-send-email-pawel.moll@arm.com>
- <201209181524.22620.arnd@arndb.de> <1348052009.11116.55.camel@hornet>
- <201209191117.45316.arnd@arndb.de>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] watchdog: at91sam9_wdt: add device tree support
+Date: Wed, 19 Sep 2012 13:57:39 +0200
+Message-ID: <1348055861-7857-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201209191117.45316.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDEyLTA5LTE5IGF0IDEyOjE3ICswMTAwLCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+
-IE9uIFdlZG5lc2RheSAxOSBTZXB0ZW1iZXIgMjAxMiwgUGF3ZWwgTW9sbCB3cm90ZToKPiA+IE9u
-IFR1ZSwgMjAxMi0wOS0xOCBhdCAxNjoyNCArMDEwMCwgQXJuZCBCZXJnbWFubiB3cm90ZToKPiA+
-ID4gT24gVHVlc2RheSAxOCBTZXB0ZW1iZXIgMjAxMiwgUGF3ZWwgTW9sbCB3cm90ZToKPiA+IAo+
-ID4gWWVzLCBidXQgSTJDIGRldmljZXMgYXJlIGNyZWF0ZWQgYnkgb2ZfaTJjX3JlZ2lzdGVyX2Rl
-dmljZXMoKSB3aGljaAo+ID4ga25vd3MgaG93IHRvIGludGVycHJldCB0aGUgcmVnIHByb3BlcnR5
-LiBBbmQgaGVyZSwgYXMgdGhlc2UgYXJlIG5vcm1hbAo+ID4gcGxhdGZvcm0gZGV2aWNlcyBub3cg
-KGFzIHlvdSBzdWdnZXN0ZWQpLCB0aGUgb2ZfcGxhdGZvcm1fYnVzX2NyZWF0ZSgpCj4gPiB3aWxs
-IHRyZWF0IGl0IGFzIGEgbm9ybWFsIGFkZHJlc3MsIHRyYW5zbGF0ZSBpdCB2aWEgcmFuZ2VzIGFu
-ZCBjcmVhdGUKPiA+IElPUkVTT1VSQ0VfTUVNIG91dCBvZiBpdC4uLiBBbmQgdGhhdCdzIHdoYXQg
-SSB3YW50ZWQgdG8gYXZvaWQuIE1heWJlCj4gPiB1bm5lY2Vzc2FyaWx5Pwo+IAo+IFlvdSBhcmUg
-cmlnaHQsIHRoaXMgaXMgYSBiaXQgbmFzdHksIGl0IHNob3VsZCBub3QgYXR0ZW1wdCB0byBkbyB0
-aGlzLgo+IEJhc2ljYWxseSB0aGUgcmVnIHBhcnNpbmcgbG9naWMgaGFzIGEgaGFjayB0byB3b3Jr
-IGFyb3VuZCBhcHBseSBQb3dlck1hYwo+IGZpcm13YXJlIHRoYXQgbWlzc2VzIHNvbWUgInJhbmdl
-cyIgcHJvcGVydGllcy4KPiAKPiBJIHRoaW5rIHdlIHNob3VsZCBjaGFuZ2UgdGhlIERUIHBhcnNp
-bmcgY29kZSB0byBub3QgY3JlYXRlIHRob3NlCj4gcmVzb3VyY2VzIGlmIHRoZXJlIGlzIGEgYnVz
-IHRoYXQgY2FuJ3QgYmUgdHJhbnNsYXRlZC4KCldlbGwsIEkgYWN0dWFsbHkgdGhpbmsgdGhlIGN1
-cnJlbnQgc29sdXRpb24gaXMgZmluZSAtIHRoZSBkZWZhdWx0IGJ1cyBpcwp0aGUgcGxhdGZvcm0g
-b25lLCBJJ20gY3JlYXRpbmcgYSBwbGF0Zm9ybSBkZXZpY2UsIHNvIHRoZSBjb2RlIGNhbiBhc3N1
-bWUKdGhhdCByZWcgaXMgYSBub3JtYWwgYWRkcmVzcyBhbmQgY3JlYXRlIGFuIElPUkVTT1VSQ0Vf
-TUVNIGZyb20gaXQuIEl0J3MKanVzdCB0aGF0IG15IHBsYXRmb3JtIGRldmljZSBpcyBub3QgbWVt
-b3J5IG1hcHBlZCwgc28gSSBkb24ndCByZWFsbHkKd2FudCB0aGlzIHRvIGhhcHBlbi4KCk9uZSB3
-YXkgb2Ygd29ya2luZyB0aGlzIGFyb3VuZCB3b3VsZCBiZSBub3QgdXNpbmcgInNpbXBsZS1idXMi
-IGFzIHRoZQpwYXJlbnQgb2YgbXkgY29uZmlnIGRldmljZXMsIHNvIHRoYXQgbm9ybWFsIG9mX3Bs
-YXRmb3JtX3BvcHVsYXRlKCkgd2lsbApub3QgY3JlYXRlIHRoZW0sIGFuZCB0aGVuIGhhdmUgYSBz
-aW1wbGUgZGNjIGRyaXZlciB0aGF0IHdpbGwgZG8gbm90aGluZwpleGNlcHQgZm9yIGNyZWF0aW5n
-IHBsYXRmb3JtIGRldmljZXMgaW4gYSBjdXN0b20gd2F5LgoKUGF3ZcWCCgoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi all,
+
+This set of patches is for adding device tree support to the
+at91sam_wdt driver and the at91sam9260 soc.
+
+I've tested it on an at91sam9260 board (evk-pro3).
+
+Changes:
+v2:
+ - add missing to and cc addresses
+
+Fabio Porcedda (2):
+  watchdog: at91sam9_wdt: add device tree support
+  ARM: at91: add at91sam9_wdt driver to at91sam9260
+
+ Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 15 +++++++++++++++
+ arch/arm/boot/dts/at91sam9260.dtsi                       |  6 ++++++
+ drivers/watchdog/at91sam9_wdt.c                          | 11 +++++++++++
+ 3 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+
+-- 
+1.7.11.3
