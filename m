@@ -1,65 +1,64 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] gpio: adnp: dt: Reference generic interrupt binding
-Date: Wed, 19 Sep 2012 10:45:16 -0500
-Message-ID: <5059E88C.7090801@gmail.com>
-References: <1348045056-29769-1-git-send-email-thierry.reding@avionic-design.de>
- <1348045056-29769-2-git-send-email-thierry.reding@avionic-design.de>
+From: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
+Date: Wed, 19 Sep 2012 17:54:33 +0200
+Message-ID: <20120919175433.3841a954@endymion.delvare>
+References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com>
+	<50588A8F.30203@wwwdotorg.org>
+	<50591C9C.2080809@atmel.com>
+	<5059E484.6090708@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348045056-29769-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5059E484.6090708-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2012 03:57 AM, Thierry Reding wrote:
-> Instead of having to duplicate the description of the properties needed
-> for interrupt support, reference the new standard document.
+On Wed, 19 Sep 2012 09:28:04 -0600, Stephen Warren wrote:
+> On 09/18/2012 07:15 PM, Bo Shen wrote:
+> > I add the debug info, and it give the following error without this patch.
+> > 
+> > --<8----------------------------------
+> > adap->name = i2c-gpio-1
+> > i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+> > adap->name = i2c-gpio-1
+> > i2c-gpio: probe of i2c.3 failed with error -16
+> > -->8----------------------------------
+> > 
+> > With this patch, it successfully registered.
+> > --<8----------------------------------
+> > adap->name = i2c-gpio0
+> > i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+> > adap->name = i2c-gpio1
+> > i2c-gpio i2c.3: using pins 90 (SDA) and 91 (SCL)
+> > -->8----------------------------------
 > 
-> Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> ---
-> This patch should go through LinusW's tree because it already carries
-> the patch that created this documentation.
+> Yes, that explains why the registration fails, but not why this patch is
+> the correct solution to the problem.
 > 
->  Documentation/devicetree/bindings/gpio/gpio-adnp.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> The problematic code appears to be:
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
-> index 5a09a21..625eee7 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-adnp.txt
-> @@ -11,6 +11,10 @@ Required properties:
->  - gpio-controller: Marks the device as a GPIO controller
->  - nr-gpios: The number of pins supported by the controller.
->  
-> +The GPIO exander can optionally be used as an interrupt controller, in
-
-s/exander/expander/
-
-Otherwise,
-
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-> +which case it uses the default two cell specifier as described in
-> +Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
-> +
->  Example:
->  
->  	gpioext: gpio-controller@41 {
+> snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
 > 
+> Instead, I think that should be something more like:
+> 
+> adap->name = dev_name(&pdev->dev);
+
+strlcpy(adap->name, dev_name(&pdev->dev), sizeof(adap->name))
+
+if anything, as adap->name is a buffer, not a pointer.
+
+> or perhaps:
+> 
+> if (pdev->dev.of_node)
+>   /* named will be based on DT node name */
+>   adap->name = dev_name(&pdev->dev);
+> else
+>   snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+> 
+> ?
+
+-- 
+Jean Delvare
