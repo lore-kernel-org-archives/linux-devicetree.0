@@ -1,66 +1,37 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: at91: add at91sam9_wdt driver to at91sam9260
-Date: Thu, 20 Sep 2012 09:52:39 +0200
-Message-ID: <CAHkwnC9jqUmb+AGCnxV9QeSv=5JjS4+AWnutkm6TZPJJRcxGAA@mail.gmail.com>
-References: <1348055861-7857-1-git-send-email-fabio.porcedda@gmail.com>
- <1348055861-7857-3-git-send-email-fabio.porcedda@gmail.com>
- <20120920052928.GE17667@game.jcrosoft.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 00/11] pinctrl: mvebu: pinctrl driver
+Date: Thu, 20 Sep 2012 10:13:15 +0200
+Message-ID: <CACRpkda+Kav6RGstSQ9+BCgVV+pR6ca_HmoueODYubX_xYM8Jw@mail.gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120920052928.GE17667-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Christophe,
+Just a minor thing here:
 
-On Thu, Sep 20, 2012 at 7:29 AM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 13:57 Wed 19 Sep     , Fabio Porcedda wrote:
->> Tested on an at91sam9260 board (evk-pro3)
->>
->> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
->> index 66389c1..680b1c8 100644
->> --- a/arch/arm/boot/dts/at91sam9260.dtsi
->> +++ b/arch/arm/boot/dts/at91sam9260.dtsi
->> @@ -233,6 +233,12 @@
->>                                       trigger-external;
->>                               };
->>                       };
->> +
->> +                     watchdog@fffffd40 {
-> disable dy default
+On Sat, Aug 11, 2012 at 2:56 PM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
 
-All the others watchdog drivers in arch/arm/boot/dts/* are enabled by default.
-IMHO the watchdog driver it's like the "rtstc" and "shdwc" driver,
-they are safe to be enabled by default.
-I'm missing something?
+>  drivers/pinctrl/pinctrl-armada-370.c               |  421 +++++++++++
+>  drivers/pinctrl/pinctrl-armada-xp.c                |  466 ++++++++++++
+>  drivers/pinctrl/pinctrl-dove.c                     |  622 ++++++++++++++++
+>  drivers/pinctrl/pinctrl-kirkwood.c                 |  460 ++++++++++++
+>  drivers/pinctrl/pinctrl-mvebu.c                    |  758 ++++++++++++++++++++
+>  drivers/pinctrl/pinctrl-mvebu.h                    |  175 +++++
 
->> +                             compatible = "atmel,at91sam9-wdt";
->> +                             reg = <0xfffffd40 0x10>;
->> +                     };
->> +
->
-> Best Regards,
-> J.
+I've tried to group related implementations together, so if the first four
+are dependent we should either:
 
-Thanks for the review
--- 
-Fabio Porcedda
+1. Move all of these to the subdir drivers/pinctrl/mvebu
+2. Rename then drivers/pinctrl/pinctrl-mvebu-dove.c (etc)
+
+Either way it's NO BIG DEAL, so I will take care of this after they
+are merged unless you feel like just fixing it in-flight at this moment.
+
+Yours,
+Linus Walleij
