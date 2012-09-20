@@ -1,55 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
-Date: Thu, 20 Sep 2012 21:28:20 +0200
-Message-ID: <CACRpkdZYr2B83e3mBmMkO8Ai3xU_QGevfbSOSNoTvK3Lz6y6mg@mail.gmail.com>
+Date: Thu, 20 Sep 2012 21:36:36 +0200
+Message-ID: <20120920213636.2ee27d41@skate>
 References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
 	<50559737.8000705@gmail.com>
 	<CACRpkdY-Nyn73EJLvE1RsL4hgMRm6hALtnS-eKAXU7edot2V9A@mail.gmail.com>
 	<201209201530.40974.arnd@arndb.de>
+	<CACRpkdZYr2B83e3mBmMkO8Ai3xU_QGevfbSOSNoTvK3Lz6y6mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201209201530.40974.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZYr2B83e3mBmMkO8Ai3xU_QGevfbSOSNoTvK3Lz6y6mg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2012 at 5:30 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+Dear Linus Walleij,
 
-> A corner case is the one where you have different versions of the same
-> IP block (e.g. the pinctrl) and the kernel cannot find out which one it
-> is by looking at registers inside it or on the parent bus, but only
-> by looking at other hardware (CPU core revision, or PCI device ID of
-> the root complex).
+On Thu, 20 Sep 2012 21:28:20 +0200, Linus Walleij wrote:
 
-So this is the case I'm thinking of. We have e.g. differens small flags
-through platform data depending on cpu_is_ux* in the ux500.
+> So what I'm after is whether in this case statically encoding this
+> onto the .dtsi files is the right thing to do, or whether the boot loader
+> or kernel should runtime-modify the device tree, patching in
+> the ASIC-specific info, just like device tree files can override
+> properties from include files.
+> 
+> Or if this is a bad idea.
+> 
+> Nobody is doing that right now AFAICT, but it is surely possible....
 
-Currently we modify platform data in the board files, just as we
-switch some cache handling etc as we know this or that
-ASIC has different sized cache.
+If I understand correctly, we would like drivers to be able to read
+some common "system" registers to figure out which SoC variant we are
+running on. Such feature should normally be provided by code in
+arch/arm/mach-*/ and called by drivers, but we are trying to eliminate
+all dependencies of driver code on architecture code, correct?
 
-> We have a precedent of at91 doing this, but I don't
-> like it too much because that still means having to change the driver
-> again if you get a new SoC with the same IP block but a different version
-> register,
+So, wouldn't we need a small, architecture-independent, infrastructure,
+through which architecture-specific code could "register" at boot
+time which SoC we are running on, and drivers could query this
+information from the common infrastructure?
 
-I don't like that either.
+Of course, the major problem is to figure out what is the good
+representation for this SoC identifier. Do we need a big list of SoCs
+like we had machine IDs? A simple string? Or maybe there is just no
+good way, and the whole idea is moot.
 
-> To avoid that, I'd prefer using separate "compatible"
-> values, at least if the hardware is already described in separate .dtsi
-> files.
+Best regards,
 
-So what I'm after is whether in this case statically encoding this
-onto the .dtsi files is the right thing to do, or whether the boot loader
-or kernel should runtime-modify the device tree, patching in
-the ASIC-specific info, just like device tree files can override
-properties from include files.
-
-Or if this is a bad idea.
-
-Nobody is doing that right now AFAICT, but it is surely possible....
-
-Yours,
-Linus Walleij
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
