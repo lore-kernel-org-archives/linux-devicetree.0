@@ -1,55 +1,148 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 00/11] pinctrl: mvebu: pinctrl driver
-Date: Thu, 20 Sep 2012 12:32:22 +0200
-Message-ID: <20120920123222.7f58ee4c@skate>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<CACRpkda+Kav6RGstSQ9+BCgVV+pR6ca_HmoueODYubX_xYM8Jw@mail.gmail.com>
-	<505AD103.8050004@gmail.com>
-	<20120920110424.3cb4daff@skate>
-	<20120920100254.GE21928@lunn.ch>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v2] dt: Document general interrupt controller bindings
+Date: Thu, 20 Sep 2012 14:16:50 +0200
+Message-ID: <1348143410-32656-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120920100254.GE21928@lunn.ch>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
+In order to use a device as interrupt controller, it needs to be marked
+with the DT interrupt-controller property. This commit adds rudimentary
+documentation about the required standard properties and describes the
+most commonly used interrupt specifiers.
 
-On Thu, 20 Sep 2012 12:02:54 +0200, Andrew Lunn wrote:
+Cc: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+Changes in v2:
+- update interrupt client description as per Stephen's suggestions
+- use an example for the two cell specifier where both the client and
+  the parent use two cell specifiers, as suggested by Rob, to reduce
+  the possibility for confusion
 
-> > Hum, which patches are stalling the integration into the Marvell tr=
-ee?
->=20
-> l2 cache, I think.
->=20
-> The trees Jason built for pull requests in the direction of arm-soc
-> had the l2 cache patch as the very first in the series. Now that thes=
-e
-> patches have run into some trouble, its blocking all the patches that
-> followed.
->=20
-> Jason is re-building his trees, throwing out l2 cache for the
-> moment. That should allow Olof/Arnd to pull these trees into arm-soc,
-> and then Jason will work on integrating the remaining patches not
-> already in his trees.
+ .../bindings/interrupt-controller/interrupts.txt   | 95 ++++++++++++++++++++++
+ 1 file changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 
-Ok, thanks. Regarding the L2 cache patches, Gr=C3=A9gory has replied to
-Russell comments, and will most likely post an updated version late
-next week. So it would be good if the pinctrl/gpio patches could get
-merged.
-
-Also, Andrew, could you look at the address decoding patch set I have
-sent? I really would like to see that in 3.7 if possible. Thanks!
-
-Best regards,
-
-Thomas
---=20
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+new file mode 100644
+index 0000000..72a06c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+@@ -0,0 +1,95 @@
++Specifying interrupt information for devices
++============================================
++
++1) Interrupt client nodes
++-------------------------
++
++Nodes that describe devices which generate interrupts must contain an
++"interrupts" property. This property must contain a list of interrupt
++specifiers, one per output interrupt. The format of the interrupt specifier is
++determined by the interrupt controller to which the interrupts are routed; see
++section 2 below for details.
++
++The "interrupt-parent" property is used to specify the controller to which
++interrupts are routed and contains a single phandle referring to the interrupt
++controller node. This property is inherited, so it may be specified in an
++interrupt client node or in any of its parent nodes.
++
++2) Interrupt controller nodes
++-----------------------------
++
++A device is marked as an interrupt controller with the "interrupt-controller"
++property. This is a empty, boolean property. An additional "#interrupt-cells"
++property defines the number of cells needed to specify a single interrupt.
++
++It is the responsibility of the interrupt controller's binding to define the
++length and format of the interrupt specifier. The following two variants are
++commonly used:
++
++  a) one cell
++  -----------
++  The #interrupt-cells property is set to 1 and the single cell defines the
++  index of the interrupt within the controller.
++
++  Example:
++
++	vic: intc@10140000 {
++		compatible = "arm,versatile-vic";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		reg = <0x10140000 0x1000>;
++	};
++
++	sic: intc@10003000 {
++		compatible = "arm,versatile-sic";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		reg = <0x10003000 0x1000>;
++		interrupt-parent = <&vic>;
++		interrupts = <31>; /* Cascaded to vic */
++	};
++
++  b) two cells
++  ------------
++  The #interrupt-cells property is set to 2 and the first cell defines the
++  index of the interrupt within the controller, while the second cell is used
++  to specify any of the following flags:
++    - bits[3:0] trigger type and level flags
++        1 = low-to-high edge triggered
++        2 = high-to-low edge triggered
++        4 = active high level-sensitive
++        8 = active low level-sensitive
++
++  Example:
++
++	i2c@7000c000 {
++		gpioext: gpio-adnp@41 {
++			compatible = "ad,gpio-adnp";
++			reg = <0x41>;
++
++			interrupt-parent = <&gpio>;
++			interrupts = <160 1>;
++
++			gpio-controller;
++			#gpio-cells = <1>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			nr-gpios = <64>;
++		};
++
++		sx8634@2b {
++			compatible = "smtc,sx8634";
++			reg = <0x2b>;
++
++			interrupt-parent = <&gpioext>;
++			interrupts = <3 0x8>;
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			threshold = <0x40>;
++			sensitivity = <7>;
++		};
++	};
+-- 
+1.7.12
