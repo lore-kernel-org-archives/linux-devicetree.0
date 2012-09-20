@@ -1,33 +1,52 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 00/11] pinctrl: mvebu: pinctrl driver
-Date: Thu, 20 Sep 2012 10:17:07 +0200
-Message-ID: <505AD103.8050004@gmail.com>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com> <CACRpkda+Kav6RGstSQ9+BCgVV+pR6ca_HmoueODYubX_xYM8Jw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda+Kav6RGstSQ9+BCgVV+pR6ca_HmoueODYubX_xYM8Jw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [RFC 0/6] pinctrl: samsung: Remove static platform-specific data
+Date: Thu, 20 Sep 2012 10:53:11 +0200
+Message-ID: <1348131197-25506-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2012 10:13 AM, Linus Walleij wrote:
-> I've tried to group related implementations together, so if the first four
-> are dependent we should either:
->
-> 1. Move all of these to the subdir drivers/pinctrl/mvebu
+This RFC series is a work on replacing static platform-specific data in
+pinctrl-samsung driver with data dynamically parsed from device tree.
 
-Linus,
+It aims at reducing the SoC-specific part of the driver and thus the
+amount of modifications to driver sources when adding support for next
+SoCs (like Exynos4x12).
 
-I prefer having a subdirectory as there are three more SoCs related
-to mvebu.
+Furthermore, moving definitions of pin banks to device tree will allow
+to simplify GPIO and GEINT specification to a format similar to used
+previously by gpiolib-based implementation, using a phandle to the bank
+and pin index inside the bank, e.g.
+	gpios = <&gpa1 4 0>;
+	interrupt-parent = <&gpa1>;
+	interrupts = <4 0>;
 
-> Either way it's NO BIG DEAL, so I will take care of this after they
-> are merged unless you feel like just fixing it in-flight at this moment.
+Any comments are welcome.
 
-I think integration into Marvell tree is a little bit stalled by other
-patches. Hopefully, today I find some time and update the patches accordingly.
+TODO:
+ - bindings documentation
+ - per-bank GPIO and GEINT specification
 
-Sebastian
+Tomasz Figa (6):
+  pinctrl: exynos: Parse wakeup-eint parameters from DT
+  pinctrl: samsung: Parse pin banks from DT
+  pinctrl: exynos: Remove static platform-specific data
+  pinctrl: samsung: Parse bank-specific eint offset from DT
+  ARM: dts: exynos4210: Remove legacy gpio nodes
+  ARM: dts: exynos4210: Add platform-specific descriptions for pin
+    controllers
+
+ arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi | 605 ++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi       |   2 +
+ arch/arm/boot/dts/exynos4210.dtsi               | 241 +---------
+ drivers/pinctrl/pinctrl-exynos.c                | 124 ++---
+ drivers/pinctrl/pinctrl-exynos.h                | 157 ------
+ drivers/pinctrl/pinctrl-samsung.c               | 153 +++++-
+ drivers/pinctrl/pinctrl-samsung.h               |  19 +-
+ 7 files changed, 813 insertions(+), 488 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi
+
+-- 
+1.7.12
