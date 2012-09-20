@@ -1,68 +1,70 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Deprecating reserve-map in favor of properties
-Date: Fri, 21 Sep 2012 08:10:51 +1000
-Message-ID: <1348179051.1132.32.camel@pasglop>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH 07/13] mmc: omap_hsmmc: dma_request_slave_channel()
+ support for DT platforms
+Date: Thu, 20 Sep 2012 15:16:31 -0700
+Message-ID: <20120920221630.GL28835@atomide.com>
+References: <1348152226-13588-1-git-send-email-mporter@ti.com>
+ <1348152226-13588-8-git-send-email-mporter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1348152226-13588-8-git-send-email-mporter@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@ti.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi folks !
+* Matt Porter <mporter@ti.com> [120920 07:43]:
+> For platforms with DT populated, use dma_request_slave_channel()
+> to acquire the DMA channel. For !DT platforms, we fall back to
+> explicitly passing the omap_dma_filter_fn() to dma_request_channel().
+> Once all platforms boot from DT, the dma_request_channel() path can
+> be dropped.
+> 
+> Signed-off-by: Matt Porter <mporter@ti.com>
+> ---
+>  drivers/mmc/host/omap_hsmmc.c |   16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> index 3a09f93..c82d0ab 100644
+> --- a/drivers/mmc/host/omap_hsmmc.c
+> +++ b/drivers/mmc/host/omap_hsmmc.c
+> @@ -1923,14 +1923,26 @@ static int __devinit omap_hsmmc_probe(struct platform_device *pdev)
+>  	dma_cap_zero(mask);
+>  	dma_cap_set(DMA_SLAVE, mask);
+>  
+> -	host->rx_chan = dma_request_channel(mask, omap_dma_filter_fn, &rx_req);
+> +	if (pdev->dev.of_node)
+> +		host->rx_chan =
+> +			dma_request_slave_channel(&pdev->dev, "rx");
+> +	else
+> +		host->rx_chan = dma_request_channel(mask,
+> +						    omap_dma_filter_fn,
+> +						    &rx_req);
+>  	if (!host->rx_chan) {
+>  		dev_err(mmc_dev(host->mmc), "unable to obtain RX DMA engine channel %u\n", rx_req);
+>  		ret = -ENXIO;
+>  		goto err_irq;
+>  	}
+>  
+> -	host->tx_chan = dma_request_channel(mask, omap_dma_filter_fn, &tx_req);
+> +	if (pdev->dev.of_node)
+> +		host->tx_chan =
+> +			dma_request_slave_channel(&pdev->dev, "tx");
+> +	else
+> +		host->tx_chan = dma_request_channel(mask,
+> +						    omap_dma_filter_fn,
+> +						    &tx_req);
+>  	if (!host->tx_chan) {
+>  		dev_err(mmc_dev(host->mmc), "unable to obtain TX DMA engine channel %u\n", tx_req);
+>  		ret = -ENXIO;
+> 
 
-The reserve map is, imho, my biggest mistake when coming up with the FDT
-format.
+Here to the omap_hsmmc.c driver should not need to care about which
+way to request the dma channels.
 
-The main problem is that it doesn't survive the transition via a real
-Open Firmware interface. There is no practical way to indicate reserved
-regions of memory accross in that case, unless you have an OS that is
-nice enough to try to keep OF alive and accomodate its advertised
-"available" properties, but that's typically not the case of Linux on
-ppc.
+Regards,
 
-So I would like to propose that we add a new "better" way to convey
-reserved memory information, via properties in the tree.
-
-I originally though of having these in the "memory" nodes themselves but
-this can be tricky on machines that have multiple nodes (ie, NUMA
-generally means a memory node per NUMA node) since the reserved regions
-can spawn accross nodes and I don't want to complicate FW life too much
-by requiring breaking them up in that case.
-
-So what about something at the root of the tree:
-
-reserved-ranges: An array of ranges of reserved memory
-
-reserved-names: A list of zero terminated strings, one for each entry in
-the reserved-ranges array, providing optional "names" for the reserved
-ranges.
-
-The idea here is that we could have well defined names (using a similar
-prefix we use for properties) such as linux,initrd, which indicates
-clearly to the kernel that the only reason that range is reserved is
-because it contains an initrd (ie, it can be freed once that's been
-extracted).
-
-It would also be generally handy in case a reserved area is meant to be
-used by a specific driver, such as an in-memory framebuffer
-pre-initialized by the firmware. The generic memory management code
-doesn't need to know, but later on, the gfx driver can pick it up easily
-provided the name is part of the binding for that device.
-
-Any objection ? If none, I'll cook up a patch to add support for it (at
-least on powerpc :-)
-
-Cheers,
-Ben.
+Tony
