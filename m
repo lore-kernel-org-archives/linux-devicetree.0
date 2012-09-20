@@ -1,67 +1,68 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH 10/13] spi: omap2-mcspi:
- dma_request_slave_channel() support for DT platforms
-Date: Thu, 20 Sep 2012 15:09:31 -0700
-Message-ID: <20120920220931.GJ28835@atomide.com>
-References: <1348152226-13588-1-git-send-email-mporter@ti.com>
- <1348152226-13588-11-git-send-email-mporter@ti.com>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Deprecating reserve-map in favor of properties
+Date: Fri, 21 Sep 2012 08:10:51 +1000
+Message-ID: <1348179051.1132.32.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1348152226-13588-11-git-send-email-mporter@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Matt Porter <mporter@ti.com> [120920 07:43]:
-> For platforms with DT populated, use dma_request_slave_channel()
-> to acquire the DMA channel. For !DT platforms, we fall back to
-> explicitly passing the omap_dma_filter_fn() to dma_request_channel().
-> Once all platforms boot from DT, the dma_request_channel() path can
-> be dropped.
-> 
-> Signed-off-by: Matt Porter <mporter@ti.com>
-> ---
->  drivers/spi/spi-omap2-mcspi.c |   68 +++++++++++++++++++++++++++++------------
->  1 file changed, 48 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-> index 9502566..1cf1072 100644
-> --- a/drivers/spi/spi-omap2-mcspi.c
-> +++ b/drivers/spi/spi-omap2-mcspi.c
-> @@ -104,6 +104,9 @@ struct omap2_mcspi_dma {
->  
->  	struct completion dma_tx_completion;
->  	struct completion dma_rx_completion;
-> +
-> +	char dma_rx_ch_name[14];
-> +	char dma_tx_ch_name[14];
->  };
->  
->  /* use PIO for small transfers, avoiding DMA setup/teardown overhead and
-> @@ -798,14 +801,26 @@ static int omap2_mcspi_request_dma(struct spi_device *spi)
->  	dma_cap_zero(mask);
->  	dma_cap_set(DMA_SLAVE, mask);
->  	sig = mcspi_dma->dma_rx_sync_dev;
-> -	mcspi_dma->dma_rx = dma_request_channel(mask, omap_dma_filter_fn, &sig);
-> +	if (spi->dev.of_node)
-> +		mcspi_dma->dma_rx =
-> +			dma_request_slave_channel(&master->dev,
-> +						  mcspi_dma->dma_rx_ch_name);
-> +	else
-> +		mcspi_dma->dma_rx =
-> +			dma_request_channel(mask, omap_dma_filter_fn, &sig);
->  	if (!mcspi_dma->dma_rx) {
->  		dev_err(&spi->dev, "no RX DMA engine channel for McSPI\n");
->  		return -EAGAIN;
->  	}
->  
+Hi folks !
 
-Hmm this does not look nice.. We should be able to somehow not to care about
-the configuration at the mcspi driver level.
+The reserve map is, imho, my biggest mistake when coming up with the FDT
+format.
 
-Regards,
+The main problem is that it doesn't survive the transition via a real
+Open Firmware interface. There is no practical way to indicate reserved
+regions of memory accross in that case, unless you have an OS that is
+nice enough to try to keep OF alive and accomodate its advertised
+"available" properties, but that's typically not the case of Linux on
+ppc.
 
-Tony
+So I would like to propose that we add a new "better" way to convey
+reserved memory information, via properties in the tree.
+
+I originally though of having these in the "memory" nodes themselves but
+this can be tricky on machines that have multiple nodes (ie, NUMA
+generally means a memory node per NUMA node) since the reserved regions
+can spawn accross nodes and I don't want to complicate FW life too much
+by requiring breaking them up in that case.
+
+So what about something at the root of the tree:
+
+reserved-ranges: An array of ranges of reserved memory
+
+reserved-names: A list of zero terminated strings, one for each entry in
+the reserved-ranges array, providing optional "names" for the reserved
+ranges.
+
+The idea here is that we could have well defined names (using a similar
+prefix we use for properties) such as linux,initrd, which indicates
+clearly to the kernel that the only reason that range is reserved is
+because it contains an initrd (ie, it can be freed once that's been
+extracted).
+
+It would also be generally handy in case a reserved area is meant to be
+used by a specific driver, such as an in-memory framebuffer
+pre-initialized by the firmware. The generic memory management code
+doesn't need to know, but later on, the gfx driver can pick it up easily
+provided the name is part of the binding for that device.
+
+Any objection ? If none, I'll cook up a patch to add support for it (at
+least on powerpc :-)
+
+Cheers,
+Ben.
