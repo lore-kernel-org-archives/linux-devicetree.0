@@ -1,139 +1,55 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [RFC PATCH 3/3] ARM: vexpress: configure CLCD driver device tree
- support for A9 CoreTile
-Date: Thu, 20 Sep 2012 11:29:44 +0100
-Message-ID: <20120920102943.GH32603@e102652-lin.cambridge.arm.com>
-References: <1348070666-9153-1-git-send-email-ryan.harkin@linaro.org>
- <1348070666-9153-4-git-send-email-ryan.harkin@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 00/11] pinctrl: mvebu: pinctrl driver
+Date: Thu, 20 Sep 2012 12:32:22 +0200
+Message-ID: <20120920123222.7f58ee4c@skate>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<CACRpkda+Kav6RGstSQ9+BCgVV+pR6ca_HmoueODYubX_xYM8Jw@mail.gmail.com>
+	<505AD103.8050004@gmail.com>
+	<20120920110424.3cb4daff@skate>
+	<20120920100254.GE21928@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1348070666-9153-4-git-send-email-ryan.harkin@linaro.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ryan Harkin <ryan.harkin@linaro.org>
-Cc: "stigge@antcom.de" <stigge@antcom.de>, "tixy@linaro.org" <tixy@linaro.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "spear-devel@list.st.com" <spear-devel@list.st.com>, "shiraz.hashim@st.com" <shiraz.hashim@st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, "arnd.bergmann@linaro.org" <arnd.bergmann@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120920100254.GE21928@lunn.ch>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBTZXAgMTksIDIwMTIgYXQgMDU6MDQ6MjZQTSArMDEwMCwgUnlhbiBIYXJraW4gd3Jv
-dGU6Cj4gQ29uZmlndXJhdGlvbiBmb3IgdGhlIGFtYmEtY2xjZCBQTDExMSBkcml2ZXIgaXMgYWRk
-ZWQgdG8gdGhlIEE5IENvcmVUaWxlJ3MgRFRTCj4gZmlsZS4KPgo+IENvbmZpZ3VyYXRpb24gb2Yg
-dGhlIG1vdGhlcmJvYXJkIENMQ0QgZHJpdmVyIGlzIHJlbW92ZWQgZnJvbSB0aGUgRFRTSSBmaWxl
-cyB0bwo+IHByZXZlbnQgZHVwbGljYXRlIENMQ0QgZHJpdmVycyBiZWluZyByZWdpc3RlcmVkLgo+
-Cj4gQSBnZW5lcmljIHNldCBvZiBDTENEIHBhbmVsIGRlc2NyaXB0aW9ucyBoYXMgYmVlbiBzcGxp
-dCBpbnRvIGl0cyBvd24gRFRTSSBmaWxlLgo+IEN1cnJlbnRseSwgb25seSBYVkdBIGFuZCBWR0Eg
-bW9uaXRvcnMgYXJlIGRlc2NyaWJlZC4KCkhpIFJ5YW4sCgpGb3IgdGhpcyBhbmQgWzIvM10gcGF0
-Y2g6CgpSZXZpZXdlZC1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+CgoKPgo+
-IFNpZ25lZC1vZmYtYnk6IFJ5YW4gSGFya2luIDxyeWFuLmhhcmtpbkBsaW5hcm8ub3JnPgo+IC0t
-LQo+ICBhcmNoL2FybS9ib290L2R0cy9jbGNkLXBhbmVscy5kdHNpICAgICAgfCAgIDUyICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgYXJjaC9hcm0vYm9vdC9kdHMvdmV4cHJlc3Mt
-djJtLXJzMS5kdHNpIHwgICAgOCArKy0tLQo+ICBhcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12
-Mm0uZHRzaSAgICAgfCAgICA4ICsrLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNzLXYy
-cC1jYTkuZHRzICB8ICAgIDYgKysrKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDYyIGluc2VydGlvbnMo
-KyksIDEyIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Ns
-Y2QtcGFuZWxzLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9jbGNkLXBhbmVscy5kdHNpCj4gbmV3
-IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi4wYjBmZjZlCj4gLS0tIC9kZXYvbnVs
-bAo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2NsY2QtcGFuZWxzLmR0c2kKPiBAQCAtMCwwICsx
-LDUyIEBACj4gKy8qCj4gKyAqIEFSTSBMdGQuIFZlcnNhdGlsZSBFeHByZXNzCj4gKyAqCj4gKyAq
-Lwo+ICsKPiArLyB7Cj4gKyAgICAgcGFuZWxzIHsKPiArICAgICAgICAgICAgIHBhbmVsQDAgewo+
-ICsgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlICAgICAgPSAicGFuZWwiOwo+ICsgICAg
-ICAgICAgICAgICAgICAgICBtb2RlICAgICAgICAgICAgPSAiVkdBIjsKPiArICAgICAgICAgICAg
-ICAgICAgICAgcmVmcmVzaCAgICAgICAgID0gPDYwPjsKPiArICAgICAgICAgICAgICAgICAgICAg
-eHJlcyAgICAgICAgICAgID0gPDY0MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgIHlyZXMgICAg
-ICAgICAgICA9IDw0ODA+Owo+ICsgICAgICAgICAgICAgICAgICAgICBwaXhjbG9jayAgICAgICAg
-PSA8Mzk3MjE+Owo+ICsgICAgICAgICAgICAgICAgICAgICBsZWZ0X21hcmdpbiAgICAgPSA8NDA+
-Owo+ICsgICAgICAgICAgICAgICAgICAgICByaWdodF9tYXJnaW4gICAgPSA8MjQ+Owo+ICsgICAg
-ICAgICAgICAgICAgICAgICB1cHBlcl9tYXJnaW4gICAgPSA8MzI+Owo+ICsgICAgICAgICAgICAg
-ICAgICAgICBsb3dlcl9tYXJnaW4gICAgPSA8MTE+Owo+ICsgICAgICAgICAgICAgICAgICAgICBo
-c3luY19sZW4gICAgICAgPSA8OTY+Owo+ICsgICAgICAgICAgICAgICAgICAgICB2c3luY19sZW4g
-ICAgICAgPSA8Mj47Cj4gKyAgICAgICAgICAgICAgICAgICAgIHN5bmMgICAgICAgICAgICA9IDww
-PjsKPiArICAgICAgICAgICAgICAgICAgICAgdm1vZGUgICAgICAgICAgID0gIkZCX1ZNT0RFX05P
-TklOVEVSTEFDRUQiOwo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgdGltMiAgICAgICAgICAg
-ID0gIlRJTTJfQkNEIiwgIlRJTTJfSVBDIjsKPiArICAgICAgICAgICAgICAgICAgICAgY250bCAg
-ICAgICAgICAgID0gIkNOVExfTENEVEZUIiwgIkNOVExfQkdSIiwgIkNOVExfTENEVkNPTVAoMSki
-Owo+ICsgICAgICAgICAgICAgICAgICAgICBjYXBzICAgICAgICAgICAgPSAiQ0xDRF9DQVBfNTU1
-MSIsICJDTENEX0NBUF81NjUiLCAiQ0xDRF9DQVBfODg4IjsKPiArICAgICAgICAgICAgICAgICAg
-ICAgYnBwICAgICAgICAgICAgID0gPDE2PjsKPiArICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAg
-ICAgICAgICAgcGFuZWxAMSB7Cj4gKyAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgICAg
-ICA9ICJwYW5lbCI7Cj4gKyAgICAgICAgICAgICAgICAgICAgIG1vZGUgICAgICAgICAgICA9ICJY
-VkdBIjsKPiArICAgICAgICAgICAgICAgICAgICAgcmVmcmVzaCAgICAgICAgID0gPDYwPjsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgeHJlcyAgICAgICAgICAgID0gPDEwMjQ+Owo+ICsgICAgICAg
-ICAgICAgICAgICAgICB5cmVzICAgICAgICAgICAgPSA8NzY4PjsKPiArICAgICAgICAgICAgICAg
-ICAgICAgcGl4Y2xvY2sgICAgICAgID0gPDE1NzQ4PjsKPiArICAgICAgICAgICAgICAgICAgICAg
-bGVmdF9tYXJnaW4gICAgID0gPDE1Mj47Cj4gKyAgICAgICAgICAgICAgICAgICAgIHJpZ2h0X21h
-cmdpbiAgICA9IDw0OD47Cj4gKyAgICAgICAgICAgICAgICAgICAgIHVwcGVyX21hcmdpbiAgICA9
-IDwyMz47Cj4gKyAgICAgICAgICAgICAgICAgICAgIGxvd2VyX21hcmdpbiAgICA9IDwzPjsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgaHN5bmNfbGVuICAgICAgID0gPDEwND47Cj4gKyAgICAgICAg
-ICAgICAgICAgICAgIHZzeW5jX2xlbiAgICAgICA9IDw0PjsKPiArICAgICAgICAgICAgICAgICAg
-ICAgc3luYyAgICAgICAgICAgID0gPDA+Owo+ICsgICAgICAgICAgICAgICAgICAgICB2bW9kZSAg
-ICAgICAgICAgPSAiRkJfVk1PREVfTk9OSU5URVJMQUNFRCI7Cj4gKwo+ICsgICAgICAgICAgICAg
-ICAgICAgICB0aW0yICAgICAgICAgICAgPSAiVElNMl9CQ0QiLCAiVElNMl9JUEMiOwo+ICsgICAg
-ICAgICAgICAgICAgICAgICBjbnRsICAgICAgICAgICAgPSAiQ05UTF9MQ0RURlQiLCAiQ05UTF9C
-R1IiLCAiQ05UTF9MQ0RWQ09NUCgxKSI7Cj4gKyAgICAgICAgICAgICAgICAgICAgIGNhcHMgICAg
-ICAgICAgICA9ICJDTENEX0NBUF81NTUxIiwgIkNMQ0RfQ0FQXzU2NSIsICJDTENEX0NBUF84ODgi
-Owo+ICsgICAgICAgICAgICAgICAgICAgICBicHAgICAgICAgICAgICAgPSA8MTY+Owo+ICsgICAg
-ICAgICAgICAgfTsKPiArICAgICB9Owo+ICt9Owo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290
-L2R0cy92ZXhwcmVzcy12Mm0tcnMxLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12
-Mm0tcnMxLmR0c2kKPiBpbmRleCBkOGE4MjdiLi4zMDFkM2Y2IDEwMDY0NAo+IC0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL3ZleHByZXNzLXYybS1yczEuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3ZleHByZXNzLXYybS1yczEuZHRzaQo+IEBAIC0xNyw2ICsxNyw4IEBACj4gICAqIENIQU5H
-RVMgVE8gdmV4cHJlc3MtdjJtLmR0c2khCj4gICAqLwo+Cj4gKy9pbmNsdWRlLyAiY2xjZC1wYW5l
-bHMuZHRzaSIKPiArCj4gIC8gewo+ICAgICAgIGFsaWFzZXMgewo+ICAgICAgICAgICAgICAgYXJt
-LHYybV90aW1lciA9ICZ2Mm1fdGltZXIwMTsKPiBAQCAtMTkzLDEyICsxOTUsNiBAQAo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDFhMDEwMCAweGYwMD47Cj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcmVnLXNoaWZ0ID0gPDI+Owo+ICAgICAgICAgICAgICAg
-ICAgICAgICB9Owo+IC0KPiAtICAgICAgICAgICAgICAgICAgICAgY2xjZEAxZjAwMDAgewo+IC0g
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHBsMTExIiwgImFy
-bSxwcmltZWNlbGwiOwo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDFm
-MDAwMCAweDEwMDA+Owo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMg
-PSA8MTQ+Owo+IC0gICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgfTsKPgo+
-ICAgICAgICAgICAgICAgdjJtX2ZpeGVkXzN2MzogZml4ZWRyZWd1bGF0b3JAMCB7Cj4gZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNzLXYybS5kdHNpIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvdmV4cHJlc3MtdjJtLmR0c2kKPiBpbmRleCBkYmE1M2ZkLi40M2NkODZmIDEwMDY0NAo+
-IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3ZleHByZXNzLXYybS5kdHNpCj4gKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvdmV4cHJlc3MtdjJtLmR0c2kKPiBAQCAtMTcsNiArMTcsOCBAQAo+ICAgKiBD
-SEFOR0VTIFRPIHZleHByZXNzLXYybS1yczEuZHRzaSEKPiAgICovCj4KPiArL2luY2x1ZGUvICJj
-bGNkLXBhbmVscy5kdHNpIgo+ICsKPiAgLyB7Cj4gICAgICAgYWxpYXNlcyB7Cj4gICAgICAgICAg
-ICAgICBhcm0sdjJtX3RpbWVyID0gJnYybV90aW1lcjAxOwo+IEBAIC0xOTIsMTIgKzE5NCw2IEBA
-Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MWExMDAgMHhmMDA+Owo+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZy1zaGlmdCA9IDwyPjsKPiAgICAgICAg
-ICAgICAgICAgICAgICAgfTsKPiAtCj4gLSAgICAgICAgICAgICAgICAgICAgIGNsY2RAMWYwMDAg
-ewo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLHBsMTEx
-IiwgImFybSxwcmltZWNlbGwiOwo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
-IDwweDFmMDAwIDB4MTAwMD47Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJy
-dXB0cyA9IDwxND47Cj4gLSAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICB9
-Owo+Cj4gICAgICAgICAgICAgICB2Mm1fZml4ZWRfM3YzOiBmaXhlZHJlZ3VsYXRvckAwIHsKPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvdmV4cHJlc3MtdjJwLWNhOS5kdHMgYi9hcmNo
-L2FybS9ib290L2R0cy92ZXhwcmVzcy12MnAtY2E5LmR0cwo+IGluZGV4IDNmMGM3MzYuLjJlYmIx
-MzIgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvdmV4cHJlc3MtdjJwLWNhOS5kdHMK
-PiArKysgYi9hcmNoL2FybS9ib290L2R0cy92ZXhwcmVzcy12MnAtY2E5LmR0cwo+IEBAIC05LDYg
-KzksOCBAQAo+Cj4gIC9kdHMtdjEvOwo+Cj4gKy9tZW1yZXNlcnZlLyAweDlmMDAwMDAwIDB4MDEw
-MDAwMDA7Cj4gKwo+ICAvIHsKPiAgICAgICBtb2RlbCA9ICJWMlAtQ0E5IjsKPiAgICAgICBhcm0s
-aGJpID0gPDB4MTkxPjsKPiBAQCAtNzAsNiArNzIsMTAgQEAKPiAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAiYXJtLHBsMTExIiwgImFybSxwcmltZWNlbGwiOwo+ICAgICAgICAgICAgICAgcmVn
-ID0gPDB4MTAwMjAwMDAgMHgxMDAwPjsKPiAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA0
-NCA0PjsKPiArICAgICAgICAgICAgIG1vZGUgPSAiWFZHQSI7Cj4gKyAgICAgICAgICAgICBhcm0s
-dmV4cHJlc3Mtb3NjID0gPDE+Owo+ICsgICAgICAgICAgICAgdXNlX2RtYSA9IDwxPjsKPiArICAg
-ICAgICAgICAgIGZyYW1lYnVmZmVyID0gPDB4OWYwMDAwMDAgMHgwMTAwMDAwMD47Cj4gICAgICAg
-fTsKPgo+ICAgICAgIG1lbW9yeS1jb250cm9sbGVyQDEwMGUwMDAwIHsKPiAtLQo+IDEuNy45LjUK
-Pgo+CgotLQo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4IHRo
-ZSB3b3JsZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBcIHNv
-dXJjZSBjb2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwoKLS0gSU1Q
-T1JUQU5UIE5PVElDRTogVGhlIGNvbnRlbnRzIG9mIHRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2ht
-ZW50cyBhcmUgY29uZmlkZW50aWFsIGFuZCBtYXkgYWxzbyBiZSBwcml2aWxlZ2VkLiBJZiB5b3Ug
-YXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIg
-aW1tZWRpYXRlbHkgYW5kIGRvIG5vdCBkaXNjbG9zZSB0aGUgY29udGVudHMgdG8gYW55IG90aGVy
-IHBlcnNvbiwgdXNlIGl0IGZvciBhbnkgcHVycG9zZSwgb3Igc3RvcmUgb3IgY29weSB0aGUgaW5m
-b3JtYXRpb24gaW4gYW55IG1lZGl1bS4gIFRoYW5rIHlvdS4KCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Dear Andrew Lunn,
+
+On Thu, 20 Sep 2012 12:02:54 +0200, Andrew Lunn wrote:
+
+> > Hum, which patches are stalling the integration into the Marvell tr=
+ee?
+>=20
+> l2 cache, I think.
+>=20
+> The trees Jason built for pull requests in the direction of arm-soc
+> had the l2 cache patch as the very first in the series. Now that thes=
+e
+> patches have run into some trouble, its blocking all the patches that
+> followed.
+>=20
+> Jason is re-building his trees, throwing out l2 cache for the
+> moment. That should allow Olof/Arnd to pull these trees into arm-soc,
+> and then Jason will work on integrating the remaining patches not
+> already in his trees.
+
+Ok, thanks. Regarding the L2 cache patches, Gr=C3=A9gory has replied to
+Russell comments, and will most likely post an updated version late
+next week. So it would be good if the pinctrl/gpio patches could get
+merged.
+
+Also, Andrew, could you look at the address decoding patch set I have
+sent? I really would like to see that in 3.7 if possible. Thanks!
+
+Best regards,
+
+Thomas
+--=20
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
