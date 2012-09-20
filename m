@@ -1,613 +1,405 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4] of: Add videomode helper
-Date: Thu, 20 Sep 2012 23:29:42 +0200
-Message-ID: <1650842.iWU5MDhFZR@avalon>
-References: <1348042843-24673-1-git-send-email-s.trumtrar@pengutronix.de> <1348046362.2565.16.camel@deskari>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1348046362.2565.16.camel@deskari>
-Sender: linux-media-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH] regulator: deprecate regulator-compatible DT property
+Date: Thu, 20 Sep 2012 16:04:57 -0600
+Message-ID: <1348178697-26314-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Laxman Dewangan <ldewangan@nvidia.com>, AnilKumar Ch <anilkumar@ti.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Stephen Warren <swarren@nvidia.com>
 
-(CC'ing the linux-media mailing list, as video modes are of interest there as 
-well)
+When the bindings for the TPS6586x regulator were being proposed, I
+asserted that DT node naming rules for bus child nodes should also be
+applied to nodes inside the TPS6586x regulator node itself. In other
+words, that each node providing regulator init data should be named
+after the type of object it represented ("regulator") and hence that
+some other property was required to indicate which regulator the node
+described ("regulator-compatible"). In turn this led to multiple nodes
+having the same name, thus requiring node names to use a unit address
+to make them unique, thus requiring reg properties within the nodes and
 
-On Wednesday 19 September 2012 12:19:22 Tomi Valkeinen wrote:
-> On Wed, 2012-09-19 at 10:20 +0200, Steffen Trumtrar wrote:
-> > This patch adds a helper function for parsing videomodes from the
-> > devicetree. The videomode can be either converted to a struct
-> > drm_display_mode or a struct fb_videomode.
-> > 
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > ---
-> > 
-> > Hi!
-> > 
-> > changes since v3:
-> > 	- print error messages
-> > 	- free alloced memory
-> > 	- general cleanup
-> > 
-> > Regards
-> > Steffen
-> > 
-> >  .../devicetree/bindings/video/displaymode          |   74 +++++
-> >  drivers/of/Kconfig                                 |    5 +
-> >  drivers/of/Makefile                                |    1 +
-> >  drivers/of/of_videomode.c                          |  283 +++++++++++++++
-> >  include/linux/of_videomode.h                       |   56 ++++
-> >  5 files changed, 419 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/video/displaymode
-> >  create mode 100644 drivers/of/of_videomode.c
-> >  create mode 100644 include/linux/of_videomode.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/video/displaymode
-> > b/Documentation/devicetree/bindings/video/displaymode new file mode
-> > 100644
-> > index 0000000..990ca52
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/video/displaymode
-> > @@ -0,0 +1,74 @@
-> > +videomode bindings
-> > +==================
-> > +
-> > +Required properties:
-> > + - hactive, vactive: Display resolution
-> > + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing
-> > parameters
-> > +   in pixels
-> > +   vfront-porch, vback-porch, vsync-len: Vertical display timing
-> > parameters in
-> > +   lines
-> > + - clock: displayclock in Hz
-> > +
-> > +Optional properties:
-> > + - width-mm, height-mm: Display dimensions in mm
-> > + - hsync-active-high (bool): Hsync pulse is active high
-> > + - vsync-active-high (bool): Vsync pulse is active high
-> > + - interlaced (bool): This is an interlaced mode
-> > + - doublescan (bool): This is a doublescan mode
-> > +
-> > +There are different ways of describing a display mode. The devicetree
-> > representation
-> > +corresponds to the one commonly found in datasheets for displays.
-> > +The description of the display and its mode is split in two parts: first
-> > the display
-> > +properties like size in mm and (optionally) multiple subnodes with the
-> > supported modes.
-> > +
-> > +Example:
-> > +
-> > +	display@0 {
-> > +		width-mm = <800>;
-> > +		height-mm = <480>;
-> > +		modes {
-> > +			mode0: mode@0 {
-> > +				/* 1920x1080p24 */
-> > +				clock = <52000000>;
-> > +				hactive = <1920>;
-> > +				vactive = <1080>;
-> > +				hfront-porch = <25>;
-> > +				hback-porch = <25>;
-> > +				hsync-len = <25>;
-> > +				vback-porch = <2>;
-> > +				vfront-porch = <2>;
-> > +				vsync-len = <2>;
-> > +				hsync-active-high;
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +Every property also supports the use of ranges, so the commonly used
-> > datasheet +description with <min typ max>-tuples can be used.
-> > +
-> > +Example:
-> > +
-> > +	mode1: mode@1 {
-> > +		/* 1920x1080p24 */
-> > +		clock = <148500000>;
-> > +		hactive = <1920>;
-> > +		vactive = <1080>;
-> > +		hsync-len = <0 44 60>;
-> > +		hfront-porch = <80 88 95>;
-> > +		hback-porch = <100 148 160>;
-> > +		vfront-porch = <0 4 6>;
-> > +		vback-porch = <0 36 50>;
-> > +		vsync-len = <0 5 6>;
-> > +	};
-> > +
-> > +The videomode can be linked to a connector via phandles. The connector
-> > has to
-> > +support the display- and default-mode-property to link to and select a
-> > mode.
-> > +
-> > +Example:
-> > +
-> > +	hdmi@00120000 {
-> > +		status = "okay";
-> > +		display = <&benq>;
-> > +		default-mode = <&mode1>;
-> > +	};
-> > +
-> > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> > index dfba3e6..a3acaa3 100644
-> > --- a/drivers/of/Kconfig
-> > +++ b/drivers/of/Kconfig
-> > @@ -83,4 +83,9 @@ config OF_MTD
-> > 
-> >  	depends on MTD
-> >  	def_bool y
-> > 
-> > +config OF_VIDEOMODE
-> > +	def_bool y
-> > +	help
-> > +	  helper to parse videomodes from the devicetree
-> > +
-> > 
-> >  endmenu # OF
-> > 
-> > diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> > index e027f44..80e6db3 100644
-> > --- a/drivers/of/Makefile
-> > +++ b/drivers/of/Makefile
-> > @@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
-> > 
-> >  obj-$(CONFIG_OF_PCI)	+= of_pci.o
-> >  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-> >  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
-> > 
-> > +obj-$(CONFIG_OF_VIDEOMODE)	+= of_videomode.o
-> > diff --git a/drivers/of/of_videomode.c b/drivers/of/of_videomode.c
-> > new file mode 100644
-> > index 0000000..52bfc74
-> > --- /dev/null
-> > +++ b/drivers/of/of_videomode.c
-> > @@ -0,0 +1,283 @@
-> > +/*
-> > + * OF helpers for parsing display modes
-> > + *
-> > + * Copyright (c) 2012 Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
-> > + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-> > Pengutronix
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +#include <linux/of.h>
-> > +#include <linux/fb.h>
-> > +#include <linux/export.h>
-> > +#include <linux/slab.h>
-> > +#include <drm/drmP.h>
-> > +#include <drm/drm_crtc.h>
-> > +#include <linux/of_videomode.h>
-> > +
-> > +static u32 of_video_get_value(struct mode_property *prop)
-> > +{
-> > +	return (prop->min >= prop->typ) ? prop->min : prop->typ;
-> > +}
-> 
-> Why is this needed? If the prop->min is higher than prop->typ, isn't
-> that an error in the DT data, and should be rejected when parsing?
-> 
-> > +
-> > +/* read property into new mode_property */
-> > +static int of_video_parse_property(struct device_node *np, char *name,
-> > +				struct mode_property *result)
-> > +{
-> > +	struct property *prop;
-> > +	int length;
-> > +	int cells;
-> > +	int ret;
-> > +
-> > +	prop = of_find_property(np, name, &length);
-> > +	if (!prop) {
-> > +		pr_err("%s: could not find property %s\n", __func__,
-> > +			name);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	cells = length / sizeof(u32);
-> > +
-> > +	memset(result, 0, sizeof(*result));
-> > +
-> > +	ret = of_property_read_u32_array(np, name, &result->min, cells);
-> > +
-> > +	return ret;
-> 
-> Ah, I guess this is the reason for the of_video_get_value... Wouldn't it
-> be cleaner to be more explicit here? If there's one cell, it's the
-> typical value, otherwise if there are 3 cells, they are min/typ/max,
-> else it's an error.
+However, subsequent discussion indicates that the rules I was asserting
+only applies to standardized bus nodes, and within a device's own node,
+the binding can basically do anything sane that it wants.
 
-I agree. We should flag errors and fail instead of trying to fix them 
-silently. That's the only way to make sure that device tree authors will get 
-it right (or at least less wrong). We might need to accept wrong DT data later 
-to support buggy devices found in the wild, but we should not start that way.
+Hence, this change deprecates the register-compatible property, and
+instead uses node names to replace this functionality. This greatly
+simplifies the device tree content, making them smaller and more legible.
 
-> And I think the above also trashes memory if there happens to be 4+ cells.
-> 
-> > +}
-> > +
-> > +static int of_video_free(struct display *disp)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i=0; i<disp->num_modes; i++)
+The code is changed such that old device trees continue to work.
 
-Spaces around = and < please.
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+Mark, if this gets into 3.7, I can fix up all the Tegra .dts files during 3.8.
 
-> > +		kfree(disp->modes[i]);
-> > +	kfree(disp->modes);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +int videomode_to_display_mode(struct display *disp, struct
-> > drm_display_mode *dmode, int index)
+ .../devicetree/bindings/regulator/max8907.txt      |   24 +++-----
+ .../devicetree/bindings/regulator/regulator.txt    |    5 +-
+ .../devicetree/bindings/regulator/tps65217.txt     |   31 ++-------
+ .../devicetree/bindings/regulator/tps6586x.txt     |   66 ++++++--------------
+ drivers/regulator/of_regulator.c                   |   25 ++++----
+ 5 files changed, 50 insertions(+), 101 deletions(-)
 
-Shouldn't this use drm_mode_modeinfo instead of drm_display_mode ?
-
-> > +{
-> > +	struct videomode *vm;
-> > +
-> > +	memset(dmode, 0, sizeof(*dmode));
-> > +
-> > +	if (index > disp->num_modes) {
-> > +		pr_err("%s: wrong index: %d from %d\n", __func__, index,
-> > disp->num_modes); +		return -EINVAL;
-> > +	}
-> > +
-> > +	vm = disp->modes[index];
-> > +
-> > +	dmode->hdisplay = of_video_get_value(&vm->hactive);
-> > +	dmode->hsync_start = of_video_get_value(&vm->hactive) +
-> > of_video_get_value(&vm->hfront_porch);
-
-You could replace of_video_get_value(&vm->hactive) with dmode->hdisplay here, 
-and similarly below (hsync_end = hsync_start + of_video_get_value(&vm-
->hsync_len), ...). Beside shortening lines, it would save calls to 
-of_video_get_value().
-
-> > +	dmode->hsync_end = of_video_get_value(&vm->hactive) +
-> > of_video_get_value(&vm->hfront_porch)
-> > +			+ of_video_get_value(&vm->hsync_len);
-> > +	dmode->htotal = of_video_get_value(&vm->hactive) +
-> > of_video_get_value(&vm->hfront_porch)
-> > +			+ of_video_get_value(&vm->hsync_len) +
-> > of_video_get_value(&vm->hback_porch);
-> > +	dmode->vdisplay = of_video_get_value(&vm->vactive);
-> > +	dmode->vsync_start = of_video_get_value(&vm->vactive) +
-> > of_video_get_value(&vm->vfront_porch); +	dmode->vsync_end =
-> > of_video_get_value(&vm->vactive) + of_video_get_value(&vm->vfront_porch)
-> > +			+ of_video_get_value(&vm->vsync_len);
-> > +	dmode->vtotal = of_video_get_value(&vm->vactive) +
-> > of_video_get_value(&vm->vfront_porch) +
-> > +			of_video_get_value(&vm->vsync_len) +
-> > of_video_get_value(&vm->vback_porch); +
-> > +	dmode->width_mm = disp->width_mm;
-> > +	dmode->height_mm = disp->height_mm;
-> > +
-> > +	dmode->clock = of_video_get_value(&vm->clock) / 1000;
-> > +
-> > +	if (vm->hah)
-> > +		dmode->flags |= DRM_MODE_FLAG_PHSYNC;
-> > +	else
-> > +		dmode->flags |= DRM_MODE_FLAG_NHSYNC;
-> > +	if (vm->vah)
-> > +		dmode->flags |= DRM_MODE_FLAG_PVSYNC;
-> > +	else
-> > +		dmode->flags |= DRM_MODE_FLAG_NVSYNC;
-> > +	if (vm->interlaced)
-> > +		dmode->flags |= DRM_MODE_FLAG_INTERLACE;
-> > +	if (vm->doublescan)
-> > +		dmode->flags |= DRM_MODE_FLAG_DBLSCAN;
-> > +
-> > +	drm_mode_set_name(dmode);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(videomode_to_display_mode);
-> > +
-> > +int videomode_to_fb_mode(struct display *disp, struct fb_videomode
-> > *fbmode, int index)
-
-disp is only used to retrieve the mode, you could pass a struct videomode 
-instead of disp and index.
-
-Thinking about it, I would make videomode_to_display_mode take a struct 
-videomode as well. The only reason it needs struct display is to get the 
-display physical dimensions. Those are only used in very specific cases in the 
-DRM subsystem, I don't think they should be copied to every struct 
-drm_mode_modeinfo.
-
-> > +{
-> > +	struct videomode *vm;
-> > +
-> > +	memset(fbmode, 0, sizeof(*fbmode));
-> > +
-> > +	if (index > disp->num_modes) {
-> > +		pr_err("%s: wrong index: %d from %d\n", __func__, index,
-> > disp->num_modes);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	vm = disp->modes[index];
-> > +
-> > +	fbmode->xres = of_video_get_value(&vm->hactive);
-> > +	fbmode->left_margin = of_video_get_value(&vm->hback_porch);
-> > +	fbmode->right_margin = of_video_get_value(&vm->hfront_porch);
-> > +	fbmode->hsync_len = of_video_get_value(&vm->hsync_len);
-> > +
-> > +	fbmode->yres = of_video_get_value(&vm->vactive);
-> > +	fbmode->upper_margin = of_video_get_value(&vm->vback_porch);
-> > +	fbmode->lower_margin = of_video_get_value(&vm->vfront_porch);
-> > +	fbmode->vsync_len = of_video_get_value(&vm->vsync_len);
-> > +
-> > +	fbmode->pixclock = KHZ2PICOS(of_video_get_value(&vm->clock) / 1000);
-> > +
-> > +	if (vm->hah)
-> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
-> > +	if (vm->vah)
-> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
-> > +	if (vm->interlaced)
-> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
-> > +	if (vm->doublescan)
-> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(videomode_to_fb_mode);
-> > +
-> > +int of_get_video_modes(struct device_node *np, struct display *disp)
-> > +{
-> > +	struct device_node *display_np;
-> > +	struct device_node *mode_np;
-> > +	struct device_node *modes_np;
-> > +	char *default_mode;
-> > +
-> > +	int ret = 0;
-> > +
-> > +	memset(disp, 0, sizeof(*disp));
-> > +	disp->modes = kmalloc(sizeof(struct videomode*), GFP_KERNEL);
-> > +
-> > +	if (!np) {
-> > +		pr_err("%s: no node provided\n", __func__);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	display_np = of_parse_phandle(np, "display", 0);
-> > +
-> > +	if (!display_np) {
-> > +		pr_err("%s: could not find display node\n", __func__);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	of_property_read_u32(display_np, "width-mm", &disp->width_mm);
-> > +	of_property_read_u32(display_np, "height-mm", &disp->height_mm);
-> > +
-> > +	mode_np = of_parse_phandle(np, "default-mode", 0);
-> > +
-> > +	if (!mode_np) {
-> > +		pr_info("%s: no default-mode specified.\n", __func__);
-> > +		mode_np = of_find_node_by_name(np, "mode");
-> > +	}
-> > +
-> > +	if (!mode_np) {
-> > +		pr_err("%s: could not find any mode specification\n", __func__);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	default_mode = (char *)mode_np->full_name;
-> > +
-> > +	modes_np = of_find_node_by_name(np, "modes");
-> > +	for_each_child_of_node(modes_np, mode_np) {
-> > +		struct videomode *vm;
-> > +
-> > +		vm = kmalloc(sizeof(struct videomode*), GFP_KERNEL);
-> > +		disp->modes[disp->num_modes] = kmalloc(sizeof(struct videomode*),
-> > GFP_KERNEL);
-> > +
-> > +		ret |= of_video_parse_property(mode_np, "hback-porch",
-> > &vm->hback_porch);
-> > +		ret |= of_video_parse_property(mode_np, "hfront-porch",
-> > &vm->hfront_porch);
-> > +		ret |= of_video_parse_property(mode_np, "hactive", &vm->hactive);
-> > +		ret |= of_video_parse_property(mode_np, "hsync-len",
-> > &vm->hsync_len);
-> > +		ret |= of_video_parse_property(mode_np, "vback-porch",
-> > &vm->vback_porch);
-> > +		ret |= of_video_parse_property(mode_np, "vfront-porch",
-> > &vm->vfront_porch);
-> > +		ret |= of_video_parse_property(mode_np, "vactive", &vm->vactive);
-> > +		ret |= of_video_parse_property(mode_np, "vsync-len",
-> > &vm->vsync_len);
-> > +		ret |= of_video_parse_property(mode_np, "clock", &vm->clock);
-> > +
-> > +		if (ret)
-> > +			return -EINVAL;
-> > +
-> > +		vm->hah = of_property_read_bool(mode_np, "hsync-active-high");
-> > +		vm->vah = of_property_read_bool(mode_np, "vsync-active-high");
-> > +		vm->interlaced = of_property_read_bool(mode_np, "interlaced");
-> > +		vm->doublescan = of_property_read_bool(mode_np, "doublescan");
-> > +
-> > +		if (strcmp(default_mode,mode_np->full_name) == 0)
-> > +			disp->default_mode = disp->num_modes;
-> > +
-> > +		disp->modes[disp->num_modes] = vm;
-> > +		disp->num_modes++;
-> > +	}
-> > +	of_node_put(display_np);
-> > +
-> > +	pr_info("%s: found %d modelines. Using #%d as default\n", __func__,
-> > +		disp->num_modes, disp->default_mode + 1);
-> > +
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_get_video_modes);
-> > +
-> > +int of_video_mode_exists(struct device_node *np)
-> > +{
-> > +	struct device_node *display_np;
-> > +	struct device_node *mode_np;
-> > +
-> > +	if (!np)
-> > +		return -EINVAL;
-> > +
-> > +	display_np = of_parse_phandle(np, "display", 0);
-> > +
-> > +	if (!display_np)
-> > +		return -EINVAL;
-> > +
-> > +	mode_np = of_parse_phandle(np, "default-mode", 0);
-> > +
-> > +	if (mode_np)
-> > +		return 0;
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_video_mode_exists);
-> > +
-> > +int of_get_display_mode(struct device_node *np, struct drm_display_mode
-> > *dmode, int index)
-> > +{
-> > +	struct display disp;
-> > +
-> > +	of_get_video_modes(np, &disp);
-> > +
-> > +	if (index == OF_MODE_SELECTION)
-> > +		index = disp.default_mode;
-> > +	if (dmode)
-> > +		videomode_to_display_mode(&disp, dmode, index);
-> > +
-> > +	of_video_free(&disp);
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_get_display_mode);
-> > +
-> > +int of_get_fb_videomode(struct device_node *np, struct fb_videomode
-> > *fbmode, int index) 
-> > +{
-> > +	struct display disp;
-> > +
-> > +	of_get_video_modes(np, &disp);
-> > +
-> > +	if (index == OF_MODE_SELECTION)
-> > +		index = disp.default_mode;
-> > +	if (fbmode)
-> > +		videomode_to_fb_mode(&disp, fbmode, index);
-> > +
-> > +	of_video_free(&disp);
-> > +
-> > +	return 0;
-> 
-> This and of_get_display_mode() do not handle errors from
-> of_get_video_modes() nor from videomode_to_xxx_mode(). And I don't see a
-> reason for the if (fbmode) check (and the same for dmode), as there's no
-> reason to call these functions except to get the video modes.
-> 
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_get_fb_videomode);
-
-What are those two functions used for ? Aren't drivers expected to parse the 
-modes into a struct display and then operate on that structure, instead of 
-getting individual modes from the DT node ?
-
-> > diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
-> > new file mode 100644
-> > index 0000000..5571ce3
-> > --- /dev/null
-> > +++ b/include/linux/of_videomode.h
-> > @@ -0,0 +1,56 @@
-> > +/*
-> > + * Copyright 2012 Sascha Hauer <s.hauer@pengutronix.de>
-> > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > + *
-> > + * OF helpers for videomodes.
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +
-> > +#ifndef __LINUX_OF_VIDEOMODE_H
-> > +#define __LINUX_OF_VIDEOMODE_H
-> > +
-> > +#define OF_MODE_SELECTION -1
-> > +
-> > +struct mode_property {
-> > +	u32 min;
-> > +	u32 typ;
-> > +	u32 max;
-> > +};
-> > +
-> > +struct display {
-> > +	u32 width_mm;
-> > +	u32 height_mm;
-> > +	struct videomode **modes;
-> > +	int default_mode;
-> > +	int num_modes;
-
-default_mode and num_modes are non-negative, what about using an unsigned int 
-type for them ?
-
-> > +};
-> > +
-> > +/* describe videomode in terms of hardware parameters */
-> > +struct videomode {
-> > +	struct mode_property hback_porch;
-> > +	struct mode_property hfront_porch;
-> > +	struct mode_property hactive;
-> > +	struct mode_property hsync_len;
-> > +
-> > +	struct mode_property vback_porch;
-> > +	struct mode_property vfront_porch;
-> > +	struct mode_property vactive;
-> > +	struct mode_property vsync_len;
-> > +
-> > +	struct mode_property clock;
-> > +
-> > +	bool hah;
-> > +	bool vah;
-> > +	bool interlaced;
-> > +	bool doublescan;
-> > +};
-> 
-> I think the names display and videomode are a bit too generic here, and
-> could clash with names from kernel drivers. Also, the videomode is not
-> really a videomode, but a "template" (or something) for videomode. A
-> real videomode doesn't have min & max values, only the actual value.
-> 
-> Perhaps these should be prefixed with "of_"? Then again, they are not
-> really of specific either...
-
-If feel this is an important topic.
-
-A generic video mode structure is definitely needed, as well as helper 
-functions to convert between the new structure and existing video mode 
-structures (struct fb_videomode, struct drm_mode_modeinfo and struct 
-v4l2_bt_timings). The structure and the helper functions should be generic, as 
-the goal is to gradually replace subsystem-specific video mode structures 
-where possible (userspace APIs will still need to keep the old structures). We 
-thus need to drop the dependency on OF for everything but the DT parsing code. 
-For that reason an of_ prefix wouldn't be a good idea. As the goal is to 
-create a truly generic video mode structure, a generic name is a good idea (I 
-might prefer struct video_mode instead of struct videomode, but that's just 
-bikeshedding).
-
-We might need two video mode structures, one to represent a video mode, and 
-one to represent a range of video modes. I don't have enough experience with 
-video modes to have a really strong opinion on this, having a single structure 
-to represent both could be useful as well. This particular topic needs to be 
-discussed.
-
+diff --git a/Documentation/devicetree/bindings/regulator/max8907.txt b/Documentation/devicetree/bindings/regulator/max8907.txt
+index 51e683b..371eccd 100644
+--- a/Documentation/devicetree/bindings/regulator/max8907.txt
++++ b/Documentation/devicetree/bindings/regulator/max8907.txt
+@@ -12,15 +12,16 @@ Required properties:
+ ...
+ - in20-supply: The input supply for LDO20.
+ - regulators: A node that houses a sub-node for each regulator within the
+-  device. Each sub-node is identified using the regulator-compatible
+-  property, with valid values listed below. The content of each sub-node
+-  is defined by the standard binding for regulators; see regulator.txt.
++  device. Each sub-node is identified using the node's name (or the deprecated
++  regulator-compatible property if present), with valid values listed below.
++  The content of each sub-node is defined by the standard binding for
++  regulators; see regulator.txt.
+ 
+ Optional properties:
+ - maxim,system-power-controller: Boolean property indicating that the PMIC
+   controls the overall system power.
+ 
+-Valid regulator-compatible values are:
++The valid names for regulators are:
+ 
+   sd1, sd2, sd3, ldo1, ldo2, ldo3, ldo4, ldo5, ldo6, ldo7, ldo8, ldo9, ldo10,
+   ldo11, ldo12, ldo13, ldo14, ldo15, ldo16, ldo17, ldo18, ldo19, ldo20, out5v,
+@@ -42,30 +43,21 @@ Example:
+ 			...
+ 
+ 			regulators {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+-				mbatt_reg: regulator@0 {
+-					reg = <0>;
+-					regulator-compatible = "mbatt";
++				mbatt_reg: mbatt {
+ 					regulator-name = "vbat_pmu";
+ 					regulator-min-microvolt = <5000000>;
+ 					regulator-max-microvolt = <5000000>;
+ 					regulator-always-on;
+ 				};
+ 
+-				regulator@1 {
+-					reg = <1>;
+-					regulator-compatible = "sd1";
++				sd1 {
+ 					regulator-name = "nvvdd_sv1,vdd_cpu_pmu";
+ 					regulator-min-microvolt = <1000000>;
+ 					regulator-max-microvolt = <1000000>;
+ 					regulator-always-on;
+ 				};
+ 
+-				regulator@2 {
+-					reg = <2>;
+-					regulator-compatible = "sd2";
++				sd2 {
+ 					regulator-name = "nvvdd_sv2,vdd_core";
+ 					regulator-min-microvolt = <1200000>;
+ 					regulator-max-microvolt = <1200000>;
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 66ece3f..ecfc6cc 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -11,10 +11,13 @@ Optional properties:
+ - regulator-boot-on: bootloader/firmware enabled regulator
+ - <name>-supply: phandle to the parent supply/regulator node
+ - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
++
++Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
+   regulators, and if the chip's binding contains a child node that
+   describes each regulator, then this property indicates which regulator
+-  this child node is intended to configure.
++  this child node is intended to configure. If this property is missing,
++  the node's name will be used instead.
+ 
+ Example:
+ 
+diff --git a/Documentation/devicetree/bindings/regulator/tps65217.txt b/Documentation/devicetree/bindings/regulator/tps65217.txt
+index 0487e96..d316fb8 100644
+--- a/Documentation/devicetree/bindings/regulator/tps65217.txt
++++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
+@@ -22,66 +22,49 @@ Example:
+ 		compatible = "ti,tps65217";
+ 
+ 		regulators {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			dcdc1_reg: regulator@0 {
+-				reg = <0>;
+-				regulator-compatible = "dcdc1";
++			dcdc1_reg: dcdc1 {
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <1800000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			dcdc2_reg: regulator@1 {
+-				reg = <1>;
+-				regulator-compatible = "dcdc2";
++			dcdc2_reg: dcdc2 {
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			dcdc3_reg: regulator@2 {
+-				reg = <2>;
+-				regulator-compatible = "dcdc3";
++			dcdc3_reg: dcc3 {
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo1_reg: regulator@3 {
+-				reg = <3>;
+-				regulator-compatible = "ldo1";
++			ldo1_reg: ldo1 {
+ 				regulator-min-microvolt = <1000000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo2_reg: regulator@4 {
+-				reg = <4>;
+-				regulator-compatible = "ldo2";
++			ldo2_reg: ldo2 {
+ 				regulator-min-microvolt = <900000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo3_reg: regulator@5 {
+-				reg = <5>;
+-				regulator-compatible = "ldo3";
++			ldo3_reg: ldo3 {
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo4_reg: regulator@6 {
+-				reg = <6>;
+-				regulator-compatible = "ldo4";
++			ldo4_reg: ldo4 {
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+diff --git a/Documentation/devicetree/bindings/regulator/tps6586x.txt b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+index 9b05e24..8b40cac 100644
+--- a/Documentation/devicetree/bindings/regulator/tps6586x.txt
++++ b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+@@ -6,8 +6,11 @@ Required properties:
+ - interrupts: the interrupt outputs of the controller
+ - #gpio-cells: number of cells to describe a GPIO
+ - gpio-controller: mark the device as a GPIO controller
+-- regulators: list of regulators provided by this controller, must have
+-  property "regulator-compatible" to match their hardware counterparts:
++- regulators: A node that houses a sub-node for each regulator within the
++  device. Each sub-node is identified using the node's name (or the deprecated
++  regulator-compatible property if present), with valid values listed below.
++  The content of each sub-node is defined by the standard binding for
++  regulators; see regulator.txt.
+   sys, sm[0-2], ldo[0-9] and ldo_rtc
+ - sys-supply: The input supply for SYS.
+ - vin-sm0-supply: The input supply for the SM0.
+@@ -51,111 +54,80 @@ Example:
+ 		vinldo9-supply = <...>;
+ 
+ 		regulators {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			sys_reg: regulator@0 {
+-				reg = <0>;
+-				regulator-compatible = "sys";
++			sys_reg: sys {
+ 				regulator-name = "vdd_sys";
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm0_reg: regulator@1 {
+-				reg = <1>;
+-				regulator-compatible = "sm0";
++			sm0_reg: sm0 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm1_reg: regulator@2 {
+-				reg = <2>;
+-				regulator-compatible = "sm1";
++			sm1_reg: sm1 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm2_reg: regulator@3 {
+-				reg = <3>;
+-				regulator-compatible = "sm2";
++			sm2_reg: sm2 {
+ 				regulator-min-microvolt = <3000000>;
+ 				regulator-max-microvolt = <4550000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo0_reg: regulator@4 {
+-				reg = <4>;
+-				regulator-compatible = "ldo0";
++			ldo0_reg: ldo0 {
+ 				regulator-name = "PCIE CLK";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo1_reg: regulator@5 {
+-				reg = <5>;
+-				regulator-compatible = "ldo1";
++			ldo1_reg: ldo1 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo2_reg: regulator@6 {
+-				reg = <6>;
+-				regulator-compatible = "ldo2";
++			ldo2_reg: ldo2 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo3_reg: regulator@7 {
+-				reg = <7>;
+-				regulator-compatible = "ldo3";
++			ldo3_reg: ldo3 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo4_reg: regulator@8 {
+-				reg = <8>;
+-				regulator-compatible = "ldo4";
++			ldo4_reg: ldo4 {
+ 				regulator-min-microvolt = <1700000>;
+ 				regulator-max-microvolt = <2475000>;
+ 			};
+ 
+-			ldo5_reg: regulator@9 {
+-				reg = <9>;
+-				regulator-compatible = "ldo5";
++			ldo5_reg: ldo5 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo6_reg: regulator@10 {
+-				reg = <10>;
+-				regulator-compatible = "ldo6";
++			ldo6_reg: ldo6 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo7_reg: regulator@11 {
+-				reg = <11>;
+-				regulator-compatible = "ldo7";
++			ldo7_reg: ldo7 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo8_reg: regulator@12 {
+-				reg = <12>;
+-				regulator-compatible = "ldo8";
++			ldo8_reg: ldo8 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo9_reg: regulator@13 {
+-				reg = <13>;
+-				regulator-compatible = "ldo9";
++			ldo9_reg: ldo9 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 3e4106f..6f68491 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -92,16 +92,18 @@ struct regulator_init_data *of_get_regulator_init_data(struct device *dev,
+ EXPORT_SYMBOL_GPL(of_get_regulator_init_data);
+ 
+ /**
+- * of_regulator_match - extract regulator init data when node
+- * property "regulator-compatible" matches with the regulator name.
++ * of_regulator_match - extract multiple regulator init data from device tree.
+  * @dev: device requesting the data
+  * @node: parent device node of the regulators
+  * @matches: match table for the regulators
+  * @num_matches: number of entries in match table
+  *
+- * This function uses a match table specified by the regulator driver and
+- * looks up the corresponding init data in the device tree  if
+- * regulator-compatible matches. Note that the match table is modified
++ * This function uses a match table specified by the regulator driver to
++ * parse regulator init data from the device tree. @node is expected to
++ * contain a set of child nodes, each providing the init data for one
++ * regulator. The data parsed from a child node will be matched to a regulator
++ * based on either the deprecated property regulator-compatible if present,
++ * or otherwise the child node's name. Note that the match table is modified
+  * in place.
+  *
+  * Returns the number of matches found or a negative error code on failure.
+@@ -112,26 +114,23 @@ int of_regulator_match(struct device *dev, struct device_node *node,
+ {
+ 	unsigned int count = 0;
+ 	unsigned int i;
+-	const char *regulator_comp;
++	const char *name;
+ 	struct device_node *child;
+ 
+ 	if (!dev || !node)
+ 		return -EINVAL;
+ 
+ 	for_each_child_of_node(node, child) {
+-		regulator_comp = of_get_property(child,
++		name = of_get_property(child,
+ 					"regulator-compatible", NULL);
+-		if (!regulator_comp) {
+-			dev_err(dev, "regulator-compatible is missing for node %s\n",
+-				child->name);
+-			continue;
+-		}
++		if (!name)
++			name = child->name;
+ 		for (i = 0; i < num_matches; i++) {
+ 			struct of_regulator_match *match = &matches[i];
+ 			if (match->of_node)
+ 				continue;
+ 
+-			if (strcmp(match->name, regulator_comp))
++			if (strcmp(match->name, name))
+ 				continue;
+ 
+ 			match->init_data =
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.0.4
