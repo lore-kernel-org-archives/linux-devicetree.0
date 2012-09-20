@@ -1,68 +1,64 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] watchdog: at91sam9_wdt: add device tree support
-Date: Thu, 20 Sep 2012 12:04:31 +0200
-Message-ID: <CAHkwnC92eMRs+FhzLG8_Y0JhKL8yVKVPhN2TSu7wTSRK6OSGuA@mail.gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v2 2/2] ARM: at91: add at91sam9_wdt driver to at91sam9260
+Date: Thu, 20 Sep 2012 12:07:24 +0200
+Message-ID: <20120920100724.GF17667@game.jcrosoft.org>
 References: <1348055861-7857-1-git-send-email-fabio.porcedda@gmail.com>
- <1348055861-7857-2-git-send-email-fabio.porcedda@gmail.com>
- <20120920052834.GD17667@game.jcrosoft.org>
+ <1348055861-7857-3-git-send-email-fabio.porcedda@gmail.com>
+ <20120920052928.GE17667@game.jcrosoft.org>
+ <CAHkwnC9jqUmb+AGCnxV9QeSv=5JjS4+AWnutkm6TZPJJRcxGAA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120920052834.GD17667-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAHkwnC9jqUmb+AGCnxV9QeSv=5JjS4+AWnutkm6TZPJJRcxGAA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Porcedda <fabio.porcedda@gmail.com>
+Cc: Russell King <linux@arm.linux.org.uk>, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Wim Van Sebroeck <wim@iguana.be>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2012 at 7:28 AM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 13:57 Wed 19 Sep     , Fabio Porcedda wrote:
->> Tested on an at91sam9260 board (evk-pro3)
->>
->> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 15 +++++++++++++++
->>  drivers/watchdog/at91sam9_wdt.c                          | 11 +++++++++++
->>  2 files changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> new file mode 100644
->> index 0000000..fca76fd
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> @@ -0,0 +1,15 @@
->> +* Atmel Watchdog Timers
->> +
->> +** at91sam9-wdt
->> +
->> +Required properties:
->> +- compatible: must be "atmel,at91sam9-wdt"
-> atmel,at91sam9260-watchdog
->> +- reg: physical base address of the controller and length of memory mapped
->> +  region.
->> +
->> +Example:
->> +
->> +     watchdog@fffffd40 {
->> +             compatible = "atmel,at91sam9-wdt";
->> +             reg = <0xfffffd40 0x10>;
->> +     };
->
-> you need to be able to specify the timeout too via DT
+On 09:52 Thu 20 Sep     , Fabio Porcedda wrote:
+> Hi Jean-Christophe,
+> 
+> On Thu, Sep 20, 2012 at 7:29 AM, Jean-Christophe PLAGNIOL-VILLARD
+> <plagnioj@jcrosoft.com> wrote:
+> > On 13:57 Wed 19 Sep     , Fabio Porcedda wrote:
+> >> Tested on an at91sam9260 board (evk-pro3)
+> >>
+> >> Signed-off-by: Fabio Porcedda <fabio.porcedda@gmail.com>
+> >> ---
+> >>  arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
+> >>  1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+> >> index 66389c1..680b1c8 100644
+> >> --- a/arch/arm/boot/dts/at91sam9260.dtsi
+> >> +++ b/arch/arm/boot/dts/at91sam9260.dtsi
+> >> @@ -233,6 +233,12 @@
+> >>                                       trigger-external;
+> >>                               };
+> >>                       };
+> >> +
+> >> +                     watchdog@fffffd40 {
+> > disable dy default
+> 
+> All the others watchdog drivers in arch/arm/boot/dts/* are enabled by default.
+> IMHO the watchdog driver it's like the "rtstc" and "shdwc" driver,
+> they are safe to be enabled by default.
+> I'm missing something?
+no the other watchdog will not reset if not managed
 
-Ok, i will send an updated patch.
+this one will
 
-Thanks for the review
--- 
-Fabio Porcedda
+so I'm not confortable by enabling it by default
+
+Best Regards,
+J.
