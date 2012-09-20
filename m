@@ -1,35 +1,68 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 00/11] pinctrl: mvebu: pinctrl driver
-Date: Thu, 20 Sep 2012 12:02:54 +0200
-Message-ID: <20120920100254.GE21928@lunn.ch>
-References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <CACRpkda+Kav6RGstSQ9+BCgVV+pR6ca_HmoueODYubX_xYM8Jw@mail.gmail.com>
- <505AD103.8050004@gmail.com>
- <20120920110424.3cb4daff@skate>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] watchdog: at91sam9_wdt: add device tree support
+Date: Thu, 20 Sep 2012 12:04:31 +0200
+Message-ID: <CAHkwnC92eMRs+FhzLG8_Y0JhKL8yVKVPhN2TSu7wTSRK6OSGuA@mail.gmail.com>
+References: <1348055861-7857-1-git-send-email-fabio.porcedda@gmail.com>
+ <1348055861-7857-2-git-send-email-fabio.porcedda@gmail.com>
+ <20120920052834.GD17667@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120920110424.3cb4daff@skate>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Ben Dooks <ben.dooks@codethink.co.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120920052834.GD17667-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas
+On Thu, Sep 20, 2012 at 7:28 AM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 13:57 Wed 19 Sep     , Fabio Porcedda wrote:
+>> Tested on an at91sam9260 board (evk-pro3)
+>>
+>> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 15 +++++++++++++++
+>>  drivers/watchdog/at91sam9_wdt.c                          | 11 +++++++++++
+>>  2 files changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> new file mode 100644
+>> index 0000000..fca76fd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> @@ -0,0 +1,15 @@
+>> +* Atmel Watchdog Timers
+>> +
+>> +** at91sam9-wdt
+>> +
+>> +Required properties:
+>> +- compatible: must be "atmel,at91sam9-wdt"
+> atmel,at91sam9260-watchdog
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +
+>> +Example:
+>> +
+>> +     watchdog@fffffd40 {
+>> +             compatible = "atmel,at91sam9-wdt";
+>> +             reg = <0xfffffd40 0x10>;
+>> +     };
+>
+> you need to be able to specify the timeout too via DT
 
-> Hum, which patches are stalling the integration into the Marvell tree?
+Ok, i will send an updated patch.
 
-l2 cache, I think.
-
-The trees Jason built for pull requests in the direction of arm-soc
-had the l2 cache patch as the very first in the series. Now that these
-patches have run into some trouble, its blocking all the patches that
-followed.
-
-Jason is re-building his trees, throwing out l2 cache for the
-moment. That should allow Olof/Arnd to pull these trees into arm-soc,
-and then Jason will work on integrating the remaining patches not
-already in his trees.
-
-	Andrew
+Thanks for the review
+-- 
+Fabio Porcedda
