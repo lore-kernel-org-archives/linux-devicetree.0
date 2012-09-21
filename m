@@ -1,58 +1,67 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: [RFC PATCH 1/6] pinctrl: samsung: Hold OF node of pin bank in bank
- struct
-Date: Fri, 21 Sep 2012 16:22:52 +0200
-Message-ID: <1348237377-21299-2-git-send-email-t.figa@samsung.com>
-References: <1348237377-21299-1-git-send-email-t.figa@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1348237377-21299-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH 10/13] spi: omap2-mcspi:
+ dma_request_slave_channel() support for DT platforms
+Date: Fri, 21 Sep 2012 08:42:47 -0700
+Message-ID: <20120921154247.GZ28835@atomide.com>
+References: <1348152226-13588-1-git-send-email-mporter@ti.com>
+ <1348152226-13588-11-git-send-email-mporter@ti.com>
+ <20120920220931.GJ28835@atomide.com>
+ <201209210816.01473.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201209210816.01473.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Matt Porter <mporter@ti.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-The node pointer will be used in extensions added by patches that will
-follow.
+* Arnd Bergmann <arnd@arndb.de> [120921 02:19]:
+> On Thursday 20 September 2012, Tony Lindgren wrote:
+> > >  /* use PIO for small transfers, avoiding DMA setup/teardown overhead and
+> > > @@ -798,14 +801,26 @@ static int omap2_mcspi_request_dma(struct spi_device *spi)
+> > >       dma_cap_zero(mask);
+> > >       dma_cap_set(DMA_SLAVE, mask);
+> > >       sig = mcspi_dma->dma_rx_sync_dev;
+> > > -     mcspi_dma->dma_rx = dma_request_channel(mask, omap_dma_filter_fn, &sig);
+> > > +     if (spi->dev.of_node)
+> > > +             mcspi_dma->dma_rx =
+> > > +                     dma_request_slave_channel(&master->dev,
+> > > +                                               mcspi_dma->dma_rx_ch_name);
+> > > +     else
+> > > +             mcspi_dma->dma_rx =
+> > > +                     dma_request_channel(mask, omap_dma_filter_fn, &sig);
+> > >       if (!mcspi_dma->dma_rx) {
+> > >               dev_err(&spi->dev, "no RX DMA engine channel for McSPI\n");
+> > >               return -EAGAIN;
+> > >       }
+> > >  
+> > 
+> > Hmm this does not look nice.. We should be able to somehow not to care about
+> > the configuration at the mcspi driver level.
+> 
+> I agree, but as far as I understand Vinod's plans, we would actually move
+> all drivers over to dma_request_slave_channel() when we have an interface
+> to register the lookup tables from platform code.
+> 
+> I think the above is ok for a transitional phase and we can remove the
+> fallback path when we have converted all platforms using this driver
+> to either use DT or move to the new style way of passing the channel
+> configuration.
 
-Signed-off-by: Tomasz Figa <t.figa@samsung.com>
----
- drivers/pinctrl/pinctrl-samsung.c | 2 ++
- drivers/pinctrl/pinctrl-samsung.h | 3 +++
- 2 files changed, 5 insertions(+)
+Can't we come up with a version of dma_request_slave_channel that works
+both ways for now:
 
-diff --git a/drivers/pinctrl/pinctrl-samsung.c b/drivers/pinctrl/pinctrl-samsung.c
-index 03bf743..846b277 100644
---- a/drivers/pinctrl/pinctrl-samsung.c
-+++ b/drivers/pinctrl/pinctrl-samsung.c
-@@ -825,6 +825,8 @@ static int samsung_pinctrl_parse_dt_bank(struct samsung_pin_bank *bank,
- 	if (!ret)
- 		bank->pudpdn_width = val;
- 
-+	bank->of_node = np;
-+
- 	if (!of_find_property(np, "interrupt-controller", NULL)) {
- 		bank->eint_type = EINT_TYPE_NONE;
- 		return 0;
-diff --git a/drivers/pinctrl/pinctrl-samsung.h b/drivers/pinctrl/pinctrl-samsung.h
-index 72303f1..b7b74cc 100644
---- a/drivers/pinctrl/pinctrl-samsung.h
-+++ b/drivers/pinctrl/pinctrl-samsung.h
-@@ -111,6 +111,7 @@ struct samsung_pinctrl_drv_data;
-  * @eint_type: type of the external interrupt supported by the bank.
-  * @irq_base: starting controller local irq number of the bank.
-  * @name: name to be prefixed for each pin in this pin bank.
-+ * @of_node: node of pin bank in device tree
-  */
- struct samsung_pin_bank {
- 	u32		pctl_offset;
-@@ -125,6 +126,8 @@ struct samsung_pin_bank {
- 	u32		eint_offset;
- 	u32		irq_base;
- 	const char	*name;
-+
-+	struct device_node *of_node;
- };
- 
- /**
--- 
-1.7.12
+	mcspi_dma->dma_rx =
+		dma_request_slave_channel_compat(mask, omap_dma_filter_fn, &sig,
+					&master->dev, mcspi_dma->dma_rx_ch_name);
+	...			
+
+Then it's just question of patching away two lines later on rather than
+having to add all this if else to all the drivers first, then patching
+it away again.
+
+Regards,
+
+Tony
