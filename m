@@ -1,45 +1,39 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
-Date: Thu, 20 Sep 2012 23:14:02 -0600
-Message-ID: <505BF79A.8060802@wwwdotorg.org>
-References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com> <1348226536-22899-3-git-send-email-l.krishna@samsung.com>
+Subject: Re: [PATCH v2] pwm_backlight: Add device tree support for Low Threshold
+ Brightness
+Date: Thu, 20 Sep 2012 23:16:45 -0600
+Message-ID: <505BF83D.8040201@wwwdotorg.org>
+References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1348226536-22899-3-git-send-email-l.krishna@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, rpurdie@rpsys.net, thierry.reding@avionic-design.de, broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/2012 05:22 AM, Leela Krishna Amudala wrote:
-> This patch adds device tree based discovery support for exynos DRM-FIMD
-> driver which includes driver modification to handle platform data in
-> both the cases with DT and non-DT, Also adds the documentation for bindings.
+On 09/20/2012 10:51 PM, Philip, Avinash wrote:
+> Some backlights perform poorly when driven by a PWM with a short
+> duty-cycle. For such devices, the low threshold can be used to specify a
+> lower bound for the duty-cycle and should be chosen to exclude the
+> problematic range.
+> 
+> This patch adds support for an optional low-threshold-brightness
+> property.
 
-> diff --git a/Documentation/devicetree/bindings/drm/exynos/fimd.txt b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
-...
-> + - samsung,fimd-display: This property should specify the phandle of the
-> +   display device node which holds the video interface timing with the
-> +   below mentioned properties.
-> +
-> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
-> +     horizontal timing includes four parameters in the following order.
-> +
-> +     - horizontal back porch (in number of lcd clocks)
-> +     - horizontal front porch (in number of lcd clocks)
-> +     - hsync pulse width (in number of lcd clocks)
-> +     - Display panels X resolution.
-> +
-> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
-> +     vertical timing includes four parameters in the following order.
-> +
-> +     - vertical back porch (in number of lcd lines)
-> +     - vertical front porch (in number of lcd lines)
-> +     - vsync pulse width (in number of lcd clocks)
-> +     - Display panels Y resolution.
+> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
 
-Should this not use the new videomode timings that are under discussion at:
+>  Optional properties:
+>    - pwm-names: a list of names for the PWM devices specified in the
+>                 "pwms" property (see PWM binding[0])
+> +  - low-threshold-brightness: brightness threshold low level. Low threshold
+> +    brightness set to value so that backlight present on low end of
+> +    brightness.
 
-http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+For my education, why not just specify values above this value in the
+brightness-levels array; how do those two interact? It seems like any
+description of that is missing from the PWM documentation, and would be
+good to have in the DT binding too.
+
