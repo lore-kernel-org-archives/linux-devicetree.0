@@ -1,116 +1,69 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC 6/6] ARM: dts: exynos4210: Add platform-specific descriptions
- for pin controllers
-Date: Fri, 21 Sep 2012 12:56:41 -0600
-Message-ID: <505CB869.5030307@wwwdotorg.org>
-References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <1348131197-25506-7-git-send-email-t.figa@samsung.com>
+From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 08/13] mmc: omap_hsmmc: limit max_segs with the EDMA
+	DMAC
+Date: Fri, 21 Sep 2012 15:03:12 -0400
+Message-ID: <20120921190312.GL16522@beef>
+References: <1348152226-13588-1-git-send-email-mporter@ti.com>
+	<1348152226-13588-9-git-send-email-mporter@ti.com>
+	<CANfBPZ81anOy8fWgKM1PgCtB4V2pEp2x1Qi4x1uPsq7QieMN5g@mail.gmail.com>
+	<20120921184721.GD31374@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1348131197-25506-7-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120921184721.GD31374-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "S, Venkatraman" <svenkatr-l0cyMroinI0@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2012 02:53 AM, Tomasz Figa wrote:
-> The patch "pinctrl: samsung: Parse pin banks from DT" introduced
-> platform-specific data parsing from DT.
+On Fri, Sep 21, 2012 at 07:47:21PM +0100, Russell King wrote:
+> On Fri, Sep 21, 2012 at 10:45:29PM +0530, S, Venkatraman wrote:
+> > On Thu, Sep 20, 2012 at 8:13 PM, Matt Porter <mporter-l0cyMroinI0@public.gmane.org> wrote:
+> > > The EDMA DMAC has a hardware limitation that prevents supporting
+> > > scatter gather lists with any number of segments. Since the EDMA
+> > > DMA Engine driver sets the maximum segments to 16, we do the
+> > > same.
+> > >
+> > > Note: this can be removed once the DMA Engine API supports an
+> > > API to query the DMAC's segment limitations.
+> > >
+> > 
+> > I wouldn't want to bind the properties of EDMA to omap_hsmmc as this patch
+> > suggests. Why don't we have a max_segs property, which when explicitly specified
+> > in DT, will override the default ?
 > 
-> This patch adds all necessary nodes and properties to exynos4210 device
-> tree sources.
+> Why not have a generic way that DMA engine can export these kinds of
+> properties?
 
-> +++ b/arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi
+That's exactly what my note above is suggesting...
 
-> +/ {
-> +	pinctrl@11400000 {
-> +		gpa0: pin-bank@0 {
+Something along the lines of:
 
-If you're going to put a unit address ("@0")into the DT node name, the
-node should have a reg property containing the same value, and the
-parent node should have #address-cells and #size-cells properties.
+	struct slave_sg_caps
+	{
+		int max_segs;	/* <0 is no limit */
+	}
 
-However, I believe you can actually get unique node names without using
-a unit address; instead name the nodes after the object they represent,
-so e.g. s/pin-bank@0/gpa0/ above.
+	struct slave_sg_cap *
+	dmaengine_get_slave_sg_caps(struct dma_chan *chan);
 
-> +			gpio-controller;
+I'm sure there are or will be other characteristics worth providing to
+slave drivers.
 
-You need a #gpio-cells property too.
+-Matt
 
-> +			samsung,pctl-offset = <0x000>;
-> +			samsung,pin-bank = "gpa0";
-> +			samsung,pin-count = <8>;
-> +			samsung,func-width = <4>;
-> +			samsung,pud-width = <2>;
-> +			samsung,drv-width = <2>;
-> +			samsung,conpdn-width = <2>;
-> +			samsung,pudpdn-width = <2>;
-
-The properties above represent the width of the fields. Must all fields
-always be packed together into say the LSB of the registers? What if
-there are gaps between the fields in a future SoC variant, or the order
-of the fields in the register changes? I think you want to add either a
-samsung,func-bit/samsung,func-position property for each of the fields,
-or change from samsung,func-width=<4> to samsung,field-mask=<0xf>. IIRC,
-the generic pinctrl binding used a mask for this purpose.
-
-What if a future SoC variant adds more fields to the register? At that
-point, you'd need to edit the driver anyway in order to define a new DT
-property to represent the new field. Perhaps instead of having an
-explicit named property per field in the register, you want a simple
-list of fields:
-
-samsung,pin-property-names = "func", "pud", "drv", "conpdn", "pudpdn";
-samsung,pin-propert-masks = <0xf 0x30 0xc0 0x300 0xc00>;
-
-That would allow a completely arbitrary number of fields and layouts to
-be described.
-
-I wonder if for absolute generality you want a samsung,pin-stride
-property to represent the difference in register address per pin. I
-assume that's hard-coded as 4 right now.
-
-> +			interrupt-controller;
-
-You need a #interrupt-cells property too.
-
-> +		gpd0: pin-bank@5 {
-> +			gpio-controller;
-> +			samsung,pctl-offset = <0x0A0>;
-
-I think hex number are usually lower-case in DT, but I may be
-extrapolating a generality from a limited set of examples.
-
-> +		gpy5: pin-bank@19{
-
-Missing a space before the { there.
-
-> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-> index ecbc707..0e93717 100644
-> --- a/arch/arm/boot/dts/exynos4210.dtsi
-> +++ b/arch/arm/boot/dts/exynos4210.dtsi
-> @@ -59,6 +59,10 @@
->  		reg = <0x11400000 0x1000>;
->  		interrupts = <0 47 0>;
->  		interrupt-controller;
-> +		samsung,geint-con = <0x700>;
-> +		samsung,geint-mask = <0x900>;
-> +		samsung,geint-pend = <0xA00>;
-> +		samsung,svc = <0xB08>;
-
-I assume those new properties represent register addresses within the
-block. If not, I don't understand what they are.
-
-It's unclear to me why those properties aren't all part of
-exynos4210-pinctrl-banks.dtsi. Do you really have multiple SoCs where
-the register addresses for the pinctrl registers are the same (hence can
-be in a shared exynos4210-pinctrl-banks.dtsi), yet the register
-addresses for the geint registers are different (hence must be in
-non-shared exynos4210.dtsi)?
-
-Do these properties interact with samsung,eint-offset at all? Oh,
-perhaps these properties are defining a top-level interrupt controller
-that aggregates all the banks together, whereas samsung,eint-offset is
-per-bank?
+------------------------------------------------------------------------------
+Got visibility?
+Most devs has no idea what their production app looks like.
+Find out how fast your code is with AppDynamics Lite.
+http://ad.doubleclick.net/clk;262219671;13503038;y?
+http://info.appdynamics.com/FreeJavaPerformanceDownload.html
