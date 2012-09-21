@@ -1,58 +1,60 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
-Date: Fri, 21 Sep 2012 16:22:29 +0900
-Message-ID: <CAAQKjZN7B1spgoD+LJjDU=PDd9jFk6g7PekuiKEeKpXLT-X4UA@mail.gmail.com>
-References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com>
-	<1348226536-22899-3-git-send-email-l.krishna@samsung.com>
-	<505BF79A.8060802@wwwdotorg.org>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH] can: mscan-mpc5xxx: fix return value check in mpc512x_can_get_clock()
+Date: Fri, 21 Sep 2012 10:09:51 +0200
+Message-ID: <505C20CF.20508@pengutronix.de>
+References: <CAPgLHd9fRAvQ77rD_PCp45XW9-FsBisUATOT00Je39nbv5o28A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <505BF79A.8060802@wwwdotorg.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enig2D9F288324D5187D24A039D9"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd9fRAvQ77rD_PCp45XW9-FsBisUATOT00Je39nbv5o28A@mail.gmail.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: wg@grandegger.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-2012/9/21 Stephen Warren <swarren@wwwdotorg.org>:
-> On 09/21/2012 05:22 AM, Leela Krishna Amudala wrote:
->> This patch adds device tree based discovery support for exynos DRM-FIMD
->> driver which includes driver modification to handle platform data in
->> both the cases with DT and non-DT, Also adds the documentation for bindings.
->
->> diff --git a/Documentation/devicetree/bindings/drm/exynos/fimd.txt b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
-> ...
->> + - samsung,fimd-display: This property should specify the phandle of the
->> +   display device node which holds the video interface timing with the
->> +   below mentioned properties.
->> +
->> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
->> +     horizontal timing includes four parameters in the following order.
->> +
->> +     - horizontal back porch (in number of lcd clocks)
->> +     - horizontal front porch (in number of lcd clocks)
->> +     - hsync pulse width (in number of lcd clocks)
->> +     - Display panels X resolution.
->> +
->> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
->> +     vertical timing includes four parameters in the following order.
->> +
->> +     - vertical back porch (in number of lcd lines)
->> +     - vertical front porch (in number of lcd lines)
->> +     - vsync pulse width (in number of lcd clocks)
->> +     - Display panels Y resolution.
->
-> Should this not use the new videomode timings that are under discussion at:
->
-> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
->
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig2D9F288324D5187D24A039D9
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-ok, I agree with you. then the videomode helper is going to be merged
-to mainline(3.6)? if so, this patch should be reworked based on the
-videomode helper.
+On 09/21/2012 09:09 AM, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>=20
+> In case of error, the function clk_get() returns ERR_PTR()
+> and never returns NULL pointer. The NULL test in the error
+> handling should be replaced with IS_ERR().
+>=20
+> dpatch engine is used to auto generated this patch.
+> (https://github.com/weiyj/dpatch)
+>=20
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+
+Applied to can-next
+
+Tnx,
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--------------enig2D9F288324D5187D24A039D9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iEYEARECAAYFAlBcIM8ACgkQjTAFq1RaXHOxzgCeNLxu1serLpCTc3MheBIOUoEM
+DKwAmwYlhDORE13jmsaMTO6c1XE5ByJo
+=VA+E
+-----END PGP SIGNATURE-----
+
+--------------enig2D9F288324D5187D24A039D9--
