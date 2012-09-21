@@ -1,49 +1,46 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH] pwm_backlight: Add device tree support for Low
- Threshold Brightness
-Date: Fri, 21 Sep 2012 04:51:19 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9A676E@DBDE01.ent.ti.com>
-References: <1343219042-4371-1-git-send-email-avinashphilip@ti.com>
- <20120730065805.GB15245@avionic-0098.mockup.avionic-design.de>
- <518397C60809E147AF5323E0420B992E3E97C4C9@DBDE01.ent.ti.com>
- <20120919064425.GA1506@avionic-0098.mockup.avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120919064425.GA1506@avionic-0098.mockup.avionic-design.de>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, Andrew Morton <akpm@linux-foundation.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: [PATCH V6 0/2] video: drm: Add Device tree support to exynos DRM-FIMD
+Date: Fri, 21 Sep 2012 16:52:14 +0530
+Message-ID: <1348226536-22899-1-git-send-email-l.krishna@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, inki.dae@samsung.com, kgene.kim@samsung.com, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 19, 2012 at 12:14:25, Thierry Reding wrote:
-> On Wed, Aug 01, 2012 at 06:51:21AM +0000, Philip, Avinash wrote:
-> > On Mon, Jul 30, 2012 at 12:28:05, Thierry Reding wrote:
-> > > On Wed, Jul 25, 2012 at 05:54:02PM +0530, Philip, Avinash wrote:
-> > > > Low Threshold Brightness should be configured to have a linear relation
-> > > > in brightness scale. This patch adds device tree support for low
-> > > > threshold brightness as optional one for pwm_backlight.
-> > > 
-> > > I think this should be more explicit as to why this is required, perhaps
-> > > something like this:
-> > > 
-> > > 	Some backlights perform poorly when driven by a PWM with a short
-> > > 	duty-cycle. For such devices, the low threshold can be used to
-> > > 	specify a lower bound for the duty-cycle and should be chosen to
-> > > 	exclude the problematic range.
-> > > 
-> > > 	This patch adds support for an optional low-threshold-brightness
-> > > 	property.
-[snip]
-> 
-> I think you never sent an updated patch or maybe I missed it. But I
-> noticed that this patch has now ended up in Andrew's tree without the
-> comments being addressed. Can you please follow up?
+This patch set adds device tree support for DRM-FIMD for Samsung's Exynos5250.
+It includes parsing platform data from dts file. Also, adds the driver data
+for exynos4 and exynos5 devices.
 
-I will send a revised patch.
+This patchset is based and tested on top of v3.6-rc4 on smdk5250 board
+Also depends on below patchset
+http://lists.freedesktop.org/archives/dri-devel/2012-August/026076.html
 
-Thanks
-Avinash
+Changes since V5:
+	- Moved the documentation file to appropriate location.
+	- Given more description in the commit message to the patch 
+	  video: drm: exynos: Add device tree support
 
+Changes since V4:
+	- Changed the compatible string from "samsung,exynos4-fb" to
+	  "samsung,exynos4-fimd".
+
+Changes since V3:
+        - Removed the fimd version from driver data and using timing base
+          address instead
+        - Removed the drm_ prefixes to the structures and fucntions
+
+Changes since V2:
+        - Added driver data to exynos5-drm-fimd as per Marek Szyprowski suggestion
+
+Changes since V1:
+        - Corrected typo errors and changed compatibility string
+
+Leela Krishna Amudala (2):
+  drm/exynos: add platform_device_id table and driver data for drm fimd
+  video: drm: exynos: Add device tree support
+
+ .../devicetree/bindings/drm/exynos/fimd.txt        |   80 +++++++++++
+ drivers/gpu/drm/exynos/exynos_drm_fimd.c           |  138 +++++++++++++++++++-
+ 2 files changed, 212 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/fimd.txt
