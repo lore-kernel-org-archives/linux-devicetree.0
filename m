@@ -1,77 +1,43 @@
-From: Kumar Gala <galak@kernel.crashing.org>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 Subject: Re: Deprecating reserve-map in favor of properties
-Date: Thu, 20 Sep 2012 20:35:26 -0500
-Message-ID: <8C5A5EB8-6CD7-4E35-AACF-A2CC04CDBE48@kernel.crashing.org>
+Date: Fri, 21 Sep 2012 12:13:27 +1000
+Message-ID: <1348193607.1132.38.camel@pasglop>
 References: <1348179051.1132.32.camel@pasglop>
-Mime-Version: 1.0 (Apple Message framework v1278)
+ <8C5A5EB8-6CD7-4E35-AACF-A2CC04CDBE48@kernel.crashing.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1348179051.1132.32.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <8C5A5EB8-6CD7-4E35-AACF-A2CC04CDBE48-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2012-09-20 at 20:35 -0500, Kumar Gala wrote:
+> If you do this, please update the code in dtc/libfdt to construct the
+> new nodes.  We use this in u-boot to reserve kernel, dtb, initrd, etc
+> regions.  So would be nice to have drop in replacement code that could
+> use same APIs if possible.
 
-On Sep 20, 2012, at 5:10 PM, Benjamin Herrenschmidt wrote:
+The kernel would of course still understand the reserve map and I don't
+intend to remove it from the header immediately, so I think that can
+stay.... unless we make it a function of the version.
 
-> Hi folks !
-> 
-> The reserve map is, imho, my biggest mistake when coming up with the FDT
-> format.
-> 
-> The main problem is that it doesn't survive the transition via a real
-> Open Firmware interface. There is no practical way to indicate reserved
-> regions of memory accross in that case, unless you have an OS that is
-> nice enough to try to keep OF alive and accomodate its advertised
-> "available" properties, but that's typically not the case of Linux on
-> ppc.
-> 
-> So I would like to propose that we add a new "better" way to convey
-> reserved memory information, via properties in the tree.
-> 
-> I originally though of having these in the "memory" nodes themselves but
-> this can be tricky on machines that have multiple nodes (ie, NUMA
-> generally means a memory node per NUMA node) since the reserved regions
-> can spawn accross nodes and I don't want to complicate FW life too much
-> by requiring breaking them up in that case.
-> 
-> So what about something at the root of the tree:
-> 
-> reserved-ranges: An array of ranges of reserved memory
-> 
-> reserved-names: A list of zero terminated strings, one for each entry in
-> the reserved-ranges array, providing optional "names" for the reserved
-> ranges.
-> 
-> The idea here is that we could have well defined names (using a similar
-> prefix we use for properties) such as linux,initrd, which indicates
-> clearly to the kernel that the only reason that range is reserved is
-> because it contains an initrd (ie, it can be freed once that's been
-> extracted).
-> 
-> It would also be generally handy in case a reserved area is meant to be
-> used by a specific driver, such as an in-memory framebuffer
-> pre-initialized by the firmware. The generic memory management code
-> doesn't need to know, but later on, the gfx driver can pick it up easily
-> provided the name is part of the binding for that device.
-> 
-> Any objection ? If none, I'll cook up a patch to add support for it (at
-> least on powerpc :-)
-> 
-> Cheers,
-> Ben.
+It's non-trivial to make the same (stateless) API in libfdt deal with
+setting properties. I'd rather avoid that problem initially by not
+changing the blob format, keeping the reserve map around for "legacy"
+purposes and simply making the kernel capable of understanding the
+properties.
 
-If you do this, please update the code in dtc/libfdt to construct the new nodes.  We use this in u-boot to reserve kernel, dtb, initrd, etc regions.  So would be nice to have drop in replacement code that could use same APIs if possible.
-
-- k
+Cheers,
+Ben.
