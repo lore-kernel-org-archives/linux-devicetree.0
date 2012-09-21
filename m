@@ -1,84 +1,123 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v6 6/9] mmc: dw_mmc: add device tree support
-Date: Fri, 21 Sep 2012 11:43:06 +0900
-Message-ID: <505BD43A.9020608@samsung.com>
-References: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
- <1347905803-22742-7-git-send-email-thomas.abraham@linaro.org>
- <001301cd966c$3f99f0a0$becdd1e0$%jun@samsung.com>
- <CAJuYYwQOCLPsVjGYQFTnTaqDeWnaDONGMHPEF5TB3htYc5SsJA@mail.gmail.com>
- <003501cd97a0$98a7fcc0$c9f7f640$%jun@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: bcm2835: device tree for mbox-driven devices in upstream
+Date: Thu, 20 Sep 2012 22:40:57 -0600
+Message-ID: <505BEFD9.1020809@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <003501cd97a0$98a7fcc0$c9f7f640$%jun@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Seungwon Jeon <tgih.jun@samsung.com>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, popcornmix <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>>> +#else /* CONFIG_OF */
->>>> +static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
->>>> +{
->>>> +     return ERR_PTR(-EINVAL);
->>>> +}
->>>> +#endif /* CONFIG_OF */
->>>> +
->>>>  int dw_mci_probe(struct dw_mci *host)
->>>>  {
->>>>       int width, i, ret = 0;
->>>>       u32 fifo_size;
->>>>       int init_slots = 0;
->>>>
->>>> -     if (!host->pdata || !host->pdata->init) {
->>> "!host->pdata->init" is removed.
->>> Please check it.
->>
->> I have checked again in mmc-next branch and "init" is still there.
-> I mean that there is no condition whether "host->pdata->init" is present or not, unlike origin code.
-> In this patch this condition is removed. We don't need it anymore?
-Actually i didn't know why need the pdata->init.
-Why need host->pdata->init? In case of exynos, just return 1.
-I didn't know how use this at other-soc.
+As background for those not familiar with the BCM2835 SoC, many aspects
+of the HW are controlled by firmware running on the VideoCore processor
+that exists alongside the ARM CPU, and communication to that core is via
+a "mailbox" interface, with SW-defined/implemented messages. The mailbox
+interface defines so-called channels, and on each channel a certain
+format of messages and protocol is expected.
 
-Best Regards,
-Jaehoon Chung
-> 
->>
->> Thanks,
->> Thomas.
->>
->>
->>>
->>> Thanks,
->>> Seungwon Jeon
->>>
->>>> -             dev_err(host->dev,
->>>> -                     "Platform data must supply init function\n");
->>>> -             return -ENODEV;
->>>> +     if (!host->pdata) {
->>>> +             host->pdata = dw_mci_parse_dt(host);
->>>> +             if (IS_ERR(host->pdata)) {
->>>> +                     dev_err(host->dev, "platform data not available\n");
->>>> +                     return -EINVAL;
->>>> +             }
->>>>       }
->>>>
->>>>       if (!host->pdata->select_slot && host->pdata->num_slots > 1) {
->>>> --
->>>> 1.6.6.rc2
->>>>
->>>> --
->>>> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
->>>> the body of a message to majordomo@vger.kernel.org
->>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->>
->> [...]
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
+The existing downstream rpi-split branch uses the following structure
+for regulators implemented using the firmware mailbox interface:
 
+vc_mbox: mbox {
+    compatible = "broadcom,bcm2835-mbox";
+    reg = <0xB880 0x40>;
+    interrupts = <0 1>;
+    #channel-cells = <1>;
+};
+
+power {
+    compatible = "broadcom,bcm2835-power-mgr", "simple-bus";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    /* This is assuming the old dedicated channel 0 for power */
+    broadcom,vc-mailbox = <&vc_mbox 0>;
+
+    reg_sd: regulator@0 {
+        compatible = "broadcom,bcm2835-power-dev";
+        reg = <0>;
+    };
+
+    reg_usbhcd: regulator@3 {
+        compatible = "broadcom,bcm2835-power-dev";
+        reg = <3>;
+    };
+};
+
+display {
+    compatible = "broadcom,bcm2835-fb";
+    /* This is assuming the old dedicated channel 1 for fb */
+    broadcom,vc-mailbox = <&vc_mbox 1>;
+};
+
+Thinking about this a bit, I see:
+
+a) A parallel between the mailbox node/device and the virtual buses used
+by hypervisors for para-virtualized devices.
+
+b) The devices that implement communication across the mailbox API are
+logically children of the mailbox device, being addressed/controlled via
+the bus.
+
+As such, I think it'd make more sense to rework the device tree along
+the following lines while upstreaming the code:
+
+vc_mbox: mbox {
+    compatible = "broadcom,bcm2835-mbox";
+    reg = <0xB880 0x40>;
+    interrupts = <0 1>;
+
+    channels {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        channel@2 {
+            /* This is the mbox channel ID */
+            reg = <2>;
+
+            uart {
+                /* MBOX-based virtual UART */
+                compatible = "broadcom,bcm2835-mbox-vuart";
+            };
+        };
+
+        channel@8 {
+            /*
+             * This is the mbox channel ID. Here we assume the new
+             * property mailbox channel for most devices; see my
+             * previous email.
+             */
+            reg = <8>;
+
+            /*
+             * Multiple independant ojects may communicate over the same
+             * channel, for the protocol on some channels at least.
+             */
+            reg_sd: sd {
+                compatible = "broadcom,bcm2835-mbox-power";
+            };
+
+            reg_usbhcd: usbhcd {
+                compatible = "broadcom,bcm2835-mbox-power";
+            };
+
+            display {
+                compatible = "broadcom,bcm2835-mbox-fb";
+            };
+        };
+    };
+};
+
+Does anyone have any comments/suggestions on this?
