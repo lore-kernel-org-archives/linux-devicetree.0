@@ -1,98 +1,72 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V5] mtd: m25p80: Make fast read configurable via DT
-Date: Fri, 21 Sep 2012 16:19:10 +0300
-Message-ID: <1348233550.7550.2.camel@sauron.fi.intel.com>
-References: <1345923416-9293-1-git-send-email-marex@denx.de>
- <201209171610.28410.marex@denx.de>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1767882004379537005=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201209171610.28410.marex-ynQEQJNshbs@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <david.woodhouse-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [RFC PATCH 0/6] pinctrl: samsung: Convert the driver to use per-bank
+ GPIO and interrupt specifiers
+Date: Fri, 21 Sep 2012 16:22:51 +0200
+Message-ID: <1348237377-21299-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+This is a continuation of work focused on improving the pinctrl-samsung
+driver.
 
---===============1767882004379537005==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-OnCi+bgaJ2bV0OXmkNoX"
+First part on which this one depends:
+[RFC 0/6] pinctrl: samsung: Remove static platform-specific data
+http://article.gmane.org/gmane.linux.kernel.samsung-soc/12759
 
+This series attempts to simplify usage of the driver and fix several
+problems of current implementation, in particular:
 
---=-OnCi+bgaJ2bV0OXmkNoX
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+  - Simplifies GPIO pin specification in device tree by using pin
+    namespace local to pin bank instead of local to pin controller, e.g.
 
-On Mon, 2012-09-17 at 16:10 +0200, Marek Vasut wrote:
-> Bump, do you think we can get this into 3.7 please?
+    	gpios = <&gpj0 3 0>;
 
-Aiaiai!
+    instead of
 
----------------------------------------------------------------------------=
------
+	gpios = <&pinctrl0 115 0>;
 
-Successfully built configuration "i386_defconfig,i386,", results:
+  - Simplifies GPIO interrupt specification in device tree by using
+    namespace local to pin bank (and equal to GPIO namespace), e.g.
 
---- before_patching.log
-+++ after_patching.log
-@@ @@
-+drivers/mtd/devices/m25p80.c: In function =E2=80=98m25p_probe=E2=80=99:
-+drivers/mtd/devices/m25p80.c:808:23: warning: unused variable =E2=80=98np=
-=E2=80=99 [-Wunused-variable]
+    	interrupt-parent = <&gpj0>;
+	interrupts = <3 0>;
 
----------------------------------------------------------------------------=
------
+    instead of
 
+	interrupt-parent = <&pinctrl0>;
+	interrupts = <115 0>;
 
---=20
-Best Regards,
-Artem Bityutskiy
+  - Simplifies internal GPIO pin to bank translation thanks to
+    correspondence of particular GPIO chips to pin banks. This allows
+    to remove the (costly in case of GPIO bit-banging drivers) lookup
+    over all banks to find the one that the pin is from.
 
---=-OnCi+bgaJ2bV0OXmkNoX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Any comments are welcome.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+To do:
+  - Bindings documentation
+  - Per-bank interrupt specifiers for wake-up interrupts
+  - Configuration of pins used as wake-up interrupts to EINT function
 
-iQIcBAABAgAGBQJQXGlOAAoJECmIfjd9wqK0QYUQAIHqypvKSsHsUOvX9KrsNFe0
-RktQndeAEJNh/zFGUOfPAJEtBxIQ+vKwDUWBMuAIR0RQM8ip7vFTiTjJL7veAnnq
-suKMQAH52dWloE3rHsC2aQ4BZlEsl+r1hoLekcOUNpw7NMyCuMdQh6syGiNzIGYE
-Fl1BExyvzAs7639ju662P1vlez6SS6IFTA17th1Mo3FLLBasIqV7HJEMEQ+tig3k
-KMHLO5rWtXQ+mmUOoq4TUPYUOst2SeqjoRkZ2PZJrkoDayz7Wz+/6YxzfbcVwBt0
-3XqilAQvV9bSXK0WHGpZ5zClkhjurbx+94c5YoR0zyqVhBxKclWD3evlq0iqHEBj
-pi8SQovC8cm1nuxkxHN4TFcugTX9akugktkfttqYbEjG7wHgETAuC0BxcOuxZN8R
-Qw6ZXaR08A8JH/rx13liaumRitxEG/SnZXdwnZ+7QT49zhumOnTjeDKsVmcoTGV9
-bzT6/0HajWMpCBPLzd21V3LQx5y+L59iIjCawzjhNMvL9r5yralf9C6j6XkDFfJM
-PeJ1l6zcrWozS24RMld9A+XY2wsBc2Bqq4UIp4zzzzNbgdl2kn5YOhy2M5RoWAFv
-TW+k3lqL0pcru5zIll/MwJ+8TLbaT8sA6pKh4cMvTeWMPINRblWrMJovI96tSYfp
-EMBk9vcPT/7eNzzZgBL1
-=csaK
------END PGP SIGNATURE-----
+Tomasz Figa (6):
+  pinctrl: samsung: Hold OF node of pin bank in bank struct
+  pinctrl: samsung: Hold pointer to driver data in bank struct
+  pinctrl: exynos: Use one IRQ domain per pin bank
+  pinctrl: samsung: Do not pass gpio_chip to pin_to_reg_bank
+  pinctrl: samsung: Use one GPIO chip per pin bank
+  ARM: dts: exynos4210: Update pin bank nodes to reflect per-bank GPIO
+    chips and IRQ domains
 
---=-OnCi+bgaJ2bV0OXmkNoX--
+ arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi |  72 ++++++++++
+ arch/arm/boot/dts/exynos4210.dtsi               |   4 -
+ drivers/pinctrl/pinctrl-exynos.c                | 118 +++++------------
+ drivers/pinctrl/pinctrl-exynos.h                |  12 --
+ drivers/pinctrl/pinctrl-samsung.c               | 168 ++++++++++++++----------
+ drivers/pinctrl/pinctrl-samsung.h               |  18 ++-
+ 6 files changed, 220 insertions(+), 172 deletions(-)
 
-
---===============1767882004379537005==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1767882004379537005==--
+-- 
+1.7.12
