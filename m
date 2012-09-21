@@ -1,72 +1,45 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: [PATCH v2] pwm_backlight: Add device tree support for Low Threshold Brightness
-Date: Fri, 21 Sep 2012 10:21:20 +0530
-Message-ID: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
+Date: Thu, 20 Sep 2012 23:14:02 -0600
+Message-ID: <505BF79A.8060802@wwwdotorg.org>
+References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com> <1348226536-22899-3-git-send-email-l.krishna@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, rpurdie@rpsys.net, thierry.reding@avionic-design.de
-Cc: broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1348226536-22899-3-git-send-email-l.krishna@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some backlights perform poorly when driven by a PWM with a short
-duty-cycle. For such devices, the low threshold can be used to specify a
-lower bound for the duty-cycle and should be chosen to exclude the
-problematic range.
+On 09/21/2012 05:22 AM, Leela Krishna Amudala wrote:
+> This patch adds device tree based discovery support for exynos DRM-FIMD
+> driver which includes driver modification to handle platform data in
+> both the cases with DT and non-DT, Also adds the documentation for bindings.
 
-This patch adds support for an optional low-threshold-brightness
-property.
+> diff --git a/Documentation/devicetree/bindings/drm/exynos/fimd.txt b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
+...
+> + - samsung,fimd-display: This property should specify the phandle of the
+> +   display device node which holds the video interface timing with the
+> +   below mentioned properties.
+> +
+> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
+> +     horizontal timing includes four parameters in the following order.
+> +
+> +     - horizontal back porch (in number of lcd clocks)
+> +     - horizontal front porch (in number of lcd clocks)
+> +     - hsync pulse width (in number of lcd clocks)
+> +     - Display panels X resolution.
+> +
+> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
+> +     vertical timing includes four parameters in the following order.
+> +
+> +     - vertical back porch (in number of lcd lines)
+> +     - vertical front porch (in number of lcd lines)
+> +     - vsync pulse width (in number of lcd clocks)
+> +     - Display panels Y resolution.
 
-Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
----
-Changes since v1:
-        - Updated commit message.
-	- Changes to low-threshold-brightness.
-	- Merged example section to original.
+Should this not use the new videomode timings that are under discussion at:
 
-:100644 100644 1e4fc72... 5baebff... M	Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-:100644 100644 995f016... 29e6fe1... M	drivers/video/backlight/pwm_bl.c
- .../bindings/video/backlight/pwm-backlight.txt     |    4 ++++
- drivers/video/backlight/pwm_bl.c                   |    5 +++++
- 2 files changed, 9 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-index 1e4fc72..5baebff 100644
---- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-@@ -14,6 +14,9 @@ Required properties:
- Optional properties:
-   - pwm-names: a list of names for the PWM devices specified in the
-                "pwms" property (see PWM binding[0])
-+  - low-threshold-brightness: brightness threshold low level. Low threshold
-+    brightness set to value so that backlight present on low end of
-+    brightness.
- 
- [0]: Documentation/devicetree/bindings/pwm/pwm.txt
- 
-@@ -25,4 +28,5 @@ Example:
- 
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
- 		default-brightness-level = <6>;
-+		low-threshold-brightness = <50>;
- 	};
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 995f016..29e6fe1 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -143,6 +143,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 
- 		data->dft_brightness = value;
- 		data->max_brightness--;
-+
-+		ret = of_property_read_u32(node, "low-threshold-brightness",
-+					   &value);
-+		if (!ret)
-+			data->lth_brightness = value;
- 	}
- 
- 	/*
--- 
-1.7.0.4
-
+http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
