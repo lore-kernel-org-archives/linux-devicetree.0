@@ -1,123 +1,49 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: bcm2835: device tree for mbox-driven devices in upstream
-Date: Thu, 20 Sep 2012 22:40:57 -0600
-Message-ID: <505BEFD9.1020809@wwwdotorg.org>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH] pwm_backlight: Add device tree support for Low
+ Threshold Brightness
+Date: Fri, 21 Sep 2012 04:51:19 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3E9A676E@DBDE01.ent.ti.com>
+References: <1343219042-4371-1-git-send-email-avinashphilip@ti.com>
+ <20120730065805.GB15245@avionic-0098.mockup.avionic-design.de>
+ <518397C60809E147AF5323E0420B992E3E97C4C9@DBDE01.ent.ti.com>
+ <20120919064425.GA1506@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, popcornmix <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20120919064425.GA1506@avionic-0098.mockup.avionic-design.de>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-As background for those not familiar with the BCM2835 SoC, many aspects
-of the HW are controlled by firmware running on the VideoCore processor
-that exists alongside the ARM CPU, and communication to that core is via
-a "mailbox" interface, with SW-defined/implemented messages. The mailbox
-interface defines so-called channels, and on each channel a certain
-format of messages and protocol is expected.
+On Wed, Sep 19, 2012 at 12:14:25, Thierry Reding wrote:
+> On Wed, Aug 01, 2012 at 06:51:21AM +0000, Philip, Avinash wrote:
+> > On Mon, Jul 30, 2012 at 12:28:05, Thierry Reding wrote:
+> > > On Wed, Jul 25, 2012 at 05:54:02PM +0530, Philip, Avinash wrote:
+> > > > Low Threshold Brightness should be configured to have a linear relation
+> > > > in brightness scale. This patch adds device tree support for low
+> > > > threshold brightness as optional one for pwm_backlight.
+> > > 
+> > > I think this should be more explicit as to why this is required, perhaps
+> > > something like this:
+> > > 
+> > > 	Some backlights perform poorly when driven by a PWM with a short
+> > > 	duty-cycle. For such devices, the low threshold can be used to
+> > > 	specify a lower bound for the duty-cycle and should be chosen to
+> > > 	exclude the problematic range.
+> > > 
+> > > 	This patch adds support for an optional low-threshold-brightness
+> > > 	property.
+[snip]
+> 
+> I think you never sent an updated patch or maybe I missed it. But I
+> noticed that this patch has now ended up in Andrew's tree without the
+> comments being addressed. Can you please follow up?
 
-The existing downstream rpi-split branch uses the following structure
-for regulators implemented using the firmware mailbox interface:
+I will send a revised patch.
 
-vc_mbox: mbox {
-    compatible = "broadcom,bcm2835-mbox";
-    reg = <0xB880 0x40>;
-    interrupts = <0 1>;
-    #channel-cells = <1>;
-};
+Thanks
+Avinash
 
-power {
-    compatible = "broadcom,bcm2835-power-mgr", "simple-bus";
-    #address-cells = <1>;
-    #size-cells = <0>;
-
-    /* This is assuming the old dedicated channel 0 for power */
-    broadcom,vc-mailbox = <&vc_mbox 0>;
-
-    reg_sd: regulator@0 {
-        compatible = "broadcom,bcm2835-power-dev";
-        reg = <0>;
-    };
-
-    reg_usbhcd: regulator@3 {
-        compatible = "broadcom,bcm2835-power-dev";
-        reg = <3>;
-    };
-};
-
-display {
-    compatible = "broadcom,bcm2835-fb";
-    /* This is assuming the old dedicated channel 1 for fb */
-    broadcom,vc-mailbox = <&vc_mbox 1>;
-};
-
-Thinking about this a bit, I see:
-
-a) A parallel between the mailbox node/device and the virtual buses used
-by hypervisors for para-virtualized devices.
-
-b) The devices that implement communication across the mailbox API are
-logically children of the mailbox device, being addressed/controlled via
-the bus.
-
-As such, I think it'd make more sense to rework the device tree along
-the following lines while upstreaming the code:
-
-vc_mbox: mbox {
-    compatible = "broadcom,bcm2835-mbox";
-    reg = <0xB880 0x40>;
-    interrupts = <0 1>;
-
-    channels {
-        #address-cells = <1>;
-        #size-cells = <0>;
-
-        channel@2 {
-            /* This is the mbox channel ID */
-            reg = <2>;
-
-            uart {
-                /* MBOX-based virtual UART */
-                compatible = "broadcom,bcm2835-mbox-vuart";
-            };
-        };
-
-        channel@8 {
-            /*
-             * This is the mbox channel ID. Here we assume the new
-             * property mailbox channel for most devices; see my
-             * previous email.
-             */
-            reg = <8>;
-
-            /*
-             * Multiple independant ojects may communicate over the same
-             * channel, for the protocol on some channels at least.
-             */
-            reg_sd: sd {
-                compatible = "broadcom,bcm2835-mbox-power";
-            };
-
-            reg_usbhcd: usbhcd {
-                compatible = "broadcom,bcm2835-mbox-power";
-            };
-
-            display {
-                compatible = "broadcom,bcm2835-mbox-fb";
-            };
-        };
-    };
-};
-
-Does anyone have any comments/suggestions on this?
