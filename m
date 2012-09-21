@@ -1,69 +1,90 @@
-From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH 08/13] mmc: omap_hsmmc: limit max_segs with the EDMA
-	DMAC
-Date: Fri, 21 Sep 2012 15:03:12 -0400
-Message-ID: <20120921190312.GL16522@beef>
-References: <1348152226-13588-1-git-send-email-mporter@ti.com>
-	<1348152226-13588-9-git-send-email-mporter@ti.com>
-	<CANfBPZ81anOy8fWgKM1PgCtB4V2pEp2x1Qi4x1uPsq7QieMN5g@mail.gmail.com>
-	<20120921184721.GD31374@n2100.arm.linux.org.uk>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [RFC 0/6] pinctrl: samsung: Remove static platform-specific data
+Date: Fri, 21 Sep 2012 21:31:15 +0200
+Message-ID: <3531529.1enE84BHSJ@flatron>
+References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <505CB4A3.9050707@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120921184721.GD31374-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "S, Venkatraman" <svenkatr-l0cyMroinI0@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <505CB4A3.9050707@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2012 at 07:47:21PM +0100, Russell King wrote:
-> On Fri, Sep 21, 2012 at 10:45:29PM +0530, S, Venkatraman wrote:
-> > On Thu, Sep 20, 2012 at 8:13 PM, Matt Porter <mporter-l0cyMroinI0@public.gmane.org> wrote:
-> > > The EDMA DMAC has a hardware limitation that prevents supporting
-> > > scatter gather lists with any number of segments. Since the EDMA
-> > > DMA Engine driver sets the maximum segments to 16, we do the
-> > > same.
-> > >
-> > > Note: this can be removed once the DMA Engine API supports an
-> > > API to query the DMAC's segment limitations.
-> > >
-> > 
-> > I wouldn't want to bind the properties of EDMA to omap_hsmmc as this patch
-> > suggests. Why don't we have a max_segs property, which when explicitly specified
-> > in DT, will override the default ?
+Hi Stephen,
+
+Thanks for your comments.
+
+On Friday 21 of September 2012 12:40:35 Stephen Warren wrote:
+> On 09/20/2012 02:53 AM, Tomasz Figa wrote:
+> > This RFC series is a work on replacing static platform-specific data in
+> > pinctrl-samsung driver with data dynamically parsed from device tree.
 > 
-> Why not have a generic way that DMA engine can export these kinds of
-> properties?
+> Hmm. I tend to think this is exactly the opposite of the correct
+> direction; you end up wasting a whole ton of time during the boot
+> process parsing data out of the device tree only to end up with exactly
+> the same tables that you would have just put into the kernel anyway.
 
-That's exactly what my note above is suggesting...
+Yes, I'm aware that parsing all those information from device tree won't be 
+free. I have even considering simplifying the binding to something like
 
-Something along the lines of:
+	samsung,pin-bank = <offset count func pud drv conpdn pudpdn>;
 
-	struct slave_sg_caps
-	{
-		int max_segs;	/* <0 is no limit */
-	}
+listing widths of fields in fixed order, with some fields allowed to be 
+zero, meaning that given bank doesn't support this control. It would 
+simplify the parsing to just iterating over a table under a single 
+property. What do you think?
 
-	struct slave_sg_cap *
-	dmaengine_get_slave_sg_caps(struct dma_chan *chan);
+I have decided to post the original variant to get some comments earlier, 
+as I already had all the rest of patches based on it.
 
-I'm sure there are or will be other characteristics worth providing to
-slave drivers.
+> Is
+> it really likely that future SoCs will change information such as the
+> width of the pullup/pulldown bitfield, but not change anything else
+> that's not already in this binding. If that isn't the case, the binding
+> won't be complete enough to describe any new features on future SoCs
+> anyway.
 
--Matt
+Looking at the history of Samsung SoCs and specifics of this subsystem, 
+there isn't much likely to change other than the bindings already account 
+for (and the binding represents whatever the driver accounts for).
 
-------------------------------------------------------------------------------
-Got visibility?
-Most devs has no idea what their production app looks like.
-Find out how fast your code is with AppDynamics Lite.
-http://ad.doubleclick.net/clk;262219671;13503038;y?
-http://info.appdynamics.com/FreeJavaPerformanceDownload.html
+> > It aims at reducing the SoC-specific part of the driver and thus the
+> > amount of modifications to driver sources when adding support for next
+> > SoCs (like Exynos4x12).
+> > 
+> > Furthermore, moving definitions of pin banks to device tree will allow
+> > to simplify GPIO and GEINT specification to a format similar to used
+> > previously by gpiolib-based implementation, using a phandle to the bank
+> > and pin index inside the bank, e.g.
+> > 
+> > 	gpios = <&gpa1 4 0>;
+> > 	interrupt-parent = <&gpa1>;
+> > 	interrupts = <4 0>;
+> 
+> I don't think those two are correlated; the GPIO specifier format could
+> just as easily be <bank pin> irrespective of whether the pinctrl driver
+> contains SoC-specific tables or not.
+
+Correct me if I'm wrong, but each bank needs to have its own subnode to be 
+able to address pins like this. That was the starting point of the whole 
+series and the idea that if all the banks (which are SoC-specific) have to 
+be defined anyway, maybe it wouldn't be too bad to put all the SoC-specific 
+parameters there too.
+
+> > Any comments are welcome.
+> > 
+> > TODO:
+> >  - bindings documentation
+> 
+> That's unfortunate; it would be the most interesting part to review. I
+> guess I'll try to work out the binding from the examples in patch 6.
+
+Sorry about that. I thought the examples would be sufficient. Still, I was 
+focused at getting comments about the idea of moving such data to DT in 
+general, not the bindings, which are most likely to change, in particular.
+
+Best regards,
+Tomasz Figa
