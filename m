@@ -1,58 +1,27 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
-Date: Fri, 21 Sep 2012 10:06:10 -0600
-Message-ID: <505C9072.2010204@wwwdotorg.org>
-References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com> <1348226536-22899-3-git-send-email-l.krishna@samsung.com> <505BF79A.8060802@wwwdotorg.org> <CAAQKjZN7B1spgoD+LJjDU=PDd9jFk6g7PekuiKEeKpXLT-X4UA@mail.gmail.com>
+From: "S, Venkatraman" <svenkatr@ti.com>
+Subject: Re: [RFC PATCH 08/13] mmc: omap_hsmmc: limit max_segs with the EDMA DMAC
+Date: Fri, 21 Sep 2012 22:45:29 +0530
+Message-ID: <CANfBPZ81anOy8fWgKM1PgCtB4V2pEp2x1Qi4x1uPsq7QieMN5g@mail.gmail.com>
+References: <1348152226-13588-1-git-send-email-mporter@ti.com> <1348152226-13588-9-git-send-email-mporter@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAQKjZN7B1spgoD+LJjDU=PDd9jFk6g7PekuiKEeKpXLT-X4UA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1348152226-13588-9-git-send-email-mporter@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Matt Porter <mporter@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infrad>
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/2012 01:22 AM, Inki Dae wrote:
-> 2012/9/21 Stephen Warren <swarren@wwwdotorg.org>:
->> On 09/21/2012 05:22 AM, Leela Krishna Amudala wrote:
->>> This patch adds device tree based discovery support for exynos DRM-FIMD
->>> driver which includes driver modification to handle platform data in
->>> both the cases with DT and non-DT, Also adds the documentation for bindings.
->>
->>> diff --git a/Documentation/devicetree/bindings/drm/exynos/fimd.txt b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
->> ...
->>> + - samsung,fimd-display: This property should specify the phandle of the
->>> +   display device node which holds the video interface timing with the
->>> +   below mentioned properties.
->>> +
->>> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
->>> +     horizontal timing includes four parameters in the following order.
->>> +
->>> +     - horizontal back porch (in number of lcd clocks)
->>> +     - horizontal front porch (in number of lcd clocks)
->>> +     - hsync pulse width (in number of lcd clocks)
->>> +     - Display panels X resolution.
->>> +
->>> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
->>> +     vertical timing includes four parameters in the following order.
->>> +
->>> +     - vertical back porch (in number of lcd lines)
->>> +     - vertical front porch (in number of lcd lines)
->>> +     - vsync pulse width (in number of lcd clocks)
->>> +     - Display panels Y resolution.
->>
->> Should this not use the new videomode timings that are under discussion at:
->>
->> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
->>
-> 
-> ok, I agree with you. then the videomode helper is going to be merged
-> to mainline(3.6)? if so, this patch should be reworked based on the
-> videomode helper.
+On Thu, Sep 20, 2012 at 8:13 PM, Matt Porter <mporter@ti.com> wrote:
+> The EDMA DMAC has a hardware limitation that prevents supporting
+> scatter gather lists with any number of segments. Since the EDMA
+> DMA Engine driver sets the maximum segments to 16, we do the
+> same.
+>
+> Note: this can be removed once the DMA Engine API supports an
+> API to query the DMAC's segment limitations.
+>
 
-I think the videomode helpers would be merged for 3.7 at the very
-earliest; 3.6 is cooked already. Given there are still some comments on
-the binding, perhaps it won't happen until 3.8, but it'd be best to ask
-on that thread so that people more directly involved with the status can
-answer.
+I wouldn't want to bind the properties of EDMA to omap_hsmmc as this patch
+suggests. Why don't we have a max_segs property, which when explicitly specified
+in DT, will override the default ?
