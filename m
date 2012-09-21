@@ -1,57 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] pwm_backlight: Add device tree support for Low Threshold
- Brightness
-Date: Fri, 21 Sep 2012 11:43:39 -0600
-Message-ID: <505CA74B.2090405@wwwdotorg.org>
-References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com> <505BF83D.8040201@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 03/10] pinctrl: mvebu: kirkwood pinctrl driver
+Date: Fri, 21 Sep 2012 20:14:20 +0200
+Message-ID: <CACRpkdYGjen9xVHHK0ca-4z4uFbuLZq1iJuuUsFssF3Ec4Kx8g@mail.gmail.com>
+References: <1344689809-6223-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<50559737.8000705@gmail.com>
+	<CACRpkdY-Nyn73EJLvE1RsL4hgMRm6hALtnS-eKAXU7edot2V9A@mail.gmail.com>
+	<201209201530.40974.arnd@arndb.de>
+	<CACRpkdZYr2B83e3mBmMkO8Ai3xU_QGevfbSOSNoTvK3Lz6y6mg@mail.gmail.com>
+	<20120920213636.2ee27d41@skate>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20120920213636.2ee27d41@skate>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Rob Landley <rob@landley.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/2012 12:03 AM, Philip, Avinash wrote:
-> Hi Stephen,
-> 
-> On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
->> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
->>> Some backlights perform poorly when driven by a PWM with a short
->>> duty-cycle. For such devices, the low threshold can be used to specify a
->>> lower bound for the duty-cycle and should be chosen to exclude the
->>> problematic range.
->>>
->>> This patch adds support for an optional low-threshold-brightness
->>> property.
->>
->>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
->>
->>>  Optional properties:
->>>    - pwm-names: a list of names for the PWM devices specified in the
->>>                 "pwms" property (see PWM binding[0])
->>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
->>> +    brightness set to value so that backlight present on low end of
->>> +    brightness.
->>
->> For my education, why not just specify values above this value in the
->> brightness-levels array; how do those two interact?
-> 
-> Please find details from 
-> https://lkml.org/lkml/2012/7/18/284
+On Thu, Sep 20, 2012 at 9:36 PM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
 
-Hmm. That still doesn't really explain what this property does.
+> If I understand correctly, we would like drivers to be able to read
+> some common "system" registers to figure out which SoC variant we are
+> running on. Such feature should normally be provided by code in
+> arch/arm/mach-*/ and called by drivers, but we are trying to eliminate
+> all dependencies of driver code on architecture code, correct?
 
-I'm going to guess that if this property is present, and values in the
-brightness-levels property get scaled between the
-low-threshold-brightness and 255 instead of being used directly. But
-then, in the email you linked to, what does "But brightness-levels won't
-be uniformly divided" mean? Why would doing the calculation at run-time
-be any better than simply putting the correct values into
-brightness-levels in the first place?
+So what I think is that any such mechanism would defy the idea
+with device tree providing all platform configuration, including
+the ASIC/SoC variant.
 
-Either way, the DT binding should explain exactly what this value is
-used for, and how it affects the interpretation of values in
-brightness-levels.
+The only not-so-unelegant idea I have is for the machine to
+go in and fiddle with the device tree, e.g. add some info into
+the tree somewhere stating into the nodes which ASIC variant
+it is. Maybe even modify the compatible value at runtime.
+
+But it somehow feels like cracking an egg with a sledgehammer.
+
+I think we need to meditate on this.
+
+Yours,
+Linus Walleij
