@@ -1,41 +1,90 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] ARM: OMAP: omap_device: fix return value check in omap_device_build_ss()
-Date: Fri, 21 Sep 2012 14:32:04 +0800
-Message-ID: <CAPgLHd8ys7uU8wBhMF7JWZEDAddOnGo4vHPu1V_+Q3__WWK-3g@mail.gmail.com>
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: Re: [PATCH v3] ARM: EXYNOS: Add MFC device tree support
+Date: Fri, 21 Sep 2012 06:37:57 +0000 (GMT)
+Message-ID: <15306421.19741348209477680.JavaMail.weblogic@epml18>
+Reply-To: arun.kk@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-
-In case of error, the function omap_device_alloc() returns ERR_PTR()
-and never returns NULL pointer. The NULL test in the return value
-check should be replaced with IS_ERR().
-
-dpatch engine is used to auto generated this patch.
-(https://github.com/weiyj/dpatch)
-
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- arch/arm/plat-omap/omap_device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/plat-omap/omap_device.c b/arch/arm/plat-omap/omap_device.c
-index c490240..3f62de6 100644
---- a/arch/arm/plat-omap/omap_device.c
-+++ b/arch/arm/plat-omap/omap_device.c
-@@ -671,7 +671,7 @@ struct platform_device __init *omap_device_build_ss(const char *pdev_name, int p
- 		dev_set_name(&pdev->dev, "%s", pdev->name);
- 
- 	od = omap_device_alloc(pdev, ohs, oh_cnt, pm_lats, pm_lats_cnt);
--	if (!od)
-+	if (IS_ERR(od))
- 		goto odbs_exit1;
- 
- 	ret = platform_device_add_data(pdev, pdata, pdata_len);
-
-
+SGkgS2Fyb2wsDQpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXcuDQpQbGVhc2UgZmluZCBteSBjb21t
+ZW50cyBpbmxpbmUuDQoNCk9uIFdlZCwgU2VwIDE5LCAyMDEyIGF0IDM6MDggUE0sIEthcm9sIExl
+d2FuZG93c2tpIDxrLmxld2FuZG93c2tAc2Ftc3VuZy5jb20+IHdyb3RlOg0KPiBPbiAwOS8xNC8y
+MDEyIDA1OjM4IFBNLCBBcnVuIEt1bWFyIEsgd3JvdGU6DQo+DQo+PiBUaGlzIHBhdGNoIGFkZHMg
+ZGV2aWNlIHRyZWUgZW50cnkgZm9yIE1GQyB2NiBpbiB0aGUgRXh5bm9zNQ0KPj4gU29DLiBNYWtl
+cyB0aGUgcmVxdWlyZWQgY2hhbmdlcyBpbiB0aGUgY2xvY2sgZmlsZXMgYW5kIGFkZHMNCj4+IE1G
+QyB0byB0aGUgRFQgZGV2aWNlIGxpc3QuDQo+DQo+DQo+IEhpIQ0KPg0KPiBUaGFua3MgZm9yIHdv
+cmtpbmcgb24gdGhpcyBwYXRjaC4gUGxlYXNlIGFsbG93IG1lIHRvIGFkZCBmZXcNCj4gY29tbWVu
+dHMuDQo+DQo+DQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5k
+dHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5kdHNpDQo+PiBpbmRleCBiNTU3OTRi
+Li41ZGYyZjk5IDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTI1MC5k
+dHNpDQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLmR0c2kNCj4+IEBAIC02
+Miw2ICs2MiwxMiBAQA0KPj4gICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgNDIgMD47DQo+
+PiAgICAgICB9Ow0KPj4NCj4+ICsgICAgIG1mYyB7DQo+DQo+DQo+IE5pdHBpY2sgLSBzaG91bGRu
+J3Qgbm9kZSBuYW1lcyBiZSBnZW5lcmljPyAgTUZDIGlzIHN0cmljdGx5DQo+IHNhbXN1bmcgc3Bl
+Y2lmaWMsIHNvbWV0aGluZyBsaWtlICJjb2RlYyIvInZpZGVvLWNvZGVjIiB3b3VsZCBtYWtlDQo+
+IG1vcmUgc2Vuc2UgKElNVkhPKS4gSSB3b3VsZCBwcmVmZXIgdG8gc2VlIGFkZHJlc3MgdG9vIChl
+LmcuDQo+IGNvZGVjQDB4MTEwMDAwMDApLg0KPg0KPiBIb3dldmVyLCBJIGRvIHNlZSB0aGF0IHJ0
+YyBiZWxvdyBkb2Vzbid0IHNwZWNpZnkgYWRkcmVzcyBpbiBub2RlIHRvbywNCj4gc28gbWF5YmUg
+SSdtIG1pc3Npbmcgc29tZXRoaW5nIGhlcmUuDQo+DQoNClllcyBjb2RlYyBtYWtlcyBpdCBtb3Jl
+IGdlbmVyaWMuDQpJIHRvbyBkb250IHNlZSB0aGUgYWRkcmVzc2VzIHVzZWQgZXZlcnl3aGVyZSBp
+biBub2RlIG5hbWVzLg0KSWYgc29tZWJvZHkgY2FuIHBsZWFzZSBzdWdnZXN0IHdoaWNoIG9uZSBp
+cyBiZXR0ZXINCm1mYyBPUiBjb2RlYyBPUiBjb2RlY0AweDExMDAwMDAwIGFzIG5vZGUgbmFtZS4N
+Cg0KDQo+DQo+Pg0KPj4gK3N0cnVjdCBtZmNfZHRfbWVtaW5mbyB7DQo+PiArICAgICB1bnNpZ25l
+ZCBsb25nIGxvZmY7DQo+PiArICAgICB1bnNpZ25lZCBsb25nIGxzaXplOw0KPj4gKyAgICAgdW5z
+aWduZWQgbG9uZyByb2ZmOw0KPj4gKyAgICAgdW5zaWduZWQgbG9uZyByc2l6ZTsNCj4NCj4NCj4g
+ICBjaGFyICpjb21wYXRpYmxlOw0KPg0KPj4gK307DQo+PiArDQo+PiAraW50IGZkdF9maW5kX21m
+Y19tZW0odW5zaWduZWQgbG9uZyBub2RlLCBjb25zdCBjaGFyICp1bmFtZSwgaW50IGRlcHRoLA0K
+Pj4gKyAgICAgICAgICAgICB2b2lkICpkYXRhKQ0KPj4gK3sNCj4+ICsgICAgIF9fYmUzMiAqcHJv
+cDsNCj4+ICsgICAgIHVuc2lnbmVkIGxvbmcgbGVuOw0KPj4gKyAgICAgc3RydWN0IG1mY19kdF9t
+ZW1pbmZvICptZmNfbWVtID0gZGF0YTsNCj4+ICsNCj4+ICsgICAgIGlmICghb2ZfZmxhdF9kdF9p
+c19jb21wYXRpYmxlKG5vZGUsICJzYW1zdW5nLG1mYy12NiIpKQ0KPj4gKyAgICAgICAgICAgICBy
+ZXR1cm4gMDsNCj4NCj4NCj4gICBpZiAoIW9mX2ZsYXRfZHRfaXNfY29tcGF0aWJsZShub2RlLCBt
+ZmNfbWVtLT5jb21wYXRpYmxlKSkNCj4gICAgICAgICByZXR1cm4gMDsNCj4NCj4+ICsNCj4+ICsg
+ICAgIHByb3AgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5vZGUsICJzYW1zdW5nLG1mYy1sIiwgJmxl
+bik7DQo+PiArICAgICBpZiAoIXByb3ApDQo+PiArICAgICAgICAgICAgIHJldHVybiAwOw0KPj4g
+KyAgICAgbWZjX21lbS0+bG9mZiA9IG9mX3JlYWRfdWxvbmcocHJvcCwgbGVuLzQpOw0KPj4gKw0K
+Pj4gKyAgICAgcHJvcCA9IG9mX2dldF9mbGF0X2R0X3Byb3Aobm9kZSwgInNhbXN1bmcsbWZjLWwt
+c2l6ZSIsICZsZW4pOw0KPj4gKyAgICAgaWYgKCFwcm9wKQ0KPj4gKyAgICAgICAgICAgICByZXR1
+cm4gMDsNCj4+ICsgICAgIG1mY19tZW0tPmxzaXplID0gb2ZfcmVhZF91bG9uZyhwcm9wLCBsZW4v
+NCk7DQo+PiArDQo+PiArICAgICBwcm9wID0gb2ZfZ2V0X2ZsYXRfZHRfcHJvcChub2RlLCAic2Ft
+c3VuZyxtZmMtciIsICZsZW4pOw0KPj4gKyAgICAgaWYgKCFwcm9wKQ0KPj4gKyAgICAgICAgICAg
+ICByZXR1cm4gMDsNCj4+ICsgICAgIG1mY19tZW0tPnJvZmYgPSBvZl9yZWFkX3Vsb25nKHByb3As
+IGxlbi80KTsNCj4+ICsNCj4+ICsgICAgIHByb3AgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5vZGUs
+ICJzYW1zdW5nLG1mYy1yLXNpemUiLCAmbGVuKTsNCj4+ICsgICAgIGlmICghcHJvcCkNCj4+ICsg
+ICAgICAgICAgICAgcmV0dXJuIDA7DQo+PiArICAgICBtZmNfbWVtLT5yc2l6ZSA9IG9mX3JlYWRf
+dWxvbmcocHJvcCwgbGVuLzQpOw0KPj4gKw0KPj4gKyAgICAgcmV0dXJuIDE7DQo+PiArfQ0KPg0K
+Pg0KPiBBYm92ZSBmdW5jdGlvbiBjb3VsZCBiZSByZXVzZWQgZm9yIG1mYy12NSAoZXh5bm9zNC1k
+dC5jKSBpZiBjb21wYXRpYmxlDQo+IHN0cmluZyB3ZXJlbid0IGhhcmRjb2RlZC4gVGh1cywgcGxl
+YXNlIGNvbnNpZGVyIGNoYW5naW5nIHRoYXQgYW5kDQo+IG1vdmluZyB0aGlzIGZ1bmN0aW9uIHRv
+IHNvbWUgY29tbW9uKC5jPykgZmlsZSAtIHlvdSBjYW4gc2VlIG9uZSBwb3NzaWJsZQ0KPiBzb2x1
+dGlvbiBpbmxpbmUuDQo+DQoNClllcyBJIGNhbiBtb3ZlIGl0IHRvIGNvbW1vbi5jIGZpbGUgYW5k
+IHRoZSBzdHJ1Y3R1cmUgZGVmaW5pdGlvbiB0byBjb21tb24uaA0KZmlsZSBmb3IgZnVuY3Rpb24g
+cmV1c2FiaWxpdHkuIFdpbGwgbWFrZSB0aGlzIGNoYW5nZS4NCg0KPj4gKw0KPj4gK3N0YXRpYyB2
+b2lkIF9faW5pdCBleHlub3M1X3Jlc2VydmUodm9pZCkNCj4+ICt7DQo+PiArICAgICBzdHJ1Y3Qg
+bWZjX2R0X21lbWluZm8gbWZjX21lbTsNCj4NCj4NCj4gICAgICAgICBtZmNfbWVtLmNvbXBhdGli
+bGUgPSAic2Ftc3VuZyxtZmMtdjYiOw0KPg0KPj4gKw0KPj4gKyAgICAgLyogUmVzZXJ2ZSBtZW1v
+cnkgZm9yIE1GQyBvbmx5IGlmIGl0J3MgYXZhaWxhYmxlICovDQo+PiArICAgICBpZiAob2Zfc2Nh
+bl9mbGF0X2R0KGZkdF9maW5kX21mY19tZW0sICZtZmNfbWVtKSkNCj4+ICsgICAgICAgICAgICAg
+czVwX21mY19yZXNlcnZlX21lbShtZmNfbWVtLnJvZmYsIG1mY19tZW0ucnNpemUsIG1mY19tZW0u
+bG9mZiwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1mY19tZW0ubHNpemUpOw0K
+Pj4gK30NCj4+ICsNCj4+ICBEVF9NQUNISU5FX1NUQVJUKEVYWU5PUzVfRFQsICJTQU1TVU5HIEVY
+WU5PUzUgKEZsYXR0ZW5lZCBEZXZpY2UgVHJlZSkiKQ0KPj4gICAgICAgLyogTWFpbnRhaW5lcjog
+S3VramluIEtpbSA8a2dlbmUua2ltQHNhbXN1bmcuY29tPiAqLw0KPj4gICAgICAgLmluaXRfaXJx
+ICAgICAgID0gZXh5bm9zNV9pbml0X2lycSwNCj4+IEBAIC05NCw0ICsxNDgsNSBAQCBEVF9NQUNI
+SU5FX1NUQVJUKEVYWU5PUzVfRFQsICJTQU1TVU5HIEVYWU5PUzUgKEZsYXR0ZW5lZCBEZXZpY2Ug
+VHJlZSkiKQ0KPj4gICAgICAgLnRpbWVyICAgICAgICAgID0gJmV4eW5vczRfdGltZXIsDQo+PiAg
+ICAgICAuZHRfY29tcGF0ICAgICAgPSBleHlub3M1MjUwX2R0X2NvbXBhdCwNCj4+ICAgICAgIC5y
+ZXN0YXJ0ICAgICAgICA9IGV4eW5vczVfcmVzdGFydCwNCj4+ICsgICAgIC5yZXNlcnZlICAgICAg
+ICA9IGV4eW5vczVfcmVzZXJ2ZSwNCj4+ICBNQUNISU5FX0VORA0KPg0KPg0KPiBSZWdhcmRzLA0K
+PiAtLQ0KPiBLYXJvbCBMZXdhbmRvd3NraSB8IFNhbXN1bmcgUG9sYW5kIFImRCBDZW50ZXIgfCBM
+aW51eC9QbGF0Zm9ybQ0KPiAtLQ0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2Vu
+ZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgbGludXgtc2Ftc3VuZy1zb2MiIGluDQo+IHRoZSBib2R5
+IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnDQo+IE1vcmUgbWFqb3Jk
+b21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbA==
