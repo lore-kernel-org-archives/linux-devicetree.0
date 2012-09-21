@@ -1,50 +1,57 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [RFC PATCH 1/3] amba-clcd: Add Device Tree support to
- amba-clcd driver
-Date: Fri, 21 Sep 2012 13:19:03 +0100
-Message-ID: <20120921121903.GE15609@n2100.arm.linux.org.uk>
-References: <1348070666-9153-1-git-send-email-ryan.harkin@linaro.org>
- <1348070666-9153-2-git-send-email-ryan.harkin@linaro.org>
- <20120921114345.GE24458@pengutronix.de>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH V2] drm/exynos: Add match table for drm platform device
+Date: Fri, 21 Sep 2012 13:20:55 +0100
+Message-ID: <505C5BA7.6020302@st.com>
+References: <1348252661-6983-1-git-send-email-l.krishna@samsung.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20120921114345.GE24458-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org, tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, shiraz.hashim-qxv4g6HH51o@public.gmane.org, viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1348252661-6983-1-git-send-email-l.krishna@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, kgene.kim@samsung.com, jg1.han@samsung.com, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2012 at 01:43:45PM +0200, Sascha Hauer wrote:
-> We are currently discussing a common panel description for the
-> devicetree. You are invited to join in here:
-> 
-> http://comments.gmane.org/gmane.linux.drivers.devicetree/21386
-> 
-> We shouldn't add any more device specific panel descriptions.
+On 21/09/12 19:37, Leela Krishna Amudala wrote:
+> This patch is a part of moving the driver to support DT style probing
+> of exynos drm device. The compatible name should match with the
+> entry in the dtsi file.
+>
+> Signed-off-by: Leela Krishna Amudala <l.krishna@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_drv.c |   11 +++++++++++
+>  1 files changed, 11 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+> index d070719..495be89 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
+> @@ -294,12 +294,23 @@ static int exynos_drm_platform_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id drm_device_dt_match[] = {
+> +	{ .compatible = "samsung,exynos-drm-device"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, drm_device_dt_match);
+> +#else
+> +#define drm_device_dt_match NULL
+> +#endif
 
-Just make sure that you don't end up encoding in integers in the device
-tree Linux kernel specific bitfields such as the 'sync' property above.
+No need of else here as you are using of_match_ptr.
 
-Also, look at how the AMBA CLCD driver handles the panels with its
-capability bitmask for the colour formats - this allows the driver to
-determine what colour formats are supported, and allows platform code
-to work out how to program any MUXes for any particular panel and
-requested colour depth setting.  It also allows figuring out whether
-BGR or RGB format should be used.
-
-This is necessary because of the beweildering array of panels, muxes
-and other funky hardware which ARM Ltd like to put into their boards,
-and the fact that the LCDs tend to be entirely separate entities to
-the boards themselves.
+> +
+>  static struct platform_driver exynos_drm_platform_driver = {
+>  	.probe		= exynos_drm_platform_probe,
+>  	.remove		= __devexit_p(exynos_drm_platform_remove),
+>  	.driver		= {
+>  		.owner	= THIS_MODULE,
+>  		.name	= "exynos-drm",
+> +		.of_match_table = of_match_ptr(drm_device_dt_match),
+>  	},
+>  };
+>  
