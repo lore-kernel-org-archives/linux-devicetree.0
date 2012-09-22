@@ -1,35 +1,22 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get a
- named child
-Date: Sat, 22 Sep 2012 12:07:33 -0400
-Message-ID: <20120922160732.GT4495@opensource.wolfsonmicro.com>
-References: <1347952249-24672-1-git-send-email-srinivas.kandagatla@st.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v2] spi/pl022: Devicetree support w/o platform data
+Date: Sat, 22 Sep 2012 12:14:18 -0400
+Message-ID: <20120922161418.GW4495@opensource.wolfsonmicro.com>
+References: <1347976433-1176-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1347952249-24672-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+In-Reply-To: <1347976433-1176-1-git-send-email-stigge@antcom.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: arnd@arndb.de, grant.likely@secretlab.ca, linus.walleij@linaro.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, STEricsson_nomadik_linux@list.st.com, devicetree-discuss@lists.ozlabs.org, aletes.xgr@gmail.com, kevin.wells@nxp.com, srinivas.bakki@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 18, 2012 at 08:10:49AM +0100, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> 
-> As follow-up to "dt: introduce of_get_child_by_name to get child node by
-> name." patch, This patch removes some of the code duplication in the
-> driver by replacing it with of_get_child_by_name instead.
+On Tue, Sep 18, 2012 at 03:53:53PM +0200, Roland Stigge wrote:
+> Even with devicetree support, we needed platform data to provide some data,
+> leading to mixed device tree and platform data. This patch makes it possible to
+> provide all that information via device tree. Now, the data must be provided
+> via platform data _or_ device tree completely.
 
-Applied, thanks.  Please do use subject lines consistent with the thing
-you're submitting against.
+Applied, thanks.
