@@ -1,31 +1,81 @@
-From: Rabin Vincent <rabin@rab.in>
-Subject: Re: [PATCH 2/5] drivers: usb: otg: make twl6030_usb as a comparator
- driver to omap_usb2
-Date: Fri, 21 Sep 2012 23:33:52 +0200
-Message-ID: <CAH+eYFAj1ecvmiJCu8QDCr3LjHT5eXjq6zsZMiVRPROoWcDuNQ@mail.gmail.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com> <1346943430-18236-3-git-send-email-kishon@ti.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: Kirkwood: ehci-orion: Add device tree binding
+Date: Fri, 21 Sep 2012 22:02:32 -0700
+Message-ID: <CAOesGMh1x8QMNBi_xKEfZ0druiAZbafVuXEQkktwVbQODDmR8w@mail.gmail.com>
+References: <1346491586-23480-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1346943430-18236-3-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: b-cousson@ti.com, tony@atomide.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1346491586-23480-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2012/9/6 Kishon Vijay Abraham I <kishon@ti.com>:
-> All the PHY configuration other than VBUS, ID GND and OTG SRP are removed
-> from twl6030. The phy configurations are taken care by the dedicated
-> usb2 phy driver. So twl6030 is made as comparator driver for VBUS and
-> ID detection.
+Hi,
+
+Sorry for the late feedback but I didn't notice this until I looked at
+the pull request from Jason.
+
+Please go back and revisit these bindings. I'll merge in the current
+version but they need to be fixed up.
+
+Also, always cc devicetree-discuss and the DT maintainers on new bindings.
+
+On Sat, Sep 1, 2012 at 2:26 AM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> Based on previous work by Michael Walle and Jason Cooper.
 >
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Made their work actually work, which required added interrupt from DT
+> and auxdata, along with setting the dma_mask, which DT does not
+> currently do.
+>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/ehci-orion.txt         |   19 +++++++
+>  drivers/usb/host/ehci-orion.c                      |   59 +++++++++++++++++++-
+>  2 files changed, 75 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ehci-orion.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> new file mode 100644
+> index 0000000..1bd704e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> @@ -0,0 +1,19 @@
+> +* EHCI controller, Orion Marvell variants
+> +
+> +Required properties:
+> +- compatible: must be "marvell,orion-ehci"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: The EHCI interrupt
+> +- phy-version: Can be one of:
+> +  "NA" - Don't touch the phy, something else has already configured it.
+> +  "orion5x" - PHY setup as specified by the Orion5x Errata
+> +
+> +Example:
+> +
+> +       ehci@50000 {
+> +               compatible = "marvell,orion-ehci";
+> +               reg = <0x50000 0x1000>;
+> +               interrupts = <19>;
+> +               phy-version = "NA";
+> +       };
 
-USB doesn't work on pandaboard on linux-next, and bisection shows this
-patch.  Unfortunately, I can't provide a dmesg log because USB is the
-only way I currently have to get one out(!), but presumably it's because
-this omap-usb2 device is never registered?  Looks like this breaks
-non-dt USB on pandaboard; is that intended?
+This isn't an appropriate binding for phy. I know, it maps straight
+over from the platform data, but it doesn't focus on what the actual
+hardware is.
 
-(I see that current linux-next doesn't have USB support even in
- pandaboard DT, but I see patches for that on the lists)
+A couple of options. What probably makes most sense depending on how
+other phy bindings are moving ahead is to add a phy node under the
+ehci controller for the "orion5x" case, and have an appropriate
+compatible value there. No node means the same as "NA" in the above
+binding. Alternatively, have a phy phandle that points to the phy
+device if it sits on an i2c bus, etc.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
