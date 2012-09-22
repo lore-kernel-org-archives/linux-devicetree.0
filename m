@@ -1,42 +1,21 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v4] Add MFC device tree support
-Date: Sat, 22 Sep 2012 23:37:16 +0530
-Message-ID: <1348337237-15426-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, s.nawrocki@samsung.com, ch.naveen@samsung.com, arun.kk@samsung.com, joshi@samsung.com
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 00/14] MFD/ASoC/Input: twl4030-audio submodule DT
+ support
+Date: Sat, 22 Sep 2012 11:19:15 -0400
+Message-ID: <20120922151915.GJ4495@opensource.wolfsonmicro.com>
+References: <1347273992-9107-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1347273992-9107-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Liam Girdwood <lrg@ti.com>, Tony Lindgren <tony@atomide.com>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dtor@mail.ru>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Tero Kristo <t-kristo@ti.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree entries for MFC on Exynos5.
-This is rebased to the linux-samsung for-next branch.
+On Mon, Sep 10, 2012 at 01:46:18PM +0300, Peter Ujfalusi wrote:
 
-Changelog v4
-- Addressed review comments from Karol Lewandowski
-http://permalink.gmane.org/gmane.linux.kernel.samsung-soc/12703
+> Hello,
 
-Changelog v3
-- Addressed review comments given by Sylwester Nawrocki
-http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg12340.html
-
-Changelog v2
-- Use fdt functions to parse dtsi file for mfc memory info
-
-Changelog v1
-- Moved board specific DT information to different dtsi file
-- Changed compatible name for the device
-- Addressed other review comments
-
-Arun Kumar K (1):
-  ARM: EXYNOS: Add MFC device tree support
-
- .../devicetree/bindings/media/s5p-mfc.txt          |   27 ++++++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    7 ++++
- arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++
- arch/arm/mach-exynos/Kconfig                       |    1 +
- arch/arm/mach-exynos/clock-exynos5.c               |    2 +-
- arch/arm/mach-exynos/common.c                      |   37 ++++++++++++++++++++
- arch/arm/mach-exynos/common.h                      |   10 +++++
- arch/arm/mach-exynos/mach-exynos5-dt.c             |   16 ++++++++
- 8 files changed, 105 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+Applied all, thanks.
