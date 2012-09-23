@@ -1,31 +1,30 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] regulator: deprecate regulator-compatible DT property
-Date: Sat, 22 Sep 2012 19:40:15 -0600
-Message-ID: <505E687F.2060404@wwwdotorg.org>
-References: <1348178697-26314-1-git-send-email-swarren@wwwdotorg.org> <20120922155620.GR4495@opensource.wolfsonmicro.com>
+From: "Maxin B. John" <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] i2c: busses: i2c-ocores: Fix documentation filename
+Date: Sun, 23 Sep 2012 09:30:12 -0400
+Message-ID: <20120923133012.GA22830@linux-3ix0.site>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120922155620.GR4495@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Liam Girdwood <lrg@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Laxman Dewangan <ldewangan@nvidia.com>, AnilKumar Ch <anilkumar@ti.com>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, "Jean Delvare (PC drivers,core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Cc: "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "Wolfram Sang (embedded platforms)" <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2012 09:56 AM, Mark Brown wrote:
-> On Thu, Sep 20, 2012 at 04:04:57PM -0600, Stephen Warren wrote:
-> 
->> Mark, if this gets into 3.7, I can fix up all the Tegra .dts files during 3.8.
-> 
-> I don't know which branch you generated this against but it doesn't
-> apply to any of the obvious branches in my regulator tree.  There's a
-> modify/delete conflict in
-> 
->    Documentation/devicetree/bindings/regulator/max8907.txt
-> 
-> which I don't seem to have.
+Fixes the wrong filename.
 
-Oh right, that file would only be in the MFD tree. I assume that given
-you attempted to apply it, there are no conceptual issues applying it
-once I split it up into patches for each subsystem?
+Signed-off-by: Maxin B. John <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index bffd550..e39c122 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -11,7 +11,7 @@
+ 
+ /*
+  * This driver can be used from the device tree, see
+- *     Documentation/devicetree/bindings/i2c/ocore-i2c.txt
++ *     Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+  */
+ #include <linux/kernel.h>
+ #include <linux/module.h>
