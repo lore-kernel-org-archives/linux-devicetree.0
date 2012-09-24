@@ -1,99 +1,137 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v4] of: Add videomode helper
-Date: Mon, 24 Sep 2012 17:09:30 -0600
-Message-ID: <5060E82A.3030404@wwwdotorg.org>
-References: <1348042843-24673-1-git-send-email-s.trumtrar@pengutronix.de>
- <50606334.7030902@gmail.com> <50608000.6050007@wwwdotorg.org>
- <5060A5D5.7040908@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC 6/6] ARM: dts: exynos4210: Add platform-specific descriptions
+ for pin controllers
+Date: Mon, 24 Sep 2012 17:14:38 -0600
+Message-ID: <5060E95E.5030601@wwwdotorg.org>
+References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <2359157.SFB7x6fWGY@flatron> <50609B77.2060406@wwwdotorg.org> <7891903.Qpoh0EJCQr@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5060A5D5.7040908-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <7891903.Qpoh0EJCQr@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2012 12:26 PM, Rob Herring wrote:
-> On 09/24/2012 10:45 AM, Stephen Warren wrote:
->> On 09/24/2012 07:42 AM, Rob Herring wrote:
->>> On 09/19/2012 03:20 AM, Steffen Trumtrar wrote:
->>>> This patch adds a helper function for parsing videomodes from the devicetree.
->>>> The videomode can be either converted to a struct drm_display_mode or a
->>>> struct fb_videomode.
->>
->>>> +++ b/Documentation/devicetree/bindings/video/displaymode
->>>> @@ -0,0 +1,74 @@
->>>> +videomode bindings
->>>> +==================
->>>> +
->>>> +Required properties:
->>>> + - hactive, vactive: Display resolution
->>>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
->>>> +   in pixels
->>>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
->>>> +   lines
->>>> + - clock: displayclock in Hz
+On 09/24/2012 03:31 PM, Tomasz Figa wrote:
+> On Monday 24 of September 2012 11:42:15 Stephen Warren wrote:
+>> On 09/21/2012 01:54 PM, Tomasz Figa wrote:
+>>> On Friday 21 of September 2012 12:56:41 Stephen Warren wrote:
+>>>> On 09/20/2012 02:53 AM, Tomasz Figa wrote:
+>>>>> The patch "pinctrl: samsung: Parse pin banks from DT" introduced
+>>>>> platform-specific data parsing from DT.
+>>>>>
+>>>>> This patch adds all necessary nodes and properties to exynos4210
+>>>>> device
+>>>>> tree sources.
+>>>>>
+>>>>> +++ b/arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi
+>>>>>
+>>>>> +			samsung,pctl-offset = <0x000>;
+>>>>> +			samsung,pin-bank = "gpa0";
+>>>>> +			samsung,pin-count = <8>;
+>>>>> +			samsung,func-width = <4>;
+>>>>> +			samsung,pud-width = <2>;
+>>>>> +			samsung,drv-width = <2>;
+>>>>> +			samsung,conpdn-width = <2>;
+>>>>> +			samsung,pudpdn-width = <2>;
+>>>>
+>>>> The properties above represent the width of the fields. Must all
+>>>> fields
+>>>> always be packed together into say the LSB of the registers? What if
+>>>> there are gaps between the fields in a future SoC variant, or the
+>>>> order
+>>>> of the fields in the register changes? I think you want to add either
+>>>> a
+>>>> samsung,func-bit/samsung,func-position property for each of the
+>>>> fields,
+>>>> or change from samsung,func-width=<4> to samsung,field-mask=<0xf>.
+>>>> IIRC,
+>>>> the generic pinctrl binding used a mask for this purpose.
+>>>>
+>>>> What if a future SoC variant adds more fields to the register? At that
+>>>> point, you'd need to edit the driver anyway in order to define a new
+>>>> DT
+>>>> property to represent the new field. Perhaps instead of having an
+>>>> explicit named property per field in the register, you want a simple
+>>>> list of fields:
+>>>>
+>>>> samsung,pin-property-names = "func", "pud", "drv", "conpdn", "pudpdn";
+>>>> samsung,pin-propert-masks = <0xf 0x30 0xc0 0x300 0xc00>;
+>>>>
+>>>> That would allow a completely arbitrary number of fields and layouts
+>>>> to
+>>>> be described.
+>>>>
+>>>> I wonder if for absolute generality you want a samsung,pin-stride
+>>>> property to represent the difference in register address per pin. I
+>>>> assume that's hard-coded as 4 right now.
 >>>
->>> A major piece missing is the LCD controller to display interface width
->>> and component ordering.
->>
->> I thought this binding was solely defining the timing of the video
->> signal (hence "video mode"). Any definition of the physical interface to
->> the LCD/display-connector is something entirely orthogonal, so it seems
->> entirely reasonable to represent that separately.
-> 
-> It is not orthogonal because in many cases the LCD panel defines the
-> mode.
-
-The LCD panel itself defines both the mode and the physical interface
-properties. The mode does not imply anything about the physical
-interface, nor does the physical interface imply anything about the
-mode. So, they are in fact orthogonal. In other words, just because you
-need both sets of information, doesn't make the two pieces of
-information correlated.
-
->>>> +Example:
->>>> +
->>>> +	display@0 {
+>>> Hmm, considering so many different possible changes, maybe a more
+>>> conservative solution would be better, like reducing the amount of
+>>> information held in DT to bank type, e.g.
 >>>
->>> It would be useful to have a compatible string here. We may not always
->>> know the panel type or have a fixed panel though. We could define
->>> "generic-lcd" or something for cases where the panel type is unknown.
+>>> 	samsung,bank-type = "exynos4";
 >>>
->>>> +		width-mm = <800>;
->>>> +		height-mm = <480>;
->>
->> I would hope that everything in the example above this point is just
->> that - an example, and this binding only covers the display mode
->> definition - i.e. that part of the example below.
->>
+>>> or maybe
+>>>
+>>> 	compatible = "samsung,exynos4-pin-bank*;
+>>>
+>>> and then define supported bank types in the driver. SoC-specific data
+>>> would remain in DT, i.e. pctl-offset, pin-bank, pin-count,
+>>> eint-offset, etc.
+>> Yes, removing much of the data from DT and putting it into a tiny table
+>> in the driver makes sense to me in this case.
 > 
-> It's fairly clear this binding is being defined based on what Linux
-> supports vs. what the h/w looks like.
+> A hybrid solution came to my mind, define bank types in device tree once 
+> and then reference them in banks. Something like:
 > 
->> If that's not the intent, as Rob says, there's a /ton/ of stuff missing.
+> 	pinctrl-bank-types {
+> 		bank_off: bank-off {
+> 			samsung,func-width = <4>;
+> 			samsung,pud-width = <2>;
+> 			samsung,drv-width = <2>;
+> 			samsung,conpdn-width = <2>;
+> 			samsung,pudpdn-width = <2>;
+> 		};
 > 
-> Assuming not, what all is missing?
+> 		bank_alive: bank-alive {
+> 			samsung,func-width = <4>;
+> 			samsung,pud-width = <2>;
+> 			samsung,drv-width = <2>;
+> 		};
+> 	};
+> 
+> 	/* ... */
+> 
+> 	pinctrl@12345678 {
+> 		/* ... */
+> 		gpa0: gpa0 {
+> 			/* ... */
+> 			samsung,bank-type = <&bank_off>;
+> 			/* ... */
+> 		};
+> 		/* ... */
+> 	};
+> 
+> This would add the possibility to define new banks types quickly, but would 
+> not add too much overhead.
+> 
+> What do you think?
 
-Everything related to the physical interface:
+That does solve the issue of parsing those same values over and over,
+but at the cost of making the binding a lot more conceptually complex.
 
-* For DSI, whatever it needs to be configured.
-* For LVDS, e.g. number of lanes of R, G, B.
-* Perhaps multi-pumping rates (# of clock signals to send each data
-value for, to satisfy any minimum clock rates)
-* Built-in displays typically need to be coupled with a backlight and
-all the associated control of that.
-* Pinctrl interaction.
+However, it doesn't solve any of the extensibility issues I raised such
+as whether pos+size or mask would be a better representation, what about
+if the fields end up being in different (separate) registers on newer
+SoCs, etc.
 
-and probably a bunch of other things I haven't thought about.
+I forget, do you actually have multiple different SoCs right now (or in
+the near future where the HW design is known now for certain even if the
+chip isn't available) that have different values for all these *-width
+properties and hence can be represented just using this binding and
+without altering the driver at all? If so, I suppose the original
+binding is at least useful (although I would certainly still request to
+use *-mask instead of *-width properties).
