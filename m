@@ -1,200 +1,76 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [RFC PATCH 00/13] DMA Engine support for AM33xx
-Date: Mon, 24 Sep 2012 08:05:12 -0400
-Message-ID: <20120924120512.GM16522@beef>
-References: <1348152226-13588-1-git-send-email-mporter@ti.com>
- <1BAFE6F6C881BF42822005164F1491C33EA8A79D@DBDE01.ent.ti.com>
- <20120921182211.GE16522@beef>
- <1BAFE6F6C881BF42822005164F1491C33EA8E07D@DBDE01.ent.ti.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
+Date: Mon, 24 Sep 2012 21:35:46 +0900
+Message-ID: <CAAQKjZMZBDpKinZkDUX7CU4yTXmu9GrP1+OiZJKW4Gx1BTno3Q@mail.gmail.com>
+References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com>
+	<1348226536-22899-3-git-send-email-l.krishna@samsung.com>
+	<505BF79A.8060802@wwwdotorg.org>
+	<CAAQKjZN7B1spgoD+LJjDU=PDd9jFk6g7PekuiKEeKpXLT-X4UA@mail.gmail.com>
+	<505C9072.2010204@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EA8E07D@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <505C9072.2010204@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: kgene.kim@samsung.com, Leela Krishna Amudala <l.krishna@samsung.com>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2012 at 11:26:55AM +0000, Hebbar, Gururaja wrote:
-> On Fri, Sep 21, 2012 at 23:52:11, Porter, Matt wrote:
-> > On Fri, Sep 21, 2012 at 08:27:07AM +0000, Hebbar, Gururaja wrote:
-> > > On Thu, Sep 20, 2012 at 20:13:33, Porter, Matt wrote:
-> > > > This series adds DMA Engine support for AM33xx, which uses
-> > > > an EDMA DMAC. The EDMA DMAC has been previously supported by on=
-ly
-> > > > a private API implementation (much like the situation with OMAP
-> > > > DMA) found on the DaVinci family of SoCs.
-> > > >=20
-> > > > There are a mind-boggling number of dependencies for this serie=
-s:
-> > > >=20
-> > > > 	- Jon Hunter's OF DMA helpers series
-> > > > 	  https://patchwork.kernel.org/patch/1461061/
-> > > > 	  https://patchwork.kernel.org/patch/1461051/
-> > > > 	- Patch to address OF DMA helpers naming issues:
-> > > > 	  https://patchwork.kernel.org/patch/1477921/
-> > > > 	- EDMA DMA Engine wrapper driver in linux-next
-> > > > 	  c2dde5f8f2095d7c623ff3565c1462e190272273
-> > > > 	- EDMA DMA Engine wrapper driver bug fix:
-> > > > 	  https://patchwork.kernel.org/patch/1474411/ =20
-> > > > 	- A huge number of patches in linux-next for AM33xx boot
-> > > > 	  (too numerous to list)
-> > > >=20
-> > > > The approach taken is similar to how OMAP DMA is being converte=
-d to
-> > > > DMA Engine support. With the functional EDMA private API alread=
-y
-> > > > existing in mach-davinci/dma.c, we first move that to an ARM co=
-mmon
-> > > > area so it can be shared. Adding DT and runtime PM support to t=
-he
-> > > > private EDMA API implementation allows it to run on AM33xx. AM3=
-3xx
-> > > > *only* boots using DT so we leverage Jon's generic DT DMA helpe=
-rs to
-> > > > register EDMA DMAC with the of_dma framework and then add suppo=
-rt
-> > > > for calling the dma_request_slave_channel() API to both the mmc
-> > > > and spi drivers.
-> > > >=20
-> > > > What works? Well, with this series we now have MMC and SPI supp=
-ort
-> > > > on AM33xx. The only caveat for MMC is that the mmc3 controller =
-has
-> > > > its events on the crossbar and is not usable right now.
-> > > >=20
-> > > > This is tested on BeagleBone with a SPI framebuffer driver and =
-SD
-> > > > card.
-> > > >=20
-> > > > After this series, the plan is to convert the last in-tree user
-> > > > of the private EDMA API (davinci-pcm/mcasp) and then eliminate
-> > > > the private EDMA API by folding its functionality into
-> > > > drivers/dma/edma.c.
-> > > >=20
-> > > > TODO:
-> > > > 	add AM33xx crossbar support to the private EDMA API
-> > > > 	(any EDMA events on the crossbar are not supported)
-> > > >=20
-> > >=20
-> > >=20
-> > > Can you please mention the base repo you have taken as starting p=
-oint.
-> > > (repo + extra patches ...).
-> >=20
-> > It's mainline 3.6-rc6 and you can see the complete set of patches
-> > at https://github.com/ohporter/linux/tree/edma-dmaengine-am33xx-rfc=
--v1
-> > after commit 5698bd757d55b1bb87edd1a9744ab09c142abfc2
+2012/9/22 Stephen Warren <swarren@wwwdotorg.org>:
+> On 09/21/2012 01:22 AM, Inki Dae wrote:
+>> 2012/9/21 Stephen Warren <swarren@wwwdotorg.org>:
+>>> On 09/21/2012 05:22 AM, Leela Krishna Amudala wrote:
+>>>> This patch adds device tree based discovery support for exynos DRM-FIMD
+>>>> driver which includes driver modification to handle platform data in
+>>>> both the cases with DT and non-DT, Also adds the documentation for bindings.
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/drm/exynos/fimd.txt b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
+>>> ...
+>>>> + - samsung,fimd-display: This property should specify the phandle of the
+>>>> +   display device node which holds the video interface timing with the
+>>>> +   below mentioned properties.
+>>>> +
+>>>> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
+>>>> +     horizontal timing includes four parameters in the following order.
+>>>> +
+>>>> +     - horizontal back porch (in number of lcd clocks)
+>>>> +     - horizontal front porch (in number of lcd clocks)
+>>>> +     - hsync pulse width (in number of lcd clocks)
+>>>> +     - Display panels X resolution.
+>>>> +
+>>>> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
+>>>> +     vertical timing includes four parameters in the following order.
+>>>> +
+>>>> +     - vertical back porch (in number of lcd lines)
+>>>> +     - vertical front porch (in number of lcd lines)
+>>>> +     - vsync pulse width (in number of lcd clocks)
+>>>> +     - Display panels Y resolution.
+>>>
+>>> Should this not use the new videomode timings that are under discussion at:
+>>>
+>>> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+>>>
+>>
+>> ok, I agree with you. then the videomode helper is going to be merged
+>> to mainline(3.6)? if so, this patch should be reworked based on the
+>> videomode helper.
+>
+> I think the videomode helpers would be merged for 3.7 at the very
+> earliest; 3.6 is cooked already. Given there are still some comments on
+> the binding, perhaps it won't happen until 3.8, but it'd be best to ask
+> on that thread so that people more directly involved with the status can
+> answer.
+>
 
->=20
-> Thanks for the link. However, I was looking for the mainline kernel r=
-epo/branch
-> That you first used as baseline.=20
+as I mentioned before, it's better to use videomode helper instead but
+for this, we should wait for that the videomode helper are merged to
+mainline so I think it's better to merge it as is and then modify it
+for videomode helper to be used later.
 
-Linus 3.6-rc6 is the baseline. This inital version was created before a=
-ny
-of the am33xx base support patches got pulled to linux-next. v2 is bein=
-g
-rebased against that to slim down the stack of patches necessary for
-testing.
+Thanks,
+Inki Dae
 
-> > > This will help us to test the code.
-> > >=20
-> > > This is because I looked at the patch 12/13 and I see that mmc
-> > > device-node is modified. But in mainline I don=E2=80=99t see devi=
-ce=20
-> > > node for mmc (yet).
-> >=20
-> > Oops. You'll need e62a3333ae450bcdefbe22229d7bc277ae0ef645 and
-> > fe97304557d2c6f7d0aaf1ea028ea48ffca366a9 which I forgot to include
-> > in this series. I'll have them in for v2.
-> >=20
-> > -Matt
-> >=20
-> > > > Matt Porter (13):
-> > > >   ARM: davinci: move private EDMA API to arm/common
-> > > >   ARM: edma: remove unused transfer controller handlers
-> > > >   ARM: edma: add DT and runtime PM support for AM335x
-> > > >   dmaengine: edma: enable build for AM335x
-> > > >   dma: Add TI EDMA device tree binding
-> > > >   ARM: omap: add hsmmc am33xx specific init
-> > > >   mmc: omap_hsmmc: dma_request_slave_channel() support for DT p=
-latforms
-> > > >   mmc: omap_hsmmc: limit max_segs with the EDMA DMAC
-> > > >   mmc: omap_hsmmc: add generic DMA request support to the DT bi=
-nding
-> > > >   spi: omap2-mcspi: dma_request_slave_channel() support for DT
-> > > >     platforms
-> > > >   spi: omap2-mcspi: add generic DMA request support to the DT b=
-inding
-> > > >   ARM: dts: add am33xx EDMA support
-> > > >   Documentation: add schedule for removing private EDMA API
-> > > >=20
-> > > >  Documentation/devicetree/bindings/dma/ti-edma.txt  |   49 +
-> > > >  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   25 +-
-> > > >  Documentation/devicetree/bindings/spi/omap-spi.txt |   27 +-
-> > > >  Documentation/feature-removal-schedule.txt         |   10 +
-> > > >  arch/arm/Kconfig                                   |    1 +
-> > > >  arch/arm/boot/dts/am33xx.dtsi                      |   46 +
-> > > >  arch/arm/common/Kconfig                            |    3 +
-> > > >  arch/arm/common/Makefile                           |    1 +
-> > > >  arch/arm/common/edma.c                             | 1779 ++++=
-++++++++++++++++
-> > > >  arch/arm/include/asm/mach/edma.h                   |  267 +++
-> > > >  arch/arm/mach-davinci/Makefile                     |    2 +-
-> > > >  arch/arm/mach-davinci/devices.c                    |    3 +-
-> > > >  arch/arm/mach-davinci/dm355.c                      |    2 +-
-> > > >  arch/arm/mach-davinci/dm365.c                      |    2 +-
-> > > >  arch/arm/mach-davinci/dm644x.c                     |    2 +-
-> > > >  arch/arm/mach-davinci/dm646x.c                     |    2 +-
-> > > >  arch/arm/mach-davinci/dma.c                        | 1588 ----=
--------------
-> > > >  arch/arm/mach-davinci/include/mach/asp.h           |    2 +-
-> > > >  arch/arm/mach-davinci/include/mach/da8xx.h         |    3 +-
-> > > >  arch/arm/mach-davinci/include/mach/edma.h          |  267 ---
-> > > >  arch/arm/mach-davinci/include/mach/spi.h           |    2 +-
-> > > >  arch/arm/mach-omap2/hsmmc.c                        |    7 +-
-> > > >  arch/arm/plat-omap/Kconfig                         |    1 +
-> > > >  drivers/dma/Kconfig                                |    2 +-
-> > > >  drivers/dma/edma.c                                 |    2 +-
-> > > >  drivers/mmc/host/omap_hsmmc.c                      |   26 +-
-> > > >  drivers/spi/spi-omap2-mcspi.c                      |   68 +-
-> > > >  27 files changed, 2296 insertions(+), 1893 deletions(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/dma/ti-ed=
-ma.txt
-> > > >  create mode 100644 arch/arm/common/edma.c
-> > > >  create mode 100644 arch/arm/include/asm/mach/edma.h
-> > > >  delete mode 100644 arch/arm/mach-davinci/dma.c
-> > > >  delete mode 100644 arch/arm/mach-davinci/include/mach/edma.h
-> > > >=20
-> > > > --=20
-> > > > 1.7.9.5
-> > > >=20
-> > > > _______________________________________________
-> > > > Davinci-linux-open-source mailing list
-> > > > Davinci-linux-open-source@linux.davincidsp.com
-> > > > http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open=
--source
-> > > >=20
-> > >=20
-> > >=20
-> > > Regards,=20
-> > > Gururaja
-> > > _______________________________________________
-> > > Davinci-linux-open-source mailing list
-> > > Davinci-linux-open-source@linux.davincidsp.com
-> > > http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-s=
-ource
-> >=20
->=20
->=20
-> Regards,=20
-> Gururaja
 > _______________________________________________
-> Davinci-linux-open-source mailing list
-> Davinci-linux-open-source@linux.davincidsp.com
-> http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-sourc=
-e
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
