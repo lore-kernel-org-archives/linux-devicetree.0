@@ -1,110 +1,101 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC 6/6] ARM: dts: exynos4210: Add platform-specific descriptions
- for pin controllers
-Date: Mon, 24 Sep 2012 11:42:15 -0600
-Message-ID: <50609B77.2060406@wwwdotorg.org>
-References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <1348131197-25506-7-git-send-email-t.figa@samsung.com> <505CB869.5030307@wwwdotorg.org> <2359157.SFB7x6fWGY@flatron>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4] of: Add videomode helper
+Date: Mon, 24 Sep 2012 13:26:29 -0500
+Message-ID: <5060A5D5.7040908@gmail.com>
+References: <1348042843-24673-1-git-send-email-s.trumtrar@pengutronix.de>
+ <50606334.7030902@gmail.com> <50608000.6050007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2359157.SFB7x6fWGY@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50608000.6050007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/2012 01:54 PM, Tomasz Figa wrote:
-> On Friday 21 of September 2012 12:56:41 Stephen Warren wrote:
->> On 09/20/2012 02:53 AM, Tomasz Figa wrote:
->>> The patch "pinctrl: samsung: Parse pin banks from DT" introduced
->>> platform-specific data parsing from DT.
->>>
->>> This patch adds all necessary nodes and properties to exynos4210 device
->>> tree sources.
->>>
->>> +++ b/arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi
+On 09/24/2012 10:45 AM, Stephen Warren wrote:
+> On 09/24/2012 07:42 AM, Rob Herring wrote:
+>> On 09/19/2012 03:20 AM, Steffen Trumtrar wrote:
+>>> This patch adds a helper function for parsing videomodes from the devicetree.
+>>> The videomode can be either converted to a struct drm_display_mode or a
+>>> struct fb_videomode.
+> 
+>>> +++ b/Documentation/devicetree/bindings/video/displaymode
+>>> @@ -0,0 +1,74 @@
+>>> +videomode bindings
+>>> +==================
+>>> +
+>>> +Required properties:
+>>> + - hactive, vactive: Display resolution
+>>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
+>>> +   in pixels
+>>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
+>>> +   lines
+>>> + - clock: displayclock in Hz
+>>
+>> A major piece missing is the LCD controller to display interface width
+>> and component ordering.
+> 
+> I thought this binding was solely defining the timing of the video
+> signal (hence "video mode"). Any definition of the physical interface to
+> the LCD/display-connector is something entirely orthogonal, so it seems
+> entirely reasonable to represent that separately.
 
->>> +			samsung,pctl-offset = <0x000>;
->>> +			samsung,pin-bank = "gpa0";
->>> +			samsung,pin-count = <8>;
->>> +			samsung,func-width = <4>;
->>> +			samsung,pud-width = <2>;
->>> +			samsung,drv-width = <2>;
->>> +			samsung,conpdn-width = <2>;
->>> +			samsung,pudpdn-width = <2>;
->>
->> The properties above represent the width of the fields. Must all fields
->> always be packed together into say the LSB of the registers? What if
->> there are gaps between the fields in a future SoC variant, or the order
->> of the fields in the register changes? I think you want to add either a
->> samsung,func-bit/samsung,func-position property for each of the fields,
->> or change from samsung,func-width=<4> to samsung,field-mask=<0xf>. IIRC,
->> the generic pinctrl binding used a mask for this purpose.
->>
->> What if a future SoC variant adds more fields to the register? At that
->> point, you'd need to edit the driver anyway in order to define a new DT
->> property to represent the new field. Perhaps instead of having an
->> explicit named property per field in the register, you want a simple
->> list of fields:
->>
->> samsung,pin-property-names = "func", "pud", "drv", "conpdn", "pudpdn";
->> samsung,pin-propert-masks = <0xf 0x30 0xc0 0x300 0xc00>;
->>
->> That would allow a completely arbitrary number of fields and layouts to
->> be described.
->>
->> I wonder if for absolute generality you want a samsung,pin-stride
->> property to represent the difference in register address per pin. I
->> assume that's hard-coded as 4 right now.
-> 
-> Hmm, considering so many different possible changes, maybe a more 
-> conservative solution would be better, like reducing the amount of 
-> information held in DT to bank type, e.g.
-> 
-> 	samsung,bank-type = "exynos4";
-> 
-> or maybe
-> 
-> 	compatible = "samsung,exynos4-pin-bank*;
-> 
-> and then define supported bank types in the driver. SoC-specific data would 
-> remain in DT, i.e. pctl-offset, pin-bank, pin-count, eint-offset, etc.
+It is not orthogonal because in many cases the LCD panel defines the
+mode. It is only cases where you just have a connector like hdmi that
+you have multiple modes. Ideally, you would use EDID in those cases, but
+obviously there are boards where that is missing or broken.
 
-Yes, removing much of the data from DT and putting it into a tiny table
-in the driver makes sense to me in this case.
-
->>> diff --git a/arch/arm/boot/dts/exynos4210.dtsi
->>> b/arch/arm/boot/dts/exynos4210.dtsi index ecbc707..0e93717 100644
->>> --- a/arch/arm/boot/dts/exynos4210.dtsi
->>> +++ b/arch/arm/boot/dts/exynos4210.dtsi
->>> @@ -59,6 +59,10 @@
->>>
->>>  		reg = <0x11400000 0x1000>;
->>>  		interrupts = <0 47 0>;
->>>  		interrupt-controller;
->>>
->>> +		samsung,geint-con = <0x700>;
->>> +		samsung,geint-mask = <0x900>;
->>> +		samsung,geint-pend = <0xA00>;
->>> +		samsung,svc = <0xB08>;
+>>> +Example:
+>>> +
+>>> +	display@0 {
 >>
->> I assume those new properties represent register addresses within the
->> block. If not, I don't understand what they are.
+>> It would be useful to have a compatible string here. We may not always
+>> know the panel type or have a fixed panel though. We could define
+>> "generic-lcd" or something for cases where the panel type is unknown.
+>>
+>>> +		width-mm = <800>;
+>>> +		height-mm = <480>;
 > 
-> Yes, they do.
+> I would hope that everything in the example above this point is just
+> that - an example, and this binding only covers the display mode
+> definition - i.e. that part of the example below.
 > 
->> It's unclear to me why those properties aren't all part of
->> exynos4210-pinctrl-banks.dtsi. Do you really have multiple SoCs where
->> the register addresses for the pinctrl registers are the same (hence can
->> be in a shared exynos4210-pinctrl-banks.dtsi), yet the register
->> addresses for the geint registers are different (hence must be in
->> non-shared exynos4210.dtsi)?
-> 
-> Exynos4210-pincstrl-banks.dtsi isn't shared, it's specific to Exynos4210. 
-> Other SoCs are going to have their own whatever-pinctrl-banks.dtsi.
 
-OK, so my point here is: why not put all the pinctrl-related properties
-into a single file, rather than spreading them across different files.
-Having separate files makes sense if they can be re-used in different
-places, but not if they're single-use.
+It's fairly clear this binding is being defined based on what Linux
+supports vs. what the h/w looks like.
+
+> If that's not the intent, as Rob says, there's a /ton/ of stuff missing.
+
+Assuming not, what all is missing?
+
+Rob
+
+> 
+>>> +		modes {
+>>> +			mode0: mode@0 {
+>>> +				/* 1920x1080p24 */
+>>> +				clock = <52000000>;
+>>> +				hactive = <1920>;
+>>> +				vactive = <1080>;
+>>> +				hfront-porch = <25>;
+>>> +				hback-porch = <25>;
+>>> +				hsync-len = <25>;
+>>> +				vback-porch = <2>;
+>>> +				vfront-porch = <2>;
+>>> +				vsync-len = <2>;
+>>> +				hsync-active-high;
+>>> +			};
+>>> +		};
+>>> +	};
+> 
