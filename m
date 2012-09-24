@@ -1,71 +1,33 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] input: pwm-beeper: Add devicetree probing support
-Date: Mon, 24 Sep 2012 09:37:38 +0200
-Message-ID: <1348472258-31519-1-git-send-email-s.hauer@pengutronix.de>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Thierry Reding <thierry.reding@avionic-design.de>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Sascha Hauer <s.hauer@pengutronix.de>
+From: Karol Lewandowski <k.lewandowsk@samsung.com>
+Subject: Re: [PATCH v4] ARM: EXYNOS: Add MFC device tree support
+Date: Mon, 24 Sep 2012 10:22:09 +0200
+Message-ID: <50601831.1020400@samsung.com>
+References: <1348337237-15426-1-git-send-email-arun.kk@samsung.com>
+ <1348337237-15426-2-git-send-email-arun.kk@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1348337237-15426-2-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com, ch.naveen@samsung.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-A very simple binding, the only property is the phandle to the PWM.
+On 09/22/2012 08:07 PM, Arun Kumar K wrote:
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- Documentation/devicetree/bindings/input/pwm-beeper.txt |    7 +++++++
- drivers/input/misc/pwm-beeper.c                        |   11 ++++++++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/pwm-beeper.txt
+> This patch adds device tree entry for MFC v6 in the Exynos5
+> SoC. Makes the required changes in the clock files and adds
+> MFC to the DT device list.
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
 
-diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-new file mode 100644
-index 0000000..7388b82
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-@@ -0,0 +1,7 @@
-+* PWM beeper device tree bindings
-+
-+Registers a PWM device as beeper.
-+
-+Required properties:
-+- compatible: should be "pwm-beeper"
-+- pwms: phandle to the physical pwm device
-diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
-index fc84c8a..a6aa48c 100644
---- a/drivers/input/misc/pwm-beeper.c
-+++ b/drivers/input/misc/pwm-beeper.c
-@@ -75,7 +75,10 @@ static int __devinit pwm_beeper_probe(struct platform_device *pdev)
- 	if (!beeper)
- 		return -ENOMEM;
- 
--	beeper->pwm = pwm_request(pwm_id, "pwm beeper");
-+	if (pdev->dev.platform_data)
-+		beeper->pwm = pwm_request(pwm_id, "pwm beeper");
-+	else
-+		beeper->pwm = pwm_get(&pdev->dev, NULL);
- 
- 	if (IS_ERR(beeper->pwm)) {
- 		error = PTR_ERR(beeper->pwm);
-@@ -171,6 +174,11 @@ static SIMPLE_DEV_PM_OPS(pwm_beeper_pm_ops,
- #define PWM_BEEPER_PM_OPS NULL
- #endif
- 
-+static const struct of_device_id pwm_beeper_match[] = {
-+	{ .compatible = "pwm-beeper", },
-+	{ },
-+};
-+
- static struct platform_driver pwm_beeper_driver = {
- 	.probe	= pwm_beeper_probe,
- 	.remove = __devexit_p(pwm_beeper_remove),
-@@ -178,6 +186,7 @@ static struct platform_driver pwm_beeper_driver = {
- 		.name	= "pwm-beeper",
- 		.owner	= THIS_MODULE,
- 		.pm	= PWM_BEEPER_PM_OPS,
-+		.of_match_table = pwm_beeper_match,
- 	},
- };
- module_platform_driver(pwm_beeper_driver);
+
+Looks good for me. FWIW, I could probably add
+
+Acked-by: Karol Lewandowski <k.lewandowsk@samsung.com>
+
+Regards,
 -- 
-1.7.10.4
-
+Karol Lewandowski | Samsung Poland R&D Center | Linux/Platform
