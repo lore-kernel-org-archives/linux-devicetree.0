@@ -1,43 +1,79 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get
- a named child
-Date: Mon, 24 Sep 2012 07:51:57 -0500
-Message-ID: <5060576D.1020905@gmail.com>
-References: <1347952249-24672-1-git-send-email-srinivas.kandagatla@st.com>
- <20120922160732.GT4495@opensource.wolfsonmicro.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] input: pwm-beeper: Add devicetree probing support
+Date: Mon, 24 Sep 2012 07:55:38 -0500
+Message-ID: <5060584A.80305@gmail.com>
+References: <1348472258-31519-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120922160732.GT4495-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1348472258-31519-1-git-send-email-s.hauer@pengutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2012 11:07 AM, Mark Brown wrote:
-> On Tue, Sep 18, 2012 at 08:10:49AM +0100, Srinivas KANDAGATLA wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->>
->> As follow-up to "dt: introduce of_get_child_by_name to get child node by
->> name." patch, This patch removes some of the code duplication in the
->> driver by replacing it with of_get_child_by_name instead.
+On 09/24/2012 02:37 AM, Sascha Hauer wrote:
+> A very simple binding, the only property is the phandle to the PWM.
 > 
-> Applied, thanks.  Please do use subject lines consistent with the thing
-> you're submitting against.
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-This dependency here is not yet applied. I was waiting for some acks for
-some other conversions in the series. I can take it or ack the
-dependency. Probably makes more sense for me to take it as there are
-other non-spi patches.
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-Rob
+> ---
+>  Documentation/devicetree/bindings/input/pwm-beeper.txt |    7 +++++++
+>  drivers/input/misc/pwm-beeper.c                        |   11 ++++++++++-
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/pwm-beeper.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> new file mode 100644
+> index 0000000..7388b82
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> @@ -0,0 +1,7 @@
+> +* PWM beeper device tree bindings
+> +
+> +Registers a PWM device as beeper.
+> +
+> +Required properties:
+> +- compatible: should be "pwm-beeper"
+> +- pwms: phandle to the physical pwm device
+> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+> index fc84c8a..a6aa48c 100644
+> --- a/drivers/input/misc/pwm-beeper.c
+> +++ b/drivers/input/misc/pwm-beeper.c
+> @@ -75,7 +75,10 @@ static int __devinit pwm_beeper_probe(struct platform_device *pdev)
+>  	if (!beeper)
+>  		return -ENOMEM;
+>  
+> -	beeper->pwm = pwm_request(pwm_id, "pwm beeper");
+> +	if (pdev->dev.platform_data)
+> +		beeper->pwm = pwm_request(pwm_id, "pwm beeper");
+> +	else
+> +		beeper->pwm = pwm_get(&pdev->dev, NULL);
+>  
+>  	if (IS_ERR(beeper->pwm)) {
+>  		error = PTR_ERR(beeper->pwm);
+> @@ -171,6 +174,11 @@ static SIMPLE_DEV_PM_OPS(pwm_beeper_pm_ops,
+>  #define PWM_BEEPER_PM_OPS NULL
+>  #endif
+>  
+> +static const struct of_device_id pwm_beeper_match[] = {
+> +	{ .compatible = "pwm-beeper", },
+> +	{ },
+> +};
+> +
+>  static struct platform_driver pwm_beeper_driver = {
+>  	.probe	= pwm_beeper_probe,
+>  	.remove = __devexit_p(pwm_beeper_remove),
+> @@ -178,6 +186,7 @@ static struct platform_driver pwm_beeper_driver = {
+>  		.name	= "pwm-beeper",
+>  		.owner	= THIS_MODULE,
+>  		.pm	= PWM_BEEPER_PM_OPS,
+> +		.of_match_table = pwm_beeper_match,
+>  	},
+>  };
+>  module_platform_driver(pwm_beeper_driver);
+> 
+
