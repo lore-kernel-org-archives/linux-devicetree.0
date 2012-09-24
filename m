@@ -1,36 +1,54 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [RFC PATCH 0/6] pinctrl: samsung: Convert the driver to use per-bank GPIO and interrupt specifiers
-Date: Mon, 24 Sep 2012 23:42:09 +0200
-Message-ID: <5294133.e1Q4XgYR6l@flatron>
-References: <1348237377-21299-1-git-send-email-t.figa@samsung.com> <CACRpkdaqaaNf=S9CMzYE3zpji0pCK1MLKeBm3uH7-18HHwPV3w@mail.gmail.com>
+From: Eric Millbrandt <emillbrandt@dekaresearch.com>
+Subject: [PATCH] powerpc/pcm030: add pcm030-audio-fabric to dts
+Date: Mon, 24 Sep 2012 18:16:47 -0400
+Message-ID: <1348525007-14413-1-git-send-email-emillbrandt@dekaresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaqaaNf=S9CMzYE3zpji0pCK1MLKeBm3uH7-18HHwPV3w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Anatolij Gustschin <agust@denx.de>
+Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, Eric Millbrandt <emillbrandt@dekaresearch.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Add a node for the pcm030-audio-fabric ASoC driver
 
-On Monday 24 of September 2012 12:43:23 Linus Walleij wrote:
-> On Fri, Sep 21, 2012 at 4:22 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-> > This is a continuation of work focused on improving the pinctrl-samsung
-> > driver.
-> 
-> All look good to me, I guess these will go through the Samsung tree?
-> Acked-by: Linus Walleij <linus.walleij@linaro.org> for all.
+Signed-off-by: Eric Millbrandt <emillbrandt@dekaresearch.com>
+---
+ arch/powerpc/boot/dts/pcm030.dts |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
-Hmm, these patches are just at RFC stage at the moment and depend on the 
-first part which does somewhat heavy reorganization of the driver. So this 
-is more like a proof of concept.
-
-After we settle all the things being discussed I will send a ready patch 
-series including both of these parts.
-
-Thanks for your ack anyway.
-
-Best regards,
-Tomasz Figa
+diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
+index 9e35499..96512c0 100644
+--- a/arch/powerpc/boot/dts/pcm030.dts
++++ b/arch/powerpc/boot/dts/pcm030.dts
+@@ -59,7 +59,7 @@
+ 			#gpio-cells = <2>;
+ 		};
+ 
+-		psc@2000 { /* PSC1 in ac97 mode */
++		audioplatform: psc@2000 { /* PSC1 in ac97 mode */
+ 			compatible = "mpc5200b-psc-ac97","fsl,mpc5200b-psc-ac97";
+ 			cell-index = <0>;
+ 		};
+@@ -134,4 +134,9 @@
+ 	localbus {
+ 		status = "disabled";
+ 	};
++
++	sound {
++		compatible = "phytec,pcm030-audio-fabric";
++		asoc-platform = <&audioplatform>;
++	};
+ };
+-- 
+1.7.2.5
