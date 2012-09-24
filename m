@@ -1,77 +1,171 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] input: pwm-beeper: Add devicetree probing support
-Date: Mon, 24 Sep 2012 21:19:32 +0200
-Message-ID: <20120924191932.GS1322@pengutronix.de>
-References: <1348472258-31519-1-git-send-email-s.hauer@pengutronix.de>
- <5060584A.80305@gmail.com>
- <20120924155639.GA1440@core.coreip.homeip.net>
- <506088C9.8030002@metafoo.de>
- <20120924184938.GQ1322@pengutronix.de>
- <5060AF17.7070409@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5060AF17.7070409@metafoo.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robherring2@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Thierry Reding <thierry.reding@avionic-design.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH 3/4] regulator: tps6586x: remove regulator-compatible from DT docs
+Date: Mon, 24 Sep 2012 13:25:02 -0600
+Message-ID: <1348514703-10152-4-git-send-email-swarren@wwwdotorg.org>
+References: <1348514703-10152-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1348514703-10152-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lrg@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Laxman Dewangan <ldewangan@nvidia.com>, AnilKumar Ch <anilkumar@ti.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2012 at 09:05:59PM +0200, Lars-Peter Clausen wrote:
-> On 09/24/2012 08:49 PM, Sascha Hauer wrote:
-> > 
-> > My bad, I missed that platform_data is casted to an unsigned long. I
-> > thought I would test for a pointer.
-> > The obvious clean way would be to use a pointer for platform_data, but
-> > given that this will vanish anyway soon, I think we could just test for
-> > existence of dev->of_node instead of dev->platform_data.
-> 
-> I think the plan is to convert the existing board file platforms to pwm_table
-> and then remove the old pwm_request API. So this wouldn't work too well if we'd
-> test for of_node. Maybe we can just run pwm_get unconditionally and fallback to
-> pwm_request if it failed. That's also what the PWM backlight driver currently does.
+From: Stephen Warren <swarren@nvidia.com>
 
-Fine with me.
+Commit "regulator: deprecate regulator-compatible DT property" deprecated
+the use of the regulator-compatible DT property. Update the DT example in
+the TPS6586x binding documentation to reflect this.
 
-> 
-> > 
-> >>
-> >> Yes, this a bit tricky, but we only have a single in-tree user of the
-> >> pwm-beeper which uses a id != 0. And now that all the PWM providers have
-> >> been converted to the new generic PWM framework the old legacy API will go
-> >> away soon anyway. So this if () else branch should hopefully only be
-> >> necessary for a transitional period of 1-2 releases. So I think this change
-> >> should be OK.
-> >>
-> >> But I think the patch is missing a change to the Kconfig entry to allow the
-> >> driver to be selected if the generic PWM framework is available.
-> >>
-> >> --- a/drivers/input/misc/Kconfig
-> >> +++ b/drivers/input/misc/Kconfig
-> >> @@ -444,7 +444,7 @@ config INPUT_PCF8574
-> >>
-> >>  config INPUT_PWM_BEEPER
-> >>  	tristate "PWM beeper support"
-> >> -	depends on HAVE_PWM
-> >> +	depends on HAVE_PWM || PWM
-> > 
-> > Is this the preferred way to do this? Instead of doing the above I added
-> > a 'select HAVE_PWM' to the pwm framework instead. I found a patch for that,
-> > but there were comments to it that this is not good
-> > 
-> 
-> Thierry said that this is his preferred solution. Given that HAVE_PWM will be
-> extinct soon anyway I think it is fine.
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+This commit is based on regulator's topic/tps6586x branch.
+---
+ .../devicetree/bindings/regulator/tps6586x.txt     |   66 ++++++--------------
+ 1 files changed, 19 insertions(+), 47 deletions(-)
 
-Ok. Will send an updated patch tomorrow.
-
-Thanks
- Sascha
-
-
+diff --git a/Documentation/devicetree/bindings/regulator/tps6586x.txt b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+index 9b05e24..8b40cac 100644
+--- a/Documentation/devicetree/bindings/regulator/tps6586x.txt
++++ b/Documentation/devicetree/bindings/regulator/tps6586x.txt
+@@ -6,8 +6,11 @@ Required properties:
+ - interrupts: the interrupt outputs of the controller
+ - #gpio-cells: number of cells to describe a GPIO
+ - gpio-controller: mark the device as a GPIO controller
+-- regulators: list of regulators provided by this controller, must have
+-  property "regulator-compatible" to match their hardware counterparts:
++- regulators: A node that houses a sub-node for each regulator within the
++  device. Each sub-node is identified using the node's name (or the deprecated
++  regulator-compatible property if present), with valid values listed below.
++  The content of each sub-node is defined by the standard binding for
++  regulators; see regulator.txt.
+   sys, sm[0-2], ldo[0-9] and ldo_rtc
+ - sys-supply: The input supply for SYS.
+ - vin-sm0-supply: The input supply for the SM0.
+@@ -51,111 +54,80 @@ Example:
+ 		vinldo9-supply = <...>;
+ 
+ 		regulators {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			sys_reg: regulator@0 {
+-				reg = <0>;
+-				regulator-compatible = "sys";
++			sys_reg: sys {
+ 				regulator-name = "vdd_sys";
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm0_reg: regulator@1 {
+-				reg = <1>;
+-				regulator-compatible = "sm0";
++			sm0_reg: sm0 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm1_reg: regulator@2 {
+-				reg = <2>;
+-				regulator-compatible = "sm1";
++			sm1_reg: sm1 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			sm2_reg: regulator@3 {
+-				reg = <3>;
+-				regulator-compatible = "sm2";
++			sm2_reg: sm2 {
+ 				regulator-min-microvolt = <3000000>;
+ 				regulator-max-microvolt = <4550000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+ 			};
+ 
+-			ldo0_reg: regulator@4 {
+-				reg = <4>;
+-				regulator-compatible = "ldo0";
++			ldo0_reg: ldo0 {
+ 				regulator-name = "PCIE CLK";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo1_reg: regulator@5 {
+-				reg = <5>;
+-				regulator-compatible = "ldo1";
++			ldo1_reg: ldo1 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo2_reg: regulator@6 {
+-				reg = <6>;
+-				regulator-compatible = "ldo2";
++			ldo2_reg: ldo2 {
+ 				regulator-min-microvolt = < 725000>;
+ 				regulator-max-microvolt = <1500000>;
+ 			};
+ 
+-			ldo3_reg: regulator@7 {
+-				reg = <7>;
+-				regulator-compatible = "ldo3";
++			ldo3_reg: ldo3 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo4_reg: regulator@8 {
+-				reg = <8>;
+-				regulator-compatible = "ldo4";
++			ldo4_reg: ldo4 {
+ 				regulator-min-microvolt = <1700000>;
+ 				regulator-max-microvolt = <2475000>;
+ 			};
+ 
+-			ldo5_reg: regulator@9 {
+-				reg = <9>;
+-				regulator-compatible = "ldo5";
++			ldo5_reg: ldo5 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo6_reg: regulator@10 {
+-				reg = <10>;
+-				regulator-compatible = "ldo6";
++			ldo6_reg: ldo6 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo7_reg: regulator@11 {
+-				reg = <11>;
+-				regulator-compatible = "ldo7";
++			ldo7_reg: ldo7 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo8_reg: regulator@12 {
+-				reg = <12>;
+-				regulator-compatible = "ldo8";
++			ldo8_reg: ldo8 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
+ 
+-			ldo9_reg: regulator@13 {
+-				reg = <13>;
+-				regulator-compatible = "ldo9";
++			ldo9_reg: ldo9 {
+ 				regulator-min-microvolt = <1250000>;
+ 				regulator-max-microvolt = <3300000>;
+ 			};
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.0.4
