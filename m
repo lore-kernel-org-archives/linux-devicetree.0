@@ -1,63 +1,71 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: Kirkwood: ehci-orion: Add device tree binding
-Date: Mon, 24 Sep 2012 09:13:53 +0200
-Message-ID: <20120924071353.GA27099@lunn.ch>
-References: <1346491586-23480-1-git-send-email-andrew@lunn.ch>
- <CAOesGMh1x8QMNBi_xKEfZ0druiAZbafVuXEQkktwVbQODDmR8w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMh1x8QMNBi_xKEfZ0druiAZbafVuXEQkktwVbQODDmR8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] input: pwm-beeper: Add devicetree probing support
+Date: Mon, 24 Sep 2012 09:37:38 +0200
+Message-ID: <1348472258-31519-1-git-send-email-s.hauer@pengutronix.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Thierry Reding <thierry.reding@avionic-design.de>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-> > +Required properties:
-> > +- compatible: must be "marvell,orion-ehci"
-> > +- reg: physical base address of the controller and length of memory mapped
-> > +  region.
-> > +- interrupts: The EHCI interrupt
-> > +- phy-version: Can be one of:
-> > +  "NA" - Don't touch the phy, something else has already configured it.
-> > +  "orion5x" - PHY setup as specified by the Orion5x Errata
-> > +
-> > +Example:
-> > +
-> > +       ehci@50000 {
-> > +               compatible = "marvell,orion-ehci";
-> > +               reg = <0x50000 0x1000>;
-> > +               interrupts = <19>;
-> > +               phy-version = "NA";
-> > +       };
-> 
-> This isn't an appropriate binding for phy. I know, it maps straight
-> over from the platform data, but it doesn't focus on what the actual
-> hardware is.
-> 
-> A couple of options. What probably makes most sense depending on how
-> other phy bindings are moving ahead is to add a phy node under the
-> ehci controller for the "orion5x" case, and have an appropriate
-> compatible value there. No node means the same as "NA" in the above
-> binding. Alternatively, have a phy phandle that points to the phy
-> device if it sits on an i2c bus, etc.
+A very simple binding, the only property is the phandle to the PWM.
 
-I Olaf
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ Documentation/devicetree/bindings/input/pwm-beeper.txt |    7 +++++++
+ drivers/input/misc/pwm-beeper.c                        |   11 ++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/pwm-beeper.txt
 
-Could i suggest a third option:
+diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+new file mode 100644
+index 0000000..7388b82
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+@@ -0,0 +1,7 @@
++* PWM beeper device tree bindings
++
++Registers a PWM device as beeper.
++
++Required properties:
++- compatible: should be "pwm-beeper"
++- pwms: phandle to the physical pwm device
+diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+index fc84c8a..a6aa48c 100644
+--- a/drivers/input/misc/pwm-beeper.c
++++ b/drivers/input/misc/pwm-beeper.c
+@@ -75,7 +75,10 @@ static int __devinit pwm_beeper_probe(struct platform_device *pdev)
+ 	if (!beeper)
+ 		return -ENOMEM;
+ 
+-	beeper->pwm = pwm_request(pwm_id, "pwm beeper");
++	if (pdev->dev.platform_data)
++		beeper->pwm = pwm_request(pwm_id, "pwm beeper");
++	else
++		beeper->pwm = pwm_get(&pdev->dev, NULL);
+ 
+ 	if (IS_ERR(beeper->pwm)) {
+ 		error = PTR_ERR(beeper->pwm);
+@@ -171,6 +174,11 @@ static SIMPLE_DEV_PM_OPS(pwm_beeper_pm_ops,
+ #define PWM_BEEPER_PM_OPS NULL
+ #endif
+ 
++static const struct of_device_id pwm_beeper_match[] = {
++	{ .compatible = "pwm-beeper", },
++	{ },
++};
++
+ static struct platform_driver pwm_beeper_driver = {
+ 	.probe	= pwm_beeper_probe,
+ 	.remove = __devexit_p(pwm_beeper_remove),
+@@ -178,6 +186,7 @@ static struct platform_driver pwm_beeper_driver = {
+ 		.name	= "pwm-beeper",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= PWM_BEEPER_PM_OPS,
++		.of_match_table = pwm_beeper_match,
+ 	},
+ };
+ module_platform_driver(pwm_beeper_driver);
+-- 
+1.7.10.4
 
-I just drop USB phy configuration all together.  Only mach-orion5x
-needs this and nobody has shown any interest in moving mach-orion5x to
-DT. So i would just hard code it to "NA".
-
-If anybody does show interest in DT for orion5x, we can add a phy node
-under ehci as a pure extension which does not affect backward
-compatibility.
-
-	Thanks
-		Andrew
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
