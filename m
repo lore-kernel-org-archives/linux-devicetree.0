@@ -1,101 +1,101 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] of: Add videomode helper
-Date: Mon, 24 Sep 2012 13:26:29 -0500
-Message-ID: <5060A5D5.7040908@gmail.com>
-References: <1348042843-24673-1-git-send-email-s.trumtrar@pengutronix.de>
- <50606334.7030902@gmail.com> <50608000.6050007@wwwdotorg.org>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH] input: pwm-beeper: Add devicetree probing support
+Date: Mon, 24 Sep 2012 20:49:38 +0200
+Message-ID: <20120924184938.GQ1322@pengutronix.de>
+References: <1348472258-31519-1-git-send-email-s.hauer@pengutronix.de>
+ <5060584A.80305@gmail.com>
+ <20120924155639.GA1440@core.coreip.homeip.net>
+ <506088C9.8030002@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50608000.6050007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <506088C9.8030002@metafoo.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robherring2@gmail.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2012 10:45 AM, Stephen Warren wrote:
-> On 09/24/2012 07:42 AM, Rob Herring wrote:
->> On 09/19/2012 03:20 AM, Steffen Trumtrar wrote:
->>> This patch adds a helper function for parsing videomodes from the devicetree.
->>> The videomode can be either converted to a struct drm_display_mode or a
->>> struct fb_videomode.
-> 
->>> +++ b/Documentation/devicetree/bindings/video/displaymode
->>> @@ -0,0 +1,74 @@
->>> +videomode bindings
->>> +==================
->>> +
->>> +Required properties:
->>> + - hactive, vactive: Display resolution
->>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
->>> +   in pixels
->>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
->>> +   lines
->>> + - clock: displayclock in Hz
->>
->> A major piece missing is the LCD controller to display interface width
->> and component ordering.
-> 
-> I thought this binding was solely defining the timing of the video
-> signal (hence "video mode"). Any definition of the physical interface to
-> the LCD/display-connector is something entirely orthogonal, so it seems
-> entirely reasonable to represent that separately.
+On Mon, Sep 24, 2012 at 06:22:33PM +0200, Lars-Peter Clausen wrote:
+> On 09/24/2012 05:56 PM, Dmitry Torokhov wrote:
+> > On Mon, Sep 24, 2012 at 07:55:38AM -0500, Rob Herring wrote:
+> >> On 09/24/2012 02:37 AM, Sascha Hauer wrote:
+> >>> A very simple binding, the only property is the phandle to the PWM.
+> >>>
+> >>> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> >>
+> >> Acked-by: Rob Herring <rob.herring@calxeda.com>
+> >>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/input/pwm-beeper.txt |    7 +++++++
+> >>>  drivers/input/misc/pwm-beeper.c                        |   11 ++++++++++-
+> >>>  2 files changed, 17 insertions(+), 1 deletion(-)
+> >>>  create mode 100644 Documentation/devicetree/bindings/input/pwm-beeper.txt
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> >>> new file mode 100644
+> >>> index 0000000..7388b82
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> >>> @@ -0,0 +1,7 @@
+> >>> +* PWM beeper device tree bindings
+> >>> +
+> >>> +Registers a PWM device as beeper.
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible: should be "pwm-beeper"
+> >>> +- pwms: phandle to the physical pwm device
+> >>> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+> >>> index fc84c8a..a6aa48c 100644
+> >>> --- a/drivers/input/misc/pwm-beeper.c
+> >>> +++ b/drivers/input/misc/pwm-beeper.c
+> >>> @@ -75,7 +75,10 @@ static int __devinit pwm_beeper_probe(struct platform_device *pdev)
+> >>>  	if (!beeper)
+> >>>  		return -ENOMEM;
+> >>>  
+> >>> -	beeper->pwm = pwm_request(pwm_id, "pwm beeper");
+> >>> +	if (pdev->dev.platform_data)
+> >>> +		beeper->pwm = pwm_request(pwm_id, "pwm beeper");
+> >>> +	else
+> >>> +		beeper->pwm = pwm_get(&pdev->dev, NULL);
+> > 
+> > Hmm, pwm_id == 0 is a valid ID I think, but your change makes it go into
+> > DT branch, potentially breaking it.
 
-It is not orthogonal because in many cases the LCD panel defines the
-mode. It is only cases where you just have a connector like hdmi that
-you have multiple modes. Ideally, you would use EDID in those cases, but
-obviously there are boards where that is missing or broken.
-
->>> +Example:
->>> +
->>> +	display@0 {
->>
->> It would be useful to have a compatible string here. We may not always
->> know the panel type or have a fixed panel though. We could define
->> "generic-lcd" or something for cases where the panel type is unknown.
->>
->>> +		width-mm = <800>;
->>> +		height-mm = <480>;
-> 
-> I would hope that everything in the example above this point is just
-> that - an example, and this binding only covers the display mode
-> definition - i.e. that part of the example below.
-> 
-
-It's fairly clear this binding is being defined based on what Linux
-supports vs. what the h/w looks like.
-
-> If that's not the intent, as Rob says, there's a /ton/ of stuff missing.
-
-Assuming not, what all is missing?
-
-Rob
+My bad, I missed that platform_data is casted to an unsigned long. I
+thought I would test for a pointer.
+The obvious clean way would be to use a pointer for platform_data, but
+given that this will vanish anyway soon, I think we could just test for
+existence of dev->of_node instead of dev->platform_data.
 
 > 
->>> +		modes {
->>> +			mode0: mode@0 {
->>> +				/* 1920x1080p24 */
->>> +				clock = <52000000>;
->>> +				hactive = <1920>;
->>> +				vactive = <1080>;
->>> +				hfront-porch = <25>;
->>> +				hback-porch = <25>;
->>> +				hsync-len = <25>;
->>> +				vback-porch = <2>;
->>> +				vfront-porch = <2>;
->>> +				vsync-len = <2>;
->>> +				hsync-active-high;
->>> +			};
->>> +		};
->>> +	};
+> Yes, this a bit tricky, but we only have a single in-tree user of the
+> pwm-beeper which uses a id != 0. And now that all the PWM providers have
+> been converted to the new generic PWM framework the old legacy API will go
+> away soon anyway. So this if () else branch should hopefully only be
+> necessary for a transitional period of 1-2 releases. So I think this change
+> should be OK.
 > 
+> But I think the patch is missing a change to the Kconfig entry to allow the
+> driver to be selected if the generic PWM framework is available.
+> 
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -444,7 +444,7 @@ config INPUT_PCF8574
+> 
+>  config INPUT_PWM_BEEPER
+>  	tristate "PWM beeper support"
+> -	depends on HAVE_PWM
+> +	depends on HAVE_PWM || PWM
+
+Is this the preferred way to do this? Instead of doing the above I added
+a 'select HAVE_PWM' to the pwm framework instead. I found a patch for that,
+but there were comments to it that this is not good
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
