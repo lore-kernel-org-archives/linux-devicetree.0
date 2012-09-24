@@ -1,84 +1,67 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH] input: pwm-beeper: Add devicetree probing support
-Date: Mon, 24 Sep 2012 18:22:33 +0200
-Message-ID: <506088C9.8030002@metafoo.de>
-References: <1348472258-31519-1-git-send-email-s.hauer@pengutronix.de> <5060584A.80305@gmail.com> <20120924155639.GA1440@core.coreip.homeip.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC 0/6] pinctrl: samsung: Remove static platform-specific data
+Date: Mon, 24 Sep 2012 11:34:12 -0600
+Message-ID: <50609994.8040005@wwwdotorg.org>
+References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <505CB4A3.9050707@wwwdotorg.org> <3531529.1enE84BHSJ@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20120924155639.GA1440@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3531529.1enE84BHSJ@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2012 05:56 PM, Dmitry Torokhov wrote:
-> On Mon, Sep 24, 2012 at 07:55:38AM -0500, Rob Herring wrote:
->> On 09/24/2012 02:37 AM, Sascha Hauer wrote:
->>> A very simple binding, the only property is the phandle to the PWM.
+On 09/21/2012 01:31 PM, Tomasz Figa wrote:
+> On Friday 21 of September 2012 12:40:35 Stephen Warren wrote:
+>> On 09/20/2012 02:53 AM, Tomasz Figa wrote:
+>>> This RFC series is a work on replacing static platform-specific data in
+>>> pinctrl-samsung driver with data dynamically parsed from device tree.
+...
+>>> It aims at reducing the SoC-specific part of the driver and thus the
+>>> amount of modifications to driver sources when adding support for next
+>>> SoCs (like Exynos4x12).
 >>>
->>> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
->>
->> Acked-by: Rob Herring <rob.herring@calxeda.com>
->>
->>> ---
->>>  Documentation/devicetree/bindings/input/pwm-beeper.txt |    7 +++++++
->>>  drivers/input/misc/pwm-beeper.c                        |   11 ++++++++++-
->>>  2 files changed, 17 insertions(+), 1 deletion(-)
->>>  create mode 100644 Documentation/devicetree/bindings/input/pwm-beeper.txt
+>>> Furthermore, moving definitions of pin banks to device tree will allow
+>>> to simplify GPIO and GEINT specification to a format similar to used
+>>> previously by gpiolib-based implementation, using a phandle to the bank
+>>> and pin index inside the bank, e.g.
 >>>
->>> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
->>> new file mode 100644
->>> index 0000000..7388b82
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
->>> @@ -0,0 +1,7 @@
->>> +* PWM beeper device tree bindings
->>> +
->>> +Registers a PWM device as beeper.
->>> +
->>> +Required properties:
->>> +- compatible: should be "pwm-beeper"
->>> +- pwms: phandle to the physical pwm device
->>> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
->>> index fc84c8a..a6aa48c 100644
->>> --- a/drivers/input/misc/pwm-beeper.c
->>> +++ b/drivers/input/misc/pwm-beeper.c
->>> @@ -75,7 +75,10 @@ static int __devinit pwm_beeper_probe(struct platform_device *pdev)
->>>  	if (!beeper)
->>>  		return -ENOMEM;
->>>  
->>> -	beeper->pwm = pwm_request(pwm_id, "pwm beeper");
->>> +	if (pdev->dev.platform_data)
->>> +		beeper->pwm = pwm_request(pwm_id, "pwm beeper");
->>> +	else
->>> +		beeper->pwm = pwm_get(&pdev->dev, NULL);
+>>> 	gpios = <&gpa1 4 0>;
+>>> 	interrupt-parent = <&gpa1>;
+>>> 	interrupts = <4 0>;
+>>
+>> I don't think those two are correlated; the GPIO specifier format could
+>> just as easily be <bank pin> irrespective of whether the pinctrl driver
+>> contains SoC-specific tables or not.
 > 
-> Hmm, pwm_id == 0 is a valid ID I think, but your change makes it go into
-> DT branch, potentially breaking it.
+> Correct me if I'm wrong, but each bank needs to have its own subnode to be 
+> able to address pins like this. That was the starting point of the whole 
+> series and the idea that if all the banks (which are SoC-specific) have to 
+> be defined anyway, maybe it wouldn't be too bad to put all the SoC-specific 
+> parameters there too.
 
-Yes, this a bit tricky, but we only have a single in-tree user of the
-pwm-beeper which uses a id != 0. And now that all the PWM providers have
-been converted to the new generic PWM framework the old legacy API will go
-away soon anyway. So this if () else branch should hopefully only be
-necessary for a transitional period of 1-2 releases. So I think this change
-should be OK.
+If you write your own custom .xlate function, I think you can do
+basically anything you want; all of the following are possible, I believe:
 
-But I think the patch is missing a change to the Kconfig entry to allow the
-driver to be selected if the generic PWM framework is available.
+a) Single DT node covering all banks, with GPIO specifier being <n>
+where n is some linearized GPIO ID across all banks.
 
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -444,7 +444,7 @@ config INPUT_PCF8574
+b) Single DT node covering all banks, with GPIO specifier being <b n>
+where b is the bank number, and n is the GPIO ID within the bank (xlate
+would presumably calculate "(b * MAX_GPIOS_PER_BANK) + n" and up with
+the same data as in (a) above.
 
- config INPUT_PWM_BEEPER
- 	tristate "PWM beeper support"
--	depends on HAVE_PWM
-+	depends on HAVE_PWM || PWM
- 	help
- 	  Say Y here to get support for PWM based beeper devices.
+c) One DT node per bank, one gpio_chip registered per node, with the
+GPIO specifier being <n> where n is the GPIO ID within the bank the
+phandle points at.
 
-
-- Lars
-
+d) One DT node per bank, all contained within a single parent DT node,
+one gpio_chip registered per node (one for each bank node, and one for
+the parent node), with GPIO phandles pointing at the parent node, with
+GPIO specifier in the format of either (a) or (b) above, and the
+top-level node's .xlate returning a different gpio_chip (for one of the
+child bank-specific nodes) rather than the parent chip. At least, IIRC,
+Grant Likely was going to extend a gpio_chip's .xlate to be able to
+return a different chip; I'm not sure if that was implemented yet or not.
