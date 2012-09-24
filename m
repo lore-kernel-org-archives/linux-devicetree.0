@@ -1,54 +1,63 @@
-From: Eric Millbrandt <emillbrandt@dekaresearch.com>
-Subject: [PATCH] powerpc/pcm030: add pcm030-audio-fabric to dts
-Date: Mon, 24 Sep 2012 18:16:47 -0400
-Message-ID: <1348525007-14413-1-git-send-email-emillbrandt@dekaresearch.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
+ DMA channel
+Date: Mon, 24 Sep 2012 17:25:47 -0500
+Message-ID: <5060DDEB.4000600@ti.com>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>  <1347662517-4210-3-git-send-email-jon-hunter@ti.com>  <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>  <20120917223619.GC12445@n2100.arm.linux.org.uk> <1347938035.1943.162.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Anatolij Gustschin <agust@denx.de>
-Cc: linuxppc-dev@ozlabs.org, devicetree-discuss@ozlabs.org, Eric Millbrandt <emillbrandt@dekaresearch.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1347938035.1943.162.camel@vkoul-udesk3>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a node for the pcm030-audio-fabric ASoC driver
+Hi Vinod,
 
-Signed-off-by: Eric Millbrandt <emillbrandt@dekaresearch.com>
----
- arch/powerpc/boot/dts/pcm030.dts |    7 ++++++-
- 1 files changed, 6 insertions(+), 1 deletions(-)
+On 09/17/2012 10:13 PM, Vinod Koul wrote:
+> On Mon, 2012-09-17 at 23:36 +0100, Russell King - ARM Linux wrote:
+>>>
+>>> I believe that Jon is on vacation this week, so if this is the only issue
+>>> holding up the merge, maybe you can change this in his patch directly, or
+>>> I can send an updated version if you prefer.
+>>
+>> I worry that too much is going on here too quickly.  We have some people
+>> working on changing the way DMA engine selects channels.  Meanwhile we
+>> have other people trying to create an OF DMA engine API.
+>>
+>> It seems that Vinod's working on a way for platforms to specify bindings
+>> to the DMA engine code, and the DMA engine code itself selects the
+>> appropriate channel.  This patch, on the other hand, introduces a set of
+>> translation functions which need to be provided by platform code,
+>> which returns the dma_chan pointer.
+>>
+>> This sounds like a recipe for a total abortion of interfaces.  Only one
+>> of those two activities should be going on at any one time, or if they
+>> have to occur, they need coordination so that the we don't end up with
+>> two totally different schemes.
+>>
+>> In the mad rush to DTify everything, don't make hasty decisions, because
+>> it is very difficult to change it later - especially something like this
+>> which defines how DT encodes this information.
+> We discussed this in KS and IMHO we need to merge these two approaches.
+> 
+> For DT bindings, I think the binding itself shouldn't change based on my
+> work but I would like these same bindings to help build the DMA engine
+> code mappings.
+> 
+> Now would it make sense to NOT merge these changes for 3.7 and postpone
+> to 3.8. I can host these patches on a topic branch and merge them when
+> we are ready. I plan to spend some good amount of time on my work this
+> week so we should be ready pretty soon.
+> One these changes are merged, users can start moving to this scheme.
 
-diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
-index 9e35499..96512c0 100644
---- a/arch/powerpc/boot/dts/pcm030.dts
-+++ b/arch/powerpc/boot/dts/pcm030.dts
-@@ -59,7 +59,7 @@
- 			#gpio-cells = <2>;
- 		};
- 
--		psc@2000 { /* PSC1 in ac97 mode */
-+		audioplatform: psc@2000 { /* PSC1 in ac97 mode */
- 			compatible = "mpc5200b-psc-ac97","fsl,mpc5200b-psc-ac97";
- 			cell-index = <0>;
- 		};
-@@ -134,4 +134,9 @@
- 	localbus {
- 		status = "disabled";
- 	};
-+
-+	sound {
-+		compatible = "phytec,pcm030-audio-fabric";
-+		asoc-platform = <&audioplatform>;
-+	};
- };
--- 
-1.7.2.5
+I just wanted to see how things are progressing your side. Did you
+create a topic branch for this? If so let me know where I can find it, I
+did not find a branch on your infradead git tree.
+
+I wanted to pull in the latest patches for some testing.
+
+Cheers
+Jon
