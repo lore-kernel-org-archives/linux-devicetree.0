@@ -1,50 +1,65 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC 6/6] ARM: dts: exynos4210: Add platform-specific descriptions
- for pin controllers
-Date: Tue, 25 Sep 2012 16:52:39 -0600
-Message-ID: <506235B7.7020507@wwwdotorg.org>
-References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <6920043.WDO1laKTfY@flatron> <5061F64B.5@wwwdotorg.org> <1634883.GDdJlvHhnl@flatron>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/1] Fix segfault in DTC
+Date: Wed, 26 Sep 2012 09:30:54 +1000
+Message-ID: <20120925233054.GL9800@truffula.fritz.box>
+References: <1348526885-2113-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1634883.GDdJlvHhnl@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1348595889-6495-2-git-send-email-mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2012 12:35 PM, Tomasz Figa wrote:
-> On Tuesday 25 of September 2012 12:22:03 Stephen Warren wrote:
-...
->> BTW, how does the driver know what register addresses to use; I can see
->> the base for each pin controller bank is in samsung,pctl-offset, but
->> what describes the offset for each of the func, pud, drv, ... registers
->> from there? Are the offsets the same for all current Samsung SoCs?
+On Tue, Sep 25, 2012 at 10:58:09AM -0700, Markus Mayer wrote:
+> Prior to this change, an empty input file would cause a segfault, because
+> yylloc had never been initialized. There was never any characters for the
+> lexer to match, so YY_USER_ACTION was never executed before the parse error
+> was detected.
 > 
-> The offsets are defined as constants in the driver.
+> When the parser printed the error message, it tried to include the name of
+> the file, but the structure holding the file name (yylloc.file, referenced
+> as pos->file) had never been initialized.
 > 
-> They are the same in all cases, but the "4bit2" bank type of S3C64xx, which 
-> can have up to 16 pins with 4-bit function specifiers, so two registers are 
-> required for function configuration. In this case all the remaining 
-> registers are offset by 0x04.
+> Without the fix:
 > 
-> I couldn't think about any good solution for this special case, but still, 
-> I haven't been thinking a lot about it, as the driver is targetted at 
-> current Exynos SoCs primarily.
+> $ ./dtc /dev/null
+> DTC: dts->dts  on file "/dev/null"
+> Segmentation fault (core dumped)
+> 
+> $ gdb dtc core
+> Program terminated with signal 11, Segmentation fault.
+>     at scripts/dtc/srcpos.c:194
+> 194			fname = pos->file->name;
+> (gdb) bt
+>     at scripts/dtc/srcpos.c:194
+>     fmt=0x40d769 "%s", va=0x7fffbf027148) at scripts/dtc/srcpos.c:220
+>     at scripts/dtc/dtc-parser.tab.c:1920
+>     at scripts/dtc/treesource.c:38
+>     at scripts/dtc/dtc.c:203
+> (gdb) p *pos
+> $1 = {first_line = 0, first_column = 0, last_line = 0, last_column = 0,
+>   file = 0x0}
 
-I suppose if you always assume that the registers will appear in a
-specific order, and never have gaps between them, then you can simply
-always calculate the addresses as e.g.:
+Which dtc version did you observe this with?  I'm unable to reproduce
+the SEGV with current git.
 
-reg_func = reg_base
-reg_pud = reg_func + round_up(num_pins / (32 / func_width))
-reg_drv = reg_pud + round_up(num_pins / (32 / func_width))
-...
-
-Then, there wouldn't ever be any special cases - that calculation would
-always work.
-
-An alternative would be to put each register's address in DT rather than
-just the base of the register block. It'd certainly be more
-future-flexible, even if not strictly necessary.
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
