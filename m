@@ -1,16 +1,15 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/1] Fix segfault in DTC
-Date: Wed, 26 Sep 2012 09:30:54 +1000
-Message-ID: <20120925233054.GL9800@truffula.fritz.box>
-References: <1348526885-2113-1-git-send-email-mmayer@broadcom.com>
- <1348595889-6495-1-git-send-email-mmayer@broadcom.com>
- <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] ARM: use C pre-processor with dtc
+Date: Tue, 25 Sep 2012 16:46:16 -0700
+Message-ID: <20120925234616.GE4840@atomide.com>
+References: <1348599998-2729-1-git-send-email-swarren@wwwdotorg.org>
+ <1348601746.5565.18@snotra> <50620B5B.5020904@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1348595889-6495-2-git-send-email-mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <50620B5B.5020904-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,45 +20,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2012 at 10:58:09AM -0700, Markus Mayer wrote:
-> Prior to this change, an empty input file would cause a segfault, because
-> yylloc had never been initialized. There was never any characters for the
-> lexer to match, so YY_USER_ACTION was never executed before the parse error
-> was detected.
+* Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> [120925 12:53]:
+> On 09/25/2012 01:35 PM, Scott Wood wrote:
+> > 
+> > Do you have an example of where you'd actually benefit from this?  I'd
+> > think most things could either be done reasonably well with what's built
+> > into DTC (see what we've done in arch/powerpc/boot/dts/fsl), or would
+> > need math expression support in DTC (or has that been added?).
 > 
-> When the parser printed the error message, it tried to include the name of
-> the file, but the structure holding the file name (yylloc.file, referenced
-> as pos->file) had never been initialized.
+> Yes, support for basic integer math in cell values has indeed been
+> recently added to upstream dtc. I don't believe this has been ported
+> into the in-kernel dtc yet though.
 > 
-> Without the fix:
+> The primary motivation here is probably naming constants and associated
+> readability. For example, instead of:
 > 
-> $ ./dtc /dev/null
-> DTC: dts->dts  on file "/dev/null"
-> Segmentation fault (core dumped)
+> nvidia,phy-reset-gpio = <&gpio 169 0>; /* gpio PV1 */
 > 
-> $ gdb dtc core
-> Program terminated with signal 11, Segmentation fault.
->     at scripts/dtc/srcpos.c:194
-> 194			fname = pos->file->name;
-> (gdb) bt
->     at scripts/dtc/srcpos.c:194
->     fmt=0x40d769 "%s", va=0x7fffbf027148) at scripts/dtc/srcpos.c:220
->     at scripts/dtc/dtc-parser.tab.c:1920
->     at scripts/dtc/treesource.c:38
->     at scripts/dtc/dtc.c:203
-> (gdb) p *pos
-> $1 = {first_line = 0, first_column = 0, last_line = 0, last_column = 0,
->   file = 0x0}
+> You could write:
+> 
+> nvidia,phy-reset-gpio = <&gpio TEGRA_GPIO_PV1 0>;
+> 
+> No more opaque numbers!
 
-Which dtc version did you observe this with?  I'm unable to reproduce
-the SEGV with current git.
+This would be nice indeed.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Regards,
+
+Tony
