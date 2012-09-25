@@ -1,100 +1,118 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] pwm_backlight: Add device tree support for Low Threshold
- Brightness
-Date: Tue, 25 Sep 2012 00:19:14 -0600
-Message-ID: <50614CE2.7010301@wwwdotorg.org>
-References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com> <505BF83D.8040201@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com> <505CA74B.2090405@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/2] watchdog: at91sam9_wdt: add device tree support
+Date: Tue, 25 Sep 2012 09:28:33 +0200
+Message-ID: <1348558114-31750-2-git-send-email-fabio.porcedda@gmail.com>
+References: <1348558114-31750-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348558114-31750-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2012 10:29 PM, Philip, Avinash wrote:
-> On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
->> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
->>> Hi Stephen,
->>>
->>> On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
->>>> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
->>>>> Some backlights perform poorly when driven by a PWM with a short
->>>>> duty-cycle. For such devices, the low threshold can be used to specify a
->>>>> lower bound for the duty-cycle and should be chosen to exclude the
->>>>> problematic range.
->>>>>
->>>>> This patch adds support for an optional low-threshold-brightness
->>>>> property.
->>>>
->>>>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
->>>>
->>>>>  Optional properties:
->>>>>    - pwm-names: a list of names for the PWM devices specified in the
->>>>>                 "pwms" property (see PWM binding[0])
->>>>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
->>>>> +    brightness set to value so that backlight present on low end of
->>>>> +    brightness.
->>>>
->>>> For my education, why not just specify values above this value in the
->>>> brightness-levels array; how do those two interact?
->>>
->>> Please find details from 
->>> https://lkml.org/lkml/2012/7/18/284
->>
->> Hmm. That still doesn't really explain what this property does.
->>
->> I'm going to guess that if this property is present, and values in the
->> brightness-levels property get scaled between the
->> low-threshold-brightness and 255 instead of being used directly.
-> 
-> This is correct.
-> 
->> But then, in the email you linked to, what does "But brightness-levels won't
->> be uniformly divided" mean?
-> 
-> For some panels, backlight would absent on low end of brightness due to low
-> percentage in duty_cycle. Consider following example where backlight absent
-> for brightness levels from 0 - 51.
-> 
-> pwms = <&pwm 0 50000>;
-> brightness-levels = <0 51 53 56 62 75 101 152 255>; 
-> default-brightness-level = <6>;
-> 
-> So in the example, brightness-levels are set to have values for backlight present.
-> Here levels are not uniformly divided.
+Tested on an at91sam9260 board (evk-pro3)
 
-So why not just change the values so they /are/ what you want? After
-all, it's just data and you can put whatever values you want there. What
-is preventing you from doing this?
+Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
+ drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
 
-Perhaps e.g.:
-
-brightness-levels = <0 101 106 112 124 150 202 304 511>;
-(just multiplying everything by N, for arbitrary N=2, to get extra
-precision)
-
-... plus whatever adjustments are required to make the data "uniformly
-divided", which I can't do in the example here since I'd need to know
-whatever non-linear equation characterizes the backlight's PWM % duty
-cycle to perceived brightness mapping.
-
-The only thing that could be preventing this is mathematical precision.
-While all the PWM DT examples I've seen have brightness-levels range
-from 0..255, I don't think there is any such actual limit; you could
-range from say 0..1000000 if you wanted, right?
-
->> Either way, the DT binding should explain exactly what this value is
->> used for, and how it affects the interpretation of values in
->> brightness-levels.
-> 
-> Is DT binding documentation a good place to explain this feature?
-> Initially Thierry suggested document option. So I left out.
-
-The binding documents are supposed to be a standalone description of
-what the data in DT does; given general no-Linux-specific domain
-knowledge, the binding document should be detailed enough for someone to
-understand how to fill in the DT. So, yes, I think the binding document
-would be a great place to put such documentation.
+diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+new file mode 100644
+index 0000000..724fad1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+@@ -0,0 +1,19 @@
++* Atmel Watchdog Timers
++
++** at91sam9-wdt
++
++Required properties:
++- compatible: must be "atmel,at91sam9-wdt".
++- reg: physical base address of the controller and length of memory mapped
++  region.
++
++Optional properties:
++- heartbeat: contains the watchdog heartbeats in seconds.
++
++Example:
++
++	watchdog@fffffd40 {
++		compatible = "atmel,at91sam9-wdt";
++		reg = <0xfffffd40 0x10>;
++		heartbeat = <10>;
++	};
+diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
+index 05e1be8..56b8836 100644
+--- a/drivers/watchdog/at91sam9_wdt.c
++++ b/drivers/watchdog/at91sam9_wdt.c
+@@ -32,6 +32,7 @@
+ #include <linux/timer.h>
+ #include <linux/bitops.h>
+ #include <linux/uaccess.h>
++#include <linux/of.h>
+ 
+ #include "at91sam9_wdt.h"
+ 
+@@ -254,6 +255,14 @@ static struct miscdevice at91wdt_miscdev = {
+ 	.fops		= &at91wdt_fops,
+ };
+ 
++static inline void __init at91wdt_probe_dt(struct device_node *node)
++{
++	if (!node)
++		return;
++
++	of_property_read_u32(node, "heartbeat", &heartbeat);
++}
++
+ static int __init at91wdt_probe(struct platform_device *pdev)
+ {
+ 	struct resource	*r;
+@@ -272,6 +281,8 @@ static int __init at91wdt_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
++	at91wdt_probe_dt(pdev->dev.of_node);
++
+ 	/* Set watchdog */
+ 	res = at91_wdt_settimeout(ms_to_ticks(WDT_HW_TIMEOUT * 1000));
+ 	if (res)
+@@ -302,11 +313,21 @@ static int __exit at91wdt_remove(struct platform_device *pdev)
+ 	return res;
+ }
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id at91_wdt_dt_ids[] = {
++	{ .compatible = "atmel,at91sam9-wdt" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, at91_wdt_dt_ids);
++#endif
++
+ static struct platform_driver at91wdt_driver = {
+ 	.remove		= __exit_p(at91wdt_remove),
+ 	.driver		= {
+ 		.name	= "at91_wdt",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(at91_wdt_dt_ids),
+ 	},
+ };
+ 
+-- 
+1.7.11.3
