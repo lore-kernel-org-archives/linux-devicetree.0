@@ -1,137 +1,102 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC 6/6] ARM: dts: exynos4210: Add platform-specific descriptions
- for pin controllers
-Date: Mon, 24 Sep 2012 17:14:38 -0600
-Message-ID: <5060E95E.5030601@wwwdotorg.org>
-References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <2359157.SFB7x6fWGY@flatron> <50609B77.2060406@wwwdotorg.org> <7891903.Qpoh0EJCQr@flatron>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH v2] pwm_backlight: Add device tree support for Low
+ Threshold Brightness
+Date: Tue, 25 Sep 2012 04:29:27 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com>
+References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
+ <505BF83D.8040201@wwwdotorg.org>
+ <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com>
+ <505CA74B.2090405@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <7891903.Qpoh0EJCQr@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <505CA74B.2090405@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/2012 03:31 PM, Tomasz Figa wrote:
-> On Monday 24 of September 2012 11:42:15 Stephen Warren wrote:
->> On 09/21/2012 01:54 PM, Tomasz Figa wrote:
->>> On Friday 21 of September 2012 12:56:41 Stephen Warren wrote:
->>>> On 09/20/2012 02:53 AM, Tomasz Figa wrote:
->>>>> The patch "pinctrl: samsung: Parse pin banks from DT" introduced
->>>>> platform-specific data parsing from DT.
->>>>>
->>>>> This patch adds all necessary nodes and properties to exynos4210
->>>>> device
->>>>> tree sources.
->>>>>
->>>>> +++ b/arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi
->>>>>
->>>>> +			samsung,pctl-offset = <0x000>;
->>>>> +			samsung,pin-bank = "gpa0";
->>>>> +			samsung,pin-count = <8>;
->>>>> +			samsung,func-width = <4>;
->>>>> +			samsung,pud-width = <2>;
->>>>> +			samsung,drv-width = <2>;
->>>>> +			samsung,conpdn-width = <2>;
->>>>> +			samsung,pudpdn-width = <2>;
->>>>
->>>> The properties above represent the width of the fields. Must all
->>>> fields
->>>> always be packed together into say the LSB of the registers? What if
->>>> there are gaps between the fields in a future SoC variant, or the
->>>> order
->>>> of the fields in the register changes? I think you want to add either
->>>> a
->>>> samsung,func-bit/samsung,func-position property for each of the
->>>> fields,
->>>> or change from samsung,func-width=<4> to samsung,field-mask=<0xf>.
->>>> IIRC,
->>>> the generic pinctrl binding used a mask for this purpose.
->>>>
->>>> What if a future SoC variant adds more fields to the register? At that
->>>> point, you'd need to edit the driver anyway in order to define a new
->>>> DT
->>>> property to represent the new field. Perhaps instead of having an
->>>> explicit named property per field in the register, you want a simple
->>>> list of fields:
->>>>
->>>> samsung,pin-property-names = "func", "pud", "drv", "conpdn", "pudpdn";
->>>> samsung,pin-propert-masks = <0xf 0x30 0xc0 0x300 0xc00>;
->>>>
->>>> That would allow a completely arbitrary number of fields and layouts
->>>> to
->>>> be described.
->>>>
->>>> I wonder if for absolute generality you want a samsung,pin-stride
->>>> property to represent the difference in register address per pin. I
->>>> assume that's hard-coded as 4 right now.
->>>
->>> Hmm, considering so many different possible changes, maybe a more
->>> conservative solution would be better, like reducing the amount of
->>> information held in DT to bank type, e.g.
->>>
->>> 	samsung,bank-type = "exynos4";
->>>
->>> or maybe
->>>
->>> 	compatible = "samsung,exynos4-pin-bank*;
->>>
->>> and then define supported bank types in the driver. SoC-specific data
->>> would remain in DT, i.e. pctl-offset, pin-bank, pin-count,
->>> eint-offset, etc.
->> Yes, removing much of the data from DT and putting it into a tiny table
->> in the driver makes sense to me in this case.
+On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
+> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
+> > Hi Stephen,
+> > 
+> > On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
+> >> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
+> >>> Some backlights perform poorly when driven by a PWM with a short
+> >>> duty-cycle. For such devices, the low threshold can be used to specify a
+> >>> lower bound for the duty-cycle and should be chosen to exclude the
+> >>> problematic range.
+> >>>
+> >>> This patch adds support for an optional low-threshold-brightness
+> >>> property.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> >>
+> >>>  Optional properties:
+> >>>    - pwm-names: a list of names for the PWM devices specified in the
+> >>>                 "pwms" property (see PWM binding[0])
+> >>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
+> >>> +    brightness set to value so that backlight present on low end of
+> >>> +    brightness.
+> >>
+> >> For my education, why not just specify values above this value in the
+> >> brightness-levels array; how do those two interact?
+> > 
+> > Please find details from 
+> > https://lkml.org/lkml/2012/7/18/284
 > 
-> A hybrid solution came to my mind, define bank types in device tree once 
-> and then reference them in banks. Something like:
+> Hmm. That still doesn't really explain what this property does.
 > 
-> 	pinctrl-bank-types {
-> 		bank_off: bank-off {
-> 			samsung,func-width = <4>;
-> 			samsung,pud-width = <2>;
-> 			samsung,drv-width = <2>;
-> 			samsung,conpdn-width = <2>;
-> 			samsung,pudpdn-width = <2>;
-> 		};
-> 
-> 		bank_alive: bank-alive {
-> 			samsung,func-width = <4>;
-> 			samsung,pud-width = <2>;
-> 			samsung,drv-width = <2>;
-> 		};
-> 	};
-> 
-> 	/* ... */
-> 
-> 	pinctrl@12345678 {
-> 		/* ... */
-> 		gpa0: gpa0 {
-> 			/* ... */
-> 			samsung,bank-type = <&bank_off>;
-> 			/* ... */
-> 		};
-> 		/* ... */
-> 	};
-> 
-> This would add the possibility to define new banks types quickly, but would 
-> not add too much overhead.
-> 
-> What do you think?
+> I'm going to guess that if this property is present, and values in the
+> brightness-levels property get scaled between the
+> low-threshold-brightness and 255 instead of being used directly.
 
-That does solve the issue of parsing those same values over and over,
-but at the cost of making the binding a lot more conceptually complex.
+This is correct.
 
-However, it doesn't solve any of the extensibility issues I raised such
-as whether pos+size or mask would be a better representation, what about
-if the fields end up being in different (separate) registers on newer
-SoCs, etc.
+> But then, in the email you linked to, what does "But brightness-levels won't
+> be uniformly divided" mean?
 
-I forget, do you actually have multiple different SoCs right now (or in
-the near future where the HW design is known now for certain even if the
-chip isn't available) that have different values for all these *-width
-properties and hence can be represented just using this binding and
-without altering the driver at all? If so, I suppose the original
-binding is at least useful (although I would certainly still request to
-use *-mask instead of *-width properties).
+For some panels, backlight would absent on low end of brightness due to low
+percentage in duty_cycle. Consider following example where backlight absent
+for brightness levels from 0 - 51.
+
+pwms = <&pwm 0 50000>;
+brightness-levels = <0 51 53 56 62 75 101 152 255>; 
+default-brightness-level = <6>;
+
+So in the example, brightness-levels are set to have values for backlight present.
+Here levels are not uniformly divided.
+
+But by providing,
+brightness_threshold_level = <50>;
+
+we can have a uniform division in brightness-levels as below
+
+brightness-levels = <0 2 4 8 16 32 64 128 255>;
+
+
+> Why would doing the calculation at run-time
+> be any better than simply putting the correct values into
+> brightness-levels in the first place?
+
+I think you mean to provide the backlight-levels as in example
+brightness-levels = <0 51 53 56 62 75 101 152 255>;
+
+In that case, I still feel adding brightness_threshold_level would be a
+better option.
+
+> 
+> Either way, the DT binding should explain exactly what this value is
+> used for, and how it affects the interpretation of values in
+> brightness-levels.
+
+Is DT binding documentation a good place to explain this feature?
+Initially Thierry suggested document option. So I left out.
+
+Thanks
+Avinash
+
+> 
+
