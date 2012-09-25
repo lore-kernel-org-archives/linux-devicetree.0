@@ -1,85 +1,48 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v3 1/2] watchdog: at91sam9_wdt: add device tree support
-Date: Tue, 25 Sep 2012 12:49:01 +0200
-Message-ID: <20120925104901.GI17667@game.jcrosoft.org>
-References: <1348558114-31750-1-git-send-email-fabio.porcedda@gmail.com>
- <1348558114-31750-2-git-send-email-fabio.porcedda@gmail.com>
- <20120925081057.GH17667@game.jcrosoft.org>
- <CAHkwnC_=i7mEv99xU6HcFpEfC6eeumcZDWrBq2_qdv=rDf3E1g@mail.gmail.com>
- <506180BE.6000603@atmel.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get a
+ named child
+Date: Tue, 25 Sep 2012 07:06:19 -0400
+Message-ID: <20120925110618.GA4428@opensource.wolfsonmicro.com>
+References: <1347952249-24672-1-git-send-email-srinivas.kandagatla@st.com>
+ <20120922160732.GT4495@opensource.wolfsonmicro.com>
+ <5060576D.1020905@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <506180BE.6000603@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Wim Van Sebroeck <wim@iguana.be>, Fabio Porcedda <fabio.porcedda@gmail.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <5060576D.1020905-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12:00 Tue 25 Sep     , Nicolas Ferre wrote:
-> On 09/25/2012 11:45 AM, Fabio Porcedda :
-> > On Tue, Sep 25, 2012 at 10:10 AM, Jean-Christophe PLAGNIOL-VILLARD
-> > <plagnioj@jcrosoft.com> wrote:
-> >> On 09:28 Tue 25 Sep     , Fabio Porcedda wrote:
-> >>> Tested on an at91sam9260 board (evk-pro3)
-> >>>
-> >>> Signed-off-by: Fabio Porcedda <fabio.porcedda@gmail.com>
-> >>> ---
-> >>>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
-> >>>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
-> >>>  2 files changed, 40 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> >>> new file mode 100644
-> >>> index 0000000..724fad1
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> >>> @@ -0,0 +1,19 @@
-> >>> +* Atmel Watchdog Timers
-> >>> +
-> >>> +** at91sam9-wdt
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible: must be "atmel,at91sam9-wdt".
-> >>> +- reg: physical base address of the controller and length of memory mapped
-> >>> +  region.
-> >>> +
-> >>> +Optional properties:
-> >>> +- heartbeat: contains the watchdog heartbeats in seconds.
-> >>> +
-> >>> +Example:
-> >>> +
-> >>> +     watchdog@fffffd40 {
-> >>> +             compatible = "atmel,at91sam9-wdt";
-> >> for the secind time atmel,at91sam9260-watchdog
-> > 
-> > Ok, i will fix this.
-> > 
-> >> you need to put the first soc that use it in the compatible
-> >>> +             reg = <0xfffffd40 0x10>;
-> >>> +             heartbeat = <10>;
-> >> need put second in the property name so need to read the doc
-> > 
-> > I didn't found any example about a property with "second" in the name.
-> > Which It's best "heartbeat-seconds", "heartbeat-sec" or "heartbeat-s" ?
-> 
-> I think that, as it is indicated in the documentation, we should not
-> worry too much about that... but "heartbeat" and "heartbeat-s" is ok
-> with me.
-> 
-> Maybe people @ devicetree-discuss have an advice for this?
-for i2c-gpio mandatory as example cf discussion with Jean and Russell
+On Mon, Sep 24, 2012 at 07:51:57AM -0500, Rob Herring wrote:
+> On 09/22/2012 11:07 AM, Mark Brown wrote:
+> > On Tue, Sep 18, 2012 at 08:10:49AM +0100, Srinivas KANDAGATLA wrote:
 
-Best Regards,
-J.
+> >> As follow-up to "dt: introduce of_get_child_by_name to get child node by
+> >> name." patch, This patch removes some of the code duplication in the
+> >> driver by replacing it with of_get_child_by_name instead.
+
+> > Applied, thanks.  Please do use subject lines consistent with the thing
+> > you're submitting against.
+
+> This dependency here is not yet applied. I was waiting for some acks for
+> some other conversions in the series. I can take it or ack the
+> dependency. Probably makes more sense for me to take it as there are
+> other non-spi patches.
+
+Ugh, this isn't in mainline...  looking at the original posting I see
+this wasn't sent as a threaded patch series, it was sent as a bunch of
+separate patches, so this got detached from the rest of the series.  I
+discarded the patch.
