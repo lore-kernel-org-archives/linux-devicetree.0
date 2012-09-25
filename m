@@ -1,102 +1,45 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v2] pwm_backlight: Add device tree support for Low
- Threshold Brightness
-Date: Tue, 25 Sep 2012 04:29:27 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com>
-References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
- <505BF83D.8040201@wwwdotorg.org>
- <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com>
- <505CA74B.2090405@wwwdotorg.org>
+From: Vinod Koul <vinod.koul@linux.intel.com>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a
+ slave DMA channel
+Date: Tue, 25 Sep 2012 10:05:01 +0530
+Message-ID: <1348547701.1943.190.camel@vkoul-udesk3>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
+	 <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
+	 <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>
+	 <20120917223619.GC12445@n2100.arm.linux.org.uk>
+	 <1347938035.1943.162.camel@vkoul-udesk3>  <5060DDEB.4000600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <505CA74B.2090405@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5060DDEB.4000600@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@nvidia.com>, Benoit Cousson <b-cousson@ti.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
-> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
-> > Hi Stephen,
+On Mon, 2012-09-24 at 17:25 -0500, Jon Hunter wrote:
+> > For DT bindings, I think the binding itself shouldn't change based on my
+> > work but I would like these same bindings to help build the DMA engine
+> > code mappings.
 > > 
-> > On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
-> >> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
-> >>> Some backlights perform poorly when driven by a PWM with a short
-> >>> duty-cycle. For such devices, the low threshold can be used to specify a
-> >>> lower bound for the duty-cycle and should be chosen to exclude the
-> >>> problematic range.
-> >>>
-> >>> This patch adds support for an optional low-threshold-brightness
-> >>> property.
-> >>
-> >>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> >>
-> >>>  Optional properties:
-> >>>    - pwm-names: a list of names for the PWM devices specified in the
-> >>>                 "pwms" property (see PWM binding[0])
-> >>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
-> >>> +    brightness set to value so that backlight present on low end of
-> >>> +    brightness.
-> >>
-> >> For my education, why not just specify values above this value in the
-> >> brightness-levels array; how do those two interact?
-> > 
-> > Please find details from 
-> > https://lkml.org/lkml/2012/7/18/284
+> > Now would it make sense to NOT merge these changes for 3.7 and postpone
+> > to 3.8. I can host these patches on a topic branch and merge them when
+> > we are ready. I plan to spend some good amount of time on my work this
+> > week so we should be ready pretty soon.
+> > One these changes are merged, users can start moving to this scheme.
 > 
-> Hmm. That still doesn't really explain what this property does.
+> I just wanted to see how things are progressing your side. Did you
+> create a topic branch for this? If so let me know where I can find it, I
+> did not find a branch on your infradead git tree.
 > 
-> I'm going to guess that if this property is present, and values in the
-> brightness-levels property get scaled between the
-> low-threshold-brightness and 255 instead of being used directly.
+> I wanted to pull in the latest patches for some testing. 
+Sorry for delay, I had everything ready, but couldn't manage to commit
+and push. I have pushed to topic/dmaengine_dt, it is pushing out now...
 
-This is correct.
+This has your two patches, my fix for build breakage, and Matt's typo
+patch. This is based on my next.
 
-> But then, in the email you linked to, what does "But brightness-levels won't
-> be uniformly divided" mean?
-
-For some panels, backlight would absent on low end of brightness due to low
-percentage in duty_cycle. Consider following example where backlight absent
-for brightness levels from 0 - 51.
-
-pwms = <&pwm 0 50000>;
-brightness-levels = <0 51 53 56 62 75 101 152 255>; 
-default-brightness-level = <6>;
-
-So in the example, brightness-levels are set to have values for backlight present.
-Here levels are not uniformly divided.
-
-But by providing,
-brightness_threshold_level = <50>;
-
-we can have a uniform division in brightness-levels as below
-
-brightness-levels = <0 2 4 8 16 32 64 128 255>;
-
-
-> Why would doing the calculation at run-time
-> be any better than simply putting the correct values into
-> brightness-levels in the first place?
-
-I think you mean to provide the backlight-levels as in example
-brightness-levels = <0 51 53 56 62 75 101 152 255>;
-
-In that case, I still feel adding brightness_threshold_level would be a
-better option.
-
-> 
-> Either way, the DT binding should explain exactly what this value is
-> used for, and how it affects the interpretation of values in
-> brightness-levels.
-
-Is DT binding documentation a good place to explain this feature?
-Initially Thierry suggested document option. So I left out.
-
-Thanks
-Avinash
-
-> 
+-- 
+~Vinod
 
