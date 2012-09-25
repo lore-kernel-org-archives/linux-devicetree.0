@@ -1,89 +1,54 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCH 1/5] drivers: usb: phy: add a new driver for omap usb2 phy
-Date: Tue, 25 Sep 2012 15:36:20 +0530
-Message-ID: <CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com>
-	<1346943430-18236-2-git-send-email-kishon@ti.com>
-	<50605CFB.5090402@gmail.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 0/2] watchdog: at91sam9_wdt: add device tree support
+Date: Tue, 25 Sep 2012 12:25:02 +0200
+Message-ID: <1348568704-28304-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50605CFB.5090402@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: grant.likely@secretlab.ca, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi all,
 
-On Mon, Sep 24, 2012 at 6:45 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On 09/06/2012 09:57 AM, Kishon Vijay Abraham I wrote:
->> All phy related programming like enabling/disabling the clocks, powering
->> on/off the phy is taken care of by this driver. It is also used for OTG
->> related functionality like srp.
->>
->> This also includes device tree support for usb2 phy driver and
->> the documentation with device tree binding information is updated.
->>
->> Currently writing to control module register is taken care in this
->> driver which will be removed once the control module driver is in place.
->>
->> Cc: Felipe Balbi <balbi@ti.com>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  Documentation/devicetree/bindings/usb/usb-phy.txt |   17 ++
->>  drivers/usb/phy/Kconfig                           |    9 +
->>  drivers/usb/phy/Makefile                          |    1 +
->>  drivers/usb/phy/omap-usb2.c                       |  271 +++++++++++++++++++++
->>  include/linux/usb/omap_usb.h                      |   46 ++++
->>  include/linux/usb/phy_companion.h                 |   34 +++
->>  6 files changed, 378 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/usb/usb-phy.txt
->>  create mode 100644 drivers/usb/phy/omap-usb2.c
->>  create mode 100644 include/linux/usb/omap_usb.h
->>  create mode 100644 include/linux/usb/phy_companion.h
->>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
->> new file mode 100644
->> index 0000000..80d4148
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
->
-> This is a very generic name...
->
->> @@ -0,0 +1,17 @@
->> +USB PHY
->> +
->> +OMAP USB2 PHY
->> +
->> +Required properties:
->> + - compatible: Should be "ti,omap-usb2"
->
-> ...for a specific phy. However, I do think a generic binding to describe
-> host ctrlr to phy connections is needed.
->
->> + - reg : Address and length of the register set for the device. Also
->> +add the address of control module dev conf register until a driver for
->> +control module is added
->
-> The dts should describe the h/w, not what you need for the current
-> driver. The 2nd reg field does not belong here.
+This set of patches is for adding device tree support to the
+at91sam_wdt driver.
 
-Indeed. This was discussed and agreed upon as a interim solution till
-we have a control module driver in place to write to the control
-module register.
->
->> +
->> +This is usually a subnode of ocp2scp to which it is connected.
->
-> How is usb port to phy connection described?
-Currently the usb controller to phy connection is established only by
-type. We have a couple of patches being currently discussed in the
-list to establish the connection by phandle.
+I've tested it on an at91sam9260 board (evk-pro3).
 
-https://patchwork.kernel.org/patch/1457801/ (Generic PHY Framework:
-devm_of_phy_get())
-http://www.spinics.net/lists/linux-usb/msg69547.html
+Changes:
+v4:
+ - use "atmel,at91sam9260-wdt" as compatible
+v3:
+ - add heartbeat option
+ - default disabled for all the soc, enable only for evk-pro3 board
+ - add at91sam9263 and at91sam9g45 soc
+v2:
+ - add missing to and cc addresses
 
-Thanks
-Kishon
+Fabio Porcedda (2):
+  watchdog: at91sam9_wdt: add device tree support
+  ARM: at91: add at91sam9_wdt driver to at91sam926x, at91sam9g45
+
+ .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
+ arch/arm/boot/dts/at91sam9260.dtsi                  |  6 ++++++
+ arch/arm/boot/dts/at91sam9263.dtsi                  |  6 ++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi                  |  6 ++++++
+ arch/arm/boot/dts/evk-pro3.dts                      |  4 ++++
+ drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
+ 6 files changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+
+-- 
+1.7.11.3
