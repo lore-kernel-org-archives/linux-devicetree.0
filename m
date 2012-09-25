@@ -1,117 +1,66 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4] of: Add videomode helper
-Date: Tue, 25 Sep 2012 10:03:43 +0200
-Message-ID: <20120925080343.GB24753@pengutronix.de>
-References: <1348042843-24673-1-git-send-email-s.trumtrar@pengutronix.de>
- <50606334.7030902@gmail.com> <50608000.6050007@wwwdotorg.org>
- <5060A5D5.7040908@gmail.com> <5060E82A.3030404@wwwdotorg.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v3 1/2] watchdog: at91sam9_wdt: add device tree support
+Date: Tue, 25 Sep 2012 10:10:57 +0200
+Message-ID: <20120925081057.GH17667@game.jcrosoft.org>
+References: <1348558114-31750-1-git-send-email-fabio.porcedda@gmail.com>
+ <1348558114-31750-2-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <5060E82A.3030404-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1348558114-31750-2-git-send-email-fabio.porcedda@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Porcedda <fabio.porcedda@gmail.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Wim Van Sebroeck <wim@iguana.be>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2012 at 05:09:30PM -0600, Stephen Warren wrote:
-> On 09/24/2012 12:26 PM, Rob Herring wrote:
-> > On 09/24/2012 10:45 AM, Stephen Warren wrote:
-> >> On 09/24/2012 07:42 AM, Rob Herring wrote:
-> >>> On 09/19/2012 03:20 AM, Steffen Trumtrar wrote:
-> >>>> This patch adds a helper function for parsing videomodes from the devicetree.
-> >>>> The videomode can be either converted to a struct drm_display_mode or a
-> >>>> struct fb_videomode.
-> >>
-> >>>> +++ b/Documentation/devicetree/bindings/video/displaymode
-> >>>> @@ -0,0 +1,74 @@
-> >>>> +videomode bindings
-> >>>> +==================
-> >>>> +
-> >>>> +Required properties:
-> >>>> + - hactive, vactive: Display resolution
-> >>>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
-> >>>> +   in pixels
-> >>>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
-> >>>> +   lines
-> >>>> + - clock: displayclock in Hz
-> >>>
-> >>> A major piece missing is the LCD controller to display interface width
-> >>> and component ordering.
-> >>
-> >> I thought this binding was solely defining the timing of the video
-> >> signal (hence "video mode"). Any definition of the physical interface to
-> >> the LCD/display-connector is something entirely orthogonal, so it seems
-> >> entirely reasonable to represent that separately.
-> > 
-> > It is not orthogonal because in many cases the LCD panel defines the
-> > mode.
+On 09:28 Tue 25 Sep     , Fabio Porcedda wrote:
+> Tested on an at91sam9260 board (evk-pro3)
 > 
-> The LCD panel itself defines both the mode and the physical interface
-> properties. The mode does not imply anything about the physical
-> interface, nor does the physical interface imply anything about the
-> mode. So, they are in fact orthogonal. In other words, just because you
-> need both sets of information, doesn't make the two pieces of
-> information correlated.
+> Signed-off-by: Fabio Porcedda <fabio.porcedda@gmail.com>
+> ---
+>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
+>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
 > 
-> >>>> +Example:
-> >>>> +
-> >>>> +	display@0 {
-> >>>
-> >>> It would be useful to have a compatible string here. We may not always
-> >>> know the panel type or have a fixed panel though. We could define
-> >>> "generic-lcd" or something for cases where the panel type is unknown.
-> >>>
-> >>>> +		width-mm = <800>;
-> >>>> +		height-mm = <480>;
-> >>
-> >> I would hope that everything in the example above this point is just
-> >> that - an example, and this binding only covers the display mode
-> >> definition - i.e. that part of the example below.
-> >>
-> > 
-> > It's fairly clear this binding is being defined based on what Linux
-> > supports vs. what the h/w looks like.
-> > 
-> >> If that's not the intent, as Rob says, there's a /ton/ of stuff missing.
-> > 
-> > Assuming not, what all is missing?
-> 
-> Everything related to the physical interface:
-> 
-> * For DSI, whatever it needs to be configured.
-> * For LVDS, e.g. number of lanes of R, G, B.
-> * Perhaps multi-pumping rates (# of clock signals to send each data
-> value for, to satisfy any minimum clock rates)
-> * Built-in displays typically need to be coupled with a backlight and
-> all the associated control of that.
-> * Pinctrl interaction.
-> 
-> and probably a bunch of other things I haven't thought about.
+> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> new file mode 100644
+> index 0000000..724fad1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> @@ -0,0 +1,19 @@
+> +* Atmel Watchdog Timers
+> +
+> +** at91sam9-wdt
+> +
+> +Required properties:
+> +- compatible: must be "atmel,at91sam9-wdt".
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +Optional properties:
+> +- heartbeat: contains the watchdog heartbeats in seconds.
+> +
+> +Example:
+> +
+> +	watchdog@fffffd40 {
+> +		compatible = "atmel,at91sam9-wdt";
+for the secind time atmel,at91sam9260-watchdog
 
-I already added some of those things in my v5. For those who missed it
-<1348500924-8551-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-I renamed from "of videomode helper" to "of display helper", seemed to be more
-clear what it is supposed to accomplish.
+you need to put the first soc that use it in the compatible
+> +		reg = <0xfffffd40 0x10>;
+> +		heartbeat = <10>;
+need put second in the property name so need to read the doc
 
-Regards,
-
-Steffen
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best Regards,
+J.
