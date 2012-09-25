@@ -1,65 +1,33 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 1/5] usb: phy: samsung: Introducing usb phy driver
- for hsotg
-Date: Tue, 25 Sep 2012 07:18:57 -0500
-Message-ID: <5061A131.9010905@gmail.com>
-References: <1347886484-16064-1-git-send-email-p.paneri@samsung.com> <1347886484-16064-2-git-send-email-p.paneri@samsung.com> <50605A69.2070201@gmail.com> <CAD6zSYOABTwTGXgFwGwLX-NhjDjDvtqUDVYTMGDng3nuTgLeZg@mail.gmail.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 0/4] deprecate regulator-compatible DT property
+Date: Tue, 25 Sep 2012 13:46:00 +0100
+Message-ID: <20120925124559.GG4428@opensource.wolfsonmicro.com>
+References: <1348514703-10152-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD6zSYOABTwTGXgFwGwLX-NhjDjDvtqUDVYTMGDng3nuTgLeZg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Praveen Paneri <p.paneri@samsung.com>
-Cc: linux-usb@vger.kernel.org, l.majewski@samsung.com, kgene.kim@samsung.com, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, balbi@ti.com, grant.likely@secretlab.ca, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1348514703-10152-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2012 06:23 AM, Praveen Paneri wrote:
-> Hi Rob,
+On Mon, Sep 24, 2012 at 01:24:59PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> On Mon, Sep 24, 2012 at 6:34 PM, Rob Herring <robherring2@gmail.com> wrote:
->> On 09/17/2012 07:54 AM, Praveen Paneri wrote:
->>> This driver uses usb_phy interface to interact with s3c-hsotg. Supports
->>> phy_init and phy_shutdown functions to enable/disable phy. Tested with
->>> smdk6410 and smdkv310. More SoCs can be brought under later.
->>>
->>> Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
->>> Acked-by: Heiko Stuebner <heiko@sntech.de>
->>> ---
->>>  .../devicetree/bindings/usb/samsung-usbphy.txt     |    9 +
->>>  drivers/usb/phy/Kconfig                            |    8 +
->>>  drivers/usb/phy/Makefile                           |    1 +
->>>  drivers/usb/phy/samsung-usbphy.c                   |  360 ++++++++++++++++++++
->>>  include/linux/platform_data/samsung-usbphy.h       |   27 ++
->>>  5 files changed, 405 insertions(+), 0 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
->>>  create mode 100644 drivers/usb/phy/samsung-usbphy.c
->>>  create mode 100644 include/linux/platform_data/samsung-usbphy.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
->>> new file mode 100644
->>> index 0000000..fefd9c8
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
->>> @@ -0,0 +1,9 @@
->>> +* Samsung's usb phy transceiver
->>> +
->>> +The Samsung's phy transceiver is used for controlling usb otg phy for
->>> +s3c-hsotg usb device controller.
->>> +
->>> +Required properties:
->>> +- compatible : should be "samsung,exynos4210-usbphy"
->>> +- reg : base physical address of the phy registers and length of memory mapped
->>> +     region.
->>
->> What's missing here is describing the connection of phys to host
->> controllers. We've got several people adding usb phy bindings and need
->> to define them in a common way.
-> yes! it just covers the generic binding. I will update it accordingly
-> as the generic phy framework takes its final shape.
+> As explained in patch 1, this series deprecates the regulator-compatible
+> DT property, and updates various binding documentation and examples for
+> this change.
 
-That sounds like the wrong way to define a binding... Figuring out how
-to describe the h/w should not be dependent on changes in the kernel.
-Bindings are an ABI and should not be evolving.
-
-Rob
+Applied regulator patches, thanks.
