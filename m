@@ -1,14 +1,16 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] ARM: at91: add at91sam9_wdt driver to at91sam926x,
- at91sam9g45
-Date: Tue, 25 Sep 2012 09:28:34 +0200
-Message-ID: <1348558114-31750-3-git-send-email-fabio.porcedda@gmail.com>
-References: <1348558114-31750-1-git-send-email-fabio.porcedda@gmail.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4] of: Add videomode helper
+Date: Tue, 25 Sep 2012 09:51:57 +0200
+Message-ID: <20120925075157.GA24753@pengutronix.de>
+References: <1348042843-24673-1-git-send-email-s.trumtrar@pengutronix.de>
+ <50606334.7030902@gmail.com> <20120924141233.GN1322@pengutronix.de>
+ <506079CF.40902@gmail.com> <20120924191628.GR1322@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348558114-31750-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120924191628.GR1322-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,87 +21,89 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the driver for the evk-pro3 board.
+On Mon, Sep 24, 2012 at 09:16:28PM +0200, Sascha Hauer wrote:
+> On Mon, Sep 24, 2012 at 10:18:39AM -0500, Rob Herring wrote:
+> > On 09/24/2012 09:12 AM, Sascha Hauer wrote:
+> > >>
+> > >> A major piece missing is the LCD controller to display interface width
+> > >> and component ordering.
+> > > 
+> > > Psst. We silently skipped this for now...
+> > > 
+> > > I think having such a videomode helper is useful without having the
+> > > data order part. We are aware that this should be added later, but
+> > > I think currently it makes sense to concentrate on the basics.
+> > 
+> > Evolving bindings is not a good thing. We know this is needed, so we
+> > should address it now. If Linux had a standard way to describe the
+> > interface (it didn't a few years ago and I haven't kept up), then I
+> > would bet it would already be part of this binding. Defining the
+> > bindings in terms of what an OS uses or not is the wrong way around.
+> 
+> I see your point. I'm just afraid that if we start a discussion about
+> this now, it will take a long time we get something merged. In the
+> meantime we will get a lot of ad-hoc bindings like this one
+> suggested for the exynos:
+> 
+> > +       lcd_fimd0: lcd_panel0 {
+> > +                       lcd-htiming = <4 4 4 480>;
+> > +                       lcd-vtiming = <4 4 4 320>;
+> > +                       supports-mipi-panel;
+> > +       };
+> 
+> Or this one for the AMBA LCD controller;
+> 
+> > +       panel.mode.refresh      = get_val(node, "refresh");
+> > +       panel.mode.xres         = get_val(node, "xres");
+> > +       panel.mode.yres         = get_val(node, "yres");
+> > +       panel.mode.pixclock     = get_val(node, "pixclock");
+> > +       panel.mode.left_margin  = get_val(node, "left_margin");
+> > +       panel.mode.right_margin = get_val(node, "right_margin");
+> > +       panel.mode.upper_margin = get_val(node, "upper_margin");
+> > +       panel.mode.lower_margin = get_val(node, "lower_margin");
+> > +       panel.mode.hsync_len    = get_val(node, "hsync_len");
+> > +       panel.mode.vsync_len    = get_val(node, "vsync_len");
+> > +       panel.mode.sync         = get_val(node, "sync");
+> > +       panel.bpp               = get_val(node, "bpp");
+> > +       panel.width             = (signed short) get_val(node, "width");
+> > +       panel.height            = (signed short) get_val(node, "height");
+> 
+> (get_val() is a wrapper around of_property_read_u32)
+> 
+> BTW the SoC-camera guys will need a wire format description for their
+> cameras aswell.
+> 
+> > > 
+> > > We expect the display nodes being subnodes of a driver (which of course
+> > > has a compatible), or maybe referred to from a driver using phandles. So
+> > > I don't see why the display node itself should have a compatible
+> > > property. The display information is only ever useful in the context of
+> > > a driver.
+> > 
+> > A subnode or phandle will describe the h/w connection, but you need a
+> > name to describe what is at each end of the connection.
+> > 
+> > Where would the model number of an lcd panel be captured then? The
+> > timing parameters are a property of a specific panel, so both should be
+> > described together. You may not have any use for the compatible string
+> > now, but more information is better than less and adding it would not
+> > hurt anything. For pretty much any other device sitting on a board, we
+> > describe the manufacturer and type of device. LCD panels should be no
+> > different.
+> 
+> You convinced me. Lets add a compatible property, it won't hurt.
 
-Tested on an at91sam9260 board (evk-pro3).
+Okay. That doesn't seem to be a big problem. I can add that.
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
- arch/arm/boot/dts/at91sam9263.dtsi | 6 ++++++
- arch/arm/boot/dts/at91sam9g45.dtsi | 6 ++++++
- arch/arm/boot/dts/evk-pro3.dts     | 4 ++++
- 4 files changed, 22 insertions(+)
+Regards,
+Steffen
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index 7c95f76..54a097b 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -236,6 +236,12 @@
- 					trigger-external;
- 				};
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 195019b..bb5af25 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -185,6 +185,12 @@
- 				interrupts = <24 4 2>;
- 				status = "disabled";
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 63751b1..5845090 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -242,6 +242,12 @@
- 					trigger-value = <0x6>;
- 				};
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/evk-pro3.dts b/arch/arm/boot/dts/evk-pro3.dts
-index b7354e6..ce959ee 100644
---- a/arch/arm/boot/dts/evk-pro3.dts
-+++ b/arch/arm/boot/dts/evk-pro3.dts
-@@ -26,6 +26,10 @@
- 				atmel,vbus-gpio = <&pioC 5 0>;
- 				status = "okay";
- 			};
-+
-+			watchdog@fffffd40 {
-+				status = "okay";
-+			};
- 		};
- 
- 		usb0: ohci@00500000 {
 -- 
-1.7.11.3
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
