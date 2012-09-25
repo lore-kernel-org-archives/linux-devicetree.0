@@ -1,48 +1,174 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v4 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get a
- named child
-Date: Tue, 25 Sep 2012 07:06:19 -0400
-Message-ID: <20120925110618.GA4428@opensource.wolfsonmicro.com>
-References: <1347952249-24672-1-git-send-email-srinivas.kandagatla@st.com>
- <20120922160732.GT4495@opensource.wolfsonmicro.com>
- <5060576D.1020905@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4] of: Add videomode helper
+Date: Tue, 25 Sep 2012 13:23:39 +0200
+Message-ID: <1378654.FmcPtcTNE1@avalon>
+References: <1348042843-24673-1-git-send-email-s.trumtrar@pengutronix.de>
+	<50606334.7030902@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5060576D.1020905-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <50606334.7030902@gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2012 at 07:51:57AM -0500, Rob Herring wrote:
-> On 09/22/2012 11:07 AM, Mark Brown wrote:
-> > On Tue, Sep 18, 2012 at 08:10:49AM +0100, Srinivas KANDAGATLA wrote:
+Hi Rob,
 
-> >> As follow-up to "dt: introduce of_get_child_by_name to get child node by
-> >> name." patch, This patch removes some of the code duplication in the
-> >> driver by replacing it with of_get_child_by_name instead.
+On Monday 24 September 2012 08:42:12 Rob Herring wrote:
+> On 09/19/2012 03:20 AM, Steffen Trumtrar wrote:
+> > This patch adds a helper function for parsing videomodes from the
+> > devicetree. The videomode can be either converted to a struct
+> > drm_display_mode or a struct fb_videomode.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > ---
+> > 
+> > Hi!
+> > 
+> > changes since v3:
+> > 	- print error messages
+> > 	- free alloced memory
+> > 	- general cleanup
+> > 
+> > Regards
+> > Steffen
+> > 
+> >  .../devicetree/bindings/video/displaymode          |   74 +++++
+> >  drivers/of/Kconfig                                 |    5 +
+> >  drivers/of/Makefile                                |    1 +
+> >  drivers/of/of_videomode.c                          |  283
+> >  ++++++++++++++++++++ include/linux/of_videomode.h                      
+> >  |   56 ++++
+> >  5 files changed, 419 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/video/displaymode
+> >  create mode 100644 drivers/of/of_videomode.c
+> >  create mode 100644 include/linux/of_videomode.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/video/displaymode
+> > b/Documentation/devicetree/bindings/video/displaymode new file mode
+> > 100644
+> > index 0000000..990ca52
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/video/displaymode
+> > @@ -0,0 +1,74 @@
+> > +videomode bindings
+> > +==================
+> > +
+> > +Required properties:
+> > + - hactive, vactive: Display resolution
+> > + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing
+> > parameters +   in pixels
+> > +   vfront-porch, vback-porch, vsync-len: Vertical display timing
+> > parameters in +   lines
+> > + - clock: displayclock in Hz
+> 
+> A major piece missing is the LCD controller to display interface width
+> and component ordering.
+> 
+> > +
+> > +Optional properties:
+> > + - width-mm, height-mm: Display dimensions in mm
+> > + - hsync-active-high (bool): Hsync pulse is active high
+> > + - vsync-active-high (bool): Vsync pulse is active high
+> > + - interlaced (bool): This is an interlaced mode
+> > + - doublescan (bool): This is a doublescan mode
+> > +
+> > +There are different ways of describing a display mode. The devicetree
+> > representation
+> > +corresponds to the one commonly found in datasheets for displays.
+> > +The description of the display and its mode is split in two parts: first
+> > the display
+> > +properties like size in mm and (optionally) multiple subnodes with the
+> > supported modes.
+> > +
+> > +Example:
+> > +
+> > +	display@0 {
+> 
+> It would be useful to have a compatible string here. We may not always
+> know the panel type or have a fixed panel though. We could define
+> "generic-lcd" or something for cases where the panel type is unknown.
 
-> > Applied, thanks.  Please do use subject lines consistent with the thing
-> > you're submitting against.
+I'm working on a generic panel framework (see 
+http://lwn.net/Articles/512363/). DT bindings are not there yet, but they're 
+certainly a hot topic. A compatible string here will definitely be needed 
+here.
 
-> This dependency here is not yet applied. I was waiting for some acks for
-> some other conversions in the series. I can take it or ack the
-> dependency. Probably makes more sense for me to take it as there are
-> other non-spi patches.
+The exact properties required in the display node will likely be panel-
+dependent. width-mm, height-mm and modes sound like a good baseline to me.
 
-Ugh, this isn't in mainline...  looking at the original posting I see
-this wasn't sent as a threaded patch series, it was sent as a bunch of
-separate patches, so this got detached from the rest of the series.  I
-discarded the patch.
+> > +		width-mm = <800>;
+> > +		height-mm = <480>;
+> > +		modes {
+> > +			mode0: mode@0 {
+> > +				/* 1920x1080p24 */
+> > +				clock = <52000000>;
+> > +				hactive = <1920>;
+> > +				vactive = <1080>;
+> > +				hfront-porch = <25>;
+> > +				hback-porch = <25>;
+> > +				hsync-len = <25>;
+> > +				vback-porch = <2>;
+> > +				vfront-porch = <2>;
+> > +				vsync-len = <2>;
+> > +				hsync-active-high;
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +Every property also supports the use of ranges, so the commonly used
+> > datasheet +description with <min typ max>-tuples can be used.
+> > +
+> > +Example:
+> > +
+> > +	mode1: mode@1 {
+> > +		/* 1920x1080p24 */
+> > +		clock = <148500000>;
+> > +		hactive = <1920>;
+> > +		vactive = <1080>;
+> > +		hsync-len = <0 44 60>;
+> > +		hfront-porch = <80 88 95>;
+> > +		hback-porch = <100 148 160>;
+> > +		vfront-porch = <0 4 6>;
+> > +		vback-porch = <0 36 50>;
+> > +		vsync-len = <0 5 6>;
+> > +	};
+> > +
+> > +The videomode can be linked to a connector via phandles. The connector
+> > has to
+> > +support the display- and default-mode-property to link to and select a
+> > mode.
+>
+> Could also be phandle in the lcd controller node? What are the '-' for?
+> Is "display-blah" a valid name or something?
+> 
+> "default-mode" is pretty generic. How about display-mode or
+> display-default-mode?
+> 
+> Rob
+> 
+> > +
+> > +Example:
+> > +
+> > +	hdmi@00120000 {
+> > +		status = "okay";
+> > +		display = <&benq>;
+> > +		default-mode = <&mode1>;
+> > +	};
+> > +
+
+-- 
+Regards,
+
+Laurent Pinchart
