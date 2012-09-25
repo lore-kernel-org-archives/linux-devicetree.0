@@ -1,45 +1,50 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] ARM: use C pre-processor with dtc
-Date: Tue, 25 Sep 2012 21:05:28 +0100
-Message-ID: <20120925200528.GK4428@opensource.wolfsonmicro.com>
-References: <20120925195127.GA19350@sirena.org.uk> <1348603151.5565.20@snotra>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC 6/6] ARM: dts: exynos4210: Add platform-specific descriptions
+ for pin controllers
+Date: Tue, 25 Sep 2012 16:52:39 -0600
+Message-ID: <506235B7.7020507@wwwdotorg.org>
+References: <1348131197-25506-1-git-send-email-t.figa@samsung.com> <6920043.WDO1laKTfY@flatron> <5061F64B.5@wwwdotorg.org> <1634883.GDdJlvHhnl@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1348603151.5565.20@snotra>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1634883.GDdJlvHhnl@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linus.walleij@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2012 at 02:59:11PM -0500, Scott Wood wrote:
-> On 09/25/2012 02:51:27 PM, Mark Brown wrote:
+On 09/25/2012 12:35 PM, Tomasz Figa wrote:
+> On Tuesday 25 of September 2012 12:22:03 Stephen Warren wrote:
+...
+>> BTW, how does the driver know what register addresses to use; I can see
+>> the base for each pin controller bank is in samsung,pctl-offset, but
+>> what describes the offset for each of the func, pud, drv, ... registers
+>> from there? Are the offsets the same for all current Samsung SoCs?
+> 
+> The offsets are defined as constants in the driver.
+> 
+> They are the same in all cases, but the "4bit2" bank type of S3C64xx, which 
+> can have up to 16 pins with 4-bit function specifiers, so two registers are 
+> required for function configuration. In this case all the remaining 
+> registers are offset by 0x04.
+> 
+> I couldn't think about any good solution for this special case, but still, 
+> I haven't been thinking a lot about it, as the driver is targetted at 
+> current Exynos SoCs primarily.
 
-> >The constant example is the magic numbers we need to embed into
-> >DTs for
-> >things like interrupt modes, making them human readable would be a
-> >real
-> >win.
+I suppose if you always assume that the registers will appear in a
+specific order, and never have gaps between them, then you can simply
+always calculate the addresses as e.g.:
 
-> Wasn't there a patch for named constant support in dtc a while back?
-> Hmm: https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-January/011184.html
+reg_func = reg_base
+reg_pud = reg_func + round_up(num_pins / (32 / func_width))
+reg_drv = reg_pud + round_up(num_pins / (32 / func_width))
+...
 
-> I'm not sure that going down the CPP path is better than the
-> possibility of named constants having a different syntax from
-> macros/functions.  It would be one thing if someone were actively
-> working on the latter, but this paralysis seems to be a case of the
-> perfect being the enemy of the good.
+Then, there wouldn't ever be any special cases - that calculation would
+always work.
 
-I don't know, it doesn't appear to have been integrated (and we still
-need to be able to or things together).
+An alternative would be to put each register's address in DT rather than
+just the base of the register block. It'd certainly be more
+future-flexible, even if not strictly necessary.
