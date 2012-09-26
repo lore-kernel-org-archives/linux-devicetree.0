@@ -1,66 +1,57 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 2/2] dtc: cpp co-existence: add support for #line
- directives
-Date: Wed, 26 Sep 2012 18:53:34 +1000
-Message-ID: <20120926085334.GE31993@truffula.fritz.box>
-References: <1348527077-27471-1-git-send-email-swarren@wwwdotorg.org>
- <1348527077-27471-3-git-send-email-swarren@wwwdotorg.org>
- <20120926043459.GD31993@truffula.fritz.box>
- <50629968.9040800@wwwdotorg.org>
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: RE: [PATCH v4] ARM: EXYNOS: Add MFC device tree support
+Date: Wed, 26 Sep 2012 11:00:06 +0000 (GMT)
+Message-ID: <20232973.290871348657205865.JavaMail.weblogic@epml02>
+Reply-To: arun.kk@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50629968.9040800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kamil Debski <k.debski@samsung.com>, Jeongtae Park <jtp.park@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>, SUNIL JOSHI <joshi@samsung.com>, Thomas P Abraham <thomas.ab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2012 at 11:58:00PM -0600, Stephen Warren wrote:
-> On 09/25/2012 10:34 PM, David Gibson wrote:
-> > On Mon, Sep 24, 2012 at 04:51:17PM -0600, Stephen Warren wrote:
-> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> Line control directives of the following formats are supported:
-> >>     #line LINE "FILE"
-> >>     # LINE FILE [FLAGS]
-> >>
-> >> This allows dtc to consume the output of pre-processors, and to provide
-> >> error messages that refer to the original filename, including taking
-> >> into account any #include directives that the pre-processor may have
-> >> performed.
-> > 
-> > I like the idea of handling line directives, whichever way we go with
-> > the other cpp-related proposals.  The fact that these are
-> > distinguished from a propnodename beginning with # only by the
-> > following digits is more subtle than I'd ideally like, but I think
-> > it's wirth it.
-> > 
-> > The only thing I would like to see change is to only recognize line
-> > directives at the beginning of the line (in fact, preferably in column
-> > 0 only).  Unfortunately that is going to mean some mucky flex work,
-> > including a new start state, I expect.
-> 
-> That turns out to be exceedingly easy; just put ^ at the start of the
-> regex (after the start state specification), and Flex takes care of
-> everything:-)
-
-Oh yeah, I forgot about ^ :).  I like it when things turn out easier
-than expected :).
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+SGkgS3VramluLA0KDQpBcyBzdWdnZXN0ZWQgYnkgeW91LCB0aGUgZnVuY3Rpb24gZXh5bm9zX2Zk
+dF9maW5kX21mY19tZW0oKSBjYW4gYmUgbW92ZWQgdG8gcGxhdC1zYW1zdW5nLg0KSSBmZWVsIHBs
+YXQtc2Ftc3VuZy9zNXAtZGV2LW1mYy5jIHdvdWxkIGJlIGEgZ29vZCBwbGFjZS4gSG9wZSBpdCBp
+cyBvaz8NCkFsc28gSSB3aWxsIHdyYXAgaXQgd2l0aCAjaWZkZWYgQ09ORklHX09GIGZvciBub24t
+ZHQgbW9kZS4NCkkgd2lsbCBwb3N0IHRoZSB1cGRhdGVkIHBhdGNoIHdpdGggdGhlIHN1Z2dlc3Rl
+ZCBjaGFuZ2VzLg0KDQpSZWdhcmRzDQpBcnVuDQoNCk9uIFdlZCwgU2VwIDI2LCAyMDEyIGF0IDc6
+NDIgQU0sIEt1a2ppbiBLaW0gPGtnZW5lLmtpbUBzYW1zdW5nLmNvbT4gd3JvdGU6DQo+IEthcm9s
+IExld2FuZG93c2tpIHdyb3RlOg0KPj4NCj4+IE9uIDA5LzIyLzIwMTIgMDg6MDcgUE0sIEFydW4g
+S3VtYXIgSyB3cm90ZToNCj4+DQo+PiA+IFRoaXMgcGF0Y2ggYWRkcyBkZXZpY2UgdHJlZSBlbnRy
+eSBmb3IgTUZDIHY2IGluIHRoZSBFeHlub3M1DQo+PiA+IFNvQy4gTWFrZXMgdGhlIHJlcXVpcmVk
+IGNoYW5nZXMgaW4gdGhlIGNsb2NrIGZpbGVzIGFuZCBhZGRzDQo+PiA+IE1GQyB0byB0aGUgRFQg
+ZGV2aWNlIGxpc3QuDQo+PiA+DQo+PiA+IFNpZ25lZC1vZmYtYnk6IE5hdmVlbiBLcmlzaG5hIENo
+YXRyYWRoaSA8Y2gubmF2ZWVuQHNhbXN1bmcuY29tPg0KPj4gPiBTaWduZWQtb2ZmLWJ5OiBBcnVu
+IEt1bWFyIEsgPGFydW4ua2tAc2Ftc3VuZy5jb20+DQo+Pg0KPj4NCj4+IExvb2tzIGdvb2QgZm9y
+IG1lLiBGV0lXLCBJIGNvdWxkIHByb2JhYmx5IGFkZA0KPj4NCj4+IEFja2VkLWJ5OiBLYXJvbCBM
+ZXdhbmRvd3NraSA8ay5sZXdhbmRvd3NrQHNhbXN1bmcuY29tPg0KPj4NCj4gSGFwcGVucyBmb2xs
+b3dpbmcgYnVpbGQgZXJyb3Igd2l0aCBleHlub3M0X2RlZmNvbmZpZyBiZWNhdXNlIG9mIG5vbi1E
+VCA/DQo+DQo+IGFyY2gvYXJtL21hY2gtZXh5bm9zL2NvbW1vbi5jOiBJbiBmdW5jdGlvbiAnZXh5
+bm9zX2ZkdF9maW5kX21mY19tZW0nOg0KPiBhcmNoL2FybS9tYWNoLWV4eW5vcy9jb21tb24uYzox
+MDU4OiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24gJ29mX2ZsYXRfZHRf
+aXNfY29tcGF0aWJsZScNCj4gYXJjaC9hcm0vbWFjaC1leHlub3MvY29tbW9uLmM6MTA2MTogZXJy
+b3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uICdvZl9nZXRfZmxhdF9kdF9wcm9w
+Jw0KPiBhcmNoL2FybS9tYWNoLWV4eW5vcy9jb21tb24uYzoxMDYxOiB3YXJuaW5nOiBhc3NpZ25t
+ZW50IG1ha2VzIHBvaW50ZXIgZnJvbSBpbnRlZ2VyIHdpdGhvdXQgYSBjYXN0DQo+IGFyY2gvYXJt
+L21hY2gtZXh5bm9zL2NvbW1vbi5jOjEwNjQ6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBv
+ZiBmdW5jdGlvbiAnb2ZfcmVhZF91bG9uZycNCj4gYXJjaC9hcm0vbWFjaC1leHlub3MvY29tbW9u
+LmM6MTA2Njogd2FybmluZzogYXNzaWdubWVudCBtYWtlcyBwb2ludGVyIGZyb20gaW50ZWdlciB3
+aXRob3V0IGEgY2FzdA0KPiBhcmNoL2FybS9tYWNoLWV4eW5vcy9jb21tb24uYzoxMDcxOiB3YXJu
+aW5nOiBhc3NpZ25tZW50IG1ha2VzIHBvaW50ZXIgZnJvbSBpbnRlZ2VyIHdpdGhvdXQgYSBjYXN0
+DQo+IGFyY2gvYXJtL21hY2gtZXh5bm9zL2NvbW1vbi5jOjEwNzY6IHdhcm5pbmc6IGFzc2lnbm1l
+bnQgbWFrZXMgcG9pbnRlciBmcm9tIGludGVnZXIgd2l0aG91dCBhIGNhc3QNCj4gbWFrZVsxXTog
+KioqIFthcmNoL2FybS9tYWNoLWV4eW5vcy9jb21tb24ub10gRXJyb3IgMQ0KPg0KPiBBbmQgSSB0
+aGluaywgZmlyc3RseSB3ZSBjb3VsZCBtb3ZlIHRoZSBmdW5jdGlvbiBleHlub3NfZmR0X2ZpbmRf
+bWZjX21lbSgpIGludG8gcGxhdC1zYW1zdW5nLyBmb3IgdXNpbmcgb24gb3RoZXIgU2Ftc3VuZyBz
+dHVmZiBzdWNoIGFzIHM1cHYyMTAgYW5kIG5lZWQgdG8gZW5jbG9zZSAnI2lmZGVmIENPTkZJR19P
+RiIgZm9yIG5vbi1EVD8NCj4NCj4gVGhhbmtzLg0KPg0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtnZW5l
+Lg0KPiAtLQ0KPiBLdWtqaW4gS2ltIDxrZ2VuZS5raW1Ac2Ftc3VuZy5jb20+LCBTZW5pb3IgRW5n
+aW5lZXIsDQo+IFNXIFNvbHV0aW9uIERldmVsb3BtZW50IFRlYW0sIFNhbXN1bmcgRWxlY3Ryb25p
+Y3MgQ28uLCBMdGQuDQo+DQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBz
+ZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51eC1zYW1zdW5nLXNvYyIgaW4NCj4gdGhlIGJv
+ZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcNCj4gTW9yZSBtYWpv
+cmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpvcmRvbW8taW5mby5odG1s
