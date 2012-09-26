@@ -1,13 +1,18 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V2 2/2] dtc: cpp co-existence: add support for #line directives
-Date: Wed, 26 Sep 2012 10:18:05 -0600
-Message-ID: <1348676285-1777-2-git-send-email-swarren@wwwdotorg.org>
-References: <1348676285-1777-1-git-send-email-swarren@wwwdotorg.org>
+From: "Markus Mayer" <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/1] Fix segfault in DTC
+Date: Wed, 26 Sep 2012 09:38:16 -0700
+Message-ID: <50632F78.4030709@broadcom.com>
+References: <1348526885-2113-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
+ <20120925233054.GL9800@truffula.fritz.box>
+ <50624393.30607@broadcom.com>
+ <20120926003508.GB31993@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348676285-1777-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20120926003508.GB31993-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,104 +23,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 25/09/2012 17:35, David Gibson wrote:
+> On Tue, Sep 25, 2012 at 04:51:47PM -0700, Markus Mayer wrote:
+>> On 25/09/2012 16:30, David Gibson wrote:
+>>>
+>>> Which dtc version did you observe this with?  I'm unable to reproduce
+>>> the SEGV with current git.
+>>
+>> That was
+>>
+>> $ cat version_gen.h
+>> #define DTC_VERSION "DTC 1.2.0-g37c0b6a0"
+>>
+>> from
+>> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git. In
+>> other words, the DTC used by the Linux 3.6-rc series.
+>
+> Ah, ok.  Patches to dtc should be made against the upstream version at
+> git://git.jdl.com/software/dtc.git.  In this case the bug was already
+> fixed there, in commit a6e6c60e3a97a6b3a033cd052bb3740fd53cbf4c.
 
-Line control directives of the following formats are supported:
-    #line LINE "FILE"
-    # LINE "FILE" [FLAGS]
+Ah yes. That makes sense. Thanks for pointing out the commit that fixes 
+the issue. I just checked it out.
 
-This allows dtc to consume the output of pre-processors, and to provide
-error messages that refer to the original filename, including taking
-into account any #include directives that the pre-processor may have
-performed.
+> I think we're overdue to update the kernel copy of dtc from upstream.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v2: Only match #line directives at the start of the line.
----
- dtc-lexer.l                |   21 +++++++++++++++++++++
- srcpos.c                   |    6 ++++++
- srcpos.h                   |    2 ++
- tests/propname_escapes.dts |    7 +++++++
- 4 files changed, 36 insertions(+), 0 deletions(-)
+Yeah, seems like the kernel DTC is quite old.
 
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index edbeb86..ce7ee06 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -71,6 +71,27 @@ static int pop_input_file(void);
- 			push_input_file(name);
- 		}
- 
-+<*>^"#"(line{WS}|" "){WS}*[0-9]+{WS}+{STRING}({WS}+[0-9]+)? {
-+			char *line, *tmp, *fn;
-+			/* skip text before line # */
-+			line = yytext;
-+			while (!isdigit(*line))
-+				line++;
-+			/* skip digits in line # */
-+			tmp = line;
-+			while (!isspace(*tmp))
-+				tmp++;
-+			/* "NULL"-terminate line # */
-+			*tmp = '\0';
-+			/* start of filename */
-+			fn = strchr(tmp + 1, '"') + 1;
-+			/* strip trailing " from filename */
-+			tmp = strchr(fn, '"');
-+			*tmp = 0;
-+			/* -1 since #line is the number of the next line */
-+			srcpos_set_line(xstrdup(fn), atoi(line) - 1);
-+		}
-+
- <*><<EOF>>		{
- 			if (!pop_input_file()) {
- 				yyterminate();
-diff --git a/srcpos.c b/srcpos.c
-index 3ee523d..246ab4b 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -328,3 +328,9 @@ srcpos_warn(struct srcpos *pos, char const *fmt, ...)
- 
- 	va_end(va);
- }
-+
-+void srcpos_set_line(char *f, int l)
-+{
-+	current_srcfile->name = f;
-+	current_srcfile->lineno = l;
-+}
-diff --git a/srcpos.h b/srcpos.h
-index 5617916..93a2712 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -113,4 +113,6 @@ extern void srcpos_error(struct srcpos *pos, char const *, ...)
- extern void srcpos_warn(struct srcpos *pos, char const *, ...)
-      __attribute__((format(printf, 2, 3)));
- 
-+extern void srcpos_set_line(char *f, int l);
-+
- #endif /* _SRCPOS_H_ */
-diff --git a/tests/propname_escapes.dts b/tests/propname_escapes.dts
-index 9f70618..9f5793d 100644
---- a/tests/propname_escapes.dts
-+++ b/tests/propname_escapes.dts
-@@ -1,5 +1,12 @@
- /dts-v1/;
- 
-+/* common format */
-+#line 3 "foo.dts"
-+/* newer gcc format */
-+# 6 "bar.dts"
-+/* newer gcc sometimes uses */
-+# 9 "baz.dts" 1
-+
- / {
- 	#address-cells = <1>;
- 	\#gpio-cells = <2>;
--- 
-1.7.0.4
+Regards,
+-Markus
