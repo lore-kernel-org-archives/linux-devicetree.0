@@ -1,80 +1,31 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] pwm_backlight: Add device tree support for Low Threshold
- Brightness
-Date: Wed, 26 Sep 2012 09:27:51 -0600
-Message-ID: <50631EF7.6040908@wwwdotorg.org>
-References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com> <505BF83D.8040201@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com> <505CA74B.2090405@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com> <50614CE2.7010301@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A8FA7@DBDE01.ent.ti.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
+Date: Wed, 26 Sep 2012 10:40:24 -0500
+Message-ID: <506321E8.4020203@ti.com>
+References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9A8FA7@DBDE01.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1347579091-3794-1-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2012 10:35 PM, Philip, Avinash wrote:
-> On Tue, Sep 25, 2012 at 11:49:14, Stephen Warren wrote:
->> On 09/24/2012 10:29 PM, Philip, Avinash wrote:
->>> On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
->>>> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
->>>>> Hi Stephen,
->>>>>
->>>>> On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
->>>>>> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
->>>>>>> Some backlights perform poorly when driven by a PWM with a short
->>>>>>> duty-cycle. For such devices, the low threshold can be used to specify a
->>>>>>> lower bound for the duty-cycle and should be chosen to exclude the
->>>>>>> problematic range.
->>>>>>>
->>>>>>> This patch adds support for an optional low-threshold-brightness
->>>>>>> property.
->>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
->>>>>>
->>>>>>>  Optional properties:
->>>>>>>    - pwm-names: a list of names for the PWM devices specified in the
->>>>>>>                 "pwms" property (see PWM binding[0])
->>>>>>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
->>>>>>> +    brightness set to value so that backlight present on low end of
->>>>>>> +    brightness.
->>>>>>
->>>>>> For my education, why not just specify values above this value in the
->>>>>> brightness-levels array; how do those two interact?
->>>>>
->>>>> Please find details from 
->>>>> https://lkml.org/lkml/2012/7/18/284
->>>>
->>>> Hmm. That still doesn't really explain what this property does.
->>>>
->>>> I'm going to guess that if this property is present, and values in the
->>>> brightness-levels property get scaled between the
->>>> low-threshold-brightness and 255 instead of being used directly.
->>>
->>> This is correct.
->>>
->>>> But then, in the email you linked to, what does "But brightness-levels won't
->>>> be uniformly divided" mean?
->>>
->>> For some panels, backlight would absent on low end of brightness due to low
->>> percentage in duty_cycle. Consider following example where backlight absent
->>> for brightness levels from 0 - 51.
->>>
->>> pwms = <&pwm 0 50000>;
->>> brightness-levels = <0 51 53 56 62 75 101 152 255>; 
->>> default-brightness-level = <6>;
->>>
->>> So in the example, brightness-levels are set to have values for backlight present.
->>> Here levels are not uniformly divided.
->>
->> So why not just change the values so they /are/ what you want? After
->> all, it's just data and you can put whatever values you want there. What
->> is preventing you from doing this?
-> 
-> brightness_threshold_level was added to explore lth_brightness support already
-> present in non-DT case.
+Hi All,
 
-I understand that. Given my discussion above, I would advocate removing
-lth_brightness from the non-DT case rather than adding it to the DT
-case, since it seems entirely pointless.
+I appear to be having problems receiving emails being sent to me by the
+mailing lists. I did not receive any of the responses to this patch set,
+but I know see online that there have been a few responses. So sorry for
+not responding.
+
+I have been complaining to our IT department but all they tell me is
+that they see no issues on their side and it is a problem with the
+mailing list. I find it hard to believe that I am subscribe to all 3
+mailing lists in CC and I don't get a single copy of any response. I
+will complain again. If anyone has any way I can prove it is a problem
+on the TI side please let me know.
+
+Thanks
+Jon
