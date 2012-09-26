@@ -1,48 +1,126 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
-Date: Wed, 26 Sep 2012 13:32:10 +0900
-Message-ID: <CAAQKjZNRJHuA4+B-tP5vTaDfmMMxC+VKLDJU4gtpvtu=srzgAg@mail.gmail.com>
-References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com>
-	<505C9072.2010204@wwwdotorg.org>
-	<CAAQKjZMZBDpKinZkDUX7CU4yTXmu9GrP1+OiZJKW4Gx1BTno3Q@mail.gmail.com>
-	<2368486.hLKA5vLF0M@avalon>
-	<CAAQKjZN++zZ9cfNCB21TeQwPZgFVU-Cmo9ZhVwaaMz+HO2vHig@mail.gmail.com>
-	<20120925153109.GA8834@sirena.org.uk>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH v2] pwm_backlight: Add device tree support for Low
+ Threshold Brightness
+Date: Wed, 26 Sep 2012 04:35:32 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3E9A8FA7@DBDE01.ent.ti.com>
+References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
+ <505BF83D.8040201@wwwdotorg.org>
+ <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com>
+ <505CA74B.2090405@wwwdotorg.org>
+ <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com>
+ <50614CE2.7010301@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20120925153109.GA8834@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: linux-samsung-soc@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Leela Krishna Amudala <l.krishna@samsung.com>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50614CE2.7010301@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-2012/9/26 Mark Brown <broonie@opensource.wolfsonmicro.com>:
-> On Wed, Sep 26, 2012 at 12:03:44AM +0900, Inki Dae wrote:
->> 2012/9/25 Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
->
->> > Aren't DT bindings considered as an ABI, and required to be supported more or
->> > less forever ? If you merge this DT binding you'll have to keep supporting it.
->> > That's why DT bindings should not be rushed in.
->
->> is ABI required for DT binding?  I know DT binding parses just lcd
->> timing data from device tree file so ABI isn't needed. but when it
->> comes to DT, I'm novice yet so there may be my missing point. could
->> you tell me why DT bindings are considered as an ABI? if there is my
->> missing point, will consider it again.
->
-> It's supposed to be possible to ship a DT with a board and then boot any
-> OS or OS version on the board.  If the meaning of the DT keeps changing
-> then this becomes impossible, you need to keep changing the DT when you
-> change the thing that parses it (rendering the whole exercise pointless).
->
+On Tue, Sep 25, 2012 at 11:49:14, Stephen Warren wrote:
+> On 09/24/2012 10:29 PM, Philip, Avinash wrote:
+> > On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
+> >> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
+> >>> Hi Stephen,
+> >>>
+> >>> On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
+> >>>> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
+> >>>>> Some backlights perform poorly when driven by a PWM with a short
+> >>>>> duty-cycle. For such devices, the low threshold can be used to specify a
+> >>>>> lower bound for the duty-cycle and should be chosen to exclude the
+> >>>>> problematic range.
+> >>>>>
+> >>>>> This patch adds support for an optional low-threshold-brightness
+> >>>>> property.
+> >>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> >>>>
+> >>>>>  Optional properties:
+> >>>>>    - pwm-names: a list of names for the PWM devices specified in the
+> >>>>>                 "pwms" property (see PWM binding[0])
+> >>>>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
+> >>>>> +    brightness set to value so that backlight present on low end of
+> >>>>> +    brightness.
+> >>>>
+> >>>> For my education, why not just specify values above this value in the
+> >>>> brightness-levels array; how do those two interact?
+> >>>
+> >>> Please find details from 
+> >>> https://lkml.org/lkml/2012/7/18/284
+> >>
+> >> Hmm. That still doesn't really explain what this property does.
+> >>
+> >> I'm going to guess that if this property is present, and values in the
+> >> brightness-levels property get scaled between the
+> >> low-threshold-brightness and 255 instead of being used directly.
+> > 
+> > This is correct.
+> > 
+> >> But then, in the email you linked to, what does "But brightness-levels won't
+> >> be uniformly divided" mean?
+> > 
+> > For some panels, backlight would absent on low end of brightness due to low
+> > percentage in duty_cycle. Consider following example where backlight absent
+> > for brightness levels from 0 - 51.
+> > 
+> > pwms = <&pwm 0 50000>;
+> > brightness-levels = <0 51 53 56 62 75 101 152 255>; 
+> > default-brightness-level = <6>;
+> > 
+> > So in the example, brightness-levels are set to have values for backlight present.
+> > Here levels are not uniformly divided.
+> 
+> So why not just change the values so they /are/ what you want? After
+> all, it's just data and you can put whatever values you want there. What
+> is preventing you from doing this?
 
-thank you for your comments. got it. DT is built as an binary(dtb) and
-the dtb file should be re-used without any modifications. will keep
-this patch until the videomode helper will be merged to mainline so
-that this could be modified based on videomode helper later.
+brightness_threshold_level was added to explore lth_brightness support already
+present in non-DT case.
+ 
+> 
+> Perhaps e.g.:
+> 
+> brightness-levels = <0 101 106 112 124 150 202 304 511>;
+> (just multiplying everything by N, for arbitrary N=2, to get extra
+> precision)
+> 
+> ... plus whatever adjustments are required to make the data "uniformly
+> divided", which I can't do in the example here since I'd need to know
+> whatever non-linear equation characterizes the backlight's PWM % duty
+> cycle to perceived brightness mapping.
+> 
+> The only thing that could be preventing this is mathematical precision.
+> While all the PWM DT examples I've seen have brightness-levels range
+> from 0..255, I don't think there is any such actual limit; you could
+> range from say 0..1000000 if you wanted, right?
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+The observation is correct. There are no fixed levels, configure these values 
+as required. This is a scale of division for brightness variation. A linear
+division in brightness won't give much difference in high end of brightness-levels
+scale. So adopting binary division in brightness-levels will allow better resolution
+in brightness. 
+
+> 
+> >> Either way, the DT binding should explain exactly what this value is
+> >> used for, and how it affects the interpretation of values in
+> >> brightness-levels.
+> > 
+> > Is DT binding documentation a good place to explain this feature?
+> > Initially Thierry suggested document option. So I left out.
+> 
+> The binding documents are supposed to be a standalone description of
+> what the data in DT does; given general no-Linux-specific domain
+> knowledge, the binding document should be detailed enough for someone to
+> understand how to fill in the DT. So, yes, I think the binding document
+> would be a great place to put such documentation.
+
+I will add details.
+
+Thanks
+Avinash
+
+> 
+
