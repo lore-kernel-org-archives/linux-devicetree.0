@@ -1,126 +1,55 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v2] pwm_backlight: Add device tree support for Low
- Threshold Brightness
-Date: Wed, 26 Sep 2012 04:35:32 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9A8FA7@DBDE01.ent.ti.com>
-References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
- <505BF83D.8040201@wwwdotorg.org>
- <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com>
- <505CA74B.2090405@wwwdotorg.org>
- <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com>
- <50614CE2.7010301@wwwdotorg.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 2/2] dtc: cpp co-existence: add support for #line
+ directives
+Date: Wed, 26 Sep 2012 14:34:59 +1000
+Message-ID: <20120926043459.GD31993@truffula.fritz.box>
+References: <1348527077-27471-1-git-send-email-swarren@wwwdotorg.org>
+ <1348527077-27471-3-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50614CE2.7010301@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1348527077-27471-3-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2012 at 11:49:14, Stephen Warren wrote:
-> On 09/24/2012 10:29 PM, Philip, Avinash wrote:
-> > On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
-> >> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
-> >>> Hi Stephen,
-> >>>
-> >>> On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
-> >>>> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
-> >>>>> Some backlights perform poorly when driven by a PWM with a short
-> >>>>> duty-cycle. For such devices, the low threshold can be used to specify a
-> >>>>> lower bound for the duty-cycle and should be chosen to exclude the
-> >>>>> problematic range.
-> >>>>>
-> >>>>> This patch adds support for an optional low-threshold-brightness
-> >>>>> property.
-> >>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> >>>>
-> >>>>>  Optional properties:
-> >>>>>    - pwm-names: a list of names for the PWM devices specified in the
-> >>>>>                 "pwms" property (see PWM binding[0])
-> >>>>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
-> >>>>> +    brightness set to value so that backlight present on low end of
-> >>>>> +    brightness.
-> >>>>
-> >>>> For my education, why not just specify values above this value in the
-> >>>> brightness-levels array; how do those two interact?
-> >>>
-> >>> Please find details from 
-> >>> https://lkml.org/lkml/2012/7/18/284
-> >>
-> >> Hmm. That still doesn't really explain what this property does.
-> >>
-> >> I'm going to guess that if this property is present, and values in the
-> >> brightness-levels property get scaled between the
-> >> low-threshold-brightness and 255 instead of being used directly.
-> > 
-> > This is correct.
-> > 
-> >> But then, in the email you linked to, what does "But brightness-levels won't
-> >> be uniformly divided" mean?
-> > 
-> > For some panels, backlight would absent on low end of brightness due to low
-> > percentage in duty_cycle. Consider following example where backlight absent
-> > for brightness levels from 0 - 51.
-> > 
-> > pwms = <&pwm 0 50000>;
-> > brightness-levels = <0 51 53 56 62 75 101 152 255>; 
-> > default-brightness-level = <6>;
-> > 
-> > So in the example, brightness-levels are set to have values for backlight present.
-> > Here levels are not uniformly divided.
+On Mon, Sep 24, 2012 at 04:51:17PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> So why not just change the values so they /are/ what you want? After
-> all, it's just data and you can put whatever values you want there. What
-> is preventing you from doing this?
+> Line control directives of the following formats are supported:
+>     #line LINE "FILE"
+>     # LINE FILE [FLAGS]
+> 
+> This allows dtc to consume the output of pre-processors, and to provide
+> error messages that refer to the original filename, including taking
+> into account any #include directives that the pre-processor may have
+> performed.
 
-brightness_threshold_level was added to explore lth_brightness support already
-present in non-DT case.
- 
-> 
-> Perhaps e.g.:
-> 
-> brightness-levels = <0 101 106 112 124 150 202 304 511>;
-> (just multiplying everything by N, for arbitrary N=2, to get extra
-> precision)
-> 
-> ... plus whatever adjustments are required to make the data "uniformly
-> divided", which I can't do in the example here since I'd need to know
-> whatever non-linear equation characterizes the backlight's PWM % duty
-> cycle to perceived brightness mapping.
-> 
-> The only thing that could be preventing this is mathematical precision.
-> While all the PWM DT examples I've seen have brightness-levels range
-> from 0..255, I don't think there is any such actual limit; you could
-> range from say 0..1000000 if you wanted, right?
+I like the idea of handling line directives, whichever way we go with
+the other cpp-related proposals.  The fact that these are
+distinguished from a propnodename beginning with # only by the
+following digits is more subtle than I'd ideally like, but I think
+it's wirth it.
 
-The observation is correct. There are no fixed levels, configure these values 
-as required. This is a scale of division for brightness variation. A linear
-division in brightness won't give much difference in high end of brightness-levels
-scale. So adopting binary division in brightness-levels will allow better resolution
-in brightness. 
+The only thing I would like to see change is to only recognize line
+directives at the beginning of the line (in fact, preferably in column
+0 only).  Unfortunately that is going to mean some mucky flex work,
+including a new start state, I expect.
 
-> 
-> >> Either way, the DT binding should explain exactly what this value is
-> >> used for, and how it affects the interpretation of values in
-> >> brightness-levels.
-> > 
-> > Is DT binding documentation a good place to explain this feature?
-> > Initially Thierry suggested document option. So I left out.
-> 
-> The binding documents are supposed to be a standalone description of
-> what the data in DT does; given general no-Linux-specific domain
-> knowledge, the binding document should be detailed enough for someone to
-> understand how to fill in the DT. So, yes, I think the binding document
-> would be a great place to put such documentation.
-
-I will add details.
-
-Thanks
-Avinash
-
-> 
-
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
