@@ -1,60 +1,67 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH v2 0/2] OMAP: mailbox initial device tree support
-Date: Wed, 26 Sep 2012 16:27:25 -0700
-Message-ID: <50638F5D.8070508@ti.com>
-References: <1347494898-16671-1-git-send-email-omar.luna@linaro.org> <1347494898-16671-4-git-send-email-omar.luna@linaro.org> <CALLhW=4d8zxekkeGr1S52aGbufyk-vGeE9REYhDSt8pnap_Dxw@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: Kirkwood: ehci-orion: Add device tree binding
+Date: Wed, 26 Sep 2012 16:49:41 -0700
+Message-ID: <20120926234941.GA6567@quad.lixom.net>
+References: <1346491586-23480-1-git-send-email-andrew@lunn.ch>
+ <CAOesGMh1x8QMNBi_xKEfZ0druiAZbafVuXEQkktwVbQODDmR8w@mail.gmail.com>
+ <20120924071353.GA27099@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CALLhW=4d8zxekkeGr1S52aGbufyk-vGeE9REYhDSt8pnap_Dxw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Omar Ramirez Luna <omar.luna@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20120924071353.GA27099-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Omar,
+On Mon, Sep 24, 2012 at 09:13:53AM +0200, Andrew Lunn wrote:
+> > > +Required properties:
+> > > +- compatible: must be "marvell,orion-ehci"
+> > > +- reg: physical base address of the controller and length of memory mapped
+> > > +  region.
+> > > +- interrupts: The EHCI interrupt
+> > > +- phy-version: Can be one of:
+> > > +  "NA" - Don't touch the phy, something else has already configured it.
+> > > +  "orion5x" - PHY setup as specified by the Orion5x Errata
+> > > +
+> > > +Example:
+> > > +
+> > > +       ehci@50000 {
+> > > +               compatible = "marvell,orion-ehci";
+> > > +               reg = <0x50000 0x1000>;
+> > > +               interrupts = <19>;
+> > > +               phy-version = "NA";
+> > > +       };
+> > 
+> > This isn't an appropriate binding for phy. I know, it maps straight
+> > over from the platform data, but it doesn't focus on what the actual
+> > hardware is.
+> > 
+> > A couple of options. What probably makes most sense depending on how
+> > other phy bindings are moving ahead is to add a phy node under the
+> > ehci controller for the "orion5x" case, and have an appropriate
+> > compatible value there. No node means the same as "NA" in the above
+> > binding. Alternatively, have a phy phandle that points to the phy
+> > device if it sits on an i2c bus, etc.
+> 
+> I Olaf
+> 
+> Could i suggest a third option:
+> 
+> I just drop USB phy configuration all together.  Only mach-orion5x
+> needs this and nobody has shown any interest in moving mach-orion5x to
+> DT. So i would just hard code it to "NA".
+> 
+> If anybody does show interest in DT for orion5x, we can add a phy node
+> under ehci as a pure extension which does not affect backward
+> compatibility.
 
-On 9/26/2012 3:21 PM, Omar Ramirez Luna wrote:
-> Hi Benoit,
->
-> On 12 September 2012 19:08, Omar Ramirez Luna <omar.luna@linaro.org> wrote:
->> To allow mailbox driver to function with device tree.
->>
->> Tested in OMAP4 and OMAP3. OMAP2 untested.
->>
->> Patch: arm/dts: OMAP2+: Add mailbox nodes, was Acked by Benoit
->> however it seems it wasn't picked up, so resend.
->>
->> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg69121.html
->>
->> Patch: OMAP: mailbox: add device tree support, there wasn't an
->> opposition other than to cleanup the driver too, however I got
->> quite some patches to send before continuing the cleanup.
->>
->> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg69338.html
->>
->> Omar Ramirez Luna (2):
->>    OMAP: mailbox: add device tree support
->>    arm/dts: OMAP2+: Add mailbox nodes
->>
->>   .../devicetree/bindings/arm/omap/mailbox.txt       |    9 +++++++++
->>   arch/arm/boot/dts/omap2.dtsi                       |    5 +++++
->>   arch/arm/boot/dts/omap3.dtsi                       |    5 +++++
->>   arch/arm/boot/dts/omap4.dtsi                       |    5 +++++
->>   arch/arm/mach-omap2/devices.c                      |    3 +++
->>   arch/arm/mach-omap2/mailbox.c                      |   12 ++++++++++++
->>   6 files changed, 39 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/arm/omap/mailbox.txt
->
-> Ping. I'm in the understanding that these go through your tree, am I right?
-
-Since it is too late for 3.7, you should probably do two more things:
-- move the mailbox driver outside mach-omap2
-- move the nr_mbox information in the driver as well instead of the 
-hwmod for the DT boot.
+Yeah, that works too.
 
 
-Regards,
-Benoit
-
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
