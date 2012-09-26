@@ -1,19 +1,42 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] drivers: phy: add generic PHY framework
-Date: Wed, 26 Sep 2012 13:08:12 -0400 (EDT)
-Message-ID: <20120926.130812.302855237600443329.davem@davemloft.net>
-References: <1348671675-20830-1-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1348671675-20830-1-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: kishon@ti.com
-Cc: akpm@linux-foundation.org, joe@perches.com, santosh.shilimkar@ti.com, grant.likely@secretlab.ca, balbi@ti.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, robherring2@gmail.com, richard.zhao@freescale.com, B29397@freescale.com, alexander.shishkin@linux.intel.com, mkl@pengutronix.de, marex@denx.de, p.paneri@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH 2/2] net: ti cpsw ethernet: set IFCTL_{A,B} bits for RMII mode
+Date: Wed, 26 Sep 2012 19:24:28 +0200
+Message-ID: <1348680268-8194-2-git-send-email-zonque@gmail.com>
+References: <1348680268-8194-1-git-send-email-zonque@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1348680268-8194-1-git-send-email-zonque@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, Mugunthan V N <mugunthanvnm@ti.com>, Vaibhav Hiremath <hvaibhav@ti.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
+For RMII mode operation in 100Mbps, the CPSW needs to set the
+IFCTL_A / IFCTL_B bits in the MACCONTROL register.
 
-All networking patches must be submitted to netdev@vger.kernel.org
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+Cc: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: David S. Miller <davem@davemloft.net>
+---
+ drivers/net/ethernet/ti/cpsw.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thank you.
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 3d7594e..d88dbfa 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -386,6 +386,12 @@ static void _cpsw_adjust_link(struct cpsw_slave *slave,
+ 			mac_control |= BIT(7);	/* GIGABITEN	*/
+ 		if (phy->duplex)
+ 			mac_control |= BIT(0);	/* FULLDUPLEXEN	*/
++
++		/* set speed_in input in case RMII mode is used in >10Mbps */
++		if (phy->speed > 10 && slave->slave_num < 2 &&
++		    phy->interface == PHY_INTERFACE_MODE_RMII)
++			mac_control |= BIT(15 + slave->slave_num);
++
+ 		*link = true;
+ 	} else {
+ 		mac_control = 0;
+-- 
+1.7.11.4
