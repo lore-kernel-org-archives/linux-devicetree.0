@@ -1,55 +1,53 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v4] ARM: EXYNOS: Add MFC device tree support
-Date: Wed, 26 Sep 2012 11:12:25 +0900
-Message-ID: <136b01cd9b8c$5edd98c0$1c98ca40$%kim@samsung.com>
-References: <1348337237-15426-1-git-send-email-arun.kk@samsung.com>
- <1348337237-15426-2-git-send-email-arun.kk@samsung.com>
- <50601831.1020400@samsung.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] i2c-s3c2410: Fix potential NULL pointer dereference
+Date: Wed, 26 Sep 2012 09:37:31 +0530
+Message-ID: <CAK9yfHw-VQN6hEWK1nyhkK=YFHniGevUeiLqEKEw3M02QgSSjA@mail.gmail.com>
+References: <1347958128-13146-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <50601831.1020400@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Karol Lewandowski' <k.lewandowsk@samsung.com>, 'Arun Kumar K' <arun.kk@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com, ch.naveen@samsung.com, joshi@samsung.com, thomas.ab@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1347958128-13146-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Karol Lewandowski wrote:
-> 
-> On 09/22/2012 08:07 PM, Arun Kumar K wrote:
-> 
-> > This patch adds device tree entry for MFC v6 in the Exynos5
-> > SoC. Makes the required changes in the clock files and adds
-> > MFC to the DT device list.
-> >
-> > Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> > Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> 
-> 
-> Looks good for me. FWIW, I could probably add
-> 
-> Acked-by: Karol Lewandowski <k.lewandowsk@samsung.com>
-> 
-Happens following build error with exynos4_defconfig because of non-DT ?
+Hi,
 
-arch/arm/mach-exynos/common.c: In function 'exynos_fdt_find_mfc_mem':
-arch/arm/mach-exynos/common.c:1058: error: implicit declaration of function 'of_flat_dt_is_compatible'
-arch/arm/mach-exynos/common.c:1061: error: implicit declaration of function 'of_get_flat_dt_prop'
-arch/arm/mach-exynos/common.c:1061: warning: assignment makes pointer from integer without a cast
-arch/arm/mach-exynos/common.c:1064: error: implicit declaration of function 'of_read_ulong'
-arch/arm/mach-exynos/common.c:1066: warning: assignment makes pointer from integer without a cast
-arch/arm/mach-exynos/common.c:1071: warning: assignment makes pointer from integer without a cast
-arch/arm/mach-exynos/common.c:1076: warning: assignment makes pointer from integer without a cast
-make[1]: *** [arch/arm/mach-exynos/common.o] Error 1
+Can we have this fix for the 3.6 series please?
 
-And I think, firstly we could move the function exynos_fdt_find_mfc_mem() into plat-samsung/ for using on other Samsung stuff such as s5pv210 and need to enclose '#ifdef CONFIG_OF" for non-DT?
+On 18 September 2012 14:18, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> of_match_node() returns NULL if a device_node does not have
+> a matching of_match structure. Thus the return value needs to be
+> checked for NULL to avoid NULL pointer dereferencing.
+>
+> Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/i2c/busses/i2c-s3c2410.c |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
+> index 5ae3b02..d906523 100644
+> --- a/drivers/i2c/busses/i2c-s3c2410.c
+> +++ b/drivers/i2c/busses/i2c-s3c2410.c
+> @@ -123,6 +123,8 @@ static inline unsigned int s3c24xx_get_device_quirks(struct platform_device *pde
+>         if (pdev->dev.of_node) {
+>                 const struct of_device_id *match;
+>                 match = of_match_node(s3c24xx_i2c_match, pdev->dev.of_node);
+> +               if (!match)
+> +                       return 0;
+>                 return (unsigned int)match->data;
+>         }
+>
+> --
+> 1.7.4.1
+>
 
-Thanks.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+
+-- 
+With warm regards,
+Sachin
