@@ -1,54 +1,99 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/2] dtc: cpp co-existence: add support for #line
- directives
-Date: Tue, 25 Sep 2012 23:58:00 -0600
-Message-ID: <50629968.9040800@wwwdotorg.org>
-References: <1348527077-27471-1-git-send-email-swarren@wwwdotorg.org>
- <1348527077-27471-3-git-send-email-swarren@wwwdotorg.org>
- <20120926043459.GD31993@truffula.fritz.box>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4] ARM: EXYNOS: Add MFC device tree support
+Date: Wed, 26 Sep 2012 08:54:59 +0200
+Message-ID: <1504455.8j02SeYi2o@flatron>
+References: <1348337237-15426-1-git-send-email-arun.kk@samsung.com> <1348337237-15426-2-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120926043459.GD31993-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1348337237-15426-2-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, s.nawrocki@samsung.com, ch.naveen@samsung.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2012 10:34 PM, David Gibson wrote:
-> On Mon, Sep 24, 2012 at 04:51:17PM -0600, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> Line control directives of the following formats are supported:
->>     #line LINE "FILE"
->>     # LINE FILE [FLAGS]
->>
->> This allows dtc to consume the output of pre-processors, and to provide
->> error messages that refer to the original filename, including taking
->> into account any #include directives that the pre-processor may have
->> performed.
-> 
-> I like the idea of handling line directives, whichever way we go with
-> the other cpp-related proposals.  The fact that these are
-> distinguished from a propnodename beginning with # only by the
-> following digits is more subtle than I'd ideally like, but I think
-> it's wirth it.
-> 
-> The only thing I would like to see change is to only recognize line
-> directives at the beginning of the line (in fact, preferably in column
-> 0 only).  Unfortunately that is going to mean some mucky flex work,
-> including a new start state, I expect.
+Hi Arun,
 
-That turns out to be exceedingly easy; just put ^ at the start of the
-regex (after the start state specification), and Flex takes care of
-everything:-)
+A little nitpick inline.
+
+On Saturday 22 of September 2012 23:37:17 Arun Kumar K wrote:
+> This patch adds device tree entry for MFC v6 in the Exynos5
+> SoC. Makes the required changes in the clock files and adds
+> MFC to the DT device list.
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> ---
+>  .../devicetree/bindings/media/s5p-mfc.txt          |   27 ++++++++++++++
+> arch/arm/boot/dts/exynos5250-smdk5250.dts          |    7 ++++
+> arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++
+>  arch/arm/mach-exynos/Kconfig                       |    1 +
+>  arch/arm/mach-exynos/clock-exynos5.c               |    2 +-
+>  arch/arm/mach-exynos/common.c                      |   37
+> ++++++++++++++++++++ arch/arm/mach-exynos/common.h                     
+> |   10 +++++ arch/arm/mach-exynos/mach-exynos5-dt.c             |   16
+> ++++++++ 8 files changed, 105 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> b/Documentation/devicetree/bindings/media/s5p-mfc.txt new file mode
+> 100644
+> index 0000000..f95e775
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> @@ -0,0 +1,27 @@
+> +* Samsung Multi Format Codec (MFC)
+> +
+> +Multi Format Codec (MFC) is the IP present in Samsung SoCs which
+> +supports high resolution decoding and encoding functionalities.
+> +The MFC device driver is a v4l2 driver which can encode/decode
+> +video raw/elementary streams and has support for all popular
+> +video codecs.
+> +
+> +Required properties:
+> +  - compatible : value should be either one among the following
+> +	(a) "samsung,mfc-v5" for MFC v5 present in Exynos4 SoCs
+> +	(b) "samsung,mfc-v6" for MFC v6 present in Exynos5 SoCs
+> +
+> +  - reg : Physical base address of the IP registers and length of memory
+> +	  mapped region.
+> +
+> +  - interrupts : MFC interrupt number to the CPU.
+> +
+> +  - samsung,mfc-r : Base address of the first memory bank used by MFC
+> +		    for DMA contiguous memory allocation.
+> +
+> +  - samsung,mfc-r-size : Size of the first memory bank.
+> +
+> +  - samsung,mfc-l : Base address of the second memory bank used by MFC
+> +		    for DMA contiguous memory allocation.
+> +
+> +  - samsung,mfc-l-size : Size of the second memory bank.
+
+Maybe the base address and size could be merged into one property with two 
+values, as it is done with the reg property? What do you think?
+
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> b/arch/arm/boot/dts/exynos5250-smdk5250.dts index 8a5e348..99890ec
+> 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -109,4 +109,11 @@
+>  	spi_2: spi@12d40000 {
+>  		status = "disabled";
+>  	};
+> +
+> +	codec@11000000 {
+> +		samsung,mfc-r = <0x43000000>;
+> +		samsung,mfc-r-size = <8388608>;
+> +		samsung,mfc-l = <0x51000000>;
+> +		samsung,mfc-l-size = <8388608>;
+
+It would look like this:
+
+		samsung-mfc-r = <0x43000000 0x800000>;
+		samsung-mfc-l = <0x51000000 0x800000>;
+
+Best regards,
+Tomasz Figa
