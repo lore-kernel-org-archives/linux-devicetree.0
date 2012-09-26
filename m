@@ -1,53 +1,48 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] i2c-s3c2410: Fix potential NULL pointer dereference
-Date: Wed, 26 Sep 2012 09:37:31 +0530
-Message-ID: <CAK9yfHw-VQN6hEWK1nyhkK=YFHniGevUeiLqEKEw3M02QgSSjA@mail.gmail.com>
-References: <1347958128-13146-1-git-send-email-sachin.kamat@linaro.org>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
+Date: Wed, 26 Sep 2012 13:32:10 +0900
+Message-ID: <CAAQKjZNRJHuA4+B-tP5vTaDfmMMxC+VKLDJU4gtpvtu=srzgAg@mail.gmail.com>
+References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com>
+	<505C9072.2010204@wwwdotorg.org>
+	<CAAQKjZMZBDpKinZkDUX7CU4yTXmu9GrP1+OiZJKW4Gx1BTno3Q@mail.gmail.com>
+	<2368486.hLKA5vLF0M@avalon>
+	<CAAQKjZN++zZ9cfNCB21TeQwPZgFVU-Cmo9ZhVwaaMz+HO2vHig@mail.gmail.com>
+	<20120925153109.GA8834@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1347958128-13146-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20120925153109.GA8834@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: linux-samsung-soc@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Leela Krishna Amudala <l.krishna@samsung.com>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Can we have this fix for the 3.6 series please?
-
-On 18 September 2012 14:18, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> of_match_node() returns NULL if a device_node does not have
-> a matching of_match structure. Thus the return value needs to be
-> checked for NULL to avoid NULL pointer dereferencing.
+2012/9/26 Mark Brown <broonie@opensource.wolfsonmicro.com>:
+> On Wed, Sep 26, 2012 at 12:03:44AM +0900, Inki Dae wrote:
+>> 2012/9/25 Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
 >
-> Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/i2c/busses/i2c-s3c2410.c |    2 ++
->  1 files changed, 2 insertions(+), 0 deletions(-)
+>> > Aren't DT bindings considered as an ABI, and required to be supported more or
+>> > less forever ? If you merge this DT binding you'll have to keep supporting it.
+>> > That's why DT bindings should not be rushed in.
 >
-> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-> index 5ae3b02..d906523 100644
-> --- a/drivers/i2c/busses/i2c-s3c2410.c
-> +++ b/drivers/i2c/busses/i2c-s3c2410.c
-> @@ -123,6 +123,8 @@ static inline unsigned int s3c24xx_get_device_quirks(struct platform_device *pde
->         if (pdev->dev.of_node) {
->                 const struct of_device_id *match;
->                 match = of_match_node(s3c24xx_i2c_match, pdev->dev.of_node);
-> +               if (!match)
-> +                       return 0;
->                 return (unsigned int)match->data;
->         }
+>> is ABI required for DT binding?  I know DT binding parses just lcd
+>> timing data from device tree file so ABI isn't needed. but when it
+>> comes to DT, I'm novice yet so there may be my missing point. could
+>> you tell me why DT bindings are considered as an ABI? if there is my
+>> missing point, will consider it again.
 >
-> --
-> 1.7.4.1
+> It's supposed to be possible to ship a DT with a board and then boot any
+> OS or OS version on the board.  If the meaning of the DT keeps changing
+> then this becomes impossible, you need to keep changing the DT when you
+> change the thing that parses it (rendering the whole exercise pointless).
 >
 
+thank you for your comments. got it. DT is built as an binary(dtb) and
+the dtb file should be re-used without any modifications. will keep
+this patch until the videomode helper will be merged to mainline so
+that this could be modified based on videomode helper later.
 
-
--- 
-With warm regards,
-Sachin
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
