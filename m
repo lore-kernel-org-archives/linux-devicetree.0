@@ -1,60 +1,55 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH 1/2] net: ti cpsw ethernet: allow reading phy interface mode from DT
-Date: Wed, 26 Sep 2012 19:24:27 +0200
-Message-ID: <1348680268-8194-1-git-send-email-zonque@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, Mugunthan V N <mugunthanvnm@ti.com>, Vaibhav Hiremath <hvaibhav@ti.com>, "David S. Miller" <davem@davemloft.net>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] drivers: phy: add generic PHY framework
+Date: Wed, 26 Sep 2012 10:41:58 -0700
+Message-ID: <2573688.gCRJ0R3vnc@dtor-d630.eng.vmware.com>
+References: <1348671675-20830-1-git-send-email-kishon@ti.com> <1348678677.15175.18.camel@joe-AO722>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1348678677.15175.18.camel@joe-AO722>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, akpm@linux-foundation.org, davem@davemloft.net, santosh.shilimkar@ti.com, grant.likely@secretlab.ca, balbi@ti.com, arnd@arndb.de, gregkh@linuxfoundation.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, robherring2@gmail.com, richard.zhao@freescale.com, B29397@freescale.com, alexander.shishkin@linux.intel.com, mkl@pengutronix.de, marex@denx.de, p.paneri@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Allow users to specify the phy interface of the CPSW slaves. The new
-node parameter is called "phy_if_mode" and is optional. The original
-behaviour of the driver is preserved when not given.
+On Wednesday, September 26, 2012 09:57:57 AM Joe Perches wrote:
+> On Wed, 2012-09-26 at 20:31 +0530, Kishon Vijay Abraham I wrote:
+> > The PHY framework provides a set of API's for the PHY drivers to
+> > create/destroy a PHY and API's
+> 
+> Just some trivial notes.
+> 
+> > diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+> 
+> []
+> 
+> > @@ -0,0 +1,445 @@
+> 
+> []
+> 
+> > +static void devm_phy_release(struct device *dev, void *res)
+> > +{
+> > +	struct phy *phy = *(struct phy **)res;
+> 
+> That's a bit twisted isn't it?
+> Perhaps
+> 	struct phy *phy = res;
 
-Signed-off-by: Daniel Mack <zonque@gmail.com>
-Cc: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: Vaibhav Hiremath <hvaibhav@ti.com>
-Cc: David S. Miller <davem@davemloft.net>
----
- Documentation/devicetree/bindings/net/cpsw.txt | 3 +++
- drivers/net/ethernet/ti/cpsw.c                 | 3 +++
- 2 files changed, 6 insertions(+)
+No, because you really need to dereference ptr, not simply cast.
 
-diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-index dcaabe9..d87f7d2 100644
---- a/Documentation/devicetree/bindings/net/cpsw.txt
-+++ b/Documentation/devicetree/bindings/net/cpsw.txt
-@@ -25,6 +25,8 @@ Required properties:
- - slave_reg_ofs		: Specifies slave register offset
- - sliver_reg_ofs	: Specifies slave sliver register offset
- - phy_id		: Specifies slave phy id
-+- phy_if_mode		: Specified slave phy interface mode (optional)
-+			  (one of the PHY_INTERFACE_MODE_* as numerical value)
- - mac-address		: Specifies slave MAC address
- 
- Optional properties:
-@@ -62,6 +64,7 @@ Examples:
- 			slave_reg_ofs = <0x208>;
- 			sliver_reg_ofs = <0xd80>;
- 			phy_id = "davinci_mdio.16:00";
-+			phy_if_mode = <6>; /* PHY_INTERFACE_MODE_RGMII */
- 			/* Filled in by U-Boot */
- 			mac-address = [ 00 00 00 00 00 00 ];
- 		};
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index aa78168..3d7594e 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -850,6 +850,9 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
- 		}
- 		slave_data->sliver_reg_ofs = prop;
- 
-+		if (!of_property_read_u32(slave_node, "phy_if_mode", &prop))
-+			slave_data->phy_if = prop;
-+
- 		mac_addr = of_get_mac_address(slave_node);
- 		if (mac_addr)
- 			memcpy(slave_data->mac_addr, mac_addr, ETH_ALEN);
+...
+
+> > +
+> > +	ptr = devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
+> 
+> Is this the right size?
+> 
+> Because ptr is **, perhaps sizeof(struct phy) is clearer.
+
+But incorrect.
+
+Thanks.
+
 -- 
-1.7.11.4
+Dmitry
