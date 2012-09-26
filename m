@@ -1,84 +1,50 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/1] Fix segfault in DTC
-Date: Wed, 26 Sep 2012 10:35:08 +1000
-Message-ID: <20120926003508.GB31993@truffula.fritz.box>
-References: <1348526885-2113-1-git-send-email-mmayer@broadcom.com>
- <1348595889-6495-1-git-send-email-mmayer@broadcom.com>
- <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
- <20120925233054.GL9800@truffula.fritz.box>
- <50624393.30607@broadcom.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v4 0/3] ARM: Exynos: Add support for MSHC controller
+Date: Wed, 26 Sep 2012 10:47:05 +0900
+Message-ID: <135f01cd9b88$d557efe0$8007cfa0$%kim@samsung.com>
+References: <1346238072-7324-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50624393.30607-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1346238072-7324-1-git-send-email-thomas.abraham@linaro.org>
+Content-language: ko
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, patches@linaro.org, tgih.jun@samsung.com, devicetree-discuss@lists.ozlabs.org, jh80.chung@samsung.com, girish.shivananjappa@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2012 at 04:51:47PM -0700, Markus Mayer wrote:
-> On 25/09/2012 16:30, David Gibson wrote:
-> >On Tue, Sep 25, 2012 at 10:58:09AM -0700, Markus Mayer wrote:
-> >>Prior to this change, an empty input file would cause a segfault, because
-> >>yylloc had never been initialized. There was never any characters for the
-> >>lexer to match, so YY_USER_ACTION was never executed before the parse error
-> >>was detected.
-> >>
-> >>When the parser printed the error message, it tried to include the name of
-> >>the file, but the structure holding the file name (yylloc.file, referenced
-> >>as pos->file) had never been initialized.
-> >>
-> >>Without the fix:
-> >>
-> >>$ ./dtc /dev/null
-> >>DTC: dts->dts  on file "/dev/null"
-> >>Segmentation fault (core dumped)
-> >>
-> >>$ gdb dtc core
-> >>Program terminated with signal 11, Segmentation fault.
-> >>     at scripts/dtc/srcpos.c:194
-> >>194			fname = pos->file->name;
-> >>(gdb) bt
-> >>     at scripts/dtc/srcpos.c:194
-> >>     fmt=0x40d769 "%s", va=0x7fffbf027148) at scripts/dtc/srcpos.c:220
-> >>     at scripts/dtc/dtc-parser.tab.c:1920
-> >>     at scripts/dtc/treesource.c:38
-> >>     at scripts/dtc/dtc.c:203
-> >>(gdb) p *pos
-> >>$1 = {first_line = 0, first_column = 0, last_line = 0, last_column = 0,
-> >>   file = 0x0}
-> >
-> >Which dtc version did you observe this with?  I'm unable to reproduce
-> >the SEGV with current git.
+Thomas Abraham wrote:
 > 
-> That was
+> This patch series adds Exynos5250 platform support for MSHC controllers.
 > 
-> $ cat version_gen.h
-> #define DTC_VERSION "DTC 1.2.0-g37c0b6a0"
+> Thomas Abraham (3):
+>   ARM: Samsung: Add support for MSHC controller clocks
+>   ARM: Exynos5: Add AUXDATA support for MSHC controllers
+>   ARM: dts: Add nodes for dw_mmc controllers for Samsung Exynos5250
+> platforms
 > 
-> from
-> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git. In
-> other words, the DTC used by the Linux 3.6-rc series.
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts |   55
+> +++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5250.dtsi         |   32 +++++++++++++++++
+>  arch/arm/mach-exynos/clock-exynos5.c      |   45 ++++++++---------------
+>  arch/arm/mach-exynos/include/mach/map.h   |    4 ++
+>  arch/arm/mach-exynos/mach-exynos5-dt.c    |    8 ++++
+>  5 files changed, 115 insertions(+), 29 deletions(-)
 
-Ah, ok.  Patches to dtc should be made against the upstream version at
-git://git.jdl.com/software/dtc.git.  In this case the bug was already
-fixed there, in commit a6e6c60e3a97a6b3a033cd052bb3740fd53cbf4c.
+Applied this series.
+Thanks.
 
-I think we're overdue to update the kernel copy of dtc from upstream.
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
