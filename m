@@ -1,68 +1,51 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 0/4] lis3: lis3lv02d_i2c: Add device tree support
-Date: Wed, 26 Sep 2012 13:57:32 -0700
-Message-ID: <20120926205732.GA11780@kroah.com>
-References: <1347866602-2088-1-git-send-email-anilkumar@ti.com>
- <20120926202400.GA27830@kroah.com>
- <20120926133450.8beeed6e.akpm@linux-foundation.org>
- <20120926204403.GA23921@kroah.com>
- <20120926135412.c6813bb1.akpm@linux-foundation.org>
+From: Omar Ramirez Luna <omar.luna@linaro.org>
+Subject: Re: [PATCH v2 0/2] OMAP: mailbox initial device tree support
+Date: Wed, 26 Sep 2012 17:21:24 -0500
+Message-ID: <CALLhW=4d8zxekkeGr1S52aGbufyk-vGeE9REYhDSt8pnap_Dxw@mail.gmail.com>
+References: <1347494898-16671-1-git-send-email-omar.luna@linaro.org>
+	<1347494898-16671-4-git-send-email-omar.luna@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120926135412.c6813bb1.akpm@linux-foundation.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: AnilKumar Ch <anilkumar@ti.com>, arnd@arndb.de, eric.piel@tremplin-utc.net, jic23@cam.ac.uk, broonie@opensource.wolfsonmicro.com, dmitry.torokhov@gmail.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1347494898-16671-4-git-send-email-omar.luna@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Omar Ramirez Luna <omar.luna@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 26, 2012 at 01:54:12PM -0700, Andrew Morton wrote:
-> On Wed, 26 Sep 2012 13:44:03 -0700
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Wed, Sep 26, 2012 at 01:34:50PM -0700, Andrew Morton wrote:
-> > > On Wed, 26 Sep 2012 13:24:00 -0700
-> > > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > > On Mon, Sep 17, 2012 at 12:53:18PM +0530, AnilKumar Ch wrote:
-> > > > > Adds device tree support to lis3lv02d_i2c driver. Along with this
-> > > > > DT init is moved from core driver to individual drivers, with the
-> > > > > current implementation some pdata is missing in lis3lv02d_i2c driver.
-> > > > > 
-> > > > > Also adds platform data for lis331dlh driver to am335x-EVM. These
-> > > > > patches were tested on AM335x-EVM.
-> > > > 
-> > > > None of these patches apply to any tree that I know of, what did you do
-> > > > them against?  Please redo them against the char-next branch of
-> > > > linux-next and resend them if you wish to see them applied.
-> > > 
-> > > Presumably they're against eariler patches whcih you don't have.  I'm
-> > > presently sitting on
-> > > 
-> > > drivers-misc-lis3lv02d-add-generic-dt-matching-code.patch
-> > > drivers-misc-lis3lv02d-add-generic-dt-matching-code-fix.patch
-> > > drivers-misc-lis3lv02d-lis3lv02d_spic-add-dt-matching-table-passthru-code.patch
-> > > drivers-misc-lis3lv02d-lis3lv02d_spic-add-dt-matching-table-passthru-code-fix.patch
-> > > drivers-misc-lis3lv02d-lis3lv02d_spic-add-dt-matching-table-passthru-code-fix-fix.patch
-> > > drivers-misc-lis3lv02d-remove-lis3lv02d-driver-dt-init.patch
-> > > drivers-misc-lis3lv02d-lis3lv02d_spic-add-lis3lv02d-device-tree-init.patch
-> > > drivers-misc-lis3lv02d-lis3lv02d_spic-add-lis3lv02d-device-tree-init-fix.patch
-> > > drivers-misc-lis3lv02d-lis3lv02d_i2cc-add-lis3lv02d-device-tree-init.patch
-> > > drivers-misc-lis3lv02d-lis3lv02d_i2cc-add-lis3lv02d-device-tree-init-fix.patch
-> > > drivers-misc-lis3lv02d-fix-some-comments-specific-to-lis331dlh-driver.patch
-> > 
-> > Care to send them to me so that I can get them to Linus for the 3.7
-> > merge window?
-> 
-> OK.
-> 
-> >  I do keep the char-misc tree for these types of things :)
-> 
-> I've actually been doing this miscdev driver since day one.  I'm happy
-> to hand over the keys but please review the patches carefully and try not to
-> miss stuff!
+Hi Benoit,
 
-Will do, thanks.
+On 12 September 2012 19:08, Omar Ramirez Luna <omar.luna@linaro.org> wrote:
+> To allow mailbox driver to function with device tree.
+>
+> Tested in OMAP4 and OMAP3. OMAP2 untested.
+>
+> Patch: arm/dts: OMAP2+: Add mailbox nodes, was Acked by Benoit
+> however it seems it wasn't picked up, so resend.
+>
+> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg69121.html
+>
+> Patch: OMAP: mailbox: add device tree support, there wasn't an
+> opposition other than to cleanup the driver too, however I got
+> quite some patches to send before continuing the cleanup.
+>
+> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg69338.html
+>
+> Omar Ramirez Luna (2):
+>   OMAP: mailbox: add device tree support
+>   arm/dts: OMAP2+: Add mailbox nodes
+>
+>  .../devicetree/bindings/arm/omap/mailbox.txt       |    9 +++++++++
+>  arch/arm/boot/dts/omap2.dtsi                       |    5 +++++
+>  arch/arm/boot/dts/omap3.dtsi                       |    5 +++++
+>  arch/arm/boot/dts/omap4.dtsi                       |    5 +++++
+>  arch/arm/mach-omap2/devices.c                      |    3 +++
+>  arch/arm/mach-omap2/mailbox.c                      |   12 ++++++++++++
+>  6 files changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/omap/mailbox.txt
 
-greg k-h
+Ping. I'm in the understanding that these go through your tree, am I right?
+
+Regards,
+
+Omar
