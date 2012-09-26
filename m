@@ -1,81 +1,80 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: [PATCH v3] pwm_backlight: Add device tree support for Low Threshold Brightness
-Date: Wed, 26 Sep 2012 20:17:07 +0530
-Message-ID: <1348670827-5720-1-git-send-email-avinashphilip@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2] pwm_backlight: Add device tree support for Low Threshold
+ Brightness
+Date: Wed, 26 Sep 2012 09:27:51 -0600
+Message-ID: <50631EF7.6040908@wwwdotorg.org>
+References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com> <505BF83D.8040201@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com> <505CA74B.2090405@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com> <50614CE2.7010301@wwwdotorg.org> <518397C60809E147AF5323E0420B992E3E9A8FA7@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, rpurdie@rpsys.net, thierry.reding@avionic-design.de
-Cc: broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <518397C60809E147AF5323E0420B992E3E9A8FA7@DBDE01.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Some back lights perform poorly when driven by a PWM with a short
-duty-cycle. For such devices, the low threshold can be used to specify a
-lower bound for the duty-cycle and should be chosen to exclude the
-problematic range.
+On 09/25/2012 10:35 PM, Philip, Avinash wrote:
+> On Tue, Sep 25, 2012 at 11:49:14, Stephen Warren wrote:
+>> On 09/24/2012 10:29 PM, Philip, Avinash wrote:
+>>> On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
+>>>> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
+>>>>> Hi Stephen,
+>>>>>
+>>>>> On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
+>>>>>> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
+>>>>>>> Some backlights perform poorly when driven by a PWM with a short
+>>>>>>> duty-cycle. For such devices, the low threshold can be used to specify a
+>>>>>>> lower bound for the duty-cycle and should be chosen to exclude the
+>>>>>>> problematic range.
+>>>>>>>
+>>>>>>> This patch adds support for an optional low-threshold-brightness
+>>>>>>> property.
+>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+>>>>>>
+>>>>>>>  Optional properties:
+>>>>>>>    - pwm-names: a list of names for the PWM devices specified in the
+>>>>>>>                 "pwms" property (see PWM binding[0])
+>>>>>>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
+>>>>>>> +    brightness set to value so that backlight present on low end of
+>>>>>>> +    brightness.
+>>>>>>
+>>>>>> For my education, why not just specify values above this value in the
+>>>>>> brightness-levels array; how do those two interact?
+>>>>>
+>>>>> Please find details from 
+>>>>> https://lkml.org/lkml/2012/7/18/284
+>>>>
+>>>> Hmm. That still doesn't really explain what this property does.
+>>>>
+>>>> I'm going to guess that if this property is present, and values in the
+>>>> brightness-levels property get scaled between the
+>>>> low-threshold-brightness and 255 instead of being used directly.
+>>>
+>>> This is correct.
+>>>
+>>>> But then, in the email you linked to, what does "But brightness-levels won't
+>>>> be uniformly divided" mean?
+>>>
+>>> For some panels, backlight would absent on low end of brightness due to low
+>>> percentage in duty_cycle. Consider following example where backlight absent
+>>> for brightness levels from 0 - 51.
+>>>
+>>> pwms = <&pwm 0 50000>;
+>>> brightness-levels = <0 51 53 56 62 75 101 152 255>; 
+>>> default-brightness-level = <6>;
+>>>
+>>> So in the example, brightness-levels are set to have values for backlight present.
+>>> Here levels are not uniformly divided.
+>>
+>> So why not just change the values so they /are/ what you want? After
+>> all, it's just data and you can put whatever values you want there. What
+>> is preventing you from doing this?
+> 
+> brightness_threshold_level was added to explore lth_brightness support already
+> present in non-DT case.
 
-Add device tree probing support for lth_brightness putting
-low-threshold-brightness as optional property.
-
-Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
----
-Changes since v2:
-        - Added documentation part for configuring low-threshold-brightness
-
-Changes since v1:
-        - Updated commit message.
-	- Changes to low-threshold-brightness.
-	- Merged example section to original.
-
-:100644 100644 1e4fc72... 4e29912... M	Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-:100644 100644 995f016... 29e6fe1... M	drivers/video/backlight/pwm_bl.c
- .../bindings/video/backlight/pwm-backlight.txt     |   10 ++++++++++
- drivers/video/backlight/pwm_bl.c                   |    5 +++++
- 2 files changed, 15 insertions(+), 0 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-index 1e4fc72..4e29912 100644
---- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-@@ -14,6 +14,15 @@ Required properties:
- Optional properties:
-   - pwm-names: a list of names for the PWM devices specified in the
-                "pwms" property (see PWM binding[0])
-+  - low-threshold-brightness: brightness threshold low level. Low threshold
-+    brightness set to value so that backlight present on low end of
-+    brightness.
-+    Some panels, backlight would absent if duty percentage of PWM wave is less
-+    than certain level (say 20%). By setting low-threshold-brightness to a
-+    value above (percentage of brightness-levels max) 50 (20% of 255, if 255
-+    is max). On setting low-threshold-brightness, range of brightness-levels
-+    is calculated in a region of low-threshold-brightness to brightness-levels
-+    max.
- 
- [0]: Documentation/devicetree/bindings/pwm/pwm.txt
- 
-@@ -25,4 +34,5 @@ Example:
- 
- 		brightness-levels = <0 4 8 16 32 64 128 255>;
- 		default-brightness-level = <6>;
-+		low-threshold-brightness = <50>;
- 	};
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 995f016..29e6fe1 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -143,6 +143,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 
- 		data->dft_brightness = value;
- 		data->max_brightness--;
-+
-+		ret = of_property_read_u32(node, "low-threshold-brightness",
-+					   &value);
-+		if (!ret)
-+			data->lth_brightness = value;
- 	}
- 
- 	/*
--- 
-1.7.0.4
-
+I understand that. Given my discussion above, I would advocate removing
+lth_brightness from the non-DT case rather than adding it to the DT
+case, since it seems entirely pointless.
