@@ -1,24 +1,68 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH V1 0/2] ARM: Exynos: Enable I2S platform support for Exynos5
-Date: Thu, 27 Sep 2012 15:56:34 +0530
-Message-ID: <1348741596-29451-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: padma.v@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
-Cc: sbkim73@samsung.com, sangsu4u.park@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH 2/2] net: ti cpsw ethernet: set IFCTL_{A,B} bits for RMII
+ mode
+Date: Thu, 27 Sep 2012 13:42:43 +0200
+Message-ID: <50643BB3.7080600@gmail.com>
+References: <1348680268-8194-1-git-send-email-zonque@gmail.com> <1348680268-8194-2-git-send-email-zonque@gmail.com> <EB1619762EAF8B4E97A227FB77B7E0293E9EBB74@DBDE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <EB1619762EAF8B4E97A227FB77B7E0293E9EBB74@DBDE01.ent.ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: "N, Mugunthan V" <mugunthanvnm@ti.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-This patch set enables device tree based platform support for the three I2S
-controllers on Samsung's Exynos5 SoC's.
+On 26.09.2012 20:50, N, Mugunthan V wrote:
+>> For RMII mode operation in 100Mbps, the CPSW needs to set the
+>> IFCTL_A / IFCTL_B bits in the MACCONTROL register.
+>>
+>> Signed-off-by: Daniel Mack <zonque@gmail.com>
+>> Cc: Mugunthan V N <mugunthanvnm@ti.com>
+>> Cc: Vaibhav Hiremath <hvaibhav@ti.com>
+>> Cc: David S. Miller <davem@davemloft.net>
+>> ---
+>>  drivers/net/ethernet/ti/cpsw.c | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/ti/cpsw.c
+>> b/drivers/net/ethernet/ti/cpsw.c
+>> index 3d7594e..d88dbfa 100644
+>> --- a/drivers/net/ethernet/ti/cpsw.c
+>> +++ b/drivers/net/ethernet/ti/cpsw.c
+>> @@ -386,6 +386,12 @@ static void _cpsw_adjust_link(struct cpsw_slave
+>> *slave,
+>>  			mac_control |= BIT(7);	/* GIGABITEN	*/
+>>  		if (phy->duplex)
+>>  			mac_control |= BIT(0);	/* FULLDUPLEXEN	*/
+>> +
+>> +		/* set speed_in input in case RMII mode is used in >10Mbps
+>> */
+>> +		if (phy->speed > 10 && slave->slave_num < 2 &&
+>> +		    phy->interface == PHY_INTERFACE_MODE_RMII)
+>> +			mac_control |= BIT(15 + slave->slave_num);
+> 
+> Mac control register is separate for both the slaves and has same bit definitions,
+> Bit 15 has to be set for 100Mbps link for RMII and RGMII Phy interface to control
+> the RMII/RGMII gasket and in GMII this bit is Un-used by CPSW.
+> For slave 1, Bit 16 is set with the above code which is not used control the
+> RMII/RGMII gasket control. So it is not required to pass the Phy mode from DT.
+> This patch has to be reworked to set Bit 15 with any Phy mode connected.
 
-Padmavathi Venna (2):
-  ARM: dts: Add nodes for i2s controllers for Samsung Exynos5 platforms
-  ARM: EXYNOS: Enable platform support for I2S controllers
+Hmm, that's interesting. I read the datasheet differently, but I believe
+you're right.
 
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   15 +++++++++++++++
- arch/arm/boot/dts/exynos5250.dtsi         |   28 ++++++++++++++++++++++++++++
- arch/arm/mach-exynos/mach-exynos5-dt.c    |    6 ++++++
- 3 files changed, 49 insertions(+), 0 deletions(-)
+> The original driver present was tested with GMII (Beagle Bone A5) and
+> RGMII (AM3358 EVM) phy , but CPSW works fine without setting this bit in
+> RGMII phymode so this issue was not caught in testing.
 
--- 
-1.7.4.4
+Yes, it used to work fine for me too until the hardware was reworked
+from RGMII to RMII :)
+
+Thanks a lot for the review - I just tested that setting bit 15 for all
+PHY interface modes works for me as well, so I'm fine with that
+solution. Will repost a new patch.
+
+
+Daniel
