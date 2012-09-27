@@ -1,7 +1,7 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 08/14] media: soc-camera: use managed devm_regulator_bulk_get()
-Date: Thu, 27 Sep 2012 16:07:27 +0200
-Message-ID: <1348754853-28619-9-git-send-email-g.liakhovetski@gmx.de>
+Subject: [PATCH 13/14] media: sh-mobile-ceu-driver: support max width and height in DT
+Date: Thu, 27 Sep 2012 16:07:32 +0200
+Message-ID: <1348754853-28619-14-git-send-email-g.liakhovetski@gmx.de>
 References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
@@ -10,53 +10,43 @@ To: linux-media@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Using device-managed devm_regulator_bulk_get() eliminates the need to
-release regulators explicitly.
+Some CEU implementations have non-standard (larger) maximum supported
+width and height values. Add two OF properties to specify them.
 
 Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 ---
- drivers/media/platform/soc_camera/soc_camera.c |    8 ++------
- 1 files changed, 2 insertions(+), 6 deletions(-)
+ .../platform/soc_camera/sh_mobile_ceu_camera.c     |   19 +++++++++++++++++++
+ 1 files changed, 19 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/media/platform/soc_camera/soc_camera.c b/drivers/media/platform/soc_camera/soc_camera.c
-index 997be15..c2a5fa3 100644
---- a/drivers/media/platform/soc_camera/soc_camera.c
-+++ b/drivers/media/platform/soc_camera/soc_camera.c
-@@ -1249,7 +1249,6 @@ static int soc_camera_i2c_notify(struct notifier_block *nb,
- 		video_device_release(icd->vdev);
- 		icd->vdev = NULL;
+diff --git a/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c b/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
+index 61ee459..1fd03f6 100644
+--- a/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
++++ b/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
+@@ -2119,6 +2119,25 @@ static int __devinit sh_mobile_ceu_probe(struct platform_device *pdev)
+ 		pcdev->flags = pcdev->pdata->flags;
  	}
--	regulator_bulk_free(icl->num_regulators, icl->regulators);
- 	v4l2_ctrl_handler_free(&icd->ctrl_handler);
  
- 	return NOTIFY_DONE;
-@@ -1358,8 +1357,8 @@ static int soc_camera_probe(struct soc_camera_device *icd)
- 	if (ret < 0)
- 		return ret;
- 
--	ret = regulator_bulk_get(icd->pdev, icl->num_regulators,
--				 icl->regulators);
-+	ret = devm_regulator_bulk_get(icd->pdev, icl->num_regulators,
-+				      icl->regulators);
- 	if (ret < 0)
- 		goto ereg;
- 
-@@ -1423,7 +1422,6 @@ eadddev:
- 		icd->vdev = NULL;
- 	}
- evdc:
--	regulator_bulk_free(icl->num_regulators, icl->regulators);
- ereg:
- 	v4l2_ctrl_handler_free(&icd->ctrl_handler);
- 	return ret;
-@@ -1460,8 +1458,6 @@ static int soc_camera_remove(struct soc_camera_device *icd)
- 	}
- 	soc_camera_free_user_formats(icd);
- 
--	regulator_bulk_free(icl->num_regulators, icl->regulators);
--
- 	return 0;
- }
- 
++	if (!pcdev->max_width) {
++		unsigned int v;
++		err = of_property_read_u32(pdev->dev.of_node, "renesas,max-width", &v);
++		if (!err)
++			pcdev->max_width = v;
++
++		if (!pcdev->max_width)
++			pcdev->max_width = 2560;
++	}
++	if (!pcdev->max_height) {
++		unsigned int v;
++		err = of_property_read_u32(pdev->dev.of_node, "renesas,max-height", &v);
++		if (!err)
++			pcdev->max_height = v;
++
++		if (!pcdev->max_height)
++			pcdev->max_height = 1920;
++	}
++
+ 	base = ioremap_nocache(res->start, resource_size(res));
+ 	if (!base) {
+ 		err = -ENXIO;
 -- 
 1.7.2.5
