@@ -1,580 +1,143 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/2] usb: phy: add a new driver for usb3 phy
-Date: Thu, 27 Sep 2012 19:34:07 +0530
-Message-ID: <1348754648-8315-2-git-send-email-kishon@ti.com>
-References: <1348754648-8315-1-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1348754648-8315-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH 12/14] media: sh-mobile-ceu-camera: add primitive OF support
+Date: Thu, 27 Sep 2012 16:07:31 +0200
+Message-ID: <1348754853-28619-13-git-send-email-g.liakhovetski@gmx.de>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Added a driver for usb3 phy that handles the interaction between usb phy
-device and dwc3 controller.
+Add an OF hook to sh_mobile_ceu_camera.c, no properties so far. Booting
+with DT also requires platform data to be optional.
 
-This also includes device tree support for usb3 phy driver and
-the documentation with device tree binding information is updated.
-
-Currently writing to control module register is taken care in this
-driver which will be removed once the control module driver is in place.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 ---
- Documentation/devicetree/bindings/usb/usb-phy.txt |   18 +
- drivers/usb/phy/Kconfig                           |    9 +
- drivers/usb/phy/Makefile                          |    1 +
- drivers/usb/phy/omap-usb3.c                       |  412 +++++++++++++++++++++
- include/linux/usb/omap_usb.h                      |   33 ++
- 5 files changed, 473 insertions(+)
- create mode 100644 drivers/usb/phy/omap-usb3.c
+ .../platform/soc_camera/sh_mobile_ceu_camera.c     |   34 ++++++++++++++------
+ 1 files changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
-index 80d4148..7c5fd89 100644
---- a/Documentation/devicetree/bindings/usb/usb-phy.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
-@@ -15,3 +15,21 @@ usb2phy@4a0ad080 {
- 	reg = <0x4a0ad080 0x58>,
- 	      <0x4a002300 0x4>;
- };
-+
-+OMAP USB3 PHY
-+
-+Required properties:
-+ - compatible: Should be "ti,omap-usb3"
-+ - reg : Address and length of the register set for the device. Also
-+add the address of control module phy power register until a driver for
-+control module is added
-+
-+This is usually a subnode of ocp2scp to which it is connected.
-+
-+usb3phy@4a084400 {
-+	compatible = "ti,omap-usb3";
-+	reg = <0x0x4a084400 0x80>,
-+	      <0x4a084800 0x64>,
-+	      <0x4a084c00 0x40>,
-+	      <0x4a002370 0x4>;
-+};
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 63c339b..353dc0c 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -13,6 +13,15 @@ config OMAP_USB2
- 	  The USB OTG controller communicates with the comparator using this
- 	  driver.
- 
-+config OMAP_USB3
-+	tristate "OMAP USB3 PHY Driver"
-+	select USB_OTG_UTILS
-+	help
-+	  Enable this to support the USB3 PHY that is part of SOC. This
-+	  driver takes care of all the PHY functionality apart from comparator.
-+	  The USB OTG controller communicates with the comparator using this
-+	  driver.
-+
- config USB_ISP1301
- 	tristate "NXP ISP1301 USB transceiver support"
- 	depends on USB || USB_GADGET
-diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-index b069f29..973b1e6 100644
---- a/drivers/usb/phy/Makefile
-+++ b/drivers/usb/phy/Makefile
-@@ -5,6 +5,7 @@
- ccflags-$(CONFIG_USB_DEBUG) := -DDEBUG
- 
- obj-$(CONFIG_OMAP_USB2)			+= omap-usb2.o
-+obj-$(CONFIG_OMAP_USB3)			+= omap-usb3.o
- obj-$(CONFIG_USB_ISP1301)		+= isp1301.o
- obj-$(CONFIG_MV_U3D_PHY)		+= mv_u3d_phy.o
- obj-$(CONFIG_USB_EHCI_TEGRA)	+= tegra_usb_phy.o
-diff --git a/drivers/usb/phy/omap-usb3.c b/drivers/usb/phy/omap-usb3.c
-new file mode 100644
-index 0000000..cecfbd4
---- /dev/null
-+++ b/drivers/usb/phy/omap-usb3.c
-@@ -0,0 +1,412 @@
-+/*
-+ * omap-usb3 - USB PHY, talking to dwc3 controller in OMAP.
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * Author: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/usb/omap_usb.h>
+diff --git a/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c b/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
+index 41e4664..61ee459 100644
+--- a/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
++++ b/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
+@@ -26,6 +26,7 @@
+ #include <linux/kernel.h>
+ #include <linux/mm.h>
+ #include <linux/moduleparam.h>
 +#include <linux/of.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/delay.h>
-+
-+#define	NUM_SYS_CLKS		5
-+#define	PLL_STATUS		0x00000004
-+#define	PLL_GO			0x00000008
-+#define	PLL_CONFIGURATION1	0x0000000C
-+#define	PLL_CONFIGURATION2	0x00000010
-+#define	PLL_CONFIGURATION3	0x00000014
-+#define	PLL_CONFIGURATION4	0x00000020
-+
-+#define	PLL_REGM_MASK		0x001FFE00
-+#define	PLL_REGM_SHIFT		0x9
-+#define	PLL_REGM_F_MASK		0x0003FFFF
-+#define	PLL_REGM_F_SHIFT	0x0
-+#define	PLL_REGN_MASK		0x000001FE
-+#define	PLL_REGN_SHIFT		0x1
-+#define	PLL_SELFREQDCO_MASK	0x0000000E
-+#define	PLL_SELFREQDCO_SHIFT	0x1
-+#define	PLL_SD_MASK		0x0003FC00
-+#define	PLL_SD_SHIFT		0x9
-+#define	SET_PLL_GO		0x1
-+#define	PLL_TICOPWDN		0x10000
-+#define	PLL_LOCK		0x2
-+#define	PLL_IDLE		0x1
-+
-+/*
-+ * This is an Empirical value that works, need to confirm the actual
-+ * value required for the USB3PHY_PLL_CONFIGURATION2.PLL_IDLE status
-+ * to be correctly reflected in the USB3PHY_PLL_STATUS register.
-+ */
-+# define PLL_IDLE_TIME  100;
-+
-+enum sys_clk_rate {
-+	CLK_RATE_UNDEFINED = -1,
-+	CLK_RATE_12MHZ,
-+	CLK_RATE_16MHZ,
-+	CLK_RATE_19MHZ,
-+	CLK_RATE_26MHZ,
-+	CLK_RATE_38MHZ
-+};
-+
-+static struct usb_dpll_params omap_usb3_dpll_params[NUM_SYS_CLKS] = {
-+	{1250, 5, 4, 20, 0},		/* 12 MHz */
-+	{3125, 20, 4, 20, 0},		/* 16.8 MHz */
-+	{1172, 8, 4, 20, 65537},	/* 19.2 MHz */
-+	{1250, 12, 4, 20, 0},		/* 26 MHz */
-+	{3125, 47, 4, 20, 92843},	/* 38.4 MHz */
-+};
-+
-+/**
-+ * omap5_usb_phy_power - power on/off the serializer using control module
-+ * @phy: struct omap_usb *
-+ * @on: 0 to off and 1 to on based on powering on or off the PHY
-+ *
-+ * omap_usb3 can call this API to power on or off the PHY.
-+ *
-+ * XXX: Remove this function once control module driver gets merged
-+ */
-+static int omap5_usb_phy_power(struct omap_usb *phy, bool on)
-+{
-+	u32 val;
-+	unsigned long rate;
-+	struct clk *sys_clk;
-+
-+	sys_clk = clk_get(NULL, "sys_clkin");
-+	if (IS_ERR(sys_clk)) {
-+		pr_err("%s: unable to get sys_clkin\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	rate = clk_get_rate(sys_clk);
-+	rate = rate/1000000;
-+	clk_put(sys_clk);
-+
-+	val = readl(phy->control_dev);
-+
-+	if (on) {
-+		val &= ~(USB_PWRCTL_CLK_CMD_MASK | USB_PWRCTL_CLK_FREQ_MASK);
-+		val |= USB3_PHY_TX_RX_POWERON << USB_PWRCTL_CLK_CMD_SHIFT;
-+		val |= rate << USB_PWRCTL_CLK_FREQ_SHIFT;
-+	} else {
-+		val &= ~USB_PWRCTL_CLK_CMD_MASK;
-+		val |= USB3_PHY_TX_RX_POWEROFF << USB_PWRCTL_CLK_CMD_SHIFT;
-+	}
-+
-+	writel(val, phy->control_dev);
-+
-+	return 0;
-+}
-+
-+static int omap_usb3_suspend(struct usb_phy *x, int suspend)
-+{
-+	struct omap_usb *phy = phy_to_omapusb(x);
-+	int	val, ret;
-+	int timeout = PLL_IDLE_TIME;
-+
-+	if (suspend && !phy->is_suspended) {
-+		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
-+		val |= PLL_IDLE;
-+		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
-+
-+		do {
-+			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
-+			if (val & PLL_TICOPWDN)
-+				break;
-+			udelay(1);
-+		} while (--timeout);
-+
-+		omap5_usb_phy_power(phy, 0);
-+		pm_runtime_put_sync(phy->dev);
-+
-+		phy->is_suspended	= 1;
-+	} else if (!suspend && phy->is_suspended) {
-+		phy->is_suspended	= 0;
-+		ret = pm_runtime_get_sync(phy->dev);
-+		if (ret < 0) {
-+			dev_err(phy->dev, "get_sync failed with err %d\n",
-+									ret);
-+			return ret;
-+		}
-+
-+		val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
-+		val &= ~PLL_IDLE;
-+		omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
-+
-+		do {
-+			val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
-+			if (!(val & PLL_TICOPWDN))
-+				break;
-+			udelay(1);
-+		} while (--timeout);
-+	}
-+
-+	return 0;
-+}
-+
-+static inline enum sys_clk_rate __get_sys_clk_index(unsigned long rate)
-+{
-+	switch (rate) {
-+	case 12000000:
-+		return CLK_RATE_12MHZ;
-+	case 16800000:
-+		return CLK_RATE_16MHZ;
-+	case 19200000:
-+		return CLK_RATE_19MHZ;
-+	case 26000000:
-+		return CLK_RATE_26MHZ;
-+	case 38400000:
-+		return CLK_RATE_38MHZ;
-+	default:
-+		return CLK_RATE_UNDEFINED;
-+	}
-+}
-+
-+static void omap_usb_dpll_relock(struct omap_usb *phy)
-+{
-+	u32		val;
-+	unsigned long	timeout;
-+
-+	omap_usb_writel(phy->pll_ctrl_base, PLL_GO, SET_PLL_GO);
-+
-+	timeout = jiffies + msecs_to_jiffies(20);
-+	do {
-+		val = omap_usb_readl(phy->pll_ctrl_base, PLL_STATUS);
-+		if (val & PLL_LOCK)
-+			break;
-+	} while (!WARN_ON(time_after(jiffies, timeout)));
-+}
-+
-+static int omap_usb_dpll_lock(struct omap_usb *phy)
-+{
-+	u32			val;
-+	struct clk		*sys_clk;
-+	unsigned long		rate;
-+	enum sys_clk_rate	clk_index;
-+
-+	sys_clk	= clk_get(NULL, "sys_clkin");
-+	if (IS_ERR(sys_clk)) {
-+		pr_err("unable to get sys_clkin\n");
-+		return PTR_ERR(sys_clk);
-+	}
-+
-+	rate		= clk_get_rate(sys_clk);
-+	clk_index	= __get_sys_clk_index(rate);
-+
-+	if (clk_index == CLK_RATE_UNDEFINED) {
-+		pr_err("dpll cannot be locked for sys clk freq:%luHz\n", rate);
-+		return -EINVAL;
-+	}
-+	clk_put(sys_clk);
-+
-+	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION1);
-+	val &= ~PLL_REGN_MASK;
-+	val |= omap_usb3_dpll_params[clk_index].n << PLL_REGN_SHIFT;
-+	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION1, val);
-+
-+	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION2);
-+	val &= ~PLL_SELFREQDCO_MASK;
-+	val |= omap_usb3_dpll_params[clk_index].freq << PLL_SELFREQDCO_SHIFT;
-+	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION2, val);
-+
-+	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION1);
-+	val &= ~PLL_REGM_MASK;
-+	val |= omap_usb3_dpll_params[clk_index].m << PLL_REGM_SHIFT;
-+	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION1, val);
-+
-+	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION4);
-+	val &= ~PLL_REGM_F_MASK;
-+	val |= omap_usb3_dpll_params[clk_index].mf << PLL_REGM_F_SHIFT;
-+	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION4, val);
-+
-+	val = omap_usb_readl(phy->pll_ctrl_base, PLL_CONFIGURATION3);
-+	val &= ~PLL_SD_MASK;
-+	val |= omap_usb3_dpll_params[clk_index].sd << PLL_SD_SHIFT;
-+	omap_usb_writel(phy->pll_ctrl_base, PLL_CONFIGURATION3, val);
-+
-+	omap_usb_dpll_relock(phy);
-+
-+	return 0;
-+}
-+
-+static int omap_usb3_init(struct usb_phy *x)
-+{
-+	struct omap_usb	*phy = phy_to_omapusb(x);
-+
-+	omap_usb_dpll_lock(phy);
-+	omap5_usb_phy_power(phy, 1);
-+
-+	return 0;
-+}
-+
-+static int __devinit omap_usb3_probe(struct platform_device *pdev)
-+{
-+	struct omap_usb			*phy;
-+	struct resource			*res;
-+
-+	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
-+	if (!phy) {
-+		dev_err(&pdev->dev, "unable to alloc mem for OMAP USB3 PHY\n");
-+		return -ENOMEM;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
-+	if (!res) {
-+		dev_err(&pdev->dev, "unable to get base address of pll_ctrl\n");
-+		return -ENODEV;
-+	}
-+
-+	phy->pll_ctrl_base = devm_request_and_ioremap(&pdev->dev, res);
-+	if (!phy->pll_ctrl_base) {
-+		dev_err(&pdev->dev, "ioremap of pll_ctrl failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
-+	if (!res) {
-+		dev_err(&pdev->dev,
-+			"unable to get address of control phy power\n");
-+		return -ENODEV;
-+	}
-+
-+	phy->control_dev = devm_request_and_ioremap(&pdev->dev, res);
-+	if (!phy->control_dev) {
-+		dev_err(&pdev->dev, "ioremap of control_dev failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	phy->dev		= &pdev->dev;
-+
-+	phy->phy.dev		= phy->dev;
-+	phy->phy.label		= "omap-usb3";
-+	phy->phy.init		= omap_usb3_init;
-+	phy->phy.set_suspend	= omap_usb3_suspend;
-+
-+	phy->is_suspended	= 1;
-+	omap5_usb_phy_power(phy, 0);
-+
-+	phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
-+	if (IS_ERR(phy->wkupclk)) {
-+		dev_err(&pdev->dev, "unable to get usb_phy_cm_clk32k\n");
-+		return PTR_ERR(phy->wkupclk);
-+	}
-+	clk_prepare(phy->wkupclk);
-+
-+	phy->optclk = devm_clk_get(phy->dev, "usb_otg_ss_refclk960m");
-+	if (IS_ERR(phy->optclk)) {
-+		dev_err(&pdev->dev, "unable to get usb_otg_ss_refclk960m\n");
-+		return PTR_ERR(phy->optclk);
-+	}
-+	clk_prepare(phy->optclk);
-+
-+	usb_add_phy(&phy->phy, USB_PHY_TYPE_USB3);
-+
-+	platform_set_drvdata(pdev, phy);
-+
-+	pm_runtime_enable(phy->dev);
-+
-+	return 0;
-+}
-+
-+static int __devexit omap_usb3_remove(struct platform_device *pdev)
-+{
-+	struct omap_usb *phy = platform_get_drvdata(pdev);
-+
-+	clk_unprepare(phy->wkupclk);
-+	clk_unprepare(phy->optclk);
-+	usb_remove_phy(&phy->phy);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_RUNTIME
-+
-+static int omap_usb3_runtime_suspend(struct device *dev)
-+{
-+	struct platform_device	*pdev = to_platform_device(dev);
-+	struct omap_usb	*phy = platform_get_drvdata(pdev);
-+
-+	clk_disable(phy->wkupclk);
-+	clk_disable(phy->optclk);
-+
-+	return 0;
-+}
-+
-+static int omap_usb3_runtime_resume(struct device *dev)
-+{
-+	u32 ret = 0;
-+	struct platform_device	*pdev = to_platform_device(dev);
-+	struct omap_usb	*phy = platform_get_drvdata(pdev);
-+
-+	ret = clk_enable(phy->optclk);
-+	if (ret) {
-+		dev_err(phy->dev, "Failed to enable optclk %d\n", ret);
-+		goto err1;
-+	}
-+
-+	ret = clk_enable(phy->wkupclk);
-+	if (ret) {
-+		dev_err(phy->dev, "Failed to enable wkupclk %d\n", ret);
-+		goto err2;
-+	}
-+
-+	return 0;
-+
-+err2:
-+	clk_disable(phy->optclk);
-+
-+err1:
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops omap_usb3_pm_ops = {
-+	SET_RUNTIME_PM_OPS(omap_usb3_runtime_suspend, omap_usb3_runtime_resume,
-+		NULL)
-+};
-+
-+#define DEV_PM_OPS     (&omap_usb3_pm_ops)
-+#else
-+#define DEV_PM_OPS     NULL
-+#endif
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id omap_usb3_id_table[] = {
-+	{ .compatible = "ti,omap-usb3" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, omap_usb3_id_table);
-+#endif
-+
-+static struct platform_driver omap_usb3_driver = {
-+	.probe		= omap_usb3_probe,
-+	.remove		= __devexit_p(omap_usb3_remove),
-+	.driver		= {
-+		.name	= "omap-usb3",
-+		.owner	= THIS_MODULE,
-+		.pm	= DEV_PM_OPS,
-+		.of_match_table = of_match_ptr(omap_usb3_id_table),
-+	},
-+};
-+
-+module_platform_driver(omap_usb3_driver);
-+
-+MODULE_ALIAS("platform: omap_usb3");
-+MODULE_AUTHOR("Texas Instruments Inc.");
-+MODULE_DESCRIPTION("OMAP USB3 phy driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/usb/omap_usb.h b/include/linux/usb/omap_usb.h
-index 0ea17f8..6947528 100644
---- a/include/linux/usb/omap_usb.h
-+++ b/include/linux/usb/omap_usb.h
-@@ -19,19 +19,41 @@
- #ifndef __DRIVERS_OMAP_USB2_H
- #define __DRIVERS_OMAP_USB2_H
+ #include <linux/time.h>
+ #include <linux/slab.h>
+ #include <linux/device.h>
+@@ -118,6 +119,7 @@ struct sh_mobile_ceu_dev {
  
-+#include <linux/io.h>
- #include <linux/usb/otg.h>
+ 	enum v4l2_field field;
+ 	int sequence;
++	unsigned long flags;
  
-+struct usb_dpll_params {
-+	u16	m;
-+	u8	n;
-+	u8	freq:3;
-+	u8	sd;
-+	u32	mf;
-+};
+ 	unsigned int image_mode:1;
+ 	unsigned int is_16bit:1;
+@@ -704,7 +706,7 @@ static void sh_mobile_ceu_set_rect(struct soc_camera_device *icd)
+ 	}
+ 
+ 	/* CSI2 special configuration */
+-	if (pcdev->pdata->csi2) {
++	if (pcdev->csi2_pdev) {
+ 		in_width = ((in_width - 2) * 2);
+ 		left_offset *= 2;
+ 	}
+@@ -808,7 +810,7 @@ static int sh_mobile_ceu_set_bus_param(struct soc_camera_device *icd)
+ 	/* Make choises, based on platform preferences */
+ 	if ((common_flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH) &&
+ 	    (common_flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)) {
+-		if (pcdev->pdata->flags & SH_CEU_FLAG_HSYNC_LOW)
++		if (pcdev->flags & SH_CEU_FLAG_HSYNC_LOW)
+ 			common_flags &= ~V4L2_MBUS_HSYNC_ACTIVE_HIGH;
+ 		else
+ 			common_flags &= ~V4L2_MBUS_HSYNC_ACTIVE_LOW;
+@@ -816,7 +818,7 @@ static int sh_mobile_ceu_set_bus_param(struct soc_camera_device *icd)
+ 
+ 	if ((common_flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH) &&
+ 	    (common_flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)) {
+-		if (pcdev->pdata->flags & SH_CEU_FLAG_VSYNC_LOW)
++		if (pcdev->flags & SH_CEU_FLAG_VSYNC_LOW)
+ 			common_flags &= ~V4L2_MBUS_VSYNC_ACTIVE_HIGH;
+ 		else
+ 			common_flags &= ~V4L2_MBUS_VSYNC_ACTIVE_LOW;
+@@ -871,11 +873,11 @@ static int sh_mobile_ceu_set_bus_param(struct soc_camera_device *icd)
+ 	value |= common_flags & V4L2_MBUS_VSYNC_ACTIVE_LOW ? 1 << 1 : 0;
+ 	value |= common_flags & V4L2_MBUS_HSYNC_ACTIVE_LOW ? 1 << 0 : 0;
+ 
+-	if (pcdev->pdata->csi2) /* CSI2 mode */
++	if (pcdev->csi2_pdev) /* CSI2 mode */
+ 		value |= 3 << 12;
+ 	else if (pcdev->is_16bit)
+ 		value |= 1 << 12;
+-	else if (pcdev->pdata->flags & SH_CEU_FLAG_LOWER_8BIT)
++	else if (pcdev->flags & SH_CEU_FLAG_LOWER_8BIT)
+ 		value |= 2 << 12;
+ 
+ 	ceu_write(pcdev, CAMCR, value);
+@@ -1050,7 +1052,7 @@ static int sh_mobile_ceu_get_formats(struct soc_camera_device *icd, unsigned int
+ 		return 0;
+ 	}
+ 
+-	if (!pcdev->pdata->csi2) {
++	if (!pcdev->csi2_pdev) {
+ 		/* Are there any restrictions in the CSI-2 case? */
+ 		ret = sh_mobile_ceu_try_bus_param(icd, fmt->bits_per_sample);
+ 		if (ret < 0)
+@@ -2103,14 +2105,19 @@ static int __devinit sh_mobile_ceu_probe(struct platform_device *pdev)
+ 	init_completion(&pcdev->complete);
+ 
+ 	pcdev->pdata = pdev->dev.platform_data;
+-	if (!pcdev->pdata) {
++	if (!pcdev->pdata && !pdev->dev.of_node) {
+ 		err = -EINVAL;
+ 		dev_err(&pdev->dev, "CEU platform data not set.\n");
+ 		goto exit_kfree;
+ 	}
+ 
+-	pcdev->max_width = pcdev->pdata->max_width ? : 2560;
+-	pcdev->max_height = pcdev->pdata->max_height ? : 1920;
++	/* TODO: implement per-device bus flags */
 +
- struct omap_usb {
- 	struct usb_phy		phy;
- 	struct phy_companion	*comparator;
-+	void __iomem		*pll_ctrl_base;
- 	struct device		*dev;
- 	u32 __iomem		*control_dev;
- 	struct clk		*wkupclk;
-+	struct clk		*optclk;
- 	u8			is_suspended:1;
++	if (pcdev->pdata) {
++		pcdev->max_width = pcdev->pdata->max_width;
++		pcdev->max_height = pcdev->pdata->max_height;
++		pcdev->flags = pcdev->pdata->flags;
++	}
+ 
+ 	base = ioremap_nocache(res->start, resource_size(res));
+ 	if (!base) {
+@@ -2169,7 +2176,7 @@ static int __devinit sh_mobile_ceu_probe(struct platform_device *pdev)
+ 		goto exit_free_ctx;
+ 
+ 	/* CSI2 interfacing */
+-	csi2 = pcdev->pdata->csi2;
++	csi2 = pcdev->pdata ? pcdev->pdata->csi2 : NULL;
+ 	if (csi2) {
+ 		struct platform_device *csi2_pdev =
+ 			platform_device_alloc("sh-mobile-csi2", csi2->id);
+@@ -2300,10 +2307,17 @@ static const struct dev_pm_ops sh_mobile_ceu_dev_pm_ops = {
+ 	.runtime_resume = sh_mobile_ceu_runtime_nop,
  };
  
- #define	PHY_PD	0x1
- 
-+#define	CONTROL_PHY_POWER_USB		0x00000370
++static const struct of_device_id sh_mobile_ceu_of_match[] = {
++	{ .compatible = "renesas,sh-mobile-ceu" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sh_mobile_ceu_of_match);
 +
-+#define	USB_PWRCTL_CLK_CMD_MASK		0x003FC000
-+#define	USB_PWRCTL_CLK_CMD_SHIFT	0xE
-+
-+#define	USB_PWRCTL_CLK_FREQ_MASK	0xFFC00000
-+#define	USB_PWRCTL_CLK_FREQ_SHIFT	0x16
-+
-+#define	USB3_PHY_TX_RX_POWERON		0x3
-+#define	USB3_PHY_TX_RX_POWEROFF		0x0
-+
- #define	phy_to_omapusb(x)	container_of((x), struct omap_usb, phy)
- 
- #if defined(CONFIG_OMAP_USB2) || defined(CONFIG_OMAP_USB2_MODULE)
-@@ -43,4 +65,15 @@ static inline int omap_usb2_set_comparator(struct phy_companion *comparator)
- }
- #endif
- 
-+static inline u32 omap_usb_readl(const void __iomem *addr, unsigned offset)
-+{
-+	return __raw_readl(addr + offset);
-+}
-+
-+static inline void omap_usb_writel(const void __iomem *addr, unsigned offset,
-+								u32 data)
-+{
-+	__raw_writel(data, addr + offset);
-+}
-+
- #endif /* __DRIVERS_OMAP_USB_H */
+ static struct platform_driver sh_mobile_ceu_driver = {
+ 	.driver 	= {
+ 		.name	= "sh_mobile_ceu",
+ 		.pm	= &sh_mobile_ceu_dev_pm_ops,
++		.of_match_table = sh_mobile_ceu_of_match,
+ 	},
+ 	.probe		= sh_mobile_ceu_probe,
+ 	.remove		= __devexit_p(sh_mobile_ceu_remove),
 -- 
-1.7.9.5
+1.7.2.5
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
