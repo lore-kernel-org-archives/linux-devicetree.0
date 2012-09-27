@@ -1,193 +1,82 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V3] video: exynos_dp: Add device tree support to DP driver
-Date: Thu, 27 Sep 2012 15:44:40 +0200
-Message-ID: <50645848.6080102@gmail.com>
-References: <1348515385-22332-1-git-send-email-ajaykumar.rs@samsung.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for
+	Tegra
+Date: Thu, 27 Sep 2012 06:58:52 -0700
+Message-ID: <CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg@mail.gmail.com>
+References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
+	<1342106718-3058-7-git-send-email-sjg@chromium.org>
+	<CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
+	<501803F3.6090803@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348515385-22332-1-git-send-email-ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <501803F3.6090803@wwwdotorg.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Stephen,
 
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+On Tue, Jul 31, 2012 at 9:12 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 07/31/2012 03:27 AM, Simon Glass wrote:
+>> On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg@chromium.org> wrote:
+>>> Add LCD definitions and also a proposed binding for LCD displays.
+>>>
+>>> The PWM is as per what will likely be committed to linux-next soon.
+>>>
+>>> The displaymode binding comes from a proposal here:
+>>>
+>>> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+>>>
+>>> The panel binding is new, and fills a need to specify the panel
+>>> timings and other tegra-specific information. Should a binding appear
+>>> that allows the pwm to handle this automatically, we can revisit
+>>> this.
+>>
+>> Any comments on this binding please? The main addition from Thierry's
+>> one posted on LMKL is the LCD resolution selection.
+>
+> I have some concerns about the way the mode is represented in the
+> binding; the timing parameters are quite different to how e.g. an EDID
+> DTD would represent them, which I think will lead to conversion mistakes
+> when writing the DT.
+>
+> I'm trying to get along of Sascha's original email so I can join in on
+> that discussion.
 
-On 09/24/2012 09:36 PM, Ajay Kumar wrote:
-> This patch enables device tree based discovery support for DP driver.
-> The driver is modified to handle platform data in both the cases:
-> with DT and non-DT.
-> Documentation is also added for the DT bindings.
-> 
-> DP-PHY should be regarded as a seperate device node while
-> being passed from device tree list, and device node for
-> DP should contain DP-PHY as child node with property name "dp-phy"
-> associated with it.
-> 
-> Signed-off-by: Ajay Kumar<ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->   .../devicetree/bindings/video/exynos_dp.txt        |   83 ++++++++++
->   drivers/video/exynos/exynos_dp_core.c              |  168 ++++++++++++++++++--
->   drivers/video/exynos/exynos_dp_core.h              |    2 +
->   3 files changed, 239 insertions(+), 14 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
-> new file mode 100644
-> index 0000000..c27f892
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-> @@ -0,0 +1,83 @@
-> +Exynos Displayport driver should configure the displayport interface
+Did you get any resolution here?
 
-Don't we need a whitespace between 'display' and 'port' ?
+>
+>>> diff --git a/doc/device-tree-bindings/video/tegra20-dc.txt b/doc/device-tree-bindings/video/tegra20-dc.txt
+>
+>>> +Optional properties (rgb):
+>>> + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
+>>> +               calculated)
+>>> +       - This may be useful to share an address between U-Boot and Linux and
+>>> +               avoid boot-time corruption / flicker
+>
+> Why can't the display driver read this out of the display registers,
+> instead of requiring the same information to be passed using DT too?
 
-> +based on the type of panel connected to it.
-> +
-> +We use two nodes:
-> +	-dptx_phy node
-> +	-display-port-controller node
-> +
-> +For the dp-phy initialization, we use a dptx_phy node.
-> +Required properties for dptx_phy:
-> +	-compatible:
-> +		Should be "samsung,dp-phy".
-> +	-samsung,dptx_phy_reg:
-> +		Base address of DP PHY register.
+The U-Boot display driver needs to set this value in the display
+registers - at reset I don't think we can rely on any particular
+value.
 
-Couldn't just 'reg' be used for this one ?
-
-> +	-samsung,enable_bit:
-> +		The bit used to enable/disable DP PHY.
-
-Is this the bit mask or the bit index ? In the code it's used as 
-a bitmask. But from description it is not clear whether it is 
-an index or a mask. Is it different across various SoCs ?
-
-Perhaps it's better to name it samsung,enable_mask (in case some
-SoC need more than one bit) ?
-
-> +
-> +For the Panel initialization, we read data from display-port-controller node.
-> +Required properties for display-port-controller:
-> +	-compatible:
-> +		Should be "samsung,exynos5-dp".
-> +	-reg:
-> +		physical base address of the controller and length
-> +		of memory mapped region.
-> +	-interrupts:
-> +		Internet combiner values.
-
-what? :)
-
-> +	-interrupt-parent:
-> +		Address of Interrupt combiner node.
-> +	-dp_phy:
-> +		Address of dptx_phy node.
-
-"A phandle to dptx_phy node" ?
-
-> +	-samsung,color_space:
-> +		input video data format.
-> +			COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
-
-Can this be changed at run time ?
-
-> +	-samsung,dynamic_range:
-> +		dynamic range for input video data.
-> +			VESA = 0, CEA = 1
-
-Why is it in the device tree ? Shouldn't it be configurable at runtime ?
-My apologies if this an obvious question, I don't have much experience 
-with DP.
-
-> +	-samsung,ycbcr_coeff:
-> +		YCbCr co-efficients for input video.
-> +			COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
-> +	-samsung,color_depth:
-> +		Bit per color component.
-
-"Number of bits per colour component" ? Also same remark as above.
-
-> +			COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
-> +	-samsung,link_rate:
-> +		link rates supportd by the panel.
-
-typo: supportd -> supported
-
-> +			LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
-
-Is this really a property of a panel ? Why it is in the PHY node ?
-Also I can see this is just a single property, so "link rates" is a bit 
-misleading.
-
-> +	-samsung,lane_count:
-> +		number of lanes supported by the panel.
-> +			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
-
-What do these symbolic names are needed for ? Is lane_count a number or a 
-mask, is this really a _maximum_ number of lanes ? What are the valid values, 
-1, 2 and 4 ? Or maybe 0x3 is also valid which  would indicate that we can 
-use 1 or 2 data lanes ?
-
-> +	-samsung,interlaced:
-> +		Interlace scan mode.
-> +			Progressive if defined, Interlaced if not defined
-
-Why do we need this in the device tree ? Is this really a default scan mode ?
-Can it be the changed at runtime ?
-
-> +	-samsung,v_sync_polarity:
-> +		VSYNC polarity configuration.
-> +			High if defined, Low if not defined
-> +	-samsung,h_sync_polarity:
-> +		HSYNC polarity configuration.
-> +			High if defined, Low if not defined
-> +
-> +Example:
-> +
-> +SOC specific portion:
-> +	dptx_phy: dptx_phy@0x10040720 {
-> +		compatible = "samsung,dp-phy";
-> +		samsung,dptx_phy_reg =<0x10040720>;
-> +		samsung,enable_bit =<1>;
-> +	};
-> +
-> +	display-port-controller {
-> +		compatible = "samsung,exynos5-dp";
-> +		reg =<0x145B0000 0x10000>;
-> +		interrupts =<10 3>;
-> +		interrupt-parent =<&combiner>;
-> +		dp_phy =<&dptx_phy>;
-
-Shouldn't it be "samsung,dp_phy" ?
-
-> +        };
-> +
-> +Board Specific portion:
-> +	display-port-controller {
-> +		samsung,color_space =<0>;
-> +		samsung,dynamic_range =<0>;
-> +		samsung,ycbcr_coeff =<0>;
-> +		samsung,color_depth =<1>;
-> +		samsung,link_rate =<0x0a>;
-> +		samsung,lane_count =<2>;
-> +	};
-
---
+Do you mean the kernel display driver? Well it could, but it doesn't.
+Really this is just a way of getting U-Boot and Linux to agree on the
+address, by having U-Boot know the address that the kernel will happen
+to use. It isn't very robust, but we have found it useful as a means
+of avoiding problems in this area.
 
 Regards,
-Sylwester
+Simon
