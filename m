@@ -1,14 +1,17 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 2/3] ARM: at91/dts: add at91sam9_wdt driver to at91sam926x,
- at91sam9g45
-Date: Thu, 27 Sep 2012 17:40:31 +0200
-Message-ID: <1348760432-12284-3-git-send-email-fabio.porcedda@gmail.com>
-References: <1348760432-12284-1-git-send-email-fabio.porcedda@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
+Date: Thu, 27 Sep 2012 09:49:40 -0600
+Message-ID: <50647594.9060404@wwwdotorg.org>
+References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
+ <1342106718-3058-7-git-send-email-sjg@chromium.org>
+ <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
+ <501803F3.6090803@wwwdotorg.org>
+ <CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348760432-12284-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,69 +22,79 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tested on an at91sam9260 board (evk-pro3).
+On 09/27/2012 07:58 AM, Simon Glass wrote:
+> Hi Stephen,
+> 
+> On Tue, Jul 31, 2012 at 9:12 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 07/31/2012 03:27 AM, Simon Glass wrote:
+>>> On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>>> Add LCD definitions and also a proposed binding for LCD displays.
+>>>>
+>>>> The PWM is as per what will likely be committed to linux-next soon.
+>>>>
+>>>> The displaymode binding comes from a proposal here:
+>>>>
+>>>> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+>>>>
+>>>> The panel binding is new, and fills a need to specify the panel
+>>>> timings and other tegra-specific information. Should a binding appear
+>>>> that allows the pwm to handle this automatically, we can revisit
+>>>> this.
+>>>
+>>> Any comments on this binding please? The main addition from Thierry's
+>>> one posted on LMKL is the LCD resolution selection.
+>>
+>> I have some concerns about the way the mode is represented in the
+>> binding; the timing parameters are quite different to how e.g. an EDID
+>> DTD would represent them, which I think will lead to conversion mistakes
+>> when writing the DT.
+>>
+>> I'm trying to get along of Sascha's original email so I can join in on
+>> that discussion.
+> 
+> Did you get any resolution here?
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
- arch/arm/boot/dts/at91sam9263.dtsi | 6 ++++++
- arch/arm/boot/dts/at91sam9g45.dtsi | 6 ++++++
- 3 files changed, 18 insertions(+)
+I think an updated version of those patches was published.
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index 7c95f76..7612193 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -236,6 +236,12 @@
- 					trigger-external;
- 				};
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9260-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 195019b..d822240 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -185,6 +185,12 @@
- 				interrupts = <24 4 2>;
- 				status = "disabled";
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9260-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 63751b1..df998ab 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -242,6 +242,12 @@
- 					trigger-value = <0x6>;
- 				};
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9260-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
--- 
-1.7.11.3
+>>>> diff --git a/doc/device-tree-bindings/video/tegra20-dc.txt b/doc/device-tree-bindings/video/tegra20-dc.txt
+>>
+>>>> +Optional properties (rgb):
+>>>> + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
+>>>> +               calculated)
+>>>> +       - This may be useful to share an address between U-Boot and Linux and
+>>>> +               avoid boot-time corruption / flicker
+>>
+>> Why can't the display driver read this out of the display registers,
+>> instead of requiring the same information to be passed using DT too?
+> 
+> The U-Boot display driver needs to set this value in the display
+> registers - at reset I don't think we can rely on any particular
+> value.
+> 
+> Do you mean the kernel display driver?
+
+Yes.
+
+> Well it could, but it doesn't.
+
+Well, there is no display driver in the upstream kernel at the moment,
+so it's not possible to make assertions about what it does or not.
+
+Any downstream kernels aren't relevant, since their DT bindings and/or
+behaviour have not been through public review.
+
+> Really this is just a way of getting U-Boot and Linux to agree on the
+> address, by having U-Boot know the address that the kernel will happen
+> to use. It isn't very robust, but we have found it useful as a means
+> of avoiding problems in this area.
+
+Right, but again, why can't the display driver simply read the address
+out of the register; why is there a need to duplicate the data?
+
+I guess one possibility is that the register only gives the base address
+and not the size/mode of the allocated surface, but I don't recall if
+this proposed binding did that either?
