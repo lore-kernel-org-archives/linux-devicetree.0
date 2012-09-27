@@ -1,71 +1,82 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] ARM: use C pre-processor with dtc
-Date: Thu, 27 Sep 2012 19:27:25 +0200
-Message-ID: <20120927172725.GT17667@game.jcrosoft.org>
-References: <1348599998-2729-1-git-send-email-swarren@wwwdotorg.org>
- <20120927054038.GL17667@game.jcrosoft.org>
- <506472E4.5060107@wwwdotorg.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 08/14] media: soc-camera: use managed devm_regulator_bulk_get()
+Date: Thu, 27 Sep 2012 23:08:57 +0530
+Message-ID: <CAK9yfHzBU1u-E5v0KsjWU8NTVDvQFn710JNQ7Rx+SNgT9B_5JA@mail.gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+	<1348754853-28619-9-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <506472E4.5060107-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-9-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 09:38 Thu 27 Sep     , Stephen Warren wrote:
-> On 09/26/2012 11:40 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 13:06 Tue 25 Sep     , Stephen Warren wrote:
-> >> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >> This series adds some build rules to run cpp on *.dts-cpp prior to
-> >> invoking dtc, and converts Tegra to the new rule as an example. What do
-> >> people think?
-> >>
-> >> I assume that you've applied the dtc patches I sent yesterday. They
-> >> aren't in this series. See:
-> >>
-> >> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020182.html
-> >> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020183.html
-> >> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020181.html
-> >>
-> >> Note: those patches are against upstream dtc. If you wish to test this
-> >> series, apply the dtc patches to upstream dtc, build it, and copy the
-> >> resultant dtc binary over the top of scripts/dtc/dtc.
-> >>
-> >> Stephen Warren (3):
-> >>   kbuild: introduce cmd_dtc_cpp
-> >>   ARM: use cmd_dtc_cpp for compilation of *.dts-cpp to *.dtb
-> >>   ARM: tegra: compile all DT files with cpp 
-> >
-> > I do not like the extention
-> 
-> It is a bit unwieldy. Perhaps *.dtsp, *.dtsip would be better.
-> 
-> > can we run gcc everytime?
-> 
-> Not without editing all the device tree files; any property (or node)
-> name the starts with a # must be escaped; changed from "#foo" to "\#foo"
-> to avoid cpp attempting to interpret it as a pre-processor directive.
-> 
-> > or just do as done for lds
-> > 
-> > *.dts.S
-> 
-> .S means assembly. (that's why I went with .dts-cpp rather than .dts.cpp).
-on lds we do this way lds.S => lds
+Hi Guennadi,
 
-Best Regards,
-J.
+On 27 September 2012 19:37, Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
+> Using device-managed devm_regulator_bulk_get() eliminates the need to
+> release regulators explicitly.
+>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> ---
+>  drivers/media/platform/soc_camera/soc_camera.c |    8 ++------
+>  1 files changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/media/platform/soc_camera/soc_camera.c b/drivers/media/platform/soc_camera/soc_camera.c
+> index 997be15..c2a5fa3 100644
+> --- a/drivers/media/platform/soc_camera/soc_camera.c
+> +++ b/drivers/media/platform/soc_camera/soc_camera.c
+> @@ -1249,7 +1249,6 @@ static int soc_camera_i2c_notify(struct notifier_block *nb,
+>                 video_device_release(icd->vdev);
+>                 icd->vdev = NULL;
+>         }
+> -       regulator_bulk_free(icl->num_regulators, icl->regulators);
+>         v4l2_ctrl_handler_free(&icd->ctrl_handler);
+>
+>         return NOTIFY_DONE;
+> @@ -1358,8 +1357,8 @@ static int soc_camera_probe(struct soc_camera_device *icd)
+>         if (ret < 0)
+>                 return ret;
+>
+> -       ret = regulator_bulk_get(icd->pdev, icl->num_regulators,
+> -                                icl->regulators);
+> +       ret = devm_regulator_bulk_get(icd->pdev, icl->num_regulators,
+> +                                     icl->regulators);
+>         if (ret < 0)
+>                 goto ereg;
+>
+> @@ -1423,7 +1422,6 @@ eadddev:
+>                 icd->vdev = NULL;
+>         }
+>  evdc:
+
+Perhaps we could get rid of this label as well?
+
+> -       regulator_bulk_free(icl->num_regulators, icl->regulators);
+>  ereg:
+>         v4l2_ctrl_handler_free(&icd->ctrl_handler);
+>         return ret;
+> @@ -1460,8 +1458,6 @@ static int soc_camera_remove(struct soc_camera_device *icd)
+>         }
+>         soc_camera_free_user_formats(icd);
+>
+> -       regulator_bulk_free(icl->num_regulators, icl->regulators);
+> -
+>         return 0;
+>  }
+>
+> --
+> 1.7.2.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+With warm regards,
+Sachin
