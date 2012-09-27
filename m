@@ -1,78 +1,85 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] pwm_backlight: Add device tree support for Low
- Threshold Brightness
-Date: Thu, 27 Sep 2012 14:33:09 -0700
-Message-ID: <20120927143309.02614908.akpm@linux-foundation.org>
-References: <1348670827-5720-1-git-send-email-avinashphilip@ti.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 1/5] drivers: usb: phy: add a new driver for omap usb2
+ phy
+Date: Thu, 27 Sep 2012 15:48:42 -0700
+Message-ID: <5064D7CA.1070909@ti.com>
+References: <1346943430-18236-1-git-send-email-kishon@ti.com> <1346943430-18236-2-git-send-email-kishon@ti.com> <50605CFB.5090402@gmail.com> <CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com> <506461A0.4050103@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1348670827-5720-1-git-send-email-avinashphilip@ti.com>
+In-Reply-To: <506461A0.4050103@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, rpurdie@rpsys.net, thierry.reding@avionic-design.de, broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com
+To: Rob Herring <robherring2@gmail.com>
+Cc: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, grant.likely@secretlab.ca, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 26 Sep 2012 20:17:07 +0530
-"Philip, Avinash" <avinashphilip@ti.com> wrote:
-
-> Some back lights perform poorly when driven by a PWM with a short
-> duty-cycle. For such devices, the low threshold can be used to specify a
-> lower bound for the duty-cycle and should be chosen to exclude the
-> problematic range.
-> 
-> Add device tree probing support for lth_brightness putting
-> low-threshold-brightness as optional property.
-> 
-> ...
+On 9/27/2012 7:24 AM, Rob Herring wrote:
+> On 09/25/2012 05:06 AM, ABRAHAM, KISHON VIJAY wrote:
+>> Hi,
+>>
+>> On Mon, Sep 24, 2012 at 6:45 PM, Rob Herring <robherring2@gmail.com> wrote:
+>>> On 09/06/2012 09:57 AM, Kishon Vijay Abraham I wrote:
+>>>> All phy related programming like enabling/disabling the clocks, powering
+>>>> on/off the phy is taken care of by this driver. It is also used for OTG
+>>>> related functionality like srp.
+>>>>
+>>>> This also includes device tree support for usb2 phy driver and
+>>>> the documentation with device tree binding information is updated.
+>>>>
+>>>> Currently writing to control module register is taken care in this
+>>>> driver which will be removed once the control module driver is in place.
+>>>>
+>>>> Cc: Felipe Balbi <balbi@ti.com>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/usb/usb-phy.txt |   17 ++
+>>>>   drivers/usb/phy/Kconfig                           |    9 +
+>>>>   drivers/usb/phy/Makefile                          |    1 +
+>>>>   drivers/usb/phy/omap-usb2.c                       |  271 +++++++++++++++++++++
+>>>>   include/linux/usb/omap_usb.h                      |   46 ++++
+>>>>   include/linux/usb/phy_companion.h                 |   34 +++
+>>>>   6 files changed, 378 insertions(+)
+>>>>   create mode 100644 Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>>   create mode 100644 drivers/usb/phy/omap-usb2.c
+>>>>   create mode 100644 include/linux/usb/omap_usb.h
+>>>>   create mode 100644 include/linux/usb/phy_companion.h
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>> new file mode 100644
+>>>> index 0000000..80d4148
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>
+>>> This is a very generic name...
+>>>
+>>>> @@ -0,0 +1,17 @@
+>>>> +USB PHY
+>>>> +
+>>>> +OMAP USB2 PHY
+>>>> +
+>>>> +Required properties:
+>>>> + - compatible: Should be "ti,omap-usb2"
+>>>
+>>> ...for a specific phy. However, I do think a generic binding to describe
+>>> host ctrlr to phy connections is needed.
+>>>
+>>>> + - reg : Address and length of the register set for the device. Also
+>>>> +add the address of control module dev conf register until a driver for
+>>>> +control module is added
+>>>
+>>> The dts should describe the h/w, not what you need for the current
+>>> driver. The 2nd reg field does not belong here.
+>>
+>> Indeed. This was discussed and agreed upon as a interim solution till
+>> we have a control module driver in place to write to the control
+>> module register.
 >
-> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> @@ -14,6 +14,15 @@ Required properties:
->  Optional properties:
->    - pwm-names: a list of names for the PWM devices specified in the
->                 "pwms" property (see PWM binding[0])
-> +  - low-threshold-brightness: brightness threshold low level. Low threshold
-> +    brightness set to value so that backlight present on low end of
-> +    brightness.
-> +    Some panels, backlight would absent if duty percentage of PWM wave is less
-> +    than certain level (say 20%). By setting low-threshold-brightness to a
-> +    value above (percentage of brightness-levels max) 50 (20% of 255, if 255
-> +    is max). On setting low-threshold-brightness, range of brightness-levels
-> +    is calculated in a region of low-threshold-brightness to brightness-levels
-> +    max.
+> Discussed where and agreed by who? I for one do not agree.
 
-hoo boy, that's hard to follow.  How does this look?
+Yeah, what was tolerated was the addition of that address inside hwmod 
+data, but I do agree that it should not go into DTS.
 
---- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt~pwm_backlight-add-device-tree-support-for-low-threshold-brightness-fix
-+++ a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-@@ -14,15 +14,15 @@ Required properties:
- Optional properties:
-   - pwm-names: a list of names for the PWM devices specified in the
-                "pwms" property (see PWM binding[0])
--  - low-threshold-brightness: brightness threshold low level. Low threshold
--    brightness set to value so that backlight present on low end of
--    brightness.
--    Some panels, backlight would absent if duty percentage of PWM wave is less
--    than certain level (say 20%). By setting low-threshold-brightness to a
--    value above (percentage of brightness-levels max) 50 (20% of 255, if 255
--    is max). On setting low-threshold-brightness, range of brightness-levels
--    is calculated in a region of low-threshold-brightness to brightness-levels
--    max.
-+  - low-threshold-brightness: brightness threshold low level. Sets the lowest
-+    brightness value.
-+    On some panels the backlight misbehaves if the duty cycle percentage of the
-+    PWM wave is less than a certain level (say 20%).  In this example the user
-+    can set low-threshold-brightness to a value above 50 (ie, 20% of 255), thus
-+    preventing the PWM duty cycle from going too low.
-+    On setting low-threshold-brightness the range of brightness levels is
-+    calculated in the range low-threshold-brightness to the maximum value in
-+    brightness-levels, described above.
- 
- [0]: Documentation/devicetree/bindings/pwm/pwm.txt
- 
+Regards,
+Benoit
 
-
-Also, I'm wondering if we really needed a new property - couldn't one
-do this simply by setting brightness-levels to 50..255?
