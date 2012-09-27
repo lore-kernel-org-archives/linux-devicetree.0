@@ -1,42 +1,41 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] netdev: pasemi: fix return value check in pasemi_mac_phy_init()
-Date: Thu, 27 Sep 2012 13:51:58 +0800
-Message-ID: <CAPgLHd8hJjj1HkV7gc8QH2p9rDJQedkc+vCUpFJMgyXQua4LGg@mail.gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v4 2/2] ARM: at91: add at91sam9_wdt driver to
+ at91sam926x, at91sam9g45
+Date: Thu, 27 Sep 2012 07:50:21 +0200
+Message-ID: <20120927055021.GO17667@game.jcrosoft.org>
+References: <1348568704-28304-1-git-send-email-fabio.porcedda@gmail.com>
+ <1348568704-28304-3-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: olof@lixom.net, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1348568704-28304-3-git-send-email-fabio.porcedda@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Porcedda <fabio.porcedda@gmail.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Wim Van Sebroeck <wim@iguana.be>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On 12:25 Tue 25 Sep     , Fabio Porcedda wrote:
+> Enable the driver for the evk-pro3 board.
+> 
+> Tested on an at91sam9260 board (evk-pro3).
+> 
+> Signed-off-by: Fabio Porcedda <fabio.porcedda@gmail.com>
+> ---
+>  arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
+>  arch/arm/boot/dts/at91sam9263.dtsi | 6 ++++++
+>  arch/arm/boot/dts/at91sam9g45.dtsi | 6 ++++++
+>  arch/arm/boot/dts/evk-pro3.dts     | 4 ++++
+split board and soc
 
-In case of error, the function of_phy_connect() returns NULL
-pointer not ERR_PTR(). The IS_ERR() test in the return value
-check should be replaced with NULL test.
-
-dpatch engine is used to auto generate this patch.
-(https://github.com/weiyj/dpatch)
-
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/net/ethernet/pasemi/pasemi_mac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
-index e559dfa..6fa74d5 100644
---- a/drivers/net/ethernet/pasemi/pasemi_mac.c
-+++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
-@@ -1101,9 +1101,9 @@ static int pasemi_mac_phy_init(struct net_device *dev)
- 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
- 				PHY_INTERFACE_MODE_SGMII);
- 
--	if (IS_ERR(phydev)) {
-+	if (!phydev) {
- 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
--		return PTR_ERR(phydev);
-+		return -ENODEV;
- 	}
- 
- 	mac->phydev = phydev;
+Best Regards,
+J.
