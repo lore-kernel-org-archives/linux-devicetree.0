@@ -1,82 +1,142 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
-Date: Thu, 27 Sep 2012 17:21:23 -0600
-Message-ID: <5064DF73.8000006@wwwdotorg.org>
-References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
- <1342106718-3058-7-git-send-email-sjg@chromium.org>
- <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
- <501803F3.6090803@wwwdotorg.org>
- <CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg@mail.gmail.com>
- <50647594.9060404@wwwdotorg.org>
- <CAPnjgZ2R=G=xmjdoP74JeAknwH9QGx8+mED7TQ8Kd_zEmcVwtQ@mail.gmail.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH] ALSA: ASoC: add DT bindings for CS4271
+Date: Fri, 28 Sep 2012 01:36:44 +0200
+Message-ID: <1348789004-19944-1-git-send-email-zonque@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ2R=G=xmjdoP74JeAknwH9QGx8+mED7TQ8Kd_zEmcVwtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, Alexander Sverdlin <subaparts@yandex.ru>, lrg@ti.com, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2012 02:27 PM, Simon Glass wrote:
-> On Thu, Sep 27, 2012 at 8:49 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 09/27/2012 07:58 AM, Simon Glass wrote:
-...
->>> Really this is just a way of getting U-Boot and Linux to agree on the
->>> address, by having U-Boot know the address that the kernel will happen
->>> to use. It isn't very robust, but we have found it useful as a means
->>> of avoiding problems in this area.
->>
->> Right, but again, why can't the display driver simply read the address
->> out of the register; why is there a need to duplicate the data?
->>
->> I guess one possibility is that the register only gives the base address
->> and not the size/mode of the allocated surface, but I don't recall if
->> this proposed binding did that either?
-> 
-> So here is my explanation:
-> 
-> 1. U-Boot would normally put the display right near the top of memory.
-> Instead, it figures out where the kernel will put it (somehow this
-> seems to often be at a fixed address) and uses that address.
-> 
-> 2. That means that U-Boot will now have the display exactly where the
-> kernel wants it.
+Apart from pure matching, the bindings also support setting the the
+reset gpio line.
 
-Oh, the DT property is telling U-Boot where to put the surface so that
-when the kernel determines where to put it, it'll already be there?
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+Cc: Alexander Sverdlin <subaparts@yandex.ru>
+---
+ Documentation/devicetree/bindings/sound/cs4271.txt | 36 ++++++++++++++++++++++
+ sound/soc/codecs/cs4271.c                          | 24 +++++++++++++--
+ 2 files changed, 57 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs4271.txt
 
-That seems completely backwards. It's also extremely fragile; what if
-the kernel suddenly starts allocating at some other random address,
-which stops matching what U-Boot expects?
-
-Far better would be for U-Boot to put the surface wherever it wants,
-then manipulate the DT that's passed to the kernel to:
-
-a) Add a /memreserve/ so that memory doesn't get re-used for anything
-else during boot.
-
-b) Add a property to the display node indicating which memreserve
-represents the frame-buffer location.
-
-When the kernel boots, it can:
-
-* Copy the content from the U-Boot-allocated buffer to whatever display
-buffer the kernel allocated before writing the new address to the HW.
-
-* Undo the memory reservation triggered by the /memreserve/ to allow the
-memory to be re-used.
-
-> So what do you think? Should we remove this entirely, or is it a useful hack?
-
-Yes, I think in its current form, it isn't useful.
+diff --git a/Documentation/devicetree/bindings/sound/cs4271.txt b/Documentation/devicetree/bindings/sound/cs4271.txt
+new file mode 100644
+index 0000000..c81b5fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs4271.txt
+@@ -0,0 +1,36 @@
++Cirrus Logic CS4271 DT bindings
++
++This driver supports both the I2C and the SPI bus.
++
++Required properties:
++
++ - compatible: "cirrus,cs4271"
++
++For required properties on SPI, please consult
++Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Required properties on I2C:
++
++ - reg: the i2c address
++
++
++Optional properties:
++
++ - reset-gpio: 	a GPIO spec to define which pin is connected to the chip's
++		!RESET pin
++
++Examples:
++
++	codec_i2c: cs4271@10 {
++		compatible = "cirrus,cs4271";
++		reg = <0x10>;
++		reset-gpio = <&gpio 23 0>;
++	};
++
++	codec_spi: cs4271@0 {
++		compatible = "cirrus,cs4271";
++		reg = <0x0>;
++		reset-gpio = <&gpio 23 0>;
++		spi-max-frequency = <6000000>;
++	};
++
+diff --git a/sound/soc/codecs/cs4271.c b/sound/soc/codecs/cs4271.c
+index 9eb01d7..f994af3 100644
+--- a/sound/soc/codecs/cs4271.c
++++ b/sound/soc/codecs/cs4271.c
+@@ -22,12 +22,14 @@
+ #include <linux/module.h>
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+-#include <sound/pcm.h>
+-#include <sound/soc.h>
+-#include <sound/tlv.h>
+ #include <linux/gpio.h>
+ #include <linux/i2c.h>
+ #include <linux/spi/spi.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++#include <sound/pcm.h>
++#include <sound/soc.h>
++#include <sound/tlv.h>
+ #include <sound/cs4271.h>
+ 
+ #define CS4271_PCM_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | \
+@@ -458,6 +460,14 @@ static int cs4271_soc_resume(struct snd_soc_codec *codec)
+ #define cs4271_soc_resume	NULL
+ #endif /* CONFIG_PM */
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id cs4271_dt_ids[] = {
++	{ .compatible = "cirrus,cs4271", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, cs4271_dt_ids);
++#endif
++
+ static int cs4271_probe(struct snd_soc_codec *codec)
+ {
+ 	struct cs4271_private *cs4271 = snd_soc_codec_get_drvdata(codec);
+@@ -465,6 +475,12 @@ static int cs4271_probe(struct snd_soc_codec *codec)
+ 	int ret;
+ 	int gpio_nreset = -EINVAL;
+ 
++#ifdef CONFIG_OF
++	if (of_match_device(cs4271_dt_ids, codec->dev))
++		gpio_nreset = of_get_named_gpio(codec->dev->of_node,
++						"reset-gpio", 0);
++#endif
++
+ 	if (cs4271plat && gpio_is_valid(cs4271plat->gpio_nreset))
+ 		gpio_nreset = cs4271plat->gpio_nreset;
+ 
+@@ -569,6 +585,7 @@ static struct spi_driver cs4271_spi_driver = {
+ 	.driver = {
+ 		.name	= "cs4271",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(cs4271_dt_ids),
+ 	},
+ 	.probe		= cs4271_spi_probe,
+ 	.remove		= __devexit_p(cs4271_spi_remove),
+@@ -608,6 +625,7 @@ static struct i2c_driver cs4271_i2c_driver = {
+ 	.driver = {
+ 		.name	= "cs4271",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(cs4271_dt_ids),
+ 	},
+ 	.id_table	= cs4271_i2c_id,
+ 	.probe		= cs4271_i2c_probe,
+-- 
+1.7.11.4
