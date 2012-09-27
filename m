@@ -1,69 +1,87 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] watchdog: at91sam9_wdt: add device tree support
-Date: Thu, 27 Sep 2012 16:59:02 +0200
-Message-ID: <CAHkwnC_R4DMaRfjQHO=+K1DO62-iH70B2_QsipLD5D4xRznouw@mail.gmail.com>
-References: <1348568704-28304-1-git-send-email-fabio.porcedda@gmail.com>
- <1348568704-28304-2-git-send-email-fabio.porcedda@gmail.com>
- <20120927055636.GP17667@game.jcrosoft.org>
+From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Subject: Re: [PATCH 1/5] drivers: usb: phy: add a new driver for omap usb2 phy
+Date: Thu, 27 Sep 2012 20:30:03 +0530
+Message-ID: <CAAe_U6JqPCK-P8m=bmi73GyVtea72O1phvSEjobtoQLz=KA86w@mail.gmail.com>
+References: <1346943430-18236-1-git-send-email-kishon@ti.com>
+	<1346943430-18236-2-git-send-email-kishon@ti.com>
+	<50605CFB.5090402@gmail.com>
+	<CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com>
+	<506461A0.4050103@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120927055636.GP17667-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <506461A0.4050103@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: grant.likely@secretlab.ca, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2012 at 7:56 AM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 12:25 Tue 25 Sep     , Fabio Porcedda wrote:
->> Tested on an at91sam9260 board (evk-pro3)
+Hi,
+
+On Thu, Sep 27, 2012 at 7:54 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On 09/25/2012 05:06 AM, ABRAHAM, KISHON VIJAY wrote:
+>> Hi,
 >>
->> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
->>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
->>  2 files changed, 40 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> On Mon, Sep 24, 2012 at 6:45 PM, Rob Herring <robherring2@gmail.com> wrote:
+>>> On 09/06/2012 09:57 AM, Kishon Vijay Abraham I wrote:
+>>>> All phy related programming like enabling/disabling the clocks, powering
+>>>> on/off the phy is taken care of by this driver. It is also used for OTG
+>>>> related functionality like srp.
+>>>>
+>>>> This also includes device tree support for usb2 phy driver and
+>>>> the documentation with device tree binding information is updated.
+>>>>
+>>>> Currently writing to control module register is taken care in this
+>>>> driver which will be removed once the control module driver is in place.
+>>>>
+>>>> Cc: Felipe Balbi <balbi@ti.com>
+>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/usb/usb-phy.txt |   17 ++
+>>>>  drivers/usb/phy/Kconfig                           |    9 +
+>>>>  drivers/usb/phy/Makefile                          |    1 +
+>>>>  drivers/usb/phy/omap-usb2.c                       |  271 +++++++++++++++++++++
+>>>>  include/linux/usb/omap_usb.h                      |   46 ++++
+>>>>  include/linux/usb/phy_companion.h                 |   34 +++
+>>>>  6 files changed, 378 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>>  create mode 100644 drivers/usb/phy/omap-usb2.c
+>>>>  create mode 100644 include/linux/usb/omap_usb.h
+>>>>  create mode 100644 include/linux/usb/phy_companion.h
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>> new file mode 100644
+>>>> index 0000000..80d4148
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>
+>>> This is a very generic name...
+>>>
+>>>> @@ -0,0 +1,17 @@
+>>>> +USB PHY
+>>>> +
+>>>> +OMAP USB2 PHY
+>>>> +
+>>>> +Required properties:
+>>>> + - compatible: Should be "ti,omap-usb2"
+>>>
+>>> ...for a specific phy. However, I do think a generic binding to describe
+>>> host ctrlr to phy connections is needed.
+>>>
+>>>> + - reg : Address and length of the register set for the device. Also
+>>>> +add the address of control module dev conf register until a driver for
+>>>> +control module is added
+>>>
+>>> The dts should describe the h/w, not what you need for the current
+>>> driver. The 2nd reg field does not belong here.
 >>
->> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> new file mode 100644
->> index 0000000..5947929
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> @@ -0,0 +1,19 @@
->> +* Atmel Watchdog Timers
->> +
->> +** at91sam9-wdt
->> +
->> +Required properties:
->> +- compatible: must be "atmel,at91sam9260-wdt".
->> +- reg: physical base address of the controller and length of memory mapped
->> +  region.
->> +
->> +Optional properties:
->> +- heartbeat: contains the watchdog heartbeats in seconds.
-> more I read this binding more it's seems wrong
+>> Indeed. This was discussed and agreed upon as a interim solution till
+>> we have a control module driver in place to write to the control
+>> module register.
 >
-> Today we do not use yet the watchdog framework which we will so we need to
-> use the same binding as the watchdog framework
+> Discussed where and agreed by who? I for one do not agree.
 
-What is the binding of the heartbeat value in the watchdog framework?
-I didn't found any binding of the heartbeat in other dt enabled drivers.
+Please find the discussion @ https://patchwork.kernel.org/patch/1415261/
 
-> So when we switch the DT will not change
-
-
-Best regards
--- 
-Fabio Porcedda
+Thanks
+Kishon
