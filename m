@@ -1,132 +1,78 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for
-	Tegra
-Date: Thu, 27 Sep 2012 13:27:05 -0700
-Message-ID: <CAPnjgZ2R=G=xmjdoP74JeAknwH9QGx8+mED7TQ8Kd_zEmcVwtQ@mail.gmail.com>
-References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
-	<1342106718-3058-7-git-send-email-sjg@chromium.org>
-	<CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
-	<501803F3.6090803@wwwdotorg.org>
-	<CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg@mail.gmail.com>
-	<50647594.9060404@wwwdotorg.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3] pwm_backlight: Add device tree support for Low
+ Threshold Brightness
+Date: Thu, 27 Sep 2012 14:33:09 -0700
+Message-ID: <20120927143309.02614908.akpm@linux-foundation.org>
+References: <1348670827-5720-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <50647594.9060404@wwwdotorg.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Stephen Warren <swarren@nvidia.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1348670827-5720-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, rpurdie@rpsys.net, thierry.reding@avionic-design.de, broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Wed, 26 Sep 2012 20:17:07 +0530
+"Philip, Avinash" <avinashphilip@ti.com> wrote:
 
-On Thu, Sep 27, 2012 at 8:49 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 09/27/2012 07:58 AM, Simon Glass wrote:
->> Hi Stephen,
->>
->> On Tue, Jul 31, 2012 at 9:12 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 07/31/2012 03:27 AM, Simon Glass wrote:
->>>> On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg@chromium.org> wrote:
->>>>> Add LCD definitions and also a proposed binding for LCD displays.
->>>>>
->>>>> The PWM is as per what will likely be committed to linux-next soon.
->>>>>
->>>>> The displaymode binding comes from a proposal here:
->>>>>
->>>>> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
->>>>>
->>>>> The panel binding is new, and fills a need to specify the panel
->>>>> timings and other tegra-specific information. Should a binding appear
->>>>> that allows the pwm to handle this automatically, we can revisit
->>>>> this.
->>>>
->>>> Any comments on this binding please? The main addition from Thierry's
->>>> one posted on LMKL is the LCD resolution selection.
->>>
->>> I have some concerns about the way the mode is represented in the
->>> binding; the timing parameters are quite different to how e.g. an EDID
->>> DTD would represent them, which I think will lead to conversion mistakes
->>> when writing the DT.
->>>
->>> I'm trying to get along of Sascha's original email so I can join in on
->>> that discussion.
->>
->> Did you get any resolution here?
+> Some back lights perform poorly when driven by a PWM with a short
+> duty-cycle. For such devices, the low threshold can be used to specify a
+> lower bound for the duty-cycle and should be chosen to exclude the
+> problematic range.
+> 
+> Add device tree probing support for lth_brightness putting
+> low-threshold-brightness as optional property.
+> 
+> ...
 >
-> I think an updated version of those patches was published.
->
->>>>> diff --git a/doc/device-tree-bindings/video/tegra20-dc.txt b/doc/device-tree-bindings/video/tegra20-dc.txt
->>>
->>>>> +Optional properties (rgb):
->>>>> + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
->>>>> +               calculated)
->>>>> +       - This may be useful to share an address between U-Boot and Linux and
->>>>> +               avoid boot-time corruption / flicker
->>>
->>> Why can't the display driver read this out of the display registers,
->>> instead of requiring the same information to be passed using DT too?
->>
->> The U-Boot display driver needs to set this value in the display
->> registers - at reset I don't think we can rely on any particular
->> value.
->>
->> Do you mean the kernel display driver?
->
-> Yes.
->
->> Well it could, but it doesn't.
->
-> Well, there is no display driver in the upstream kernel at the moment,
-> so it's not possible to make assertions about what it does or not.
->
-> Any downstream kernels aren't relevant, since their DT bindings and/or
-> behaviour have not been through public review.
+> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> @@ -14,6 +14,15 @@ Required properties:
+>  Optional properties:
+>    - pwm-names: a list of names for the PWM devices specified in the
+>                 "pwms" property (see PWM binding[0])
+> +  - low-threshold-brightness: brightness threshold low level. Low threshold
+> +    brightness set to value so that backlight present on low end of
+> +    brightness.
+> +    Some panels, backlight would absent if duty percentage of PWM wave is less
+> +    than certain level (say 20%). By setting low-threshold-brightness to a
+> +    value above (percentage of brightness-levels max) 50 (20% of 255, if 255
+> +    is max). On setting low-threshold-brightness, range of brightness-levels
+> +    is calculated in a region of low-threshold-brightness to brightness-levels
+> +    max.
 
-OK, but typically the kernel selects its own address for the display.
-It might be quite hard for the kernel to use the one defined by
-U-Boot.
+hoo boy, that's hard to follow.  How does this look?
 
->
->> Really this is just a way of getting U-Boot and Linux to agree on the
->> address, by having U-Boot know the address that the kernel will happen
->> to use. It isn't very robust, but we have found it useful as a means
->> of avoiding problems in this area.
->
-> Right, but again, why can't the display driver simply read the address
-> out of the register; why is there a need to duplicate the data?
->
-> I guess one possibility is that the register only gives the base address
-> and not the size/mode of the allocated surface, but I don't recall if
-> this proposed binding did that either?
+--- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt~pwm_backlight-add-device-tree-support-for-low-threshold-brightness-fix
++++ a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+@@ -14,15 +14,15 @@ Required properties:
+ Optional properties:
+   - pwm-names: a list of names for the PWM devices specified in the
+                "pwms" property (see PWM binding[0])
+-  - low-threshold-brightness: brightness threshold low level. Low threshold
+-    brightness set to value so that backlight present on low end of
+-    brightness.
+-    Some panels, backlight would absent if duty percentage of PWM wave is less
+-    than certain level (say 20%). By setting low-threshold-brightness to a
+-    value above (percentage of brightness-levels max) 50 (20% of 255, if 255
+-    is max). On setting low-threshold-brightness, range of brightness-levels
+-    is calculated in a region of low-threshold-brightness to brightness-levels
+-    max.
++  - low-threshold-brightness: brightness threshold low level. Sets the lowest
++    brightness value.
++    On some panels the backlight misbehaves if the duty cycle percentage of the
++    PWM wave is less than a certain level (say 20%).  In this example the user
++    can set low-threshold-brightness to a value above 50 (ie, 20% of 255), thus
++    preventing the PWM duty cycle from going too low.
++    On setting low-threshold-brightness the range of brightness levels is
++    calculated in the range low-threshold-brightness to the maximum value in
++    brightness-levels, described above.
+ 
+ [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+ 
 
-So here is my explanation:
 
-1. U-Boot would normally put the display right near the top of memory.
-Instead, it figures out where the kernel will put it (somehow this
-seems to often be at a fixed address) and uses that address.
-
-2. That means that U-Boot will now have the display exactly where the
-kernel wants it.
-
-3. When U-Boot boots the kernel, it leaves the display running,
-knowing that the kernel will not overwrite the frame buffer with its
-own code / data.
-
-4. The effect is that there is a seamless display transition from
-U-Boot to the kernel.
-
-Note this is only a hint - it can be omitted i.w.c. it isn't used.
-
-So what do you think? Should we remove this entirely, or is it a useful hack?
-
-Regards,
-Simon
+Also, I'm wondering if we really needed a new property - couldn't one
+do this simply by setting brightness-levels to 50..255?
