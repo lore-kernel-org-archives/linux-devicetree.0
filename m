@@ -1,160 +1,132 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
-Date: Thu, 27 Sep 2012 12:44:42 -0700
-Message-ID: <CAPnjgZ0+MUkvLPpSdnXTLpbM8Z0Hk_mtTRBk3Y75=EPsMPN5BQ@mail.gmail.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for
+	Tegra
+Date: Thu, 27 Sep 2012 13:27:05 -0700
+Message-ID: <CAPnjgZ2R=G=xmjdoP74JeAknwH9QGx8+mED7TQ8Kd_zEmcVwtQ@mail.gmail.com>
 References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
- <1342106718-3058-7-git-send-email-sjg@chromium.org>
- <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
- <20120731095116.GA16155@avionic-0098.adnet.avionic-design.de>
+	<1342106718-3058-7-git-send-email-sjg@chromium.org>
+	<CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
+	<501803F3.6090803@wwwdotorg.org>
+	<CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg@mail.gmail.com>
+	<50647594.9060404@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120731095116.GA16155-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <50647594.9060404@wwwdotorg.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@nvidia.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Hi Stephen,
 
-On Tue, Jul 31, 2012 at 2:51 AM, Thierry Reding
-<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> On Tue, Jul 31, 2012 at 10:27:23AM +0100, Simon Glass wrote:
->> +Thierry
+On Thu, Sep 27, 2012 at 8:49 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 09/27/2012 07:58 AM, Simon Glass wrote:
+>> Hi Stephen,
 >>
->> Hi,
+>> On Tue, Jul 31, 2012 at 9:12 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> On 07/31/2012 03:27 AM, Simon Glass wrote:
+>>>> On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg@chromium.org> wrote:
+>>>>> Add LCD definitions and also a proposed binding for LCD displays.
+>>>>>
+>>>>> The PWM is as per what will likely be committed to linux-next soon.
+>>>>>
+>>>>> The displaymode binding comes from a proposal here:
+>>>>>
+>>>>> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+>>>>>
+>>>>> The panel binding is new, and fills a need to specify the panel
+>>>>> timings and other tegra-specific information. Should a binding appear
+>>>>> that allows the pwm to handle this automatically, we can revisit
+>>>>> this.
+>>>>
+>>>> Any comments on this binding please? The main addition from Thierry's
+>>>> one posted on LMKL is the LCD resolution selection.
+>>>
+>>> I have some concerns about the way the mode is represented in the
+>>> binding; the timing parameters are quite different to how e.g. an EDID
+>>> DTD would represent them, which I think will lead to conversion mistakes
+>>> when writing the DT.
+>>>
+>>> I'm trying to get along of Sascha's original email so I can join in on
+>>> that discussion.
 >>
->> On Thu, Jul 12, 2012 at 4:25 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> > Add LCD definitions and also a proposed binding for LCD displays.
->> >
->> > The PWM is as per what will likely be committed to linux-next soon.
->> >
->> > The displaymode binding comes from a proposal here:
->> >
->> > http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
->> >
->> > The panel binding is new, and fills a need to specify the panel
->> > timings and other tegra-specific information. Should a binding appear
->> > that allows the pwm to handle this automatically, we can revisit
->> > this.
->> >
+>> Did you get any resolution here?
+>
+> I think an updated version of those patches was published.
+>
+>>>>> diff --git a/doc/device-tree-bindings/video/tegra20-dc.txt b/doc/device-tree-bindings/video/tegra20-dc.txt
+>>>
+>>>>> +Optional properties (rgb):
+>>>>> + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
+>>>>> +               calculated)
+>>>>> +       - This may be useful to share an address between U-Boot and Linux and
+>>>>> +               avoid boot-time corruption / flicker
+>>>
+>>> Why can't the display driver read this out of the display registers,
+>>> instead of requiring the same information to be passed using DT too?
 >>
->> Any comments on this binding please? The main addition from Thierry's
->> one posted on LMKL is the LCD resolution selection.
+>> The U-Boot display driver needs to set this value in the display
+>> registers - at reset I don't think we can rely on any particular
+>> value.
+>>
+>> Do you mean the kernel display driver?
 >
-> There's no such thing as the panel bindings on Linux. I think nobody's
-> done that before, there's also no suitable software abstraction, but I
-> suppose that should be irrelevant for this discussion.
+> Yes.
 >
->> > +Optional properties (rgb):
->> > + - nvidia,frame-buffer: address of frame buffer (if omitted it will be
->> > +               calculated)
->> > +       - This may be useful to share an address between U-Boot and Linux and
->> > +               avoid boot-time corruption / flicker
->> > +
->> > +
->> > +The panel node describes the panel itself.
->> > +
->> > +Required properties (panel) :
->> > + - nvidia,pwm : pwm to use to set display contrast (see tegra20-pwm.txt)
->> > + - nvidia,panel-timings: 4 cells containing required timings in ms:
->> > +       * delay between panel_vdd-rise and data-rise
->> > +       * delay between data-rise and backlight_vdd-rise
->> > +       * delay between backlight_vdd and pwm-rise
->> > +       * delay between pwm-rise and backlight_en-rise
->> > +
->> > +Optional GPIO properies all have (phandle, GPIO number, flags):
->> > + - nvidia,backlight-enable-gpios: backlight enable GPIO
->> > + - nvidia,lvds-shutdown-gpios: LVDS power shutdown GPIO
->> > + - nvidia,backlight-vdd-gpios: backlight power GPIO
->> > + - nvidia,panel-vdd-gpios: panel power GPIO
->> > +
->> > +Example:
->> > +
->> > +host1x {
->> > +       compatible = "nvidia,tegra20-host1x", "simple-bus";
->> > +       reg = <0x50000000 0x00024000>;
->> > +       interrupts = <0 65 0x04   /* mpcore syncpt */
->> > +                       0 67 0x04>; /* mpcore general */
->> > +
->> > +       #address-cells = <1>;
->> > +       #size-cells = <1>;
->> > +
->> > +       ranges = <0x54000000 0x54000000 0x04000000>;
->> > +
->> > +       dc@54200000 {
->> > +               compatible = "nvidia,tegra20-dc";
->> > +               reg = <0x54200000 0x00040000>;
->> > +               interrupts = <0 73 0x04>;
->> > +
->> > +               rgb {
->> > +                       status = "okay";
->> > +                       /* Seaboard has 1366x768 */
->> > +                       clock = <70600000>;
->> > +                       xres = <1366>;
->> > +                       yres = <768>;
->> > +                       left-margin = <58>;
->> > +                       right-margin = <58>;
->> > +                       hsync-len = <58>;
->> > +                       lower-margin = <4>;
->> > +                       upper-margin = <4>;
->> > +                       vsync-len = <4>;
->> > +                       hsync-active-high;
->> > +                       nvidia,frame-buffer = <0x2f680000>;
->> > +                       nvidia,bits-per-pixel = <16>;
->> > +                       nvidia,panel = <&lcd_panel>;
->> > +               };
+>> Well it could, but it doesn't.
 >
-> Perhaps it would be useful to add an extra node for the mode definition,
-> if only to keep the data separate from that of the rgb node. I know that
-> there currently are no other properties, but the rgb node was supposed
-> to define the output or connector. If ever the same needs to be done for
-> any of the TVO or DSI outputs, more properties may be needed.
+> Well, there is no display driver in the upstream kernel at the moment,
+> so it's not possible to make assertions about what it does or not.
 >
-> Furthermore the code to parse this would be more generic because you
-> could pass it any DT node. Of course the nvidia,-prefixed properties
-> wouldn't be part of that subnode because they don't define the mode as
-> such.
->
-> Thinking about it some more, maybe the mode information should really be
-> part of the panel description below.
+> Any downstream kernels aren't relevant, since their DT bindings and/or
+> behaviour have not been through public review.
 
-OK I will move it there, thanks.
+OK, but typically the kernel selects its own address for the display.
+It might be quite hard for the kernel to use the one defined by
+U-Boot.
 
 >
->> > +       };
->> > +};
->> > +
->> > +lcd_panel: panel {
->> > +       nvidia,pwm = <&pwm 2 0>;
->> > +       nvidia,backlight-enable-gpios = <&gpio 28 0>;   /* PD4 */
->> > +       nvidia,lvds-shutdown-gpios = <&gpio 10 0>;      /* PB2 */
->> > +       nvidia,backlight-vdd-gpios = <&gpio 176 0>;     /* PW0 */
->> > +       nvidia,panel-vdd-gpios = <&gpio 22 0>;          /* PC6 */
->> > +       nvidia,panel-timings = <4 203 17 15>;
->> > +};
+>> Really this is just a way of getting U-Boot and Linux to agree on the
+>> address, by having U-Boot know the address that the kernel will happen
+>> to use. It isn't very robust, but we have found it useful as a means
+>> of avoiding problems in this area.
 >
-> If we can reach some kind of agreement on the power-sequencing code that
-> Alexandre (Cc'ed) is working on, then this can be replaced with a more
-> generic description. This also has the usual problem of being a non-
-> addressable top-level node...
+> Right, but again, why can't the display driver simply read the address
+> out of the register; why is there a need to duplicate the data?
+>
+> I guess one possibility is that the register only gives the base address
+> and not the size/mode of the allocated surface, but I don't recall if
+> this proposed binding did that either?
 
-Yes, I have been following that. However, it would need quite a bit of
-code to be written. I would like to leave this for a future owner if
-possible.
+So here is my explanation:
+
+1. U-Boot would normally put the display right near the top of memory.
+Instead, it figures out where the kernel will put it (somehow this
+seems to often be at a fixed address) and uses that address.
+
+2. That means that U-Boot will now have the display exactly where the
+kernel wants it.
+
+3. When U-Boot boots the kernel, it leaves the display running,
+knowing that the kernel will not overwrite the frame buffer with its
+own code / data.
+
+4. The effect is that there is a seamless display transition from
+U-Boot to the kernel.
+
+Note this is only a hint - it can be omitted i.w.c. it isn't used.
+
+So what do you think? Should we remove this entirely, or is it a useful hack?
 
 Regards,
 Simon
-
->
-> Thierry
