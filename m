@@ -1,124 +1,44 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v2] pwm_backlight: Add device tree support for Low
- Threshold Brightness
-Date: Thu, 27 Sep 2012 09:24:47 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9A9B2A@DBDE01.ent.ti.com>
-References: <1348203080-16348-1-git-send-email-avinashphilip@ti.com>
- <505BF83D.8040201@wwwdotorg.org>
- <518397C60809E147AF5323E0420B992E3E9A685B@DBDE01.ent.ti.com>
- <505CA74B.2090405@wwwdotorg.org>
- <518397C60809E147AF5323E0420B992E3E9A8449@DBDE01.ent.ti.com>
- <50614CE2.7010301@wwwdotorg.org>
- <518397C60809E147AF5323E0420B992E3E9A8FA7@DBDE01.ent.ti.com>
- <50631EF7.6040908@wwwdotorg.org>
- <20120926164949.GA24041@avionic-0098.mockup.avionic-design.de>
+From: Vinod Koul <vinod.koul@linux.intel.com>
+Subject: Re: [RFC PATCH 10/13] spi: omap2-mcspi:
+ dma_request_slave_channel() support for DT platforms
+Date: Thu, 27 Sep 2012 15:06:34 +0530
+Message-ID: <1348738594.1648.9.camel@vkoul-udesk3>
+References: <1348152226-13588-1-git-send-email-mporter@ti.com>
+	 <1348152226-13588-11-git-send-email-mporter@ti.com>
+	 <20120920220931.GJ28835@atomide.com> <201209210816.01473.arnd@arndb.de>
+	 <20120921154247.GZ28835@atomide.com>  <20120921183729.GI16522@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120926164949.GA24041@avionic-0098.mockup.avionic-design.de>
-Content-Language: en-US
+In-Reply-To: <20120921183729.GI16522@beef>
 Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+To: Matt Porter <mporter@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 26, 2012 at 22:19:49, Thierry Reding wrote:
-> On Wed, Sep 26, 2012 at 09:27:51AM -0600, Stephen Warren wrote:
-> > On 09/25/2012 10:35 PM, Philip, Avinash wrote:
-> > > On Tue, Sep 25, 2012 at 11:49:14, Stephen Warren wrote:
-> > >> On 09/24/2012 10:29 PM, Philip, Avinash wrote:
-> > >>> On Fri, Sep 21, 2012 at 23:13:39, Stephen Warren wrote:
-> > >>>> On 09/21/2012 12:03 AM, Philip, Avinash wrote:
-> > >>>>> Hi Stephen,
-> > >>>>>
-> > >>>>> On Fri, Sep 21, 2012 at 10:46:45, Stephen Warren wrote:
-> > >>>>>> On 09/20/2012 10:51 PM, Philip, Avinash wrote:
-> > >>>>>>> Some backlights perform poorly when driven by a PWM with a short
-> > >>>>>>> duty-cycle. For such devices, the low threshold can be used to specify a
-> > >>>>>>> lower bound for the duty-cycle and should be chosen to exclude the
-> > >>>>>>> problematic range.
-> > >>>>>>>
-> > >>>>>>> This patch adds support for an optional low-threshold-brightness
-> > >>>>>>> property.
-> > >>>>>>
-> > >>>>>>> diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-> > >>>>>>
-> > >>>>>>>  Optional properties:
-> > >>>>>>>    - pwm-names: a list of names for the PWM devices specified in the
-> > >>>>>>>                 "pwms" property (see PWM binding[0])
-> > >>>>>>> +  - low-threshold-brightness: brightness threshold low level. Low threshold
-> > >>>>>>> +    brightness set to value so that backlight present on low end of
-> > >>>>>>> +    brightness.
-> > >>>>>>
-> > >>>>>> For my education, why not just specify values above this value in the
-> > >>>>>> brightness-levels array; how do those two interact?
-> > >>>>>
-> > >>>>> Please find details from 
-> > >>>>> https://lkml.org/lkml/2012/7/18/284
-> > >>>>
-> > >>>> Hmm. That still doesn't really explain what this property does.
-> > >>>>
-> > >>>> I'm going to guess that if this property is present, and values in the
-> > >>>> brightness-levels property get scaled between the
-> > >>>> low-threshold-brightness and 255 instead of being used directly.
-> > >>>
-> > >>> This is correct.
-> > >>>
-> > >>>> But then, in the email you linked to, what does "But brightness-levels won't
-> > >>>> be uniformly divided" mean?
-> > >>>
-> > >>> For some panels, backlight would absent on low end of brightness due to low
-> > >>> percentage in duty_cycle. Consider following example where backlight absent
-> > >>> for brightness levels from 0 - 51.
-> > >>>
-> > >>> pwms = <&pwm 0 50000>;
-> > >>> brightness-levels = <0 51 53 56 62 75 101 152 255>; 
-> > >>> default-brightness-level = <6>;
-> > >>>
-> > >>> So in the example, brightness-levels are set to have values for backlight present.
-> > >>> Here levels are not uniformly divided.
-> > >>
-> > >> So why not just change the values so they /are/ what you want? After
-> > >> all, it's just data and you can put whatever values you want there. What
-> > >> is preventing you from doing this?
-> > > 
-> > > brightness_threshold_level was added to explore lth_brightness support already
-> > > present in non-DT case.
+On Fri, 2012-09-21 at 14:37 -0400, Matt Porter wrote:
+> On Fri, Sep 21, 2012 at 08:42:47AM -0700, Tony Lindgren wrote:
 > > 
-> > I understand that. Given my discussion above, I would advocate removing
-> > lth_brightness from the non-DT case rather than adding it to the DT
-> > case, since it seems entirely pointless.
+> > Can't we come up with a version of dma_request_slave_channel that works
+> > both ways for now:
+> > 
+> > 	mcspi_dma->dma_rx =
+> > 		dma_request_slave_channel_compat(mask, omap_dma_filter_fn, &sig,
+> > 					&master->dev, mcspi_dma->dma_rx_ch_name);
+> > 	...			
+> > 
+> > Then it's just question of patching away two lines later on rather than
+> > having to add all this if else to all the drivers first, then patching
+> > it away again.
 > 
-> It is still required for the case where brightness levels are not used.
-> So we can't drop it right away. I agree however that we should plan to
-> get rid of the max_brightness and lth_brightness eventually. Since the
-> DT bindings don't use it yet we should keep only the brightness levels.
-> Once all users have been converted we can rename max_brightness to
-> something like num_levels and remove lth_brightness. dft_brightness can
-> probably be renamed to default_level.
+> I think that something like that is workable with the implementation
+> simply checking for of_node to do the right thing.
+Yes, I think it would be better to have common API but underneath two
+implementations in transitional phase.
 
-In non-DT case lth_brightness is required. 
-But for DT we have options with/without lth_brightness support. 
-In case if patch is dropped, user has to put proper brightness-levels 
-(brightness-levels DT parameters should be specified considering the 
-low-threshold values)
 
-Meanwhile I had submitted another version yesterday (with more documentation)
 
-[PATCH v3] pwm_backlight: Add device tree support for Low Threshold Brightness
-
-https://lkml.org/lkml/2012/9/26/271
-
-Thierry,
-
-Can you please confirm the acceptance/rejection of the patch? This will help me
-to submit the backlight DT blob for AM335x platform.
-
-Thanks
-Avinash
-
-> 
-> Thierry
-> 
+-- 
+~Vinod
 
