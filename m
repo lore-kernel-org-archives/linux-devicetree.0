@@ -1,7 +1,8 @@
 From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 3/3] ARM: at91/dts: evk-pro3: enable watchdog
-Date: Thu, 27 Sep 2012 17:40:32 +0200
-Message-ID: <1348760432-12284-4-git-send-email-fabio.porcedda@gmail.com>
+Subject: [PATCH v5 2/3] ARM: at91/dts: add at91sam9_wdt driver to at91sam926x,
+ at91sam9g45
+Date: Thu, 27 Sep 2012 17:40:31 +0200
+Message-ID: <1348760432-12284-3-git-send-email-fabio.porcedda@gmail.com>
 References: <1348760432-12284-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,27 +23,65 @@ To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchd
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tested on evk-pro3.
+Tested on an at91sam9260 board (evk-pro3).
 
 Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/evk-pro3.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
+ arch/arm/boot/dts/at91sam9263.dtsi | 6 ++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi | 6 ++++++
+ 3 files changed, 18 insertions(+)
 
-diff --git a/arch/arm/boot/dts/evk-pro3.dts b/arch/arm/boot/dts/evk-pro3.dts
-index b7354e6..ce959ee 100644
---- a/arch/arm/boot/dts/evk-pro3.dts
-+++ b/arch/arm/boot/dts/evk-pro3.dts
-@@ -26,6 +26,10 @@
- 				atmel,vbus-gpio = <&pioC 5 0>;
- 				status = "okay";
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index 7c95f76..7612193 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -236,6 +236,12 @@
+ 					trigger-external;
+ 				};
  			};
 +
 +			watchdog@fffffd40 {
-+				status = "okay";
++				compatible = "atmel,at91sam9260-wdt";
++				reg = <0xfffffd40 0x10>;
++				status = "disabled";
 +			};
  		};
  
- 		usb0: ohci@00500000 {
+ 		nand0: nand@40000000 {
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 195019b..d822240 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -185,6 +185,12 @@
+ 				interrupts = <24 4 2>;
+ 				status = "disabled";
+ 			};
++
++			watchdog@fffffd40 {
++				compatible = "atmel,at91sam9260-wdt";
++				reg = <0xfffffd40 0x10>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		nand0: nand@40000000 {
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 63751b1..df998ab 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -242,6 +242,12 @@
+ 					trigger-value = <0x6>;
+ 				};
+ 			};
++
++			watchdog@fffffd40 {
++				compatible = "atmel,at91sam9260-wdt";
++				reg = <0xfffffd40 0x10>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		nand0: nand@40000000 {
 -- 
 1.7.11.3
