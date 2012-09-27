@@ -1,192 +1,57 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Thu, 27 Sep 2012 16:07:23 +0200
-Message-ID: <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH 11/14] media: sh-mobile-ceu-camera: runtime PM suspending
+ doesn't have to be synchronous
+Date: Thu, 27 Sep 2012 16:07:30 +0200
+Message-ID: <1348754853-28619-12-git-send-email-g.liakhovetski@gmx.de>
 References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348754853-28619-1-git-send-email-g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a document, describing common V4L2 device tree bindings.
+In both error and clean up cases there is no need to wait for runtime PM
+to finish suspending the device.
 
-Co-authored-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 ---
- Documentation/devicetree/bindings/media/v4l2.txt |  162 ++++++++++++++++++++++
- 1 files changed, 162 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/v4l2.txt
+ .../platform/soc_camera/sh_mobile_ceu_camera.c     |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/v4l2.txt b/Documentation/devicetree/bindings/media/v4l2.txt
-new file mode 100644
-index 0000000..b8b3f41
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/v4l2.txt
-@@ -0,0 +1,162 @@
-+Video4Linux Version 2 (V4L2)
-+
-+General concept
-+---------------
-+
-+Video pipelines consist of external devices, e.g. camera sensors, controlled
-+over an I2C, SPI or UART bus, and SoC internal IP blocks, including video DMA
-+engines and video data processors.
-+
-+SoC internal blocks are described by DT nodes, placed similarly to other SoC
-+blocks. External devices are represented as child nodes of their respective bus
-+controller nodes, e.g. I2C.
-+
-+Data interfaces on all video devices are described by "port" child DT nodes.
-+Configuration of a port depends on other devices participating in the data
-+transfer and is described by "link" DT nodes, specified as children of the
-+"port" nodes:
-+
-+/foo {
-+	port@0 {
-+		link@0 { ... };
-+		link@1 { ... };
-+	};
-+	port@1 { ... };
-+};
-+
-+If a port can be configured to work with more than one other device on the same
-+bus, a "link" child DT node must be provided for each of them. If more than one
-+port is present on a device or more than one link is connected to a port, a
-+common scheme, using "#address-cells," "#size-cells" and "reg" properties is
-+used.
-+
-+Optional link properties:
-+- remote: phandle to the other endpoint link DT node.
-+- slave-mode: a boolean property, run the link in slave mode. Default is master
-+  mode.
-+- data-shift: on parallel data busses, if data-width is used to specify the
-+  number of data lines, data-shift can be used to specify which data lines are
-+  used, e.g. "data-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
-+- hsync-active: 1 or 0 for active-high or -low HSYNC signal polarity
-+  respectively.
-+- vsync-active: ditto for VSYNC. Note, that if HSYNC and VSYNC polarities are
-+  not specified, embedded synchronisation may be required, where supported.
-+- data-active: similar to HSYNC and VSYNC specifies data line polarity.
-+- field-even-active: field signal level during the even field data transmission.
-+- pclk-sample: rising (1) or falling (0) edge to sample the pixel clock pin.
-+- data-lanes: array of serial, e.g. MIPI CSI-2, data hardware lane numbers in
-+  the ascending order, beginning with logical lane 0.
-+- clock-lanes: hardware lane number, used for the clock lane.
-+- clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
-+  clock mode.
-+
-+Example:
-+
-+	ceu0: ceu@0xfe910000 {
-+		compatible = "renesas,sh-mobile-ceu";
-+		reg = <0xfe910000 0xa0>;
-+		interrupts = <0x880>;
-+
-+		mclk: master_clock {
-+			compatible = "renesas,ceu-clock";
-+			#clock-cells = <1>;
-+			clock-frequency = <50000000>;	/* max clock frequency */
-+			clock-output-names = "mclk";
-+		};
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ceu0_1: link@1 {
-+				reg = <1>;		/* local link # */
-+				remote = <&ov772x_1_1>;	/* remote phandle */
-+				bus-width = <8>;	/* used data lines */
-+				data-shift = <0>;	/* lines 7:0 are used */
-+
-+				/* If [hv]sync-active are missing, embedded bt.605 sync is used */
-+				hsync-active = <1>;	/* active high */
-+				vsync-active = <1>;	/* active high */
-+				data-active = <1>;	/* active high */
-+				pclk-sample = <1>;	/* rising */
-+			};
-+
-+			ceu0_0: link@0 {
-+				reg = <0>;
-+				remote = <&csi2_2>;
-+				immutable;
-+			};
-+		};
-+	};
-+
-+	i2c0: i2c@0xfff20000 {
-+		...
-+		ov772x_1: camera@0x21 {
-+			compatible = "omnivision,ov772x";
-+			reg = <0x21>;
-+			vddio-supply = <&regulator1>;
-+			vddcore-supply = <&regulator2>;
-+
-+			clock-frequency = <20000000>;
-+			clocks = <&mclk 0>;
-+			clock-names = "xclk";
-+
-+			port {
-+				/* With 1 link per port no need in addresses */
-+				ov772x_1_1: link {
-+					bus-width = <8>;
-+					remote = <&ceu0_1>;
-+					hsync-active = <1>;
-+					vsync-active = <0>;	/* who came up with an inverter here?... */
-+					data-active = <1>;
-+					pclk-sample = <1>;
-+				};
-+			};
-+		};
-+
-+		imx074: camera@0x1a {
-+			compatible = "sony,imx074";
-+			reg = <0x1a>;
-+			vddio-supply = <&regulator1>;
-+			vddcore-supply = <&regulator2>;
-+
-+			clock-frequency = <30000000>;	/* shared clock with ov772x_1 */
-+			clocks = <&mclk 0>;
-+			clock-names = "sysclk";		/* assuming this is the name in the datasheet */
-+
-+			port {
-+				imx074_1: link {
-+					clock-lanes = <0>;
-+					data-lanes = <1>, <2>;
-+					remote = <&csi2_1>;
-+				};
-+			};
-+		};
-+	};
-+
-+	csi2: csi2@0xffc90000 {
-+		compatible = "renesas,sh-mobile-csi2";
-+		reg = <0xffc90000 0x1000>;
-+		interrupts = <0x17a0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@1 {
-+			compatible = "renesas,csi2c";	/* one of CSI2I and CSI2C */
-+			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S, PHY_M has port address 0, is unused */
-+
-+			csi2_1: link {
-+				clock-lanes = <0>;
-+				data-lanes = <2>, <1>;
-+				remote = <&imx074_1>;
-+			};
-+		};
-+		port@2 {
-+			reg = <2>;			/* port 2: link to the CEU */
-+
-+			csi2_2: link {
-+				immutable;
-+				remote = <&ceu0_0>;
-+			};
-+		};
-+	};
+diff --git a/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c b/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
+index 0a24253..41e4664 100644
+--- a/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
++++ b/drivers/media/platform/soc_camera/sh_mobile_ceu_camera.c
+@@ -572,7 +572,7 @@ static int sh_mobile_ceu_add_device(struct soc_camera_device *icd)
+ 
+ 	ret = v4l2_subdev_call(csi2_sd, core, s_power, 1);
+ 	if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV) {
+-		pm_runtime_put_sync(ici->v4l2_dev.dev);
++		pm_runtime_put(ici->v4l2_dev.dev);
+ 		return ret;
+ 	}
+ 
+@@ -612,7 +612,7 @@ static void sh_mobile_ceu_remove_device(struct soc_camera_device *icd)
+ 	}
+ 	spin_unlock_irq(&pcdev->lock);
+ 
+-	pm_runtime_put_sync(ici->v4l2_dev.dev);
++	pm_runtime_put(ici->v4l2_dev.dev);
+ 
+ 	dev_info(icd->parent,
+ 		 "SuperH Mobile CEU driver detached from camera %d\n",
 -- 
 1.7.2.5
-
