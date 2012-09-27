@@ -1,59 +1,42 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] ARM: use cmd_dtc_cpp for compilation of
- *.dts-cpp to *.dtb
-Date: Thu, 27 Sep 2012 07:47:00 +0200
-Message-ID: <20120927054700.GN17667@game.jcrosoft.org>
-References: <1348599998-2729-1-git-send-email-swarren@wwwdotorg.org>
- <1348599998-2729-3-git-send-email-swarren@wwwdotorg.org>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] netdev: pasemi: fix return value check in pasemi_mac_phy_init()
+Date: Thu, 27 Sep 2012 13:51:58 +0800
+Message-ID: <CAPgLHd8hJjj1HkV7gc8QH2p9rDJQedkc+vCUpFJMgyXQua4LGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1348599998-2729-3-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: olof@lixom.net, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 13:06 Tue 25 Sep     , Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> This allows DT source files to use the C pre-processor. A new file
-> extension is introduced for this purpose, since use of the pre-processor
-> must be optional; any property or node name that starts with "#" must be
-> escaped to prevent the pre-processor attempting to interpret it as a
-> directive. For this reason, skeleton.dtsi-cpp is introduced for *.dts-cpp
-> to include.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/Makefile              |    3 +++
->  arch/arm/boot/dts/skeleton.dtsi-cpp |   13 +++++++++++++
->  2 files changed, 16 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/skeleton.dtsi-cpp
-> 
-> diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-> index 3fdab01..c5d7fca 100644
-> --- a/arch/arm/boot/Makefile
-> +++ b/arch/arm/boot/Makefile
-> @@ -65,6 +65,9 @@ targets += $(dtb-y)
->  $(obj)/%.dtb: $(src)/dts/%.dts FORCE
->  	$(call if_changed_dep,dtc)
->  
-> +$(obj)/%.dtb: $(src)/dts/%.dts-cpp FORCE
-> +	$(call if_changed_dep,dtc_cpp)
-> +
-move this to Makefile.build so we wan use it acroos arch
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Best Regards,
-J.
+In case of error, the function of_phy_connect() returns NULL
+pointer not ERR_PTR(). The IS_ERR() test in the return value
+check should be replaced with NULL test.
+
+dpatch engine is used to auto generate this patch.
+(https://github.com/weiyj/dpatch)
+
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/net/ethernet/pasemi/pasemi_mac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
+index e559dfa..6fa74d5 100644
+--- a/drivers/net/ethernet/pasemi/pasemi_mac.c
++++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
+@@ -1101,9 +1101,9 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+ 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
+ 				PHY_INTERFACE_MODE_SGMII);
+ 
+-	if (IS_ERR(phydev)) {
++	if (!phydev) {
+ 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
+-		return PTR_ERR(phydev);
++		return -ENODEV;
+ 	}
+ 
+ 	mac->phydev = phydev;
