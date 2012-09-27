@@ -1,97 +1,77 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/5] drivers: usb: phy: add a new driver for omap usb2
- phy
-Date: Thu, 27 Sep 2012 09:24:32 -0500
-Message-ID: <506461A0.4050103@gmail.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com> <1346943430-18236-2-git-send-email-kishon@ti.com> <50605CFB.5090402@gmail.com> <CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: grant.likely@secretlab.ca, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH 00/14] V4L2 DT support
+Date: Thu, 27 Sep 2012 16:07:19 +0200
+Message-ID: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2012 05:06 AM, ABRAHAM, KISHON VIJAY wrote:
-> Hi,
-> 
-> On Mon, Sep 24, 2012 at 6:45 PM, Rob Herring <robherring2@gmail.com> wrote:
->> On 09/06/2012 09:57 AM, Kishon Vijay Abraham I wrote:
->>> All phy related programming like enabling/disabling the clocks, powering
->>> on/off the phy is taken care of by this driver. It is also used for OTG
->>> related functionality like srp.
->>>
->>> This also includes device tree support for usb2 phy driver and
->>> the documentation with device tree binding information is updated.
->>>
->>> Currently writing to control module register is taken care in this
->>> driver which will be removed once the control module driver is in place.
->>>
->>> Cc: Felipe Balbi <balbi@ti.com>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> ---
->>>  Documentation/devicetree/bindings/usb/usb-phy.txt |   17 ++
->>>  drivers/usb/phy/Kconfig                           |    9 +
->>>  drivers/usb/phy/Makefile                          |    1 +
->>>  drivers/usb/phy/omap-usb2.c                       |  271 +++++++++++++++++++++
->>>  include/linux/usb/omap_usb.h                      |   46 ++++
->>>  include/linux/usb/phy_companion.h                 |   34 +++
->>>  6 files changed, 378 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/usb/usb-phy.txt
->>>  create mode 100644 drivers/usb/phy/omap-usb2.c
->>>  create mode 100644 include/linux/usb/omap_usb.h
->>>  create mode 100644 include/linux/usb/phy_companion.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
->>> new file mode 100644
->>> index 0000000..80d4148
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
->>
->> This is a very generic name...
->>
->>> @@ -0,0 +1,17 @@
->>> +USB PHY
->>> +
->>> +OMAP USB2 PHY
->>> +
->>> +Required properties:
->>> + - compatible: Should be "ti,omap-usb2"
->>
->> ...for a specific phy. However, I do think a generic binding to describe
->> host ctrlr to phy connections is needed.
->>
->>> + - reg : Address and length of the register set for the device. Also
->>> +add the address of control module dev conf register until a driver for
->>> +control module is added
->>
->> The dts should describe the h/w, not what you need for the current
->> driver. The 2nd reg field does not belong here.
-> 
-> Indeed. This was discussed and agreed upon as a interim solution till
-> we have a control module driver in place to write to the control
-> module register.
+The last version of the V4L2 DT binding RFC only raised some cosmetic
+improvement suggestions, which are addressed in the respective patch in this
+series.
 
-Discussed where and agreed by who? I for one do not agree.
+The rest of patches add a simple V4L2 DT parser for common properties, and an
+implementation for soc-camera, the sh_mobile_ceu_camera host driver and the
+mt9t112 camera sensor driver. This has been tested on an sh7372 SoC based
+mackerel board, using a dummy I2C driver to simulate a proper one (the onboard
+sensor has no driver and simply continuously produces video frames in a fixed
+format). Only patches 4 and 5 are actually core V4L2 changes.
 
-Rob
+Some comments:
 
->>
->>> +
->>> +This is usually a subnode of ocp2scp to which it is connected.
->>
->> How is usb port to phy connection described?
-> Currently the usb controller to phy connection is established only by
-> type. We have a couple of patches being currently discussed in the
-> list to establish the connection by phandle.
-> 
-> https://patchwork.kernel.org/patch/1457801/ (Generic PHY Framework:
-> devm_of_phy_get())
-> http://www.spinics.net/lists/linux-usb/msg69547.html
-> 
-> Thanks
-> Kishon
-> 
+1. generic clock framework support is needed for a proper V4L2 DT
+implementation. For now patch 6/14 exports an soc-camera specific function to
+attach and detach a client to / from a host. Yes, I know this is bad from
+several PoVs, and has to be fixed. If we don't want to depend on the clock
+framework progress, we could implement V4L2 generic functions to do the same
+until clocks become available.
 
+2. the two driver-specific DT properties in patch 13/14 are just an RFC and
+can be modified / discussed.
+
+Thanks
+Guennadi
+
+Guennadi Liakhovetski (14):
+  i2c: add dummy inline functions for when CONFIG_OF_I2C(_MODULE) isn't
+    defined
+  of: add a dummy inline function for when CONFIG_OF is not defined
+  OF: make a function pointer argument const
+  media: add V4L2 DT binding documentation
+  media: add a V4L2 OF parser
+  media: soc-camera: prepare for asynchronous client probing
+  media: soc-camera: support deferred probing of clients
+  media: soc-camera: use managed devm_regulator_bulk_get()
+  media: mt9t112: support deferred probing
+  media: soc-camera: support OF cameras
+  media: sh-mobile-ceu-camera: runtime PM suspending doesn't have to be
+    synchronous
+  media: sh-mobile-ceu-camera: add primitive OF support
+  media: sh-mobile-ceu-driver: support max width and height in DT
+  media: sh_mobile_ceu_camera: support all standard V4L2 DT properties
+
+ Documentation/devicetree/bindings/media/v4l2.txt   |  162 +++++
+ drivers/media/i2c/soc_camera/mt9t112.c             |   18 +-
+ .../platform/soc_camera/sh_mobile_ceu_camera.c     |  177 ++++--
+ drivers/media/platform/soc_camera/soc_camera.c     |  650 +++++++++++++++++---
+ drivers/media/v4l2-core/Makefile                   |    3 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  190 ++++++
+ drivers/of/base.c                                  |    4 +-
+ include/linux/of.h                                 |   11 +-
+ include/linux/of_i2c.h                             |   12 +
+ include/media/soc_camera.h                         |   10 +
+ include/media/v4l2-of.h                            |   62 ++
+ 11 files changed, 1153 insertions(+), 146 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/v4l2.txt
+ create mode 100644 drivers/media/v4l2-core/v4l2-of.c
+ create mode 100644 include/media/v4l2-of.h
+
+-- 
+1.7.2.5
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
