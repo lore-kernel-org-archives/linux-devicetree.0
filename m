@@ -1,85 +1,170 @@
-From: "Cousson, Benoit" <b-cousson@ti.com>
-Subject: Re: [PATCH 1/5] drivers: usb: phy: add a new driver for omap usb2
- phy
-Date: Thu, 27 Sep 2012 15:48:42 -0700
-Message-ID: <5064D7CA.1070909@ti.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com> <1346943430-18236-2-git-send-email-kishon@ti.com> <50605CFB.5090402@gmail.com> <CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com> <506461A0.4050103@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V3 1/2] dtc: cpp co-existence: allow names starting with # to
+ be escaped
+Date: Thu, 27 Sep 2012 17:11:04 -0600
+Message-ID: <1348787465-9745-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <506461A0.4050103@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, grant.likely@secretlab.ca, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/27/2012 7:24 AM, Rob Herring wrote:
-> On 09/25/2012 05:06 AM, ABRAHAM, KISHON VIJAY wrote:
->> Hi,
->>
->> On Mon, Sep 24, 2012 at 6:45 PM, Rob Herring <robherring2@gmail.com> wrote:
->>> On 09/06/2012 09:57 AM, Kishon Vijay Abraham I wrote:
->>>> All phy related programming like enabling/disabling the clocks, powering
->>>> on/off the phy is taken care of by this driver. It is also used for OTG
->>>> related functionality like srp.
->>>>
->>>> This also includes device tree support for usb2 phy driver and
->>>> the documentation with device tree binding information is updated.
->>>>
->>>> Currently writing to control module register is taken care in this
->>>> driver which will be removed once the control module driver is in place.
->>>>
->>>> Cc: Felipe Balbi <balbi@ti.com>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>   Documentation/devicetree/bindings/usb/usb-phy.txt |   17 ++
->>>>   drivers/usb/phy/Kconfig                           |    9 +
->>>>   drivers/usb/phy/Makefile                          |    1 +
->>>>   drivers/usb/phy/omap-usb2.c                       |  271 +++++++++++++++++++++
->>>>   include/linux/usb/omap_usb.h                      |   46 ++++
->>>>   include/linux/usb/phy_companion.h                 |   34 +++
->>>>   6 files changed, 378 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/usb/usb-phy.txt
->>>>   create mode 100644 drivers/usb/phy/omap-usb2.c
->>>>   create mode 100644 include/linux/usb/omap_usb.h
->>>>   create mode 100644 include/linux/usb/phy_companion.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
->>>> new file mode 100644
->>>> index 0000000..80d4148
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
->>>
->>> This is a very generic name...
->>>
->>>> @@ -0,0 +1,17 @@
->>>> +USB PHY
->>>> +
->>>> +OMAP USB2 PHY
->>>> +
->>>> +Required properties:
->>>> + - compatible: Should be "ti,omap-usb2"
->>>
->>> ...for a specific phy. However, I do think a generic binding to describe
->>> host ctrlr to phy connections is needed.
->>>
->>>> + - reg : Address and length of the register set for the device. Also
->>>> +add the address of control module dev conf register until a driver for
->>>> +control module is added
->>>
->>> The dts should describe the h/w, not what you need for the current
->>> driver. The 2nd reg field does not belong here.
->>
->> Indeed. This was discussed and agreed upon as a interim solution till
->> we have a control module driver in place to write to the control
->> module register.
->
-> Discussed where and agreed by who? I for one do not agree.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Yeah, what was tolerated was the addition of that address inside hwmod 
-data, but I do agree that it should not go into DTS.
+The device tree language as currently defined conflicts with the C pre-
+processor in one aspect - when a property or node name begins with a #
+character, a pre-processor would attempt to interpret it as a directive,
+fail, and most likely error out.
 
-Regards,
-Benoit
+This change allows a property/node name to be prefixed with \. This
+prevents a pre-processor from seeing # as the first non-whitespace
+character on the line, and hence prevents the conflict. \ was previously
+an illegal character in property/node names, so this change is
+backwards compatible. The \ is stripped from the name during parsing
+by dtc.
 
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+v3: No change.
+---
+ dtc-lexer.l                |    5 +++--
+ tests/.gitignore           |    1 +
+ tests/Makefile.tests       |    2 +-
+ tests/propname_escapes.c   |   43 +++++++++++++++++++++++++++++++++++++++++++
+ tests/propname_escapes.dts |    6 ++++++
+ tests/run_tests.sh         |    3 +++
+ 6 files changed, 57 insertions(+), 3 deletions(-)
+ create mode 100644 tests/propname_escapes.c
+ create mode 100644 tests/propname_escapes.dts
+
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index 91c4930..edbeb86 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -162,9 +162,10 @@ static int pop_input_file(void);
+ 			return ']';
+ 		}
+ 
+-<PROPNODENAME>{PROPNODECHAR}+ {
++<PROPNODENAME>\\?{PROPNODECHAR}+ {
+ 			DPRINT("PropNodeName: %s\n", yytext);
+-			yylval.propnodename = xstrdup(yytext);
++			yylval.propnodename = xstrdup((yytext[0] == '\\') ?
++							yytext + 1 : yytext);
+ 			BEGIN_DEFAULT();
+ 			return DT_PROPNODENAME;
+ 		}
+diff --git a/tests/.gitignore b/tests/.gitignore
+index f8e1af0..e2aa24a 100644
+--- a/tests/.gitignore
++++ b/tests/.gitignore
+@@ -39,6 +39,7 @@ tmp.*
+ /path_offset
+ /path_offset_aliases
+ /phandle_format
++/propname_escapes
+ /references
+ /root_node
+ /rw_tree1
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index 1795466..d59bff8 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -12,7 +12,7 @@ LIB_TESTS_L = get_mem_rsv \
+ 	sw_tree1 \
+ 	move_and_save mangle-layout nopulate \
+ 	open_pack rw_tree1 set_name setprop del_property del_node \
+-	appendprop1 appendprop2 \
++	appendprop1 appendprop2 propname_escapes \
+ 	string_escapes references path-references phandle_format \
+ 	boot-cpuid incbin \
+ 	extra-terminating-null \
+diff --git a/tests/propname_escapes.c b/tests/propname_escapes.c
+new file mode 100644
+index 0000000..3aec28f
+--- /dev/null
++++ b/tests/propname_escapes.c
+@@ -0,0 +1,43 @@
++/*
++ * libfdt - Flat Device Tree manipulation
++ *	Testcase for fdt_getprop()
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ * Copyright (C) 2012 NVIDIA CORPORATION. All rights reserved.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++
++#include <fdt.h>
++#include <libfdt.h>
++
++#include "tests.h"
++
++int main(int argc, char *argv[])
++{
++	void *fdt;
++
++	test_init(argc, argv);
++	fdt = load_blob_arg(argc, argv);
++
++	check_getprop_cell(fdt, 0, "#address-cells", 1);
++	check_getprop_cell(fdt, 0, "#gpio-cells", 2);
++
++	PASS();
++}
+diff --git a/tests/propname_escapes.dts b/tests/propname_escapes.dts
+new file mode 100644
+index 0000000..9f70618
+--- /dev/null
++++ b/tests/propname_escapes.dts
+@@ -0,0 +1,6 @@
++/dts-v1/;
++
++/ {
++	#address-cells = <1>;
++	\#gpio-cells = <2>;
++};
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index e2158f7..7d7a5f7 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -254,6 +254,9 @@ dtc_tests () {
+     tree1_tests_rw dtc_tree1.test.dtb
+     run_test dtbs_equal_ordered dtc_tree1.test.dtb test_tree1.dtb
+ 
++    run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb propname_escapes.dts
++    run_test propname_escapes dtc_escapes.test.dtb
++
+     run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb escapes.dts
+     run_test string_escapes dtc_escapes.test.dtb
+ 
+-- 
+1.7.0.4
