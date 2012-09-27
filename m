@@ -1,57 +1,57 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] ARM: use C pre-processor with dtc
-Date: Thu, 27 Sep 2012 07:40:38 +0200
-Message-ID: <20120927054038.GL17667@game.jcrosoft.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [RFC PATCH 1/3] kbuild: introduce cmd_dtc_cpp
+Date: Thu, 27 Sep 2012 07:44:38 +0200
+Message-ID: <20120927054438.GM17667@game.jcrosoft.org>
 References: <1348599998-2729-1-git-send-email-swarren@wwwdotorg.org>
+ <1348599998-2729-2-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1348599998-2729-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1348599998-2729-2-git-send-email-swarren@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
 On 13:06 Tue 25 Sep     , Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> From: Stephen Warren <swarren@nvidia.com>
 > 
-> This series adds some build rules to run cpp on *.dts-cpp prior to
-> invoking dtc, and converts Tegra to the new rule as an example. What do
-> people think?
+> cmd_dtc_cpp runs the C pre-processor on the input .dts file before
+> passing it to dtc for final compilation. This allows used of #define
+> within the .dts file.
 > 
-> I assume that you've applied the dtc patches I sent yesterday. They
-> aren't in this series. See:
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+>  scripts/Makefile.lib |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
 > 
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020182.html
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020183.html
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020181.html
-> 
-> Note: those patches are against upstream dtc. If you wish to test this
-> series, apply the dtc patches to upstream dtc, build it, and copy the
-> resultant dtc binary over the top of scripts/dtc/dtc.
-> 
-> Stephen Warren (3):
->   kbuild: introduce cmd_dtc_cpp
->   ARM: use cmd_dtc_cpp for compilation of *.dts-cpp to *.dtb
->   ARM: tegra: compile all DT files with cpp 
-I do not like the extention
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 0be6f11..e3a149e 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -266,6 +266,9 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
+>  quiet_cmd_dtc = DTC     $@
+>  cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
+>  
+> +quiet_cmd_dtc_cpp = DTC+CPP $@
+> +cmd_dtc_cpp = $(CC) -E -Wp,-MD,$(depfile) -xc $< | $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -
+this should go to Makefile.build
 
-can we run gcc everytime?
+and we should keep the same nomecalture as lds with lds.S
 
-or just do as done for lds
+here dts.S
 
-*.dts.S
+and is it possible to cmd with it
 
 Best Regards,
 J.
