@@ -1,57 +1,59 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [RFC PATCH 1/3] kbuild: introduce cmd_dtc_cpp
-Date: Thu, 27 Sep 2012 07:44:38 +0200
-Message-ID: <20120927054438.GM17667@game.jcrosoft.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] ARM: use cmd_dtc_cpp for compilation of
+ *.dts-cpp to *.dtb
+Date: Thu, 27 Sep 2012 07:47:00 +0200
+Message-ID: <20120927054700.GN17667@game.jcrosoft.org>
 References: <1348599998-2729-1-git-send-email-swarren@wwwdotorg.org>
- <1348599998-2729-2-git-send-email-swarren@wwwdotorg.org>
+ <1348599998-2729-3-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1348599998-2729-2-git-send-email-swarren@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Stephen Warren <swarren@nvidia.com>, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
+In-Reply-To: <1348599998-2729-3-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 13:06 Tue 25 Sep     , Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> cmd_dtc_cpp runs the C pre-processor on the input .dts file before
-> passing it to dtc for final compilation. This allows used of #define
-> within the .dts file.
+> This allows DT source files to use the C pre-processor. A new file
+> extension is introduced for this purpose, since use of the pre-processor
+> must be optional; any property or node name that starts with "#" must be
+> escaped to prevent the pre-processor attempting to interpret it as a
+> directive. For this reason, skeleton.dtsi-cpp is introduced for *.dts-cpp
+> to include.
 > 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  scripts/Makefile.lib |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
+>  arch/arm/boot/Makefile              |    3 +++
+>  arch/arm/boot/dts/skeleton.dtsi-cpp |   13 +++++++++++++
+>  2 files changed, 16 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/skeleton.dtsi-cpp
 > 
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 0be6f11..e3a149e 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -266,6 +266,9 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
->  quiet_cmd_dtc = DTC     $@
->  cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
+> diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
+> index 3fdab01..c5d7fca 100644
+> --- a/arch/arm/boot/Makefile
+> +++ b/arch/arm/boot/Makefile
+> @@ -65,6 +65,9 @@ targets += $(dtb-y)
+>  $(obj)/%.dtb: $(src)/dts/%.dts FORCE
+>  	$(call if_changed_dep,dtc)
 >  
-> +quiet_cmd_dtc_cpp = DTC+CPP $@
-> +cmd_dtc_cpp = $(CC) -E -Wp,-MD,$(depfile) -xc $< | $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -
-this should go to Makefile.build
-
-and we should keep the same nomecalture as lds with lds.S
-
-here dts.S
-
-and is it possible to cmd with it
+> +$(obj)/%.dtb: $(src)/dts/%.dts-cpp FORCE
+> +	$(call if_changed_dep,dtc_cpp)
+> +
+move this to Makefile.build so we wan use it acroos arch
 
 Best Regards,
 J.
