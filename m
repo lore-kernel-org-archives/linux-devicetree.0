@@ -1,12 +1,13 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V3 1/2] dtc: cpp co-existence: allow names starting with # to
- be escaped
-Date: Thu, 27 Sep 2012 17:11:04 -0600
-Message-ID: <1348787465-9745-1-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH V3 2/2] dtc: cpp co-existence: add support for #line directives
+Date: Thu, 27 Sep 2012 17:11:05 -0600
+Message-ID: <1348787465-9745-2-git-send-email-swarren@wwwdotorg.org>
+References: <1348787465-9745-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348787465-9745-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,145 +24,111 @@ List-Id: devicetree@vger.kernel.org
 
 From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The device tree language as currently defined conflicts with the C pre-
-processor in one aspect - when a property or node name begins with a #
-character, a pre-processor would attempt to interpret it as a directive,
-fail, and most likely error out.
+Line control directives of the following formats are supported:
+    #line LINE "FILE"
+    # LINE "FILE" [FLAGS]
 
-This change allows a property/node name to be prefixed with \. This
-prevents a pre-processor from seeing # as the first non-whitespace
-character on the line, and hence prevents the conflict. \ was previously
-an illegal character in property/node names, so this change is
-backwards compatible. The \ is stripped from the name during parsing
-by dtc.
+This allows dtc to consume the output of pre-processors, and to provide
+error messages that refer to the original filename, including taking
+into account any #include directives that the pre-processor may have
+performed.
 
 Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
-v3: No change.
+v3: Use a simplified regex from David Gibson. Use a separate test-case .dts.
+v2: Only match #line directives at the start of the line.
 ---
- dtc-lexer.l                |    5 +++--
- tests/.gitignore           |    1 +
- tests/Makefile.tests       |    2 +-
- tests/propname_escapes.c   |   43 +++++++++++++++++++++++++++++++++++++++++++
- tests/propname_escapes.dts |    6 ++++++
- tests/run_tests.sh         |    3 +++
- 6 files changed, 57 insertions(+), 3 deletions(-)
- create mode 100644 tests/propname_escapes.c
- create mode 100644 tests/propname_escapes.dts
+ dtc-lexer.l               |   21 +++++++++++++++++++++
+ srcpos.c                  |    6 ++++++
+ srcpos.h                  |    2 ++
+ tests/line_directives.dts |   11 +++++++++++
+ tests/run_tests.sh        |    2 ++
+ 5 files changed, 42 insertions(+), 0 deletions(-)
+ create mode 100644 tests/line_directives.dts
 
 diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 91c4930..edbeb86 100644
+index edbeb86..254d5af 100644
 --- a/dtc-lexer.l
 +++ b/dtc-lexer.l
-@@ -162,9 +162,10 @@ static int pop_input_file(void);
- 			return ']';
+@@ -71,6 +71,27 @@ static int pop_input_file(void);
+ 			push_input_file(name);
  		}
  
--<PROPNODENAME>{PROPNODECHAR}+ {
-+<PROPNODENAME>\\?{PROPNODECHAR}+ {
- 			DPRINT("PropNodeName: %s\n", yytext);
--			yylval.propnodename = xstrdup(yytext);
-+			yylval.propnodename = xstrdup((yytext[0] == '\\') ?
-+							yytext + 1 : yytext);
- 			BEGIN_DEFAULT();
- 			return DT_PROPNODENAME;
- 		}
-diff --git a/tests/.gitignore b/tests/.gitignore
-index f8e1af0..e2aa24a 100644
---- a/tests/.gitignore
-+++ b/tests/.gitignore
-@@ -39,6 +39,7 @@ tmp.*
- /path_offset
- /path_offset_aliases
- /phandle_format
-+/propname_escapes
- /references
- /root_node
- /rw_tree1
-diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-index 1795466..d59bff8 100644
---- a/tests/Makefile.tests
-+++ b/tests/Makefile.tests
-@@ -12,7 +12,7 @@ LIB_TESTS_L = get_mem_rsv \
- 	sw_tree1 \
- 	move_and_save mangle-layout nopulate \
- 	open_pack rw_tree1 set_name setprop del_property del_node \
--	appendprop1 appendprop2 \
-+	appendprop1 appendprop2 propname_escapes \
- 	string_escapes references path-references phandle_format \
- 	boot-cpuid incbin \
- 	extra-terminating-null \
-diff --git a/tests/propname_escapes.c b/tests/propname_escapes.c
-new file mode 100644
-index 0000000..3aec28f
---- /dev/null
-+++ b/tests/propname_escapes.c
-@@ -0,0 +1,43 @@
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ *	Testcase for fdt_getprop()
-+ * Copyright (C) 2006 David Gibson, IBM Corporation.
-+ * Copyright (C) 2012 NVIDIA CORPORATION. All rights reserved.
-+ *
-+ * This library is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public License
-+ * as published by the Free Software Foundation; either version 2.1 of
-+ * the License, or (at your option) any later version.
-+ *
-+ * This library is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * Lesser General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU Lesser General Public
-+ * License along with this library; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-+ */
++<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}({WS}+[0-9]+)? {
++			char *line, *tmp, *fn;
++			/* skip text before line # */
++			line = yytext;
++			while (!isdigit(*line))
++				line++;
++			/* skip digits in line # */
++			tmp = line;
++			while (!isspace(*tmp))
++				tmp++;
++			/* "NULL"-terminate line # */
++			*tmp = '\0';
++			/* start of filename */
++			fn = strchr(tmp + 1, '"') + 1;
++			/* strip trailing " from filename */
++			tmp = strchr(fn, '"');
++			*tmp = 0;
++			/* -1 since #line is the number of the next line */
++			srcpos_set_line(xstrdup(fn), atoi(line) - 1);
++		}
 +
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdint.h>
+ <*><<EOF>>		{
+ 			if (!pop_input_file()) {
+ 				yyterminate();
+diff --git a/srcpos.c b/srcpos.c
+index 3ee523d..246ab4b 100644
+--- a/srcpos.c
++++ b/srcpos.c
+@@ -328,3 +328,9 @@ srcpos_warn(struct srcpos *pos, char const *fmt, ...)
+ 
+ 	va_end(va);
+ }
 +
-+#include <fdt.h>
-+#include <libfdt.h>
-+
-+#include "tests.h"
-+
-+int main(int argc, char *argv[])
++void srcpos_set_line(char *f, int l)
 +{
-+	void *fdt;
-+
-+	test_init(argc, argv);
-+	fdt = load_blob_arg(argc, argv);
-+
-+	check_getprop_cell(fdt, 0, "#address-cells", 1);
-+	check_getprop_cell(fdt, 0, "#gpio-cells", 2);
-+
-+	PASS();
++	current_srcfile->name = f;
++	current_srcfile->lineno = l;
 +}
-diff --git a/tests/propname_escapes.dts b/tests/propname_escapes.dts
+diff --git a/srcpos.h b/srcpos.h
+index 5617916..93a2712 100644
+--- a/srcpos.h
++++ b/srcpos.h
+@@ -113,4 +113,6 @@ extern void srcpos_error(struct srcpos *pos, char const *, ...)
+ extern void srcpos_warn(struct srcpos *pos, char const *, ...)
+      __attribute__((format(printf, 2, 3)));
+ 
++extern void srcpos_set_line(char *f, int l);
++
+ #endif /* _SRCPOS_H_ */
+diff --git a/tests/line_directives.dts b/tests/line_directives.dts
 new file mode 100644
-index 0000000..9f70618
+index 0000000..e9d0800
 --- /dev/null
-+++ b/tests/propname_escapes.dts
-@@ -0,0 +1,6 @@
++++ b/tests/line_directives.dts
+@@ -0,0 +1,11 @@
 +/dts-v1/;
 +
++/* common format */
++#line 3 "foo.dts"
++/* newer gcc format */
++# 9 "baz.dts" 1
++/* flags are optional */
++# 6 "bar.dts"
++
 +/ {
-+	#address-cells = <1>;
-+	\#gpio-cells = <2>;
 +};
 diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index e2158f7..7d7a5f7 100755
+index 7d7a5f7..9ca45c9 100755
 --- a/tests/run_tests.sh
 +++ b/tests/run_tests.sh
-@@ -254,6 +254,9 @@ dtc_tests () {
-     tree1_tests_rw dtc_tree1.test.dtb
-     run_test dtbs_equal_ordered dtc_tree1.test.dtb test_tree1.dtb
+@@ -257,6 +257,8 @@ dtc_tests () {
+     run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb propname_escapes.dts
+     run_test propname_escapes dtc_escapes.test.dtb
  
-+    run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb propname_escapes.dts
-+    run_test propname_escapes dtc_escapes.test.dtb
++    run_dtc_test -I dts -O dtb -o line_directives.test.dtb line_directives.dts
 +
      run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb escapes.dts
      run_test string_escapes dtc_escapes.test.dtb
