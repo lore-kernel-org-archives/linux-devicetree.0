@@ -1,13 +1,19 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V3 2/2] dtc: cpp co-existence: add support for #line directives
-Date: Thu, 27 Sep 2012 17:11:05 -0600
-Message-ID: <1348787465-9745-2-git-send-email-swarren@wwwdotorg.org>
-References: <1348787465-9745-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
+Date: Thu, 27 Sep 2012 17:21:23 -0600
+Message-ID: <5064DF73.8000006@wwwdotorg.org>
+References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
+ <1342106718-3058-7-git-send-email-sjg@chromium.org>
+ <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
+ <501803F3.6090803@wwwdotorg.org>
+ <CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg@mail.gmail.com>
+ <50647594.9060404@wwwdotorg.org>
+ <CAPnjgZ2R=G=xmjdoP74JeAknwH9QGx8+mED7TQ8Kd_zEmcVwtQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348787465-9745-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <CAPnjgZ2R=G=xmjdoP74JeAknwH9QGx8+mED7TQ8Kd_zEmcVwtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,120 +24,59 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 09/27/2012 02:27 PM, Simon Glass wrote:
+> On Thu, Sep 27, 2012 at 8:49 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 09/27/2012 07:58 AM, Simon Glass wrote:
+...
+>>> Really this is just a way of getting U-Boot and Linux to agree on the
+>>> address, by having U-Boot know the address that the kernel will happen
+>>> to use. It isn't very robust, but we have found it useful as a means
+>>> of avoiding problems in this area.
+>>
+>> Right, but again, why can't the display driver simply read the address
+>> out of the register; why is there a need to duplicate the data?
+>>
+>> I guess one possibility is that the register only gives the base address
+>> and not the size/mode of the allocated surface, but I don't recall if
+>> this proposed binding did that either?
+> 
+> So here is my explanation:
+> 
+> 1. U-Boot would normally put the display right near the top of memory.
+> Instead, it figures out where the kernel will put it (somehow this
+> seems to often be at a fixed address) and uses that address.
+> 
+> 2. That means that U-Boot will now have the display exactly where the
+> kernel wants it.
 
-Line control directives of the following formats are supported:
-    #line LINE "FILE"
-    # LINE "FILE" [FLAGS]
+Oh, the DT property is telling U-Boot where to put the surface so that
+when the kernel determines where to put it, it'll already be there?
 
-This allows dtc to consume the output of pre-processors, and to provide
-error messages that refer to the original filename, including taking
-into account any #include directives that the pre-processor may have
-performed.
+That seems completely backwards. It's also extremely fragile; what if
+the kernel suddenly starts allocating at some other random address,
+which stops matching what U-Boot expects?
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v3: Use a simplified regex from David Gibson. Use a separate test-case .dts.
-v2: Only match #line directives at the start of the line.
----
- dtc-lexer.l               |   21 +++++++++++++++++++++
- srcpos.c                  |    6 ++++++
- srcpos.h                  |    2 ++
- tests/line_directives.dts |   11 +++++++++++
- tests/run_tests.sh        |    2 ++
- 5 files changed, 42 insertions(+), 0 deletions(-)
- create mode 100644 tests/line_directives.dts
+Far better would be for U-Boot to put the surface wherever it wants,
+then manipulate the DT that's passed to the kernel to:
 
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index edbeb86..254d5af 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -71,6 +71,27 @@ static int pop_input_file(void);
- 			push_input_file(name);
- 		}
- 
-+<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}({WS}+[0-9]+)? {
-+			char *line, *tmp, *fn;
-+			/* skip text before line # */
-+			line = yytext;
-+			while (!isdigit(*line))
-+				line++;
-+			/* skip digits in line # */
-+			tmp = line;
-+			while (!isspace(*tmp))
-+				tmp++;
-+			/* "NULL"-terminate line # */
-+			*tmp = '\0';
-+			/* start of filename */
-+			fn = strchr(tmp + 1, '"') + 1;
-+			/* strip trailing " from filename */
-+			tmp = strchr(fn, '"');
-+			*tmp = 0;
-+			/* -1 since #line is the number of the next line */
-+			srcpos_set_line(xstrdup(fn), atoi(line) - 1);
-+		}
-+
- <*><<EOF>>		{
- 			if (!pop_input_file()) {
- 				yyterminate();
-diff --git a/srcpos.c b/srcpos.c
-index 3ee523d..246ab4b 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -328,3 +328,9 @@ srcpos_warn(struct srcpos *pos, char const *fmt, ...)
- 
- 	va_end(va);
- }
-+
-+void srcpos_set_line(char *f, int l)
-+{
-+	current_srcfile->name = f;
-+	current_srcfile->lineno = l;
-+}
-diff --git a/srcpos.h b/srcpos.h
-index 5617916..93a2712 100644
---- a/srcpos.h
-+++ b/srcpos.h
-@@ -113,4 +113,6 @@ extern void srcpos_error(struct srcpos *pos, char const *, ...)
- extern void srcpos_warn(struct srcpos *pos, char const *, ...)
-      __attribute__((format(printf, 2, 3)));
- 
-+extern void srcpos_set_line(char *f, int l);
-+
- #endif /* _SRCPOS_H_ */
-diff --git a/tests/line_directives.dts b/tests/line_directives.dts
-new file mode 100644
-index 0000000..e9d0800
---- /dev/null
-+++ b/tests/line_directives.dts
-@@ -0,0 +1,11 @@
-+/dts-v1/;
-+
-+/* common format */
-+#line 3 "foo.dts"
-+/* newer gcc format */
-+# 9 "baz.dts" 1
-+/* flags are optional */
-+# 6 "bar.dts"
-+
-+/ {
-+};
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 7d7a5f7..9ca45c9 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -257,6 +257,8 @@ dtc_tests () {
-     run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb propname_escapes.dts
-     run_test propname_escapes dtc_escapes.test.dtb
- 
-+    run_dtc_test -I dts -O dtb -o line_directives.test.dtb line_directives.dts
-+
-     run_dtc_test -I dts -O dtb -o dtc_escapes.test.dtb escapes.dts
-     run_test string_escapes dtc_escapes.test.dtb
- 
--- 
-1.7.0.4
+a) Add a /memreserve/ so that memory doesn't get re-used for anything
+else during boot.
+
+b) Add a property to the display node indicating which memreserve
+represents the frame-buffer location.
+
+When the kernel boots, it can:
+
+* Copy the content from the U-Boot-allocated buffer to whatever display
+buffer the kernel allocated before writing the new address to the HW.
+
+* Undo the memory reservation triggered by the /memreserve/ to allow the
+memory to be re-used.
+
+> So what do you think? Should we remove this entirely, or is it a useful hack?
+
+Yes, I think in its current form, it isn't useful.
