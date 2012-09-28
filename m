@@ -1,50 +1,103 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH V3 2/2] dtc: cpp co-existence: add support for #line
- directives
-Date: Fri, 28 Sep 2012 09:25:34 -0500
-Message-ID: <E1THbVW-0005d1-0V@jdl.com>
-References: <1348787465-9745-1-git-send-email-swarren@wwwdotorg.org>
- <1348787465-9745-2-git-send-email-swarren@wwwdotorg.org>
- <20120928000807.GD24942@truffula.fritz.box>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20120928000807.GD24942-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [RFC PATCH 00/16] pinctrl: samsung: Usability and extensibiltiy
+ improvements
+Date: Fri, 28 Sep 2012 16:28:31 +0200
+Message-ID: <1348842527-22460-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-> On Thu, Sep 27, 2012 at 05:11:05PM -0600, Stephen Warren wrote:
-> > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > 
-> > Line control directives of the following formats are supported:
-> >     #line LINE "FILE"
-> >     # LINE "FILE" [FLAGS]
-> > 
-> > This allows dtc to consume the output of pre-processors, and to provide
-> > error messages that refer to the original filename, including taking
-> > into account any #include directives that the pre-processor may have
-> > performed.
-> > 
-> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> 
-> Jon, please apply.
+This RFC series is a work on improving usability and extensibiltiy of the
+pinctrl-samsung driver. It consists of three main parts:
+ - moving SoC-specific data to device tree
+ - converting the driver to use one GPIO chip and one IRQ domain per pin bank
+ - introducing generic wake-up interrupt capability description
 
+What the first part does is replacing static platform-specific data in
+pinctrl-samsung driver with data dynamically parsed from device tree.
 
-Both 1/2 and 2/2 applied and pushed out.
+It aims at reducing the SoC-specific part of the driver and thus the
+amount of modifications to driver sources when adding support for next
+SoCs (like Exynos4x12).
 
-Thanks,
-jdl
+In addition, it extends the description of SoC-specific attributes to cover all
+mainlined Samsung SoCs, starting from s3c24xx and ending on latest Exynos5
+series, with the exception of 4-bit banks with more than 8 pins on S3C64xx,
+which will be covered by futher patch(es).
+
+The second part attempts to simplify usage of the driver and fix several
+problems of current implementation, in particular:
+
+  - Simplifies GPIO pin specification in device tree by using pin
+    namespace local to pin bank instead of local to pin controller, e.g.
+
+	gpios = <&gpj0 3 0>;
+
+    instead of
+
+	gpios = <&pinctrl0 115 0>;
+
+  - Simplifies GPIO interrupt specification in device tree by using
+    namespace local to pin bank (and equal to GPIO namespace), e.g.
+
+	interrupt-parent = <&gpj0>;
+	interrupts = <3 0>;
+
+    instead of
+
+	interrupt-parent = <&pinctrl0>;
+	interrupts = <115 0>;
+
+  - Simplifies internal GPIO pin to bank translation thanks to
+    correspondence of particular GPIO chips to pin banks. This allows
+    to remove the (costly in case of GPIO bit-banging drivers) lookup
+    over all banks to find the one that the pin is from.
+
+Third part is focused on removing the static, hard-coded description of wake-up
+interrupt controller and wake-up interrupt layout.
+
+It defines a (mostly) generic (in scope of targetted SoCs) wake-up interrupt
+layout specification format that allows to specify which pin banks support
+wake-up interrupts and how they are handled (direct or multiplexed/chained).
+
+See particular patches for more detailed descriptions and the last patch for
+updated device tree bindings.
+
+Any comments are welcome.
+
+Tomasz Figa (16):
+  pinctrl: exynos: Parse wakeup-eint parameters from DT
+  pinctrl: samsung: Detect and handle unsupported configuration types
+  pinctrl: samsung: Parse pin banks from DT
+  pinctrl: exynos: Remove static platform-specific data
+  pinctrl: samsung: Parse bank-specific eint offset from DT
+  pinctrl: samsung: Hold OF node of pin bank in bank struct
+  pinctrl: samsung: Hold pointer to driver data in bank struct
+  pinctrl: exynos: Use one IRQ domain per pin bank
+  pinctrl: samsung: Do not pass gpio_chip to pin_to_reg_bank
+  pinctrl: samsung: Use one GPIO chip per pin bank
+  pinctrl: samsung: Use per-bank IRQ domain for wake-up interrupts
+  pinctrl: exynos: Set pin function to EINT in irq_set_type of wake-up
+    EINT
+  pinctrl: samsung: Parse offsets of particular registers from DT
+  ARM: dts: exynos4210: Remove legacy gpio nodes
+  ARM: dts: exynos4210: Add platform-specific descriptions for pin
+    controllers
+  Documentation: Update samsung-pinctrl device tree bindings
+    documentation
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           | 212 ++++++++--
+ arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi    | 459 +++++++++++++++++++++
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi          |   2 +
+ arch/arm/boot/dts/exynos4210.dtsi                  | 254 +-----------
+ drivers/pinctrl/pinctrl-exynos.c                   | 401 ++++++++----------
+ drivers/pinctrl/pinctrl-exynos.h                   | 184 +--------
+ drivers/pinctrl/pinctrl-samsung.c                  | 372 +++++++++++++----
+ drivers/pinctrl/pinctrl-samsung.h                  |  87 ++--
+ 8 files changed, 1186 insertions(+), 785 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi
+
+-- 
+1.7.12
