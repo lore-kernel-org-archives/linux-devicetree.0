@@ -1,13 +1,12 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [RFC PATCH 2/2] kbuild: introduce cmd_dtc_cpp
-Date: Fri, 28 Sep 2012 13:32:11 -0600
-Message-ID: <1348860731-20868-3-git-send-email-swarren@wwwdotorg.org>
-References: <1348860731-20868-1-git-send-email-swarren@wwwdotorg.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: Current state of devicetree and x86
+Date: Fri, 28 Sep 2012 22:04:21 +0200
+Message-ID: <20120928200421.GA30777@avionic-0098.mockup.avionic-design.de>
+References: <CAH9NwWeVMZi3fH43DVZnp2_J1XbH-NDmVXND9TX8SGr35Sy+eQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5516559931148280817=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348860731-20868-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <CAH9NwWeVMZi3fH43DVZnp2_J1XbH-NDmVXND9TX8SGr35Sy+eQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,65 +17,77 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-cmd_dtc_cpp runs the C pre-processor on the input .dts file before
-passing it to dtc for final compilation. This allows used of #define
-within the .dts file.
+--===============5516559931148280817==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Disposition: inline
 
-Introduce a new rule for %.dtsp -> %.dtb, which uses cmd_dtc_cpp. A new
-file extension is introduced for this purpose, since use of the pre-
-processor must be optional; any property or node name that starts with
-"#" must be escaped to prevent the pre-processor attempting to interpret
-it as a directive. For this reason, skeleton.dtsi-cpp is introduced for
-*.dts-cpp to include.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/skeleton.dtsip |   13 +++++++++++++
- scripts/Makefile.lib             |    6 ++++++
- 2 files changed, 19 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/skeleton.dtsip
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/skeleton.dtsip b/arch/arm/boot/dts/skeleton.dtsip
-new file mode 100644
-index 0000000..8bf6729
---- /dev/null
-+++ b/arch/arm/boot/dts/skeleton.dtsip
-@@ -0,0 +1,13 @@
-+/*
-+ * Skeleton device tree; the bare minimum needed to boot; just include and
-+ * add a compatible value.  The bootloader will typically populate the memory
-+ * node.
-+ */
-+
-+/ {
-+	\#address-cells = <1>;
-+	\#size-cells = <1>;
-+	chosen { };
-+	aliases { };
-+	memory { device_type = "memory"; reg = <0 0>; };
-+};
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 425578e..9dd81c0 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -269,6 +269,12 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
- $(obj)/%.dtb: $(src)/dts/%.dts FORCE
- 	$(call if_changed_dep,dtc)
- 
-+quiet_cmd_dtc_cpp = DTC+CPP $@
-+cmd_dtc_cpp = $(CC) -E -Wp,-MD,$(depfile) -xc $< | $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -
-+
-+$(obj)/%.dtb: $(src)/dts/%.dtsp FORCE
-+	$(call if_changed_dep,dtc_cpp)
-+
- # Bzip2
- # ---------------------------------------------------------------------------
- 
--- 
-1.7.0.4
+On Tue, Sep 25, 2012 at 08:13:05PM +0200, Christian Gmeiner wrote:
+> Hi all.
+>=20
+> I am interested in the current state of dt and x86. In general I have
+> device with some
+> i2c devices and gpio stuff and a coreboot based BIOS. That means I could =
+add the
+> dt into the BIOS flash and make use of it. Is there any x86 bootloader th=
+at does
+> support devicetree? Has somebody some experiences?
+
+I patched syslinux a while back to allow loading and passing a DTB to
+the Linux kernel. Patches based on that work went into syslinux 4.06
+IIRC. Note that currently onle the linux.c32 executable contains that
+functionality but there were plans to make it available in the standard
+loader in 5.00 I think.
+
+Alternatively you could customize OpenFirmware for your device. OFW can
+be built as a COM32 executable and can be run from syslinux or it can be
+used as a BIOS replacement.
+
+Thierry
+
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQZgLFAAoJEN0jrNd/PrOh4I0P/3AwFwItiq5OS7pOGR/UeIU7
+vT39dDw8IElTuUY0UbRHeJP/KcqVxaQSGXaa/0VoLBGX1dwtUr5cjotP397t0XLE
+EK108M3EfuV4MnuGlTVro8ygx2Rvc0UCuE9o3CuHBX0iCXqBx9gns80JQEmOfXyL
+aocJhkeCGWwzYX5Dha7HgKvgEHjzaU370EUqjHBrFiT4Y2cnbxglhNEl2Ww09KG5
+aVrAozW2COzjIT1pKiX2cDfAp+6AOrA60osvXQny7jr7C9Pfeeq85HA2c06joYUW
+6XAhRFVfts0LFoYgK9HZhaVguYWydYE3IuBAMEQ1s8qv/x9rIReaAO2arzN0qLo8
+5ULZu1ZjKVN/X4WPMoTpUIei7NQ5Qb7jLJMcbHheuh24BgIDi1ARoPFe7CqykskY
+kBVmwc5EjwX4JJzTzOkuAB4w1wobZCQh7M86SRFKpEXPZBOXq8/gU42We6ABUuIU
+ruVb7U3M431qlbllyU7RN3t/cpdIlQ+bBsf8TEFvFspOd+uysrTNVGC0E9aEe2Gz
+IenvOG5uw+xlZ1QYG3wh8IIND1jjm+LbUNhnAvHai3bx6PujhlMlE8kRQmIlKLeG
+ZCqdqtgVEi3Cmv4dPbBr4j0+Cr7q/5MCWFj98dtSIfEAga2YlsjoyxEXrjolaZio
+WTqMgpD01DyPtMu+Yo9e
+=TpVe
+-----END PGP SIGNATURE-----
+
+--5mCyUwZo2JvN/JJP--
+
+--===============5516559931148280817==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5516559931148280817==--
