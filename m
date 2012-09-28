@@ -1,41 +1,40 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH V3] video: exynos_dp: Add device tree support to DP driver
-Date: Fri, 28 Sep 2012 10:25:39 +0200
-Message-ID: <50655F03.6000700@samsung.com>
-References: <1348515385-22332-1-git-send-email-ajaykumar.rs@samsung.com>
- <50645848.6080102@gmail.com> <000601cd9d0d$c3296ca0$497c45e0$%han@samsung.com>
- <1511551.R6uMubmq1B@flatron>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] pinctrl: add bcm2835 driver
+Date: Fri, 28 Sep 2012 10:40:50 +0200
+Message-ID: <CACRpkdbpGUfcE8mG7iPA_kocj3XGw8QSL37NMS+-KXgNGoqK9w@mail.gmail.com>
+References: <1348805412-7804-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1511551.R6uMubmq1B@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, 'Ajay Kumar' <ajaykumar.rs@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, FlorianSchandinat@gmx.de, thomas.ab@samsung.com, 'devicetree-discuss' <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348805412-7804-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Boot <bootc-1Slo4GeK4H1eoWH0uzbU5w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2012 08:48 AM, Tomasz Figa wrote:
->>>> +	display-port-controller {
->>>> +		compatible = "samsung,exynos5-dp";
->>>> +		reg =<0x145B0000 0x10000>;
->>>> +		interrupts =<10 3>;
->>>> +		interrupt-parent =<&combiner>;
->>>> +		dp_phy =<&dptx_phy>;
->>>
->>> Shouldn't it be "samsung,dp_phy" ?
->>
->> Do you mean this ? It is not working.
->> +		dp_phy = "samsung,dp_phy";
-> 
-> I believe he meant:
-> 
-> -+		dp_phy =<&dptx_phy>;
-> ++		samsung,dp_phy =<&dptx_phy>;
-> 
-> to mark that this is a Samsung-specific property.
+On Fri, Sep 28, 2012 at 6:10 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
-Yes, that's what I meant. Sorry for imprecise wording.
+> From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+>
+> The BCM2835 GPIO module is a combined GPIO controller, (GPIO) interrupt
+> controller, and pinmux/control device.
+>
+> Original driver by Simon Arlott.
+> Rewrite including GPIO chip device by Chris Boot.
 
-Regards,
-Sylwester
+It's such a sweet thing that I can't resist it, and since it's
+a new driver it's OK this late in the cycle, so:
+patch applied.
+
+Yours,
+Linus Walleij
