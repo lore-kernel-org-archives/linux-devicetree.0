@@ -1,71 +1,49 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm2835: implement machine restart hook
-Date: Fri, 28 Sep 2012 12:31:40 +0200
-Message-ID: <20120928103140.GZ17667@game.jcrosoft.org>
-References: <1348805280-7647-1-git-send-email-swarren@wwwdotorg.org>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH V2 1/2] mmc: sdhci-spear: add device tree bindings
+Date: Fri, 28 Sep 2012 06:58:15 -0400
+Message-ID: <871uhmv2go.fsf@octavius.laptop.org>
+References: <cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1348805280-7647-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
+	(Viresh Kumar's message of "Fri, 28 Sep 2012 15:58:22 +0530")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sr@denx.de
 List-Id: devicetree@vger.kernel.org
 
-On 22:08 Thu 27 Sep     , Stephen Warren wrote:
-> Implement the machine restart hook using the SoC's watchdog timer module.
-> To support this, define a DT binding for the watchdog module, and add it
-> to the device tree.
-> 
-> The downstream rpi-split branch contains a full watchdog timer driver
-> implementation, which also implements the restart hook. However, the
-> restart function is largely separate from the watchdog driver, so for
-> simplicity, the restart hook is implemented here directly in the main
-> machine source file.
-> 
-> Overall structure (separate setup/restart) functions derived from the
-> picoxcell ARM support.
-> 
-> Watchdog register IO sequence taken from code by Simon Arlott. Note that
-> the watchdog module is not documented in BCM2835-ARM-Peripherals.pdf.
-> 
-> Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> ---
->  .../bindings/watchdog/brcm,bcm2835-pm-wdog.txt     |   13 ++++++
->  arch/arm/boot/dts/bcm2835.dtsi                     |    5 +++
->  arch/arm/mach-bcm2835/bcm2835.c                    |   46 ++++++++++++++++++++
->  3 files changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt b/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
-> new file mode 100644
-> index 0000000..03138e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
-> @@ -0,0 +1,13 @@
-> +BCM2835 Watchdog timer
-> +
-> +Required properties:
-> +
-> +- compatible : should be "brcm,bcm2835-pm-wdog"
-> +- reg : Specifies base physical address and size of the registers.
-> +
-> +Example:
-> +
-> +intc: interrupt-controller {
-> +	compatible = "brcm,bcm2835-pm-wdog";
-it's seems everyone use -wdt
+Hi,
 
-Best Regards,
-J.
+On Fri, Sep 28 2012, Viresh Kumar wrote:
+> This adds simple DT bindings for SDHCI SPEAr controller. It uses cd-gpios from
+> common mmc bindings.
+>
+> This also fixes spear300-evb.dts with correct name for card detect binding.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> V1->V2:
+> - Use cd-gpios instead of int-gpio as binding for card detect gpio.
+> - Fix spear300-evb.dts binding name for cd-gpios
+> - Removed power-gpio from DT bindings and code, must be handled via regulators
+>
+>  .../devicetree/bindings/mmc/sdhci-spear.txt        | 18 +++++++
+>  arch/arm/boot/dts/spear300-evb.dts                 |  3 +-
+>  arch/arm/boot/dts/spear320-evb.dts                 |  2 -
+>  drivers/mmc/host/sdhci-spear.c                     | 57 +++++++++++++++++++++-
+>  4 files changed, 74 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-spear.txt
+
+Thanks, pushed to mmc-next for 3.7.
+
+It might be possible to remove sdhci-spear.c in the future -- all it's
+doing at the moment is the card_power_gpio handling (which should be a
+regulator) and cd-gpio handling (which can be done by core/slot-gpio.c).
+So perhaps sdhci-pltfm can handle SPEAr hosts directly, once we move the
+platdata users away from card_power_gpio.
+
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
