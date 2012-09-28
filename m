@@ -1,51 +1,50 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCH 6/6] usb: dwc3: core: add dt support for dwc3 core
-Date: Fri, 28 Sep 2012 19:02:26 +0530
-Message-ID: <CAAe_U6Lu-bKXEA7ZUHMiS3R+e6eZ+NEg3VTT+RmepqwqyYYmOA@mail.gmail.com>
-References: <1348836795-4783-1-git-send-email-kishon@ti.com>
-	<1348836795-4783-7-git-send-email-kishon@ti.com>
-	<20120928130240.GN31006@arwen.pp.htv.fi>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH V3 2/2] dtc: cpp co-existence: add support for #line
+ directives
+Date: Fri, 28 Sep 2012 09:25:34 -0500
+Message-ID: <E1THbVW-0005d1-0V@jdl.com>
+References: <1348787465-9745-1-git-send-email-swarren@wwwdotorg.org>
+ <1348787465-9745-2-git-send-email-swarren@wwwdotorg.org>
+ <20120928000807.GD24942@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120928130240.GN31006@arwen.pp.htv.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20120928000807.GD24942-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> On Thu, Sep 27, 2012 at 05:11:05PM -0600, Stephen Warren wrote:
+> > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Line control directives of the following formats are supported:
+> >     #line LINE "FILE"
+> >     # LINE "FILE" [FLAGS]
+> > 
+> > This allows dtc to consume the output of pre-processors, and to provide
+> > error messages that refer to the original filename, including taking
+> > into account any #include directives that the pre-processor may have
+> > performed.
+> > 
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> 
+> Jon, please apply.
 
-On Fri, Sep 28, 2012 at 6:32 PM, Felipe Balbi <balbi@ti.com> wrote:
-> On Fri, Sep 28, 2012 at 06:23:15PM +0530, Kishon Vijay Abraham I wrote:
->> Added dwc3 support for dwc3 core and update the documentation with
->> device tree binding information.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  Documentation/devicetree/bindings/usb/dwc3.txt |   24 ++++++++++++++++++++++++
->>  drivers/usb/dwc3/core.c                        |   14 ++++++++++++--
->>  2 files changed, 36 insertions(+), 2 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/usb/dwc3.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
->> new file mode 100644
->> index 0000000..87d5eeb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
->> @@ -0,0 +1,24 @@
->> +SYNOPSIS DWC3 CORE
->> +
->> +DWC3- USB3 CONTROLLER
->> +
->> +Required properties:
->> + - compatible: Should be "synopsis,dwc3"
->
-> "synopsys" and I think:
->
-> - compatible: Must be "synopsys,dwc3" reads a bit better.
 
-Will re-post this patch.
+Both 1/2 and 2/2 applied and pushed out.
 
-Thanks
-Kishon
+Thanks,
+jdl
