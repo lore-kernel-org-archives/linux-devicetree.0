@@ -1,50 +1,57 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add DT support for i2s
-Date: Fri, 28 Sep 2012 14:33:55 +0530
-Message-ID: <CAAgF-Bc_KwJgcDOOkzrqcondGnmHDQ08s9Ooq61DbON7ZZtvmA@mail.gmail.com>
-References: <1348741532-29412-1-git-send-email-padma.v@samsung.com>
-	<506470A5.3070307@wwwdotorg.org>
+From: "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] usb: phy: add a new driver for usb3 phy
+Date: Fri, 28 Sep 2012 15:10:59 +0530
+Message-ID: <CAAe_U6J_AGArYEj1-sUmEeVkMmbkhp=WZxOuN-y-L6E5SDJM=Q@mail.gmail.com>
+References: <1348754648-8315-1-git-send-email-kishon@ti.com>
+ <1348754648-8315-2-git-send-email-kishon@ti.com>
+ <20120927141837.GA26268@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <506470A5.3070307@wwwdotorg.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, sangsu4u.park@samsung.com, kgene.kim@samsung.com, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120927141837.GA26268-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2012 at 8:58 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 09/27/2012 04:25 AM, Padmavathi Venna wrote:
->> Add support for device based discovery.
+Hi,
+
+On Thu, Sep 27, 2012 at 7:48 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Thu, Sep 27, 2012 at 07:34:07PM +0530, Kishon Vijay Abraham I wrote:
+>> +static int omap5_usb_phy_power(struct omap_usb *phy, bool on)
+>> +{
+>> +     u32 val;
+>> +     unsigned long rate;
+>> +     struct clk *sys_clk;
+>> +
+>> +     sys_clk = clk_get(NULL, "sys_clkin");
+>> +     if (IS_ERR(sys_clk)) {
+>> +             pr_err("%s: unable to get sys_clkin\n", __func__);
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     rate = clk_get_rate(sys_clk);
+>> +     rate = rate/1000000;
+>> +     clk_put(sys_clk);
 >
->> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> Actually, you're supposed to hold on to the struct clk all the time your
+> driver is making use of that - you're not supposed to drop it.
 >
->> +i2s@03830000 {
->> +     compatible = "samsung,samsung-i2s";
->> +     reg = <0x03830000 0x100>;
->
->> +     tx-dma-channel-secondary = <&pdma0 8>;
->> +     tx-dma-channel = <&pdma0 10>;
->> +     rx-dma-channel = <&pdma0 9>;
->> +     supports-6ch;
->> +     supports-rstclr;
->> +     supports-secdai;
->
-> Those 6 properties are custom to this binding so should have a vendor
-> prefix, e.g. "samsung,supports-6ch".
-Okay. I will change this.
->
-> Also, I wonder if this shouldn't wait for the forthcoming standardized
-> DT DMA bindings (or perhaps document custom bindings that are identical
-> to the new standardized bindings)? Otherwise, the DMA stuff will all
-> have to be redefined again. Apparently it's hoped the bindings will be
-> in 3.7, or if not there, in 3.8.
-Okay. Once the generic DT DMA bindings are available I will use that.
-But It will be good if atleast other things get reviewed.
+> That has several advantages: if clk_get() fails, then you're failing
+> earlier on (when the driver is being probed) and when some event occurs.
+
+Ok. Will post a patch fixing it.
 
 Thanks
-Padma
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kishon
