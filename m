@@ -1,221 +1,110 @@
-From: viresh kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH Resend 1/2] mmc: sdhci-spear: add device tree bindings
-Date: Fri, 28 Sep 2012 15:29:51 +0530
-Message-ID: <CAOh2x==YUrjA0xXP+npBUM1vkZ1pG0nunXqc5jwrxntiP0OvMw@mail.gmail.com>
-References: <viresh.kumar@linaro.org>
-	<a42729885c593f61bb62c45f229174d9f7370c40.1348809217.git.viresh.kumar2@arm.com>
-	<87lifuv7rm.fsf@octavius.laptop.org>
+From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Subject: Re: [PATCH 1/5] drivers: usb: phy: add a new driver for omap usb2 phy
+Date: Fri, 28 Sep 2012 15:37:37 +0530
+Message-ID: <CAAe_U6KHk1nuSBVn-4H397wzUk0cnqGe_H0D8RVqrSFYGJVMCg@mail.gmail.com>
+References: <1346943430-18236-1-git-send-email-kishon@ti.com>
+	<1346943430-18236-2-git-send-email-kishon@ti.com>
+	<50605CFB.5090402@gmail.com>
+	<CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com>
+	<506461A0.4050103@gmail.com>
+	<5064D7CA.1070909@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <87lifuv7rm.fsf@octavius.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sr@denx.de
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5064D7CA.1070909@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, grant.likely@secretlab.ca, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2012 at 2:33 PM, Chris Ball <cjb@laptop.org> wrote:
-> You don't have to mention reg/interrupts, because they're already
-> covered in mmc.txt.
+Hi,
 
-> power-gpio should be "power-gpios" (even though there's only one), and
-> power_always_enb should use hyphens instead of underscores
+On Fri, Sep 28, 2012 at 4:18 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
+> On 9/27/2012 7:24 AM, Rob Herring wrote:
+>>
+>> On 09/25/2012 05:06 AM, ABRAHAM, KISHON VIJAY wrote:
+>>>
+>>> Hi,
+>>>
+>>> On Mon, Sep 24, 2012 at 6:45 PM, Rob Herring <robherring2@gmail.com>
+>>> wrote:
+>>>>
+>>>> On 09/06/2012 09:57 AM, Kishon Vijay Abraham I wrote:
+>>>>>
+>>>>> All phy related programming like enabling/disabling the clocks,
+>>>>> powering
+>>>>> on/off the phy is taken care of by this driver. It is also used for OTG
+>>>>> related functionality like srp.
+>>>>>
+>>>>> This also includes device tree support for usb2 phy driver and
+>>>>> the documentation with device tree binding information is updated.
+>>>>>
+>>>>> Currently writing to control module register is taken care in this
+>>>>> driver which will be removed once the control module driver is in
+>>>>> place.
+>>>>>
+>>>>> Cc: Felipe Balbi <balbi@ti.com>
+>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>>   Documentation/devicetree/bindings/usb/usb-phy.txt |   17 ++
+>>>>>   drivers/usb/phy/Kconfig                           |    9 +
+>>>>>   drivers/usb/phy/Makefile                          |    1 +
+>>>>>   drivers/usb/phy/omap-usb2.c                       |  271
+>>>>> +++++++++++++++++++++
+>>>>>   include/linux/usb/omap_usb.h                      |   46 ++++
+>>>>>   include/linux/usb/phy_companion.h                 |   34 +++
+>>>>>   6 files changed, 378 insertions(+)
+>>>>>   create mode 100644 Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>>>   create mode 100644 drivers/usb/phy/omap-usb2.c
+>>>>>   create mode 100644 include/linux/usb/omap_usb.h
+>>>>>   create mode 100644 include/linux/usb/phy_companion.h
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>>> b/Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..80d4148
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+>>>>
+>>>>
+>>>> This is a very generic name...
+>>>>
+>>>>> @@ -0,0 +1,17 @@
+>>>>> +USB PHY
+>>>>> +
+>>>>> +OMAP USB2 PHY
+>>>>> +
+>>>>> +Required properties:
+>>>>> + - compatible: Should be "ti,omap-usb2"
+>>>>
+>>>>
+>>>> ...for a specific phy. However, I do think a generic binding to describe
+>>>> host ctrlr to phy connections is needed.
+>>>>
+>>>>> + - reg : Address and length of the register set for the device. Also
+>>>>> +add the address of control module dev conf register until a driver for
+>>>>> +control module is added
+>>>>
+>>>>
+>>>> The dts should describe the h/w, not what you need for the current
+>>>> driver. The 2nd reg field does not belong here.
+>>>
+>>>
+>>> Indeed. This was discussed and agreed upon as a interim solution till
+>>> we have a control module driver in place to write to the control
+>>> module register.
+>>
+>>
+>> Discussed where and agreed by who? I for one do not agree.
+>
+>
+> Yeah, what was tolerated was the addition of that address inside hwmod data,
+> but I do agree that it should not go into DTS.
 
-Hi Chris,
+So how can we handle reg writes to control module until we have a
+control module driver. usb2 phy does not have a hwmod data for itself.
+Do you think we should add a new hwmod data for usb2 phy and use this
+in the usb2phy data node in the dts file?
 
-I have fixed above two for now, please apply below if it looks fine to you:
-
-
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Date: Mon, 26 Mar 2012 15:05:14 +0530
-Subject: [PATCH V2 1/2] mmc: sdhci-spear: add device tree bindings
-
-This adds simple DT bindings for SDHCI SPEAr controller. It uses cd-gpios from
-common mmc bindings.
-
-This also fixes spear300-evb.dts with correct name for card detect binding.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- .../devicetree/bindings/mmc/sdhci-spear.txt        | 24 ++++++++
- arch/arm/boot/dts/spear300-evb.dts                 |  4 +-
- arch/arm/boot/dts/spear320-evb.dts                 |  4 +-
- drivers/mmc/host/sdhci-spear.c                     | 71 +++++++++++++++++++++-
- 4 files changed, 97 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-spear.txt
-
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-spear.txt
-b/Documentation/devicetree/bindings/mmc/sdhci-spear.txt
-new file mode 100644
-index 0000000..5d9be8b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-spear.txt
-@@ -0,0 +1,24 @@
-+* SPEAr SDHCI Controller
-+
-+Required properties:
-+- compatible : "st,spear300-sdhci"
-+
-+Optional Properties:
-+- cd-gpios: card detect gpio, with zero flags.
-+- power-gpios: specifies the power gpio pin with flags: active low:1, active
-+  high:0
-+- power-always-enb: power should be on before inserting the card and
-so can't be
-+  switched off. Only valid when power gpio is supported.
-+
-+If your board don't support these gpios then don't pass the entry.
-+
-+Example:
-+
-+	sdhci@fc000000 {
-+		compatible = "st,spear300-sdhci";
-+		reg = <0xfc000000 0x1000>;
-+
-+		power-gpios = <&gpio0 5 0>
-+		power-always-enb;
-+		cd-gpios = <&gpio0 6 0>
-+	};
-diff --git a/arch/arm/boot/dts/spear300-evb.dts
-b/arch/arm/boot/dts/spear300-evb.dts
-index d71b8d5..a26abed 100644
---- a/arch/arm/boot/dts/spear300-evb.dts
-+++ b/arch/arm/boot/dts/spear300-evb.dts
-@@ -80,8 +80,8 @@
- 		};
-
- 		sdhci@70000000 {
--			int-gpio = <&gpio1 0 0>;
--			power-gpio = <&gpio1 2 1>;
-+			cd-gpios = <&gpio1 0 0>;
-+			power-gpios = <&gpio1 2 1>;
- 			status = "okay";
- 		};
-
-diff --git a/arch/arm/boot/dts/spear320-evb.dts
-b/arch/arm/boot/dts/spear320-evb.dts
-index e4e912f..490c85a 100644
---- a/arch/arm/boot/dts/spear320-evb.dts
-+++ b/arch/arm/boot/dts/spear320-evb.dts
-@@ -103,8 +103,8 @@
- 		};
-
- 		sdhci@70000000 {
--			power-gpio = <&gpio0 2 1>;
--			power_always_enb;
-+			power-gpios = <&gpio0 2 1>;
-+			power-always-enb;
- 			status = "okay";
- 		};
-
-diff --git a/drivers/mmc/host/sdhci-spear.c b/drivers/mmc/host/sdhci-spear.c
-index 423da81..854f7e9 100644
---- a/drivers/mmc/host/sdhci-spear.c
-+++ b/drivers/mmc/host/sdhci-spear.c
-@@ -20,6 +20,8 @@
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/slab.h>
-@@ -68,8 +70,56 @@ static irqreturn_t sdhci_gpio_irq(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
-
-+#ifdef CONFIG_OF
-+static struct sdhci_plat_data * __devinit
-+sdhci_probe_config_dt(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct sdhci_plat_data *pdata = NULL;
-+	enum of_gpio_flags flags;
-+	int pgpio, igpio;
-+
-+	pgpio = of_get_named_gpio_flags(np, "power-gpios", 0, &flags);
-+	if (!gpio_is_valid(pgpio))
-+		pgpio = -1;
-+
-+	igpio = of_get_named_gpio(np, "cd-gpios", 0);
-+	if (!gpio_is_valid(igpio))
-+		igpio = -1;
-+
-+	/* If pdata is required */
-+	if ((pgpio != -1) || (igpio != -1)) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			dev_err(&pdev->dev, "DT: kzalloc failed\n");
-+			return ERR_PTR(-ENOMEM);
-+		}
-+	}
-+
-+	/* if power gpio is supported */
-+	if (pgpio != -1) {
-+		pdata->power_active_high = (flags != OF_GPIO_ACTIVE_LOW);
-+
-+		if (of_property_read_bool(np, "power-always-enb"))
-+			pdata->power_always_enb = true;
-+	}
-+
-+	pdata->card_power_gpio = pgpio;
-+	pdata->card_int_gpio = igpio;
-+
-+	return pdata;
-+}
-+#else
-+static struct sdhci_plat_data * __devinit
-+sdhci_probe_config_dt(struct platform_device *pdev)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
-+#endif
-+
- static int __devinit sdhci_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct sdhci_host *host;
- 	struct resource *iomem;
- 	struct spear_sdhci *sdhci;
-@@ -110,8 +160,16 @@ static int __devinit sdhci_probe(struct
-platform_device *pdev)
- 		goto put_clk;
- 	}
-
--	/* overwrite platform_data */
--	sdhci->data = dev_get_platdata(&pdev->dev);
-+	if (np) {
-+		sdhci->data = sdhci_probe_config_dt(pdev);
-+		if (IS_ERR(sdhci->data)) {
-+			dev_err(&pdev->dev, "DT: Failed to get pdata\n");
-+			return -ENODEV;
-+		}
-+	} else {
-+		sdhci->data = dev_get_platdata(&pdev->dev);
-+	}
-+
- 	pdev->dev.platform_data = sdhci;
-
- 	if (pdev->dev.parent)
-@@ -276,11 +334,20 @@ static int sdhci_resume(struct device *dev)
-
- static SIMPLE_DEV_PM_OPS(sdhci_pm_ops, sdhci_suspend, sdhci_resume);
-
-+#ifdef CONFIG_OF
-+static const struct of_device_id sdhci_spear_id_table[] = {
-+	{ .compatible = "st,spear300-sdhci" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, sdhci_spear_id_table);
-+#endif
-+
- static struct platform_driver sdhci_driver = {
- 	.driver = {
- 		.name	= "sdhci",
- 		.owner	= THIS_MODULE,
- 		.pm	= &sdhci_pm_ops,
-+		.of_match_table = of_match_ptr(sdhci_spear_id_table),
- 	},
- 	.probe		= sdhci_probe,
- 	.remove		= __devexit_p(sdhci_remove),
+Thanks
+Kishon
