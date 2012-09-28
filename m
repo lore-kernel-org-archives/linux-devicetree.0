@@ -1,168 +1,138 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 06/18] tegra: fdt: Add LCD definitions for Tegra
-Date: Fri, 28 Sep 2012 07:42:34 +0200
-Message-ID: <20120928054234.GA10237@avionic-0098.mockup.avionic-design.de>
-References: <1342106718-3058-1-git-send-email-sjg@chromium.org>
- <1342106718-3058-7-git-send-email-sjg@chromium.org>
- <CAPnjgZ2SbVVKxUdW1cvLf_9rAWLWeiVr-y6S_sz-Uw5_O_AyQA@mail.gmail.com>
- <501803F3.6090803@wwwdotorg.org>
- <CAPnjgZ2NAf4PF0_U9hQeJzpdL87ZNq+WpxsbFJQHbh4rY2MoEg@mail.gmail.com>
- <50647594.9060404@wwwdotorg.org>
- <CAPnjgZ2R=G=xmjdoP74JeAknwH9QGx8+mED7TQ8Kd_zEmcVwtQ@mail.gmail.com>
- <5064DF73.8000006@wwwdotorg.org>
- <CAPnjgZ3JuE_jiSRGW6o3eCbp4cLCf1uenKz4kPCpfqLJ3Mdmjw@mail.gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v3] pwm_backlight: Add device tree support for Low
+ Threshold Brightness
+Date: Fri, 28 Sep 2012 07:45:48 +0200
+Message-ID: <20120928054548.GB10237@avionic-0098.mockup.avionic-design.de>
+References: <1348670827-5720-1-git-send-email-avinashphilip@ti.com>
+ <20120927143309.02614908.akpm@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1782199822714645509=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPnjgZ3JuE_jiSRGW6o3eCbp4cLCf1uenKz4kPCpfqLJ3Mdmjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="U+BazGySraz5kW0T"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20120927143309.02614908.akpm@linux-foundation.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Philip, Avinash" <avinashphilip@ti.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, rpurdie@rpsys.net, broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============1782199822714645509==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Content-Disposition: inline
-
-
---/9DWx/yDrRhgMJTb
+--U+BazGySraz5kW0T
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 27, 2012 at 04:37:41PM -0700, Simon Glass wrote:
-> Hi Stephen,
+On Thu, Sep 27, 2012 at 02:33:09PM -0700, Andrew Morton wrote:
+> On Wed, 26 Sep 2012 20:17:07 +0530
+> "Philip, Avinash" <avinashphilip@ti.com> wrote:
 >=20
-> On Thu, Sep 27, 2012 at 4:21 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> w=
-rote:
-> > On 09/27/2012 02:27 PM, Simon Glass wrote:
-> >> On Thu, Sep 27, 2012 at 8:49 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org=
-> wrote:
-> >>> On 09/27/2012 07:58 AM, Simon Glass wrote:
+> > Some back lights perform poorly when driven by a PWM with a short
+> > duty-cycle. For such devices, the low threshold can be used to specify a
+> > lower bound for the duty-cycle and should be chosen to exclude the
+> > problematic range.
+> >=20
+> > Add device tree probing support for lth_brightness putting
+> > low-threshold-brightness as optional property.
+> >=20
 > > ...
-> >>>> Really this is just a way of getting U-Boot and Linux to agree on the
-> >>>> address, by having U-Boot know the address that the kernel will happ=
-en
-> >>>> to use. It isn't very robust, but we have found it useful as a means
-> >>>> of avoiding problems in this area.
-> >>>
-> >>> Right, but again, why can't the display driver simply read the address
-> >>> out of the register; why is there a need to duplicate the data?
-> >>>
-> >>> I guess one possibility is that the register only gives the base addr=
-ess
-> >>> and not the size/mode of the allocated surface, but I don't recall if
-> >>> this proposed binding did that either?
-> >>
-> >> So here is my explanation:
-> >>
-> >> 1. U-Boot would normally put the display right near the top of memory.
-> >> Instead, it figures out where the kernel will put it (somehow this
-> >> seems to often be at a fixed address) and uses that address.
-> >>
-> >> 2. That means that U-Boot will now have the display exactly where the
-> >> kernel wants it.
 > >
-> > Oh, the DT property is telling U-Boot where to put the surface so that
-> > when the kernel determines where to put it, it'll already be there?
-> >
-> > That seems completely backwards. It's also extremely fragile; what if
-> > the kernel suddenly starts allocating at some other random address,
-> > which stops matching what U-Boot expects?
+> > --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.t=
+xt
+> > +++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.t=
+xt
+> > @@ -14,6 +14,15 @@ Required properties:
+> >  Optional properties:
+> >    - pwm-names: a list of names for the PWM devices specified in the
+> >                 "pwms" property (see PWM binding[0])
+> > +  - low-threshold-brightness: brightness threshold low level. Low thre=
+shold
+> > +    brightness set to value so that backlight present on low end of
+> > +    brightness.
+> > +    Some panels, backlight would absent if duty percentage of PWM wave=
+ is less
+> > +    than certain level (say 20%). By setting low-threshold-brightness =
+to a
+> > +    value above (percentage of brightness-levels max) 50 (20% of 255, =
+if 255
+> > +    is max). On setting low-threshold-brightness, range of brightness-=
+levels
+> > +    is calculated in a region of low-threshold-brightness to brightnes=
+s-levels
+> > +    max.
 >=20
-> The screen will flicker, or may fill up with junk as the kernel boots.
-> We did have that happen once when the driver changed.
+> hoo boy, that's hard to follow.  How does this look?
 >=20
-> >
-> > Far better would be for U-Boot to put the surface wherever it wants,
-> > then manipulate the DT that's passed to the kernel to:
-> >
-> > a) Add a /memreserve/ so that memory doesn't get re-used for anything
-> > else during boot.
-> >
-> > b) Add a property to the display node indicating which memreserve
-> > represents the frame-buffer location.
+> --- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt=
+~pwm_backlight-add-device-tree-support-for-low-threshold-brightness-fix
+> +++ a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
+> @@ -14,15 +14,15 @@ Required properties:
+>  Optional properties:
+>    - pwm-names: a list of names for the PWM devices specified in the
+>                 "pwms" property (see PWM binding[0])
+> -  - low-threshold-brightness: brightness threshold low level. Low thresh=
+old
+> -    brightness set to value so that backlight present on low end of
+> -    brightness.
+> -    Some panels, backlight would absent if duty percentage of PWM wave i=
+s less
+> -    than certain level (say 20%). By setting low-threshold-brightness to=
+ a
+> -    value above (percentage of brightness-levels max) 50 (20% of 255, if=
+ 255
+> -    is max). On setting low-threshold-brightness, range of brightness-le=
+vels
+> -    is calculated in a region of low-threshold-brightness to brightness-=
+levels
+> -    max.
+> +  - low-threshold-brightness: brightness threshold low level. Sets the l=
+owest
+> +    brightness value.
+> +    On some panels the backlight misbehaves if the duty cycle percentage=
+ of the
+> +    PWM wave is less than a certain level (say 20%).  In this example th=
+e user
+> +    can set low-threshold-brightness to a value above 50 (ie, 20% of 255=
+), thus
+> +    preventing the PWM duty cycle from going too low.
+> +    On setting low-threshold-brightness the range of brightness levels is
+> +    calculated in the range low-threshold-brightness to the maximum valu=
+e in
+> +    brightness-levels, described above.
+> =20
+>  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
+> =20
 >=20
-> Yes, I believe the Tegra video driver we used (and I take your point
-> that it doesn't exist upstream so there is no point in discussing it
-> :-) always had to use the same frame buffer address. The memory was
-> statically allocated. Certainly this could be encoded in the fdt.
 >=20
-> >
-> > When the kernel boots, it can:
-> >
-> > * Copy the content from the U-Boot-allocated buffer to whatever display
-> > buffer the kernel allocated before writing the new address to the HW.
-> >
-> > * Undo the memory reservation triggered by the /memreserve/ to allow the
-> > memory to be re-used.
-> >
-> >> So what do you think? Should we remove this entirely, or is it a usefu=
-l hack?
-> >
-> > Yes, I think in its current form, it isn't useful.
->=20
-> Thanks for the thorough response. Let's remove it, particularly as
-> there isn't even a kernel driver upstream yet.
+> Also, I'm wondering if we really needed a new property - couldn't one
+> do this simply by setting brightness-levels to 50..255?
 
-We've been discussing some of these issues for quite some time and came
-to the conclusion that the Tegra DRM driver should not be using static
-allocations like the previous drivers did. One of the reasons is that
-the amount of carveout memory needs to be fixed at boot time, which
-isn't going to suit a wide range of devices well. Another, perhaps more
-important reason is that starting with Tegra30 that's no longer
-necessary because of the SMMU.
-
-So in the end it wouldn't be possible to reliably determine the memory
-area where the kernel will put the framebuffer. If we want a flicker-
-free boot then we need to go with something more elaborate like what
-Stephen suggested.
+Yes. This was discussed in the thread that followed the posting of this
+patch's v2. We've decided to drop it and go with brightness-levels only
+for device tree data. Eventually all existing users should convert to
+that as well so we can remove some of the cruft from the platform data
+up.
 
 Thierry
 
---/9DWx/yDrRhgMJTb
+--U+BazGySraz5kW0T
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQZTjKAAoJEN0jrNd/PrOhSd0P/3A29MlEZgkLMywZZv8d+s4M
-TkqsT2DkYoR5wGzGrp2C3YBJ+zAfl+NVMSQX7XFMxbJAZmVv8LyR1Yu1UwNyE/S9
-/R52bYw+rxbttS4DgO4ZGmmmOqT1kWDVmLWHE7URuWgLZuiFvKoah4Mm4SugYEVp
-9eyrfeosxnY7NbYGp224ijD2Q9h/4YMVqVXVZcL7TLeeu6HUOtguXR7eAo0CoXqq
-tb28SLKq5Qou8UnqWO4lY9yAx9SUWuYFBarxaV3XqWcOh14cmIq0NJ0HM7ul4msv
-s8sVLc/oaWEcIZcaitciOF+0Cdr1TbzfcIOyqKmyzvSKGRH7gWe6dxrzOGEYHGns
-BVv7x3CVkFC55LTmybYd5anXKwPbFK0hPFGmm7fH7PGLaLRrs5FbdQis7ojFBwDp
-nEcGJQbSn5i38fsErE2c5nq7ZHIDCmIsLgWznNDQOCC6vvBQn+vuELayFBt1lt8M
-JFwiaYR9XhKpq0N3GkkN+QuOexN3pjgpi4RrGY/tHUWYTeGoOJno6iClvgtYhYsH
-+jAsA1wkDXosJhF/ROQplQA3OasEUxBNkwRMy5Qsvq9r/L5kC4sRwnPmocts/rFc
-DgfAxIUaWBigsfSGvtbDKv5g1mjZ7sgzu+Qy/uNjHGp1HVCcRn2miIOgm7fxfUJE
-h2lyXaXo2dftG7dEaqDG
-=W9eS
+iQIcBAEBAgAGBQJQZTmMAAoJEN0jrNd/PrOhuxsQALsRNFfz8Bm/fSbycbr7ZJfu
+jyCL1pQse6n0jxVYoIa3yK/+jZWIdaLReiuft4aYbcSKajNPEBgyNrxdccKDTebd
+aq8a4QYpdTDSnYjX7uDQ1XOPxn3IAk9dB3398sKHccAJ+XnccVxKvmgdXeZyQnC0
+9Qd4oH/vOWXYXeiB9dUKxZQpNsr9at95xvrqIhcOgyg13M3TG7L/0LJNID74CYjS
+ZN/IFNm3AsWHdLsh4trdjU9bC/E8eNZJ5HiEi9nVm4EhyoYGJeAlRRt0R+M6EiUS
+xucgzn9DeQjBODiXzlVsAOXIHwrglfoYiBzHNtAa7XsIeDxjc29cCKeBkGz+gtfH
+u5cwGXlit2TWUsrUtPOEGrM887b41Xx2KW2xAWnGj/JfWaupH7SzinQZafAKpEpY
+/M9+96jAQjnrnYvKE3bPlAOF6QkFpiRTRVDxtnq+wV8L+PyeZn+s/5hYE3YwloAq
+g1lKzAIwWStvcAJT/WVoJ/1/SYA8lBBwqwE0YA7jaYHzVd0AuNvYrhwMXGz55mxt
+/oSHOiVe7NWNUUE7jmkfFWizK8fngjxWMjth3pUV7sDeR1tqG0SxxQ0Wj+VKYy0J
+BQHDkRyAzf4i1vedfw6TGeoHnhdEGICiqlSPHIknGWtciL5KUoq+/u08Q/PXGMNy
+8Pzt/TOdpaK194HmlBo2
+=lgr/
 -----END PGP SIGNATURE-----
 
---/9DWx/yDrRhgMJTb--
-
---===============1782199822714645509==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1782199822714645509==--
+--U+BazGySraz5kW0T--
