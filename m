@@ -1,106 +1,89 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [PATCH v2 RESEND 2/2] ARM: local timers: add timer support using
- IO mapped register
-Date: Fri, 28 Sep 2012 16:57:46 +0100
-Message-ID: <20120928155746.GB2253@linaro.org>
-References: <1347694914-1457-1-git-send-email-rvaswani@codeaurora.org>
- <1347694914-1457-2-git-send-email-rvaswani@codeaurora.org>
- <5062013F.8050507@codeaurora.org>
- <20120928122858.GD9472@e106331-lin.cambridge.arm.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: at91sam9_wdt: add device tree support
+Date: Fri, 28 Sep 2012 18:20:14 +0200
+Message-ID: <CAHkwnC8tsM2iLsbcnMGbzR4G=SqPfTxyMBYYQbe79gZK1=jYEw@mail.gmail.com>
+References: <1348568704-28304-1-git-send-email-fabio.porcedda@gmail.com>
+ <1348568704-28304-2-git-send-email-fabio.porcedda@gmail.com>
+ <20120927055636.GP17667@game.jcrosoft.org>
+ <CAHkwnC_R4DMaRfjQHO=+K1DO62-iH70B2_QsipLD5D4xRznouw@mail.gmail.com>
+ <20120927171934.GS17667@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20120928122858.GD9472@e106331-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rohit Vaswani <rvaswani@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Landley <rob@landley.net>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120927171934.GS17667-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[ Note: please aim to CC devicetree-discuss@lists.ozlabs.org with any
-patches or bindings relevant to device tree. ]
+On Thu, Sep 27, 2012 at 7:19 PM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 16:59 Thu 27 Sep     , Fabio Porcedda wrote:
+>> On Thu, Sep 27, 2012 at 7:56 AM, Jean-Christophe PLAGNIOL-VILLARD
+>> <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+>> > On 12:25 Tue 25 Sep     , Fabio Porcedda wrote:
+>> >> Tested on an at91sam9260 board (evk-pro3)
+>> >>
+>> >> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >> ---
+>> >>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
+>> >>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
+>> >>  2 files changed, 40 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> >> new file mode 100644
+>> >> index 0000000..5947929
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> >> @@ -0,0 +1,19 @@
+>> >> +* Atmel Watchdog Timers
+>> >> +
+>> >> +** at91sam9-wdt
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible: must be "atmel,at91sam9260-wdt".
+>> >> +- reg: physical base address of the controller and length of memory mapped
+>> >> +  region.
+>> >> +
+>> >> +Optional properties:
+>> >> +- heartbeat: contains the watchdog heartbeats in seconds.
+>> > more I read this binding more it's seems wrong
+>> >
+>> > Today we do not use yet the watchdog framework which we will so we need to
+>> > use the same binding as the watchdog framework
+>>
+>> What is the binding of the heartbeat value in the watchdog framework?
+>> I didn't found any binding of the heartbeat in other dt enabled drivers.
+> when you read the new watchdog framework cf watchdog_dev.c and watchdog_core.c
+>
+> you will see that we can set a timeout which have the same meaning as
+> heartbeat
+>
+> the key point here is you try to solve the DT the wrong way -> drivers
+> specific
+>
+> the binding need to be framwork specific os here we need to do the binding of
+> the watchdog framework first and then use it in the at91sam9 driver evenif we
+> do not switch yet. Because in the DT we describe the hw not a drvier
+> implementation
 
-[ Lorenzo, there's a question for you further down this mail. ]
+Ok i will try to send an updated patch following your advice.
 
-On Fri, Sep 28, 2012 at 01:28:58PM +0100, Mark Rutland wrote:
-> On Tue, Sep 25, 2012 at 08:08:47PM +0100, Rohit Vaswani wrote:
-> > Any comments ?
-> 
-> I have a few questions about the irq side of things.
-> 
-> > > diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > > index 52478c8..8e01328 100644
-> > > --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> > > @@ -7,10 +7,13 @@ The timer is attached to a GIC to deliver its per-processor interrupts.
-> > >
-> > >   ** Timer node properties:
-> > >
-> > > -- compatible : Should at least contain "arm,armv7-timer".
-> > > +- compatible : Should at least contain "arm,armv7-timer" or
-> > > +  "arm,armv7-timer-mem" if using the memory mapped arch timer interface.
-> > >
-> > > -- interrupts : Interrupt list for secure, non-secure, virtual and
-> > > -  hypervisor timers, in that order.
-> > > +- interrupts : If using the cp15 interface, the interrupt list for secure,
-> > > +  non-secure, virtual and hypervisor timers, in that order.
-
-We should use the correct architectural terms for documenting these.
-For example, "non-secure" requires qualification.
-
-If I understand the ARM ARM correctly, the architectural names are
-
- * Secure PL1 physical
- * Non-secure PL2 physical
- * Non-secure PL1 physical
- * Virtual
-
-[...]
-
-> What privilege level are the interrupts for the memory-mapped interface?
-> 
-> Could each core have multiple interrupts at different privilege levels?
-> 
-> I also notice we don't seem to handle the case of systems without security
-> extensions, which only have physical and virtual interrupts. If we're adding
-> support for different interrupt setups, how do we handle them?
-
-Agreed, some of the timers will be absent depending on the architectural
-options implemented by the processor.
-
-Also, timers not visible to / usable by the kernel being booted should
-probably left out of the DT, even though the hardware may physically have
-them:
-
-For example, a guest should not see the Secure PL1 physical timer or the
-Non-secure PL2 physical timer.  A hypervisor or host OS which does not
-provide the guest with access to the Non-secure PL1 physical timer (such
-as KVM) should leave that out too: there is no exception-free way for
-the OS to probe that directly: i.e., from the guest's point of view the
-device doesn't exist at all, so it seems wrong for the DT to include them
-in this case.
+> Best Regards,
+> J.
 
 
-[...]
-
-> > > +  If using the memory mapped interface, list the interrupts for each core,
-> > > +  starting with core 0.
-> 
-> I take it that core 0 means physical cpu 0 (i.e. MPIDR.Aff{2,1,0} == 0)?
-
-Lorenzo, should we have a standard way of referring to CPUs and topology
-nodes documented as part of the topology bindings?  We certainly need
-rules of some kind, since when the topology is non-trivial there is no
-well-defined "first" CPU, nor any single correct order in which to list
-CPUs.
-
-The topology may also be sparsely populated (e.g.,
-Aff[2,1,0] in { (0,0,0), (0,0,1), (0,1,0), (0,1,1), (0,1,2), (0,1,3) })
-
-It would be bad if different driver bindings end up solving this in
-different ways (even non-broken ways)
-
-Cheers
----Dave
-
-[...]
+Best regards
+-- 
+Fabio Porcedda
