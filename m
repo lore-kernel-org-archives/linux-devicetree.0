@@ -1,110 +1,72 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCH 1/5] drivers: usb: phy: add a new driver for omap usb2 phy
-Date: Fri, 28 Sep 2012 15:37:37 +0530
-Message-ID: <CAAe_U6KHk1nuSBVn-4H397wzUk0cnqGe_H0D8RVqrSFYGJVMCg@mail.gmail.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com>
-	<1346943430-18236-2-git-send-email-kishon@ti.com>
-	<50605CFB.5090402@gmail.com>
-	<CAAe_U6+2Vxd8F_JMafm41+0SnZSrZCa_9VKRbdB200BUHw5vEQ@mail.gmail.com>
-	<506461A0.4050103@gmail.com>
-	<5064D7CA.1070909@ti.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH Resend 1/2] mmc: sdhci-spear: add device tree bindings
+Date: Fri, 28 Sep 2012 06:13:27 -0400
+Message-ID: <87626yv4jc.fsf@octavius.laptop.org>
+References: <viresh.kumar@linaro.org>
+	<a42729885c593f61bb62c45f229174d9f7370c40.1348809217.git.viresh.kumar2@arm.com>
+	<87lifuv7rm.fsf@octavius.laptop.org>
+	<CAOh2x=mrL6ZT5xR1HMM-r_RQL+J6YE80hq56e9ykndxrEwaHUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5064D7CA.1070909@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Rob Herring <robherring2@gmail.com>, grant.likely@secretlab.ca, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAOh2x=mrL6ZT5xR1HMM-r_RQL+J6YE80hq56e9ykndxrEwaHUw@mail.gmail.com>
+	(viresh kumar's message of "Fri, 28 Sep 2012 15:19:30 +0530")
+Sender: linux-mmc-owner@vger.kernel.org
+To: viresh kumar <viresh.kumar@linaro.org>
+Cc: spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sr@denx.de
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Fri, Sep 28, 2012 at 4:18 AM, Cousson, Benoit <b-cousson@ti.com> wrote:
-> On 9/27/2012 7:24 AM, Rob Herring wrote:
+On Fri, Sep 28 2012, viresh kumar wrote:
+>> You should use a fixed regulator instead of this power-gpio hack.
+>> It's easy to hook up a fixed regulator to a gpio:
 >>
->> On 09/25/2012 05:06 AM, ABRAHAM, KISHON VIJAY wrote:
->>>
->>> Hi,
->>>
->>> On Mon, Sep 24, 2012 at 6:45 PM, Rob Herring <robherring2@gmail.com>
->>> wrote:
->>>>
->>>> On 09/06/2012 09:57 AM, Kishon Vijay Abraham I wrote:
->>>>>
->>>>> All phy related programming like enabling/disabling the clocks,
->>>>> powering
->>>>> on/off the phy is taken care of by this driver. It is also used for OTG
->>>>> related functionality like srp.
->>>>>
->>>>> This also includes device tree support for usb2 phy driver and
->>>>> the documentation with device tree binding information is updated.
->>>>>
->>>>> Currently writing to control module register is taken care in this
->>>>> driver which will be removed once the control module driver is in
->>>>> place.
->>>>>
->>>>> Cc: Felipe Balbi <balbi@ti.com>
->>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>> ---
->>>>>   Documentation/devicetree/bindings/usb/usb-phy.txt |   17 ++
->>>>>   drivers/usb/phy/Kconfig                           |    9 +
->>>>>   drivers/usb/phy/Makefile                          |    1 +
->>>>>   drivers/usb/phy/omap-usb2.c                       |  271
->>>>> +++++++++++++++++++++
->>>>>   include/linux/usb/omap_usb.h                      |   46 ++++
->>>>>   include/linux/usb/phy_companion.h                 |   34 +++
->>>>>   6 files changed, 378 insertions(+)
->>>>>   create mode 100644 Documentation/devicetree/bindings/usb/usb-phy.txt
->>>>>   create mode 100644 drivers/usb/phy/omap-usb2.c
->>>>>   create mode 100644 include/linux/usb/omap_usb.h
->>>>>   create mode 100644 include/linux/usb/phy_companion.h
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt
->>>>> b/Documentation/devicetree/bindings/usb/usb-phy.txt
->>>>> new file mode 100644
->>>>> index 0000000..80d4148
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
->>>>
->>>>
->>>> This is a very generic name...
->>>>
->>>>> @@ -0,0 +1,17 @@
->>>>> +USB PHY
->>>>> +
->>>>> +OMAP USB2 PHY
->>>>> +
->>>>> +Required properties:
->>>>> + - compatible: Should be "ti,omap-usb2"
->>>>
->>>>
->>>> ...for a specific phy. However, I do think a generic binding to describe
->>>> host ctrlr to phy connections is needed.
->>>>
->>>>> + - reg : Address and length of the register set for the device. Also
->>>>> +add the address of control module dev conf register until a driver for
->>>>> +control module is added
->>>>
->>>>
->>>> The dts should describe the h/w, not what you need for the current
->>>> driver. The 2nd reg field does not belong here.
->>>
->>>
->>> Indeed. This was discussed and agreed upon as a interim solution till
->>> we have a control module driver in place to write to the control
->>> module register.
+>>         vmmc1: fixedregulator@0 {
+>>                 compatible = "regulator-fixed";
+>>                 regulator-name = "fixed-supply";
+>>                 regulator-min-microvolt = <1800000>;
+>>                 regulator-max-microvolt = <1800000>;
+>>                 gpio = <&gpio1 16 0>;
+>>                 startup-delay-us = <70000>;
+>>                 vin-supply = <&parent_reg>;
+>>         };
 >>
+>> and then you can encode the regulator inside your SD host:
 >>
->> Discussed where and agreed by who? I for one do not agree.
+>>         sdhci@fc000000 {
+>>                 compatible = "st,spear300-sdhci";
+>>                 reg = <0xfc000000 0x1000>;
+>>                 cd-gpios = <&gpio0 6 0>;
+>>                 vmmc-supply = <&vmmc1>;
+>>         };
+>>
+>> and the MMC core will take care of making sure that it's powered up
+>> only when needed.  What do you think?
 >
+> We haven't used regulator framework till now for SPEAr and i am not much
+> knowledgeable in that.
 >
-> Yeah, what was tolerated was the addition of that address inside hwmod data,
-> but I do agree that it should not go into DTS.
+> Because i am not adding this power hack now and it had been there
+> since ever, i would request you to take this patchset as is..
+>
+> @Shiraz: Can you please explore this a bit and provide a separate
+> patch for it in future?
 
-So how can we handle reg writes to control module until we have a
-control module driver. usb2 phy does not have a hwmod data for itself.
-Do you think we should add a new hwmod data for usb2 phy and use this
-in the usb2phy data node in the dts file?
+I think now is a good time to get the DT bindings right instead of
+propagating previous hacks into the DT, and this should be a pretty
+simple change -- it's not even a code change, since the code for
+automatically handling a vmmc-supply exists already.  Once we start
+accepting power-gpios properties we can't easily get rid of them later.
 
-Thanks
-Kishon
+If you don't have time to work on this, I guess I could accept the patch
+without the power-gpios handling included (since it'll still work with
+a DT that provides a vmmc-supply), but I don't want to take the patch
+as-is and legitimize the power-gpios binding.  Does that make sense?
+
+Thanks,
+
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
