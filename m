@@ -1,81 +1,162 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH] arm: fdt: Relocate fdt along with other data
-Date: Thu, 27 Sep 2012 18:41:55 -0700
-Message-ID: <1348796515-29008-1-git-send-email-sjg@chromium.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] ARM: bcm2835: implement machine restart hook
+Date: Thu, 27 Sep 2012 22:08:00 -0600
+Message-ID: <1348805280-7647-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rather than leave the fdt down next to the code/data, we really should
-relocate it along with everything else. For CONFIG_OF_EMBED this happens
-automatically, but for CONFIG_OF_SEPARATE it does not.
+Implement the machine restart hook using the SoC's watchdog timer module.
+To support this, define a DT binding for the watchdog module, and add it
+to the device tree.
 
-Add code to copy the fdt and point to the new copy after relocation.
+The downstream rpi-split branch contains a full watchdog timer driver
+implementation, which also implements the restart hook. However, the
+restart function is largely separate from the watchdog driver, so for
+simplicity, the restart hook is implemented here directly in the main
+machine source file.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
+Overall structure (separate setup/restart) functions derived from the
+picoxcell ARM support.
+
+Watchdog register IO sequence taken from code by Simon Arlott. Note that
+the watchdog module is not documented in BCM2835-ARM-Peripherals.pdf.
+
+Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 ---
- arch/arm/lib/board.c |   22 ++++++++++++++++++++++
- 1 files changed, 22 insertions(+), 0 deletions(-)
+ .../bindings/watchdog/brcm,bcm2835-pm-wdog.txt     |   13 ++++++
+ arch/arm/boot/dts/bcm2835.dtsi                     |    5 +++
+ arch/arm/mach-bcm2835/bcm2835.c                    |   46 ++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
 
-diff --git a/arch/arm/lib/board.c b/arch/arm/lib/board.c
-index 109a1ac..6dca891 100644
---- a/arch/arm/lib/board.c
-+++ b/arch/arm/lib/board.c
-@@ -274,6 +274,8 @@ void board_init_f(ulong bootflag)
- #ifdef CONFIG_PRAM
- 	ulong reg;
- #endif
-+	void *new_fdt = NULL;
-+	size_t fdt_size = 0;
- 
- 	bootstage_mark_name(BOOTSTAGE_ID_START_UBOOT_F, "board_init_f");
- 
-@@ -409,6 +411,22 @@ void board_init_f(ulong bootflag)
- 	debug("Reserving %zu Bytes for Global Data at: %08lx\n",
- 			sizeof (gd_t), addr_sp);
- 
-+#if defined(CONFIG_OF_SEPARATE) && defined(CONFIG_OF_CONTROL)
-+	/*
-+	 * If the device tree is sitting immediate above our image then we
-+	 * must relocate it. If it is embedded in the data section, then it
-+	 * will be relocated with other data.
-+	 */
-+	if (gd->fdt_blob) {
-+		fdt_size = ALIGN(fdt_totalsize(gd->fdt_blob) + 0x1000, 32);
+diff --git a/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt b/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
+new file mode 100644
+index 0000000..03138e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
+@@ -0,0 +1,13 @@
++BCM2835 Watchdog timer
 +
-+		addr_sp -= fdt_size;
-+		new_fdt = (void *)addr_sp;
-+		debug("Reserving %zu Bytes for FDT at: %08lx\n",
-+		      fdt_size, addr_sp);
-+	}
-+#endif
++Required properties:
 +
- 	/* setup stackpointer for exeptions */
- 	gd->irq_sp = addr_sp;
- #ifdef CONFIG_USE_IRQ
-@@ -442,6 +460,10 @@ void board_init_f(ulong bootflag)
- 	gd->start_addr_sp = addr_sp;
- 	gd->reloc_off = addr - _TEXT_BASE;
- 	debug("relocation Offset is: %08lx\n", gd->reloc_off);
-+	if (new_fdt) {
-+		memcpy(new_fdt, gd->fdt_blob, fdt_size);
-+		gd->fdt_blob = new_fdt;
-+	}
- 	memcpy(id, (void *)gd, sizeof(gd_t));
++- compatible : should be "brcm,bcm2835-pm-wdog"
++- reg : Specifies base physical address and size of the registers.
++
++Example:
++
++intc: interrupt-controller {
++	compatible = "brcm,bcm2835-pm-wdog";
++	reg = <0x7e100000 0x28>;
++};
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 0b61939..7e0d515 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -29,6 +29,11 @@
+ 			#interrupt-cells = <2>;
+ 		};
  
- 	relocate_code(addr_sp, id, addr);
++		watchdog {
++			compatible = "brcm,bcm2835-pm-wdog";
++			reg = <0x7e100000 0x28>;
++		};
++
+ 		uart@20201000 {
+ 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+ 			reg = <0x7e201000 0x1000>;
+diff --git a/arch/arm/mach-bcm2835/bcm2835.c b/arch/arm/mach-bcm2835/bcm2835.c
+index f6fea49..35859c6 100644
+--- a/arch/arm/mach-bcm2835/bcm2835.c
++++ b/arch/arm/mach-bcm2835/bcm2835.c
+@@ -12,8 +12,10 @@
+  * GNU General Public License for more details.
+  */
+ 
++#include <linux/delay.h>
+ #include <linux/init.h>
+ #include <linux/irqchip/bcm2835.h>
++#include <linux/of_address.h>
+ #include <linux/of_platform.h>
+ #include <linux/bcm2835_timer.h>
+ #include <linux/clk/bcm2835.h>
+@@ -23,6 +25,48 @@
+ 
+ #include <mach/bcm2835_soc.h>
+ 
++#define PM_RSTC				0x1c
++#define PM_WDOG				0x24
++
++#define PM_PASSWORD			0x5a000000
++#define PM_RSTC_WRCFG_MASK		0x00000030
++#define PM_RSTC_WRCFG_FULL_RESET	0x00000020
++
++static void __iomem *wdt_regs;
++
++/*
++ * The machine restart method can be called from an atomic context so we won't
++ * be able to ioremap the regs then.
++ */
++static void bcm2835_setup_restart(void)
++{
++	struct device_node *np = of_find_compatible_node(NULL, NULL,
++						"brcm,bcm2835-pm-wdog");
++	if (WARN(!np, "unable to setup watchdog restart"))
++		return;
++
++	wdt_regs = of_iomap(np, 0);
++	WARN(!wdt_regs, "failed to remap watchdog regs");
++}
++
++static void bcm2835_restart(char mode, const char *cmd)
++{
++	u32 val;
++
++	if (!wdt_regs)
++		return;
++
++	/* use a timeout of 10 ticks (~150us) */
++	writel_relaxed(10 | PM_PASSWORD, wdt_regs + PM_WDOG);
++	val = readl_relaxed(wdt_regs + PM_RSTC);
++	val &= ~PM_RSTC_WRCFG_MASK;
++	val |= PM_PASSWORD | PM_RSTC_WRCFG_FULL_RESET;
++	writel_relaxed(val, wdt_regs + PM_RSTC);
++
++	/* No sleeping, possibly atomic. */
++	mdelay(1);
++}
++
+ static struct map_desc io_map __initdata = {
+ 	.virtual = BCM2835_PERIPH_VIRT,
+ 	.pfn = __phys_to_pfn(BCM2835_PERIPH_PHYS),
+@@ -39,6 +83,7 @@ void __init bcm2835_init(void)
+ {
+ 	int ret;
+ 
++	bcm2835_setup_restart();
+ 	bcm2835_init_clocks();
+ 
+ 	ret = of_platform_populate(NULL, of_default_bus_match_table, NULL,
+@@ -60,5 +105,6 @@ DT_MACHINE_START(BCM2835, "BCM2835")
+ 	.handle_irq = bcm2835_handle_irq,
+ 	.init_machine = bcm2835_init,
+ 	.timer = &bcm2835_timer,
++	.restart = bcm2835_restart,
+ 	.dt_compat = bcm2835_compat
+ MACHINE_END
 -- 
-1.7.7.3
+1.7.9.5
