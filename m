@@ -1,37 +1,83 @@
-From: viresh kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH Resend 1/2] mmc: sdhci-spear: add device tree bindings
-Date: Fri, 28 Sep 2012 15:48:16 +0530
-Message-ID: <CAOh2x=n8HkH2Nd_t5hDiA8nxLyWQsCn-kF+zrPkhR0fWDCpanQ@mail.gmail.com>
-References: <viresh.kumar@linaro.org>
-	<a42729885c593f61bb62c45f229174d9f7370c40.1348809217.git.viresh.kumar2@arm.com>
-	<87lifuv7rm.fsf@octavius.laptop.org>
-	<CAOh2x=mrL6ZT5xR1HMM-r_RQL+J6YE80hq56e9ykndxrEwaHUw@mail.gmail.com>
-	<87626yv4jc.fsf@octavius.laptop.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V2 2/2] mmc: sdhci-spear: Add clk_{un}prepare() support
+Date: Fri, 28 Sep 2012 15:58:23 +0530
+Message-ID: <a5ffa125606bf00e558145364281e9ea8551ff77.1348828070.git.viresh.kumar@linaro.org>
+References: <cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <87626yv4jc.fsf@octavius.laptop.org>
+In-Reply-To: <cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
+In-Reply-To: <cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
+References: <cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
 Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sr@denx.de
+To: cjb@laptop.org
+Cc: spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sr@denx.de, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2012 at 3:43 PM, Chris Ball <cjb@laptop.org> wrote:
-> I think now is a good time to get the DT bindings right instead of
-> propagating previous hacks into the DT, and this should be a pretty
-> simple change -- it's not even a code change, since the code for
-> automatically handling a vmmc-supply exists already.  Once we start
-> accepting power-gpios properties we can't easily get rid of them later.
->
-> If you don't have time to work on this, I guess I could accept the patch
-> without the power-gpios handling included (since it'll still work with
-> a DT that provides a vmmc-supply), but I don't want to take the patch
-> as-is and legitimize the power-gpios binding.  Does that make sense?
+clk_{un}prepare is mandatory for platforms using common clock framework. Si=
+nce
+this driver is used by SPEAr platform, which supports common clock framewor=
+k,
+add clk_{un}prepare() support for it.
 
-Can't disagree with you, for not accepting it :)
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/mmc/host/sdhci-spear.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Ok. For now i would just remove the power-gpios stuff and somebody from
-ST will fix it with regulator stuff later.
+diff --git a/drivers/mmc/host/sdhci-spear.c b/drivers/mmc/host/sdhci-spear.=
+c
+index ecad282..6be89c0 100644
+--- a/drivers/mmc/host/sdhci-spear.c
++++ b/drivers/mmc/host/sdhci-spear.c
+@@ -140,7 +140,7 @@ static int __devinit sdhci_probe(struct platform_device=
+ *pdev)
+ =09=09goto err;
+ =09}
+=20
+-=09ret =3D clk_enable(sdhci->clk);
++=09ret =3D clk_prepare_enable(sdhci->clk);
+ =09if (ret) {
+ =09=09dev_dbg(&pdev->dev, "Error enabling clock\n");
+ =09=09goto put_clk;
+@@ -260,7 +260,7 @@ set_drvdata:
+ free_host:
+ =09sdhci_free_host(host);
+ disable_clk:
+-=09clk_disable(sdhci->clk);
++=09clk_disable_unprepare(sdhci->clk);
+ put_clk:
+ =09clk_put(sdhci->clk);
+ err:
+@@ -282,7 +282,7 @@ static int __devexit sdhci_remove(struct platform_devic=
+e *pdev)
+=20
+ =09sdhci_remove_host(host, dead);
+ =09sdhci_free_host(host);
+-=09clk_disable(sdhci->clk);
++=09clk_disable_unprepare(sdhci->clk);
+ =09clk_put(sdhci->clk);
+=20
+ =09return 0;
+@@ -297,7 +297,7 @@ static int sdhci_suspend(struct device *dev)
+=20
+ =09ret =3D sdhci_suspend_host(host);
+ =09if (!ret)
+-=09=09clk_disable(sdhci->clk);
++=09=09clk_disable_unprepare(sdhci->clk);
+=20
+ =09return ret;
+ }
+@@ -308,7 +308,7 @@ static int sdhci_resume(struct device *dev)
+ =09struct spear_sdhci *sdhci =3D dev_get_platdata(dev);
+ =09int ret;
+=20
+-=09ret =3D clk_enable(sdhci->clk);
++=09ret =3D clk_prepare_enable(sdhci->clk);
+ =09if (ret) {
+ =09=09dev_dbg(dev, "Resume: Error enabling clock\n");
+ =09=09return ret;
+--=20
+1.7.12.rc2.18.g61b472e
 
---
-viresh
+
