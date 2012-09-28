@@ -1,96 +1,50 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH Resend 1/2] mmc: sdhci-spear: add device tree bindings
-Date: Fri, 28 Sep 2012 05:03:41 -0400
-Message-ID: <87lifuv7rm.fsf@octavius.laptop.org>
-References: <viresh.kumar@linaro.org>
-	<a42729885c593f61bb62c45f229174d9f7370c40.1348809217.git.viresh.kumar2@arm.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add DT support for i2s
+Date: Fri, 28 Sep 2012 14:33:55 +0530
+Message-ID: <CAAgF-Bc_KwJgcDOOkzrqcondGnmHDQ08s9Ooq61DbON7ZZtvmA@mail.gmail.com>
+References: <1348741532-29412-1-git-send-email-padma.v@samsung.com>
+	<506470A5.3070307@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <a42729885c593f61bb62c45f229174d9f7370c40.1348809217.git.viresh.kumar2@arm.com>
-	(Viresh Kumar's message of "Fri, 28 Sep 2012 10:48:08 +0530")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sr@denx.de
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <506470A5.3070307@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, sangsu4u.park@samsung.com, kgene.kim@samsung.com, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh,
-
-On Fri, Sep 28 2012, Viresh Kumar wrote:
-> This adds simple DT bindings for SDHCI SPEAr controller. It uses cd-gpios from
-> common mmc bindings.
+On Thu, Sep 27, 2012 at 8:58 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 09/27/2012 04:25 AM, Padmavathi Venna wrote:
+>> Add support for device based discovery.
 >
-> This also fixes spear300-evb.dts with correct name for card detect binding.
+>> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
 >
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> V1->resend:
-> - Use cd-gpios instead of int-gpio as binding for card detect gpio.
-> - Fix spear300-evb.dts binding name for cd-gpios
+>> +i2s@03830000 {
+>> +     compatible = "samsung,samsung-i2s";
+>> +     reg = <0x03830000 0x100>;
 >
-> .../devicetree/bindings/mmc/sdhci-spear.txt        | 28 +++++++++
->  arch/arm/boot/dts/spear300-evb.dts                 |  2 +-
->  drivers/mmc/host/sdhci-spear.c                     | 71 +++++++++++++++++++++-
->  3 files changed, 98 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-spear.txt
+>> +     tx-dma-channel-secondary = <&pdma0 8>;
+>> +     tx-dma-channel = <&pdma0 10>;
+>> +     rx-dma-channel = <&pdma0 9>;
+>> +     supports-6ch;
+>> +     supports-rstclr;
+>> +     supports-secdai;
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-spear.txt b/Documentation/devicetree/bindings/mmc/sdhci-spear.txt
-> new file mode 100644
-> index 0000000..cd34a05
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-spear.txt
-> @@ -0,0 +1,28 @@
-> +* SPEAr SDHCI Controller
-> +
-> +Required properties:
-> +- compatible : "st,spear300-sdhci"
-> +- reg : Address range of the sdhci
-> +- interrupt-parent: Should be the phandle for the interrupt controller
-> +  that services interrupts for this device
-> +- interrupt: Should contain the sdhci interrupt number
+> Those 6 properties are custom to this binding so should have a vendor
+> prefix, e.g. "samsung,supports-6ch".
+Okay. I will change this.
+>
+> Also, I wonder if this shouldn't wait for the forthcoming standardized
+> DT DMA bindings (or perhaps document custom bindings that are identical
+> to the new standardized bindings)? Otherwise, the DMA stuff will all
+> have to be redefined again. Apparently it's hoped the bindings will be
+> in 3.7, or if not there, in 3.8.
+Okay. Once the generic DT DMA bindings are available I will use that.
+But It will be good if atleast other things get reviewed.
 
-You don't have to mention reg/interrupts, because they're already
-covered in mmc.txt.
-
-> +Optional Properties:
-> +- cd-gpios: card detect gpio, with zero flags.
-> +- power-gpio: specifies the power gpio pin with flags: active low:1, active
-> +  high:0
-> +- power_always_enb: power should be on before inserting the card and so can't be
-> +  switched off. Only valid when power gpio is supported.
-
-power-gpio should be "power-gpios" (even though there's only one), and
-power_always_enb should use hyphens instead of underscores, but I have
-a more fundamental request:
-
-You should use a fixed regulator instead of this power-gpio hack.
-It's easy to hook up a fixed regulator to a gpio:
-
-        vmmc1: fixedregulator@0 {
-                compatible = "regulator-fixed";
-                regulator-name = "fixed-supply";
-                regulator-min-microvolt = <1800000>;
-                regulator-max-microvolt = <1800000>;
-                gpio = <&gpio1 16 0>;
-                startup-delay-us = <70000>;
-                vin-supply = <&parent_reg>;
-        };
-
-and then you can encode the regulator inside your SD host:
-
-	sdhci@fc000000 {
-		compatible = "st,spear300-sdhci";
-		reg = <0xfc000000 0x1000>;
-		cd-gpios = <&gpio0 6 0>;
-		vmmc-supply = <&vmmc1>;
-	};
-
-and the MMC core will take care of making sure that it's powered up
-only when needed.  What do you think?
-
-Thanks,
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+Thanks
+Padma
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
