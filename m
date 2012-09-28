@@ -1,93 +1,127 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: Current state of devicetree and x86
-Date: Fri, 28 Sep 2012 22:04:21 +0200
-Message-ID: <20120928200421.GA30777@avionic-0098.mockup.avionic-design.de>
-References: <CAH9NwWeVMZi3fH43DVZnp2_J1XbH-NDmVXND9TX8SGr35Sy+eQ@mail.gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v4 03/16] tegra: fdt: Add pwm binding and node
+Date: Fri, 28 Sep 2012 22:08:17 +0200
+Message-ID: <20120928200817.GB30777@avionic-0098.mockup.avionic-design.de>
+References: <1348793077-10126-1-git-send-email-sjg@chromium.org>
+	<1348793077-10126-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5516559931148280817=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAH9NwWeVMZi3fH43DVZnp2_J1XbH-NDmVXND9TX8SGr35Sy+eQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Gmeiner <christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0339771149=="
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1348793077-10126-4-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, Jerry Van Baren <vanbaren@cideas.com>, Tom Warren <twarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
 
---===============5516559931148280817==
+--===============0339771149==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+	protocol="application/pgp-signature"; boundary="vGgW1X5XWziG23Ko"
 Content-Disposition: inline
 
 
---5mCyUwZo2JvN/JJP
+--vGgW1X5XWziG23Ko
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 25, 2012 at 08:13:05PM +0200, Christian Gmeiner wrote:
-> Hi all.
+On Thu, Sep 27, 2012 at 05:44:24PM -0700, Simon Glass wrote:
+> This binding will apparently soon be in linux-next. Bring it in now
+> since we need to do something, and may as well try to target what
+> Linux will have.
 >=20
-> I am interested in the current state of dt and x86. In general I have
-> device with some
-> i2c devices and gpio stuff and a coreboot based BIOS. That means I could =
-add the
-> dt into the BIOS flash and make use of it. Is there any x86 bootloader th=
-at does
-> support devicetree? Has somebody some experiences?
+> Signed-off-by: Simon Glass <sjg@chromium.org>
+> ---
+> Changes in v3:
+> - Add new commit for pwm binding and node
+>=20
+>  arch/arm/dts/tegra20.dtsi                    |    7 +++++++
+>  doc/device-tree-bindings/pwm/tegra20-pwm.txt |   18 ++++++++++++++++++
+>  2 files changed, 25 insertions(+), 0 deletions(-)
+>  create mode 100644 doc/device-tree-bindings/pwm/tegra20-pwm.txt
+>=20
+> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+> index d936b1e..3221bc9 100644
+> --- a/arch/arm/dts/tegra20.dtsi
+> +++ b/arch/arm/dts/tegra20.dtsi
+> @@ -211,4 +211,11 @@
+>  		compatible =3D "nvidia,tegra20-nand";
+>  		reg =3D <0x70008000 0x100>;
+>  	};
+> +
+> +	pwm: pwm@7000a000 {
+> +		compatible =3D "nvidia,tegra20-pwm";
+> +		reg =3D <0x7000a000 0x100>;
+> +		#pwm-cells =3D <2>;
+> +	};
+> +
+>  };
+> diff --git a/doc/device-tree-bindings/pwm/tegra20-pwm.txt b/doc/device-tr=
+ee-bindings/pwm/tegra20-pwm.txt
+> new file mode 100644
+> index 0000000..bbbeedb
+> --- /dev/null
+> +++ b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
+> @@ -0,0 +1,18 @@
+> +Tegra SoC PWFM controller
+> +
+> +Required properties:
+> +- compatible: should be one of:
+> +  - "nvidia,tegra20-pwm"
+> +  - "nvidia,tegra30-pwm"
+> +- reg: physical base address and length of the controller's registers
+> +- #pwm-cells: On Tegra the number of cells used to specify a PWM is 2. T=
+he
+> +  first cell specifies the per-chip index of the PWM to use and the seco=
+nd
+> +  cell is the duty cycle in nanoseconds.
 
-I patched syslinux a while back to allow loading and passing a DTB to
-the Linux kernel. Patches based on that work went into syslinux 4.06
-IIRC. Note that currently onle the linux.c32 executable contains that
-functionality but there were plans to make it available in the standard
-loader in 5.00 I think.
-
-Alternatively you could customize OpenFirmware for your device. OFW can
-be built as a COM32 executable and can be run from syslinux or it can be
-used as a BIOS replacement.
+This is a mistake in the Linux kernel documentation. The second cell
+specifies the period in nanoseconds, not the duty cycle. I'll fix this
+up in the kernel.
 
 Thierry
 
---5mCyUwZo2JvN/JJP
+--vGgW1X5XWziG23Ko
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQZgLFAAoJEN0jrNd/PrOh4I0P/3AwFwItiq5OS7pOGR/UeIU7
-vT39dDw8IElTuUY0UbRHeJP/KcqVxaQSGXaa/0VoLBGX1dwtUr5cjotP397t0XLE
-EK108M3EfuV4MnuGlTVro8ygx2Rvc0UCuE9o3CuHBX0iCXqBx9gns80JQEmOfXyL
-aocJhkeCGWwzYX5Dha7HgKvgEHjzaU370EUqjHBrFiT4Y2cnbxglhNEl2Ww09KG5
-aVrAozW2COzjIT1pKiX2cDfAp+6AOrA60osvXQny7jr7C9Pfeeq85HA2c06joYUW
-6XAhRFVfts0LFoYgK9HZhaVguYWydYE3IuBAMEQ1s8qv/x9rIReaAO2arzN0qLo8
-5ULZu1ZjKVN/X4WPMoTpUIei7NQ5Qb7jLJMcbHheuh24BgIDi1ARoPFe7CqykskY
-kBVmwc5EjwX4JJzTzOkuAB4w1wobZCQh7M86SRFKpEXPZBOXq8/gU42We6ABUuIU
-ruVb7U3M431qlbllyU7RN3t/cpdIlQ+bBsf8TEFvFspOd+uysrTNVGC0E9aEe2Gz
-IenvOG5uw+xlZ1QYG3wh8IIND1jjm+LbUNhnAvHai3bx6PujhlMlE8kRQmIlKLeG
-ZCqdqtgVEi3Cmv4dPbBr4j0+Cr7q/5MCWFj98dtSIfEAga2YlsjoyxEXrjolaZio
-WTqMgpD01DyPtMu+Yo9e
-=TpVe
+iQIcBAEBAgAGBQJQZgOxAAoJEN0jrNd/PrOhe1AP/1vdcBHoKdkoJbAzRSgmxmNO
+ETZwps0L+z/tvdeLnHjEKmsW7wWHIJaH5uH/8vFaNvu8CwvWo7xdiLVvvtB6Q2kT
+MCVoo5HH0Wd5g+tN38k0WDUZMtQOvXtcBNhhCx0m2lntN7+PFMXpzl4t8hjSqkY1
+XW7MFXBs4caz1MAKMCwqMPYHIFIcHtnVMFVZLTAroICC0keNQ0OFOWVrmBQ9aPJ2
+QvHvja4j3lNT+Iw6KWaoXJimr6hAJrzM7pUwQiPqZzhgqDRnTh0XJX7Rzc2/O3IB
+jLxnue6uzIjD7Zb0DKC78w1ga3+YHwogwmOkBcLITV3/mkjmp6qHjsGovA/et+xn
+UH7m0u3XVbAEdhTKsI9SdaVdufWUrUjGHM2/bQmktMnnyn2YRwY0ELSoC3x1zpQI
+hxL9ReND2FJXVGJHcNVuE5lm4FqyZRYAbYiDMTB0gdu8rlDQY2aAYhJ49r3oV5I8
+GNxNFeEwbJe5jA2l6vRQnbPKtIOXnXQpom1lgRv1Ucdt/gLGSg+w33Xvp1n8S3ur
+AxJfbAsSzY98VaeO6fBX5iycAmkWW5bc86l+61FAB5ZP9CL/+YKUsWv3s395koPs
+KAcVSzgauID6qRUjXt6v3iZc0ZQdPeMLkPso4ddLTEw6MJVCuXBqQTaBOujNzV9u
+MoG9QdFmu2Sl8rdR6PJp
+=oLCK
 -----END PGP SIGNATURE-----
 
---5mCyUwZo2JvN/JJP--
+--vGgW1X5XWziG23Ko--
 
---===============5516559931148280817==
+--===============0339771149==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
 _______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+U-Boot mailing list
+U-Boot@lists.denx.de
+http://lists.denx.de/mailman/listinfo/u-boot
 
---===============5516559931148280817==--
+--===============0339771149==--
