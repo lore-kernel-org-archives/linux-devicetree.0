@@ -1,13 +1,11 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH 08/12] dtc: be more quiet with "make -s"
-Date: Fri, 28 Sep 2012 23:36:13 +0200
-Message-ID: <1348868177-21205-9-git-send-email-arnd@arndb.de>
-References: <1348868177-21205-1-git-send-email-arnd@arndb.de>
+From: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: DT support for common clk drivers
+Date: Fri, 28 Sep 2012 21:42:17 +0000
+Message-ID: <3E54258959B69E4282D79E01AB1F32B7041EFA98@DFLE12.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============3441701470237211711=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348868177-21205-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,65 +16,118 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On a normal build, we get output from both make and from dtc
-about each file that is being processed.
+--===============3441701470237211711==
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_"
 
-  DTC     arch/arm/boot/vexpress-v2p-ca5s.dtb
-DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca5s.dts"
-  DTC     arch/arm/boot/vexpress-v2p-ca9.dtb
-DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca9.dts"
-  DTC     arch/arm/boot/vexpress-v2p-ca15-tc1.dtb
-DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts"
-  DTC     arch/arm/boot/vexpress-v2p-ca15_a7.dtb
-DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts"
+--_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-When both lines refer to the same action. When building with "make -s",
-the "DTC: dts->dtb ..." line is the only output we currently get.
+Hello All,
 
-This patch makes dtc not output the message when the "-q" flag is passed,
-and ensures that we pass it in both cases.
+I am working to use DT bindings to configure clk drivers. Could someone poi=
+nt me to the patch set that adds this to clk drivers and also any sample pl=
+atform code that uses these?
 
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
----
- scripts/Makefile.lib |    2 +-
- scripts/dtc/dtc.c    |    5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Murali Karicheri
+Software Design Engineer
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 0be6f11..662528a 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -264,7 +264,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
- 	$(call cmd,dt_S_dtb)
- 
- quiet_cmd_dtc = DTC     $@
--cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
-+cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -q -d $(depfile) $<
- 
- # Bzip2
- # ---------------------------------------------------------------------------
-diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
-index 2ef5e2e..a1586ff 100644
---- a/scripts/dtc/dtc.c
-+++ b/scripts/dtc/dtc.c
-@@ -188,8 +188,9 @@ int main(int argc, char *argv[])
- 	if (minsize)
- 		fprintf(stderr, "DTC: Use of \"-S\" is deprecated; it will be removed soon, use \"-p\" instead\n");
- 
--	fprintf(stderr, "DTC: %s->%s  on file \"%s\"\n",
--		inform, outform, arg);
-+	if (!quiet)
-+		fprintf(stderr, "DTC: %s->%s  on file \"%s\"\n",
-+			inform, outform, arg);
- 
- 	if (depname) {
- 		depfile = fopen(depname, "w");
--- 
-1.7.10
+
+--_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 12 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Verdana;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Verdana","sans-serif";
+	color:windowtext;
+	font-weight:normal;
+	font-style:normal;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
+rdana&quot;,&quot;sans-serif&quot;">Hello All,<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
+rdana&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
+rdana&quot;,&quot;sans-serif&quot;">I am working to use DT bindings to conf=
+igure clk drivers. Could someone point me to the patch set that adds this t=
+o clk drivers and also any sample platform code that uses
+ these?<o:p></o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
+rdana&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">Murali Karicheri<o:=
+p></o:p></span></p>
+<p class=3D"MsoNormal"><i><span style=3D"font-size:12.0pt">Software Design =
+Engineer<o:p></o:p></span></i></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
+
+--_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_--
+
+--===============3441701470237211711==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3441701470237211711==--
