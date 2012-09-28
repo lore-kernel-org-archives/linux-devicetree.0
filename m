@@ -1,85 +1,64 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH V2 2/2] mmc: sdhci-spear: Add clk_{un}prepare() support
-Date: Fri, 28 Sep 2012 06:59:13 -0400
-Message-ID: <87wqzetnum.fsf@octavius.laptop.org>
-References: <cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
-	<cb66033bd923920daefc57570381f978d6e37168.1348828070.git.viresh.kumar@linaro.org>
-	<a5ffa125606bf00e558145364281e9ea8551ff77.1348828070.git.viresh.kumar@linaro.org>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH 15/14] OF:  define of_*_cmp() macros also if CONFIG_OF isn't
+ set
+Date: Fri, 28 Sep 2012 13:05:27 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1209281302390.5428@axis700.grange>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-3-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <a5ffa125606bf00e558145364281e9ea8551ff77.1348828070.git.viresh.kumar@linaro.org>
-	(Viresh Kumar's message of "Fri, 28 Sep 2012 15:58:23 +0530")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sr@denx.de
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-3-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+of_*_cmp() macros do not depend on any OF functions and can be defined also
+if CONFIG_OF isn't set. Also include linux/string.h, required by those
+macros.
 
-On Fri, Sep 28 2012, Viresh Kumar wrote:
-> clk_{un}prepare is mandatory for platforms using common clock framework. Since
-> this driver is used by SPEAr platform, which supports common clock framework,
-> add clk_{un}prepare() support for it.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/mmc/host/sdhci-spear.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-spear.c b/drivers/mmc/host/sdhci-spear.c
-> index ecad282..6be89c0 100644
-> --- a/drivers/mmc/host/sdhci-spear.c
-> +++ b/drivers/mmc/host/sdhci-spear.c
-> @@ -140,7 +140,7 @@ static int __devinit sdhci_probe(struct platform_device *pdev)
->  		goto err;
->  	}
->  
-> -	ret = clk_enable(sdhci->clk);
-> +	ret = clk_prepare_enable(sdhci->clk);
->  	if (ret) {
->  		dev_dbg(&pdev->dev, "Error enabling clock\n");
->  		goto put_clk;
-> @@ -260,7 +260,7 @@ set_drvdata:
->  free_host:
->  	sdhci_free_host(host);
->  disable_clk:
-> -	clk_disable(sdhci->clk);
-> +	clk_disable_unprepare(sdhci->clk);
->  put_clk:
->  	clk_put(sdhci->clk);
->  err:
-> @@ -282,7 +282,7 @@ static int __devexit sdhci_remove(struct platform_device *pdev)
->  
->  	sdhci_remove_host(host, dead);
->  	sdhci_free_host(host);
-> -	clk_disable(sdhci->clk);
-> +	clk_disable_unprepare(sdhci->clk);
->  	clk_put(sdhci->clk);
->  
->  	return 0;
-> @@ -297,7 +297,7 @@ static int sdhci_suspend(struct device *dev)
->  
->  	ret = sdhci_suspend_host(host);
->  	if (!ret)
-> -		clk_disable(sdhci->clk);
-> +		clk_disable_unprepare(sdhci->clk);
->  
->  	return ret;
->  }
-> @@ -308,7 +308,7 @@ static int sdhci_resume(struct device *dev)
->  	struct spear_sdhci *sdhci = dev_get_platdata(dev);
->  	int ret;
->  
-> -	ret = clk_enable(sdhci->clk);
-> +	ret = clk_prepare_enable(sdhci->clk);
->  	if (ret) {
->  		dev_dbg(dev, "Resume: Error enabling clock\n");
->  		return ret;
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+---
 
-Thanks, pushed to mmc-next for 3.7.
+These definitions are also required for "# CONFIG_OF is not set" builds.
 
-- Chris.
+ include/linux/of.h |   15 ++++++++-------
+ 1 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 3636fae..ad2e79b 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -85,6 +85,14 @@ static inline struct device_node *of_node_get(struct device_node *node)
+ static inline void of_node_put(struct device_node *node) { }
+ #endif /* !CONFIG_OF_DYNAMIC */
+ 
++/* Default string compare functions, Allow arch asm/prom.h to override */
++#if !defined(of_compat_cmp)
++#include <linux/string.h>
++#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
++#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
++#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
++#endif
++
+ #ifdef CONFIG_OF
+ 
+ /* Pointer for first entry in chain of all nodes. */
+@@ -143,13 +151,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ #define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
+ #endif
+ 
+-/* Default string compare functions, Allow arch asm/prom.h to override */
+-#if !defined(of_compat_cmp)
+-#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
+-#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
+-#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
+-#endif
+-
+ /* flag descriptions */
+ #define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+ #define OF_DETACHED	2 /* node has been detached from the device tree */
 -- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+1.7.2.5
+
