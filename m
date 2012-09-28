@@ -1,15 +1,14 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
-Date: Fri, 28 Sep 2012 16:47:51 -0500
-Message-ID: <50661B07.1040200@ti.com>
-References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com>
- <505A7E0B.30709@ti.com> <20120920235309.GO28835@atomide.com>
- <5063330E.3000203@ti.com> <5065F19E.5020708@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: adding OF_DYNAMIC proc interface
+Date: Fri, 28 Sep 2012 15:54:13 -0600
+Message-ID: <50661C85.4000209@wwwdotorg.org>
+References: <1348850798-24352-1-git-send-email-atull@altera.com>
+ <1348867740.7621.4.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5065F19E.5020708-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1348867740.7621.4.camel@pasglop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,107 +19,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, atull@atull-linux1, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 09/28/2012 01:51 PM, Vaibhav Hiremath wrote:
-> 
-> 
-> On 9/26/2012 10:23 PM, Jon Hunter wrote:
+On 09/28/2012 03:29 PM, Benjamin Herrenschmidt wrote:
+> On Fri, 2012-09-28 at 11:46 -0500, Alan Tull wrote:
+>> Hello,
 >>
->> On 09/20/2012 06:53 PM, Tony Lindgren wrote:
->>> * Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org> [120919 19:24]:
->>>> Hi Tony,
->>>>
->>>> I was about to take the DTS patch, but was wondering if you will pull
->>>> the driver changes for 3.7.
->>>
->>> I suggest that you do a separate branch on top of Paul's hwmod series
->>> when he posts those if that works for you?
+>> The following patch adds a /proc/ofdt interface to add or remove device tree
+>> nodes dynamically.
 >>
->> Benoit, I see that you have pulled in the DTS patch.
+>> Based on earlier feedback, I've changed my driver to use /proc instead of
+>> creating a new ioctl (the old thread is at 
+>> http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg17333.html)
 >>
->> Do you guys want me to rebase the remaining patches with Rob's change on
->> Tony's master branch and re-submit?
 >>
+>> I was hoping to get some early feedback from others who might be interested
+>> who were discussing this on an earlier thread about OF_DYNAMIC usage.
+>>
+>> This code doesn't do any notification for drivers yet. It can add multiple
+>> nodes and they will show up properly under /proc/device-tree.  It has an
+>> issue that shows up when removing nodes (it appears that the memory used by
+>> proc gets corrupted after the add).
 > 
-> Jon,
+> (Adding Arnd here)
 > 
-> Sorry for delayed response, But I tried using your omap_test application
-> to validate this patch series, but it is failing for me.
+> Have you guys considered whether a better approach would be a file
+> system ? IE, create a node by creating a directory, add files for
+> properties etc... ?
 > 
-> How did you test it? Are you running same test application at your end?
+> It might need some trick to make the node "active" (in order to not
+> internally in the kernel start exposing unfinished nodes), maybe a
+> special file, maybe a permission trick ...
 
-Sorry, I now see you are using the latest test code! I was too hasty
-when I saw the first error ;-)
-
-> I am debugging this issue, i just thought I should tell you this before
-> its too late.
-
-Thanks.
-
-> Below is the log -
-> 
-> [root@arago /]# echo 3 > /tmp/omap-test/timer/one
-> [   79.612223] omap_dm_timer_request_specific: Please use
-> omap_dm_timer_request_by_cap()
-> [   79.620636] Timer 3 not available!
-
-This is expected because omap_dm_timer_request_specific() is no longer
-supported. I should remove in the omap-test/timer/one going forward.
-
-> [root@arago /]#
-> [root@arago /]# echo 3 > /tmp/omap-test/timer/all
-> [  135.111949] Testing 48042000.timer with 24000000 Hz clock ...
-> [root@arago /]# [  137.457389] Timer read test PASSED! No errors, 100 loops
-> [  137.463267] Timer interrupt test PASSED!
-> [  137.467650] Testing 48042000.timer with 32768 Hz clock ...
-> [  139.816892] Timer read test PASSED! No errors, 100 loops
-> [  139.830776] Timer interrupt test PASSED!
-> [  139.835245] Testing 48044000.timer with 24000000 Hz clock ...
-> [  142.183912] Timer read test PASSED! No errors, 100 loops
-> [  142.189734] Timer interrupt test PASSED!
-> [  142.194076] Testing 48044000.timer with 32768 Hz clock ...
-> [  144.543451] Timer read test PASSED! No errors, 100 loops
-> [  144.557334] Timer interrupt test PASSED!
-> [  144.561806] Testing 48046000.timer with 24000000 Hz clock ...
-> [  146.910469] Timer read test PASSED! No errors, 100 loops
-> [  147.910493] Timer interrupt test FAILED! No interrupt occurred in 1 sec
-> [  147.917598] Testing 48046000.timer with 32768 Hz clock ...
-> [  150.262203] Timer read test PASSED! No errors, 100 loops
-> [  151.262049] Timer interrupt test FAILED! No interrupt occurred in 1 sec
-> [  151.269298] Testing 48048000.timer with 24000000 Hz clock ...
-> [  153.613596] Timer read test PASSED! No errors, 100 loops
-> [  154.613618] Timer interrupt test FAILED! No interrupt occurred in 1 sec
-> [  154.620725] Testing 48048000.timer with 32768 Hz clock ...
-> [  156.965324] Timer read test PASSED! No errors, 100 loops
-> [  157.965176] Timer interrupt test FAILED! No interrupt occurred in 1 sec
-> [  157.972419] Testing 4804a000.timer with 24000000 Hz clock ...
-> 
-> [root@arago /]# [  160.316753] Timer read test PASSED! No errors, 100 loops
-> 
-> [root@arago /]# [  161.316728] Timer interrupt test FAILED! No interrupt
-> occurred in 1 sec
-> [  161.323912] Testing 4804a000.timer with 32768 Hz clock ...
-> 
-> [root@arago /]# [  163.668490] Timer read test PASSED! No errors, 100 loops
-> [  164.668328] Timer interrupt test FAILED! No interrupt occurred in 1 sec
-> [  164.675545] Tested 5 timers, skipped 6 timers and detected 6 errors
-> [  164.682202] Test iteration 0 complete in 29 secs
-> [  164.687104] Test summary: Iterations 1, Errors 6
-
-What is interesting is that it is the interrupt test that is failing for
-timers 5-7. Any chance there is a problem with the interrupt mapping? I
-checked the documentation for AM335x and I don't see anything obvious
-that is wrong with the binding unless the documentation itself is wrong.
-
-Given that the interrupts work on timers 3 and 4 it appears to be a
-interrupt configuration problem somewhere. We could adapt the test to
-see if an interrupt is pending in the timer peripheral when it fails.
-This would tell us that the timer is working but the interrupt is not
-being enabled correctly in the interrupt controller.
-
-Cheers
-Jon
+mkdir automatically creates status="disabled" or similar internally to
+the kernel?
