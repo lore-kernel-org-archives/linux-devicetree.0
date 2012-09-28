@@ -1,18 +1,11 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/1] Fix segfault in DTC
-Date: Fri, 28 Sep 2012 13:05:33 -0600
-Message-ID: <5065F4FD.4010807@wwwdotorg.org>
-References: <1348526885-2113-1-git-send-email-mmayer@broadcom.com>
- <1348595889-6495-1-git-send-email-mmayer@broadcom.com>
- <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
- <20120925233054.GL9800@truffula.fritz.box> <50624393.30607@broadcom.com>
- <20120926003508.GB31993@truffula.fritz.box> <50632F78.4030709@broadcom.com>
- <5065D9C7.40906@wwwdotorg.org> <E1THfgr-0006Fg-KT@jdl.com>
+Subject: [RFC PATCH 0/2] dtc: enable use of pre-processor
+Date: Fri, 28 Sep 2012 13:32:09 -0600
+Message-ID: <1348860731-20868-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1THfgr-0006Fg-KT-CYoMK+44s/E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,36 +16,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2012 12:53 PM, Jon Loeliger wrote:
->>>
->>> Yeah, seems like the kernel DTC is quite old.
->>
->> FYI, I'm working on a patch to the kernel to bring in the latest dtc.
-> 
-> Awesome.  Thank you.
-> 
->> I've run a regression test vs. the old dtc in the kernel ...
-> 
-> Which is the icky step.  Again, thank you.
-> 
->> ... and found that
->> some of the PowerPC .dts files don't compile with the new dtc (but did
->> with the old), all due to non-existent labels/paths being referenced.
->> I'll try and track down whether this is a regression in dtc, or simply
->> buggy .dts files that weren't noticed before.
-> 
-> I think you should just smack the PowerPC guys. :-)
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-For the record in this thread, it was a regression I introduced into dtc
-- the patch I just sent was for this.
+This series adds some build rules to run cpp on *.dtsp prior to
+invoking dtc, and converts Tegra to the new rule as an example. What do
+people think?
 
->> Everything non-PowerPC works fine, and most PowerPC files work fine.
->> Where compilation succeeds, the md5sum of the .dtb is identical in every
->> case.
+I assume that you've applied the dtc patches I sent yesterday. They
+aren't in this series. See:
 
-... and with that patch, every .dts in the kernel compiles to the same
-md5sum before/after.
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020182.html
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020183.html
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020181.html
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-September/020387.html
+
+Note: those patches are against upstream dtc. If you wish to test this
+series, apply the dtc patches to upstream dtc, build it, and copy the
+resultant dtc binary over the top of scripts/dtc/dtc.
+
+I'll post a patch to update the in-kernel dtc to the upstream dtc as
+soon as one final dtc patch has been applied, and this series will then
+depend on that patch.
+
+Stephen Warren (2):
+  kbuild: centralize .dts->.dtb rule
+  kbuild: introduce cmd_dtc_cpp
+
+ arch/arm/boot/Makefile           |    4 ----
+ arch/arm/boot/dts/skeleton.dtsip |   13 +++++++++++++
+ arch/c6x/boot/Makefile           |    3 ---
+ arch/openrisc/boot/Makefile      |    3 ---
+ arch/powerpc/boot/Makefile       |    4 ----
+ scripts/Makefile.lib             |    9 +++++++++
+ 6 files changed, 22 insertions(+), 14 deletions(-)
+ create mode 100644 arch/arm/boot/dts/skeleton.dtsip
