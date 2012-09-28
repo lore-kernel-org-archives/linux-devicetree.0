@@ -1,11 +1,15 @@
-From: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: DT support for common clk drivers
-Date: Fri, 28 Sep 2012 21:42:17 +0000
-Message-ID: <3E54258959B69E4282D79E01AB1F32B7041EFA98@DFLE12.ent.ti.com>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
+Date: Fri, 28 Sep 2012 16:47:51 -0500
+Message-ID: <50661B07.1040200@ti.com>
+References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com>
+ <505A7E0B.30709@ti.com> <20120920235309.GO28835@atomide.com>
+ <5063330E.3000203@ti.com> <5065F19E.5020708@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3441701470237211711=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <5065F19E.5020708-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,118 +20,107 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============3441701470237211711==
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_"
 
---_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+On 09/28/2012 01:51 PM, Vaibhav Hiremath wrote:
+> 
+> 
+> On 9/26/2012 10:23 PM, Jon Hunter wrote:
+>>
+>> On 09/20/2012 06:53 PM, Tony Lindgren wrote:
+>>> * Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org> [120919 19:24]:
+>>>> Hi Tony,
+>>>>
+>>>> I was about to take the DTS patch, but was wondering if you will pull
+>>>> the driver changes for 3.7.
+>>>
+>>> I suggest that you do a separate branch on top of Paul's hwmod series
+>>> when he posts those if that works for you?
+>>
+>> Benoit, I see that you have pulled in the DTS patch.
+>>
+>> Do you guys want me to rebase the remaining patches with Rob's change on
+>> Tony's master branch and re-submit?
+>>
+> 
+> Jon,
+> 
+> Sorry for delayed response, But I tried using your omap_test application
+> to validate this patch series, but it is failing for me.
+> 
+> How did you test it? Are you running same test application at your end?
 
-Hello All,
+Sorry, I now see you are using the latest test code! I was too hasty
+when I saw the first error ;-)
 
-I am working to use DT bindings to configure clk drivers. Could someone poi=
-nt me to the patch set that adds this to clk drivers and also any sample pl=
-atform code that uses these?
+> I am debugging this issue, i just thought I should tell you this before
+> its too late.
 
-Murali Karicheri
-Software Design Engineer
+Thanks.
 
+> Below is the log -
+> 
+> [root@arago /]# echo 3 > /tmp/omap-test/timer/one
+> [   79.612223] omap_dm_timer_request_specific: Please use
+> omap_dm_timer_request_by_cap()
+> [   79.620636] Timer 3 not available!
 
---_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+This is expected because omap_dm_timer_request_specific() is no longer
+supported. I should remove in the omap-test/timer/one going forward.
 
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 12 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:Verdana;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Verdana","sans-serif";
-	color:windowtext;
-	font-weight:normal;
-	font-style:normal;}
-.MsoChpDefault
-	{mso-style-type:export-only;}
-@page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;">Hello All,<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;">I am working to use DT bindings to conf=
-igure clk drivers. Could someone point me to the patch set that adds this t=
-o clk drivers and also any sample platform code that uses
- these?<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">Murali Karicheri<o:=
-p></o:p></span></p>
-<p class=3D"MsoNormal"><i><span style=3D"font-size:12.0pt">Software Design =
-Engineer<o:p></o:p></span></i></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-</div>
-</body>
-</html>
+> [root@arago /]#
+> [root@arago /]# echo 3 > /tmp/omap-test/timer/all
+> [  135.111949] Testing 48042000.timer with 24000000 Hz clock ...
+> [root@arago /]# [  137.457389] Timer read test PASSED! No errors, 100 loops
+> [  137.463267] Timer interrupt test PASSED!
+> [  137.467650] Testing 48042000.timer with 32768 Hz clock ...
+> [  139.816892] Timer read test PASSED! No errors, 100 loops
+> [  139.830776] Timer interrupt test PASSED!
+> [  139.835245] Testing 48044000.timer with 24000000 Hz clock ...
+> [  142.183912] Timer read test PASSED! No errors, 100 loops
+> [  142.189734] Timer interrupt test PASSED!
+> [  142.194076] Testing 48044000.timer with 32768 Hz clock ...
+> [  144.543451] Timer read test PASSED! No errors, 100 loops
+> [  144.557334] Timer interrupt test PASSED!
+> [  144.561806] Testing 48046000.timer with 24000000 Hz clock ...
+> [  146.910469] Timer read test PASSED! No errors, 100 loops
+> [  147.910493] Timer interrupt test FAILED! No interrupt occurred in 1 sec
+> [  147.917598] Testing 48046000.timer with 32768 Hz clock ...
+> [  150.262203] Timer read test PASSED! No errors, 100 loops
+> [  151.262049] Timer interrupt test FAILED! No interrupt occurred in 1 sec
+> [  151.269298] Testing 48048000.timer with 24000000 Hz clock ...
+> [  153.613596] Timer read test PASSED! No errors, 100 loops
+> [  154.613618] Timer interrupt test FAILED! No interrupt occurred in 1 sec
+> [  154.620725] Testing 48048000.timer with 32768 Hz clock ...
+> [  156.965324] Timer read test PASSED! No errors, 100 loops
+> [  157.965176] Timer interrupt test FAILED! No interrupt occurred in 1 sec
+> [  157.972419] Testing 4804a000.timer with 24000000 Hz clock ...
+> 
+> [root@arago /]# [  160.316753] Timer read test PASSED! No errors, 100 loops
+> 
+> [root@arago /]# [  161.316728] Timer interrupt test FAILED! No interrupt
+> occurred in 1 sec
+> [  161.323912] Testing 4804a000.timer with 32768 Hz clock ...
+> 
+> [root@arago /]# [  163.668490] Timer read test PASSED! No errors, 100 loops
+> [  164.668328] Timer interrupt test FAILED! No interrupt occurred in 1 sec
+> [  164.675545] Tested 5 timers, skipped 6 timers and detected 6 errors
+> [  164.682202] Test iteration 0 complete in 29 secs
+> [  164.687104] Test summary: Iterations 1, Errors 6
 
---_000_3E54258959B69E4282D79E01AB1F32B7041EFA98DFLE12entticom_--
+What is interesting is that it is the interrupt test that is failing for
+timers 5-7. Any chance there is a problem with the interrupt mapping? I
+checked the documentation for AM335x and I don't see anything obvious
+that is wrong with the binding unless the documentation itself is wrong.
 
---===============3441701470237211711==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Given that the interrupts work on timers 3 and 4 it appears to be a
+interrupt configuration problem somewhere. We could adapt the test to
+see if an interrupt is pending in the timer peripheral when it fails.
+This would tell us that the timer is working but the interrupt is not
+being enabled correctly in the interrupt controller.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3441701470237211711==--
+Cheers
+Jon
