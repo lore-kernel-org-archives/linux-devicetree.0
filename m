@@ -1,36 +1,38 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 08/12] dtc: be more quiet with "make -s"
-Date: Fri, 28 Sep 2012 15:55:18 -0600
-Message-ID: <50661CC6.2010007@wwwdotorg.org>
-References: <1348868177-21205-1-git-send-email-arnd@arndb.de> <1348868177-21205-9-git-send-email-arnd@arndb.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
+Date: Fri, 28 Sep 2012 17:17:03 -0500
+Message-ID: <506621DF.20508@ti.com>
+References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com> <505A7E0B.30709@ti.com> <20120920235309.GO28835@atomide.com> <5063330E.3000203@ti.com> <5065F19E.5020708@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1348868177-21205-9-git-send-email-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, David Gibson <dwg@au1.ibm.com>, arm@kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5065F19E.5020708@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2012 03:36 PM, Arnd Bergmann wrote:
-> On a normal build, we get output from both make and from dtc
-> about each file that is being processed.
-> 
->   DTC     arch/arm/boot/vexpress-v2p-ca5s.dtb
-> DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca5s.dts"
->   DTC     arch/arm/boot/vexpress-v2p-ca9.dtb
-> DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca9.dts"
->   DTC     arch/arm/boot/vexpress-v2p-ca15-tc1.dtb
-> DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts"
->   DTC     arch/arm/boot/vexpress-v2p-ca15_a7.dtb
-> DTC: dts->dtb  on file "/git/arnd/linux-arm/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts"
-> 
-> When both lines refer to the same action. When building with "make -s",
-> the "DTC: dts->dtb ..." line is the only output we currently get.
-> 
-> This patch makes dtc not output the message when the "-q" flag is passed,
-> and ensures that we pass it in both cases.
 
-Just as an FYI, the upstream dtc no longer prints this message, and I
-just posted a patch to pull that whole upstream dtc into the kernel.
+On 09/28/2012 01:51 PM, Vaibhav Hiremath wrote:
+
+[snip]
+
+> Jon,
+> 
+> Sorry for delayed response, But I tried using your omap_test application
+> to validate this patch series, but it is failing for me.
+> 
+> How did you test it? Are you running same test application at your end?
+> 
+> I am debugging this issue, i just thought I should tell you this before
+> its too late.
+
+By the way, I have not seen any such issues on OMAP2/3/4 and so this
+appears to be specific to AM335x. So I would not be too concerned, we
+just need to understand why interrupts on some timers are not working on
+the AM335x. Probably a configuration issue some where and that can
+always be fixed separately.
+
+Cheers
+Jon
