@@ -1,17 +1,17 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] watchdog: at91sam9_wdt: add device tree support
-Date: Fri, 28 Sep 2012 18:20:14 +0200
-Message-ID: <CAHkwnC8tsM2iLsbcnMGbzR4G=SqPfTxyMBYYQbe79gZK1=jYEw@mail.gmail.com>
-References: <1348568704-28304-1-git-send-email-fabio.porcedda@gmail.com>
- <1348568704-28304-2-git-send-email-fabio.porcedda@gmail.com>
- <20120927055636.GP17667@game.jcrosoft.org>
- <CAHkwnC_R4DMaRfjQHO=+K1DO62-iH70B2_QsipLD5D4xRznouw@mail.gmail.com>
- <20120927171934.GS17667@game.jcrosoft.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/1] Fix segfault in DTC
+Date: Fri, 28 Sep 2012 11:09:27 -0600
+Message-ID: <5065D9C7.40906@wwwdotorg.org>
+References: <1348526885-2113-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
+ <20120925233054.GL9800@truffula.fritz.box> <50624393.30607@broadcom.com>
+ <20120926003508.GB31993@truffula.fritz.box> <50632F78.4030709@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120927171934.GS17667-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+In-Reply-To: <50632F78.4030709-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,68 +22,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2012 at 7:19 PM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 16:59 Thu 27 Sep     , Fabio Porcedda wrote:
->> On Thu, Sep 27, 2012 at 7:56 AM, Jean-Christophe PLAGNIOL-VILLARD
->> <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
->> > On 12:25 Tue 25 Sep     , Fabio Porcedda wrote:
->> >> Tested on an at91sam9260 board (evk-pro3)
->> >>
->> >> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >> ---
->> >>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
->> >>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
->> >>  2 files changed, 40 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> >> new file mode 100644
->> >> index 0000000..5947929
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> >> @@ -0,0 +1,19 @@
->> >> +* Atmel Watchdog Timers
->> >> +
->> >> +** at91sam9-wdt
->> >> +
->> >> +Required properties:
->> >> +- compatible: must be "atmel,at91sam9260-wdt".
->> >> +- reg: physical base address of the controller and length of memory mapped
->> >> +  region.
->> >> +
->> >> +Optional properties:
->> >> +- heartbeat: contains the watchdog heartbeats in seconds.
->> > more I read this binding more it's seems wrong
->> >
->> > Today we do not use yet the watchdog framework which we will so we need to
->> > use the same binding as the watchdog framework
+On 09/26/2012 10:38 AM, Markus Mayer wrote:
+> On 25/09/2012 17:35, David Gibson wrote:
+>> On Tue, Sep 25, 2012 at 04:51:47PM -0700, Markus Mayer wrote:
+>>> On 25/09/2012 16:30, David Gibson wrote:
+>>>>
+>>>> Which dtc version did you observe this with?  I'm unable to reproduce
+>>>> the SEGV with current git.
+>>>
+>>> That was
+>>>
+>>> $ cat version_gen.h
+>>> #define DTC_VERSION "DTC 1.2.0-g37c0b6a0"
+>>>
+>>> from
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git. In
+>>> other words, the DTC used by the Linux 3.6-rc series.
 >>
->> What is the binding of the heartbeat value in the watchdog framework?
->> I didn't found any binding of the heartbeat in other dt enabled drivers.
-> when you read the new watchdog framework cf watchdog_dev.c and watchdog_core.c
->
-> you will see that we can set a timeout which have the same meaning as
-> heartbeat
->
-> the key point here is you try to solve the DT the wrong way -> drivers
-> specific
->
-> the binding need to be framwork specific os here we need to do the binding of
-> the watchdog framework first and then use it in the at91sam9 driver evenif we
-> do not switch yet. Because in the DT we describe the hw not a drvier
-> implementation
+>> Ah, ok.  Patches to dtc should be made against the upstream version at
+>> git://git.jdl.com/software/dtc.git.  In this case the bug was already
+>> fixed there, in commit a6e6c60e3a97a6b3a033cd052bb3740fd53cbf4c.
+> 
+> Ah yes. That makes sense. Thanks for pointing out the commit that fixes
+> the issue. I just checked it out.
+> 
+>> I think we're overdue to update the kernel copy of dtc from upstream.
+> 
+> Yeah, seems like the kernel DTC is quite old.
 
-Ok i will try to send an updated patch following your advice.
+FYI, I'm working on a patch to the kernel to bring in the latest dtc.
 
-> Best Regards,
-> J.
+I've run a regression test vs. the old dtc in the kernel and found that
+some of the PowerPC .dts files don't compile with the new dtc (but did
+with the old), all due to non-existent labels/paths being referenced.
+I'll try and track down whether this is a regression in dtc, or simply
+buggy .dts files that weren't noticed before.
 
-
-Best regards
--- 
-Fabio Porcedda
+Everything non-PowerPC works fine, and most PowerPC files work fine.
+Where compilation succeeds, the md5sum of the .dtb is identical in every
+case.
