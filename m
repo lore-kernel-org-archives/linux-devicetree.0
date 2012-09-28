@@ -1,75 +1,44 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 RESEND 2/2] ARM: local timers: add timer support using
- IO mapped register
-Date: Fri, 28 Sep 2012 18:15:53 +0100
-Message-ID: <20120928171549.GA29991@e102568-lin.cambridge.arm.com>
-References: <1347694914-1457-1-git-send-email-rvaswani@codeaurora.org>
- <1347694914-1457-2-git-send-email-rvaswani@codeaurora.org>
- <5062013F.8050507@codeaurora.org>
- <20120928122858.GD9472@e106331-lin.cambridge.arm.com>
- <20120928155746.GB2253@linaro.org>
+From: <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: adding OF_DYNAMIC proc interface - 2nd try
+Date: Fri, 28 Sep 2012 13:25:17 -0500
+Message-ID: <1348856718-25854-1-git-send-email-atull@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20120928155746.GB2253@linaro.org>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: Rohit Vaswani <rvaswani@codeaurora.org>, Mark Rutland <Mark.Rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Landley <rob@landley.net>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2012 at 04:57:46PM +0100, Dave Martin wrote:
-> [ Note: please aim to CC devicetree-discuss@lists.ozlabs.org with any
-> patches or bindings relevant to device tree. ]
-> 
-> [ Lorenzo, there's a question for you further down this mail. ]
 
-[...]
+Hello,
 
-> > > > +  If using the memory mapped interface, list the interrupts for each core,
-> > > > +  starting with core 0.
-> > 
-> > I take it that core 0 means physical cpu 0 (i.e. MPIDR.Aff{2,1,0} == 0)?
-> 
-> Lorenzo, should we have a standard way of referring to CPUs and topology
-> nodes documented as part of the topology bindings?  We certainly need
-> rules of some kind, since when the topology is non-trivial there is no
-> well-defined "first" CPU, nor any single correct order in which to list
-> CPUs.
+(Fixed my mail configuration from earlier).
 
-I think, and that's just my opinion, that whatever solution we go for to
-describe the topology must contain the information needed by all kernel
-subsystems to retrieve HW information. I do not think we should document
-how devices connect to CPU(s)/Cluster(s) in the topology bindings per-se,
-since those are properties that belong to device nodes.
+The following patch adds a /proc/ofdt interface to add or remove device tree
+nodes dynamically.
 
-There must be a common way for all devices to link to the topology, though.
+Based on earlier feedback, I've changed my driver to use /proc instead of
+creating a new ioctl (the old thread is at 
+http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg17333.html)
 
-The topology must be descriptive enough to cater for all required cases
-and that's what Mark with PMU and all of us are trying to come up with, a solid
-way to represent with DT the topology of current and future ARM systems.
+I was hoping to get some early feedback from others who might be interested
+who were discussing this on an earlier thread about OF_DYNAMIC usage.
 
-First idea I implemented and related LAK posting:
+This code doesn't do any notification for drivers yet. It can add multiple
+nodes and they will show up properly under /proc/device-tree.  It has an
+issue that shows up when removing nodes (it appears that the memory used by
+proc gets corrupted after the add).
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080873.html
-
-Are "cluster" nodes really needed or "cpu" nodes are enough ? I do not
-know, let's get this discussion started, that's all I need.
-
-But definitely declaring IRQs in physical CPU id order (and mind, as you say,
-physical CPU ids, ie MPIDR, can be sparsely populated) and initializing them
-*thinking* the order is the logical one is plainly broken.
-
-> The topology may also be sparsely populated (e.g.,
-> Aff[2,1,0] in { (0,0,0), (0,0,1), (0,1,0), (0,1,1), (0,1,2), (0,1,3) })
-> 
-> It would be bad if different driver bindings end up solving this in
-> different ways (even non-broken ways)
-
-Yes, I agree and code that relies on any temporary work-around to tackle
-this problem should not be merged before we set in stone proper topology
-bindings.
-
-Lorenzo
-
+Alan Tull
+Altera
