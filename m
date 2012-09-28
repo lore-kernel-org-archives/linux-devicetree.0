@@ -1,64 +1,44 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 15/14] OF:  define of_*_cmp() macros also if CONFIG_OF isn't
- set
-Date: Fri, 28 Sep 2012 13:05:27 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1209281302390.5428@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <1348754853-28619-3-git-send-email-g.liakhovetski@gmx.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/6] usb: dwc3-omap: add dt support
+Date: Fri, 28 Sep 2012 18:23:09 +0530
+Message-ID: <1348836795-4783-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1348754853-28619-3-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, kishon@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-of_*_cmp() macros do not depend on any OF functions and can be defined also
-if CONFIG_OF isn't set. Also include linux/string.h, required by those
-macros.
+This patch series adds dt support to dwc3 core and fixes few minor
+stuff in dwc3-omap glue to get dwc3 working.
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
----
+While at that it also uses *of_platform* to create the child device
+(dwc3-core) and fixes to use runtime API's to enable clock and write
+to SYSCONFIG register.
 
-These definitions are also required for "# CONFIG_OF is not set" builds.
+This patch series is developed on:
+git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git dwc3
 
- include/linux/of.h |   15 ++++++++-------
- 1 files changed, 8 insertions(+), 7 deletions(-)
+These patches were actually tested in
+http://gitorious.org/linux-usb/linux-usb/commits/dwc3 dwc3
+since all the dependent modules is not yet upstreamed.
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 3636fae..ad2e79b 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -85,6 +85,14 @@ static inline struct device_node *of_node_get(struct device_node *node)
- static inline void of_node_put(struct device_node *node) { }
- #endif /* !CONFIG_OF_DYNAMIC */
- 
-+/* Default string compare functions, Allow arch asm/prom.h to override */
-+#if !defined(of_compat_cmp)
-+#include <linux/string.h>
-+#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
-+#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
-+#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
-+#endif
-+
- #ifdef CONFIG_OF
- 
- /* Pointer for first entry in chain of all nodes. */
-@@ -143,13 +151,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
- #define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
- #endif
- 
--/* Default string compare functions, Allow arch asm/prom.h to override */
--#if !defined(of_compat_cmp)
--#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
--#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
--#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
--#endif
--
- /* flag descriptions */
- #define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
- #define OF_DETACHED	2 /* node has been detached from the device tree */
+Kishon Vijay Abraham I (6):
+  usb: dwc3-omap: use of_platform API to create dwc3 core pdev
+  usb: dwc3-omap: use runtime API's to enable clocks
+  usb: dwc3-omap: Remove explicit writes to SYSCONFIG register
+  usb: dwc3-omap: Add an API to write to dwc mailbox
+  usb: dwc3-omap: Minor fixes to get dt working
+  usb: dwc3: core: add dt support for dwc3 core
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |   24 ++++
+ drivers/usb/dwc3/core.c                        |   14 +-
+ drivers/usb/dwc3/dwc3-omap.c                   |  164 ++++++++++++++----------
+ include/linux/usb/dwc3-omap.h                  |   30 +++++
+ 4 files changed, 160 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3.txt
+ create mode 100644 include/linux/usb/dwc3-omap.h
+
 -- 
-1.7.2.5
+1.7.10.4
 
