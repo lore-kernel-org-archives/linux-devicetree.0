@@ -1,65 +1,63 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: adding OF_DYNAMIC proc interface
-Date: Sat, 29 Sep 2012 07:29:00 +1000
-Message-ID: <1348867740.7621.4.camel@pasglop>
-References: <1348850798-24352-1-git-send-email-atull@altera.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
+Date: Fri, 28 Sep 2012 16:30:16 -0500
+Message-ID: <506616E8.9000006@ti.com>
+References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com> <505A7E0B.30709@ti.com> <20120920235309.GO28835@atomide.com> <5063330E.3000203@ti.com> <5065F19E.5020708@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348850798-24352-1-git-send-email-atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: atull@atull-linux1
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5065F19E.5020708@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2012-09-28 at 11:46 -0500, Alan Tull wrote:
-> Hello,
-> 
-> The following patch adds a /proc/ofdt interface to add or remove device tree
-> nodes dynamically.
-> 
-> Based on earlier feedback, I've changed my driver to use /proc instead of
-> creating a new ioctl (the old thread is at 
-> http://www.mail-archive.com/devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg17333.html)
+
+On 09/28/2012 01:51 PM, Vaibhav Hiremath wrote:
 > 
 > 
-> I was hoping to get some early feedback from others who might be interested
-> who were discussing this on an earlier thread about OF_DYNAMIC usage.
+> On 9/26/2012 10:23 PM, Jon Hunter wrote:
+>>
+>> On 09/20/2012 06:53 PM, Tony Lindgren wrote:
+>>> * Benoit Cousson <b-cousson@ti.com> [120919 19:24]:
+>>>> Hi Tony,
+>>>>
+>>>> I was about to take the DTS patch, but was wondering if you will pull
+>>>> the driver changes for 3.7.
+>>>
+>>> I suggest that you do a separate branch on top of Paul's hwmod series
+>>> when he posts those if that works for you?
+>>
+>> Benoit, I see that you have pulled in the DTS patch.
+>>
+>> Do you guys want me to rebase the remaining patches with Rob's change on
+>> Tony's master branch and re-submit?
+>>
 > 
-> This code doesn't do any notification for drivers yet. It can add multiple
-> nodes and they will show up properly under /proc/device-tree.  It has an
-> issue that shows up when removing nodes (it appears that the memory used by
-> proc gets corrupted after the add).
+> Jon,
+> 
+> Sorry for delayed response, But I tried using your omap_test application
+> to validate this patch series, but it is failing for me.
+> 
+> How did you test it? Are you running same test application at your end?
 
-(Adding Arnd here)
+Check your email on Sept 14th. I sent you the latest version of the test
+code. I will resend in case it got lost in deep space.
 
-Have you guys considered whether a better approach would be a file
-system ? IE, create a node by creating a directory, add files for
-properties etc... ?
+> I am debugging this issue, i just thought I should tell you this before
+> its too late.
+> 
+> 
+> Below is the log -
+> 
+> [root@arago /]# echo 3 > /tmp/omap-test/timer/one
+> [   79.612223] omap_dm_timer_request_specific: Please use
+> omap_dm_timer_request_by_cap()
+> [   79.620636] Timer 3 not available!
 
-It might need some trick to make the node "active" (in order to not
-internally in the kernel start exposing unfinished nodes), maybe a
-special file, maybe a permission trick ...
+Yes that's expected as omap_dm_timer_request_specific is not supported
+with DT. Don't spend anytime debugging you just need the latest test.
 
-It should be at least considered rather than a new interface that tries
-to re-implement semantics (such as notification) that are pretty much
-already provided by a fs.
-
-Also, what about the existing /proc/device-tree ?
-
-Finally, if we are doing something new and for some reason not a fs,
-what about using sysfs rather than /proc ? Really /proc is not a great
-idea here.
-
-Cheers,
-Ben.
+Cheers
+Jon
