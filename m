@@ -1,40 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: add bcm2835 driver
-Date: Fri, 28 Sep 2012 10:40:50 +0200
-Message-ID: <CACRpkdbpGUfcE8mG7iPA_kocj3XGw8QSL37NMS+-KXgNGoqK9w@mail.gmail.com>
-References: <1348805412-7804-1-git-send-email-swarren@wwwdotorg.org>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add DT support for i2s
+Date: Fri, 28 Sep 2012 14:17:58 +0530
+Message-ID: <CAAgF-Bem9BxyreQzFk=hTZNQGC-Py-RH_adqdo2v2h7QyhCK9w@mail.gmail.com>
+References: <1348741532-29412-1-git-send-email-padma.v@samsung.com>
+	<000d01cd9d42$9fbd7b50$df3871f0$@com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348805412-7804-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Boot <bootc-1Slo4GeK4H1eoWH0uzbU5w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <000d01cd9d42$9fbd7b50$df3871f0$@com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sangsu4u.park@samsung.com, kgene.kim@samsung.com, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2012 at 6:10 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+Hi,
 
-> From: Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>
+On Fri, Sep 28, 2012 at 11:59 AM, Sangbeom Kim <sbkim73@samsung.com> wrote:
+> Hi!
+> On Thu, Sep 27, 2012 at 07:26 PM, Padmavathi Venna wrote:
 >
-> The BCM2835 GPIO module is a combined GPIO controller, (GPIO) interrupt
-> controller, and pinmux/control device.
+>> Subject: [PATCH V2] ASoC: SAMSUNG: Add DT support for i2s
+>>
+>> Add support for device based discovery.
+>>
+>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 >
-> Original driver by Simon Arlott.
-> Rewrite including GPIO chip device by Chris Boot.
+> Please describe the difference between v1 and v2.
+There are no major comments in V1.
+I just addressed some of the comments given by kukjin kim(regarding
+clocks) ,Sachin(regarding I2S base addresses).
+As I deleted the variable which holds the names of the RCLK src clocks
+in the driver in the first patch set, this breaks the older platforms.
+ So I reworked on older platforms and added I2S clkdev support and
+tested on s3c64xx series and deleted that variable from samsung-i2s
+structure.
+Added NULL in place of cdclk of sclk_audio0 src list because adding
+rate of that clk is a question to me because this is machine dependent
+and I am also not using this as parent clk.
 
-It's such a sweet thing that I can't resist it, and since it's
-a new driver it's OK this late in the cycle, so:
-patch applied.
-
-Yours,
-Linus Walleij
+In my next version of patchset I will mention the difference clearly.
+>
+> Thanks,
+> Sangbeom.
+Thanks
+Padma
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
