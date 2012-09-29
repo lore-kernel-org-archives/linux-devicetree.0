@@ -1,71 +1,37 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: [PATCH 2/2] ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evm
-Date: Sat, 29 Sep 2012 16:05:20 +0530
-Message-ID: <1348914920-30737-3-git-send-email-avinashphilip@ti.com>
-References: <1348914920-30737-1-git-send-email-avinashphilip@ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [RFC PATCH 1/2] kbuild: centralize .dts->.dtb rule
+Date: Sat, 29 Sep 2012 22:08:28 +0200
+Message-ID: <20120929200828.GD31527@game.jcrosoft.org>
+References: <1348860731-20868-1-git-send-email-swarren@wwwdotorg.org>
+ <1348860731-20868-2-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1348914920-30737-1-git-send-email-avinashphilip@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1348860731-20868-2-git-send-email-swarren@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com, thierry.reding@avionic-design.de
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, omap@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-PWM output from ecap0 uses as backlight source. Also adds low threshold
-value to have a uniform divisions in brightness-levels scales.
+On 13:32 Fri 28 Sep     , Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+> 
+> All architectures that use cmd_dtc do so in the same way. Move the build
+> rule to a central location to avoid duplication.
+> 
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+> Jean-Christophe,
+> Moving the build rule to Makefile.lib rather than Makefile.build seems
+> reasonable to me; the dtc-related logic is already in Makefile.lib, and
+> for features where cmd_* is defined in Makefile.lib, the associated
+> build rule is also defined there. I see no reason for this patch series
+> to move all the dtc-related logic into Makefile.build.
 
-Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
----
-:100644 100644 a5c4c62... 5516098... M	arch/arm/boot/dts/am335x-evm.dts
- arch/arm/boot/dts/am335x-evm.dts |   21 +++++++++++++++++++++
- 1 files changed, 21 insertions(+), 0 deletions(-)
+build rules are in Makefile.build c to o , s to o etc...
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index a5c4c62..5516098 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -24,6 +24,14 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- 
-+	am33xx_pinmux: pinmux@44e10800 {
-+		ecap0_pins: backlight_pins {
-+			pinctrl-single,pins = <
-+				0x164 0x0	/* eCAP0_in_PWM0_out.eCAP0_in_PWM0_out MODE0 */
-+			>;
-+		};
-+	};
-+
- 	ocp {
- 		uart1: serial@44e09000 {
- 			status = "okay";
-@@ -75,6 +83,12 @@
- 				reg = <0x48>;
- 			};
- 		};
-+
-+		ecap0: ecap@48300100 {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ecap0_pins>;
-+		};
- 	};
- 
- 	vbat: fixedregulator@0 {
-@@ -90,6 +104,13 @@
- 		regulator-name = "lis3_reg";
- 		regulator-boot-on;
- 	};
-+
-+	backlight {
-+		compatible	= "pwm-backlight";
-+		pwms = <&ecap0 0 50000 0>;
-+		brightness-levels = <0 51 53 56 62 75 101 152 255>;
-+		default-brightness-level = <8>;
-+	};
- };
- 
- /include/ "tps65910.dtsi"
--- 
-1.7.0.4
+so put it in Makefile.build is the correct place ditto fot the dtc cmd
+
+Best Regards,
+J.
