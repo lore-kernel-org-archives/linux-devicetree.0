@@ -1,38 +1,166 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
-Date: Fri, 28 Sep 2012 17:17:03 -0500
-Message-ID: <506621DF.20508@ti.com>
-References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com> <505A7E0B.30709@ti.com> <20120920235309.GO28835@atomide.com> <5063330E.3000203@ti.com> <5065F19E.5020708@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH V2] ARM: bcm2835: implement machine restart hook
+Date: Fri, 28 Sep 2012 23:17:15 -0600
+Message-ID: <1348895835-18245-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5065F19E.5020708@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vaibhav Hiremath <hvaibhav@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Implement the machine restart hook using the SoC's watchdog timer module.
+To support this, define a DT binding for the watchdog module, and add it
+to the device tree.
 
-On 09/28/2012 01:51 PM, Vaibhav Hiremath wrote:
+The downstream rpi-split branch contains a full watchdog timer driver
+implementation, which also implements the restart hook. However, the
+restart function is largely separate from the watchdog driver, so for
+simplicity, the restart hook is implemented here directly in the main
+machine source file.
 
-[snip]
+Overall structure (separate setup/restart) functions derived from the
+picoxcell ARM support.
 
-> Jon,
-> 
-> Sorry for delayed response, But I tried using your omap_test application
-> to validate this patch series, but it is failing for me.
-> 
-> How did you test it? Are you running same test application at your end?
-> 
-> I am debugging this issue, i just thought I should tell you this before
-> its too late.
+Watchdog register IO sequence taken from code by Simon Arlott. Note that
+the watchdog module is not documented in BCM2835-ARM-Peripherals.pdf.
 
-By the way, I have not seen any such issues on OMAP2/3/4 and so this
-appears to be specific to AM335x. So I would not be too concerned, we
-just need to understand why interrupts on some timers are not working on
-the AM335x. Probably a configuration issue some where and that can
-always be fixed separately.
+Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+---
+v2:
+* s/-wdog/-wdt/ in compatible value given precedent in other bindings.
+* Fix node name in DT binding example.
+---
+ .../bindings/watchdog/brcm,bcm2835-pm-wdog.txt     |   13 ++++++
+ arch/arm/boot/dts/bcm2835.dtsi                     |    5 +++
+ arch/arm/mach-bcm2835/bcm2835.c                    |   46 ++++++++++++++++++++
+ 3 files changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
 
-Cheers
-Jon
+diff --git a/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt b/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
+new file mode 100644
+index 0000000..d209366
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/brcm,bcm2835-pm-wdog.txt
+@@ -0,0 +1,13 @@
++BCM2835 Watchdog timer
++
++Required properties:
++
++- compatible : should be "brcm,bcm2835-pm-wdt"
++- reg : Specifies base physical address and size of the registers.
++
++Example:
++
++watchdog {
++	compatible = "brcm,bcm2835-pm-wdt";
++	reg = <0x7e100000 0x28>;
++};
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 0b61939..5c5cbaf 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -29,6 +29,11 @@
+ 			#interrupt-cells = <2>;
+ 		};
+ 
++		watchdog {
++			compatible = "brcm,bcm2835-pm-wdt";
++			reg = <0x7e100000 0x28>;
++		};
++
+ 		uart@20201000 {
+ 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+ 			reg = <0x7e201000 0x1000>;
+diff --git a/arch/arm/mach-bcm2835/bcm2835.c b/arch/arm/mach-bcm2835/bcm2835.c
+index f6fea49..c4dd210 100644
+--- a/arch/arm/mach-bcm2835/bcm2835.c
++++ b/arch/arm/mach-bcm2835/bcm2835.c
+@@ -12,8 +12,10 @@
+  * GNU General Public License for more details.
+  */
+ 
++#include <linux/delay.h>
+ #include <linux/init.h>
+ #include <linux/irqchip/bcm2835.h>
++#include <linux/of_address.h>
+ #include <linux/of_platform.h>
+ #include <linux/bcm2835_timer.h>
+ #include <linux/clk/bcm2835.h>
+@@ -23,6 +25,48 @@
+ 
+ #include <mach/bcm2835_soc.h>
+ 
++#define PM_RSTC				0x1c
++#define PM_WDOG				0x24
++
++#define PM_PASSWORD			0x5a000000
++#define PM_RSTC_WRCFG_MASK		0x00000030
++#define PM_RSTC_WRCFG_FULL_RESET	0x00000020
++
++static void __iomem *wdt_regs;
++
++/*
++ * The machine restart method can be called from an atomic context so we won't
++ * be able to ioremap the regs then.
++ */
++static void bcm2835_setup_restart(void)
++{
++	struct device_node *np = of_find_compatible_node(NULL, NULL,
++						"brcm,bcm2835-pm-wdt");
++	if (WARN(!np, "unable to setup watchdog restart"))
++		return;
++
++	wdt_regs = of_iomap(np, 0);
++	WARN(!wdt_regs, "failed to remap watchdog regs");
++}
++
++static void bcm2835_restart(char mode, const char *cmd)
++{
++	u32 val;
++
++	if (!wdt_regs)
++		return;
++
++	/* use a timeout of 10 ticks (~150us) */
++	writel_relaxed(10 | PM_PASSWORD, wdt_regs + PM_WDOG);
++	val = readl_relaxed(wdt_regs + PM_RSTC);
++	val &= ~PM_RSTC_WRCFG_MASK;
++	val |= PM_PASSWORD | PM_RSTC_WRCFG_FULL_RESET;
++	writel_relaxed(val, wdt_regs + PM_RSTC);
++
++	/* No sleeping, possibly atomic. */
++	mdelay(1);
++}
++
+ static struct map_desc io_map __initdata = {
+ 	.virtual = BCM2835_PERIPH_VIRT,
+ 	.pfn = __phys_to_pfn(BCM2835_PERIPH_PHYS),
+@@ -39,6 +83,7 @@ void __init bcm2835_init(void)
+ {
+ 	int ret;
+ 
++	bcm2835_setup_restart();
+ 	bcm2835_init_clocks();
+ 
+ 	ret = of_platform_populate(NULL, of_default_bus_match_table, NULL,
+@@ -60,5 +105,6 @@ DT_MACHINE_START(BCM2835, "BCM2835")
+ 	.handle_irq = bcm2835_handle_irq,
+ 	.init_machine = bcm2835_init,
+ 	.timer = &bcm2835_timer,
++	.restart = bcm2835_restart,
+ 	.dt_compat = bcm2835_compat
+ MACHINE_END
+-- 
+1.7.9.5
