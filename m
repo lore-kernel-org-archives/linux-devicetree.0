@@ -1,93 +1,71 @@
 From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: [PATCH 1/2] ARM: dts: AM33XX: Add ECAP & EHRPWM device tree nodes
-Date: Sat, 29 Sep 2012 16:05:19 +0530
-Message-ID: <1348914920-30737-2-git-send-email-avinashphilip@ti.com>
+Subject: [PATCH 2/2] ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evm
+Date: Sat, 29 Sep 2012 16:05:20 +0530
+Message-ID: <1348914920-30737-3-git-send-email-avinashphilip@ti.com>
 References: <1348914920-30737-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1348914920-30737-1-git-send-email-avinashphilip@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: b-cousson@ti.com, tony@atomide.com, thierry.reding@avionic-design.de
-Cc: devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, gururaja.hebbar@ti.com, omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, omap@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add ECAP and EHRPWM device tree nodes to AM33XX SoC family
-by adding necessary properties like pwm-cells, base reg & set disabled
-as status.
+PWM output from ecap0 uses as backlight source. Also adds low threshold
+value to have a uniform divisions in brightness-levels scales.
 
 Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
 ---
-:100644 100644 a9c885a... 736ba0a... M	arch/arm/boot/dts/am33xx.dtsi
- arch/arm/boot/dts/am33xx.dtsi |   48 +++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 48 insertions(+), 0 deletions(-)
+:100644 100644 a5c4c62... 5516098... M	arch/arm/boot/dts/am335x-evm.dts
+ arch/arm/boot/dts/am335x-evm.dts |   21 +++++++++++++++++++++
+ 1 files changed, 21 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index a9c885a..736ba0a 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -313,5 +313,53 @@
- 			ti,hwmods = "timer7";
- 			ti,timer-pwm;
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index a5c4c62..5516098 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -24,6 +24,14 @@
+ 		reg = <0x80000000 0x10000000>; /* 256 MB */
+ 	};
+ 
++	am33xx_pinmux: pinmux@44e10800 {
++		ecap0_pins: backlight_pins {
++			pinctrl-single,pins = <
++				0x164 0x0	/* eCAP0_in_PWM0_out.eCAP0_in_PWM0_out MODE0 */
++			>;
++		};
++	};
++
+ 	ocp {
+ 		uart1: serial@44e09000 {
+ 			status = "okay";
+@@ -75,6 +83,12 @@
+ 				reg = <0x48>;
+ 			};
  		};
 +
 +		ecap0: ecap@48300100 {
-+			compatible = "ti,am33xx-ecap";
-+			#pwm-cells = <3>;
-+			reg = <0x48300100 0x80 0x48300000 0x10>;
-+			ti,hwmods = "ecap0";
-+			status = "disabled";
-+		};
-+
-+		ecap1: ecap@48302100 {
-+			compatible = "ti,am33xx-ecap";
-+			#pwm-cells = <3>;
-+			reg = <0x48302100 0x80 0x48302000 0x10>;
-+			ti,hwmods = "ecap1";
-+			status = "disabled";
-+		};
-+
-+		ecap2: ecap@48304100 {
-+			compatible = "ti,am33xx-ecap";
-+			#pwm-cells = <3>;
-+			reg = <0x48304100 0x80 0x48304000 0x10>;
-+			ti,hwmods = "ecap2";
-+			status = "disabled";
-+		};
-+
-+		ehrpwm0: ehrpwm@48300200 {
-+			compatible = "ti,am33xx-ehrpwm";
-+			#pwm-cells = <3>;
-+			reg = <0x48300200 0x100 0x48300000 0x10>;
-+			ti,hwmods = "ehrpwm0";
-+			status = "disabled";
-+		};
-+
-+		ehrpwm1: ehrpwm@48302200 {
-+			compatible = "ti,am33xx-ehrpwm";
-+			#pwm-cells = <3>;
-+			reg = <0x48302200 0x100 0x48302000 0x10>;
-+			ti,hwmods = "ehrpwm1";
-+			status = "disabled";
-+		};
-+
-+		ehrpwm2: ehrpwm@48304200 {
-+			compatible = "ti,am33xx-ehrpwm";
-+			#pwm-cells = <3>;
-+			reg = <0x48304200 0x100 0x48304000 0x10>;
-+			ti,hwmods = "ehrpwm2";
-+			status = "disabled";
++			status = "okay";
++			pinctrl-names = "default";
++			pinctrl-0 = <&ecap0_pins>;
 +		};
  	};
+ 
+ 	vbat: fixedregulator@0 {
+@@ -90,6 +104,13 @@
+ 		regulator-name = "lis3_reg";
+ 		regulator-boot-on;
+ 	};
++
++	backlight {
++		compatible	= "pwm-backlight";
++		pwms = <&ecap0 0 50000 0>;
++		brightness-levels = <0 51 53 56 62 75 101 152 255>;
++		default-brightness-level = <8>;
++	};
  };
+ 
+ /include/ "tps65910.dtsi"
 -- 
 1.7.0.4
