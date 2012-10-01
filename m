@@ -1,74 +1,84 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/1] Fix segfault in DTC
-Date: Mon, 1 Oct 2012 16:46:10 +1000
-Message-ID: <20121001064610.GA5323@truffula.fritz.box>
-References: <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
- <20120925233054.GL9800@truffula.fritz.box>
- <50624393.30607@broadcom.com>
- <20120926003508.GB31993@truffula.fritz.box>
- <50632F78.4030709@broadcom.com> <5065D9C7.40906@wwwdotorg.org>
- <E1THfgr-0006Fg-KT@jdl.com> <5065F4FD.4010807@wwwdotorg.org>
- <20120929235342.GA23078@truffula.fritz.box>
- <50692B7A.8000405@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Mon, 1 Oct 2012 10:24:18 +0200
+Message-ID: <CACRpkdZ_NxST-oJ=MWC5L=r8uQD_71eHUVUR85v4jfsYpqz=UQ@mail.gmail.com>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+	<CACRpkdbSY-aH_Vf3Q4h-ufz35m6=vVXCEecGGS-WOsG7vmPZ0g@mail.gmail.com>
+	<331ABD5ECB02734CA317220B2BBEABC13EA3E24E@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50692B7A.8000405-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA3E24E@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: "tony@atomide.com" <tony@atomide.com>, "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, "dong.aisheng@linaro.org" <dong.aisheng@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 30, 2012 at 11:34:50PM -0600, Stephen Warren wrote:
-> On 09/29/2012 05:53 PM, David Gibson wrote:
-> > On Fri, Sep 28, 2012 at 01:05:33PM -0600, Stephen Warren wrote:
-> >> On 09/28/2012 12:53 PM, Jon Loeliger wrote:
-> >>>>>
-> >>>>> Yeah, seems like the kernel DTC is quite old.
-> >>>>
-> >>>> FYI, I'm working on a patch to the kernel to bring in the latest dtc.
-> >>>
-> >>> Awesome.  Thank you.
-> >>>
-> >>>> I've run a regression test vs. the old dtc in the kernel ...
-> >>>
-> >>> Which is the icky step.  Again, thank you.
-> >>>
-> >>>> ... and found that
-> >>>> some of the PowerPC .dts files don't compile with the new dtc (but did
-> >>>> with the old), all due to non-existent labels/paths being referenced.
-> >>>> I'll try and track down whether this is a regression in dtc, or simply
-> >>>> buggy .dts files that weren't noticed before.
-> >>>
-> >>> I think you should just smack the PowerPC guys. :-)
-> >>
-> >> For the record in this thread, it was a regression I introduced into dtc
-> >> - the patch I just sent was for this.
-> > 
-> > I would be nice to add a testcase for this regression into dtc.
-> 
-> The issue here was caused by uninitialized memory, so it would, I think,
-> be basically impossible to create a test-case that would be guaranteed
-> to fail because of this; it'd depend on the internal details of the
-> malloc library and how/when it re-used previously free()d memory blocks.
+On Mon, Oct 1, 2012 at 9:03 AM, AnilKumar, Chimata <anilkumar@ti.com> wrote:
 
-It doesn't have to be guaranteed to fail to be useful.  Plus, we
-already have the infrastructure to run the tests under valgrind, which
-would catch it.
+>    I have gone through the "Don Aisheng" patch series, which
+> adds "pinctrl_dt_add_gpio_ranges" support but not accepted
+> yet. With this patch series we can overcome the driver changes.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+OK then this is the direction we need to go.
+
+> 4. The current pinctrl driver has support for these APIs
+> pinctrl_request_gpio(), pinctrl_free_gpio(),
+> pinctrl_gpio_direction_input/output()
+> no API for slew rate control, pulled down/up control
+> how can we handle this?
+
+You are not supposed to handle that from the GPIO level
+of the API. That is supposed to be handled by pinctrl.
+
+These two subsystems are orthogonal, with the exception
+of the above calls. If you need to pass more information
+between the GPIO and pinctrl interfaces it usually means
+you're doing something wrong.
+
+The reason why pinctrl was created in the first place
+was that Grant didn't like that we started to shoehorn all
+kind of pin control into the GPIO subsystem.
+
+> 5. pinctrl-single driver has to modify to provide separate handles
+> for pinmux and pinconfig. And we need separate pin configuration
+> bit masks and values/flags to take care of pull-up/down, slew rate,
+> receiver in/out and mux mode control.
+
+OK that is typical pinctrl driver implementation work.
+I hope Tony can advice on this?
+
+> 6. This is for my understanding, on which node do we have to add
+> pinctrl data i.e., pin mux-mode data. In leds-gpio node (mostly not)
+> and if it is in gpio node then how can we pass pinmux data with
+> the existing API pinctrl_request_gpio(gpio);? Here we are passing
+> only gpio number.
+
+So with the pinctrl_request_gpio() call you are requesting a single
+pin to be used as GPIO, nothing else.
+
+No additional data should be passed with that call.
+
+Implementing it is up to the pinctrl driver, the pinctrl subsystem
+API does not say anything about how this should be done, but
+there are a few examples.
+
+The pinctrl maps of muxes and config from the pin control
+subsystem are for entire devices, and the single-pin GPIO
+reservation API is orthogonal to this, please consult
+Documentation/pinctrl.txt if you are uncertain about what
+I mean with this, I've really tried to explain it there.
+
+The docs were recently amended to reflect some corner-case
+GPIO uses, see e.g.:
+http://marc.info/?l=linux-arm-kernel&m=134763067415678&w=2
+
+> Few more driver patches are pending along with this (leds-gpio DT
+> data additions according to this patch, similarly other drivers
+> like matrix keypad and volume keys)
+
+OK so the threshold is that we need to get it right for the first
+one and then the others will look good too.
+
+Yours,
+Linus Walleij
