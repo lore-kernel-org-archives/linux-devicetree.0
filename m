@@ -1,63 +1,61 @@
-From: Leela Krishna Amudala <l.krishna@samsung.com>
-Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
-Date: Mon, 1 Oct 2012 10:59:04 +0530
-Message-ID: <CAL1wa8eOA6eV-9EoeUFrSFaFwq5sEVnYXn9yKnPRv=0mSU5WvQ@mail.gmail.com>
-References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com>
- <1348226536-22899-3-git-send-email-l.krishna@samsung.com> <505BF79A.8060802@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/1] Fix segfault in DTC
+Date: Sun, 30 Sep 2012 23:34:50 -0600
+Message-ID: <50692B7A.8000405@wwwdotorg.org>
+References: <1348526885-2113-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-1-git-send-email-mmayer@broadcom.com>
+ <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
+ <20120925233054.GL9800@truffula.fritz.box> <50624393.30607@broadcom.com>
+ <20120926003508.GB31993@truffula.fritz.box> <50632F78.4030709@broadcom.com>
+ <5065D9C7.40906@wwwdotorg.org> <E1THfgr-0006Fg-KT@jdl.com>
+ <5065F4FD.4010807@wwwdotorg.org> <20120929235342.GA23078@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <505BF79A.8060802@wwwdotorg.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20120929235342.GA23078-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen Warren,
+On 09/29/2012 05:53 PM, David Gibson wrote:
+> On Fri, Sep 28, 2012 at 01:05:33PM -0600, Stephen Warren wrote:
+>> On 09/28/2012 12:53 PM, Jon Loeliger wrote:
+>>>>>
+>>>>> Yeah, seems like the kernel DTC is quite old.
+>>>>
+>>>> FYI, I'm working on a patch to the kernel to bring in the latest dtc.
+>>>
+>>> Awesome.  Thank you.
+>>>
+>>>> I've run a regression test vs. the old dtc in the kernel ...
+>>>
+>>> Which is the icky step.  Again, thank you.
+>>>
+>>>> ... and found that
+>>>> some of the PowerPC .dts files don't compile with the new dtc (but did
+>>>> with the old), all due to non-existent labels/paths being referenced.
+>>>> I'll try and track down whether this is a regression in dtc, or simply
+>>>> buggy .dts files that weren't noticed before.
+>>>
+>>> I think you should just smack the PowerPC guys. :-)
+>>
+>> For the record in this thread, it was a regression I introduced into dtc
+>> - the patch I just sent was for this.
+> 
+> I would be nice to add a testcase for this regression into dtc.
 
-The binding names that I use in my dts file should match with the
-names given in http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
-right?
-I think that is the only thing I have to take care, and as I'm not
-using "struct drm_display_mode"  in my driver its my wish whether to
-use the helper function or not.
-Please clarify me if I miss something.
-
-Best Regards,
-Leela Krishna Amudala.
-
-On Fri, Sep 21, 2012 at 10:44 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 09/21/2012 05:22 AM, Leela Krishna Amudala wrote:
->> This patch adds device tree based discovery support for exynos DRM-FIMD
->> driver which includes driver modification to handle platform data in
->> both the cases with DT and non-DT, Also adds the documentation for bindings.
->
->> diff --git a/Documentation/devicetree/bindings/drm/exynos/fimd.txt b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
-> ...
->> + - samsung,fimd-display: This property should specify the phandle of the
->> +   display device node which holds the video interface timing with the
->> +   below mentioned properties.
->> +
->> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
->> +     horizontal timing includes four parameters in the following order.
->> +
->> +     - horizontal back porch (in number of lcd clocks)
->> +     - horizontal front porch (in number of lcd clocks)
->> +     - hsync pulse width (in number of lcd clocks)
->> +     - Display panels X resolution.
->> +
->> +   - lcd-vtiming: Specifies the vertical timing for the overlay. The
->> +     vertical timing includes four parameters in the following order.
->> +
->> +     - vertical back porch (in number of lcd lines)
->> +     - vertical front porch (in number of lcd lines)
->> +     - vsync pulse width (in number of lcd clocks)
->> +     - Display panels Y resolution.
->
-> Should this not use the new videomode timings that are under discussion at:
->
-> http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The issue here was caused by uninitialized memory, so it would, I think,
+be basically impossible to create a test-case that would be guaranteed
+to fail because of this; it'd depend on the internal details of the
+malloc library and how/when it re-used previously free()d memory blocks.
