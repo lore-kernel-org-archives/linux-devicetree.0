@@ -1,43 +1,38 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 1/2] net: ti cpsw ethernet: allow reading phy interface
- mode from DT
-Date: Mon, 01 Oct 2012 17:38:13 -0400 (EDT)
-Message-ID: <20121001.173813.2159935016069621238.davem@davemloft.net>
-References: <1348680268-8194-1-git-send-email-zonque@gmail.com>
-	<20121001.171114.1093867649404020043.davem@davemloft.net>
-	<506A07FA.5000800@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] MAINTAINERS: add scripts/dtc under Devicetree maintainers
+Date: Mon, 01 Oct 2012 16:09:02 -0600
+Message-ID: <506A147E.3040309@wwwdotorg.org>
+References: <1349124546-16864-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <506A07FA.5000800@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: zonque@gmail.com
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mugunthanvnm@ti.com, hvaibhav@ti.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1349124546-16864-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Mack <zonque@gmail.com>
-Date: Mon, 01 Oct 2012 23:15:38 +0200
-
-> On 01.10.2012 23:11, David Miller wrote:
->> From: Daniel Mack <zonque@gmail.com>
->> Date: Wed, 26 Sep 2012 19:24:27 +0200
->> 
->>> Allow users to specify the phy interface of the CPSW slaves. The new
->>> node parameter is called "phy_if_mode" and is optional. The original
->>> behaviour of the driver is preserved when not given.
->>>
->>> Signed-off-by: Daniel Mack <zonque@gmail.com>
->> 
->> Applied, thanks.
->> 
+On 10/01/2012 02:49 PM, Rob Herring wrote:
+> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 > 
-> Eh, no - sorry. My original understanding was that a bit in the cpsw
-> registers has to be set only when a certain physical phy mode is in use.
-> Hence we would have needed a way to pass that information in via DT. But
-> as Mugunthan pointed out, that bit must always be set, and the cpsw
-> slaves can stay agnostic to the actual phy mode.
-> 
-> So that patch isn't needed. Sorry for the confusion.
+> scripts/dtc has no explicit in kernel maintainer, so add it under
+> Devicetree maintainers.
 
-Ok I'll revert.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+
+>  F:	Documentation/devicetree
+>  F:	drivers/of
+>  F:	include/linux/of*.h
+> +	scripts/dtc
+
+Doesn't that new line need to start with "F:" too?
