@@ -1,146 +1,117 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2] dt: Document general interrupt controller bindings
-Date: Mon, 01 Oct 2012 10:52:28 -0500
-Message-ID: <5069BC3C.8070407@gmail.com>
-References: <1348143410-32656-1-git-send-email-thierry.reding@avionic-design.de>
+From: Kent Yoder <key@linux.vnet.ibm.com>
+Subject: Re: [PATCH] TPM: Provide a tpm_tis OF driver
+Date: Mon, 1 Oct 2012 11:00:31 -0500
+Message-ID: <20121001160029.GB3478@ennui.austin.ibm.com>
+References: <20120930233156.GI30637@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1348143410-32656-1-git-send-email-thierry.reding@avionic-design.de>
+Content-Disposition: inline
+In-Reply-To: <20120930233156.GI30637@obsidianresearch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@stericsson.com>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: linux-kernel@vger.kernel.org, tpmdd-devel@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2012 07:16 AM, Thierry Reding wrote:
-> In order to use a device as interrupt controller, it needs to be marked
-> with the DT interrupt-controller property. This commit adds rudimentary
-> documentation about the required standard properties and describes the
-> most commonly used interrupt specifiers.
-> 
-> Cc: Linus Walleij <linus.walleij@stericsson.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Stephen Warren <swarren@wwwdotorg.org>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
-> ---
-> Changes in v2:
-> - update interrupt client description as per Stephen's suggestions
-> - use an example for the two cell specifier where both the client and
->   the parent use two cell specifiers, as suggested by Rob, to reduce
->   the possibility for confusion
-> 
+> +/* irq == 0 -> autoprobe, -1 ->forced no interrupt,
+> +   others -> irq line to use */
+>  static int tpm_tis_init(struct device *dev, resource_size_t start,
+> -			resource_size_t len, unsigned int irq)
+> +			resource_size_t len, int irq)
+>  {
+>  	u32 vendor, intfcaps, intmask;
+>  	int rc, i, irq_s, irq_e, probe;
+> @@ -605,9 +610,11 @@ static int tpm_tis_init(struct device *dev, resource_size_t start,
+>  	iowrite32(intmask,
+>  		  chip->vendor.iobase +
+>  		  TPM_INT_ENABLE(chip->vendor.locality));
+> -	if (interrupts)
+> +	if (!interrupts)
+> +		irq = -1;
+> +	if (irq != -1)
+>  		chip->vendor.irq = irq;
+> -	if (interrupts && !chip->vendor.irq) {
+> +	if (irq == 0) {
 
-Applied.
+  This logic took me awhile to understand and figure out if it actually
+worked. How about a flag for the interrupts and/or irq values that makes
+things more explicit?
 
-Rob
+Kent
 
->  .../bindings/interrupt-controller/interrupts.txt   | 95 ++++++++++++++++++++++
->  1 file changed, 95 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>  		irq_s =
+>  		    ioread8(chip->vendor.iobase +
+>  			    TPM_INT_VECTOR(chip->vendor.locality));
+> @@ -821,12 +828,53 @@ static int tpm_tis_resume(struct device *dev)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> new file mode 100644
-> index 0000000..72a06c0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> @@ -0,0 +1,95 @@
-> +Specifying interrupt information for devices
-> +============================================
+>  static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
+> 
+> +#ifdef CONFIG_OF
+> +static struct of_device_id tis_of_platform_match[] = {
+> +	{.compatible = "tcg,tpm_tis"},
+> +	{},
+> +};
+> +static int __devinit tis_of_init_one(struct platform_device *pdev)
+> +{
+> +	struct resource res;
+> +	int ret;
+> +	int irq;
 > +
-> +1) Interrupt client nodes
-> +-------------------------
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
 > +
-> +Nodes that describe devices which generate interrupts must contain an
-> +"interrupts" property. This property must contain a list of interrupt
-> +specifiers, one per output interrupt. The format of the interrupt specifier is
-> +determined by the interrupt controller to which the interrupts are routed; see
-> +section 2 below for details.
+> +	ret = of_address_to_resource(pdev->dev.of_node, 0, &res);
+> +	if (ret)
+> +		return ret;
 > +
-> +The "interrupt-parent" property is used to specify the controller to which
-> +interrupts are routed and contains a single phandle referring to the interrupt
-> +controller node. This property is inherited, so it may be specified in an
-> +interrupt client node or in any of its parent nodes.
+> +	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> +	if (irq == NO_IRQ)
+> +		irq = -1;
+> +	return tpm_tis_init(&pdev->dev, res.start, res.end - res.start + 1,
+> +			    irq);
+> +}
 > +
-> +2) Interrupt controller nodes
-> +-----------------------------
+> +static int __devexit tis_of_remove_one(struct platform_device *odev)
+> +{
+> +	struct tpm_chip *chip = dev_get_drvdata(&odev->dev);
+> +	tpm_dev_vendor_release(chip);
+> +	kfree(chip);
+> +	return 0;
+> +}
+> +#endif
 > +
-> +A device is marked as an interrupt controller with the "interrupt-controller"
-> +property. This is a empty, boolean property. An additional "#interrupt-cells"
-> +property defines the number of cells needed to specify a single interrupt.
-> +
-> +It is the responsibility of the interrupt controller's binding to define the
-> +length and format of the interrupt specifier. The following two variants are
-> +commonly used:
-> +
-> +  a) one cell
-> +  -----------
-> +  The #interrupt-cells property is set to 1 and the single cell defines the
-> +  index of the interrupt within the controller.
-> +
-> +  Example:
-> +
-> +	vic: intc@10140000 {
-> +		compatible = "arm,versatile-vic";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		reg = <0x10140000 0x1000>;
-> +	};
-> +
-> +	sic: intc@10003000 {
-> +		compatible = "arm,versatile-sic";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		reg = <0x10003000 0x1000>;
-> +		interrupt-parent = <&vic>;
-> +		interrupts = <31>; /* Cascaded to vic */
-> +	};
-> +
-> +  b) two cells
-> +  ------------
-> +  The #interrupt-cells property is set to 2 and the first cell defines the
-> +  index of the interrupt within the controller, while the second cell is used
-> +  to specify any of the following flags:
-> +    - bits[3:0] trigger type and level flags
-> +        1 = low-to-high edge triggered
-> +        2 = high-to-low edge triggered
-> +        4 = active high level-sensitive
-> +        8 = active low level-sensitive
-> +
-> +  Example:
-> +
-> +	i2c@7000c000 {
-> +		gpioext: gpio-adnp@41 {
-> +			compatible = "ad,gpio-adnp";
-> +			reg = <0x41>;
-> +
-> +			interrupt-parent = <&gpio>;
-> +			interrupts = <160 1>;
-> +
-> +			gpio-controller;
-> +			#gpio-cells = <1>;
-> +
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +
-> +			nr-gpios = <64>;
-> +		};
-> +
-> +		sx8634@2b {
-> +			compatible = "smtc,sx8634";
-> +			reg = <0x2b>;
-> +
-> +			interrupt-parent = <&gpioext>;
-> +			interrupts = <3 0x8>;
-> +
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			threshold = <0x40>;
-> +			sensitivity = <7>;
-> +		};
-> +	};
+>  static struct platform_driver tis_drv = {
+>  	.driver = {
+>  		.name = "tpm_tis",
+>  		.owner		= THIS_MODULE,
+>  		.pm		= &tpm_tis_pm,
+> +#ifdef CONFIG_OF
+> +		.of_match_table = tis_of_platform_match,
+> +#endif
+>  	},
+> +#ifdef CONFIG_OF
+> +	.probe = tis_of_init_one,
+> +	.remove = __devexit_p(tis_of_remove_one)
+> +#endif
+>  };
+> 
+>  static struct platform_device *pdev;
+> @@ -849,7 +897,9 @@ static int __init init_tis(void)
+>  		return PTR_ERR(pdev);
+>  	if((rc=tpm_tis_init(&pdev->dev, TIS_MEM_BASE, TIS_MEM_LEN, 0)) != 0) {
+>  		platform_device_unregister(pdev);
+> +#ifndef CONFIG_OF
+>  		platform_driver_unregister(&tis_drv);
+> +#endif
+>  	}
+>  	return rc;
+>  }
+> -- 
+> 1.7.4.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 > 
