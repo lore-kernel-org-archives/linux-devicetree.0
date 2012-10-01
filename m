@@ -1,147 +1,99 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: add helper to parse display specs
-Date: Mon, 01 Oct 2012 14:25:04 -0600
-Message-ID: <5069FC20.8060708@wwwdotorg.org>
-References: <1348500924-8551-1-git-send-email-s.trumtrar@pengutronix.de>
- <1348500924-8551-2-git-send-email-s.trumtrar@pengutronix.de>
- <5069CA74.7040409@wwwdotorg.org> <5069EC1C.2050506@firmworks.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Mon, 01 Oct 2012 22:45:39 +0200
+Message-ID: <506A00F3.40909@gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5069EC1C.2050506-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2012 01:16 PM, Mitch Bradley wrote:
-> On 10/1/2012 6:53 AM, Stephen Warren wrote:
->> On 09/24/2012 09:35 AM, Steffen Trumtrar wrote:
->>> Parse a display-node with timings and hardware-specs from devictree.
->>
->>> diff --git a/Documentation/devicetree/bindings/video/display b/Documentation/devicetree/bindings/video/display
->>> new file mode 100644
->>> index 0000000..722766a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/video/display
->>
->> This should be display.txt.
->>
->>> @@ -0,0 +1,208 @@
->>> +display bindings
->>> +==================
->>> +
->>> +display-node
->>> +------------
->>
->> I'm not personally convinced about the direction this is going. While I
->> think it's reasonable to define DT bindings for displays, and DT
->> bindings for display modes, I'm not sure that it's reasonable to couple
->> them together into a single binding.
->>
->> I think creating a well-defined timing binding first will be much
->> simpler than doing so within the context of a display binding; the
->> scope/content of a general display binding seems much less well-defined
->> to me at least, for reasons I mentioned before.
->>
->>> +required properties:
->>> + - none
->>> +
->>> +optional properties:
->>> + - default-timing: the default timing value
->>> + - width-mm, height-mm: Display dimensions in mm
->>
->>> + - hsync-active-high (bool): Hsync pulse is active high
->>> + - vsync-active-high (bool): Vsync pulse is active high
->>
->> At least those two properties should exist in the display timing instead
->> (or perhaps as well). There are certainly cases where different similar
->> display modes are differentiated by hsync/vsync polarity more than
->> anything else. This is probably more likely with analog display
->> connectors than digital, but I see no reason why a DT binding for
->> display timing shouldn't cover both.
->>
->>> + - de-active-high (bool): Data-Enable pulse is active high
->>> + - pixelclk-inverted (bool): pixelclock is inverted
->>
->>> + - pixel-per-clk
->>
->> pixel-per-clk is probably something that should either be part of the
->> timing definition, or something computed internally to the display
->> driver based on rules for the signal type, rather than something
->> represented in DT.
->>
->> The above comment assumes this property is intended to represent DVI's
->> requirement for pixel clock doubling for low-pixel-clock-rate modes. If
->> it's something to do with e.g. a single-data-rate vs. double-data-rate
->> property of the underlying physical connection, that's most likely
->> something that should be defined in a binding specific to e.g. LVDS,
->> rather than something generic.
->>
->>> + - link-width: number of channels (e.g. LVDS)
->>> + - bpp: bits-per-pixel
->>> +
->>> +timings-subnode
->>> +---------------
->>> +
->>> +required properties:
->>> +subnodes that specify
->>> + - hactive, vactive: Display resolution
->>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
->>> +   in pixels
->>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
->>> +   lines
->>> + - clock: displayclock in Hz
->>> +
->>> +There are different ways of describing a display and its capabilities. The devicetree
->>> +representation corresponds to the one commonly found in datasheets for displays.
->>> +The description of the display and its timing is split in two parts: first the display
->>> +properties like size in mm and (optionally) multiple subnodes with the supported timings.
->>> +If a display supports multiple signal timings, the default-timing can be specified.
->>> +
->>> +Example:
->>> +
->>> +	display@0 {
->>> +		width-mm = <800>;
->>> +		height-mm = <480>;
->>> +		default-timing = <&timing0>;
->>> +		timings {
->>> +			timing0: timing@0 {
->>
->> If you're going to use a unit address ("@0") to ensure that node names
->> are unique (which is not mandatory), then each node also needs a reg
->> property with matching value, and #address-cells/#size-cells in the
->> parent. Instead, you could name the nodes something unique based on the
->> mode name to avoid this, e.g. 1080p24 { ... }.
-> 
-> 
-> I'm concerned that numbered nodes are being misused as arrays.
-> 
-> It's easy to make real arrays by including multiple cells in the value
-> of each timing parameter, and easy to choose a cell by saying the array
-> index instead of using the phandle.
+Hi Guennadi,
 
-In this case though, arrays don't work out so well in my opinion:
+On 09/27/2012 04:07 PM, Guennadi Liakhovetski wrote:
+> This patch adds a document, describing common V4L2 device tree bindings.
+> 
+> Co-authored-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+> Signed-off-by: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
+> ---
+>   Documentation/devicetree/bindings/media/v4l2.txt |  162 ++++++++++++++++++++++
+>   1 files changed, 162 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/media/v4l2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/v4l2.txt b/Documentation/devicetree/bindings/media/v4l2.txt
+> new file mode 100644
+> index 0000000..b8b3f41
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/v4l2.txt
+> @@ -0,0 +1,162 @@
+> +Video4Linux Version 2 (V4L2)
+> +
+> +General concept
+> +---------------
+> +
+> +Video pipelines consist of external devices, e.g. camera sensors, controlled
+> +over an I2C, SPI or UART bus, and SoC internal IP blocks, including video DMA
+> +engines and video data processors.
+> +
+> +SoC internal blocks are described by DT nodes, placed similarly to other SoC
+> +blocks. External devices are represented as child nodes of their respective bus
+> +controller nodes, e.g. I2C.
+> +
+> +Data interfaces on all video devices are described by "port" child DT nodes.
+> +Configuration of a port depends on other devices participating in the data
+> +transfer and is described by "link" DT nodes, specified as children of the
+> +"port" nodes:
+> +
+> +/foo {
+> +	port@0 {
+> +		link@0 { ... };
+> +		link@1 { ... };
+> +	};
+> +	port@1 { ... };
+> +};
+> +
+> +If a port can be configured to work with more than one other device on the same
+> +bus, a "link" child DT node must be provided for each of them. If more than one
+> +port is present on a device or more than one link is connected to a port, a
+> +common scheme, using "#address-cells," "#size-cells" and "reg" properties is
+> +used.
+> +
+> +Optional link properties:
+> +- remote: phandle to the other endpoint link DT node.
+> +- slave-mode: a boolean property, run the link in slave mode. Default is master
+> +  mode.
+> +- data-shift: on parallel data busses, if data-width is used to specify the
+> +  number of data lines, data-shift can be used to specify which data lines are
+> +  used, e.g. "data-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
+> +- hsync-active: 1 or 0 for active-high or -low HSYNC signal polarity
+> +  respectively.
+> +- vsync-active: ditto for VSYNC. Note, that if HSYNC and VSYNC polarities are
+> +  not specified, embedded synchronisation may be required, where supported.
+> +- data-active: similar to HSYNC and VSYNC specifies data line polarity.
+> +- field-even-active: field signal level during the even field data transmission.
+> +- pclk-sample: rising (1) or falling (0) edge to sample the pixel clock pin.
+> +- data-lanes: array of serial, e.g. MIPI CSI-2, data hardware lane numbers in
+> +  the ascending order, beginning with logical lane 0.
+> +- clock-lanes: hardware lane number, used for the clock lane.
 
-We want to describe a set of unrelated display modes that the display
-can handle. These are logically separate entities. I don't think
-combining the values that represent say 5 different modes into a single
-set of properties really makes sense here; a separate node or property
-per display mode really does make sense because they're separate objects.
+It is not very clear we are using common contiguous range of logical indexes
+for the clock and the data lanes, IMO. Maybe something like this would be
+more explicit:
 
-Related, each display timing parameter (e.g. hsync length, position,
-...) has a range, so min/typical/max values. These are already
-represented as a 3-cell property as I believe you're proposing.
-Combining that with a cell that represents n different modes in a single
-array seems like it'd end up with something rather hard to read, at
-least for humans even if it would be admittedly trivial for a CPU.
+- data-lanes: an array of hardware data lane indexes. Position of an entry 
+  determines logical lane number, while the value of an entry indicates hardware
+  lane number, e.g. for 2-lane MIPI CSI-2 bus we could have data-lanes = <1>, <2>;,
+  assuming the clock lane is on hardware lane 0. This property is applicable to
+  serial buses only (e.g. MIPI CSI-2). 
+
+?
+
+--
+
+Thanks,
+Sylwester
