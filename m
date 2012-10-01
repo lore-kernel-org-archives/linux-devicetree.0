@@ -1,8 +1,8 @@
 From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 4/5] ARM: at91/dts: add at91sam9_wdt driver to at91sam926x,
- at91sam9g45
-Date: Mon,  1 Oct 2012 14:24:40 +0200
-Message-ID: <1349094281-28889-5-git-send-email-fabio.porcedda@gmail.com>
+Subject: [PATCH v6 2/5] watchdog: orion_wdt: dt: add the timeout property
+ binding
+Date: Mon,  1 Oct 2012 14:24:38 +0200
+Message-ID: <1349094281-28889-3-git-send-email-fabio.porcedda@gmail.com>
 References: <1349094281-28889-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,65 +23,53 @@ To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchd
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tested on an at91sam9260 board (evk-pro3).
+The binding is provided by the watchdog core.
 
 Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
- arch/arm/boot/dts/at91sam9263.dtsi | 6 ++++++
- arch/arm/boot/dts/at91sam9g45.dtsi | 6 ++++++
- 3 files changed, 18 insertions(+)
+ Documentation/devicetree/bindings/watchdog/marvel.txt | 5 +++++
+ drivers/watchdog/orion_wdt.c                          | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index 7c95f76..7612193 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -236,6 +236,12 @@
- 					trigger-external;
- 				};
- 			};
-+
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9260-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
+diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/marvel.txt
+index 0b2503a..66c2b8c 100644
+--- a/Documentation/devicetree/bindings/watchdog/marvel.txt
++++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
+@@ -5,10 +5,15 @@ Required Properties:
+ - Compatibility : "marvell,orion-wdt"
+ - reg		: Address of the timer registers
  
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 195019b..d822240 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -185,6 +185,12 @@
- 				interrupts = <24 4 2>;
- 				status = "disabled";
- 			};
++Optional properties:
 +
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9260-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 63751b1..df998ab 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -242,6 +242,12 @@
- 					trigger-value = <0x6>;
- 				};
- 			};
++- timeout	: Contains the watchdog timeout in seconds
 +
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam9260-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 		};
+ Example:
  
- 		nand0: nand@40000000 {
+ 	wdt@20300 {
+ 		compatible = "marvell,orion-wdt";
+ 		reg = <0x20300 0x28>;
++		timeout = <10>;
+ 		status = "okay";
+ 	};
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index c20f96b..3dc7481 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -24,7 +24,6 @@
+ #include <linux/spinlock.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+-#include <linux/of.h>
+ #include <mach/bridge-regs.h>
+ 
+ /*
+@@ -168,6 +167,7 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+ 	orion_wdt.timeout = heartbeat;
+ 	orion_wdt.min_timeout = 1;
+ 	orion_wdt.max_timeout = wdt_max_duration;
++	watchdog_probe_dt(&orion_wdt, pdev->dev.of_node);
+ 
+ 	watchdog_set_nowayout(&orion_wdt, nowayout);
+ 	ret = watchdog_register_device(&orion_wdt);
 -- 
 1.7.11.3
