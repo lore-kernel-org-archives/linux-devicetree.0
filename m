@@ -1,42 +1,53 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
 Subject: Re: dtc: import latest upstream dtc
-Date: Mon, 01 Oct 2012 13:02:53 -0500
-Message-ID: <E1TIkKT-0000OV-NF@jdl.com>
-References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org>
- <5069C042.40209@gmail.com>
+Date: Mon, 01 Oct 2012 12:33:20 -0600
+Message-ID: <5069E1F0.5070902@wwwdotorg.org>
+References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org> <5069C042.40209@gmail.com> <5069C11C.6040505@wwwdotorg.org> <5069D946.1060502@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <5069C042.40209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5069D946.1060502@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On 10/01/2012 11:56 AM, Rob Herring wrote:
+> On 10/01/2012 11:13 AM, Stephen Warren wrote:
+>> On 10/01/2012 10:09 AM, Rob Herring wrote:
+>>> On 09/28/2012 04:25 PM, Stephen Warren wrote:
+>>>> From: Stephen Warren <swarren@nvidia.com>
+>>>>
+>>>> This updates scripts/dtc to commit 317a5d9 "dtc: zero out new label
+>>>> objects" from git://git.jdl.com/software/dtc.git.
+>>>>
+>>>> This adds features such as:
+>>>> * /bits/ syntax for cell data.
+>>>> * Math expressions within cell data.
+>>>> * The ability to delete properties or nodes.
+>>>> * Support for #line directives in the input file, which allows the use of
+>>>>   cpp on *.dts.
+>>>> * -i command-line option (/include/ path)
+>>>> * -W/-E command-line options for error/warning control.
+>>>> * Removal of spew to STDOUT containing the filename being compiled.
+>>>> * Many additions to the libfdt API.
+>>>>
+>>>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>>>
+>>> Seems dtc doesn't really have a maintainer. Probably makes more sense
+>>> for me to take this unless there are objections.
+>>
+>> Will you also take the two kbuild patches I posted that depend on this
+>> (e.g. "kbuild: introduce cmd_dtc_cpp")? I'd assumed that Michal Marek
+>> would take this given the dependencies and that he's take a fair number
+>> of dtc patches recently.
 > 
-> Seems dtc doesn't really have a maintainer. 
+> No. I think whether we use the cpp preprocessor or not needs more time
+> to discuss and some level of agreement. So I don't think it is 3.7 material.
 
-Picking nits, let's be clear on that phraseology:
+Oh, you were planning on taking the dtc update into 3.7? I had assumed
+you meant for 3.8. There wouldn't be any dependencies if you take the
+dtc update now, so it'd probably be fine.
 
-    Seems dtc doesn't really have a maintainer
-    within the kernel repository.
-
-Over in git.jdl.com land, there is a well established
-maintainer for the upstream DTC.
-
-> Probably makes more sense
-> for me to take this unless there are objections.
-
-Please, and thank you.
-
-jdl
+What more do you think needs discussion re: dtc+cpp?
