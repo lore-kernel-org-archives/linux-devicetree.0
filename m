@@ -1,144 +1,64 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: [PATCH] TPM: Provide a tpm_tis OF driver
-Date: Sun, 30 Sep 2012 17:31:56 -0600
-Message-ID: <20120930233156.GI30637@obsidianresearch.com>
+From: "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 6/6] usb: dwc3: core: add dt support for dwc3 core
+Date: Mon, 1 Oct 2012 10:40:12 +0530
+Message-ID: <CAAe_U6Lt-+HQ5ZZ3xGsfhCqcOewWGprBCYc31qbZE_uUK7VtvA@mail.gmail.com>
+References: <1348836795-4783-1-git-send-email-kishon@ti.com>
+ <1348836795-4783-7-git-send-email-kishon@ti.com>
+ <5068779A.20402@mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, tpmdd-devel@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5068779A.20402-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This provides an open firwmare driver binding for tpm_tis. OF
-is useful on arches where PNP is not used.
+Hi,
 
-Allow the tpm_tis driver to be selected if PNP or OF are compiled in.
+On Sun, Sep 30, 2012 at 10:17 PM, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org> wrote:
+> Hello.
+>
+>
+> On 28-09-2012 14:53, Kishon Vijay Abraham I wrote:
+>
+>> Added dwc3 support for dwc3 core and update the documentation with
+>> device tree binding information.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I<kishon-l0cyMroinI0@public.gmane.org>
+>
+> [...]
+>
+>
+>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>> index 08a5738..0c17a7a 100644
+>> --- a/drivers/usb/dwc3/core.c
+>> +++ b/drivers/usb/dwc3/core.c
+>
+> [...]
+>
+>> @@ -602,11 +601,22 @@ static int __devexit dwc3_remove(struct
+>> platform_device *pdev)
+>>         return 0;
+>>   }
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id of_dwc3_matach[] = {
+>
+>
+>     I guess you meant 'of_dwc3_match' here and below?
 
-Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
----
- drivers/char/tpm/Kconfig   |    2 +-
- drivers/char/tpm/tpm_tis.c |   56 +++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 54 insertions(+), 4 deletions(-)
+indeed.. will re-post the patch..
 
-This is a rebase, retest, resend of a patch I sent two years ago...
-
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index a048199..a346714 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -26,7 +26,7 @@ if TCG_TPM
- 
- config TCG_TIS
- 	tristate "TPM Interface Specification 1.2 Interface"
--	depends on X86
-+	depends on X86 || OF
- 	---help---
- 	  If you have a TPM security chip that is compliant with the
- 	  TCG TIS 1.2 TPM specification say Yes and it will be accessible
-diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
-index c4be351..0a890ed 100644
---- a/drivers/char/tpm/tpm_tis.c
-+++ b/drivers/char/tpm/tpm_tis.c
-@@ -27,6 +27,9 @@
- #include <linux/wait.h>
- #include <linux/acpi.h>
- #include <linux/freezer.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include "tpm.h"
- 
- enum tis_access {
-@@ -506,8 +509,10 @@ static bool interrupts = 1;
- module_param(interrupts, bool, 0444);
- MODULE_PARM_DESC(interrupts, "Enable interrupts");
- 
-+/* irq == 0 -> autoprobe, -1 ->forced no interrupt,
-+   others -> irq line to use */
- static int tpm_tis_init(struct device *dev, resource_size_t start,
--			resource_size_t len, unsigned int irq)
-+			resource_size_t len, int irq)
- {
- 	u32 vendor, intfcaps, intmask;
- 	int rc, i, irq_s, irq_e, probe;
-@@ -605,9 +610,11 @@ static int tpm_tis_init(struct device *dev, resource_size_t start,
- 	iowrite32(intmask,
- 		  chip->vendor.iobase +
- 		  TPM_INT_ENABLE(chip->vendor.locality));
--	if (interrupts)
-+	if (!interrupts)
-+		irq = -1;
-+	if (irq != -1)
- 		chip->vendor.irq = irq;
--	if (interrupts && !chip->vendor.irq) {
-+	if (irq == 0) {
- 		irq_s =
- 		    ioread8(chip->vendor.iobase +
- 			    TPM_INT_VECTOR(chip->vendor.locality));
-@@ -821,12 +828,53 @@ static int tpm_tis_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id tis_of_platform_match[] = {
-+	{.compatible = "tcg,tpm_tis"},
-+	{},
-+};
-+static int __devinit tis_of_init_one(struct platform_device *pdev)
-+{
-+	struct resource res;
-+	int ret;
-+	int irq;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	ret = of_address_to_resource(pdev->dev.of_node, 0, &res);
-+	if (ret)
-+		return ret;
-+
-+	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-+	if (irq == NO_IRQ)
-+		irq = -1;
-+	return tpm_tis_init(&pdev->dev, res.start, res.end - res.start + 1,
-+			    irq);
-+}
-+
-+static int __devexit tis_of_remove_one(struct platform_device *odev)
-+{
-+	struct tpm_chip *chip = dev_get_drvdata(&odev->dev);
-+	tpm_dev_vendor_release(chip);
-+	kfree(chip);
-+	return 0;
-+}
-+#endif
-+
- static struct platform_driver tis_drv = {
- 	.driver = {
- 		.name = "tpm_tis",
- 		.owner		= THIS_MODULE,
- 		.pm		= &tpm_tis_pm,
-+#ifdef CONFIG_OF
-+		.of_match_table = tis_of_platform_match,
-+#endif
- 	},
-+#ifdef CONFIG_OF
-+	.probe = tis_of_init_one,
-+	.remove = __devexit_p(tis_of_remove_one)
-+#endif
- };
- 
- static struct platform_device *pdev;
-@@ -849,7 +897,9 @@ static int __init init_tis(void)
- 		return PTR_ERR(pdev);
- 	if((rc=tpm_tis_init(&pdev->dev, TIS_MEM_BASE, TIS_MEM_LEN, 0)) != 0) {
- 		platform_device_unregister(pdev);
-+#ifndef CONFIG_OF
- 		platform_driver_unregister(&tis_drv);
-+#endif
- 	}
- 	return rc;
- }
--- 
-1.7.4.1
+Thanks
+Kishon
