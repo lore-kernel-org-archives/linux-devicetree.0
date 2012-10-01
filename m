@@ -1,84 +1,84 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Mon, 1 Oct 2012 10:24:18 +0200
-Message-ID: <CACRpkdZ_NxST-oJ=MWC5L=r8uQD_71eHUVUR85v4jfsYpqz=UQ@mail.gmail.com>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
-	<CACRpkdbSY-aH_Vf3Q4h-ufz35m6=vVXCEecGGS-WOsG7vmPZ0g@mail.gmail.com>
-	<331ABD5ECB02734CA317220B2BBEABC13EA3E24E@DBDE01.ent.ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/6] usb: dwc3-omap: use of_platform API to create dwc3
+ core pdev
+Date: Mon, 1 Oct 2012 11:50:52 +0300
+Message-ID: <20121001085051.GA19346@arwen.pp.htv.fi>
+References: <1348836795-4783-1-git-send-email-kishon@ti.com>
+ <1348836795-4783-2-git-send-email-kishon@ti.com>
+ <20120928125758.GK31006@arwen.pp.htv.fi>
+ <CAAe_U6JX8nqhZU-m+0Cfh1-xEkZhXNf2ecYcg_JX9mx5fv1b3A@mail.gmail.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA3E24E@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "tony@atomide.com" <tony@atomide.com>, "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, "dong.aisheng@linaro.org" <dong.aisheng@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAe_U6JX8nqhZU-m+0Cfh1-xEkZhXNf2ecYcg_JX9mx5fv1b3A@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Cc: balbi@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 1, 2012 at 9:03 AM, AnilKumar, Chimata <anilkumar@ti.com> wrote:
 
->    I have gone through the "Don Aisheng" patch series, which
-> adds "pinctrl_dt_add_gpio_ranges" support but not accepted
-> yet. With this patch series we can overcome the driver changes.
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK then this is the direction we need to go.
+Hi,
 
-> 4. The current pinctrl driver has support for these APIs
-> pinctrl_request_gpio(), pinctrl_free_gpio(),
-> pinctrl_gpio_direction_input/output()
-> no API for slew rate control, pulled down/up control
-> how can we handle this?
+On Fri, Sep 28, 2012 at 07:01:04PM +0530, ABRAHAM, KISHON VIJAY wrote:
+> Hi,
+>=20
+> On Fri, Sep 28, 2012 at 6:27 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > Hi,
+> >
+> > On Fri, Sep 28, 2012 at 06:23:10PM +0530, Kishon Vijay Abraham I wrote:
+> >> Used of_platform_populate() to populate dwc3 core platform_device
+> >> from device tree data. Since now the allocation of unique device id is
+> >> handled be of_*, removed the call to dwc3_get_device_id.
+> >>
+> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >
+> > I think it's best if you split the use of device_for_each_child() from
+> > this patch. So first do the device_for_each_child() part, then later use
+> > of_platform_populate().
+>=20
+> I think it's better to have it both together as of_platform_populate
+> will create the device and the device_for_each_child() part will
+> delete it on error conditions and during driver removal.
+> In this patch the first device_for_each_child() comes in error
+> condition and it is not needed if we have not created the device using
+> of_platform_populate.
 
-You are not supposed to handle that from the GPIO level
-of the API. That is supposed to be handled by pinctrl.
+We are already parent of a device and we already handle child removal
+manually. You can change the current implementation to use
+device_for_each_child() and on a later patch introduce
+of_platform_populate().
 
-These two subsystems are orthogonal, with the exception
-of the above calls. If you need to pass more information
-between the GPIO and pinctrl interfaces it usually means
-you're doing something wrong.
+--=20
+balbi
 
-The reason why pinctrl was created in the first place
-was that Grant didn't like that we started to shoehorn all
-kind of pin control into the GPIO subsystem.
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 5. pinctrl-single driver has to modify to provide separate handles
-> for pinmux and pinconfig. And we need separate pin configuration
-> bit masks and values/flags to take care of pull-up/down, slew rate,
-> receiver in/out and mux mode control.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-OK that is typical pinctrl driver implementation work.
-I hope Tony can advice on this?
+iQIcBAEBAgAGBQJQaVlrAAoJEIaOsuA1yqREnPcP/3Sr7v7PldUaazkom6xUwMsq
+lUYN4YzeYJbtS8wqdyf+AMU1bbAeBdKv8cirLgh8AxGE4ILJiGmiXYsjg3KbUgma
+fi8aMBgwhovDYAiJU/VS029qLIJyGHlFA4thbdoHymSOYoTX7RMEi9V2hLlTqmBQ
+M2UKmB2ep8HBUwhLgnGMJty6qGOhz8KXXxG7oO6lunwzHeqzlEresP/b1Gd3YpVm
+vkvdgXoqErh8aMgL9S5AaV178eFEIoLsvR6iaPO8JeWaNGI2vhrR9ZMmwkXrd9vZ
+soZnuk35VrNJH3eyFeDkIloTAGWjT0uB+96WdVOhjF4i3WV70Bji9z0Q9i5HLZDT
+cymfjpDwwMryhqhAdqV8Rbz6zYHlb9xWkhUncOHuS7ladY06DPwUVdk6So9GUyCn
+0SJz553i3H/JQv8458NdOek19c8W2H5wBAZ2VygFyVsTRqkwDndh2HRVme/WtMC9
+VRc1pTc+3LRCX+40CeDXGjOru8ymukRChzRcFiXKrDpbrkOUe6DTbYGj9dSxt/R/
+TItEoOwULYaAIGYMQLw9OAguxvvLVg+FAfFHdeU8FOExPo5I9FlrBQNSSEvUh1NS
+se+Iqs+XC8S2yOQyREKFkSasBOduIWFhLUoTCNbkm979p9CFbpmtrcrxFlTAYzA7
+PZYml2WxpR2/bslLgNKt
+=JM55
+-----END PGP SIGNATURE-----
 
-> 6. This is for my understanding, on which node do we have to add
-> pinctrl data i.e., pin mux-mode data. In leds-gpio node (mostly not)
-> and if it is in gpio node then how can we pass pinmux data with
-> the existing API pinctrl_request_gpio(gpio);? Here we are passing
-> only gpio number.
-
-So with the pinctrl_request_gpio() call you are requesting a single
-pin to be used as GPIO, nothing else.
-
-No additional data should be passed with that call.
-
-Implementing it is up to the pinctrl driver, the pinctrl subsystem
-API does not say anything about how this should be done, but
-there are a few examples.
-
-The pinctrl maps of muxes and config from the pin control
-subsystem are for entire devices, and the single-pin GPIO
-reservation API is orthogonal to this, please consult
-Documentation/pinctrl.txt if you are uncertain about what
-I mean with this, I've really tried to explain it there.
-
-The docs were recently amended to reflect some corner-case
-GPIO uses, see e.g.:
-http://marc.info/?l=linux-arm-kernel&m=134763067415678&w=2
-
-> Few more driver patches are pending along with this (leds-gpio DT
-> data additions according to this patch, similarly other drivers
-> like matrix keypad and volume keys)
-
-OK so the threshold is that we need to get it right for the first
-one and then the others will look good too.
-
-Yours,
-Linus Walleij
+--mP3DRpeJDSE+ciuQ--
