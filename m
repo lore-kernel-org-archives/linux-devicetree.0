@@ -1,91 +1,112 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/1] Fix segfault in DTC
-Date: Mon, 01 Oct 2012 10:41:09 -0600
-Message-ID: <5069C7A5.8090409@wwwdotorg.org>
-References: <1348595889-6495-2-git-send-email-mmayer@broadcom.com>
- <20120925233054.GL9800@truffula.fritz.box> <50624393.30607@broadcom.com>
- <20120926003508.GB31993@truffula.fritz.box> <50632F78.4030709@broadcom.com>
- <5065D9C7.40906@wwwdotorg.org> <E1THfgr-0006Fg-KT@jdl.com>
- <5065F4FD.4010807@wwwdotorg.org> <20120929235342.GA23078@truffula.fritz.box>
- <50692B7A.8000405@wwwdotorg.org> <20121001064610.GA5323@truffula.fritz.box>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/2] of: add helper to parse display specs
+Date: Mon, 01 Oct 2012 10:53:08 -0600
+Message-ID: <5069CA74.7040409@wwwdotorg.org>
+References: <1348500924-8551-1-git-send-email-s.trumtrar@pengutronix.de> <1348500924-8551-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121001064610.GA5323-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1348500924-8551-2-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans Verkuil <hverkuil@xs4all.nl>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2012 12:46 AM, David Gibson wrote:
-> On Sun, Sep 30, 2012 at 11:34:50PM -0600, Stephen Warren wrote:
->> On 09/29/2012 05:53 PM, David Gibson wrote:
->>> On Fri, Sep 28, 2012 at 01:05:33PM -0600, Stephen Warren wrote:
->>>> On 09/28/2012 12:53 PM, Jon Loeliger wrote:
->>>>>>>
->>>>>>> Yeah, seems like the kernel DTC is quite old.
->>>>>>
->>>>>> FYI, I'm working on a patch to the kernel to bring in the latest dtc.
->>>>>
->>>>> Awesome.  Thank you.
->>>>>
->>>>>> I've run a regression test vs. the old dtc in the kernel ...
->>>>>
->>>>> Which is the icky step.  Again, thank you.
->>>>>
->>>>>> ... and found that
->>>>>> some of the PowerPC .dts files don't compile with the new dtc (but did
->>>>>> with the old), all due to non-existent labels/paths being referenced.
->>>>>> I'll try and track down whether this is a regression in dtc, or simply
->>>>>> buggy .dts files that weren't noticed before.
->>>>>
->>>>> I think you should just smack the PowerPC guys. :-)
->>>>
->>>> For the record in this thread, it was a regression I introduced into dtc
->>>> - the patch I just sent was for this.
->>>
->>> I would be nice to add a testcase for this regression into dtc.
->>
->> The issue here was caused by uninitialized memory, so it would, I think,
->> be basically impossible to create a test-case that would be guaranteed
->> to fail because of this; it'd depend on the internal details of the
->> malloc library and how/when it re-used previously free()d memory blocks.
-> 
-> It doesn't have to be guaranteed to fail to be useful.  Plus, we
-> already have the infrastructure to run the tests under valgrind, which
-> would catch it.
+On 09/24/2012 09:35 AM, Steffen Trumtrar wrote:
+> Parse a display-node with timings and hardware-specs from devictree.
 
-I certainly disagree here; the absolute worst kind of test is one which
-gives different results each time it's run, or statically gives
-different results to different people. People will either ignore the
-test because it's flaky, or it'll end up blaming the wrong person due to
-some entirely unrelated and correct change just happening to tickle the
-test.
+> diff --git a/Documentation/devicetree/bindings/video/display b/Documentation/devicetree/bindings/video/display
+> new file mode 100644
+> index 0000000..722766a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/display
 
-If we were to force any such new test to always run under valgrind, then
-hopefully the test would always fail (assuming the test harness triggers
-failure if valgrind finds problems). That might be reasonable. However,
-if we do this, then I think instead we should just always force the
-entire existing test suite to run under valgrind; no new test should be
-needed for valgrind to detect this failure (since there was a
-read-before-write problem any time a label was used in the existing
-code, it just didn't always cause a user-visible issue).
+This should be display.txt.
 
-Another alternative might be to LD_PRELOAD a test malloc library with a
-known allocation pattern. That would allow a new test for this case to
-always fail. However, the allocation pattern of this test malloc library
-would have to be carefully tied to the allocation pattern of dtc itself
-when processing the new test's .dts file, and that could easily and
-legitimately change due to unrelated implementation details of dtc
-changing, thus making the maintenance of the test malloc library
-painful. So, I don't think this is the way to go.
+> @@ -0,0 +1,208 @@
+> +display bindings
+> +==================
+> +
+> +display-node
+> +------------
+
+I'm not personally convinced about the direction this is going. While I
+think it's reasonable to define DT bindings for displays, and DT
+bindings for display modes, I'm not sure that it's reasonable to couple
+them together into a single binding.
+
+I think creating a well-defined timing binding first will be much
+simpler than doing so within the context of a display binding; the
+scope/content of a general display binding seems much less well-defined
+to me at least, for reasons I mentioned before.
+
+> +required properties:
+> + - none
+> +
+> +optional properties:
+> + - default-timing: the default timing value
+> + - width-mm, height-mm: Display dimensions in mm
+
+> + - hsync-active-high (bool): Hsync pulse is active high
+> + - vsync-active-high (bool): Vsync pulse is active high
+
+At least those two properties should exist in the display timing instead
+(or perhaps as well). There are certainly cases where different similar
+display modes are differentiated by hsync/vsync polarity more than
+anything else. This is probably more likely with analog display
+connectors than digital, but I see no reason why a DT binding for
+display timing shouldn't cover both.
+
+> + - de-active-high (bool): Data-Enable pulse is active high
+> + - pixelclk-inverted (bool): pixelclock is inverted
+
+> + - pixel-per-clk
+
+pixel-per-clk is probably something that should either be part of the
+timing definition, or something computed internally to the display
+driver based on rules for the signal type, rather than something
+represented in DT.
+
+The above comment assumes this property is intended to represent DVI's
+requirement for pixel clock doubling for low-pixel-clock-rate modes. If
+it's something to do with e.g. a single-data-rate vs. double-data-rate
+property of the underlying physical connection, that's most likely
+something that should be defined in a binding specific to e.g. LVDS,
+rather than something generic.
+
+> + - link-width: number of channels (e.g. LVDS)
+> + - bpp: bits-per-pixel
+> +
+> +timings-subnode
+> +---------------
+> +
+> +required properties:
+> +subnodes that specify
+> + - hactive, vactive: Display resolution
+> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
+> +   in pixels
+> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
+> +   lines
+> + - clock: displayclock in Hz
+> +
+> +There are different ways of describing a display and its capabilities. The devicetree
+> +representation corresponds to the one commonly found in datasheets for displays.
+> +The description of the display and its timing is split in two parts: first the display
+> +properties like size in mm and (optionally) multiple subnodes with the supported timings.
+> +If a display supports multiple signal timings, the default-timing can be specified.
+> +
+> +Example:
+> +
+> +	display@0 {
+> +		width-mm = <800>;
+> +		height-mm = <480>;
+> +		default-timing = <&timing0>;
+> +		timings {
+> +			timing0: timing@0 {
+
+If you're going to use a unit address ("@0") to ensure that node names
+are unique (which is not mandatory), then each node also needs a reg
+property with matching value, and #address-cells/#size-cells in the
+parent. Instead, you could name the nodes something unique based on the
+mode name to avoid this, e.g. 1080p24 { ... }.
