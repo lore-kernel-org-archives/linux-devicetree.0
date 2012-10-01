@@ -1,49 +1,47 @@
-From: Marek Belisko <marek.belisko@open-nandra.com>
-Subject: [PATCH] arm/dts: at91sam9g20ek_common: Fix typos in buttons labels.
-Date: Mon,  1 Oct 2012 22:46:09 +0200
-Message-ID: <1349124369-28742-1-git-send-email-marek.belisko@open-nandra.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] MAINTAINERS: add scripts/dtc under Devicetree maintainers
+Date: Mon,  1 Oct 2012 15:49:06 -0500
+Message-ID: <1349124546-16864-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Marek Belisko <marek.belisko@open-nandra.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
----
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-index b06c0db..e6391a4 100644
---- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-@@ -126,14 +126,14 @@
- 		#size-cells = <0>;
+scripts/dtc has no explicit in kernel maintainer, so add it under
+Devicetree maintainers.
+
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+ MAINTAINERS |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 94b823f..2d7eaba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5035,6 +5035,7 @@ S:	Maintained
+ F:	Documentation/devicetree
+ F:	drivers/of
+ F:	include/linux/of*.h
++	scripts/dtc
+ K:	of_get_property
+ K:	of_match_table
  
- 		btn3 {
--			label = "Buttin 3";
-+			label = "Button 3";
- 			gpios = <&pioA 30 1>;
- 			linux,code = <0x103>;
- 			gpio-key,wakeup;
- 		};
- 
- 		btn4 {
--			label = "Buttin 4";
-+			label = "Button 4";
- 			gpios = <&pioA 31 1>;
- 			linux,code = <0x104>;
- 			gpio-key,wakeup;
 -- 
 1.7.9.5
