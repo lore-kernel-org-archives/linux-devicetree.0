@@ -1,8 +1,7 @@
 From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 2/5] watchdog: orion_wdt: dt: add the timeout property
- binding
-Date: Mon,  1 Oct 2012 14:24:38 +0200
-Message-ID: <1349094281-28889-3-git-send-email-fabio.porcedda@gmail.com>
+Subject: [PATCH v6 5/5] ARM: at91/dts: evk-pro3: enable watchdog
+Date: Mon,  1 Oct 2012 14:24:41 +0200
+Message-ID: <1349094281-28889-6-git-send-email-fabio.porcedda@gmail.com>
 References: <1349094281-28889-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,53 +22,27 @@ To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchd
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The binding is provided by the watchdog core.
+Tested on evk-pro3.
 
 Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/watchdog/marvel.txt | 5 +++++
- drivers/watchdog/orion_wdt.c                          | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/evk-pro3.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/marvel.txt
-index 0b2503a..66c2b8c 100644
---- a/Documentation/devicetree/bindings/watchdog/marvel.txt
-+++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
-@@ -5,10 +5,15 @@ Required Properties:
- - Compatibility : "marvell,orion-wdt"
- - reg		: Address of the timer registers
- 
-+Optional properties:
+diff --git a/arch/arm/boot/dts/evk-pro3.dts b/arch/arm/boot/dts/evk-pro3.dts
+index b7354e6..ce959ee 100644
+--- a/arch/arm/boot/dts/evk-pro3.dts
++++ b/arch/arm/boot/dts/evk-pro3.dts
+@@ -26,6 +26,10 @@
+ 				atmel,vbus-gpio = <&pioC 5 0>;
+ 				status = "okay";
+ 			};
 +
-+- timeout	: Contains the watchdog timeout in seconds
-+
- Example:
++			watchdog@fffffd40 {
++				status = "okay";
++			};
+ 		};
  
- 	wdt@20300 {
- 		compatible = "marvell,orion-wdt";
- 		reg = <0x20300 0x28>;
-+		timeout = <10>;
- 		status = "okay";
- 	};
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index c20f96b..3dc7481 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -24,7 +24,6 @@
- #include <linux/spinlock.h>
- #include <linux/clk.h>
- #include <linux/err.h>
--#include <linux/of.h>
- #include <mach/bridge-regs.h>
- 
- /*
-@@ -168,6 +167,7 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
- 	orion_wdt.timeout = heartbeat;
- 	orion_wdt.min_timeout = 1;
- 	orion_wdt.max_timeout = wdt_max_duration;
-+	watchdog_probe_dt(&orion_wdt, pdev->dev.of_node);
- 
- 	watchdog_set_nowayout(&orion_wdt, nowayout);
- 	ret = watchdog_register_device(&orion_wdt);
+ 		usb0: ohci@00500000 {
 -- 
 1.7.11.3
