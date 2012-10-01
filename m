@@ -1,14 +1,16 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: dtc: import latest upstream dtc
-Date: Mon, 01 Oct 2012 10:13:16 -0600
-Message-ID: <5069C11C.6040505@wwwdotorg.org>
-References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org>
- <5069C042.40209@gmail.com>
+Subject: Re: [PATCH V6 2/2] video: drm: exynos: Add device tree support
+Date: Mon, 01 Oct 2012 10:20:44 -0600
+Message-ID: <5069C2DC.8080905@wwwdotorg.org>
+References: <1348226536-22899-1-git-send-email-l.krishna@samsung.com>
+ <1348226536-22899-3-git-send-email-l.krishna@samsung.com>
+ <505BF79A.8060802@wwwdotorg.org>
+ <CAL1wa8eOA6eV-9EoeUFrSFaFwq5sEVnYXn9yKnPRv=0mSU5WvQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5069C042.40209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAL1wa8eOA6eV-9EoeUFrSFaFwq5sEVnYXn9yKnPRv=0mSU5WvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,34 +21,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2012 10:09 AM, Rob Herring wrote:
-> On 09/28/2012 04:25 PM, Stephen Warren wrote:
->> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> This updates scripts/dtc to commit 317a5d9 "dtc: zero out new label
->> objects" from git://git.jdl.com/software/dtc.git.
->>
->> This adds features such as:
->> * /bits/ syntax for cell data.
->> * Math expressions within cell data.
->> * The ability to delete properties or nodes.
->> * Support for #line directives in the input file, which allows the use of
->>   cpp on *.dts.
->> * -i command-line option (/include/ path)
->> * -W/-E command-line options for error/warning control.
->> * Removal of spew to STDOUT containing the filename being compiled.
->> * Many additions to the libfdt API.
->>
->> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 09/30/2012 11:29 PM, Leela Krishna Amudala wrote:
+> Hello Stephen Warren,
 > 
-> Seems dtc doesn't really have a maintainer. Probably makes more sense
-> for me to take this unless there are objections.
+> The binding names that I use in my dts file should match with the
+> names given in http://lists.freedesktop.org/archives/dri-devel/2012-July/024875.html
+> right?
 
-Will you also take the two kbuild patches I posted that depend on this
-(e.g. "kbuild: introduce cmd_dtc_cpp")? I'd assumed that Michal Marek
-would take this given the dependencies and that he's take a fair number
-of dtc patches recently.
+I don't think so; the binding in that link is for example:
+
+> + - xres, yres: Display resolution
+> + - left-margin, right-margin, hsync-len: Horizontal Display timing parameters
+> +   in pixels
+> +   upper-margin, lower-margin, vsync-len: Vertical display timing parameters in
+> +   lines
+> + - clock: displayclock in Hz
+
+i.e. a bunch of separate properties, one for each value needed to
+describe the display timing. However, your patch contains:
+
+>>> + - samsung,fimd-display: This property should specify the phandle of the
+>>> +   display device node which holds the video interface timing with the
+>>> +   below mentioned properties.
+>>> +
+>>> +   - lcd-htiming: Specifies the horizontal timing for the overlay. The
+>>> +     horizontal timing includes four parameters in the following order.
+>>> +
+>>> +     - horizontal back porch (in number of lcd clocks)
+>>> +     - horizontal front porch (in number of lcd clocks)
+>>> +     - hsync pulse width (in number of lcd clocks)
+>>> +     - Display panels X resolution.
+
+A single lcd-htiming property, which contains 4 values. (and a similar
+construct for the vertical timing).
+
+That seems entirely different to me...
