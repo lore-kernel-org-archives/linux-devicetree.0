@@ -1,207 +1,98 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: [PATCH v2] TPM: Provide a tpm_tis OF driver
-Date: Tue, 2 Oct 2012 15:04:53 -0600
-Message-ID: <20121002210453.GA12231@obsidianresearch.com>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH v2 8/9] ARM: OMAP: iommu: add device tree support
+Date: Tue, 2 Oct 2012 17:25:23 -0400
+Message-ID: <20121002212523.GA11180@beef>
+References: <1347479152-588-1-git-send-email-omar.luna@linaro.org>
+ <1347479152-588-9-git-send-email-omar.luna@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kent Yoder <key@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, tpmdd-devel@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1347479152-588-9-git-send-email-omar.luna@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Omar Ramirez Luna <omar.luna@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Joerg Roedel <joerg.roedel@amd.com>, Russell King <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This provides an open firwmare driver binding for tpm_tis. OF
-is useful on arches where PNP is not used.
+On Wed, Sep 12, 2012 at 02:45:51PM -0500, Omar Ramirez Luna wrote:
+> Adapt driver to use DT if provided.
 
-Allow the tpm_tis driver to be selected if OF is compiled in.
+Hi Omar,
 
-Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
----
- drivers/char/tpm/Kconfig   |    2 +-
- drivers/char/tpm/tpm_tis.c |   79 +++++++++++++++++++++++++++++++++++--------
- 2 files changed, 65 insertions(+), 16 deletions(-)
+I'm interested in making use of the assert/deassert APIs you exposed in
+this series on AM335x for the pruss hwmod which has one hardreset
+line. I have the same situation where I need to get it deasserted before
+I do any runtime PM. See my comments below...
 
-v2 changes:
- - Add irq_autoprobe to tpm_tis_init to simplify the logic around
-   the autoprobe function
- - Use platform functions in tis_of_probe_one
- - Rename tis_drv to tis_driver to silence MODPOST warnings
- - checkpatch cleanups
- - Do not attempt to auto-probe the TPM on OF configurations
+> +static int __devinit
+> +iommu_add_platform_data_from_dt(struct platform_device *pdev)
+> +{
+> +	struct iommu_platform_data *pdata;
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct omap_hwmod *oh;
+> +	struct omap_mmu_dev_attr *a;
+> +	int ret = 0;
+> +
+> +	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return -ENOMEM;
+> +
+> +	of_property_read_string(node, "ti,hwmods", &pdata->name);
+> +	oh = omap_hwmod_lookup(pdata->name);
+> +	if (!oh) {
+> +		dev_err(&pdev->dev, "Cannot lookup hwmod '%s'\n", pdata->name);
+> +		ret = -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	a = (struct omap_mmu_dev_attr *)oh->dev_attr;
+> +	pdata->nr_tlb_entries = a->nr_tlb_entries;
+> +	pdata->da_start = a->da_start;
+> +	pdata->da_end = a->da_end;
+> +
+> +	if (oh->rst_lines_cnt == 1) {
+> +		pdata->reset_name = oh->rst_lines->name;
+> +		pdata->assert_reset = omap_device_assert_hardreset;
+> +		pdata->deassert_reset = omap_device_deassert_hardreset;
+> +	}
+> +
+> +	ret = platform_device_add_data(pdev, pdata, sizeof(*pdata));
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Cannot add pdata for %s\n", pdata->name);
+> +
+> +out:
+> +	kfree(pdata);
+> +
+> +	return ret;
+> +}
 
-diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-index a048199..a346714 100644
---- a/drivers/char/tpm/Kconfig
-+++ b/drivers/char/tpm/Kconfig
-@@ -26,7 +26,7 @@ if TCG_TPM
- 
- config TCG_TIS
- 	tristate "TPM Interface Specification 1.2 Interface"
--	depends on X86
-+	depends on X86 || OF
- 	---help---
- 	  If you have a TPM security chip that is compliant with the
- 	  TCG TIS 1.2 TPM specification say Yes and it will be accessible
-diff --git a/drivers/char/tpm/tpm_tis.c b/drivers/char/tpm/tpm_tis.c
-index c4be351..23c6562 100644
---- a/drivers/char/tpm/tpm_tis.c
-+++ b/drivers/char/tpm/tpm_tis.c
-@@ -27,6 +27,7 @@
- #include <linux/wait.h>
- #include <linux/acpi.h>
- #include <linux/freezer.h>
-+#include <linux/of_device.h>
- #include "tpm.h"
- 
- enum tis_access {
-@@ -507,7 +508,7 @@ module_param(interrupts, bool, 0444);
- MODULE_PARM_DESC(interrupts, "Enable interrupts");
- 
- static int tpm_tis_init(struct device *dev, resource_size_t start,
--			resource_size_t len, unsigned int irq)
-+			resource_size_t len, int irq, int irq_autoprobe)
- {
- 	u32 vendor, intfcaps, intmask;
- 	int rc, i, irq_s, irq_e, probe;
-@@ -605,9 +606,12 @@ static int tpm_tis_init(struct device *dev, resource_size_t start,
- 	iowrite32(intmask,
- 		  chip->vendor.iobase +
- 		  TPM_INT_ENABLE(chip->vendor.locality));
--	if (interrupts)
--		chip->vendor.irq = irq;
--	if (interrupts && !chip->vendor.irq) {
-+	if (!interrupts) {
-+		irq = 0;
-+		irq_autoprobe = 0;
-+	}
-+	chip->vendor.irq = irq;
-+	if (irq == 0 && irq_autoprobe) {
- 		irq_s =
- 		    ioread8(chip->vendor.iobase +
- 			    TPM_INT_VECTOR(chip->vendor.locality));
-@@ -739,13 +743,11 @@ static int __devinit tpm_tis_pnp_init(struct pnp_dev *pnp_dev,
- 
- 	if (pnp_irq_valid(pnp_dev, 0))
- 		irq = pnp_irq(pnp_dev, 0);
--	else
--		interrupts = 0;
- 
- 	if (is_itpm(pnp_dev))
- 		itpm = 1;
- 
--	return tpm_tis_init(&pnp_dev->dev, start, len, irq);
-+	return tpm_tis_init(&pnp_dev->dev, start, len, irq, 0);
- }
- 
- static int tpm_tis_pnp_suspend(struct pnp_dev *dev, pm_message_t msg)
-@@ -768,7 +770,7 @@ static int tpm_tis_pnp_resume(struct pnp_dev *dev)
- 	return ret;
- }
- 
--static struct pnp_device_id tpm_pnp_tbl[] __devinitdata = {
-+static const struct pnp_device_id tpm_pnp_tbl[] __devinitdata = {
- 	{"PNP0C31", 0},		/* TPM */
- 	{"ATM1200", 0},		/* Atmel */
- 	{"IFX0102", 0},		/* Infineon */
-@@ -792,7 +794,7 @@ static __devexit void tpm_tis_pnp_remove(struct pnp_dev *dev)
- }
- 
- 
--static struct pnp_driver tis_pnp_driver = {
-+static const struct pnp_driver tis_pnp_driver = {
- 	.name = "tpm_tis",
- 	.id_table = tpm_pnp_tbl,
- 	.probe = tpm_tis_pnp_init,
-@@ -821,12 +823,52 @@ static int tpm_tis_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume);
- 
--static struct platform_driver tis_drv = {
-+#ifdef CONFIG_OF
-+static const struct of_device_id tis_of_platform_match[] __devinitdata = {
-+	{.compatible = "tcg,tpm_tis"},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tis_of_platform_match);
-+
-+static int __devinit tis_of_probe_one(struct platform_device *pdev)
-+{
-+	const struct resource *res;
-+	int irq;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		irq = 0;
-+	return tpm_tis_init(&pdev->dev, res->start, res->end - res->start + 1,
-+			    irq, 0);
-+}
-+
-+static int __devexit tis_of_remove_one(struct platform_device *odev)
-+{
-+	struct tpm_chip *chip = dev_get_drvdata(&odev->dev);
-+	tpm_dev_vendor_release(chip);
-+	kfree(chip);
-+	return 0;
-+}
-+#endif
-+
-+static struct platform_driver tis_driver = {
- 	.driver = {
- 		.name = "tpm_tis",
- 		.owner		= THIS_MODULE,
- 		.pm		= &tpm_tis_pm,
-+		.of_match_table = of_match_ptr(tis_of_platform_match),
- 	},
-+#ifdef CONFIG_OF
-+	.probe = tis_of_probe_one,
-+	.remove = __devexit_p(tis_of_remove_one)
-+#endif
- };
- 
- static struct platform_device *pdev;
-@@ -842,15 +884,22 @@ static int __init init_tis(void)
- 		return pnp_register_driver(&tis_pnp_driver);
- #endif
- 
--	rc = platform_driver_register(&tis_drv);
-+	rc = platform_driver_register(&tis_driver);
- 	if (rc < 0)
- 		return rc;
--	if (IS_ERR(pdev=platform_device_register_simple("tpm_tis", -1, NULL, 0)))
-+	/* TIS_MEM_BASE is only going to work on x86.. */
-+#ifndef CONFIG_OF
-+	pdev = platform_device_register_simple("tpm_tis", -1, NULL, 0);
-+	if (IS_ERR(pdev)) {
-+		platform_driver_unregister(&tis_driver);
- 		return PTR_ERR(pdev);
--	if((rc=tpm_tis_init(&pdev->dev, TIS_MEM_BASE, TIS_MEM_LEN, 0)) != 0) {
-+	}
-+	rc = tpm_tis_init(&pdev->dev, TIS_MEM_BASE, TIS_MEM_LEN, 0, 1);
-+	if (rc != 0) {
- 		platform_device_unregister(pdev);
--		platform_driver_unregister(&tis_drv);
-+		platform_driver_unregister(&tis_driver);
- 	}
-+#endif
- 	return rc;
- }
- 
-@@ -882,7 +931,7 @@ static void __exit cleanup_tis(void)
- 	}
- #endif
- 	platform_device_unregister(pdev);
--	platform_driver_unregister(&tis_drv);
-+	platform_driver_unregister(&tis_driver);
- }
- 
- module_init(init_tis);
--- 
-1.7.5.4
+I can see why you went this path with the iommu driver as it already had
+some integration code present here. I have some concerns going forward
+about how this should be long-term. Take any platform booting only with
+DT populated, we'd like to avoid having to use this approach where
+platform private APIs are called via pdata. In fact, it's going to makes
+thing ugly to carry any sort of pdata for a driver that's otherwise
+driven exclusively from DT.
+
+For AM335x, I can implement this approach, but it means adding some
+pruss specific integration code just to have it create the pdata for
+reset_name and assert/deassert.
+
+>From reading all the threads on hardresets and OMAP, it seems we may not
+be able to come up with a generic OMAP handler for these resets and
+that's really reflected in the fact that this API exists. So given that,
+it reasons that OMAP isn't the only one needing a reset API for drivers.
+I'm thinking that (as trivial as it may seem), this support may need to
+move to a reset subsystem such that drivers have a clean way to access
+reset resources in an SoC.
+
+I'm curious if you or others have thought about where this needs to go
+next. When I first thought about a reset subsystem it seemed to trivial
+to bother with but looking at the reasoning behind the power_seq
+subsystem, it seems to have similar justification to get this machine
+specific logic out of the platform code and under standardized control
+of the driver. We have resources that are manipulated outside of the IP
+block but need to be controlled at the driver level and probably should
+have a common driver API that isn't OMAP specific and tied to pdata.
+
+-Matt
