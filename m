@@ -1,18 +1,11 @@
 From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/5] watchdog: at91sam9_wdt: add device tree support
-Date: Tue, 2 Oct 2012 17:04:05 +0200
-Message-ID: <CAHkwnC83DcKXZOtLse_xnYe7zOZ5qwGJVimLkBzDwSJ7Y5vL_Q@mail.gmail.com>
-References: <1349094281-28889-1-git-send-email-fabio.porcedda@gmail.com>
- <1349094281-28889-4-git-send-email-fabio.porcedda@gmail.com>
- <20121001124546.GE11837@lunn.ch>
- <CAHkwnC_u+bMX7REU5G3u=cm3VGmOUn+AShruw+ERkPJWtZpxUg@mail.gmail.com>
- <CAHkwnC_5wRgf-DGnUfzkrreT_E1v8i=G8U0qo_5t1DY6+L7c+w@mail.gmail.com>
- <20121001130658.GG11837@lunn.ch>
+Subject: [PATCH v7 0/3] watchdog: at91sam9_wdt: add device tree support
+Date: Tue,  2 Oct 2012 18:00:59 +0200
+Message-ID: <1349193662-23482-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121001130658.GG11837-g2DYL2Zd6BY@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,117 +16,49 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 1, 2012 at 3:06 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
-> On Mon, Oct 01, 2012 at 02:54:55PM +0200, Fabio Porcedda wrote:
->> On Mon, Oct 1, 2012 at 2:48 PM, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > On Mon, Oct 1, 2012 at 2:45 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
->> >> On Mon, Oct 01, 2012 at 02:24:39PM +0200, Fabio Porcedda wrote:
->> >>> Tested on an at91sam9260 board (evk-pro3)
->> >>>
->> >>> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >>> ---
->> >>>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
->> >>>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
->> >>>  2 files changed, 40 insertions(+)
->> >>>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> >>>
->> >>> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> >>> new file mode 100644
->> >>> index 0000000..65c1755
->> >>> --- /dev/null
->> >>> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
->> >>> @@ -0,0 +1,19 @@
->> >>> +* Atmel Watchdog Timers
->> >>> +
->> >>> +** at91sam9-wdt
->> >>> +
->> >>> +Required properties:
->> >>> +- compatible: must be "atmel,at91sam9260-wdt".
->> >>> +- reg: physical base address of the controller and length of memory mapped
->> >>> +  region.
->> >>> +
->> >>> +Optional properties:
->> >>> +- timeout: contains the watchdog timeout in seconds.
->> >>> +
->> >>> +Example:
->> >>> +
->> >>> +     watchdog@fffffd40 {
->> >>> +             compatible = "atmel,at91sam9260-wdt";
->> >>> +             reg = <0xfffffd40 0x10>;
->> >>> +             timeout = <10>;
->> >>> +     };
->> >>> diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
->> >>> index 05e1be8..c9e6bfa 100644
->> >>> --- a/drivers/watchdog/at91sam9_wdt.c
->> >>> +++ b/drivers/watchdog/at91sam9_wdt.c
->> >>> @@ -32,6 +32,7 @@
->> >>>  #include <linux/timer.h>
->> >>>  #include <linux/bitops.h>
->> >>>  #include <linux/uaccess.h>
->> >>> +#include <linux/of.h>
->> >>>
->> >>>  #include "at91sam9_wdt.h"
->> >>>
->> >>> @@ -254,6 +255,14 @@ static struct miscdevice at91wdt_miscdev = {
->> >>>       .fops           = &at91wdt_fops,
->> >>>  };
->> >>>
->> >>> +static inline void __init at91wdt_probe_dt(struct device_node *node)
->> >>> +{
->> >>> +     if (!node)
->> >>> +             return;
->> >>> +
->> >>> +     of_property_read_u32(node, "timeout", &heartbeat);
->> >>> +}
->> >>> +
->> >>
->> >> In patch #1 you add a function to do this, and then you don't make use
->> >> of it here ?
->> >>
->> >> Or am i missing something?
->> >
->> > I'm using it on the patch #2 for the orion_wdt driver.
->> > Do you think it's better to join the #1 and the #2 patch?
->> >
->> > Best regards
->> > --
->> > Fabio Porcedda
->>
->> I'm sorry, only now i understand your question.
->> The at91sam9_wdt driver don't use the watchdog core framework si i
->> can't use that function cleanly.
->
->> The patch #1 and #2 are for introducing the same property as the
->> at91sam9_wdt driver.
->
-> So maybe split this up into two different patchsets. One patchset to
-> add the helper function, and the use of this helper to all watchdog
-> divers that can use it. I think the following drivers should be
-> modified:
->
-> orion_wdt.c
-> pnx4008_wdt.c
-> s3c2410_wdt.c
->
-> In a second patchset, convert the AT91SAM9 driver over to the watchdog
-> core framework, and then use the helper function.
+Hi all,
 
-I was thinking to add a more generic helper function like this:
+This patchset is for adding device tree support to the
+at91sam9_wdt driver.
 
-static inline void watchdog_get_dttimeout(struct device_node *node,
-u32 *timeout)
-{
-	if (node)
-		of_property_read_u32(node, "timeout", &wdd->timeout);
-}
+Another patchset will follow to add the new "timeout" binding to the
+watchdog framework, at91sam9_wdt driver and to all the relevant drivers.
 
-This way i can use this helper function in the at91sam9_wdt driver too.
-What do you think?
+Changes:
+v7:
+ - split the patchset
+ - remove timeout binding
+v6:
+ - add watchdog core proprty timeout binding
+ - add as example to the orion_wdt driver the new timeout binding
+v5:
+ - split dts commit in two, one for socs and one for boards.
+v4:
+ - use "atmel,at91sam9260-wdt" as compatible
+v3:
+ - add heartbeat option
+ - default disabled for all the soc, enable only for evk-pro3 board
+ - add at91sam9263 and at91sam9g45 soc
+v2:
+ - add missing to and cc addresses
 
-Best regards
+Fabio Porcedda (3):
+  watchdog: at91sam9_wdt: add device tree support
+  ARM: at91/dts: add at91sam9_wdt driver to at91sam926x, at91sam9g45
+  ARM: at91/dts: evk-pro3: enable watchdog
+
+ Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 15 +++++++++++++++
+ arch/arm/boot/dts/at91sam9260.dtsi                       |  6 ++++++
+ arch/arm/boot/dts/at91sam9263.dtsi                       |  6 ++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi                       |  6 ++++++
+ arch/arm/boot/dts/evk-pro3.dts                           |  4 ++++
+ drivers/watchdog/at91sam9_wdt.c                          | 11 +++++++++++
+ 6 files changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+
 -- 
-Fabio Porcedda
+1.7.11.3
