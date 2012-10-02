@@ -1,143 +1,57 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v6 3/5] watchdog: at91sam9_wdt: add device tree support
-Date: Tue, 2 Oct 2012 21:00:20 +0200
-Message-ID: <20121002190020.GD5117@game.jcrosoft.org>
-References: <1349094281-28889-1-git-send-email-fabio.porcedda@gmail.com>
- <1349094281-28889-4-git-send-email-fabio.porcedda@gmail.com>
- <20121001124546.GE11837@lunn.ch>
- <CAHkwnC_u+bMX7REU5G3u=cm3VGmOUn+AShruw+ERkPJWtZpxUg@mail.gmail.com>
- <CAHkwnC_5wRgf-DGnUfzkrreT_E1v8i=G8U0qo_5t1DY6+L7c+w@mail.gmail.com>
- <20121001130658.GG11837@lunn.ch>
- <CAHkwnC83DcKXZOtLse_xnYe7zOZ5qwGJVimLkBzDwSJ7Y5vL_Q@mail.gmail.com>
+From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Subject: Re: [PATCHv3 1/4] mfd: smsc: Add support for smsc gpio io/keypad driver
+Date: Wed, 3 Oct 2012 00:42:12 +0530
+Message-ID: <CAAe_U6LFOzSe9PDnFhjk4G5vXjoz3QSBM99NL4okjq2s5V0t3Q@mail.gmail.com>
+References: <1349089282-22105-1-git-send-email-sourav.poddar@ti.com>
+	<CAAe_U6+zEGuwMC1yn7O=LXE6PhPvPc2i7DCF0EAprkE8s+-iEw@mail.gmail.com>
+	<20121001114454.GA9170@sirena.org.uk>
+	<CAAe_U6JX9QDWvWA3KH7E9sOv0EHGkozVONuXDgn+a2MZ4GTE7Q@mail.gmail.com>
+	<20121001120907.GK4360@opensource.wolfsonmicro.com>
+	<CAAe_U6K6nAjsZUOk2rBFweWHtJmcLF7EJDpu9O6FXrq3tzv3yg@mail.gmail.com>
+	<20121002123856.GX4360@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAHkwnC83DcKXZOtLse_xnYe7zOZ5qwGJVimLkBzDwSJ7Y5vL_Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Porcedda <fabio.porcedda@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Wim Van Sebroeck <wim@iguana.be>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20121002123856.GX4360@opensource.wolfsonmicro.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 17:04 Tue 02 Oct     , Fabio Porcedda wrote:
-> On Mon, Oct 1, 2012 at 3:06 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> > On Mon, Oct 01, 2012 at 02:54:55PM +0200, Fabio Porcedda wrote:
-> >> On Mon, Oct 1, 2012 at 2:48 PM, Fabio Porcedda <fabio.porcedda@gmail.com> wrote:
-> >> > On Mon, Oct 1, 2012 at 2:45 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-> >> >> On Mon, Oct 01, 2012 at 02:24:39PM +0200, Fabio Porcedda wrote:
-> >> >>> Tested on an at91sam9260 board (evk-pro3)
-> >> >>>
-> >> >>> Signed-off-by: Fabio Porcedda <fabio.porcedda@gmail.com>
-> >> >>> ---
-> >> >>>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
-> >> >>>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
-> >> >>>  2 files changed, 40 insertions(+)
-> >> >>>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> >> >>>
-> >> >>> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> >> >>> new file mode 100644
-> >> >>> index 0000000..65c1755
-> >> >>> --- /dev/null
-> >> >>> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> >> >>> @@ -0,0 +1,19 @@
-> >> >>> +* Atmel Watchdog Timers
-> >> >>> +
-> >> >>> +** at91sam9-wdt
-> >> >>> +
-> >> >>> +Required properties:
-> >> >>> +- compatible: must be "atmel,at91sam9260-wdt".
-> >> >>> +- reg: physical base address of the controller and length of memory mapped
-> >> >>> +  region.
-> >> >>> +
-> >> >>> +Optional properties:
-> >> >>> +- timeout: contains the watchdog timeout in seconds.
-> >> >>> +
-> >> >>> +Example:
-> >> >>> +
-> >> >>> +     watchdog@fffffd40 {
-> >> >>> +             compatible = "atmel,at91sam9260-wdt";
-> >> >>> +             reg = <0xfffffd40 0x10>;
-> >> >>> +             timeout = <10>;
-> >> >>> +     };
-> >> >>> diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
-> >> >>> index 05e1be8..c9e6bfa 100644
-> >> >>> --- a/drivers/watchdog/at91sam9_wdt.c
-> >> >>> +++ b/drivers/watchdog/at91sam9_wdt.c
-> >> >>> @@ -32,6 +32,7 @@
-> >> >>>  #include <linux/timer.h>
-> >> >>>  #include <linux/bitops.h>
-> >> >>>  #include <linux/uaccess.h>
-> >> >>> +#include <linux/of.h>
-> >> >>>
-> >> >>>  #include "at91sam9_wdt.h"
-> >> >>>
-> >> >>> @@ -254,6 +255,14 @@ static struct miscdevice at91wdt_miscdev = {
-> >> >>>       .fops           = &at91wdt_fops,
-> >> >>>  };
-> >> >>>
-> >> >>> +static inline void __init at91wdt_probe_dt(struct device_node *node)
-> >> >>> +{
-> >> >>> +     if (!node)
-> >> >>> +             return;
-> >> >>> +
-> >> >>> +     of_property_read_u32(node, "timeout", &heartbeat);
-> >> >>> +}
-> >> >>> +
-> >> >>
-> >> >> In patch #1 you add a function to do this, and then you don't make use
-> >> >> of it here ?
-> >> >>
-> >> >> Or am i missing something?
-> >> >
-> >> > I'm using it on the patch #2 for the orion_wdt driver.
-> >> > Do you think it's better to join the #1 and the #2 patch?
-> >> >
-> >> > Best regards
-> >> > --
-> >> > Fabio Porcedda
-> >>
-> >> I'm sorry, only now i understand your question.
-> >> The at91sam9_wdt driver don't use the watchdog core framework si i
-> >> can't use that function cleanly.
-> >
-> >> The patch #1 and #2 are for introducing the same property as the
-> >> at91sam9_wdt driver.
-> >
-> > So maybe split this up into two different patchsets. One patchset to
-> > add the helper function, and the use of this helper to all watchdog
-> > divers that can use it. I think the following drivers should be
-> > modified:
-> >
-> > orion_wdt.c
-> > pnx4008_wdt.c
-> > s3c2410_wdt.c
-> >
-> > In a second patchset, convert the AT91SAM9 driver over to the watchdog
-> > core framework, and then use the helper function.
-> 
-> I was thinking to add a more generic helper function like this:
-> 
-> static inline void watchdog_get_dttimeout(struct device_node *node,
-> u32 *timeout)
-> {
-> 	if (node)
-> 		of_property_read_u32(node, "timeout", &wdd->timeout);
-> }
-> 
-> This way i can use this helper function in the at91sam9_wdt driver too.
-> What do you think?
-timeout_sec and this can be move at of.h level
+Hi,
 
-as this is not watchdog framework secific
+On Tue, Oct 2, 2012 at 6:08 PM, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> On Mon, Oct 01, 2012 at 08:54:23PM +0530, ABRAHAM, KISHON VIJAY wrote:
+>> On Mon, Oct 1, 2012 at 5:39 PM, Mark Brown
+>
+>> > Why would that be helpful?  Most platforms don't support DT at all, and
+>
+>> I'm not sure how to put it correctly. All I'm trying to tell is mfd is
+>> a framework that exposes a set of API's to create and remove a device
+>> among others. If a mfd child device is not created using mfd API,
+>> it'll be unfair to expect that child be removed properly using mfd
+>> API. Like in this patch, the device is created using
+>> of_platform_populate (not a mfd API) but is removed using
+>> mfd_remove_devices (mfd API) [which should result in an abort].
+>
+> That doesn't sound terribly clever, no, though it's not immediately
+> clear to me if the non-clever bit is using mfd_remove_devices() or
+> of_platform_populate().
+>
+>> This means mfd framework does not have an API to create a device from
+>> dt data or so do I think since of_platform_populate() is used. Thats
+>> why I suggested the idea of extending mfd_add_devices() (or adding a
+>> new API in mfd framework) to create child devices from dt data so that
+>> we'll have API's in mfd framework to both create and delete a device.
+>
+> The trouble that always exists with representing MFD children in DT is
+> that unless you've got a usefully reusable IP block which is clearly
+> separate from the chip integration you end up essentially just dumping
+> the Linux data structures into DT which often doesn't leave you with
+> something which describes the hardware.
 
-Best Regards,
-J.
+indeed!
+
+Thanks
+Kishon
