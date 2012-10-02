@@ -1,57 +1,48 @@
-From: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Subject: Re: [PATCHv3 1/4] mfd: smsc: Add support for smsc gpio io/keypad driver
-Date: Wed, 3 Oct 2012 00:42:12 +0530
-Message-ID: <CAAe_U6LFOzSe9PDnFhjk4G5vXjoz3QSBM99NL4okjq2s5V0t3Q@mail.gmail.com>
-References: <1349089282-22105-1-git-send-email-sourav.poddar@ti.com>
-	<CAAe_U6+zEGuwMC1yn7O=LXE6PhPvPc2i7DCF0EAprkE8s+-iEw@mail.gmail.com>
-	<20121001114454.GA9170@sirena.org.uk>
-	<CAAe_U6JX9QDWvWA3KH7E9sOv0EHGkozVONuXDgn+a2MZ4GTE7Q@mail.gmail.com>
-	<20121001120907.GK4360@opensource.wolfsonmicro.com>
-	<CAAe_U6K6nAjsZUOk2rBFweWHtJmcLF7EJDpu9O6FXrq3tzv3yg@mail.gmail.com>
-	<20121002123856.GX4360@opensource.wolfsonmicro.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] watchdog: at91sam9_wdt: add device tree support
+Date: Tue, 2 Oct 2012 21:59:14 +0200
+Message-ID: <20121002195914.GG21046@lunn.ch>
+References: <1349094281-28889-1-git-send-email-fabio.porcedda@gmail.com>
+ <1349094281-28889-4-git-send-email-fabio.porcedda@gmail.com>
+ <20121001124546.GE11837@lunn.ch>
+ <CAHkwnC_u+bMX7REU5G3u=cm3VGmOUn+AShruw+ERkPJWtZpxUg@mail.gmail.com>
+ <CAHkwnC_5wRgf-DGnUfzkrreT_E1v8i=G8U0qo_5t1DY6+L7c+w@mail.gmail.com>
+ <20121001130658.GG11837@lunn.ch>
+ <CAHkwnC83DcKXZOtLse_xnYe7zOZ5qwGJVimLkBzDwSJ7Y5vL_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20121002123856.GX4360@opensource.wolfsonmicro.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com, sameo@linux.intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHkwnC83DcKXZOtLse_xnYe7zOZ5qwGJVimLkBzDwSJ7Y5vL_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> I was thinking to add a more generic helper function like this:
+> 
+> static inline void watchdog_get_dttimeout(struct device_node *node,
+> u32 *timeout)
+> {
+> 	if (node)
+> 		of_property_read_u32(node, "timeout", &wdd->timeout);
+> }
 
-On Tue, Oct 2, 2012 at 6:08 PM, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> On Mon, Oct 01, 2012 at 08:54:23PM +0530, ABRAHAM, KISHON VIJAY wrote:
->> On Mon, Oct 1, 2012 at 5:39 PM, Mark Brown
->
->> > Why would that be helpful?  Most platforms don't support DT at all, and
->
->> I'm not sure how to put it correctly. All I'm trying to tell is mfd is
->> a framework that exposes a set of API's to create and remove a device
->> among others. If a mfd child device is not created using mfd API,
->> it'll be unfair to expect that child be removed properly using mfd
->> API. Like in this patch, the device is created using
->> of_platform_populate (not a mfd API) but is removed using
->> mfd_remove_devices (mfd API) [which should result in an abort].
->
-> That doesn't sound terribly clever, no, though it's not immediately
-> clear to me if the non-clever bit is using mfd_remove_devices() or
-> of_platform_populate().
->
->> This means mfd framework does not have an API to create a device from
->> dt data or so do I think since of_platform_populate() is used. Thats
->> why I suggested the idea of extending mfd_add_devices() (or adding a
->> new API in mfd framework) to create child devices from dt data so that
->> we'll have API's in mfd framework to both create and delete a device.
->
-> The trouble that always exists with representing MFD children in DT is
-> that unless you've got a usefully reusable IP block which is clearly
-> separate from the chip integration you end up essentially just dumping
-> the Linux data structures into DT which often doesn't leave you with
-> something which describes the hardware.
+You forgot to change the function signature. 
 
-indeed!
+Also, if you are adding a generic function, it should be a generic
+function for the framework. All drivers should be slowly moving
+towards the framework, so adding functions which help you not move
+towards the framework are wrong.
 
-Thanks
-Kishon
+	Andrew
