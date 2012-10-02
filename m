@@ -1,76 +1,139 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [PATCH v2 RESEND 2/2] ARM: local timers: add timer support using
- IO mapped register
-Date: Tue, 2 Oct 2012 16:03:33 +0100
-Message-ID: <20121002150333.GC2108@linaro.org>
-References: <1347694914-1457-1-git-send-email-rvaswani@codeaurora.org>
- <1347694914-1457-2-git-send-email-rvaswani@codeaurora.org>
- <5062013F.8050507@codeaurora.org>
- <20120928122858.GD9472@e106331-lin.cambridge.arm.com>
- <20120928155746.GB2253@linaro.org>
- <20120928171549.GA29991@e102568-lin.cambridge.arm.com>
- <20121002112704.GA2410@linaro.org>
- <20121002134444.GB28600@e102568-lin.cambridge.arm.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] watchdog: at91sam9_wdt: add device tree support
+Date: Tue, 2 Oct 2012 17:04:05 +0200
+Message-ID: <CAHkwnC83DcKXZOtLse_xnYe7zOZ5qwGJVimLkBzDwSJ7Y5vL_Q@mail.gmail.com>
+References: <1349094281-28889-1-git-send-email-fabio.porcedda@gmail.com>
+ <1349094281-28889-4-git-send-email-fabio.porcedda@gmail.com>
+ <20121001124546.GE11837@lunn.ch>
+ <CAHkwnC_u+bMX7REU5G3u=cm3VGmOUn+AShruw+ERkPJWtZpxUg@mail.gmail.com>
+ <CAHkwnC_5wRgf-DGnUfzkrreT_E1v8i=G8U0qo_5t1DY6+L7c+w@mail.gmail.com>
+ <20121001130658.GG11837@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121002134444.GB28600@e102568-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Bryan Huntsman <bryanh@codeaurora.org>, Rob Landley <rob@landley.net>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121001130658.GG11837-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 02, 2012 at 02:44:44PM +0100, Lorenzo Pieralisi wrote:
-> On Tue, Oct 02, 2012 at 12:27:04PM +0100, Dave Martin wrote:
-> > On Fri, Sep 28, 2012 at 06:15:53PM +0100, Lorenzo Pieralisi wrote:
-> > > On Fri, Sep 28, 2012 at 04:57:46PM +0100, Dave Martin wrote:
-> 
-> [...]
-> 
-> > > There must be a common way for all devices to link to the topology, though.
-> > > 
-> > > The topology must be descriptive enough to cater for all required cases
-> > > and that's what Mark with PMU and all of us are trying to come up with, a solid
-> > > way to represent with DT the topology of current and future ARM systems.
-> > > 
-> > > First idea I implemented and related LAK posting:
-> > > 
-> > > http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080873.html
-> > > 
-> > > Are "cluster" nodes really needed or "cpu" nodes are enough ? I do not
-> > > know, let's get this discussion started, that's all I need.
-> > 
-> > One thing which now occurs to me on this point it that if we want to describe
-> > the CCI properly in the DT (yes) then we need a way to describe the mapping
-> > between clusters and CCI slave ports.  Currently that knowledge just has to
-> > be a hard-coded hack somewhere: it's not probeable at all.
-> 
-> That's definitely a good point. We can still define CCI ports as belonging
-> to a range of CPUs, but that's a bit of a stretch IMHO.
-> 
-> > I'm not sure how we do that, or how we describe the cache topology, without
-> > the clusters being explicit in the DT
-> > 
-> > ...unless you already have ideas ?
-> 
-> Either we define the cluster node explicitly or we can always see it as a
-> collection of CPUs, ie phandles to "cpu" nodes. That's what the decision
-> we have to make is all about. I think that describing it explicitly make
-> sense, but we need to check all possible use cases to see if that's
-> worthwhile.
+On Mon, Oct 1, 2012 at 3:06 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> On Mon, Oct 01, 2012 at 02:54:55PM +0200, Fabio Porcedda wrote:
+>> On Mon, Oct 1, 2012 at 2:48 PM, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Mon, Oct 1, 2012 at 2:45 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>> >> On Mon, Oct 01, 2012 at 02:24:39PM +0200, Fabio Porcedda wrote:
+>> >>> Tested on an at91sam9260 board (evk-pro3)
+>> >>>
+>> >>> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>> ---
+>> >>>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
+>> >>>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
+>> >>>  2 files changed, 40 insertions(+)
+>> >>>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> >>>
+>> >>> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> >>> new file mode 100644
+>> >>> index 0000000..65c1755
+>> >>> --- /dev/null
+>> >>> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+>> >>> @@ -0,0 +1,19 @@
+>> >>> +* Atmel Watchdog Timers
+>> >>> +
+>> >>> +** at91sam9-wdt
+>> >>> +
+>> >>> +Required properties:
+>> >>> +- compatible: must be "atmel,at91sam9260-wdt".
+>> >>> +- reg: physical base address of the controller and length of memory mapped
+>> >>> +  region.
+>> >>> +
+>> >>> +Optional properties:
+>> >>> +- timeout: contains the watchdog timeout in seconds.
+>> >>> +
+>> >>> +Example:
+>> >>> +
+>> >>> +     watchdog@fffffd40 {
+>> >>> +             compatible = "atmel,at91sam9260-wdt";
+>> >>> +             reg = <0xfffffd40 0x10>;
+>> >>> +             timeout = <10>;
+>> >>> +     };
+>> >>> diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
+>> >>> index 05e1be8..c9e6bfa 100644
+>> >>> --- a/drivers/watchdog/at91sam9_wdt.c
+>> >>> +++ b/drivers/watchdog/at91sam9_wdt.c
+>> >>> @@ -32,6 +32,7 @@
+>> >>>  #include <linux/timer.h>
+>> >>>  #include <linux/bitops.h>
+>> >>>  #include <linux/uaccess.h>
+>> >>> +#include <linux/of.h>
+>> >>>
+>> >>>  #include "at91sam9_wdt.h"
+>> >>>
+>> >>> @@ -254,6 +255,14 @@ static struct miscdevice at91wdt_miscdev = {
+>> >>>       .fops           = &at91wdt_fops,
+>> >>>  };
+>> >>>
+>> >>> +static inline void __init at91wdt_probe_dt(struct device_node *node)
+>> >>> +{
+>> >>> +     if (!node)
+>> >>> +             return;
+>> >>> +
+>> >>> +     of_property_read_u32(node, "timeout", &heartbeat);
+>> >>> +}
+>> >>> +
+>> >>
+>> >> In patch #1 you add a function to do this, and then you don't make use
+>> >> of it here ?
+>> >>
+>> >> Or am i missing something?
+>> >
+>> > I'm using it on the patch #2 for the orion_wdt driver.
+>> > Do you think it's better to join the #1 and the #2 patch?
+>> >
+>> > Best regards
+>> > --
+>> > Fabio Porcedda
+>>
+>> I'm sorry, only now i understand your question.
+>> The at91sam9_wdt driver don't use the watchdog core framework si i
+>> can't use that function cleanly.
+>
+>> The patch #1 and #2 are for introducing the same property as the
+>> at91sam9_wdt driver.
+>
+> So maybe split this up into two different patchsets. One patchset to
+> add the helper function, and the use of this helper to all watchdog
+> divers that can use it. I think the following drivers should be
+> modified:
+>
+> orion_wdt.c
+> pnx4008_wdt.c
+> s3c2410_wdt.c
+>
+> In a second patchset, convert the AT91SAM9 driver over to the watchdog
+> core framework, and then use the helper function.
 
-How is the cache topology described today (forgive my laziness in not
-answering this question for myself)?  The issues are somewhat similar.
+I was thinking to add a more generic helper function like this:
 
-I still have some misgivings about describing clusters in terms of sets of
-CPUs.  For example, when we boot up a cluster, we have to set up ... the
-cluster.  This is a distinct thing which we must set up in addition to
-any of the actual CPUs.
+static inline void watchdog_get_dttimeout(struct device_node *node,
+u32 *timeout)
+{
+	if (node)
+		of_property_read_u32(node, "timeout", &wdd->timeout);
+}
 
-There is a strict child/parent relationship between clusters and CPUs, so
-a tree of nodes does seem the most natural description ... but I'm not
-aware of all the background to this discussion.
+This way i can use this helper function in the at91sam9_wdt driver too.
+What do you think?
 
-Cheers
----Dave
+Best regards
+-- 
+Fabio Porcedda
