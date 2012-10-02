@@ -1,198 +1,164 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/2] pwm: pwm-tiecap: Add device-tree binding support for
- APWM driver
-Date: Tue, 2 Oct 2012 08:00:14 +0200
-Message-ID: <20121002060014.GA4298@avionic-0098.mockup.avionic-design.de>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 2/2] pwm: pwm-tiehrpwm: Add device-tree binding support
+ for EHRPWM driver
+Date: Tue, 2 Oct 2012 08:11:43 +0200
+Message-ID: <20121002061143.GB4298@avionic-0098.mockup.avionic-design.de>
 References: <1348658863-29428-1-git-send-email-avinashphilip@ti.com>
- <1348658863-29428-2-git-send-email-avinashphilip@ti.com>
+ <1348658863-29428-3-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1348658863-29428-2-git-send-email-avinashphilip@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com
+Content-Type: multipart/mixed; boundary="===============6550221682218946843=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348658863-29428-3-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---FL5UXtIhxfXey3p5
+--===============6550221682218946843==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
+Content-Disposition: inline
+
+
+--aM3YZ0Iwxop3KEKx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 26, 2012 at 04:57:42PM +0530, Philip, Avinash wrote:
-[...]
-> +#include <linux/platform_data/ti-pwmss.h>
-[...]
-> +static struct pwmss_platform_data am33xx_data =3D {
-> +	.has_configspace	=3D true,
-> +};
+On Wed, Sep 26, 2012 at 04:57:43PM +0530, Philip, Avinash wrote:
+> Add support for device-tree binding and of_xlate for EHRWPM driver.
+> of_xlate provides EHRPWM polarity configuration from client driver
+> device-tree.
+> Also size of pwm-cells set to 3 to support pwm channel number, pwm
+> period & polarity configuration from device tree.
 
-This structure is defined in a public header. I don't see why it has to,
-given that it's only used to associate some data with an of_device_id
-entry below. Since AM33xx never had anything but OF support in the
-mainline kernel I don't think we should add platform data.
+Oh, I forgot to mention this in my reply to the previous patch, but you
+should consistently use PWM to refer to PWM devices, so the above should
+be "PWM channel number" and "PWM period & polarity". And the property is
+named "#pwm-cells".
 
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id ecap_of_match[] =3D {
-> +	{
-> +		.compatible	=3D "ti,am33xx-ecap",
-> +		.data		=3D &am33xx_data,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, ecap_of_match);
-> +#endif
+> Signed-off-by: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+> ---
+> :000000 100644 0000000... 05d9d63... A	Documentation/devicetree/bindings/=
+pwm/pwm-tiehrpwm.txt
+> :100644 100644 caf00fe... ae23c2b... M	drivers/pwm/pwm-tiehrpwm.c
+>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   26 +++++
+>  drivers/pwm/pwm-tiehrpwm.c                         |  107 ++++++++++++++=
+++++++
+>  2 files changed, 133 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Doc=
+umentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+> new file mode 100644
+> index 0000000..05d9d63
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+> @@ -0,0 +1,26 @@
+> +TI SOC EHRPWM based PWM controller
 > +
+> +Required properties:
+> +- compatible : Must be "ti,am33xx-ehrpwm"
+> +- #pwm-cells: Should be 3. Number of cells being used to specify PWM pro=
+perty.
+> +  First cell specifies the per-chip index of the PWM to use, the second
+> +  cell is the period cycle in nanoseconds and the third cell is the
 
-I don't quite see why we need to pass this platform data to the device
-at all since there is no other variant anyway. I think this should only
-be added if this turns out to be required at some point.
+"period cycle" doesn't make much sense. It should be "period" only. This
+also applies to the previous patch.
 
->  static int __devinit ecap_pwm_probe(struct platform_device *pdev)
->  {
->  	int ret;
->  	struct resource *r;
->  	struct clk *clk;
->  	struct ecap_pwm_chip *pc;
-> +	struct pwmss_platform_data *pdata =3D pdev->dev.platform_data;
-> +	const struct of_device_id *match;
-> +	u16 regval;
-> +	struct pinctrl *pinctrl;
-> +
-> +	match =3D of_match_device(of_match_ptr(ecap_of_match), &pdev->dev);
+> +  polarity of PWM output. Polarity 0 gives normal polarity and 1 gives
+> +  inversed polarity (inverse duty cycle)
 
-I've never seen of_match_ptr() used this way. Maybe you should think
-about not #ifdef'ing OF specific code at all. That way ecap_of_match
-will always exist and you could use the IS_ENABLED() macro to
-conditionalize at compile time. The compiler will probably be clever
-enough to optimize the ecap_of_match away if OF is not enabled.
+I don't think "inversed" exists. It should be either "inverted polarity"
+or "inverse polarity".
 
-Given my comment earlier, since AM33xx is OF only you might just as well
-add a depends on OF to this driver and things will become a lot easier.
+> +- reg: physical base address and size of the registers map. For am33xx,
+> +  2 register maps are present (EHRPWM register space & PWM subsystem com=
+mon
+> +  config space). Order should be maintained with EHRPWM register map as =
+first
+> +  entry & PWM subsystem common config space as second entry.
+> +
+> +Optional properties:
+> +- ti,hwmods: Name of the hwmod associated to the EHRPWM:
+> +  "ehrpwm<x>", <x> being the 0-based instance number from the HW spec
 
-> +
-> +	if (match)
-> +		pdata =3D (struct pwmss_platform_data *)match->data;
-> +
-> +	pinctrl =3D devm_pinctrl_get_select_default(&pdev->dev);
-> +	if (IS_ERR(pinctrl))
-> +		dev_warn(&pdev->dev, "failed to configure pins from driver\n");
-> =20
->  	pc =3D devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
->  	if (!pc) {
-> @@ -211,6 +268,8 @@ static int __devinit ecap_pwm_probe(struct platform_d=
-evice *pdev)
-> =20
->  	pc->chip.dev =3D &pdev->dev;
->  	pc->chip.ops =3D &ecap_pwm_ops;
-> +	pc->chip.of_xlate =3D of_ecap_xlate;
-> +	pc->chip.of_pwm_n_cells =3D PWM_CELL_SIZE;
->  	pc->chip.base =3D -1;
->  	pc->chip.npwm =3D 1;
-> =20
-> @@ -231,13 +290,56 @@ static int __devinit ecap_pwm_probe(struct platform=
-_device *pdev)
->  	}
-> =20
->  	pm_runtime_enable(&pdev->dev);
-> +
-> +	/*
-> +	 * Some platform has extra PWM-subsystem common config space
-> +	 * and requires special handling of clock gating.
-> +	 */
-> +	if (pdata && pdata->has_configspace) {
-> +		r =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +		if (!r) {
-> +			dev_err(&pdev->dev, "no memory resource defined\n");
-> +			ret =3D -ENODEV;
-> +			goto err_disable_clock;
-> +		}
-> +
-> +		pc->config_base =3D devm_ioremap(&pdev->dev, r->start,
-> +				resource_size(r));
-> +		if (!pc->config_base) {
-> +			dev_err(&pdev->dev, "failed to ioremap() registers\n");
-> +			ret =3D -EADDRNOTAVAIL;
-> +			goto err_disable_clock;
-> +		}
+I don't see where this property is used. There is no code in this patch
+that parses it.
 
-Isn't this missing a request_mem_region()? I assume you don't do that
-here because you need the same region in the EHRPWM driver, right? This
-should be indication enough that the design is not right here. I think
-we need a proper abstraction here. Can this not be done via PM runtime
-support? If not, maybe this should be represented by clock objects since
-the bit obviously enables a clock.
+> +static struct pwm_device *of_ehrpwm_xlate(struct pwm_chip *chip,
+> +		const struct of_phandle_args *args)
+> +{
+> +	struct pwm_device *pwm;
+> +
+> +	if (chip->of_pwm_n_cells < PWM_CELL_SIZE)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	if (args->args[0] >=3D chip->npwm)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	pwm =3D pwm_request_from_chip(chip, args->args[0], NULL);
+> +	if (IS_ERR(pwm))
+> +		return pwm;
+> +
+> +	pwm_set_period(pwm, args->args[1]);
+> +	pwm_set_polarity(pwm, args->args[2]);
+> +	return pwm;
+> +}
 
-> +
-> +		/* Enable ECAP clock gating at PWM-subsystem common config */
-> +		pm_runtime_get_sync(&pdev->dev);
-> +		regval =3D readw(pc->config_base + PWMSS_CLKCONFIG);
-> +		regval |=3D PWMSS_ECAP_CLK_EN;
-> +		writew(regval, pc->config_base + PWMSS_CLKCONFIG);
-> +		pm_runtime_put_sync(&pdev->dev);
-> +	}
-> +
->  	platform_set_drvdata(pdev, pc);
->  	return 0;
-> +
-> +err_disable_clock:
-> +	pm_runtime_disable(&pdev->dev);
-> +	return ret;
->  }
-> =20
->  static int __devexit ecap_pwm_remove(struct platform_device *pdev)
->  {
->  	struct ecap_pwm_chip *pc =3D platform_get_drvdata(pdev);
-> +	u16 regval;
-> +
-> +	if (pc->config_base) {
-> +		/* Disable ECAP clock gating at PWM-subsystem common config */
-> +		pm_runtime_get_sync(&pdev->dev);
-> +		regval =3D readw(pc->config_base + PWMSS_CLKCONFIG);
-> +		regval &=3D ~PWMSS_ECAP_CLK_EN;
-> +		writew(regval, pc->config_base + PWMSS_CLKCONFIG);
-> +		pm_runtime_put_sync(&pdev->dev);
-> +	}
-> =20
->  	pm_runtime_put_sync(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> @@ -247,6 +349,9 @@ static int __devexit ecap_pwm_remove(struct platform_=
-device *pdev)
->  static struct platform_driver ecap_pwm_driver =3D {
->  	.driver =3D {
->  		.name =3D "ecap",
-> +#ifdef CONFIG_OF
-> +		.of_match_table =3D of_match_ptr(ecap_of_match),
-> +#endif
+This is an exact duplicate of the ECAP's of_xlate(). Maybe we should
+make this part of the PWM core. If so it is probably safer to define the
+values for the third cell as flags, where the polarity is encoded in bit
+0, and make the function handle this accordingly to allow other bits to
+be added in the future.
 
-If you use of_match_ptr() you don't need the additional #ifdef
-CONFIG_OF. But as I already said I don't think you need this at all
-anyway. You should really just depend on OF and be done with it.
+The same comments as for patch 1 apply to the rest of this patch as
+well.
 
 Thierry
 
---FL5UXtIhxfXey3p5
+--aM3YZ0Iwxop3KEKx
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQaoLuAAoJEN0jrNd/PrOhMB0P/271N18vXFA0VwKa1EMTJSAC
-CiajselnLgvaXrsYECic6lVZWEZsxgpHlu+1chk8YCLjV18mluq+ux2syI7vIUXh
-nLGZ+CfEHdiK8w86fgkItsiSP4SFrR1xPM5alYIkpn4GHe9hTfysAi5pbSAMwYQi
-h0JjLhbcNnmagMT4AGcfwJ0BOC29VlUmpktZYMSilIQ4j3WZP2Q83u3BxzSGSvRf
-G4ye09juSQgEvxv+bJMOvt/HcIStSz/4xBIm2xcxPlJrpxEwXse8iLxpA2B/avu/
-iAZEF12t/6JCyULbFPN3vcqt606wdmRuRE0alBdHmn5l4qxY8Q0jxtgL0gZrZkOz
-XDbahlbT6EyaNQbIWD6+MN4FmrMNQRKEcXGKZ081ixr/s1tcHwpB5w+2RXUvrTXY
-0m+RevgyZlJbJivtifSQOFdmaJfmRecCC01lp82HoLl2UIfAOvO1PxYOfEJS4/xC
-LdHq5Qiyyp5qUP4xHQF4BKkR3ZkZhQKFcvsVUaMwSHUXq0c73xijA/mdDfLJRGyK
-+7c5cDEoPchIP6xVpEPN1s26/lFe9qnVkS+oMuUmRHo1giQP8q7tHQZaHvdxDyDG
-VLa8z9yCGHKbG3xXS2/a1V2pQfpIOjUIliSkbe3VUtIyBgM3X68qWq9Rr5cWr1Ih
-TjSOQKjeONTL0L6bVHJI
-=UkYO
+iQIcBAEBAgAGBQJQaoWfAAoJEN0jrNd/PrOhMjoP/jskEvA+YGj9ja3H9l9GlVEj
+R+LVwaSi/jZeIAk5godM8bZoof+AjIZRbOuCWoUMvNVmJzZk8DXZjr/H4oQiZykw
+vHRN4nSv563agghkraE+xzVtjhdSBZaa1MoyE8pM9aXapsM+ZQ9siijAA0dyj5+A
+Lnh54viM0R6RbUV3y5se/GtmTk6mZ1vz0EWCDhsW5yyLdMibTuEgC/kfsR/2rWlo
+5SZFtAROZiPDn8xqk05nsXUByJ91dVvkZtOsjcj4XENG877wh84IObzXTy87vKVi
+g5DvIJ63f9jQifwhzQ2N0u7rv6n0f2bE1D9M2M5uswdUZlyd5nZrfeuzoXDp88Dq
+5rZOtABgVLzTCiLOHwqWORCj7tZiWQce5y7omn5cOnEMA7OktAHSIS8yloJvo5xP
+tqE/mLfpMmTIYdqAqosSx3xlkDeFVTcJN1zDYLQHDx4nmIdaohVVXBbVI5K8AsFm
+Dk9Q++flCc9G0SwoZQ/S0mLeOYMPRgsQxIDMnLQSqA0JdWXf1IhWmb1gyOn7crcv
+TNNfAzaBb7KWohS9Mwu6OYSaNOlfAMxFNMuqXx7UN/wT+UDjwLpUufYnqxgwa89s
+X37KOK1J0L3bF0wUwVZSQeG+o51dfWERdec9b+8KJ/uFKBA4uRXf4dElcGNGdFMp
+5RZp9thqd5d+eF4Z3eY2
+=EDZa
 -----END PGP SIGNATURE-----
 
---FL5UXtIhxfXey3p5--
+--aM3YZ0Iwxop3KEKx--
+
+--===============6550221682218946843==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6550221682218946843==--
