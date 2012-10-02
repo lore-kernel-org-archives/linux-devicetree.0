@@ -1,164 +1,419 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 2/2] pwm: pwm-tiehrpwm: Add device-tree binding support
- for EHRPWM driver
-Date: Tue, 2 Oct 2012 08:11:43 +0200
-Message-ID: <20121002061143.GB4298@avionic-0098.mockup.avionic-design.de>
-References: <1348658863-29428-1-git-send-email-avinashphilip@ti.com>
- <1348658863-29428-3-git-send-email-avinashphilip@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCHv3 2/4] Input: keypad: Add smsc ece1099 keypad driver
+Date: Mon, 1 Oct 2012 23:18:29 -0700
+Message-ID: <20121002061829.GA3853@core.coreip.homeip.net>
+References: <1349089310-22134-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6550221682218946843=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348658863-29428-3-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1349089310-22134-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Sourav,
 
---===============6550221682218946843==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
-Content-Disposition: inline
-
-
---aM3YZ0Iwxop3KEKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Sep 26, 2012 at 04:57:43PM +0530, Philip, Avinash wrote:
-> Add support for device-tree binding and of_xlate for EHRWPM driver.
-> of_xlate provides EHRPWM polarity configuration from client driver
-> device-tree.
-> Also size of pwm-cells set to 3 to support pwm channel number, pwm
-> period & polarity configuration from device tree.
-
-Oh, I forgot to mention this in my reply to the previous patch, but you
-should consistently use PWM to refer to PWM devices, so the above should
-be "PWM channel number" and "PWM period & polarity". And the property is
-named "#pwm-cells".
-
-> Signed-off-by: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+On Mon, Oct 01, 2012 at 04:31:50PM +0530, Sourav Poddar wrote:
+> From: G, Manjunath Kondaiah <manjugk@ti.com>
+> 
+> SMSC ECE1099 is a keyboard scan or GPIO expansion device.The device
+> supports a keypad scan matrix of 23*8.This driver uses this
+> device as a keypad driver.
+> 
+> Tested on omap5430 evm with 3.6-rc6 custom kernel.
+> 
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Cc: Felipe Balbi <balbi@ti.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
+> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> Acked-by: Felipe Balbi <balbi@ti.com>
 > ---
-> :000000 100644 0000000... 05d9d63... A	Documentation/devicetree/bindings/=
-pwm/pwm-tiehrpwm.txt
-> :100644 100644 caf00fe... ae23c2b... M	drivers/pwm/pwm-tiehrpwm.c
->  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   26 +++++
->  drivers/pwm/pwm-tiehrpwm.c                         |  107 ++++++++++++++=
-++++++
->  2 files changed, 133 insertions(+), 0 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Doc=
-umentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+> Changes since v2:
+>  - Replace magic numbers through driver variable.
+>  - Provide comments for some initialisation done in probe.
+>  drivers/input/keyboard/Kconfig               |   11 +
+>  drivers/input/keyboard/Makefile              |    1 +
+>  drivers/input/keyboard/smsc-ece1099-keypad.c |  304 ++++++++++++++++++++++++++
+>  3 files changed, 316 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/input/keyboard/smsc-ece1099-keypad.c
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index c50fa75..b03a39c 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -593,6 +593,17 @@ config KEYBOARD_TWL4030
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called twl4030_keypad.
+>  
+> +config KEYBOARD_SMSC
+> +       tristate "SMSC ECE1099 keypad support"
+
+Should also select INPUT_MATRIXKMAP.
+
+> +       depends on I2C
+> +       help
+> +         Say Y here if your board use the smsc keypad controller
+> +         for omap5 defconfig. It's safe to say enable this
+> +         even on boards that don't use the keypad controller.
+> +
+> +         To compile this driver as a module, choose M here: the
+> +         module will be called smsc-ece1099-keypad.
+> +
+>  config KEYBOARD_XTKBD
+>  	tristate "XT keyboard"
+>  	select SERIO
+> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+> index 44e7600..0f2aa26 100644
+> --- a/drivers/input/keyboard/Makefile
+> +++ b/drivers/input/keyboard/Makefile
+> @@ -52,5 +52,6 @@ obj-$(CONFIG_KEYBOARD_TC3589X)		+= tc3589x-keypad.o
+>  obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
+>  obj-$(CONFIG_KEYBOARD_TNETV107X)	+= tnetv107x-keypad.o
+>  obj-$(CONFIG_KEYBOARD_TWL4030)		+= twl4030_keypad.o
+> +obj-$(CONFIG_KEYBOARD_SMSC)            += smsc-ece1099-keypad.o
+>  obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
+>  obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
+> diff --git a/drivers/input/keyboard/smsc-ece1099-keypad.c b/drivers/input/keyboard/smsc-ece1099-keypad.c
 > new file mode 100644
-> index 0000000..05d9d63
+> index 0000000..15dc147
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
-> @@ -0,0 +1,26 @@
-> +TI SOC EHRPWM based PWM controller
+> +++ b/drivers/input/keyboard/smsc-ece1099-keypad.c
+> @@ -0,0 +1,304 @@
+> +/*
+> + * SMSC_ECE1099 Keypad driver
+> + *
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
 > +
-> +Required properties:
-> +- compatible : Must be "ti,am33xx-ehrpwm"
-> +- #pwm-cells: Should be 3. Number of cells being used to specify PWM pro=
-perty.
-> +  First cell specifies the per-chip index of the PWM to use, the second
-> +  cell is the period cycle in nanoseconds and the third cell is the
-
-"period cycle" doesn't make much sense. It should be "period" only. This
-also applies to the previous patch.
-
-> +  polarity of PWM output. Polarity 0 gives normal polarity and 1 gives
-> +  inversed polarity (inverse duty cycle)
-
-I don't think "inversed" exists. It should be either "inverted polarity"
-or "inverse polarity".
-
-> +- reg: physical base address and size of the registers map. For am33xx,
-> +  2 register maps are present (EHRPWM register space & PWM subsystem com=
-mon
-> +  config space). Order should be maintained with EHRPWM register map as =
-first
-> +  entry & PWM subsystem common config space as second entry.
+> +#include <linux/i2c.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/input.h>
+> +#include <linux/gpio.h>
+> +#include <linux/slab.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/input/matrix_keypad.h>
+> +#include <linux/delay.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/smsc.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of.h>
 > +
-> +Optional properties:
-> +- ti,hwmods: Name of the hwmod associated to the EHRPWM:
-> +  "ehrpwm<x>", <x> being the 0-based instance number from the HW spec
-
-I don't see where this property is used. There is no code in this patch
-that parses it.
-
-> +static struct pwm_device *of_ehrpwm_xlate(struct pwm_chip *chip,
-> +		const struct of_phandle_args *args)
+> +#define KEYPRESS_TIME          200
+> +
+> +struct smsc_keypad {
+> +	struct smsc *smsc;
+> +	struct matrix_keymap_data *keymap_data;
+> +	unsigned int last_key_state[16];
+> +	unsigned int last_col;
+> +	unsigned int last_key_ms[16];
+> +	unsigned short *keymap;
+> +	struct i2c_client *client;
+> +	struct input_dev *input;
+> +	int rows, cols;
+> +	int row_shift;
+> +	bool no_autorepeat;
+> +	unsigned        irq;
+> +	struct device *dev;
+> +};
+> +
+> +static void smsc_kp_scan(struct smsc_keypad *kp)
 > +{
-> +	struct pwm_device *pwm;
+> +	struct input_dev *input = kp->input;
+> +	int i, j;
+> +	int row, col;
+> +	int temp, code;
+> +	unsigned int new_state[16];
+> +	unsigned int bits_changed;
+> +	int this_ms;
 > +
-> +	if (chip->of_pwm_n_cells < PWM_CELL_SIZE)
-> +		return ERR_PTR(-EINVAL);
+> +	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0x00);
+> +	smsc_write(kp->dev, SMSC_KP_INT_STAT, 0xFF);
 > +
-> +	if (args->args[0] >=3D chip->npwm)
-> +		return ERR_PTR(-EINVAL);
+> +	/* Scan for row and column */
+> +	for (i = 0; i < kp->cols; i++) {
+> +		smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_EVAL + i);
+> +		/* Read Row Status */
+> +		smsc_read(kp->dev, SMSC_KP_IN, &temp);
+> +		if (temp == 0xFF)
+> +			continue;
 > +
-> +	pwm =3D pwm_request_from_chip(chip, args->args[0], NULL);
-> +	if (IS_ERR(pwm))
-> +		return pwm;
+> +		col = i;
+> +		for (j = 0; j < kp->rows; j++) {
+> +			if ((temp & 0x01) != 0x00) {
+> +				temp = temp >> 1;
+> +				continue;
+> +			}
 > +
-> +	pwm_set_period(pwm, args->args[1]);
-> +	pwm_set_polarity(pwm, args->args[2]);
-> +	return pwm;
+> +			row = j;
+> +			new_state[col] =  (1 << row);
+> +			bits_changed = kp->last_key_state[col] ^ new_state[col];
+> +			this_ms = jiffies_to_msecs(jiffies);
+> +			if (bits_changed != 0 || (!bits_changed &&
+> +					((this_ms - kp->last_key_ms[col]) >= KEYPRESS_TIME))) {
+> +				code = MATRIX_SCAN_CODE(row, col, kp->row_shift);
+> +				input_event(input, EV_MSC, MSC_SCAN, code);
+> +				input_report_key(input, kp->keymap[code], 1);
+> +				input_report_key(input, kp->keymap[code], 0);
+> +				kp->last_key_state[col] = new_state[col];
+> +				if (kp->last_col != col)
+> +					kp->last_key_state[kp->last_col] = 0;
+> +				kp->last_key_ms[col] = this_ms;
+> +			}
+> +			temp = temp >> 1;
+> +		}
+> +	}
+> +	input_sync(input);
+> +
+> +	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0xFF);
+> +
+> +	/* Set up Low Power Mode (Wake-up) (0xFB) */
+> +	smsc_write(kp->dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
+> +
+> +	/*Enable Keypad Scan (generate interrupt on key press) (0x40)*/
+> +	smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
 > +}
+> +
+> +static irqreturn_t do_kp_irq(int irq, void *_kp)
+> +{
+> +	struct smsc_keypad *kp = _kp;
+> +	int int_status;
+> +
+> +	smsc_read(kp->dev, SMSC_KP_INT_STAT, &int_status);
+> +	if (int_status)
+> +		smsc_kp_scan(kp);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static int __devinit smsc_keypad_parse_dt(struct device *dev,
+> +				struct smsc_keypad *kp)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +
+> +	if (!np) {
+> +		dev_err(dev, "missing DT data");
+> +		return -EINVAL;
+> +	}
+> +
+> +	of_property_read_u32(np, "keypad,num-rows", &kp->rows);
+> +	of_property_read_u32(np, "keypad,num-columns", &kp->cols);
+> +	if (!kp->rows || !kp->cols) {
+> +		dev_err(dev, "number of keypad rows/columns not specified\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_bool(np, "linux,input-no-autorepeat"))
+> +		kp->no_autorepeat = true;
+> +
+> +	return 0;
+> +}
+> +#else
+> +static inline int smsc_keypad_parse_dt(struct device *dev,
+> +				struct smsc_keypad *kp)
+> +{
+> +	return -ENOSYS;
+> +}
+> +#endif
+> +
+> +static int __devinit
+> +smsc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct smsc *smsc = dev_get_drvdata(pdev->dev.parent);
+> +	struct input_dev *input;
+> +	struct smsc_keypad *kp;
+> +	int ret = 0, error;
+> +	int col, i, max_keys, row_shift;
+> +	int irq;
+> +	int addr;
+> +
+> +	kp = devm_kzalloc(dev, sizeof(*kp), GFP_KERNEL);
+> +
+> +	input = input_allocate_device();
+> +	if (!kp || !input) {
+> +		error = -ENOMEM;
+> +		goto err1;
+> +	}
+> +
+> +	error = smsc_keypad_parse_dt(&pdev->dev, kp);
 
-This is an exact duplicate of the ECAP's of_xlate(). Maybe we should
-make this part of the PWM core. If so it is probably safer to define the
-values for the third cell as flags, where the polarity is encoded in bit
-0, and make the function handle this accordingly to allow other bits to
-be added in the future.
+It doe snot look like the driver is useful without DT... Should it
+simply depend on OF and not even provide !OF stubs?
 
-The same comments as for patch 1 apply to the rest of this patch as
-well.
+> +	if (error)
 
-Thierry
+You are leaking input device here.
 
---aM3YZ0Iwxop3KEKx
-Content-Type: application/pgp-signature
+> +		return error;
+> +
+> +	/* Get the debug Device */
+> +	kp->input = input;
+> +	kp->smsc = smsc;
+> +	kp->irq = platform_get_irq(pdev, 0);
+> +	kp->dev = dev;
+> +
+> +	for (col = 0; col < 16; col++) {
+> +		kp->last_key_state[col] = 0;
+> +		kp->last_key_ms[col] = 0;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+kzalloc should have already taken care of this.
 
-iQIcBAEBAgAGBQJQaoWfAAoJEN0jrNd/PrOhMjoP/jskEvA+YGj9ja3H9l9GlVEj
-R+LVwaSi/jZeIAk5godM8bZoof+AjIZRbOuCWoUMvNVmJzZk8DXZjr/H4oQiZykw
-vHRN4nSv563agghkraE+xzVtjhdSBZaa1MoyE8pM9aXapsM+ZQ9siijAA0dyj5+A
-Lnh54viM0R6RbUV3y5se/GtmTk6mZ1vz0EWCDhsW5yyLdMibTuEgC/kfsR/2rWlo
-5SZFtAROZiPDn8xqk05nsXUByJ91dVvkZtOsjcj4XENG877wh84IObzXTy87vKVi
-g5DvIJ63f9jQifwhzQ2N0u7rv6n0f2bE1D9M2M5uswdUZlyd5nZrfeuzoXDp88Dq
-5rZOtABgVLzTCiLOHwqWORCj7tZiWQce5y7omn5cOnEMA7OktAHSIS8yloJvo5xP
-tqE/mLfpMmTIYdqAqosSx3xlkDeFVTcJN1zDYLQHDx4nmIdaohVVXBbVI5K8AsFm
-Dk9Q++flCc9G0SwoZQ/S0mLeOYMPRgsQxIDMnLQSqA0JdWXf1IhWmb1gyOn7crcv
-TNNfAzaBb7KWohS9Mwu6OYSaNOlfAMxFNMuqXx7UN/wT+UDjwLpUufYnqxgwa89s
-X37KOK1J0L3bF0wUwVZSQeG+o51dfWERdec9b+8KJ/uFKBA4uRXf4dElcGNGdFMp
-5RZp9thqd5d+eF4Z3eY2
-=EDZa
------END PGP SIGNATURE-----
+> +	}
+> +
+> +	/* setup input device */
+> +	 __set_bit(EV_KEY, input->evbit);
+> +
+> +	/* Enable auto repeat feature of Linux input subsystem */
+> +	if (!(kp->no_autorepeat))
 
---aM3YZ0Iwxop3KEKx--
+No need for extra parenthesis.
 
---===============6550221682218946843==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +		__set_bit(EV_REP, input->evbit);
+> +
+> +	input_set_capability(input, EV_MSC, MSC_SCAN);
+> +	input->name             = "SMSC Keypad";
+> +	input->phys             = "smsc_keypad/input0";
+> +	input->dev.parent       = &pdev->dev;
+> +	input->id.bustype       = BUS_HOST;
+> +	input->id.vendor        = 0x0001;
+> +	input->id.product       = 0x0001;
+> +	input->id.version       = 0x0003;
+> +
+> +	error = input_register_device(input);
+> +	if (error) {
+> +		dev_err(kp->dev,
+> +			"Unable to register twl4030 keypad device\n");
+> +		goto err1;
+> +	}
+> +
+> +	/* Mask all GPIO interrupts (0x37-0x3B) */
+> +	for (addr = SMSC_GPIO_INT_MASK_START;
+> +			addr < SMSC_GPIO_INT_MASK_START + 4; addr++)
+> +		smsc_write(dev, addr, 0);
+> +
+> +	/* Set all outputs high (0x05-0x09) */
+> +	for (addr = SMSC_GPIO_DATA_OUT_START;
+> +			addr < SMSC_GPIO_DATA_OUT_START + 4; addr++)
+> +		smsc_write(dev, addr, 0xff);
+> +
+> +	/* Clear all GPIO interrupts (0x32-0x36) */
+> +	for (addr = SMSC_GPIO_INT_STAT_START;
+> +			addr < SMSC_GPIO_INT_STAT_START + 4; addr++)
+> +		smsc_write(dev, addr, 0xff);
+> +
+> +	/* Configure the smsc pins as Keyboard scan Input */
+> +	for (i = 0; i <= kp->rows; i++) {
+> +		addr = 0x12 + i;
+> +		smsc_write(dev, addr, SMSC_KP_KSI);
+> +	}
+> +
+> +	/* Configure the smsc pins as Keyboard scan output */
+> +	for (i = 0; i <= kp->cols; i++) {
+> +		addr = 0x1A + i;
+> +		smsc_write(dev, addr, SMSC_KP_KSO);
+> +	}
+> +
+> +	smsc_write(dev, SMSC_KP_INT_STAT, SMSC_KP_SET_HIGH);
+> +	smsc_write(dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
+> +	smsc_write(dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
+> +
+> +	row_shift = get_count_order(kp->cols);
+> +	max_keys = kp->rows << row_shift;
+> +
+> +	kp->row_shift = row_shift;
+> +	kp->keymap = devm_kzalloc(dev, max_keys * sizeof(kp->keymap[0]),
+> +					GFP_KERNEL);
+> +	if (!kp->keymap) {
+> +		dev_err(&pdev->dev, "Not enough memory for keymap\n");
+> +		error = -ENOMEM;
+> +	}
+> +
+> +	matrix_keypad_build_keymap(NULL, NULL, kp->rows,
+> +			kp->cols, kp->keymap, input);
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+Needs error handling I believe.
 
---===============6550221682218946843==--
+> +
+> +	/*
+> +	* This ISR will always execute in kernel thread context because of
+> +	* the need to access the SMSC over the I2C bus.
+> +	*/
+> +	ret = devm_request_threaded_irq(dev, kp->irq, NULL, do_kp_irq,
+> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT, pdev->name, kp);
+> +	if (ret) {
+> +		dev_dbg(&pdev->dev, "request_irq failed for irq no=%d\n",
+> +			irq);
+> +		goto err2;
+> +	}
+> +
+> +	/* Enable smsc keypad interrupts */
+> +	ret = smsc_write(dev, SMSC_KP_INT_MASK, 0xff);
+> +	if (ret < 0)
+> +		goto err2;
+> +
+> +	return 0;
+> +
+> +err2:
+> +	input_unregister_device(input);
+> +err1:
+> +	input_free_device(input);
+
+Double free.
+
+> +	return ret;
+> +}
+> +
+> +static int __devexit smsc_remove(struct platform_device *pdev)
+> +{
+> +	struct smsc_keypad *kp = platform_get_drvdata(pdev);
+> +	input_unregister_device(kp->input);
+
+And your kernel goes *BOOM*
+
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id smsc_keypad_dt_match[] = {
+> +	{ .compatible = "smsc,keypad" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, smsc_keypad_dt_match);
+> +#endif
+> +
+> +static struct platform_driver smsc_driver = {
+> +	.driver = {
+> +		.name	= "smsc-keypad",
+> +		.of_match_table = of_match_ptr(smsc_keypad_dt_match),
+> +		.owner  = THIS_MODULE,
+> +	},
+> +	.probe		= smsc_probe,
+> +	.remove		= __devexit_p(smsc_remove),
+> +};
+> +
+> +module_platform_driver(smsc_driver);
+> +
+> +MODULE_AUTHOR("G Kondaiah Manjunath <manjugk@ti.com>");
+> +MODULE_DESCRIPTION("SMSC ECE1099 Keypad driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 1.7.1
+> 
+
+Thanks.
+
+-- 
+Dmitry
