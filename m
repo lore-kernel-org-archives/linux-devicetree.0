@@ -1,64 +1,126 @@
-From: Kevin Hilman <khilman@deeprootsystems.com>
-Subject: Re: [PATCH] ARM: OMAP: omap_device: fix return value check in
- omap_device_build_ss()
-Date: Mon, 01 Oct 2012 16:01:11 -0700
-Message-ID: <878vbper0o.fsf@deeprootsystems.com>
-References: <CAPgLHd8ys7uU8wBhMF7JWZEDAddOnGo4vHPu1V_+Q3__WWK-3g@mail.gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/1] Fix segfault in DTC
+Date: Tue, 2 Oct 2012 10:08:51 +1000
+Message-ID: <20121002000851.GA29302@truffula.fritz.box>
+References: <50624393.30607@broadcom.com>
+ <20120926003508.GB31993@truffula.fritz.box>
+ <50632F78.4030709@broadcom.com> <5065D9C7.40906@wwwdotorg.org>
+ <E1THfgr-0006Fg-KT@jdl.com> <5065F4FD.4010807@wwwdotorg.org>
+ <20120929235342.GA23078@truffula.fritz.box>
+ <50692B7A.8000405@wwwdotorg.org>
+ <20121001064610.GA5323@truffula.fritz.box>
+ <5069C7A5.8090409@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPgLHd8ys7uU8wBhMF7JWZEDAddOnGo4vHPu1V_+Q3__WWK-3g@mail.gmail.com>
- (Wei Yongjun's message of "Fri, 21 Sep 2012 14:32:04 +0800")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: linux@arm.linux.org.uk, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, yongjun_wei@trendmicro.com.cn, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5069C7A5.8090409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Wei Yongjun <weiyj.lk@gmail.com> writes:
+On Mon, Oct 01, 2012 at 10:41:09AM -0600, Stephen Warren wrote:
+> On 10/01/2012 12:46 AM, David Gibson wrote:
+> > On Sun, Sep 30, 2012 at 11:34:50PM -0600, Stephen Warren wrote:
+> >> On 09/29/2012 05:53 PM, David Gibson wrote:
+> >>> On Fri, Sep 28, 2012 at 01:05:33PM -0600, Stephen Warren wrote:
+> >>>> On 09/28/2012 12:53 PM, Jon Loeliger wrote:
+> >>>>>>>
+> >>>>>>> Yeah, seems like the kernel DTC is quite old.
+> >>>>>>
+> >>>>>> FYI, I'm working on a patch to the kernel to bring in the latest dtc.
+> >>>>>
+> >>>>> Awesome.  Thank you.
+> >>>>>
+> >>>>>> I've run a regression test vs. the old dtc in the kernel ...
+> >>>>>
+> >>>>> Which is the icky step.  Again, thank you.
+> >>>>>
+> >>>>>> ... and found that
+> >>>>>> some of the PowerPC .dts files don't compile with the new dtc (but did
+> >>>>>> with the old), all due to non-existent labels/paths being referenced.
+> >>>>>> I'll try and track down whether this is a regression in dtc, or simply
+> >>>>>> buggy .dts files that weren't noticed before.
+> >>>>>
+> >>>>> I think you should just smack the PowerPC guys. :-)
+> >>>>
+> >>>> For the record in this thread, it was a regression I introduced into dtc
+> >>>> - the patch I just sent was for this.
+> >>>
+> >>> I would be nice to add a testcase for this regression into dtc.
+> >>
+> >> The issue here was caused by uninitialized memory, so it would, I think,
+> >> be basically impossible to create a test-case that would be guaranteed
+> >> to fail because of this; it'd depend on the internal details of the
+> >> malloc library and how/when it re-used previously free()d memory blocks.
+> > 
+> > It doesn't have to be guaranteed to fail to be useful.  Plus, we
+> > already have the infrastructure to run the tests under valgrind, which
+> > would catch it.
+> 
+> I certainly disagree here; the absolute worst kind of test is one which
+> gives different results each time it's run, or statically gives
+> different results to different people. People will either ignore the
+> test because it's flaky, or it'll end up blaming the wrong person due to
+> some entirely unrelated and correct change just happening to tickle the
+> test.
 
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->
-> In case of error, the function omap_device_alloc() returns ERR_PTR()
-> and never returns NULL pointer. The NULL test in the return value
-> check should be replaced with IS_ERR().
->
-> dpatch engine is used to auto generated this patch.
-> (https://github.com/weiyj/dpatch)
->
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+I'd agree 100% if the test could give false failures.  But in this
+case it can only give false passes.  If the test fails there is a bug
+*somewhere*, even if it's not actually in whatever changed last.  The
+test framework actually has a "PASS (inconclusive)" result for exactly
+this sort of case.
 
-Acked-by: Kevin Hilman <khilman@ti.com>
+> If we were to force any such new test to always run under valgrind, then
+> hopefully the test would always fail (assuming the test harness triggers
+> failure if valgrind finds problems).
 
+Aside: it's supposed to;  if it doesn't, that's a bug.  You can try it
+easily enough with "make checkm".
 
-> ---
->  arch/arm/plat-omap/omap_device.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/plat-omap/omap_device.c b/arch/arm/plat-omap/omap_device.c
-> index c490240..3f62de6 100644
-> --- a/arch/arm/plat-omap/omap_device.c
-> +++ b/arch/arm/plat-omap/omap_device.c
-> @@ -671,7 +671,7 @@ struct platform_device __init *omap_device_build_ss(const char *pdev_name, int p
->  		dev_set_name(&pdev->dev, "%s", pdev->name);
->  
->  	od = omap_device_alloc(pdev, ohs, oh_cnt, pm_lats, pm_lats_cnt);
-> -	if (!od)
-> +	if (IS_ERR(od))
->  		goto odbs_exit1;
->  
->  	ret = platform_device_add_data(pdev, pdata, pdata_len);
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> That might be reasonable. However,
+> if we do this, then I think instead we should just always force the
+> entire existing test suite to run under valgrind; no new test should be
+> needed for valgrind to detect this failure (since there was a
+> read-before-write problem any time a label was used in the existing
+> code, it just didn't always cause a user-visible issue).
+
+Hrm.  I don't want to run the whole testsuite under valgrind by
+default for a couple of reasons.  First, it's much, much slower, and
+second you need to have valgrind installed.  Both these would
+discourage people from running the testsuite so frequently, and even
+without valgrind it's very, very useful.
+
+I guess we could make the new one a "valgrind only" test, that's we
+only bother to execute when the valgrind options are enabled.
+
+> Another alternative might be to LD_PRELOAD a test malloc library with a
+> known allocation pattern. That would allow a new test for this case to
+> always fail. However, the allocation pattern of this test malloc library
+> would have to be carefully tied to the allocation pattern of dtc itself
+> when processing the new test's .dts file, and that could easily and
+> legitimately change due to unrelated implementation details of dtc
+> changing, thus making the maintenance of the test malloc library
+> painful. So, I don't think this is the way to go.
+
+Hrm.  A malloc() with a "known buggy" allocation pattern would be
+impractical, I agree.  But it occurred to me that a much simpler
+malloc() wrapper which filled each allocated block with garbage
+(non-zero) data before returning it would be sufficient in this case.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
