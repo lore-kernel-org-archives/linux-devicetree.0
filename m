@@ -1,419 +1,131 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCHv3 2/4] Input: keypad: Add smsc ece1099 keypad driver
-Date: Mon, 1 Oct 2012 23:18:29 -0700
-Message-ID: <20121002061829.GA3853@core.coreip.homeip.net>
-References: <1349089310-22134-1-git-send-email-sourav.poddar@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V2 0/3] Add clock framework for armada 370/XP
+Date: Tue, 02 Oct 2012 09:10:13 +0200
+Message-ID: <506A9355.1020101@free-electrons.com>
+References: <1349125926-16144-1-git-send-email-gregory.clement@free-electrons.com>
+ <20121002041736.21556.20051@nucleus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1349089310-22134-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121002041736.21556.20051@nucleus>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Li Li <li.li-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sourav,
-
-On Mon, Oct 01, 2012 at 04:31:50PM +0530, Sourav Poddar wrote:
-> From: G, Manjunath Kondaiah <manjugk@ti.com>
+On 10/02/2012 06:17 AM, Mike Turquette wrote:
+> Quoting Gregory CLEMENT (2012-10-01 14:12:03)
+>> Hello Mike,
+>>
+>> My first version didn't get many attention, so I guess it's too late
+>> for 3.7! ;) I should have ping you earlier about this series. This
+>> time was not lost, by using the cpu clock with SMP I found a bug and
+>> fixed it. And I also improved the spelling and removed unnecessary
+>> small piece of code thanks to the feed back of Andrew Lunn.
+>>
 > 
-> SMSC ECE1099 is a keyboard scan or GPIO expansion device.The device
-> supports a keypad scan matrix of 23*8.This driver uses this
-> device as a keypad driver.
+> My apologies for letting this one slip through the cracks.  I'm glad you
+> fixed the bug though!
 > 
-> Tested on omap5430 evm with 3.6-rc6 custom kernel.
+> I'll give this a review once the -rc1 merge window is closed.
+
+This time I will remind you as soon as -rc1 will be released ;)
+
+I have an other patch set which will depend on this one. So I hope
+this one will be merged early enough in your clk-3.8 branch.
+
+Regards,
+Gregory
+
 > 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-> Acked-by: Felipe Balbi <balbi@ti.com>
-> ---
-> Changes since v2:
->  - Replace magic numbers through driver variable.
->  - Provide comments for some initialisation done in probe.
->  drivers/input/keyboard/Kconfig               |   11 +
->  drivers/input/keyboard/Makefile              |    1 +
->  drivers/input/keyboard/smsc-ece1099-keypad.c |  304 ++++++++++++++++++++++++++
->  3 files changed, 316 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/input/keyboard/smsc-ece1099-keypad.c
+> Regards,
+> Mike
 > 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index c50fa75..b03a39c 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -593,6 +593,17 @@ config KEYBOARD_TWL4030
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called twl4030_keypad.
->  
-> +config KEYBOARD_SMSC
-> +       tristate "SMSC ECE1099 keypad support"
-
-Should also select INPUT_MATRIXKMAP.
-
-> +       depends on I2C
-> +       help
-> +         Say Y here if your board use the smsc keypad controller
-> +         for omap5 defconfig. It's safe to say enable this
-> +         even on boards that don't use the keypad controller.
-> +
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called smsc-ece1099-keypad.
-> +
->  config KEYBOARD_XTKBD
->  	tristate "XT keyboard"
->  	select SERIO
-> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-> index 44e7600..0f2aa26 100644
-> --- a/drivers/input/keyboard/Makefile
-> +++ b/drivers/input/keyboard/Makefile
-> @@ -52,5 +52,6 @@ obj-$(CONFIG_KEYBOARD_TC3589X)		+= tc3589x-keypad.o
->  obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
->  obj-$(CONFIG_KEYBOARD_TNETV107X)	+= tnetv107x-keypad.o
->  obj-$(CONFIG_KEYBOARD_TWL4030)		+= twl4030_keypad.o
-> +obj-$(CONFIG_KEYBOARD_SMSC)            += smsc-ece1099-keypad.o
->  obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
->  obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
-> diff --git a/drivers/input/keyboard/smsc-ece1099-keypad.c b/drivers/input/keyboard/smsc-ece1099-keypad.c
-> new file mode 100644
-> index 0000000..15dc147
-> --- /dev/null
-> +++ b/drivers/input/keyboard/smsc-ece1099-keypad.c
-> @@ -0,0 +1,304 @@
-> +/*
-> + * SMSC_ECE1099 Keypad driver
-> + *
-> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/input.h>
-> +#include <linux/gpio.h>
-> +#include <linux/slab.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/input/matrix_keypad.h>
-> +#include <linux/delay.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/smsc.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of.h>
-> +
-> +#define KEYPRESS_TIME          200
-> +
-> +struct smsc_keypad {
-> +	struct smsc *smsc;
-> +	struct matrix_keymap_data *keymap_data;
-> +	unsigned int last_key_state[16];
-> +	unsigned int last_col;
-> +	unsigned int last_key_ms[16];
-> +	unsigned short *keymap;
-> +	struct i2c_client *client;
-> +	struct input_dev *input;
-> +	int rows, cols;
-> +	int row_shift;
-> +	bool no_autorepeat;
-> +	unsigned        irq;
-> +	struct device *dev;
-> +};
-> +
-> +static void smsc_kp_scan(struct smsc_keypad *kp)
-> +{
-> +	struct input_dev *input = kp->input;
-> +	int i, j;
-> +	int row, col;
-> +	int temp, code;
-> +	unsigned int new_state[16];
-> +	unsigned int bits_changed;
-> +	int this_ms;
-> +
-> +	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0x00);
-> +	smsc_write(kp->dev, SMSC_KP_INT_STAT, 0xFF);
-> +
-> +	/* Scan for row and column */
-> +	for (i = 0; i < kp->cols; i++) {
-> +		smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_EVAL + i);
-> +		/* Read Row Status */
-> +		smsc_read(kp->dev, SMSC_KP_IN, &temp);
-> +		if (temp == 0xFF)
-> +			continue;
-> +
-> +		col = i;
-> +		for (j = 0; j < kp->rows; j++) {
-> +			if ((temp & 0x01) != 0x00) {
-> +				temp = temp >> 1;
-> +				continue;
-> +			}
-> +
-> +			row = j;
-> +			new_state[col] =  (1 << row);
-> +			bits_changed = kp->last_key_state[col] ^ new_state[col];
-> +			this_ms = jiffies_to_msecs(jiffies);
-> +			if (bits_changed != 0 || (!bits_changed &&
-> +					((this_ms - kp->last_key_ms[col]) >= KEYPRESS_TIME))) {
-> +				code = MATRIX_SCAN_CODE(row, col, kp->row_shift);
-> +				input_event(input, EV_MSC, MSC_SCAN, code);
-> +				input_report_key(input, kp->keymap[code], 1);
-> +				input_report_key(input, kp->keymap[code], 0);
-> +				kp->last_key_state[col] = new_state[col];
-> +				if (kp->last_col != col)
-> +					kp->last_key_state[kp->last_col] = 0;
-> +				kp->last_key_ms[col] = this_ms;
-> +			}
-> +			temp = temp >> 1;
-> +		}
-> +	}
-> +	input_sync(input);
-> +
-> +	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0xFF);
-> +
-> +	/* Set up Low Power Mode (Wake-up) (0xFB) */
-> +	smsc_write(kp->dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
-> +
-> +	/*Enable Keypad Scan (generate interrupt on key press) (0x40)*/
-> +	smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
-> +}
-> +
-> +static irqreturn_t do_kp_irq(int irq, void *_kp)
-> +{
-> +	struct smsc_keypad *kp = _kp;
-> +	int int_status;
-> +
-> +	smsc_read(kp->dev, SMSC_KP_INT_STAT, &int_status);
-> +	if (int_status)
-> +		smsc_kp_scan(kp);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static int __devinit smsc_keypad_parse_dt(struct device *dev,
-> +				struct smsc_keypad *kp)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +
-> +	if (!np) {
-> +		dev_err(dev, "missing DT data");
-> +		return -EINVAL;
-> +	}
-> +
-> +	of_property_read_u32(np, "keypad,num-rows", &kp->rows);
-> +	of_property_read_u32(np, "keypad,num-columns", &kp->cols);
-> +	if (!kp->rows || !kp->cols) {
-> +		dev_err(dev, "number of keypad rows/columns not specified\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (of_property_read_bool(np, "linux,input-no-autorepeat"))
-> +		kp->no_autorepeat = true;
-> +
-> +	return 0;
-> +}
-> +#else
-> +static inline int smsc_keypad_parse_dt(struct device *dev,
-> +				struct smsc_keypad *kp)
-> +{
-> +	return -ENOSYS;
-> +}
-> +#endif
-> +
-> +static int __devinit
-> +smsc_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct smsc *smsc = dev_get_drvdata(pdev->dev.parent);
-> +	struct input_dev *input;
-> +	struct smsc_keypad *kp;
-> +	int ret = 0, error;
-> +	int col, i, max_keys, row_shift;
-> +	int irq;
-> +	int addr;
-> +
-> +	kp = devm_kzalloc(dev, sizeof(*kp), GFP_KERNEL);
-> +
-> +	input = input_allocate_device();
-> +	if (!kp || !input) {
-> +		error = -ENOMEM;
-> +		goto err1;
-> +	}
-> +
-> +	error = smsc_keypad_parse_dt(&pdev->dev, kp);
-
-It doe snot look like the driver is useful without DT... Should it
-simply depend on OF and not even provide !OF stubs?
-
-> +	if (error)
-
-You are leaking input device here.
-
-> +		return error;
-> +
-> +	/* Get the debug Device */
-> +	kp->input = input;
-> +	kp->smsc = smsc;
-> +	kp->irq = platform_get_irq(pdev, 0);
-> +	kp->dev = dev;
-> +
-> +	for (col = 0; col < 16; col++) {
-> +		kp->last_key_state[col] = 0;
-> +		kp->last_key_ms[col] = 0;
-
-kzalloc should have already taken care of this.
-
-> +	}
-> +
-> +	/* setup input device */
-> +	 __set_bit(EV_KEY, input->evbit);
-> +
-> +	/* Enable auto repeat feature of Linux input subsystem */
-> +	if (!(kp->no_autorepeat))
-
-No need for extra parenthesis.
-
-> +		__set_bit(EV_REP, input->evbit);
-> +
-> +	input_set_capability(input, EV_MSC, MSC_SCAN);
-> +	input->name             = "SMSC Keypad";
-> +	input->phys             = "smsc_keypad/input0";
-> +	input->dev.parent       = &pdev->dev;
-> +	input->id.bustype       = BUS_HOST;
-> +	input->id.vendor        = 0x0001;
-> +	input->id.product       = 0x0001;
-> +	input->id.version       = 0x0003;
-> +
-> +	error = input_register_device(input);
-> +	if (error) {
-> +		dev_err(kp->dev,
-> +			"Unable to register twl4030 keypad device\n");
-> +		goto err1;
-> +	}
-> +
-> +	/* Mask all GPIO interrupts (0x37-0x3B) */
-> +	for (addr = SMSC_GPIO_INT_MASK_START;
-> +			addr < SMSC_GPIO_INT_MASK_START + 4; addr++)
-> +		smsc_write(dev, addr, 0);
-> +
-> +	/* Set all outputs high (0x05-0x09) */
-> +	for (addr = SMSC_GPIO_DATA_OUT_START;
-> +			addr < SMSC_GPIO_DATA_OUT_START + 4; addr++)
-> +		smsc_write(dev, addr, 0xff);
-> +
-> +	/* Clear all GPIO interrupts (0x32-0x36) */
-> +	for (addr = SMSC_GPIO_INT_STAT_START;
-> +			addr < SMSC_GPIO_INT_STAT_START + 4; addr++)
-> +		smsc_write(dev, addr, 0xff);
-> +
-> +	/* Configure the smsc pins as Keyboard scan Input */
-> +	for (i = 0; i <= kp->rows; i++) {
-> +		addr = 0x12 + i;
-> +		smsc_write(dev, addr, SMSC_KP_KSI);
-> +	}
-> +
-> +	/* Configure the smsc pins as Keyboard scan output */
-> +	for (i = 0; i <= kp->cols; i++) {
-> +		addr = 0x1A + i;
-> +		smsc_write(dev, addr, SMSC_KP_KSO);
-> +	}
-> +
-> +	smsc_write(dev, SMSC_KP_INT_STAT, SMSC_KP_SET_HIGH);
-> +	smsc_write(dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
-> +	smsc_write(dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
-> +
-> +	row_shift = get_count_order(kp->cols);
-> +	max_keys = kp->rows << row_shift;
-> +
-> +	kp->row_shift = row_shift;
-> +	kp->keymap = devm_kzalloc(dev, max_keys * sizeof(kp->keymap[0]),
-> +					GFP_KERNEL);
-> +	if (!kp->keymap) {
-> +		dev_err(&pdev->dev, "Not enough memory for keymap\n");
-> +		error = -ENOMEM;
-> +	}
-> +
-> +	matrix_keypad_build_keymap(NULL, NULL, kp->rows,
-> +			kp->cols, kp->keymap, input);
-
-Needs error handling I believe.
-
-> +
-> +	/*
-> +	* This ISR will always execute in kernel thread context because of
-> +	* the need to access the SMSC over the I2C bus.
-> +	*/
-> +	ret = devm_request_threaded_irq(dev, kp->irq, NULL, do_kp_irq,
-> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT, pdev->name, kp);
-> +	if (ret) {
-> +		dev_dbg(&pdev->dev, "request_irq failed for irq no=%d\n",
-> +			irq);
-> +		goto err2;
-> +	}
-> +
-> +	/* Enable smsc keypad interrupts */
-> +	ret = smsc_write(dev, SMSC_KP_INT_MASK, 0xff);
-> +	if (ret < 0)
-> +		goto err2;
-> +
-> +	return 0;
-> +
-> +err2:
-> +	input_unregister_device(input);
-> +err1:
-> +	input_free_device(input);
-
-Double free.
-
-> +	return ret;
-> +}
-> +
-> +static int __devexit smsc_remove(struct platform_device *pdev)
-> +{
-> +	struct smsc_keypad *kp = platform_get_drvdata(pdev);
-> +	input_unregister_device(kp->input);
-
-And your kernel goes *BOOM*
-
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id smsc_keypad_dt_match[] = {
-> +	{ .compatible = "smsc,keypad" },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, smsc_keypad_dt_match);
-> +#endif
-> +
-> +static struct platform_driver smsc_driver = {
-> +	.driver = {
-> +		.name	= "smsc-keypad",
-> +		.of_match_table = of_match_ptr(smsc_keypad_dt_match),
-> +		.owner  = THIS_MODULE,
-> +	},
-> +	.probe		= smsc_probe,
-> +	.remove		= __devexit_p(smsc_remove),
-> +};
-> +
-> +module_platform_driver(smsc_driver);
-> +
-> +MODULE_AUTHOR("G Kondaiah Manjunath <manjugk@ti.com>");
-> +MODULE_DESCRIPTION("SMSC ECE1099 Keypad driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 1.7.1
+>> The purpose of this patch set is to add support for clock framework
+>> for Armada 370 and Armada XP SoCs. All the support is done under the
+>> directory drivers/clk/mvebu/ as the support for other mvebu SoCs was
+>> in mind during the writing of the code.
+>>
+>> Two kinds of clocks are added:
+>>
+>> - The CPU clocks are only for Armada XP (which si multi-core)
+>>
+>> - The core clocks are clocks which have their rate fixed during
+>>   reset.
+>>
+>> This patch set is based on the clk-3.7 branch of Mike Turquette as it
+>> use the patch "clk: add of_clk_src_onecell_get() support" from Shawn
+>> Guo.
+>>
+>> Many thanks to Thomas Petazzoni and Sebastian Hesselbarth for their
+>> review and feedback. The device tree bindings were really improved
+>> with the advices of Sebastian.
+>>
+>> Changelog:
+>> V1 -> V2:
+>>
+>> - Improved the spelling and the wording of the documentation and the
+>>   1st commit log
+>> - Removed the "end_of_list" name which are unused here.
+>> - Fix the cpu clock by using of_clk_src_onecell_get in the same way it
+>>   was used for the core clocks
+>>
+>> Regards,
+>>
+>> Gregory CLEMENT (3):
+>>   clk: mvebu: add armada-370-xp specific clocks
+>>   clk: armada-370-xp: add support for clock framework
+>>   clocksource: time-armada-370-xp converted to clk framework
+>>
+>>  .../devicetree/bindings/clock/mvebu-core-clock.txt |   40 +++
+>>  .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   21 ++
+>>  arch/arm/boot/dts/armada-370-db.dts                |    4 -
+>>  arch/arm/boot/dts/armada-370-xp.dtsi               |    1 +
+>>  arch/arm/boot/dts/armada-370.dtsi                  |   12 +
+>>  arch/arm/boot/dts/armada-xp.dtsi                   |   48 +++
+>>  arch/arm/mach-mvebu/Kconfig                        |    5 +
+>>  arch/arm/mach-mvebu/armada-370-xp.c                |    8 +-
+>>  arch/arm/mach-mvebu/common.h                       |    1 +
+>>  drivers/clk/Makefile                               |    1 +
+>>  drivers/clk/mvebu/Makefile                         |    2 +
+>>  drivers/clk/mvebu/clk-core.c                       |  312 ++++++++++++++++++++
+>>  drivers/clk/mvebu/clk-core.h                       |   19 ++
+>>  drivers/clk/mvebu/clk-cpu.c                        |  155 ++++++++++
+>>  drivers/clk/mvebu/clk-cpu.h                        |   19 ++
+>>  drivers/clk/mvebu/clk.c                            |   36 +++
+>>  drivers/clocksource/time-armada-370-xp.c           |   11 +-
+>>  17 files changed, 685 insertions(+), 10 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+>>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+>>  create mode 100644 drivers/clk/mvebu/Makefile
+>>  create mode 100644 drivers/clk/mvebu/clk-core.c
+>>  create mode 100644 drivers/clk/mvebu/clk-core.h
+>>  create mode 100644 drivers/clk/mvebu/clk-cpu.c
+>>  create mode 100644 drivers/clk/mvebu/clk-cpu.h
+>>  create mode 100644 drivers/clk/mvebu/clk.c
+>>
+>> -- 
+>> 1.7.9.5
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
 
-Thanks.
 
 -- 
-Dmitry
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
