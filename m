@@ -1,31 +1,251 @@
-From: Kevin Hilman <khilman@deeprootsystems.com>
-Subject: Re: [PATCH] ARM: OMAP: omap_device: fix return value check in omap_device_build_ss()
-Date: Tue, 02 Oct 2012 14:36:52 -0700
-Message-ID: <87lifo8sjv.fsf@deeprootsystems.com>
-References: <CAPgLHd8ys7uU8wBhMF7JWZEDAddOnGo4vHPu1V_+Q3__WWK-3g@mail.gmail.com>
+From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Subject: [PATCH 1/5] Add /proc device tree updating to of node add/remove
+Date: Tue, 02 Oct 2012 21:55:01 -0500
+Message-ID: <506BA905.4090000@linux.vnet.ibm.com>
+References: <506B2E63.5090900@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd8ys7uU8wBhMF7JWZEDAddOnGo4vHPu1V_+Q3__WWK-3g@mail.gmail.com>
-	(Wei Yongjun's message of "Fri, 21 Sep 2012 14:32:04 +0800")
-Sender: linux-omap-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: tony@atomide.com, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <506B2E63.5090900@linux.vnet.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: devicetree-discuss@lists.ozlabs.org, cbe-oss-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Wei Yongjun <weiyj.lk@gmail.com> writes:
+When adding or removing a device tree node we should also update
+the device tree in /proc/device-tree. This action is already done in the
+generic OF code for adding/removing properties of a node. This patch adds
+this functionality for nodes.
 
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->
-> In case of error, the function omap_device_alloc() returns ERR_PTR()
-> and never returns NULL pointer. The NULL test in the return value
-> check should be replaced with IS_ERR().
->
-> dpatch engine is used to auto generated this patch.
-> (https://github.com/weiyj/dpatch)
->
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com> 
+---
+ arch/powerpc/platforms/pseries/dlpar.c    |   24 -------------
+ arch/powerpc/platforms/pseries/reconfig.c |   47 -------------------------
+ drivers/of/base.c                         |   55 +++++++++++++++++++++++++++---
+ 3 files changed, 51 insertions(+), 75 deletions(-)
 
-Thanks, queueing this for v3.7-rc.
-
-Kevin
+Index: dt-next/arch/powerpc/platforms/pseries/dlpar.c
+===================================================================
+--- dt-next.orig/arch/powerpc/platforms/pseries/dlpar.c	2012-10-02 08:30:23.000000000 -0500
++++ dt-next/arch/powerpc/platforms/pseries/dlpar.c	2012-10-02 08:40:51.000000000 -0500
+@@ -13,7 +13,6 @@
+ #include <linux/kernel.h>
+ #include <linux/kref.h>
+ #include <linux/notifier.h>
+-#include <linux/proc_fs.h>
+ #include <linux/spinlock.h>
+ #include <linux/cpu.h>
+ #include <linux/slab.h>
+@@ -255,9 +254,6 @@
+ 
+ int dlpar_attach_node(struct device_node *dn)
+ {
+-#ifdef CONFIG_PROC_DEVICETREE
+-	struct proc_dir_entry *ent;
+-#endif
+ 	int rc;
+ 
+ 	of_node_set_flag(dn, OF_DYNAMIC);
+@@ -274,32 +270,12 @@
+ 	}
+ 
+ 	of_attach_node(dn);
+-
+-#ifdef CONFIG_PROC_DEVICETREE
+-	ent = proc_mkdir(strrchr(dn->full_name, '/') + 1, dn->parent->pde);
+-	if (ent)
+-		proc_device_tree_add_node(dn, ent);
+-#endif
+-
+ 	of_node_put(dn->parent);
+ 	return 0;
+ }
+ 
+ int dlpar_detach_node(struct device_node *dn)
+ {
+-#ifdef CONFIG_PROC_DEVICETREE
+-	struct device_node *parent = dn->parent;
+-	struct property *prop = dn->properties;
+-
+-	while (prop) {
+-		remove_proc_entry(prop->name, dn->pde);
+-		prop = prop->next;
+-	}
+-
+-	if (dn->pde)
+-		remove_proc_entry(dn->pde->name, parent->pde);
+-#endif
+-
+ 	pSeries_reconfig_notify(PSERIES_RECONFIG_REMOVE, dn);
+ 	of_detach_node(dn);
+ 	of_node_put(dn); /* Must decrement the refcount */
+Index: dt-next/arch/powerpc/platforms/pseries/reconfig.c
+===================================================================
+--- dt-next.orig/arch/powerpc/platforms/pseries/reconfig.c	2012-10-02 08:30:23.000000000 -0500
++++ dt-next/arch/powerpc/platforms/pseries/reconfig.c	2012-10-02 08:40:51.000000000 -0500
+@@ -23,48 +23,6 @@
+ #include <asm/pSeries_reconfig.h>
+ #include <asm/mmu.h>
+ 
+-
+-
+-/*
+- * Routines for "runtime" addition and removal of device tree nodes.
+- */
+-#ifdef CONFIG_PROC_DEVICETREE
+-/*
+- * Add a node to /proc/device-tree.
+- */
+-static void add_node_proc_entries(struct device_node *np)
+-{
+-	struct proc_dir_entry *ent;
+-
+-	ent = proc_mkdir(strrchr(np->full_name, '/') + 1, np->parent->pde);
+-	if (ent)
+-		proc_device_tree_add_node(np, ent);
+-}
+-
+-static void remove_node_proc_entries(struct device_node *np)
+-{
+-	struct property *pp = np->properties;
+-	struct device_node *parent = np->parent;
+-
+-	while (pp) {
+-		remove_proc_entry(pp->name, np->pde);
+-		pp = pp->next;
+-	}
+-	if (np->pde)
+-		remove_proc_entry(np->pde->name, parent->pde);
+-}
+-#else /* !CONFIG_PROC_DEVICETREE */
+-static void add_node_proc_entries(struct device_node *np)
+-{
+-	return;
+-}
+-
+-static void remove_node_proc_entries(struct device_node *np)
+-{
+-	return;
+-}
+-#endif /* CONFIG_PROC_DEVICETREE */
+-
+ /**
+  *	derive_parent - basically like dirname(1)
+  *	@path:  the full_name of a node to be added to the tree
+@@ -149,9 +107,6 @@
+ 	}
+ 
+ 	of_attach_node(np);
+-
+-	add_node_proc_entries(np);
+-
+ 	of_node_put(np->parent);
+ 
+ 	return 0;
+@@ -179,8 +134,6 @@
+ 		return -EBUSY;
+ 	}
+ 
+-	remove_node_proc_entries(np);
+-
+ 	pSeries_reconfig_notify(PSERIES_RECONFIG_REMOVE, np);
+ 	of_detach_node(np);
+ 
+Index: dt-next/drivers/of/base.c
+===================================================================
+--- dt-next.orig/drivers/of/base.c	2012-10-02 08:30:47.000000000 -0500
++++ dt-next/drivers/of/base.c	2012-10-02 08:40:51.000000000 -0500
+@@ -1103,6 +1103,22 @@
+  * device tree nodes.
+  */
+ 
++#ifdef CONFIG_PROC_DEVICETREE
++static void of_add_proc_dt_entry(struct device_node *dn)
++{
++	struct proc_dir_entry *ent;
++
++	ent = proc_mkdir(strrchr(dn->full_name, '/') + 1, dn->parent->pde);
++	if (ent)
++		proc_device_tree_add_node(dn, ent);
++}
++#else
++static void of_add_proc_dt_entry(struct device_node *dn)
++{
++	return;
++}
++#endif
++
+ /**
+  * of_attach_node - Plug a device node into the tree and global list.
+  */
+@@ -1116,7 +1132,30 @@
+ 	np->parent->child = np;
+ 	allnodes = np;
+ 	write_unlock_irqrestore(&devtree_lock, flags);
++
++	of_add_proc_dt_entry(np);
++}
++
++#ifdef CONFIG_PROC_DEVICETREE
++static void of_remove_proc_dt_entry(struct device_node *dn)
++{
++	struct device_node *parent = dn->parent;
++	struct property *prop = dn->properties;
++
++	while (prop) {
++		remove_proc_entry(prop->name, dn->pde);
++		prop = prop->next;
++	}
++
++	if (dn->pde)
++		remove_proc_entry(dn->pde->name, parent->pde);
++}
++#else
++static void of_remove_proc_dt_entry(struct device_node *dn)
++{
++	return;
+ }
++#endif
+ 
+ /**
+  * of_detach_node - "Unplug" a node from the device tree.
+@@ -1131,9 +1170,17 @@
+ 
+ 	write_lock_irqsave(&devtree_lock, flags);
+ 
++	if (of_node_check_flag(np, OF_DETACHED)) {
++		/* someone already detached it */
++		write_unlock_irqrestore(&devtree_lock, flags);
++		return;
++	}
++
+ 	parent = np->parent;
+-	if (!parent)
+-		goto out_unlock;
++	if (!parent) {
++		write_unlock_irqrestore(&devtree_lock, flags);
++		return;
++	}
+ 
+ 	if (allnodes == np)
+ 		allnodes = np->allnext;
+@@ -1158,9 +1205,9 @@
+ 	}
+ 
+ 	of_node_set_flag(np, OF_DETACHED);
+-
+-out_unlock:
+ 	write_unlock_irqrestore(&devtree_lock, flags);
++
++	of_remove_proc_dt_entry(np);
+ }
+ #endif /* defined(CONFIG_OF_DYNAMIC) */
