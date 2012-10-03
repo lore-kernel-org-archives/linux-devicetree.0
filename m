@@ -1,11 +1,20 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] Devicetree updates for 3.7
-Date: Wed, 03 Oct 2012 11:31:42 -0500
-Message-ID: <506C686E.1050609@gmail.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] watchdog: at91sam9_wdt: add device tree support
+Date: Wed, 3 Oct 2012 18:32:31 +0200
+Message-ID: <CAHkwnC_uS1Q_oxr61w8k-7MJWyNfHx=maF_jMZ97tyGxPOn1kg@mail.gmail.com>
+References: <1349094281-28889-1-git-send-email-fabio.porcedda@gmail.com>
+ <1349094281-28889-4-git-send-email-fabio.porcedda@gmail.com>
+ <20121001124546.GE11837@lunn.ch>
+ <CAHkwnC_u+bMX7REU5G3u=cm3VGmOUn+AShruw+ERkPJWtZpxUg@mail.gmail.com>
+ <CAHkwnC_5wRgf-DGnUfzkrreT_E1v8i=G8U0qo_5t1DY6+L7c+w@mail.gmail.com>
+ <20121001130658.GG11837@lunn.ch>
+ <CAHkwnC83DcKXZOtLse_xnYe7zOZ5qwGJVimLkBzDwSJ7Y5vL_Q@mail.gmail.com>
+ <20121002190020.GD5117@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121002190020.GD5117-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,120 +25,79 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+On Tue, Oct 2, 2012 at 9:00 PM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 17:04 Tue 02 Oct     , Fabio Porcedda wrote:
+>> On Mon, Oct 1, 2012 at 3:06 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>> > On Mon, Oct 01, 2012 at 02:54:55PM +0200, Fabio Porcedda wrote:
+>> >> On Mon, Oct 1, 2012 at 2:48 PM, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >> > On Mon, Oct 1, 2012 at 2:45 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>> >> >> On Mon, Oct 01, 2012 at 02:24:39PM +0200, Fabio Porcedda wrote:
+>> >> >>> Tested on an at91sam9260 board (evk-pro3)
+>> >> >>>
+>> >> >>> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >> >>> ---
+>> >> >>>  .../devicetree/bindings/watchdog/atmel-wdt.txt      | 19 +++++++++++++++++++
+>> >> >>>  drivers/watchdog/at91sam9_wdt.c                     | 21 +++++++++++++++++++++
+>> >> >>>  2 files changed, 40 insertions(+)
+>> >> >>> ...
+>> >> >>
+>> >> >> In patch #1 you add a function to do this, and then you don't make use
+>> >> >> of it here ?
+>> >> >>
+>> >> >> Or am i missing something?
+>> >> >
+>> >> > I'm using it on the patch #2 for the orion_wdt driver.
+>> >> > Do you think it's better to join the #1 and the #2 patch?
+>> >> >
+>> >> > Best regards
+>> >> > --
+>> >> > Fabio Porcedda
+>> >>
+>> >> I'm sorry, only now i understand your question.
+>> >> The at91sam9_wdt driver don't use the watchdog core framework si i
+>> >> can't use that function cleanly.
+>> >
+>> >> The patch #1 and #2 are for introducing the same property as the
+>> >> at91sam9_wdt driver.
+>> >
+>> > So maybe split this up into two different patchsets. One patchset to
+>> > add the helper function, and the use of this helper to all watchdog
+>> > divers that can use it. I think the following drivers should be
+>> > modified:
+>> >
+>> > orion_wdt.c
+>> > pnx4008_wdt.c
+>> > s3c2410_wdt.c
+>> >
+>> > In a second patchset, convert the AT91SAM9 driver over to the watchdog
+>> > core framework, and then use the helper function.
+>>
+>> I was thinking to add a more generic helper function like this:
+>>
+>> static inline void watchdog_get_dttimeout(struct device_node *node,
+>> u32 *timeout)
+>> {
+>>       if (node)
+>>               of_property_read_u32(node, "timeout", &wdd->timeout);
+>> }
+>>
+>> This way i can use this helper function in the at91sam9_wdt driver too.
+>> What do you think?
+> timeout_sec and this can be move at of.h level
+>
+> as this is not watchdog framework secific
 
-Please pull Devicetree updates for 3.7. I'm filling in for Grant again
-this cycle.
+I can not find any property with the "_sec" suffix, you think it's
+still fine to use that suffix?
 
-The biggest change here is the import of the current upstream dtc
-scripts. Other than that, it's the typical small set of changes.
+You are speaking about a of_watchdog.h header with a
+of_watchdog_get_timeout function?
 
-There's one conflict with commit 3296193d1421c2d6f9 (dt: introduce
-for_each_available_child_of_node, of_get_next_available_child), but it
-is just context differences.
-
-Rob
-
-The following changes since commit 0d7614f09c1ebdbaa1599a5aba7593f147bf96ee:
-
-  Linux 3.6-rc1 (2012-08-02 16:38:10 -0700)
-
-are available in the git repository at:
-
-  git://sources.calxeda.com/kernel/linux.git tags/dt-for-3.7
-
-for you to fetch changes up to 36165f55055781a0e4bf32d775241796414504b0:
-
-  MAINTAINERS: add scripts/dtc under Devicetree maintainers (2012-10-01
-20:09:23 -0500)
-
-----------------------------------------------------------------
-Devicetree updates for 3.7
-
-- Import of latest upstream device tree compiler (dtc)
-- New function of_get_child_by_name
-- Support for #size-cells of 0 and #addr-cells of >2
-- Couple of DT binding documentation updates
-
-----------------------------------------------------------------
-Fabio Estevam (2):
-      devicetree: pwm: mxs-pwm.txt: Fix reg field annotation
-      devicetree: serial: Add documentation for imx serial
-
-John Crispin (1):
-      DT: export of_irq_to_resource_table()
-
-Olof Johansson (1):
-      of: i2c: add support for wakeup-source property
-
-Rob Herring (1):
-      MAINTAINERS: add scripts/dtc under Devicetree maintainers
-
-Srinivas Kandagatla (2):
-      dt: introduce of_get_child_by_name to get child node by name
-      dt/s3c64xx/spi: Use of_get_child_by_name to get a named child
-
-Stephen Warren (2):
-      of: Allow busses with #size-cells=0
-      dtc: import latest upstream dtc
-
-Thierry Reding (2):
-      of/address: Handle #address-cells > 2 specially
-      dt: Document general interrupt controller bindings
-
- .../bindings/interrupt-controller/interrupts.txt   |   95 +++
- Documentation/devicetree/bindings/pwm/mxs-pwm.txt  |    2 +-
- .../devicetree/bindings/serial/fsl-imx-uart.txt    |   35 +
- MAINTAINERS                                        |    1 +
- drivers/of/address.c                               |   35 +-
- drivers/of/base.c                                  |   23 +
- drivers/of/irq.c                                   |    1 +
- drivers/of/of_i2c.c                                |    3 +
- drivers/of/platform.c                              |   16 +-
- drivers/spi/spi-s3c64xx.c                          |    7 +-
- include/linux/of.h                                 |    2 +
- include/linux/of_address.h                         |    1 +
- scripts/dtc/Makefile.dtc                           |   13 +-
- scripts/dtc/checks.c                               |  203 +++--
- scripts/dtc/data.c                                 |  124 +---
- scripts/dtc/dtc-lexer.l                            |   65 +-
- scripts/dtc/dtc-lexer.lex.c_shipped                |  503 +++++++++----
- scripts/dtc/dtc-parser.tab.c_shipped               |  780
-++++++++++++++++----
- scripts/dtc/dtc-parser.tab.h_shipped               |   47 +-
- scripts/dtc/dtc-parser.y                           |  255 ++++++-
- scripts/dtc/dtc.c                                  |   21 +-
- scripts/dtc/dtc.h                                  |   51 +-
- scripts/dtc/fdtdump.c                              |  162 ++++
- scripts/dtc/fdtget.c                               |  366 +++++++++
- scripts/dtc/fdtput.c                               |  362 +++++++++
- scripts/dtc/flattree.c                             |    3 +
- scripts/dtc/libfdt/Makefile.libfdt                 |    6 +-
- scripts/dtc/libfdt/fdt.c                           |   61 +-
- scripts/dtc/libfdt/fdt_empty_tree.c                |   84 +++
- scripts/dtc/libfdt/fdt_ro.c                        |  275 ++++---
- scripts/dtc/libfdt/fdt_rw.c                        |   29 +
- scripts/dtc/libfdt/fdt_sw.c                        |   11 +-
- scripts/dtc/libfdt/fdt_wip.c                       |   41 +-
- scripts/dtc/libfdt/libfdt.h                        |  440 ++++++++++-
- scripts/dtc/libfdt/libfdt_env.h                    |   16 +-
- scripts/dtc/libfdt/libfdt_internal.h               |    2 +-
- scripts/dtc/livetree.c                             |  128 +++-
- scripts/dtc/srcpos.c                               |   98 ++-
- scripts/dtc/srcpos.h                               |   31 +
- scripts/dtc/treesource.c                           |    2 +
- scripts/dtc/util.c                                 |  272 +++++++
- scripts/dtc/util.h                                 |   97 +++
- 42 files changed, 4057 insertions(+), 712 deletions(-)
- create mode 100644
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- create mode 100644
-Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
- create mode 100644 scripts/dtc/fdtdump.c
- create mode 100644 scripts/dtc/fdtget.c
- create mode 100644 scripts/dtc/fdtput.c
- create mode 100644 scripts/dtc/libfdt/fdt_empty_tree.c
+Best regards and thanks for the review.
+-- 
+Fabio Porcedda
