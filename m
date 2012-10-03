@@ -1,119 +1,82 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: =?UTF-8?q?=5BPATCH=201/2=20v6=5D=20of=3A=20add=20helper=20to=20parse=20display=20timings?=
-Date: Thu, 4 Oct 2012 23:35:35 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
- <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
+From: Omar Ramirez Luna <omar.luna@linaro.org>
+Subject: Re: [PATCH v2 8/9] ARM: OMAP: iommu: add device tree support
+Date: Wed, 3 Oct 2012 16:13:33 -0500
+Message-ID: <CALLhW=4oawfGqSDHAVgh_SPqB4Ugeyw6MjoaNDVkxSJcJd4Tpg@mail.gmail.com>
+References: <1347479152-588-1-git-send-email-omar.luna@linaro.org>
+	<1347479152-588-9-git-send-email-omar.luna@linaro.org>
+	<20121002212523.GA11180@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1349373560-11128-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121002212523.GA11180@beef>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matt Porter <mporter@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Paul Walmsley <paul@pwsan.com>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Joerg Roedel <joerg.roedel@amd.com>, Russell King <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen
+Hi Matt,
 
-Sorry for chiming in so late in the game, but I've long been wanting to 
-have a look at this and compare with what we do for V4L2, so, this seems a 
-great opportunity to me:-)
+On 2 October 2012 16:25, Matt Porter <mporter@ti.com> wrote:
+...
+> I can see why you went this path with the iommu driver as it already had
+> some integration code present here. I have some concerns going forward
+> about how this should be long-term. Take any platform booting only with
+> DT populated, we'd like to avoid having to use this approach where
+> platform private APIs are called via pdata. In fact, it's going to makes
+> thing ugly to carry any sort of pdata for a driver that's otherwise
+> driven exclusively from DT.
+>
+> For AM335x, I can implement this approach, but it means adding some
+> pruss specific integration code just to have it create the pdata for
+> reset_name and assert/deassert.
 
-On Thu, 4 Oct 2012, Steffen Trumtrar wrote:
+Yes I agree, it looks a bit ugly for devices that have more than one
+reset line name too, but right now there is no other way to keep the
+reset names and also provide flexibility to the driver to control them
+in a given order.
 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/display-timings.txt  |  222 ++++++++++++++++++++
->  drivers/of/Kconfig                                 |    5 +
->  drivers/of/Makefile                                |    1 +
->  drivers/of/of_display_timings.c                    |  183 ++++++++++++++++
->  include/linux/of_display_timings.h                 |   85 ++++++++
->  5 files changed, 496 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
->  create mode 100644 drivers/of/of_display_timings.c
->  create mode 100644 include/linux/of_display_timings.h
-> 
-> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
-> new file mode 100644
-> index 0000000..45e39bd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/display-timings.txt
-> @@ -0,0 +1,222 @@
-> +display-timings bindings
-> +==================
-> +
-> +display-timings-node
-> +------------
-> +
-> +required properties:
-> + - none
-> +
-> +optional properties:
-> + - default-timing: the default timing value
-> +
-> +timings-subnode
-> +---------------
-> +
-> +required properties:
-> + - hactive, vactive: Display resolution
-> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
-> +   in pixels
-> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
-> +   lines
-> + - clock: displayclock in Hz
+> From reading all the threads on hardresets and OMAP, it seems we may not
+> be able to come up with a generic OMAP handler for these resets and
+> that's really reflected in the fact that this API exists. So given that,
+> it reasons that OMAP isn't the only one needing a reset API for drivers.
+> I'm thinking that (as trivial as it may seem), this support may need to
+> move to a reset subsystem such that drivers have a clean way to access
+> reset resources in an SoC.
 
-You're going to hate me for this, but eventually we want to actually 
-reference clock objects in our DT bindings. For now, even if you don't 
-want to actually add clock phandles and stuff here, I think, using the 
-standard "clock-frequency" property would be much better!
+Well, there was a point where the OMAP hwmod code contained the reset
+code and at least for me it was working fine, with iommu and ipu
+processor, just with a minor misleading warning print... however then
+this code got stripped out and since there appeared to be people
+needing to handle their reset lines in unknown ways it was advised
+that everybody should implement their own reset functions, but in my
+case I could reuse most of the disabled code at the expense of almost
+duplicating _enable (omap_hwmod) function while waiting all the reset
+line users started asking for changes.
 
-> +
-> +optional properties:
-> + - hsync-active-high (bool): Hsync pulse is active high
-> + - vsync-active-high (bool): Vsync pulse is active high
+> I'm curious if you or others have thought about where this needs to go
+> next.
 
-For the above two we also considered using bool properties but eventually 
-settled down with integer ones:
+I haven't planned for a reset subsystem or a more generic
+implementation, although I have been looking for a way to avoid using
+the pdata function pointers.
 
-- hsync-active = <1>
+> When I first thought about a reset subsystem it seemed to trivial
+> to bother with but looking at the reasoning behind the power_seq
+> subsystem, it seems to have similar justification to get this machine
+> specific logic out of the platform code and under standardized control
+> of the driver.
 
-for active-high and 0 for active low. This has the added advantage of 
-being able to omit this property in the .dts, which then doesn't mean, 
-that the polarity is active low, but rather, that the hsync line is not 
-used on this hardware. So, maybe it would be good to use the same binding 
-here too?
+IMHO, the reset code even if made a subsystem or a library, would
+still need to interface with machine specific code and definitions
+(say omap_hwmod), so I don't see much difference in making the
+omap_device reset handlers as exported symbols for the time being,
+with acceptance of the owners of omap_device code.
 
-> + - de-active-high (bool): Data-Enable pulse is active high
-> + - pixelclk-inverted (bool): pixelclock is inverted
+And then if power_seq makes it to mainline perhaps extending it to
+handle deassert, assert and softreset events, but then again this
+would have the same hooks to omap_hwmod which is the one with the prcm
+information.
 
-We don't (yet) have a de-active property in V4L, don't know whether we'll 
-ever have to distingsuish between what some datasheets call "HREF" and 
-HSYNC in DT, but maybe similarly to the above an integer would be 
-preferred. As for pixclk, we call the property "pclk-sample" and it's also 
-an integer.
+Regards,
 
-> + - interlaced (bool)
-
-Is "interlaced" a property of the hardware, i.e. of the board? Can the 
-same display controller on one board require interlaced data and on 
-another board - progressive? BTW, I'm not very familiar with display 
-interfaces, but for interlaced you probably sometimes use a field signal, 
-whose polarity you also want to specify here? We use a "field-even-active" 
-integer property for it.
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Omar
