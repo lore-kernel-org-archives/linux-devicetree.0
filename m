@@ -1,155 +1,115 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH v4 2/6] misc: Generic on-chip SRAM allocation driver
-Date: Thu, 4 Oct 2012 11:25:09 -0400
-Message-ID: <20121004152509.GJ11149@beef>
-References: <1347021828-23034-1-git-send-email-p.zabel@pengutronix.de>
- <1347021828-23034-3-git-send-email-p.zabel@pengutronix.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] dtc: fix for_each_*() to skip first object if deleted
+Date: Wed,  3 Oct 2012 16:32:54 -0600
+Message-ID: <1349303574-4635-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1347021828-23034-3-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2012 at 02:43:44PM +0200, Philipp Zabel wrote:
-> This driver requests and remaps a memory region as configured in the
-> device tree. It serves memory from this region via the genalloc API.
-> 
-> Other drivers can retrieve the genalloc pool from a phandle pointing
-> to this drivers' device node in the device tree.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-<snip>
+The previous definition of e.g. for_each_*() would always include the
+very first object within the list of processed labels, irrespective of
+whether it was marked deleted, since the deleted flag was not checked
+on the first object, but only on any "next" object.
 
-> +	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
-> +	if (!sram->pool)
-> +		return -ENOMEM;
+Fix for_each_*() to call skip_deleted_*() prior to every loop iteration,
+including the first, i.e. as part of the for loop test expression rather
+than as part of the increment statement, to correct this.
 
-As mentioned in the uio_pruss/genalloc discussion, removing the
-hardcoded minimum allocation order will allow this to be used for
-a number of other cases. The most notable is moving mach-davinci/
-off of its own genalloc-based SRAM arch driver. Some of the davinci
-SoCs have very small SRAMs and need the ability to allocate a smaller
-chunk.
+Incidentally, this change is why commit 45013d8 dtc: "Add ability to
+delete nodes and properties" only caused two "make checkm" failures;
+only two tests actually use multiple labels on the same property or
+node. With this current change applied, but commit 317a5d9 "dtc: zero
+out new label objects" reverted, "make checkm" fails 29 times; i.e.
+for every test that uses any labels at all.
 
-Here's a build-tested patch to add this option:
-
->From 6eced8c31eba2f86e72e854cf404d8f58fbeba85 Mon Sep 17 00:00:00 2001
-From: Matt Porter <mporter@ti.com>
-Date: Thu, 4 Oct 2012 11:08:02 -0400
-Subject: [PATCH] misc: sram: add support for configurable allocation order
-
-Adds support for setting the genalloc pool's minimum allocation
-order via DT or platform data. The allocation order is optional
-for both the DT property and platform data case. If it is not
-present then the order defaults to PAGE_SHIFT to preserve the
-current behavior.
-
-Signed-off-by: Matt Porter <mporter@ti.com>
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/devicetree/bindings/misc/sram.txt |   12 ++++++++++-
- drivers/misc/sram.c                             |   14 ++++++++++++-
- include/linux/platform_data/sram.h              |   25 +++++++++++++++++++++++
- 3 files changed, 49 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/platform_data/sram.h
+Rob, Grant, now that you're listed as maintainers for the Linux kernel's
+copy of dtc, will you automatically apply patches there as they are
+accepted into upstream dtc, or should I still create "backport" patches
+and send them to you separately?
 
-diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
-index b64136c..b1705ec 100644
---- a/Documentation/devicetree/bindings/misc/sram.txt
-+++ b/Documentation/devicetree/bindings/misc/sram.txt
-@@ -8,10 +8,20 @@ Required properties:
- 
- - reg : SRAM iomem address range
- 
--Example:
-+Optional properties:
-+
-+- alloc-order : Minimum allocation order for the SRAM pool
-+
-+Examples:
-+
-+sram: sram@5c000000 {
-+	compatible = "sram";
-+	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-+};
- 
- sram: sram@5c000000 {
- 	compatible = "sram";
- 	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-+	alloc-order = <9>; /* Minimum 512 byte allocation */
+ dtc.h |   23 +++++++++++------------
+ 1 files changed, 11 insertions(+), 12 deletions(-)
+
+diff --git a/dtc.h b/dtc.h
+index d501c86..88da264 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -161,47 +161,46 @@ struct node {
+ 	struct label *labels;
  };
  
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index 7a363f2..3bf8ed3 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -26,6 +26,7 @@
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
- #include <linux/genalloc.h>
-+#include <linux/platform_data/sram.h>
+-static inline struct label *for_each_label_next(struct label *l)
++static inline struct label *skip_deleted_labels(struct label *l)
+ {
+-	do {
++	while (l && l->deleted)
+ 		l = l->next;
+-	} while (l && l->deleted);
  
- struct sram_dev {
- 	struct gen_pool *pool;
-@@ -37,6 +38,7 @@ static int __devinit sram_probe(struct platform_device *pdev)
- 	struct sram_dev *sram;
- 	struct resource *res;
- 	unsigned long size;
-+	u32 alloc_order = PAGE_SHIFT;
- 	int ret;
+ 	return l;
+ }
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -53,7 +55,17 @@ static int __devinit sram_probe(struct platform_device *pdev)
- 	if (!sram)
- 		return -ENOMEM;
+ #define for_each_label(l0, l) \
+-	for ((l) = (l0); (l); (l) = for_each_label_next(l))
++	for ((l) = (l0); ((l) = skip_deleted_labels(l)); (l) = (l)->next)
  
--	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
-+	if (pdev->dev.of_node)
-+		of_property_read_u32(pdev->dev.of_node,
-+				     "alloc-order", &alloc_order);
-+	else
-+		if (pdev->dev.platform_data) {
-+			struct sram_pdata *pdata = pdev->dev.platform_data;
-+			if (pdata->alloc_order)
-+				alloc_order = pdata->alloc_order;
-+		}
-+
-+	sram->pool = gen_pool_create(alloc_order, -1);
- 	if (!sram->pool)
- 		return -ENOMEM;
+ #define for_each_label_withdel(l0, l) \
+ 	for ((l) = (l0); (l); (l) = (l)->next)
  
-diff --git a/include/linux/platform_data/sram.h b/include/linux/platform_data/sram.h
-new file mode 100644
-index 0000000..e17bdaa
---- /dev/null
-+++ b/include/linux/platform_data/sram.h
-@@ -0,0 +1,25 @@
-+/*
-+ * include/linux/platform_data/sram.h
-+ *
-+ * Platform data for generic sram driver
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _SRAM_H_
-+#define _SRAM_H_
-+
-+struct sram_pdata {
-+	unsigned alloc_order;	/* Optional: driver defaults to PAGE_SHIFT */
-+};
-+
-+#endif /* _SRAM_H_ */
+-static inline struct property *for_each_property_next(struct property *p)
++static inline struct property *skip_deleted_properties(struct property *p)
+ {
+-	do {
++	while (p && p->deleted)
+ 		p = p->next;
+-	} while (p && p->deleted);
+ 
+ 	return p;
+ }
+ 
+ #define for_each_property(n, p) \
+-	for ((p) = (n)->proplist; (p); (p) = for_each_property_next(p))
++	for ((p) = (n)->proplist; ((p) = skip_deleted_properties(p)); \
++		(p) = (p)->next)
+ 
+ #define for_each_property_withdel(n, p) \
+ 	for ((p) = (n)->proplist; (p); (p) = (p)->next)
+ 
+-static inline struct node *for_each_child_next(struct node *c)
++static inline struct node *skip_deleted_children(struct node *c)
+ {
+-	do {
++	while (c && c->deleted)
+ 		c = c->next_sibling;
+-	} while (c && c->deleted);
+ 
+ 	return c;
+ }
+ 
+ #define for_each_child(n, c) \
+-	for ((c) = (n)->children; (c); (c) = for_each_child_next(c))
++	for ((c) = (n)->children; ((c) = skip_deleted_children(c)); \
++		(c) = (c)->next_sibling)
+ 
+ #define for_each_child_withdel(n, c) \
+ 	for ((c) = (n)->children; (c); (c) = (c)->next_sibling)
 -- 
-1.7.9.5
+1.7.0.4
