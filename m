@@ -1,87 +1,140 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Wed, 3 Oct 2012 10:52:32 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA3F22E@DBDE01.ent.ti.com>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
- <CACRpkdbSY-aH_Vf3Q4h-ufz35m6=vVXCEecGGS-WOsG7vmPZ0g@mail.gmail.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA3E24E@DBDE01.ent.ti.com>
- <CACRpkdZ_NxST-oJ=MWC5L=r8uQD_71eHUVUR85v4jfsYpqz=UQ@mail.gmail.com>
- <20121001154451.GI4840@atomide.com>
- <CACRpkdaib2M1_UwSbyUG8qwZC2h7xaT5VU7WMj=y+h4S4LianQ@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH 1/2] of: add helper to parse display specs
+Date: Wed, 3 Oct 2012 13:06:16 +0200
+Message-ID: <20121003110616.GA2946@pengutronix.de>
+References: <1348500924-8551-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1348500924-8551-2-git-send-email-s.trumtrar@pengutronix.de>
+ <5069CA74.7040409@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdaib2M1_UwSbyUG8qwZC2h7xaT5VU7WMj=y+h4S4LianQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org" <bryan.wu-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5069CA74.7040409@wwwdotorg.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 02, 2012 at 01:29:37, Linus Walleij wrote:
-> On Mon, Oct 1, 2012 at 5:44 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+On Mon, Oct 01, 2012 at 10:53:08AM -0600, Stephen Warren wrote:
+> On 09/24/2012 09:35 AM, Steffen Trumtrar wrote:
+> > Parse a display-node with timings and hardware-specs from devictree.
 > 
-> >> OK that is typical pinctrl driver implementation work.
-> >> I hope Tony can advice on this?
-> >
-> > I think we're best off to just stick to alternative named modes
-> > passed from device tree. For example, for GPIO wake-ups you can
-> > have named modes such as "default", "enabled" and "idle" where
-> > "idle" muxes things for GPIO wake-ups for the duration of idle.
-> >
-
-In this case we need to add three different values according
-to three modes (default, enabled, idle) and for each node.
-
-> > It seems that should also work for leds-gpio. And you can
-> > define more named modes as needed.
-
-If we want to implement pinctrl_gpio functionality we have to
-separate "function-mask" bits to
-
-1. pinmux-mask
-2. pinconf-mask, to make it generic we need following bit masks
-	a. receiver enable/disable bit
-	b. slew rate fast/slow bit
-	c. pull-up/down bit
-	....
-
-I have gone through nvidia pinctrl dt data (tegra20-seaboard.dts,
-node drive_sdio1) which has different pinconfig values, those
-are mapping to pinconf values.
-
-With the above bit masks and function-mask we can identify
-pull-up/down, slow/high speed slew rate and direction in/out.
-
-(or)
-
-Named modes:-
-
-Are you saying named modes like this?
-default-input-up
-default-input-down
-default-output-up
-default-output-down
-
-This 1, 2 and 2.a or named modes are required to implement
-pinctrl_gpio_direction_input/output and
-pinctrl_request/free_gpio.
-
+> > diff --git a/Documentation/devicetree/bindings/video/display b/Documentation/devicetree/bindings/video/display
+> > new file mode 100644
+> > index 0000000..722766a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/video/display
 > 
+> This should be display.txt.
 > 
-> This is what we're doing for ux500 and should be a good model.
+Okay
 
-I have looked into this, but not seen any named modes.
+> > @@ -0,0 +1,208 @@
+> > +display bindings
+> > +==================
+> > +
+> > +display-node
+> > +------------
+> 
+> I'm not personally convinced about the direction this is going. While I
+> think it's reasonable to define DT bindings for displays, and DT
+> bindings for display modes, I'm not sure that it's reasonable to couple
+> them together into a single binding.
+> 
+> I think creating a well-defined timing binding first will be much
+> simpler than doing so within the context of a display binding; the
+> scope/content of a general display binding seems much less well-defined
+> to me at least, for reasons I mentioned before.
+> 
 
-Thanks
-AnilKumar
+Yes, you are right. I'm in the middle of moving things around a little.
+It seems best, to have bindings only for the timings at the moment and
+get people to agree on those and use them, instead of all the adhoc solutions
+based on of_videomode v2.
+
+Then, the of_get_display_timings and the conversion via videomode to fb_videomode
+etc can be combined with Laurent Pincharts panel proposal.
+
+> > +required properties:
+> > + - none
+> > +
+> > +optional properties:
+> > + - default-timing: the default timing value
+> > + - width-mm, height-mm: Display dimensions in mm
+> 
+> > + - hsync-active-high (bool): Hsync pulse is active high
+> > + - vsync-active-high (bool): Vsync pulse is active high
+> 
+> At least those two properties should exist in the display timing instead
+> (or perhaps as well). There are certainly cases where different similar
+> display modes are differentiated by hsync/vsync polarity more than
+> anything else. This is probably more likely with analog display
+> connectors than digital, but I see no reason why a DT binding for
+> display timing shouldn't cover both.
+> 
+
+Yes. Will do.
+
+> > + - de-active-high (bool): Data-Enable pulse is active high
+> > + - pixelclk-inverted (bool): pixelclock is inverted
+> 
+> > + - pixel-per-clk
+> 
+> pixel-per-clk is probably something that should either be part of the
+> timing definition, or something computed internally to the display
+> driver based on rules for the signal type, rather than something
+> represented in DT.
+> 
+> The above comment assumes this property is intended to represent DVI's
+> requirement for pixel clock doubling for low-pixel-clock-rate modes. If
+> it's something to do with e.g. a single-data-rate vs. double-data-rate
+> property of the underlying physical connection, that's most likely
+> something that should be defined in a binding specific to e.g. LVDS,
+> rather than something generic.
+> 
+> > + - link-width: number of channels (e.g. LVDS)
+> > + - bpp: bits-per-pixel
+> > +
+> > +timings-subnode
+> > +---------------
+> > +
+> > +required properties:
+> > +subnodes that specify
+> > + - hactive, vactive: Display resolution
+> > + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
+> > +   in pixels
+> > +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
+> > +   lines
+> > + - clock: displayclock in Hz
+> > +
+> > +There are different ways of describing a display and its capabilities. The devicetree
+> > +representation corresponds to the one commonly found in datasheets for displays.
+> > +The description of the display and its timing is split in two parts: first the display
+> > +properties like size in mm and (optionally) multiple subnodes with the supported timings.
+> > +If a display supports multiple signal timings, the default-timing can be specified.
+> > +
+> > +Example:
+> > +
+> > +	display@0 {
+> > +		width-mm = <800>;
+> > +		height-mm = <480>;
+> > +		default-timing = <&timing0>;
+> > +		timings {
+> > +			timing0: timing@0 {
+> 
+> If you're going to use a unit address ("@0") to ensure that node names
+> are unique (which is not mandatory), then each node also needs a reg
+> property with matching value, and #address-cells/#size-cells in the
+> parent. Instead, you could name the nodes something unique based on the
+> mode name to avoid this, e.g. 1080p24 { ... }.
+> 
+
+Ah, okay. Wasn't sure that was valid. I prefer to not use unit addresses.
+
+ 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
