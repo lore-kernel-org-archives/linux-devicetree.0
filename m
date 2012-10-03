@@ -1,96 +1,65 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v6 0/4] Runtime Interpreted Power Sequences
-Date: Wed, 03 Oct 2012 09:30:12 -0600
-Message-ID: <506C5A04.9030503@wwwdotorg.org>
-References: <1347443867-18868-1-git-send-email-acourbot@nvidia.com>
- <4473898.CeAQBgUhKL@percival>
- <20120913071928.GA20959@opensource.wolfsonmicro.com>
- <1378218.yLeQheNFT0@percival>
- <20120913072943.GB20959@opensource.wolfsonmicro.com>
- <5051FAC5.40501@wwwdotorg.org> <506BF62F.6040308@nvidia.com>
+From: Fabio Porcedda <fabio.porcedda@gmail.com>
+Subject: [PATCH v8 0/3] watchdog: at91sam9_wdt: add device tree support
+Date: Wed,  3 Oct 2012 17:48:03 +0200
+Message-ID: <1349279286-11261-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <506BF62F.6040308-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>
+Cc: Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2012 02:24 AM, Alex Courbot wrote:
-> On 09/14/2012 12:24 AM, Stephen Warren wrote:
->> On 09/13/2012 01:29 AM, Mark Brown wrote:
->>> On Thu, Sep 13, 2012 at 04:26:34PM +0900, Alex Courbot wrote:
->>>> On Thursday 13 September 2012 15:19:30 Mark Brown wrote:
->>>>>> On Thursday 13 September 2012 14:25:53 Mark Brown wrote:
->>>>>>> It would be sensible to make sure that the framework is done in
->>>>>>> such a
->>>>>>> way that drivers can use it - there will be drivers (perhaps not
->>>>>>> display
->>>>>>> ones) that have a known power sequence and which could benefit
->>>>>>> from the
->>>>>>> ability to use library code to implement it based on the user simply
->>>>>>> supplying named resources.
->>>
->>>>>> Not sure I understand what you mean, but things should be working
->>>>>> this way
->>>>>> already - regulators and PWMs are acquired by name using the standard
->>>>>> regulator_get() and pwm_get() functions. GPIOs do not, AFAIK, have
->>>>>> a way
->>>>>> to be referenced by name so their number is used instead.
->>>
->>>>> Right, but the sequencing for enabling them is currently open coded in
->>>>> each driver.
->>>
->>>> Mmm then I'm afraid I don't see what you wanted to say initially -
->>>> could you
->>>> elaborate?
->>>
->>> The driver knows the power sequence.  Having to type the same sequence
->>> into the DT or platform data for each board using the device wouuld be
->>> retarded so we need the drivers to be able to give the sequence to the
->>> library if they're going to be able to reuse it (which is a lot of what
->>> Tomi is talking about).
->>
->> I believe that's trivial to implement. The relevant function is:
->>
->> struct power_seq_set *devm_power_seq_set_build(struct device *dev,
->>            struct platform_power_seq_set *pseq);
->>
->> It's up to the driver whether pseq comes from platform data or is
->> hard-coded into the driver (or not provided at all, for the DT case).
->> So, the only change needed to convert a "hard-coded" driver to this API
->> is to convert the current custom data structure (or code) that describes
->> the sequence into a struct platform_power_seq_set.
-> 
-> If we go this way (which looks good IMO!), then maybe we should abandon
-> that "platform" denomination and merge platform_power_seq* structures
-> with the currently private power_seq*, and also replace the "building"
-> step with a resources acquisition one. Calling these structures
-> "platform" implies they are for platform data while they can be used to
-> perform more flexible things as Mark mentioned.
+Hi all,
 
-That all seems reasonable.
+This patchset is for adding device tree support to the
+at91sam9_wdt driver.
 
-> Also making the resolved
-> resource visible would allow drivers to "patch" generic sequences with
-> the proper GPIO numbers at runtime.
+Another patchset will follow to add the new "timeout" binding to the
+watchdog framework and to all the relevant drivers.
 
-That doesn't sound like a great idea to me, but we can simply avoid
-doing this even though it's technically possible.
+Changes:
+v8:
+ - add __initconst to at91_wdt_dt_ids
+v7:
+ - split the patchset
+ - remove timeout binding
+v6:
+ - add watchdog core proprty timeout binding
+ - add as example to the orion_wdt driver the new timeout binding
+v5:
+ - split dts commit in two, one for socs and one for boards.
+v4:
+ - use "atmel,at91sam9260-wdt" as compatible
+v3:
+ - add heartbeat option
+ - default disabled for all the soc, enable only for evk-pro3 board
+ - add at91sam9263 and at91sam9g45 soc
+v2:
+ - add missing to and cc addresses
 
-> We would also avoid a few memory
-> copies and both design and usage would be simplified, at the cost of
-> having more things exposed. How does that sound?
+Fabio Porcedda (3):
+  watchdog: at91sam9_wdt: add device tree support
+  ARM: at91/dts: add at91sam9_wdt driver to at91sam926x, at91sam9g45
+  ARM: at91/dts: evk-pro3: enable watchdog
 
-Sounds fine to me at least.
+ Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 15 +++++++++++++++
+ arch/arm/boot/dts/at91sam9260.dtsi                       |  6 ++++++
+ arch/arm/boot/dts/at91sam9263.dtsi                       |  6 ++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi                       |  6 ++++++
+ arch/arm/boot/dts/evk-pro3.dts                           |  4 ++++
+ drivers/watchdog/at91sam9_wdt.c                          | 11 +++++++++++
+ 6 files changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+
+-- 
+1.7.11.3
