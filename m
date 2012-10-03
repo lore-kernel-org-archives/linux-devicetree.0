@@ -1,65 +1,87 @@
-From: Fabio Porcedda <fabio.porcedda@gmail.com>
-Subject: [PATCH v8 0/3] watchdog: at91sam9_wdt: add device tree support
-Date: Wed,  3 Oct 2012 17:48:03 +0200
-Message-ID: <1349279286-11261-1-git-send-email-fabio.porcedda@gmail.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v8 2/3] ARM: at91/dts: add at91sam9_wdt driver to at91sam926x,
+ at91sam9g45
+Date: Wed,  3 Oct 2012 17:48:05 +0200
+Message-ID: <1349279286-11261-3-git-send-email-fabio.porcedda@gmail.com>
+References: <1349279286-11261-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>
-Cc: Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1349279286-11261-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Tested on an at91sam9260 board (evk-pro3).
 
-This patchset is for adding device tree support to the
-at91sam9_wdt driver.
+Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/at91sam9260.dtsi | 6 ++++++
+ arch/arm/boot/dts/at91sam9263.dtsi | 6 ++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi | 6 ++++++
+ 3 files changed, 18 insertions(+)
 
-Another patchset will follow to add the new "timeout" binding to the
-watchdog framework and to all the relevant drivers.
-
-Changes:
-v8:
- - add __initconst to at91_wdt_dt_ids
-v7:
- - split the patchset
- - remove timeout binding
-v6:
- - add watchdog core proprty timeout binding
- - add as example to the orion_wdt driver the new timeout binding
-v5:
- - split dts commit in two, one for socs and one for boards.
-v4:
- - use "atmel,at91sam9260-wdt" as compatible
-v3:
- - add heartbeat option
- - default disabled for all the soc, enable only for evk-pro3 board
- - add at91sam9263 and at91sam9g45 soc
-v2:
- - add missing to and cc addresses
-
-Fabio Porcedda (3):
-  watchdog: at91sam9_wdt: add device tree support
-  ARM: at91/dts: add at91sam9_wdt driver to at91sam926x, at91sam9g45
-  ARM: at91/dts: evk-pro3: enable watchdog
-
- Documentation/devicetree/bindings/watchdog/atmel-wdt.txt | 15 +++++++++++++++
- arch/arm/boot/dts/at91sam9260.dtsi                       |  6 ++++++
- arch/arm/boot/dts/at91sam9263.dtsi                       |  6 ++++++
- arch/arm/boot/dts/at91sam9g45.dtsi                       |  6 ++++++
- arch/arm/boot/dts/evk-pro3.dts                           |  4 ++++
- drivers/watchdog/at91sam9_wdt.c                          | 11 +++++++++++
- 6 files changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index 7c95f76..7612193 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -236,6 +236,12 @@
+ 					trigger-external;
+ 				};
+ 			};
++
++			watchdog@fffffd40 {
++				compatible = "atmel,at91sam9260-wdt";
++				reg = <0xfffffd40 0x10>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		nand0: nand@40000000 {
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 195019b..d822240 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -185,6 +185,12 @@
+ 				interrupts = <24 4 2>;
+ 				status = "disabled";
+ 			};
++
++			watchdog@fffffd40 {
++				compatible = "atmel,at91sam9260-wdt";
++				reg = <0xfffffd40 0x10>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		nand0: nand@40000000 {
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 63751b1..df998ab 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -242,6 +242,12 @@
+ 					trigger-value = <0x6>;
+ 				};
+ 			};
++
++			watchdog@fffffd40 {
++				compatible = "atmel,at91sam9260-wdt";
++				reg = <0xfffffd40 0x10>;
++				status = "disabled";
++			};
+ 		};
+ 
+ 		nand0: nand@40000000 {
 -- 
 1.7.11.3
