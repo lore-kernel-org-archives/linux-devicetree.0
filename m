@@ -1,60 +1,47 @@
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: re: spi-gpio: allow operation without CS signal
-Date: Wed, 3 Oct 2012 17:42:41 +0300
-Message-ID: <20121003144241.GA18056@elgon.mountain>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: [PATCH 0/4] mtd: nand: OMAP: Add support to use ELM as error correction module
+Date: Wed, 3 Oct 2012 19:59:45 +0530
+Message-ID: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: mb-fseUSCV1ubazQB+pC5nmwQ@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, tony@atomide.com
+Cc: afzal@ti.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, ivan.djelic@parrot.com, "Philip, Avinash" <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Michael Buesch,
+Adds support to use ELM as BCH 4 & 8 bit error correction module and
+adds support for single shot read_page and write_page functions
 
-The patch bfb9bcdbda9a: "spi-gpio: allow operation without CS signal"
-from Apr 2, 2009, leads to the following Clang warning:
-drivers/spi/spi-gpio.c:229:9: warning: comparison of constant
-18446744073709551615 with expression of type 'unsigned int' is always
-true [-Wtautological-constant-out-of-range-compare]
+Platforms containing the ELM module can be used to correct errors
+reported by BCH 4, 8 & 16 bit ECC scheme. For now only 4 & 8 bit
+support is added.
 
+BCH 4 & 8 bit error detection support is already available in mainline
+kernel and works with software error correction.
 
-#define SPI_GPIO_NO_CHIPSELECT          ((unsigned long)-1l)
-                                         ^^^^^^^^^^^^^^^^^^
+This series is based on top of [1] &[2]
 
-drivers/spi/spi-gpio.c
-   223          unsigned int cs = spi_gpio->cs_gpios[spi->chip_select];
-   224  
-   225          /* set initial clock polarity */
-   226          if (is_active)
-   227                  setsck(spi, spi->mode & SPI_CPOL);
-   228  
-   229          if (cs != SPI_GPIO_NO_CHIPSELECT) {
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This is always true.  SPI_GPIO_NO_CHIPSELECT is used like this through
-out.  The comments say that it's supposed to be used as a void pointer
-but that doesn't make a lot of sense either.
+1. linux-next/master
+2. linux-omap-dt/for_3.7/dts_part2
 
-   230                  /* SPI is normally active-low */
-   231                  gpio_set_value(cs, (spi->mode & SPI_CS_HIGH) ? is_active : !is_active);
-   232          }
+Nand driver tested for BCH 4 & 8 bit error correction per sector.
+This being tested by introducing bit errors at multiple sectors inside page.
 
-regards,
-dan carpenter
+Philip, Avinash (4):
+  mtd: nand: omap2: Update nerrors using ecc.strength
+  mtd: devices: elm: Add support for ELM error correction
+  ARM: OMAP2: gpmc: Add support for BCH ECC scheme
+  mtd: nand: omap2: Add data correction support
 
+ arch/arm/mach-omap2/gpmc.c                   |  120 +++++++-
+ arch/arm/plat-omap/include/plat/gpmc.h       |    1 +
+ drivers/mtd/devices/Makefile                 |    4 +-
+ drivers/mtd/devices/elm.c                    |  446 ++++++++++++++++++++++++++
+ drivers/mtd/nand/omap2.c                     |  368 +++++++++++++++++++--
+ include/linux/platform_data/elm.h            |   64 ++++
+ include/linux/platform_data/mtd-nand-omap2.h |    1 +
+ 7 files changed, 958 insertions(+), 46 deletions(-)
+ create mode 100644 drivers/mtd/devices/elm.c
+ create mode 100644 include/linux/platform_data/elm.h
 
-------------------------------------------------------------------------------
-Don't let slow site performance ruin your business. Deploy New Relic APM
-Deploy New Relic app performance management and know exactly
-what is happening inside your Ruby, Python, PHP, Java, and .NET app
-Try New Relic at no cost today and get our sweet Data Nerd shirt too!
-http://p.sf.net/sfu/newrelic-dev2dev
