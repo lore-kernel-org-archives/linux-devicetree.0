@@ -1,35 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2 v6] of: add generic videomode description
-Date: Thu, 04 Oct 2012 12:51:00 -0600
-Message-ID: <506DDA94.1090702@wwwdotorg.org>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <1349373560-11128-3-git-send-email-s.trumtrar@pengutronix.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 14/16] tegra: fdt: Add LCD definitions for Seaboard
+Date: Wed, 03 Oct 2012 16:58:47 -0600
+Message-ID: <506CC327.2070609@wwwdotorg.org>
+References: <1348793077-10126-1-git-send-email-sjg@chromium.org>
+ <1348793077-10126-15-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1349373560-11128-3-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348793077-10126-15-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/2012 11:59 AM, Steffen Trumtrar wrote:
-> Get videomode from devicetree in a format appropriate for the
-> backend. drm_display_mode and fb_videomode are supported atm.
-> Uses the display signal timings from of_display_timings
+On 09/27/2012 06:44 PM, Simon Glass wrote:
+> The Seaboard has a 1366x768 16bpp LCD. The backlight is controlled
+> by one of the PWMs.
 
-> +++ b/drivers/of/of_videomode.c
+> diff --git a/board/nvidia/dts/tegra20-seaboard.dts b/board/nvidia/dts/tegra20-seaboard.dts
 
-> +int videomode_from_timing(struct display_timings *disp, struct videomode *vm,
+> +	host1x {
+> +		dc@54200000 {
 
-> +	st = display_timings_get(disp, index);
-> +
-> +	if (!st) {
+So based on my previous comment, I think you want status="okay" at this
+level too, perhaps even at the host1x level.
 
-It's a little odd to leave a blank line between those two lines.
-
-Only half of the code in this file seems OF-related; the routines to
-convert a timing to a videomode or drm display mode seem like they'd be
-useful outside device tree, so I wonder if putting them into
-of_videomode.c is the correct thing to do. Still, it's probably not a
-big deal.
+> +			rgb {
+> +				status = "okay";
+> +				nvidia,panel = <&lcd_panel>;
+> +			};
+> +		};
+> +	};
