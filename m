@@ -1,54 +1,72 @@
-From: Seungwon Jeon <tgih.jun@samsung.com>
-Subject: RE: [PATCH v6 8/9] mmc: dw_mmc: add support for implementation
- specific callbacks
-Date: Thu, 04 Oct 2012 21:41:07 +0900
-Message-ID: <001e01cda22d$86383130$92a89390$%jun@samsung.com>
-References: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
- <1347905803-22742-9-git-send-email-thomas.abraham@linaro.org>
- <001401cd966c$5fe94590$1fbbd0b0$%jun@samsung.com>
- <CAJuYYwRUhK858ixLfZPz9UVmqJBe0=LdgjhLfazPNHE3zckDjQ@mail.gmail.com>
- <m3haqodsvb.fsf@pullcord.laptop.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ks_c_5601-1987
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <m3haqodsvb.fsf@pullcord.laptop.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Chris Ball' <cjb@laptop.org>, 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, patches@linaro.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 7/9] ARM/dts: omap4-panda: pinmux configuration for audio
+Date: Thu,  4 Oct 2012 14:57:26 +0300
+Message-ID: <1349351848-12972-8-git-send-email-peter.ujfalusi@ti.com>
+References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Monday, September 24, Chris Ball <cjb@laptop.org>
-> Hi,
-> 
-> On Thu, Sep 20 2012, Thomas Abraham wrote:
-> >> In non-Exynos platform, host->drv_data has NULL.
-> >
-> > Yes, sorry, I missed that.
-> >
-> > Chris, should I fix this and send the updated patch or shall I send a
-> > separate fix patch.
-> 
-> A separate fix patch would be good, please.
-> 
-> (I'd normally take an updated patch but Stephen Rothwell's asked for
-> people to hold off rebasing now that -rc7 is out, which is reasonable.)
-Thomas,
+u-boot stopped configuring 'non essential' pins recently. The kernel needs
+to configure the mux for audio needs.
+Since the pinmux for these IPs are static let pinctrl to handle the mux
+configuration for.
+Configuring the mux for: twl6040 (audpwron, irq), McPDM and McBSP1.
 
-Is there any work for fix?
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/omap4-panda.dts | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-Thanks,
-Seungwon Jeon
+diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+index 771cefd..e8f927c 100644
+--- a/arch/arm/boot/dts/omap4-panda.dts
++++ b/arch/arm/boot/dts/omap4-panda.dts
+@@ -59,6 +59,41 @@
+ 	};
+ };
+ 
++&omap4_pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++			&twl6040_pins
++			&mcpdm_pins
++			&mcbsp1_pins
++	>;
++
++	twl6040_pins: pinmux_twl6040_pins {
++		pinctrl-single,pins = <
++			0xe0 0x3	/* hdq_sio.gpio_127 OUTPUT | MODE3 */
++			0x160 0x100	/* sys_nirq2.sys_nirq2 INPUT | MODE0 */
++		>;
++	};
++
++	mcpdm_pins: pinmux_mcpdm_pins {
++		pinctrl-single,pins = <
++			0xc6 0x108	/* abe_pdm_ul_data.abe_pdm_ul_data INPUT PULLDOWN | MODE0 */
++			0xc8 0x108	/* abe_pdm_dl_data.abe_pdm_dl_data INPUT PULLDOWN | MODE0 */
++			0xca 0x118	/* abe_pdm_frame.abe_pdm_frame INPUT PULLUP | MODE0 */
++			0xcc 0x108	/* abe_pdm_lb_clk.abe_pdm_lb_clk INPUT PULLDOWN | MODE0 */
++			0xce 0x108	/* abe_clks.abe_clks INPUT PULLDOWN | MODE0 */
++		>;
++	};
++
++	mcbsp1_pins: pinmux_mcbsp1_pins {
++		pinctrl-single,pins = <
++			0xbe 0x100	/* abe_mcbsp1_clkx.abe_mcbsp1_clkx INPUT | MODE0 */
++			0xc0 0x108	/* abe_mcbsp1_dr.abe_mcbsp1_dr INPUT PULLDOWN | MODE0 */
++			0xc2 0x8		/* abe_mcbsp1_dx.abe_mcbsp1_dx OUTPUT PULLDOWN | MODE0 */
++			0xc4 0x100	/* abe_mcbsp1_fsx.abe_mcbsp1_fsx INPUT | MODE0 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	clock-frequency = <400000>;
+ 
+-- 
+1.7.12
 
-> 
-> Thanks,
-> 
-> - Chris.
-> --
-> Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-> One Laptop Per Child
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
