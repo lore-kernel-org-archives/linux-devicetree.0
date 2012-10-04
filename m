@@ -1,136 +1,316 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/1] Fix segfault in DTC
-Date: Thu, 4 Oct 2012 14:49:29 +1000
-Message-ID: <20121004044929.GP29302@truffula.fritz.box>
-References: <50632F78.4030709@broadcom.com> <5065D9C7.40906@wwwdotorg.org>
- <E1THfgr-0006Fg-KT@jdl.com> <5065F4FD.4010807@wwwdotorg.org>
- <20120929235342.GA23078@truffula.fritz.box>
- <50692B7A.8000405@wwwdotorg.org>
- <20121001064610.GA5323@truffula.fritz.box>
- <5069C7A5.8090409@wwwdotorg.org>
- <20121002000851.GA29302@truffula.fritz.box>
- <506CAF2A.204@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <506CAF2A.204-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCH 2/2 v6] of: add generic videomode description
+Date: Thu,  4 Oct 2012 19:59:20 +0200
+Message-ID: <1349373560-11128-3-git-send-email-s.trumtrar@pengutronix.de>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 03, 2012 at 03:33:30PM -0600, Stephen Warren wrote:
-> On 10/01/2012 06:08 PM, David Gibson wrote:
-> > On Mon, Oct 01, 2012 at 10:41:09AM -0600, Stephen Warren wrote:
-> >> On 10/01/2012 12:46 AM, David Gibson wrote:
-> >>> On Sun, Sep 30, 2012 at 11:34:50PM -0600, Stephen Warren wrote:
-> >>>> On 09/29/2012 05:53 PM, David Gibson wrote:
-> >>>>> On Fri, Sep 28, 2012 at 01:05:33PM -0600, Stephen Warren wrote:
-> >>>>>> On 09/28/2012 12:53 PM, Jon Loeliger wrote:
-> >>>>>>>>>
-> >>>>>>>>> Yeah, seems like the kernel DTC is quite old.
-> >>>>>>>>
-> >>>>>>>> FYI, I'm working on a patch to the kernel to bring in the latest dtc.
-> >>>>>>>
-> >>>>>>> Awesome.  Thank you.
-> >>>>>>>
-> >>>>>>>> I've run a regression test vs. the old dtc in the kernel ...
-> >>>>>>>
-> >>>>>>> Which is the icky step.  Again, thank you.
-> >>>>>>>
-> >>>>>>>> ... and found that
-> >>>>>>>> some of the PowerPC .dts files don't compile with the new dtc (but did
-> >>>>>>>> with the old), all due to non-existent labels/paths being referenced.
-> >>>>>>>> I'll try and track down whether this is a regression in dtc, or simply
-> >>>>>>>> buggy .dts files that weren't noticed before.
-> >>>>>>>
-> >>>>>>> I think you should just smack the PowerPC guys. :-)
-> >>>>>>
-> >>>>>> For the record in this thread, it was a regression I introduced into dtc
-> >>>>>> - the patch I just sent was for this.
-> >>>>>
-> >>>>> I would be nice to add a testcase for this regression into dtc.
-> >>>>
-> >>>> The issue here was caused by uninitialized memory, so it would, I think,
-> >>>> be basically impossible to create a test-case that would be guaranteed
-> >>>> to fail because of this; it'd depend on the internal details of the
-> >>>> malloc library and how/when it re-used previously free()d memory blocks.
-> >>>
-> >>> It doesn't have to be guaranteed to fail to be useful.  Plus, we
-> >>> already have the infrastructure to run the tests under valgrind, which
-> >>> would catch it.
-> >>
-> >> I certainly disagree here; the absolute worst kind of test is one which
-> >> gives different results each time it's run, or statically gives
-> >> different results to different people. People will either ignore the
-> >> test because it's flaky, or it'll end up blaming the wrong person due to
-> >> some entirely unrelated and correct change just happening to tickle the
-> >> test.
-> > 
-> > I'd agree 100% if the test could give false failures.  But in this
-> > case it can only give false passes.
-> 
-> That is true. I still dislike flaky tests irrespective of
-> false-{negative,positive} though.
+Get videomode from devicetree in a format appropriate for the
+backend. drm_display_mode and fb_videomode are supported atm.
+Uses the display signal timings from of_display_timings
 
-I don't love it, but I think a test which can generate false-negatives
-is better than no test.
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+---
+ drivers/of/Kconfig           |    5 +
+ drivers/of/Makefile          |    1 +
+ drivers/of/of_videomode.c    |  212 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_videomode.h |   41 ++++++++
+ 4 files changed, 259 insertions(+)
+ create mode 100644 drivers/of/of_videomode.c
+ create mode 100644 include/linux/of_videomode.h
 
-> > If the test fails there is a bug
-> > *somewhere*, even if it's not actually in whatever changed last.  The
-> > test framework actually has a "PASS (inconclusive)" result for exactly
-> > this sort of case.
-> > 
-> >> If we were to force any such new test to always run under valgrind, then
-> >> hopefully the test would always fail (assuming the test harness triggers
-> >> failure if valgrind finds problems).
-> > 
-> > Aside: it's supposed to;  if it doesn't, that's a bug.  You can try it
-> > easily enough with "make checkm".
-> 
-> Ah, I didn't know about that make target (or even "make check"; I'd
-> always run run_tests.sh manually).
-> 
-> Incidentally, before commit 317a5d9 "dtc: zero out new label objects"
-> the following two tests fail under make checkm:
-> 
-> dtc -I dts -O dtb -o multilabel.test.dtb multilabel.dts:        FAIL
-> Returned error code 126
-> 
-> dtc -I dts -O dtb -o multilabel_merge.test.dtb multilabel_merge.dts:
-> FAIL Returned error code 126
-> 
-> However, they pass at/after that commit.
-
-Ah, interesting.  Goes to show that neither Jon nor I runs the
-valgrind check as often as we probably should.
-
-> Equally, those failures were introduced with commit 45013d8 "dtc: Add
-> ability to delete nodes and properties", which is exactly what I'd
-> expect given the fix was a fix for that commit.
-> 
-> So, it seems like we already have tests that catch this problem. Do we
-> need to do anything given that?
-
-Hm, I guess not.
-
-> I am slightly surprised that the problem didn't cause all tests to fail
-> make checkm though (I'd expect any usage of a label to trigger the
-> problem); I'll have to think about why some more...
-
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 646deb0..74282e2 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -88,4 +88,9 @@ config OF_DISPLAY_TIMINGS
+ 	help
+ 	  helper to parse display timings from the devicetree
+ 
++config OF_VIDEOMODE
++	def_bool y
++	help
++	  helper to get videomodes from the devicetree
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index c8e9603..09d556f 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_DISPLAY_TIMINGS) += of_display_timings.o
++obj-$(CONFIG_OF_VIDEOMODE) += of_videomode.o
+diff --git a/drivers/of/of_videomode.c b/drivers/of/of_videomode.c
+new file mode 100644
+index 0000000..76ac16e
+--- /dev/null
++++ b/drivers/of/of_videomode.c
+@@ -0,0 +1,212 @@
++/*
++ * generic videomode helper
++ *
++ * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pengutronix
++ *
++ * This file is released under the GPLv2
++ */
++#include <linux/of.h>
++#include <linux/fb.h>
++#include <linux/slab.h>
++#include <drm/drm_mode.h>
++#include <linux/of_display_timings.h>
++#include <linux/of_videomode.h>
++
++void dump_fb_videomode(struct fb_videomode *m)
++{
++        pr_debug("fb_videomode = %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
++                m->refresh, m->xres, m->yres, m->pixclock, m->left_margin,
++                m->right_margin, m->upper_margin, m->lower_margin,
++                m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
++}
++
++void dump_drm_displaymode(struct drm_display_mode *m)
++{
++        pr_debug("drm_displaymode = %d %d %d %d %d %d %d %d %d\n",
++                m->hdisplay, m->hsync_start, m->hsync_end, m->htotal,
++                m->vdisplay, m->vsync_start, m->vsync_end, m->vtotal,
++                m->clock);
++}
++
++int videomode_from_timing(struct display_timings *disp, struct videomode *vm,
++			int index)
++{
++	struct signal_timing *st = NULL;
++
++	if (!vm)
++		return -EINVAL;
++
++	st = display_timings_get(disp, index);
++
++	if (!st) {
++		pr_err("%s: no signal timings found\n", __func__);
++		return -EINVAL;
++	}
++
++	vm->pixelclock = signal_timing_get_value(&st->pixelclock, 0);
++	vm->hactive = signal_timing_get_value(&st->hactive, 0);
++	vm->hfront_porch = signal_timing_get_value(&st->hfront_porch, 0);
++	vm->hback_porch = signal_timing_get_value(&st->hback_porch, 0);
++	vm->hsync_len = signal_timing_get_value(&st->hsync_len, 0);
++
++	vm->vactive = signal_timing_get_value(&st->vactive, 0);
++	vm->vfront_porch = signal_timing_get_value(&st->vfront_porch, 0);
++	vm->vback_porch = signal_timing_get_value(&st->vback_porch, 0);
++	vm->vsync_len = signal_timing_get_value(&st->vsync_len, 0);
++
++	vm->vah = st->vsync_pol_active_high;
++	vm->hah = st->hsync_pol_active_high;
++	vm->interlaced = st->interlaced;
++	vm->doublescan = st->doublescan;
++
++	return 0;
++}
++
++int of_get_videomode(struct device_node *np, struct videomode *vm, int index)
++{
++	struct display_timings *disp;
++	int ret = 0;
++
++	disp = of_get_display_timing_list(np);
++
++	if (!disp) {
++		pr_err("%s: no timings specified\n", __func__);
++		return -EINVAL;
++	}
++
++	if (index == OF_DEFAULT_TIMING)
++		index = disp->default_timing;
++
++	ret = videomode_from_timing(disp, vm, index);
++
++	if (ret)
++		return ret;
++
++	display_timings_release(disp);
++
++	if (!vm) {
++		pr_err("%s: could not get videomode %d\n", __func__, index);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_get_videomode);
++
++#if defined(CONFIG_DRM)
++int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmode)
++{
++	memset(dmode, 0, sizeof(*dmode));
++
++	dmode->hdisplay = vm->hactive;
++	dmode->hsync_start = dmode->hdisplay + vm->hfront_porch;
++	dmode->hsync_end = dmode->hsync_start + vm->hsync_len;
++	dmode->htotal = dmode->hsync_end + vm->hback_porch;
++
++	dmode->vdisplay = vm->vactive;
++	dmode->vsync_start = dmode->vdisplay + vm->vfront_porch;
++	dmode->vsync_end = dmode->vsync_start + vm->vsync_len;
++	dmode->vtotal = dmode->vsync_end + vm->vback_porch;
++
++	dmode->clock = vm->pixelclock / 1000;
++
++	if (vm->hah)
++		dmode->flags |= DRM_MODE_FLAG_PHSYNC;
++	else
++		dmode->flags |= DRM_MODE_FLAG_NHSYNC;
++	if (vm->vah)
++		dmode->flags |= DRM_MODE_FLAG_PVSYNC;
++	else
++		dmode->flags |= DRM_MODE_FLAG_NVSYNC;
++	if (vm->interlaced)
++		dmode->flags |= DRM_MODE_FLAG_INTERLACE;
++	if (vm->doublescan)
++		dmode->flags |= DRM_MODE_FLAG_DBLSCAN;
++	drm_mode_set_name(dmode);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(videomode_to_display_mode);
++
++int of_get_drm_display_mode(struct device_node *np, struct drm_display_mode *dmode,
++			int index)
++{
++	struct videomode vm;
++	int ret;
++
++	ret = of_get_videomode(np, &vm, index);
++
++	if (ret)
++		return ret;
++
++	videomode_to_display_mode(&vm, dmode);
++
++	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
++		vm.vactive, np->name);
++	dump_drm_displaymode(dmode);
++
++	return 0;
++
++}
++EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
++#else
++int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmode)
++{
++	return 0;
++}
++
++int of_get_drm_display_mode(struct device_node *np, struct drm_display_mode *dmode,
++			int index)
++{
++	return 0;
++}
++#endif
++
++int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
++{
++	memset(fbmode, 0, sizeof(*fbmode));
++
++	fbmode->xres = vm->hactive;
++	fbmode->left_margin = vm->hback_porch;
++	fbmode->right_margin = vm->hfront_porch;
++	fbmode->hsync_len = vm->hsync_len;
++
++	fbmode->yres = vm->vactive;
++	fbmode->upper_margin = vm->vback_porch;
++	fbmode->lower_margin = vm->vfront_porch;
++	fbmode->vsync_len = vm->vsync_len;
++
++	fbmode->pixclock = KHZ2PICOS(vm->pixelclock) / 1000;
++
++	if (vm->hah)
++		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
++	if (vm->vah)
++		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
++	if (vm->interlaced)
++		fbmode->vmode |= FB_VMODE_INTERLACED;
++	if (vm->doublescan)
++		fbmode->vmode |= FB_VMODE_DOUBLE;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(videomode_to_fb_videomode);
++
++int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
++			int index)
++{
++	struct videomode vm;
++	int ret;
++
++	ret = of_get_videomode(np, &vm, index);
++	if (ret)
++		return ret;
++
++	videomode_to_fb_videomode(&vm, fb);
++
++	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
++		vm.vactive, np->name);
++	dump_fb_videomode(fb);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
+diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
+new file mode 100644
+index 0000000..96efe01
+--- /dev/null
++++ b/include/linux/of_videomode.h
+@@ -0,0 +1,41 @@
++/*
++ * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
++ *
++ * generic videomode description
++ *
++ * This file is released under the GPLv2
++ */
++
++#ifndef __LINUX_VIDEOMODE_H
++#define __LINUX_VIDEOMODE_H
++
++#include <drm/drmP.h>
++
++struct videomode {
++	u32 pixelclock;
++	u32 refreshrate;
++
++	u32 hactive;
++	u32 hfront_porch;
++	u32 hback_porch;
++	u32 hsync_len;
++
++	u32 vactive;
++	u32 vfront_porch;
++	u32 vback_porch;
++	u32 vsync_len;
++
++	bool hah;
++	bool vah;
++	bool interlaced;
++	bool doublescan;
++
++};
++
++int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmode);
++int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode);
++int of_get_videomode(struct device_node *np, struct videomode *vm, int index);
++int of_get_drm_display_mode(struct device_node *np, struct drm_display_mode *dmode,
++			int index);
++int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb, int index);
++#endif /* __LINUX_VIDEOMODE_H */
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.10.4
