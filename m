@@ -1,72 +1,52 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 7/9] ARM/dts: omap4-panda: pinmux configuration for audio
-Date: Thu,  4 Oct 2012 14:57:26 +0300
-Message-ID: <1349351848-12972-8-git-send-email-peter.ujfalusi@ti.com>
-References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH 7/8] arm: exynos: add exynos5 drm framework platform device
+Date: Thu, 04 Oct 2012 21:44:27 +0530
+Message-ID: <1349367268-32553-8-git-send-email-rahul.sharma@samsung.com>
+References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-u-boot stopped configuring 'non essential' pins recently. The kernel needs
-to configure the mux for audio needs.
-Since the pinmux for these IPs are static let pinctrl to handle the mux
-configuration for.
-Configuring the mux for: twl6040 (audpwron, irq), McPDM and McBSP1.
+This patch adds drm framework platform device. This device is a
+software device, hence not made part of device tree file.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- arch/arm/boot/dts/omap4-panda.dts | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ arch/arm/mach-exynos/mach-exynos5-dt.c |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index 771cefd..e8f927c 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -59,6 +59,41 @@
- 	};
+diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+index 9a6d569..db3447c 100644
+--- a/arch/arm/mach-exynos/mach-exynos5-dt.c
++++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+@@ -17,6 +17,7 @@
+ #include <asm/hardware/gic.h>
+ #include <mach/map.h>
+ 
++#include <plat/devs.h>
+ #include <plat/cpu.h>
+ #include <plat/regs-serial.h>
+ #include <plat/gpio-cfg.h>
+@@ -77,6 +78,9 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
+ 	{},
  };
  
-+&omap4_pmx_core {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+			&twl6040_pins
-+			&mcpdm_pins
-+			&mcbsp1_pins
-+	>;
-+
-+	twl6040_pins: pinmux_twl6040_pins {
-+		pinctrl-single,pins = <
-+			0xe0 0x3	/* hdq_sio.gpio_127 OUTPUT | MODE3 */
-+			0x160 0x100	/* sys_nirq2.sys_nirq2 INPUT | MODE0 */
-+		>;
-+	};
-+
-+	mcpdm_pins: pinmux_mcpdm_pins {
-+		pinctrl-single,pins = <
-+			0xc6 0x108	/* abe_pdm_ul_data.abe_pdm_ul_data INPUT PULLDOWN | MODE0 */
-+			0xc8 0x108	/* abe_pdm_dl_data.abe_pdm_dl_data INPUT PULLDOWN | MODE0 */
-+			0xca 0x118	/* abe_pdm_frame.abe_pdm_frame INPUT PULLUP | MODE0 */
-+			0xcc 0x108	/* abe_pdm_lb_clk.abe_pdm_lb_clk INPUT PULLDOWN | MODE0 */
-+			0xce 0x108	/* abe_clks.abe_clks INPUT PULLDOWN | MODE0 */
-+		>;
-+	};
-+
-+	mcbsp1_pins: pinmux_mcbsp1_pins {
-+		pinctrl-single,pins = <
-+			0xbe 0x100	/* abe_mcbsp1_clkx.abe_mcbsp1_clkx INPUT | MODE0 */
-+			0xc0 0x108	/* abe_mcbsp1_dr.abe_mcbsp1_dr INPUT PULLDOWN | MODE0 */
-+			0xc2 0x8		/* abe_mcbsp1_dx.abe_mcbsp1_dx OUTPUT PULLDOWN | MODE0 */
-+			0xc4 0x100	/* abe_mcbsp1_fsx.abe_mcbsp1_fsx INPUT | MODE0 */
-+		>;
-+	};
++static struct platform_device *exynos5_devices[] __initdata = {
++	&exynos_device_drm,
 +};
-+
- &i2c1 {
- 	clock-frequency = <400000>;
+ static void __init exynos5250_dt_map_io(void)
+ {
+ 	exynos_init_io(NULL, 0);
+@@ -94,6 +98,7 @@ static void __init exynos5250_dt_machine_init(void)
+ 	of_platform_populate(NULL, of_default_bus_match_table,
+ 				exynos5250_auxdata_lookup, NULL);
+ 	smdk_hpd_setup();
++	platform_add_devices(exynos5_devices, ARRAY_SIZE(exynos5_devices));
+ }
  
+ static char const *exynos5250_dt_compat[] __initdata = {
 -- 
-1.7.12
-
+1.7.0.4
