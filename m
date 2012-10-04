@@ -1,14 +1,14 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v4 14/16] tegra: fdt: Add LCD definitions for Seaboard
-Date: Wed, 03 Oct 2012 16:58:47 -0600
-Message-ID: <506CC327.2070609@wwwdotorg.org>
-References: <1348793077-10126-1-git-send-email-sjg@chromium.org>
- <1348793077-10126-15-git-send-email-sjg@chromium.org>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH v2 2/2] watchdog: add timeout-sec property binding to some
+ drivers
+Date: Thu,  4 Oct 2012 10:26:59 +0200
+Message-ID: <1349339219-1467-3-git-send-email-fabio.porcedda@gmail.com>
+References: <1349339219-1467-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348793077-10126-15-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1349339219-1467-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,25 +19,167 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2012 06:44 PM, Simon Glass wrote:
-> The Seaboard has a 1366x768 16bpp LCD. The backlight is controlled
-> by one of the PWMs.
+The binding is provided by the watchdog core.
 
-> diff --git a/board/nvidia/dts/tegra20-seaboard.dts b/board/nvidia/dts/tegra20-seaboard.dts
+Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> +	host1x {
-> +		dc@54200000 {
+f2
+---
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |  4 ++++
+ .../devicetree/bindings/watchdog/marvel.txt        |  5 +++++
+ drivers/watchdog/at91sam9_wdt.c                    | 23 ++++++++++++++++------
+ drivers/watchdog/orion_wdt.c                       | 13 ++++++------
+ 4 files changed, 33 insertions(+), 12 deletions(-)
 
-So based on my previous comment, I think you want status="okay" at this
-level too, perhaps even at the host1x level.
-
-> +			rgb {
-> +				status = "okay";
-> +				nvidia,panel = <&lcd_panel>;
-> +			};
-> +		};
-> +	};
+diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+index 2957ebb..ad4cc0a 100644
+--- a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+@@ -7,9 +7,13 @@ Required properties:
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ 
++Optional properties:
++- timeout-sec	: Contains the watchdog timeout in seconds
++
+ Example:
+ 
+ 	watchdog@fffffd40 {
+ 		compatible = "atmel,at91sam9260-wdt";
+ 		reg = <0xfffffd40 0x10>;
++		timeout-sec = <10>;
+ 	};
+diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/marvel.txt
+index 0b2503a..5dc8d30 100644
+--- a/Documentation/devicetree/bindings/watchdog/marvel.txt
++++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
+@@ -5,10 +5,15 @@ Required Properties:
+ - Compatibility : "marvell,orion-wdt"
+ - reg		: Address of the timer registers
+ 
++Optional properties:
++
++- timeout-sec	: Contains the watchdog timeout in seconds
++
+ Example:
+ 
+ 	wdt@20300 {
+ 		compatible = "marvell,orion-wdt";
+ 		reg = <0x20300 0x28>;
++		timeout-sec = <10>;
+ 		status = "okay";
+ 	};
+diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
+index dc42e44..3f66193 100644
+--- a/drivers/watchdog/at91sam9_wdt.c
++++ b/drivers/watchdog/at91sam9_wdt.c
+@@ -32,7 +32,6 @@
+ #include <linux/timer.h>
+ #include <linux/bitops.h>
+ #include <linux/uaccess.h>
+-#include <linux/of.h>
+ 
+ #include "at91sam9_wdt.h"
+ 
+@@ -57,11 +56,13 @@
+ #define WDT_TIMEOUT	(HZ/2)
+ 
+ /* User land timeout */
+-#define WDT_HEARTBEAT 15
+-static int heartbeat = WDT_HEARTBEAT;
++#define MIN_HEARTBEAT 1
++#define MAX_HEARTBEAT 16
++#define DEF_HEARTBEAT 15
++static int heartbeat = 0;
+ module_param(heartbeat, int, 0);
+ MODULE_PARM_DESC(heartbeat, "Watchdog heartbeats in seconds. "
+-	"(default = " __MODULE_STRING(WDT_HEARTBEAT) ")");
++	"(default = " __MODULE_STRING(DEF_HEARTBEAT) ")");
+ 
+ static bool nowayout = WATCHDOG_NOWAYOUT;
+ module_param(nowayout, bool, 0);
+@@ -255,6 +256,11 @@ static struct miscdevice at91wdt_miscdev = {
+ 	.fops		= &at91wdt_fops,
+ };
+ 
++static struct watchdog_device at91wdt_wdd __initdata = {
++	.min_timeout = MIN_HEARTBEAT,
++	.max_timeout = MAX_HEARTBEAT,
++};
++
+ static int __init at91wdt_probe(struct platform_device *pdev)
+ {
+ 	struct resource	*r;
+@@ -273,6 +279,11 @@ static int __init at91wdt_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
++	if ((heartbeat < MIN_HEARTBEAT) || (heartbeat > MAX_HEARTBEAT)) {
++		at91wdt_wdd.timeout = DEF_HEARTBEAT;
++		watchdog_probe_dt_timeout(&at91wdt_wdd, pdev->dev.of_node);
++	}
++
+ 	/* Set watchdog */
+ 	res = at91_wdt_settimeout(ms_to_ticks(WDT_HW_TIMEOUT * 1000));
+ 	if (res)
+@@ -282,12 +293,12 @@ static int __init at91wdt_probe(struct platform_device *pdev)
+ 	if (res)
+ 		return res;
+ 
+-	at91wdt_private.next_heartbeat = jiffies + heartbeat * HZ;
++	at91wdt_private.next_heartbeat = jiffies + at91wdt_wdd.timeout * HZ;
+ 	setup_timer(&at91wdt_private.timer, at91_ping, 0);
+ 	mod_timer(&at91wdt_private.timer, jiffies + WDT_TIMEOUT);
+ 
+ 	pr_info("enabled (heartbeat=%d sec, nowayout=%d)\n",
+-		heartbeat, nowayout);
++		at91wdt_wdd.timeout, nowayout);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index c20f96b..14406e6 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -24,7 +24,6 @@
+ #include <linux/spinlock.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+-#include <linux/of.h>
+ #include <mach/bridge-regs.h>
+ 
+ /*
+@@ -162,12 +161,14 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+ 
+ 	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
+ 
+-	if ((heartbeat < 1) || (heartbeat > wdt_max_duration))
+-		heartbeat = wdt_max_duration;
+-
+-	orion_wdt.timeout = heartbeat;
+ 	orion_wdt.min_timeout = 1;
+ 	orion_wdt.max_timeout = wdt_max_duration;
++	if ((heartbeat >= 1) && (heartbeat <= wdt_max_duration)) {
++		orion_wdt.timeout = heartbeat;
++	} else {
++		orion_wdt.timeout = wdt_max_duration;
++		watchdog_probe_dt_timeout(&orion_wdt, pdev->dev.of_node);
++	}
+ 
+ 	watchdog_set_nowayout(&orion_wdt, nowayout);
+ 	ret = watchdog_register_device(&orion_wdt);
+@@ -177,7 +178,7 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	pr_info("Initial timeout %d sec%s\n",
+-		heartbeat, nowayout ? ", nowayout" : "");
++		orion_wdt.timeout, nowayout ? ", nowayout" : "");
+ 	return 0;
+ }
+ 
+-- 
+1.7.11.3
