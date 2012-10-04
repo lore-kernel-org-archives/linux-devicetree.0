@@ -1,44 +1,155 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 0/9] ARM: dts/OMAP: Pinmux audio configuration for OMAP4+
-Date: Thu,  4 Oct 2012 14:57:19 +0300
-Message-ID: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH v4 2/6] misc: Generic on-chip SRAM allocation driver
+Date: Thu, 4 Oct 2012 11:25:09 -0400
+Message-ID: <20121004152509.GJ11149@beef>
+References: <1347021828-23034-1-git-send-email-p.zabel@pengutronix.de>
+ <1347021828-23034-3-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1347021828-23034-3-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Sep 07, 2012 at 02:43:44PM +0200, Philipp Zabel wrote:
+> This driver requests and remaps a memory region as configured in the
+> device tree. It serves memory from this region via the genalloc API.
+> 
+> Other drivers can retrieve the genalloc pool from a phandle pointing
+> to this drivers' device node in the device tree.
 
-u-boot recently stopped configuring 'non essential' pin mux. This change leaves
-the audio essential pins in non configured state which prevents the use of audio.
-The following series makes sure that the needed pins are configured correctly by
-the kernel on OMAP4 and OMAP5.
+<snip>
 
-Tony: can this series queued for 3.7?
+> +	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
+> +	if (!sram->pool)
+> +		return -ENOMEM;
 
-Regards,
-Peter
+As mentioned in the uio_pruss/genalloc discussion, removing the
+hardcoded minimum allocation order will allow this to be used for
+a number of other cases. The most notable is moving mach-davinci/
+off of its own genalloc-based SRAM arch driver. Some of the davinci
+SoCs have very small SRAMs and need the ability to allocate a smaller
+chunk.
+
+Here's a build-tested patch to add this option:
+
+>From 6eced8c31eba2f86e72e854cf404d8f58fbeba85 Mon Sep 17 00:00:00 2001
+From: Matt Porter <mporter@ti.com>
+Date: Thu, 4 Oct 2012 11:08:02 -0400
+Subject: [PATCH] misc: sram: add support for configurable allocation order
+
+Adds support for setting the genalloc pool's minimum allocation
+order via DT or platform data. The allocation order is optional
+for both the DT property and platform data case. If it is not
+present then the order defaults to PAGE_SHIFT to preserve the
+current behavior.
+
+Signed-off-by: Matt Porter <mporter@ti.com>
 ---
-Peter Ujfalusi (9):
-  ARM: OMAP: board-4430-sdp: Pin mux configuration for audio needs
-  ARM: OMAP: board-omap4panda: Pin mux configuration for audio needs
-  ARM/dts: omap4-panda: Disable unused audio IPs
-  ARM/dts: omap4-sdp: Disable unused McBSP3
-  ARM/dts: omap5-evm: Disable unused McBSP3
-  ARM/dts: omap4-sdp: pinmux configuration for audio
-  ARM/dts: omap4-panda: pinmux configuration for audio
-  ARM/dts: Add pinctrl driver entries for omap5
-  ARM/dts: omap5-evm: pinmux configuration for audio
+ Documentation/devicetree/bindings/misc/sram.txt |   12 ++++++++++-
+ drivers/misc/sram.c                             |   14 ++++++++++++-
+ include/linux/platform_data/sram.h              |   25 +++++++++++++++++++++++
+ 3 files changed, 49 insertions(+), 2 deletions(-)
+ create mode 100644 include/linux/platform_data/sram.h
 
- arch/arm/boot/dts/omap4-panda.dts      | 47 +++++++++++++++++++++++++++
- arch/arm/boot/dts/omap4-sdp.dts        | 57 +++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/omap5-evm.dts        | 58 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/omap5.dtsi           | 17 ++++++++++
- arch/arm/mach-omap2/board-4430sdp.c    | 26 +++++++++++++++
- arch/arm/mach-omap2/board-omap4panda.c | 15 +++++++++
- 6 files changed, 220 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
+index b64136c..b1705ec 100644
+--- a/Documentation/devicetree/bindings/misc/sram.txt
++++ b/Documentation/devicetree/bindings/misc/sram.txt
+@@ -8,10 +8,20 @@ Required properties:
+ 
+ - reg : SRAM iomem address range
+ 
+-Example:
++Optional properties:
++
++- alloc-order : Minimum allocation order for the SRAM pool
++
++Examples:
++
++sram: sram@5c000000 {
++	compatible = "sram";
++	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
++};
+ 
+ sram: sram@5c000000 {
+ 	compatible = "sram";
+ 	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
++	alloc-order = <9>; /* Minimum 512 byte allocation */
+ };
+ 
+diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+index 7a363f2..3bf8ed3 100644
+--- a/drivers/misc/sram.c
++++ b/drivers/misc/sram.c
+@@ -26,6 +26,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+ #include <linux/genalloc.h>
++#include <linux/platform_data/sram.h>
+ 
+ struct sram_dev {
+ 	struct gen_pool *pool;
+@@ -37,6 +38,7 @@ static int __devinit sram_probe(struct platform_device *pdev)
+ 	struct sram_dev *sram;
+ 	struct resource *res;
+ 	unsigned long size;
++	u32 alloc_order = PAGE_SHIFT;
+ 	int ret;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -53,7 +55,17 @@ static int __devinit sram_probe(struct platform_device *pdev)
+ 	if (!sram)
+ 		return -ENOMEM;
+ 
+-	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
++	if (pdev->dev.of_node)
++		of_property_read_u32(pdev->dev.of_node,
++				     "alloc-order", &alloc_order);
++	else
++		if (pdev->dev.platform_data) {
++			struct sram_pdata *pdata = pdev->dev.platform_data;
++			if (pdata->alloc_order)
++				alloc_order = pdata->alloc_order;
++		}
++
++	sram->pool = gen_pool_create(alloc_order, -1);
+ 	if (!sram->pool)
+ 		return -ENOMEM;
+ 
+diff --git a/include/linux/platform_data/sram.h b/include/linux/platform_data/sram.h
+new file mode 100644
+index 0000000..e17bdaa
+--- /dev/null
++++ b/include/linux/platform_data/sram.h
+@@ -0,0 +1,25 @@
++/*
++ * include/linux/platform_data/sram.h
++ *
++ * Platform data for generic sram driver
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _SRAM_H_
++#define _SRAM_H_
++
++struct sram_pdata {
++	unsigned alloc_order;	/* Optional: driver defaults to PAGE_SHIFT */
++};
++
++#endif /* _SRAM_H_ */
 -- 
-1.7.12
-
+1.7.9.5
