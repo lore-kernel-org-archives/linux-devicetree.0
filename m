@@ -1,304 +1,167 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/1] mtd: st fsmc_nand: pass the ale and cmd resource via
- resource
-Date: Thu,  4 Oct 2012 15:14:16 +0200
-Message-ID: <1349356456-13371-1-git-send-email-plagnioj@jcrosoft.com>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
+Subject: Re: [PATCH] input: touchscreen: mms114: Add device tree bindings
+Date: Thu, 04 Oct 2012 10:21:49 +0900
+Message-ID: <506CE4AD.8000608@samsung.com>
+References: <1349170427-1625-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349170427-1625-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-input@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Do not use the platform_data to pass resource and be smart in the drivers.
-Just pass it via resource
+Hi, Tomasz.
 
-Switch to devm_request_and_ioremap at the sametime
+On 10/02/2012 06:33 PM, Tomasz Figa wrote:
+> This patch adds device tree bindings for mms114 touchscreen.
+>
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+>
+> ---
+>   .../bindings/input/touchscreen/mms114.txt          | 34 ++++++++++++++
+>   drivers/input/touchscreen/mms114.c                 | 52 +++++++++++++++++++++-
+>   2 files changed, 84 insertions(+), 2 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+>
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/mms114.txt b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> new file mode 100644
+> index 0000000..f89d382
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/mms114.txt
+> @@ -0,0 +1,34 @@
+> +* MELFAS MMS114 touchscreen controller
+> +
+> +Required properties:
+> +- compatible: must be "melfas,mms114"
+> +- reg: I2C address of the chip
+> +- interrupts: interrupt to which the chip is connected
+> +- x-size: horizontal resolution of touchscreen
+> +- y-size: vertical resolution of touchscreen
+> +
+> +Optional properties:
+> +- contact-threshold:
+> +- moving-threshold:
+> +- x-invert: invert X axis
+> +- y-invert: invert Y axis
+> +
+> +Example:
+> +
+> +	i2c@00000000 {
+> +		/* ... */
+> +
+> +		touchscreen@48 {
+> +			compatible = "melfas,mms114";
+> +			reg = <0x48>;
+> +			interrupts = <39 0>;
+> +			x-size = <720>;
+> +			y-size = <1280>;
+> +			contact-threshold = <10>;
+> +			moving-threshold = <10>;
+> +			x-invert;
+> +			y-invert;
+> +		};
+> +
+> +		/* ... */
+> +	};
+> diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
+> index 49c44bb..fb66f7a 100644
+> --- a/drivers/input/touchscreen/mms114.c
+> +++ b/drivers/input/touchscreen/mms114.c
+> @@ -10,6 +10,7 @@
+>   #include <linux/module.h>
+>   #include <linux/init.h>
+>   #include <linux/delay.h>
+> +#include <linux/of.h>
+>   #include <linux/i2c.h>
+>   #include <linux/i2c/mms114.h>
+>   #include <linux/input/mt.h>
+> @@ -360,14 +361,55 @@ static void mms114_input_close(struct input_dev *dev)
+>   	mms114_stop(data);
+>   }
+>   
+> +static struct mms114_platform_data *mms114_parse_dt(struct device *dev)
+> +{
+> +	struct mms114_platform_data *pdata;
+> +	struct device_node *np = dev->of_node;
+> +
+> +	if (!np)
+> +		return NULL;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(dev, "failed to allocate platform data\n");
+> +		return NULL;
+> +	}
+> +
+> +	if (of_property_read_u32(np, "x-size", &pdata->x_size)) {
+> +		dev_err(dev, "failed to get x-size property\n");
+> +		return NULL;
+> +	};
+> +
+> +	if (of_property_read_u32(np, "y-size", &pdata->y_size)) {
+> +		dev_err(dev, "failed to get y-size property\n");
+> +		return NULL;
+> +	};
+> +
+> +	of_property_read_u32(np, "contact-threshold",
+> +						&pdata->contact_threshold);
+> +	of_property_read_u32(np, "moving-threshold",
+> +						&pdata->moving_threshold);
+> +
+> +	if (of_find_property(np, "x-invert", NULL))
+> +		pdata->x_invert = true;
+> +	if (of_find_property(np, "y-invert", NULL))
+> +		pdata->y_invert = true;
+> +
+> +	return pdata;
+> +}
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vipin Kumar <vipin.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
----
- .../devicetree/bindings/mtd/fsmc-nand.txt          |   12 +++---
- arch/arm/boot/dts/spear13xx.dtsi                   |   10 ++---
- arch/arm/boot/dts/spear300.dtsi                    |    8 ++--
- arch/arm/boot/dts/spear310.dtsi                    |    8 ++--
- arch/arm/boot/dts/spear320.dtsi                    |    8 ++--
- arch/arm/boot/dts/spear600.dtsi                    |    8 ++--
- arch/arm/mach-u300/core.c                          |   14 ++++++-
- drivers/mtd/nand/fsmc_nand.c                       |   44 +++++---------------
- include/linux/mtd/fsmc.h                           |    3 --
- 9 files changed, 49 insertions(+), 66 deletions(-)
+#ifdef CONFIG_OF needs.
 
-diff --git a/Documentation/devicetree/bindings/mtd/fsmc-nand.txt b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-index e2c663b..e3ea32e 100644
---- a/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/fsmc-nand.txt
-@@ -3,9 +3,7 @@
- Required properties:
- - compatible : "st,spear600-fsmc-nand"
- - reg : Address range of the mtd chip
--- reg-names: Should contain the reg names "fsmc_regs" and "nand_data"
--- st,ale-off : Chip specific offset to ALE
--- st,cle-off : Chip specific offset to CLE
-+- reg-names: Should contain the reg names "fsmc_regs", "nand_data", "nand_addr" and "nand_cmd"
- 
- Optional properties:
- - bank-width : Width (in bytes) of the device.  If not present, the width
-@@ -19,10 +17,10 @@ Example:
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		reg = <0xd1800000 0x1000	/* FSMC Register */
--		       0xd2000000 0x4000>;	/* NAND Base */
--		reg-names = "fsmc_regs", "nand_data";
--		st,ale-off = <0x20000>;
--		st,cle-off = <0x10000>;
-+		       0xd2000000 0x0010	/* NAND Base DATA */
-+		       0xd2020000 0x0010	/* NAND Base ADDR */
-+		       0xd2010000 0x0010>;	/* NAND Base CMD */
-+		reg-names = "fsmc_regs", "nand_data", "nand_addr", "nand_cmd";
- 
- 		bank-width = <1>;
- 		nand-skip-bbtscan;
-diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-index f7b84ac..14a6d15 100644
---- a/arch/arm/boot/dts/spear13xx.dtsi
-+++ b/arch/arm/boot/dts/spear13xx.dtsi
-@@ -104,15 +104,15 @@
- 			compatible = "st,spear600-fsmc-nand";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			reg = <0xb0000000 0x1000	/* FSMC Register */
--			       0xb0800000 0x0010>;	/* NAND Base */
--			reg-names = "fsmc_regs", "nand_data";
-+			reg = <0xb0000000 0x1000	/* FSMC Register*/
-+			       0xb0800000 0x0010	/* NAND Base DATA */
-+			       0xb0820000 0x0010	/* NAND Base ADDR */
-+			       0xb0810000 0x0010>;	/* NAND Base CMD */
-+			reg-names = "fsmc_regs", "nand_data", "nand_addr", "nand_cmd";
- 			interrupts = <0 20 0x4
- 				      0 21 0x4
- 				      0 22 0x4
- 				      0 23 0x4>;
--			st,ale-off = <0x20000>;
--			st,cle-off = <0x10000>;
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/spear300.dtsi b/arch/arm/boot/dts/spear300.dtsi
-index ed3627c..bc43638 100644
---- a/arch/arm/boot/dts/spear300.dtsi
-+++ b/arch/arm/boot/dts/spear300.dtsi
-@@ -38,10 +38,10 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0x94000000 0x1000	/* FSMC Register */
--			       0x80000000 0x0010>;	/* NAND Base */
--			reg-names = "fsmc_regs", "nand_data";
--			st,ale-off = <0x20000>;
--			st,cle-off = <0x10000>;
-+			       0x80000000 0x0010	/* NAND Base DATA */
-+			       0x80020000 0x0010	/* NAND Base ADDR */
-+			       0x80010000 0x0010>;	/* NAND Base CMD */
-+			reg-names = "fsmc_regs", "nand_data", "nand_addr", "nand_cmd";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/spear310.dtsi b/arch/arm/boot/dts/spear310.dtsi
-index 62fc4fb..7840e52 100644
---- a/arch/arm/boot/dts/spear310.dtsi
-+++ b/arch/arm/boot/dts/spear310.dtsi
-@@ -32,10 +32,10 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0x44000000 0x1000	/* FSMC Register */
--			       0x40000000 0x0010>;	/* NAND Base */
--			reg-names = "fsmc_regs", "nand_data";
--			st,ale-off = <0x10000>;
--			st,cle-off = <0x20000>;
-+			       0x40000000 0x0010	/* NAND Base DATA */
-+			       0x40020000 0x0010	/* NAND Base ADDR */
-+			       0x40010000 0x0010>;	/* NAND Base CMD */
-+			reg-names = "fsmc_regs", "nand_data", "nand_addr", "nand_cmd";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/spear320.dtsi b/arch/arm/boot/dts/spear320.dtsi
-index 1f49d69..5ad8206 100644
---- a/arch/arm/boot/dts/spear320.dtsi
-+++ b/arch/arm/boot/dts/spear320.dtsi
-@@ -38,10 +38,10 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0x4c000000 0x1000	/* FSMC Register */
--			       0x50000000 0x0010>;	/* NAND Base */
--			reg-names = "fsmc_regs", "nand_data";
--			st,ale-off = <0x20000>;
--			st,cle-off = <0x10000>;
-+			       0x50000000 0x0010	/* NAND Base DATA */
-+			       0x50020000 0x0010	/* NAND Base ADDR */
-+			       0x50010000 0x0010>;	/* NAND Base CMD */
-+			reg-names = "fsmc_regs", "nand_data", "nand_addr", "nand_cmd";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
-index a3c36e4..4ecc66f 100644
---- a/arch/arm/boot/dts/spear600.dtsi
-+++ b/arch/arm/boot/dts/spear600.dtsi
-@@ -67,10 +67,10 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0xd1800000 0x1000	/* FSMC Register */
--			       0xd2000000 0x4000>;	/* NAND Base */
--			reg-names = "fsmc_regs", "nand_data";
--			st,ale-off = <0x20000>;
--			st,cle-off = <0x10000>;
-+			       0xd2000000 0x0010	/* NAND Base DATA */
-+			       0xd2020000 0x0010	/* NAND Base ADDR */
-+			       0xd2010000 0x0010>;	/* NAND Base CMD */
-+			reg-names = "fsmc_regs", "nand_data", "nand_addr", "nand_cmd";
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm/mach-u300/core.c b/arch/arm/mach-u300/core.c
-index ef6f602..527bcc2 100644
---- a/arch/arm/mach-u300/core.c
-+++ b/arch/arm/mach-u300/core.c
-@@ -252,6 +252,18 @@ static struct resource rtc_resources[] = {
-  */
- static struct resource fsmc_resources[] = {
- 	{
-+		.name  = "nand_addr",
-+		.start = U300_NAND_CS0_PHYS_BASE + PLAT_NAND_ALE,
-+		.end   = U300_NAND_CS0_PHYS_BASE + PLAT_NAND_ALE + SZ_16K - 1,
-+		.flags = IORESOURCE_MEM,
-+	},
-+	{
-+		.name  = "nand_cmd",
-+		.start = U300_NAND_CS0_PHYS_BASE + PLAT_NAND_CLE,
-+		.end   = U300_NAND_CS0_PHYS_BASE + PLAT_NAND_CLE + SZ_16K - 1,
-+		.flags = IORESOURCE_MEM,
-+	},
-+	{
- 		.name  = "nand_data",
- 		.start = U300_NAND_CS0_PHYS_BASE,
- 		.end   = U300_NAND_CS0_PHYS_BASE + SZ_16K - 1,
-@@ -1496,8 +1508,6 @@ static struct fsmc_nand_platform_data nand_platform_data = {
- 	.nr_partitions = ARRAY_SIZE(u300_partitions),
- 	.options = NAND_SKIP_BBTSCAN,
- 	.width = FSMC_NAND_BW8,
--	.ale_off = PLAT_NAND_ALE,
--	.cle_off = PLAT_NAND_CLE,
- };
- 
- static struct platform_device nand_device = {
-diff --git a/drivers/mtd/nand/fsmc_nand.c b/drivers/mtd/nand/fsmc_nand.c
-index 38d2624..cb86450 100644
---- a/drivers/mtd/nand/fsmc_nand.c
-+++ b/drivers/mtd/nand/fsmc_nand.c
-@@ -876,8 +876,6 @@ static int __devinit fsmc_nand_probe_config_dt(struct platform_device *pdev,
- 			return -EINVAL;
- 		}
- 	}
--	of_property_read_u32(np, "st,ale-off", &pdata->ale_off);
--	of_property_read_u32(np, "st,cle-off", &pdata->cle_off);
- 	if (of_get_property(np, "nand-skip-bbtscan", NULL))
- 		pdata->options = NAND_SKIP_BBTSCAN;
- 
-@@ -935,41 +933,28 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
- 	if (!res)
- 		return -EINVAL;
- 
--	if (!devm_request_mem_region(&pdev->dev, res->start, resource_size(res),
--				pdev->name)) {
--		dev_err(&pdev->dev, "Failed to get memory data resourse\n");
--		return -ENOENT;
--	}
--
--	host->data_pa = (dma_addr_t)res->start;
--	host->data_va = devm_ioremap(&pdev->dev, res->start,
--			resource_size(res));
-+	host->data_va = devm_request_and_ioremap(&pdev->dev, res);
- 	if (!host->data_va) {
- 		dev_err(&pdev->dev, "data ioremap failed\n");
- 		return -ENOMEM;
- 	}
-+	host->data_pa = (dma_addr_t)res->start;
- 
--	if (!devm_request_mem_region(&pdev->dev, res->start + pdata->ale_off,
--			resource_size(res), pdev->name)) {
--		dev_err(&pdev->dev, "Failed to get memory ale resourse\n");
--		return -ENOENT;
--	}
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_addr");
-+	if (!res)
-+		return -EINVAL;
- 
--	host->addr_va = devm_ioremap(&pdev->dev, res->start + pdata->ale_off,
--			resource_size(res));
-+	host->addr_va = devm_request_and_ioremap(&pdev->dev, res);
- 	if (!host->addr_va) {
- 		dev_err(&pdev->dev, "ale ioremap failed\n");
- 		return -ENOMEM;
- 	}
- 
--	if (!devm_request_mem_region(&pdev->dev, res->start + pdata->cle_off,
--			resource_size(res), pdev->name)) {
--		dev_err(&pdev->dev, "Failed to get memory cle resourse\n");
--		return -ENOENT;
--	}
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nand_cmd");
-+	if (!res)
-+		return -EINVAL;
- 
--	host->cmd_va = devm_ioremap(&pdev->dev, res->start + pdata->cle_off,
--			resource_size(res));
-+	host->cmd_va = devm_request_and_ioremap(&pdev->dev, res);
- 	if (!host->cmd_va) {
- 		dev_err(&pdev->dev, "ale ioremap failed\n");
- 		return -ENOMEM;
-@@ -979,14 +964,7 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
- 	if (!res)
- 		return -EINVAL;
- 
--	if (!devm_request_mem_region(&pdev->dev, res->start, resource_size(res),
--			pdev->name)) {
--		dev_err(&pdev->dev, "Failed to get memory regs resourse\n");
--		return -ENOENT;
--	}
--
--	host->regs_va = devm_ioremap(&pdev->dev, res->start,
--			resource_size(res));
-+	host->regs_va = devm_request_and_ioremap(&pdev->dev, res);
- 	if (!host->regs_va) {
- 		dev_err(&pdev->dev, "regs ioremap failed\n");
- 		return -ENOMEM;
-diff --git a/include/linux/mtd/fsmc.h b/include/linux/mtd/fsmc.h
-index b200292..d6ed61e 100644
---- a/include/linux/mtd/fsmc.h
-+++ b/include/linux/mtd/fsmc.h
-@@ -155,9 +155,6 @@ struct fsmc_nand_platform_data {
- 	unsigned int		width;
- 	unsigned int		bank;
- 
--	/* CLE, ALE offsets */
--	unsigned int		cle_off;
--	unsigned int		ale_off;
- 	enum access_mode	mode;
- 
- 	void			(*select_bank)(uint32_t bank, uint32_t busw);
--- 
-1.7.10.4
+> +
+>   static int __devinit mms114_probe(struct i2c_client *client,
+>   				  const struct i2c_device_id *id)
+>   {
+>   	struct mms114_data *data;
+>   	struct input_dev *input_dev;
+> +	struct mms114_platform_data *pdata = client->dev.platform_data;
+>   	int error;
+>   
+> -	if (!client->dev.platform_data) {
+> +	if (!pdata)
+> +		pdata = mms114_parse_dt(&client->dev);
+> +
+> +	if (!pdata) {
+>   		dev_err(&client->dev, "Need platform data\n");
+>   		return -EINVAL;
+>   	}
+> @@ -389,7 +431,7 @@ static int __devinit mms114_probe(struct i2c_client *client,
+>   
+>   	data->client = client;
+>   	data->input_dev = input_dev;
+> -	data->pdata = client->dev.platform_data;
+> +	data->pdata = pdata;
+>   
+>   	input_dev->name = "MELPAS MMS114 Touchscreen";
+>   	input_dev->id.bustype = BUS_I2C;
+> @@ -525,11 +567,17 @@ static const struct i2c_device_id mms114_id[] = {
+>   };
+>   MODULE_DEVICE_TABLE(i2c, mms114_id);
+>   
+> +static struct of_device_id __devinitdata mms114_dt_match[] = {
+> +	{ .compatible = "melfas,mms114" },
+> +	{ }
+> +};
+> +
+>   static struct i2c_driver mms114_driver = {
+>   	.driver = {
+>   		.name	= "mms114",
+>   		.owner	= THIS_MODULE,
+>   		.pm	= &mms114_pm_ops,
+> +		.of_match_table = mms114_dt_match,
+>   	},
+>   	.probe		= mms114_probe,
+>   	.remove		= __devexit_p(mms114_remove),
