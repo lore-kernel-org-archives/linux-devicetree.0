@@ -1,99 +1,169 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] serial: i.MX: evaluate linux,stdout-path property
-Date: Thu, 04 Oct 2012 07:44:45 -0500
-Message-ID: <506D84BD.5010000@gmail.com>
-References: <1349347191-7406-1-git-send-email-s.hauer@pengutronix.de>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH 3/4] ARM: OMAP2: gpmc: Add support for BCH ECC scheme
+Date: Thu, 4 Oct 2012 08:03:42 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3E9B4902@DBDE01.ent.ti.com>
+References: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
+ <1349274589-11389-4-git-send-email-avinashphilip@ti.com>
+ <20121003185458.GA27502@parrot.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1349347191-7406-1-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-serial-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121003185458.GA27502@parrot.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivan Djelic <ivan.djelic@parrot.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/2012 05:39 AM, Sascha Hauer wrote:
-> devicetrees may have the linux,stdout-path property to specify the
-> console. This patch adds support to the i.MX serial driver for this.
+On Thu, Oct 04, 2012 at 00:24:58, Ivan Djelic wrote:
+> On Wed, Oct 03, 2012 at 03:29:48PM +0100, Philip, Avinash wrote:
+> > Add support for BCH ECC scheme to gpmc driver and also enabling multi
+> > sector read/write. This helps in doing single shot NAND page read and
+> > write.
+> > 
+> > ECC engine configurations
+> > BCH 4 bit support
+> > 1. write => ECC engine configured in wrap mode 6 and with ecc_size0 as 32.
+> > 2. read  => ECC engine configured in wrap mode 1 and with ecc_size0 as
+> > 13 and ecc_size1 as 1.
+> > 
+> > BCH 8 bit support
+> > 1. write => ECC engine configured in wrap mode 6 and with ecc_size0 as 32.
+> > 2. read  => ECC engine configured in wrap mode 1 and with ecc_size0 as
+> > 26 and ecc_size1 as 2.
+> > 
+> > Note: For BCH8 ECC bytes set to 14 to make compatible with RBL.
+> > 
 > 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
+> Hi Philip,
 > 
-> I was originally looking for a more generic way to handle this, but
-> since a struct console has no device associated to it, it's not
-> possible to match a console with a device in a generic way. So we
-
-Could we add a device ptr to struct console?
-
-> just call add_preferred_console from the driver and let it go down
-> to a string matching in the console code.
-> If anyone has a better idea how to handle this, please let me know.
-> Otherwise I'm happy to see this patch applied aswell.
+> I have a few comments/questions below,
 > 
-> Thanks
->  Sascha
+> (...)
+> > diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> > index 72428bd..c9bc3cf 100644
+> > --- a/arch/arm/mach-omap2/gpmc.c
+> > +++ b/arch/arm/mach-omap2/gpmc.c
+> > @@ -24,6 +24,7 @@
+> >  #include <linux/io.h>
+> >  #include <linux/module.h>
+> >  #include <linux/interrupt.h>
+> > +#include <linux/mtd/nand.h>
+> >  
+> >  #include <asm/mach-types.h>
+> >  #include <plat/gpmc.h>
+> > @@ -83,6 +84,18 @@
+> >  #define ENABLE_PREFETCH		(0x1 << 7)
+> >  #define DMA_MPU_MODE		2
+> >  
+> > +/* GPMC ecc engine settings for read */
+> > +#define BCH_WRAPMODE_1		1	/* BCH wrap mode 6 */
 > 
->  drivers/tty/serial/imx.c |   29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+> Comment should say "mode 1".
+
+Ok I will correct it.
+
 > 
-> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-> index e309e8b..b52c4a7 100644
-> --- a/drivers/tty/serial/imx.c
-> +++ b/drivers/tty/serial/imx.c
-> @@ -1397,6 +1397,32 @@ static int serial_imx_resume(struct platform_device *dev)
->  
->  #ifdef CONFIG_OF
->  /*
-> + * Check if this device matches the linux,stdout-path property
-> + * in the chosen node. return true if yes, false otherwise
-> + */
-> +static int serial_imx_is_stdoutpath(struct platform_device *pdev)
-
-Couldn't this function be generic? Just move
-IS_ENABLED(CONFIG_SERIAL_IMX_CONSOLE) outside this function. Arguably,
-the presence of the property or not could replace the config option all
-together.
-
-And use a struct device so this can work with devices other than
-platform devices (i.e. amba).
-
-Rob
-
-> +{
-> +	struct device_node *dn;
-> +	const char *name;
-> +
-> +	if (!IS_ENABLED(CONFIG_SERIAL_IMX_CONSOLE))
-> +		return 0;
-> +
-> +	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-> +	if (name == NULL)
-> +		return 0;
-> +
-> +	dn = of_find_node_by_path(name);
-> +	if (!dn)
-> +		return 0;
-> +
-> +	if (dn == pdev->dev.of_node)
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
->   * This function returns 1 iff pdev isn't a device instatiated by dt, 0 iff it
->   * could successfully get all information from dt or a negative errno.
->   */
-> @@ -1427,6 +1453,9 @@ static int serial_imx_probe_dt(struct imx_port *sport,
->  
->  	sport->devdata = of_id->data;
->  
-> +	if (serial_imx_is_stdoutpath(pdev))
-> +		add_preferred_console(imx_reg.cons->name, sport->port.line, 0);
-> +
->  	return 0;
->  }
->  #else
+> (...)
+> >  /**
+> > + * gpmc_calculate_ecc_bch	- Generate ecc bytes per block of 512 data bytes for entire page
+> > + * @cs:  chip select number
+> > + * @dat: The pointer to data on which ECC is computed
+> > + * @ecc: The ECC output buffer
+> > + */
+> > +int gpmc_calculate_ecc_bch(int cs, const u_char *dat, u_char *ecc)
+> > +{
+> > +	int i, eccbchtsel;
+> > +	u32 nsectors, reg, bch_val1, bch_val2, bch_val3, bch_val4;
+> > +
+> > +	if (gpmc_ecc_used != cs)
+> > +		return -EINVAL;
+> > +
+> > +	/* read number of sectors for ecc to be calculated */
+> > +	nsectors = ((gpmc_read_reg(GPMC_ECC_CONFIG) >> 4) & 0x7) + 1;
+> > +	/*
+> > +	 * find BCH scheme used
+> > +	 * 0 -> BCH4
+> > +	 * 1 -> BCH8
+> > +	 */
+> > +	eccbchtsel = ((gpmc_read_reg(GPMC_ECC_CONFIG) >> 12) & 0x3);
+> > +
+> > +	/* update ecc bytes for entire page */
+> > +	for (i = 0; i < nsectors; i++) {
+> > +
+> > +		reg = GPMC_ECC_BCH_RESULT_0 + 16 * i;
+> > +
+> > +		/* Read hw-computed remainder */
+> > +		bch_val1 = gpmc_read_reg(reg + 0);
+> > +		bch_val2 = gpmc_read_reg(reg + 4);
+> > +		if (eccbchtsel) {
+> > +			bch_val3 = gpmc_read_reg(reg + 8);
+> > +			bch_val4 = gpmc_read_reg(reg + 12);
+> > +		}
+> > +
+> > +		if (eccbchtsel) {
+> > +			/* BCH8 ecc scheme */
+> > +			*ecc++ = (bch_val4 & 0xFF);
+> > +			*ecc++ = ((bch_val3 >> 24) & 0xFF);
+> > +			*ecc++ = ((bch_val3 >> 16) & 0xFF);
+> > +			*ecc++ = ((bch_val3 >> 8) & 0xFF);
+> > +			*ecc++ = (bch_val3 & 0xFF);
+> > +			*ecc++ = ((bch_val2 >> 24) & 0xFF);
+> > +			*ecc++ = ((bch_val2 >> 16) & 0xFF);
+> > +			*ecc++ = ((bch_val2 >> 8) & 0xFF);
+> > +			*ecc++ = (bch_val2 & 0xFF);
+> > +			*ecc++ = ((bch_val1 >> 24) & 0xFF);
+> > +			*ecc++ = ((bch_val1 >> 16) & 0xFF);
+> > +			*ecc++ = ((bch_val1 >> 8) & 0xFF);
+> > +			*ecc++ = (bch_val1 & 0xFF);
+> > +			/* 14th byte of ecc not used */
+> > +			*ecc++ = 0;
+> > +		} else {
+> > +			/* BCH4 ecc scheme */
+> > +			*ecc++ = ((bch_val2 >> 12) & 0xFF);
+> > +			*ecc++ = ((bch_val2 >> 4) & 0xFF);
+> > +			*ecc++ = (((bch_val2 & 0xF) << 4) |
+> > +					((bch_val1 >> 28) & 0xF));
+> > +			*ecc++ = ((bch_val1 >> 20) & 0xFF);
+> > +			*ecc++ = ((bch_val1 >> 12) & 0xFF);
+> > +			*ecc++ = ((bch_val1 >> 4) & 0xFF);
+> > +			*ecc++ = ((bch_val1 & 0xF) << 4);
+> > +		}
+> > +	}
+> > +
+> > +	gpmc_ecc_used = -EINVAL;
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(gpmc_calculate_ecc_bch);
 > 
+> Here you introduce a function very similar to gpmc_calculate_ecc_bch4 and
+> gpmc_calculate_ecc_bch8, but without the added benefit (IMHO) of the constant
+> polynomial that allows to get an ecc sequence of 0xFFs for a buffer filled with
+> 0xFFs. Why ?
 
+I don't exactly understand what we benefitted/achieve. In my observation,
+this API does spare area also written with 0xFF if data area is 0xFFs.
+So the area looks like erased page again.
+
+> If using the ELM prevents you from reusing gpmc_calculate_ecc_bch[48], could you explain in which way ?
+
+When using gpmc_calculate_ecc_bch[48], calculated ecc values modified.
+The read sequence we following is
+Read 512 byte -> read ECC bytes from spare area
+Now the calculated ECC will be zero if no error is reported. In case of error, a syndrome
+Polynomial is reported. In either case modifying will corrupt the data.
+
+This is valid if we are writing a page with 0xFF also. But this time we were filling a valid
+ecc in spare area not 0xFF as in gpmc_calculate_ecc_bch[48].
+
+Additionally to make compatible with RBL ECC layout (14 byte), we were setting ecc[13] as zero.
+
+Thanks
+Avinash  
+
+> 
+> Best regards,
+> --
+> Ivan
+> 
