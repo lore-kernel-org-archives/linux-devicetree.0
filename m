@@ -1,34 +1,57 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 4/9] ARM/dts: omap4-sdp: Disable unused McBSP3
-Date: Thu,  4 Oct 2012 14:57:23 +0300
-Message-ID: <1349351848-12972-5-git-send-email-peter.ujfalusi@ti.com>
-References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH 4/8] dts: exynos: add device tree support for exynos5 hdmiddc
+Date: Thu, 04 Oct 2012 21:44:24 +0530
+Message-ID: <1349367268-32553-5-git-send-email-rahul.sharma@samsung.com>
+References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-McBSP3 is not usable on OMAP4 SDP/Blaze (the pins used for McPDM).
+This patch adds support for device tree based discovery for exynos5
+hdmi ddc.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- arch/arm/boot/dts/omap4-sdp.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/exynos5250-smdk5250.dts |   10 +++++++++-
+ arch/arm/mach-exynos/mach-exynos5-dt.c    |    2 ++
+ 2 files changed, 11 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 94a23b3..cf09875 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -349,3 +349,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart4_pins>;
- };
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index af9271c..be22a83 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -56,7 +56,15 @@
+ 	};
+ 
+ 	i2c@12C80000 {
+-		status = "disabled";
++		samsung,i2c-sda-delay = <100>;
++		samsung,i2c-max-bus-freq = <66000>;
++		gpios = <&gpa0 6 3 3 0>,
++			<&gpa0 7 3 3 0>;
 +
-+&mcbsp3 {
-+	status = "disabled";
-+};
++		hdmiddc {
++			compatible = "samsung,exynos5-hdmiddc";
++			reg = <0x50>;
++		};
+ 	};
+ 
+ 	i2c@12C90000 {
+diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+index 3f129db..003963c 100644
+--- a/arch/arm/mach-exynos/mach-exynos5-dt.c
++++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+@@ -47,6 +47,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
+ 				"s3c2440-i2c.0", NULL),
+ 	OF_DEV_AUXDATA("samsung,s3c2440-i2c", EXYNOS5_PA_IIC(1),
+ 				"s3c2440-i2c.1", NULL),
++	OF_DEV_AUXDATA("samsung,s3c2440-i2c", EXYNOS5_PA_IIC(2),
++				"s3c2440-i2c.2", NULL),
+ 	OF_DEV_AUXDATA("samsung,s3c2440-hdmiphy-i2c", EXYNOS5_PA_IIC(8),
+ 				"s3c2440-hdmiphy-i2c", NULL),
+ 	OF_DEV_AUXDATA("samsung,exynos5250-dw-mshc", EXYNOS5_PA_DWMCI0,
 -- 
-1.7.12
-
+1.7.0.4
