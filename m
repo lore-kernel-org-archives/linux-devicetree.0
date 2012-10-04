@@ -1,11 +1,14 @@
-From: "Karicheri, Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Are there DT updates for clk drivers?
-Date: Thu, 4 Oct 2012 15:27:56 +0000
-Message-ID: <3E54258959B69E4282D79E01AB1F32B7041F40EA@DFLE12.ent.ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] dtc: fix for_each_*() to skip first object if deleted
+Date: Thu, 04 Oct 2012 12:05:43 -0600
+Message-ID: <506DCFF7.9080304@wwwdotorg.org>
+References: <1349303574-4635-1-git-send-email-swarren@wwwdotorg.org>
+ <506CCD68.4030000@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4242052403590513383=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <506CCD68.4030000-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,127 +19,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============4242052403590513383==
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_3E54258959B69E4282D79E01AB1F32B7041F40EADFLE12entticom_"
+On 10/03/2012 05:42 PM, Rob Herring wrote:
+> On 10/03/2012 05:32 PM, Stephen Warren wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> The previous definition of e.g. for_each_*() would always include the
+>> very first object within the list of processed labels, irrespective of
+>> whether it was marked deleted, since the deleted flag was not checked
+>> on the first object, but only on any "next" object.
+>>
+>> Fix for_each_*() to call skip_deleted_*() prior to every loop iteration,
+>> including the first, i.e. as part of the for loop test expression rather
+>> than as part of the increment statement, to correct this.
+>>
+>> Incidentally, this change is why commit 45013d8 dtc: "Add ability to
+>> delete nodes and properties" only caused two "make checkm" failures;
+>> only two tests actually use multiple labels on the same property or
+>> node. With this current change applied, but commit 317a5d9 "dtc: zero
+>> out new label objects" reverted, "make checkm" fails 29 times; i.e.
+>> for every test that uses any labels at all.
+>>
+>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>> Rob, Grant, now that you're listed as maintainers for the Linux kernel's
+>> copy of dtc, will you automatically apply patches there as they are
+>> accepted into upstream dtc, or should I still create "backport" patches
+>> and send them to you separately?
+> 
+> I guess the fundamental question is when do we sync upstream dtc:
+...
+> Assuming we go with pick-up all the dtc changes every kernel cycle, it
+> should be simple enough to script picking up commits from upstream. I'm
+> assuming it is just a path fix-up? In that case, it wouldn't be
+> necessary to post both versions of patches. Now, if someone wants to do
+> that script and just provide me a git branch to pull, I would be more
+> than happy to take it.
 
---_000_3E54258959B69E4282D79E01AB1F32B7041F40EADFLE12entticom_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+There are a couple of things that make scripting this slightly non-trivial:
 
-Mike,
+a) The kernel has its own Makefile, so when Makefile.dtc is changed, the
+kernel's Makefile needs equivalent changes.
 
-I could see DT update for clk-fixed-rate driver. Is there similar updates i=
-n the pipeline for clk-mux, clk-divider etc? I posted this question to dt d=
-iscuss list and I don't have any response so far. Do you know if there are =
-patches that I can use or I have to write a patch for this support?
+I guess a script could just check for Makefile edits, and flag the
+commit as needing manual fixup later or something.
 
-Thanks.
+b) The kernel doesn't run flex/bison, but rather relies on having
+checked-in copies of their output with "_shipped" names.
 
-Murali Karicheri
-Software Design Engineer
+I guess this wouldn't be too hard to automate.
 
-
---_000_3E54258959B69E4282D79E01AB1F32B7041F40EADFLE12entticom_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 12 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-@font-face
-	{font-family:Verdana;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Verdana","sans-serif";
-	color:windowtext;
-	font-weight:normal;
-	font-style:normal;}
-.MsoChpDefault
-	{mso-style-type:export-only;}
-@page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;">Mike,<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;">I could see DT update for clk-fixed-rat=
-e driver. Is there similar updates in the pipeline for clk-mux, clk-divider=
- etc? I posted this question to dt discuss list and I don&#8217;t
- have any response so far. Do you know if there are patches that I can use =
-or I have to write a patch for this support?<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;">Thanks.<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;font-family:&quot;Ve=
-rdana&quot;,&quot;sans-serif&quot;"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt">Murali Karicheri<o:=
-p></o:p></span></p>
-<p class=3D"MsoNormal"><i><span style=3D"font-size:12.0pt">Software Design =
-Engineer<o:p></o:p></span></i></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-</div>
-</body>
-</html>
-
---_000_3E54258959B69E4282D79E01AB1F32B7041F40EADFLE12entticom_--
-
---===============4242052403590513383==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4242052403590513383==--
+c) And of course, some files don't get checked into the kernel (e.g.
+tests/), but that and the path change should be easy to handle.
