@@ -1,50 +1,61 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 8/9] ARM/dts: Add pinctrl driver entries for omap5
-Date: Thu,  4 Oct 2012 14:57:27 +0300
-Message-ID: <1349351848-12972-9-git-send-email-peter.ujfalusi@ti.com>
-References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH 6/8] arm: exynos: config exynos5 hdmi-hpd gpio
+Date: Thu, 04 Oct 2012 21:44:26 +0530
+Message-ID: <1349367268-32553-7-git-send-email-rahul.sharma@samsung.com>
+References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-These all use the generic pinctrl-single driver for the padconf registers.
+This patch adds support for the configuration of exynos5 hdmi-hpd gpio.
+It sets the gpio fucntion to EINT which is required for recieving
+external hpd interrupt in drm hdmi driver.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- arch/arm/boot/dts/omap5.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/mach-exynos/mach-exynos5-dt.c |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 9ac75b3..00ee987 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -65,6 +65,23 @@
- 		ranges;
- 		ti,hwmods = "l3_main_1", "l3_main_2", "l3_main_3";
+diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+index 003963c..9a6d569 100644
+--- a/arch/arm/mach-exynos/mach-exynos5-dt.c
++++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+@@ -11,6 +11,7 @@
  
-+		omap5_pmx_core: pinmux@4a002840 {
-+			compatible = "ti,omap4-padconf", "pinctrl-single";
-+			reg = <0x4a002840 0x01b6>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-single,register-width = <16>;
-+			pinctrl-single,function-mask = <0x7fff>;
-+		};
-+		omap5_pmx_wkup: pinmux@4ae0c840 {
-+			compatible = "ti,omap4-padconf", "pinctrl-single";
-+			reg = <0x4ae0c840 0x0038>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			pinctrl-single,register-width = <16>;
-+			pinctrl-single,function-mask = <0x7fff>;
-+		};
+ #include <linux/of_platform.h>
+ #include <linux/serial_core.h>
++#include <linux/gpio.h>
+ 
+ #include <asm/mach/arch.h>
+ #include <asm/hardware/gic.h>
+@@ -18,6 +19,7 @@
+ 
+ #include <plat/cpu.h>
+ #include <plat/regs-serial.h>
++#include <plat/gpio-cfg.h>
+ 
+ #include "common.h"
+ 
+@@ -81,10 +83,17 @@ static void __init exynos5250_dt_map_io(void)
+ 	s3c24xx_init_clocks(24000000);
+ }
+ 
++static void smdk_hpd_setup(void)
++{
++	s3c_gpio_cfgpin(EXYNOS5_GPX3(7), S3C_GPIO_SFN(0xf));
++	s3c_gpio_setpull(EXYNOS5_GPX3(7), S3C_GPIO_PULL_DOWN);
++}
 +
- 		gic: interrupt-controller@48211000 {
- 			compatible = "arm,cortex-a15-gic";
- 			interrupt-controller;
+ static void __init exynos5250_dt_machine_init(void)
+ {
+ 	of_platform_populate(NULL, of_default_bus_match_table,
+ 				exynos5250_auxdata_lookup, NULL);
++	smdk_hpd_setup();
+ }
+ 
+ static char const *exynos5250_dt_compat[] __initdata = {
 -- 
-1.7.12
-
+1.7.0.4
