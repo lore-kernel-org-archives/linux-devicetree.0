@@ -1,58 +1,99 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V3] video: exynos_dp: Add device tree support to DP driver
-Date: Thu, 04 Oct 2012 10:50:17 +0900
-Message-ID: <005f01cda1d2$9b123c00$d136b400$%han@samsung.com>
-References: <1348515385-22332-1-git-send-email-ajaykumar.rs@samsung.com>
- <50645848.6080102@gmail.com> <000601cd9d0d$c3296ca0$497c45e0$%han@samsung.com>
- <CAEC9eQNFos4Sw57eubX-USEjKBnKf9ETeWCU_sT1vdX3MgN4dA@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] serial: i.MX: evaluate linux,stdout-path property
+Date: Thu, 04 Oct 2012 07:44:45 -0500
+Message-ID: <506D84BD.5010000@gmail.com>
+References: <1349347191-7406-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAEC9eQNFos4Sw57eubX-USEjKBnKf9ETeWCU_sT1vdX3MgN4dA@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Ajay kumar' <ajaynumb@gmail.com>, linux-fbdev@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, FlorianSchandinat@gmx.de, thomas.ab@samsung.com, 'devicetree-discuss' <devicetree-discuss@lists.ozlabs.org>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1349347191-7406-1-git-send-email-s.hauer@pengutronix.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, October 01, 2012 2:40 PM Ajay kumar wrote
+On 10/04/2012 05:39 AM, Sascha Hauer wrote:
+> devicetrees may have the linux,stdout-path property to specify the
+> console. This patch adds support to the i.MX serial driver for this.
 > 
-> On Fri, Sep 28, 2012 at 5:41 AM, Jingoo Han <jg1.han@samsung.com> wrote:
-> > On Thursday, September 27, 2012 10:45 PM Sylwester Nawrocki wrote
-> >> On 09/24/2012 09:36 PM, Ajay Kumar wrote:
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+> 
+> I was originally looking for a more generic way to handle this, but
+> since a struct console has no device associated to it, it's not
+> possible to match a console with a device in a generic way. So we
 
-[...]
+Could we add a device ptr to struct console?
 
-> >> > +Example:
-> >> > +
-> >> > +SOC specific portion:
-> >> > +   dptx_phy: dptx_phy@0x10040720 {
-> >> > +           compatible = "samsung,dp-phy";
-> >> > +           samsung,dptx_phy_reg =<0x10040720>;
-> >> > +           samsung,enable_bit =<1>;
-> >> > +   };
-> >> > +
-> >> > +   display-port-controller {
-> >> > +           compatible = "samsung,exynos5-dp";
-> >> > +           reg =<0x145B0000 0x10000>;
-> >> > +           interrupts =<10 3>;
-> >> > +           interrupt-parent =<&combiner>;
-> >> > +           dp_phy =<&dptx_phy>;
-> >>
-> >> Shouldn't it be "samsung,dp_phy" ?
-> >
-> > Do you mean this ? It is not working.
-> > +               dp_phy = "samsung,dp_phy";
-> I din't get this.
-> What do I need to change here?
+> just call add_preferred_console from the driver and let it go down
+> to a string matching in the console code.
+> If anyone has a better idea how to handle this, please let me know.
+> Otherwise I'm happy to see this patch applied aswell.
+> 
+> Thanks
+>  Sascha
+> 
+>  drivers/tty/serial/imx.c |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+> index e309e8b..b52c4a7 100644
+> --- a/drivers/tty/serial/imx.c
+> +++ b/drivers/tty/serial/imx.c
+> @@ -1397,6 +1397,32 @@ static int serial_imx_resume(struct platform_device *dev)
+>  
+>  #ifdef CONFIG_OF
+>  /*
+> + * Check if this device matches the linux,stdout-path property
+> + * in the chosen node. return true if yes, false otherwise
+> + */
+> +static int serial_imx_is_stdoutpath(struct platform_device *pdev)
 
-As Tomasz Figa mentioned, it means that
+Couldn't this function be generic? Just move
+IS_ENABLED(CONFIG_SERIAL_IMX_CONSOLE) outside this function. Arguably,
+the presence of the property or not could replace the config option all
+together.
 
--+		dp_phy =<&dptx_phy>;
-++		samsung,dp_phy =<&dptx_phy>;
+And use a struct device so this can work with devices other than
+platform devices (i.e. amba).
 
-It is because this is a Samsung-specific property.
+Rob
 
-Best regards,
-Jingoo Han
+> +{
+> +	struct device_node *dn;
+> +	const char *name;
+> +
+> +	if (!IS_ENABLED(CONFIG_SERIAL_IMX_CONSOLE))
+> +		return 0;
+> +
+> +	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+> +	if (name == NULL)
+> +		return 0;
+> +
+> +	dn = of_find_node_by_path(name);
+> +	if (!dn)
+> +		return 0;
+> +
+> +	if (dn == pdev->dev.of_node)
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+>   * This function returns 1 iff pdev isn't a device instatiated by dt, 0 iff it
+>   * could successfully get all information from dt or a negative errno.
+>   */
+> @@ -1427,6 +1453,9 @@ static int serial_imx_probe_dt(struct imx_port *sport,
+>  
+>  	sport->devdata = of_id->data;
+>  
+> +	if (serial_imx_is_stdoutpath(pdev))
+> +		add_preferred_console(imx_reg.cons->name, sport->port.line, 0);
+> +
+>  	return 0;
+>  }
+>  #else
+> 
+
