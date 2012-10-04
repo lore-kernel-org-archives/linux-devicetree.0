@@ -1,14 +1,21 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v2 1/2] watchdog: core: dt: add support for the
- timeout-sec dt property
-Date: Thu,  4 Oct 2012 10:26:58 +0200
-Message-ID: <1349339219-1467-2-git-send-email-fabio.porcedda@gmail.com>
-References: <1349339219-1467-1-git-send-email-fabio.porcedda@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/1] Fix segfault in DTC
+Date: Thu, 4 Oct 2012 14:49:29 +1000
+Message-ID: <20121004044929.GP29302@truffula.fritz.box>
+References: <50632F78.4030709@broadcom.com> <5065D9C7.40906@wwwdotorg.org>
+ <E1THfgr-0006Fg-KT@jdl.com> <5065F4FD.4010807@wwwdotorg.org>
+ <20120929235342.GA23078@truffula.fritz.box>
+ <50692B7A.8000405@wwwdotorg.org>
+ <20121001064610.GA5323@truffula.fritz.box>
+ <5069C7A5.8090409@wwwdotorg.org>
+ <20121002000851.GA29302@truffula.fritz.box>
+ <506CAF2A.204@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1349339219-1467-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <506CAF2A.204-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,59 +26,111 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/watchdog/watchdog-kernel-api.txt |  3 +++
- include/linux/watchdog.h                       | 15 +++++++++++++++
- 2 files changed, 18 insertions(+)
+On Wed, Oct 03, 2012 at 03:33:30PM -0600, Stephen Warren wrote:
+> On 10/01/2012 06:08 PM, David Gibson wrote:
+> > On Mon, Oct 01, 2012 at 10:41:09AM -0600, Stephen Warren wrote:
+> >> On 10/01/2012 12:46 AM, David Gibson wrote:
+> >>> On Sun, Sep 30, 2012 at 11:34:50PM -0600, Stephen Warren wrote:
+> >>>> On 09/29/2012 05:53 PM, David Gibson wrote:
+> >>>>> On Fri, Sep 28, 2012 at 01:05:33PM -0600, Stephen Warren wrote:
+> >>>>>> On 09/28/2012 12:53 PM, Jon Loeliger wrote:
+> >>>>>>>>>
+> >>>>>>>>> Yeah, seems like the kernel DTC is quite old.
+> >>>>>>>>
+> >>>>>>>> FYI, I'm working on a patch to the kernel to bring in the latest dtc.
+> >>>>>>>
+> >>>>>>> Awesome.  Thank you.
+> >>>>>>>
+> >>>>>>>> I've run a regression test vs. the old dtc in the kernel ...
+> >>>>>>>
+> >>>>>>> Which is the icky step.  Again, thank you.
+> >>>>>>>
+> >>>>>>>> ... and found that
+> >>>>>>>> some of the PowerPC .dts files don't compile with the new dtc (but did
+> >>>>>>>> with the old), all due to non-existent labels/paths being referenced.
+> >>>>>>>> I'll try and track down whether this is a regression in dtc, or simply
+> >>>>>>>> buggy .dts files that weren't noticed before.
+> >>>>>>>
+> >>>>>>> I think you should just smack the PowerPC guys. :-)
+> >>>>>>
+> >>>>>> For the record in this thread, it was a regression I introduced into dtc
+> >>>>>> - the patch I just sent was for this.
+> >>>>>
+> >>>>> I would be nice to add a testcase for this regression into dtc.
+> >>>>
+> >>>> The issue here was caused by uninitialized memory, so it would, I think,
+> >>>> be basically impossible to create a test-case that would be guaranteed
+> >>>> to fail because of this; it'd depend on the internal details of the
+> >>>> malloc library and how/when it re-used previously free()d memory blocks.
+> >>>
+> >>> It doesn't have to be guaranteed to fail to be useful.  Plus, we
+> >>> already have the infrastructure to run the tests under valgrind, which
+> >>> would catch it.
+> >>
+> >> I certainly disagree here; the absolute worst kind of test is one which
+> >> gives different results each time it's run, or statically gives
+> >> different results to different people. People will either ignore the
+> >> test because it's flaky, or it'll end up blaming the wrong person due to
+> >> some entirely unrelated and correct change just happening to tickle the
+> >> test.
+> > 
+> > I'd agree 100% if the test could give false failures.  But in this
+> > case it can only give false passes.
+> 
+> That is true. I still dislike flaky tests irrespective of
+> false-{negative,positive} though.
 
-diff --git a/Documentation/watchdog/watchdog-kernel-api.txt b/Documentation/watchdog/watchdog-kernel-api.txt
-index 086638f..35057b2 100644
---- a/Documentation/watchdog/watchdog-kernel-api.txt
-+++ b/Documentation/watchdog/watchdog-kernel-api.txt
-@@ -212,3 +212,6 @@ driver specific data to and a pointer to the data itself.
- The watchdog_get_drvdata function allows you to retrieve driver specific data.
- The argument of this function is the watchdog device where you want to retrieve
- data from. The function returns the pointer to the driver specific data.
-+
-+The watchdog_probe_dt_timeout function allows you to retrieve the timeout-sec
-+property from the device tree.
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index da70f0f..18af39f 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -11,6 +11,7 @@
- 
- #include <linux/ioctl.h>
- #include <linux/types.h>
-+#include <linux/of.h>
- 
- #define	WATCHDOG_IOCTL_BASE	'W'
- 
-@@ -174,6 +175,20 @@ static inline void *watchdog_get_drvdata(struct watchdog_device *wdd)
- 	return wdd->driver_data;
- }
- 
-+/* Use the following function to retrieve the timeout-sec property from dt */
-+static inline void watchdog_probe_dt_timeout(struct watchdog_device *wdd,
-+					     struct device_node *node)
-+{
-+	unsigned int t = 0;
-+
-+	if (!node)
-+		return;
-+
-+	of_property_read_u32(node, "timeout-sec", &t);
-+	if ((t >= wdd->min_timeout) && (t <= wdd->max_timeout))
-+		wdd->timeout = t;
-+}
-+
- /* drivers/watchdog/core/watchdog_core.c */
- extern int watchdog_register_device(struct watchdog_device *);
- extern void watchdog_unregister_device(struct watchdog_device *);
+I don't love it, but I think a test which can generate false-negatives
+is better than no test.
+
+> > If the test fails there is a bug
+> > *somewhere*, even if it's not actually in whatever changed last.  The
+> > test framework actually has a "PASS (inconclusive)" result for exactly
+> > this sort of case.
+> > 
+> >> If we were to force any such new test to always run under valgrind, then
+> >> hopefully the test would always fail (assuming the test harness triggers
+> >> failure if valgrind finds problems).
+> > 
+> > Aside: it's supposed to;  if it doesn't, that's a bug.  You can try it
+> > easily enough with "make checkm".
+> 
+> Ah, I didn't know about that make target (or even "make check"; I'd
+> always run run_tests.sh manually).
+> 
+> Incidentally, before commit 317a5d9 "dtc: zero out new label objects"
+> the following two tests fail under make checkm:
+> 
+> dtc -I dts -O dtb -o multilabel.test.dtb multilabel.dts:        FAIL
+> Returned error code 126
+> 
+> dtc -I dts -O dtb -o multilabel_merge.test.dtb multilabel_merge.dts:
+> FAIL Returned error code 126
+> 
+> However, they pass at/after that commit.
+
+Ah, interesting.  Goes to show that neither Jon nor I runs the
+valgrind check as often as we probably should.
+
+> Equally, those failures were introduced with commit 45013d8 "dtc: Add
+> ability to delete nodes and properties", which is exactly what I'd
+> expect given the fix was a fix for that commit.
+> 
+> So, it seems like we already have tests that catch this problem. Do we
+> need to do anything given that?
+
+Hm, I guess not.
+
+> I am slightly surprised that the problem didn't cause all tests to fail
+> make checkm though (I'd expect any usage of a label to trigger the
+> problem); I'll have to think about why some more...
+
 -- 
-1.7.11.3
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
