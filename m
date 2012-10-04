@@ -1,79 +1,57 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] serial: i.MX: evaluate linux,stdout-path property
-Date: Thu,  4 Oct 2012 12:39:51 +0200
-Message-ID: <1349347191-7406-1-git-send-email-s.hauer@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sascha Hauer <s.hauer@pengutronix.de>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH 5/8] arm: exynos: add clocks for exynos5 hdmi
+Date: Thu, 04 Oct 2012 21:44:25 +0530
+Message-ID: <1349367268-32553-6-git-send-email-rahul.sharma@samsung.com>
+References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-devicetrees may have the linux,stdout-path property to specify the
-console. This patch adds support to the i.MX serial driver for this.
+This patch adds support for clocks for hdmi, hdmiphy and mixer.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
+ arch/arm/mach-exynos/clock-exynos5.c |   14 ++++++++++++--
+ 1 files changed, 12 insertions(+), 2 deletions(-)
 
-I was originally looking for a more generic way to handle this, but
-since a struct console has no device associated to it, it's not
-possible to match a console with a device in a generic way. So we
-just call add_preferred_console from the driver and let it go down
-to a string matching in the console code.
-If anyone has a better idea how to handle this, please let me know.
-Otherwise I'm happy to see this patch applied aswell.
-
-Thanks
- Sascha
-
- drivers/tty/serial/imx.c |   29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index e309e8b..b52c4a7 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -1397,6 +1397,32 @@ static int serial_imx_resume(struct platform_device *dev)
+diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/clock-exynos5.c
+index 17e6c77..ec2a4da 100644
+--- a/arch/arm/mach-exynos/clock-exynos5.c
++++ b/arch/arm/mach-exynos/clock-exynos5.c
+@@ -201,6 +201,11 @@ static int exynos5_clk_ip_isp1_ctrl(struct clk *clk, int enable)
+ 	return s5p_gatectrl(EXYNOS5_CLKGATE_IP_ISP1, clk, enable);
+ }
  
- #ifdef CONFIG_OF
- /*
-+ * Check if this device matches the linux,stdout-path property
-+ * in the chosen node. return true if yes, false otherwise
-+ */
-+static int serial_imx_is_stdoutpath(struct platform_device *pdev)
++static int exynos5_clk_hdmiphy_ctrl(struct clk *clk, int enable)
 +{
-+	struct device_node *dn;
-+	const char *name;
-+
-+	if (!IS_ENABLED(CONFIG_SERIAL_IMX_CONSOLE))
-+		return 0;
-+
-+	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-+	if (name == NULL)
-+		return 0;
-+
-+	dn = of_find_node_by_path(name);
-+	if (!dn)
-+		return 0;
-+
-+	if (dn == pdev->dev.of_node)
-+		return 1;
-+
-+	return 0;
++	return s5p_gatectrl(S5P_HDMI_PHY_CONTROL, clk, enable);
 +}
 +
-+/*
-  * This function returns 1 iff pdev isn't a device instatiated by dt, 0 iff it
-  * could successfully get all information from dt or a negative errno.
-  */
-@@ -1427,6 +1453,9 @@ static int serial_imx_probe_dt(struct imx_port *sport,
+ /* Core list of CMU_CPU side */
  
- 	sport->devdata = of_id->data;
- 
-+	if (serial_imx_is_stdoutpath(pdev))
-+		add_preferred_console(imx_reg.cons->name, sport->port.line, 0);
-+
- 	return 0;
- }
- #else
+ static struct clksrc_clk exynos5_clk_mout_apll = {
+@@ -612,12 +617,17 @@ static struct clk exynos5_init_clocks_off[] = {
+ 		.ctrlbit	= (1 << 0),
+ 	}, {
+ 		.name		= "hdmi",
+-		.devname	= "exynos4-hdmi",
++		.devname	= "exynos5-hdmi",
+ 		.enable		= exynos5_clk_ip_disp1_ctrl,
+ 		.ctrlbit	= (1 << 6),
+ 	}, {
++		.name		= "hdmiphy",
++		.devname	= "exynos5-hdmi",
++		.enable		= exynos5_clk_hdmiphy_ctrl,
++		.ctrlbit	= (1 << 0),
++	}, {
+ 		.name		= "mixer",
+-		.devname	= "s5p-mixer",
++		.devname	= "exynos5-mixer",
+ 		.enable		= exynos5_clk_ip_disp1_ctrl,
+ 		.ctrlbit	= (1 << 5),
+ 	}, {
 -- 
-1.7.10.4
+1.7.0.4
