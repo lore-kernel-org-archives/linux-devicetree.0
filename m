@@ -1,166 +1,119 @@
-From: Ivan Djelic <ivan.djelic@parrot.com>
-Subject: Re: [PATCH 4/4] mtd: nand: omap2: Add data correction support
-Date: Wed, 3 Oct 2012 21:20:45 +0200
-Message-ID: <20121003192044.GB27502@parrot.com>
-References: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
- <1349274589-11389-5-git-send-email-avinashphilip@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: =?UTF-8?q?=5BPATCH=201/2=20v6=5D=20of=3A=20add=20helper=20to=20parse=20display=20timings?=
+Date: Thu, 4 Oct 2012 23:35:35 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1349274589-11389-5-git-send-email-avinashphilip@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "afzal@ti.com" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1349373560-11128-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 03, 2012 at 03:29:49PM +0100, Philip, Avinash wrote:
-> ELM module can be used for error correction of BCH 4 & 8 bit. Also
-> support read & write page in one shot by adding custom read_page &
-> write_page methods. This helps in optimizing code.
-> 
-> New structure member "is_elm_used" is added to know the status of
-> whether the ELM module is used for error correction or not.
-> 
-> Note:
-> ECC layout of BCH8 uses 14 bytes for 512 byte of data to make compatible
-> with RBL ECC layout, even though the requirement was only 13 byte. This
-> results a common ecc layout across RBL, U-boot & Linux.
-> 
+Hi Steffen
 
-See a few comments below,
+Sorry for chiming in so late in the game, but I've long been wanting to 
+have a look at this and compare with what we do for V4L2, so, this seems a 
+great opportunity to me:-)
 
-(...)
-> +static int omap_elm_correct_data(struct mtd_info *mtd, u_char *dat,
-> +                               u_char *read_ecc, u_char *calc_ecc)
-> +{
-> +       struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
-> +                       mtd);
-> +       int eccsteps = info->nand.ecc.steps;
-> +       int i , j, stat = 0;
-> +       int eccsize, eccflag, size;
-> +       struct elm_errorvec err_vec[ERROR_VECTOR_MAX];
-> +       u_char *ecc_vec = calc_ecc;
-> +       enum bch_ecc type;
-> +       bool is_error_reported = false;
+On Thu, 4 Oct 2012, Steffen Trumtrar wrote:
+
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/display-timings.txt  |  222 ++++++++++++++++++++
+>  drivers/of/Kconfig                                 |    5 +
+>  drivers/of/Makefile                                |    1 +
+>  drivers/of/of_display_timings.c                    |  183 ++++++++++++++++
+>  include/linux/of_display_timings.h                 |   85 ++++++++
+>  5 files changed, 496 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
+>  create mode 100644 drivers/of/of_display_timings.c
+>  create mode 100644 include/linux/of_display_timings.h
+> 
+> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
+> new file mode 100644
+> index 0000000..45e39bd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/display-timings.txt
+> @@ -0,0 +1,222 @@
+> +display-timings bindings
+> +==================
 > +
-> +       /* initialize elm error vector to zero */
-> +       memset(err_vec, 0, sizeof(err_vec));
-> +       if (info->nand.ecc.strength == BCH8_MAX_ERROR) {
-> +               size = BCH8_SIZE;
-> +               eccsize = BCH8_ECC_OOB_BYTES;
-> +               type = BCH8_ECC;
-> +       } else {
-> +               size = BCH4_SIZE;
-> +               eccsize = BCH4_SIZE;
-> +               type = BCH4_ECC;
-> +       }
+> +display-timings-node
+> +------------
 > +
-> +       for (i = 0; i < eccsteps ; i++) {
-> +               eccflag = 0;    /* initialize eccflag */
+> +required properties:
+> + - none
 > +
-> +               for (j = 0; (j < eccsize); j++) {
-> +                       if (read_ecc[j] != 0xFF) {
-> +                               eccflag = 1;    /* data area is flashed */
-
-Just a reminder: this way of checking if a page has been programmed is not robust to bitflips,
-so you may get into trouble with UBIFS on a fairly recent device.
-
-(...)
-> @@ -1039,14 +1180,45 @@ static void omap3_enable_hwecc_bch(struct mtd_info *mtd, int mode)
-> 
->         nerrors = info->nand.ecc.strength;
->         dev_width = (chip->options & NAND_BUSWIDTH_16) ? 1 : 0;
-> +#ifdef CONFIG_MTD_NAND_OMAP_BCH
-> +       if (info->is_elm_used) {
-> +               /*
-> +                * Program GPMC to perform correction on (steps * 512) byte
-> +                * sector at a time.
-> +                */
-> +               gpmc_enable_hwecc_bch(info->gpmc_cs, mode, dev_width,
-> +                               info->nand.ecc.steps, nerrors);
-> +               return;
-> +       }
-> +#endif
->         /*
-> -        * Program GPMC to perform correction on one 512-byte sector at a time.
-> -        * Using 4 sectors at a time (i.e. ecc.size = 2048) is also possible and
-> -        * gives a slight (5%) performance gain (but requires additional code).
-> +        * Program GPMC to perform correction on one 512-byte sector at
-> +        * a time.
-
-Why removing the comment about 4-sector perf gain ? :-)
-
-(...)
-> @@ -1146,35 +1402,62 @@ static int omap3_init_bch(struct mtd_info *mtd, int ecc_opt)
->                 goto fail;
->         }
-> 
-> -       /* initialize GPMC BCH engine */
-> -       ret = gpmc_init_hwecc_bch(info->gpmc_cs, 1, max_errors);
-> -       if (ret)
-> -               goto fail;
-> -
-> -       /* software bch library is only used to detect and locate errors */
-> -       info->bch = init_bch(13, max_errors, 0x201b /* hw polynomial */);
-> -       if (!info->bch)
-> -               goto fail;
-> +       info->nand.ecc.size = 512;
-> +       info->nand.ecc.hwctl = omap3_enable_hwecc_bch;
-> +       info->nand.ecc.mode = NAND_ECC_HW;
-> +       info->nand.ecc.strength = hw_errors;
-> 
-> -       info->nand.ecc.size    = 512;
-> -       info->nand.ecc.hwctl   = omap3_enable_hwecc_bch;
-> -       info->nand.ecc.correct = omap3_correct_data_bch;
-> -       info->nand.ecc.mode    = NAND_ECC_HW;
-> +       if (info->is_elm_used && (mtd->writesize <= 4096)) {
-> +               enum bch_ecc bch_type;
-> 
-> -       /*
-> -        * The number of corrected errors in an ecc block that will trigger
-> -        * block scrubbing defaults to the ecc strength (4 or 8).
-> -        * Set mtd->bitflip_threshold here to define a custom threshold.
-> -        */
-> +               if (hw_errors == BCH8_MAX_ERROR) {
-> +                       bch_type = BCH8_ECC;
-> +                       info->nand.ecc.bytes = BCH8_SIZE;
-> +               } else {
-> +                       bch_type = BCH4_ECC;
-> +                       info->nand.ecc.bytes = BCH4_SIZE;
-> +               }
-> 
-> -       if (max_errors == 8) {
-> -               info->nand.ecc.strength  = 8;
-> -               info->nand.ecc.bytes     = 13;
-> -               info->nand.ecc.calculate = omap3_calculate_ecc_bch8;
-> +               info->nand.ecc.correct = omap_elm_correct_data;
-> +               info->nand.ecc.calculate = omap3_calculate_ecc_bch;
-> +               info->nand.ecc.read_page = omap_read_page_bch;
-> +               info->nand.ecc.write_page = omap_write_page_bch;
-> +               info->elm_dev = elm_request(bch_type);
-> +               if (!info->elm_dev) {
-> +                       pr_err("Request to elm module failed\n");
-> +                       goto fail;
-> +               }
->         } else {
-> -               info->nand.ecc.strength  = 4;
-> -               info->nand.ecc.bytes     = 7;
-> -               info->nand.ecc.calculate = omap3_calculate_ecc_bch4;
+> +optional properties:
+> + - default-timing: the default timing value
 > +
-> +               /* initialize GPMC BCH engine */
-> +               ret = gpmc_init_hwecc_bch(info->gpmc_cs, 1, max_errors);
-> +               if (ret)
-> +                       goto fail;
+> +timings-subnode
+> +---------------
 > +
-> +               /*
-> +                * software bch library is only used to detect and
-> +                * locateerrors
+> +required properties:
+> + - hactive, vactive: Display resolution
+> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
+> +   in pixels
+> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
+> +   lines
+> + - clock: displayclock in Hz
 
-s/locateerrors/locate errors/
+You're going to hate me for this, but eventually we want to actually 
+reference clock objects in our DT bindings. For now, even if you don't 
+want to actually add clock phandles and stuff here, I think, using the 
+standard "clock-frequency" property would be much better!
 
-BTW, did you check that your patch does not break the software BCH case (i.e. no ELM) ?
+> +
+> +optional properties:
+> + - hsync-active-high (bool): Hsync pulse is active high
+> + - vsync-active-high (bool): Vsync pulse is active high
 
-BR,
---
-Ivan
+For the above two we also considered using bool properties but eventually 
+settled down with integer ones:
+
+- hsync-active = <1>
+
+for active-high and 0 for active low. This has the added advantage of 
+being able to omit this property in the .dts, which then doesn't mean, 
+that the polarity is active low, but rather, that the hsync line is not 
+used on this hardware. So, maybe it would be good to use the same binding 
+here too?
+
+> + - de-active-high (bool): Data-Enable pulse is active high
+> + - pixelclk-inverted (bool): pixelclock is inverted
+
+We don't (yet) have a de-active property in V4L, don't know whether we'll 
+ever have to distingsuish between what some datasheets call "HREF" and 
+HSYNC in DT, but maybe similarly to the above an integer would be 
+preferred. As for pixclk, we call the property "pclk-sample" and it's also 
+an integer.
+
+> + - interlaced (bool)
+
+Is "interlaced" a property of the hardware, i.e. of the board? Can the 
+same display controller on one board require interlaced data and on 
+another board - progressive? BTW, I'm not very familiar with display 
+interfaces, but for interlaced you probably sometimes use a field signal, 
+whose polarity you also want to specify here? We use a "field-even-active" 
+integer property for it.
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
