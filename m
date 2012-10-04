@@ -1,79 +1,91 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 1/8] dts: exynos: add device tree support for exynos5 hdmi
-Date: Thu, 04 Oct 2012 21:44:21 +0530
-Message-ID: <1349367268-32553-2-git-send-email-rahul.sharma@samsung.com>
-References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 9/9] ARM/dts: omap5-evm: pinmux configuration for audio
+Date: Thu,  4 Oct 2012 14:57:28 +0300
+Message-ID: <1349351848-12972-10-git-send-email-peter.ujfalusi@ti.com>
+References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for device tree based discovery for exynos5
-hdmi. Hdmi node is also renamed with "exynos5-hdmi".
+u-boot stopped configuring 'non essential' pins recently. The kernel needs
+to configure the mux for audio needs.
+Since the pinmux for these IPs are static let pinctrl to handle the mux
+configuration for.
+Configuring the mux for: twl6040 (audpwron), McPDM, DMIC, McBSP1 and McBSP2.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    4 ++++
- arch/arm/boot/dts/exynos5250.dtsi         |    7 +++++++
- arch/arm/mach-exynos/include/mach/map.h   |    1 +
- arch/arm/mach-exynos/mach-exynos5-dt.c    |    2 ++
- 4 files changed, 14 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/omap5-evm.dts | 54 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index a352df4..2a478ab 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -166,4 +166,8 @@
- 	spi_2: spi@12d40000 {
- 		status = "disabled";
- 	};
+diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
+index 825e607..c663eba 100644
+--- a/arch/arm/boot/dts/omap5-evm.dts
++++ b/arch/arm/boot/dts/omap5-evm.dts
+@@ -27,6 +27,60 @@
+ 
+ };
+ 
++&omap5_pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++			&twl6040_pins
++			&mcpdm_pins
++			&dmic_pins
++			&mcbsp1_pins
++			&mcbsp2_pins
++	>;
 +
-+	hdmi {
-+		hpd-gpio = <&gpx3 7 0xf 1 3>;
++	twl6040_pins: pinmux_twl6040_pins {
++		pinctrl-single,pins = <
++			0x18a 0x6	/* perslimbus2_clock.gpio5_145 OUTPUT | MODE6 */
++		>;
 +	};
- };
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index f69e389..4e019b5 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -492,4 +492,11 @@
- 			#gpio-cells = <4>;
- 		};
- 	};
 +
-+	hdmi {
-+		compatible = "samsung,exynos5-hdmi";
-+		reg = <0x14530000 0x100000>;
-+		interrupts = <0 95 0>;
-+		version = "1.4";
-+        };
- };
-diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index 5edbbe9..7b9efb2 100644
---- a/arch/arm/mach-exynos/include/mach/map.h
-+++ b/arch/arm/mach-exynos/include/mach/map.h
-@@ -201,6 +201,7 @@
- #define EXYNOS4_PA_SDO			0x12C20000
- #define EXYNOS4_PA_HDMI			0x12D00000
- #define EXYNOS4_PA_IIC_HDMIPHY		0x138E0000
-+#define EXYNOS5_PA_HDMI		0x14530000
- 
- #define EXYNOS4_PA_IIC(x)		(0x13860000 + ((x) * 0x10000))
- #define EXYNOS5_PA_IIC(x)		(0x12C60000 + ((x) * 0x10000))
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index ce82f30..43449fb 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -64,6 +64,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos5-hdmi", EXYNOS5_PA_HDMI,
-+				"exynos5-hdmi", NULL),
- 	{},
- };
- 
++	mcpdm_pins: pinmux_mcpdm_pins {
++		pinctrl-single,pins = <
++			0x142 0x108	/* abe_clks.abe_clks INPUT PULLDOWN | MODE0 */
++			0x15c 0x108	/* abemcpdm_ul_data.abemcpdm_ul_data INPUT PULLDOWN | MODE0 */
++			0x15e 0x108	/* abemcpdm_dl_data.abemcpdm_dl_data INPUT PULLDOWN | MODE0 */
++			0x160 0x118	/* abemcpdm_frame.abemcpdm_frame INPUT PULLUP | MODE0 */
++			0x162 0x108	/* abemcpdm_lb_clk.abemcpdm_lb_clk INPUT PULLDOWN | MODE0 */
++		>;
++	};
++
++	dmic_pins: pinmux_dmic_pins {
++		pinctrl-single,pins = <
++			0x144 0x100	/* abedmic_din1.abedmic_din1 INPUT | MODE0 */
++			0x146 0x100	/* abedmic_din2.abedmic_din2 INPUT | MODE0 */
++			0x148 0x100	/* abedmic_din3.abedmic_din3 INPUT | MODE0 */
++			0x14a 0		/* abedmic_clk1.abedmic_clk1 OUTPUT | MODE0 */
++		>;
++	};
++
++	mcbsp1_pins: pinmux_mcbsp1_pins {
++		pinctrl-single,pins = <
++			0x14c 0x101	/* abedmic_clk2.abemcbsp1_fsx INPUT | MODE1 */
++			0x14e 0x9	/* abedmic_clk3.abemcbsp1_dx OUTPUT PULLDOWN | MODE1 */
++			0x150 0x101	/* abeslimbus1_clock.abemcbsp1_clkx INPUT | MODE0 */
++			0x152 0x109	/* abeslimbus1_data.abemcbsp1_dr INPUT PULLDOWN | MODE1 */
++		>;
++	};
++
++	mcbsp2_pins: pinmux_mcbsp2_pins {
++		pinctrl-single,pins = <
++			0x154 0x108	/* abemcbsp2_dr.abemcbsp2_dr INPUT PULLDOWN | MODE0 */
++			0x156 0x8	/* abemcbsp2_dx.abemcbsp2_dx OUTPUT PULLDOWN | MODE0 */
++			0x158 0x100	/* abemcbsp2_fsx.abemcbsp2_fsx INPUT | MODE0 */
++			0x15a 0x100	/* abemcbsp2_clkx.abemcbsp2_clkx INPUT | MODE0 */
++		>;
++	};
++};
++
+ &mmc1 {
+ 	vmmc-supply = <&vmmcsd_fixed>;
+ 	bus-width = <4>;
 -- 
-1.7.0.4
+1.7.12
+
