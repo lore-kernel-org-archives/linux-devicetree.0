@@ -1,54 +1,98 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCHv3 2/4] Input: keypad: Add smsc ece1099 keypad driver
-Date: Thu, 4 Oct 2012 00:24:26 -0700
-Message-ID: <20121004072426.GB14217@core.coreip.homeip.net>
-References: <1349089310-22134-1-git-send-email-sourav.poddar@ti.com>
- <20121002061829.GA3853@core.coreip.homeip.net>
- <CAKdam55BEQi9tJb1yzKJWNhO7sHrW5NFHfsZjicw2NGYDEFovQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKdam55BEQi9tJb1yzKJWNhO7sHrW5NFHfsZjicw2NGYDEFovQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Poddar, Sourav" <sourav.poddar@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 6/9] ARM/dts: omap4-sdp: pinmux configuration for audio
+Date: Thu,  4 Oct 2012 14:57:25 +0300
+Message-ID: <1349351848-12972-7-git-send-email-peter.ujfalusi@ti.com>
+References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 03, 2012 at 11:26:46AM +0530, Poddar, Sourav wrote:
-> Hi Dmitry,
-> 
-> On Tue, Oct 2, 2012 at 11:48 AM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> > Hi Sourav,
-> >
-> > On Mon, Oct 01, 2012 at 04:31:50PM +0530, Sourav Poddar wrote:
-> >> From: G, Manjunath Kondaiah <manjugk@ti.com>
-> >>
-> >> +
-> >> +     /* Enable smsc keypad interrupts */
-> >> +     ret = smsc_write(dev, SMSC_KP_INT_MASK, 0xff);
-> >> +     if (ret < 0)
-> >> +             goto err2;
-> >> +
-> >> +     return 0;
-> >> +
-> >> +err2:
-> >> +     input_unregister_device(input);
-> >> +err1:
-> >> +     input_free_device(input);
-> >
-> > Double free.
-> >
-> I believe what you are trying to say here is that we dont really
-> need a " input_unregister_device" (as also I checked in other keypad
-> implementations) and do a "unregister_device" in the remove api ??
+u-boot stopped configuring 'non essential' pins recently. The kernel needs
+to configure the mux for audio needs.
+Since the pinmux for these IPs are static let pinctrl to handle the mux
+configuration for.
+Configuring the mux for: twl6040 (audpwron, irq), McPDM, DMIC, McBSP1 and
+McBSP2.
 
-What I was trying to say is that if input device has been registered
-then you need to call input_unregister_device() to unregister and free
-it, otherwise you need to call input_free_device(), but not both.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/omap4-sdp.dts | 53 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-Thanks.
-
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index cf09875..5b7e04f 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -117,6 +117,15 @@
+ };
+ 
+ &omap4_pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++			&twl6040_pins
++			&mcpdm_pins
++			&dmic_pins
++			&mcbsp1_pins
++			&mcbsp2_pins
++	>;
++
+ 	uart2_pins: pinmux_uart2_pins {
+ 		pinctrl-single,pins = <
+ 			0xd8 0x118	/* uart2_cts.uart2_cts INPUT_PULLUP | MODE0 */
+@@ -141,6 +150,50 @@
+ 			0x11e 0		/* uart4_tx.uart4_tx OUTPUT | MODE0 */
+ 		>;
+ 	};
++
++	twl6040_pins: pinmux_twl6040_pins {
++		pinctrl-single,pins = <
++			0xe0 0x3	/* hdq_sio.gpio_127 OUTPUT | MODE3 */
++			0x160 0x100	/* sys_nirq2.sys_nirq2 INPUT | MODE0 */
++		>;
++	};
++
++	mcpdm_pins: pinmux_mcpdm_pins {
++		pinctrl-single,pins = <
++			0xc6 0x108	/* abe_pdm_ul_data.abe_pdm_ul_data INPUT PULLDOWN | MODE0 */
++			0xc8 0x108	/* abe_pdm_dl_data.abe_pdm_dl_data INPUT PULLDOWN | MODE0 */
++			0xca 0x118	/* abe_pdm_frame.abe_pdm_frame INPUT PULLUP | MODE0 */
++			0xcc 0x108	/* abe_pdm_lb_clk.abe_pdm_lb_clk INPUT PULLDOWN | MODE0 */
++			0xce 0x108	/* abe_clks.abe_clks INPUT PULLDOWN | MODE0 */
++		>;
++	};
++
++	dmic_pins: pinmux_dmic_pins {
++		pinctrl-single,pins = <
++			0xd0 0		/* abe_dmic_clk1.abe_dmic_clk1 OUTPUT | MODE0 */
++			0xd2 0x100	/* abe_dmic_din1.abe_dmic_din1 INPUT | MODE0 */
++			0xd4 0x100	/* abe_dmic_din2.abe_dmic_din2 INPUT | MODE0 */
++			0xd6 0x100	/* abe_dmic_din3.abe_dmic_din3 INPUT | MODE0 */
++		>;
++	};
++
++	mcbsp1_pins: pinmux_mcbsp1_pins {
++		pinctrl-single,pins = <
++			0xbe 0x100	/* abe_mcbsp1_clkx.abe_mcbsp1_clkx INPUT | MODE0 */
++			0xc0 0x108	/* abe_mcbsp1_dr.abe_mcbsp1_dr INPUT PULLDOWN | MODE0 */
++			0xc2 0x8	/* abe_mcbsp1_dx.abe_mcbsp1_dx OUTPUT PULLDOWN | MODE0 */
++			0xc4 0x100	/* abe_mcbsp1_fsx.abe_mcbsp1_fsx INPUT | MODE0 */
++		>;
++	};
++
++	mcbsp2_pins: pinmux_mcbsp2_pins {
++		pinctrl-single,pins = <
++			0xb6 0x100	/* abe_mcbsp2_clkx.abe_mcbsp2_clkx INPUT | MODE0 */
++			0xb8 0x108	/* abe_mcbsp2_dr.abe_mcbsp2_dr INPUT PULLDOWN | MODE0 */
++			0xba 0x8	/* abe_mcbsp2_dx.abe_mcbsp2_dx OUTPUT PULLDOWN | MODE0 */
++			0xbc 0x100	/* abe_mcbsp2_fsx.abe_mcbsp2_fsx INPUT | MODE0 */
++		>;
++	};
+ };
+ 
+ &i2c1 {
 -- 
-Dmitry
+1.7.12
+
