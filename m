@@ -1,65 +1,54 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 8/8] arm: exynos: add exynos5 drm-hdmi common platform device
-Date: Thu, 04 Oct 2012 21:44:28 +0530
-Message-ID: <1349367268-32553-9-git-send-email-rahul.sharma@samsung.com>
-References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCHv3 2/4] Input: keypad: Add smsc ece1099 keypad driver
+Date: Thu, 4 Oct 2012 00:24:26 -0700
+Message-ID: <20121004072426.GB14217@core.coreip.homeip.net>
+References: <1349089310-22134-1-git-send-email-sourav.poddar@ti.com>
+ <20121002061829.GA3853@core.coreip.homeip.net>
+ <CAKdam55BEQi9tJb1yzKJWNhO7sHrW5NFHfsZjicw2NGYDEFovQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKdam55BEQi9tJb1yzKJWNhO7sHrW5NFHfsZjicw2NGYDEFovQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Poddar, Sourav" <sourav.poddar@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds drm-hdmi-common platform device which abstracts hdmi
-and mixer device. This is software module hence not palced as device
-tree node.
+On Wed, Oct 03, 2012 at 11:26:46AM +0530, Poddar, Sourav wrote:
+> Hi Dmitry,
+> 
+> On Tue, Oct 2, 2012 at 11:48 AM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+> > Hi Sourav,
+> >
+> > On Mon, Oct 01, 2012 at 04:31:50PM +0530, Sourav Poddar wrote:
+> >> From: G, Manjunath Kondaiah <manjugk@ti.com>
+> >>
+> >> +
+> >> +     /* Enable smsc keypad interrupts */
+> >> +     ret = smsc_write(dev, SMSC_KP_INT_MASK, 0xff);
+> >> +     if (ret < 0)
+> >> +             goto err2;
+> >> +
+> >> +     return 0;
+> >> +
+> >> +err2:
+> >> +     input_unregister_device(input);
+> >> +err1:
+> >> +     input_free_device(input);
+> >
+> > Double free.
+> >
+> I believe what you are trying to say here is that we dont really
+> need a " input_unregister_device" (as also I checked in other keypad
+> implementations) and do a "unregister_device" in the remove api ??
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/mach-exynos/dev-drm.c            |    5 +++++
- arch/arm/mach-exynos/mach-exynos5-dt.c    |    2 ++
- arch/arm/plat-samsung/include/plat/devs.h |    1 +
- 3 files changed, 8 insertions(+), 0 deletions(-)
+What I was trying to say is that if input device has been registered
+then you need to call input_unregister_device() to unregister and free
+it, otherwise you need to call input_free_device(), but not both.
 
-diff --git a/arch/arm/mach-exynos/dev-drm.c b/arch/arm/mach-exynos/dev-drm.c
-index 17c9c6e..ca811de 100644
---- a/arch/arm/mach-exynos/dev-drm.c
-+++ b/arch/arm/mach-exynos/dev-drm.c
-@@ -27,3 +27,8 @@ struct platform_device exynos_device_drm = {
- 		.coherent_dma_mask	= DMA_BIT_MASK(32),
- 	}
- };
-+
-+/* common drm-hdmi device which abstracts hdmi and mixer dev*/
-+struct platform_device exynos_drm_hdmi_device = {
-+	.name	= "exynos-drm-hdmi",
-+};
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index db3447c..db7092e 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -79,8 +79,10 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- };
- 
- static struct platform_device *exynos5_devices[] __initdata = {
-+	&exynos_drm_hdmi_device,
- 	&exynos_device_drm,
- };
-+
- static void __init exynos5250_dt_map_io(void)
- {
- 	exynos_init_io(NULL, 0);
-diff --git a/arch/arm/plat-samsung/include/plat/devs.h b/arch/arm/plat-samsung/include/plat/devs.h
-index 5da4b4f..cda177e 100644
---- a/arch/arm/plat-samsung/include/plat/devs.h
-+++ b/arch/arm/plat-samsung/include/plat/devs.h
-@@ -134,6 +134,7 @@ extern struct platform_device exynos4_device_pcm2;
- extern struct platform_device exynos4_device_spdif;
- 
- extern struct platform_device exynos_device_drm;
-+extern struct platform_device exynos_drm_hdmi_device;
- 
- extern struct platform_device samsung_asoc_dma;
- extern struct platform_device samsung_asoc_idma;
+Thanks.
+
 -- 
-1.7.0.4
+Dmitry
