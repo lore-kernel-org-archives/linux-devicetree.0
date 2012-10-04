@@ -1,66 +1,50 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 2/8] dts: exynos: add device tree support for exynos5 mixer
-Date: Thu, 04 Oct 2012 21:44:22 +0530
-Message-ID: <1349367268-32553-3-git-send-email-rahul.sharma@samsung.com>
-References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 2/9] ARM: OMAP: board-omap4panda: Pin mux configuration for audio needs
+Date: Thu,  4 Oct 2012 14:57:21 +0300
+Message-ID: <1349351848-12972-3-git-send-email-peter.ujfalusi@ti.com>
+References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for device tree based discovery for exynos5
-mixer. Mixer node is also renamed with "exynos5-mixer".
+u-boot stopped configuring 'non essential' pins recently. These pins are
+essential for audio and need to be done to have working audio on the board.
+Pin Mux configuration for: twl6040 audpwron gpio, McPDM, and McBSP1.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/exynos5250.dtsi       |    8 ++++++++
- arch/arm/mach-exynos/include/mach/map.h |    1 +
- arch/arm/mach-exynos/mach-exynos5-dt.c  |    2 ++
- 3 files changed, 11 insertions(+), 0 deletions(-)
+ arch/arm/mach-omap2/board-omap4panda.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 4e019b5..e4483bc 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -499,4 +499,12 @@
- 		interrupts = <0 95 0>;
- 		version = "1.4";
-         };
+diff --git a/arch/arm/mach-omap2/board-omap4panda.c b/arch/arm/mach-omap2/board-omap4panda.c
+index 57d217a..51d08fc 100644
+--- a/arch/arm/mach-omap2/board-omap4panda.c
++++ b/arch/arm/mach-omap2/board-omap4panda.c
+@@ -380,6 +380,21 @@ static struct omap_board_mux board_mux[] __initdata = {
+ 	/* NIRQ2 for twl6040 */
+ 	OMAP4_MUX(SYS_NIRQ2, OMAP_MUX_MODE0 |
+ 		  OMAP_PIN_INPUT_PULLUP | OMAP_PIN_OFF_WAKEUPENABLE),
++	/* GPIO_127 for twl6040 */
++	OMAP4_MUX(HDQ_SIO, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT),
++	/* McPDM */
++	OMAP4_MUX(ABE_PDM_UL_DATA, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLDOWN),
++	OMAP4_MUX(ABE_PDM_DL_DATA, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLDOWN),
++	OMAP4_MUX(ABE_PDM_FRAME, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLUP),
++	OMAP4_MUX(ABE_PDM_LB_CLK, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLDOWN),
++	OMAP4_MUX(ABE_CLKS, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLDOWN),
++	/* McBSP1 */
++	OMAP4_MUX(ABE_MCBSP1_CLKX, OMAP_MUX_MODE0 | OMAP_PIN_INPUT),
++	OMAP4_MUX(ABE_MCBSP1_DR, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLDOWN),
++	OMAP4_MUX(ABE_MCBSP1_DX, OMAP_MUX_MODE0 | OMAP_PIN_OUTPUT |
++		  OMAP_PULL_ENA),
++	OMAP4_MUX(ABE_MCBSP1_FSX, OMAP_MUX_MODE0 | OMAP_PIN_INPUT),
 +
-+        mixer {
-+		compatible = "samsung,exynos5-mixer";
-+		reg = <0x14450000 0x10000>;
-+		interrupts = <0 94 0>;
-+		version = "16.0.33.0";
-+		vp-support = <0>;
-+        };
- };
-diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index 7b9efb2..314ee75 100644
---- a/arch/arm/mach-exynos/include/mach/map.h
-+++ b/arch/arm/mach-exynos/include/mach/map.h
-@@ -201,6 +201,7 @@
- #define EXYNOS4_PA_SDO			0x12C20000
- #define EXYNOS4_PA_HDMI			0x12D00000
- #define EXYNOS4_PA_IIC_HDMIPHY		0x138E0000
-+#define EXYNOS5_PA_MIXER		0x14450000
- #define EXYNOS5_PA_HDMI		0x14530000
- 
- #define EXYNOS4_PA_IIC(x)		(0x13860000 + ((x) * 0x10000))
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index 43449fb..cdad7c1 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -66,6 +66,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
- 	OF_DEV_AUXDATA("samsung,exynos5-hdmi", EXYNOS5_PA_HDMI,
- 				"exynos5-hdmi", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos5-mixer", EXYNOS5_PA_MIXER,
-+				"exynos5-mixer", NULL),
- 	{},
+ 	{ .reg_offset = OMAP_MUX_TERMINATOR },
  };
  
 -- 
-1.7.0.4
+1.7.12
+
