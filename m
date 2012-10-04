@@ -1,52 +1,53 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 7/8] arm: exynos: add exynos5 drm framework platform device
-Date: Thu, 04 Oct 2012 21:44:27 +0530
-Message-ID: <1349367268-32553-8-git-send-email-rahul.sharma@samsung.com>
-References: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349367268-32553-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, fahad.k@samsung.com, l.krishna@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
+From: Sourav <sourav.poddar@ti.com>
+Subject: Re: [PATCHv3 2/4] Input: keypad: Add smsc ece1099 keypad driver
+Date: Thu, 4 Oct 2012 13:45:23 +0530
+Message-ID: <506D459B.3070504@ti.com>
+References: <1349089310-22134-1-git-send-email-sourav.poddar@ti.com> <20121002061829.GA3853@core.coreip.homeip.net> <CAKdam55BEQi9tJb1yzKJWNhO7sHrW5NFHfsZjicw2NGYDEFovQ@mail.gmail.com> <20121004072426.GB14217@core.coreip.homeip.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20121004072426.GB14217@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds drm framework platform device. This device is a
-software device, hence not made part of device tree file.
+Hi Dmitry,
+On Thursday 04 October 2012 12:54 PM, Dmitry Torokhov wrote:
+> On Wed, Oct 03, 2012 at 11:26:46AM +0530, Poddar, Sourav wrote:
+>> Hi Dmitry,
+>>
+>> On Tue, Oct 2, 2012 at 11:48 AM, Dmitry Torokhov
+>> <dmitry.torokhov@gmail.com> wrote:
+>>> Hi Sourav,
+>>>
+>>> On Mon, Oct 01, 2012 at 04:31:50PM +0530, Sourav Poddar wrote:
+>>>> From: G, Manjunath Kondaiah <manjugk@ti.com>
+>>>>
+>>>> +
+>>>> +     /* Enable smsc keypad interrupts */
+>>>> +     ret = smsc_write(dev, SMSC_KP_INT_MASK, 0xff);
+>>>> +     if (ret < 0)
+>>>> +             goto err2;
+>>>> +
+>>>> +     return 0;
+>>>> +
+>>>> +err2:
+>>>> +     input_unregister_device(input);
+>>>> +err1:
+>>>> +     input_free_device(input);
+>>> Double free.
+>>>
+>> I believe what you are trying to say here is that we dont really
+>> need a " input_unregister_device" (as also I checked in other keypad
+>> implementations) and do a "unregister_device" in the remove api ??
+> What I was trying to say is that if input device has been registered
+> then you need to call input_unregister_device() to unregister and free
+> it, otherwise you need to call input_free_device(), but not both.
+>
+> Thanks.
+Ok. Thanks for the clarification. Will update and post a new version.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/mach-exynos/mach-exynos5-dt.c |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+~Sourav
 
-diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index 9a6d569..db3447c 100644
---- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -17,6 +17,7 @@
- #include <asm/hardware/gic.h>
- #include <mach/map.h>
- 
-+#include <plat/devs.h>
- #include <plat/cpu.h>
- #include <plat/regs-serial.h>
- #include <plat/gpio-cfg.h>
-@@ -77,6 +78,9 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 	{},
- };
- 
-+static struct platform_device *exynos5_devices[] __initdata = {
-+	&exynos_device_drm,
-+};
- static void __init exynos5250_dt_map_io(void)
- {
- 	exynos_init_io(NULL, 0);
-@@ -94,6 +98,7 @@ static void __init exynos5250_dt_machine_init(void)
- 	of_platform_populate(NULL, of_default_bus_match_table,
- 				exynos5250_auxdata_lookup, NULL);
- 	smdk_hpd_setup();
-+	platform_add_devices(exynos5_devices, ARRAY_SIZE(exynos5_devices));
- }
- 
- static char const *exynos5250_dt_compat[] __initdata = {
--- 
-1.7.0.4
