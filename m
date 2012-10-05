@@ -1,176 +1,115 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
 Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Date: Fri, 5 Oct 2012 18:16:20 +0200
-Message-ID: <20121005161620.GB2053@pengutronix.de>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
- <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
- <506DD9B4.40409@wwwdotorg.org>
+Date: Fri, 05 Oct 2012 10:17:55 -0600
+Message-ID: <506F0833.1090704@wwwdotorg.org>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de> <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <506DD9B4.40409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBPY3QgMDQsIDIwMTIgYXQgMTI6NDc6MTZQTSAtMDYwMCwgU3RlcGhlbiBXYXJyZW4g
-d3JvdGU6Cj4gT24gMTAvMDQvMjAxMiAxMTo1OSBBTSwgU3RlZmZlbiBUcnVtdHJhciB3cm90ZToK
-PiAKPiBBIHBhdGNoIGRlc2NyaXB0aW9uIHdvdWxkIGJlIHVzZWZ1bCBmb3Igc29tZXRoaW5nIGxp
-a2UgdGhpcy4KPiAKClllcy4gU2hhbWUgb24gbWUuCgo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9kaXNwbGF5LXRpbWluZ3MudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZpZGVvL2Rpc3BsYXktdGltaW5ncy50eHQK
-PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gLi4uCj4gPiArVXNhZ2UgaW4gYmFja2VuZAo+ID4g
-Kz09PT09PT09PT09PT09PT0KPiAKPiBFdmVyeXRoaW5nIGJlZm9yZSB0aGF0IHBvaW50IGluIHRo
-ZSBmaWxlIGxvb2tzIGZpbmUgdG8gbWUuCj4gCgpcby8KCj4gRXZlcnl0aGluZyBhZnRlciB0aGlz
-IHBvaW50IGluIHRoZSBmaWxlIHNlZW1zIHRvIGJlIExpbnV4LXNwZWNpZmljCj4gaW1wbGVtZW50
-YXRpb24gZGV0YWlscy4gRG9lcyBpdCByZWFsbHkgYmVsb25nIGluIHRoZSBEVCBiaW5kaW5nCj4g
-ZG9jdW1lbnRhdGlvbiwgcmF0aGVyIHRoYW4gc29tZSBMaW51eC1zcGVjaWZpYyBkb2N1bWVudGF0
-aW9uIGZpbGU/Cj4gCgpJIGd1ZXNzIHlvdSBhcmUgcmlnaHQgYWJvdXQgdGhhdC4KCj4gPiArc3Ry
-dWN0IGRybV9kaXNwbGF5X21vZGUKPiA+ICs9PT09PT09PT09PT09PT09PT09PT09PQo+ID4gKwo+
-ID4gKyAgKy0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tKy0tLS0tLS0tLS0rLS0tLS0tLSsKPiA+ICsgIHwgICAgICAgICAgfCAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgfCAgICAgICB8ICDi
-hpEKPiA+ICsgIHwgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICAgICAgICAgfCAgICAgICB8ICB8Cj4gPiArICB8ICAgICAgICAgIHwgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgIHwgICAg
-ICAgfCAgfAo+ID4gKyAgKy0tLS0tLS0tLS0jIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj
-IyMjIyMjIyMjIyMjIyMjIy0tLS0tLS0tLS0rLS0tLS0tLSsgIHwKPiAKPiBJIHN1c3BlY3QgdGhl
-IGVudGlyZSBob3Jpem9udGFsIGJveCBhYm92ZSAoYW5kIHRoZSBlbnRpcmUgdmVydGljYWwgYm94
-Cj4gYWxsIHRoZSB3YXkgZG93biB0aGUgbGVmdC1oYW5kIHNpZGUpIHNob3VsZCBiZSBvbiB0aGUg
-Ym90dG9tL3JpZ2h0Cj4gaW5zdGVhZCBvZiB0b3AvbGVmdC4gVGhlIHJlYXNvbiBJIHRoaW5rIHRo
-aXMgaXMgYmVjYXVzZSBhbGwgb2YKPiB2c3luY19zdGFydCwgdnN5bmNfZW5kLCB2ZGlzcGxheSBo
-YXZlIHRvIGJlIHJlZmVyZW5jZWQgdG8gc29tZSBrbm93bgo+IHBvaW50LCB3aGljaCBpcyB1c3Vh
-bGx5IHplcm8gb3IgdGhlIHN0YXJ0IG9mIHRoZSB0aW1pbmcgZGVmaW5pdGlvbiwgL29yLwo+IHRo
-ZXJlIHdvdWxkIGJlIHNvbWUgdmFsdWUgaW5kaWNhdGluZyB0aGUgc2l6ZSBvZiB0aGUgdG9wIG1h
-cmdpbmcvcG9yY2gKPiBpbiBvcmRlciB0byBzYXkgd2hlcmUgdGhvc2Ugb3RoZXIgdmFsdWVzIGFy
-ZSByZWZlcmVuY2VkIHRvLgo+IAo+ID4gKyAgfCAgICAgICAgICAjICAg4oaRICAgICAgICAg4oaR
-ICAgICAgICAgIOKGkSAgICAgICAgICAgICAgICAgICAgIyAgICAgICAgICB8ICAgICAgIHwgIHwK
-PiA+ICsgIHwgICAgICAgICAgIyAgIHwgICAgICAgICB8ICAgICAgICAgIHwgICAgICAgICAgICAg
-ICAgICAgICMgICAgICAgICAgfCAgICAgICB8ICB8Cj4gPiArICB8ICAgICAgICAgICMgICB8ICAg
-ICAgICAgfCAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAjICAgICAgICAgIHwgICAgICAg
-fCAgfAo+ID4gKyAgfCAgICAgICAgICAjICAgfCAgICAgICAgIHwgICAgICAgICAgfCAgICAgICAg
-ICAgICAgICAgICAgIyAgICAgICAgICB8ICAgICAgIHwgIHwKPiA+ICsgIHwgICAgICAgICAgIyAg
-IHwgICAgICAgICB8ICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICMgICAgICAgICAgfCAg
-ICAgICB8ICB8Cj4gPiArICB8ICAgICAgICAgICMgICB8ICAgICAgICAgfCAgICAgICAgICB8ICAg
-ICAgIGhkaXNwbGF5ICAgICAjICAgICAgICAgIHwgICAgICAgfCAgfAo+ID4gKyAgfCAgICAgICAg
-ICAjPC0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0+IyAgICAgICAg
-ICB8ICAgICAgIHwgIHwKPiA+ICsgIHwgICAgICAgICAgIyAgIHwgICAgICAgICB8ICAgICAgICAg
-IHwgICAgICAgICAgICAgICAgICAgICMgICAgICAgICAgfCAgICAgICB8ICB8Cj4gPiArICB8ICAg
-ICAgICAgICMgICB8dnN5bmNfc3RhcnQgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAjICAg
-ICAgICAgIHwgICAgICAgfCAgfAo+ID4gKyAgfCAgICAgICAgICAjICAgfCAgICAgICAgIHwgICAg
-ICAgICAgfCAgICAgICAgICAgICAgICAgICAgIyAgICAgICAgICB8ICAgICAgIHwgIHwKPiA+ICsg
-IHwgICAgICAgICAgIyAgIHwgICAgICAgICB8dnN5bmNfZW5kIHwgICAgICAgICAgICAgICAgICAg
-ICMgICAgICAgICAgfCAgICAgICB8ICB8Cj4gPiArICB8ICAgICAgICAgICMgICB8ICAgICAgICAg
-fCAgICAgICAgICB8dmRpc3BsYXkgICAgICAgICAgICAjICAgICAgICAgIHwgICAgICAgfCAgfAo+
-ID4gKyAgfCAgICAgICAgICAjICAgfCAgICAgICAgIHwgICAgICAgICAgfCAgICAgICAgICAgICAg
-ICAgICAgIyAgICAgICAgICB8ICAgICAgIHwgIHwKPiA+ICsgIHwgICAgICAgICAgIyAgIHwgICAg
-ICAgICB8ICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICMgICAgICAgICAgfCAgICAgICB8
-ICB8Cj4gPiArICB8ICAgICAgICAgICMgICB8ICAgICAgICAgfCAgICAgICAgICB8ICAgICAgICAg
-ICAgICAgICAgICAjICAgICAgICAgIHwgICAgICAgfCAgfCB2dG90YWwKPiA+ICsgIHwgICAgICAg
-ICAgIyAgIHwgICAgICAgICB8ICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICMgICAgICAg
-ICAgfCAgICAgICB8ICB8Cj4gPiArICB8ICAgICAgICAgICMgICB8ICAgICAgICAgfCAgICAgICAg
-ICB8ICAgICBoc3luY19zdGFydCAgICAjICAgICAgICAgIHwgICAgICAgfCAgfAo+ID4gKyAgfCAg
-ICAgICAgICAjPC0tKy0tLS0tLS0tLSstLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLT58ICAgICAgIHwgIHwKPiA+ICsgIHwgICAgICAgICAgIyAgIHwgICAgICAgICB8ICAg
-ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICMgICAgICAgICAgfCAgICAgICB8ICB8Cj4gPiAr
-ICB8ICAgICAgICAgICMgICB8ICAgICAgICAgfCAgICAgICAgICB8ICAgICBoc3luY19lbmQgICAg
-ICAjICAgICAgICAgIHwgICAgICAgfCAgfAo+ID4gKyAgfCAgICAgICAgICAjPC0tKy0tLS0tLS0t
-LSstLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPnwgIHwK
-PiA+ICsgIHwgICAgICAgICAgIyAgIHwgICAgICAgICB8ICAgICAgICAgIOKGkyAgICAgICAgICAg
-ICAgICAgICAgIyAgICAgICAgICB8ICAgICAgIHwgIHwKPiA+ICsgICstLS0tLS0tLS0tIyMjI3wj
-IyMjIyMjIyN8IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMtLS0tLS0tLS0tKy0tLS0t
-LS0rICB8Cj4gPiArICB8ICAgICAgICAgIHwgICB8ICAgICAgICAgfCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB8ICAgICAgICAgIHwgICAgICAgfCAgfAo+ID4gKyAgfCAgICAgICAgICB8
-ICAgfCAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICB8
-ICAgICAgIHwgIHwKPiA+ICsgIHwgICAgICAgICAgfCAgIOKGkyAgICAgICAgIHwgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICB8ICAgICAgIHwgIHwKPiA+ICsgICstLS0t
-LS0tLS0tKy0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSstLS0t
-LS0tLS0tKy0tLS0tLS0rICB8Cj4gPiArICB8ICAgICAgICAgIHwgICAgICAgICAgICAgfCAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgICAgICAgIHwgICAgICAgfCAgfAo+ID4gKyAg
-fCAgICAgICAgICB8ICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-fCAgICAgICAgICB8ICAgICAgIHwgIHwKPiA+ICsgIHwgICAgICAgICAgfCAgICAgICAgICAgICDi
-hpMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICB8ICAgICAgIHwgIOKG
-kwo+ID4gKyAgKy0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tKy0tLS0tLS0tLS0rLS0tLS0tLSsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGh0b3RhbAo+ID4gKyAgIDwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tPgo+IAo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvb2Yvb2ZfZGlzcGxheV90aW1pbmdzLmMgYi9kcml2ZXJzL29mL29m
-X2Rpc3BsYXlfdGltaW5ncy5jCj4gCj4gPiArc3RhdGljIGludCBwYXJzZV9wcm9wZXJ0eShzdHJ1
-Y3QgZGV2aWNlX25vZGUgKm5wLCBjaGFyICpuYW1lLAo+ID4gKwkJCQlzdHJ1Y3QgdGltaW5nX2Vu
-dHJ5ICpyZXN1bHQpCj4gCj4gPiArCWlmIChjZWxscyA9PSAxKQo+ID4gKwkJcmV0ID0gb2ZfcHJv
-cGVydHlfcmVhZF91MzJfYXJyYXkobnAsIG5hbWUsICZyZXN1bHQtPnR5cCwgY2VsbHMpOwo+IAo+
-IFNob3VsZCB0aGF0IGJyYW5jaCBub3QganVzdCBzZXQgcmVzdWx0LT5taW4vbWF4IHRvIHR5cCBh
-cyB3ZWxsPwo+IFByZXN1bWFibHkgaXQnZCBwcmV2ZW50IGFueSBjb2RlIHRoYXQgaW50ZXJwcmV0
-cyBzdHJ1Y3QgdGltaW5nX2VudHJ5Cj4gZnJvbSBoYXZpbmcgdG8gY2hlY2sgaWYgdGhvc2UgdmFs
-dWVzIHdlcmUgMCBvciBub3Q/Cj4gCgpZZXMsIG9rYXkuCgo+ID4gKwllbHNlIGlmIChjZWxscyA9
-PSAzKQo+ID4gKwkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzJfYXJyYXkobnAsIG5hbWUsICZy
-ZXN1bHQtPm1pbiwgY2VsbHMpOwo+IAo+ID4gK3N0cnVjdCBkaXNwbGF5X3RpbWluZ3MgKm9mX2dl
-dF9kaXNwbGF5X3RpbWluZ19saXN0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4gCj4gPiArCWVu
-dHJ5ID0gb2ZfcGFyc2VfcGhhbmRsZSh0aW1pbmdzX25wLCAiZGVmYXVsdC10aW1pbmciLCAwKTsK
-PiA+ICsKPiA+ICsJaWYgKCFlbnRyeSkgewo+ID4gKwkJcHJfaW5mbygiJXM6IG5vIGRlZmF1bHQt
-dGltaW5nIHNwZWNpZmllZFxuIiwgX19mdW5jX18pOwo+ID4gKwkJZW50cnkgPSBvZl9maW5kX25v
-ZGVfYnlfbmFtZShucCwgInRpbWluZyIpOwo+IAo+IEkgZG9uJ3QgdGhpbmsgeW91IHdhbnQgdG8g
-cmVxdWlyZSB0aGUgbm9kZSBoYXZlIGFuIGV4cGxpY2l0IG5hbWU7IEkKPiBkb24ndCByZWNhbGwg
-dGhlIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBtYWtpbmcgdGhhdCBhIHJlcXVpcmVtZW50Lgo+
-IEluc3RlYWQsIGNhbid0IHlvdSBlaXRoZXIganVzdCBsZWF2ZSB0aGUgZGVmYXVsdCB1bnNldCwg
-b3IgcGljayB0aGUKPiBmaXJzdCBEVCBjaGlsZCBub2RlLCBpcnJlc3BlY3RpdmUgb2YgbmFtZT8K
-PiAKQWgsIHllcy4gSSB3aWxsIHNldCB0aGUgZmlyc3QgY2hpbGQgdGhlbi4KCj4gPiArCWlmICgh
-ZW50cnkpIHsKPiA+ICsJCXByX2luZm8oIiVzOiBubyB0aW1pbmcgc3BlY2lmaWNhdGlvbnMgZ2l2
-ZW5cbiIsIF9fZnVuY19fKTsKPiA+ICsJCXJldHVybiBkaXNwOwo+ID4gKwl9Cj4gCj4gVGhlIERU
-IGJpbmRpbmdzIGRvbid0IHN0YXRlIHRoYXQgaXQncyBtYW5kYXRvcnkgdG8gaGF2ZSBzb21lIHRp
-bWluZwo+IHNwZWNpZmllZCwgYWx0aG91Z2ggSSBhZ3JlZSB0aGF0IGl0IG1ha2VzIHNlbnNlIGlu
-IHByYWN0aWNlLgo+IAoKVGhlIGRlZmluaXRpb24gb2YgdGltaW5ncyBpbiBkdCBkb2Vzbid0IG1h
-a2UgbXVjaCBzZW5zZSwgd2hlbiB0aGVyZQphcmUgbm8gdGltaW5ncyBkZWZpbmVkLCBkb2VzIGl0
-ID8gTWF5YmUgSSBzaG91bGQgc3RhdGUgdGhlIG9idmlvdXMKaW4gdGhlIGJpbmRpbmcsIGp1c3Qg
-aW4gY2FzZS4KCj4gPiArCWZvcl9lYWNoX2NoaWxkX29mX25vZGUodGltaW5nc19ucCwgZW50cnkp
-IHsKPiA+ICsJCXN0cnVjdCBzaWduYWxfdGltaW5nICpzdDsKPiA+ICsKPiA+ICsJCXN0ID0gb2Zf
-Z2V0X2Rpc3BsYXlfdGltaW5nKGVudHJ5KTsKPiA+ICsKPiA+ICsJCWlmICghc3QpCj4gPiArCQkJ
-Y29udGludWU7Cj4gCj4gSSB3b25kZXIgaWYgdGhhdCBzaG91bGRuJ3QgYmUgYW4gZXJyb3I/Cj4g
-CgpJbiB0aGUgc2Vuc2Ugb2YgYSBwcl9lcnIgbm90IGEgLUVJTlZBTCBJIHByZXN1bWU/ISBJdCBp
-cyBhIGxpdHRsZSBiaXQgcXVpZXQgaW4KY2FzZSBvZiBhIGZhdWx0eSBzcGVjLCB0aGF0IGlzIHJp
-Z2h0LgoKPiA+ICsJCWlmIChzdHJjbXAoZGVmYXVsdF90aW1pbmcsIGVudHJ5LT5mdWxsX25hbWUp
-ID09IDApCj4gPiArCQkJZGlzcC0+ZGVmYXVsdF90aW1pbmcgPSBkaXNwLT5udW1fdGltaW5nczsK
-PiAKPiBIbW0uIFdoeSBub3QgY29tcGFyZSB0aGUgbm9kZSBwb2ludGVycyByYXRoZXIgdGhhbiB0
-aGUgbmFtZT8gQWxzbywgaWYKPiB0aGUgcGFyc2luZyBmYWlsZWQsIHRoZW4gdGhpcyBjYW4gbGVh
-ZCB0byBkZWZhdWx0X3RpbWluZyBiZWluZwo+IHVuaW5pdGlhbGl6ZWQgYW55d2F5Li4uCj4gCi4u
-IGFuZCB3ZSBkb24ndCB3YW50IHRoYXQuIFdpbGwgZml4LgoKPiA+ICsJCWRpc3AtPnRpbWluZ3Nb
-ZGlzcC0+bnVtX3RpbWluZ3NdID0gc3Q7Cj4gPiArCQlkaXNwLT5udW1fdGltaW5ncysrOwo+ID4g
-Kwl9Cj4gCj4gPiArCWlmIChkaXNwLT5udW1fdGltaW5ncyA+PSAwKQo+ID4gKwkJcHJfaW5mbygi
-JXM6IGdvdCAlZCB0aW1pbmdzLiBVc2luZyB0aW1pbmcgIyVkIGFzIGRlZmF1bHRcbiIsIF9fZnVu
-Y19fLAo+ID4gKwkJCWRpc3AtPm51bV90aW1pbmdzICwgZGlzcC0+ZGVmYXVsdF90aW1pbmcgKyAx
-KTsKPiA+ICsJZWxzZQo+ID4gKwkJcHJfaW5mbygiJXM6IG5vIHRpbWluZ3Mgc3BlY2lmaWVkXG4i
-LCBfX2Z1bmNfXyk7Cj4gCj4gVGhlIG1lc3NhZ2UgaW4gdGhlIGVsc2UgY2xhdXNlIGlzIG5vdCBu
-ZWNlc3NhcmlseSB0cnVlOyB0aGVyZSBtYXkgaGF2ZQo+IGJlZW4gc29tZSBzcGVjaWZpZWQsIGJ1
-dCB0aGV5IGp1c3QgY291bGRuJ3QgYmUgcGFyc2VkLgo+IApSaWdodC4KCj4gPiAraW50IG9mX2Rp
-c3BsYXlfdGltaW5nc19leGlzdHMoc3RydWN0IGRldmljZV9ub2RlICpucCkKPiA+ICt7Cj4gPiAr
-CXN0cnVjdCBkZXZpY2Vfbm9kZSAqdGltaW5nc19ucDsKPiA+ICsJc3RydWN0IGRldmljZV9ub2Rl
-ICpkZWZhdWx0X25wOwo+ID4gKwo+ID4gKwlpZiAoIW5wKQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7
-Cj4gPiArCj4gPiArCXRpbWluZ3NfbnAgPSBvZl9wYXJzZV9waGFuZGxlKG5wLCAiZGlzcGxheS10
-aW1pbmdzIiwgMCk7Cj4gPiArCj4gPiArCWlmICghdGltaW5nc19ucCkKPiA+ICsJCXJldHVybiAt
-RUlOVkFMOwo+ID4gKwo+ID4gKwlkZWZhdWx0X25wID0gb2ZfcGFyc2VfcGhhbmRsZShucCwgImRl
-ZmF1bHQtdGltaW5nIiwgMCk7Cj4gPiArCj4gPiArCWlmIChkZWZhdWx0X25wKQo+ID4gKwkJcmV0
-dXJuIDA7Cj4gCj4gSWYgdGhpcyBmdW5jdGlvbiBjaGVja3MgdGhhdCBhIGRlZmF1bHQtdGltaW5n
-IHByb3BlcnR5IGV4aXN0cywgc2hvdWxkbid0Cj4gdGhlIGZ1bmN0aW9uIGJlIG5hbWVkIG9mX2Rp
-c3BsYXlfZGVmYXVsdF90aW1pbmdfZXhpc3RzKCk/Cj4gCgpNYXliZSBJIHNob3VsZCBzcGxpdCB0
-aGlzIGluIHR3byBmdW5jdGlvbnMuCgpUaGFua3MgZm9yIHlvdXIgZmVlZGJhY2suCgpSZWdhcmRz
-LApTdGVmZmVuCgotLSAKUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwKSW5kdXN0cmlhbCBMaW51eCBTb2x1dGlv
-bnMgICAgICAgICAgICAgICAgIHwgaHR0cDovL3d3dy5wZW5ndXRyb25peC5kZS8gIHwKUGVpbmVy
-IFN0ci4gNi04LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIw
-NjkxNy0wICAgIHwKQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwg
-RmF4OiAgICs0OS01MTIxLTIwNjkxNy01NTU1IHwKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZp
-Y2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcv
-bGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On 10/04/2012 03:35 PM, Guennadi Liakhovetski wrote:
+> Hi Steffen
+> 
+> Sorry for chiming in so late in the game, but I've long been wanting to 
+> have a look at this and compare with what we do for V4L2, so, this seems a 
+> great opportunity to me:-)
+> 
+> On Thu, 4 Oct 2012, Steffen Trumtrar wrote:
+
+>> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
+
+>> +timings-subnode
+>> +---------------
+>> +
+>> +required properties:
+>> + - hactive, vactive: Display resolution
+>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
+>> +   in pixels
+>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
+>> +   lines
+>> + - clock: displayclock in Hz
+> 
+> You're going to hate me for this, but eventually we want to actually 
+> reference clock objects in our DT bindings. For now, even if you don't 
+> want to actually add clock phandles and stuff here, I think, using the 
+> standard "clock-frequency" property would be much better!
+
+In a definition of a display timing, we will never need to use the clock
+binding; the clock binding would be used by the HW module that is
+generating a timing, not by the timing definition itself.
+
+That said, your comment about renaming the property to avoid any kind of
+conceptual conflict is still quite valid. This is bike-shedding, but
+"pixel-clock" might be more in line with typical video mode terminology,
+although there's certainly preference in DT for using the generic term
+clock-frequency that you proposed. Either is fine by me.
+
+>> +optional properties:
+>> + - hsync-active-high (bool): Hsync pulse is active high
+>> + - vsync-active-high (bool): Vsync pulse is active high
+> 
+> For the above two we also considered using bool properties but eventually 
+> settled down with integer ones:
+> 
+> - hsync-active = <1>
+> 
+> for active-high and 0 for active low. This has the added advantage of 
+> being able to omit this property in the .dts, which then doesn't mean, 
+> that the polarity is active low, but rather, that the hsync line is not 
+> used on this hardware. So, maybe it would be good to use the same binding 
+> here too?
+
+I agree. This also covers the case where analog display connectors often
+use polarity to differentiate similar modes, yet digital connectors
+often always use a fixed polarity since the receiving device can
+"measure" the signal in more complete ways.
+
+If the board HW inverts these lines, the same property names can exist
+in the display controller itself, and the two values XORd together to
+yield the final output polarity.
+
+>> + - de-active-high (bool): Data-Enable pulse is active high
+>> + - pixelclk-inverted (bool): pixelclock is inverted
+> 
+> We don't (yet) have a de-active property in V4L, don't know whether we'll 
+> ever have to distingsuish between what some datasheets call "HREF" and 
+> HSYNC in DT, but maybe similarly to the above an integer would be 
+> preferred. As for pixclk, we call the property "pclk-sample" and it's also 
+> an integer.
+
+Thinking about this more: de-active-high is likely to be a
+board-specific property and hence something in the display controller,
+not in the mode definition?
+
+>> + - interlaced (bool)
+> 
+> Is "interlaced" a property of the hardware, i.e. of the board? Can the 
+> same display controller on one board require interlaced data and on 
+> another board - progressive?
+
+Interlace is a property of a display mode. It's quite possible for a
+particular display controller to switch between interlace and
+progressive output at run-time. For example, reconfiguring the output
+between 480i, 720p, 1080i, 1080p modes. Admittedly, if you're talking to
+a built-in LCD display, you're probably always going to be driving the
+single mode required by the panel, and that mode will likely always be
+progressive. However, since this binding attempts to describe any
+display timing, I think we still need this property per mode.
+
+> BTW, I'm not very familiar with display 
+> interfaces, but for interlaced you probably sometimes use a field signal, 
+> whose polarity you also want to specify here? We use a "field-even-active" 
+> integer property for it.
+
+I think that's a property of the display controller itself, rather than
+an individual mode, although I'm not 100% certain. My assertion is that
+the physical interface that the display controller is driving will
+determine whether embedded or separate sync is used, and in the separate
+sync case, how the field signal is defined, and that all interlace modes
+driven over that interface will use the same field signal definition.
