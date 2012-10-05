@@ -1,7 +1,7 @@
 From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v3 4/4] watchdog: WatchDog Timer Driver Core: fix comment
-Date: Fri,  5 Oct 2012 12:16:09 +0200
-Message-ID: <1349432169-13006-5-git-send-email-fabio.porcedda@gmail.com>
+Subject: [RFC PATCH v3 3/4] watchdog: orion_wdt: litte cleanup
+Date: Fri,  5 Oct 2012 12:16:08 +0200
+Message-ID: <1349432169-13006-4-git-send-email-fabio.porcedda@gmail.com>
 References: <1349432169-13006-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,23 +22,42 @@ To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchd
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+- Move the min_timeout initialization inside the orion_wdt definition.
+- Change orion_wdt_of_match_table from __devinitdata to __devinitconst.
+
 Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- include/linux/watchdog.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/orion_wdt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index d09dda7..9e6a8f2 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -175,7 +175,7 @@ static inline void *watchdog_get_drvdata(struct watchdog_device *wdd)
- 	return wdd->driver_data;
+diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+index 3417f1b..9e09598 100644
+--- a/drivers/watchdog/orion_wdt.c
++++ b/drivers/watchdog/orion_wdt.c
+@@ -139,6 +139,7 @@ static const struct watchdog_ops orion_wdt_ops = {
+ static struct watchdog_device orion_wdt = {
+ 	.info = &orion_wdt_info,
+ 	.ops = &orion_wdt_ops,
++	.min_timeout = 1,
+ };
+ 
+ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+@@ -161,7 +162,6 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+ 
+ 	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
+ 
+-	orion_wdt.min_timeout = 1;
+ 	orion_wdt.max_timeout = wdt_max_duration;
+ 	orion_wdt.timeout = wdt_max_duration;
+ 	watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
+@@ -190,7 +190,7 @@ static void orion_wdt_shutdown(struct platform_device *pdev)
+ 	orion_wdt_stop(&orion_wdt);
  }
  
--/* drivers/watchdog/core/watchdog_core.c */
-+/* drivers/watchdog/watchdog_core.c */
- extern int watchdog_register_device(struct watchdog_device *);
- extern void watchdog_unregister_device(struct watchdog_device *);
- extern void watchdog_init_timeout(struct watchdog_device *wdd,
+-static const struct of_device_id orion_wdt_of_match_table[] __devinitdata = {
++static const struct of_device_id orion_wdt_of_match_table[] __devinitconst = {
+ 	{ .compatible = "marvell,orion-wdt", },
+ 	{},
+ };
 -- 
 1.7.11.3
