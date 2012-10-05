@@ -1,56 +1,65 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
-Date: Fri, 5 Oct 2012 13:35:03 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210051333020.13761@axis700.grange>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Fri, 5 Oct 2012 13:37:43 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1210051335390.13761@axis700.grange>
 References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <201210051241.52205.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
- <201210051323.45571.hverkuil@xs4all.nl>
+ <506CA5F7.3060807@gmail.com> <Pine.LNX.4.64.1210051119420.13761@axis700.grange>
+ <201210051331.18586.hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201210051323.45571.hverkuil@xs4all.nl>
+In-Reply-To: <201210051331.18586.hverkuil@xs4all.nl>
 Sender: linux-sh-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Robert Schwebel <r.schwebel@pengutronix.de>, Philipp Zabel <pza@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
 On Fri, 5 Oct 2012, Hans Verkuil wrote:
 
-> On Fri October 5 2012 12:58:21 Guennadi Liakhovetski wrote:
-> > On Fri, 5 Oct 2012, Hans Verkuil wrote:
+> On Fri October 5 2012 11:43:27 Guennadi Liakhovetski wrote:
+> > On Wed, 3 Oct 2012, Rob Herring wrote:
+> > 
+> > > On 10/02/2012 09:33 AM, Guennadi Liakhovetski wrote:
+> > > > Hi Rob
+> > > > 
+> > > > On Tue, 2 Oct 2012, Rob Herring wrote:
+> > > > 
+> > > >> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
 
 [snip]
 
-> > > One area that I do not yet completely understand is the i2c bus notifications
-> > > (or asynchronous loading or i2c modules).
+> > > >>> +Optional link properties:
+> > > >>> +- remote: phandle to the other endpoint link DT node.
+> > > >>
+> > > >> This name is a little vague. Perhaps "endpoint" would be better.
+> > > > 
+> > > > "endpoint" can also refer to something local like in USB case. Maybe 
+> > > > rather the description of the "remote" property should be improved?
 > > > 
-> > > I would have expected that using OF the i2c devices are still initialized
-> > > before the host/bridge driver is initialized. But I gather that's not the
-> > > case?
+> > > remote-endpoint?
 > > 
-> > No, it's not. I'm not sure, whether it depends on the order of devices in 
-> > the .dts, but, I think, it's better to not have to mandate a certain order 
-> > and I also seem to have seen devices being registered in different order 
-> > with the same DT, but I'm not 100% sure about that.
-> > 
-> > > If this deferred probing is a general problem, then I think we need a general
-> > > solution as well that's part of the v4l2 core.
-> > 
-> > That can be done, perhaps. But we can do it as a next step. As soon as 
-> > we're happy with the OF implementation as such, we can commit that, 
-> > possibly leaving soc-camera patches out for now, then we can think where 
-> > to put async I2C handling.
+> > Sorry, I really don't want to pull in yet another term here. We've got 
+> > ports and links already, now you're proposing to also use "endpoind." 
+> > Until now everyone was happy with "remote," any more opinions on this?
 > 
-> It would be good to have a number of 'Reviewed-by's or 'Acked-by's for the
-> DT binding documentation at least before it is merged.
+> Actually, when I was reviewing the patch series today I got confused as
+> well by 'remote'. What about 'remote-link'?
 
-Definitely, I'm sure you'll be honoured to be the first one in the list;-)
+Yes, I was thinking about this one too, it looks a bit clumsy, but it does 
+make it clearer, what is meant.
 
-> I think the soc_camera patches should be left out for now. I suspect that
-> by adding core support for async i2c handling first, the soc_camera patches
-> will become a lot easier to understand.
+> And v4l2_of_get_remote() can be renamed to v4l2_of_get_remote_link() which
+> I think is a lot clearer.
+> 
+> The text can be improved as well since this:
+> 
+> - remote: phandle to the other endpoint link DT node.
+> 
+> is a bit vague. How about:
+> 
+> - remote-link: phandle to the remote end of this link.
 
-Ok, we can do this.
+Looks good to me.
 
 Thanks
 Guennadi
