@@ -1,55 +1,63 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 04/10] of/i2c: Add support for I2C_CLIENT_WAKE when
- booting with Device Tree
-Date: Fri, 5 Oct 2012 20:56:43 +0200
-Message-ID: <20121005185643.GC12462@game.jcrosoft.org>
-References: <1349451107-8009-1-git-send-email-lee.jones@linaro.org>
- <1349451107-8009-5-git-send-email-lee.jones@linaro.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 10/14] media: soc-camera: support OF cameras
+Date: Fri, 05 Oct 2012 21:11:36 +0200
+Message-ID: <506F30E8.10206@gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1349451107-8009-5-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 16:31 Fri 05 Oct     , Lee Jones wrote:
-> It's important for wakeup sources such as keyboards, power buttons
-> and the like to identify themselves as wakeup devices. Until now
-> this has not been possible when platforms are booting via Device
-> Tree.
-> 
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 09/27/2012 04:07 PM, Guennadi Liakhovetski wrote:
+> With OF we aren't getting platform data any more. To minimise changes we
+> create all the missing data ourselves, including compulsory struct
+> soc_camera_link objects. Host-client linking is now done, based on the OF
+> data. Media bus numbers also have to be assigned dynamically.
+>
+> Signed-off-by: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
 > ---
->  drivers/of/of_i2c.c |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-> index 1e173f3..2f20019 100644
-> --- a/drivers/of/of_i2c.c
-> +++ b/drivers/of/of_i2c.c
-> @@ -61,6 +61,9 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  		info.of_node = of_node_get(node);
->  		info.archdata = &dev_ad;
->  
-> +		if (of_get_property(node, "i2c-client-wake", NULL))
-> +			info.flags |= I2C_CLIENT_WAKE;
-use of_property_read_bool
+...
+>   static int soc_camera_i2c_notify(struct notifier_block *nb,
+>   				 unsigned long action, void *data)
+>   {
+> @@ -1203,13 +1434,20 @@ static int soc_camera_i2c_notify(struct notifier_block *nb,
+>   	struct v4l2_subdev *subdev;
+>   	int ret;
+>
+> -	if (client->addr != icl->board_info->addr ||
+> -	    client->adapter->nr != icl->i2c_adapter_id)
+> +	dev_dbg(dev, "%s(%lu): %x on %u\n", __func__, action,
+> +		client->addr, client->adapter->nr);
+> +
+> +	if (!soc_camera_i2c_client_match(icl, client))
+>   		return NOTIFY_DONE;
+>
+>   	switch (action) {
+>   	case BUS_NOTIFY_BIND_DRIVER:
+>   		client->dev.platform_data = icl;
+> +		if (icl->of_link) {
+> +			struct soc_camera_of_client *sofc = container_of(icl->of_link,
+> +						struct soc_camera_of_client, of_link);
+> +			soc_camera_of_i2c_ifill(sofc, client);
+> +		}
+>
+>   		return NOTIFY_OK;
+>   	case BUS_NOTIFY_BOUND_DRIVER:
 
-Best Regards,
-J.
+There is no need for different handling of this event as well ?
+Further, there is code like:
+
+	adap = i2c_get_adapter(icl->i2c_adapter_id);
+
+which is clearly not going to work in OF case. Could you clarify how
+it is supposed to work ?
+
+--
+
+Thanks,
+Sylwester
