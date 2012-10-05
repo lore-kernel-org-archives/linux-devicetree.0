@@ -1,69 +1,92 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Fri, 5 Oct 2012 13:37:43 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210051335390.13761@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <506CA5F7.3060807@gmail.com> <Pine.LNX.4.64.1210051119420.13761@axis700.grange>
- <201210051331.18586.hverkuil@xs4all.nl>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v3 1/4] watchdog: core: dt: add support for the
+ timeout-sec dt property
+Date: Fri, 5 Oct 2012 14:06:38 +0200
+Message-ID: <CAHkwnC8cZ26Z8jXx4LU3wBbGn2FC3-rjn+m861G3_Ue58yqfjw@mail.gmail.com>
+References: <1349432169-13006-1-git-send-email-fabio.porcedda@gmail.com>
+ <1349432169-13006-2-git-send-email-fabio.porcedda@gmail.com>
+ <20121005111642.GA12462@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201210051331.18586.hverkuil@xs4all.nl>
-Sender: linux-sh-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Rob Herring <robherring2@gmail.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Robert Schwebel <r.schwebel@pengutronix.de>, Philipp Zabel <pza@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121005111642.GA12462-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Oct 2012, Hans Verkuil wrote:
+On Fri, Oct 5, 2012 at 1:16 PM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 12:16 Fri 05 Oct     , Fabio Porcedda wrote:
+>> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/watchdog/watchdog-kernel-api.txt |  4 ++++
+>>  drivers/watchdog/watchdog_core.c               | 27 ++++++++++++++++++++++++++
+>>  include/linux/watchdog.h                       |  4 ++++
+>>  3 files changed, 35 insertions(+)
+>>
+>> diff --git a/Documentation/watchdog/watchdog-kernel-api.txt b/Documentation/watchdog/watchdog-kernel-api.txt
+>> index 086638f..2208db7 100644
+>> --- a/Documentation/watchdog/watchdog-kernel-api.txt
+>> +++ b/Documentation/watchdog/watchdog-kernel-api.txt
+>> @@ -212,3 +212,7 @@ driver specific data to and a pointer to the data itself.
+>>  The watchdog_get_drvdata function allows you to retrieve driver specific data.
+>>  The argument of this function is the watchdog device where you want to retrieve
+>>  data from. The function returns the pointer to the driver specific data.
+>> +
+>> +The watchdog_init_timeout function allows you to initialize the timeout field
+>> +using the module timeout parameter or retrieving the timeout-sec property from
+>> +the device tree.
+>> diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+>> index 3796434..646be48 100644
+>> --- a/drivers/watchdog/watchdog_core.c
+>> +++ b/drivers/watchdog/watchdog_core.c
+>> @@ -143,6 +143,33 @@ void watchdog_unregister_device(struct watchdog_device *wdd)
+>>  }
+>>  EXPORT_SYMBOL_GPL(watchdog_unregister_device);
+>>
+>> +/**
+>> + * watchdog_init_timeout() - initialize the timeout field
+>> + * @parm_timeout: timeout module parameter, it takes precedence over the
+>> + *                timeout-sec property.
+>> + * @node: Retrieve the timeout-sec property only if the parm_timeout
+>> + *        is out of bounds.
+>> + */
+>> +void watchdog_init_timeout(struct watchdog_device *wdd,
+>> +                        unsigned int parm_timeout, struct device_node *node)
+>> +{
+>> +     unsigned int t = 0;
+>> +
+>> +     if ((parm_timeout >= wdd->min_timeout) &&
+>> +         (parm_timeout <= wdd->max_timeout)) {
+>> +             wdd->timeout = parm_timeout;
+>> +             return;
+>> +     }
+>> +
+>> +     if (!node)
+>> +             return;
+>> +
+>> +     of_property_read_u32(node, "timeout-sec", &t);
+> why I bother to comment
+> *make this of generic* this is not watchdog specific other driver can use it
 
-> On Fri October 5 2012 11:43:27 Guennadi Liakhovetski wrote:
-> > On Wed, 3 Oct 2012, Rob Herring wrote:
-> > 
-> > > On 10/02/2012 09:33 AM, Guennadi Liakhovetski wrote:
-> > > > Hi Rob
-> > > > 
-> > > > On Tue, 2 Oct 2012, Rob Herring wrote:
-> > > > 
-> > > >> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
+You mean to add the function in of.h and use that function inside
+watchdog_init_timeout or to
+use the of_* function instead of the watchdog_init_timeout function?
 
-[snip]
+Do you like the use of watchdog_init_timeout function inside the
+at91sam9_wdt driver?
 
-> > > >>> +Optional link properties:
-> > > >>> +- remote: phandle to the other endpoint link DT node.
-> > > >>
-> > > >> This name is a little vague. Perhaps "endpoint" would be better.
-> > > > 
-> > > > "endpoint" can also refer to something local like in USB case. Maybe 
-> > > > rather the description of the "remote" property should be improved?
-> > > 
-> > > remote-endpoint?
-> > 
-> > Sorry, I really don't want to pull in yet another term here. We've got 
-> > ports and links already, now you're proposing to also use "endpoind." 
-> > Until now everyone was happy with "remote," any more opinions on this?
-> 
-> Actually, when I was reviewing the patch series today I got confused as
-> well by 'remote'. What about 'remote-link'?
-
-Yes, I was thinking about this one too, it looks a bit clumsy, but it does 
-make it clearer, what is meant.
-
-> And v4l2_of_get_remote() can be renamed to v4l2_of_get_remote_link() which
-> I think is a lot clearer.
-> 
-> The text can be improved as well since this:
-> 
-> - remote: phandle to the other endpoint link DT node.
-> 
-> is a bit vague. How about:
-> 
-> - remote-link: phandle to the remote end of this link.
-
-Looks good to me.
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Best regards
+-- 
+Fabio Porcedda
