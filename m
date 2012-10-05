@@ -1,57 +1,104 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Date: Fri, 5 Oct 2012 18:38:58 +0200
-Message-ID: <20121005163858.GD2053@pengutronix.de>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
- <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
- <506DD9B4.40409@wwwdotorg.org>
- <20121005161620.GB2053@pengutronix.de>
- <506F0911.1050808@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/3] serial_core: Add helper for matching against linux,stdout-path
+Date: Fri, 05 Oct 2012 11:43:17 -0500
+Message-ID: <506F0E25.6080309@gmail.com>
+References: <1349453581-1685-1-git-send-email-s.hauer@pengutronix.de> <1349453581-1685-2-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <506F0911.1050808@wwwdotorg.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1349453581-1685-2-git-send-email-s.hauer@pengutronix.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-serial@vger.kernel.org, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 05, 2012 at 10:21:37AM -0600, Stephen Warren wrote:
-> On 10/05/2012 10:16 AM, Steffen Trumtrar wrote:
-> > On Thu, Oct 04, 2012 at 12:47:16PM -0600, Stephen Warren wrote:
-> >> On 10/04/2012 11:59 AM, Steffen Trumtrar wrote:
-> ...
-> >>> +	for_each_child_of_node(timings_np, entry) {
-> >>> +		struct signal_timing *st;
-> >>> +
-> >>> +		st = of_get_display_timing(entry);
-> >>> +
-> >>> +		if (!st)
-> >>> +			continue;
-> >>
-> >> I wonder if that shouldn't be an error?
-> > 
-> > In the sense of a pr_err not a -EINVAL I presume?! It is a little bit quiet in
-> > case of a faulty spec, that is right.
+On 10/05/2012 11:12 AM, Sascha Hauer wrote:
+> devicetrees may have a linux,stdout-path property in the chosen
+> node describing the console device. This adds a helper function
+> to match a device against this property so a driver can call
+> add_preferred_console for a matching device.
+
+Consoles can be on devices other than uarts, so this should really be
+of_device_is_stdout_path() and in the DT core.
+
 > 
-> I did mean return an error; if we try to parse something and can't,
-> shouldn't we return an error?
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  drivers/tty/serial/serial_core.c |   30 ++++++++++++++++++++++++++++++
+>  include/linux/serial_core.h      |    3 +++
+>  2 files changed, 33 insertions(+)
 > 
-> I suppose it may be possible to limp on and use whatever subset of modes
-> could be parsed and drop the others, which is what this code does, but
-> the code after the loop would definitely return an error if zero timings
-> were parseable.
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index a21dc8e..f4a9f26 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/serial_core.h>
+>  #include <linux/delay.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+>  
+>  #include <asm/irq.h>
+>  #include <asm/uaccess.h>
+> @@ -2540,6 +2541,35 @@ void uart_insert_char(struct uart_port *port, unsigned int status,
+>  }
+>  EXPORT_SYMBOL_GPL(uart_insert_char);
+>  
+> +#ifdef CONFIG_OF
+> +/**
+> + * of_uart_is_stdoutpath - check if this device matches the linux,stdout-path
+> + *                         property
+> + *
+> + * Check if this device matches the linux,stdout-path property
+> + * in the chosen node. return true if yes, false otherwise.
+> + */
+> +int of_uart_is_stdoutpath(struct device *dev)
+> +{
+> +	struct device_node *dn;
+> +	const char *name;
+> +
+> +	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+> +	if (name == NULL)
+> +		return 0;
+> +
+> +	dn = of_find_node_by_path(name);
+> +	if (!dn)
+> +		return 0;
+> +
+> +	if (dn == dev->of_node)
 
-If a display supports multiple modes, I think it is better to have a working
-mode (even if it is not the preferred one) than have none at all.
-If there is no mode at all, that should be an error, right.
+I know I said use struct device, but since only device_node ptr is
+needed you should just use that. Then the function is usable if you only
+have the device_node ptr.
 
-Regards,
-Steffen
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_uart_is_stdoutpath);
+> +#endif
+> +
+>  EXPORT_SYMBOL(uart_write_wakeup);
+>  EXPORT_SYMBOL(uart_register_driver);
+>  EXPORT_SYMBOL(uart_unregister_driver);
+> diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+> index 0253c20..35a61f6 100644
+> --- a/include/linux/serial_core.h
+> +++ b/include/linux/serial_core.h
+> @@ -560,6 +560,9 @@ static inline int uart_handle_break(struct uart_port *port)
+>  					 (cflag) & CRTSCTS || \
+>  					 !((cflag) & CLOCAL))
+>  
+> +/* check if a device matches the linux,stdout-path property */
+> +int of_uart_is_stdoutpath(struct device *dev);
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Need an empty version for !CONFIG_OF?
+
+Rob
+
+> +
+>  #endif
+>  
+>  #endif /* LINUX_SERIAL_CORE_H */
+> 
