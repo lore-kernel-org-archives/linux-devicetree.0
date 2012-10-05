@@ -1,92 +1,41 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v3 1/4] watchdog: core: dt: add support for the
- timeout-sec dt property
-Date: Fri, 5 Oct 2012 14:06:38 +0200
-Message-ID: <CAHkwnC8cZ26Z8jXx4LU3wBbGn2FC3-rjn+m861G3_Ue58yqfjw@mail.gmail.com>
-References: <1349432169-13006-1-git-send-email-fabio.porcedda@gmail.com>
- <1349432169-13006-2-git-send-email-fabio.porcedda@gmail.com>
- <20121005111642.GA12462@game.jcrosoft.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 00/14] V4L2 DT support
+Date: Fri, 05 Oct 2012 14:32:04 +0200
+Message-ID: <506ED344.2020407@gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121005111642.GA12462-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 5, 2012 at 1:16 PM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 12:16 Fri 05 Oct     , Fabio Porcedda wrote:
->> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  Documentation/watchdog/watchdog-kernel-api.txt |  4 ++++
->>  drivers/watchdog/watchdog_core.c               | 27 ++++++++++++++++++++++++++
->>  include/linux/watchdog.h                       |  4 ++++
->>  3 files changed, 35 insertions(+)
->>
->> diff --git a/Documentation/watchdog/watchdog-kernel-api.txt b/Documentation/watchdog/watchdog-kernel-api.txt
->> index 086638f..2208db7 100644
->> --- a/Documentation/watchdog/watchdog-kernel-api.txt
->> +++ b/Documentation/watchdog/watchdog-kernel-api.txt
->> @@ -212,3 +212,7 @@ driver specific data to and a pointer to the data itself.
->>  The watchdog_get_drvdata function allows you to retrieve driver specific data.
->>  The argument of this function is the watchdog device where you want to retrieve
->>  data from. The function returns the pointer to the driver specific data.
->> +
->> +The watchdog_init_timeout function allows you to initialize the timeout field
->> +using the module timeout parameter or retrieving the timeout-sec property from
->> +the device tree.
->> diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
->> index 3796434..646be48 100644
->> --- a/drivers/watchdog/watchdog_core.c
->> +++ b/drivers/watchdog/watchdog_core.c
->> @@ -143,6 +143,33 @@ void watchdog_unregister_device(struct watchdog_device *wdd)
->>  }
->>  EXPORT_SYMBOL_GPL(watchdog_unregister_device);
->>
->> +/**
->> + * watchdog_init_timeout() - initialize the timeout field
->> + * @parm_timeout: timeout module parameter, it takes precedence over the
->> + *                timeout-sec property.
->> + * @node: Retrieve the timeout-sec property only if the parm_timeout
->> + *        is out of bounds.
->> + */
->> +void watchdog_init_timeout(struct watchdog_device *wdd,
->> +                        unsigned int parm_timeout, struct device_node *node)
->> +{
->> +     unsigned int t = 0;
->> +
->> +     if ((parm_timeout >= wdd->min_timeout) &&
->> +         (parm_timeout <= wdd->max_timeout)) {
->> +             wdd->timeout = parm_timeout;
->> +             return;
->> +     }
->> +
->> +     if (!node)
->> +             return;
->> +
->> +     of_property_read_u32(node, "timeout-sec", &t);
-> why I bother to comment
-> *make this of generic* this is not watchdog specific other driver can use it
+Hi Guennadi,
 
-You mean to add the function in of.h and use that function inside
-watchdog_init_timeout or to
-use the of_* function instead of the watchdog_init_timeout function?
+Any chance for a GIT tree including this patch series ? I'd like
+to see all these pieces put together and I don't seem to find any
+base tree that this series would have applied cleanly to.
 
-Do you like the use of watchdog_init_timeout function inside the
-at91sam9_wdt driver?
+...(20121005_media_for_v3.7-dt)$ git am -3 \[PATCH\ *
+Applying: i2c: add dummy inline functions for when CONFIG_OF_I2C(_MODULE) isn't defined
+Applying: of: add a dummy inline function for when CONFIG_OF is not defined
+Applying: OF: make a function pointer argument const
+Applying: media: add V4L2 DT binding documentation
+Applying: media: add a V4L2 OF parser
+Applying: media: soc-camera: prepare for asynchronous client probing
+Applying: media: soc-camera: support deferred probing of clients
+fatal: sha1 information is lacking or useless (drivers/media/platform/soc_camera/soc_camera.c).
+Repository lacks necessary blobs to fall back on 3-way merge.
+Cannot fall back to three-way merge.
+Patch failed at 0007 media: soc-camera: support deferred probing of clients
+When you have resolved this problem run "git am --resolved".
+If you would prefer to skip this patch, instead run "git am --skip".
+To restore the original branch and stop patching run "git am --abort".
 
-Best regards
--- 
-Fabio Porcedda
+--
+
+Thanks,
+Sylwester
