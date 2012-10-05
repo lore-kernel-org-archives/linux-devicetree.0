@@ -1,49 +1,54 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 04/10] of/i2c: Add support for I2C_CLIENT_WAKE when booting
- with Device Tree
-Date: Fri, 05 Oct 2012 13:13:08 -0500
-Message-ID: <506F2334.1040009@gmail.com>
-References: <1349451107-8009-1-git-send-email-lee.jones@linaro.org> <1349451107-8009-5-git-send-email-lee.jones@linaro.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Fri, 05 Oct 2012 20:30:59 +0200
+Message-ID: <506F2763.6050808@gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <Pine.LNX.4.64.1210021142210.15778@axis700.grange> <506ABE40.9070504@samsung.com> <201210051241.52205.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1349451107-8009-5-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/2012 10:31 AM, Lee Jones wrote:
-> It's important for wakeup sources such as keyboards, power buttons
-> and the like to identify themselves as wakeup devices. Until now
-> this has not been possible when platforms are booting via Device
-> Tree.
-
-A similar feature from Olof already went in for 3.7.
-
-Rob
-
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/of/of_i2c.c |    3 +++
->  1 file changed, 3 insertions(+)
+On 10/05/2012 12:58 PM, Guennadi Liakhovetski wrote:
+>> One area that I do not yet completely understand is the i2c bus notifications
+>> (or asynchronous loading of i2c modules).
+>>
+>> I would have expected that using OF the i2c devices are still initialized
+>> before the host/bridge driver is initialized. But I gather that's not the
+>> case?
 > 
-> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-> index 1e173f3..2f20019 100644
-> --- a/drivers/of/of_i2c.c
-> +++ b/drivers/of/of_i2c.c
-> @@ -61,6 +61,9 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  		info.of_node = of_node_get(node);
->  		info.archdata = &dev_ad;
->  
-> +		if (of_get_property(node, "i2c-client-wake", NULL))
-> +			info.flags |= I2C_CLIENT_WAKE;
-> +
->  		request_module("%s%s", I2C_MODULE_PREFIX, info.type);
->  
->  		result = i2c_new_device(adap, &info);
+> No, it's not. I'm not sure, whether it depends on the order of devices in
+> the .dts, but, I think, it's better to not have to mandate a certain order
+> and I also seem to have seen devices being registered in different order
+> with the same DT, but I'm not 100% sure about that.
+
+The device instantiation (and initialization) order is not something that
+is supposed to be ensured by a specific device tree source layout, IIUC.
+The initialization sequence is probably something that is specific to a
+particular operating system. I checked the device tree compiler but couldn't
+find if it is free to reorder anything when converting from the human 
+readable device tree to its binary representation.
+
+The deferred probing was introduced in Linux to resolve resource 
+inter-dependencies in case of FDT based booting AFAIK.
+
+>> If this deferred probing is a general problem, then I think we need a general
+>> solution as well that's part of the v4l2 core.
 > 
+> That can be done, perhaps. But we can do it as a next step. As soon as
+> we're happy with the OF implementation as such, we can commit that,
+> possibly leaving soc-camera patches out for now, then we can think where
+> to put async I2C handling.
+
+I would really like to see more than one user until we add any core code.
+No that it couldn't be changed afterwards, but it would be nice to ensure 
+the concepts are right and proven in real life.
+
+--
+
+Regards,
+Sylwester
