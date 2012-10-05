@@ -1,207 +1,55 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH V2] dtc: fix for_each_*() to skip first object if deleted
-Date: Fri, 5 Oct 2012 10:07:18 +1000
-Message-ID: <20121005000717.GR29302@truffula.fritz.box>
-References: <1349373309-20422-1-git-send-email-swarren@wwwdotorg.org>
+From: RAHUL SHARMA <rahul.sharma@samsung.com>
+Subject: Re: Re: [PATCH 6/8] arm: exynos: config exynos5 hdmi-hpd gpio
+Date: Fri, 05 Oct 2012 03:36:14 +0000 (GMT)
+Message-ID: <6144318.564701349408174292.JavaMail.weblogic@epml07>
+Reply-To: rahul.sharma@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1349373309-20422-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, In-Ki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, PRASHANTH GODREHAL <prashanth.g@samsung.com>, SUNIL JOSHI <joshi@samsung.com>, SHIRISH S <s.shirish@samsung.com>, FAHAD KUNNATHADI <fahad.k@samsung.com>, Leela Krishna Amudala <l.krishna@samsung.com>, "r.sh.open@gmail.com" <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 04, 2012 at 11:55:09AM -0600, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> The previous definition of e.g. for_each_*() would always include the
-> very first object within the list of processed labels, irrespective of
-> whether it was marked deleted, since the deleted flag was not checked
-> on the first object, but only on any "next" object.
-> 
-> Fix for_each_*() to call skip_deleted_*() prior to every loop iteration,
-> including the first, i.e. as part of the for loop test expression rather
-> than as part of the increment statement, to correct this.
-
-Um, so, the patch is great now, but with the simplified
-implementation, this part of the comment is no longer accurate.
-
-> Incidentally, this change is why commit 45013d8 dtc: "Add ability to
-> delete nodes and properties" only caused two "make checkm" failures;
-> only two tests actually use multiple labels on the same property or
-> node. With this current change applied, but commit 317a5d9 "dtc: zero
-> out new label objects" reverted, "make checkm" fails 29 times; i.e.
-> for every test that uses any labels at all.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> v2:
-> * Simplified for_each_*() implementation per suggestion from David
->   Gibson.
-> * Added a test-case for this bug, which was verified to fail without
->   this code change.
-> ---
->  dtc.h                                     |   44 ++++++----------------------
->  tests/delete_reinstate_multilabel.dts     |   37 ++++++++++++++++++++++++
->  tests/delete_reinstate_multilabel_ref.dts |    9 ++++++
->  tests/run_tests.sh                        |    3 ++
->  4 files changed, 59 insertions(+), 34 deletions(-)
->  create mode 100644 tests/delete_reinstate_multilabel.dts
->  create mode 100644 tests/delete_reinstate_multilabel_ref.dts
-> 
-> diff --git a/dtc.h b/dtc.h
-> index d501c86..3e42a07 100644
-> --- a/dtc.h
-> +++ b/dtc.h
-> @@ -161,51 +161,27 @@ struct node {
->  	struct label *labels;
->  };
->  
-> -static inline struct label *for_each_label_next(struct label *l)
-> -{
-> -	do {
-> -		l = l->next;
-> -	} while (l && l->deleted);
-> -
-> -	return l;
-> -}
-> -
-> -#define for_each_label(l0, l) \
-> -	for ((l) = (l0); (l); (l) = for_each_label_next(l))
-> -
->  #define for_each_label_withdel(l0, l) \
->  	for ((l) = (l0); (l); (l) = (l)->next)
->  
-> -static inline struct property *for_each_property_next(struct property *p)
-> -{
-> -	do {
-> -		p = p->next;
-> -	} while (p && p->deleted);
-> -
-> -	return p;
-> -}
-> -
-> -#define for_each_property(n, p) \
-> -	for ((p) = (n)->proplist; (p); (p) = for_each_property_next(p))
-> +#define for_each_label(l0, l) \
-> +	for_each_label_withdel(l0, l) \
-> +		if (!(l)->deleted)
->  
->  #define for_each_property_withdel(n, p) \
->  	for ((p) = (n)->proplist; (p); (p) = (p)->next)
->  
-> -static inline struct node *for_each_child_next(struct node *c)
-> -{
-> -	do {
-> -		c = c->next_sibling;
-> -	} while (c && c->deleted);
-> -
-> -	return c;
-> -}
-> -
-> -#define for_each_child(n, c) \
-> -	for ((c) = (n)->children; (c); (c) = for_each_child_next(c))
-> +#define for_each_property(n, p) \
-> +	for_each_property_withdel(n, p) \
-> +		if (!(p)->deleted)
->  
->  #define for_each_child_withdel(n, c) \
->  	for ((c) = (n)->children; (c); (c) = (c)->next_sibling)
->  
-> +#define for_each_child(n, c) \
-> +	for_each_child_withdel(n, c) \
-> +		if (!(c)->deleted)
-> +
->  void add_label(struct label **labels, char *label);
->  void delete_labels(struct label **labels);
->  
-> diff --git a/tests/delete_reinstate_multilabel.dts b/tests/delete_reinstate_multilabel.dts
-> new file mode 100644
-> index 0000000..281a6b2
-> --- /dev/null
-> +++ b/tests/delete_reinstate_multilabel.dts
-> @@ -0,0 +1,37 @@
-> +/dts-v1/;
-> +
-> +/* Create some nodes and properties with multiple labels */
-> +
-> +/ {
-> +	label1: label2: prop = "value";
-> +
-> +	label3: label4: node {
-> +		label5: label6: prop = "value";
-> +	};
-> +};
-> +
-> +/* Delete them, and everything that's part of them, i.e. the labels */
-> +
-> +/ {
-> +	/delete-property/ prop;
-> +	/delete-node/ node;
-> +};
-> +
-> +/*
-> + * Re-instate them. None of the old labels should come back
-> + *
-> + * Note: Do not add any new/extra labels here. As of the time of writing,
-> + * when dtc adds labels to an object, they are added to the head of the list
-> + * of labels, and this test is specifically about ensuring the correct
-> + * handling of lists of labels where the first label in the list is marked as
-> + * deleted. Failure to observe this note may result in the test passing when
-> + * it should not.
-> + */
-> +
-> +/ {
-> +	prop = "value";
-> +
-> +	node {
-> +		prop = "value";
-> +	};
-> +};
-> diff --git a/tests/delete_reinstate_multilabel_ref.dts b/tests/delete_reinstate_multilabel_ref.dts
-> new file mode 100644
-> index 0000000..28fa117
-> --- /dev/null
-> +++ b/tests/delete_reinstate_multilabel_ref.dts
-> @@ -0,0 +1,9 @@
-> +/dts-v1/;
-> +
-> +/ {
-> +	prop = "value";
-> +
-> +	node {
-> +		prop = "value";
-> +	};
-> +};
-> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-> index 9ca45c9..dd7f217 100755
-> --- a/tests/run_tests.sh
-> +++ b/tests/run_tests.sh
-> @@ -376,6 +376,9 @@ dtc_tests () {
->      run_dtc_test -I dts -O dtb -o dtc_tree1_delete.test.dtb test_tree1_delete.dts
->      tree1_tests dtc_tree1_delete.test.dtb
->  
-> +    run_dtc_test -I dts -O dts -o delete_reinstate_multilabel.dts.test.dts delete_reinstate_multilabel.dts
-> +    run_wrap_test cmp delete_reinstate_multilabel.dts.test.dts delete_reinstate_multilabel_ref.dts
-> +
->      # Check some checks
->      check_tests dup-nodename.dts duplicate_node_names
->      check_tests dup-propname.dts duplicate_property_names
-
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+U3VyZSBNci4gcGFyaywNCg0KSSB3aWxsIGNvcnJlY3QgdGhpcyBpbiB2Mi4NCkkgd2FudCB0byBy
+ZXF1ZXN0IHlvdSBmb3IgcmV2aWV3aW5nIHRoZSBvdGhlciBwYXRjaGVzIGluIHRoZSBzZXQuDQoN
+CnJlZ2FyZHMsDQpSYWh1bCBTaGFybWENCg0KT24gVGh1LCBPY3QgNCwgMjAxMiBhdCAxOjQ1IFBN
+LCBLeXVuZ21pbiBQYXJrIDxreXVuZ21pbi5wYXJrQHNhbXN1bmcuY29tPiB3cm90ZToNCj4gT24g
+MTAvNS8xMiwgUmFodWwgU2hhcm1hIDxyYWh1bC5zaGFybWFAc2Ftc3VuZy5jb20+IHdyb3RlOg0K
+Pj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBjb25maWd1cmF0aW9uIG9mIGV4eW5v
+czUgaGRtaS1ocGQgZ3Bpby4NCj4+IEl0IHNldHMgdGhlIGdwaW8gZnVjbnRpb24gdG8gRUlOVCB3
+aGljaCBpcyByZXF1aXJlZCBmb3IgcmVjaWV2aW5nDQo+PiBleHRlcm5hbCBocGQgaW50ZXJydXB0
+IGluIGRybSBoZG1pIGRyaXZlci4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBSYWh1bCBTaGFybWEg
+PHJhaHVsLnNoYXJtYUBzYW1zdW5nLmNvbT4NCj4+IC0tLQ0KPj4gIGFyY2gvYXJtL21hY2gtZXh5
+bm9zL21hY2gtZXh5bm9zNS1kdC5jIHwgICAgOSArKysrKysrKysNCj4+ICAxIGZpbGVzIGNoYW5n
+ZWQsIDkgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEv
+YXJjaC9hcm0vbWFjaC1leHlub3MvbWFjaC1leHlub3M1LWR0LmMNCj4+IGIvYXJjaC9hcm0vbWFj
+aC1leHlub3MvbWFjaC1leHlub3M1LWR0LmMNCj4+IGluZGV4IDAwMzk2M2MuLjlhNmQ1NjkgMTAw
+NjQ0DQo+PiAtLS0gYS9hcmNoL2FybS9tYWNoLWV4eW5vcy9tYWNoLWV4eW5vczUtZHQuYw0KPj4g
+KysrIGIvYXJjaC9hcm0vbWFjaC1leHlub3MvbWFjaC1leHlub3M1LWR0LmMNCj4+IEBAIC0xMSw2
+ICsxMSw3IEBADQo+Pg0KPj4gICNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPg0KPj4gICNp
+bmNsdWRlIDxsaW51eC9zZXJpYWxfY29yZS5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9ncGlvLmg+
+DQo+Pg0KPj4gICNpbmNsdWRlIDxhc20vbWFjaC9hcmNoLmg+DQo+PiAgI2luY2x1ZGUgPGFzbS9o
+YXJkd2FyZS9naWMuaD4NCj4+IEBAIC0xOCw2ICsxOSw3IEBADQo+Pg0KPj4gICNpbmNsdWRlIDxw
+bGF0L2NwdS5oPg0KPj4gICNpbmNsdWRlIDxwbGF0L3JlZ3Mtc2VyaWFsLmg+DQo+PiArI2luY2x1
+ZGUgPHBsYXQvZ3Bpby1jZmcuaD4NCj4+DQo+PiAgI2luY2x1ZGUgImNvbW1vbi5oIg0KPj4NCj4+
+IEBAIC04MSwxMCArODMsMTcgQEAgc3RhdGljIHZvaWQgX19pbml0IGV4eW5vczUyNTBfZHRfbWFw
+X2lvKHZvaWQpDQo+PiAgICAgICBzM2MyNHh4X2luaXRfY2xvY2tzKDI0MDAwMDAwKTsNCj4+ICB9
+DQo+Pg0KPj4gK3N0YXRpYyB2b2lkIHNtZGtfaHBkX3NldHVwKHZvaWQpDQo+PiArew0KPj4gKyAg
+ICAgczNjX2dwaW9fY2ZncGluKEVYWU5PUzVfR1BYMyg3KSwgUzNDX0dQSU9fU0ZOKDB4ZikpOw0K
+Pj4gKyAgICAgczNjX2dwaW9fc2V0cHVsbChFWFlOT1M1X0dQWDMoNyksIFMzQ19HUElPX1BVTExf
+RE9XTik7DQo+PiArfQ0KPiB0aGVzZSBzaG91bGQgYmUgZGVzY3JpYmVkIGF0IGR0cyBmaWxlIGlu
+c3RlYWQgb2YgaGVyZS4gYW5kIG5hbWUgaXMgbm90DQo+IGdvb2QuIHNtZGsuLi4NCj4NCj4gVGhh
+bmsgeW91LA0KPiBLeXVuZ21pbiBQYXJrDQo+PiArDQo+PiAgc3RhdGljIHZvaWQgX19pbml0IGV4
+eW5vczUyNTBfZHRfbWFjaGluZV9pbml0KHZvaWQpDQo+PiAgew0KPj4gICAgICAgb2ZfcGxhdGZv
+cm1fcG9wdWxhdGUoTlVMTCwgb2ZfZGVmYXVsdF9idXNfbWF0Y2hfdGFibGUsDQo+PiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBleHlub3M1MjUwX2F1eGRhdGFfbG9va3VwLCBOVUxMKTsN
+Cj4+ICsgICAgIHNtZGtfaHBkX3NldHVwKCk7DQo+PiAgfQ0KPj4NCj4+ICBzdGF0aWMgY2hhciBj
+b25zdCAqZXh5bm9zNTI1MF9kdF9jb21wYXRbXSBfX2luaXRkYXRhID0gew0KPj4gLS0NCj4+IDEu
+Ny4wLjQNCj4+DQo+PiAtLQ0KPj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQg
+dGhlIGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LXNhbXN1bmctc29jIg0KPj4gaW4NCj4+IHRoZSBi
+b2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwub3JnDQo+PiBNb3JlIG1h
+am9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0
+bWwNCj4+DQoNCg==
