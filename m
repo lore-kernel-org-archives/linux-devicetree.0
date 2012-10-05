@@ -1,44 +1,52 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] input: keyboard: gpio-keys: Try to parse IRQ from device
- tree
-Date: Thu, 4 Oct 2012 23:23:15 -0700
-Message-ID: <20121005062315.GB11112@core.coreip.homeip.net>
-References: <1349263201-422-1-git-send-email-t.figa@samsung.com>
+From: Robert Schwebel <r.schwebel@pengutronix.de>
+Subject: (unknown)
+Date: Fri, 5 Oct 2012 09:15:59 +0200
+Message-ID: <20121005071559.GH23204@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1349263201-422-1-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, TomiValkeinen@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+<tomi.valkeinen@ti.com>, pza
+Bcc:
+Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
+Reply-To:
+In-Reply-To: <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-IRC: #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:13:09 up 103 days, 22:24, 36 users,  load average: 0,57, 0,60,
+ 0,61
 
-On Wed, Oct 03, 2012 at 01:20:00PM +0200, Tomasz Figa wrote:
-> On modern platforms using device tree and non-legacy IRQ domains there
-> is usually no way to perform direct translation between GPIO and IRQ,
-> because the IRQ of interest is not mapped yet into sparse IRQ namespace.
-> 
-> This patch modifies the gpio_keys driver to parse IRQ from device tree
-> and use gpio_to_irq only as a fallback.
+On Thu, Oct 04, 2012 at 11:35:35PM +0200, Guennadi Liakhovetski wrote:
+> > +optional properties:
+> > + - hsync-active-high (bool): Hsync pulse is active high
+> > + - vsync-active-high (bool): Vsync pulse is active high
+>
+> For the above two we also considered using bool properties but eventually
+> settled down with integer ones:
+>
+> - hsync-active = <1>
+>
+> for active-high and 0 for active low. This has the added advantage of
+> being able to omit this property in the .dts, which then doesn't mean,
+> that the polarity is active low, but rather, that the hsync line is not
+> used on this hardware. So, maybe it would be good to use the same binding
+> here too?
 
-This means that this change would need to be applied to every driver
-that currently maps gpio to IRQ. Why can't gpio_to_irq() be fixed
-instead?
+Philipp, this is the same argumentation as we discussed yesterday for
+the dual-link LVDS option, so that one could be modelled in a similar
+way.
 
-Thanks.
-
+rsc
 -- 
-Dmitry
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
