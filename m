@@ -1,41 +1,46 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 00/14] V4L2 DT support
-Date: Fri, 05 Oct 2012 14:32:04 +0200
-Message-ID: <506ED344.2020407@gmail.com>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] mtd: st fsmc_nand: pass the ale and cmd resource via
+ resource
+Date: Fri, 5 Oct 2012 14:49:44 +0200
+Message-ID: <CACRpkdb10dfKR-sAvbUar+ZsC16uLofhBXuMxfL7QtXLhNg1+Q@mail.gmail.com>
+References: <1349356456-13371-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1349356456-13371-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
+On Thu, Oct 4, 2012 at 3:14 PM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
 
-Any chance for a GIT tree including this patch series ? I'd like
-to see all these pieces put together and I don't seem to find any
-base tree that this series would have applied cleanly to.
+> Do not use the platform_data to pass resource and be smart in the drivers.
+> Just pass it via resource
+>
+> Switch to devm_request_and_ioremap at the sametime
+>
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Vipin Kumar <vipin.kumar-qxv4g6HH51o@public.gmane.org>
+> Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 
-...(20121005_media_for_v3.7-dt)$ git am -3 \[PATCH\ *
-Applying: i2c: add dummy inline functions for when CONFIG_OF_I2C(_MODULE) isn't defined
-Applying: of: add a dummy inline function for when CONFIG_OF is not defined
-Applying: OF: make a function pointer argument const
-Applying: media: add V4L2 DT binding documentation
-Applying: media: add a V4L2 OF parser
-Applying: media: soc-camera: prepare for asynchronous client probing
-Applying: media: soc-camera: support deferred probing of clients
-fatal: sha1 information is lacking or useless (drivers/media/platform/soc_camera/soc_camera.c).
-Repository lacks necessary blobs to fall back on 3-way merge.
-Cannot fall back to three-way merge.
-Patch failed at 0007 media: soc-camera: support deferred probing of clients
-When you have resolved this problem run "git am --resolved".
-If you would prefer to skip this patch, instead run "git am --skip".
-To restore the original branch and stop patching run "git am --abort".
+This is much better. Actually I was confused by these offsets recently...
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
---
+My patch to convert the Nomadik to the FSMC driver will collide with this,
+but I can sure fix it up as we run into it, no big deal.
 
-Thanks,
-Sylwester
+Yours,
+Linus Walleij
