@@ -1,26 +1,62 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH 0/2] Enable ehci and ohci devices for exynos5250
-Date: Fri, 05 Oct 2012 15:40:16 +0530
-Message-ID: <1349431818-15639-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, jg1.han@samsung.com
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH v3 0/4] watchdog: core: dt: add support for the
+ timeout-sec dt property
+Date: Fri,  5 Oct 2012 12:16:05 +0200
+Message-ID: <1349432169-13006-1-git-send-email-fabio.porcedda@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on for-next branch of linux-samsung.
+Hi all,
+this patchset add the timeout-sec property to the watchdog core,
+in the next revision i will add the s3c2410 driver.
 
-Vivek Gautam (2):
-  ARM: Exynos5250: Enabling ehci-s5p driver
-  ARM: Exynos5250: Enabling ohci-exynos driver
+changes:
+v3:
+  - rename watchdog_probe_dt_timeout ->  watchdog_init_timeout
+  - move the watchdog_init_timeout function from inline to watchdog_core.c
+  - add timeout parameter handling code to watchdog_init_timeout
+  - add timeout-sec property to the pnx4008-wdt driver
+  - add two small commit for fixup and cleanup
+v2:
+  - change "timeout" to "timeout-sec" as asked by Jean-Christophe
+  - at91sam9_wdt: use the new helper function
+  - at91sam9_wdt: add bounds checking
+  - watchdog.h: add bounds checking 
 
- .../devicetree/bindings/usb/exynos-usb.txt         |   40 ++++++++++++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 ++
- arch/arm/boot/dts/exynos5250.dtsi                  |   12 ++++++
- arch/arm/mach-exynos/include/mach/map.h            |    2 +
- arch/arm/mach-exynos/mach-exynos5-dt.c             |    4 ++
- 5 files changed, 62 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
+
+
+Fabio Porcedda (4):
+  watchdog: core: dt: add support for the timeout-sec dt property
+  watchdog: add timeout-sec property binding to some drivers
+  watchdog: orion_wdt: litte cleanup
+  watchdog: WatchDog Timer Driver Core: fix comment
+
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |  4 ++++
+ .../devicetree/bindings/watchdog/marvel.txt        |  5 ++++
+ .../devicetree/bindings/watchdog/pnx4008-wdt.txt   |  4 ++++
+ Documentation/watchdog/watchdog-kernel-api.txt     |  4 ++++
+ drivers/watchdog/Kconfig                           |  1 +
+ drivers/watchdog/at91sam9_wdt.c                    | 17 ++++++++++----
+ drivers/watchdog/orion_wdt.c                       | 13 ++++-------
+ drivers/watchdog/pnx4008_wdt.c                     |  7 +++---
+ drivers/watchdog/watchdog_core.c                   | 27 ++++++++++++++++++++++
+ include/linux/watchdog.h                           |  6 ++++-
+ 10 files changed, 71 insertions(+), 17 deletions(-)
 
 -- 
-1.7.6.5
+1.7.11.3
