@@ -1,63 +1,61 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 10/14] media: soc-camera: support OF cameras
-Date: Fri, 05 Oct 2012 21:11:36 +0200
-Message-ID: <506F30E8.10206@gmail.com>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/9] ARM: dts/OMAP: Pinmux audio configuration for
+ OMAP4+
+Date: Fri, 5 Oct 2012 16:03:55 -0700
+Message-ID: <20121005230354.GS3874@atomide.com>
+References: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1349351848-12972-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2012 04:07 PM, Guennadi Liakhovetski wrote:
-> With OF we aren't getting platform data any more. To minimise changes we
-> create all the missing data ourselves, including compulsory struct
-> soc_camera_link objects. Host-client linking is now done, based on the OF
-> data. Media bus numbers also have to be assigned dynamically.
->
-> Signed-off-by: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [121004 04:57]:
+> Hello,
+> 
+> u-boot recently stopped configuring 'non essential' pin mux. This change leaves
+> the audio essential pins in non configured state which prevents the use of audio.
+> The following series makes sure that the needed pins are configured correctly by
+> the kernel on OMAP4 and OMAP5.
+> 
+> Tony: can this series queued for 3.7?
+
+Let's see if that's possible to avoid mysterious bug reports
+of things not working.
+
+If we can't merge it, then it might be worth adding a warning
+that bails out early after some pin is checked or similar.
+
+Regards,
+
+Tony
+ 
+> Regards,
+> Peter
 > ---
-...
->   static int soc_camera_i2c_notify(struct notifier_block *nb,
->   				 unsigned long action, void *data)
->   {
-> @@ -1203,13 +1434,20 @@ static int soc_camera_i2c_notify(struct notifier_block *nb,
->   	struct v4l2_subdev *subdev;
->   	int ret;
->
-> -	if (client->addr != icl->board_info->addr ||
-> -	    client->adapter->nr != icl->i2c_adapter_id)
-> +	dev_dbg(dev, "%s(%lu): %x on %u\n", __func__, action,
-> +		client->addr, client->adapter->nr);
-> +
-> +	if (!soc_camera_i2c_client_match(icl, client))
->   		return NOTIFY_DONE;
->
->   	switch (action) {
->   	case BUS_NOTIFY_BIND_DRIVER:
->   		client->dev.platform_data = icl;
-> +		if (icl->of_link) {
-> +			struct soc_camera_of_client *sofc = container_of(icl->of_link,
-> +						struct soc_camera_of_client, of_link);
-> +			soc_camera_of_i2c_ifill(sofc, client);
-> +		}
->
->   		return NOTIFY_OK;
->   	case BUS_NOTIFY_BOUND_DRIVER:
-
-There is no need for different handling of this event as well ?
-Further, there is code like:
-
-	adap = i2c_get_adapter(icl->i2c_adapter_id);
-
-which is clearly not going to work in OF case. Could you clarify how
-it is supposed to work ?
-
---
-
-Thanks,
-Sylwester
+> Peter Ujfalusi (9):
+>   ARM: OMAP: board-4430-sdp: Pin mux configuration for audio needs
+>   ARM: OMAP: board-omap4panda: Pin mux configuration for audio needs
+>   ARM/dts: omap4-panda: Disable unused audio IPs
+>   ARM/dts: omap4-sdp: Disable unused McBSP3
+>   ARM/dts: omap5-evm: Disable unused McBSP3
+>   ARM/dts: omap4-sdp: pinmux configuration for audio
+>   ARM/dts: omap4-panda: pinmux configuration for audio
+>   ARM/dts: Add pinctrl driver entries for omap5
+>   ARM/dts: omap5-evm: pinmux configuration for audio
+> 
+>  arch/arm/boot/dts/omap4-panda.dts      | 47 +++++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap4-sdp.dts        | 57 +++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap5-evm.dts        | 58 ++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap5.dtsi           | 17 ++++++++++
+>  arch/arm/mach-omap2/board-4430sdp.c    | 26 +++++++++++++++
+>  arch/arm/mach-omap2/board-omap4panda.c | 15 +++++++++
+>  6 files changed, 220 insertions(+)
+> 
+> -- 
+> 1.7.12
+> 
