@@ -1,63 +1,75 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH v3 3/4] watchdog: orion_wdt: litte cleanup
-Date: Fri,  5 Oct 2012 12:16:08 +0200
-Message-ID: <1349432169-13006-4-git-send-email-fabio.porcedda@gmail.com>
-References: <1349432169-13006-1-git-send-email-fabio.porcedda@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Fri, 5 Oct 2012 12:41:52 +0200
+Message-ID: <201210051241.52205.hverkuil@xs4all.nl>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <Pine.LNX.4.64.1210021142210.15778@axis700.grange> <506ABE40.9070504@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1349432169-13006-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <506ABE40.9070504@samsung.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-- Move the min_timeout initialization inside the orion_wdt definition.
-- Change orion_wdt_of_match_table from __devinitdata to __devinitconst.
+On Tue October 2 2012 12:13:20 Sylwester Nawrocki wrote:
+> Hi Guennadi,
+> 
+> On 10/02/2012 11:49 AM, Guennadi Liakhovetski wrote:
+> >>> +	if (!of_property_read_u32_array(node, "data-lanes", data_lanes,
+> >>> +					ARRAY_SIZE(data_lanes))) {
+> >>> +		int i;
+> >>> +		for (i = 0; i<  ARRAY_SIZE(data_lanes); i++)
+> >>> +			link->mipi_csi_2.data_lanes[i] = data_lanes[i];
+> >>
+> >> It doesn't look like what we aimed for. The data-lanes array is supposed
+> >> to be of variable length, thus I don't think it can be parsed like that. 
+> >> Or am I missing something ? I think we need more something like below 
+> >> (based on of_property_read_u32_array(), not tested):
+> > 
+> > Ok, you're right, that my version only was suitable for fixed-size arrays, 
+> > which wasn't our goal. But I don't think we should go down to manually 
+> > parsing property data. How about (tested;-))
+> > 
+> > 	data = of_find_property(node, "data-lanes", NULL);
+> > 	if (data) {
+> > 		int i = 0;
+> > 		const __be32 *lane = NULL;
+> > 		do {
+> > 			lane = of_prop_next_u32(data, lane, &data_lanes[i]);
+> > 		} while (lane && i++ < ARRAY_SIZE(data_lanes));
+> > 		link->mipi_csi_2.num_data_lanes = i;
+> > 		while (i--)
+> > 			link->mipi_csi_2.data_lanes[i] = data_lanes[i];
+> > 	}
+> 
+> Yes, that looks neat and does what it is supposed to do. :) Thanks!
+> For now, I'll trust you it works ;)
+> 
+> With regards to the remaining patches, it looks a bit scary to me how
+> complicated it got, perhaps mostly because of requirement to reference
+> host devices from subdevs. And it seems to rely on the existing SoC
+> camera infrastructure, which might imply lot's of work need to be done
+> for non soc-camera drivers. But I'm going to take a closer look and
+> comment more on the details at the corresponding patches.
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/watchdog/orion_wdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I have to say that I agree with Sylwester here. It seems awfully complicated,
+but I can't really put my finger on the actual cause. It would be really
+interesting to see this implemented for a non-SoC device and to compare the
+two.
 
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 3417f1b..9e09598 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -139,6 +139,7 @@ static const struct watchdog_ops orion_wdt_ops = {
- static struct watchdog_device orion_wdt = {
- 	.info = &orion_wdt_info,
- 	.ops = &orion_wdt_ops,
-+	.min_timeout = 1,
- };
- 
- static int __devinit orion_wdt_probe(struct platform_device *pdev)
-@@ -161,7 +162,6 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
- 
- 	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
- 
--	orion_wdt.min_timeout = 1;
- 	orion_wdt.max_timeout = wdt_max_duration;
- 	orion_wdt.timeout = wdt_max_duration;
- 	watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
-@@ -190,7 +190,7 @@ static void orion_wdt_shutdown(struct platform_device *pdev)
- 	orion_wdt_stop(&orion_wdt);
- }
- 
--static const struct of_device_id orion_wdt_of_match_table[] __devinitdata = {
-+static const struct of_device_id orion_wdt_of_match_table[] __devinitconst = {
- 	{ .compatible = "marvell,orion-wdt", },
- 	{},
- };
--- 
-1.7.11.3
+One area that I do not yet completely understand is the i2c bus notifications
+(or asynchronous loading or i2c modules).
+
+I would have expected that using OF the i2c devices are still initialized
+before the host/bridge driver is initialized. But I gather that's not the
+case?
+
+If this deferred probing is a general problem, then I think we need a general
+solution as well that's part of the v4l2 core.
+
+Regards,
+
+	Hans
