@@ -1,38 +1,38 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Date: Fri, 05 Oct 2012 10:21:37 -0600
-Message-ID: <506F0911.1050808@wwwdotorg.org>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de> <506DD9B4.40409@wwwdotorg.org> <20121005161620.GB2053@pengutronix.de>
+From: Geoff Levand <geoff@infradead.org>
+Subject: Re: [Cbe-oss-dev] [PATCH 4/5] Rename the drivers/of prom_*
+ functions to of_*
+Date: Fri, 05 Oct 2012 09:22:49 -0700
+Message-ID: <1349454169.3106.6.camel@clam>
+References: <506B2E63.5090900@linux.vnet.ibm.com>
+ <506BA9E6.9050309@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20121005161620.GB2053@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <506BA9E6.9050309@linux.vnet.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc: cbe-oss-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/2012 10:16 AM, Steffen Trumtrar wrote:
-> On Thu, Oct 04, 2012 at 12:47:16PM -0600, Stephen Warren wrote:
->> On 10/04/2012 11:59 AM, Steffen Trumtrar wrote:
-...
->>> +	for_each_child_of_node(timings_np, entry) {
->>> +		struct signal_timing *st;
->>> +
->>> +		st = of_get_display_timing(entry);
->>> +
->>> +		if (!st)
->>> +			continue;
->>
->> I wonder if that shouldn't be an error?
+On Tue, 2012-10-02 at 21:58 -0500, Nathan Fontenot wrote:
+> Rename the prom_*_property routines of the generic OF code to of_*_property.
+> This brings them in line with the naming used by the rest of the OF code.
 > 
-> In the sense of a pr_err not a -EINVAL I presume?! It is a little bit quiet in
-> case of a faulty spec, that is right.
+> Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+> ---
+>  arch/powerpc/platforms/ps3/os-area.c      |    6 +++---
+>  10 files changed, 35 insertions(+), 37 deletions(-)
 
-I did mean return an error; if we try to parse something and can't,
-shouldn't we return an error?
+The ps3 part looks OK.  Please do build test with ps3_defconfig.
 
-I suppose it may be possible to limp on and use whatever subset of modes
-could be parsed and drop the others, which is what this code does, but
-the code after the loop would definitely return an error if zero timings
-were parseable.
+Acked-by: Geoff Levand <geoff@infradead.org>
