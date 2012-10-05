@@ -1,28 +1,19 @@
 From: Robert Schwebel <r.schwebel@pengutronix.de>
-Subject: (unknown)
-Date: Fri, 5 Oct 2012 09:15:59 +0200
-Message-ID: <20121005071559.GH23204@pengutronix.de>
+Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
+Date: Fri, 5 Oct 2012 09:17:40 +0200
+Message-ID: <20121005071740.GI23204@pengutronix.de>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
+ <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
 Sender: linux-media-owner@vger.kernel.org
 To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, TomiValkeinen@pengutronix.de
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Philipp Zabel <pza@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
-
-<tomi.valkeinen@ti.com>, pza
-Bcc:
-Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Reply-To:
-In-Reply-To: <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-IRC: #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 09:13:09 up 103 days, 22:24, 36 users,  load average: 0,57, 0,60,
- 0,61
 
 On Thu, Oct 04, 2012 at 11:35:35PM +0200, Guennadi Liakhovetski wrote:
 > > +optional properties:
