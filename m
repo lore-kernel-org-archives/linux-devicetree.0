@@ -1,47 +1,66 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] i2c-s3c2410: Fix potential NULL pointer dereference
-Date: Sat, 6 Oct 2012 15:37:24 +0200
-Message-ID: <20121006133724.GB25123@pengutronix.de>
-References: <1347958128-13146-1-git-send-email-sachin.kamat@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] devicetree: fsl.txt: Add an entry to mx27pdk board
+Date: Sat, 6 Oct 2012 22:06:41 +0800
+Message-ID: <20121006140639.GG20231@S2101-09.ap.freescale.net>
+References: <1348661955-7258-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1347958128-13146-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1348661955-7258-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 26, 2012 at 09:19:15AM -0300, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Add an entry to mx27pdk board (or also known as mx27 3ds).
+> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index ac9e751..57dc148 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -5,6 +5,10 @@ i.MX23 Evaluation Kit
+>  Required root node properties:
+>      - compatible = "fsl,imx23-evk", "fsl,imx23";
+>  
+> +i.MX27 Product Development Kit
 
---rS8CxjVDS/+yyDmU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm wondering why fsl,imx27-pdk wasn't picked as the compatible string,
+if Product Development Kit is the preferred name.
 
-On Tue, Sep 18, 2012 at 02:18:48PM +0530, Sachin Kamat wrote:
-> of_match_node() returns NULL if a device_node does not have
-> a matching of_match structure. Thus the return value needs to be
-> checked for NULL to avoid NULL pointer dereferencing.
+> +Required root node properties:
+> +    - compatible = "fsl,imx27-3ds", "fsl,imx27";
+> +
 
-I am missing how the driver can be matched to the device if there is no
-fitting device node?
+We have the following two lines in imx27-3ds.dts right now.
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+        model = "mx27_3ds";
+        compatible = "freescale,imx27-3ds", "fsl,imx27";
 
---rS8CxjVDS/+yyDmU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The "model" property deserves a more descriptive string, while
+"compatible" even needs a fixing, s/freescale/fsl.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlBwNBQACgkQD27XaX1/VRtOoACgxqoLSJZyRlkLQsLVnqS50MyM
-/vgAoKeajzgnavJuq2UqUL5S8myj/DQ6
-=e9Lz
------END PGP SIGNATURE-----
-
---rS8CxjVDS/+yyDmU--
+>  i.MX28 Evaluation Kit
+>  Required root node properties:
+>      - compatible = "fsl,imx28-evk", "fsl,imx28";
+> -- 
+> 1.7.9.5
+> 
