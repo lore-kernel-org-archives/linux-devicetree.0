@@ -1,15 +1,16 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: bcm476x: Instantiate console UART
-Date: Sun, 7 Oct 2012 22:03:00 +0200
-Message-ID: <20121007200300.GH12801@game.jcrosoft.org>
+From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
+Date: Mon, 8 Oct 2012 00:54:17 +0200
+Message-ID: <20121007225417.GA29996@glitch>
 References: <20121007015300.828366635@gmail.com>
- <20121007015407.840781689@gmail.com>
+ <20121007015405.958959522@gmail.com>
+ <20121007195759.GG12801@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20121007015407.840781689-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20121007195759.GG12801-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,109 +21,190 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03:53 Sun 07 Oct     , Domenico Andreoli wrote:
-> From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+On Sun, Oct 07, 2012 at 09:57:59PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 03:53 Sun 07 Oct     , Domenico Andreoli wrote:
+> > From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+> > 
+> > BCM476x's minimal infrastructure, Kernel's great reuse.
+> > 
+> > Look mom, no include/mach directory!
+> > 
+> > Signed-off-by: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/bcm476x.txt |    8 +
+> >  MAINTAINERS                                       |    9 +
+> >  arch/arm/Kconfig                                  |    2 +
+> >  arch/arm/Makefile                                 |    1 +
+> >  arch/arm/boot/dts/bcm476x-catalina.dts            |   11 +
+> >  arch/arm/boot/dts/bcm476x.dtsi                    |   31 ++
+> >  arch/arm/configs/bcm476x_defconfig                |  352 ++++++++++++++++++++++
+> >  arch/arm/include/debug/bcm476x-uncompress.h       |   53 +++
+> >  arch/arm/include/debug/bcm476x.S                  |   35 ++
+> >  arch/arm/mach-bcm476x/Kconfig                     |   17 +
+> >  arch/arm/mach-bcm476x/Makefile                    |    1 +
+> >  arch/arm/mach-bcm476x/Makefile.boot               |    5 +
+> >  arch/arm/mach-bcm476x/bcm476x.c                   |   83 +++++
+> >  13 files changed, 608 insertions(+)
+> > 
+> > Index: b/arch/arm/boot/dts/bcm476x.dtsi
+> > ===================================================================
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm476x.dtsi
+> > @@ -0,0 +1,31 @@
+> > +/include/ "skeleton.dtsi"
+> > +
+> > +/ {
+> > +	compatible = "brcm,bcm476x";
+> > +	model = "Broadcom BCM476x";
+> > +
+> > +	chosen {
+> > +		bootargs = "earlyprintk";
+> > +	};
+> > +
+> > +	amba {
+> > +		compatible = "arm,amba-bus";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges;
+> > +
+> > +		vic0: interrupt-controller@80000 {
+> > +			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
+> why brcm specific compatbile?
+
+Nothing breaks if I drop it. I think it's a future-proof clause, especially
+if you consider that the devicetree could be not easy to upgrade and you
+may need a way to differentiate the bcm476x's implementation from the
+common one. I'm not sure it's an actual requirement with use cases.
+
+> > +			reg = <0x80000 0x1000>;
+> > +			interrupt-controller;
+> > +			#interrupt-cells = <1>;
+> > +		};
+> > +
+> > +		vic1: interrupt-controller@81000 {
+> > +			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
+> > +			reg = <0x81000 0x1000>;
+> > +			interrupt-controller;
+> > +			#interrupt-cells = <1>;
+> > +		};
+> > +	};
+> > +};
+> > Index: b/arch/arm/include/debug/bcm476x.S
+> > ===================================================================
+> > --- /dev/null
+> > +++ b/arch/arm/include/debug/bcm476x.S
+> > @@ -0,0 +1,35 @@
+> > +/*
+> > + * Broadcom BCM476x SoCs DEBUG_LL support
+> > + *
+> > + * Copyright (C) 2012 Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#if defined(CONFIG_DEBUG_BCM476X_UART0)
+> > +# define BCM476X_DEBUG_PHYS	0x000c0000
+> > +# define BCM476X_DEBUG_VIRT	0xd00c0000
+> > +#elif defined(CONFIG_DEBUG_BCM476X_UART1)
+> > +# define BCM476X_DEBUG_PHYS	0x000c1000
+> > +# define BCM476X_DEBUG_VIRT	0xd00c1000
+> > +#elif defined(CONFIG_DEBUG_BCM476X_UART2)
+> > +# define BCM476X_DEBUG_PHYS	0x000b2000
+> > +# define BCM476X_DEBUG_VIRT	0xd00b2000
+> > +#else
+> > +# error Unknown BCM476x debug port
+> > +#endif
 > 
-> The BCM476x sports standard PL011 UARTs which are fully described and
-> put to use with these few changes.
-> 
-> Signed-off-by: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/Kconfig.debug         |   16 ++++++++++++++++
->  arch/arm/boot/dts/bcm476x.dtsi |   23 ++++++++++++++++++++++-
->  2 files changed, 38 insertions(+), 1 deletion(-)
-> 
-> Index: b/arch/arm/boot/dts/bcm476x.dtsi
-> ===================================================================
-> --- a/arch/arm/boot/dts/bcm476x.dtsi
-> +++ b/arch/arm/boot/dts/bcm476x.dtsi
-> @@ -5,7 +5,7 @@
->  	model = "Broadcom BCM476x";
->  
->  	chosen {
-> -		bootargs = "earlyprintk";
-> +		bootargs = "console=ttyAMA1";
->  	};
->  
->  	amba {
-> @@ -41,5 +41,26 @@
->  			interrupt-controller;
->  			#interrupt-cells = <1>;
->  		};
-> +
-> +		uart0@c0000 {
-> +			compatible = "brcm,bcm476x-pl011", "arm,pl011", "arm,primecell";
-why brcm specific compatible did broadcom customised the IP?
-> +			reg = <0xc0000 0x1000>;
-> +			interrupt-parent = <&vic0>;
-> +			interrupts = <14>;
-> +		};
-> +
-> +		uart1@c1000 {
-> +			compatible = "brcm,bcm476x-pl011", "arm,pl011", "arm,primecell";
-> +			reg = <0xc1000 0x1000>;
-> +			interrupt-parent = <&vic0>;
-> +			interrupts = <15>;
-> +		};
-> +
-> +		uart2@b2000 {
-> +			compatible = "brcm,bcm476x-pl011", "arm,pl011", "arm,primecell";
-> +			reg = <0xb2000 0x1000>;
-> +			interrupt-parent = <&vic0>;
-> +			interrupts = <16>;
-> +		};
->  	};
->  };
-> Index: b/arch/arm/Kconfig.debug
-> ===================================================================
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-this should come with the debug patch
-> @@ -89,6 +89,18 @@ choice
->  		bool "Kernel low-level debugging on 9263 and 9g45"
->  		depends on HAVE_AT91_DBGU1
->  
-> +	config DEBUG_BCM476X_UART0
-> +		depends on ARCH_BCM476X
-> +		bool "Kernel low-level debugging on BCM476x UART 0"
-> +
-> +	config DEBUG_BCM476X_UART1
-> +		depends on ARCH_BCM476X
-> +		bool "Kernel low-level debugging on BCM476x UART 1"
-> +
-> +	config DEBUG_BCM476X_UART2
-> +		depends on ARCH_BCM476X
-> +		bool "Kernel low-level debugging on BCM476x UART 2"
-> +
->  	config DEBUG_CLPS711X_UART1
->  		bool "Kernel low-level debugging messages via UART1"
->  		depends on ARCH_CLPS711X
-> @@ -404,6 +416,8 @@ endchoice
->  
->  config DEBUG_LL_INCLUDE
->  	string
-> +	default "debug/bcm476x.S" if DEBUG_BCM476X_UART0 || \
-> +		DEBUG_BCM476X_UART1 || DEBUG_BCM476X_UART2
->  	default "debug/icedcc.S" if DEBUG_ICEDCC
->  	default "debug/highbank.S" if DEBUG_HIGHBANK_UART
->  	default "debug/mvebu.S" if DEBUG_MVEBU_UART
-> @@ -416,6 +430,8 @@ config DEBUG_LL_INCLUDE
->  
->  config UNCOMPRESS_INCLUDE
->  	string
-> +	default "debug/bcm476x-uncompress.h" if DEBUG_BCM476X_UART0 || \
-> +		DEBUG_BCM476X_UART1 || DEBUG_BCM476X_UART2
->  	default "debug/icedcc-uncompress.h" if DEBUG_ICEDCC
->  	default "debug/mvebu-uncompress.h" if DEBUG_MVEBU_UART
->  	default "debug/tegra-uncompress.h" if DEBUG_TEGRA_UART
-Best Regards,
-J.
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> can't you detect it?
+
+If I can assume that the boot loader will configure and enable only the
+console port, I could use the first one in such state.
+
+Where could I place such detection, in the maco addruart itself?
+
+> > +
+> > +	.macro	addruart, rp, rv, tmp
+> > +	ldr	\rp, =BCM476X_DEBUG_PHYS
+> > +	ldr	\rv, =BCM476X_DEBUG_VIRT
+> > +	.endm
+> > +
+> > +#include <asm/hardware/debug-pl01x.S>
+> > Index: b/arch/arm/include/debug/bcm476x-uncompress.h
+> > ===================================================================
+> > --- /dev/null
+> > +++ b/arch/arm/include/debug/bcm476x-uncompress.h
+> > @@ -0,0 +1,53 @@
+> > +/*
+> > + * Broadcom BCM476x SoCs decompressor output
+> > + *
+> > + * Copyright (C) 2012 Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/io.h>
+> > +#include <linux/amba/serial.h>
+> > +
+> > +#if defined(CONFIG_DEBUG_BCM476X_UART0)
+> > +# define BCM476X_DEBUG_PHYS	0x000c0000
+> > +#elif defined(CONFIG_DEBUG_BCM476X_UART1)
+> > +# define BCM476X_DEBUG_PHYS	0x000c1000
+> > +#elif defined(CONFIG_DEBUG_BCM476X_UART2)
+> > +# define BCM476X_DEBUG_PHYS	0x000b2000
+> > +#else
+> > +# error Unknown BCM476x debug port
+> ditto here by using the first one enable by the bootloader
+
+Are you saying that the detection should happen always or only in this
+last else branch, which actually should be impossible?
+
+> > +#endif
+> > +
+> > +#define BCM476X_UART_DR IOMEM(BCM476X_DEBUG_PHYS + UART01x_DR)
+> > +#define BCM476X_UART_FR IOMEM(BCM476X_DEBUG_PHYS + UART01x_FR)
+> > +#define BCM476X_UART_CR IOMEM(BCM476X_DEBUG_PHYS + UART011_CR)
+> > +
+> > +static inline void putc(int c)
+> > +{
+> > +	while (__raw_readl(BCM476X_UART_FR) & UART01x_FR_TXFF)
+> > +		barrier();
+> > +
+> > +	__raw_writel(c, BCM476X_UART_DR);
+> > +	barrier();
+> > +}
+> > +
+> > +static inline void flush(void)
+> > +{
+> > +	int fr;
+> > +
+> > +	do {
+> > +		fr = __raw_readl(BCM476X_UART_FR);
+> > +		barrier();
+> > +	} while ((fr & (UART011_FR_TXFE | UART01x_FR_BUSY)) != UART011_FR_TXFE);
+> > +}
+> > +
+
+Thank you.
+
+Regards,
+Domenico
