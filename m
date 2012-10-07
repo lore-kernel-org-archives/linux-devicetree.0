@@ -1,52 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2 v6] of: add generic videomode description
-Date: Sun, 07 Oct 2012 15:38:33 +0200
-Message-ID: <1865954.iaNNHHSnLW@avalon>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <506DDA94.1090702@wwwdotorg.org> <20121005155121.GA2053@pengutronix.de>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] pinctrl: fix return value in bcm2835_pinctrl_probe()
+Date: Sun, 7 Oct 2012 22:01:15 +0800
+Message-ID: <CAPgLHd8F99f5LVS-wNekKA+a1369RfqCa-w_jHGV-_Wueg_cTQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20121005155121.GA2053@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-media@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
+List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-On Friday 05 October 2012 17:51:21 Steffen Trumtrar wrote:
-> On Thu, Oct 04, 2012 at 12:51:00PM -0600, Stephen Warren wrote:
-> > On 10/04/2012 11:59 AM, Steffen Trumtrar wrote:
-> > > Get videomode from devicetree in a format appropriate for the
-> > > backend. drm_display_mode and fb_videomode are supported atm.
-> > > Uses the display signal timings from of_display_timings
-> > > 
-> > > +++ b/drivers/of/of_videomode.c
-> > > 
-> > > +int videomode_from_timing(struct display_timings *disp, struct
-> > > videomode *vm,
-> > > 
-> > > +	st = display_timings_get(disp, index);
-> > > +
-> > > +	if (!st) {
-> > 
-> > It's a little odd to leave a blank line between those two lines.
-> 
-> Hm, well okay. That can be remedied
-> 
-> > Only half of the code in this file seems OF-related; the routines to
-> > convert a timing to a videomode or drm display mode seem like they'd be
-> > useful outside device tree, so I wonder if putting them into
-> > of_videomode.c is the correct thing to do. Still, it's probably not a
-> > big deal.
-> 
-> I am not sure, what the appropriate way to do this is. I can split it up
-> (again).
+In case of error, the function pinctrl_register() returns
+NULL not ERR_PTR(). The PTR_ERR() in the return value
+should be replaced with error no.
 
-I think it would make sense to move them to their respective subsystems.
+dpatch engine is used to auto generate this patch.
+(https://github.com/weiyj/dpatch)
 
--- 
-Regards,
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ drivers/pinctrl/pinctrl-bcm2835.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Laurent Pinchart
+diff --git a/drivers/pinctrl/pinctrl-bcm2835.c b/drivers/pinctrl/pinctrl-bcm2835.c
+index a4adee6..1f9a878 100644
+--- a/drivers/pinctrl/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/pinctrl-bcm2835.c
+@@ -1032,7 +1032,7 @@ static int __devinit bcm2835_pinctrl_probe(struct platform_device *pdev)
+ 	pc->pctl_dev = pinctrl_register(&bcm2835_pinctrl_desc, dev, pc);
+ 	if (!pc->pctl_dev) {
+ 		gpiochip_remove(&pc->gpio_chip);
+-		return PTR_ERR(pc->pctl_dev);
++		return -EINVAL;
+ 	}
+ 
+ 	pc->gpio_range = bcm2835_pinctrl_gpio_range;
