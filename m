@@ -1,13 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Date: Sun, 07 Oct 2012 15:38:25 +0200
-Message-ID: <9190603.vEUidl99Ca@avalon>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <506F0911.1050808@wwwdotorg.org> <20121005163858.GD2053@pengutronix.de>
+Subject: Re: [PATCH 2/2 v6] of: add generic videomode description
+Date: Sun, 07 Oct 2012 15:38:33 +0200
+Message-ID: <1865954.iaNNHHSnLW@avalon>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <506DDA94.1090702@wwwdotorg.org> <20121005155121.GA2053@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20121005163858.GD2053@pengutronix.de>
+In-Reply-To: <20121005155121.GA2053@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
 To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 Cc: Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-media@vger.kernel.org
@@ -15,42 +15,36 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Steffen,
 
-On Friday 05 October 2012 18:38:58 Steffen Trumtrar wrote:
-> On Fri, Oct 05, 2012 at 10:21:37AM -0600, Stephen Warren wrote:
-> > On 10/05/2012 10:16 AM, Steffen Trumtrar wrote:
-> > > On Thu, Oct 04, 2012 at 12:47:16PM -0600, Stephen Warren wrote:
-> > >> On 10/04/2012 11:59 AM, Steffen Trumtrar wrote:
-> > ...
-> > 
-> > >>> +	for_each_child_of_node(timings_np, entry) {
-> > >>> +		struct signal_timing *st;
-> > >>> +
-> > >>> +		st = of_get_display_timing(entry);
-> > >>> +
-> > >>> +		if (!st)
-> > >>> +			continue;
-> > >> 
-> > >> I wonder if that shouldn't be an error?
+On Friday 05 October 2012 17:51:21 Steffen Trumtrar wrote:
+> On Thu, Oct 04, 2012 at 12:51:00PM -0600, Stephen Warren wrote:
+> > On 10/04/2012 11:59 AM, Steffen Trumtrar wrote:
+> > > Get videomode from devicetree in a format appropriate for the
+> > > backend. drm_display_mode and fb_videomode are supported atm.
+> > > Uses the display signal timings from of_display_timings
 > > > 
-> > > In the sense of a pr_err not a -EINVAL I presume?! It is a little bit
-> > > quiet in case of a faulty spec, that is right.
+> > > +++ b/drivers/of/of_videomode.c
+> > > 
+> > > +int videomode_from_timing(struct display_timings *disp, struct
+> > > videomode *vm,
+> > > 
+> > > +	st = display_timings_get(disp, index);
+> > > +
+> > > +	if (!st) {
 > > 
-> > I did mean return an error; if we try to parse something and can't,
-> > shouldn't we return an error?
-> > 
-> > I suppose it may be possible to limp on and use whatever subset of modes
-> > could be parsed and drop the others, which is what this code does, but
-> > the code after the loop would definitely return an error if zero timings
-> > were parseable.
+> > It's a little odd to leave a blank line between those two lines.
 > 
-> If a display supports multiple modes, I think it is better to have a working
-> mode (even if it is not the preferred one) than have none at all.
-> If there is no mode at all, that should be an error, right.
+> Hm, well okay. That can be remedied
+> 
+> > Only half of the code in this file seems OF-related; the routines to
+> > convert a timing to a videomode or drm display mode seem like they'd be
+> > useful outside device tree, so I wonder if putting them into
+> > of_videomode.c is the correct thing to do. Still, it's probably not a
+> > big deal.
+> 
+> I am not sure, what the appropriate way to do this is. I can split it up
+> (again).
 
-If we fail completely in case of an error, DT writers will notice their bugs. 
-If we ignore errors silently they won't, and we'll end up with buggy DTs (or, 
-to be accurate, even more buggy DTs :-)). I'd rather fail completely in the 
-first implementation and add workarounds later only if we need to.
+I think it would make sense to move them to their respective subsystems.
 
 -- 
 Regards,
