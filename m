@@ -1,66 +1,44 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] devicetree: fsl.txt: Add an entry to mx27pdk board
-Date: Sat, 6 Oct 2012 22:06:41 +0800
-Message-ID: <20121006140639.GG20231@S2101-09.ap.freescale.net>
-References: <1348661955-7258-1-git-send-email-festevam@gmail.com>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: [PATCH] dtb: Add arch-vt8500 board files to arch/arm/boot/dts/Makefile
+Date: Sun,  7 Oct 2012 14:14:41 +1300
+Message-ID: <1349572481-26526-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1348661955-7258-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Tony Prisk <linux@prisktech.co.nz>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 26, 2012 at 09:19:15AM -0300, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Add an entry to mx27pdk board (or also known as mx27 3ds).
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index ac9e751..57dc148 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -5,6 +5,10 @@ i.MX23 Evaluation Kit
->  Required root node properties:
->      - compatible = "fsl,imx23-evk", "fsl,imx23";
->  
-> +i.MX27 Product Development Kit
+Add board files (vt8500-bv07, wm8505-ref and wm8650-mid)
+to allow 'make dtbs' on arch-vt8500.
 
-I'm wondering why fsl,imx27-pdk wasn't picked as the compatible string,
-if Product Development Kit is the preferred name.
+Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+---
+ arch/arm/boot/dts/Makefile |    3 +++
+ 1 file changed, 3 insertions(+)
 
-> +Required root node properties:
-> +    - compatible = "fsl,imx27-3ds", "fsl,imx27";
-> +
-
-We have the following two lines in imx27-3ds.dts right now.
-
-        model = "mx27_3ds";
-        compatible = "freescale,imx27-3ds", "fsl,imx27";
-
-The "model" property deserves a more descriptive string, while
-"compatible" even needs a fixing, s/freescale/fsl.
-
->  i.MX28 Evaluation Kit
->  Required root node properties:
->      - compatible = "fsl,imx28-evk", "fsl,imx28";
-> -- 
-> 1.7.9.5
-> 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 43c084c..ef088de 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -97,5 +97,8 @@ dtb-$(CONFIG_ARCH_VEXPRESS) += vexpress-v2p-ca5s.dtb \
+ 	vexpress-v2p-ca9.dtb \
+ 	vexpress-v2p-ca15-tc1.dtb \
+ 	vexpress-v2p-ca15_a7.dtb
++dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
++	wm8505-ref.dtb \
++	wm8650-mid.dtb
+ 
+ endif
+-- 
+1.7.9.5
