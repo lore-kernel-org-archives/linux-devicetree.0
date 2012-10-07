@@ -1,156 +1,170 @@
-From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/6] ARM: bcm476x: Add stub clock driver
-Date: Sun, 07 Oct 2012 03:53:04 +0200
-Message-ID: <20121007015407.154476821@gmail.com>
+From: Domenico Andreoli <cavokz@gmail.com>
+Subject: [PATCH 5/6] ARM: bcm476x: Add restart hook
+Date: Sun, 07 Oct 2012 03:53:05 +0200
+Message-ID: <20121007015407.522256287@gmail.com>
 References: <20121007015300.828366635@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline; filename=arm-bcm476x-add-stub-clock-driver.patch
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline; filename=arm-bcm476x-add-restart-hook.patch
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Domenico Andreoli <domenico.andreoli@linux.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+From: Domenico Andreoli <domenico.andreoli@linux.com>
 
-This is the minimal clock support required for the boot, a more complete
-implementation will follow (shortly).
+Restart hook implementation for the BCM476x SoC (uses the watchdog).
 
-Signed-off-by: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
 ---
- arch/arm/mach-bcm476x/bcm476x.c |    3 ++
- drivers/clk/Makefile            |    1 +
- drivers/clk/clk-bcm476x.c       |   52 ++++++++++++++++++++++++++++++++++++++++
- include/linux/clk/bcm476x.h     |   22 +++++++++++++++++
- 4 files changed, 78 insertions(+)
- create mode 100644 drivers/clk/clk-bcm476x.c
- create mode 100644 include/linux/clk/bcm476x.h
+ Documentation/devicetree/bindings/watchdog/brcm,bcm476x-pm-wdt.txt |   13 ++
+ arch/arm/boot/dts/bcm476x.dtsi                                     |    5 +
+ arch/arm/mach-bcm476x/bcm476x.c                                    |   66 ++++++++++
+ 3 files changed, 84 insertions(+)
 
+Index: b/Documentation/devicetree/bindings/watchdog/brcm,bcm476x-pm-wdt.txt
+===================================================================
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/brcm,bcm476x-pm-wdt.txt
+@@ -0,0 +1,13 @@
++BCM476x Watchdog timer
++
++Required properties:
++
++- compatible : should be "brcm,bcm476x-pm-wdt"
++- reg : Specifies base physical address and size of the registers.
++
++Example:
++
++watchdog {
++	compatible = "brcm,bcm476x-pm-wdt";
++	reg = <0xbd000 0x1000>;
++};
+Index: b/arch/arm/boot/dts/bcm476x.dtsi
+===================================================================
+--- a/arch/arm/boot/dts/bcm476x.dtsi
++++ b/arch/arm/boot/dts/bcm476x.dtsi
+@@ -28,6 +28,11 @@
+ 			clock-frequency = <32000>;
+ 		};
+ 
++		watchdog {
++			compatible = "brcm,bcm476x-pm-wdt";
++			reg = <0xbd000 0x1000>;
++		};
++
+ 		vic0: interrupt-controller@80000 {
+ 			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
+ 			reg = <0x80000 0x1000>;
 Index: b/arch/arm/mach-bcm476x/bcm476x.c
 ===================================================================
 --- a/arch/arm/mach-bcm476x/bcm476x.c
 +++ b/arch/arm/mach-bcm476x/bcm476x.c
-@@ -18,6 +18,7 @@
+@@ -15,7 +15,9 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/delay.h>
  #include <linux/of_irq.h>
++#include <linux/of_address.h>
  #include <linux/of_platform.h>
  #include <linux/bcm476x_timer.h>
-+#include <linux/clk/bcm476x.h>
+ #include <linux/clk/bcm476x.h>
+@@ -28,6 +30,17 @@
+ #define BCM476X_PERIPH_VIRT   0xd0080000
+ #define BCM476X_PERIPH_SIZE   SZ_512K
  
- #include <asm/hardware/vic.h>
- #include <asm/mach/arch.h>
-@@ -43,6 +44,8 @@ void __init bcm476x_init(void)
++#define BCM476X_WDT_LOAD      0x000
++#define BCM476X_WDT_CTRL      0x008
++#define BCM476X_WDT_INTCLR    0x00c
++#define BCM476X_WDT_LOCK      0xc00
++
++#define BCM476X_WDT_PASSWORD  0x1acce551
++#define BCM476X_WDT_INTEN     BIT(0)
++#define BCM476X_WDT_RESEN     BIT(1)
++
++static void __iomem *wdt_regs;
++
+ static struct map_desc io_map __initdata = {
+ 	.virtual = BCM476X_PERIPH_VIRT,
+ 	.pfn = __phys_to_pfn(BCM476X_PERIPH_PHYS),
+@@ -40,10 +53,62 @@ void __init bcm476x_map_io(void)
+ 	iotable_init(&io_map, 1);
+ }
+ 
++/*
++ * The machine restart method can be called from an atomic context so we won't
++ * be able to ioremap the regs then.
++ */
++static void bcm476x_setup_restart(void)
++{
++	struct device_node *np;
++
++	np = of_find_compatible_node(NULL, NULL, "brcm,bcm476x-pm-wdt");
++	if (WARN(!np, "unable to setup watchdog restart"))
++		return;
++
++	wdt_regs = of_iomap(np, 0);
++	WARN(!wdt_regs, "Can't remap watchdog registers");
++
++	/* unlock watchdog registers */
++	writel(BCM476X_WDT_PASSWORD, wdt_regs + BCM476X_WDT_LOCK);
++	/* disable watchdog */
++	writel(0, wdt_regs + BCM476X_WDT_CTRL);
++	/* lock watchdog registers */
++	writel(1, wdt_regs + BCM476X_WDT_LOCK);
++}
++
++static void bcm476x_restart(char mode, const char *cmd)
++{
++	if (!wdt_regs)
++		return;
++
++	/* unlock watchdog registers */
++	writel(BCM476X_WDT_PASSWORD, wdt_regs + BCM476X_WDT_LOCK);
++
++	/* disable watchdog */
++	writel(0, wdt_regs + BCM476X_WDT_CTRL);
++	udelay(20);
++
++	/* clear the irq status */
++	writel(1, wdt_regs + BCM476X_WDT_INTCLR);
++	udelay(20);
++
++	/* expire after 5 cycles (~156us) */
++	writel(5, wdt_regs + BCM476X_WDT_LOAD);
++	/* enable watchdog */
++	writel(BCM476X_WDT_INTEN | BCM476X_WDT_RESEN,
++		wdt_regs + BCM476X_WDT_CTRL);
++
++	/* lock watchdog registers */
++	writel(1, wdt_regs + BCM476X_WDT_LOCK);
++	/* wait the bite */
++	udelay(400);
++}
++
+ void __init bcm476x_init(void)
  {
  	int ret;
  
-+	bcm476x_init_clocks();
-+
++	bcm476x_setup_restart();
+ 	bcm476x_init_clocks();
+ 
  	ret = of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
- 	if (ret) {
- 		pr_err("of_platform_populate failed: %d\n", ret);
-Index: b/drivers/clk/Makefile
-===================================================================
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk.o clk-fi
- 				   clk-mux.o clk-divider.o clk-fixed-factor.o
- # SoCs specific
- obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
-+obj-$(CONFIG_ARCH_BCM476X)	+= clk-bcm476x.o
- obj-$(CONFIG_ARCH_NOMADIK)	+= clk-nomadik.o
- obj-$(CONFIG_ARCH_HIGHBANK)	+= clk-highbank.o
- obj-$(CONFIG_ARCH_MXS)		+= mxs/
-Index: b/drivers/clk/clk-bcm476x.c
-===================================================================
---- /dev/null
-+++ b/drivers/clk/clk-bcm476x.c
-@@ -0,0 +1,52 @@
-+/*
-+ * Broadcom BCM476x SoCs clocks
-+ *
-+ * Copyright (C) 2011-2012 Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-private.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/bcm476x.h>
-+
-+/*
-+ * These are fixed clocks (and device tree doesn't support clk!).
-+ *
-+ * They're probably not all root clocks and it may be possible to
-+ * turn them on and off but until this is mapped out better it's
-+ * the only way they can be used.
-+ */
-+DEFINE_CLK_FIXED_RATE(sys_pclk,   CLK_IS_ROOT, 312000000, 0);
-+DEFINE_CLK_FIXED_RATE(apb_pclk,   CLK_IS_ROOT, 156000000, 0);
-+DEFINE_CLK_FIXED_RATE(uart0_pclk, CLK_IS_ROOT, 78000000, 0);
-+DEFINE_CLK_FIXED_RATE(uart1_pclk, CLK_IS_ROOT, 78000000, 0);
-+DEFINE_CLK_FIXED_RATE(uart2_pclk, CLK_IS_ROOT, 78000000, 0);
-+
-+static struct clk_lookup lookups[] = {
-+	{ .con_id = "sys_pclk", .clk = &sys_pclk },
-+	{ .con_id = "apb_pclk", .clk = &apb_pclk },
-+	{ .dev_id = "c0000.uart0", .clk = &uart0_pclk },
-+	{ .dev_id = "c1000.uart1", .clk = &uart1_pclk },
-+	{ .dev_id = "b2000.uart2", .clk = &uart2_pclk },
-+};
-+
-+void __init bcm476x_init_clocks(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(lookups); i++) {
-+		__clk_init(NULL, lookups[i].clk);
-+		clkdev_add(&lookups[i]);
-+	}
-+}
-Index: b/include/linux/clk/bcm476x.h
-===================================================================
---- /dev/null
-+++ b/include/linux/clk/bcm476x.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Broadcom BCM476x SoCs clocks
-+ *
-+ * Copyright (C) 2011-2012 Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __LINUX_CLK_BCM476X_H_
-+#define __LINUX_CLK_BCM476X_H_
-+
-+void __init bcm476x_init_clocks(void);
-+
-+#endif
+@@ -74,5 +139,6 @@ DT_MACHINE_START(BCM476X, "Broadcom BCM4
+ 	.handle_irq = vic_handle_irq,
+ 	.init_machine = bcm476x_init,
+ 	.timer = &bcm476x_timer,
++	.restart = bcm476x_restart,
+ 	.dt_compat = bcm476x_compat
+ MACHINE_END
