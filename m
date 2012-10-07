@@ -1,46 +1,59 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: sata_highbank: mismatch in reference
-Date: Sun, 7 Oct 2012 18:06:30 +0100
-Message-ID: <CACxGe6uho2BJR=xjR7SOadpHyCPiCoTVc=Z+XzK85NsT1mpkvQ@mail.gmail.com>
-References: <CAG27Bk2kP7TvCG2m4Q_ke-RauNUufZ4H6yQqXdNom-V0BTNpxA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAG27Bk2kP7TvCG2m4Q_ke-RauNUufZ4H6yQqXdNom-V0BTNpxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: kerolasa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Robert Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v2 0/5] clk: exynos4: migrate to common clock framework
+Date: Mon,  8 Oct 2012 02:10:50 +0900
+Message-ID: <1349629855-4962-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com, mturquette@ti.com, mturquette@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Oct 7, 2012 3:05 PM, "Sami Kerola" <kerolasa-X3B1VOXEql0@public.gmane.org> wrote:
->
-> FYI maintainers,
->
-> I tried to compile linus git kernel (v3.6-7996-g0b8e74c) and got
-> mismatch warning. I am not sure, but the warning might have something
-> to do config option CONFIG_OPTIMIZE_INLINING=y. Here are the
-> interesting lines from compilation attempt.
->
-> WARNING: drivers/ata/sata_highbank.o(.data+0x0): Section mismatch in
-> reference from the variable ahci_highbank_driver to the function
-> .init.text:ahci_highbank_probe()
-> The variable ahci_highbank_driver references
-> the function __init ahci_highbank_probe()
-> If the reference is valid then annotate the
-> variable with __init* or __refdata (see linux/init.h) or name the variable:
-> *_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+This patch series removes the usage of Samsung specific clock for Exynos4
+based platforms and migrates to use the common clock framework to register
+the clocks. Both legacy and device tree enabled Exynos4 platforms are
+supported. For legacy platforms, the clock instances are statically listed.
+For device tree based platforms, the device tree is searched for clock nodes
+and all available clock nodes are registered.
 
-This error means that the _probe and _release hooks need to be changed
-from __init to __devinit and __exit to __devexit.
+Thomas Abraham (5):
+  clk: samsung: add common clock framework support for Samsung platforms
+  clk: exynos4: register clocks using common clock framework
+  ARM: dts: Add Exynos4210 clock nodes
+  ARM: dts: list the clock providers for serial ports
+  ARM: Exynos4: Migrate clock support to common clock framework
 
-g.
+ arch/arm/boot/dts/exynos4-clock.dtsi       |  389 +++++++++++++++++
+ arch/arm/boot/dts/exynos4.dtsi             |    9 +
+ arch/arm/mach-exynos/Kconfig               |    1 +
+ arch/arm/mach-exynos/Makefile              |    3 -
+ arch/arm/mach-exynos/clock-exynos4.h       |   35 --
+ arch/arm/mach-exynos/clock-exynos4210.c    |  188 --------
+ arch/arm/mach-exynos/clock-exynos4212.c    |  192 --------
+ arch/arm/mach-exynos/common.c              |   22 +-
+ arch/arm/mach-exynos/common.h              |    3 +
+ arch/arm/mach-exynos/mach-armlex4210.c     |    1 -
+ arch/arm/mach-exynos/mach-exynos4-dt.c     |    1 -
+ arch/arm/mach-exynos/mach-nuri.c           |    1 -
+ arch/arm/mach-exynos/mach-origen.c         |    1 -
+ arch/arm/mach-exynos/mach-smdk4x12.c       |    1 -
+ arch/arm/mach-exynos/mach-smdkv310.c       |    1 -
+ arch/arm/mach-exynos/mach-universal_c210.c |    1 -
+ arch/arm/mach-exynos/mct.c                 |   11 +-
+ arch/arm/plat-samsung/Kconfig              |    4 +-
+ drivers/clk/Makefile                       |    1 +
+ drivers/clk/samsung/Makefile               |    6 +
+ drivers/clk/samsung/clk-exynos4.c          |  647 ++++++++++++++++++++++++++++
+ drivers/clk/samsung/clk.c                  |  414 ++++++++++++++++++
+ drivers/clk/samsung/clk.h                  |  212 +++++++++
+ 23 files changed, 1696 insertions(+), 448 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4-clock.dtsi
+ delete mode 100644 arch/arm/mach-exynos/clock-exynos4.h
+ delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
+ delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
+ create mode 100644 drivers/clk/samsung/Makefile
+ create mode 100644 drivers/clk/samsung/clk-exynos4.c
+ create mode 100644 drivers/clk/samsung/clk.c
+ create mode 100644 drivers/clk/samsung/clk.h
+
+-- 
+1.7.5.4
