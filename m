@@ -1,14 +1,14 @@
 From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Mon, 08 Oct 2012 13:50:08 +0200
-Message-ID: <19574322.MHE4gIJg5N@flexo>
+Subject: Re: [PATCH 2/6] ARM: bcm476x: Add system timer
+Date: Mon, 08 Oct 2012 13:50:16 +0200
+Message-ID: <1822741.oh36baA1m8@flexo>
 References: <20121007015300.828366635@gmail.com>
- <20121007015405.958959522@gmail.com>
+ <20121007015406.470633343@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121007015405.958959522@gmail.com>
+In-Reply-To: <20121007015406.470633343@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,77 +22,64 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Domenico Andreoli <domenico.andreoli@linux.com>, devicetree-discuss@lists.ozlabs.org, Domenico Andreoli <cavokz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Domenico,
-
-On Sunday 07 October 2012 03:53:01 Domenico Andreoli wrote:
+On Sunday 07 October 2012 03:53:02 Domenico Andreoli wrote:
 > From: Domenico Andreoli <domenico.andreoli@linux.com>
 > 
-> BCM476x's minimal infrastructure, Kernel's great reuse.
-> 
-> Look mom, no include/mach directory!
-
-This is going to be in the commit, use something more sensible ;)
-
+> System timer implementation for the BCM476x SoCs.
 > 
 > Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
 > ---
-[snip]
+>  Documentation/devicetree/bindings/timer/brcm,bcm476x-system-timer.txt |   22 +
+>  arch/arm/boot/dts/bcm476x.dtsi                                        |    8 +
+>  arch/arm/mach-bcm476x/bcm476x.c                                       |   10 -
+>  drivers/clocksource/Makefile                                          |    1 +
+>  drivers/clocksource/bcm476x_timer.c                                   |  188 ++++++++++
+>  include/linux/bcm476x_timer.h                                         |   24 +
+>  6 files changed, 244 insertions(+), 9 deletions(-)
+> 
+> Index: b/Documentation/devicetree/bindings/timer/brcm,bcm476x-system-timer.txt
+> ===================================================================
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm476x-system-timer.txt
+> @@ -0,0 +1,22 @@
+> +BCM476x System Timer
+> +
+> +The System Timer peripheral provides either two or four 32-bit timer
+> +channels.  BCM476x has three timers at 0xba000, 0xbb000 and 0xd1000. The
+> +first two provide four channels, the last (in the AON - Always ON power
+> +domain) provides only two.
+> +
+> +Required properties:
+> +
+> +- compatible : should be "brcm,bcm476x-system-timer"
+> +- reg : Specifies base physical address and size of the registers.
+> +- interrupts : A list of 2 or 4 interrupt sinks; one per timer channel.
+> +- clock-frequency : The frequency of the clock that drives the counter, in Hz.
+> +
+> +Example:
+> +
+> +timer {
+> +	compatible = "brcm,bcm476x-system-timer";
+> +	reg = <0xba000 0x1000>;
+> +	interrupts = <4>, <11>;
+> +	clock-frequency = <24000000>;
+> +};
 > Index: b/arch/arm/boot/dts/bcm476x.dtsi
 > ===================================================================
-> --- /dev/null
+> --- a/arch/arm/boot/dts/bcm476x.dtsi
 > +++ b/arch/arm/boot/dts/bcm476x.dtsi
-> @@ -0,0 +1,31 @@
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +	compatible = "brcm,bcm476x";
-> +	model = "Broadcom BCM476x";
-> +
-> +	chosen {
-> +		bootargs = "earlyprintk";
-> +	};
-> +
-> +	amba {
-
-I would rather explicitely mention that the peripheral base address is at 0
-so something like this:
-
-amba@0 {
-
-to make it clear that the peripherals declared as leaf nodes of this one are
-at a relative address.
-
-> +		compatible = "arm,amba-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		vic0: interrupt-controller@80000 {
-> +			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
-> +			reg = <0x80000 0x1000>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
+> @@ -14,6 +14,14 @@
+>  		#size-cells = <1>;
+>  		ranges;
+>  
+> +		timer {
+> +			compatible = "brcm,bcm476x-system-timer";
+> +			reg = <0xba000 0x1000>;
+> +			interrupt-parent = <&vic0>;
+> +			interrupts = <4>, <11>;
+> +			clock-frequency = <24000000>;
 > +		};
-> +
-> +		vic1: interrupt-controller@81000 {
-> +			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
-> +			reg = <0x81000 0x1000>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <1>;
-> +		};
-> +	};
-> +};
-> Index: b/arch/arm/configs/bcm476x_defconfig
-> ===================================================================
-> --- /dev/null
-> +++ b/arch/arm/configs/bcm476x_defconfig
-> @@ -0,0 +1,352 @@
-[snip]
-> +CONFIG_ARM_APPENDED_DTB=y
-> +CONFIG_ARM_ATAG_DTB_COMPAT=y
-> +CONFIG_ARM_ATAG_DTB_COMPAT_CMDLINE_FROM_BOOTLOADER=y
-> +CONFIG_CMDLINE="root=/dev/mmcblk0p2 ro console=ttyAMA1,115200 rootwait init=/bin/bash"
 
-remove the specific init=, let people use the defaults.
+This should rather be timer: timer@ba0000 for this node to be uniquely named.
 --
 Florian
