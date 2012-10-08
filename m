@@ -1,86 +1,101 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 10/14] media: soc-camera: support OF cameras
-Date: Mon, 8 Oct 2012 10:37:32 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210081028270.11034@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de> <506F30E8.10206@gmail.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <506F30E8.10206@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH 00/16] pinctrl: samsung: Usability and extensibiltiy
+ improvements
+Date: Mon, 08 Oct 2012 10:39:00 +0200
+Message-ID: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester
+This patch series is a work on improving usability and extensibiltiy of the
+pinctrl-samsung driver. It consists of three main parts:
+ - moving SoC-specific data to device tree
+ - converting the driver to use one GPIO chip and one IRQ domain per pin bank
+ - introducing generic wake-up interrupt capability description
 
-On Fri, 5 Oct 2012, Sylwester Nawrocki wrote:
+What the first part does is replacing static platform-specific data in
+pinctrl-samsung driver with data dynamically parsed from device tree.
 
-> On 09/27/2012 04:07 PM, Guennadi Liakhovetski wrote:
-> > With OF we aren't getting platform data any more. To minimise changes we
-> > create all the missing data ourselves, including compulsory struct
-> > soc_camera_link objects. Host-client linking is now done, based on the OF
-> > data. Media bus numbers also have to be assigned dynamically.
-> > 
-> > Signed-off-by: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
-> > ---
-> ...
-> >   static int soc_camera_i2c_notify(struct notifier_block *nb,
-> >   				 unsigned long action, void *data)
-> >   {
-> > @@ -1203,13 +1434,20 @@ static int soc_camera_i2c_notify(struct
-> > notifier_block *nb,
-> >   	struct v4l2_subdev *subdev;
-> >   	int ret;
-> > 
-> > -	if (client->addr != icl->board_info->addr ||
-> > -	    client->adapter->nr != icl->i2c_adapter_id)
-> > +	dev_dbg(dev, "%s(%lu): %x on %u\n", __func__, action,
-> > +		client->addr, client->adapter->nr);
-> > +
-> > +	if (!soc_camera_i2c_client_match(icl, client))
-> >   		return NOTIFY_DONE;
-> > 
-> >   	switch (action) {
-> >   	case BUS_NOTIFY_BIND_DRIVER:
-> >   		client->dev.platform_data = icl;
-> > +		if (icl->of_link) {
-> > +			struct soc_camera_of_client *sofc =
-> > container_of(icl->of_link,
-> > +						struct soc_camera_of_client,
-> > of_link);
-> > +			soc_camera_of_i2c_ifill(sofc, client);
-> > +		}
-> > 
-> >   		return NOTIFY_OK;
-> >   	case BUS_NOTIFY_BOUND_DRIVER:
-> 
-> There is no need for different handling of this event as well ?
+It aims at reducing the SoC-specific part of the driver and thus the
+amount of modifications to driver sources when adding support for next
+SoCs (like Exynos4x12).
 
-There is. The former is entered before the sensor I2C probe method is 
-called and prepares the data for probing, the latter is entered after a 
-successful sensor I2C probing.
+In addition, it extends the description of SoC-specific attributes to cover all
+mainlined Samsung SoCs, starting from s3c24xx and ending on latest Exynos5
+series, with the exception of 4-bit banks with more than 8 pins on S3C64xx,
+which will be covered by futher patch(es).
 
-> Further, there is code like:
-> 
-> 	adap = i2c_get_adapter(icl->i2c_adapter_id);
-> 
-> which is clearly not going to work in OF case.
+The second part attempts to simplify usage of the driver and fix several
+problems of current implementation, in particular:
 
-It does work. See the call to soc_camera_of_i2c_ifill() under 
-BUS_NOTIFY_BIND_DRIVER above. In it
+  - Simplifies GPIO pin specification in device tree by using pin
+    namespace local to pin bank instead of local to pin controller, e.g.
 
-	icl->i2c_adapter_id = client->adapter->nr;
+        gpios = <&gpj0 3 0>;
 
-> Could you clarify how it is supposed to work ?
+    instead of
 
-It is not only supposed to work, it actually does work. Does the above 
-explain it sufficiently?
+        gpios = <&pinctrl0 115 0>;
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+  - Simplifies GPIO interrupt specification in device tree by using
+    namespace local to pin bank (and equal to GPIO namespace), e.g.
+
+        interrupt-parent = <&gpj0>;
+        interrupts = <3 0>;
+
+    instead of
+
+        interrupt-parent = <&pinctrl0>;
+        interrupts = <115 0>;
+
+  - Simplifies internal GPIO pin to bank translation thanks to
+    correspondence of particular GPIO chips to pin banks. This allows
+    to remove the (costly in case of GPIO bit-banging drivers) lookup
+    over all banks to find the one that the pin is from.
+
+Third part is focused on removing the static, hard-coded description of wake-up
+interrupt controller and wake-up interrupt layout.
+
+It defines a (mostly) generic (in scope of targetted SoCs) wake-up interrupt
+layout specification format that allows to specify which pin banks support
+wake-up interrupts and how they are handled (direct or multiplexed/chained).
+
+See particular patches for more detailed descriptions and the last patch for
+updated device tree bindings.
+
+Tomasz Figa (16):
+  ARM: dts: exynos4210: Replace legacy GPIO bank nodes with pinctrl
+    bank nodes
+  pinctrl: exynos: Parse wakeup-eint parameters from DT
+  pinctrl: samsung: Detect and handle unsupported configuration types
+  pinctrl: samsung: Parse pin banks from DT
+  pinctrl: exynos: Remove static SoC-specific data
+  pinctrl: samsung: Parse bank-specific eint offset from DT
+  pinctrl: samsung: Hold OF node of pin bank in bank struct
+  pinctrl: samsung: Hold pointer to driver data in bank struct
+  pinctrl: exynos: Use one IRQ domain per pin bank
+  pinctrl: samsung: Do not pass gpio_chip to pin_to_reg_bank
+  pinctrl: samsung: Use one GPIO chip per pin bank
+  pinctrl: samsung: Use per-bank IRQ domain for wake-up interrupts
+  pinctrl: exynos: Set pin function to EINT in irq_set_type of wake-up
+    EINT
+  pinctrl: samsung: Parse offsets of particular registers from DT
+  pinctrl: samsung: Add GPIO to IRQ translation
+  Documentation: Update samsung-pinctrl device tree bindings
+    documentation
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           | 212 ++++++++--
+ arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi    | 459 +++++++++++++++++++++
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi          |   2 +
+ arch/arm/boot/dts/exynos4210.dtsi                  | 254 +-----------
+ drivers/pinctrl/pinctrl-exynos.c                   | 399 ++++++++----------
+ drivers/pinctrl/pinctrl-exynos.h                   | 184 +--------
+ drivers/pinctrl/pinctrl-samsung.c                  | 392 ++++++++++++++----
+ drivers/pinctrl/pinctrl-samsung.h                  |  87 ++--
+ 8 files changed, 1205 insertions(+), 784 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4210-pinctrl-banks.dtsi
+
+-- 
+1.7.12
