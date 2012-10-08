@@ -1,31 +1,31 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v6 14/16] tegra: fdt: Add LCD definitions for
-	Seaboard
-Date: Mon, 08 Oct 2012 16:39:26 -0600
-Message-ID: <5073561E.4030907@wwwdotorg.org>
-References: <1349735293-18832-5-git-send-email-sjg@chromium.org>
-	<1349735293-18832-15-git-send-email-sjg@chromium.org>
+From: Michael Ellerman <michael@ellerman.id.au>
+Subject: Re: [PATCH 0/5] Move some OF functionality from pseries to generic
+ OF code
+Date: Tue, 09 Oct 2012 10:54:29 +1100
+Message-ID: <1349740469.32656.2.camel@concordia>
+References: <506B2E63.5090900@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1349735293-18832-15-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Stephen Warren <swarren@nvidia.com>, Tom Warren <twarren@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <506B2E63.5090900@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc: devicetree-discuss@lists.ozlabs.org, cbe-oss-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2012 04:28 PM, Simon Glass wrote:
-> The Seaboard has a 1366x768 16bpp LCD. The backlight is controlled
-> by one of the PWMs.
+On Tue, 2012-10-02 at 13:11 -0500, Nathan Fontenot wrote:
+> This set of patches moves some OF code that has been living
+> in the pseries tree over to the generic OF code base. The
+> functionality being migrated over is something that, I believe,
+> should live in the generic code base. The specific functionality
+> being migrated to generic OF code is;
 
-These 3 updated patches seem OK, but I'd like to see Thierry's ack for
-the DT binding changes; they'd need to be ported into the kernel I think.
+Your changes collide with commit 475d0094293:
+http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commitdiff;h=475d0094293b51353e342d1198377967dbc48169
+
+
+At a quick glance they don't look like they conflict in concept, just
+textually.
+
+cheers
