@@ -1,62 +1,121 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: add stub of_get_child_by_name for non-OF builds
-Date: Mon, 08 Oct 2012 08:47:45 -0500
-Message-ID: <5072D981.7090801@gmail.com>
-References: <1349631654-20931-1-git-send-email-olof@lixom.net>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 2/2] pwm: pwm-tiehrpwm: Add device-tree binding support
+ for EHRPWM driver
+Date: Mon, 8 Oct 2012 15:50:08 +0200
+Message-ID: <20121008135008.GB26525@avionic-0098.mockup.avionic-design.de>
+References: <1348658863-29428-1-git-send-email-avinashphilip@ti.com>
+ <1348658863-29428-3-git-send-email-avinashphilip@ti.com>
+ <20121002061143.GB4298@avionic-0098.mockup.avionic-design.de>
+ <518397C60809E147AF5323E0420B992E3E9CA1ED@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1349631654-20931-1-git-send-email-olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <518397C60809E147AF5323E0420B992E3E9CA1ED@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2012 12:40 PM, Olof Johansson wrote:
-> Fixes build error on s3c6400_defconfig, introduced by commit
-> 06455bbcab76e5f5225de5f38ab948d37a1c3587, "dt/s3c64xx/spi: Use
-> of_get_child_by_name to get a named child".
-> 
-> drivers/spi/spi-s3c64xx.c: In function 's3c64xx_get_slave_ctrldata':
-> drivers/spi/spi-s3c64xx.c:838:2: error: implicit declaration of function
->     'of_get_child_by_name' [-Werror=implicit-function-declaration]
-> 
-> Signed-off-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> ---
 
-Applied, thanks.
+--/WwmFnJnmDyWGHa4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Mon, Oct 08, 2012 at 01:31:20PM +0000, Philip, Avinash wrote:
+> On Tue, Oct 02, 2012 at 11:41:43, Thierry Reding wrote:
+> > On Wed, Sep 26, 2012 at 04:57:43PM +0530, Philip, Avinash wrote:
+[...]
+> > > +- reg: physical base address and size of the registers map. For am33=
+xx,
+> > > +  2 register maps are present (EHRPWM register space & PWM subsystem=
+ common
+> > > +  config space). Order should be maintained with EHRPWM register map=
+ as first
+> > > +  entry & PWM subsystem common config space as second entry.
+> > > +
+> > > +Optional properties:
+> > > +- ti,hwmods: Name of the hwmod associated to the EHRPWM:
+> > > +  "ehrpwm<x>", <x> being the 0-based instance number from the HW spec
+> >=20
+> > I don't see where this property is used. There is no code in this patch
+> > that parses it.
+>=20
+> This data used by omap_hwmod layer to create platform devices. This is pa=
+rt
+> of omap hwmod implementation.
 
->  include/linux/of.h | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 72843b7..b4e50d5 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -331,6 +331,13 @@ static inline bool of_have_populated_dt(void)
->  #define for_each_child_of_node(parent, child) \
->  	while (0)
->  
-> +static inline struct device_node *of_get_child_by_name(
-> +					const struct device_node *node,
-> +					const char *name)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline int of_get_child_count(const struct device_node *np)
->  {
->  	return 0;
-> 
+Okay. I've heard about hwmod but I wasn't aware of how it was used in
+the context of device tree.
+
+> > > +static struct pwm_device *of_ehrpwm_xlate(struct pwm_chip *chip,
+> > > +		const struct of_phandle_args *args)
+> > > +{
+> > > +	struct pwm_device *pwm;
+> > > +
+> > > +	if (chip->of_pwm_n_cells < PWM_CELL_SIZE)
+> > > +		return ERR_PTR(-EINVAL);
+> > > +
+> > > +	if (args->args[0] >=3D chip->npwm)
+> > > +		return ERR_PTR(-EINVAL);
+> > > +
+> > > +	pwm =3D pwm_request_from_chip(chip, args->args[0], NULL);
+> > > +	if (IS_ERR(pwm))
+> > > +		return pwm;
+> > > +
+> > > +	pwm_set_period(pwm, args->args[1]);
+> > > +	pwm_set_polarity(pwm, args->args[2]);
+> > > +	return pwm;
+> > > +}
+> >=20
+> > This is an exact duplicate of the ECAP's of_xlate(). Maybe we should
+> > make this part of the PWM core. If so it is probably safer to define the
+> > values for the third cell as flags, where the polarity is encoded in bit
+> > 0, and make the function handle this accordingly to allow other bits to
+> > be added in the future.
+>=20
+> Custom of_xlate support is provided as suggested while the discussion of
+> "Adding support for configuring polarity in PWM framework".
+> https://lkml.org/lkml/2012/7/16/177
+>=20
+> without custom of_xlate() support, PWM drivers has to populate
+> chip->of_pwm_n_cells =3D x;
+> as this is hard coded to 2 in pwm/core.c.
+>=20
+> if (!chip->of_xlate) {
+> 	chip->of_xlate =3D of_pwm_simple_xlate;
+> 	chip->of_pwm_n_cells =3D 2;
+
+It's absolutely fine to provide a custom implementation. All I'm saying
+is that we should add a 3-cell variant of of_pwm_simple_xlate() instead
+of having to duplicate it for every chip that supports inversion of the
+polarity.
+
+Maybe something like of_pwm_xlate_with_flags()?
+
+Thierry
+
+--/WwmFnJnmDyWGHa4
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQctoQAAoJEN0jrNd/PrOhiS0P/0FEV2hLcV4p3YfvgS9uuTJG
+M6EWNV3w4AozIWRYAN+becyyD0haCfuzl18rz/ar7/F4N5S4zXRnzKeOupjqlYrh
+mWDII3cqYOjgU4IBdnwsWETxRRjz86pR6O314wlf+SywKdRjDWriypwGE2/wXSZC
+ZgNHoWfcog0oweFZD4PBLsgXomg0rjXLdgHMgF1MQry9w9F5Z7p3PGqPVFjBu6ov
+OkLj2jdaWAN5376pn9YmjccE2p7k5BsumSRN70fPb0Tn/6rKNa5ZhEUJK8LAR0Jg
++uzpJmN2DJ4p7IxbVZEEpFTMXZWIMB1ub6p3MKHPLH0maLWKYDEuDmRSVSUsEtcV
+gR3AoyHZHwsiWPI1mBBAJ0CIY/weIcHmqYh0dmlKV+5Lkq2Zj/tBuDMbigHytpfr
+mDLjq3tsFyUhL7kJNETYuztPYOzlLdlYrnT7CqbuTF/dta3dj+F+ZNBRXnCTVn9J
+DoO7XIklnf2I6P5rSzLKQgBS/Tu+dYhZxqR7kNJ2cB8RuX3kdnBq1zf7ExIbkhx1
+uBl9tyE5JIFC6OipPz74jZtrZqGqKk3qTk/gs39pJ4nOjP7OcIEBL688iTf/Y4LA
+MzMZOsaLSRG9Yo1yyUs9GrwVqIWozZ3/7H6yrM8pmKL32qz8wa6YNS8tGqQf1s42
+FwuGrAVKsTMKiZ2rO8uD
+=Vs2O
+-----END PGP SIGNATURE-----
+
+--/WwmFnJnmDyWGHa4--
