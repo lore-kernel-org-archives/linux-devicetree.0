@@ -1,179 +1,143 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Mon, 8 Oct 2012 09:58:58 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
- <20121005151057.GA5125@pengutronix.de> <Pine.LNX.4.64.1210051735360.13761@axis700.grange>
- <20121005160242.GX1322@pengutronix.de>
+Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
+Date: Mon, 8 Oct 2012 10:25:04 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1210081000530.11034@axis700.grange>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
+ <Pine.LNX.4.64.1210042307300.3744@axis700.grange> <506F0833.1090704@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20121005160242.GX1322@pengutronix.de>
+In-Reply-To: <506F0833.1090704@wwwdotorg.org>
 Sender: linux-media-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Oct 2012, Sascha Hauer wrote:
+On Fri, 5 Oct 2012, Stephen Warren wrote:
 
-> On Fri, Oct 05, 2012 at 05:41:00PM +0200, Guennadi Liakhovetski wrote:
-> > Hi Sascha
+> On 10/04/2012 03:35 PM, Guennadi Liakhovetski wrote:
+> > Hi Steffen
 > > 
-> > > > +
-> > > > +	ceu0: ceu@0xfe910000 {
-> > > > +		compatible = "renesas,sh-mobile-ceu";
-> > > > +		reg = <0xfe910000 0xa0>;
-> > > > +		interrupts = <0x880>;
-> > > > +
-> > > > +		mclk: master_clock {
-> > > > +			compatible = "renesas,ceu-clock";
-> > > > +			#clock-cells = <1>;
-> > > > +			clock-frequency = <50000000>;	/* max clock frequency */
-> > > > +			clock-output-names = "mclk";
-> > > > +		};
-> > > > +
-> > > > +		port {
-> > > > +			#address-cells = <1>;
-> > > > +			#size-cells = <0>;
-> > > > +
-> > > > +			ceu0_1: link@1 {
-> > > > +				reg = <1>;		/* local link # */
-> > > > +				remote = <&ov772x_1_1>;	/* remote phandle */
-> > > > +				bus-width = <8>;	/* used data lines */
-> > > > +				data-shift = <0>;	/* lines 7:0 are used */
-> > > > +
-> > > > +				/* If [hv]sync-active are missing, embedded bt.605 sync is used */
-> > > > +				hsync-active = <1>;	/* active high */
-> > > > +				vsync-active = <1>;	/* active high */
-> > > > +				data-active = <1>;	/* active high */
-> > > > +				pclk-sample = <1>;	/* rising */
-> > > > +			};
-> > > > +
-> > > > +			ceu0_0: link@0 {
-> > > > +				reg = <0>;
-> > > > +				remote = <&csi2_2>;
-> > > > +				immutable;
-> > > > +			};
-> > > > +		};
-> > > > +	};
-> > > > +
-> > > > +	i2c0: i2c@0xfff20000 {
-> > > > +		...
-> > > > +		ov772x_1: camera@0x21 {
-> > > > +			compatible = "omnivision,ov772x";
-> > > > +			reg = <0x21>;
-> > > > +			vddio-supply = <&regulator1>;
-> > > > +			vddcore-supply = <&regulator2>;
-> > > > +
-> > > > +			clock-frequency = <20000000>;
-> > > > +			clocks = <&mclk 0>;
-> > > > +			clock-names = "xclk";
-> > > > +
-> > > > +			port {
-> > > > +				/* With 1 link per port no need in addresses */
-> > > > +				ov772x_1_1: link {
-> > > > +					bus-width = <8>;
-> > > > +					remote = <&ceu0_1>;
-> > > > +					hsync-active = <1>;
-> > > > +					vsync-active = <0>;	/* who came up with an inverter here?... */
-> > > > +					data-active = <1>;
-> > > > +					pclk-sample = <1>;
-> > > > +				};
-> > > 
-> > > I currently do not understand why these properties are both in the sensor
-> > > and in the link. What happens if they conflict? Are inverters assumed
-> > > like suggested above? I think the bus can only have a single bus-width,
-> > > why allow multiple bus widths here?
+> > Sorry for chiming in so late in the game, but I've long been wanting to 
+> > have a look at this and compare with what we do for V4L2, so, this seems a 
+> > great opportunity to me:-)
 > > 
-> > Yes, these nodes represent port configuration of each party on a certain 
-> > link. And they can differ in certain properties, like - as you correctly 
-> > notice - in the case, when there's an inverter on a line. As for other 
-> > properties, some of them must be identical, like bus-width, still, they 
-> > have to be provided on both ends, because generally drivers have to be 
-> > able to perform all the required configuration based only on the 
-> > information from their own nodes, without looking at "remote" partner node 
-> > properties.
+> > On Thu, 4 Oct 2012, Steffen Trumtrar wrote:
 > 
-> So the port associated to the ov772x_1 only describes how to configure
-> the ov772x and it's up to me to make sure that this configuration
-> matches the partner device. If I don't then it won't work but soc-camera
-> will happily continue.
-> Ok, that's good, I thought there would be some kind of matching
-> mechanism take place here. It may be worth to make this more explicit in
-> the docs.
+> >> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
 > 
+> >> +timings-subnode
+> >> +---------------
+> >> +
+> >> +required properties:
+> >> + - hactive, vactive: Display resolution
+> >> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
+> >> +   in pixels
+> >> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
+> >> +   lines
+> >> + - clock: displayclock in Hz
 > > 
-> > > > +		reg = <0xffc90000 0x1000>;
-> > > > +		interrupts = <0x17a0>;
-> > > > +		#address-cells = <1>;
-> > > > +		#size-cells = <0>;
-> > > > +
-> > > > +		port@1 {
-> > > > +			compatible = "renesas,csi2c";	/* one of CSI2I and CSI2C */
-> > > > +			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S, PHY_M has port address 0, is unused */
-> > > > +
-> > > > +			csi2_1: link {
-> > > > +				clock-lanes = <0>;
-> > > > +				data-lanes = <2>, <1>;
-> > > > +				remote = <&imx074_1>;
-> > > > +			};
-> > > > +		};
-> > > > +		port@2 {
-> > > > +			reg = <2>;			/* port 2: link to the CEU */
-> > > > +
-> > > > +			csi2_2: link {
-> > > > +				immutable;
-> > > > +				remote = <&ceu0_0>;
-> > > > +			};
-> > > > +		};
-> > > 
-> > > Maybe the example would be clearer if you split it up in two, one simple
-> > > case with the csi2_1 <-> imx074_1 and a more advanced with the link in
-> > > between.
-> > 
-> > With no link between two ports no connection is possible, so, only 
-> > examples with links make sense.
+> > You're going to hate me for this, but eventually we want to actually 
+> > reference clock objects in our DT bindings. For now, even if you don't 
+> > want to actually add clock phandles and stuff here, I think, using the 
+> > standard "clock-frequency" property would be much better!
 > 
-> I should have said with the renesas,sh-mobile-ceu in between.
-> 
-> So simple example: csi2_1 <-l-> imx074_1
-> advanced: csi2_2 <-l-> ceu <-l-> ov772x
+> In a definition of a display timing, we will never need to use the clock
+> binding; the clock binding would be used by the HW module that is
+> generating a timing, not by the timing definition itself.
 
-No, CEU is the DMA engine with some image processing, so, it's always 
-present. The CSI-2 is just a MIPI CSI-2 interface, that in the above case 
-is used with the CEU too. So, it's like
+You mean clock consumer bindings will be in the display device DT node? 
+And the display-timings node will be its child?
 
-       ,-l- ov772x
-      /
-ceu0 <
-      \
-       `-l- csi2 -l- imx074
-
-> > > It took me some time until I figured out that these are two
-> > > separate camera/sensor pairs. Somehow I was looking for a multiplexer
-> > > between them.
-> > 
-> > Maybe I can add more comments to the file, perhaps, add an ASCII-art 
-> > chart.
+> That said, your comment about renaming the property to avoid any kind of
+> conceptual conflict is still quite valid. This is bike-shedding, but
+> "pixel-clock" might be more in line with typical video mode terminology,
+> although there's certainly preference in DT for using the generic term
+> clock-frequency that you proposed. Either is fine by me.
 > 
-> That would be good.
+> >> +optional properties:
+> >> + - hsync-active-high (bool): Hsync pulse is active high
+> >> + - vsync-active-high (bool): Vsync pulse is active high
+> > 
+> > For the above two we also considered using bool properties but eventually 
+> > settled down with integer ones:
+> > 
+> > - hsync-active = <1>
+> > 
+> > for active-high and 0 for active low. This has the added advantage of 
+> > being able to omit this property in the .dts, which then doesn't mean, 
+> > that the polarity is active low, but rather, that the hsync line is not 
+> > used on this hardware. So, maybe it would be good to use the same binding 
+> > here too?
+> 
+> I agree. This also covers the case where analog display connectors often
+> use polarity to differentiate similar modes, yet digital connectors
+> often always use a fixed polarity since the receiving device can
+> "measure" the signal in more complete ways.
+> 
+> If the board HW inverts these lines, the same property names can exist
+> in the display controller itself, and the two values XORd together to
+> yield the final output polarity.
+> 
+> >> + - de-active-high (bool): Data-Enable pulse is active high
+> >> + - pixelclk-inverted (bool): pixelclock is inverted
+> > 
+> > We don't (yet) have a de-active property in V4L, don't know whether we'll 
+> > ever have to distingsuish between what some datasheets call "HREF" and 
+> > HSYNC in DT, but maybe similarly to the above an integer would be 
+> > preferred. As for pixclk, we call the property "pclk-sample" and it's also 
+> > an integer.
+> 
+> Thinking about this more: de-active-high is likely to be a
+> board-specific property and hence something in the display controller,
+> not in the mode definition?
+> 
+> >> + - interlaced (bool)
+> > 
+> > Is "interlaced" a property of the hardware, i.e. of the board? Can the 
+> > same display controller on one board require interlaced data and on 
+> > another board - progressive?
+> 
+> Interlace is a property of a display mode. It's quite possible for a
+> particular display controller to switch between interlace and
+> progressive output at run-time. For example, reconfiguring the output
+> between 480i, 720p, 1080i, 1080p modes. Admittedly, if you're talking to
+> a built-in LCD display, you're probably always going to be driving the
+> single mode required by the panel, and that mode will likely always be
+> progressive. However, since this binding attempts to describe any
+> display timing, I think we still need this property per mode.
 
-Is the above good enough? :)
+But why do you need this in the DT then at all? If it's fixed, as required 
+per display controller, then its driver will know it. If it's runtime 
+configurable, then it's a purely software parameter and doesn't depend on 
+the board?
+
+> > BTW, I'm not very familiar with display 
+> > interfaces, but for interlaced you probably sometimes use a field signal, 
+> > whose polarity you also want to specify here? We use a "field-even-active" 
+> > integer property for it.
+> 
+> I think that's a property of the display controller itself, rather than
+> an individual mode, although I'm not 100% certain. My assertion is that
+> the physical interface that the display controller is driving will
+> determine whether embedded or separate sync is used, and in the separate
+> sync case, how the field signal is defined, and that all interlace modes
+> driven over that interface will use the same field signal definition.
+
+In general, I might be misunderstanding something, but don't we have to 
+distinguish between 2 types of information about display timings: (1) is 
+defined by the display controller requirements, is known to the display 
+driver and doesn't need to be present in timings DT. We did have some of 
+these parameters in board data previously, because we didn't have proper 
+display controller drivers... (2) is board specific configuration, and is 
+such it has to be present in DT.
+
+In that way, doesn't "interlaced" belong to type (1) and thus doesn't need 
+to be present in DT?
 
 Thanks
 Guennadi
-
-> > > I am not sure we really want to have these circular phandles here.
-> > 
-> > It has been suggested and accepted during a discussion at the KS / LPC a 
-> > month ago. The original version only had phandle referencing in one 
-> > direction.
-> 
-> Ok.
-> 
-> Sascha
-
 ---
 Guennadi Liakhovetski, Ph.D.
 Freelance Open-Source Software Developer
