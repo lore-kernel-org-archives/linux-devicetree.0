@@ -1,169 +1,51 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH 5/5] usb: exynos-ohci: Adding phy driver support
-Date: Mon, 08 Oct 2012 19:42:28 +0530
-Message-ID: <1349705548-15207-6-git-send-email-gautam.vivek@samsung.com>
-References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, jg1.han@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com, yulgon.kim@samsung.com
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH V3] dtc: fix for_each_*() to skip first object if deleted
+Date: Mon, 08 Oct 2012 09:13:15 -0500
+Message-ID: <E1TLE55-0001yX-Fp@jdl.com>
+References: <1349452661-14445-1-git-send-email-swarren@wwwdotorg.org>
+ <20121005232948.GW29302@truffula.fritz.box>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20121005232948.GW29302-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding the transceiver to ohci driver. Keeping the platform data
-for continuing the smooth operation for boards which still uses it
+> On Fri, Oct 05, 2012 at 09:57:41AM -0600, Stephen Warren wrote:
+> > From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > 
+> > The previous definition of for_each_*() would always include the very
+> > first object within the list, irrespective of whether it was marked
+> > deleted, since the deleted flag was not checked on the first object,
+> > but only on any "next" object.
+> > 
+> > Fix for_each_*() to check the deleted flag in the loop body every
+> > iteration to correct this.
+> > 
+> > Incidentally, this change is why commit 45013d8 dtc: "Add ability to
+> > delete nodes and properties" only caused two "make checkm" failures;
+> > only two tests actually use multiple labels on the same property or
+> > node. With this current change applied, but commit 317a5d9 "dtc: zero
+> > out new label objects" reverted, "make checkm" fails 29 times; i.e.
+> > for every test that uses any labels at all.
+> > 
+> > Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
----
- drivers/usb/host/ohci-exynos.c |   62 +++++++++++++++++++++++++++------------
- 1 files changed, 43 insertions(+), 19 deletions(-)
+Applied.
 
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index 20a5008..e0ed594 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -16,13 +16,36 @@
- #include <linux/platform_device.h>
- #include <linux/platform_data/usb-exynos.h>
- #include <plat/usb-phy.h>
-+#include <linux/usb/phy.h>
- 
- struct exynos_ohci_hcd {
- 	struct device *dev;
- 	struct usb_hcd *hcd;
- 	struct clk *clk;
-+	struct usb_phy *phy;
-+	struct exynos4_ohci_platdata *pdata;
- };
- 
-+static void exynos_ohci_phy_enable(struct exynos_ohci_hcd *exynos_ohci)
-+{
-+	struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
-+
-+	if (exynos_ohci->phy)
-+		usb_phy_init(exynos_ohci->phy);
-+	else if (exynos_ohci->pdata->phy_init)
-+		exynos_ohci->pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-+}
-+
-+static void exynos_ohci_phy_disable(struct exynos_ohci_hcd *exynos_ohci)
-+{
-+	struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
-+
-+	if (exynos_ohci->phy)
-+		usb_phy_shutdown(exynos_ohci->phy);
-+	else if (exynos_ohci->pdata->phy_exit)
-+		exynos_ohci->pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-+}
-+
- static int ohci_exynos_start(struct usb_hcd *hcd)
- {
- 	struct ohci_hcd *ohci = hcd_to_ohci(hcd);
-@@ -81,15 +104,10 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
- 	struct usb_hcd *hcd;
- 	struct ohci_hcd *ohci;
- 	struct resource *res;
-+	struct usb_phy *phy;
- 	int irq;
- 	int err;
- 
--	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data defined\n");
--		return -EINVAL;
--	}
--
- 	/*
- 	 * Right now device-tree probed devices don't get dma_mask set.
- 	 * Since shared usb code relies on it, set it here for now.
-@@ -105,6 +123,20 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
- 	if (!exynos_ohci)
- 		return -ENOMEM;
- 
-+	pdata = pdev->dev.platform_data;
-+	if (!pdata) {
-+		/* Fallback to Phy transceiver */
-+		phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-+		if (IS_ERR_OR_NULL(phy)) {
-+			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
-+			return -EPROBE_DEFER;
-+		} else {
-+			exynos_ohci->phy = phy;
-+		}
-+	} else {
-+		exynos_ohci->pdata = pdata;
-+	}
-+
- 	exynos_ohci->dev = &pdev->dev;
- 
- 	hcd = usb_create_hcd(&exynos_ohci_hc_driver, &pdev->dev,
-@@ -150,8 +182,7 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
- 		goto fail_io;
- 	}
- 
--	if (pdata->phy_init)
--		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-+	exynos_ohci_phy_enable(exynos_ohci);
- 
- 	ohci = hcd_to_ohci(hcd);
- 	ohci_hcd_init(ohci);
-@@ -168,6 +199,7 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
- 
- fail_io:
- 	clk_disable(exynos_ohci->clk);
-+	exynos_ohci_phy_disable(exynos_ohci);
- fail_clken:
- 	clk_put(exynos_ohci->clk);
- fail_clk:
-@@ -177,14 +209,12 @@ fail_clk:
- 
- static int __devexit exynos_ohci_remove(struct platform_device *pdev)
- {
--	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
- 	struct exynos_ohci_hcd *exynos_ohci = platform_get_drvdata(pdev);
- 	struct usb_hcd *hcd = exynos_ohci->hcd;
- 
- 	usb_remove_hcd(hcd);
- 
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-+	exynos_ohci_phy_disable(exynos_ohci);
- 
- 	clk_disable(exynos_ohci->clk);
- 	clk_put(exynos_ohci->clk);
-@@ -209,8 +239,6 @@ static int exynos_ohci_suspend(struct device *dev)
- 	struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
- 	struct usb_hcd *hcd = exynos_ohci->hcd;
- 	struct ohci_hcd *ohci = hcd_to_ohci(hcd);
--	struct platform_device *pdev = to_platform_device(dev);
--	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
- 	unsigned long flags;
- 	int rc = 0;
- 
-@@ -229,8 +257,7 @@ static int exynos_ohci_suspend(struct device *dev)
- 
- 	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
- 
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-+	exynos_ohci_phy_disable(exynos_ohci);
- 
- 	clk_disable(exynos_ohci->clk);
- 
-@@ -244,13 +271,10 @@ static int exynos_ohci_resume(struct device *dev)
- {
- 	struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
- 	struct usb_hcd *hcd = exynos_ohci->hcd;
--	struct platform_device *pdev = to_platform_device(dev);
--	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
- 
- 	clk_enable(exynos_ohci->clk);
- 
--	if (pdata && pdata->phy_init)
--		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-+	exynos_ohci_phy_enable(exynos_ohci);
- 
- 	/* Mark hardware accessible again as we are out of D3 state by now */
- 	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
--- 
-1.7.6.5
+Thanks,
+jdl
