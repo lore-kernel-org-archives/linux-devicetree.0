@@ -1,48 +1,48 @@
 From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] [media] v4l2: use list_move_tail instead of list_del/list_add_tail
-Date: Mon, 8 Oct 2012 20:34:09 +0800
-Message-ID: <CAPgLHd9N8YuzKY86UYmXJysv+B1E_ms4i=SAujXDZaiBHdZx=A@mail.gmail.com>
+Subject: [PATCH] powerpc/83xx: use module_i2c_driver to simplify the code
+Date: Mon, 8 Oct 2012 20:39:52 +0800
+Message-ID: <CAPgLHd-=SuxABDRiUp3V-HzOnaJVhzOJd4XxPax+NjUJ9xjwVg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: mchehab@infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: galak@kernel.crashing.org, benh@kernel.crashing.org, paulus@samba.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Using list_move_tail() instead of list_del() + list_add_tail().
+Use the module_i2c_driver() macro to make the code smaller
+and a bit simpler.
 
 dpatch engine is used to auto generate this patch.
 (https://github.com/weiyj/dpatch)
 
 Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 ---
- drivers/media/platform/fsl-viu.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/media/platform/fsl-viu.c b/drivers/media/platform/fsl-viu.c
-index 897250b..c5091fe 100644
---- a/drivers/media/platform/fsl-viu.c
-+++ b/drivers/media/platform/fsl-viu.c
-@@ -352,8 +352,7 @@ static int restart_video_queue(struct viu_dmaqueue *vidq)
- 			return 0;
- 		buf = list_entry(vidq->queued.next, struct viu_buf, vb.queue);
- 		if (prev == NULL) {
--			list_del(&buf->vb.queue);
--			list_add_tail(&buf->vb.queue, &vidq->active);
-+			list_move_tail(&buf->vb.queue, &vidq->active);
+diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+index ef6537b..d91799e 100644
+--- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
++++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+@@ -232,17 +232,7 @@ static struct i2c_driver mcu_driver = {
+ 	.id_table = mcu_ids,
+ };
  
- 			dprintk(1, "Restarting video dma\n");
- 			viu_stop_dma(vidq->dev);
-@@ -367,8 +366,7 @@ static int restart_video_queue(struct viu_dmaqueue *vidq)
- 		} else if (prev->vb.width  == buf->vb.width  &&
- 			   prev->vb.height == buf->vb.height &&
- 			   prev->fmt       == buf->fmt) {
--			list_del(&buf->vb.queue);
--			list_add_tail(&buf->vb.queue, &vidq->active);
-+			list_move_tail(&buf->vb.queue, &vidq->active);
- 			buf->vb.state = VIDEOBUF_ACTIVE;
- 			dprintk(2, "[%p/%d] restart_queue - move to active\n",
- 				buf, buf->vb.i);
+-static int __init mcu_init(void)
+-{
+-	return i2c_add_driver(&mcu_driver);
+-}
+-module_init(mcu_init);
+-
+-static void __exit mcu_exit(void)
+-{
+-	i2c_del_driver(&mcu_driver);
+-}
+-module_exit(mcu_exit);
++module_i2c_driver(mcu_driver);
+ 
+ MODULE_DESCRIPTION("Power Management and GPIO expander driver for "
+ 		   "MPC8349E-mITX-compatible MCU");
