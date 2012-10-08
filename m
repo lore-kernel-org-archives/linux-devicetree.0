@@ -1,89 +1,104 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 03/16] tegra: fdt: Add pwm binding and node
-Date: Mon, 8 Oct 2012 14:22:36 -0700
-Message-ID: <CAPnjgZ0De76tG=gWi4z6Es9_0_6mL=t1PWSvq-RJKkthZDdRLg@mail.gmail.com>
-References: <1348793077-10126-1-git-send-email-sjg@chromium.org>
- <1348793077-10126-4-git-send-email-sjg@chromium.org>
- <20120928200817.GB30777@avionic-0098.mockup.avionic-design.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Mon, 08 Oct 2012 23:30:58 +0200
+Message-ID: <12735748.ZBbT3nyMls@avalon>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <201210051241.52205.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120928200817.GB30777-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+On Friday 05 October 2012 12:58:21 Guennadi Liakhovetski wrote:
+> On Fri, 5 Oct 2012, Hans Verkuil wrote:
+> > On Tue October 2 2012 12:13:20 Sylwester Nawrocki wrote:
+> > > On 10/02/2012 11:49 AM, Guennadi Liakhovetski wrote:
+> > > >>> +	if (!of_property_read_u32_array(node, "data-lanes", data_lanes,
+> > > >>> +					ARRAY_SIZE(data_lanes))) {
+> > > >>> +		int i;
+> > > >>> +		for (i = 0; i<  ARRAY_SIZE(data_lanes); i++)
+> > > >>> +			link->mipi_csi_2.data_lanes[i] = data_lanes[i];
+> > > >> 
+> > > >> It doesn't look like what we aimed for. The data-lanes array is
+> > > >> supposed to be of variable length, thus I don't think it can be
+> > > >> parsed like that. Or am I missing something ? I think we need more
+> > > >> something like below
+> > > > 
+> > > >> (based on of_property_read_u32_array(), not tested):
+> > > > Ok, you're right, that my version only was suitable for fixed-size
+> > > > arrays, which wasn't our goal. But I don't think we should go down to
+> > > > manually parsing property data. How about (tested;-))
+> > > > 
+> > > > 	data = of_find_property(node, "data-lanes", NULL);
+> > > > 	if (data) {
+> > > > 	
+> > > > 		int i = 0;
+> > > > 		const __be32 *lane = NULL;
+> > > > 		do {
+> > > > 		
+> > > > 			lane = of_prop_next_u32(data, lane, &data_lanes[i]);
+> > > > 		
+> > > > 		} while (lane && i++ < ARRAY_SIZE(data_lanes));
+> > > > 		link->mipi_csi_2.num_data_lanes = i;
+> > > > 		while (i--)
+> > > > 		
+> > > > 			link->mipi_csi_2.data_lanes[i] = data_lanes[i];
+> > > > 	
+> > > > 	}
+> > > 
+> > > Yes, that looks neat and does what it is supposed to do. :) Thanks!
+> > > For now, I'll trust you it works ;)
+> > > 
+> > > With regards to the remaining patches, it looks a bit scary to me how
+> > > complicated it got, perhaps mostly because of requirement to reference
+> > > host devices from subdevs. And it seems to rely on the existing SoC
+> > > camera infrastructure, which might imply lot's of work need to be done
+> > > for non soc-camera drivers. But I'm going to take a closer look and
+> > > comment more on the details at the corresponding patches.
+> > 
+> > I have to say that I agree with Sylwester here. It seems awfully
+> > complicated, but I can't really put my finger on the actual cause.
+> 
+> Well, which exactly part? The V4L2 OF part is quite simple.
+> 
+> > It would be really interesting to see this implemented for a non-SoC
+> > device and to compare the two.
+> 
+> Sure, volunteers? ;-) In principle, if I find time, I could try to convert
+> sh_vou, which is also interesting, because it's an output driver.
 
-On Fri, Sep 28, 2012 at 1:08 PM, Thierry Reding
-<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> On Thu, Sep 27, 2012 at 05:44:24PM -0700, Simon Glass wrote:
->> This binding will apparently soon be in linux-next. Bring it in now
->> since we need to do something, and may as well try to target what
->> Linux will have.
->>
->> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->> Changes in v3:
->> - Add new commit for pwm binding and node
->>
->>  arch/arm/dts/tegra20.dtsi                    |    7 +++++++
->>  doc/device-tree-bindings/pwm/tegra20-pwm.txt |   18 ++++++++++++++++++
->>  2 files changed, 25 insertions(+), 0 deletions(-)
->>  create mode 100644 doc/device-tree-bindings/pwm/tegra20-pwm.txt
->>
->> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
->> index d936b1e..3221bc9 100644
->> --- a/arch/arm/dts/tegra20.dtsi
->> +++ b/arch/arm/dts/tegra20.dtsi
->> @@ -211,4 +211,11 @@
->>               compatible = "nvidia,tegra20-nand";
->>               reg = <0x70008000 0x100>;
->>       };
->> +
->> +     pwm: pwm@7000a000 {
->> +             compatible = "nvidia,tegra20-pwm";
->> +             reg = <0x7000a000 0x100>;
->> +             #pwm-cells = <2>;
->> +     };
->> +
->>  };
->> diff --git a/doc/device-tree-bindings/pwm/tegra20-pwm.txt b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
->> new file mode 100644
->> index 0000000..bbbeedb
->> --- /dev/null
->> +++ b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
->> @@ -0,0 +1,18 @@
->> +Tegra SoC PWFM controller
->> +
->> +Required properties:
->> +- compatible: should be one of:
->> +  - "nvidia,tegra20-pwm"
->> +  - "nvidia,tegra30-pwm"
->> +- reg: physical base address and length of the controller's registers
->> +- #pwm-cells: On Tegra the number of cells used to specify a PWM is 2. The
->> +  first cell specifies the per-chip index of the PWM to use and the second
->> +  cell is the duty cycle in nanoseconds.
+The OMAP3 ISP is on my to-do list, but that depends on the generic clock 
+availability on the OMAP3, so I have to wait.
+
+> > One area that I do not yet completely understand is the i2c bus
+> > notifications (or asynchronous loading or i2c modules).
+> > 
+> > I would have expected that using OF the i2c devices are still initialized
+> > before the host/bridge driver is initialized. But I gather that's not the
+> > case?
+> 
+> No, it's not. I'm not sure, whether it depends on the order of devices in
+> the .dts, but, I think, it's better to not have to mandate a certain order
+> and I also seem to have seen devices being registered in different order
+> with the same DT, but I'm not 100% sure about that.
 >
-> This is a mistake in the Linux kernel documentation. The second cell
-> specifies the period in nanoseconds, not the duty cycle. I'll fix this
-> up in the kernel.
+> > If this deferred probing is a general problem, then I think we need a
+> > general solution as well that's part of the v4l2 core.
+> 
+> That can be done, perhaps. But we can do it as a next step. As soon as
+> we're happy with the OF implementation as such, we can commit that,
+> possibly leaving soc-camera patches out for now, then we can think where
+> to put async I2C handling.
 
-Oh ok, thanks. I will update this patch.
+I agree that async I2C handling should have V4L2 core helpers, otherwise it's 
+going to be pretty complex for ISP drivers.
 
+-- 
 Regards,
-Simon
 
->
-> Thierry
+Laurent Pinchart
+
