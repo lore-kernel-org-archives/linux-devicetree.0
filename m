@@ -1,53 +1,90 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Mon, 8 Oct 2012 14:14:55 +0200
-Message-ID: <20121008141455.324f914b@skate>
-References: <20121007015300.828366635@gmail.com>
- <20121007015405.958959522@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/2 v6] of: add generic videomode description
+Date: Mon, 08 Oct 2012 14:19:49 +0200
+Message-ID: <1811676.DhpfCA3vWz@avalon>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <1349680913.3227.32.camel@deskari> <20121008075741.GC20800@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121007015405.958959522@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Domenico Andreoli <cavokz@gmail.com>
-Cc: Domenico Andreoli <domenico.andreoli@linux.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20121008075741.GC20800@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Steffen,
 
-On Sun, 07 Oct 2012 03:53:01 +0200, Domenico Andreoli wrote:
+On Monday 08 October 2012 09:57:41 Steffen Trumtrar wrote:
+> On Mon, Oct 08, 2012 at 10:21:53AM +0300, Tomi Valkeinen wrote:
+> > On Thu, 2012-10-04 at 19:59 +0200, Steffen Trumtrar wrote:
 
-> Index: b/arch/arm/mach-bcm476x/Makefile.boot
-> ===================================================================
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm476x/Makefile.boot
-> @@ -0,0 +1,5 @@
-> +   zreladdr-y := 0x00008000
-> +params_phys-y := 0x00000100
-> +initrd_phys-y := 0x00800000
+[snip]
 
-Those params_phys-y and initrd_phys-y lines as useless as you're using
-the Device Tree.
+> > > diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
+> > > new file mode 100644
+> > > index 0000000..96efe01
+> > > --- /dev/null
+> > > +++ b/include/linux/of_videomode.h
+> > > @@ -0,0 +1,41 @@
+> > > +/*
+> > > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > > + *
+> > > + * generic videomode description
+> > > + *
+> > > + * This file is released under the GPLv2
+> > > + */
+> > > +
+> > > +#ifndef __LINUX_VIDEOMODE_H
+> > > +#define __LINUX_VIDEOMODE_H
+> > > +
+> > > +#include <drm/drmP.h>
+> > 
+> > You don't need to include this.
+> 
+> That is a fix to my liking. Easily done ;-)
+> 
+> > > +struct videomode {
+> > > +	u32 pixelclock;
+> > > +	u32 refreshrate;
+> > > +
+> > > +	u32 hactive;
+> > > +	u32 hfront_porch;
+> > > +	u32 hback_porch;
+> > > +	u32 hsync_len;
+> > > +
+> > > +	u32 vactive;
+> > > +	u32 vfront_porch;
+> > > +	u32 vback_porch;
+> > > +	u32 vsync_len;
+> > > +
+> > > +	bool hah;
+> > > +	bool vah;
+> > > +	bool interlaced;
+> > > +	bool doublescan;
+> > > +
+> > > +};
+> > 
+> > This is not really of related. And actually, neither is the struct
+> > signal_timing in the previous patch. It would be nice to have these in a
+> > common header that fb, drm, and others could use instead of each having
+> > their own timing structs.
+> > 
+> > But that's probably out of scope for this series =). Did you check the
+> > timing structs from the video related frameworks in the kernel to see if
+> > your structs contain all the info the others have, so that, at least in
+> > theory, everybody could use these common structs?
+> > 
+> >  Tomi
+> 
+> Yes. Stephen and Laurent already suggested to split it up.
+> No, all info is not contained. That starts with drm, which has width-mm,..
+> If time permits, I will go over that.
 
-> +#define BCM476X_PERIPH_PHYS   0x00080000
-> +#define BCM476X_PERIPH_VIRT   0xd0080000
+Just to make sure we won't forget it, the V4L2 version of the timings 
+structure is struct v4l2_bt_timings in include/linux/videodev2.h.
 
-This one should be defined with IOMEM(). Yes, you will have to add a
-cast to make it play nicely with map_desc.virtual.
-
-Best regards,
-
-Thomas
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Regards,
+
+Laurent Pinchart
