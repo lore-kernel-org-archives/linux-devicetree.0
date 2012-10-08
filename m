@@ -1,86 +1,55 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Date: Mon, 08 Oct 2012 12:01:18 +0300
-Message-ID: <1349686878.3227.40.camel@deskari>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
-	 <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
-	 <Pine.LNX.4.64.1210042307300.3744@axis700.grange>
-	 <506F0833.1090704@wwwdotorg.org>
-	 <Pine.LNX.4.64.1210081000530.11034@axis700.grange>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 1/7] usb: dwc3-omap: use device_for_each_child to handle child removal
+Date: Mon, 8 Oct 2012 14:53:50 +0530
+Message-ID: <1349688236-22814-2-git-send-email-kishon@ti.com>
+References: <1349688236-22814-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-UJ1ZVwdXI0O4oyoyQOoC"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1210081000530.11034@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1349688236-22814-1-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: sshtylyov@mvista.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, gregkh@linuxfoundation.org, kishon@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Used device_for_each_child() to handle child device (dwc3 core) removal
+during devexit of dwc3 omap.
 
---=-UJ1ZVwdXI0O4oyoyQOoC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/usb/dwc3/dwc3-omap.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-On Mon, 2012-10-08 at 10:25 +0200, Guennadi Liakhovetski wrote:
+diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+index 479dc04..e335da3 100644
+--- a/drivers/usb/dwc3/dwc3-omap.c
++++ b/drivers/usb/dwc3/dwc3-omap.c
+@@ -204,6 +204,15 @@ static irqreturn_t dwc3_omap_interrupt(int irq, void *_omap)
+ 	return IRQ_HANDLED;
+ }
+ 
++static int dwc3_omap_remove_core(struct device *dev, void *c)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++
++	platform_device_unregister(pdev);
++
++	return 0;
++}
++
+ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+ {
+ 	struct dwc3_omap_data	*pdata = pdev->dev.platform_data;
+@@ -370,9 +379,8 @@ static int __devexit dwc3_omap_remove(struct platform_device *pdev)
+ {
+ 	struct dwc3_omap	*omap = platform_get_drvdata(pdev);
+ 
+-	platform_device_unregister(omap->dwc3);
+-
+ 	dwc3_put_device_id(omap->dwc3->id);
++	device_for_each_child(&pdev->dev, NULL, dwc3_omap_remove_core);
+ 
+ 	return 0;
+ }
+-- 
+1.7.9.5
 
-> In general, I might be misunderstanding something, but don't we have to=
-=20
-> distinguish between 2 types of information about display timings: (1) is=
-=20
-> defined by the display controller requirements, is known to the display=
-=20
-> driver and doesn't need to be present in timings DT. We did have some of=
-=20
-> these parameters in board data previously, because we didn't have proper=
-=20
-> display controller drivers... (2) is board specific configuration, and is=
-=20
-> such it has to be present in DT.
->=20
-> In that way, doesn't "interlaced" belong to type (1) and thus doesn't nee=
-d=20
-> to be present in DT?
-
-As I see it, this DT data is about the display (most commonly LCD
-panel), i.e. what video mode(s) the panel supports. If things were done
-my way, the panel's supported timings would be defined in the driver for
-the panel, and DT would be left to describe board specific data, but
-this approach has its benefits.
-
-Thus, if you connect an interlaced panel to your board, you need to tell
-the display controller that this panel requires interlace signal. Also,
-pixel clock source doesn't make sense in this context, as this doesn't
-describe the actual used configuration, but only what the panel
-supports.
-
-Of course, if this is about describing the hardware, the default-mode
-property doesn't really fit in...
-
- Tomi
-
-
---=-UJ1ZVwdXI0O4oyoyQOoC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAABAgAGBQJQcpZeAAoJEPo9qoy8lh71jiIP/RpaYW8fyffAFqfy8QlVtOyF
-eUDBwng9QkEjAyOd6+JzVlXB3Ex/40nQCubII7g73e9+tKaPx+C0uR+ugbf5QObc
-pq2D08O9fWgxJAdmdN+2cW859hX6m5Fm9N74lXXSIZqqcbyUjxIwAuUn3rsiwQV2
-gKB9LZr8s0s7H6u+f9aUZtro9Es/lpZNjVYR1x0pRfFUCLIdypfuCpIv3244WkH2
-HcOvbDVThAHHtNI+vI/6vPRo3KDA/vYFRZ/4056dx+v/uPkGdAH2RRW4iQ+3nBA3
-alqjadOzKOHrqb65JyDU2GCPIGJh5b05HTRAh5T7xuT2C0wJ8CU7ZULrzL/thyFK
-DOgDFJAig8Uyj5vQ4bA6Hz0U+QiaRnm0EWUph+O9XbaHsoM15sG1Gk01F99R+1RM
-BK/X0dNs1fWXiRxSIfJtFd9gzI9YrTK9tqF2l29E6sDBCt7C8EbImo74Lk/OSrfy
-BhuZTwnm/LiHYE5A5c0PbJr1zQIsRRe49CZ9boqCOnLvgwDvfL4hYoug9H2qmlH9
-FbpxRADQAWmYcWfE6A/mHbzQqKlFDdrsylPMCwotzHiRApUBdqloNPBPSi+n1zPe
-p+JQeCcjXx53TulC5uM0+gXWwHQf6psImU+8X7JOXD7XCYOEk6OhW3vyWmtcinOj
-5Fw728bqQlFNIWs0l59s
-=ZIY1
------END PGP SIGNATURE-----
-
---=-UJ1ZVwdXI0O4oyoyQOoC--
