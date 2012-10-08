@@ -1,137 +1,52 @@
-From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: bcm476x: Instantiate console UART
-Date: Mon, 8 Oct 2012 01:14:41 +0200
-Message-ID: <20121007231441.GB29996@glitch>
-References: <20121007015300.828366635@gmail.com>
- <20121007015407.840781689@gmail.com>
- <20121007200300.GH12801@game.jcrosoft.org>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] serial: vt8500: fix possible memory leak in vt8500_serial_probe()
+Date: Mon, 8 Oct 2012 08:47:47 +0800
+Message-ID: <CAPgLHd9NrFCsp5NhjBJ4tYgY3-SfbTA-ps=rZgpmoywM6tX6KQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121007200300.GH12801-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux@prisktech.co.nz, alan@linux.intel.com, gregkh@linuxfoundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 07, 2012 at 10:03:00PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 03:53 Sun 07 Oct     , Domenico Andreoli wrote:
-> > From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-> > 
-> > The BCM476x sports standard PL011 UARTs which are fully described and
-> > put to use with these few changes.
-> > 
-> > Signed-off-by: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/Kconfig.debug         |   16 ++++++++++++++++
-> >  arch/arm/boot/dts/bcm476x.dtsi |   23 ++++++++++++++++++++++-
-> >  2 files changed, 38 insertions(+), 1 deletion(-)
-> > 
-> > Index: b/arch/arm/boot/dts/bcm476x.dtsi
-> > ===================================================================
-> > --- a/arch/arm/boot/dts/bcm476x.dtsi
-> > +++ b/arch/arm/boot/dts/bcm476x.dtsi
-> > @@ -5,7 +5,7 @@
-> >  	model = "Broadcom BCM476x";
-> >  
-> >  	chosen {
-> > -		bootargs = "earlyprintk";
-> > +		bootargs = "console=ttyAMA1";
-> >  	};
-> >  
-> >  	amba {
-> > @@ -41,5 +41,26 @@
-> >  			interrupt-controller;
-> >  			#interrupt-cells = <1>;
-> >  		};
-> > +
-> > +		uart0@c0000 {
-> > +			compatible = "brcm,bcm476x-pl011", "arm,pl011", "arm,primecell";
-> why brcm specific compatible did broadcom customised the IP?
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-yes, there are some peculiarities here but do not prevent the normal pl011
-driver to work.
+vt8500_port is malloced in vt8500_serial_probe() and should be freed
+before leaving from the error handling cases, otherwise it will
+cause memory leak.
 
-> > +			reg = <0xc0000 0x1000>;
-> > +			interrupt-parent = <&vic0>;
-> > +			interrupts = <14>;
-> > +		};
-> > +
-> > +		uart1@c1000 {
-> > +			compatible = "brcm,bcm476x-pl011", "arm,pl011", "arm,primecell";
-> > +			reg = <0xc1000 0x1000>;
-> > +			interrupt-parent = <&vic0>;
-> > +			interrupts = <15>;
-> > +		};
-> > +
-> > +		uart2@b2000 {
-> > +			compatible = "brcm,bcm476x-pl011", "arm,pl011", "arm,primecell";
-> > +			reg = <0xb2000 0x1000>;
-> > +			interrupt-parent = <&vic0>;
-> > +			interrupts = <16>;
-> > +		};
-> >  	};
-> >  };
-> > Index: b/arch/arm/Kconfig.debug
-> > ===================================================================
-> > --- a/arch/arm/Kconfig.debug
-> > +++ b/arch/arm/Kconfig.debug
-> this should come with the debug patch
+dpatch engine is used to auto generate this patch.
+(https://github.com/weiyj/dpatch)
 
-ok
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/tty/serial/vt8500_serial.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-> > @@ -89,6 +89,18 @@ choice
-> >  		bool "Kernel low-level debugging on 9263 and 9g45"
-> >  		depends on HAVE_AT91_DBGU1
-> >  
-> > +	config DEBUG_BCM476X_UART0
-> > +		depends on ARCH_BCM476X
-> > +		bool "Kernel low-level debugging on BCM476x UART 0"
-> > +
-> > +	config DEBUG_BCM476X_UART1
-> > +		depends on ARCH_BCM476X
-> > +		bool "Kernel low-level debugging on BCM476x UART 1"
-> > +
-> > +	config DEBUG_BCM476X_UART2
-> > +		depends on ARCH_BCM476X
-> > +		bool "Kernel low-level debugging on BCM476x UART 2"
-> > +
-> >  	config DEBUG_CLPS711X_UART1
-> >  		bool "Kernel low-level debugging messages via UART1"
-> >  		depends on ARCH_CLPS711X
-> > @@ -404,6 +416,8 @@ endchoice
-> >  
-> >  config DEBUG_LL_INCLUDE
-> >  	string
-> > +	default "debug/bcm476x.S" if DEBUG_BCM476X_UART0 || \
-> > +		DEBUG_BCM476X_UART1 || DEBUG_BCM476X_UART2
-> >  	default "debug/icedcc.S" if DEBUG_ICEDCC
-> >  	default "debug/highbank.S" if DEBUG_HIGHBANK_UART
-> >  	default "debug/mvebu.S" if DEBUG_MVEBU_UART
-> > @@ -416,6 +430,8 @@ config DEBUG_LL_INCLUDE
-> >  
-> >  config UNCOMPRESS_INCLUDE
-> >  	string
-> > +	default "debug/bcm476x-uncompress.h" if DEBUG_BCM476X_UART0 || \
-> > +		DEBUG_BCM476X_UART1 || DEBUG_BCM476X_UART2
-> >  	default "debug/icedcc-uncompress.h" if DEBUG_ICEDCC
-> >  	default "debug/mvebu-uncompress.h" if DEBUG_MVEBU_UART
-> >  	default "debug/tegra-uncompress.h" if DEBUG_TEGRA_UART
-> Best Regards,
-> J.
+diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
+index 205d4cf..43fc369 100644
+--- a/drivers/tty/serial/vt8500_serial.c
++++ b/drivers/tty/serial/vt8500_serial.c
+@@ -584,13 +584,16 @@ static int __devinit vt8500_serial_probe(struct platform_device *pdev)
+ 					sizeof(vt8500_ports_in_use));
+ 	}
+ 
+-	if (port > VT8500_MAX_PORTS)
+-		return -ENODEV;
++	if (port > VT8500_MAX_PORTS) {
++		ret = -ENODEV;
++		goto err;
++	}
+ 
+ 	/* reserve the port id */
+ 	if (test_and_set_bit(port, &vt8500_ports_in_use)) {
+ 		/* port already in use - shouldn't really happen */
+-		return -EBUSY;
++		ret = -EBUSY;
++		goto err;
+ 	}
+ 
+ 	vt8500_port->uart.type = PORT_VT8500;
 
-Thank you.
 
-Regards,
-Domenico
