@@ -1,54 +1,24 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 14/16] tegra: fdt: Add LCD definitions for Seaboard
-Date: Mon, 8 Oct 2012 13:06:54 -0700
-Message-ID: <CAPnjgZ23PPBeBo7C0r53ZaYaE4q2PfUv8SxKQx5NT9Cdp+8O9w@mail.gmail.com>
-References: <1348793077-10126-1-git-send-email-sjg@chromium.org>
- <1348793077-10126-15-git-send-email-sjg@chromium.org>
- <506CC327.2070609@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Mon, 08 Oct 2012 14:12:34 -0600
+Message-ID: <507333B2.60109@wwwdotorg.org>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <506CC327.2070609-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On 09/27/2012 08:07 AM, Guennadi Liakhovetski wrote:
+> This patch adds a document, describing common V4L2 device tree bindings.
+> 
+> Co-authored-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 
-On Wed, Oct 3, 2012 at 3:58 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 09/27/2012 06:44 PM, Simon Glass wrote:
->> The Seaboard has a 1366x768 16bpp LCD. The backlight is controlled
->> by one of the PWMs.
->
->> diff --git a/board/nvidia/dts/tegra20-seaboard.dts b/board/nvidia/dts/tegra20-seaboard.dts
->
->> +     host1x {
->> +             dc@54200000 {
->
-> So based on my previous comment, I think you want status="okay" at this
-> level too, perhaps even at the host1x level.
-
-Yes I will do this.
-
->
->> +                     rgb {
->> +                             status = "okay";
->> +                             nvidia,panel = <&lcd_panel>;
->> +                     };
->> +             };
->> +     };
->
-
-Regards,
-Simon
+I think this looks reasonable now, touch wood:-) I guess I won't ack the
+binding until the v4l2 -> something-generic rename happens, but I don't
+see anything stopping me from doing so once the rename happens.
