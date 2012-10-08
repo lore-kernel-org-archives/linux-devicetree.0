@@ -1,33 +1,103 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V2 0/7] ARM: OMAP2+: Add device-tree support for timers
-Date: Mon, 8 Oct 2012 14:10:02 -0700
-Message-ID: <20121008211001.GH13011@atomide.com>
-References: <1347579091-3794-1-git-send-email-jon-hunter@ti.com>
- <505A7E0B.30709@ti.com>
- <20120920235309.GO28835@atomide.com>
- <5063330E.3000203@ti.com>
- <5065F19E.5020708@ti.com>
- <50661B07.1040200@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Mon, 8 Oct 2012 23:14:01 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1210082312570.14454@axis700.grange>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <Pine.LNX.4.64.1210021626220.15778@axis700.grange>
+ <507330E6.1010409@wwwdotorg.org> <4043536.qVaHVXMbPA@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50661B07.1040200@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Vaibhav Hiremath <hvaibhav@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4043536.qVaHVXMbPA@avalon>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [120928 14:48]:
+On Mon, 8 Oct 2012, Laurent Pinchart wrote:
+
+> On Monday 08 October 2012 14:00:38 Stephen Warren wrote:
+> > On 10/02/2012 08:33 AM, Guennadi Liakhovetski wrote:
+> > > On Tue, 2 Oct 2012, Rob Herring wrote:
+> > >> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
+> > >>> This patch adds a document, describing common V4L2 device tree bindings.
+> > >>> 
+> > >>> diff --git a/Documentation/devicetree/bindings/media/v4l2.txt
+> > >>> b/Documentation/devicetree/bindings/media/v4l2.txt>> 
+> > >> One other comment below:
+> > >>> +
+> > >>> +General concept
+> > >>> +---------------
+> > >>> +
+> > >>> +Video pipelines consist of external devices, e.g. camera sensors,
+> > >>> controlled +over an I2C, SPI or UART bus, and SoC internal IP blocks,
+> > >>> including video DMA +engines and video data processors.
+> > >>> +
+> > >>> +SoC internal blocks are described by DT nodes, placed similarly to
+> > >>> other SoC +blocks. External devices are represented as child nodes of
+> > >>> their respective bus +controller nodes, e.g. I2C.
+> > >>> +
+> > >>> +Data interfaces on all video devices are described by "port" child DT
+> > >>> nodes. +Configuration of a port depends on other devices participating
+> > >>> in the data +transfer and is described by "link" DT nodes, specified as
+> > >>> children of the +"port" nodes:
+> > >>> +
+> > >>> +/foo {
+> > >>> +	port@0 {
+> > >>> +		link@0 { ... };
+> > >>> +		link@1 { ... };
+> > >>> +	};
+> > >>> +	port@1 { ... };
+> > >>> +};
+> > >>> +
+> > >>> +If a port can be configured to work with more than one other device on
+> > >>> the same +bus, a "link" child DT node must be provided for each of
+> > >>> them. If more than one +port is present on a device or more than one
+> > >>> link is connected to a port, a +common scheme, using "#address-cells,"
+> > >>> "#size-cells" and "reg" properties is +used.
+> > >>> +
+> > >>> +Optional link properties:
+> > >>> +- remote: phandle to the other endpoint link DT node.
+> > >> 
+> > >> This name is a little vague. Perhaps "endpoint" would be better.
+> > > 
+> > > "endpoint" can also refer to something local like in USB case. Maybe
+> > > rather the description of the "remote" property should be improved?
+> > 
+> > The documentation doesn't show up in all the .dts files that use it; it
+> > might be useful to try and make the .dts file as obviously readable as
+> > possible.
+> > 
+> > Perhaps "remote-port" or "connected-port" would be sufficiently descriptive.
 > 
-> What is interesting is that it is the interrupt test that is failing for
-> timers 5-7. Any chance there is a problem with the interrupt mapping? I
-> checked the documentation for AM335x and I don't see anything obvious
-> that is wrong with the binding unless the documentation itself is wrong.
+> I like remote-port better than the already proposed remote-link.
 
-This could also be caused by some timers not being able to wake up
-the system from idle?
+Yes, remote-port sounds better, than remote-link, but might be more 
+difficult to correlate with the fact, that the phandle value of this 
+property points to a link DT node, and not to a port.
 
-Regards,
+Thanks
+Guennadi
 
-Tony
+> > (and yes, I know I'm probably bike-shedding now).
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
