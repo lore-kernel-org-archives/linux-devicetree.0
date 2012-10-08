@@ -1,106 +1,119 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
-Date: Mon, 8 Oct 2012 18:00:45 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210081758280.14454@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <201210081653.55984.hverkuil@xs4all.nl>
- <Pine.LNX.4.64.1210081708240.14454@axis700.grange>
- <201210081741.43546.hverkuil@xs4all.nl>
- <Pine.LNX.4.64.1210081748390.14454@axis700.grange>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
+Date: Mon, 08 Oct 2012 10:10:31 -0600
+Message-ID: <5072FAF7.2090900@wwwdotorg.org>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de> <Pine.LNX.4.64.1210042307300.3744@axis700.grange> <506F0833.1090704@wwwdotorg.org> <Pine.LNX.4.64.1210081000530.11034@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.64.1210081748390.14454-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1210081000530.11034@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Oct 2012, Guennadi Liakhovetski wrote:
+On 10/08/2012 02:25 AM, Guennadi Liakhovetski wrote:
+> On Fri, 5 Oct 2012, Stephen Warren wrote:
+> 
+>> On 10/04/2012 03:35 PM, Guennadi Liakhovetski wrote:
+>>> Hi Steffen
+>>>
+>>> Sorry for chiming in so late in the game, but I've long been wanting to 
+>>> have a look at this and compare with what we do for V4L2, so, this seems a 
+>>> great opportunity to me:-)
+>>>
+>>> On Thu, 4 Oct 2012, Steffen Trumtrar wrote:
+>>
+>>>> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
+>>
+>>>> +timings-subnode
+>>>> +---------------
+>>>> +
+>>>> +required properties:
+>>>> + - hactive, vactive: Display resolution
+>>>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
+>>>> +   in pixels
+>>>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
+>>>> +   lines
+>>>> + - clock: displayclock in Hz
+>>>
+>>> You're going to hate me for this, but eventually we want to actually 
+>>> reference clock objects in our DT bindings. For now, even if you don't 
+>>> want to actually add clock phandles and stuff here, I think, using the 
+>>> standard "clock-frequency" property would be much better!
+>>
+>> In a definition of a display timing, we will never need to use the clock
+>> binding; the clock binding would be used by the HW module that is
+>> generating a timing, not by the timing definition itself.
+> 
+> You mean clock consumer bindings will be in the display device DT node? 
+> And the display-timings node will be its child?
 
-> On Mon, 8 Oct 2012, Hans Verkuil wrote:
-> 
-> > On Mon October 8 2012 17:15:53 Guennadi Liakhovetski wrote:
+Yes
 
-[snip]
+...
+>>>> + - interlaced (bool)
+>>>
+>>> Is "interlaced" a property of the hardware, i.e. of the board? Can the 
+>>> same display controller on one board require interlaced data and on 
+>>> another board - progressive?
+>>
+>> Interlace is a property of a display mode. It's quite possible for a
+>> particular display controller to switch between interlace and
+>> progressive output at run-time. For example, reconfiguring the output
+>> between 480i, 720p, 1080i, 1080p modes. Admittedly, if you're talking to
+>> a built-in LCD display, you're probably always going to be driving the
+>> single mode required by the panel, and that mode will likely always be
+>> progressive. However, since this binding attempts to describe any
+>> display timing, I think we still need this property per mode.
+> 
+> But why do you need this in the DT then at all?
 
-> > > No, I don't think there is a way to get a device pointer from a DT node.
-> > 
-> > Not a device pointer, but the i2c bus and i2c address. With that information
-> > you can get the i2c_client, and with that you can get the subdev pointer.
-> 
-> How? How can you get a client pointer from adapter and i2c device address? 
-> I haven't found anything suitable in i2c.h.
+Because the driver for the display controller has no idea what display
+or panel will be connected to it.
 
-Ok, you could use of_find_i2c_device_by_node(), but the second argument 
-remains - if you need notifiers in one case, I don't think it makes sense 
-to implement multiple methods.
+> If it's fixed, as required 
+> per display controller, then its driver will know it. If it's runtime 
+> configurable, then it's a purely software parameter and doesn't depend on 
+> the board?
 
-Thanks
-Guennadi
+interlace-vs-progressive isn't "fixed, as required per display
+controller", but is a property of the mode being sent by the display
+controller, and the requirements for that mode are driven by the
+panel/display connected to the display controller, not the display
+controller, in general.
 
-> > If there is no way to get that information from the proposed V4L2 DT, then
-> > it needs to be modified since a bridge driver really needs to know which
-> > subdevs it has to register with the v4l2_device struct. That information is
-> > also board specific so it should be part of the DT.
-> > 
-> > > 
-> > > > In my view you cannot do a proper initialization unless you have both the
-> > > > bridge driver and all subdev drivers loaded and instantiated. They need one
-> > > > another. So I am perfectly fine with letting the probe function do next to
-> > > > nothing and postponing that until register() is called. I2C and actual probing
-> > > > to check if it's the right device is a bad idea in general since you have no
-> > > > idea what a hardware access to an unknown i2c device will do. There are still
-> > > > some corner cases where that is needed, but I do not think that that is an
-> > > > issue here.
-> > > > 
-> > > > It would simplify things a lot IMHO. Also note that the register() op will
-> > > > work with any device, not just i2c. That may be a useful property as well.
-> > > 
-> > > And what if the subdevice device is not yet instantiated by OF by the time 
-> > > your bridge driver probes?
-> > 
-> > That is where you still need to have a bus notifier mechanism. You have to be
-> > able to wait until all dependent drivers are loaded/instantiated,
+...
+>>> BTW, I'm not very familiar with display 
+>>> interfaces, but for interlaced you probably sometimes use a field signal, 
+>>> whose polarity you also want to specify here? We use a "field-even-active" 
+>>> integer property for it.
+>>
+>> I think that's a property of the display controller itself, rather than
+>> an individual mode, although I'm not 100% certain. My assertion is that
+>> the physical interface that the display controller is driving will
+>> determine whether embedded or separate sync is used, and in the separate
+>> sync case, how the field signal is defined, and that all interlace modes
+>> driven over that interface will use the same field signal definition.
 > 
-> No, drivers are not the problem, as you say, you can load them. Devices 
-> are the problem. You don't know when they will be registered.
-> 
-> > or
-> > alternatively you have to be able to load them explicitly. But this should
-> > be relatively easy to implement in a generic manner.
-> 
-> So, if you need notifiers anyway, why not use them in all cases instead of 
-> mixing multiple methods?
-> 
-> Thanks
-> Guennadi
-> 
-> > I still think this sucks (excuse my language), but I see no way around it as
-> > long as there is no explicit probe order one can rely on.
-> > 
-> > Regards,
-> > 
-> > 	Hans
-> > 
-> 
-> ---
-> Guennadi Liakhovetski, Ph.D.
-> Freelance Open-Source Software Developer
-> http://www.open-technology.de/
-> 
+> In general, I might be misunderstanding something, but don't we have to 
+> distinguish between 2 types of information about display timings: (1) is 
+> defined by the display controller requirements, is known to the display 
+> driver and doesn't need to be present in timings DT. We did have some of 
+> these parameters in board data previously, because we didn't have proper 
+> display controller drivers...
 
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Yes, there probably is data of that kind, but the display mode timings
+binding is only address standardized display timings information, not
+controller-specific information, and hence doesn't cover this case.
+
+> (2) is board specific configuration, and is
+> such it has to be present in DT.
+
+Certainly, yes.
+
+> In that way, doesn't "interlaced" belong to type (1) and thus doesn't need 
+> to be present in DT?
+
+I don't believe so.
