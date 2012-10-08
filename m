@@ -1,15 +1,15 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Mon, 8 Oct 2012 23:14:01 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210082312570.14454@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <Pine.LNX.4.64.1210021626220.15778@axis700.grange>
- <507330E6.1010409@wwwdotorg.org> <4043536.qVaHVXMbPA@avalon>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 03/16] tegra: fdt: Add pwm binding and node
+Date: Mon, 8 Oct 2012 14:22:36 -0700
+Message-ID: <CAPnjgZ0De76tG=gWi4z6Es9_0_6mL=t1PWSvq-RJKkthZDdRLg@mail.gmail.com>
+References: <1348793077-10126-1-git-send-email-sjg@chromium.org>
+ <1348793077-10126-4-git-send-email-sjg@chromium.org>
+ <20120928200817.GB30777@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4043536.qVaHVXMbPA@avalon>
+In-Reply-To: <20120928200817.GB30777-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,84 +20,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Oct 2012, Laurent Pinchart wrote:
+Hi Thierry,
 
-> On Monday 08 October 2012 14:00:38 Stephen Warren wrote:
-> > On 10/02/2012 08:33 AM, Guennadi Liakhovetski wrote:
-> > > On Tue, 2 Oct 2012, Rob Herring wrote:
-> > >> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
-> > >>> This patch adds a document, describing common V4L2 device tree bindings.
-> > >>> 
-> > >>> diff --git a/Documentation/devicetree/bindings/media/v4l2.txt
-> > >>> b/Documentation/devicetree/bindings/media/v4l2.txt>> 
-> > >> One other comment below:
-> > >>> +
-> > >>> +General concept
-> > >>> +---------------
-> > >>> +
-> > >>> +Video pipelines consist of external devices, e.g. camera sensors,
-> > >>> controlled +over an I2C, SPI or UART bus, and SoC internal IP blocks,
-> > >>> including video DMA +engines and video data processors.
-> > >>> +
-> > >>> +SoC internal blocks are described by DT nodes, placed similarly to
-> > >>> other SoC +blocks. External devices are represented as child nodes of
-> > >>> their respective bus +controller nodes, e.g. I2C.
-> > >>> +
-> > >>> +Data interfaces on all video devices are described by "port" child DT
-> > >>> nodes. +Configuration of a port depends on other devices participating
-> > >>> in the data +transfer and is described by "link" DT nodes, specified as
-> > >>> children of the +"port" nodes:
-> > >>> +
-> > >>> +/foo {
-> > >>> +	port@0 {
-> > >>> +		link@0 { ... };
-> > >>> +		link@1 { ... };
-> > >>> +	};
-> > >>> +	port@1 { ... };
-> > >>> +};
-> > >>> +
-> > >>> +If a port can be configured to work with more than one other device on
-> > >>> the same +bus, a "link" child DT node must be provided for each of
-> > >>> them. If more than one +port is present on a device or more than one
-> > >>> link is connected to a port, a +common scheme, using "#address-cells,"
-> > >>> "#size-cells" and "reg" properties is +used.
-> > >>> +
-> > >>> +Optional link properties:
-> > >>> +- remote: phandle to the other endpoint link DT node.
-> > >> 
-> > >> This name is a little vague. Perhaps "endpoint" would be better.
-> > > 
-> > > "endpoint" can also refer to something local like in USB case. Maybe
-> > > rather the description of the "remote" property should be improved?
-> > 
-> > The documentation doesn't show up in all the .dts files that use it; it
-> > might be useful to try and make the .dts file as obviously readable as
-> > possible.
-> > 
-> > Perhaps "remote-port" or "connected-port" would be sufficiently descriptive.
-> 
-> I like remote-port better than the already proposed remote-link.
+On Fri, Sep 28, 2012 at 1:08 PM, Thierry Reding
+<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> On Thu, Sep 27, 2012 at 05:44:24PM -0700, Simon Glass wrote:
+>> This binding will apparently soon be in linux-next. Bring it in now
+>> since we need to do something, and may as well try to target what
+>> Linux will have.
+>>
+>> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>> Changes in v3:
+>> - Add new commit for pwm binding and node
+>>
+>>  arch/arm/dts/tegra20.dtsi                    |    7 +++++++
+>>  doc/device-tree-bindings/pwm/tegra20-pwm.txt |   18 ++++++++++++++++++
+>>  2 files changed, 25 insertions(+), 0 deletions(-)
+>>  create mode 100644 doc/device-tree-bindings/pwm/tegra20-pwm.txt
+>>
+>> diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+>> index d936b1e..3221bc9 100644
+>> --- a/arch/arm/dts/tegra20.dtsi
+>> +++ b/arch/arm/dts/tegra20.dtsi
+>> @@ -211,4 +211,11 @@
+>>               compatible = "nvidia,tegra20-nand";
+>>               reg = <0x70008000 0x100>;
+>>       };
+>> +
+>> +     pwm: pwm@7000a000 {
+>> +             compatible = "nvidia,tegra20-pwm";
+>> +             reg = <0x7000a000 0x100>;
+>> +             #pwm-cells = <2>;
+>> +     };
+>> +
+>>  };
+>> diff --git a/doc/device-tree-bindings/pwm/tegra20-pwm.txt b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
+>> new file mode 100644
+>> index 0000000..bbbeedb
+>> --- /dev/null
+>> +++ b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
+>> @@ -0,0 +1,18 @@
+>> +Tegra SoC PWFM controller
+>> +
+>> +Required properties:
+>> +- compatible: should be one of:
+>> +  - "nvidia,tegra20-pwm"
+>> +  - "nvidia,tegra30-pwm"
+>> +- reg: physical base address and length of the controller's registers
+>> +- #pwm-cells: On Tegra the number of cells used to specify a PWM is 2. The
+>> +  first cell specifies the per-chip index of the PWM to use and the second
+>> +  cell is the duty cycle in nanoseconds.
+>
+> This is a mistake in the Linux kernel documentation. The second cell
+> specifies the period in nanoseconds, not the duty cycle. I'll fix this
+> up in the kernel.
 
-Yes, remote-port sounds better, than remote-link, but might be more 
-difficult to correlate with the fact, that the phandle value of this 
-property points to a link DT node, and not to a port.
+Oh ok, thanks. I will update this patch.
 
-Thanks
-Guennadi
+Regards,
+Simon
 
-> > (and yes, I know I'm probably bike-shedding now).
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
-
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+>
+> Thierry
