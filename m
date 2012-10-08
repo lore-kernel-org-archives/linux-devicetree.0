@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 03/16] tegra: fdt: Add pwm binding and node
-Date: Mon,  8 Oct 2012 14:42:23 -0700
-Message-ID: <1349732556-30700-4-git-send-email-sjg@chromium.org>
+Subject: [PATCH v5 14/16] tegra: fdt: Add LCD definitions for Seaboard
+Date: Mon,  8 Oct 2012 14:42:34 -0700
+Message-ID: <1349732556-30700-15-git-send-email-sjg@chromium.org>
 References: <1349732556-30700-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,62 +22,68 @@ To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
 Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This binding will apparently soon be in linux-next. Bring it in now
-since we need to do something, and may as well try to target what
-Linux will have.
+The Seaboard has a 1366x768 16bpp LCD. The backlight is controlled
+by one of the PWMs.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 Changes in v5:
-- Update Tegra PWM binding s/duty cycle/period/
+- Enable required LCD fdt nodes (which are now disabled by default)
+
+Changes in v4:
+- Adjust LCD fdt nodes for new binding
+- Remove LCD frame buffer address property hack
 
 Changes in v3:
-- Add new commit for pwm binding and node
+- Use new upstream proposed LCD definitions
 
- arch/arm/dts/tegra20.dtsi                    |    7 +++++++
- doc/device-tree-bindings/pwm/tegra20-pwm.txt |   18 ++++++++++++++++++
- 2 files changed, 25 insertions(+), 0 deletions(-)
- create mode 100644 doc/device-tree-bindings/pwm/tegra20-pwm.txt
+Changes in v2:
+- Update seaboard LCD definitions for new fdt binding
 
-diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
-index d936b1e..3221bc9 100644
---- a/arch/arm/dts/tegra20.dtsi
-+++ b/arch/arm/dts/tegra20.dtsi
-@@ -211,4 +211,11 @@
- 		compatible = "nvidia,tegra20-nand";
- 		reg = <0x70008000 0x100>;
+ board/nvidia/dts/tegra20-seaboard.dts |   33 +++++++++++++++++++++++++++++++++
+ 1 files changed, 33 insertions(+), 0 deletions(-)
+
+diff --git a/board/nvidia/dts/tegra20-seaboard.dts b/board/nvidia/dts/tegra20-seaboard.dts
+index 25a63a0..02d7c68 100644
+--- a/board/nvidia/dts/tegra20-seaboard.dts
++++ b/board/nvidia/dts/tegra20-seaboard.dts
+@@ -163,4 +163,37 @@
+ 			compatible = "hynix,hy27uf4g2b", "nand-flash";
+ 		};
  	};
 +
-+	pwm: pwm@7000a000 {
-+		compatible = "nvidia,tegra20-pwm";
-+		reg = <0x7000a000 0x100>;
-+		#pwm-cells = <2>;
++	host1x {
++		status = "okay";
++		dc@54200000 {
++			status = "okay";
++			rgb {
++				status = "okay";
++				nvidia,panel = <&lcd_panel>;
++			};
++		};
++	};
++
++	lcd_panel: panel {
++		/* Seaboard has 1366x768 */
++		clock = <70600000>;
++		xres = <1366>;
++		yres = <768>;
++		left-margin = <58>;
++		right-margin = <58>;
++		hsync-len = <58>;
++		lower-margin = <4>;
++		upper-margin = <4>;
++		vsync-len = <4>;
++		hsync-active-high;
++		nvidia,bits-per-pixel = <16>;
++		nvidia,pwm = <&pwm 2 0>;
++		nvidia,backlight-enable-gpios = <&gpio 28 0>;	/* PD4 */
++		nvidia,lvds-shutdown-gpios = <&gpio 10 0>;	/* PB2 */
++		nvidia,backlight-vdd-gpios = <&gpio 176 0>;	/* PW0 */
++		nvidia,panel-vdd-gpios = <&gpio 22 0>;		/* PC6 */
++		nvidia,panel-timings = <4 203 17 15>;
 +	};
 +
  };
-diff --git a/doc/device-tree-bindings/pwm/tegra20-pwm.txt b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
-new file mode 100644
-index 0000000..01438ec
---- /dev/null
-+++ b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
-@@ -0,0 +1,18 @@
-+Tegra SoC PWFM controller
-+
-+Required properties:
-+- compatible: should be one of:
-+  - "nvidia,tegra20-pwm"
-+  - "nvidia,tegra30-pwm"
-+- reg: physical base address and length of the controller's registers
-+- #pwm-cells: On Tegra the number of cells used to specify a PWM is 2. The
-+  first cell specifies the per-chip index of the PWM to use and the second
-+  cell is the period in nanoseconds.
-+
-+Example:
-+
-+	pwm: pwm@7000a000 {
-+		compatible = "nvidia,tegra20-pwm";
-+		reg = <0x7000a000 0x100>;
-+		#pwm-cells = <2>;
-+	};
 -- 
 1.7.7.3
