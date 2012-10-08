@@ -1,85 +1,58 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 2/6] ARM: bcm476x: Add system timer
-Date: Mon, 08 Oct 2012 13:50:16 +0200
-Message-ID: <1822741.oh36baA1m8@flexo>
-References: <20121007015300.828366635@gmail.com>
- <20121007015406.470633343@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
+Date: Mon, 08 Oct 2012 14:04:19 +0200
+Message-ID: <1479122.2xVsV4MZ4o@avalon>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <Pine.LNX.4.64.1210081000530.11034@axis700.grange> <1349686878.3227.40.camel@deskari>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121007015406.470633343@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Domenico Andreoli <domenico.andreoli@linux.com>, devicetree-discuss@lists.ozlabs.org, Domenico Andreoli <cavokz@gmail.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1349686878.3227.40.camel@deskari>
+Sender: linux-media-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Stephen Warren <swarren@wwwdotorg.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 07 October 2012 03:53:02 Domenico Andreoli wrote:
-> From: Domenico Andreoli <domenico.andreoli@linux.com>
-> 
-> System timer implementation for the BCM476x SoCs.
-> 
-> Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
-> ---
->  Documentation/devicetree/bindings/timer/brcm,bcm476x-system-timer.txt |   22 +
->  arch/arm/boot/dts/bcm476x.dtsi                                        |    8 +
->  arch/arm/mach-bcm476x/bcm476x.c                                       |   10 -
->  drivers/clocksource/Makefile                                          |    1 +
->  drivers/clocksource/bcm476x_timer.c                                   |  188 ++++++++++
->  include/linux/bcm476x_timer.h                                         |   24 +
->  6 files changed, 244 insertions(+), 9 deletions(-)
-> 
-> Index: b/Documentation/devicetree/bindings/timer/brcm,bcm476x-system-timer.txt
-> ===================================================================
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm476x-system-timer.txt
-> @@ -0,0 +1,22 @@
-> +BCM476x System Timer
-> +
-> +The System Timer peripheral provides either two or four 32-bit timer
-> +channels.  BCM476x has three timers at 0xba000, 0xbb000 and 0xd1000. The
-> +first two provide four channels, the last (in the AON - Always ON power
-> +domain) provides only two.
-> +
-> +Required properties:
-> +
-> +- compatible : should be "brcm,bcm476x-system-timer"
-> +- reg : Specifies base physical address and size of the registers.
-> +- interrupts : A list of 2 or 4 interrupt sinks; one per timer channel.
-> +- clock-frequency : The frequency of the clock that drives the counter, in Hz.
-> +
-> +Example:
-> +
-> +timer {
-> +	compatible = "brcm,bcm476x-system-timer";
-> +	reg = <0xba000 0x1000>;
-> +	interrupts = <4>, <11>;
-> +	clock-frequency = <24000000>;
-> +};
-> Index: b/arch/arm/boot/dts/bcm476x.dtsi
-> ===================================================================
-> --- a/arch/arm/boot/dts/bcm476x.dtsi
-> +++ b/arch/arm/boot/dts/bcm476x.dtsi
-> @@ -14,6 +14,14 @@
->  		#size-cells = <1>;
->  		ranges;
->  
-> +		timer {
-> +			compatible = "brcm,bcm476x-system-timer";
-> +			reg = <0xba000 0x1000>;
-> +			interrupt-parent = <&vic0>;
-> +			interrupts = <4>, <11>;
-> +			clock-frequency = <24000000>;
-> +		};
+Hi Tomi,
 
-This should rather be timer: timer@ba0000 for this node to be uniquely named.
---
-Florian
+On Monday 08 October 2012 12:01:18 Tomi Valkeinen wrote:
+> On Mon, 2012-10-08 at 10:25 +0200, Guennadi Liakhovetski wrote:
+> > In general, I might be misunderstanding something, but don't we have to
+> > distinguish between 2 types of information about display timings: (1) is
+> > defined by the display controller requirements, is known to the display
+> > driver and doesn't need to be present in timings DT. We did have some of
+> > these parameters in board data previously, because we didn't have proper
+> > display controller drivers... (2) is board specific configuration, and is
+> > such it has to be present in DT.
+> > 
+> > In that way, doesn't "interlaced" belong to type (1) and thus doesn't need
+> > to be present in DT?
+> 
+> As I see it, this DT data is about the display (most commonly LCD
+> panel), i.e. what video mode(s) the panel supports. If things were done
+> my way, the panel's supported timings would be defined in the driver for
+> the panel, and DT would be left to describe board specific data, but
+> this approach has its benefits.
+
+What about dumb DPI panels ? They will all be supported by a single driver, 
+would you have the driver contain information about all known DPI panels ? DT 
+seems a good solution to me in this case.
+
+For complex panels where the driver will support a single (or very few) model 
+I agree that specifying the timings in DT isn't needed.
+
+> Thus, if you connect an interlaced panel to your board, you need to tell
+> the display controller that this panel requires interlace signal. Also,
+> pixel clock source doesn't make sense in this context, as this doesn't
+> describe the actual used configuration, but only what the panel
+> supports.
+> 
+> Of course, if this is about describing the hardware, the default-mode
+> property doesn't really fit in...
+
+Maybe we should rename it to native-mode then ?
+
+-- 
+Regards,
+
+Laurent Pinchart
