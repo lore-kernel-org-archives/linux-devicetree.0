@@ -1,61 +1,71 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 04/10] of/i2c: Add support for I2C_CLIENT_WAKE when
- booting with Device Tree
-Date: Mon, 8 Oct 2012 08:32:58 +0100
-Message-ID: <20121008073258.GA9707@gmail.com>
-References: <1349451107-8009-1-git-send-email-lee.jones@linaro.org>
- <1349451107-8009-5-git-send-email-lee.jones@linaro.org>
- <506F2334.1040009@gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
+Date: Mon, 8 Oct 2012 09:34:13 +0200
+Message-ID: <20121008073413.GA20800@pengutronix.de>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+ <506F0911.1050808@wwwdotorg.org>
+ <20121005163858.GD2053@pengutronix.de>
+ <9190603.vEUidl99Ca@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <506F2334.1040009@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, linus.walleij@stericsson.com, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <9190603.vEUidl99Ca@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 05 Oct 2012, Rob Herring wrote:
+On Sun, Oct 07, 2012 at 03:38:25PM +0200, Laurent Pinchart wrote:
+> Hi Steffen,
+> 
+> On Friday 05 October 2012 18:38:58 Steffen Trumtrar wrote:
+> > On Fri, Oct 05, 2012 at 10:21:37AM -0600, Stephen Warren wrote:
+> > > On 10/05/2012 10:16 AM, Steffen Trumtrar wrote:
+> > > > On Thu, Oct 04, 2012 at 12:47:16PM -0600, Stephen Warren wrote:
+> > > >> On 10/04/2012 11:59 AM, Steffen Trumtrar wrote:
+> > > ...
+> > > 
+> > > >>> +	for_each_child_of_node(timings_np, entry) {
+> > > >>> +		struct signal_timing *st;
+> > > >>> +
+> > > >>> +		st = of_get_display_timing(entry);
+> > > >>> +
+> > > >>> +		if (!st)
+> > > >>> +			continue;
+> > > >> 
+> > > >> I wonder if that shouldn't be an error?
+> > > > 
+> > > > In the sense of a pr_err not a -EINVAL I presume?! It is a little bit
+> > > > quiet in case of a faulty spec, that is right.
+> > > 
+> > > I did mean return an error; if we try to parse something and can't,
+> > > shouldn't we return an error?
+> > > 
+> > > I suppose it may be possible to limp on and use whatever subset of modes
+> > > could be parsed and drop the others, which is what this code does, but
+> > > the code after the loop would definitely return an error if zero timings
+> > > were parseable.
+> > 
+> > If a display supports multiple modes, I think it is better to have a working
+> > mode (even if it is not the preferred one) than have none at all.
+> > If there is no mode at all, that should be an error, right.
+> 
+> If we fail completely in case of an error, DT writers will notice their bugs. 
+> If we ignore errors silently they won't, and we'll end up with buggy DTs (or, 
+> to be accurate, even more buggy DTs :-)). I'd rather fail completely in the 
+> first implementation and add workarounds later only if we need to.
+> 
 
-> On 10/05/2012 10:31 AM, Lee Jones wrote:
-> > It's important for wakeup sources such as keyboards, power buttons
-> > and the like to identify themselves as wakeup devices. Until now
-> > this has not been possible when platforms are booting via Device
-> > Tree.
->=20
-> A similar feature from Olof already went in for 3.7.
+Okay, that is two against one. And if you say it like this, Stephen and you are
+right I guess. Fail completely it is then.
 
-Ah yes, I see it. Thanks Rob.
+Regards,
 
-> > Cc: Rob Herring <rob.herring@calxeda.com>
-> > Cc: devicetree-discuss@lists.ozlabs.org
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/of/of_i2c.c |    3 +++
-> >  1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-> > index 1e173f3..2f20019 100644
-> > --- a/drivers/of/of_i2c.c
-> > +++ b/drivers/of/of_i2c.c
-> > @@ -61,6 +61,9 @@ void of_i2c_register_devices(struct i2c_adapter *=
-adap)
-> >  		info.of_node =3D of_node_get(node);
-> >  		info.archdata =3D &dev_ad;
-> > =20
-> > +		if (of_get_property(node, "i2c-client-wake", NULL))
-> > +			info.flags |=3D I2C_CLIENT_WAKE;
-> > +
-> >  		request_module("%s%s", I2C_MODULE_PREFIX, info.type);
-> > =20
-> >  		result =3D i2c_new_device(adap, &info);
-> >=20
+Steffen
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
