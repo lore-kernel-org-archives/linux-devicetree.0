@@ -1,121 +1,167 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 2/2] pwm: pwm-tiehrpwm: Add device-tree binding support
- for EHRPWM driver
-Date: Mon, 8 Oct 2012 15:50:08 +0200
-Message-ID: <20121008135008.GB26525@avionic-0098.mockup.avionic-design.de>
-References: <1348658863-29428-1-git-send-email-avinashphilip@ti.com>
- <1348658863-29428-3-git-send-email-avinashphilip@ti.com>
- <20121002061143.GB4298@avionic-0098.mockup.avionic-design.de>
- <518397C60809E147AF5323E0420B992E3E9CA1ED@DBDE01.ent.ti.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Mon, 8 Oct 2012 15:48:11 +0200
+Message-ID: <201210081548.11207.hverkuil@xs4all.nl>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <201210051323.45571.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/WwmFnJnmDyWGHa4"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9CA1ED@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
+On Mon October 8 2012 14:23:25 Guennadi Liakhovetski wrote:
+> Hi Hans
+> 
+> On Fri, 5 Oct 2012, Hans Verkuil wrote:
+> 
+> [snip]
+> 
+> > I think the soc_camera patches should be left out for now. I suspect that
+> > by adding core support for async i2c handling first,
+> 
+> Ok, let's think, what this meacs - async I2C in media / V4L2 core.
+> 
+> The main reason for our probing order problem is the master clock, 
+> typically supplied from the camera bridge to I2C subdevices, which we only 
+> want to start when necessary, i.e. when accessing the subdevice. And the 
+> subdevice driver needs that clock running during its .probe() to be able 
+> to access and verify or configure the hardware. Our current solution is to 
+> not register I2C subdevices from the platform data, as is usual for all 
+> I2C devices, but from the bridge driver and only after it has switched on 
+> the master clock. After the subdevice driver has completed its probing we 
+> switch the clock back off until the subdevice has to be activated, e.g. 
+> for video capture.
+> 
+> Also important - when we want to unregister the bridge driver we just also 
+> unregister the I2C device.
+> 
+> Now, to reverse the whole thing and to allow I2C devices be registered as 
+> usual - via platform data or OF, first of all we have to teach I2C 
+> subdevice drivers to recognise the "too early" situation and request 
+> deferred probing in such a case. Then it will be reprobed after each new 
+> successful probe or unregister on the system. After the bridge driver has 
+> successfully probed the subdevice driver will be re-probed and at that 
+> time it should succeed. Now, there is a problem here too: who should 
+> switch on and off the master clock?
+> 
+> If we do it from the bridge driver, we could install an I2C bus-notifier, 
+> _before_ the subdevice driver is probed, i.e. upon the 
+> BUS_NOTIFY_BIND_DRIVER event we could turn on the clock. If subdevice 
+> probing was successful, we can then wait for the BUS_NOTIFY_BOUND_DRIVER 
+> event to switch the clock back off. BUT - if the subdevice fails probing? 
+> How do we find out about that and turn the clock back off? There is no 
+> notification event for that... Possible solutions:
+> 
+> 1. timer - ugly and unreliable.
+> 2. add a "probing failed" notifier event to the device core - would this 
+>    be accepted?
+> 3. let the subdevice turn the master clock on and off for the duration of 
+>    probing.
+> 
+> My vote goes for (3). Ideally this should be done using the generic clock 
+> framework. But can we really expect all drivers and platforms to switch to 
+> it quickly enough? If not, we need a V4L2-specific callback from subdevice 
+> drivers to bridge drivers to turn the clock on and off. That's what I've 
+> done "temporarily" in this patch series for soc-camera.
+> 
+> Suppose we decide to do the same for V4L2 centrally - add call-backs. Then 
+> we can think what else we need to add to V4L2 to support asynchronous 
+> subdevice driver probing.
 
---/WwmFnJnmDyWGHa4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I wonder, don't we have the necessary code already? V4L2 subdev drivers can
+have internal_ops with register/unregister ops. These are called by
+v4l2_device_register_subdev. This happens during the bridge driver's probe.
 
-On Mon, Oct 08, 2012 at 01:31:20PM +0000, Philip, Avinash wrote:
-> On Tue, Oct 02, 2012 at 11:41:43, Thierry Reding wrote:
-> > On Wed, Sep 26, 2012 at 04:57:43PM +0530, Philip, Avinash wrote:
-[...]
-> > > +- reg: physical base address and size of the registers map. For am33=
-xx,
-> > > +  2 register maps are present (EHRPWM register space & PWM subsystem=
- common
-> > > +  config space). Order should be maintained with EHRPWM register map=
- as first
-> > > +  entry & PWM subsystem common config space as second entry.
-> > > +
-> > > +Optional properties:
-> > > +- ti,hwmods: Name of the hwmod associated to the EHRPWM:
-> > > +  "ehrpwm<x>", <x> being the 0-based instance number from the HW spec
-> >=20
-> > I don't see where this property is used. There is no code in this patch
-> > that parses it.
->=20
-> This data used by omap_hwmod layer to create platform devices. This is pa=
-rt
-> of omap hwmod implementation.
+Suppose the subdev's probe does not actually access the i2c device, but
+instead defers that to the register callback? The bridge driver will turn on
+the clock before calling v4l2_device_register_subdev to ensure that the
+register callback can access the i2c registers. The register callback will
+do any initialization and can return an error. In case of an error the i2c
+client is automatically unregistered as well.
 
-Okay. I've heard about hwmod but I wasn't aware of how it was used in
-the context of device tree.
+In addition, during the register op the subdev driver can call into the
+bridge driver since it knows the v4l2_device struct.
 
-> > > +static struct pwm_device *of_ehrpwm_xlate(struct pwm_chip *chip,
-> > > +		const struct of_phandle_args *args)
-> > > +{
-> > > +	struct pwm_device *pwm;
-> > > +
-> > > +	if (chip->of_pwm_n_cells < PWM_CELL_SIZE)
-> > > +		return ERR_PTR(-EINVAL);
-> > > +
-> > > +	if (args->args[0] >=3D chip->npwm)
-> > > +		return ERR_PTR(-EINVAL);
-> > > +
-> > > +	pwm =3D pwm_request_from_chip(chip, args->args[0], NULL);
-> > > +	if (IS_ERR(pwm))
-> > > +		return pwm;
-> > > +
-> > > +	pwm_set_period(pwm, args->args[1]);
-> > > +	pwm_set_polarity(pwm, args->args[2]);
-> > > +	return pwm;
-> > > +}
-> >=20
-> > This is an exact duplicate of the ECAP's of_xlate(). Maybe we should
-> > make this part of the PWM core. If so it is probably safer to define the
-> > values for the third cell as flags, where the polarity is encoded in bit
-> > 0, and make the function handle this accordingly to allow other bits to
-> > be added in the future.
->=20
-> Custom of_xlate support is provided as suggested while the discussion of
-> "Adding support for configuring polarity in PWM framework".
-> https://lkml.org/lkml/2012/7/16/177
->=20
-> without custom of_xlate() support, PWM drivers has to populate
-> chip->of_pwm_n_cells =3D x;
-> as this is hard coded to 2 in pwm/core.c.
->=20
-> if (!chip->of_xlate) {
-> 	chip->of_xlate =3D of_pwm_simple_xlate;
-> 	chip->of_pwm_n_cells =3D 2;
+This has also the advantage that subdev drivers can change to this model
+gradually. Only drivers that need master clocks, etc. need to move any probe
+code that actually accesses hardware to the register op. Others can remain
+as. Nor should this change behavior of existing drivers as this happens
+all in the V4L2 core.
 
-It's absolutely fine to provide a custom implementation. All I'm saying
-is that we should add a 3-cell variant of of_pwm_simple_xlate() instead
-of having to duplicate it for every chip that supports inversion of the
-polarity.
+The bridge driver may still have to wait until all i2c drivers are loaded,
+though. But that can definitely be handled centrally (i.e.: 'I need these
+drivers, wait until all are loaded').
 
-Maybe something like of_pwm_xlate_with_flags()?
+> 1. We'll have to create these V4L2 clock start and stop functions, that, 
+> supplied (in case of I2C) with client address and adapter number will find 
+> the correct v4l2_device instance and call its callbacks.
+> 
+> 2. The I2C notifier. I'm not sure, whether this one should be common. Of 
+> common tasks we have to refcount the I2C adapter and register the 
+> subdevice. Then we'd have to call the bridge driver's callback. Is it 
+> worth it doing this centrally or rather allow individual drivers to do 
+> that themselves?
+> 
+> Also, ideally OF-compatible (I2C) drivers should run with no platform 
+> data, but soc-camera is using I2C device platform data intensively. To 
+> avoid modifying the soc-camera core and all drivers, I also trigger on the 
+> BUS_NOTIFY_BIND_DRIVER event and assign a reference to the dynamically 
+> created platform data to the I2C device. Would we also want to do this for 
+> all V4L2 bridge drivers? We could call this a "prepare" callback or 
+> something similar...
 
-Thierry
+Well, subdev drivers should either parse the OF data, or use the platform_data.
+The way soc_camera uses platform_data is one reason why it is so hard to
+reuse subdevs for non-soc_camera drivers. All the callbacks in soc_camera_link
+should be replaced by calls to the v4l2_device notify() callback. After that we
+can see what is needed to drop struct soc_camera_link altogether as platform_data.
 
---/WwmFnJnmDyWGHa4
-Content-Type: application/pgp-signature
+> 3. Bridge driver unregistering. Here we have to put the subdevice driver 
+> back into the deferred-probe state... Ugliness alert: I'm doing this by 
+> unregistering and re-registering the I2C device... For that I also have to 
+> create a copy of devices I2C board-info data. Lovely, ain't it? This I'd 
+> be happy to move to the V4L2 core;-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+By just using the unregister ops this should be greatly simplified as well.
 
-iQIcBAEBAgAGBQJQctoQAAoJEN0jrNd/PrOhiS0P/0FEV2hLcV4p3YfvgS9uuTJG
-M6EWNV3w4AozIWRYAN+becyyD0haCfuzl18rz/ar7/F4N5S4zXRnzKeOupjqlYrh
-mWDII3cqYOjgU4IBdnwsWETxRRjz86pR6O314wlf+SywKdRjDWriypwGE2/wXSZC
-ZgNHoWfcog0oweFZD4PBLsgXomg0rjXLdgHMgF1MQry9w9F5Z7p3PGqPVFjBu6ov
-OkLj2jdaWAN5376pn9YmjccE2p7k5BsumSRN70fPb0Tn/6rKNa5ZhEUJK8LAR0Jg
-+uzpJmN2DJ4p7IxbVZEEpFTMXZWIMB1ub6p3MKHPLH0maLWKYDEuDmRSVSUsEtcV
-gR3AoyHZHwsiWPI1mBBAJ0CIY/weIcHmqYh0dmlKV+5Lkq2Zj/tBuDMbigHytpfr
-mDLjq3tsFyUhL7kJNETYuztPYOzlLdlYrnT7CqbuTF/dta3dj+F+ZNBRXnCTVn9J
-DoO7XIklnf2I6P5rSzLKQgBS/Tu+dYhZxqR7kNJ2cB8RuX3kdnBq1zf7ExIbkhx1
-uBl9tyE5JIFC6OipPz74jZtrZqGqKk3qTk/gs39pJ4nOjP7OcIEBL688iTf/Y4LA
-MzMZOsaLSRG9Yo1yyUs9GrwVqIWozZ3/7H6yrM8pmKL32qz8wa6YNS8tGqQf1s42
-FwuGrAVKsTMKiZ2rO8uD
-=Vs2O
------END PGP SIGNATURE-----
+Unless I am missing something, which is perfectly possible :-)
 
---/WwmFnJnmDyWGHa4--
+Regards,
+
+	Hans
+
+> 
+> Thanks
+> Guennadi
+> 
+> > the soc_camera patches
+> > will become a lot easier to understand.
+> > 
+> > Regards,
+> > 
+> > 	Hans
+> > 
+> > > 
+> > > Thanks
+> > > Guennadi
+> > > ---
+> > > Guennadi Liakhovetski, Ph.D.
+> > > Freelance Open-Source Software Developer
+> > > http://www.open-technology.de/
+> > > --
+> > > To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> > > the body of a message to majordomo@vger.kernel.org
+> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > 
+> > 
+> 
+> ---
+> Guennadi Liakhovetski, Ph.D.
+> Freelance Open-Source Software Developer
+> http://www.open-technology.de/
+> 
