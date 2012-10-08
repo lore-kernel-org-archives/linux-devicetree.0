@@ -1,139 +1,71 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Date: Mon, 08 Oct 2012 19:33:38 +0200
-Message-ID: <1372700.aWK5SMVmD3@avalon>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de> <Pine.LNX.4.64.1210081000530.11034@axis700.grange> <5072FAF7.2090900@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Mon, 08 Oct 2012 14:00:38 -0600
+Message-ID: <507330E6.1010409@wwwdotorg.org>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de> <506AF706.3090003@gmail.com> <Pine.LNX.4.64.1210021626220.15778@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <5072FAF7.2090900@wwwdotorg.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1210021626220.15778@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Rob Herring <robherring2@gmail.com>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On 10/02/2012 08:33 AM, Guennadi Liakhovetski wrote:
+> On Tue, 2 Oct 2012, Rob Herring wrote:
+>> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
+>>> This patch adds a document, describing common V4L2 device tree bindings.
 
-On Monday 08 October 2012 10:10:31 Stephen Warren wrote:
-> On 10/08/2012 02:25 AM, Guennadi Liakhovetski wrote:
-> > On Fri, 5 Oct 2012, Stephen Warren wrote:
-> >> On 10/04/2012 03:35 PM, Guennadi Liakhovetski wrote:
-> >>> Hi Steffen
-> >>> 
-> >>> Sorry for chiming in so late in the game, but I've long been wanting to
-> >>> have a look at this and compare with what we do for V4L2, so, this seems
-> >>> a great opportunity to me:-)
-> >>> 
-> >>> On Thu, 4 Oct 2012, Steffen Trumtrar wrote:
-> >>>> diff --git
-> >>>> a/Documentation/devicetree/bindings/video/display-timings.txt
-> >>>> b/Documentation/devicetree/bindings/video/display-timings.txt
-> >>>> 
-> >>>> +timings-subnode
-> >>>> +---------------
-> >>>> +
-> >>>> +required properties:
-> >>>> + - hactive, vactive: Display resolution
-> >>>> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing
-> >>>> parameters +   in pixels
-> >>>> +   vfront-porch, vback-porch, vsync-len: Vertical display timing
-> >>>> parameters in +   lines
-> >>>> + - clock: displayclock in Hz
-> >>> 
-> >>> You're going to hate me for this, but eventually we want to actually
-> >>> reference clock objects in our DT bindings. For now, even if you don't
-> >>> want to actually add clock phandles and stuff here, I think, using the
-> >>> standard "clock-frequency" property would be much better!
-> >> 
-> >> In a definition of a display timing, we will never need to use the clock
-> >> binding; the clock binding would be used by the HW module that is
-> >> generating a timing, not by the timing definition itself.
-> > 
-> > You mean clock consumer bindings will be in the display device DT node?
-> > And the display-timings node will be its child?
-> 
-> Yes
-> 
-> ...
-> 
-> >>>> + - interlaced (bool)
-> >>> 
-> >>> Is "interlaced" a property of the hardware, i.e. of the board? Can the
-> >>> same display controller on one board require interlaced data and on
-> >>> another board - progressive?
-> >> 
-> >> Interlace is a property of a display mode. It's quite possible for a
-> >> particular display controller to switch between interlace and
-> >> progressive output at run-time. For example, reconfiguring the output
-> >> between 480i, 720p, 1080i, 1080p modes. Admittedly, if you're talking to
-> >> a built-in LCD display, you're probably always going to be driving the
-> >> single mode required by the panel, and that mode will likely always be
-> >> progressive. However, since this binding attempts to describe any
-> >> display timing, I think we still need this property per mode.
-> > 
-> > But why do you need this in the DT then at all?
-> 
-> Because the driver for the display controller has no idea what display
-> or panel will be connected to it.
+>>> diff --git a/Documentation/devicetree/bindings/media/v4l2.txt b/Documentation/devicetree/bindings/media/v4l2.txt
 
-That's right, but with the current common panel framework (WIP, I plan to 
-resume working on it this week) the display controller will be able to query 
-the panel for bus configuration parameters (or the other way around, the panel 
-driver will set the display controller bus configuration). The panel driver 
-will still need to receive timing information from DT, but it will be possible 
-to communicate display bus configuration parameters between the panel driver 
-and the display controller driver.
+>> One other comment below:
+>>
+>>> +
+>>> +General concept
+>>> +---------------
+>>> +
+>>> +Video pipelines consist of external devices, e.g. camera sensors, controlled
+>>> +over an I2C, SPI or UART bus, and SoC internal IP blocks, including video DMA
+>>> +engines and video data processors.
+>>> +
+>>> +SoC internal blocks are described by DT nodes, placed similarly to other SoC
+>>> +blocks. External devices are represented as child nodes of their respective bus
+>>> +controller nodes, e.g. I2C.
+>>> +
+>>> +Data interfaces on all video devices are described by "port" child DT nodes.
+>>> +Configuration of a port depends on other devices participating in the data
+>>> +transfer and is described by "link" DT nodes, specified as children of the
+>>> +"port" nodes:
+>>> +
+>>> +/foo {
+>>> +	port@0 {
+>>> +		link@0 { ... };
+>>> +		link@1 { ... };
+>>> +	};
+>>> +	port@1 { ... };
+>>> +};
+>>> +
+>>> +If a port can be configured to work with more than one other device on the same
+>>> +bus, a "link" child DT node must be provided for each of them. If more than one
+>>> +port is present on a device or more than one link is connected to a port, a
+>>> +common scheme, using "#address-cells," "#size-cells" and "reg" properties is
+>>> +used.
+>>> +
+>>> +Optional link properties:
+>>> +- remote: phandle to the other endpoint link DT node.
+>>
+>> This name is a little vague. Perhaps "endpoint" would be better.
+> 
+> "endpoint" can also refer to something local like in USB case. Maybe 
+> rather the description of the "remote" property should be improved?
 
-This being said, I agree that interlaced is a property of the display mode, 
-not of the display bus (even though the display bus will then be configured 
-for interlaced data).
+The documentation doesn't show up in all the .dts files that use it; it
+might be useful to try and make the .dts file as obviously readable as
+possible.
 
-> > If it's fixed, as required per display controller, then its driver will
-> > know it. If it's runtime configurable, then it's a purely software
-> > parameter and doesn't depend on the board?
-> 
-> interlace-vs-progressive isn't "fixed, as required per display
-> controller", but is a property of the mode being sent by the display
-> controller, and the requirements for that mode are driven by the
-> panel/display connected to the display controller, not the display
-> controller, in general.
-> 
-> ...
-> 
-> >>> BTW, I'm not very familiar with display interfaces, but for interlaced
-> >>> you probably sometimes use a field signal, whose polarity you also want
-> >>> to specify here? We use a "field-even-active" integer property for it.
-> >> 
-> >> I think that's a property of the display controller itself, rather than
-> >> an individual mode, although I'm not 100% certain. My assertion is that
-> >> the physical interface that the display controller is driving will
-> >> determine whether embedded or separate sync is used, and in the separate
-> >> sync case, how the field signal is defined, and that all interlace modes
-> >> driven over that interface will use the same field signal definition.
-> > 
-> > In general, I might be misunderstanding something, but don't we have to
-> > distinguish between 2 types of information about display timings: (1) is
-> > defined by the display controller requirements, is known to the display
-> > driver and doesn't need to be present in timings DT. We did have some of
-> > these parameters in board data previously, because we didn't have proper
-> > display controller drivers...
-> 
-> Yes, there probably is data of that kind, but the display mode timings
-> binding is only address standardized display timings information, not
-> controller-specific information, and hence doesn't cover this case.
-> 
-> > (2) is board specific configuration, and is
-> > such it has to be present in DT.
-> 
-> Certainly, yes.
-> 
-> > In that way, doesn't "interlaced" belong to type (1) and thus doesn't need
-> > to be present in DT?
-> 
-> I don't believe so.
+Perhaps "remote-port" or "connected-port" would be sufficiently descriptive.
 
--- 
-Regards,
+(and yes, I know I'm probably bike-shedding now).
 
-Laurent Pinchart
