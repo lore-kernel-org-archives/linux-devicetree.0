@@ -1,62 +1,95 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Tue, 9 Oct 2012 09:18:56 +0000
-Message-ID: <201210090918.56725.arnd@arndb.de>
-References: <20121007015300.828366635@gmail.com>
- <20121007015405.958959522@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Tue, 9 Oct 2012 11:21:23 +0200
+Message-ID: <201210091121.23683.hverkuil@xs4all.nl>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <4043536.qVaHVXMbPA@avalon> <Pine.LNX.4.64.1210082312570.14454@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121007015405.958959522-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1210082312570.14454@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robherring2@gmail.com>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Domenico,
+On Mon 8 October 2012 23:14:01 Guennadi Liakhovetski wrote:
+> On Mon, 8 Oct 2012, Laurent Pinchart wrote:
+> 
+> > On Monday 08 October 2012 14:00:38 Stephen Warren wrote:
+> > > On 10/02/2012 08:33 AM, Guennadi Liakhovetski wrote:
+> > > > On Tue, 2 Oct 2012, Rob Herring wrote:
+> > > >> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
+> > > >>> This patch adds a document, describing common V4L2 device tree bindings.
+> > > >>> 
+> > > >>> diff --git a/Documentation/devicetree/bindings/media/v4l2.txt
+> > > >>> b/Documentation/devicetree/bindings/media/v4l2.txt>> 
+> > > >> One other comment below:
+> > > >>> +
+> > > >>> +General concept
+> > > >>> +---------------
+> > > >>> +
+> > > >>> +Video pipelines consist of external devices, e.g. camera sensors,
+> > > >>> controlled +over an I2C, SPI or UART bus, and SoC internal IP blocks,
+> > > >>> including video DMA +engines and video data processors.
+> > > >>> +
+> > > >>> +SoC internal blocks are described by DT nodes, placed similarly to
+> > > >>> other SoC +blocks. External devices are represented as child nodes of
+> > > >>> their respective bus +controller nodes, e.g. I2C.
+> > > >>> +
+> > > >>> +Data interfaces on all video devices are described by "port" child DT
+> > > >>> nodes. +Configuration of a port depends on other devices participating
+> > > >>> in the data +transfer and is described by "link" DT nodes, specified as
+> > > >>> children of the +"port" nodes:
+> > > >>> +
+> > > >>> +/foo {
+> > > >>> +	port@0 {
+> > > >>> +		link@0 { ... };
+> > > >>> +		link@1 { ... };
+> > > >>> +	};
+> > > >>> +	port@1 { ... };
+> > > >>> +};
+> > > >>> +
+> > > >>> +If a port can be configured to work with more than one other device on
+> > > >>> the same +bus, a "link" child DT node must be provided for each of
+> > > >>> them. If more than one +port is present on a device or more than one
+> > > >>> link is connected to a port, a +common scheme, using "#address-cells,"
+> > > >>> "#size-cells" and "reg" properties is +used.
+> > > >>> +
+> > > >>> +Optional link properties:
+> > > >>> +- remote: phandle to the other endpoint link DT node.
+> > > >> 
+> > > >> This name is a little vague. Perhaps "endpoint" would be better.
+> > > > 
+> > > > "endpoint" can also refer to something local like in USB case. Maybe
+> > > > rather the description of the "remote" property should be improved?
+> > > 
+> > > The documentation doesn't show up in all the .dts files that use it; it
+> > > might be useful to try and make the .dts file as obviously readable as
+> > > possible.
+> > > 
+> > > Perhaps "remote-port" or "connected-port" would be sufficiently descriptive.
+> > 
+> > I like remote-port better than the already proposed remote-link.
+> 
+> Yes, remote-port sounds better, than remote-link, but might be more 
+> difficult to correlate with the fact, that the phandle value of this 
+> property points to a link DT node, and not to a port.
 
-Your series looks very nice, thanks for the contribution!
+I first thought of remote-port as well, but it is just weird that it points to
+a link node.
 
-Stephen has already covered everything I would have commented and
-more, except for one thing that I found: 
+I seem to remember that 'link' was called 'pad' initially, but people didn't
+like that due to possible confusion with other meanings of that word.
 
-On Sunday 07 October 2012, Domenico Andreoli wrote:
-> Index: b/arch/arm/boot/dts/bcm476x.dtsi
-> ===================================================================
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm476x.dtsi
-> @@ -0,0 +1,31 @@
-> +/include/ "skeleton.dtsi"
-> +
-> +/ {
-> +       compatible = "brcm,bcm476x";
-> +       model = "Broadcom BCM476x";
-> +
-> ...
-> +               vic0: interrupt-controller@80000 {
-> +                       compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
-> +                       reg = <0x80000 0x1000>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <1>;
-> +               };
+The problem with the word 'link' is that it doesn't describe a link but just
+one endpoint of a link.
 
-I suppose that the name of the soc is not actually "bcm476x" but you
-are in fact referring to the family including bcm4760 and bcm4761.
+Is it an idea to rename 'link' to 'endpoint' and 'remote' to 'remote-endpoint'?
 
-The convention in the device tree is to always use specific product
-numbers, rather than wildcards. If one of the two has a superset of
-the hardware of the other, I would recommend you pick that number
-in the device tree and in the drivers, and for the other one, you
-just mark them as compatible to both of them.
+So a port has endpoints, and each endpoint has a remote-endpoint property.
 
-	Arnd
+Regards,
+
+	Hans
