@@ -1,103 +1,63 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 2/2] ARM: Exynos5250: Enabling ohci-exynos driver
-Date: Tue, 09 Oct 2012 17:29:14 +0900
-Message-ID: <003901cda5f8$2a4f3980$7eedac80$%han@samsung.com>
-References: <1349431818-15639-1-git-send-email-gautam.vivek@samsung.com>
- <1349431818-15639-3-git-send-email-gautam.vivek@samsung.com>
+From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: OMAP2+: gpmc: Fix kernel BUG for DT boot mode
+Date: Tue, 9 Oct 2012 14:27:20 +0530
+Message-ID: <1349773040-8204-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349431818-15639-3-git-send-email-gautam.vivek@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, October 05, 2012 7:10 PM Vivek Gautam wrote
-> 
-> Adding OHCI device tree node for Exynos5250 along with
-> the device base address.
-> 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+With recent changes in omap gpmc driver code, in case of DT
+boot mode, where bootloader does not configure gpmc cs space
+will result into kernel BUG() inside gpmc_mem_init() function,
+as gpmc cs0 gpmc_config7[0].csvalid bit is set to '1' and
+gpmc_config7[0].baseaddress is set to '0' on reset.
 
-It looks good. Also I have tested this patch with Exynos5250.
+This use-case is applicable for any board/EVM which doesn't have
+any peripheral connected to gpmc cs0, for example BeagleXM and
+BeagleBone, so DT boot mode fails.
 
-Acked-by: Jingoo Han <jg1.han@samsung.com>
+This patch adds of_have_populated_dt() check before creating
+device, so that for DT boot mode, gpmc probe will not be called
+which is expected behavior, as gpmc is not supported yet from DT.
 
-> ---
->  .../devicetree/bindings/usb/exynos-usb.txt         |   15 +++++++++++++++
->  arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++++
->  arch/arm/mach-exynos/include/mach/map.h            |    1 +
->  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 ++
->  4 files changed, 24 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> index 56e35c7..bff10a8 100644
-> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> @@ -23,3 +23,18 @@ Example:
->  		interrupts = <0 71 0>;
->  		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
->  	};
-> +
-> +OHCI
-> +Required properties:
-> + - compatible: should be "samsung,exynos-ohci" for USB 2.0
-> +   OHCI companion controller in host mode.
-> + - reg: physical base address of the controller and length of memory mapped
-> +   region.
-> + - interrupts: interrupt number to the cpu.
-> +
-> +Example:
-> +	ohci {
-> +		compatible = "samsung,exynos-ohci";
-> +		reg = <0x12120000 0x100>;
-> +		interrupts = <0 71 0>;
-> +	};
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 73ea844..bcdfbe2 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -224,6 +224,12 @@
->  		interrupts = <0 71 0>;
->  	};
-> 
-> +	ohci {
-> +		compatible = "samsung,exynos-ohci";
-> +		reg = <0x12120000 0x100>;
-> +		interrupts = <0 71 0>;
-> +	};
-> +
->  	amba {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-> index 825fe40..cfede1f 100644
-> --- a/arch/arm/mach-exynos/include/mach/map.h
-> +++ b/arch/arm/mach-exynos/include/mach/map.h
-> @@ -196,6 +196,7 @@
->  #define EXYNOS4_PA_OHCI			0x12590000
->  #define EXYNOS4_PA_HSPHY		0x125B0000
->  #define EXYNOS5_PA_EHCI			0x12110000
-> +#define EXYNOS5_PA_OHCI			0x12120000
->  #define EXYNOS4_PA_MFC			0x13400000
-> 
->  #define EXYNOS4_PA_UART			0x13800000
-> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> index 6d950d7b..e6c2144 100644
-> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> @@ -74,6 +74,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
->  				"exynos-gsc.3", NULL),
->  	OF_DEV_AUXDATA("samsung,exynos-ehci", EXYNOS5_PA_EHCI,
->  					"s5p-ehci", NULL),
-> +	OF_DEV_AUXDATA("samsung,exynos-ohci", EXYNOS5_PA_OHCI,
-> +					"exynos-ohci", NULL),
->  	{},
->  };
-> 
-> --
-> 1.7.6.5
+Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+---
+This should go in for rc1, as this breaks AM33xx boot.
+
+ arch/arm/mach-omap2/gpmc.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index 8ab1e1b..c68f9e1 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -981,6 +981,10 @@ static int __init omap_gpmc_init(void)
+ 	struct platform_device *pdev;
+ 	char *oh_name = "gpmc";
+
++	/* If dtb is there, the devices will be created dynamically */
++	if (of_have_populated_dt())
++		return -ENODEV;
++
+ 	oh = omap_hwmod_lookup(oh_name);
+ 	if (!oh) {
+ 		pr_err("Could not look up %s\n", oh_name);
+--
+1.7.0.4
