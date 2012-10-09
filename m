@@ -1,45 +1,36 @@
-From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Tue, 9 Oct 2012 13:55:30 +0200
-Message-ID: <20121009115530.GD28817@glitch>
-References: <20121007015300.828366635@gmail.com>
- <20121007015405.958959522@gmail.com>
- <50739541.2030603@wwwdotorg.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/3] Input: egalax_ts: get gpio from devicetree node
+Date: Tue, 9 Oct 2012 11:58:32 +0000
+Message-ID: <201210091158.33040.arnd@arndb.de>
+References: <1345114051-3052-1-git-send-email-jason77.wang@gmail.com> <1345114051-3052-2-git-send-email-jason77.wang@gmail.com> <20120817003125.GA24242@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50739541.2030603-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20120817003125.GA24242@S2101-09.ap.freescale.net>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Shawn Guo <shawn.guo@linaro.org>, Hui Wang <jason77.wang@gmail.com>, devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2012 at 09:08:49PM -0600, Stephen Warren wrote:
-> On 10/06/2012 07:53 PM, Domenico Andreoli wrote:
-> > BCM476x's minimal infrastructure, Kernel's great reuse.
+On Friday 17 August 2012, Shawn Guo wrote:
+> On Thu, Aug 16, 2012 at 06:47:29PM +0800, Hui Wang wrote:
+> > The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
+> > and don't support this API anymore.
+> > 
+> > The i.MX6q sabrelite platform equips an egalax touchscreen controller,
+> > and this platform already transfered to GENERIC_GPIO framework, to
+> > support this driver, we use a more generic way to get gpio.
+> > 
+> > Add a return value checking for waking up the controller in the probe
+> > function, this guarantee only a workable device can pass init.
+> > 
+> > Signed-off-by: Hui Wang <jason77.wang@gmail.com>
 > 
-> > Index: b/arch/arm/configs/bcm476x_defconfig
-> 
-> > +CONFIG_DEBUG_BCM476X_UART2=y
-> > +CONFIG_DEBUG_LL_INCLUDE="debug/bcm476x.S"
-> > +CONFIG_UNCOMPRESS_INCLUDE="debug/bcm476x-uncompress.h"
-> 
-> Was this defconfig file created by "make savedefconfig ; mv defconfig
-> arch/arm/configs/bcm476x_defconfig"? If you do that, I think those last
-> two lines I quoted above (and many more) will be removed, since those
-> values are selected by CONFIG_DEBUG_BCM476X_UART2.
+> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
 
-Yep, knew I was a 'make help' away from this. Will fix.
+What's the status on this patch? I'm still getting build errors from this
+driver, so I guess it was never accepted for the 3.7 merge window.
 
-Dome
+	Arnd
