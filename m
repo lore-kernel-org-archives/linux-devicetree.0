@@ -1,58 +1,98 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
-Date: Tue, 9 Oct 2012 13:00:24 +0200
-Message-ID: <201210091300.24124.hverkuil@xs4all.nl>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <Pine.LNX.4.64.1210081126140.12203@axis700.grange> <5073FDC8.8090909@samsung.com>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 2/5] ARM: S3C64XX: Add phy_type to pmu_isolation
+Date: Tue, 09 Oct 2012 20:12:20 +0900
+Message-ID: <004901cda60e$f3a45ac0$daed1040$%han@samsung.com>
+References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
+ <1349705548-15207-3-git-send-email-gautam.vivek@samsung.com>
+ <5073B743.9000200@ti.com>
+ <CAFp+6iE6Er088dYwp8q7uQuZhw9bdYbJXQDbJp66W6tD7+C-Xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5073FDC8.8090909@samsung.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAFp+6iE6Er088dYwp8q7uQuZhw9bdYbJXQDbJp66W6tD7+C-Xw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-language: ko
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Vivek Gautam' <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'kishon' <kishon-l0cyMroinI0@public.gmane.org>
+Cc: 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 9 October 2012 12:34:48 Sylwester Nawrocki wrote:
-> Hi Guennadi,
+On Tuesday, October 09, 2012 7:51 PM Vivek Gautam wrote
 > 
-> On 10/08/2012 11:40 AM, Guennadi Liakhovetski wrote:
-> > On Fri, 5 Oct 2012, Sylwester Nawrocki wrote:
-> >> I would really like to see more than one user until we add any core code.
-> >> No that it couldn't be changed afterwards, but it would be nice to ensure 
-> >> the concepts are right and proven in real life.
-> > 
-> > Unfortunately I don't have any more systems on which I could easily enough 
-> > try this. I've got a beagleboard with a camera, but I don't think I'm a 
-> > particularly good candidate for implementing DT support for OMAP3 camera 
-> > drivers;-) Apart from that I've only got soc-camera based systems, of 
-> > which none are _really_ DT-ready... At best I could try an i.MX31 based 
-> > board, but that doesn't have a very well developed .dts and that would be 
-> > soc-camera too anyway.
+> Hi Kishon,
 > 
-> I certainly wouldn't expect you would do all the job. I mean it would be good
-> to possibly have some other developers adding device tree support based on that 
-> new bindings and new infrastructure related to them. 
+> Firstly, thanks for the quick review.
 > 
-> There have been recently some progress in device tree support for Exynos SoCs,
-> including common clock framework support and we hope to add FDT support to the 
-> Samsung SoC camera devices during this kernel cycle, based on the newly designed 
-> media bindings. This is going to be a second attempt, after our initial RFC from 
-> May [1]. It would still be SoC specific implementation, but not soc-camera based.
->  
-> I wasn't a big fan of this asynchronous sub-devices probing, but it now seems
-> to be a most complete solution to me. I think it just need to be done right
-> at the v4l2-core so individual drivers don't get complicated too much.
+> On Tue, Oct 9, 2012 at 11:03 AM, kishon <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> > Hi,
+> >
+> >
+> > On Monday 08 October 2012 07:42 PM, Vivek Gautam wrote:
+> >>
+> >> It adds 'type' argument to pmu_isolation function, aligning
+> >> with other platforms, which keeps track of usbphy_type.
+> >>
+> >> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >> ---
+> >>   arch/arm/mach-s3c64xx/setup-usb-phy.c |    2 +-
+> >>   1 files changed, 1 insertions(+), 1 deletions(-)
+> >>
+> >> diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c
+> >> b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+> >> index 3aee778..b7d1d95 100644
+> >> --- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
+> >> +++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+> >> @@ -13,7 +13,7 @@
+> >>   #include <mach/map.h>
+> >>   #include <mach/regs-sys.h>
+> >>
+> >> -void s5p_usb_phy_pmu_isolation(int on)
+> >> +void s5p_usb_phy_pmu_isolation(int on, int type)
+> >
+> >
+> > IMO, this patch should have been squashed with the previous patch. IIUC, you
+> > have changed the call to this function for taking two arguments in your
+> > previous patch. Wouldn't that introduce compilation break after applying
+> > your first patch?
+> Yes, that's right it will introduce compilation break, my fault.
+> Just one querry, will it be good to put this arch change in [patch 1/5]?
+> and then can i move similar change in [patch 3/5] as given below again
+> in [patch 1/5]?
 
-After investigating this some more I think I agree with that. There are some
-things where we should probably ask for advice from the i2c subsystem devs,
-I'm thinking of putting the driver back into the deferred-probe state in
-particular.
+In my opinion, it would be better.
+This is because it can prevent build errors.
 
-Creating v4l2-core support for this is crucial as it is quite complex and
-without core support this is going to be a nightmare for drivers.
 
-Regards,
+Best regards,
+Jingoo Han
 
-	Hans
+> 
+> diff --git a/arch/arm/mach-exynos/setup-usb-phy.c
+> b/arch/arm/mach-exynos/setup-usb-phy.c
+> index 1c62d20..039d246 100644
+> --- a/arch/arm/mach-exynos/setup-usb-phy.c
+> +++ b/arch/arm/mach-exynos/setup-usb-phy.c
+> @@ -222,15 +226,40 @@ int s5p_usb_phy_exit(struct platform_device
+> *pdev, int type)
+>         return -EINVAL;
+>  }
+> 
+> -void s5p_usb_phy_pmu_isolation(int on)
+> +void s5p_usb_phy_pmu_isolation(int on, int type)
+> 
+> >
+> > Thanks
+> > Kishon
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Best regards
+> Vivek
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
