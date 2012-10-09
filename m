@@ -1,107 +1,227 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Tue, 9 Oct 2012 11:29:40 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210091129200.21518@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <4043536.qVaHVXMbPA@avalon> <Pine.LNX.4.64.1210082312570.14454@axis700.grange>
- <201210091121.23683.hverkuil@xs4all.nl>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 4/5] usb: s5p-ehci: Adding phy driver support
+Date: Tue, 09 Oct 2012 18:40:04 +0900
+Message-ID: <004301cda602$0f6c17a0$2e4446e0$%han@samsung.com>
+References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
+ <1349705548-15207-5-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <201210091121.23683.hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robherring2@gmail.com>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1349705548-15207-5-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-language: ko
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Oct 2012, Hans Verkuil wrote:
+On Monday, October 08, 2012 11:12 PM Vivek Gautam wrote
+> 
+> Adding the transceiver to ehci driver. Keeping the platform data
+> for continuing the smooth operation for boards which still uses it
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-> On Mon 8 October 2012 23:14:01 Guennadi Liakhovetski wrote:
-> > On Mon, 8 Oct 2012, Laurent Pinchart wrote:
-> > 
-> > > On Monday 08 October 2012 14:00:38 Stephen Warren wrote:
-> > > > On 10/02/2012 08:33 AM, Guennadi Liakhovetski wrote:
-> > > > > On Tue, 2 Oct 2012, Rob Herring wrote:
-> > > > >> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
-> > > > >>> This patch adds a document, describing common V4L2 device tree bindings.
-> > > > >>> 
-> > > > >>> diff --git a/Documentation/devicetree/bindings/media/v4l2.txt
-> > > > >>> b/Documentation/devicetree/bindings/media/v4l2.txt>> 
-> > > > >> One other comment below:
-> > > > >>> +
-> > > > >>> +General concept
-> > > > >>> +---------------
-> > > > >>> +
-> > > > >>> +Video pipelines consist of external devices, e.g. camera sensors,
-> > > > >>> controlled +over an I2C, SPI or UART bus, and SoC internal IP blocks,
-> > > > >>> including video DMA +engines and video data processors.
-> > > > >>> +
-> > > > >>> +SoC internal blocks are described by DT nodes, placed similarly to
-> > > > >>> other SoC +blocks. External devices are represented as child nodes of
-> > > > >>> their respective bus +controller nodes, e.g. I2C.
-> > > > >>> +
-> > > > >>> +Data interfaces on all video devices are described by "port" child DT
-> > > > >>> nodes. +Configuration of a port depends on other devices participating
-> > > > >>> in the data +transfer and is described by "link" DT nodes, specified as
-> > > > >>> children of the +"port" nodes:
-> > > > >>> +
-> > > > >>> +/foo {
-> > > > >>> +	port@0 {
-> > > > >>> +		link@0 { ... };
-> > > > >>> +		link@1 { ... };
-> > > > >>> +	};
-> > > > >>> +	port@1 { ... };
-> > > > >>> +};
-> > > > >>> +
-> > > > >>> +If a port can be configured to work with more than one other device on
-> > > > >>> the same +bus, a "link" child DT node must be provided for each of
-> > > > >>> them. If more than one +port is present on a device or more than one
-> > > > >>> link is connected to a port, a +common scheme, using "#address-cells,"
-> > > > >>> "#size-cells" and "reg" properties is +used.
-> > > > >>> +
-> > > > >>> +Optional link properties:
-> > > > >>> +- remote: phandle to the other endpoint link DT node.
-> > > > >> 
-> > > > >> This name is a little vague. Perhaps "endpoint" would be better.
-> > > > > 
-> > > > > "endpoint" can also refer to something local like in USB case. Maybe
-> > > > > rather the description of the "remote" property should be improved?
-> > > > 
-> > > > The documentation doesn't show up in all the .dts files that use it; it
-> > > > might be useful to try and make the .dts file as obviously readable as
-> > > > possible.
-> > > > 
-> > > > Perhaps "remote-port" or "connected-port" would be sufficiently descriptive.
-> > > 
-> > > I like remote-port better than the already proposed remote-link.
-> > 
-> > Yes, remote-port sounds better, than remote-link, but might be more 
-> > difficult to correlate with the fact, that the phandle value of this 
-> > property points to a link DT node, and not to a port.
-> 
-> I first thought of remote-port as well, but it is just weird that it points to
-> a link node.
-> 
-> I seem to remember that 'link' was called 'pad' initially, but people didn't
-> like that due to possible confusion with other meanings of that word.
-> 
-> The problem with the word 'link' is that it doesn't describe a link but just
-> one endpoint of a link.
-> 
-> Is it an idea to rename 'link' to 'endpoint' and 'remote' to 'remote-endpoint'?
-> 
-> So a port has endpoints, and each endpoint has a remote-endpoint property.
+Hi Vivek Gautam,
 
-I'm fine with that.
+Could you replace the patch subject with
+'USB: ehci-s5p: Add phy driver support'.
 
-Thanks
-Guennadi
+I also added some comments.
 
-> Regards,
+> ---
+>  drivers/usb/host/ehci-s5p.c |   62 +++++++++++++++++++++++++++++-------------
+>  1 files changed, 43 insertions(+), 19 deletions(-)
 > 
-> 	Hans
+> diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
+> index 85b74be..ac22893 100644
+> --- a/drivers/usb/host/ehci-s5p.c
+> +++ b/drivers/usb/host/ehci-s5p.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/of_gpio.h>
+>  #include <linux/platform_data/usb-ehci-s5p.h>
+>  #include <plat/usb-phy.h>
+> +#include <linux/usb/phy.h>
 
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Please, move header include to proper place as bellows:
+
+#include <linux/platform_data/usb-ehci-s5p.h>
++#include <linux/usb/phy.h>
+##include <plat/usb-phy.h>
+
+> 
+>  #define EHCI_INSNREG00(base)			(base + 0x90)
+>  #define EHCI_INSNREG00_ENA_INCR16		(0x1 << 25)
+> @@ -32,6 +33,8 @@ struct s5p_ehci_hcd {
+>  	struct device *dev;
+>  	struct usb_hcd *hcd;
+>  	struct clk *clk;
+> +	struct usb_phy *phy;
+> +	struct s5p_ehci_platdata *pdata;
+>  };
+> 
+>  static const struct hc_driver s5p_ehci_hc_driver = {
+> @@ -65,6 +68,26 @@ static const struct hc_driver s5p_ehci_hc_driver = {
+>  	.clear_tt_buffer_complete	= ehci_clear_tt_buffer_complete,
+>  };
+> 
+> +static void s5p_ehci_phy_enable(struct s5p_ehci_hcd *s5p_ehci)
+> +{
+> +	struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
+> +
+> +	if (s5p_ehci->phy)
+> +		usb_phy_init(s5p_ehci->phy);
+> +	else if (s5p_ehci->pdata->phy_init)
+> +		s5p_ehci->pdata->phy_init(pdev, S5P_USB_PHY_HOST);
+> +}
+> +
+> +static void s5p_ehci_phy_disable(struct s5p_ehci_hcd *s5p_ehci)
+> +{
+> +	struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
+> +
+> +	if (s5p_ehci->phy)
+> +		usb_phy_shutdown(s5p_ehci->phy);
+> +	else if (s5p_ehci->pdata->phy_exit)
+> +		s5p_ehci->pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
+> +}
+> +
+>  static void s5p_setup_vbus_gpio(struct platform_device *pdev)
+>  {
+>  	int err;
+> @@ -92,15 +115,10 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+>  	struct usb_hcd *hcd;
+>  	struct ehci_hcd *ehci;
+>  	struct resource *res;
+> +	struct usb_phy *phy;
+>  	int irq;
+>  	int err;
+> 
+> -	pdata = pdev->dev.platform_data;
+> -	if (!pdata) {
+> -		dev_err(&pdev->dev, "No platform data defined\n");
+> -		return -EINVAL;
+> -	}
+> -
+>  	/*
+>  	 * Right now device-tree probed devices don't get dma_mask set.
+>  	 * Since shared usb code relies on it, set it here for now.
+> @@ -118,6 +136,20 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+>  	if (!s5p_ehci)
+>  		return -ENOMEM;
+> 
+> +	pdata = pdev->dev.platform_data;
+> +	if (!pdata) {
+> +		/* Fallback to Phy transceiver */
+> +		phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
+> +		if (IS_ERR_OR_NULL(phy)) {
+> +			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
+> +			return -EPROBE_DEFER;
+> +		} else {
+> +			s5p_ehci->phy = phy;
+> +		}
+> +	} else {
+> +		s5p_ehci->pdata = pdata;
+> +	}
+> +
+>  	s5p_ehci->dev = &pdev->dev;
+> 
+>  	hcd = usb_create_hcd(&s5p_ehci_hc_driver, &pdev->dev,
+> @@ -163,8 +195,7 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+>  		goto fail_io;
+>  	}
+> 
+> -	if (pdata->phy_init)
+> -		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
+> +	s5p_ehci_phy_enable(s5p_ehci);
+> 
+>  	ehci = hcd_to_ehci(hcd);
+>  	ehci->caps = hcd->regs;
+> @@ -184,6 +215,7 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+> 
+>  fail_io:
+>  	clk_disable(s5p_ehci->clk);
+> +	s5p_ehci_phy_disable(s5p_ehci);
+
+This is wrong path for errors.
+For example, when devm_ioremap() fails, s5p_ehci_phy_disable()
+is called. However, in this case, s5p_ehci_phy_enable() is not
+called. So, s5p_ehci_phy_disable() should not be called.
+
+Please fix them as follows:
+
+	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+	if (err) {
+		dev_err(&pdev->dev, "Failed to add USB HCD\n");
+-		goto fail_io;
++		goto fail_add_hcd;
+	}
+
+	platform_set_drvdata(pdev, s5p_ehci);
+
+	return 0;
+
++fail_add_hcd:
++	s5p_ehci_phy_disable(s5p_ehci);
+fail_io:
+	clk_disable(s5p_ehci->clk);
+fail_clk:
+	usb_put_hcd(hcd);
+
+
+>  fail_clk:
+>  	usb_put_hcd(hcd);
+>  	return err;
+> @@ -191,14 +223,12 @@ fail_clk:
+> 
+>  static int __devexit s5p_ehci_remove(struct platform_device *pdev)
+>  {
+> -	struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
+>  	struct s5p_ehci_hcd *s5p_ehci = platform_get_drvdata(pdev);
+>  	struct usb_hcd *hcd = s5p_ehci->hcd;
+> 
+>  	usb_remove_hcd(hcd);
+> 
+> -	if (pdata && pdata->phy_exit)
+> -		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
+> +	s5p_ehci_phy_disable(s5p_ehci);
+> 
+>  	clk_disable(s5p_ehci->clk);
+> 
+> @@ -222,14 +252,11 @@ static int s5p_ehci_suspend(struct device *dev)
+>  	struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
+>  	struct usb_hcd *hcd = s5p_ehci->hcd;
+>  	bool do_wakeup = device_may_wakeup(dev);
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
+>  	int rc;
+> 
+>  	rc = ehci_suspend(hcd, do_wakeup);
+> 
+> -	if (pdata && pdata->phy_exit)
+> -		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
+> +	s5p_ehci_phy_disable(s5p_ehci);
+> 
+>  	clk_disable(s5p_ehci->clk);
+> 
+> @@ -240,13 +267,10 @@ static int s5p_ehci_resume(struct device *dev)
+>  {
+>  	struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
+>  	struct usb_hcd *hcd = s5p_ehci->hcd;
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
+> 
+>  	clk_enable(s5p_ehci->clk);
+> 
+> -	if (pdata && pdata->phy_init)
+> -		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
+> +	s5p_ehci_phy_enable(s5p_ehci);
+> 
+>  	/* DMA burst Enable */
+>  	writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
+> --
+> 1.7.6.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
