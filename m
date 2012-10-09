@@ -1,7 +1,7 @@
 From: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/3] of/address: sparse fixes
-Date: Mon, 8 Oct 2012 19:41:58 -0500
-Message-ID: <20121008194158.bd759eebd0e81de06a03b04b@freescale.com>
+Subject: [PATCH 2/3] of/irq: sparse fixes
+Date: Mon, 8 Oct 2012 19:42:04 -0500
+Message-ID: <20121008194204.fa666587adc7445ac580ddf3@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -20,169 +20,71 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-drivers/of/address.c:66:29: warning: incorrect type in argument 1 (different base types)
-drivers/of/address.c:66:29:    expected restricted __be32 const [usertype] *cell
-drivers/of/address.c:66:29:    got unsigned int [usertype] *addr
-drivers/of/address.c:87:32: warning: incorrect type in argument 1 (different base types)
-drivers/of/address.c:87:32:    expected restricted __be32 const [usertype] *cell
-drivers/of/address.c:87:32:    got unsigned int [usertype] *addr
-drivers/of/address.c:91:30: warning: incorrect type in assignment (different base types)
-drivers/of/address.c:91:30:    expected unsigned int [unsigned] [usertype] <noident>
-drivers/of/address.c:91:30:    got restricted __be32 [usertype] <noident>
-drivers/of/address.c:92:22: warning: incorrect type in assignment (different base types)
-drivers/of/address.c:92:22:    expected unsigned int [unsigned] [usertype] <noident>
-drivers/of/address.c:92:22:    got restricted __be32 [usertype] <noident>
-drivers/of/address.c:147:35: warning: incorrect type in argument 1 (different base types)
-drivers/of/address.c:147:35:    expected restricted __be32 const [usertype] *addr
-drivers/of/address.c:147:35:    got unsigned int [usertype] *addr
-drivers/of/address.c:157:34: warning: incorrect type in argument 1 (different base types)
-drivers/of/address.c:157:34:    expected restricted __be32 const [usertype] *cell
-drivers/of/address.c:157:34:    got unsigned int [usertype] *
-drivers/of/address.c:256:29: warning: restricted __be32 degrades to integer
-drivers/of/address.c:256:36: warning: restricted __be32 degrades to integer
-drivers/of/address.c:262:34: warning: incorrect type in argument 1 (different base types)
-drivers/of/address.c:262:34:    expected restricted __be32 const [usertype] *cell
-drivers/of/address.c:262:34:    got unsigned int [usertype] *
-drivers/of/address.c:372:41: warning: incorrect type in argument 1 (different base types)
-drivers/of/address.c:372:41:    expected restricted __be32 const [usertype] *cell
-drivers/of/address.c:372:41:    got unsigned int [usertype] *addr
-drivers/of/address.c:395:53: warning: incorrect type in argument 2 (different base types)
-drivers/of/address.c:395:53:    expected restricted __be32 const [usertype] *addr
-drivers/of/address.c:395:53:    got unsigned int [usertype] *addr
-drivers/of/address.c:443:50: warning: incorrect type in argument 2 (different base types)
-drivers/of/address.c:443:50:    expected restricted __be32 const [usertype] *addr
-drivers/of/address.c:443:50:    got unsigned int *<noident>
-drivers/of/address.c:455:49: warning: incorrect type in argument 1 (different base types)
-drivers/of/address.c:455:49:    expected restricted __be32 const [usertype] *cell
-drivers/of/address.c:455:49:    got unsigned int *<noident>
-drivers/of/address.c:480:60: warning: incorrect type in argument 2 (different base types)
-drivers/of/address.c:480:60:    expected restricted __be32 const [usertype] *addr
-drivers/of/address.c:480:60:    got unsigned int *<noident>
-drivers/of/address.c:412:5: warning: symbol '__of_translate_address' was not declared. Should it be static?
-drivers/of/address.c:520:14: error: symbol 'of_get_address' redeclared with different type (originally declared at include/linux/of_address.h:22) - different base types
+drivers/of/irq.c:195:57: warning: restricted __be32 degrades to integer
+drivers/of/irq.c:196:51: warning: restricted __be32 degrades to integer
+drivers/of/irq.c:199:57: warning: restricted __be32 degrades to integer
+drivers/of/irq.c:201:58: warning: restricted __be32 degrades to integer
+drivers/of/irq.c:470:37: warning: incorrect type in assignment (different modifiers)
+drivers/of/irq.c:470:37:    expected int ( *[usertype] irq_init_cb )( ... )
+drivers/of/irq.c:470:37:    got void const *const data
+drivers/of/irq.c:96:5: error: symbol 'of_irq_map_raw' redeclared with different type (originally declared at include/linux/of_irq.h:61) - incompatible argument 2 (different base types)
+
+drivers/of/of_pci_irq.c:91:40: warning: incorrect type in argument 2 (different base types)
+drivers/of/of_pci_irq.c:91:40:    expected unsigned int const [usertype] *intspec
+drivers/of/of_pci_irq.c:91:40:    got restricted __be32 *<noident>
+drivers/of/of_pci_irq.c:91:53: warning: incorrect type in argument 4 (different base types)
+drivers/of/of_pci_irq.c:91:53:    expected unsigned int const [usertype] *addr
+drivers/of/of_pci_irq.c:91:53:    got restricted __be32 *<noident>
 
 Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/of/address.c       | 24 ++++++++++++------------
- include/linux/of_address.h |  4 ++--
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/of/irq.c       | 8 +++++---
+ include/linux/of_irq.h | 4 ++--
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 72e496f..0125524 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -37,9 +37,9 @@ struct of_bus {
- 	int		(*match)(struct device_node *parent);
- 	void		(*count_cells)(struct device_node *child,
- 				       int *addrc, int *sizec);
--	u64		(*map)(u32 *addr, const __be32 *range,
-+	u64		(*map)(__be32 *addr, const __be32 *range,
- 				int na, int ns, int pna);
--	int		(*translate)(u32 *addr, u64 offset, int na);
-+	int		(*translate)(__be32 *addr, u64 offset, int na);
- 	unsigned int	(*get_flags)(const __be32 *addr);
- };
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index a23ec77..a3c1c5a 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -192,11 +192,13 @@ int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
+ 			/* Compare specifiers */
+ 			match = 1;
+ 			for (i = 0; i < addrsize && match; ++i) {
+-				u32 mask = imask ? imask[i] : 0xffffffffu;
++				__be32 mask = imask ? imask[i]
++						    : cpu_to_be32(0xffffffffu);
+ 				match = ((addr[i] ^ imap[i]) & mask) == 0;
+ 			}
+ 			for (; i < (addrsize + intsize) && match; ++i) {
+-				u32 mask = imask ? imask[i] : 0xffffffffu;
++				__be32 mask = imask ? imask[i]
++						    : cpu_to_be32(0xffffffffu);
+ 				match =
+ 				   ((intspec[i-addrsize] ^ imap[i]) & mask) == 0;
+ 			}
+@@ -465,7 +467,7 @@ void __init of_irq_init(const struct of_device_id *matches)
+ 			pr_debug("of_irq_init: init %s @ %p, parent %p\n",
+ 				 match->compatible,
+ 				 desc->dev, desc->interrupt_parent);
+-			irq_init_cb = match->data;
++			irq_init_cb = (of_irq_init_cb_t)match->data;
+ 			ret = irq_init_cb(desc->dev, desc->interrupt_parent);
+ 			if (ret) {
+ 				kfree(desc);
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index b8e2411..535cecf 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -58,8 +58,8 @@ static inline int of_irq_map_oldworld(struct device_node *device, int index,
+ #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
  
-@@ -56,7 +56,7 @@ static void of_bus_default_count_cells(struct device_node *dev,
- 		*sizec = of_n_size_cells(dev);
- }
  
--static u64 of_bus_default_map(u32 *addr, const __be32 *range,
-+static u64 of_bus_default_map(__be32 *addr, const __be32 *range,
- 		int na, int ns, int pna)
- {
- 	u64 cp, s, da;
-@@ -82,7 +82,7 @@ static u64 of_bus_default_map(u32 *addr, const __be32 *range,
- 	return da - cp;
- }
- 
--static int of_bus_default_translate(u32 *addr, u64 offset, int na)
-+static int of_bus_default_translate(__be32 *addr, u64 offset, int na)
- {
- 	u64 a = of_read_number(addr, na);
- 	memset(addr, 0, na * 4);
-@@ -138,7 +138,7 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 	return flags;
- }
- 
--static u64 of_bus_pci_map(u32 *addr, const __be32 *range, int na, int ns,
-+static u64 of_bus_pci_map(__be32 *addr, const __be32 *range, int na, int ns,
- 		int pna)
- {
- 	u64 cp, s, da;
-@@ -165,7 +165,7 @@ static u64 of_bus_pci_map(u32 *addr, const __be32 *range, int na, int ns,
- 	return da - cp;
- }
- 
--static int of_bus_pci_translate(u32 *addr, u64 offset, int na)
-+static int of_bus_pci_translate(__be32 *addr, u64 offset, int na)
- {
- 	return of_bus_default_translate(addr + 1, offset, na - 1);
- }
-@@ -247,7 +247,7 @@ static void of_bus_isa_count_cells(struct device_node *child,
- 		*sizec = 1;
- }
- 
--static u64 of_bus_isa_map(u32 *addr, const __be32 *range, int na, int ns,
-+static u64 of_bus_isa_map(__be32 *addr, const __be32 *range, int na, int ns,
- 		int pna)
- {
- 	u64 cp, s, da;
-@@ -270,7 +270,7 @@ static u64 of_bus_isa_map(u32 *addr, const __be32 *range, int na, int ns,
- 	return da - cp;
- }
- 
--static int of_bus_isa_translate(u32 *addr, u64 offset, int na)
-+static int of_bus_isa_translate(__be32 *addr, u64 offset, int na)
- {
- 	return of_bus_default_translate(addr + 1, offset, na - 1);
- }
-@@ -338,7 +338,7 @@ static struct of_bus *of_match_bus(struct device_node *np)
- }
- 
- static int of_translate_one(struct device_node *parent, struct of_bus *bus,
--			    struct of_bus *pbus, u32 *addr,
-+			    struct of_bus *pbus, __be32 *addr,
- 			    int na, int ns, int pna, const char *rprop)
- {
- 	const __be32 *ranges;
-@@ -409,12 +409,12 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-  * that can be mapped to a cpu physical address). This is not really specified
-  * that way, but this is traditionally the way IBM at least do things
-  */
--u64 __of_translate_address(struct device_node *dev, const __be32 *in_addr,
--			   const char *rprop)
-+static u64 __of_translate_address(struct device_node *dev,
-+				  const __be32 *in_addr, const char *rprop)
- {
- 	struct device_node *parent = NULL;
- 	struct of_bus *bus, *pbus;
--	u32 addr[OF_MAX_ADDR_CELLS];
-+	__be32 addr[OF_MAX_ADDR_CELLS];
- 	int na, ns, pna, pns;
- 	u64 result = OF_BAD_ADDR;
- 
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index c3cdc10..a1984dd 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -19,7 +19,7 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
-  * the address space flags too. The PCI version uses a BAR number
-  * instead of an absolute index
-  */
--extern const u32 *of_get_address(struct device_node *dev, int index,
-+extern const __be32 *of_get_address(struct device_node *dev, int index,
- 			   u64 *size, unsigned int *flags);
- 
- #ifndef pci_address_to_pio
-@@ -44,7 +44,7 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
- {
- 	return NULL;
- }
--static inline const u32 *of_get_address(struct device_node *dev, int index,
-+static inline const __be32 *of_get_address(struct device_node *dev, int index,
- 					u64 *size, unsigned int *flags)
- {
- 	return NULL;
+-extern int of_irq_map_raw(struct device_node *parent, const u32 *intspec,
+-			  u32 ointsize, const u32 *addr,
++extern int of_irq_map_raw(struct device_node *parent, const __be32 *intspec,
++			  u32 ointsize, const __be32 *addr,
+ 			  struct of_irq *out_irq);
+ extern int of_irq_map_one(struct device_node *device, int index,
+ 			  struct of_irq *out_irq);
 -- 
 1.7.12.2
