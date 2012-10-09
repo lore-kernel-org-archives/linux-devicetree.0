@@ -1,132 +1,26 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/2] pwm: pwm-tiecap: Add device-tree binding support for
- APWM driver
-Date: Tue, 9 Oct 2012 14:48:30 +0200
-Message-ID: <20121009124830.GA25493@avionic-0098.mockup.avionic-design.de>
-References: <1348658863-29428-1-git-send-email-avinashphilip@ti.com>
- <1348658863-29428-2-git-send-email-avinashphilip@ti.com>
- <20121002060014.GA4298@avionic-0098.mockup.avionic-design.de>
- <518397C60809E147AF5323E0420B992E3E9CA1E8@DBDE01.ent.ti.com>
- <20121008133951.GA26525@avionic-0098.mockup.avionic-design.de>
- <518397C60809E147AF5323E0420B992E3E9CA82E@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9CA82E@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH V4 0/2] video: exynos_dp: Add device tree support to DP driver
+Date: Wed, 10 Oct 2012 04:38:19 +0530
+Message-ID: <1349824101-32574-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, jg1.han@samsung.com, devicetree-discuss@lists.ozlabs.org
+Cc: FlorianSchandinat@gmx.de, sylvester.nawrocki@gmail.com, tomasz.figa@gmail.com, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Changes from V3:
+	--Fix typos in the documentation file "exynos_dp.txt".
+	--Use variable name enable_mask instead of enable_bit.
+	--Use property name samsung,dp_phy instead of dp-phy.
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To linux-fbdev:
+  [PATCH V4 1/2] video: exynos_dp: Add device tree support to DP driver
 
-On Tue, Oct 09, 2012 at 12:36:53PM +0000, Philip, Avinash wrote:
-> On Mon, Oct 08, 2012 at 19:09:51, Thierry Reding wrote:
-> > On Mon, Oct 08, 2012 at 01:31:19PM +0000, Philip, Avinash wrote:
-> > > On Tue, Oct 02, 2012 at 11:30:14, Thierry Reding wrote:
-> > > > On Wed, Sep 26, 2012 at 04:57:42PM +0530, Philip, Avinash wrote:
-> > [...]
-> > > > > @@ -231,13 +290,56 @@ static int __devinit ecap_pwm_probe(struct =
-platform_device *pdev)
-> > > > >  	}
-> > > > > =20
-> > > > >  	pm_runtime_enable(&pdev->dev);
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * Some platform has extra PWM-subsystem common config space
-> > > > > +	 * and requires special handling of clock gating.
-> > > > > +	 */
-> > > > > +	if (pdata && pdata->has_configspace) {
-> > > > > +		r =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > > > > +		if (!r) {
-> > > > > +			dev_err(&pdev->dev, "no memory resource defined\n");
-> > > > > +			ret =3D -ENODEV;
-> > > > > +			goto err_disable_clock;
-> > > > > +		}
-> > > > > +
-> > > > > +		pc->config_base =3D devm_ioremap(&pdev->dev, r->start,
-> > > > > +				resource_size(r));
-> > > > > +		if (!pc->config_base) {
-> > > > > +			dev_err(&pdev->dev, "failed to ioremap() registers\n");
-> > > > > +			ret =3D -EADDRNOTAVAIL;
-> > > > > +			goto err_disable_clock;
-> > > > > +		}
-> > > >=20
-> > > > Isn't this missing a request_mem_region()? I assume you don't do th=
-at
-> > > > here because you need the same region in the EHRPWM driver, right?
-> > >=20
-> > > request_mem_region() is avoided as this region is shared across PWM
-> > > sub modules ECAP & EHRPWM.=20
-> > >=20
-> > > > This should be indication enough that the design is not right here.
-> > > > I think we need a proper abstraction here. Can this not be done via
-> > > > PM runtime support? If not, maybe this should be represented by
-> > > > clock objects since the bit obviously enables a clock.
-> > >=20
-> > > It is not done as part of PM runtime as this is has nothing to
-> > > do with clock tree of the SOC. The bits we were enabling here
-> > > should consider as an enable of the individual sub module as
-> > > part of IP integration. Hence we were handling these subsystem
-> > > module enable in the driver itself.
-> >=20
-> > My point remains valid: you shouldn't be able to access the same
-> > register through two different drivers. That's one of the reasons, if
-> > not the only reasen, why the request_mem_region() function exists. I
-> > think you should add some abstraction to provide this functionality to
-> > the drivers. I assume that eventually there will be more than just the
-> > PWM cores that require access to this register.
->=20
-> Enabling of PWM sub modules from CONFIG space is only present in AM33xx
-> as part of IP integration (ECAP, EHRPWM & EQEP).
->=20
-> Enabling of sub modules (ECAP, EHRPWM & EQEP) should do in CONFIG space.=
-=20
-> Hence sub module drivers are accessing CONFIG space without reserving it=
-=20
-> Individually from drivers (request_mem_region()).
->=20
-> Can you describe/point how it can be handled in a separate Abstraction la=
-yer
-> as this is shared across ECAP, EHRPWM & EQEP (EQEP driver is not yet avai=
-lable).
+To devicetree discussion list:
+  [PATCH V4 2/2] video: exynos_dp: device tree documentation
 
-Perhaps something like a global function to enable and disable the
-clocks would be enough. You could for instance have a driver that
-requests the config space memory region and provides this global
-function so that it can be used by the ECAP, EHRPWM and EQEP.
-
-A more elaborate scheme would possibly involve making the new device a
-parent of the ECAP, EHRPWM and EQEP devices and have their drivers
-lookup the parent to determine which configurator device to operate on.
-
-Thierry
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQdB0dAAoJEN0jrNd/PrOhuEUQAKH+erxs3ev55H0NBvjWV7lu
-DiR/PlG1dGgpQUZ0qZdFFBoEyspq2iJ9LokHxBMpeG304tD8QBqLgYOIGNG1xoVO
-qKTvLncoyo9dqoX/R5EpiVxHr+aexm7gKaWayAjgFSis9e2ZKF+7DvBaXYSK29Ck
-n1v6pI8mpV44dUeWnhfpbIRLxJGlwivS+jbKru+d7He25aiTn2tLBR3x/SlSShAj
-g4/hpjxA5ckZ5sDHfqf32XYp041fY6OWN38TskJFFsLl4RwcvO+sXPa2k8wDKkwy
-Nm4H7M3l1NdWmSPRUq92BuFt14q2KKpGPkCop7X4YauObx1tXwUnMizGCbAD0nV7
-Bwg2Ll/NyEnN+n5OJrhXoU4f8kiDKSfcXXlnsT8vc27ocexynvcqHjh303IfFL/Y
-Orsw2+3wW/FE3lpR4o1YrvdlDwsqpfZ/uj97ERWXacYwZmSh5GLtVEwxB3LBJ3+b
-t3RIvzfnsjNXKnLoYTr/onolHsZXiXSAXBI+4WpKXDeH4pTHz1/26Tb50F6on8uY
-ov3GXHinA9JPjdw4Dcqgc/QBluxQjZuIeBhZIKLvtlsuEGD2Wx6aK1GDKZdmi7Jd
-BF4jova96Hmbvcs0/dPPIWQUZJ6y5iCm2o/tKk0Xt2gGOdCoVZXjC98nboIsZnzW
-bt7pxv2TN9a5c2yoMhLx
-=ypgM
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
+ .../devicetree/bindings/video/exynos_dp.txt        |   81 ++++++++++
+ drivers/video/exynos/exynos_dp_core.c              |  168 ++++++++++++++++++--
+ drivers/video/exynos/exynos_dp_core.h              |    2 +
+ 3 files changed, 239 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
