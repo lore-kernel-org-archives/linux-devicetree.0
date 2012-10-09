@@ -1,36 +1,34 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/3] Input: egalax_ts: get gpio from devicetree node
-Date: Tue, 9 Oct 2012 11:58:32 +0000
-Message-ID: <201210091158.33040.arnd@arndb.de>
-References: <1345114051-3052-1-git-send-email-jason77.wang@gmail.com> <1345114051-3052-2-git-send-email-jason77.wang@gmail.com> <20120817003125.GA24242@S2101-09.ap.freescale.net>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v5 2/2] regulator: add device tree support for max8997
+Date: Tue, 09 Oct 2012 14:01:23 +0200
+Message-ID: <k513mj$3o8$5@ger.gmane.org>
+References: <1334741463-25058-1-git-send-email-thomas.abraham@linaro.org> <1334741463-25058-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20120817003125.GA24242@S2101-09.ap.freescale.net>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Shawn Guo <shawn.guo@linaro.org>, Hui Wang <jason77.wang@gmail.com>, devicetree-discuss@lists.ozlabs.org, dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 17 August 2012, Shawn Guo wrote:
-> On Thu, Aug 16, 2012 at 06:47:29PM +0800, Hui Wang wrote:
-> > The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
-> > and don't support this API anymore.
-> > 
-> > The i.MX6q sabrelite platform equips an egalax touchscreen controller,
-> > and this platform already transfered to GENERIC_GPIO framework, to
-> > support this driver, we use a more generic way to get gpio.
-> > 
-> > Add a return value checking for waking up the controller in the probe
-> > function, this guarantee only a workable device can pass init.
-> > 
-> > Signed-off-by: Hui Wang <jason77.wang@gmail.com>
+Hi Thomas,
+
+Thomas Abraham wrote:
+
+> Add device tree based discovery support for max8997.
 > 
-> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Karol Lewandowski <k.lewandowsk@samsung.com>
+> Cc: Rajendra Nayak <rnayak@ti.com>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 
-What's the status on this patch? I'm still getting build errors from this
-driver, so I guess it was never accepted for the 3.7 merge window.
+Are there any plans for merging this patch? It is a dependency of Samsung 
+Trats board device tree support.
 
-	Arnd
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
