@@ -1,14 +1,14 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: bcm476x: Instantiate console UART
-Date: Mon, 08 Oct 2012 21:06:51 -0600
-Message-ID: <507394CB.5080300@wwwdotorg.org>
+Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
+Date: Mon, 08 Oct 2012 21:08:49 -0600
+Message-ID: <50739541.2030603@wwwdotorg.org>
 References: <20121007015300.828366635@gmail.com>
- <20121007015407.840781689@gmail.com>
+ <20121007015405.958959522@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121007015407.840781689-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20121007015405.958959522-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,15 +24,15 @@ Cc: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 10/06/2012 07:53 PM, Domenico Andreoli wrote:
-> From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
-> 
-> The BCM476x sports standard PL011 UARTs which are fully described and
-> put to use with these few changes.
+> BCM476x's minimal infrastructure, Kernel's great reuse.
 
-Given that this SoC uses an interrupt controller for which there's
-already a driver (so there's no need to wait for a later patch before
-interrupts work), and that patch 1/6 adds debug/bcm476x.S anyway, I'd be
-inclined to just squash this patch into the very first one myself.
+> Index: b/arch/arm/configs/bcm476x_defconfig
 
-If not, this patch isn't really just instantiating the console UART, but
-also allowing the DEBUG_LL implementation to be selected.
+> +CONFIG_DEBUG_BCM476X_UART2=y
+> +CONFIG_DEBUG_LL_INCLUDE="debug/bcm476x.S"
+> +CONFIG_UNCOMPRESS_INCLUDE="debug/bcm476x-uncompress.h"
+
+Was this defconfig file created by "make savedefconfig ; mv defconfig
+arch/arm/configs/bcm476x_defconfig"? If you do that, I think those last
+two lines I quoted above (and many more) will be removed, since those
+values are selected by CONFIG_DEBUG_BCM476X_UART2.
