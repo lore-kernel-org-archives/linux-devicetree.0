@@ -1,100 +1,97 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH 2/5] ARM: S3C64XX: Add phy_type to pmu_isolation
-Date: Tue, 9 Oct 2012 18:05:33 +0530
-Message-ID: <CAFp+6iGGH2-Ln2Cx2EKLtN+bz3zs18dEhEQf0zuGxLrCH+eLug@mail.gmail.com>
-References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
-	<1349705548-15207-3-git-send-email-gautam.vivek@samsung.com>
-	<5073B743.9000200@ti.com>
-	<CAFp+6iE6Er088dYwp8q7uQuZhw9bdYbJXQDbJp66W6tD7+C-Xw@mail.gmail.com>
-	<004901cda60e$f3a45ac0$daed1040$%han@samsung.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH 1/2] pwm: pwm-tiecap: Add device-tree binding support
+ for APWM driver
+Date: Tue, 9 Oct 2012 12:36:53 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3E9CA82E@DBDE01.ent.ti.com>
+References: <1348658863-29428-1-git-send-email-avinashphilip@ti.com>
+ <1348658863-29428-2-git-send-email-avinashphilip@ti.com>
+ <20121002060014.GA4298@avionic-0098.mockup.avionic-design.de>
+ <518397C60809E147AF5323E0420B992E3E9CA1E8@DBDE01.ent.ti.com>
+ <20121008133951.GA26525@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <004901cda60e$f3a45ac0$daed1040$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, p.paneri@samsung.com, yulgon.kim@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121008133951.GA26525@avionic-0098.mockup.avionic-design.de>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Oct 08, 2012 at 19:09:51, Thierry Reding wrote:
+> On Mon, Oct 08, 2012 at 01:31:19PM +0000, Philip, Avinash wrote:
+> > On Tue, Oct 02, 2012 at 11:30:14, Thierry Reding wrote:
+> > > On Wed, Sep 26, 2012 at 04:57:42PM +0530, Philip, Avinash wrote:
+> [...]
+> > > > @@ -231,13 +290,56 @@ static int __devinit ecap_pwm_probe(struct platform_device *pdev)
+> > > >  	}
+> > > >  
+> > > >  	pm_runtime_enable(&pdev->dev);
+> > > > +
+> > > > +	/*
+> > > > +	 * Some platform has extra PWM-subsystem common config space
+> > > > +	 * and requires special handling of clock gating.
+> > > > +	 */
+> > > > +	if (pdata && pdata->has_configspace) {
+> > > > +		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > > > +		if (!r) {
+> > > > +			dev_err(&pdev->dev, "no memory resource defined\n");
+> > > > +			ret = -ENODEV;
+> > > > +			goto err_disable_clock;
+> > > > +		}
+> > > > +
+> > > > +		pc->config_base = devm_ioremap(&pdev->dev, r->start,
+> > > > +				resource_size(r));
+> > > > +		if (!pc->config_base) {
+> > > > +			dev_err(&pdev->dev, "failed to ioremap() registers\n");
+> > > > +			ret = -EADDRNOTAVAIL;
+> > > > +			goto err_disable_clock;
+> > > > +		}
+> > > 
+> > > Isn't this missing a request_mem_region()? I assume you don't do that
+> > > here because you need the same region in the EHRPWM driver, right?
+> > 
+> > request_mem_region() is avoided as this region is shared across PWM
+> > sub modules ECAP & EHRPWM. 
+> > 
+> > > This should be indication enough that the design is not right here.
+> > > I think we need a proper abstraction here. Can this not be done via
+> > > PM runtime support? If not, maybe this should be represented by
+> > > clock objects since the bit obviously enables a clock.
+> > 
+> > It is not done as part of PM runtime as this is has nothing to
+> > do with clock tree of the SOC. The bits we were enabling here
+> > should consider as an enable of the individual sub module as
+> > part of IP integration. Hence we were handling these subsystem
+> > module enable in the driver itself.
+> 
+> My point remains valid: you shouldn't be able to access the same
+> register through two different drivers. That's one of the reasons, if
+> not the only reasen, why the request_mem_region() function exists. I
+> think you should add some abstraction to provide this functionality to
+> the drivers. I assume that eventually there will be more than just the
+> PWM cores that require access to this register.
 
-On Tue, Oct 9, 2012 at 4:42 PM, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Tuesday, October 09, 2012 7:51 PM Vivek Gautam wrote
->>
->> Hi Kishon,
->>
->> Firstly, thanks for the quick review.
->>
->> On Tue, Oct 9, 2012 at 11:03 AM, kishon <kishon@ti.com> wrote:
->> > Hi,
->> >
->> >
->> > On Monday 08 October 2012 07:42 PM, Vivek Gautam wrote:
->> >>
->> >> It adds 'type' argument to pmu_isolation function, aligning
->> >> with other platforms, which keeps track of usbphy_type.
->> >>
->> >> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> >> ---
->> >>   arch/arm/mach-s3c64xx/setup-usb-phy.c |    2 +-
->> >>   1 files changed, 1 insertions(+), 1 deletions(-)
->> >>
->> >> diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c
->> >> b/arch/arm/mach-s3c64xx/setup-usb-phy.c
->> >> index 3aee778..b7d1d95 100644
->> >> --- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
->> >> +++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
->> >> @@ -13,7 +13,7 @@
->> >>   #include <mach/map.h>
->> >>   #include <mach/regs-sys.h>
->> >>
->> >> -void s5p_usb_phy_pmu_isolation(int on)
->> >> +void s5p_usb_phy_pmu_isolation(int on, int type)
->> >
->> >
->> > IMO, this patch should have been squashed with the previous patch. IIUC, you
->> > have changed the call to this function for taking two arguments in your
->> > previous patch. Wouldn't that introduce compilation break after applying
->> > your first patch?
->> Yes, that's right it will introduce compilation break, my fault.
->> Just one querry, will it be good to put this arch change in [patch 1/5]?
->> and then can i move similar change in [patch 3/5] as given below again
->> in [patch 1/5]?
->
-> In my opinion, it would be better.
-> This is because it can prevent build errors.
->
-Sure, I shall update this in the next patchset.
->
-> Best regards,
-> Jingoo Han
->
->>
->> diff --git a/arch/arm/mach-exynos/setup-usb-phy.c
->> b/arch/arm/mach-exynos/setup-usb-phy.c
->> index 1c62d20..039d246 100644
->> --- a/arch/arm/mach-exynos/setup-usb-phy.c
->> +++ b/arch/arm/mach-exynos/setup-usb-phy.c
->> @@ -222,15 +226,40 @@ int s5p_usb_phy_exit(struct platform_device
->> *pdev, int type)
->>         return -EINVAL;
->>  }
->>
->> -void s5p_usb_phy_pmu_isolation(int on)
->> +void s5p_usb_phy_pmu_isolation(int on, int type)
->>
->> >
->> > Thanks
->> > Kishon
->> >
->> > --
->> > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->> > the body of a message to majordomo@vger.kernel.org
->> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->> Best regards
->> Vivek
->
+Enabling of PWM sub modules from CONFIG space is only present in AM33xx
+as part of IP integration (ECAP, EHRPWM & EQEP).
+
+Enabling of sub modules (ECAP, EHRPWM & EQEP) should do in CONFIG space. 
+Hence sub module drivers are accessing CONFIG space without reserving it 
+Individually from drivers (request_mem_region()).
+
+Can you describe/point how it can be handled in a separate Abstraction layer
+as this is shared across ECAP, EHRPWM & EQEP (EQEP driver is not yet available).
+
+
+Adding it as part of PM runtime support is not a right place.
+In PWM-SS, CONFIG Space is "Shared" across different sub modules and hence
+can't be considered as a part of clock tree.
 
 Thanks
-Vivek
+Avinash
+
+> 
+> Thierry
+> 
+
