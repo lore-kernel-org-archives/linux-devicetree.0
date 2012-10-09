@@ -1,125 +1,238 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH 4/4] mtd: nand: omap2: Add data correction support
-Date: Tue, 9 Oct 2012 12:36:50 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9CA829@DBDE01.ent.ti.com>
-References: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
- <1349274589-11389-5-git-send-email-avinashphilip@ti.com>
- <20121003192044.GB27502@parrot.com>
- <518397C60809E147AF5323E0420B992E3E9B8A65@DBDE01.ent.ti.com>
- <20121005142338.GA7199@parrot.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 4/5] usb: s5p-ehci: Adding phy driver support
+Date: Tue, 9 Oct 2012 18:14:34 +0530
+Message-ID: <CAFp+6iEEQSNRCbXMneXWuosmuj8oq1dRGySW3_qgcK5xBZK5wA@mail.gmail.com>
+References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
+	<1349705548-15207-5-git-send-email-gautam.vivek@samsung.com>
+	<004301cda602$0f6c17a0$2e4446e0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20121005142338.GA7199@parrot.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Ivan Djelic <ivan.djelic@parrot.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <004301cda602$0f6c17a0$2e4446e0$%han@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com, yulgon.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 05, 2012 at 19:53:38, Ivan Djelic wrote:
-> On Fri, Oct 05, 2012 at 09:51:50AM +0100, Philip, Avinash wrote:
-> > On Thu, Oct 04, 2012 at 15:51:03, Philip, Avinash wrote:
-> > > On Thu, Oct 04, 2012 at 00:50:45, Ivan Djelic wrote:
-> > > > On Wed, Oct 03, 2012 at 03:29:49PM +0100, Philip, Avinash wrote:
-> > > > > ELM module can be used for error correction of BCH 4 & 8 bit. Also
-> > > > > support read & write page in one shot by adding custom read_page &
-> > > > > write_page methods. This helps in optimizing code.
-> > > > > 
-> > > > > New structure member "is_elm_used" is added to know the status of
-> > > > > whether the ELM module is used for error correction or not.
-> > > > > 
-> > > > > Note:
-> > > > > ECC layout of BCH8 uses 14 bytes for 512 byte of data to make compatible
-> > > > > with RBL ECC layout, even though the requirement was only 13 byte. This
-> > > > > results a common ecc layout across RBL, U-boot & Linux.
-> > > > > 
-> > > > 
-> > > > See a few comments below,
-> > > > 
-> > > > (...)
-> > > > > +static int omap_elm_correct_data(struct mtd_info *mtd, u_char *dat,
-> > > > > +                               u_char *read_ecc, u_char *calc_ecc)
-> > > > > +{
-> > > > > +       struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
-> > > > > +                       mtd);
-> > > > > +       int eccsteps = info->nand.ecc.steps;
-> > > > > +       int i , j, stat = 0;
-> > > > > +       int eccsize, eccflag, size;
-> > > > > +       struct elm_errorvec err_vec[ERROR_VECTOR_MAX];
-> > > > > +       u_char *ecc_vec = calc_ecc;
-> > > > > +       enum bch_ecc type;
-> > > > > +       bool is_error_reported = false;
-> > > > > +
-> > > > > +       /* initialize elm error vector to zero */
-> > > > > +       memset(err_vec, 0, sizeof(err_vec));
-> > > > > +       if (info->nand.ecc.strength == BCH8_MAX_ERROR) {
-> > > > > +               size = BCH8_SIZE;
-> > > > > +               eccsize = BCH8_ECC_OOB_BYTES;
-> > > > > +               type = BCH8_ECC;
-> > > > > +       } else {
-> > > > > +               size = BCH4_SIZE;
-> > > > > +               eccsize = BCH4_SIZE;
-> > > > > +               type = BCH4_ECC;
-> > > > > +       }
-> > > > > +
-> > > > > +       for (i = 0; i < eccsteps ; i++) {
-> > > > > +               eccflag = 0;    /* initialize eccflag */
-> > > > > +
-> > > > > +               for (j = 0; (j < eccsize); j++) {
-> > > > > +                       if (read_ecc[j] != 0xFF) {
-> > > > > +                               eccflag = 1;    /* data area is flashed */
-> > > > 
-> > > > Just a reminder: this way of checking if a page has been programmed is not robust to bitflips,
-> > > > so you may get into trouble with UBIFS on a fairly recent device.
-> > 
-> > Sorry I missed this point.
-> > 
-> > Here we were checking data in spare area (only in ecc layout 14*4 for BCH8) is 0xFF. If all data
-> > in spare area is 0xFF, conclude that the page is erased & no need of error correction. In case
-> > of bit flip present in spare area, page will be reported as uncorrectable.
-> > But I am not understand understand " trouble with UBIFS on a fairly recent device".
-> > Can you little elaborativ
-> 
-> There are at least 2 potential problems when reading an erased page with bitflips:
-> 
-> 1. bitflip in data area and no bitflip in spare area (all 0xff)
-> Your code will not perform any ECC correction.
-> UBIFS does not like finding bitflips in empty pages, see for instance
-> http://lists.infradead.org/pipermail/linux-mtd/2012-March/040328.html.
+Hi,
 
-In case of error correction using ELM, syndrome vector calculated after reading
-Data area & OOB area. So handling of erased page requires a software workaround.
-I am planning something as follows.
+On Tue, Oct 9, 2012 at 3:10 PM, Jingoo Han <jg1.han@samsung.com> wrote:
+> On Monday, October 08, 2012 11:12 PM Vivek Gautam wrote
+>>
+>> Adding the transceiver to ehci driver. Keeping the platform data
+>> for continuing the smooth operation for boards which still uses it
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>
+> Hi Vivek Gautam,
+>
+> Could you replace the patch subject with
+> 'USB: ehci-s5p: Add phy driver support'.
+>
+Yeah, sure. I shall update this in the next patchset.
 
-I will first check calculated ecc, which would be zero for non error pages.
-Then I would check 0xFF in OOB area (for erased page) by checking number of
-bit zeros in OOB area.  If it is 0xFF (number of bit zero count is zero),
-set entire page as 0xFF if number of bit zeros is less than max bit flips
-(8 or 4) by counting the number of bit zero's in data area.
+> I also added some comments.
+>
+>> ---
+>>  drivers/usb/host/ehci-s5p.c |   62 +++++++++++++++++++++++++++++-------------
+>>  1 files changed, 43 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
+>> index 85b74be..ac22893 100644
+>> --- a/drivers/usb/host/ehci-s5p.c
+>> +++ b/drivers/usb/host/ehci-s5p.c
+>> @@ -18,6 +18,7 @@
+>>  #include <linux/of_gpio.h>
+>>  #include <linux/platform_data/usb-ehci-s5p.h>
+>>  #include <plat/usb-phy.h>
+>> +#include <linux/usb/phy.h>
+>
+> Please, move header include to proper place as bellows:
+>
+Sure, i will change this accordingly.
 
-This logic is implemented in fsmc_nand.c
+> #include <linux/platform_data/usb-ehci-s5p.h>
+> +#include <linux/usb/phy.h>
+> ##include <plat/usb-phy.h>
+>
+>>
+>>  #define EHCI_INSNREG00(base)                 (base + 0x90)
+>>  #define EHCI_INSNREG00_ENA_INCR16            (0x1 << 25)
+>> @@ -32,6 +33,8 @@ struct s5p_ehci_hcd {
+>>       struct device *dev;
+>>       struct usb_hcd *hcd;
+>>       struct clk *clk;
+>> +     struct usb_phy *phy;
+>> +     struct s5p_ehci_platdata *pdata;
+>>  };
+>>
+>>  static const struct hc_driver s5p_ehci_hc_driver = {
+>> @@ -65,6 +68,26 @@ static const struct hc_driver s5p_ehci_hc_driver = {
+>>       .clear_tt_buffer_complete       = ehci_clear_tt_buffer_complete,
+>>  };
+>>
+>> +static void s5p_ehci_phy_enable(struct s5p_ehci_hcd *s5p_ehci)
+>> +{
+>> +     struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
+>> +
+>> +     if (s5p_ehci->phy)
+>> +             usb_phy_init(s5p_ehci->phy);
+>> +     else if (s5p_ehci->pdata->phy_init)
+>> +             s5p_ehci->pdata->phy_init(pdev, S5P_USB_PHY_HOST);
+>> +}
+>> +
+>> +static void s5p_ehci_phy_disable(struct s5p_ehci_hcd *s5p_ehci)
+>> +{
+>> +     struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
+>> +
+>> +     if (s5p_ehci->phy)
+>> +             usb_phy_shutdown(s5p_ehci->phy);
+>> +     else if (s5p_ehci->pdata->phy_exit)
+>> +             s5p_ehci->pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
+>> +}
+>> +
+>>  static void s5p_setup_vbus_gpio(struct platform_device *pdev)
+>>  {
+>>       int err;
+>> @@ -92,15 +115,10 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+>>       struct usb_hcd *hcd;
+>>       struct ehci_hcd *ehci;
+>>       struct resource *res;
+>> +     struct usb_phy *phy;
+>>       int irq;
+>>       int err;
+>>
+>> -     pdata = pdev->dev.platform_data;
+>> -     if (!pdata) {
+>> -             dev_err(&pdev->dev, "No platform data defined\n");
+>> -             return -EINVAL;
+>> -     }
+>> -
+>>       /*
+>>        * Right now device-tree probed devices don't get dma_mask set.
+>>        * Since shared usb code relies on it, set it here for now.
+>> @@ -118,6 +136,20 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+>>       if (!s5p_ehci)
+>>               return -ENOMEM;
+>>
+>> +     pdata = pdev->dev.platform_data;
+>> +     if (!pdata) {
+>> +             /* Fallback to Phy transceiver */
+>> +             phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
+>> +             if (IS_ERR_OR_NULL(phy)) {
+>> +                     dev_err(&pdev->dev, "no platform data or transceiver defined\n");
+>> +                     return -EPROBE_DEFER;
+>> +             } else {
+>> +                     s5p_ehci->phy = phy;
+>> +             }
+>> +     } else {
+>> +             s5p_ehci->pdata = pdata;
+>> +     }
+>> +
+>>       s5p_ehci->dev = &pdev->dev;
+>>
+>>       hcd = usb_create_hcd(&s5p_ehci_hc_driver, &pdev->dev,
+>> @@ -163,8 +195,7 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+>>               goto fail_io;
+>>       }
+>>
+>> -     if (pdata->phy_init)
+>> -             pdata->phy_init(pdev, S5P_USB_PHY_HOST);
+>> +     s5p_ehci_phy_enable(s5p_ehci);
+>>
+>>       ehci = hcd_to_ehci(hcd);
+>>       ehci->caps = hcd->regs;
+>> @@ -184,6 +215,7 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
+>>
+>>  fail_io:
+>>       clk_disable(s5p_ehci->clk);
+>> +     s5p_ehci_phy_disable(s5p_ehci);
+>
+> This is wrong path for errors.
+> For example, when devm_ioremap() fails, s5p_ehci_phy_disable()
+> is called. However, in this case, s5p_ehci_phy_enable() is not
+> called. So, s5p_ehci_phy_disable() should not be called.
+>
+> Please fix them as follows:
+>
+>         err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>         if (err) {
+>                 dev_err(&pdev->dev, "Failed to add USB HCD\n");
+> -               goto fail_io;
+> +               goto fail_add_hcd;
+>         }
+>
+>         platform_set_drvdata(pdev, s5p_ehci);
+>
+>         return 0;
+>
+> +fail_add_hcd:
+> +       s5p_ehci_phy_disable(s5p_ehci);
+> fail_io:
+>         clk_disable(s5p_ehci->clk);
+> fail_clk:
+>         usb_put_hcd(hcd);
+>
+Right, nice catch, thanks. I shall modify this as suggested and update.
 
-See commit
-mtd: fsmc: Newly erased page read algorithm implemented
-
-> 
-> 2. bitflip in ECC bytes in spare area
-> Your code will report an uncorrectable error upon reading; if this happens while reading a partially programmed UBI block,
-> I guess you will lose data.
-
-In case of uncorrectable errors due to bit flips in spare area,
-I can go on checking number of bit zero's in data area + OOB area
-are less than max bit flips (8 or 4), I can go on setting the entire
-page as 0xFF.
+>
+>>  fail_clk:
+>>       usb_put_hcd(hcd);
+>>       return err;
+>> @@ -191,14 +223,12 @@ fail_clk:
+>>
+>>  static int __devexit s5p_ehci_remove(struct platform_device *pdev)
+>>  {
+>> -     struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
+>>       struct s5p_ehci_hcd *s5p_ehci = platform_get_drvdata(pdev);
+>>       struct usb_hcd *hcd = s5p_ehci->hcd;
+>>
+>>       usb_remove_hcd(hcd);
+>>
+>> -     if (pdata && pdata->phy_exit)
+>> -             pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
+>> +     s5p_ehci_phy_disable(s5p_ehci);
+>>
+>>       clk_disable(s5p_ehci->clk);
+>>
+>> @@ -222,14 +252,11 @@ static int s5p_ehci_suspend(struct device *dev)
+>>       struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
+>>       struct usb_hcd *hcd = s5p_ehci->hcd;
+>>       bool do_wakeup = device_may_wakeup(dev);
+>> -     struct platform_device *pdev = to_platform_device(dev);
+>> -     struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
+>>       int rc;
+>>
+>>       rc = ehci_suspend(hcd, do_wakeup);
+>>
+>> -     if (pdata && pdata->phy_exit)
+>> -             pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
+>> +     s5p_ehci_phy_disable(s5p_ehci);
+>>
+>>       clk_disable(s5p_ehci->clk);
+>>
+>> @@ -240,13 +267,10 @@ static int s5p_ehci_resume(struct device *dev)
+>>  {
+>>       struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
+>>       struct usb_hcd *hcd = s5p_ehci->hcd;
+>> -     struct platform_device *pdev = to_platform_device(dev);
+>> -     struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
+>>
+>>       clk_enable(s5p_ehci->clk);
+>>
+>> -     if (pdata && pdata->phy_init)
+>> -             pdata->phy_init(pdev, S5P_USB_PHY_HOST);
+>> +     s5p_ehci_phy_enable(s5p_ehci);
+>>
+>>       /* DMA burst Enable */
+>>       writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
+>> --
+>> 1.7.6.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 Thanks
-Avinash
-
-> 
-> BR,
-> --
-> Ivan
-> 
-
+Vivek
