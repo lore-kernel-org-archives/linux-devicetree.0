@@ -1,185 +1,126 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH 2/2 v6] of: add generic videomode description
-Date: Tue, 9 Oct 2012 09:26:08 +0200
-Message-ID: <20121009072608.GA2519@pengutronix.de>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
- <12272414.930KpWciBg@avalon>
- <20121008124801.GD20800@pengutronix.de>
- <1737299.6PuzOm7XuT@avalon>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 1/2] ARM: Exynos5250: Enabling ehci-s5p driver
+Date: Tue, 09 Oct 2012 17:27:49 +0900
+Message-ID: <003801cda5f7$f7fd9a30$e7f8ce90$%han@samsung.com>
+References: <1349431818-15639-1-git-send-email-gautam.vivek@samsung.com>
+ <1349431818-15639-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1737299.6PuzOm7XuT@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349431818-15639-2-git-send-email-gautam.vivek@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Friday, October 05, 2012 7:10 PM Vivek Gautam wrote
+> 
+> Adding EHCI device tree node for Exynos5250 along with
+> the device base adress and gpio line for vbus.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
 
-On Mon, Oct 08, 2012 at 10:52:04PM +0200, Laurent Pinchart wrote:
-> Hi Steffen,
-> 
-> On Monday 08 October 2012 14:48:01 Steffen Trumtrar wrote:
-> > On Mon, Oct 08, 2012 at 02:13:50PM +0200, Laurent Pinchart wrote:
-> > > On Thursday 04 October 2012 19:59:20 Steffen Trumtrar wrote:
-> > > > Get videomode from devicetree in a format appropriate for the
-> > > > backend. drm_display_mode and fb_videomode are supported atm.
-> > > > Uses the display signal timings from of_display_timings
-> > > > 
-> > > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > > > ---
-> > > > 
-> > > >  drivers/of/Kconfig           |    5 +
-> > > >  drivers/of/Makefile          |    1 +
-> > > >  drivers/of/of_videomode.c    |  212 +++++++++++++++++++++++++++++++++++
-> > > >  include/linux/of_videomode.h |   41 ++++++++
-> > > >  4 files changed, 259 insertions(+)
-> > > >  create mode 100644 drivers/of/of_videomode.c
-> > > >  create mode 100644 include/linux/of_videomode.h
-> 
-> [snip]
-> 
-> > > > diff --git a/drivers/of/of_videomode.c b/drivers/of/of_videomode.c
-> > > > new file mode 100644
-> > > > index 0000000..76ac16e
-> > > > --- /dev/null
-> > > > +++ b/drivers/of/of_videomode.c
-> 
-> [snip]
-> 
-> > > > +int videomode_from_timing(struct display_timings *disp, struct
-> > > > videomode *vm,
-> > > > +			int index)
-> > > > +{
-> > > > +	struct signal_timing *st = NULL;
-> > > > +
-> > > > +	if (!vm)
-> > > > +		return -EINVAL;
-> > > > +
-> > > 
-> > > What about making vm a mandatory argument ? It looks to me like a caller
-> > > bug if vm is NULL.
-> > 
-> > The caller must provide the struct videomode, yes. Wouldn't the kernel hang
-> > itself with a NULL pointer exception, if I just work with it ?
-> 
-> The kernel would oops, clearly showing the caller that a non-null vm is needed 
-> :-)
-> 
+It looks good. Also I have tested this patch with Exynos5250.
 
-Okay. No error checking it is then.
+Acked-by: Jingoo Han <jg1.han@samsung.com>
 
-> > > > +	st = display_timings_get(disp, index);
-> > > > +
-> > > 
-> > > You can remove the blank line.
-> > > 
-> > > > +	if (!st) {
-> > > > +		pr_err("%s: no signal timings found\n", __func__);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	vm->pixelclock = signal_timing_get_value(&st->pixelclock, 0);
-> > > > +	vm->hactive = signal_timing_get_value(&st->hactive, 0);
-> > > > +	vm->hfront_porch = signal_timing_get_value(&st->hfront_porch, 0);
-> > > > +	vm->hback_porch = signal_timing_get_value(&st->hback_porch, 0);
-> > > > +	vm->hsync_len = signal_timing_get_value(&st->hsync_len, 0);
-> > > > +
-> > > > +	vm->vactive = signal_timing_get_value(&st->vactive, 0);
-> > > > +	vm->vfront_porch = signal_timing_get_value(&st->vfront_porch, 0);
-> > > > +	vm->vback_porch = signal_timing_get_value(&st->vback_porch, 0);
-> > > > +	vm->vsync_len = signal_timing_get_value(&st->vsync_len, 0);
-> > > > +
-> > > > +	vm->vah = st->vsync_pol_active_high;
-> > > > +	vm->hah = st->hsync_pol_active_high;
-> > > > +	vm->interlaced = st->interlaced;
-> > > > +	vm->doublescan = st->doublescan;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +int of_get_videomode(struct device_node *np, struct videomode *vm, int
-> > > > index)
-> > > 
-> > > I wonder how to avoid abuse of this functions. It's a useful helper for
-> > > drivers that need to get a video mode once only, but would result in lower
-> > > performances if a driver calls it for every mode. Drivers must call
-> > > of_get_display_timing_list instead in that case and case the display
-> > > timings. I'm wondering whether we should really expose of_get_videomode.
-> > 
-> > The intent was to let the driver decide. That way all the other overhead may
-> > be skipped.
+> ---
+>  .../devicetree/bindings/usb/exynos-usb.txt         |   25 ++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++
+>  arch/arm/mach-exynos/include/mach/map.h            |    1 +
+>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
+>  5 files changed, 38 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
 > 
-> My point is that driver writers might just call of_get_videomode() in a loop, 
-> not knowing that it's expensive. I want to avoid that. We need to at least add 
-> kerneldoc to the function stating that this shouldn't be done.
+> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> new file mode 100644
+> index 0000000..56e35c7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> @@ -0,0 +1,25 @@
+> +Samsung Exynos SoC USB controller
+> +
+> +The USB devices interface with USB controllers on Exynos SOCs.
+> +The device node has following properties.
+> +
+> +EHCI
+> +Required properties:
+> + - compatible: should be "samsung,exynos-ehci" for USB 2.0
+> +   EHCI controller in host mode.
+> + - reg: physical base address of the controller and length of memory mapped
+> +   region.
+> + - interrupts: interrupt number to the cpu.
+> +
+> +Optional properties:
+> + - samsung,vbus-gpio:  if present, specifies the GPIO that
+> +   needs to be pulled up for the bus to be powered.
+> +
+> +Example:
+> +
+> +	ehci {
+> +		compatible = "samsung,exynos-ehci";
+> +		reg = <0x12110000 0x100>;
+> +		interrupts = <0 71 0>;
+> +		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+> +	};
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> index a352df4..089576b 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -166,4 +166,8 @@
+>  	spi_2: spi@12d40000 {
+>  		status = "disabled";
+>  	};
+> +
+> +	ehci {
+> +		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index dddfd6e..73ea844 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -218,6 +218,12 @@
+>  		#size-cells = <0>;
+>  	};
 > 
-
-You're right. That should be made clear in the code.
-
-> > > > +{
-> > > > +	struct display_timings *disp;
-> > > > +	int ret = 0;
-> > > 
-> > > No need to assign ret to 0 here.
-> > 
-> > Ah, yes. Unneeded in this case.
-> > 
-> > > > +
-> > > > +	disp = of_get_display_timing_list(np);
-> > > > +
-> > > 
-> > > You can remove the blank line.
-> > > 
-> > > > +	if (!disp) {
-> > > > +		pr_err("%s: no timings specified\n", __func__);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	if (index == OF_DEFAULT_TIMING)
-> > > > +		index = disp->default_timing;
-> > > > +
-> > > > +	ret = videomode_from_timing(disp, vm, index);
-> > > > +
-> > > 
-> > > No need for a blank line.
-> > > 
-> > > > +	if (ret)
-> > > > +		return ret;
-> > > > +
-> > > > +	display_timings_release(disp);
-> > > > +
-> > > > +	if (!vm) {
-> > > > +		pr_err("%s: could not get videomode %d\n", __func__, index);
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > 
-> > > This can't happen. If vm is NULL the videomode_from_timing call above will
-> > > return -EINVAL, and this function will then return immediately without
-> > > reaching this code block.
-> > 
-> > Okay.
-> > 
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(of_get_videomode);
+> +	ehci {
+> +		compatible = "samsung,exynos-ehci";
+> +		reg = <0x12110000 0x100>;
+> +		interrupts = <0 71 0>;
+> +	};
+> +
+>  	amba {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+> index 8480849..825fe40 100644
+> --- a/arch/arm/mach-exynos/include/mach/map.h
+> +++ b/arch/arm/mach-exynos/include/mach/map.h
+> @@ -195,6 +195,7 @@
+>  #define EXYNOS4_PA_EHCI			0x12580000
+>  #define EXYNOS4_PA_OHCI			0x12590000
+>  #define EXYNOS4_PA_HSPHY		0x125B0000
+> +#define EXYNOS5_PA_EHCI			0x12110000
+>  #define EXYNOS4_PA_MFC			0x13400000
 > 
-> -- 
-> Regards,
+>  #define EXYNOS4_PA_UART			0x13800000
+> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> index fee9dcd..6d950d7b 100644
+> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> @@ -72,6 +72,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
+>  				"exynos-gsc.2", NULL),
+>  	OF_DEV_AUXDATA("samsung,exynos5-gsc", EXYNOS5_PA_GSC3,
+>  				"exynos-gsc.3", NULL),
+> +	OF_DEV_AUXDATA("samsung,exynos-ehci", EXYNOS5_PA_EHCI,
+> +					"s5p-ehci", NULL),
+>  	{},
+>  };
 > 
-> Laurent Pinchart
-> 
-> 
-
-Regards,
-
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> --
+> 1.7.6.5
