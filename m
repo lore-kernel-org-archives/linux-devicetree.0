@@ -1,15 +1,14 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Mon, 08 Oct 2012 20:37:04 -0600
-Message-ID: <50738DD0.5090406@wwwdotorg.org>
+Date: Mon, 08 Oct 2012 20:41:03 -0600
+Message-ID: <50738EBF.2060905@wwwdotorg.org>
 References: <20121007015300.828366635@gmail.com>
- <20121007015405.958959522@gmail.com>
- <20121007195759.GG12801@game.jcrosoft.org> <20121007225417.GA29996@glitch>
+ <20121007015405.958959522@gmail.com> <19574322.MHE4gIJg5N@flexo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121007225417.GA29996@glitch>
+In-Reply-To: <19574322.MHE4gIJg5N@flexo>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,61 +19,50 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/07/2012 04:54 PM, Domenico Andreoli wrote:
-> On Sun, Oct 07, 2012 at 09:57:59PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
->> On 03:53 Sun 07 Oct     , Domenico Andreoli wrote:
->>> From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
->>>
->>> BCM476x's minimal infrastructure, Kernel's great reuse.
->>>
->>> Look mom, no include/mach directory!
-
-(sigh, Jean-Christophe, it's a really good idea when replying to patches
-to delete everything except what you're replying to so that others can
-actually find what they wrote in the email...)
-
->>> Index: b/arch/arm/boot/dts/bcm476x.dtsi
-
->>> +		vic0: interrupt-controller@80000 {
->>> +			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
->> why brcm specific compatbile?
+On 10/08/2012 05:50 AM, Florian Fainelli wrote:
+> Hi Domenico,
 > 
-> Nothing breaks if I drop it. I think it's a future-proof clause, especially
-> if you consider that the devicetree could be not easy to upgrade and you
-> may need a way to differentiate the bcm476x's implementation from the
-> common one. I'm not sure it's an actual requirement with use cases.
-
-Indeed, everything works fine right now if you drop that. However, it is
-correct practice to include a compatible value for the particular SoC
-that incorporates the IP so that if in the future some SoC-specific
-workaround is required, the compatible value needed to trigger this is
-already in all historical .dts file.
-
->>> Index: b/arch/arm/include/debug/bcm476x.S
-
->>> +#if defined(CONFIG_DEBUG_BCM476X_UART0)
->>> +# define BCM476X_DEBUG_PHYS	0x000c0000
->>> +# define BCM476X_DEBUG_VIRT	0xd00c0000
->>> +#elif defined(CONFIG_DEBUG_BCM476X_UART1)
->>> +# define BCM476X_DEBUG_PHYS	0x000c1000
->>> +# define BCM476X_DEBUG_VIRT	0xd00c1000
->>> +#elif defined(CONFIG_DEBUG_BCM476X_UART2)
->>> +# define BCM476X_DEBUG_PHYS	0x000b2000
->>> +# define BCM476X_DEBUG_VIRT	0xd00b2000
->>> +#else
->>> +# error Unknown BCM476x debug port
->>> +#endif
+> On Sunday 07 October 2012 03:53:01 Domenico Andreoli wrote:
+>> From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
 >>
->> can't you detect it?
-> 
-> If I can assume that the boot loader will configure and enable only the
-> console port, I could use the first one in such state.
-> 
-> Where could I place such detection, in the maco addruart itself?
+>> BCM476x's minimal infrastructure, Kernel's great reuse.
+>>
+>> Look mom, no include/mach directory!
 
-Auto-detection is not necessarily a good idea; there's no reason in
-general to believe that no future board will ever use a UART for any
-purposes other than console/debug. Being explicit is probably good.
+>> Index: b/arch/arm/boot/dts/bcm476x.dtsi
+>> ===================================================================
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/bcm476x.dtsi
+>> @@ -0,0 +1,31 @@
+>> +/include/ "skeleton.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "brcm,bcm476x";
+>> +	model = "Broadcom BCM476x";
+>> +
+>> +	chosen {
+>> +		bootargs = "earlyprintk";
+>> +	};
+>> +
+>> +	amba {
+> 
+> I would rather explicitely mention that the peripheral base address is at 0
+> so something like this:
+> 
+> amba@0 {
+> 
+> to make it clear that the peripherals declared as leaf nodes of this one are
+> at a relative address.
+> 
+>> +		compatible = "arm,amba-bus";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+
+You should only put a unit address ("@0") in the node name if there's a
+matching reg property and the unit address is needed to make the node
+name unique. Neither condition applies in this case.
