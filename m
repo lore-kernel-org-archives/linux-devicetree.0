@@ -1,82 +1,100 @@
-From: Afzal Mohammed <x0148406@ti.com>
-Subject: Re: [PATCH v3 0/6] omap-am33xx rtc dt support
-Date: Tue, 9 Oct 2012 17:56:18 +0530
-Message-ID: <507417EA.3010008@ti.com>
-References: <cover.1343383616.git.afzal@ti.com> <50256797.3020505@ti.com> <C8443D0743D26F4388EA172BF4E2A7A93E9BA4EB@DBDE01.ent.ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 2/5] ARM: S3C64XX: Add phy_type to pmu_isolation
+Date: Tue, 9 Oct 2012 18:05:33 +0530
+Message-ID: <CAFp+6iGGH2-Ln2Cx2EKLtN+bz3zs18dEhEQf0zuGxLrCH+eLug@mail.gmail.com>
+References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
+	<1349705548-15207-3-git-send-email-gautam.vivek@samsung.com>
+	<5073B743.9000200@ti.com>
+	<CAFp+6iE6Er088dYwp8q7uQuZhw9bdYbJXQDbJp66W6tD7+C-Xw@mail.gmail.com>
+	<004901cda60e$f3a45ac0$daed1040$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93E9BA4EB@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Nori, Sekhar" <nsekhar@ti.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "Hilman, Kevin" <khilman@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <004901cda60e$f3a45ac0$daed1040$%han@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, p.paneri@samsung.com, yulgon.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi,
 
-
-On Monday 27 August 2012 01:05 PM, Mohammed, Afzal wrote:
-> On Sat, Aug 11, 2012 at 01:27:11, Nori, Sekhar wrote:
->> On 7/27/2012 5:53 PM, Afzal Mohammed wrote:
-
->>> This series makes rtc-omap driver DT capable, adds AM33xx
->>> RTC DT support along with a few enchancments to the driver.
->>>
->>> rtc-omap driver is made intelligent enough to handle kicker
->>> mechanism. This helps in removing kicker mechanism support
->>> done for DaVinci at platform level.
->>>
->>> This has been tested on Beaglebone (AM33xx platform) and on
->>> DaVinci DA850 EVM.
-
->> I tested patches 1-5 on AM18x EVM using rtcwake and hwclock commands.
->> Also tested on DT enabled AM18x EVM using hwclock.
+On Tue, Oct 9, 2012 at 4:42 PM, Jingoo Han <jg1.han@samsung.com> wrote:
+> On Tuesday, October 09, 2012 7:51 PM Vivek Gautam wrote
 >>
->> For patched 1-5:
+>> Hi Kishon,
 >>
->> Acked-by: Sekhar Nori<nsekhar@ti.com>
+>> Firstly, thanks for the quick review.
 >>
->> Alessandro,
+>> On Tue, Oct 9, 2012 at 11:03 AM, kishon <kishon@ti.com> wrote:
+>> > Hi,
+>> >
+>> >
+>> > On Monday 08 October 2012 07:42 PM, Vivek Gautam wrote:
+>> >>
+>> >> It adds 'type' argument to pmu_isolation function, aligning
+>> >> with other platforms, which keeps track of usbphy_type.
+>> >>
+>> >> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> >> ---
+>> >>   arch/arm/mach-s3c64xx/setup-usb-phy.c |    2 +-
+>> >>   1 files changed, 1 insertions(+), 1 deletions(-)
+>> >>
+>> >> diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c
+>> >> b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+>> >> index 3aee778..b7d1d95 100644
+>> >> --- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
+>> >> +++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+>> >> @@ -13,7 +13,7 @@
+>> >>   #include <mach/map.h>
+>> >>   #include <mach/regs-sys.h>
+>> >>
+>> >> -void s5p_usb_phy_pmu_isolation(int on)
+>> >> +void s5p_usb_phy_pmu_isolation(int on, int type)
+>> >
+>> >
+>> > IMO, this patch should have been squashed with the previous patch. IIUC, you
+>> > have changed the call to this function for taking two arguments in your
+>> > previous patch. Wouldn't that introduce compilation break after applying
+>> > your first patch?
+>> Yes, that's right it will introduce compilation break, my fault.
+>> Just one querry, will it be good to put this arch change in [patch 1/5]?
+>> and then can i move similar change in [patch 3/5] as given below again
+>> in [patch 1/5]?
+>
+> In my opinion, it would be better.
+> This is because it can prevent build errors.
+>
+Sure, I shall update this in the next patchset.
+>
+> Best regards,
+> Jingoo Han
+>
 >>
->> I assume you would want me to queue 2/6 through DaVinci tree. That patch
->> depends on 1/6 being accepted and merged by you. Let me know how you
->> want to move forward here.
-> Can you please help 1-5 patches in this series to get into mainline.
-> 1-5 of this series is a prerequisite for adding RTC support for AM335X
-> SoC's, which is present in beaglebone, AM335X EVM.
+>> diff --git a/arch/arm/mach-exynos/setup-usb-phy.c
+>> b/arch/arm/mach-exynos/setup-usb-phy.c
+>> index 1c62d20..039d246 100644
+>> --- a/arch/arm/mach-exynos/setup-usb-phy.c
+>> +++ b/arch/arm/mach-exynos/setup-usb-phy.c
+>> @@ -222,15 +226,40 @@ int s5p_usb_phy_exit(struct platform_device
+>> *pdev, int type)
+>>         return -EINVAL;
+>>  }
+>>
+>> -void s5p_usb_phy_pmu_isolation(int on)
+>> +void s5p_usb_phy_pmu_isolation(int on, int type)
+>>
+>> >
+>> > Thanks
+>> > Kishon
+>> >
+>> > --
+>> > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+>> > the body of a message to majordomo@vger.kernel.org
+>> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> Best regards
+>> Vivek
+>
 
-This series which adds rtc support for AM335x SoC (ARM
-Cortex-A8 from TI) based boards (like beagle bone) and
-in the process making omap rtc driver device tree capable
-was posted after addressing review comments around
-July end. It seems rtc maintainer is not active and you
-are taking care of the rtc patches.
-
-Patches 1-5 has been Acked by DaVinci maintainer.
-
-Can you please help this series reach mainline, let me
-know whether this series needs to be reposted.
-
-I waited to see response from rtc maintainer, it seems wait went
-too far and this mail should have been sent a couple of weeks
-before start of merge window.
-
-As merge window is coming to an end, I feel it may be bad to
-ask you this , but still: would it be possible to get the series in
-during this merge window.
-
-A recap of what this series is about,
-
-omap-rtc driver used by DaVinci and OMAP1 platforms is being
-reused for AM335x. Kicker release mechanism that is handled
-by DaVinci platform code has been moved to rtc driver. AM335x
-also needs to handle kicker mechanism. DT support has been
-added to omap-rtc driver, this was necessitated as AM335x
-supports only DT boot (DaVinci platform is also going DT way)
-Patch 6 adds AM335x DT support (this probably should go
-through omap tree). This series has been tested on beagle bone
-and DaVinci DA850 EVM.
-
-Regards
-Afzal
+Thanks
+Vivek
