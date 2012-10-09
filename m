@@ -1,111 +1,58 @@
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
-Subject: [PATCH V4 2/2] video: exynos_dp: device tree documentation
-Date: Wed, 10 Oct 2012 04:38:21 +0530
-Message-ID: <1349824101-32574-3-git-send-email-ajaykumar.rs@samsung.com>
-References: <1349824101-32574-1-git-send-email-ajaykumar.rs@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349824101-32574-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, jg1.han@samsung.com, devicetree-discuss@lists.ozlabs.org
-Cc: FlorianSchandinat@gmx.de, sylvester.nawrocki@gmail.com, tomasz.figa@gmail.com, thomas.ab@samsung.com
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: ARM_ATAG_DTB_COMPAT fails on fdt_ro.c compiling
+Date: Tue, 09 Oct 2012 10:15:54 -0600
+Message-ID: <50744DBA.3070900@wwwdotorg.org>
+References: <20121009031715.GC21822@S2101-09.ap.freescale.net>
+ <alpine.LFD.2.02.1210090018470.16518@xanadu.home>
+ <20121009050109.GD21822@S2101-09.ap.freescale.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121009050109.GD21822-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the DT bindings in exynos display port driver.
+On 10/08/2012 11:01 PM, Shawn Guo wrote:
+> On Tue, Oct 09, 2012 at 12:25:44AM -0400, Nicolas Pitre wrote:
+>> On Tue, 9 Oct 2012, Shawn Guo wrote:
+>>
+>>> I have seen this error on mainline for a couple days when
+>>> ARM_ATAG_DTB_COMPAT is enabled.
+>>>
+>>>   CC      arch/arm/boot/compressed/fdt_ro.o
+>>> arch/arm/boot/compressed/fdt_ro.c: In function =91fdt_path_offset=92:
+>>> arch/arm/boot/compressed/fdt_ro.c:172:3: error: implicit declaration of=
+ function =91fdt_get_alias_namelen=92 [-Werror=3Dimplicit-function-declarat=
+ion]
+>>> arch/arm/boot/compressed/fdt_ro.c:172:5: warning: assignment makes poin=
+ter from integer without a cast [enabled by default]
+>>> arch/arm/boot/compressed/fdt_ro.c: At top level:
+>>> arch/arm/boot/compressed/fdt_ro.c:340:13: error: conflicting types for =
+=91fdt_get_alias_namelen=92
+>>> arch/arm/boot/compressed/fdt_ro.c:172:7: note: previous implicit declar=
+ation of =91fdt_get_alias_namelen=92 was here
+>>> cc1: some warnings being treated as errors
+>>
+>> I just tried building mainline now.  It is at commit f5a246eab9.
+>>
+> The build still fails for me at this commit.
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
----
- .../devicetree/bindings/video/exynos_dp.txt        |   83 ++++++++++++++++++++
- 1 files changed, 83 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
+I can't reproduce this.
 
-diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
-new file mode 100644
-index 0000000..a021963
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-@@ -0,0 +1,83 @@
-+Exynos display port driver should configure the display port interface
-+based on the type of panel connected to it.
-+
-+We use two nodes:
-+	-dptx_phy node
-+	-display-port-controller node
-+
-+For the dp-phy initialization, we use a dptx_phy node.
-+Required properties for dptx_phy:
-+	-compatible:
-+		Should be "samsung,dp-phy".
-+	-samsung,dptx_phy_reg:
-+		Base address of DP PHY register.
-+	-samsung,enable_mask:
-+		The bit-mask used to enable/disable DP PHY.
-+
-+For the Panel initialization, we read data from display-port-controller node.
-+Required properties for display-port-controller:
-+	-compatible:
-+		Should be "samsung,exynos5-dp".
-+	-reg:
-+		physical base address of the controller and length
-+		of memory mapped region.
-+	-interrupts:
-+		Interrupt combiner values.
-+	-interrupt-parent:
-+		phandle to Interrupt combiner node.
-+	-samsung,dp_phy:
-+		phandle to dptx_phy node.
-+	-samsung,color_space:
-+		input video data format.
-+			COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
-+	-samsung,dynamic_range:
-+		dynamic range for input video data.
-+			VESA = 0, CEA = 1
-+	-samsung,ycbcr_coeff:
-+		YCbCr co-efficients for input video.
-+			COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
-+	-samsung,color_depth:
-+		Number of bits per colour component.
-+			COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
-+	-samsung,link_rate:
-+		link rate supported by the panel.
-+			LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
-+	-samsung,lane_count:
-+		number of lanes supported by the panel.
-+			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
-+	-samsung,interlaced:
-+		Interlace scan mode.
-+			Progressive if defined, Interlaced if not defined
-+	-samsung,v_sync_polarity:
-+		VSYNC polarity configuration.
-+			High if defined, Low if not defined
-+	-samsung,h_sync_polarity:
-+		HSYNC polarity configuration.
-+			High if defined, Low if not defined
-+
-+Example:
-+
-+SOC specific portion:
-+	dptx_phy: dptx_phy@0x10040720 {
-+		compatible = "samsung,dp-phy";
-+		samsung,dptx_phy_reg = <0x10040720>;
-+		samsung,enable_mask = <1>;
-+	};
-+
-+	display-port-controller {
-+		compatible = "samsung,exynos5-dp";
-+		reg = <0x145B0000 0x10000>;
-+		interrupts = <10 3>;
-+		interrupt-parent = <&combiner>;
-+		samsung,dp_phy = <&dptx_phy>;
-+        };
-+
-+Board Specific portion:
-+	display-port-controller {
-+		samsung,color_space = <0>;
-+		samsung,dynamic_range = <0>;
-+		samsung,ycbcr_coeff = <0>;
-+		samsung,color_depth = <1>;
-+		samsung,link_rate = <0x0a>;
-+		samsung,lane_count = <2>;
-+	};
--- 
-1.7.0.4
+I tried both my local next-20121005-based dev branch and that exact
+commit above. I tried both the crosstool-ng-based compiler I normally
+use and Ubuntu 10.04's ARM compiler (possibly from a PPA). In both
+cases, I ran git clean -f -d -x ; git reset --hard HEAD first, and then
+build zImage, dtbs, and modules, and of course used your attached .config.
