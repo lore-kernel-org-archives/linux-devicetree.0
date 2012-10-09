@@ -1,228 +1,132 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH 5/5] usb: exynos-ohci: Adding phy driver support
-Date: Tue, 9 Oct 2012 18:17:58 +0530
-Message-ID: <CAFp+6iGgTrqBy1=O3jtfV2JFmdkfSe21=JLrYoPd3BEviTnyPQ@mail.gmail.com>
-References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
-	<1349705548-15207-6-git-send-email-gautam.vivek@samsung.com>
-	<004401cda602$e7c9a630$b75cf290$%han@samsung.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 1/2] pwm: pwm-tiecap: Add device-tree binding support for
+ APWM driver
+Date: Tue, 9 Oct 2012 14:48:30 +0200
+Message-ID: <20121009124830.GA25493@avionic-0098.mockup.avionic-design.de>
+References: <1348658863-29428-1-git-send-email-avinashphilip@ti.com>
+ <1348658863-29428-2-git-send-email-avinashphilip@ti.com>
+ <20121002060014.GA4298@avionic-0098.mockup.avionic-design.de>
+ <518397C60809E147AF5323E0420B992E3E9CA1E8@DBDE01.ent.ti.com>
+ <20121008133951.GA26525@avionic-0098.mockup.avionic-design.de>
+ <518397C60809E147AF5323E0420B992E3E9CA82E@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <004401cda602$e7c9a630$b75cf290$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com, yulgon.kim@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <518397C60809E147AF5323E0420B992E3E9CA82E@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Tue, Oct 9, 2012 at 3:16 PM, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Monday, October 08, 2012 11:12 PM Vivek Gautam wrote
->>
->> Adding the transceiver to ohci driver. Keeping the platform data
->> for continuing the smooth operation for boards which still uses it
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->
-> Hi Vivek Gautam,
->
-> Could you replace the patch subject with
-> 'USB: ohci-exynos: Add phy driver support'?
->
-Sure. I shall update this in the next patchset.
-> I also added some comments, too.
->
->> ---
->>  drivers/usb/host/ohci-exynos.c |   62 +++++++++++++++++++++++++++------------
->>  1 files changed, 43 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
->> index 20a5008..e0ed594 100644
->> --- a/drivers/usb/host/ohci-exynos.c
->> +++ b/drivers/usb/host/ohci-exynos.c
->> @@ -16,13 +16,36 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/platform_data/usb-exynos.h>
->>  #include <plat/usb-phy.h>
->> +#include <linux/usb/phy.h>
->
-> Please, move header include to proper place as bellows:
->
-> #include <linux/platform_data/usb-exynos.h>
-> +#include <linux/usb/phy.h>
-> ##include <plat/usb-phy.h>
->
-Right, i will change this accordingly and update.
->>
->>  struct exynos_ohci_hcd {
->>       struct device *dev;
->>       struct usb_hcd *hcd;
->>       struct clk *clk;
->> +     struct usb_phy *phy;
->> +     struct exynos4_ohci_platdata *pdata;
->>  };
->>
->> +static void exynos_ohci_phy_enable(struct exynos_ohci_hcd *exynos_ohci)
->> +{
->> +     struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
->> +
->> +     if (exynos_ohci->phy)
->> +             usb_phy_init(exynos_ohci->phy);
->> +     else if (exynos_ohci->pdata->phy_init)
->> +             exynos_ohci->pdata->phy_init(pdev, S5P_USB_PHY_HOST);
->> +}
->> +
->> +static void exynos_ohci_phy_disable(struct exynos_ohci_hcd *exynos_ohci)
->> +{
->> +     struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
->> +
->> +     if (exynos_ohci->phy)
->> +             usb_phy_shutdown(exynos_ohci->phy);
->> +     else if (exynos_ohci->pdata->phy_exit)
->> +             exynos_ohci->pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
->> +}
->> +
->>  static int ohci_exynos_start(struct usb_hcd *hcd)
->>  {
->>       struct ohci_hcd *ohci = hcd_to_ohci(hcd);
->> @@ -81,15 +104,10 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->>       struct usb_hcd *hcd;
->>       struct ohci_hcd *ohci;
->>       struct resource *res;
->> +     struct usb_phy *phy;
->>       int irq;
->>       int err;
->>
->> -     pdata = pdev->dev.platform_data;
->> -     if (!pdata) {
->> -             dev_err(&pdev->dev, "No platform data defined\n");
->> -             return -EINVAL;
->> -     }
->> -
->>       /*
->>        * Right now device-tree probed devices don't get dma_mask set.
->>        * Since shared usb code relies on it, set it here for now.
->> @@ -105,6 +123,20 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->>       if (!exynos_ohci)
->>               return -ENOMEM;
->>
->> +     pdata = pdev->dev.platform_data;
->> +     if (!pdata) {
->> +             /* Fallback to Phy transceiver */
->> +             phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
->> +             if (IS_ERR_OR_NULL(phy)) {
->> +                     dev_err(&pdev->dev, "no platform data or transceiver defined\n");
->> +                     return -EPROBE_DEFER;
->> +             } else {
->> +                     exynos_ohci->phy = phy;
->> +             }
->> +     } else {
->> +             exynos_ohci->pdata = pdata;
->> +     }
->> +
->>       exynos_ohci->dev = &pdev->dev;
->>
->>       hcd = usb_create_hcd(&exynos_ohci_hc_driver, &pdev->dev,
->> @@ -150,8 +182,7 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->>               goto fail_io;
->>       }
->>
->> -     if (pdata->phy_init)
->> -             pdata->phy_init(pdev, S5P_USB_PHY_HOST);
->> +     exynos_ohci_phy_enable(exynos_ohci);
->>
->>       ohci = hcd_to_ohci(hcd);
->>       ohci_hcd_init(ohci);
->> @@ -168,6 +199,7 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->>
->>  fail_io:
->>       clk_disable(exynos_ohci->clk);
->> +     exynos_ohci_phy_disable(exynos_ohci);
->
-> As I mentioned, it is also wrong.
->
-> Please fix them as follows:
->
->         err = usb_add_hcd(hcd, irq, IRQF_SHARED);
->         if (err) {
->                 dev_err(&pdev->dev, "Failed to add USB HCD\n");
-> -               goto fail_io;
-> +               goto fail_add_hcd;
->         }
->
->         platform_set_drvdata(pdev, exynos_ohci);
->
->         return 0;
->
-> +fail_add_hcd:
-> +       exynos_ohci_phy_disable(exynos_ohci);
-> fail_io:
->         clk_disable(exynos_ohci->clk);
-> fail_clken:
->         clk_put(exynos_ohci->clk);
->
-Right, my mistake. I shall modify this as suggested and update.
->
->>  fail_clken:
->>       clk_put(exynos_ohci->clk);
->>  fail_clk:
->> @@ -177,14 +209,12 @@ fail_clk:
->>
->>  static int __devexit exynos_ohci_remove(struct platform_device *pdev)
->>  {
->> -     struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
->>       struct exynos_ohci_hcd *exynos_ohci = platform_get_drvdata(pdev);
->>       struct usb_hcd *hcd = exynos_ohci->hcd;
->>
->>       usb_remove_hcd(hcd);
->>
->> -     if (pdata && pdata->phy_exit)
->> -             pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
->> +     exynos_ohci_phy_disable(exynos_ohci);
->>
->>       clk_disable(exynos_ohci->clk);
->>       clk_put(exynos_ohci->clk);
->> @@ -209,8 +239,6 @@ static int exynos_ohci_suspend(struct device *dev)
->>       struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
->>       struct usb_hcd *hcd = exynos_ohci->hcd;
->>       struct ohci_hcd *ohci = hcd_to_ohci(hcd);
->> -     struct platform_device *pdev = to_platform_device(dev);
->> -     struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
->>       unsigned long flags;
->>       int rc = 0;
->>
->> @@ -229,8 +257,7 @@ static int exynos_ohci_suspend(struct device *dev)
->>
->>       clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
->>
->> -     if (pdata && pdata->phy_exit)
->> -             pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
->> +     exynos_ohci_phy_disable(exynos_ohci);
->>
->>       clk_disable(exynos_ohci->clk);
->>
->> @@ -244,13 +271,10 @@ static int exynos_ohci_resume(struct device *dev)
->>  {
->>       struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
->>       struct usb_hcd *hcd = exynos_ohci->hcd;
->> -     struct platform_device *pdev = to_platform_device(dev);
->> -     struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
->>
->>       clk_enable(exynos_ohci->clk);
->>
->> -     if (pdata && pdata->phy_init)
->> -             pdata->phy_init(pdev, S5P_USB_PHY_HOST);
->> +     exynos_ohci_phy_enable(exynos_ohci);
->>
->>       /* Mark hardware accessible again as we are out of D3 state by now */
->>       set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
->> --
->> 1.7.6.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
-Vivek
+On Tue, Oct 09, 2012 at 12:36:53PM +0000, Philip, Avinash wrote:
+> On Mon, Oct 08, 2012 at 19:09:51, Thierry Reding wrote:
+> > On Mon, Oct 08, 2012 at 01:31:19PM +0000, Philip, Avinash wrote:
+> > > On Tue, Oct 02, 2012 at 11:30:14, Thierry Reding wrote:
+> > > > On Wed, Sep 26, 2012 at 04:57:42PM +0530, Philip, Avinash wrote:
+> > [...]
+> > > > > @@ -231,13 +290,56 @@ static int __devinit ecap_pwm_probe(struct =
+platform_device *pdev)
+> > > > >  	}
+> > > > > =20
+> > > > >  	pm_runtime_enable(&pdev->dev);
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Some platform has extra PWM-subsystem common config space
+> > > > > +	 * and requires special handling of clock gating.
+> > > > > +	 */
+> > > > > +	if (pdata && pdata->has_configspace) {
+> > > > > +		r =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > > > > +		if (!r) {
+> > > > > +			dev_err(&pdev->dev, "no memory resource defined\n");
+> > > > > +			ret =3D -ENODEV;
+> > > > > +			goto err_disable_clock;
+> > > > > +		}
+> > > > > +
+> > > > > +		pc->config_base =3D devm_ioremap(&pdev->dev, r->start,
+> > > > > +				resource_size(r));
+> > > > > +		if (!pc->config_base) {
+> > > > > +			dev_err(&pdev->dev, "failed to ioremap() registers\n");
+> > > > > +			ret =3D -EADDRNOTAVAIL;
+> > > > > +			goto err_disable_clock;
+> > > > > +		}
+> > > >=20
+> > > > Isn't this missing a request_mem_region()? I assume you don't do th=
+at
+> > > > here because you need the same region in the EHRPWM driver, right?
+> > >=20
+> > > request_mem_region() is avoided as this region is shared across PWM
+> > > sub modules ECAP & EHRPWM.=20
+> > >=20
+> > > > This should be indication enough that the design is not right here.
+> > > > I think we need a proper abstraction here. Can this not be done via
+> > > > PM runtime support? If not, maybe this should be represented by
+> > > > clock objects since the bit obviously enables a clock.
+> > >=20
+> > > It is not done as part of PM runtime as this is has nothing to
+> > > do with clock tree of the SOC. The bits we were enabling here
+> > > should consider as an enable of the individual sub module as
+> > > part of IP integration. Hence we were handling these subsystem
+> > > module enable in the driver itself.
+> >=20
+> > My point remains valid: you shouldn't be able to access the same
+> > register through two different drivers. That's one of the reasons, if
+> > not the only reasen, why the request_mem_region() function exists. I
+> > think you should add some abstraction to provide this functionality to
+> > the drivers. I assume that eventually there will be more than just the
+> > PWM cores that require access to this register.
+>=20
+> Enabling of PWM sub modules from CONFIG space is only present in AM33xx
+> as part of IP integration (ECAP, EHRPWM & EQEP).
+>=20
+> Enabling of sub modules (ECAP, EHRPWM & EQEP) should do in CONFIG space.=
+=20
+> Hence sub module drivers are accessing CONFIG space without reserving it=
+=20
+> Individually from drivers (request_mem_region()).
+>=20
+> Can you describe/point how it can be handled in a separate Abstraction la=
+yer
+> as this is shared across ECAP, EHRPWM & EQEP (EQEP driver is not yet avai=
+lable).
+
+Perhaps something like a global function to enable and disable the
+clocks would be enough. You could for instance have a driver that
+requests the config space memory region and provides this global
+function so that it can be used by the ECAP, EHRPWM and EQEP.
+
+A more elaborate scheme would possibly involve making the new device a
+parent of the ECAP, EHRPWM and EQEP devices and have their drivers
+lookup the parent to determine which configurator device to operate on.
+
+Thierry
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQdB0dAAoJEN0jrNd/PrOhuEUQAKH+erxs3ev55H0NBvjWV7lu
+DiR/PlG1dGgpQUZ0qZdFFBoEyspq2iJ9LokHxBMpeG304tD8QBqLgYOIGNG1xoVO
+qKTvLncoyo9dqoX/R5EpiVxHr+aexm7gKaWayAjgFSis9e2ZKF+7DvBaXYSK29Ck
+n1v6pI8mpV44dUeWnhfpbIRLxJGlwivS+jbKru+d7He25aiTn2tLBR3x/SlSShAj
+g4/hpjxA5ckZ5sDHfqf32XYp041fY6OWN38TskJFFsLl4RwcvO+sXPa2k8wDKkwy
+Nm4H7M3l1NdWmSPRUq92BuFt14q2KKpGPkCop7X4YauObx1tXwUnMizGCbAD0nV7
+Bwg2Ll/NyEnN+n5OJrhXoU4f8kiDKSfcXXlnsT8vc27ocexynvcqHjh303IfFL/Y
+Orsw2+3wW/FE3lpR4o1YrvdlDwsqpfZ/uj97ERWXacYwZmSh5GLtVEwxB3LBJ3+b
+t3RIvzfnsjNXKnLoYTr/onolHsZXiXSAXBI+4WpKXDeH4pTHz1/26Tb50F6on8uY
+ov3GXHinA9JPjdw4Dcqgc/QBluxQjZuIeBhZIKLvtlsuEGD2Wx6aK1GDKZdmi7Jd
+BF4jova96Hmbvcs0/dPPIWQUZJ6y5iCm2o/tKk0Xt2gGOdCoVZXjC98nboIsZnzW
+bt7pxv2TN9a5c2yoMhLx
+=ypgM
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
