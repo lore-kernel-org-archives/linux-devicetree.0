@@ -1,98 +1,87 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 2/5] ARM: S3C64XX: Add phy_type to pmu_isolation
-Date: Tue, 09 Oct 2012 20:12:20 +0900
-Message-ID: <004901cda60e$f3a45ac0$daed1040$%han@samsung.com>
-References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
- <1349705548-15207-3-git-send-email-gautam.vivek@samsung.com>
- <5073B743.9000200@ti.com>
- <CAFp+6iE6Er088dYwp8q7uQuZhw9bdYbJXQDbJp66W6tD7+C-Xw@mail.gmail.com>
+From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
+Date: Tue, 9 Oct 2012 13:50:35 +0200
+Message-ID: <20121009115034.GA28817@glitch>
+References: <20121007015300.828366635@gmail.com>
+ <20121007015405.958959522@gmail.com>
+ <20121007195759.GG12801@game.jcrosoft.org>
+ <20121007225417.GA29996@glitch> <50738DD0.5090406@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAFp+6iE6Er088dYwp8q7uQuZhw9bdYbJXQDbJp66W6tD7+C-Xw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-language: ko
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Vivek Gautam' <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'kishon' <kishon-l0cyMroinI0@public.gmane.org>
-Cc: 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50738DD0.5090406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, October 09, 2012 7:51 PM Vivek Gautam wrote
+On Mon, Oct 08, 2012 at 08:37:04PM -0600, Stephen Warren wrote:
+> On 10/07/2012 04:54 PM, Domenico Andreoli wrote:
+> > On Sun, Oct 07, 2012 at 09:57:59PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >> On 03:53 Sun 07 Oct     , Domenico Andreoli wrote:
+> >>> From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
 > 
-> Hi Kishon,
+> >>> Index: b/arch/arm/boot/dts/bcm476x.dtsi
 > 
-> Firstly, thanks for the quick review.
+> >>> +		vic0: interrupt-controller@80000 {
+> >>> +			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
+> >> why brcm specific compatbile?
+> > 
+> > Nothing breaks if I drop it. I think it's a future-proof clause, especially
+> > if you consider that the devicetree could be not easy to upgrade and you
+> > may need a way to differentiate the bcm476x's implementation from the
+> > common one. I'm not sure it's an actual requirement with use cases.
 > 
-> On Tue, Oct 9, 2012 at 11:03 AM, kishon <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> > Hi,
-> >
-> >
-> > On Monday 08 October 2012 07:42 PM, Vivek Gautam wrote:
+> Indeed, everything works fine right now if you drop that. However, it is
+> correct practice to include a compatible value for the particular SoC
+> that incorporates the IP so that if in the future some SoC-specific
+> workaround is required, the compatible value needed to trigger this is
+> already in all historical .dts file.
+
+This matches with what I know but it seems anyway that in the arm,primecell
+cases this is not a great concern, almost none of the dts currently in
+mainline go as far as specifying the machine specific name.
+
+> >>> Index: b/arch/arm/include/debug/bcm476x.S
+> 
+> >>> +#if defined(CONFIG_DEBUG_BCM476X_UART0)
+> >>> +# define BCM476X_DEBUG_PHYS	0x000c0000
+> >>> +# define BCM476X_DEBUG_VIRT	0xd00c0000
+> >>> +#elif defined(CONFIG_DEBUG_BCM476X_UART1)
+> >>> +# define BCM476X_DEBUG_PHYS	0x000c1000
+> >>> +# define BCM476X_DEBUG_VIRT	0xd00c1000
+> >>> +#elif defined(CONFIG_DEBUG_BCM476X_UART2)
+> >>> +# define BCM476X_DEBUG_PHYS	0x000b2000
+> >>> +# define BCM476X_DEBUG_VIRT	0xd00b2000
+> >>> +#else
+> >>> +# error Unknown BCM476x debug port
+> >>> +#endif
 > >>
-> >> It adds 'type' argument to pmu_isolation function, aligning
-> >> with other platforms, which keeps track of usbphy_type.
-> >>
-> >> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >> ---
-> >>   arch/arm/mach-s3c64xx/setup-usb-phy.c |    2 +-
-> >>   1 files changed, 1 insertions(+), 1 deletions(-)
-> >>
-> >> diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c
-> >> b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-> >> index 3aee778..b7d1d95 100644
-> >> --- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
-> >> +++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
-> >> @@ -13,7 +13,7 @@
-> >>   #include <mach/map.h>
-> >>   #include <mach/regs-sys.h>
-> >>
-> >> -void s5p_usb_phy_pmu_isolation(int on)
-> >> +void s5p_usb_phy_pmu_isolation(int on, int type)
-> >
-> >
-> > IMO, this patch should have been squashed with the previous patch. IIUC, you
-> > have changed the call to this function for taking two arguments in your
-> > previous patch. Wouldn't that introduce compilation break after applying
-> > your first patch?
-> Yes, that's right it will introduce compilation break, my fault.
-> Just one querry, will it be good to put this arch change in [patch 1/5]?
-> and then can i move similar change in [patch 3/5] as given below again
-> in [patch 1/5]?
-
-In my opinion, it would be better.
-This is because it can prevent build errors.
-
-
-Best regards,
-Jingoo Han
-
+> >> can't you detect it?
+> > 
+> > If I can assume that the boot loader will configure and enable only the
+> > console port, I could use the first one in such state.
+> > 
+> > Where could I place such detection, in the maco addruart itself?
 > 
-> diff --git a/arch/arm/mach-exynos/setup-usb-phy.c
-> b/arch/arm/mach-exynos/setup-usb-phy.c
-> index 1c62d20..039d246 100644
-> --- a/arch/arm/mach-exynos/setup-usb-phy.c
-> +++ b/arch/arm/mach-exynos/setup-usb-phy.c
-> @@ -222,15 +226,40 @@ int s5p_usb_phy_exit(struct platform_device
-> *pdev, int type)
->         return -EINVAL;
->  }
-> 
-> -void s5p_usb_phy_pmu_isolation(int on)
-> +void s5p_usb_phy_pmu_isolation(int on, int type)
-> 
-> >
-> > Thanks
-> > Kishon
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> Best regards
-> Vivek
+> Auto-detection is not necessarily a good idea; there's no reason in
+> general to believe that no future board will ever use a UART for any
+> purposes other than console/debug. Being explicit is probably good.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+After thinking at it a bit, I also prefer to leave the guessing out. It
+can break things in non-obvious ways. I prefer a full consistent and
+testable behaviour.
+
+Thanks,
+Domenico
