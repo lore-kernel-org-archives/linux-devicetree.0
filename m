@@ -1,95 +1,34 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Tue, 9 Oct 2012 11:21:23 +0200
-Message-ID: <201210091121.23683.hverkuil@xs4all.nl>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <4043536.qVaHVXMbPA@avalon> <Pine.LNX.4.64.1210082312570.14454@axis700.grange>
+From: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Subject: Re: [PATCH 2/2] i2c: busses: i2c-ocores: switch to devm_request_and_ioremap
+Date: Tue, 09 Oct 2012 11:29:22 +0200
+Message-ID: <87y5jgc7t9.fsf@macbook.be.48ers.dk>
+References: <20120923133358.GA22861@linux-3ix0.site>
+	<874nmoa9b1.fsf@macbook.be.48ers.dk>
+	<CAMhs6YztTFh0fQFfJOwc++fr-xXxEJU5KvcSvOcAcyyDgWOBDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1210082312570.14454@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robherring2@gmail.com>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMhs6YztTFh0fQFfJOwc++fr-xXxEJU5KvcSvOcAcyyDgWOBDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Maxin B. John's message of "Tue, 9 Oct 2012 05:13:13 -0400")
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxin B John <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, "Wolfram Sang (embedded platforms)" <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Jean Delvare (PC drivers, core)" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 8 October 2012 23:14:01 Guennadi Liakhovetski wrote:
-> On Mon, 8 Oct 2012, Laurent Pinchart wrote:
-> 
-> > On Monday 08 October 2012 14:00:38 Stephen Warren wrote:
-> > > On 10/02/2012 08:33 AM, Guennadi Liakhovetski wrote:
-> > > > On Tue, 2 Oct 2012, Rob Herring wrote:
-> > > >> On 09/27/2012 09:07 AM, Guennadi Liakhovetski wrote:
-> > > >>> This patch adds a document, describing common V4L2 device tree bindings.
-> > > >>> 
-> > > >>> diff --git a/Documentation/devicetree/bindings/media/v4l2.txt
-> > > >>> b/Documentation/devicetree/bindings/media/v4l2.txt>> 
-> > > >> One other comment below:
-> > > >>> +
-> > > >>> +General concept
-> > > >>> +---------------
-> > > >>> +
-> > > >>> +Video pipelines consist of external devices, e.g. camera sensors,
-> > > >>> controlled +over an I2C, SPI or UART bus, and SoC internal IP blocks,
-> > > >>> including video DMA +engines and video data processors.
-> > > >>> +
-> > > >>> +SoC internal blocks are described by DT nodes, placed similarly to
-> > > >>> other SoC +blocks. External devices are represented as child nodes of
-> > > >>> their respective bus +controller nodes, e.g. I2C.
-> > > >>> +
-> > > >>> +Data interfaces on all video devices are described by "port" child DT
-> > > >>> nodes. +Configuration of a port depends on other devices participating
-> > > >>> in the data +transfer and is described by "link" DT nodes, specified as
-> > > >>> children of the +"port" nodes:
-> > > >>> +
-> > > >>> +/foo {
-> > > >>> +	port@0 {
-> > > >>> +		link@0 { ... };
-> > > >>> +		link@1 { ... };
-> > > >>> +	};
-> > > >>> +	port@1 { ... };
-> > > >>> +};
-> > > >>> +
-> > > >>> +If a port can be configured to work with more than one other device on
-> > > >>> the same +bus, a "link" child DT node must be provided for each of
-> > > >>> them. If more than one +port is present on a device or more than one
-> > > >>> link is connected to a port, a +common scheme, using "#address-cells,"
-> > > >>> "#size-cells" and "reg" properties is +used.
-> > > >>> +
-> > > >>> +Optional link properties:
-> > > >>> +- remote: phandle to the other endpoint link DT node.
-> > > >> 
-> > > >> This name is a little vague. Perhaps "endpoint" would be better.
-> > > > 
-> > > > "endpoint" can also refer to something local like in USB case. Maybe
-> > > > rather the description of the "remote" property should be improved?
-> > > 
-> > > The documentation doesn't show up in all the .dts files that use it; it
-> > > might be useful to try and make the .dts file as obviously readable as
-> > > possible.
-> > > 
-> > > Perhaps "remote-port" or "connected-port" would be sufficiently descriptive.
-> > 
-> > I like remote-port better than the already proposed remote-link.
-> 
-> Yes, remote-port sounds better, than remote-link, but might be more 
-> difficult to correlate with the fact, that the phandle value of this 
-> property points to a link DT node, and not to a port.
+>>>>> "Maxin" == Maxin B John <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-I first thought of remote-port as well, but it is just weird that it points to
-a link node.
+ Maxin> Hi Peter,
 
-I seem to remember that 'link' was called 'pad' initially, but people didn't
-like that due to possible confusion with other meanings of that word.
+ Maxin> This drops a few lines of code and allows common APIs to handle
+ Maxin> those for us.
 
-The problem with the word 'link' is that it doesn't describe a link but just
-one endpoint of a link.
+ Maxin> Signed-off-by: Maxin B. John <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Is it an idea to rename 'link' to 'endpoint' and 'remote' to 'remote-endpoint'?
+ >> Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
 
-So a port has endpoints, and each endpoint has a remote-endpoint property.
+ Maxin> Is there any update on this ?
 
-Regards,
+I'm expecting Wolfram to pick it up.
 
-	Hans
+-- 
+Bye, Peter Korsgaard
