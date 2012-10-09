@@ -1,14 +1,14 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Mon, 08 Oct 2012 20:48:20 -0600
-Message-ID: <50739074.8000001@wwwdotorg.org>
+Subject: Re: [PATCH 3/6] ARM: bcm476x: Add sched clock
+Date: Mon, 08 Oct 2012 20:54:40 -0600
+Message-ID: <507391F0.8070609@wwwdotorg.org>
 References: <20121007015300.828366635@gmail.com>
- <20121007015405.958959522@gmail.com>
+ <20121007015406.809888002@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121007015405.958959522-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20121007015406.809888002-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,21 +24,18 @@ Cc: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 10/06/2012 07:53 PM, Domenico Andreoli wrote:
-> BCM476x's minimal infrastructure, Kernel's great reuse.
+> Sched clock implementation based on the BCM476x's free runner counter.
 
-> Index: b/arch/arm/boot/dts/bcm476x.dtsi
+> Index: b/Documentation/devicetree/bindings/timer/brcm,bcm476x-sched-clock.txt
+> ===================================================================
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/brcm,bcm476x-sched-clock.txt
+> @@ -0,0 +1,18 @@
+> +BCM476x Sched clock
+> +
+> +The BCM476x provides a 63-bit free running counter driven by a separate
+> +32KHz clock line.
 
-> +	chosen {
-> +		bootargs = "earlyprintk";
-> +	};
-
-> Index: b/arch/arm/configs/bcm476x_defconfig
-
-> +CONFIG_CMDLINE="root=/dev/mmcblk0p2 ro console=ttyAMA1,115200 rootwait init=/bin/bash"
-> +CONFIG_CMDLINE_FROM_BOOTLOADER=y
-
-I'm not sure you need to specify a default command-line in both those
-places. I would be inclined to leave out the root= option as well; it's
-pretty specific to however the user's SD card was partitioned, so there
-could be quite some variation there I think? Oh, especially since I
-think you said there was no SD driver yet anyway?
+Is "sched clock" really the name of the HW module in the Broadcom
+documentation (well, assuming you have any access to that). DT names
+should derived from HW manuals/... where possible.
