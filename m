@@ -1,16 +1,16 @@
 From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Tue, 9 Oct 2012 13:52:50 +0200
-Message-ID: <20121009115250.GB28817@glitch>
+Date: Tue, 9 Oct 2012 13:54:05 +0200
+Message-ID: <20121009115405.GC28817@glitch>
 References: <20121007015300.828366635@gmail.com>
  <20121007015405.958959522@gmail.com>
- <20121008141455.324f914b@skate>
+ <50739074.8000001@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20121008141455.324f914b@skate>
+In-Reply-To: <50739074.8000001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,33 +21,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2012 at 02:14:55PM +0200, Thomas Petazzoni wrote:
+On Mon, Oct 08, 2012 at 08:48:20PM -0600, Stephen Warren wrote:
+> On 10/06/2012 07:53 PM, Domenico Andreoli wrote:
+> > BCM476x's minimal infrastructure, Kernel's great reuse.
 > 
-> On Sun, 07 Oct 2012 03:53:01 +0200, Domenico Andreoli wrote:
+> > Index: b/arch/arm/boot/dts/bcm476x.dtsi
 > 
-> > Index: b/arch/arm/mach-bcm476x/Makefile.boot
-> > ===================================================================
-> > --- /dev/null
-> > +++ b/arch/arm/mach-bcm476x/Makefile.boot
-> > @@ -0,0 +1,5 @@
-> > +   zreladdr-y := 0x00008000
-> > +params_phys-y := 0x00000100
-> > +initrd_phys-y := 0x00800000
+> > +	chosen {
+> > +		bootargs = "earlyprintk";
+> > +	};
 > 
-> Those params_phys-y and initrd_phys-y lines as useless as you're using
-> the Device Tree.
+> > Index: b/arch/arm/configs/bcm476x_defconfig
 > 
-> > +#define BCM476X_PERIPH_PHYS   0x00080000
-> > +#define BCM476X_PERIPH_VIRT   0xd0080000
+> > +CONFIG_CMDLINE="root=/dev/mmcblk0p2 ro console=ttyAMA1,115200 rootwait init=/bin/bash"
+> > +CONFIG_CMDLINE_FROM_BOOTLOADER=y
 > 
-> This one should be defined with IOMEM(). Yes, you will have to add a
-> cast to make it play nicely with map_desc.virtual.
+> I'm not sure you need to specify a default command-line in both those
+> places. I would be inclined to leave out the root= option as well; it's
+> pretty specific to however the user's SD card was partitioned, so there
+> could be quite some variation there I think? Oh, especially since I
+> think you said there was no SD driver yet anyway?
 
-Will address both of them. Thank you Thomas.
+Right, I'll drop both. Thanks.
 
-Regards,
-Domenico
+Dome
