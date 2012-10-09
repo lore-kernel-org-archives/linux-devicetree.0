@@ -1,17 +1,16 @@
 From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Tue, 9 Oct 2012 13:50:35 +0200
-Message-ID: <20121009115034.GA28817@glitch>
+Date: Tue, 9 Oct 2012 13:52:50 +0200
+Message-ID: <20121009115250.GB28817@glitch>
 References: <20121007015300.828366635@gmail.com>
  <20121007015405.958959522@gmail.com>
- <20121007195759.GG12801@game.jcrosoft.org>
- <20121007225417.GA29996@glitch> <50738DD0.5090406@wwwdotorg.org>
+ <20121008141455.324f914b@skate>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <50738DD0.5090406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20121008141455.324f914b@skate>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,66 +21,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2012 at 08:37:04PM -0600, Stephen Warren wrote:
-> On 10/07/2012 04:54 PM, Domenico Andreoli wrote:
-> > On Sun, Oct 07, 2012 at 09:57:59PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >> On 03:53 Sun 07 Oct     , Domenico Andreoli wrote:
-> >>> From: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+On Mon, Oct 08, 2012 at 02:14:55PM +0200, Thomas Petazzoni wrote:
 > 
-> >>> Index: b/arch/arm/boot/dts/bcm476x.dtsi
+> On Sun, 07 Oct 2012 03:53:01 +0200, Domenico Andreoli wrote:
 > 
-> >>> +		vic0: interrupt-controller@80000 {
-> >>> +			compatible = "brcm,bcm476x-pl192", "arm,pl192-vic", "arm,primecell";
-> >> why brcm specific compatbile?
-> > 
-> > Nothing breaks if I drop it. I think it's a future-proof clause, especially
-> > if you consider that the devicetree could be not easy to upgrade and you
-> > may need a way to differentiate the bcm476x's implementation from the
-> > common one. I'm not sure it's an actual requirement with use cases.
+> > Index: b/arch/arm/mach-bcm476x/Makefile.boot
+> > ===================================================================
+> > --- /dev/null
+> > +++ b/arch/arm/mach-bcm476x/Makefile.boot
+> > @@ -0,0 +1,5 @@
+> > +   zreladdr-y := 0x00008000
+> > +params_phys-y := 0x00000100
+> > +initrd_phys-y := 0x00800000
 > 
-> Indeed, everything works fine right now if you drop that. However, it is
-> correct practice to include a compatible value for the particular SoC
-> that incorporates the IP so that if in the future some SoC-specific
-> workaround is required, the compatible value needed to trigger this is
-> already in all historical .dts file.
+> Those params_phys-y and initrd_phys-y lines as useless as you're using
+> the Device Tree.
+> 
+> > +#define BCM476X_PERIPH_PHYS   0x00080000
+> > +#define BCM476X_PERIPH_VIRT   0xd0080000
+> 
+> This one should be defined with IOMEM(). Yes, you will have to add a
+> cast to make it play nicely with map_desc.virtual.
 
-This matches with what I know but it seems anyway that in the arm,primecell
-cases this is not a great concern, almost none of the dts currently in
-mainline go as far as specifying the machine specific name.
+Will address both of them. Thank you Thomas.
 
-> >>> Index: b/arch/arm/include/debug/bcm476x.S
-> 
-> >>> +#if defined(CONFIG_DEBUG_BCM476X_UART0)
-> >>> +# define BCM476X_DEBUG_PHYS	0x000c0000
-> >>> +# define BCM476X_DEBUG_VIRT	0xd00c0000
-> >>> +#elif defined(CONFIG_DEBUG_BCM476X_UART1)
-> >>> +# define BCM476X_DEBUG_PHYS	0x000c1000
-> >>> +# define BCM476X_DEBUG_VIRT	0xd00c1000
-> >>> +#elif defined(CONFIG_DEBUG_BCM476X_UART2)
-> >>> +# define BCM476X_DEBUG_PHYS	0x000b2000
-> >>> +# define BCM476X_DEBUG_VIRT	0xd00b2000
-> >>> +#else
-> >>> +# error Unknown BCM476x debug port
-> >>> +#endif
-> >>
-> >> can't you detect it?
-> > 
-> > If I can assume that the boot loader will configure and enable only the
-> > console port, I could use the first one in such state.
-> > 
-> > Where could I place such detection, in the maco addruart itself?
-> 
-> Auto-detection is not necessarily a good idea; there's no reason in
-> general to believe that no future board will ever use a UART for any
-> purposes other than console/debug. Being explicit is probably good.
-
-After thinking at it a bit, I also prefer to leave the guessing out. It
-can break things in non-obvious ways. I prefer a full consistent and
-testable behaviour.
-
-Thanks,
+Regards,
 Domenico
