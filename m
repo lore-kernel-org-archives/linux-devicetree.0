@@ -1,13 +1,12 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dtc: fix for_each_*() to skip first object if deleted
-Date: Mon, 08 Oct 2012 22:13:23 -0500
-Message-ID: <50739653.7060009@gmail.com>
-References: <1349734526-29792-1-git-send-email-swarren@wwwdotorg.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: ARM_ATAG_DTB_COMPAT fails on fdt_ro.c compiling
+Date: Tue, 9 Oct 2012 11:17:20 +0800
+Message-ID: <20121009031715.GC21822@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1349734526-29792-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,100 +17,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/08/2012 05:15 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> The previous definition of for_each_*() would always include the very
-> first object within the list, irrespective of whether it was marked
-> deleted, since the deleted flag was not checked on the first object,
-> but only on any "next" object.
-> 
-> Fix for_each_*() to check the deleted flag in the loop body every
-> iteration to correct this.
-> 
-> (upstream dtc commit 1762ab42ef77db7ab2776d0d6cba3515150f518a)
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
-Applied.
-
-Thanks for sending this before I got around to asking you to since a
-script to do this is not yet in place. :)
-
-Rob
-
-> ---
->  scripts/dtc/dtc.h |   44 ++++++++++----------------------------------
->  1 files changed, 10 insertions(+), 34 deletions(-)
-> 
-> diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
-> index d501c86..3e42a07 100644
-> --- a/scripts/dtc/dtc.h
-> +++ b/scripts/dtc/dtc.h
-> @@ -161,51 +161,27 @@ struct node {
->  	struct label *labels;
->  };
->  
-> -static inline struct label *for_each_label_next(struct label *l)
-> -{
-> -	do {
-> -		l = l->next;
-> -	} while (l && l->deleted);
-> -
-> -	return l;
-> -}
-> -
-> -#define for_each_label(l0, l) \
-> -	for ((l) = (l0); (l); (l) = for_each_label_next(l))
-> -
->  #define for_each_label_withdel(l0, l) \
->  	for ((l) = (l0); (l); (l) = (l)->next)
->  
-> -static inline struct property *for_each_property_next(struct property *p)
-> -{
-> -	do {
-> -		p = p->next;
-> -	} while (p && p->deleted);
-> -
-> -	return p;
-> -}
-> -
-> -#define for_each_property(n, p) \
-> -	for ((p) = (n)->proplist; (p); (p) = for_each_property_next(p))
-> +#define for_each_label(l0, l) \
-> +	for_each_label_withdel(l0, l) \
-> +		if (!(l)->deleted)
->  
->  #define for_each_property_withdel(n, p) \
->  	for ((p) = (n)->proplist; (p); (p) = (p)->next)
->  
-> -static inline struct node *for_each_child_next(struct node *c)
-> -{
-> -	do {
-> -		c = c->next_sibling;
-> -	} while (c && c->deleted);
-> -
-> -	return c;
-> -}
-> -
-> -#define for_each_child(n, c) \
-> -	for ((c) = (n)->children; (c); (c) = for_each_child_next(c))
-> +#define for_each_property(n, p) \
-> +	for_each_property_withdel(n, p) \
-> +		if (!(p)->deleted)
->  
->  #define for_each_child_withdel(n, c) \
->  	for ((c) = (n)->children; (c); (c) = (c)->next_sibling)
->  
-> +#define for_each_child(n, c) \
-> +	for_each_child_withdel(n, c) \
-> +		if (!(c)->deleted)
-> +
->  void add_label(struct label **labels, char *label);
->  void delete_labels(struct label **labels);
->  
-> 
+SSBoYXZlIHNlZW4gdGhpcyBlcnJvciBvbiBtYWlubGluZSBmb3IgYSBjb3VwbGUgZGF5cyB3aGVu
+CkFSTV9BVEFHX0RUQl9DT01QQVQgaXMgZW5hYmxlZC4KCiAgQ0MgICAgICBhcmNoL2FybS9ib290
+L2NvbXByZXNzZWQvZmR0X3JvLm8KYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdF9yby5jOiBJ
+biBmdW5jdGlvbiDigJhmZHRfcGF0aF9vZmZzZXTigJk6CmFyY2gvYXJtL2Jvb3QvY29tcHJlc3Nl
+ZC9mZHRfcm8uYzoxNzI6MzogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9u
+IOKAmGZkdF9nZXRfYWxpYXNfbmFtZWxlbuKAmSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1k
+ZWNsYXJhdGlvbl0KYXJjaC9hcm0vYm9vdC9jb21wcmVzc2VkL2ZkdF9yby5jOjE3Mjo1OiB3YXJu
+aW5nOiBhc3NpZ25tZW50IG1ha2VzIHBvaW50ZXIgZnJvbSBpbnRlZ2VyIHdpdGhvdXQgYSBjYXN0
+IFtlbmFibGVkIGJ5IGRlZmF1bHRdCmFyY2gvYXJtL2Jvb3QvY29tcHJlc3NlZC9mZHRfcm8uYzog
+QXQgdG9wIGxldmVsOgphcmNoL2FybS9ib290L2NvbXByZXNzZWQvZmR0X3JvLmM6MzQwOjEzOiBl
+cnJvcjogY29uZmxpY3RpbmcgdHlwZXMgZm9yIOKAmGZkdF9nZXRfYWxpYXNfbmFtZWxlbuKAmQph
+cmNoL2FybS9ib290L2NvbXByZXNzZWQvZmR0X3JvLmM6MTcyOjc6IG5vdGU6IHByZXZpb3VzIGlt
+cGxpY2l0IGRlY2xhcmF0aW9uIG9mIOKAmGZkdF9nZXRfYWxpYXNfbmFtZWxlbuKAmSB3YXMgaGVy
+ZQpjYzE6IHNvbWUgd2FybmluZ3MgYmVpbmcgdHJlYXRlZCBhcyBlcnJvcnMKClNoYXduCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlz
+Y3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0
+cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
