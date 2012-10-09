@@ -1,215 +1,55 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 5/5] usb: exynos-ohci: Adding phy driver support
-Date: Tue, 09 Oct 2012 18:46:07 +0900
-Message-ID: <004401cda602$e7c9a630$b75cf290$%han@samsung.com>
-References: <1349705548-15207-1-git-send-email-gautam.vivek@samsung.com>
- <1349705548-15207-6-git-send-email-gautam.vivek@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Tue, 09 Oct 2012 12:34:48 +0200
+Message-ID: <5073FDC8.8090909@samsung.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <Pine.LNX.4.64.1210021142210.15778@axis700.grange>
+ <506ABE40.9070504@samsung.com> <201210051241.52205.hverkuil@xs4all.nl>
+ <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
+ <506F2763.6050808@gmail.com> <Pine.LNX.4.64.1210081126140.12203@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349705548-15207-6-git-send-email-gautam.vivek@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com, yulgon.kim@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-reply-to: <Pine.LNX.4.64.1210081126140.12203@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, October 08, 2012 11:12 PM Vivek Gautam wrote
-> 
-> Adding the transceiver to ohci driver. Keeping the platform data
-> for continuing the smooth operation for boards which still uses it
-> 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+Hi Guennadi,
 
-Hi Vivek Gautam,
+On 10/08/2012 11:40 AM, Guennadi Liakhovetski wrote:
+> On Fri, 5 Oct 2012, Sylwester Nawrocki wrote:
+>> I would really like to see more than one user until we add any core code.
+>> No that it couldn't be changed afterwards, but it would be nice to ensure 
+>> the concepts are right and proven in real life.
+> 
+> Unfortunately I don't have any more systems on which I could easily enough 
+> try this. I've got a beagleboard with a camera, but I don't think I'm a 
+> particularly good candidate for implementing DT support for OMAP3 camera 
+> drivers;-) Apart from that I've only got soc-camera based systems, of 
+> which none are _really_ DT-ready... At best I could try an i.MX31 based 
+> board, but that doesn't have a very well developed .dts and that would be 
+> soc-camera too anyway.
 
-Could you replace the patch subject with
-'USB: ohci-exynos: Add phy driver support'?
+I certainly wouldn't expect you would do all the job. I mean it would be good
+to possibly have some other developers adding device tree support based on that 
+new bindings and new infrastructure related to them. 
 
-I also added some comments, too.
+There have been recently some progress in device tree support for Exynos SoCs,
+including common clock framework support and we hope to add FDT support to the 
+Samsung SoC camera devices during this kernel cycle, based on the newly designed 
+media bindings. This is going to be a second attempt, after our initial RFC from 
+May [1]. It would still be SoC specific implementation, but not soc-camera based.
+ 
+I wasn't a big fan of this asynchronous sub-devices probing, but it now seems
+to be a most complete solution to me. I think it just need to be done right
+at the v4l2-core so individual drivers don't get complicated too much.
 
-> ---
->  drivers/usb/host/ohci-exynos.c |   62 +++++++++++++++++++++++++++------------
->  1 files changed, 43 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-> index 20a5008..e0ed594 100644
-> --- a/drivers/usb/host/ohci-exynos.c
-> +++ b/drivers/usb/host/ohci-exynos.c
-> @@ -16,13 +16,36 @@
->  #include <linux/platform_device.h>
->  #include <linux/platform_data/usb-exynos.h>
->  #include <plat/usb-phy.h>
-> +#include <linux/usb/phy.h>
+--
 
-Please, move header include to proper place as bellows:
+Regards,
+Sylwester
 
-#include <linux/platform_data/usb-exynos.h>
-+#include <linux/usb/phy.h>
-##include <plat/usb-phy.h>
-
-> 
->  struct exynos_ohci_hcd {
->  	struct device *dev;
->  	struct usb_hcd *hcd;
->  	struct clk *clk;
-> +	struct usb_phy *phy;
-> +	struct exynos4_ohci_platdata *pdata;
->  };
-> 
-> +static void exynos_ohci_phy_enable(struct exynos_ohci_hcd *exynos_ohci)
-> +{
-> +	struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
-> +
-> +	if (exynos_ohci->phy)
-> +		usb_phy_init(exynos_ohci->phy);
-> +	else if (exynos_ohci->pdata->phy_init)
-> +		exynos_ohci->pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-> +}
-> +
-> +static void exynos_ohci_phy_disable(struct exynos_ohci_hcd *exynos_ohci)
-> +{
-> +	struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
-> +
-> +	if (exynos_ohci->phy)
-> +		usb_phy_shutdown(exynos_ohci->phy);
-> +	else if (exynos_ohci->pdata->phy_exit)
-> +		exynos_ohci->pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-> +}
-> +
->  static int ohci_exynos_start(struct usb_hcd *hcd)
->  {
->  	struct ohci_hcd *ohci = hcd_to_ohci(hcd);
-> @@ -81,15 +104,10 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->  	struct usb_hcd *hcd;
->  	struct ohci_hcd *ohci;
->  	struct resource *res;
-> +	struct usb_phy *phy;
->  	int irq;
->  	int err;
-> 
-> -	pdata = pdev->dev.platform_data;
-> -	if (!pdata) {
-> -		dev_err(&pdev->dev, "No platform data defined\n");
-> -		return -EINVAL;
-> -	}
-> -
->  	/*
->  	 * Right now device-tree probed devices don't get dma_mask set.
->  	 * Since shared usb code relies on it, set it here for now.
-> @@ -105,6 +123,20 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->  	if (!exynos_ohci)
->  		return -ENOMEM;
-> 
-> +	pdata = pdev->dev.platform_data;
-> +	if (!pdata) {
-> +		/* Fallback to Phy transceiver */
-> +		phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-> +		if (IS_ERR_OR_NULL(phy)) {
-> +			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
-> +			return -EPROBE_DEFER;
-> +		} else {
-> +			exynos_ohci->phy = phy;
-> +		}
-> +	} else {
-> +		exynos_ohci->pdata = pdata;
-> +	}
-> +
->  	exynos_ohci->dev = &pdev->dev;
-> 
->  	hcd = usb_create_hcd(&exynos_ohci_hc_driver, &pdev->dev,
-> @@ -150,8 +182,7 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
->  		goto fail_io;
->  	}
-> 
-> -	if (pdata->phy_init)
-> -		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-> +	exynos_ohci_phy_enable(exynos_ohci);
-> 
->  	ohci = hcd_to_ohci(hcd);
->  	ohci_hcd_init(ohci);
-> @@ -168,6 +199,7 @@ static int __devinit exynos_ohci_probe(struct platform_device *pdev)
-> 
->  fail_io:
->  	clk_disable(exynos_ohci->clk);
-> +	exynos_ohci_phy_disable(exynos_ohci);
-
-As I mentioned, it is also wrong.
-
-Please fix them as follows:
-
-	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
-	if (err) {
-		dev_err(&pdev->dev, "Failed to add USB HCD\n");
--		goto fail_io;
-+		goto fail_add_hcd;
-	}
-
-	platform_set_drvdata(pdev, exynos_ohci);
-
-	return 0;
-
-+fail_add_hcd:
-+	exynos_ohci_phy_disable(exynos_ohci);
-fail_io:
-	clk_disable(exynos_ohci->clk);
-fail_clken:
-	clk_put(exynos_ohci->clk);
-
-
->  fail_clken:
->  	clk_put(exynos_ohci->clk);
->  fail_clk:
-> @@ -177,14 +209,12 @@ fail_clk:
-> 
->  static int __devexit exynos_ohci_remove(struct platform_device *pdev)
->  {
-> -	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
->  	struct exynos_ohci_hcd *exynos_ohci = platform_get_drvdata(pdev);
->  	struct usb_hcd *hcd = exynos_ohci->hcd;
-> 
->  	usb_remove_hcd(hcd);
-> 
-> -	if (pdata && pdata->phy_exit)
-> -		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-> +	exynos_ohci_phy_disable(exynos_ohci);
-> 
->  	clk_disable(exynos_ohci->clk);
->  	clk_put(exynos_ohci->clk);
-> @@ -209,8 +239,6 @@ static int exynos_ohci_suspend(struct device *dev)
->  	struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
->  	struct usb_hcd *hcd = exynos_ohci->hcd;
->  	struct ohci_hcd *ohci = hcd_to_ohci(hcd);
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
->  	unsigned long flags;
->  	int rc = 0;
-> 
-> @@ -229,8 +257,7 @@ static int exynos_ohci_suspend(struct device *dev)
-> 
->  	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
-> 
-> -	if (pdata && pdata->phy_exit)
-> -		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-> +	exynos_ohci_phy_disable(exynos_ohci);
-> 
->  	clk_disable(exynos_ohci->clk);
-> 
-> @@ -244,13 +271,10 @@ static int exynos_ohci_resume(struct device *dev)
->  {
->  	struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
->  	struct usb_hcd *hcd = exynos_ohci->hcd;
-> -	struct platform_device *pdev = to_platform_device(dev);
-> -	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
-> 
->  	clk_enable(exynos_ohci->clk);
-> 
-> -	if (pdata && pdata->phy_init)
-> -		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-> +	exynos_ohci_phy_enable(exynos_ohci);
-> 
->  	/* Mark hardware accessible again as we are out of D3 state by now */
->  	set_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
-> --
-> 1.7.6.5
+[1] http://www.spinics.net/lists/linux-media/msg48341.html
