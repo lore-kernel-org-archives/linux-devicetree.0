@@ -1,88 +1,336 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Fri, 12 Oct 2012 13:28:43 +0000
-Message-ID: <1350048519.10584.158.camel@smile>
-References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
-	 <91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 01/16] ARM: dts: exynos4210: Replace legacy GPIO bank
+ nodes with pinctrl bank nodes
+Date: Wed, 10 Oct 2012 20:22:51 +0200
+Message-ID: <96424007.y4zaCRkHIe@flatron>
+References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
+ <5075A1EF.60900@wwwdotorg.org> <20121010181253.GQ12552@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
-Content-Language: en-US
-Content-ID: <2EB5CA6FD0272640BF09A738D5796869@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Koul, Vinod" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "spear-devel@list.st.com" <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: multipart/mixed; boundary="===============7476724617363955397=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121010181253.GQ12552@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-samsung-soc@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDEyLTEwLTEyIGF0IDExOjE0ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6IA0K
-PiBkd19kbWFjIGRyaXZlciBhbHJlYWR5IHN1cHBvcnRzIGRldmljZSB0cmVlIGJ1dCBpdCB1c2Vk
-IHRvIGhhdmUgaXRzIHBsYXRmb3JtDQo+IGRhdGEgcGFzc2VkIHRoZSBub24tRFQgd2F5Lg0KQW5v
-dGhlciBwb3J0aW9uIG9mIGNvbW1lbnRzLg0KDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9k
-d19kbWFjLmMgYi9kcml2ZXJzL2RtYS9kd19kbWFjLmMNCg0KPiArc3RhdGljIHN0cnVjdCBkd19k
-bWFfcGxhdGZvcm1fZGF0YSAqDQo+ICtfX2RldmluaXQgZHdfZG1hX3BhcnNlX2R0KHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICt7DQo+ICsJc3RydWN0IGRldmljZV9ub2RlICpzbiwg
-KmNuLCAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4gKwlzdHJ1Y3QgZHdfZG1hX3BsYXRmb3Jt
-X2RhdGEgKnBkYXRhOw0KPiArCXN0cnVjdCBkd19kbWFfc2xhdmUgKnNkOw0KPiArCXUzMiBjb3Vu
-dCwgdmFsLCBhcnJbNF07DQo+ICsNCj4gKwlpZiAoIW5wKSB7DQo+ICsJCWRldl9lcnIoJnBkZXYt
-PmRldiwgIk1pc3NpbmcgRFQgZGF0YVxuIik7DQo+ICsJCXJldHVybiBOVUxMOw0KPiArCX0NCj4g
-Kw0KPiArCXBkYXRhID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqcGRhdGEpLCBH
-RlBfS0VSTkVMKTsNCj4gKwlpZiAoIXBkYXRhKQ0KPiArCQlyZXR1cm4gTlVMTDsNCj4gKw0KPiAr
-CWlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm5yX2NoYW5uZWxzIiwgJnBkYXRhLT5ucl9j
-aGFubmVscykpDQo+ICsJCXJldHVybiBOVUxMOw0KPiArDQo+ICsJaWYgKG9mX3Byb3BlcnR5X3Jl
-YWRfYm9vbChucCwgImlzX3ByaXZhdGUiKSkNCj4gKwkJcGRhdGEtPmlzX3ByaXZhdGUgPSB0cnVl
-Ow0KPiArDQo+ICsJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImNoYW5fYWxsb2NhdGlv
-bl9vcmRlciIsDQo+ICsJCQkJJnZhbCkpDQpGaXRzIG9uZSBsaW5lPw0KDQo+ICsJCXBkYXRhLT5j
-aGFuX2FsbG9jYXRpb25fb3JkZXIgPSAodW5zaWduZWQgY2hhcil2YWw7DQpkbyB3ZSByZWFsbHkg
-bmVlZCBleHBsaWNpdCBjYXN0aW5nIGhlcmU/DQoNCj4gKw0KPiArCWlmICghb2ZfcHJvcGVydHlf
-cmVhZF91MzIobnAsICJjaGFuX3ByaW9yaXR5IiwgJnZhbCkpDQo+ICsJCXBkYXRhLT5jaGFuX3By
-aW9yaXR5ID0gKHVuc2lnbmVkIGNoYXIpdmFsOw0KZGl0dG8NCg0KPiArDQo+ICsJaWYgKCFvZl9w
-cm9wZXJ0eV9yZWFkX3UzMihucCwgImJsb2NrX3NpemUiLCAmdmFsKSkNCj4gKwkJcGRhdGEtPmJs
-b2NrX3NpemUgPSAodW5zaWduZWQgc2hvcnQpdmFsOw0KZGl0dG8gDQo+ICsNCj4gKwlpZiAoIW9m
-X3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAibnJfbWFzdGVycyIsICZ2YWwpKSB7DQo+ICsJCWlmICh2
-YWwgPiA0KQ0KSSB0aG91Z2h0IG9uY2UgdGhhdCB3ZSBtaWdodCBpbnRyb2R1Y2UgY29uc3RhbnQg
-bGlrZSAjZGVmaW5lDQpEV19NQVhfQUhCX01BU1RFUlMgNC4gSXQgc2VlbXMgYSBiaXQgdXNlbGVz
-cyBiZWNhdXNlIGh3IGlzIGRlc2lnbmVkIGZvcg0KdGhhdCBudW1iZXIgYW55d2F5LCBidXQgbWF5
-YmUgeW91IGhhdmUgYW5vdGhlciBvcGluaW9uLiANCg0KPiArCQkJcmV0dXJuIE5VTEw7DQo+ICsN
-Cj4gKwkJcGRhdGEtPm5yX21hc3RlcnMgPSAodW5zaWduZWQgY2hhcil2YWw7DQo+ICsJfQ0KPiAr
-DQo+ICsJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShucCwgImRhdGFfd2lkdGgiLCBh
-cnIsDQo+ICsJCQkJcGRhdGEtPm5yX21hc3RlcnMpKQ0KPiArCQlmb3IgKGNvdW50ID0gMDsgY291
-bnQgPCBwZGF0YS0+bnJfbWFzdGVyczsgY291bnQrKykNCj4gKwkJCXBkYXRhLT5kYXRhX3dpZHRo
-W2NvdW50XSA9IGFycltjb3VudF07DQpBaCwgaXQgd291bGQgYmUgbmljZSB0byBoYXZlIG9mX3By
-b3BlcnR5X3JlYWRfdThfYXJyYXkgYW5kIHNvIG9uLi4uDQoNCj4gKw0KPiArCS8qIHBhcnNlIHNs
-YXZlIGRhdGEgKi8NCj4gKwlzbiA9IG9mX2ZpbmRfbm9kZV9ieV9uYW1lKG5wLCAic2xhdmVfaW5m
-byIpOw0KPiArCWlmICghc24pDQo+ICsJCXJldHVybiBwZGF0YTsNCj4gKw0KPiArCWNvdW50ID0g
-MDsNCj4gKwkvKiBjYWxjdWxhdGUgbnVtYmVyIG9mIHNsYXZlcyAqLw0KPiArCWZvcl9lYWNoX2No
-aWxkX29mX25vZGUoc24sIGNuKQ0KPiArCQljb3VudCsrOw0KDQpvZi5oOiBzdGF0aWMgaW5saW5l
-IGludCBvZl9nZXRfY2hpbGRfY291bnQoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpucCkNCg0K
-DQo+ICsNCj4gKwlpZiAoIWNvdW50KQ0KPiArCQlyZXR1cm4gTlVMTDsNCj4gKw0KPiArCXNkID0g
-ZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqc2QpICogY291bnQsIEdGUF9LRVJORUwp
-Ow0KPiArCWlmICghc2QpDQo+ICsJCXJldHVybiBOVUxMOw0KPiArDQo+ICsJY291bnQgPSAwOw0K
-PiArCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoc24sIGNuKSB7DQo+ICsJCW9mX3Byb3BlcnR5X3Jl
-YWRfc3RyaW5nKGNuLCAiYnVzX2lkIiwgJnNkW2NvdW50XS5idXNfaWQpOw0KPiArCQlvZl9wcm9w
-ZXJ0eV9yZWFkX3UzMihjbiwgImNmZ19oaSIsICZzZFtjb3VudF0uY2ZnX2hpKTsNCj4gKwkJb2Zf
-cHJvcGVydHlfcmVhZF91MzIoY24sICJjZmdfbG8iLCAmc2RbY291bnRdLmNmZ19sbyk7DQo+ICsJ
-CWlmICghb2ZfcHJvcGVydHlfcmVhZF91MzIoY24sICJzcmNfbWFzdGVyIiwgJnZhbCkpDQo+ICsJ
-CQlzZFtjb3VudF0uc3JjX21hc3RlciA9ICh1OCl2YWw7DQpFeHBsaWNpdCBjYXN0aW5nPw0KDQo+
-ICsNCj4gKwkJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMihjbiwgImRzdF9tYXN0ZXIiLCAmdmFs
-KSkNCj4gKwkJCXNkW2NvdW50XS5kc3RfbWFzdGVyID0gKHU4KXZhbDsNCmRpdHRvIA0KPiArDQo+
-ICsJCXNkW2NvdW50XS5kbWFfZGV2ID0gJnBkZXYtPmRldjsNCj4gKwkJY291bnQrKzsNCj4gKwl9
-DQoNCndoYXQgYWJvdXQgdG8gZGVmaW5lIHNkIGFzIHNkWzBdOyBpbiB0aGUgcGxhdGZvcm1fZGF0
-YSBzdHJ1Y3R1cmUgYW5kDQp0aGVuIHVzZSBzbXRoIGxpa2UgZm9sbG93aW5nDQoNCnN0cnVjdCAu
-Li4gKnNkID0gcGRhdGEtPnNkOw0KZm9yX2VhY2guLi4gew0Kc2QtPi4uLiA9IDsNCnNkKys7DQp9
-DQoNCml0IHdpbGwgcHJvYmFibHkgcmVxdWlyZSB0byBzcGxpdCB0aGlzIHBhcnQgaW4gYSBzZXBh
-cmF0ZSBmdW5jdGlvbiBhbmQNCmNhbGN1bGF0ZSBjb3VudCBvZiBzbGF2ZV9pbmZvIGNoaWxkcmVu
-IGJlZm9yZSBwZGF0YSBtZW1vcnkgYWxsb2NhdGlvbi4NCg0KDQo+ICsNCj4gKwlwZGF0YS0+c2Qg
-PSBzZDsNCj4gKwlwZGF0YS0+c2RfY291bnQgPSBjb3VudDsNCj4gKw0KPiArCXJldHVybiBwZGF0
-YTsNCj4gK30NCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4
-LmludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFu
-ZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCi0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVyZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxz
-aW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29kZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBI
-ZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29u
-ZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lw
-aWVudChzKS4gQW55IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5
-IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFz
-ZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
+This is a multi-part message in MIME format.
+
+--===============7476724617363955397==
+Content-Type: multipart/alternative; boundary="nextPart2330454.ke8rkMPPQu"
+Content-Transfer-Encoding: 7Bit
+
+This is a multi-part message in MIME format.
+
+--nextPart2330454.ke8rkMPPQu
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Dnia =C5=9Broda, 10 pa=C5=BAdziernika 2012 11:12:53 Tony Lindgren pisze=
+:
+> * Stephen Warren <swarren@wwwdotorg.org> [121010 09:36]:
+> > On 10/10/2012 01:26 AM, Linus Walleij wrote:
+> > > On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com>=
+=20
+wrote:
+> > >> Seuqential patches from this series introduce SoC-specific data=20=
+
+parsing
+> > >> from device tree.
+> > >>=20
+> > >> This patch removes legacy GPIO bank nodes from exynos4210.dtsi a=
+nd
+> > >> replaces them with nodes and properties required for these patch=
+es.
+> > >=20
+> > > So to be clear:
+> > >> +       pinctrl-bank-types {
+> > >> +               bank_off: bank-off {
+> > >> +                       samsung,reg-names =3D "func", "dat", "pu=
+d",
+> > >> +                                               "drv", "conpdn",=
+
+> > >> "pudpdn";
+> > >> +                       samsung,reg-params =3D <0x00 4>, <0x04 1=
+>,=20
+<0x08
+> > >> 2>,
+> > >> +                                               <0x0C 2>, <0x10 =
+2>,
+> > >> <0x14 2>; +               };
+> > >=20
+> > > This is starting to look like a firmware language, I have mixed
+> > > feelings about this. Shall this be read:
+> > >=20
+> > > "Poke 4 into 0x00, poke 1 into 0x04, poke 2 into 0x08" etc?
+> > >=20
+> > > We really need to discuss this, Grant has already NACK:ed
+> > > such approaches once.
+> >=20
+> > Well, I don't think he NACK'd Tony Lindgren's generic pinctrl drive=
+r,
+> > which is doing this exact same thing. I did raise the same point ab=
+out
+> > Tony's driver when he posted it, but nobody seemed inclined to NACK=
+ it
+> > based on that at the time, IIRC...
+>=20
+> To summarize, using reg value pairs in DT makes sense if the amount
+> of data is huge. Otherwise we'll be describing indidual hardware bits=
+
+> as properties in DT, or have to have huge amounts of static data in
+> the kernel.
+>=20
+> Where it does not make sense is if there's a sequence of reads
+> and writes with test loops in between.. But that's does not look
+> to be the case here.
+>=20
+> The reg value pairs will be readable when the DT preprocessing is
+> available, and that allows the values to be orred together while
+> DT properties don't. The alternative is to describe hardware register=
+
+> bits as DT properties, which is very bloated.
+>=20
+> But considering all this.. Are the samsung,reg-names really needed
+> by the kernel?
+
+They are used to specify which registers are defined in reg-params prop=
+erty=20
+and in which order. Most of the registers are not mandatory and this is=
+=20
+needed to be able to specify only those that are present. At least I=20=
+
+couldn't think of a better solution for this. Do you have some suggesti=
+ons?
+
+Best regards,
+Tomasz Figa
+
+--nextPart2330454.ke8rkMPPQu
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="utf-8"
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/=
+REC-html40/strict.dtd">
+<html><head><meta name=3D"qrichtext" content=3D"1" /><style type=3D"tex=
+t/css">
+p, li { white-space: pre-wrap; }
+</style></head><body style=3D" font-family:'DejaVu Sans Mono'; font-siz=
+e:9pt; font-weight:400; font-style:normal;">
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Dni=
+a =C5=9Broda, 10 pa=C5=BAdziernika 2012 11:12:53 Tony Lindgren pisze:</=
+p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; * Stephen Warren &lt;swarren@wwwdotorg.org&gt; [121010 09:36]:</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; On 10/10/2012 01:26 AM, Linus Walleij wrote:</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa &lt;t.figa@sam=
+sung.com&gt; wrote:</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; Seuqential patches from this series introduce SoC-speci=
+fic data parsing</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; from device tree.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; This patch removes legacy GPIO bank nodes from exynos42=
+10.dtsi and</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; replaces them with nodes and properties required for th=
+ese patches.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; So to be clear:</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; +       pinctrl-bank-types {</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; +               bank_off: bank-off {</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; +                       samsung,reg-names =3D &quot;fun=
+c&quot;, &quot;dat&quot;, &quot;pud&quot;,</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; +                                               &quot;d=
+rv&quot;, &quot;conpdn&quot;,</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; &quot;pudpdn&quot;;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; +                       samsung,reg-params =3D &lt;0x00=
+ 4&gt;, &lt;0x04 1&gt;, &lt;0x08</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; 2&gt;,</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; +                                               &lt;0x0=
+C 2&gt;, &lt;0x10 2&gt;,</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt;&gt; &lt;0x14 2&gt;; +               };</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; This is starting to look like a firmware language, I have m=
+ixed</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; feelings about this. Shall this be read:</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; &quot;Poke 4 into 0x00, poke 1 into 0x04, poke 2 into 0x08&=
+quot; etc?</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; We really need to discuss this, Grant has already NACK:ed</=
+p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; &gt; such approaches once.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; Well, I don't think he NACK'd Tony Lindgren's generic pinctrl dr=
+iver,</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; which is doing this exact same thing. I did raise the same point=
+ about</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; Tony's driver when he posted it, but nobody seemed inclined to N=
+ACK it</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; &gt; based on that at the time, IIRC...</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; To summarize, using reg value pairs in DT makes sense if the amount</=
+p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; of data is huge. Otherwise we'll be describing indidual hardware bits=
+</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; as properties in DT, or have to have huge amounts of static data in</=
+p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; the kernel.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; Where it does not make sense is if there's a sequence of reads</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; and writes with test loops in between.. But that's does not look</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; to be the case here.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; The reg value pairs will be readable when the DT preprocessing is</p>=
+
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; available, and that allows the values to be orred together while</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; DT properties don't. The alternative is to describe hardware register=
+</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; bits as DT properties, which is very bloated.</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; </p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; But considering all this.. Are the samsung,reg-names really needed</p=
+>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">&gt=
+; by the kernel?</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">The=
+y are used to specify which registers are defined in reg-params propert=
+y and in which order. Most of the registers are not mandatory and this =
+is needed to be able to specify only those that are present. At least I=
+ couldn't think of a better solution for this. Do you have some suggest=
+ions?</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Bes=
+t regards,</p>
+<p style=3D" margin-top:0px; margin-bottom:0px; margin-left:0px; margin=
+-right:0px; -qt-block-indent:0; text-indent:0px; -qt-user-state:0;">Tom=
+asz Figa</p>
+<p style=3D"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px=
+; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0p=
+x; ">&nbsp;</p></body></html>
+--nextPart2330454.ke8rkMPPQu--
+
+
+
+--===============7476724617363955397==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7476724617363955397==--
