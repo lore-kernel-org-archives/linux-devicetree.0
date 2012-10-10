@@ -1,57 +1,40 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: dtc: import latest upstream dtc
-Date: Wed, 10 Oct 2012 18:24:01 +1100
-Message-ID: <20121010072401.GA28467@truffula.fritz.box>
-References: <1349827466.26044.16@snotra>
- <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com>
+From: Hui Wang <jason77.wang@gmail.com>
+Subject: [PATCH v4 RESEND 0/3] Input: egalax_ts: parse devicetree to get gpio
+Date: Wed, 10 Oct 2012 17:12:00 +0800
+Message-ID: <1349860323-12786-1-git-send-email-jason77.wang@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Warner Losh <imp@bsdimp.com>
-Cc: Scott Wood <scottwood@freescale.com>, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, shawn.guo@linaro.org
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2012 at 10:43:50PM -0600, Warner Losh wrote:
-> 
-> On Oct 9, 2012, at 6:04 PM, Scott Wood wrote:
-> 
-> > On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
-> >> On 10/9/2012 11:16 AM, Stephen Warren wrote:
-> >> > On 10/01/2012 12:39 PM, Jon Loeliger wrote:
-> >> >>>
-> >> >>> What more do you think needs discussion re: dtc+cpp?
-> >> >>
-> >> >> How not to abuse the ever-loving shit out of it? :-)
-> >> >
-> >> > Perhaps we can just handle this through the regular patch review
-> >> > process; I think it may be difficult to define and agree upon exactly
-> >> > what "abuse" means ahead of time, but it's probably going to be easy
-> >> > enough to recognize it when one sees it?
-> >> One of the ways it could get out of hand would be via "include
-> >> dependency hell".  People will be tempted to reuse existing .h files
-> >> containing pin definitions, which, if history is a guide, will end up
-> >> depending on all sorts of other .h files.
-> >> Another problem I often face with symbolic names is the difficulty of
-> >> figuring out what the numerical values really are (for debugging),
-> >> especially when .h files are in different subtrees from the files that
-> >> use the definitions, and when they use multiple macro levels and fancy
-> >> features like concatenation.  Sometimes I think it's clearer just to
-> >> write the number and use a comment to say what it is.
-> > 
-> > Both comments apply just as well to ordinary C code, and I don't think anyone would seriously suggest just using comments instead for C code.
-> 
-> .h files include both structs and defines, which are fine for
-> ordinary C code, but problematic in this context.
+Hi Dmitry,
 
-Right, cpp should be invoked with similar options to the way it's done
-for asm files which have the same problem.  I'm not sure if the
-current patch does so.
+The patchset was sent out for review during the time you were away
+from the maillist. Now you are back, i rebase the patchset to the latest
+upstream and i resend them to you to catch your notice.
+
+The patchset has been reviewed by JieJing and Shawn, if you are OK
+for the patchset, please apply 0001-xxx.patch and 0002-xxx.patch to
+your tree. Shawn will merge 0003-xxx.patch from his tree.
+
+Thanks,
+Hui.
+
+Hui Wang (3):
+  Input: egalax_ts: get gpio from devicetree node
+  Input: add devicetree binding note for egalax_ts
+  ARM: dts: imx6q-sabrelite: add eeti egalax touchscreen
+
+ .../bindings/input/touchscreen/egalax-ts.txt       |   19 +++++++++++++++
+ arch/arm/boot/dts/imx6q-sabrelite.dts              |   16 ++++++++++++
+ arch/arm/boot/dts/imx6q.dtsi                       |    9 +++++++
+ drivers/input/touchscreen/egalax_ts.c              |   25 +++++++++++++++++--
+ 4 files changed, 66 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
 
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.6
+
