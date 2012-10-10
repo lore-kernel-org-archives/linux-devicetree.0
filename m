@@ -1,17 +1,17 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 Subject: Re: dtc: import latest upstream dtc
-Date: Wed, 10 Oct 2012 12:45:40 -0600
-Message-ID: <5075C254.4040304@wwwdotorg.org>
+Date: Wed, 10 Oct 2012 08:52:40 -1000
+Message-ID: <5075C3F8.4080600@firmworks.com>
 References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org>
  <5069C042.40209@gmail.com> <5069C11C.6040505@wwwdotorg.org>
  <5069D946.1060502@gmail.com> <5069E1F0.5070902@wwwdotorg.org>
  <E1TIktZ-0000U4-Qh@jdl.com> <50749441.8030307@wwwdotorg.org>
- <5075ABB8.103@gmail.com> <5075BD21.2070106@firmworks.com>
+ <5075ABB8.103@gmail.com> <5075C10C.1030205@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5075BD21.2070106-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+In-Reply-To: <5075C10C.1030205-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,12 +22,12 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 12:23 PM, Mitch Bradley wrote:
-> On 10/10/2012 7:09 AM, Rob Herring wrote:
+On 10/10/2012 8:40 AM, Stephen Warren wrote:
+> On 10/10/2012 11:09 AM, Rob Herring wrote:
 >> On 10/09/2012 04:16 PM, Stephen Warren wrote:
 >>> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
 >>>>>
@@ -51,21 +51,30 @@ On 10/10/2012 12:23 PM, Mitch Bradley wrote:
 >> - No kernel kconfig option usage
 >> - No gcc built-in define usage
 >> - No unused items (i.e. externs, structs, etc.)
+> 
 >> - No macro concatenation
+> 
+> That seems to be potentially a very useful feature; I have no idea why
+> we would ban that; it isn't banned in C code in the kernel is it?
+
+It's used in the kernel.  It is useful, but it has an unexpected side
+effect that can be extremely annoying - it can make it extremely
+difficult to find a definition with grep.  All the grep hits will be for
+the fully-expanded uses of a symbol, while the definition is "hidden" by
+virtue of being synthesized by concatenation.
+
+Maybe it's not a big deal in a small project, but in a code base the
+size of the Linux kernel, where you don't know a priori where something
+is defined, it can make you want to tear your hair out.
+
+> 
 >> - No macros for strings or property names
 > 
-> Instead of making a bunch of rules about how you can only use a small
-> subset of cpp, why not just add a "define name value" command to DTC?
-
-I implemented a patch to do exactly that, and it was rejected because it
-only solved part of the problem (named constants) and not the reset (a
-completely generic macro language/... within dtc). The argument was that
-defining just the named constant syntax on its own without knowing what
-the unspecified future macro language will look like might result in the
-named constant syntax not fitting into it.
-
-That all said, I now think that using cpp is actually a much better
-solution that adding yet more dtc-specific syntax. The *huge* benefit
-here is that it allows you to share .h files between *.dts and C code,
-so you don't have to write out the same set of #defines once in dtc
-syntax and once in cpp syntax.
+> Property names I can understand. Property values - I can perhaps see a
+> use-case for...
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
