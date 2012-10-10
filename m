@@ -1,53 +1,68 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: dtc: import latest upstream dtc
-Date: Tue, 9 Oct 2012 19:04:26 -0500
-Message-ID: <1349827466.26044.16@snotra>
-References: <5074B155.4090703@firmworks.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
+Date: Wed, 10 Oct 2012 10:54:01 +0800
+Message-ID: <5074E349.30605@atmel.com>
+References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com> <50588A8F.30203@wwwdotorg.org> <50591C9C.2080809@atmel.com> <5059E484.6090708@wwwdotorg.org> <20120919175433.3841a954@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; delsp=Yes; format=Flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5074B155.4090703@firmworks.com> (from wmb@firmworks.com on Tue
-	Oct  9 18:20:53 2012)
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20120919175433.3841a954-R0o5gVi9kd7kN2dkZ6Wm7A@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
-> On 10/9/2012 11:16 AM, Stephen Warren wrote:
-> > On 10/01/2012 12:39 PM, Jon Loeliger wrote:
-> >>>
-> >>> What more do you think needs discussion re: dtc+cpp?
-> >>
-> >> How not to abuse the ever-loving shit out of it? :-)
-> >
-> > Perhaps we can just handle this through the regular patch review
-> > process; I think it may be difficult to define and agree upon  
-> exactly
-> > what "abuse" means ahead of time, but it's probably going to be easy
-> > enough to recognize it when one sees it?
-> 
-> 
-> One of the ways it could get out of hand would be via "include
-> dependency hell".  People will be tempted to reuse existing .h files
-> containing pin definitions, which, if history is a guide, will end up
-> depending on all sorts of other .h files.
-> 
-> Another problem I often face with symbolic names is the difficulty of
-> figuring out what the numerical values really are (for debugging),
-> especially when .h files are in different subtrees from the files that
-> use the definitions, and when they use multiple macro levels and fancy
-> features like concatenation.  Sometimes I think it's clearer just to
-> write the number and use a comment to say what it is.
 
-Both comments apply just as well to ordinary C code, and I don't think  
-anyone would seriously suggest just using comments instead for C code.
+Hi Jean Delvare,
 
-Is there a way to ask CPP to evaluate a macro in the context of the  
-input file, rather than produce normal output?  If not, I guess you  
-could make a tool that creates a wrapper file that includes the main  
-file and then evaluates the symbol you want.
+On 9/19/2012 23:54, Jean Delvare wrote:
+> On Wed, 19 Sep 2012 09:28:04 -0600, Stephen Warren wrote:
+>> On 09/18/2012 07:15 PM, Bo Shen wrote:
+>>> I add the debug info, and it give the following error without this patch.
+>>>
+>>> --<8----------------------------------
+>>> adap->name = i2c-gpio-1
+>>> i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+>>> adap->name = i2c-gpio-1
+>>> i2c-gpio: probe of i2c.3 failed with error -16
+>>> -->8----------------------------------
+>>>
+>>> With this patch, it successfully registered.
+>>> --<8----------------------------------
+>>> adap->name = i2c-gpio0
+>>> i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+>>> adap->name = i2c-gpio1
+>>> i2c-gpio i2c.3: using pins 90 (SDA) and 91 (SCL)
+>>> -->8----------------------------------
+>>
+>> Yes, that explains why the registration fails, but not why this patch is
+>> the correct solution to the problem.
+>>
+>> The problematic code appears to be:
+>>
+>> snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+>>
+>> Instead, I think that should be something more like:
+>>
+>> adap->name = dev_name(&pdev->dev);
+>
+> strlcpy(adap->name, dev_name(&pdev->dev), sizeof(adap->name))
 
--Scott
+I am sorry for late. I have tested with DT, it works.
+
+Please send this patch to fix the issue.
+Thanks.
+
+> if anything, as adap->name is a buffer, not a pointer.
+>
+>> or perhaps:
+>>
+>> if (pdev->dev.of_node)
+>>    /* named will be based on DT node name */
+>>    adap->name = dev_name(&pdev->dev);
+>> else
+>>    snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+>>
+>> ?
+>
