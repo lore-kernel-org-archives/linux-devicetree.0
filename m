@@ -1,187 +1,56 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/4 v2] USB: ehci-s5p: Add phy driver support
-Date: Wed, 10 Oct 2012 16:12:59 +0530
-Message-ID: <1349865780-7701-4-git-send-email-gautam.vivek@samsung.com>
-References: <1349865780-7701-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1349865780-7701-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Wed, 10 Oct 2012 19:46:16 +0900
+Message-ID: <20121010104615.GK17288@opensource.wolfsonmicro.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
+ <20121005151057.GA5125@pengutronix.de>
+ <Pine.LNX.4.64.1210051735360.13761@axis700.grange>
+ <20121005160242.GX1322@pengutronix.de>
+ <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
+ <20121010084006.GQ27665@pengutronix.de>
+ <20121010085124.GJ17288@opensource.wolfsonmicro.com>
+ <20121010092115.GW27665@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121010092115.GW27665@pengutronix.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Adding the transceiver to ehci driver. Keeping the platform data
-for continuing the smooth operation for boards which still uses it
+On Wed, Oct 10, 2012 at 11:21:15AM +0200, Sascha Hauer wrote:
+> On Wed, Oct 10, 2012 at 05:51:27PM +0900, Mark Brown wrote:
 
-Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/usb/host/ehci-s5p.c |   65 +++++++++++++++++++++++++++++-------------
- 1 files changed, 45 insertions(+), 20 deletions(-)
+> > Well, I'm unlikely to work on it as I don't have any systems which can
+> > boot with device tree.
 
-diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
-index 85b74be..6dac38f 100644
---- a/drivers/usb/host/ehci-s5p.c
-+++ b/drivers/usb/host/ehci-s5p.c
-@@ -17,6 +17,7 @@
- #include <linux/platform_device.h>
- #include <linux/of_gpio.h>
- #include <linux/platform_data/usb-ehci-s5p.h>
-+#include <linux/usb/phy.h>
- #include <plat/usb-phy.h>
- 
- #define EHCI_INSNREG00(base)			(base + 0x90)
-@@ -32,6 +33,8 @@ struct s5p_ehci_hcd {
- 	struct device *dev;
- 	struct usb_hcd *hcd;
- 	struct clk *clk;
-+	struct usb_phy *phy;
-+	struct s5p_ehci_platdata *pdata;
- };
- 
- static const struct hc_driver s5p_ehci_hc_driver = {
-@@ -65,6 +68,26 @@ static const struct hc_driver s5p_ehci_hc_driver = {
- 	.clear_tt_buffer_complete	= ehci_clear_tt_buffer_complete,
- };
- 
-+static void s5p_ehci_phy_enable(struct s5p_ehci_hcd *s5p_ehci)
-+{
-+	struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
-+
-+	if (s5p_ehci->phy)
-+		usb_phy_init(s5p_ehci->phy);
-+	else if (s5p_ehci->pdata->phy_init)
-+		s5p_ehci->pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-+}
-+
-+static void s5p_ehci_phy_disable(struct s5p_ehci_hcd *s5p_ehci)
-+{
-+	struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
-+
-+	if (s5p_ehci->phy)
-+		usb_phy_shutdown(s5p_ehci->phy);
-+	else if (s5p_ehci->pdata->phy_exit)
-+		s5p_ehci->pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-+}
-+
- static void s5p_setup_vbus_gpio(struct platform_device *pdev)
- {
- 	int err;
-@@ -92,15 +115,10 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
- 	struct usb_hcd *hcd;
- 	struct ehci_hcd *ehci;
- 	struct resource *res;
-+	struct usb_phy *phy;
- 	int irq;
- 	int err;
- 
--	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data defined\n");
--		return -EINVAL;
--	}
--
- 	/*
- 	 * Right now device-tree probed devices don't get dma_mask set.
- 	 * Since shared usb code relies on it, set it here for now.
-@@ -118,6 +136,20 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
- 	if (!s5p_ehci)
- 		return -ENOMEM;
- 
-+	pdata = pdev->dev.platform_data;
-+	if (!pdata) {
-+		/* Fallback to Phy transceiver */
-+		phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-+		if (IS_ERR_OR_NULL(phy)) {
-+			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
-+			return -EPROBE_DEFER;
-+		} else {
-+			s5p_ehci->phy = phy;
-+		}
-+	} else {
-+		s5p_ehci->pdata = pdata;
-+	}
-+
- 	s5p_ehci->dev = &pdev->dev;
- 
- 	hcd = usb_create_hcd(&s5p_ehci_hc_driver, &pdev->dev,
-@@ -163,8 +195,7 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
- 		goto fail_io;
- 	}
- 
--	if (pdata->phy_init)
--		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-+	s5p_ehci_phy_enable(s5p_ehci);
- 
- 	ehci = hcd_to_ehci(hcd);
- 	ehci->caps = hcd->regs;
-@@ -175,13 +206,15 @@ static int __devinit s5p_ehci_probe(struct platform_device *pdev)
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to add USB HCD\n");
--		goto fail_io;
-+		goto fail_add_hcd;
- 	}
- 
- 	platform_set_drvdata(pdev, s5p_ehci);
- 
- 	return 0;
- 
-+fail_add_hcd:
-+	s5p_ehci_phy_disable(s5p_ehci);
- fail_io:
- 	clk_disable(s5p_ehci->clk);
- fail_clk:
-@@ -191,14 +224,12 @@ fail_clk:
- 
- static int __devexit s5p_ehci_remove(struct platform_device *pdev)
- {
--	struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
- 	struct s5p_ehci_hcd *s5p_ehci = platform_get_drvdata(pdev);
- 	struct usb_hcd *hcd = s5p_ehci->hcd;
- 
- 	usb_remove_hcd(hcd);
- 
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-+	s5p_ehci_phy_disable(s5p_ehci);
- 
- 	clk_disable(s5p_ehci->clk);
- 
-@@ -222,14 +253,11 @@ static int s5p_ehci_suspend(struct device *dev)
- 	struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
- 	struct usb_hcd *hcd = s5p_ehci->hcd;
- 	bool do_wakeup = device_may_wakeup(dev);
--	struct platform_device *pdev = to_platform_device(dev);
--	struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
- 	int rc;
- 
- 	rc = ehci_suspend(hcd, do_wakeup);
- 
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, S5P_USB_PHY_HOST);
-+	s5p_ehci_phy_disable(s5p_ehci);
- 
- 	clk_disable(s5p_ehci->clk);
- 
-@@ -240,13 +268,10 @@ static int s5p_ehci_resume(struct device *dev)
- {
- 	struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
- 	struct usb_hcd *hcd = s5p_ehci->hcd;
--	struct platform_device *pdev = to_platform_device(dev);
--	struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
- 
- 	clk_enable(s5p_ehci->clk);
- 
--	if (pdata && pdata->phy_init)
--		pdata->phy_init(pdev, S5P_USB_PHY_HOST);
-+	s5p_ehci_phy_enable(s5p_ehci);
- 
- 	/* DMA burst Enable */
- 	writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
--- 
-1.7.6.5
+> If it's only that I'm sure we could spare a i.MX53 LOCO ;)
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Well, something with Wolfson hardware would be helpful.
+
+> > The big, big problem you've got doing this is lots of dynamic changes at 
+> > runtime and in general complicated systems.  It's trivial to describe
+> > the physical links but they don't provide anything like enough
+> > information to use things.  Quite frankly I'm not sure device tree is a
+> > useful investment of time for advanced audio systems anyway, it's really
+> > not solving any problems people actually have.
+
+> Right now the i.MX audmux binding is only enough to say which ports
+> should be connected, but not which format should be used. Just today
+
+Why should that be in DT?  For most things it's either fixed by the
+hardware or makes no odds.
+
+> we had the problem where a codec has two DAIs and wanted to add the
+> information on which port our SSI unit is connected to the devicetree.
+
+There's nothing stopping you doing that right now, the existing DT 
+
+> So I think it's worthwile to do, but that would be a big big task...
+
+For simple devices there's already stuff there and it's not hard to add
+new machine bindings, it's trying to cover the general case that's far
+too much effort.
