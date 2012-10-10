@@ -1,99 +1,96 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: dtc: import latest upstream dtc
-Date: Wed, 10 Oct 2012 12:18:43 -0500
-Message-ID: <5075ADF3.4040407@gmail.com>
-References: <1349827466.26044.16@snotra> <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com> <20121010072401.GA28467@truffula.fritz.box> <50759152.9050407@wwwdotorg.org> <5075954B.8030008@gmail.com> <5075A00B.2040509@wwwdotorg.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 01/16] ARM: dts: exynos4210: Replace legacy GPIO bank
+ nodes with pinctrl bank nodes
+Date: Wed, 10 Oct 2012 11:12:53 -0700
+Message-ID: <20121010181253.GQ12552@atomide.com>
+References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
+ <1349685556-23718-2-git-send-email-t.figa@samsung.com>
+ <CACRpkdZgH9TSr2uWQW+-8-U7BxJCscQgStVOndGixGmRz74TWw@mail.gmail.com>
+ <5075A1EF.60900@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5075A00B.2040509@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5075A1EF.60900@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Scott Wood <scottwood@freescale.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, kgene.kim@samsung.com, tomasz.figa@gmail.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 11:19 AM, Stephen Warren wrote:
-> On 10/10/2012 09:33 AM, Rob Herring wrote:
->> On 10/10/2012 10:16 AM, Stephen Warren wrote:
->>> On 10/10/2012 01:24 AM, David Gibson wrote:
->>>> On Tue, Oct 09, 2012 at 10:43:50PM -0600, Warner Losh wrote:
->>>>>
->>>>> On Oct 9, 2012, at 6:04 PM, Scott Wood wrote:
->>>>>
->>>>>> On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
->>>>>>> On 10/9/2012 11:16 AM, Stephen Warren wrote:
->>>>>>>> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
->>>>>>>>>>
->>>>>>>>>> What more do you think needs discussion re: dtc+cpp?
->>>>>>>>>
->>>>>>>>> How not to abuse the ever-loving shit out of it? :-)
->>>>>>>>
->>>>>>>> Perhaps we can just handle this through the regular patch review
->>>>>>>> process; I think it may be difficult to define and agree upon exactly
->>>>>>>> what "abuse" means ahead of time, but it's probably going to be easy
->>>>>>>> enough to recognize it when one sees it?
->>>>>>> One of the ways it could get out of hand would be via "include
->>>>>>> dependency hell".  People will be tempted to reuse existing .h files
->>>>>>> containing pin definitions, which, if history is a guide, will end up
->>>>>>> depending on all sorts of other .h files.
->>>>>>> Another problem I often face with symbolic names is the difficulty of
->>>>>>> figuring out what the numerical values really are (for debugging),
->>>>>>> especially when .h files are in different subtrees from the files that
->>>>>>> use the definitions, and when they use multiple macro levels and fancy
->>>>>>> features like concatenation.  Sometimes I think it's clearer just to
->>>>>>> write the number and use a comment to say what it is.
->>>>>>
->>>>>> Both comments apply just as well to ordinary C code, and I don't think anyone would seriously suggest just using comments instead for C code.
->>>>>
->>>>> .h files include both structs and defines, which are fine for
->>>>> ordinary C code, but problematic in this context.
->>>>
->>>> Right, cpp should be invoked with similar options to the way it's done
->>>> for asm files which have the same problem.  I'm not sure if the
->>>> current patch does so.
->>>
->>> That's probably a reasonable idea, although I imagined that people would
->>> actually split out the portions of any header file they wanted to use
->>> with dtc, so that any headers included by *.dts would only include
->>> #defines. Those headers could be used by both dtc and other .h files (or
->>> .c files).
->>
->> Used by what other files? kernel files? We ultimately want to split out
->> dts files from the kernel, so whatever we add needs to be self
->> contained. I don't see this as a huge issue though because the whole
->> point of the DT data is to move that information out of the kernel. If
->> it is needed in both places, then something is wrong.
+* Stephen Warren <swarren@wwwdotorg.org> [121010 09:36]:
+> On 10/10/2012 01:26 AM, Linus Walleij wrote:
+> > On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> > 
+> >> Seuqential patches from this series introduce SoC-specific data parsing
+> >> from device tree.
+> >>
+> >> This patch removes legacy GPIO bank nodes from exynos4210.dtsi and
+> >> replaces them with nodes and properties required for these patches.
+> > 
+> > So to be clear:
+> > 
+> >> +       pinctrl-bank-types {
+> >> +               bank_off: bank-off {
+> >> +                       samsung,reg-names = "func", "dat", "pud",
+> >> +                                               "drv", "conpdn", "pudpdn";
+> >> +                       samsung,reg-params = <0x00 4>, <0x04 1>, <0x08 2>,
+> >> +                                               <0x0C 2>, <0x10 2>, <0x14 2>;
+> >> +               };
+> > 
+> > This is starting to look like a firmware language, I have mixed
+> > feelings about this. Shall this be read:
+> > 
+> > "Poke 4 into 0x00, poke 1 into 0x04, poke 2 into 0x08" etc?
+> > 
+> > We really need to discuss this, Grant has already NACK:ed
+> > such approaches once.
 > 
-> One example is the IDs of the GPIOs, e.g.:
+> Well, I don't think he NACK'd Tony Lindgren's generic pinctrl driver,
+> which is doing this exact same thing. I did raise the same point about
+> Tony's driver when he posted it, but nobody seemed inclined to NACK it
+> based on that at the time, IIRC...
+
+To summarize, using reg value pairs in DT makes sense if the amount
+of data is huge. Otherwise we'll be describing indidual hardware bits
+as properties in DT, or have to have huge amounts of static data in
+the kernel.
+
+Where it does not make sense is if there's a sequence of reads
+and writes with test loops in between.. But that's does not look
+to be the case here.
+
+The reg value pairs will be readable when the DT preprocessing is
+available, and that allows the values to be orred together while
+DT properties don't. The alternative is to describe hardware register
+bits as DT properties, which is very bloated.
+
+But considering all this.. Are the samsung,reg-names really needed
+by the kernel?
+
+The pinctrl named modes actually are more generic from the pinctrl
+client driver point of view as you can set up multiple states for
+runtime PM.
+ 
+> BTW, the idea here is IIRC to create a generic Samsung pinctrl driver
+> that works across N different Samsung SoCs, each with different register
+> layout, without having to encode the register layout into tables in the
+> kernel.
 > 
-> #define TEGRA_PIN_VI_GP6_PA0            _GPIO(0)
-> #define TEGRA_PIN_UART3_CTS_N_PA1       _GPIO(1)
-> #define TEGRA_PIN_DAP2_FS_PA2           _GPIO(2)
-> #define TEGRA_PIN_DAP2_SCLK_PA3         _GPIO(3)
+> > If you're still going to do this, it is mandatory
+> > to NOT use magic hex numbers anymore, because Stephen has
+> > merged preprocessor support to the DTC compiler so you
+> > can use #defined macros.
+> > 
+> > See commit:
+> > cd296721a9645f9f28800a072490fa15458d1fb7
 > 
-> Those defines are useful to both the .dts files (so named constants can
-> be used) and the pinctrl driver. By using the same header file, we
-> guarantee that the .dts files and pinctrl driver use the exact same
-> naming for the pins; the pin naming/numbering being defined by the DT
-> binding more than anything else.
+> That feature isn't enabled yet. While dtc has been modified to be able
+> to accept input that's been generated/processed by cpp, there is still
+> ongoing discussion about how/whether to actually enable *.dts to use
+> that feature.
 
-If pinctrl needs to get a matching name, then it should get it from the
-dtb. We should not have 2 sources of data. That is just broken.
+Hey finally! That's good news.
 
-> 
-> It'd be similarly useful to share GPIO or interrupt flag definitions,
-> etc. etc.
-> 
-> We could do something like we do for dtc today, where there's an
-> external repository for *.dts (and required *.h), yet those *.h are
-> duplicated into the kernel tree as needed by drivers.
+Regards,
 
-So as long as we only need to sync up about once a year that's fine
-because we have yet to prove that doing it frequently for dtc will be
-easy and painless.
-
-I'd like fewer things to copy around, not more. If you have some
-self-contained platform defines to copy, then it is your problem.
-
-Rob
+Tony
