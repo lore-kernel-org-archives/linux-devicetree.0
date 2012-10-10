@@ -1,86 +1,49 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 01/16] ARM: dts: exynos4210: Replace legacy GPIO bank nodes with pinctrl bank nodes
-Date: Wed, 10 Oct 2012 20:26:25 +0200
-Message-ID: <1760725.iUz22fJjbN@flatron>
-References: <1349685556-23718-1-git-send-email-t.figa@samsung.com> <5075A1EF.60900@wwwdotorg.org> <20121010181253.GQ12552@atomide.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: dtc: import latest upstream dtc
+Date: Wed, 10 Oct 2012 12:40:12 -0600
+Message-ID: <5075C10C.1030205@wwwdotorg.org>
+References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org> <5069C042.40209@gmail.com> <5069C11C.6040505@wwwdotorg.org> <5069D946.1060502@gmail.com> <5069E1F0.5070902@wwwdotorg.org> <E1TIktZ-0000U4-Qh@jdl.com> <50749441.8030307@wwwdotorg.org> <5075ABB8.103@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20121010181253.GQ12552@atomide.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5075ABB8.103@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Jon Loeliger <jdl@jdl.com>, Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Dnia =C5=9Broda, 10 pa=C5=BAdziernika 2012 11:12:53 Tony Lindgren pisze=
-:
-> * Stephen Warren <swarren@wwwdotorg.org> [121010 09:36]:
-> > On 10/10/2012 01:26 AM, Linus Walleij wrote:
-> > > On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com>=
-=20
-wrote:
-> > >> Seuqential patches from this series introduce SoC-specific data
-> > >> parsing
-> > >> from device tree.
-> > >>=20
-> > >> This patch removes legacy GPIO bank nodes from exynos4210.dtsi a=
-nd
-> > >> replaces them with nodes and properties required for these patch=
-es.
-> > >=20
-> > > So to be clear:
-> > >> +       pinctrl-bank-types {
-> > >> +               bank_off: bank-off {
-> > >> +                       samsung,reg-names =3D "func", "dat", "pu=
-d",
-> > >> +                                               "drv", "conpdn",
-> > >> "pudpdn"; +                       samsung,reg-params =3D <0x00 4=
->,
-> > >> <0x04 1>, <0x08 2>, +                                           =
-  =20
-> > >> <0x0C 2>, <0x10 2>, <0x14 2>; +               };
-> > >=20
-> > > This is starting to look like a firmware language, I have mixed
-> > > feelings about this. Shall this be read:
-> > >=20
-> > > "Poke 4 into 0x00, poke 1 into 0x04, poke 2 into 0x08" etc?
-> > >=20
-> > > We really need to discuss this, Grant has already NACK:ed
-> > > such approaches once.
-> >=20
-> > Well, I don't think he NACK'd Tony Lindgren's generic pinctrl drive=
-r,
-> > which is doing this exact same thing. I did raise the same point ab=
-out
-> > Tony's driver when he posted it, but nobody seemed inclined to NACK=
- it
-> > based on that at the time, IIRC...
->=20
-> To summarize, using reg value pairs in DT makes sense if the amount
-> of data is huge. Otherwise we'll be describing indidual hardware bits
-> as properties in DT, or have to have huge amounts of static data in
-> the kernel.
->=20
-> Where it does not make sense is if there's a sequence of reads
-> and writes with test loops in between.. But that's does not look
-> to be the case here.
->=20
-> The reg value pairs will be readable when the DT preprocessing is
-> available, and that allows the values to be orred together while
-> DT properties don't. The alternative is to describe hardware register
-> bits as DT properties, which is very bloated.
->=20
-> But considering all this.. Are the samsung,reg-names really needed
-> by the kernel?
+On 10/10/2012 11:09 AM, Rob Herring wrote:
+> On 10/09/2012 04:16 PM, Stephen Warren wrote:
+>> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
+>>>>
+>>>> What more do you think needs discussion re: dtc+cpp?
+>>>
+>>> How not to abuse the ever-loving shit out of it? :-)
+>>
+>> Perhaps we can just handle this through the regular patch review
+>> process; I think it may be difficult to define and agree upon exactly
+>> what "abuse" means ahead of time, but it's probably going to be easy
+>> enough to recognize it when one sees it?
+> 
+> Rather than repeating things over and over in reviews, we should
+> document at least rules we can easily agree on and then add to it when
+> people get "creative." Also, I can't keep up with every single binding
+> review as is, and this could just add another level of complexity to the
+> review. A few off the top of my head and from the thread discussion:
+> 
+> - Headers must be self contained with no outside (i.e. libc, kernel,
+> etc.) header dependencies.
+> - No kernel kconfig option usage
+> - No gcc built-in define usage
+> - No unused items (i.e. externs, structs, etc.)
 
-They are used to specify which registers are defined in reg-params prop=
-erty=20
-and in which order. Most of the registers are not mandatory and this is=
-=20
-needed to be able to specify only those that are present. At least I=20
-couldn't think of a better solution for this. Do you have some suggesti=
-ons?
-=20
-Best regards,
-Tomasz Figa
+> - No macro concatenation
+
+That seems to be potentially a very useful feature; I have no idea why
+we would ban that; it isn't banned in C code in the kernel is it?
+
+> - No macros for strings or property names
+
+Property names I can understand. Property values - I can perhaps see a
+use-case for...
