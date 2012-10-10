@@ -1,74 +1,72 @@
-From: Ivan Djelic <ivan.djelic@parrot.com>
-Subject: Re: [PATCH 4/4] mtd: nand: omap2: Add data correction support
-Date: Wed, 10 Oct 2012 19:08:06 +0200
-Message-ID: <20121010170806.GB13585@parrot.com>
-References: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
- <1349274589-11389-5-git-send-email-avinashphilip@ti.com>
- <20121003192044.GB27502@parrot.com>
- <518397C60809E147AF5323E0420B992E3E9B8A65@DBDE01.ent.ti.com>
- <20121005142338.GA7199@parrot.com>
- <518397C60809E147AF5323E0420B992E3E9CA829@DBDE01.ent.ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: dtc: import latest upstream dtc
+Date: Wed, 10 Oct 2012 12:09:12 -0500
+Message-ID: <5075ABB8.103@gmail.com>
+References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org> <5069C042.40209@gmail.com> <5069C11C.6040505@wwwdotorg.org> <5069D946.1060502@gmail.com> <5069E1F0.5070902@wwwdotorg.org> <E1TIktZ-0000U4-Qh@jdl.com> <50749441.8030307@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9CA829@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50749441.8030307@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Jon Loeliger <jdl@jdl.com>, Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2012 at 01:36:50PM +0100, Philip, Avinash wrote:
-(...)
-> > There are at least 2 potential problems when reading an erased page with bitflips:
-> > 
-> > 1. bitflip in data area and no bitflip in spare area (all 0xff)
-> > Your code will not perform any ECC correction.
-> > UBIFS does not like finding bitflips in empty pages, see for instance
-> > http://lists.infradead.org/pipermail/linux-mtd/2012-March/040328.html.
+On 10/09/2012 04:16 PM, Stephen Warren wrote:
+> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
+>>>
+>>> What more do you think needs discussion re: dtc+cpp?
+>>
+>> How not to abuse the ever-loving shit out of it? :-)
 > 
-> In case of error correction using ELM, syndrome vector calculated after reading
-> Data area & OOB area. So handling of erased page requires a software workaround.
-> I am planning something as follows.
+> Perhaps we can just handle this through the regular patch review
+> process; I think it may be difficult to define and agree upon exactly
+> what "abuse" means ahead of time, but it's probably going to be easy
+> enough to recognize it when one sees it?
+
+Rather than repeating things over and over in reviews, we should
+document at least rules we can easily agree on and then add to it when
+people get "creative." Also, I can't keep up with every single binding
+review as is, and this could just add another level of complexity to the
+review. A few off the top of my head and from the thread discussion:
+
+- Headers must be self contained with no outside (i.e. libc, kernel,
+etc.) header dependencies.
+- No kernel kconfig option usage
+- No gcc built-in define usage
+- No unused items (i.e. externs, structs, etc.)
+- No macro concatenation
+- No macros for strings or property names
+
+Do we further restrict things to say defines are only numbers? One could
+start to define complex macros to build the nodes themselves. If each
+platform does this slightly differently, it will become difficult to
+review and maintain. Then we will be doing dts consolidation. The fact
+that we have some fixed structure and each SOC is not free to do things
+their own way makes things easier to maintain. You don't have that in
+the kernel across platforms. For example, look how register defines and
+static mappings or platform device creation are done. They are all
+similar, but yet slightly different. That makes doing changes across
+platforms more difficult.
+
+> I imagine the most common usage will simply be a bunch of:
 > 
-> I will first check calculated ecc, which would be zero for non error pages.
-> Then I would check 0xFF in OOB area (for erased page) by checking number of
-> bit zeros in OOB area.  If it is 0xFF (number of bit zero count is zero),
-> set entire page as 0xFF if number of bit zeros is less than max bit flips
-> (8 or 4) by counting the number of bit zero's in data area.
+> #define TEGRA_GPIO_PB0 32
+> #define TEGRA_GPIO_INT_LEVEL_LOW 8
 > 
-> This logic is implemented in fsmc_nand.c
+> / {
+>     xxx {
+>         interrupts = <TEGRA_GPIO_PB0 TEGRA_GPIO_INT_LEVEL_LOW>;
 > 
-> See commit
-> mtd: fsmc: Newly erased page read algorithm implemented
+> and similarly, simple math:
 > 
-> > 
-> > 2. bitflip in ECC bytes in spare area
-> > Your code will report an uncorrectable error upon reading; if this happens while reading a partially programmed UBI block,
-> > I guess you will lose data.
-> 
-> In case of uncorrectable errors due to bit flips in spare area,
-> I can go on checking number of bit zero's in data area + OOB area
-> are less than max bit flips (8 or 4), I can go on setting the entire
-> page as 0xFF.
+>     something = <((FOO << XXX_SHIFT) | (BAR << YYY_SHIFT))>;
 > 
 
-OK, sounds reasonable.
-Another simple strategy could use the fact that you add a 14th zero byte to
-the 13 BCH bytes for RBL compatibility:
+These are all perfectly fine and sane use, but if we don't restrict
+things then the next step is this:
 
-Upon reading:
- - if this 14th byte is zero (*) => page was programmed: perform ECC
-   correction as usual
- - else, page was not programmed: do not perform ECC, read entire data+spare
-   area, and set it to 0xff if less than 8 or 4 (max bitflips) zero bits
-   were found
+#define PROP_SOMETHING(v) (something = <(v)>)
 
-(*) for robustness to bitflip in 14th byte, replace condition
-"14th byte is zero" by e.g. "14th byte has less than 4 bits set to 1".
-
-What do you think ?
-
-BR,
---
-Ivan
+Rob
