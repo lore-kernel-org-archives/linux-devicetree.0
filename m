@@ -1,76 +1,54 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Wed, 10 Oct 2012 10:40:06 +0200
-Message-ID: <20121010084006.GQ27665@pengutronix.de>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
- <20121005151057.GA5125@pengutronix.de>
- <Pine.LNX.4.64.1210051735360.13761@axis700.grange>
- <20121005160242.GX1322@pengutronix.de>
- <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 09/16] pinctrl: exynos: Use one IRQ domain per pin bank
+Date: Wed, 10 Oct 2012 10:45:20 +0200
+Message-ID: <3063300.jojsnxbhX8@amdc1227>
+References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
+ <1349685556-23718-10-git-send-email-t.figa@samsung.com>
+ <CACRpkdbNHqwt2X-SNRv3=7Ca-WrDERb=t01K7pFuvRzTNk1+4Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CACRpkdbNHqwt2X-SNRv3=7Ca-WrDERb=t01K7pFuvRzTNk1+4Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-On Mon, Oct 08, 2012 at 09:58:58AM +0200, Guennadi Liakhovetski wrote:
-> On Fri, 5 Oct 2012, Sascha Hauer wrote:
-> 
-> > On Fri, Oct 05, 2012 at 05:41:00PM +0200, Guennadi Liakhovetski wrote:
-> > > Hi Sascha
-> > > 
-> > > > 
-> > > > Maybe the example would be clearer if you split it up in two, one simple
-> > > > case with the csi2_1 <-> imx074_1 and a more advanced with the link in
-> > > > between.
-> > > 
-> > > With no link between two ports no connection is possible, so, only 
-> > > examples with links make sense.
+On Wednesday 10 of October 2012 09:40:16 Linus Walleij wrote:
+> On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> > Instead of registering one IRQ domain for all pin banks of a pin
+> > controller, this patch implements registration of per-bank domains.
 > > 
-> > I should have said with the renesas,sh-mobile-ceu in between.
+> > At a cost of a little memory overhead (~2.5KiB for all GPIO interrupts
+> > of Exynos4x12) it simplifies driver code and device tree sources,
+> > because GPIO interrupts can be now specified per banks.
 > > 
-> > So simple example: csi2_1 <-l-> imx074_1
-> > advanced: csi2_2 <-l-> ceu <-l-> ov772x
-> 
-> No, CEU is the DMA engine with some image processing, so, it's always 
-> present. The CSI-2 is just a MIPI CSI-2 interface, that in the above case 
-> is used with the CEU too. So, it's like
-> 
->        ,-l- ov772x
->       /
-> ceu0 <
->       \
->        `-l- csi2 -l- imx074
-> 
-> > > > It took me some time until I figured out that these are two
-> > > > separate camera/sensor pairs. Somehow I was looking for a multiplexer
-> > > > between them.
-> > > 
-> > > Maybe I can add more comments to the file, perhaps, add an ASCII-art 
-> > > chart.
+> > Example:
+> >         device {
+> >         
+> >                 /* ... */
+> >                 interrupt-parent = <&gpa1>;
+> >                 interrupts = <3 0>;
+> >                 /* ... */
+> >         
+> >         };
 > > 
-> > That would be good.
+> > Signed-off-by: Tomasz Figa <t.figa@samsung.com>
 > 
-> Is the above good enough? :)
+> This looks like a very good patch!
+> Can it be applied in isolation from the other patches?
 
-Yes, thanks. We thought and disucssed about this devicetree binding
-quite much the last days. Finally I understood it and I must say that I
-like it. I think more prosa to explain the general concept would be good
-in the binding doc.
+This is heavily dependent on previous patches, because each pin bank must 
+have its own node that can be bound to the IRQ domain and used as an 
+interrupt-controller in interrupt-parent property.
 
-Mark, when do we get the same for aSoC? ;)
+I can imagine kind of hybrid solution, where bank nodes contain almost no 
+data, other than gpio-controller, interrupt-controller and #*-cells 
+properties, but this would introduce the need of matching bank nodes with 
+banks statically defined in the driver.
 
-Sascha
-
+Best regards,
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Tomasz Figa
+Samsung Poland R&D Center
