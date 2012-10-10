@@ -1,34 +1,44 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Wed, 10 Oct 2012 17:51:27 +0900
-Message-ID: <20121010085124.GJ17288@opensource.wolfsonmicro.com>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
- <20121005151057.GA5125@pengutronix.de>
- <Pine.LNX.4.64.1210051735360.13761@axis700.grange>
- <20121005160242.GX1322@pengutronix.de>
- <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
- <20121010084006.GQ27665@pengutronix.de>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 10/16] pinctrl: samsung: Do not pass gpio_chip to
+ pin_to_reg_bank
+Date: Wed, 10 Oct 2012 10:51:37 +0200
+Message-ID: <1519398.vRBS8CYjxJ@amdc1227>
+References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
+ <1349685556-23718-11-git-send-email-t.figa@samsung.com>
+ <CACRpkdYinRRictTsH-zp=Y7FPAd92NP6E1WMU6YoupJDeYre8A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121010084006.GQ27665@pengutronix.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CACRpkdYinRRictTsH-zp=Y7FPAd92NP6E1WMU6YoupJDeYre8A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2012 at 10:40:06AM +0200, Sascha Hauer wrote:
+On Wednesday 10 of October 2012 09:42:10 Linus Walleij wrote:
+> On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> > The pointer to gpio_chip passed to pin_to_reg_bank utility function is
+> > used only to retrieve a pointer to samsung_pinctrl_drv_data structure.
+> > 
+> > This patch modifies the function and its users to pass a pointer to
+> > samsung_pinctrl_drv_data directly.
+> > 
+> > Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> 
+> Looks good, can it be applied without the others?
 
-> Mark, when do we get the same for aSoC? ;)
+Yes, I think this one should apply fine.
 
-Well, I'm unlikely to work on it as I don't have any systems which can
-boot with device tree.
+> Maybe you can make a patch series without all the
+> stuff moving register offsets to the DT so I can begin
+> with merging that and we can discuss the movement
+> of register info separately?
 
-The big, big problem you've got doing this is lots of dynamic changes at 
-runtime and in general complicated systems.  It's trivial to describe
-the physical links but they don't provide anything like enough
-information to use things.  Quite frankly I'm not sure device tree is a
-useful investment of time for advanced audio systems anyway, it's really
-not solving any problems people actually have.
+I already considered this approach, but it introduces some problems, as I 
+mentioned in my other replies.
+
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
