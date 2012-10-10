@@ -1,72 +1,200 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: dtc: import latest upstream dtc
-Date: Wed, 10 Oct 2012 10:22:02 -0600
-Message-ID: <5075A0AA.2000605@wwwdotorg.org>
-References: <1349827466.26044.16@snotra> <50759105.2000406@wwwdotorg.org> <1349885393.21493.2@snotra>
+From: Kent Yoder <key@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2] TPM: Provide a tpm_tis OF driver
+Date: Wed, 10 Oct 2012 11:24:28 -0500
+Message-ID: <20121010162428.GA5013@ennui.austin.ibm.com>
+References: <20121002210453.GA12231@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1349885393.21493.2@snotra>
+Content-Disposition: inline
+In-Reply-To: <20121002210453.GA12231@obsidianresearch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <scottwood@freescale.com>
-Cc: Mitch Bradley <wmb@firmworks.com>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: linux-kernel@vger.kernel.org, tpmdd-devel@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 10:09 AM, Scott Wood wrote:
-> On 10/10/2012 10:15:17 AM, Stephen Warren wrote:
->> On 10/09/2012 06:04 PM, Scott Wood wrote:
->> > On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
->> >> On 10/9/2012 11:16 AM, Stephen Warren wrote:
->> >> > On 10/01/2012 12:39 PM, Jon Loeliger wrote:
->> >> >>>
->> >> >>> What more do you think needs discussion re: dtc+cpp?
->> >> >>
->> >> >> How not to abuse the ever-loving shit out of it? :-)
->> >> >
->> >> > Perhaps we can just handle this through the regular patch review
->> >> > process; I think it may be difficult to define and agree upon
->> exactly
->> >> > what "abuse" means ahead of time, but it's probably going to be easy
->> >> > enough to recognize it when one sees it?
->> >>
->> >>
->> >> One of the ways it could get out of hand would be via "include
->> >> dependency hell".  People will be tempted to reuse existing .h files
->> >> containing pin definitions, which, if history is a guide, will end up
->> >> depending on all sorts of other .h files.
->> >>
->> >> Another problem I often face with symbolic names is the difficulty of
->> >> figuring out what the numerical values really are (for debugging),
->> >> especially when .h files are in different subtrees from the files that
->> >> use the definitions, and when they use multiple macro levels and fancy
->> >> features like concatenation.  Sometimes I think it's clearer just to
->> >> write the number and use a comment to say what it is.
->> >
->> > Both comments apply just as well to ordinary C code, and I don't think
->> > anyone would seriously suggest just using comments instead for C code.
->> >
->> > Is there a way to ask CPP to evaluate a macro in the context of the
->> > input file, rather than produce normal output?  If not, I guess you
->> > could make a tool that creates a wrapper file that includes the main
->> > file and then evaluates the symbol you want.
->>
->> I'm not sure what "evaluate a macro in the context of the input file"
->> means. Macros are obviously already evaluated based on the current set
->> of macros defined by the file that's been processed or those it
->> included. Do you mean only allowing the use of macros in the current
->> file and not included files? What exactly would the wrapper you
->> mentioned do?
-> 
-> I just meant a way for a developer to quickly ask the preprocessor what
-> a particular macro expands to, rather than try to figure it out
-> manually.  I was not suggesting any change to normal operation.
+Hi Jason,
 
-Oh right. Well, the patch I proposed to the kernel was basically:
+On Tue, Oct 02, 2012 at 03:04:53PM -0600, Jason Gunthorpe wrote:
+> This provides an open firwmare driver binding for tpm_tis. OF
+> is useful on arches where PNP is not used.
+>=20
+> Allow the tpm_tis driver to be selected if OF is compiled in.
+>=20
+> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> ---
+>  drivers/char/tpm/Kconfig   |    2 +-
+>  drivers/char/tpm/tpm_tis.c |   79 ++++++++++++++++++++++++++++++++++=
++--------
+>  2 files changed, 65 insertions(+), 16 deletions(-)
+>=20
+> v2 changes:
+>  - Add irq_autoprobe to tpm_tis_init to simplify the logic around
+>    the autoprobe function
+>  - Use platform functions in tis_of_probe_one
+>  - Rename tis_drv to tis_driver to silence MODPOST warnings
+>  - checkpatch cleanups
+>  - Do not attempt to auto-probe the TPM on OF configurations
+>=20
+[cut]
+> @@ -768,7 +770,7 @@ static int tpm_tis_pnp_resume(struct pnp_dev *dev=
+)
+>  	return ret;
+>  }
+>=20
+> -static struct pnp_device_id tpm_pnp_tbl[] __devinitdata =3D {
+> +static const struct pnp_device_id tpm_pnp_tbl[] __devinitdata =3D {
+>  	{"PNP0C31", 0},		/* TPM */
+>  	{"ATM1200", 0},		/* Atmel */
+>  	{"IFX0102", 0},		/* Infineon */
+> @@ -792,7 +794,7 @@ static __devexit void tpm_tis_pnp_remove(struct p=
+np_dev *dev)
+>  }
+>=20
+>=20
+> -static struct pnp_driver tis_pnp_driver =3D {
+> +static const struct pnp_driver tis_pnp_driver =3D {
+>  	.name =3D "tpm_tis",
+>  	.id_table =3D tpm_pnp_tbl,
+>  	.probe =3D tpm_tis_pnp_init,
 
-%.dtb: %.dtsp
-    cpp -E $< | dtc -o $@ -
+  Why change the structs to const here? This generates warnings for me:
 
-A developer could run the same cpp -E command to find that out, or that
-build rule could instead save the intermediate result rather than just
-piping it, so you could just go read the file.
+drivers/char/tpm/tpm_tis.c: In function =E2=80=98init_tis=E2=80=99:
+drivers/char/tpm/tpm_tis.c:885:3: warning: passing argument 1 of
+=E2=80=98pnp_register_driver=E2=80=99 discards =E2=80=98const=E2=80=99 =
+qualifier from pointer target
+type [enabled by default]
+In file included from drivers/char/tpm/tpm_tis.c:24:0:
+include/linux/pnp.h:469:5: note: expected =E2=80=98struct pnp_driver *=E2=
+=80=99 but
+argument is of type =E2=80=98const struct pnp_driver *=E2=80=99
+drivers/char/tpm/tpm_tis.c: In function =E2=80=98cleanup_tis=E2=80=99:
+drivers/char/tpm/tpm_tis.c:930:3: warning: passing argument 1 of
+=E2=80=98pnp_unregister_driver=E2=80=99 discards =E2=80=98const=E2=80=99=
+ qualifier from pointer target
+type [enabled by default]
+In file included from drivers/char/tpm/tpm_tis.c:24:0:
+include/linux/pnp.h:470:6: note: expected =E2=80=98struct pnp_driver *=E2=
+=80=99 but
+argument is of type =E2=80=98const struct pnp_driver *=E2=80=99
+
+> @@ -821,12 +823,52 @@ static int tpm_tis_resume(struct device *dev)
+>=20
+>  static SIMPLE_DEV_PM_OPS(tpm_tis_pm, tpm_pm_suspend, tpm_tis_resume)=
+;
+>=20
+> -static struct platform_driver tis_drv =3D {
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id tis_of_platform_match[] __devinitda=
+ta =3D {
+> +	{.compatible =3D "tcg,tpm_tis"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, tis_of_platform_match);
+> +
+> +static int __devinit tis_of_probe_one(struct platform_device *pdev)
+> +{
+> +	const struct resource *res;
+> +	int irq;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -ENODEV;
+> +
+> +	irq =3D platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		irq =3D 0;
+> +	return tpm_tis_init(&pdev->dev, res->start, res->end - res->start +=
+ 1,
+> +			    irq, 0);
+> +}
+> +
+> +static int __devexit tis_of_remove_one(struct platform_device *odev)
+> +{
+> +	struct tpm_chip *chip =3D dev_get_drvdata(&odev->dev);
+> +	tpm_dev_vendor_release(chip);
+> +	kfree(chip);
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static struct platform_driver tis_driver =3D {
+>  	.driver =3D {
+>  		.name =3D "tpm_tis",
+>  		.owner		=3D THIS_MODULE,
+>  		.pm		=3D &tpm_tis_pm,
+> +		.of_match_table =3D of_match_ptr(tis_of_platform_match),
+>  	},
+
+  Patch v2 removes the ifdef around of_match_table, which now generates
+an error:
+
+drivers/char/tpm/tpm_tis.c:867:3: error: implicit declaration of
+function =E2=80=98of_match_ptr=E2=80=99 [-Werror=3Dimplicit-function-de=
+claration]
+drivers/char/tpm/tpm_tis.c:867:34: error: =E2=80=98tis_of_platform_matc=
+h=E2=80=99
+undeclared here (not in a function)
+
+Kent
+
+> +#ifdef CONFIG_OF
+> +	.probe =3D tis_of_probe_one,
+> +	.remove =3D __devexit_p(tis_of_remove_one)
+> +#endif
+>  };
+>=20
+>  static struct platform_device *pdev;
+> @@ -842,15 +884,22 @@ static int __init init_tis(void)
+>  		return pnp_register_driver(&tis_pnp_driver);
+>  #endif
+>=20
+> -	rc =3D platform_driver_register(&tis_drv);
+> +	rc =3D platform_driver_register(&tis_driver);
+>  	if (rc < 0)
+>  		return rc;
+> -	if (IS_ERR(pdev=3Dplatform_device_register_simple("tpm_tis", -1, NU=
+LL, 0)))
+> +	/* TIS_MEM_BASE is only going to work on x86.. */
+> +#ifndef CONFIG_OF
+> +	pdev =3D platform_device_register_simple("tpm_tis", -1, NULL, 0);
+> +	if (IS_ERR(pdev)) {
+> +		platform_driver_unregister(&tis_driver);
+>  		return PTR_ERR(pdev);
+> -	if((rc=3Dtpm_tis_init(&pdev->dev, TIS_MEM_BASE, TIS_MEM_LEN, 0)) !=3D=
+ 0) {
+> +	}
+> +	rc =3D tpm_tis_init(&pdev->dev, TIS_MEM_BASE, TIS_MEM_LEN, 0, 1);
+> +	if (rc !=3D 0) {
+>  		platform_device_unregister(pdev);
+> -		platform_driver_unregister(&tis_drv);
+> +		platform_driver_unregister(&tis_driver);
+>  	}
+> +#endif
+>  	return rc;
+>  }
+>=20
+> @@ -882,7 +931,7 @@ static void __exit cleanup_tis(void)
+>  	}
+>  #endif
+>  	platform_device_unregister(pdev);
+> -	platform_driver_unregister(&tis_drv);
+> +	platform_driver_unregister(&tis_driver);
+>  }
+>=20
+>  module_init(init_tis);
+> --=20
+> 1.7.5.4
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kerne=
+l" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>=20
