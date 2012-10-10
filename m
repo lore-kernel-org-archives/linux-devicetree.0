@@ -1,14 +1,13 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Wed, 10 Oct 2012 06:29:57 +0000
-Message-ID: <201210100629.58272.arnd@arndb.de>
-References: <20121007015300.828366635@gmail.com>
- <201210090918.56725.arnd@arndb.de> <20121009225837.GA7758@glitch>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: fix return value in bcm2835_pinctrl_probe()
+Date: Wed, 10 Oct 2012 08:46:33 +0200
+Message-ID: <CACRpkdY5F1zd0Qh1jvintMn6R35_ZAaTUkbRxaK5tnvy=_Q8ig@mail.gmail.com>
+References: <CAPgLHd8F99f5LVS-wNekKA+a1369RfqCa-w_jHGV-_Wueg_cTQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121009225837.GA7758@glitch>
+In-Reply-To: <CAPgLHd8F99f5LVS-wNekKA+a1369RfqCa-w_jHGV-_Wueg_cTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,34 +18,24 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 October 2012, Domenico Andreoli wrote:
-> bcm4760 is the superset (bcm4761 hasn't the gpu) but there are also other
-> differences (that I know, USB phy and clocks).
-> 
-> I can identify the SoC at runtime, does this change anything to your
-> recommendation?
+On Sun, Oct 7, 2012 at 4:01 PM, Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Not much. The rule not to have wildcards in the device tree strings
-is rather universal. For device drivers, the rule should be that the
-driver should only look at its own device and the information it can
-get about that from the bus (or from the device tree), but should
-generally not use interfaces to ask what soc the device is part of.
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>
+> In case of error, the function pinctrl_register() returns
+> NULL not ERR_PTR(). The PTR_ERR() in the return value
+> should be replaced with error no.
+>
+> dpatch engine is used to auto generate this patch.
+> (https://github.com/weiyj/dpatch)
+>
+> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-Otherwise you end up having to modify all device drivers every time
-you want to support a new SoC, which is something we want to avoid.
-If a new SoC contains some device that is identical to one on an
-older SoC, you should just be able to mark it as compatible with the
-original string in the device tree.
+Applied with Stephen's ACK.
 
-For the USB PHY and the clock setup, it should be very easy to use
-different compatible strings, although for the clock controller it
-may also be reasonable to call the initialization function from
-platform code and pass the type of controller into it. It may also
-be possible that all the differences between the clock implementations
-go away once you describe all clocks in the DT itself.
-
-	Arnd
+Thanks!
+Linus Walleij
