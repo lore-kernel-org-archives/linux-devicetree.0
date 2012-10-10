@@ -1,61 +1,53 @@
-From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: Add support for Broadcom BCM476x SoCs
-Date: Wed, 10 Oct 2012 01:57:34 +0200
-Message-ID: <20121009235734.GD7758@glitch>
-References: <20121007015300.828366635@gmail.com>
- <5071118A.6040508@wwwdotorg.org> <20121007101418.GA24323@glitch>
- <50738F8F.3030006@wwwdotorg.org>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: dtc: import latest upstream dtc
+Date: Tue, 9 Oct 2012 19:04:26 -0500
+Message-ID: <1349827466.26044.16@snotra>
+References: <5074B155.4090703@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; delsp=Yes; format=Flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5074B155.4090703@firmworks.com> (from wmb@firmworks.com on Tue
+	Oct  9 18:20:53 2012)
 Content-Disposition: inline
-In-Reply-To: <50738F8F.3030006-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 08, 2012 at 08:44:31PM -0600, Stephen Warren wrote:
-> On 10/07/2012 04:14 AM, Domenico Andreoli wrote:
-> > On Sat, Oct 06, 2012 at 11:22:18PM -0600, Stephen Warren wrote:
-> >> On 10/06/2012 07:53 PM, Domenico Andreoli wrote:
+On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
+> On 10/9/2012 11:16 AM, Stephen Warren wrote:
+> > On 10/01/2012 12:39 PM, Jon Loeliger wrote:
 > >>>
-> >>> Additional support is being worked on.... and usb (DWC OTG) only
-> >>> attemped reusing s3c-hsotg.
+> >>> What more do you think needs discussion re: dtc+cpp?
 > >>
-> >> Hmmm. I believe the bcm2835 uses DWC OTG. I wonder if the same driver
-> >> will work there; USB in particular is a major pain point on the bcm2835...
-> > 
-> > I don't know any more how many versions of this driver are circulating,
-> > we may have some options.
-> > 
-> >>> It's based on a random pre v3.7-rc1 commit (eb0ad9c) with mainlined
-> >>> multi-platform support and Stephen's patch to add DEBUG_LL to it.
-> >>
-> >> ...
-> >> about uncompress.h now. Unless anyone really pipes up and says they'd
-> >> still like me to pursue uncompress.h in multi-platform, I'm inclined to
-> >> drop it.
-> > 
-> > I think it is valuable, multi-platform doesn't have any DEBUG_LL or
-> > earlyprintk support
+> >> How not to abuse the ever-loving shit out of it? :-)
+> >
+> > Perhaps we can just handle this through the regular patch review
+> > process; I think it may be difficult to define and agree upon  
+> exactly
+> > what "abuse" means ahead of time, but it's probably going to be easy
+> > enough to recognize it when one sees it?
 > 
-> Why do you say that? Locally I have ported Tegra to multi-platform and I
-> certainly have earlyprintk enabled, and I dropped the patches to support
-> uncompress.h in multi-platform from my local work branch.
+> 
+> One of the ways it could get out of hand would be via "include
+> dependency hell".  People will be tempted to reuse existing .h files
+> containing pin definitions, which, if history is a guide, will end up
+> depending on all sorts of other .h files.
+> 
+> Another problem I often face with symbolic names is the difficulty of
+> figuring out what the numerical values really are (for debugging),
+> especially when .h files are in different subtrees from the files that
+> use the definitions, and when they use multiple macro levels and fancy
+> features like concatenation.  Sometimes I think it's clearer just to
+> write the number and use a comment to say what it is.
 
-Yes, sorry, it's me. I tend to mix DEBUG_LL/earlyprintk with the decompressor
-output. Only the latter is broken on multi-platform.
+Both comments apply just as well to ordinary C code, and I don't think  
+anyone would seriously suggest just using comments instead for C code.
 
-cheers,
-Domenico
+Is there a way to ask CPP to evaluate a macro in the context of the  
+input file, rather than produce normal output?  If not, I guess you  
+could make a tool that creates a wrapper file that includes the main  
+file and then evaluates the symbol you want.
+
+-Scott
