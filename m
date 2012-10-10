@@ -1,107 +1,86 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: dtc: import latest upstream dtc
-Date: Wed, 10 Oct 2012 08:23:29 -1000
-Message-ID: <5075BD21.2070106@firmworks.com>
-References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org>
- <5069C042.40209@gmail.com> <5069C11C.6040505@wwwdotorg.org>
- <5069D946.1060502@gmail.com> <5069E1F0.5070902@wwwdotorg.org>
- <E1TIktZ-0000U4-Qh@jdl.com> <50749441.8030307@wwwdotorg.org>
- <5075ABB8.103@gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 01/16] ARM: dts: exynos4210: Replace legacy GPIO bank nodes with pinctrl bank nodes
+Date: Wed, 10 Oct 2012 20:26:25 +0200
+Message-ID: <1760725.iUz22fJjbN@flatron>
+References: <1349685556-23718-1-git-send-email-t.figa@samsung.com> <5075A1EF.60900@wwwdotorg.org> <20121010181253.GQ12552@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5075ABB8.103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20121010181253.GQ12552@atomide.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 7:09 AM, Rob Herring wrote:
-> On 10/09/2012 04:16 PM, Stephen Warren wrote:
->> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
->>>>
->>>> What more do you think needs discussion re: dtc+cpp?
->>>
->>> How not to abuse the ever-loving shit out of it? :-)
->>
->> Perhaps we can just handle this through the regular patch review
->> process; I think it may be difficult to define and agree upon exactly
->> what "abuse" means ahead of time, but it's probably going to be easy
->> enough to recognize it when one sees it?
-> 
-> Rather than repeating things over and over in reviews, we should
-> document at least rules we can easily agree on and then add to it when
-> people get "creative." Also, I can't keep up with every single binding
-> review as is, and this could just add another level of complexity to the
-> review. A few off the top of my head and from the thread discussion:
-> 
-> - Headers must be self contained with no outside (i.e. libc, kernel,
-> etc.) header dependencies.
-> - No kernel kconfig option usage
-> - No gcc built-in define usage
-> - No unused items (i.e. externs, structs, etc.)
-> - No macro concatenation
-> - No macros for strings or property names
+Dnia =C5=9Broda, 10 pa=C5=BAdziernika 2012 11:12:53 Tony Lindgren pisze=
+:
+> * Stephen Warren <swarren@wwwdotorg.org> [121010 09:36]:
+> > On 10/10/2012 01:26 AM, Linus Walleij wrote:
+> > > On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com>=
+=20
+wrote:
+> > >> Seuqential patches from this series introduce SoC-specific data
+> > >> parsing
+> > >> from device tree.
+> > >>=20
+> > >> This patch removes legacy GPIO bank nodes from exynos4210.dtsi a=
+nd
+> > >> replaces them with nodes and properties required for these patch=
+es.
+> > >=20
+> > > So to be clear:
+> > >> +       pinctrl-bank-types {
+> > >> +               bank_off: bank-off {
+> > >> +                       samsung,reg-names =3D "func", "dat", "pu=
+d",
+> > >> +                                               "drv", "conpdn",
+> > >> "pudpdn"; +                       samsung,reg-params =3D <0x00 4=
+>,
+> > >> <0x04 1>, <0x08 2>, +                                           =
+  =20
+> > >> <0x0C 2>, <0x10 2>, <0x14 2>; +               };
+> > >=20
+> > > This is starting to look like a firmware language, I have mixed
+> > > feelings about this. Shall this be read:
+> > >=20
+> > > "Poke 4 into 0x00, poke 1 into 0x04, poke 2 into 0x08" etc?
+> > >=20
+> > > We really need to discuss this, Grant has already NACK:ed
+> > > such approaches once.
+> >=20
+> > Well, I don't think he NACK'd Tony Lindgren's generic pinctrl drive=
+r,
+> > which is doing this exact same thing. I did raise the same point ab=
+out
+> > Tony's driver when he posted it, but nobody seemed inclined to NACK=
+ it
+> > based on that at the time, IIRC...
+>=20
+> To summarize, using reg value pairs in DT makes sense if the amount
+> of data is huge. Otherwise we'll be describing indidual hardware bits
+> as properties in DT, or have to have huge amounts of static data in
+> the kernel.
+>=20
+> Where it does not make sense is if there's a sequence of reads
+> and writes with test loops in between.. But that's does not look
+> to be the case here.
+>=20
+> The reg value pairs will be readable when the DT preprocessing is
+> available, and that allows the values to be orred together while
+> DT properties don't. The alternative is to describe hardware register
+> bits as DT properties, which is very bloated.
+>=20
+> But considering all this.. Are the samsung,reg-names really needed
+> by the kernel?
 
-Instead of making a bunch of rules about how you can only use a small
-subset of cpp, why not just add a "define name value" command to DTC?
-
-One of the things I like least about C is that the language itself is
-incomplete; in order to actually program in C, you have to deal with not
-only with the C syntactic structure, but also cpp, with its different
-rules, and also make, with fundamentally different linguistic structure,
-and then you end up wrapping that in something like KConfig, with yet
-another linguistic framework, and the makefile contains embedded shell
-commands, which is yet another syntax.
-
-Rather than open Pandora's box by grafting on cpp, why not solve the
-actual problem?
-
-
-> 
-> Do we further restrict things to say defines are only numbers? One could
-> start to define complex macros to build the nodes themselves. If each
-> platform does this slightly differently, it will become difficult to
-> review and maintain. Then we will be doing dts consolidation. The fact
-> that we have some fixed structure and each SOC is not free to do things
-> their own way makes things easier to maintain. You don't have that in
-> the kernel across platforms. For example, look how register defines and
-> static mappings or platform device creation are done. They are all
-> similar, but yet slightly different. That makes doing changes across
-> platforms more difficult.
-> 
->> I imagine the most common usage will simply be a bunch of:
->>
->> #define TEGRA_GPIO_PB0 32
->> #define TEGRA_GPIO_INT_LEVEL_LOW 8
->>
->> / {
->>     xxx {
->>         interrupts = <TEGRA_GPIO_PB0 TEGRA_GPIO_INT_LEVEL_LOW>;
->>
->> and similarly, simple math:
->>
->>     something = <((FOO << XXX_SHIFT) | (BAR << YYY_SHIFT))>;
->>
-> 
-> These are all perfectly fine and sane use, but if we don't restrict
-> things then the next step is this:
-> 
-> #define PROP_SOMETHING(v) (something = <(v)>)
-> 
-> Rob
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+They are used to specify which registers are defined in reg-params prop=
+erty=20
+and in which order. Most of the registers are not mandatory and this is=
+=20
+needed to be able to specify only those that are present. At least I=20
+couldn't think of a better solution for this. Do you have some suggesti=
+ons?
+=20
+Best regards,
+Tomasz Figa
