@@ -1,70 +1,76 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 04/16] pinctrl: samsung: Parse pin banks from DT
-Date: Wed, 10 Oct 2012 10:39:30 +0200
-Message-ID: <1983938.6eHV2XjAIK@amdc1227>
-References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
- <1349685556-23718-5-git-send-email-t.figa@samsung.com>
- <CACRpkdafuxbO_peOBgmrjXk7ioVBF6D-D7d=shUd-GpHOdNxqg@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Wed, 10 Oct 2012 10:40:06 +0200
+Message-ID: <20121010084006.GQ27665@pengutronix.de>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
+ <20121005151057.GA5125@pengutronix.de>
+ <Pine.LNX.4.64.1210051735360.13761@axis700.grange>
+ <20121005160242.GX1322@pengutronix.de>
+ <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdafuxbO_peOBgmrjXk7ioVBF6D-D7d=shUd-GpHOdNxqg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: ext Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 of October 2012 09:34:05 Linus Walleij wrote:
-> On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com> wrote:
-> > Currently SoC-specific properties such as list of pin banks, register
-> > offsets and bitfield sizes are being taken from static data structures
-> > residing in pinctrl-exynos.c.
+Hi Guennadi,
+
+On Mon, Oct 08, 2012 at 09:58:58AM +0200, Guennadi Liakhovetski wrote:
+> On Fri, 5 Oct 2012, Sascha Hauer wrote:
+> 
+> > On Fri, Oct 05, 2012 at 05:41:00PM +0200, Guennadi Liakhovetski wrote:
+> > > Hi Sascha
+> > > 
+> > > > 
+> > > > Maybe the example would be clearer if you split it up in two, one simple
+> > > > case with the csi2_1 <-> imx074_1 and a more advanced with the link in
+> > > > between.
+> > > 
+> > > With no link between two ports no connection is possible, so, only 
+> > > examples with links make sense.
 > > 
-> > This patch modifies the pinctrl-samsung driver to parse all
-> > SoC-specific
-> > data from device tree, which will allow to remove the static data
-> > structures and facilitate adding of further SoC variants to the
-> > pinctrl-samsung driver.
+> > I should have said with the renesas,sh-mobile-ceu in between.
+> > 
+> > So simple example: csi2_1 <-l-> imx074_1
+> > advanced: csi2_2 <-l-> ceu <-l-> ov772x
 > 
-> So why? Two approaches:
+> No, CEU is the DMA engine with some image processing, so, it's always 
+> present. The CSI-2 is just a MIPI CSI-2 interface, that in the above case 
+> is used with the CEU too. So, it's like
 > 
-> - Put as much info as possible into the device tree
-> - Put as much info as possible into the driver
+>        ,-l- ov772x
+>       /
+> ceu0 <
+>       \
+>        `-l- csi2 -l- imx074
 > 
-> The first approach is currently only used by pinctrl-single.c.
+> > > > It took me some time until I figured out that these are two
+> > > > separate camera/sensor pairs. Somehow I was looking for a multiplexer
+> > > > between them.
+> > > 
+> > > Maybe I can add more comments to the file, perhaps, add an ASCII-art 
+> > > chart.
+> > 
+> > That would be good.
 > 
-> That driver is designed for the case where all info about
-> the hardware arrives in some description language that
-> can be translated into a simple DT description.
-> 
-> If you want to use that approach, you should use that
-> driver. If that driver does not work for you, then it's not
-> fulfilling it's purpose as a one-stop shop for simple
-> pin controllers entirely contained within the device tree,
-> and should be renamed or redesigned.
-> 
-> If you will end up with a hybrid approach with some
-> stuff in the device tree and some stuff in the code,
-> it's better to keep the old driver.
+> Is the above good enough? :)
 
-This will allow us to cover all the existing Samsung SoCs, starting from 
-S3C24xx, through S3C64xx, S5P*, all supported Exynos SoCs and ending on any 
-future SoCs using this kind of pin controller, without bloating the driver 
-with hardly readable macros, lots of (often duplicated) static data and 
-similar.
+Yes, thanks. We thought and disucssed about this devicetree binding
+quite much the last days. Finally I understood it and I must say that I
+like it. I think more prosa to explain the general concept would be good
+in the binding doc.
 
-If there are some serious problems with this approach, just let me know and 
-I will reconsider it, but if not, I'd like to keep it, because of the 
-benefits it gives.
+Mark, when do we get the same for aSoC? ;)
 
-(Even if I moved all those SoC-specific data to static structures located 
-in the driver, to keep the most readable way of GPIO specification in DT, I 
-would have to create nodes for all banks in DT anyway and the driver would 
-have to match particular nodes with their static data. I don't like this 
-kind of approach.)
+Sascha
 
-Best regards,
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
