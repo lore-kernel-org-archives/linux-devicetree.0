@@ -1,36 +1,74 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
-Date: Wed, 10 Oct 2012 10:50:20 -0600
-Message-ID: <5075A74C.80106@wwwdotorg.org>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <201210081653.55984.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210081708240.14454@axis700.grange> <2002286.8sbBLyKbDe@avalon>
+From: Ivan Djelic <ivan.djelic@parrot.com>
+Subject: Re: [PATCH 4/4] mtd: nand: omap2: Add data correction support
+Date: Wed, 10 Oct 2012 19:08:06 +0200
+Message-ID: <20121010170806.GB13585@parrot.com>
+References: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
+ <1349274589-11389-5-git-send-email-avinashphilip@ti.com>
+ <20121003192044.GB27502@parrot.com>
+ <518397C60809E147AF5323E0420B992E3E9B8A65@DBDE01.ent.ti.com>
+ <20121005142338.GA7199@parrot.com>
+ <518397C60809E147AF5323E0420B992E3E9CA829@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2002286.8sbBLyKbDe@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <518397C60809E147AF5323E0420B992E3E9CA829@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 07:18 AM, Laurent Pinchart wrote:
-> On Monday 08 October 2012 17:15:53 Guennadi Liakhovetski wrote:
-...
->> But how do you get the subdev pointer? With the notifier I get it from
->> i2c_get_clientdata(client) and what do you do without it? How do you get
->> to the client?
->>
->>> And can't it get that from DT as well?
->>
->> No, I don't think there is a way to get a device pointer from a DT node.
+On Tue, Oct 09, 2012 at 01:36:50PM +0100, Philip, Avinash wrote:
+(...)
+> > There are at least 2 potential problems when reading an erased page with bitflips:
+> > 
+> > 1. bitflip in data area and no bitflip in spare area (all 0xff)
+> > Your code will not perform any ECC correction.
+> > UBIFS does not like finding bitflips in empty pages, see for instance
+> > http://lists.infradead.org/pipermail/linux-mtd/2012-March/040328.html.
+> 
+> In case of error correction using ELM, syndrome vector calculated after reading
+> Data area & OOB area. So handling of erased page requires a software workaround.
+> I am planning something as follows.
+> 
+> I will first check calculated ecc, which would be zero for non error pages.
+> Then I would check 0xFF in OOB area (for erased page) by checking number of
+> bit zeros in OOB area.  If it is 0xFF (number of bit zero count is zero),
+> set entire page as 0xFF if number of bit zeros is less than max bit flips
+> (8 or 4) by counting the number of bit zero's in data area.
+> 
+> This logic is implemented in fsmc_nand.c
+> 
+> See commit
+> mtd: fsmc: Newly erased page read algorithm implemented
+> 
+> > 
+> > 2. bitflip in ECC bytes in spare area
+> > Your code will report an uncorrectable error upon reading; if this happens while reading a partially programmed UBI block,
+> > I guess you will lose data.
+> 
+> In case of uncorrectable errors due to bit flips in spare area,
+> I can go on checking number of bit zero's in data area + OOB area
+> are less than max bit flips (8 or 4), I can go on setting the entire
+> page as 0xFF.
+> 
 
-I don't believe there's a generic API for this (although perhaps there
-could be), but it can be implemented quite easily.
+OK, sounds reasonable.
+Another simple strategy could use the fact that you add a 14th zero byte to
+the 13 BCH bytes for RBL compatibility:
 
-For example, on Tegra, the SMMU needs to flip a bit in the AHB register
-space in order to enable itself. The SMMU DT node contains a phandle
-that points at the AHB DT node. The SMMU driver parses the phandle and
-passes the DT node pointer to the AHB driver. The AHB driver looks up
-the struct device that was instantiated for that node. See
-drivers/amba/tegra-ahb.c:tegra_ahb_enable_smmu(). There are a few other
-cases of similar code in the kernel, although I can't remember the others!
+Upon reading:
+ - if this 14th byte is zero (*) => page was programmed: perform ECC
+   correction as usual
+ - else, page was not programmed: do not perform ECC, read entire data+spare
+   area, and set it to 0xff if less than 8 or 4 (max bitflips) zero bits
+   were found
+
+(*) for robustness to bitflip in 14th byte, replace condition
+"14th byte is zero" by e.g. "14th byte has less than 4 bits set to 1".
+
+What do you think ?
+
+BR,
+--
+Ivan
