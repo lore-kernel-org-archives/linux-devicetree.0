@@ -1,50 +1,66 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 00/16] pinctrl: samsung: Usability and extensibiltiy
- improvements
-Date: Wed, 10 Oct 2012 17:22:17 +0200
-Message-ID: <1574970.TNZCJfSix7@amdc1227>
-References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
- <CACRpkdbUmM2=vhjhCq_qN2v=8RUDeWV4b8A8oXXPE4e8Z9C7zg@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: dtc: import latest upstream dtc
+Date: Wed, 10 Oct 2012 10:33:31 -0500
+Message-ID: <5075954B.8030008@gmail.com>
+References: <1349827466.26044.16@snotra> <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com> <20121010072401.GA28467@truffula.fritz.box> <50759152.9050407@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdbUmM2=vhjhCq_qN2v=8RUDeWV4b8A8oXXPE4e8Z9C7zg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50759152.9050407@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Scott Wood <scottwood@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 of October 2012 09:46:28 Linus Walleij wrote:
-> On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com> wrote:
-> > This patch series is a work on improving usability and extensibiltiy of
-> > the> 
-> > pinctrl-samsung driver. It consists of three main parts:
-> >  - moving SoC-specific data to device tree
-> >  - converting the driver to use one GPIO chip and one IRQ domain per
-> >  pin bank - introducing generic wake-up interrupt capability
-> >  description
+On 10/10/2012 10:16 AM, Stephen Warren wrote:
+> On 10/10/2012 01:24 AM, David Gibson wrote:
+>> On Tue, Oct 09, 2012 at 10:43:50PM -0600, Warner Losh wrote:
+>>>
+>>> On Oct 9, 2012, at 6:04 PM, Scott Wood wrote:
+>>>
+>>>> On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
+>>>>> On 10/9/2012 11:16 AM, Stephen Warren wrote:
+>>>>>> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
+>>>>>>>>
+>>>>>>>> What more do you think needs discussion re: dtc+cpp?
+>>>>>>>
+>>>>>>> How not to abuse the ever-loving shit out of it? :-)
+>>>>>>
+>>>>>> Perhaps we can just handle this through the regular patch review
+>>>>>> process; I think it may be difficult to define and agree upon exactly
+>>>>>> what "abuse" means ahead of time, but it's probably going to be easy
+>>>>>> enough to recognize it when one sees it?
+>>>>> One of the ways it could get out of hand would be via "include
+>>>>> dependency hell".  People will be tempted to reuse existing .h files
+>>>>> containing pin definitions, which, if history is a guide, will end up
+>>>>> depending on all sorts of other .h files.
+>>>>> Another problem I often face with symbolic names is the difficulty of
+>>>>> figuring out what the numerical values really are (for debugging),
+>>>>> especially when .h files are in different subtrees from the files that
+>>>>> use the definitions, and when they use multiple macro levels and fancy
+>>>>> features like concatenation.  Sometimes I think it's clearer just to
+>>>>> write the number and use a comment to say what it is.
+>>>>
+>>>> Both comments apply just as well to ordinary C code, and I don't think anyone would seriously suggest just using comments instead for C code.
+>>>
+>>> .h files include both structs and defines, which are fine for
+>>> ordinary C code, but problematic in this context.
+>>
+>> Right, cpp should be invoked with similar options to the way it's done
+>> for asm files which have the same problem.  I'm not sure if the
+>> current patch does so.
 > 
-> So can you prepare a patch series which does all but the first
-> bullet to begin with, and a SoC-and register offset patch
-> on top of that as a separate series, because it is controversial?
-> 
-> I don't like that these two things are mingled together like this
-> in an all-or-nothing manner.
-> 
-> So I'm OK with a patch series for bulle (2) and (3) but not (1).
-> 
-> And I'd like to have Thomas A:s ACK on the series too.
-> 
+> That's probably a reasonable idea, although I imagined that people would
+> actually split out the portions of any header file they wanted to use
+> with dtc, so that any headers included by *.dts would only include
+> #defines. Those headers could be used by both dtc and other .h files (or
+> .c files).
 
-I have managed to rework the changes to drop (1). I will send next version 
-of patches tomorrow. It would be nice to have them merged for 3.7, as they 
-are rather important for further work.
+Used by what other files? kernel files? We ultimately want to split out
+dts files from the kernel, so whatever we add needs to be self
+contained. I don't see this as a huge issue though because the whole
+point of the DT data is to move that information out of the kernel. If
+it is needed in both places, then something is wrong.
 
-Moving data from the driver to device tree is not as important, so it might 
-be discussed later.
-
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
+Rob
