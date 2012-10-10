@@ -1,75 +1,62 @@
-From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Subject: Re: [RFC PATCH 1/3] amba-clcd: Add Device Tree support to amba-clcd
- driver
-Date: Wed, 10 Oct 2012 11:13:26 +0100
-Message-ID: <1349864006.3354.35.camel@linaro1.home>
-References: <1348070666-9153-1-git-send-email-ryan.harkin@linaro.org>
- <1348070666-9153-2-git-send-email-ryan.harkin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1348070666-9153-2-git-send-email-ryan.harkin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ryan Harkin <ryan.harkin@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, liviu.dudau@arm.com, linux-arm-kernel@lists.infradead.org, pawel.moll@arm.com
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 0/4 v2] Adding usb2.0 host-phy support for exynos5250
+Date: Wed, 10 Oct 2012 16:12:56 +0530
+Message-ID: <1349865780-7701-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, jg1.han@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com, yulgon.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-09-19 at 17:04 +0100, Ryan Harkin wrote:
-> Add support to parse the display configuration from device tree.
-> 
-> If the board does not provide platform specific functions in the struct
-> clcd_board contained with the amba device info, then defaults are provided
-> by the driver.
-> 
-> The device tree configuration can either ask for a DMA setup or provide a
-> framebuffer address to be remapped into the driver.
-> 
-> Signed-off-by: Ryan Harkin <ryan.harkin@linaro.org>
-> ---
+This patchset is based on the work by Praveen Paneri for
+samsung-usbphy driver:
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/12653
 
-<big snip>
+Changes from v1:
+ - squashed the patch "ARM: S3C64XX: Add phy_type to pmu_isolation" into
+   "usb: phy: samsung: Add host phy support to samsung-phy driver".
+ - moved similar change of adding phy_type to pmu_isolation for exynos from
+   "ARM: Exynos5250: Enabling samsung-usbphy driver" to
+   "usb: phy: samsung: Add host phy support to samsung-phy driver".
+ - moved s5p_usb_phy_pmu_isolation() declaration from
+   "ARM: Exynos5250: Enabling samsung-usbphy driver" to
+   "usb: phy: samsung: Add host phy support to samsung-phy driver".
+ - moved phy_cfg_sel function pointer declaration from
+   "usb: phy: samsung: Add host phy support to samsung-phy driver" to
+   "ARM: Exynos5250: Enabling samsung-usbphy driver".
+ - Replaced the patch subject "usb: s5p-ehci: Adding phy driver support" and
+   "usb: exynos-ohci: Adding phy driver support" with
+   "USB: ehci-s5p: Add phy driver support" and
+   "USB: ohci-exynos: Add phy driver support" respectively.
+ - Corrected the header include order in ehci-s5p and ohci-exynos.
+ - Corrected wrong error path for s5p_ehci_phy_disable() and
+   exynos_ohci_phy_disable() in ehci-s5p and ohci-exynos respectively.
 
->  static int clcdfb_probe(struct amba_device *dev, const struct amba_id *id)
->  {
->  	struct clcd_board *board = dev->dev.platform_data;
->  	struct clcd_fb *fb;
->  	int ret;
->  
-> +#ifdef CONFIG_OF
-> +	if (dev->dev.of_node) {
-> +		const __be32 *prop;
-> +		int len, na, ns;
-> +		phys_addr_t reg_base;
-> +
-> +		na = of_n_addr_cells(dev->dev.of_node);
-> +		ns = of_n_size_cells(dev->dev.of_node);
-> +
-> +		prop = of_get_property(dev->dev.of_node, "reg", &len);
-> +		if (WARN_ON(!prop || len < (na + ns) * sizeof(*prop)))
-> +			return -EINVAL;
-> +		reg_base = of_read_number(prop, na);
-> +
-> +		if (dev->res.start != reg_base)
-> +			return -EINVAL;
+Tested on smdk5250 target with usb-next branch along with arch patches
+for exynos5250:
+http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13042
+http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13048
 
-When the motherboard CLCD is used, the CLCD node is under the iofga node
-and has a reg value equal to the offset from the start of the iofgpa,
-however dev->res.start holds the calculated address of the start of the
-iofga region plus the offset of the clcd, this means that the above
-check fails.
+Vivek Gautam (4):
+  usb: phy: samsung: Add host phy support to samsung-phy driver
+  ARM: Exynos5250: Enabling samsung-usbphy driver
+  USB: ehci-s5p: Add phy driver support
+  USB: ohci-exynos: Add phy driver support
 
-The question is, what is the purpose of this check? Can't we rely on the
-value of dev->res.start being consistent with dev->dev.of_node and so
-just drop all the above code from "const __be32 *prop" onwards?
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   12 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    5 +
+ arch/arm/mach-exynos/Kconfig                       |    1 +
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |   10 +
+ arch/arm/mach-exynos/setup-usb-phy.c               |   45 ++-
+ arch/arm/mach-s3c64xx/setup-usb-phy.c              |    2 +-
+ arch/arm/plat-samsung/include/plat/usb-phy.h       |    3 +-
+ drivers/usb/host/ehci-s5p.c                        |   65 +++-
+ drivers/usb/host/ohci-exynos.c                     |   65 +++-
+ drivers/usb/phy/Kconfig                            |    1 -
+ drivers/usb/phy/samsung-usbphy.c                   |  368 ++++++++++++++++++--
+ include/linux/platform_data/samsung-usbphy.h       |    9 +-
+ 13 files changed, 507 insertions(+), 80 deletions(-)
 
 -- 
-Tixy
+1.7.6.5
