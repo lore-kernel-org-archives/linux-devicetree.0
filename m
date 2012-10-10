@@ -1,65 +1,65 @@
-From: Sasha Levin <sasha.levin@oracle.com>
-Subject: [PATCH] of/mdio: fix build errors when CONFIG_OF isn't set
-Date: Wed, 10 Oct 2012 12:31:23 -0400
-Message-ID: <1349886683-26351-1-git-send-email-sasha.levin@oracle.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, srinivas.kandagatla@st.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sasha Levin <sasha.levin@oracle.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 01/16] ARM: dts: exynos4210: Replace legacy GPIO bank
+ nodes with pinctrl bank nodes
+Date: Wed, 10 Oct 2012 10:27:27 -0600
+Message-ID: <5075A1EF.60900@wwwdotorg.org>
+References: <1349685556-23718-1-git-send-email-t.figa@samsung.com> <1349685556-23718-2-git-send-email-t.figa@samsung.com> <CACRpkdZgH9TSr2uWQW+-8-U7BxJCscQgStVOndGixGmRz74TWw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZgH9TSr2uWQW+-8-U7BxJCscQgStVOndGixGmRz74TWw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Commit f9dc9ac5 ("of/mdio: Add dummy functions in of_mdio.h.") has added
-empty stubs into of_mdio.h which were not static, this causes build errors
-when these symbols were defined across several objects.
+On 10/10/2012 01:26 AM, Linus Walleij wrote:
+> On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> 
+>> Seuqential patches from this series introduce SoC-specific data parsing
+>> from device tree.
+>>
+>> This patch removes legacy GPIO bank nodes from exynos4210.dtsi and
+>> replaces them with nodes and properties required for these patches.
+> 
+> So to be clear:
+> 
+>> +       pinctrl-bank-types {
+>> +               bank_off: bank-off {
+>> +                       samsung,reg-names = "func", "dat", "pud",
+>> +                                               "drv", "conpdn", "pudpdn";
+>> +                       samsung,reg-params = <0x00 4>, <0x04 1>, <0x08 2>,
+>> +                                               <0x0C 2>, <0x10 2>, <0x14 2>;
+>> +               };
+> 
+> This is starting to look like a firmware language, I have mixed
+> feelings about this. Shall this be read:
+> 
+> "Poke 4 into 0x00, poke 1 into 0x04, poke 2 into 0x08" etc?
+> 
+> We really need to discuss this, Grant has already NACK:ed
+> such approaches once.
 
-Fix it by marking those stubs as 'static inline'.
+Well, I don't think he NACK'd Tony Lindgren's generic pinctrl driver,
+which is doing this exact same thing. I did raise the same point about
+Tony's driver when he posted it, but nobody seemed inclined to NACK it
+based on that at the time, IIRC...
 
-Signed-off-by: Sasha Levin <sasha.levin@oracle.com>
----
- include/linux/of_mdio.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+BTW, the idea here is IIRC to create a generic Samsung pinctrl driver
+that works across N different Samsung SoCs, each with different register
+layout, without having to encode the register layout into tables in the
+kernel.
 
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index 6ef49b8..7f17b9c 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -26,17 +26,17 @@ extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
- extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
- 
- #else /* CONFIG_OF */
--int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
-+static inline int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- {
- 	return -ENOSYS;
- }
- 
--struct phy_device *of_phy_find_device(struct device_node *phy_np)
-+static inline struct phy_device *of_phy_find_device(struct device_node *phy_np)
- {
- 	return NULL;
- }
- 
--struct phy_device *of_phy_connect(struct net_device *dev,
-+static inline struct phy_device *of_phy_connect(struct net_device *dev,
- 					 struct device_node *phy_np,
- 					 void (*hndlr)(struct net_device *),
- 					 u32 flags, phy_interface_t iface)
-@@ -44,14 +44,14 @@ struct phy_device *of_phy_connect(struct net_device *dev,
- 	return NULL;
- }
- 
--struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
-+static inline struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
- 					 void (*hndlr)(struct net_device *),
- 					 phy_interface_t iface)
- {
- 	return NULL;
- }
- 
--struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
-+static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
- {
- 	return NULL;
- }
--- 
-1.7.12
+> If you're still going to do this, it is mandatory
+> to NOT use magic hex numbers anymore, because Stephen has
+> merged preprocessor support to the DTC compiler so you
+> can use #defined macros.
+> 
+> See commit:
+> cd296721a9645f9f28800a072490fa15458d1fb7
+
+That feature isn't enabled yet. While dtc has been modified to be able
+to accept input that's been generated/processed by cpp, there is still
+ongoing discussion about how/whether to actually enable *.dts to use
+that feature.
