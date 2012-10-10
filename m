@@ -1,55 +1,54 @@
-From: Hui Wang <jason77.wang@gmail.com>
-Subject: [PATCH v4 RESEND 2/3] Input: add devicetree binding note for
-Date: Wed, 10 Oct 2012 17:12:02 +0800
-Message-ID: <1349860323-12786-3-git-send-email-jason77.wang@gmail.com>
-References: <1349860323-12786-1-git-send-email-jason77.wang@gmail.com>
- <1349860323-12786-2-git-send-email-jason77.wang@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
+Date: Wed, 10 Oct 2012 11:21:15 +0200
+Message-ID: <20121010092115.GW27665@pengutronix.de>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
+ <20121005151057.GA5125@pengutronix.de>
+ <Pine.LNX.4.64.1210051735360.13761@axis700.grange>
+ <20121005160242.GX1322@pengutronix.de>
+ <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
+ <20121010084006.GQ27665@pengutronix.de>
+ <20121010085124.GJ17288@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1349860323-12786-2-git-send-email-jason77.wang@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, jiejing.zhang@freescale.com, shawn.guo@linaro.org
-Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121010085124.GJ17288@opensource.wolfsonmicro.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-The egalax_ts driver needs to get the gpio number of the irq pin,
-and use this gpio to wake up the controller. So add a note
-for this change.
+On Wed, Oct 10, 2012 at 05:51:27PM +0900, Mark Brown wrote:
+> On Wed, Oct 10, 2012 at 10:40:06AM +0200, Sascha Hauer wrote:
+> 
+> > Mark, when do we get the same for aSoC? ;)
+> 
+> Well, I'm unlikely to work on it as I don't have any systems which can
+> boot with device tree.
 
-Ackyed-by Zhang Jiejing <jiejing.zhang@freescale.com>
-Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
-Signed-off-by: Hui Wang <jason77.wang@gmail.com>
----
- .../bindings/input/touchscreen/egalax-ts.txt       |   19 +++++++++++++++++++
- 1 files changed, 19 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+If it's only that I'm sure we could spare a i.MX53 LOCO ;)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-new file mode 100644
-index 0000000..df70318
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-@@ -0,0 +1,19 @@
-+* EETI eGalax Multiple Touch Controller
-+
-+Required properties:
-+- compatible: must be "eeti,egalax_ts"
-+- reg: i2c slave address
-+- interrupt-parent: the phandle for the interrupt controller
-+- interrupts: touch controller interrupt
-+- wakeup-gpios: the gpio pin to be used for waking up the controller
-+  as well as uased as irq pin
-+
-+Example:
-+
-+	egalax_ts@04 {
-+		compatible = "eeti,egalax_ts";
-+		reg = <0x04>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <9 2>;
-+		wakeup-gpios = <&gpio1 9 0>;
-+	};
+> 
+> The big, big problem you've got doing this is lots of dynamic changes at 
+> runtime and in general complicated systems.  It's trivial to describe
+> the physical links but they don't provide anything like enough
+> information to use things.  Quite frankly I'm not sure device tree is a
+> useful investment of time for advanced audio systems anyway, it's really
+> not solving any problems people actually have.
+
+Right now the i.MX audmux binding is only enough to say which ports
+should be connected, but not which format should be used. Just today
+we had the problem where a codec has two DAIs and wanted to add the
+information on which port our SSI unit is connected to the devicetree.
+
+So I think it's worthwile to do, but that would be a big big task...
+
+Sascha
+
 -- 
-1.7.6
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
