@@ -1,62 +1,42 @@
-From: Mauro Carvalho Chehab <mchehab@redhat.com>
-Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
-Date: Wed, 10 Oct 2012 10:45:22 -0300
-Message-ID: <20121010104522.53dabe5e@redhat.com>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
-	<201210051323.45571.hverkuil@xs4all.nl>
-	<Pine.LNX.4.64.1210081306240.12203@axis700.grange>
-	<1744244.z7BseID5vc@avalon>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH] ARM: OMAP2+: gpmc: Fix kernel BUG for DT boot mode
+Date: Wed, 10 Oct 2012 10:00:27 -0400
+Message-ID: <20121010140027.GB13724@beef>
+References: <1349773040-8204-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1744244.z7BseID5vc@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1349773040-8204-1-git-send-email-hvaibhav@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: linux-omap@vger.kernel.org, Afzal Mohammed <afzal@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 10 Oct 2012 14:54 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> escreveu:
-
-> > Also, ideally OF-compatible (I2C) drivers should run with no platform
-> > data, but soc-camera is using I2C device platform data intensively. To
-> > avoid modifying the soc-camera core and all drivers, I also trigger on the
-> > BUS_NOTIFY_BIND_DRIVER event and assign a reference to the dynamically
-> > created platform data to the I2C device. Would we also want to do this for
-> > all V4L2 bridge drivers? We could call this a "prepare" callback or
-> > something similar...
+On Tue, Oct 09, 2012 at 02:27:20PM +0530, Vaibhav Hiremath wrote:
+> With recent changes in omap gpmc driver code, in case of DT
+> boot mode, where bootloader does not configure gpmc cs space
+> will result into kernel BUG() inside gpmc_mem_init() function,
+> as gpmc cs0 gpmc_config7[0].csvalid bit is set to '1' and
+> gpmc_config7[0].baseaddress is set to '0' on reset.
 > 
-> If that's going to be an interim solution only I'm fine with keeping it in 
-> soc-camera.
+> This use-case is applicable for any board/EVM which doesn't have
+> any peripheral connected to gpmc cs0, for example BeagleXM and
+> BeagleBone, so DT boot mode fails.
+> 
+> This patch adds of_have_populated_dt() check before creating
+> device, so that for DT boot mode, gpmc probe will not be called
+> which is expected behavior, as gpmc is not supported yet from DT.
+> 
+> Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+> Cc: Afzal Mohammed <afzal@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc Paul Walmsley <paul@pwsan.com>
+> ---
+> This should go in for rc1, as this breaks AM33xx boot.
 
-I'm far from being an OF expert, but why do we need to export I2C devices to
-DT/OF? On my understanding, it is the bridge code that should be responsible
-for detecting, binding and initializing the proper I2C devices. On several
-cases, it is impossible or it would cause lots of ugly hacks if we ever try
-to move away from platform data stuff, as only the bridge driver knows what
-initialization is needed for an specific I2C driver.
+Fixes BeagleBone on mainline.
 
-To make things more complex, it is expected that most I2C drivers to be arch
-independent, and they should be allowed to be used by a personal computer
-or by an embedded device. 
+Tested-by: Matt Porter <mporter@ti.com>
 
-Let me give 2 such examples:
-
-	- ir-i2c-kbd driver supports lots of IR devices. Platform_data is needed
-to specify what hardware will actually be used, and what should be the default
-Remote Controller keymap;
-
-	- Sensor drivers like ov2940 is needed by soc_camera and by other
-webcam drivers like em28xx. The setup for em28xx should be completely different
-than the one for soc_camera: the initial registers init sequence is different
-for both. As several registers there aren't properly documented, there's no
-easy way to parametrize the configuration.
-
-So, for me, we should not expose the I2C devices directly on OF; it should,
-instead, see just the bridge, and let the bridge to map the needed I2C devices
-using the needed platform_data.
-
--- 
-Regards,
-Mauro
+-Matt
