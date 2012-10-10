@@ -1,57 +1,57 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 00/16] pinctrl: samsung: Usability and extensibiltiy
- improvements
-Date: Wed, 10 Oct 2012 11:04:13 +0200
-Message-ID: <2232733.TBZrPdcAAF@amdc1227>
-References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
- <CACRpkdbUmM2=vhjhCq_qN2v=8RUDeWV4b8A8oXXPE4e8Z9C7zg@mail.gmail.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: dtc: import latest upstream dtc
+Date: Wed, 10 Oct 2012 18:24:01 +1100
+Message-ID: <20121010072401.GA28467@truffula.fritz.box>
+References: <1349827466.26044.16@snotra>
+ <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <CACRpkdbUmM2=vhjhCq_qN2v=8RUDeWV4b8A8oXXPE4e8Z9C7zg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Warner Losh <imp@bsdimp.com>
+Cc: Scott Wood <scottwood@freescale.com>, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 of October 2012 09:46:28 Linus Walleij wrote:
-> On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > This patch series is a work on improving usability and extensibiltiy of
-> > the> 
-> > pinctrl-samsung driver. It consists of three main parts:
-> >  - moving SoC-specific data to device tree
-> >  - converting the driver to use one GPIO chip and one IRQ domain per
-> >  pin bank - introducing generic wake-up interrupt capability
-> >  description
+On Tue, Oct 09, 2012 at 10:43:50PM -0600, Warner Losh wrote:
 > 
-> So can you prepare a patch series which does all but the first
-> bullet to begin with, and a SoC-and register offset patch
-> on top of that as a separate series, because it is controversial?
+> On Oct 9, 2012, at 6:04 PM, Scott Wood wrote:
 > 
-> I don't like that these two things are mingled together like this
-> in an all-or-nothing manner.
+> > On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
+> >> On 10/9/2012 11:16 AM, Stephen Warren wrote:
+> >> > On 10/01/2012 12:39 PM, Jon Loeliger wrote:
+> >> >>>
+> >> >>> What more do you think needs discussion re: dtc+cpp?
+> >> >>
+> >> >> How not to abuse the ever-loving shit out of it? :-)
+> >> >
+> >> > Perhaps we can just handle this through the regular patch review
+> >> > process; I think it may be difficult to define and agree upon exactly
+> >> > what "abuse" means ahead of time, but it's probably going to be easy
+> >> > enough to recognize it when one sees it?
+> >> One of the ways it could get out of hand would be via "include
+> >> dependency hell".  People will be tempted to reuse existing .h files
+> >> containing pin definitions, which, if history is a guide, will end up
+> >> depending on all sorts of other .h files.
+> >> Another problem I often face with symbolic names is the difficulty of
+> >> figuring out what the numerical values really are (for debugging),
+> >> especially when .h files are in different subtrees from the files that
+> >> use the definitions, and when they use multiple macro levels and fancy
+> >> features like concatenation.  Sometimes I think it's clearer just to
+> >> write the number and use a comment to say what it is.
+> > 
+> > Both comments apply just as well to ordinary C code, and I don't think anyone would seriously suggest just using comments instead for C code.
 > 
-> So I'm OK with a patch series for bulle (2) and (3) but not (1).
+> .h files include both structs and defines, which are fine for
+> ordinary C code, but problematic in this context.
 
-As I already stated in my other replies, patches for (2) and (3) depend on 
-(1), because current architecture of the driver makes it hard to implement 
-in an elegant way, so some code would have to be reworked anyway.
+Right, cpp should be invoked with similar options to the way it's done
+for asm files which have the same problem.  I'm not sure if the
+current patch does so.
 
-I should still have some preliminary work on this in one of my branches in 
-my working tree, but it was heavily incomplete, as it turned out that using 
-DT would simplify some things.
-
-Best regards,
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
