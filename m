@@ -1,72 +1,99 @@
 From: Rob Herring <robherring2@gmail.com>
 Subject: Re: dtc: import latest upstream dtc
-Date: Wed, 10 Oct 2012 12:09:12 -0500
-Message-ID: <5075ABB8.103@gmail.com>
-References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org> <5069C042.40209@gmail.com> <5069C11C.6040505@wwwdotorg.org> <5069D946.1060502@gmail.com> <5069E1F0.5070902@wwwdotorg.org> <E1TIktZ-0000U4-Qh@jdl.com> <50749441.8030307@wwwdotorg.org>
+Date: Wed, 10 Oct 2012 12:18:43 -0500
+Message-ID: <5075ADF3.4040407@gmail.com>
+References: <1349827466.26044.16@snotra> <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com> <20121010072401.GA28467@truffula.fritz.box> <50759152.9050407@wwwdotorg.org> <5075954B.8030008@gmail.com> <5075A00B.2040509@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50749441.8030307@wwwdotorg.org>
+In-Reply-To: <5075A00B.2040509@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Jon Loeliger <jdl@jdl.com>, Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Scott Wood <scottwood@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2012 04:16 PM, Stephen Warren wrote:
-> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
+On 10/10/2012 11:19 AM, Stephen Warren wrote:
+> On 10/10/2012 09:33 AM, Rob Herring wrote:
+>> On 10/10/2012 10:16 AM, Stephen Warren wrote:
+>>> On 10/10/2012 01:24 AM, David Gibson wrote:
+>>>> On Tue, Oct 09, 2012 at 10:43:50PM -0600, Warner Losh wrote:
+>>>>>
+>>>>> On Oct 9, 2012, at 6:04 PM, Scott Wood wrote:
+>>>>>
+>>>>>> On 10/09/2012 06:20:53 PM, Mitch Bradley wrote:
+>>>>>>> On 10/9/2012 11:16 AM, Stephen Warren wrote:
+>>>>>>>> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
+>>>>>>>>>>
+>>>>>>>>>> What more do you think needs discussion re: dtc+cpp?
+>>>>>>>>>
+>>>>>>>>> How not to abuse the ever-loving shit out of it? :-)
+>>>>>>>>
+>>>>>>>> Perhaps we can just handle this through the regular patch review
+>>>>>>>> process; I think it may be difficult to define and agree upon exactly
+>>>>>>>> what "abuse" means ahead of time, but it's probably going to be easy
+>>>>>>>> enough to recognize it when one sees it?
+>>>>>>> One of the ways it could get out of hand would be via "include
+>>>>>>> dependency hell".  People will be tempted to reuse existing .h files
+>>>>>>> containing pin definitions, which, if history is a guide, will end up
+>>>>>>> depending on all sorts of other .h files.
+>>>>>>> Another problem I often face with symbolic names is the difficulty of
+>>>>>>> figuring out what the numerical values really are (for debugging),
+>>>>>>> especially when .h files are in different subtrees from the files that
+>>>>>>> use the definitions, and when they use multiple macro levels and fancy
+>>>>>>> features like concatenation.  Sometimes I think it's clearer just to
+>>>>>>> write the number and use a comment to say what it is.
+>>>>>>
+>>>>>> Both comments apply just as well to ordinary C code, and I don't think anyone would seriously suggest just using comments instead for C code.
+>>>>>
+>>>>> .h files include both structs and defines, which are fine for
+>>>>> ordinary C code, but problematic in this context.
+>>>>
+>>>> Right, cpp should be invoked with similar options to the way it's done
+>>>> for asm files which have the same problem.  I'm not sure if the
+>>>> current patch does so.
 >>>
->>> What more do you think needs discussion re: dtc+cpp?
+>>> That's probably a reasonable idea, although I imagined that people would
+>>> actually split out the portions of any header file they wanted to use
+>>> with dtc, so that any headers included by *.dts would only include
+>>> #defines. Those headers could be used by both dtc and other .h files (or
+>>> .c files).
 >>
->> How not to abuse the ever-loving shit out of it? :-)
+>> Used by what other files? kernel files? We ultimately want to split out
+>> dts files from the kernel, so whatever we add needs to be self
+>> contained. I don't see this as a huge issue though because the whole
+>> point of the DT data is to move that information out of the kernel. If
+>> it is needed in both places, then something is wrong.
 > 
-> Perhaps we can just handle this through the regular patch review
-> process; I think it may be difficult to define and agree upon exactly
-> what "abuse" means ahead of time, but it's probably going to be easy
-> enough to recognize it when one sees it?
-
-Rather than repeating things over and over in reviews, we should
-document at least rules we can easily agree on and then add to it when
-people get "creative." Also, I can't keep up with every single binding
-review as is, and this could just add another level of complexity to the
-review. A few off the top of my head and from the thread discussion:
-
-- Headers must be self contained with no outside (i.e. libc, kernel,
-etc.) header dependencies.
-- No kernel kconfig option usage
-- No gcc built-in define usage
-- No unused items (i.e. externs, structs, etc.)
-- No macro concatenation
-- No macros for strings or property names
-
-Do we further restrict things to say defines are only numbers? One could
-start to define complex macros to build the nodes themselves. If each
-platform does this slightly differently, it will become difficult to
-review and maintain. Then we will be doing dts consolidation. The fact
-that we have some fixed structure and each SOC is not free to do things
-their own way makes things easier to maintain. You don't have that in
-the kernel across platforms. For example, look how register defines and
-static mappings or platform device creation are done. They are all
-similar, but yet slightly different. That makes doing changes across
-platforms more difficult.
-
-> I imagine the most common usage will simply be a bunch of:
+> One example is the IDs of the GPIOs, e.g.:
 > 
-> #define TEGRA_GPIO_PB0 32
-> #define TEGRA_GPIO_INT_LEVEL_LOW 8
+> #define TEGRA_PIN_VI_GP6_PA0            _GPIO(0)
+> #define TEGRA_PIN_UART3_CTS_N_PA1       _GPIO(1)
+> #define TEGRA_PIN_DAP2_FS_PA2           _GPIO(2)
+> #define TEGRA_PIN_DAP2_SCLK_PA3         _GPIO(3)
 > 
-> / {
->     xxx {
->         interrupts = <TEGRA_GPIO_PB0 TEGRA_GPIO_INT_LEVEL_LOW>;
-> 
-> and similarly, simple math:
-> 
->     something = <((FOO << XXX_SHIFT) | (BAR << YYY_SHIFT))>;
-> 
+> Those defines are useful to both the .dts files (so named constants can
+> be used) and the pinctrl driver. By using the same header file, we
+> guarantee that the .dts files and pinctrl driver use the exact same
+> naming for the pins; the pin naming/numbering being defined by the DT
+> binding more than anything else.
 
-These are all perfectly fine and sane use, but if we don't restrict
-things then the next step is this:
+If pinctrl needs to get a matching name, then it should get it from the
+dtb. We should not have 2 sources of data. That is just broken.
 
-#define PROP_SOMETHING(v) (something = <(v)>)
+> 
+> It'd be similarly useful to share GPIO or interrupt flag definitions,
+> etc. etc.
+> 
+> We could do something like we do for dtc today, where there's an
+> external repository for *.dts (and required *.h), yet those *.h are
+> duplicated into the kernel tree as needed by drivers.
+
+So as long as we only need to sync up about once a year that's fine
+because we have yet to prove that doing it frequently for dtc will be
+easy and painless.
+
+I'd like fewer things to copy around, not more. If you have some
+self-contained platform defines to copy, then it is your problem.
 
 Rob
