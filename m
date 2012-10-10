@@ -1,56 +1,122 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 04/14] media: add V4L2 DT binding documentation
-Date: Wed, 10 Oct 2012 19:46:16 +0900
-Message-ID: <20121010104615.GK17288@opensource.wolfsonmicro.com>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <1348754853-28619-5-git-send-email-g.liakhovetski@gmx.de>
- <20121005151057.GA5125@pengutronix.de>
- <Pine.LNX.4.64.1210051735360.13761@axis700.grange>
- <20121005160242.GX1322@pengutronix.de>
- <Pine.LNX.4.64.1210080950350.11034@axis700.grange>
- <20121010084006.GQ27665@pengutronix.de>
- <20121010085124.GJ17288@opensource.wolfsonmicro.com>
- <20121010092115.GW27665@pengutronix.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Wed, 10 Oct 2012 14:54 +0200
+Message-ID: <1744244.z7BseID5vc@avalon>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <201210051323.45571.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121010092115.GW27665@pengutronix.de>
+In-Reply-To: <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2012 at 11:21:15AM +0200, Sascha Hauer wrote:
-> On Wed, Oct 10, 2012 at 05:51:27PM +0900, Mark Brown wrote:
+Hi Guennadi,
 
-> > Well, I'm unlikely to work on it as I don't have any systems which can
-> > boot with device tree.
+On Monday 08 October 2012 14:23:25 Guennadi Liakhovetski wrote:
+> On Fri, 5 Oct 2012, Hans Verkuil wrote:
+> 
+> [snip]
+> 
+> > I think the soc_camera patches should be left out for now. I suspect that
+> > by adding core support for async i2c handling first,
+> 
+> Ok, let's think, what this meacs - async I2C in media / V4L2 core.
+> 
+> The main reason for our probing order problem is the master clock,
+> typically supplied from the camera bridge to I2C subdevices, which we only
+> want to start when necessary, i.e. when accessing the subdevice. And the
+> subdevice driver needs that clock running during its .probe() to be able
+> to access and verify or configure the hardware. Our current solution is to
+> not register I2C subdevices from the platform data, as is usual for all
+> I2C devices, but from the bridge driver and only after it has switched on
+> the master clock. After the subdevice driver has completed its probing we
+> switch the clock back off until the subdevice has to be activated, e.g.
+> for video capture.
+> 
+> Also important - when we want to unregister the bridge driver we just also
+> unregister the I2C device.
+> 
+> Now, to reverse the whole thing and to allow I2C devices be registered as
+> usual - via platform data or OF, first of all we have to teach I2C
+> subdevice drivers to recognise the "too early" situation and request
+> deferred probing in such a case. Then it will be reprobed after each new
+> successful probe or unregister on the system. After the bridge driver has
+> successfully probed the subdevice driver will be re-probed and at that
+> time it should succeed. Now, there is a problem here too: who should
+> switch on and off the master clock?
+> 
+> If we do it from the bridge driver, we could install an I2C bus-notifier,
+> _before_ the subdevice driver is probed, i.e. upon the
+> BUS_NOTIFY_BIND_DRIVER event we could turn on the clock. If subdevice
+> probing was successful, we can then wait for the BUS_NOTIFY_BOUND_DRIVER
+> event to switch the clock back off. BUT - if the subdevice fails probing?
+> How do we find out about that and turn the clock back off? There is no
+> notification event for that... Possible solutions:
+> 
+> 1. timer - ugly and unreliable.
+> 2. add a "probing failed" notifier event to the device core - would this
+>    be accepted?
+> 3. let the subdevice turn the master clock on and off for the duration of
+>    probing.
+> 
+> My vote goes for (3). Ideally this should be done using the generic clock
+> framework. But can we really expect all drivers and platforms to switch to
+> it quickly enough? If not, we need a V4L2-specific callback from subdevice
+> drivers to bridge drivers to turn the clock on and off. That's what I've
+> done "temporarily" in this patch series for soc-camera.
 
-> If it's only that I'm sure we could spare a i.MX53 LOCO ;)
+I vote for (3) as well, using the generic clock framework. You're right that 
+we need an interim solution, as not all platforms will switch quickly enough. 
+I'm fine with that interim solution being a bit hackish, as long as we push 
+new drivers towards the right solution.
 
-Well, something with Wolfson hardware would be helpful.
+> Suppose we decide to do the same for V4L2 centrally - add call-backs. Then
+> we can think what else we need to add to V4L2 to support asynchronous
+> subdevice driver probing.
+> 
+> 1. We'll have to create these V4L2 clock start and stop functions, that,
+> supplied (in case of I2C) with client address and adapter number will find
+> the correct v4l2_device instance and call its callbacks.
+> 
+> 2. The I2C notifier. I'm not sure, whether this one should be common. Of
+> common tasks we have to refcount the I2C adapter and register the
+> subdevice. Then we'd have to call the bridge driver's callback. Is it
+> worth it doing this centrally or rather allow individual drivers to do
+> that themselves?
 
-> > The big, big problem you've got doing this is lots of dynamic changes at 
-> > runtime and in general complicated systems.  It's trivial to describe
-> > the physical links but they don't provide anything like enough
-> > information to use things.  Quite frankly I'm not sure device tree is a
-> > useful investment of time for advanced audio systems anyway, it's really
-> > not solving any problems people actually have.
+What about going through board code for platforms that don't support the 
+generic clock framework yet ? That's what the OMAP3 ISP driver does. DT 
+support would then require the generic clock framework.
 
-> Right now the i.MX audmux binding is only enough to say which ports
-> should be connected, but not which format should be used. Just today
+> Also, ideally OF-compatible (I2C) drivers should run with no platform
+> data, but soc-camera is using I2C device platform data intensively. To
+> avoid modifying the soc-camera core and all drivers, I also trigger on the
+> BUS_NOTIFY_BIND_DRIVER event and assign a reference to the dynamically
+> created platform data to the I2C device. Would we also want to do this for
+> all V4L2 bridge drivers? We could call this a "prepare" callback or
+> something similar...
 
-Why should that be in DT?  For most things it's either fixed by the
-hardware or makes no odds.
+If that's going to be an interim solution only I'm fine with keeping it in 
+soc-camera.
 
-> we had the problem where a codec has two DAIs and wanted to add the
-> information on which port our SSI unit is connected to the devicetree.
+> 3. Bridge driver unregistering. Here we have to put the subdevice driver
+> back into the deferred-probe state... Ugliness alert: I'm doing this by
+> unregistering and re-registering the I2C device... For that I also have to
+> create a copy of devices I2C board-info data. Lovely, ain't it? This I'd
+> be happy to move to the V4L2 core;-)
 
-There's nothing stopping you doing that right now, the existing DT 
+That's the ugly part. As soon as the I2C device starts using resources 
+provided by the bridge, those resources can't disappear behind the scene. 
+Reference counting must ensure that the bridge driver doesn't get removed. And 
+that's where it gets bad: the bridge uses resources provided by the I2C 
+driver, through the subdev operations. This creates circular dependencies that 
+we need to break somehow. I currently have no solution for that problem.
 
-> So I think it's worthwile to do, but that would be a big big task...
+-- 
+Regards,
 
-For simple devices there's already stuff there and it's not hard to add
-new machine bindings, it's trying to cover the general case that's far
-too much effort.
+Laurent Pinchart
+
