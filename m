@@ -1,80 +1,79 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: dtc: import latest upstream dtc
-Date: Wed, 10 Oct 2012 08:56:11 -1000
-Message-ID: <5075C4CB.8020409@firmworks.com>
-References: <1348867559-2495-1-git-send-email-swarren@wwwdotorg.org>
- <5069C042.40209@gmail.com> <5069C11C.6040505@wwwdotorg.org>
- <5069D946.1060502@gmail.com> <5069E1F0.5070902@wwwdotorg.org>
- <E1TIktZ-0000U4-Qh@jdl.com> <50749441.8030307@wwwdotorg.org>
- <5075ABB8.103@gmail.com> <5075BD21.2070106@firmworks.com>
- <5075C254.4040304@wwwdotorg.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Wed, 10 Oct 2012 22:23:35 +0200
+Message-ID: <5075D947.3080903@gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <5073FDC8.8090909@samsung.com> <201210091300.24124.hverkuil@xs4all.nl> <1398413.j3yGqyN4Du@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5075C254.4040304-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1398413.j3yGqyN4Du@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 8:45 AM, Stephen Warren wrote:
-> On 10/10/2012 12:23 PM, Mitch Bradley wrote:
->> On 10/10/2012 7:09 AM, Rob Herring wrote:
->>> On 10/09/2012 04:16 PM, Stephen Warren wrote:
->>>> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
->>>>>>
->>>>>> What more do you think needs discussion re: dtc+cpp?
->>>>>
->>>>> How not to abuse the ever-loving shit out of it? :-)
+Hi Laurent,
+
+On 10/10/2012 03:25 PM, Laurent Pinchart wrote:
+> On Tuesday 09 October 2012 13:00:24 Hans Verkuil wrote:
+>> On Tue 9 October 2012 12:34:48 Sylwester Nawrocki wrote:
+>>> On 10/08/2012 11:40 AM, Guennadi Liakhovetski wrote:
+>>>> On Fri, 5 Oct 2012, Sylwester Nawrocki wrote:
+>>>>> I would really like to see more than one user until we add any core
+>>>>> code. No that it couldn't be changed afterwards, but it would be nice
+>>>>> to ensure the concepts are right and proven in real life.
 >>>>
->>>> Perhaps we can just handle this through the regular patch review
->>>> process; I think it may be difficult to define and agree upon exactly
->>>> what "abuse" means ahead of time, but it's probably going to be easy
->>>> enough to recognize it when one sees it?
+>>>> Unfortunately I don't have any more systems on which I could easily
+>>>> enough try this. I've got a beagleboard with a camera, but I don't think
+>>>> I'm a particularly good candidate for implementing DT support for OMAP3
+>>>> camera drivers;-) Apart from that I've only got soc-camera based
+>>>> systems, of which none are _really_ DT-ready... At best I could try an
+>>>> i.MX31 based board, but that doesn't have a very well developed .dts and
+>>>> that would be soc-camera too anyway.
 >>>
->>> Rather than repeating things over and over in reviews, we should
->>> document at least rules we can easily agree on and then add to it when
->>> people get "creative." Also, I can't keep up with every single binding
->>> review as is, and this could just add another level of complexity to the
->>> review. A few off the top of my head and from the thread discussion:
+>>> I certainly wouldn't expect you would do all the job. I mean it would be
+>>> good to possibly have some other developers adding device tree support
+>>> based on that new bindings and new infrastructure related to them.
+> 
+> As I mentioned in another e-mail, I plan to work on DT support for the OMAP3
+> ISP, but I first need generic clock framework support for OMAP3.
+
+OK, let's hope it's available soon.
+
+>>> There have been recently some progress in device tree support for Exynos
+>>> SoCs, including common clock framework support and we hope to add FDT
+>>> support to the Samsung SoC camera devices during this kernel cycle, based
+>>> on the newly designed media bindings. This is going to be a second
+>>> attempt, after our initial RFC from May [1]. It would still be SoC
+>>> specific implementation, but not soc-camera based.
 >>>
->>> - Headers must be self contained with no outside (i.e. libc, kernel,
->>> etc.) header dependencies.
->>> - No kernel kconfig option usage
->>> - No gcc built-in define usage
->>> - No unused items (i.e. externs, structs, etc.)
->>> - No macro concatenation
->>> - No macros for strings or property names
+>>> I wasn't a big fan of this asynchronous sub-devices probing, but it now
+>>> seems to be a most complete solution to me. I think it just need to be
+>>> done right at the v4l2-core so individual drivers don't get complicated
+>>> too much.
 >>
->> Instead of making a bunch of rules about how you can only use a small
->> subset of cpp, why not just add a "define name value" command to DTC?
+>> After investigating this some more I think I agree with that. There are some
+>> things where we should probably ask for advice from the i2c subsystem devs,
+>> I'm thinking of putting the driver back into the deferred-probe state in
+>> particular.
 > 
-> I implemented a patch to do exactly that, and it was rejected because it
-> only solved part of the problem (named constants) and not the reset (a
-> completely generic macro language/... within dtc). The argument was that
-> defining just the named constant syntax on its own without knowing what
-> the unspecified future macro language will look like might result in the
-> named constant syntax not fitting into it.
-> 
-> That all said, I now think that using cpp is actually a much better
-> solution that adding yet more dtc-specific syntax. The *huge* benefit
-> here is that it allows you to share .h files between *.dts and C code,
-> so you don't have to write out the same set of #defines once in dtc
-> syntax and once in cpp syntax.
+> We might actually not need that, it might be easier to handle the circular
+> dependency problem from the other end. We could add a way (ioctl, sysfs, ...)
+> to force a V4L2 bridge driver to release its subdevs. Once done, the subdev
+> driver could be unloaded and/or the subdev device unregistered, which would
+> release the resources used by the subdev, such as clocks. The bridge driver
+> could then be unregistered.
 
-... and it imposes an equally *huge* restriction that you have to
-restrict the .h file to avoid avoid C constructs.  That can be done, but
-I've personally experienced a lot of headaches when trying to share .h
-files between different languages.
+That sounds like an option. Perhaps it could be done by v4l2-core, e.g. a sysfs 
+entry could be registered for a media or video device if driver requests it.
+I'm not sure if we should allow subdevs in "released" state, perhaps it's better
+to just unregister subdevs entirely right away ?
 
-> 
+>> Creating v4l2-core support for this is crucial as it is quite complex and
+>> without core support this is going to be a nightmare for drivers.
+
+--
+
+Regards,
+Sylwester
