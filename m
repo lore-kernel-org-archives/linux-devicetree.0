@@ -1,50 +1,54 @@
 From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 02/16] pinctrl: exynos: Parse wakeup-eint parameters from DT
-Date: Wed, 10 Oct 2012 10:23:53 +0200
-Message-ID: <2083377.E0rtGYPSc2@amdc1227>
+Subject: Re: [PATCH 03/16] pinctrl: samsung: Detect and handle unsupported
+ configuration types
+Date: Wed, 10 Oct 2012 10:25:06 +0200
+Message-ID: <2300237.byLt0lYsM2@amdc1227>
 References: <1349685556-23718-1-git-send-email-t.figa@samsung.com>
- <1349685556-23718-3-git-send-email-t.figa@samsung.com>
- <CACRpkdZ97BRHo1Usen-D9CnojU4HLqkNb5CKNOmx7uP1A9ttgw@mail.gmail.com>
+ <1349685556-23718-4-git-send-email-t.figa@samsung.com>
+ <CACRpkda8mBsetmkWSfed0VpGA_Aw4vNUSGZcTx=bY8LDRzxFdA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdZ97BRHo1Usen-D9CnojU4HLqkNb5CKNOmx7uP1A9ttgw@mail.gmail.com>
+In-reply-to: <CACRpkda8mBsetmkWSfed0VpGA_Aw4vNUSGZcTx=bY8LDRzxFdA@mail.gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, swarren@wwwdotorg.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 of October 2012 09:18:51 Linus Walleij wrote:
+On Wednesday 10 of October 2012 09:37:42 Linus Walleij wrote:
 > On Mon, Oct 8, 2012 at 10:39 AM, Tomasz Figa <t.figa@samsung.com> wrote:
-> > This patch converts the pinctrl-exynos driver to parse wakeup interrupt
-> > count and register offsets from device tree. It reduces the amount of
-> > static platform-specific data and facilitates adding further SoC
-> > variants to pinctrl-samsung driver.
+> > This patch modifies the pinctrl-samsung driver to detect when width of
+> > a
+> > bit field is set to zero (which means that such configuraton type is
+> > not
+> > supported) and return an error instead of trying to modify an
+> > inexistent
+> > register.
+> > 
+> > Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> > ---
+> > 
+> >  drivers/pinctrl/pinctrl-samsung.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/pinctrl/pinctrl-samsung.c
+> > b/drivers/pinctrl/pinctrl-samsung.c index dd108a9..c660fa5 100644
+> > --- a/drivers/pinctrl/pinctrl-samsung.c
+> > +++ b/drivers/pinctrl/pinctrl-samsung.c
+> > @@ -391,6 +391,9 @@ static int samsung_pinconf_rw(struct pinctrl_dev
+> > *pctldev, unsigned int pin,> 
+> >                 return -EINVAL;
+> >         
+> >         }
+> > 
+> > +       if (!width)
+> > +               return -EINVAL;
+> > +
 > 
-> So these are:
-> > +       ret = of_property_read_u32(wkup_np, "samsung,weint-count",
-> > &val); +       ret = of_property_read_u32(wkup_np,
-> > "samsung,weint-con", &val); +       ret =
-> > of_property_read_u32(wkup_np, "samsung,weint-mask", &val); +       ret
-> > = of_property_read_u32(wkup_np, "samsung,weint-pend", &val);
-> Are these all four register offsets?
-> 
-> I don't think it's proper for the device tree to contain register
-> offsets.
-> 
-> Base address, "regs" property, yes. Individual registers, no. That just
-> makes the code hard to read and compare to the datasheet.
-> 
-> Or what are you aiming at here?
+> Can this patch be applied in isolation from the others?
 
-See my reply to your comments for patch 1. I think it should explain how 
-these values are used.
-
-One thing worth mentioning is that registers for GPIO interrupts and wakeup 
-interrupts can be located at different areas of pin controller address 
-space, so these offsets have to be specified for both (using geint-* and 
-weint-* properties).
+Yes, I don't see any problem here.
 
 Best regards,
 -- 
