@@ -1,83 +1,100 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: dtc: import latest upstream dtc
-Date: Thu, 11 Oct 2012 15:11:38 +1000
-Message-ID: <20121011051138.GB25270@truffula.fritz.box>
-References: <1349827466.26044.16@snotra>
- <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com>
- <20121010072401.GA28467@truffula.fritz.box>
- <50759152.9050407@wwwdotorg.org> <5075954B.8030008@gmail.com>
- <20121010231623.GG28467@truffula.fritz.box>
- <50762409.5060105@firmworks.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH 4/4] mtd: nand: omap2: Add data correction support
+Date: Thu, 11 Oct 2012 05:27:13 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3E9CB751@DBDE01.ent.ti.com>
+References: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
+ <1349274589-11389-5-git-send-email-avinashphilip@ti.com>
+ <20121003192044.GB27502@parrot.com>
+ <518397C60809E147AF5323E0420B992E3E9B8A65@DBDE01.ent.ti.com>
+ <20121005142338.GA7199@parrot.com>
+ <518397C60809E147AF5323E0420B992E3E9CA829@DBDE01.ent.ti.com>
+ <20121010170806.GB13585@parrot.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50762409.5060105-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121010170806.GB13585@parrot.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Ivan Djelic <ivan.djelic@parrot.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2012 at 03:42:33PM -1000, Mitch Bradley wrote:
-> On 10/10/2012 1:16 PM, David Gibson wrote:
-> > On Wed, Oct 10, 2012 at 10:33:31AM -0500, Rob Herring wrote:
-> >> On 10/10/2012 10:16 AM, Stephen Warren wrote:
-> >>> On 10/10/2012 01:24 AM, David Gibson wrote:
-> >>>> On Tue, Oct 09, 2012 at 10:43:50PM -0600, Warner Losh wrote:
-> >>>>> On Oct 9, 2012, at 6:04 PM, Scott Wood wrote:
-> > [snip]
-> >>> That's probably a reasonable idea, although I imagined that people would
-> >>> actually split out the portions of any header file they wanted to use
-> >>> with dtc, so that any headers included by *.dts would only include
-> >>> #defines. Those headers could be used by both dtc and other .h files (or
-> >>> .c files).
-> >>
-> >> Used by what other files? kernel files? We ultimately want to split out
-> >> dts files from the kernel, so whatever we add needs to be self
-> >> contained. I don't see this as a huge issue though because the whole
-> >> point of the DT data is to move that information out of the kernel. If
-> >> it is needed in both places, then something is wrong.
+On Wed, Oct 10, 2012 at 22:38:06, Ivan Djelic wrote:
+> On Tue, Oct 09, 2012 at 01:36:50PM +0100, Philip, Avinash wrote:
+> (...)
+> > > There are at least 2 potential problems when reading an erased page with bitflips:
+> > > 
+> > > 1. bitflip in data area and no bitflip in spare area (all 0xff)
+> > > Your code will not perform any ECC correction.
+> > > UBIFS does not like finding bitflips in empty pages, see for instance
+> > > http://lists.infradead.org/pipermail/linux-mtd/2012-March/040328.html.
 > > 
-> > People get very hung up on this idea of having the DT move device
-> > information out of the kernel, but that was never really the
-> > motivation behind it.  Or at least, not the only or foremost
-> > motivation.
+> > In case of error correction using ELM, syndrome vector calculated after reading
+> > Data area & OOB area. So handling of erased page requires a software workaround.
+> > I am planning something as follows.
 > > 
-> > The DT provides a consistent, flexible way of describing device
-> > information.  That allows the core runtime the kernel to operate the
-> > same way, regardless of how the DT information was obtained.  The DT
-> > could come from firmware, but it could also come from an intermediate
-> > bootloader or from early kernel code.  All are perfectly acceptable
-> > options depending on the constraints of the platform.
+> > I will first check calculated ecc, which would be zero for non error pages.
+> > Then I would check 0xFF in OOB area (for erased page) by checking number of
+> > bit zeros in OOB area.  If it is 0xFF (number of bit zero count is zero),
+> > set entire page as 0xFF if number of bit zeros is less than max bit flips
+> > (8 or 4) by counting the number of bit zero's in data area.
 > > 
-> > The idea of firmware supplying the DT is much touted, but while it's a
-> > theoretically nice idea, I think it's frequently a bad idea for
-> > practical reasons.  Those being, in essence that a) firmware usually
-> > sucks, b) it's usually harder (or at least no easier) to replace
-> > firmware with a fixed version than the kernel/bootwrapper and c)
-> > firmware usually *really* sucks.
+> > This logic is implemented in fsmc_nand.c
+> > 
+> > See commit
+> > mtd: fsmc: Newly erased page read algorithm implemented
+> > 
+> > > 
+> > > 2. bitflip in ECC bytes in spare area
+> > > Your code will report an uncorrectable error upon reading; if this happens while reading a partially programmed UBI block,
+> > > I guess you will lose data.
+> > 
+> > In case of uncorrectable errors due to bit flips in spare area,
+> > I can go on checking number of bit zero's in data area + OOB area
+> > are less than max bit flips (8 or 4), I can go on setting the entire
+> > page as 0xFF.
+> > 
 > 
-> Gee, it sounds like you want firmware to suck.  Beating on the "firmware
-> sucks" drum is sort of a self-fulfilling prophecy, discouraging talented
-> programmers from doing firmware.  Who would want to work on something
-> that "everyone knows sucks"?
+> OK, sounds reasonable.
+> Another simple strategy could use the fact that you add a 14th zero byte to
+> the 13 BCH bytes for RBL compatibility:
 
-At this point it's already fulfilled.  Unfortunately, it really
-doesn't matter how many more nice firmwares appear, once you have to
-support the shitty ones - which we already do - the damage is done.
+RBL compatibility (14th byte) is applicable only for BCH8 ecc scheme.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+So I am planning adding an extra byte (0) for BCH4 ecc scheme. So with this
+we can go for same approaches in BCH4 & BCH8 ecc scheme.
+
+If I understood correctly, software BCH ecc scheme is modifying calculated
+ecc data to handle bit flips in erased pages.
+
+If that is the only reason, whether same logic can go for same ECC calculation
+(remove modification of calculated ecc in case of software ecc correction)
+by adding an extra byte (0) in spare area to handle erased pages.
+
+So can you share if I am missing something?
+
+> 
+> Upon reading:
+>  - if this 14th byte is zero (*) => page was programmed: perform ECC
+>    correction as usual
+>  - else, page was not programmed: do not perform ECC, read entire data+spare
+>    area, and set it to 0xff if less than 8 or 4 (max bitflips) zero bits
+>    were found
+> 
+> (*) for robustness to bitflip in 14th byte, replace condition
+> "14th byte is zero" by e.g. "14th byte has less than 4 bits set to 1".
+> 
+> What do you think ?
+
+This seems logically good.
+
+Thanks
+Avinash
+
+> 
+> BR,
+> --
+> Ivan
+> 
+
