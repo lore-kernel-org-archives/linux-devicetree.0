@@ -1,50 +1,133 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 RESEND 1/3] Input: egalax_ts: get gpio from devicetree
-Date: Thu, 11 Oct 2012 16:55:40 +0800
-Message-ID: <20121011085535.GA31464@S2101-09.ap.freescale.net>
-References: <1349860323-12786-1-git-send-email-jason77.wang@gmail.com>
- <1349860323-12786-2-git-send-email-jason77.wang@gmail.com>
- <20121010163036.GC19335@core.coreip.homeip.net>
+From: Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH v2 00/15] pinctrl: samsung: Usability and extensibiltiy
+ improvements
+Date: Thu, 11 Oct 2012 18:01:03 +0900
+Message-ID: <CAH9JG2WZciwLuWzk5Zgn06+xJdCsmSOu=z2JUz4_HpSjOwM59g@mail.gmail.com>
+References: <1349943081-27939-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121010163036.GC19335@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hui Wang <jason77.wang@gmail.com>, jiejing.zhang@freescale.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1349943081-27939-1-git-send-email-t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add LAKML ...
+Hi,
 
-On Wed, Oct 10, 2012 at 09:30:36AM -0700, Dmitry Torokhov wrote:
-> Hi Hui,
-> 
-> On Wed, Oct 10, 2012 at 05:12:01PM +0800, Hui Wang wrote:
-> > The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
-> > and don't support this API anymore.
-> > 
-> > The i.MX6q sabrelite platform equips an egalax touchscreen controller,
-> > and this platform already transfered to GENERIC_GPIO framework, to
-> > support this driver, we use a more generic way to get gpio.
-> 
-> Unfortunately this does break the driver for platforms that do still
-> support irq_to_gpio and have not transitioned to device tree (yet?).
-> It looks like the API suffered from premature deletion...
-> 
-> I really do not want to add a new platform data structure with only gpio
-> in it, is there a better way to detect if irq_to_gpio() (even if only a
-> stub) is available?
-> 
-If CONFIG_ARCH_HAVE_CUSTOM_GPIO_H is not enabled for an architecture,
-the irq_to_gpio() in include/linux/gpio.h will tell unavailability by
-returning -EINVAL.  But ARM architecture still selects ARCH_HAVE_CUSTOM_GPIO_H
-because there are still some platforms having mach/gpio.h.
+On Thu, Oct 11, 2012 at 5:11 PM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch series is a work on improving usability and extensibiltiy of
+> the pinctrl-samsung driver. It consists of three main parts:
+>  - improving flexibility of SoC-specific data specification
+>  - converting the driver to one GPIO chip and IRQ domain per pin bank
+>  - improving wake-up IRQ setup and handling
 
-We may also need a stub irq_to_gpio simply returning -EINVAL into
-arch/arm/include/asm/gpio.h when platform does not provide irq_to_gpio,
-so that driver can detect if irq_to_gpio() is available.  And that
-stub can be removed later when we deselect ARCH_HAVE_CUSTOM_GPIO_H
-for ARM architecture.
+Really good job! and it solved mess GPIOs H/W configurations of Samsung SoC.
+Basically Samsung SoC GPIOs don't have generic rules. Even worse, pin
+name is mixed but offset is still increased.
 
-Shawn
+With DT support. we can solve this issue and use generic pinctrl drivers.
+
+For all series.
+Reviewed-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+>
+> 1) What the first part does, in addition to various related fixes, is
+> removing any unnecessary static data from pinctrl-exynos driver.
+>
+> This is achieved mostly thanks to assigning pin numbers dynamically,
+> with help of only pin counts of particular banks. It also simplifies
+> adding next SoC variants, since much less static data needs to be
+> specified.
+>
+> 2) The second part attempts to simplify usage of the driver and fix several
+> problems of current implementation, in particular:
+>
+>   - Simplifies GPIO pin specification in device tree by using pin
+>     namespace local to pin bank instead of local to pin controller, e.g.
+>
+>         gpios = <&gpj0 3 0>;
+>
+>     instead of
+>
+>         gpios = <&pinctrl0 115 0>;
+>
+>   - Simplifies GPIO interrupt specification in device tree by using
+>     namespace local to pin bank (and equal to GPIO namespace), e.g.
+>
+>         interrupt-parent = <&gpj0>;
+>         interrupts = <3 0>;
+>
+>     instead of
+>
+>         interrupt-parent = <&pinctrl0>;
+>         interrupts = <115 0>;
+>
+>   - Simplifies internal GPIO pin to bank translation thanks to
+>     correspondence of particular GPIO chips to pin banks. This allows
+>     to remove the (costly in case of GPIO bit-banging drivers) lookup
+>     over all banks to find the one that the pin is from.
+>
+> 3) Third part is focused on removing the hard-coded description of wake-up
+> interrupt layout.
+>
+> It moves wake-up interrupt description to bank struct and device tree,
+> which allows to specify which pin banks support wake-up interrupts and
+> how they are handled (direct or multiplexed/chained).
+>
+> See particular patches for more detailed descriptions and the last patch for
+> updated device tree bindings.
+>
+> Changes since v1:
+>  - dropped moving SoC-specific data to device tree
+>    (might be added in further patches)
+>  - dropped per-bank specification of configuration register offsets
+>    (thus limiting scope of the driver to Exynos SoCs; will be added in
+>     further patches)
+>
+> Tomasz Figa (15):
+>   pinctrl: samsung: Detect and handle unsupported configuration types
+>   pinctrl: samsung: Do not pass gpio_chip to pin_to_reg_bank
+>   pinctrl: samsung: Assing pin numbers dynamically
+>   pinctrl: samsung: Remove static pin enumerations
+>   pinctrl: samsung: Distinguish between pin group and bank nodes
+>   ARM: dts: exynos4210-pinctrl: Add nodes for pin banks
+>   pinctrl: samsung: Match pin banks with their device nodes
+>   pinctrl: samsung: Hold pointer to driver data in bank struct
+>   pinctrl: samsung: Include bank-specific eint offset in bank struct
+>   pinctrl: exynos: Use one IRQ domain per pin bank
+>   pinctrl: samsung: Use one GPIO chip per pin bank
+>   pinctrl: samsung: Use per-bank IRQ domain for wake-up interrupts
+>   pinctrl: exynos: Set pin function to EINT in irq_set_type of wake-up
+>     EINT
+>   pinctrl: samsung: Add GPIO to IRQ translation
+>   Documentation: Update samsung-pinctrl device tree bindings
+>     documentation
+>
+>  .../bindings/pinctrl/samsung-pinctrl.txt           | 118 +++++--
+>  arch/arm/boot/dts/exynos4210-pinctrl.dtsi          | 278 ++++++++++++++++
+>  arch/arm/boot/dts/exynos4210.dtsi                  | 241 +-------------
+>  drivers/pinctrl/pinctrl-exynos.c                   | 367 ++++++++++-----------
+>  drivers/pinctrl/pinctrl-exynos.h                   | 170 ++--------
+>  drivers/pinctrl/pinctrl-samsung.c                  | 203 ++++++++----
+>  drivers/pinctrl/pinctrl-samsung.h                  |  29 +-
+>  7 files changed, 741 insertions(+), 665 deletions(-)
+>
+> --
+> 1.7.12
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
