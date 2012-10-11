@@ -1,92 +1,227 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
-Date: Thu, 11 Oct 2012 21:31:18 +0200
-Message-ID: <20121011193118.GA27599@avionic-0098.mockup.avionic-design.de>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
- <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
- <1349680065.3227.25.camel@deskari>
- <20121008074921.GB20800@pengutronix.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH] of: dma: fix protection of DMA controller data stored by DMA helpers
+Date: Thu, 11 Oct 2012 14:43:01 -0500
+Message-ID: <1349984581-5427-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4867836362692305609=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121008074921.GB20800-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+In the current implementation of the OF DMA helpers, read-copy-update (RCU)
+linked lists are being used for storing and accessing the DMA controller data.
+This part of implementation is based upon V2 of the DMA helpers by Nicolas [1].
+During a recent review of RCU, it became apparent that the code is missing the
+required rcu_read_lock()/unlock() calls as well as synchronisation calls before
+freeing any memory protected by RCU.
 
---===============4867836362692305609==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Content-Disposition: inline
+Having looked into adding the appropriate RCU calls to protect the DMA data it
+became apparent that with the current DMA helper implementation, using RCU is
+not as attractive as it may have been before. The main reasons being that ...
 
+1. We need to protect the DMA data around calls to the xlate function.
+2. The of_dma_simple_xlate() function calls the DMA engine function
+   dma_request_channel() which employs a mutex and so could sleep.
+3. The RCU read-side critical sections must not sleep and so we cannot hold
+   an RCU read lock around the xlate function.
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Therefore, instead of using RCU, an alternative for this use-case is to employ
+a simple spinlock inconjunction with a usage count variable to keep track of
+how many current users of the DMA data structure there are. With this
+implementation, the DMA data cannot be freed until all current users of the
+DMA data are finished.
 
-On Mon, Oct 08, 2012 at 09:49:21AM +0200, Steffen Trumtrar wrote:
-> On Mon, Oct 08, 2012 at 10:07:45AM +0300, Tomi Valkeinen wrote:
-> > On Thu, 2012-10-04 at 19:59 +0200, Steffen Trumtrar wrote:
-[...]
-> > > +
-> > > +	disp->num_timings =3D 0;
-> > > +
-> > > +	for_each_child_of_node(timings_np, entry) {
-> > > +		disp->num_timings++;
-> > > +	}
-> >=20
-> > No need for { }
-> >=20
->=20
-> Okay.
+This patch is based upon the DMA helpers fix for potential deadlock [2].
 
-Or you could just use of_get_child_count().
+[1] http://article.gmane.org/gmane.linux.ports.arm.omap/73622
+[2] http://marc.info/?l=linux-arm-kernel&m=134859982520984&w=2
 
-Thierry
+Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+---
+ drivers/of/dma.c       |   89 ++++++++++++++++++++++++++++++++++++------------
+ include/linux/of_dma.h |    5 +--
+ 2 files changed, 70 insertions(+), 24 deletions(-)
 
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature
+diff --git a/drivers/of/dma.c b/drivers/of/dma.c
+index 4bed490..59631b2 100644
+--- a/drivers/of/dma.c
++++ b/drivers/of/dma.c
+@@ -19,28 +19,61 @@
+ #include <linux/of_dma.h>
+ 
+ static LIST_HEAD(of_dma_list);
++static DEFINE_SPINLOCK(of_dma_lock);
+ 
+ /**
+- * of_dma_find_controller - Find a DMA controller in DT DMA helpers list
+- * @np:		device node of DMA controller
++ * of_dma_get_controller - Get a DMA controller in DT DMA helpers list
++ * @dma_spec:	pointer to DMA specifier as found in the device tree
++ *
++ * Finds a DMA controller with matching device node and number for dma cells
++ * in a list of registered DMA controllers. If a match is found the use_count
++ * variable is increased and a valid pointer to the DMA data stored is retuned.
++ * A NULL pointer is returned if no match is found.
+  */
+-static struct of_dma *of_dma_find_controller(struct device_node *np)
++static struct of_dma *of_dma_get_controller(struct of_phandle_args *dma_spec)
+ {
+ 	struct of_dma *ofdma;
+ 
++	spin_lock(&of_dma_lock);
++
+ 	if (list_empty(&of_dma_list)) {
+-		pr_err("empty DMA controller list\n");
++		spin_unlock(&of_dma_lock);
+ 		return NULL;
+ 	}
+ 
+-	list_for_each_entry_rcu(ofdma, &of_dma_list, of_dma_controllers)
+-		if (ofdma->of_node == np)
++	list_for_each_entry(ofdma, &of_dma_list, of_dma_controllers)
++		if ((ofdma->of_node == dma_spec->np) &&
++		    (ofdma->of_dma_nbcells == dma_spec->args_count)) {
++			ofdma->use_count++;
++			spin_unlock(&of_dma_lock);
+ 			return ofdma;
++		}
++
++	spin_unlock(&of_dma_lock);
++
++	pr_debug("%s: can't find DMA controller %s\n", __func__,
++		 dma_spec->np->full_name);
+ 
+ 	return NULL;
+ }
+ 
+ /**
++ * of_dma_put_controller - Decrement use count for a registered DMA controller
++ * @of_dma:	pointer to DMA controller data
++ *
++ * Decrements the use_count variable in the DMA data structure. This function
++ * should be called only when a valid pointer is returned from
++ * of_dma_get_controller() and no further accesses to data referenced by that
++ * pointer are needed.
++ */
++static void of_dma_put_controller(struct of_dma *ofdma)
++{
++	spin_lock(&of_dma_lock);
++	ofdma->use_count--;
++	spin_unlock(&of_dma_lock);
++}
++
++/**
+  * of_dma_controller_register - Register a DMA controller to DT DMA helpers
+  * @np:			device node of DMA controller
+  * @of_dma_xlate:	translation function which converts a phandle
+@@ -81,9 +114,10 @@ int of_dma_controller_register(struct device_node *np,
+ 	ofdma->of_dma_nbcells = nbcells;
+ 	ofdma->of_dma_xlate = of_dma_xlate;
+ 	ofdma->of_dma_data = data;
++	ofdma->use_count = 0;
+ 
+ 	/* Now queue of_dma controller structure in list */
+-	list_add_tail_rcu(&ofdma->of_dma_controllers, &of_dma_list);
++	list_add_tail(&ofdma->of_dma_controllers, &of_dma_list);
+ 
+ 	return 0;
+ }
+@@ -95,15 +129,32 @@ EXPORT_SYMBOL_GPL(of_dma_controller_register);
+  *
+  * Memory allocated by of_dma_controller_register() is freed here.
+  */
+-void of_dma_controller_free(struct device_node *np)
++int of_dma_controller_free(struct device_node *np)
+ {
+ 	struct of_dma *ofdma;
+ 
+-	ofdma = of_dma_find_controller(np);
+-	if (ofdma) {
+-		list_del_rcu(&ofdma->of_dma_controllers);
+-		kfree(ofdma);
++	spin_lock(&of_dma_lock);
++
++	if (list_empty(&of_dma_list)) {
++		spin_unlock(&of_dma_lock);
++		return -ENODEV;
+ 	}
++
++	list_for_each_entry(ofdma, &of_dma_list, of_dma_controllers)
++		if (ofdma->of_node == np) {
++			if (ofdma->use_count) {
++				spin_unlock(&of_dma_lock);
++				return -EBUSY;
++			}
++
++			list_del(&ofdma->of_dma_controllers);
++			spin_unlock(&of_dma_lock);
++			kfree(ofdma);
++			return 0;
++		}
++
++	spin_unlock(&of_dma_lock);
++	return -ENODEV;
+ }
+ EXPORT_SYMBOL_GPL(of_dma_controller_free);
+ 
+@@ -166,21 +217,15 @@ struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+ 		if (of_dma_match_channel(np, name, i, &dma_spec))
+ 			continue;
+ 
+-		ofdma = of_dma_find_controller(dma_spec.np);
+-		if (!ofdma) {
+-			pr_debug("%s: can't find DMA controller %s\n",
+-				 np->full_name, dma_spec.np->full_name);
+-			continue;
+-		}
++		ofdma = of_dma_get_controller(&dma_spec);
+ 
+-		if (dma_spec.args_count != ofdma->of_dma_nbcells) {
+-			pr_debug("%s: wrong #dma-cells for %s\n", np->full_name,
+-				 dma_spec.np->full_name);
++		if (!ofdma)
+ 			continue;
+-		}
+ 
+ 		chan = ofdma->of_dma_xlate(&dma_spec, ofdma);
+ 
++		of_dma_put_controller(ofdma);
++
+ 		of_node_put(dma_spec.np);
+ 
+ 		if (chan)
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index 67158dd..84b64f8 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -25,6 +25,7 @@ struct of_dma {
+ 	struct dma_chan		*(*of_dma_xlate)
+ 				(struct of_phandle_args *, struct of_dma *);
+ 	void			*of_dma_data;
++	int			use_count;
+ };
+ 
+ struct of_dma_filter_info {
+@@ -37,7 +38,7 @@ extern int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+ 		void *data);
+-extern void of_dma_controller_free(struct device_node *np);
++extern int of_dma_controller_free(struct device_node *np);
+ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+ 						     char *name);
+ extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+@@ -51,7 +52,7 @@ static int of_dma_controller_register(struct device_node *np,
+ 	return -ENODEV;
+ }
+ 
+-static void of_dma_controller_free(struct device_node *np)
++static int of_dma_controller_free(struct device_node *np)
+ {
+ }
+ 
+-- 
+1.7.9.5
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQdx6GAAoJEN0jrNd/PrOhrvYP/0QzXJteJs+u3JzLMmCOLyW9
-cYuAOeDplrkE/87S7CUU7S0wxPiUAm48Mx7LjG9h2P0cHgFeDRgCFfkwQgSlDTqx
-2UiCCyVrfiZjCio63UmlVr0l7+1/sh4BR4mzbi1bRBNFujPLg+1Jq/gLX9yC1yA+
-g8qvC3ztLffObsCzDGZRIFffThMrsEQYNohUxcu+oOSI0Mmnc2s18eZFEDLQdvCE
-RCTTFv+EcBWgIJ7mPBesuPlT2pMdOiIMfwUOmFhowwQQcpZII+5OPgoe+Xnth3Re
-e5af9863zCuq4SceFCkth2MVey2uNLUusN13kxhdeyUKTAATs+7NiiP6qa3hgxuh
-Vpq3bxRINB/9ORIU64MOi4+tuRMLMKri2aXgZXePVA5+e5ebBp2Kh4Zr8rxZQbBf
-t+dZXMsGwsNHZO2A3T9UdrgzAvAqfdazLzsj6Qw6OSHlbYl0eCUbif+qhoxDf2rI
-rHfYaRGgb/2uGX76OzizCcQduFstqQv8ILvGTXCxIIT6Q54bAJ4gsOx4/jRSElg7
-9nrUJ08F/7tn0H+zxKRRhRiVT9rWF5EQysojkmtOl0p2Iw1DRpafzHVBTGuJa0Kd
-owTVjNyaEITJqlGwrqgHaJD+YETTqUB0GeCN9CY+3MriPcwOCX/jB3IlC8FJH7BY
-o4Zgh+VdzXtRq0BUqE2g
-=lkat
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
-
---===============4867836362692305609==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4867836362692305609==--
