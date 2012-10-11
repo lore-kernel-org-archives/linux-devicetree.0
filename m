@@ -1,72 +1,58 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: ARM_ATAG_DTB_COMPAT fails on fdt_ro.c compiling
-Date: Thu, 11 Oct 2012 10:08:04 -0600
-Message-ID: <5076EEE4.6000007@wwwdotorg.org>
-References: <20121009031715.GC21822@S2101-09.ap.freescale.net>
- <alpine.LFD.2.02.1210090018470.16518@xanadu.home>
- <20121009050109.GD21822@S2101-09.ap.freescale.net>
- <50744DBA.3070900@wwwdotorg.org>
- <CAOMZO5BgJ0eSPvhnjCx_DVAUdLKpEhp-amJQw-8NZDX9AfCDeA@mail.gmail.com>
- <20121011072428.GA26298@S2101-09.ap.freescale.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Thu, 11 Oct 2012 10:15:37 -0600
+Message-ID: <5076F0A9.6020101@wwwdotorg.org>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <2002286.8sbBLyKbDe@avalon> <5075A74C.80106@wwwdotorg.org> <2098605.jat554dMFe@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121011072428.GA26298-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2098605.jat554dMFe@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2012 01:24 AM, Shawn Guo wrote:
-> On Tue, Oct 09, 2012 at 01:21:02PM -0300, Fabio Estevam wrote:
->> On Tue, Oct 9, 2012 at 1:15 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+On 10/10/2012 04:51 PM, Laurent Pinchart wrote:
+> On Wednesday 10 October 2012 10:50:20 Stephen Warren wrote:
+>> On 10/10/2012 07:18 AM, Laurent Pinchart wrote:
+>>> On Monday 08 October 2012 17:15:53 Guennadi Liakhovetski wrote:
+>> ...
 >>
->>>>> I just tried building mainline now.  It is at commit f5a246eab9.
->>>>>
->>>> The build still fails for me at this commit.
->>>
->>> I can't reproduce this.
+>>>> But how do you get the subdev pointer? With the notifier I get it from
+>>>> i2c_get_clientdata(client) and what do you do without it? How do you get
+>>>> to the client?
+>>>>
+>>>>> And can't it get that from DT as well?
+>>>>
+>>>> No, I don't think there is a way to get a device pointer from a DT node.
 >>
->> Same here. It builds fine for me.
+>> I don't believe there's a generic API for this (although perhaps there
+>> could be), but it can be implemented quite easily.
 >>
-> Thanks all for confirming it works.
+>> For example, on Tegra, the SMMU needs to flip a bit in the AHB register
+>> space in order to enable itself. The SMMU DT node contains a phandle
+>> that points at the AHB DT node. The SMMU driver parses the phandle and
+>> passes the DT node pointer to the AHB driver. The AHB driver looks up
+>> the struct device that was instantiated for that node. See
+>> drivers/amba/tegra-ahb.c:tegra_ahb_enable_smmu(). There are a few other
+>> cases of similar code in the kernel, although I can't remember the others!
 > 
-> I just figured it out on my end.  Here is how it gets broken for me.
-> 
-> - Before commit cd29672 (dtc: import latest upstream dtc) gets in,
->   I did a build without O=<output_dir>.  It results in a copy of those
->   libfdt files in arch/arm/boot/compressed.
-> 
-> - After the commit gets in, I start a build with O=imx parameter.  When
->   compiling imx/arch/arm/boot/compressed/fdt_ro.c, the #include <libfdt.h>
->   in fdt_ro.c seems to match the one left in arch/arm/boot/compressed/
->   from last build rather than imx/arch/arm/boot/compressed/libfdt.h.
-> 
-> Cleaning the libfdt copies in arch/arm/boot/compressed fixes the
-> problem.
+> That's a very naive approach, but what about storing the struct device in 
+> struct device_node when the device is instantiated ? It's so simple that 
+> there's probably a good reason why that hasn't been implemented though.
 
-> Not sure why it's not "libfdt.h" but <libfdt.h> is used as
-> the inclusion though, since the .h and .c are in the same folder.
+It sounds like that would work.
 
-I imagine that's because the libfdt code is set up to support being
-built as a standalone library. In that case, <fdt.h> and <libfdt.h> are
-presumably the public interface to the library, and would hence be
-installed into /usr/include or similar. Still, I guess the libfdt source
-itself would still work with "libfdt.h" rather than <libfdt.h>.
+The advantage of calling a function in the driver for the node, rather
+than just grabbing something from the node directly in code unrelated to
+the driver for the node, is that it any knowledge of what kind of
+device/driver is handling that node is embedded into a function in the
+driver for the node, not the driver using the node, which makes
+everything a bit more type-safe.
 
-Note that looking at git history, fdt_ro.c included <libfdt.h> even
-before cd29672 (dtc: import latest upstream dtc), and
-arch/arm/boot/compressed/Makefile included fdt_ro.c before that commit,
-so I'm not sure why the problem only shows up now? Perhaps anything that
-caused your objects to be stale, and hence get rebuilt, would have
-caused the issue.
+Now, perhaps the implementation of that function could just pull a field
+out of struct of_node rather than calling driver_find_device(), but it'd
+then have to validate that the struct device that was found was truly
+managed by the expected driver, for safety. I assume that's pretty
+simple, but haven't checked.
