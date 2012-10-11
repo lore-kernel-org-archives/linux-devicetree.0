@@ -1,185 +1,58 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V4 2/2] video: exynos_dp: device tree documentation
-Date: Thu, 11 Oct 2012 12:20:53 +0530
-Message-ID: <CAEC9eQO5s5VG_qwRbH4K7TD_Z_rYbks=s_GEOfY3TxDMk7gPzw@mail.gmail.com>
-References: <1349824101-32574-1-git-send-email-ajaykumar.rs@samsung.com>
-	<1349824101-32574-3-git-send-email-ajaykumar.rs@samsung.com>
-	<50749727.1020103@gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: ARM_ATAG_DTB_COMPAT fails on fdt_ro.c compiling
+Date: Thu, 11 Oct 2012 15:24:32 +0800
+Message-ID: <20121011072428.GA26298@S2101-09.ap.freescale.net>
+References: <20121009031715.GC21822@S2101-09.ap.freescale.net>
+ <alpine.LFD.2.02.1210090018470.16518@xanadu.home>
+ <20121009050109.GD21822@S2101-09.ap.freescale.net>
+ <50744DBA.3070900@wwwdotorg.org>
+ <CAOMZO5BgJ0eSPvhnjCx_DVAUdLKpEhp-amJQw-8NZDX9AfCDeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <50749727.1020103@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, jg1.han@samsung.com, devicetree-discuss@lists.ozlabs.org, FlorianSchandinat@gmx.de, tomasz.figa@gmail.com, thomas.ab@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5BgJ0eSPvhnjCx_DVAUdLKpEhp-amJQw-8NZDX9AfCDeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Tue, Oct 09, 2012 at 01:21:02PM -0300, Fabio Estevam wrote:
+> On Tue, Oct 9, 2012 at 1:15 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> 
+> >>> I just tried building mainline now.  It is at commit f5a246eab9.
+> >>>
+> >> The build still fails for me at this commit.
+> >
+> > I can't reproduce this.
+> 
+> Same here. It builds fine for me.
+> 
+Thanks all for confirming it works.
 
-On Wed, Oct 10, 2012 at 2:59 AM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi Ajay,
->
-> On 10/10/2012 01:08 AM, Ajay Kumar wrote:
->> Add documentation for the DT bindings in exynos display port driver.
->>
->> Signed-off-by: Ajay Kumar<ajaykumar.rs@samsung.com>
->> ---
->>   .../devicetree/bindings/video/exynos_dp.txt        |   83 ++++++++++++++++++++
->>   1 files changed, 83 insertions(+), 0 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
->> new file mode 100644
->> index 0000000..a021963
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
->> @@ -0,0 +1,83 @@
->> +Exynos display port driver should configure the display port interface
->> +based on the type of panel connected to it.
->
-> The bindings are supposed to describe devices, not drivers. So it
-> might be better to say:
->
-> "The Exynos display port interface should be configured based on the
-> type of panel connected to it."
-Ok. I will change it.
-> From this documentation it is not clear which properties are required
-> and which are optional for each node.
-> I think, in the property names dashes should be used, rather than
-> underscores. Dashes are much more common among existing bindings.
-Ok. Will make use of dashes and mention optional properties.
->> +We use two nodes:
->> +     -dptx_phy node
->> +     -display-port-controller node
->> +
->> +For the dp-phy initialization, we use a dptx_phy node.
->> +Required properties for dptx_phy:
->> +     -compatible:
->> +             Should be "samsung,dp-phy".
->
-> Is there a separate dptx-phy driver that is being matched with this
-> compatible property ? Is the dptx-node going to be referenced by other
-> nodes than display-port-controller ? If not, then you could likely drop
-> the compatible property entirely and make the dptx-phy node a child
-> node of display-port-controller, i.e.
->
->         display-port-controller {
->                 compatible = "samsung,exynos5-dp";
->                 reg = <0x145b0000 0x10000>;
->                 interrupts =<10 3>;
->                 interrupt-parent =<&combiner>;
->
->                 dptx-phy {
->                         reg = <0x10040720>;
->                         samsung,enable_mask = <1>;
->                 };
->        };
->
-> Then the driver could just look for a child node named "dptx-phy" with
-> e.g. of_find_node_by_name().
-Ok. Will change it.
->> +     -samsung,dptx_phy_reg:
->
-> I think it's fine to use just 'reg' instead of this vendor specific name.
-Ok.
->> +             Base address of DP PHY register.
->> +     -samsung,enable_mask:
->> +             The bit-mask used to enable/disable DP PHY.
->> +
->> +For the Panel initialization, we read data from display-port-controller node.
->> +Required properties for display-port-controller:
->> +     -compatible:
->> +             Should be "samsung,exynos5-dp".
->> +     -reg:
->> +             physical base address of the controller and length
->> +             of memory mapped region.
->> +     -interrupts:
->> +             Interrupt combiner values.
->> +     -interrupt-parent:
->> +             phandle to Interrupt combiner node.
->> +     -samsung,dp_phy:
->> +             phandle to dptx_phy node.
->> +     -samsung,color_space:
->> +             input video data format.
->> +                     COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
->> +     -samsung,dynamic_range:
->> +             dynamic range for input video data.
->> +                     VESA = 0, CEA = 1
->> +     -samsung,ycbcr_coeff:
->> +             YCbCr co-efficients for input video.
->> +                     COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
->> +     -samsung,color_depth:
->> +             Number of bits per colour component.
->> +                     COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
->> +     -samsung,link_rate:
->> +             link rate supported by the panel.
->> +                     LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
->> +     -samsung,lane_count:
->> +             number of lanes supported by the panel.
->> +                     LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
->> +     -samsung,interlaced:
->> +             Interlace scan mode.
->> +                     Progressive if defined, Interlaced if not defined
->> +     -samsung,v_sync_polarity:
->> +             VSYNC polarity configuration.
->> +                     High if defined, Low if not defined
->> +     -samsung,h_sync_polarity:
->> +             HSYNC polarity configuration.
->> +                     High if defined, Low if not defined
->
-> So there is no common video bindings for things like these two ?
-> In V4L2 we decided to use vsync-active, hsync-active [1], the video
-> timings bindings [2] use hsync-active-high, hsync-active-high boolean
-> properties. Perhaps it is worth to pick some of those standard
-> definitions and use instead of the vendor specific ones ?
-hsync-active-high and vsync-active-high seems to hold good in our case.
-Also, are you asking us to just use only the standard names or use standard
-helper functions as well? Since we use only hsync and vsync polarity and no
-other LCD timing properties, I think we need not use standard helper functions
-for parsing display timings!
->> +
->> +Example:
->> +
->> +SOC specific portion:
->> +     dptx_phy: dptx_phy@0x10040720 {
->> +             compatible = "samsung,dp-phy";
->> +             samsung,dptx_phy_reg =<0x10040720>;
->
->                 reg = <0x10040720>;
-Ok.
->> +             samsung,enable_mask =<1>;
->> +     };
->> +
->> +     display-port-controller {
->> +             compatible = "samsung,exynos5-dp";
->> +             reg =<0x145B0000 0x10000>;
->
-> I think lower case is preferred.
-Ok. Will change it.
->> +             interrupts =<10 3>;
->> +             interrupt-parent =<&combiner>;
->> +             samsung,dp_phy =<&dptx_phy>;
->> +        };
->> +
->> +Board Specific portion:
->> +     display-port-controller {
->> +             samsung,color_space =<0>;
->> +             samsung,dynamic_range =<0>;
->> +             samsung,ycbcr_coeff =<0>;
->> +             samsung,color_depth =<1>;
->> +             samsung,link_rate =<0x0a>;
->> +             samsung,lane_count =<2>;
->> +     };
->
-> Thanks,
-> Sylwester
->
-> [1] http://www.mail-archive.com/linux-media@vger.kernel.org/msg52743.html
-> [2] http://www.mail-archive.com/linux-media@vger.kernel.org/msg53323.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-Regards,
-Ajay
+I just figured it out on my end.  Here is how it gets broken for me.
+
+- Before commit cd29672 (dtc: import latest upstream dtc) gets in,
+  I did a build without O=<output_dir>.  It results in a copy of those
+  libfdt files in arch/arm/boot/compressed.
+
+- After the commit gets in, I start a build with O=imx parameter.  When
+  compiling imx/arch/arm/boot/compressed/fdt_ro.c, the #include <libfdt.h>
+  in fdt_ro.c seems to match the one left in arch/arm/boot/compressed/
+  from last build rather than imx/arch/arm/boot/compressed/libfdt.h.
+
+Cleaning the libfdt copies in arch/arm/boot/compressed fixes the
+problem.  Not sure why it's not "libfdt.h" but <libfdt.h> is used as
+the inclusion though, since the .h and .c are in the same folder.
+
+Shawn
