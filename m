@@ -1,97 +1,103 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH 3/3] ARM: dts: EMIF and LPDDR2 device tree data for OMAP5
- boards
-Date: Thu, 11 Oct 2012 10:11:46 +0200
-Message-ID: <50767F42.9000807@ti.com>
-References: <1349870716-25511-1-git-send-email-lokeshvutla@ti.com> <1349870716-25511-4-git-send-email-lokeshvutla@ti.com> <50758DC7.3070408@ti.com> <5076644A.10504@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5076644A.10504@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH 08/15] pinctrl: samsung: Hold pointer to driver data in bank
+ struct
+Date: Thu, 11 Oct 2012 10:11:14 +0200
+Message-ID: <1349943081-27939-9-git-send-email-t.figa@samsung.com>
+References: <1349943081-27939-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349943081-27939-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, swarren@wwwdotorg.org, tony@atomide.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lokesh,
+This patch is a preparation for converting the pinctrl-samsung driver to
+one GPIO chip and IRQ domain per bank. It allows one having only
+a pointer to particular bank struct to access driver data struct.
 
-On 10/11/2012 08:16 AM, Lokesh Vutla wrote:
-> + devicetree-discuss
-> 
-> Hi Benoit,
-> 
-> On Wednesday 10 October 2012 08:31 PM, Benoit Cousson wrote:
->> On 10/10/2012 02:05 PM, Lokesh Vutla wrote:
->>> Device tree data for the EMIF sdram controllers in OMAP5
->>> and LPDDR2 memory devices attached to OMAP5 boards.
->>
->> Nit: Could you make a sentence with a verb to explain what you are doing
->> in this patch.
-> I am really sorry about this.
-> I ll make sure that all patch descriptions will be clear in V2 of this
-> patch series.
-> 
-> In this patch I am adding device tree data for LPDDR2 memory devices
-> attached to omap5-sevm and also adding device tree data for EMIF sdram
-> controllers in OMAP5.
->>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> ---
->>>   arch/arm/boot/dts/lpddr2_data.dtsi |   64
->>> +++++++++++++++++++++++++++++++++++-
->>>   arch/arm/boot/dts/omap5-evm.dts    |   11 +++++++
->>>   arch/arm/boot/dts/omap5.dtsi       |   18 ++++++++++
->>>   3 files changed, 92 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/lpddr2_data.dtsi
->>> b/arch/arm/boot/dts/lpddr2_data.dtsi
->>> index f97f70f..8e8c1bc 100644
->>> --- a/arch/arm/boot/dts/lpddr2_data.dtsi
->>> +++ b/arch/arm/boot/dts/lpddr2_data.dtsi
->>> @@ -3,7 +3,7 @@
->>>    */
->>>
->>>   / {
->>> -    elpida_ECB240ABACN: lpddr2 {
->>> +    elpida_ECB240ABACN: lpddr2@0 {
->>>           compatible    = "Elpida,ECB240ABACN","jedec,lpddr2-s4";
->>>           density        = <2048>;
->>>           io-width    = <32>;
->>> @@ -64,4 +64,66 @@
->>>               tDQSCK-max-derated = <6000>;
->>>           };
->>>       };
->>> +
->>> +    samsung_K3PE0E000B: lpddr2@1 {
->>
->> I'm confused now, why are you reusing the same lpddr2_data.dtsi file?
->> You should create a file per memory. That will make the reuse much
->> easier.
->>
->> If the goal of your first patch was to do that, it is then the wrong
->> approach.
-> Yes, I wanted to group data for all lppdr2 devices in a single file than
-> creating separate file for each device.
-> May be a dumb question, Why can't we group data for all the lpddr2
-> devices in a single file?
+Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+---
+ drivers/pinctrl/pinctrl-samsung.c | 18 ++++++++++--------
+ drivers/pinctrl/pinctrl-samsung.h |  2 ++
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-Well, why should we do that? What will be the advantage?
-
-That will increase the size of the DTS/DTB with data nobody will care if
-only one type of memory is used on a given platform.
-
-Going in the same direction you can consider adding every OMAP
-description into a single DTS... Does that really make sense?
-
-So clearly there is no point doing that, it will cluttered the OMAP4 DTB
-with useless Samsung memory data. And the same issue for OMAP5 board
-that will contain Elpida memory information. And it will get worst each
-time someone will want to add a new memory in this file.
-
-You should just include the data you need for a given board.
-
-
-Regards,
-Benoit
-
+diff --git a/drivers/pinctrl/pinctrl-samsung.c b/drivers/pinctrl/pinctrl-samsung.c
+index f266710..53493c3 100644
+--- a/drivers/pinctrl/pinctrl-samsung.c
++++ b/drivers/pinctrl/pinctrl-samsung.c
+@@ -789,17 +789,18 @@ static const struct of_device_id samsung_pinctrl_dt_match[];
+ 
+ /* retrieve the soc specific data */
+ static struct samsung_pin_ctrl *samsung_pinctrl_get_soc_data(
++				struct samsung_pinctrl_drv_data *d,
+ 				struct platform_device *pdev)
+ {
+ 	int id;
+ 	const struct of_device_id *match;
+-	const struct device_node *node = pdev->dev.of_node;
++	struct device_node *node = pdev->dev.of_node;
+ 	struct device_node *np;
+ 	struct samsung_pin_ctrl *ctrl;
+ 	struct samsung_pin_bank *bank;
+ 	int i;
+ 
+-	id = of_alias_get_id(pdev->dev.of_node, "pinctrl");
++	id = of_alias_get_id(node, "pinctrl");
+ 	if (id < 0) {
+ 		dev_err(&pdev->dev, "failed to get alias id\n");
+ 		return NULL;
+@@ -809,6 +810,7 @@ static struct samsung_pin_ctrl *samsung_pinctrl_get_soc_data(
+ 
+ 	bank = ctrl->pin_banks;
+ 	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
++		bank->drvdata = d;
+ 		bank->pin_base = ctrl->nr_pins;
+ 		ctrl->nr_pins += bank->nr_pins;
+ 		if (bank->eint_type == EINT_TYPE_GPIO) {
+@@ -848,18 +850,18 @@ static int __devinit samsung_pinctrl_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	ctrl = samsung_pinctrl_get_soc_data(pdev);
+-	if (!ctrl) {
+-		dev_err(&pdev->dev, "driver data not available\n");
+-		return -EINVAL;
+-	}
+-
+ 	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+ 	if (!drvdata) {
+ 		dev_err(dev, "failed to allocate memory for driver's "
+ 				"private data\n");
+ 		return -ENOMEM;
+ 	}
++
++	ctrl = samsung_pinctrl_get_soc_data(drvdata, pdev);
++	if (!ctrl) {
++		dev_err(&pdev->dev, "driver data not available\n");
++		return -EINVAL;
++	}
+ 	drvdata->ctrl = ctrl;
+ 	drvdata->dev = dev;
+ 
+diff --git a/drivers/pinctrl/pinctrl-samsung.h b/drivers/pinctrl/pinctrl-samsung.h
+index 5c53f32..ea5dadd 100644
+--- a/drivers/pinctrl/pinctrl-samsung.h
++++ b/drivers/pinctrl/pinctrl-samsung.h
+@@ -112,6 +112,7 @@ struct samsung_pinctrl_drv_data;
+  * @irq_base: starting controller local irq number of the bank.
+  * @name: name to be prefixed for each pin in this pin bank.
+  * @of_node: OF node of the bank.
++ * @drvdata: link to controller driver data
+  */
+ struct samsung_pin_bank {
+ 	u32		pctl_offset;
+@@ -126,6 +127,7 @@ struct samsung_pin_bank {
+ 	u32		irq_base;
+ 	char		*name;
+ 	struct device_node *of_node;
++	struct samsung_pinctrl_drv_data *drvdata;
+ };
+ 
+ /**
+-- 
+1.7.12
