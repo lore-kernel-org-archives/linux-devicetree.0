@@ -1,227 +1,63 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH] of: dma: fix protection of DMA controller data stored by DMA helpers
-Date: Thu, 11 Oct 2012 14:43:01 -0500
-Message-ID: <1349984581-5427-1-git-send-email-jon-hunter@ti.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Thu, 11 Oct 2012 22:48:46 +0300
+Message-ID: <20121011194845.GQ14107@valkosipuli.retiisi.org.uk>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <201210051241.52205.hverkuil@xs4all.nl>
+ <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
+ <201210051323.45571.hverkuil@xs4all.nl>
+ <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@linux.intel.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Arnd Bergmann <arnd@arndb.de>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-In the current implementation of the OF DMA helpers, read-copy-update (RCU)
-linked lists are being used for storing and accessing the DMA controller data.
-This part of implementation is based upon V2 of the DMA helpers by Nicolas [1].
-During a recent review of RCU, it became apparent that the code is missing the
-required rcu_read_lock()/unlock() calls as well as synchronisation calls before
-freeing any memory protected by RCU.
+Hi Guennadi,
 
-Having looked into adding the appropriate RCU calls to protect the DMA data it
-became apparent that with the current DMA helper implementation, using RCU is
-not as attractive as it may have been before. The main reasons being that ...
+On Mon, Oct 08, 2012 at 02:23:25PM +0200, Guennadi Liakhovetski wrote:
+...
+> If we do it from the bridge driver, we could install an I2C bus-notifier, 
+> _before_ the subdevice driver is probed, i.e. upon the 
+> BUS_NOTIFY_BIND_DRIVER event we could turn on the clock. If subdevice 
+> probing was successful, we can then wait for the BUS_NOTIFY_BOUND_DRIVER 
+> event to switch the clock back off. BUT - if the subdevice fails probing? 
+> How do we find out about that and turn the clock back off? There is no 
+> notification event for that... Possible solutions:
+> 
+> 1. timer - ugly and unreliable.
+> 2. add a "probing failed" notifier event to the device core - would this 
+>    be accepted?
+> 3. let the subdevice turn the master clock on and off for the duration of 
+>    probing.
+> 
+> My vote goes for (3). Ideally this should be done using the generic clock 
+> framework. But can we really expect all drivers and platforms to switch to 
+> it quickly enough? If not, we need a V4L2-specific callback from subdevice 
+> drivers to bridge drivers to turn the clock on and off. That's what I've 
+> done "temporarily" in this patch series for soc-camera.
 
-1. We need to protect the DMA data around calls to the xlate function.
-2. The of_dma_simple_xlate() function calls the DMA engine function
-   dma_request_channel() which employs a mutex and so could sleep.
-3. The RCU read-side critical sections must not sleep and so we cannot hold
-   an RCU read lock around the xlate function.
+I'd say the clock has to be controlled by the sub-device driver. Sensors
+also have a power-up (and power-down) sequences that should be followed.
+Usually they also involve switching the external clock on (and off) at a
+given point of time.
 
-Therefore, instead of using RCU, an alternative for this use-case is to employ
-a simple spinlock inconjunction with a usage count variable to keep track of
-how many current users of the DMA data structure there are. With this
-implementation, the DMA data cannot be freed until all current users of the
-DMA data are finished.
+Also the OMAP 3 provides that clock through ISP so it, too, requires the
+generic clock framework to function with DT.
 
-This patch is based upon the DMA helpers fix for potential deadlock [2].
+> Suppose we decide to do the same for V4L2 centrally - add call-backs. Then 
 
-[1] http://article.gmane.org/gmane.linux.ports.arm.omap/73622
-[2] http://marc.info/?l=linux-arm-kernel&m=134859982520984&w=2
+I'd prefer to use the generic clock framework, albeit I admit it may take
+some time till all the relevant platforms support it. Nevertheless, if
+there's going to be a temporary solution it should be removed once the
+clock framework support is there.
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- drivers/of/dma.c       |   89 ++++++++++++++++++++++++++++++++++++------------
- include/linux/of_dma.h |    5 +--
- 2 files changed, 70 insertions(+), 24 deletions(-)
+Kind regards,
 
-diff --git a/drivers/of/dma.c b/drivers/of/dma.c
-index 4bed490..59631b2 100644
---- a/drivers/of/dma.c
-+++ b/drivers/of/dma.c
-@@ -19,28 +19,61 @@
- #include <linux/of_dma.h>
- 
- static LIST_HEAD(of_dma_list);
-+static DEFINE_SPINLOCK(of_dma_lock);
- 
- /**
-- * of_dma_find_controller - Find a DMA controller in DT DMA helpers list
-- * @np:		device node of DMA controller
-+ * of_dma_get_controller - Get a DMA controller in DT DMA helpers list
-+ * @dma_spec:	pointer to DMA specifier as found in the device tree
-+ *
-+ * Finds a DMA controller with matching device node and number for dma cells
-+ * in a list of registered DMA controllers. If a match is found the use_count
-+ * variable is increased and a valid pointer to the DMA data stored is retuned.
-+ * A NULL pointer is returned if no match is found.
-  */
--static struct of_dma *of_dma_find_controller(struct device_node *np)
-+static struct of_dma *of_dma_get_controller(struct of_phandle_args *dma_spec)
- {
- 	struct of_dma *ofdma;
- 
-+	spin_lock(&of_dma_lock);
-+
- 	if (list_empty(&of_dma_list)) {
--		pr_err("empty DMA controller list\n");
-+		spin_unlock(&of_dma_lock);
- 		return NULL;
- 	}
- 
--	list_for_each_entry_rcu(ofdma, &of_dma_list, of_dma_controllers)
--		if (ofdma->of_node == np)
-+	list_for_each_entry(ofdma, &of_dma_list, of_dma_controllers)
-+		if ((ofdma->of_node == dma_spec->np) &&
-+		    (ofdma->of_dma_nbcells == dma_spec->args_count)) {
-+			ofdma->use_count++;
-+			spin_unlock(&of_dma_lock);
- 			return ofdma;
-+		}
-+
-+	spin_unlock(&of_dma_lock);
-+
-+	pr_debug("%s: can't find DMA controller %s\n", __func__,
-+		 dma_spec->np->full_name);
- 
- 	return NULL;
- }
- 
- /**
-+ * of_dma_put_controller - Decrement use count for a registered DMA controller
-+ * @of_dma:	pointer to DMA controller data
-+ *
-+ * Decrements the use_count variable in the DMA data structure. This function
-+ * should be called only when a valid pointer is returned from
-+ * of_dma_get_controller() and no further accesses to data referenced by that
-+ * pointer are needed.
-+ */
-+static void of_dma_put_controller(struct of_dma *ofdma)
-+{
-+	spin_lock(&of_dma_lock);
-+	ofdma->use_count--;
-+	spin_unlock(&of_dma_lock);
-+}
-+
-+/**
-  * of_dma_controller_register - Register a DMA controller to DT DMA helpers
-  * @np:			device node of DMA controller
-  * @of_dma_xlate:	translation function which converts a phandle
-@@ -81,9 +114,10 @@ int of_dma_controller_register(struct device_node *np,
- 	ofdma->of_dma_nbcells = nbcells;
- 	ofdma->of_dma_xlate = of_dma_xlate;
- 	ofdma->of_dma_data = data;
-+	ofdma->use_count = 0;
- 
- 	/* Now queue of_dma controller structure in list */
--	list_add_tail_rcu(&ofdma->of_dma_controllers, &of_dma_list);
-+	list_add_tail(&ofdma->of_dma_controllers, &of_dma_list);
- 
- 	return 0;
- }
-@@ -95,15 +129,32 @@ EXPORT_SYMBOL_GPL(of_dma_controller_register);
-  *
-  * Memory allocated by of_dma_controller_register() is freed here.
-  */
--void of_dma_controller_free(struct device_node *np)
-+int of_dma_controller_free(struct device_node *np)
- {
- 	struct of_dma *ofdma;
- 
--	ofdma = of_dma_find_controller(np);
--	if (ofdma) {
--		list_del_rcu(&ofdma->of_dma_controllers);
--		kfree(ofdma);
-+	spin_lock(&of_dma_lock);
-+
-+	if (list_empty(&of_dma_list)) {
-+		spin_unlock(&of_dma_lock);
-+		return -ENODEV;
- 	}
-+
-+	list_for_each_entry(ofdma, &of_dma_list, of_dma_controllers)
-+		if (ofdma->of_node == np) {
-+			if (ofdma->use_count) {
-+				spin_unlock(&of_dma_lock);
-+				return -EBUSY;
-+			}
-+
-+			list_del(&ofdma->of_dma_controllers);
-+			spin_unlock(&of_dma_lock);
-+			kfree(ofdma);
-+			return 0;
-+		}
-+
-+	spin_unlock(&of_dma_lock);
-+	return -ENODEV;
- }
- EXPORT_SYMBOL_GPL(of_dma_controller_free);
- 
-@@ -166,21 +217,15 @@ struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
- 		if (of_dma_match_channel(np, name, i, &dma_spec))
- 			continue;
- 
--		ofdma = of_dma_find_controller(dma_spec.np);
--		if (!ofdma) {
--			pr_debug("%s: can't find DMA controller %s\n",
--				 np->full_name, dma_spec.np->full_name);
--			continue;
--		}
-+		ofdma = of_dma_get_controller(&dma_spec);
- 
--		if (dma_spec.args_count != ofdma->of_dma_nbcells) {
--			pr_debug("%s: wrong #dma-cells for %s\n", np->full_name,
--				 dma_spec.np->full_name);
-+		if (!ofdma)
- 			continue;
--		}
- 
- 		chan = ofdma->of_dma_xlate(&dma_spec, ofdma);
- 
-+		of_dma_put_controller(ofdma);
-+
- 		of_node_put(dma_spec.np);
- 
- 		if (chan)
-diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-index 67158dd..84b64f8 100644
---- a/include/linux/of_dma.h
-+++ b/include/linux/of_dma.h
-@@ -25,6 +25,7 @@ struct of_dma {
- 	struct dma_chan		*(*of_dma_xlate)
- 				(struct of_phandle_args *, struct of_dma *);
- 	void			*of_dma_data;
-+	int			use_count;
- };
- 
- struct of_dma_filter_info {
-@@ -37,7 +38,7 @@ extern int of_dma_controller_register(struct device_node *np,
- 		struct dma_chan *(*of_dma_xlate)
- 		(struct of_phandle_args *, struct of_dma *),
- 		void *data);
--extern void of_dma_controller_free(struct device_node *np);
-+extern int of_dma_controller_free(struct device_node *np);
- extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
- 						     char *name);
- extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
-@@ -51,7 +52,7 @@ static int of_dma_controller_register(struct device_node *np,
- 	return -ENODEV;
- }
- 
--static void of_dma_controller_free(struct device_node *np)
-+static int of_dma_controller_free(struct device_node *np)
- {
- }
- 
 -- 
-1.7.9.5
-
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
