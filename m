@@ -1,57 +1,89 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 RESEND 1/3] Input: egalax_ts: get gpio from devicetree
-Date: Thu, 11 Oct 2012 10:25:05 +0000
-Message-ID: <201210111025.05815.arnd@arndb.de>
-References: <1349860323-12786-1-git-send-email-jason77.wang@gmail.com> <1349860323-12786-2-git-send-email-jason77.wang@gmail.com> <20121010163036.GC19335@core.coreip.homeip.net>
+From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] mtd: st fsmc_nand: pass the ale and cmd resource
+ via resource
+Date: Thu, 11 Oct 2012 14:15:21 +0300
+Message-ID: <1349954121.12014.9.camel@sauron.fi.intel.com>
+References: <1349356456-13371-1-git-send-email-plagnioj@jcrosoft.com>
+Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20121010163036.GC19335@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hui Wang <jason77.wang@gmail.com>, jiejing.zhang@freescale.com, linux-input@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============5810964873148559958=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1349356456-13371-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 October 2012, Dmitry Torokhov wrote:
-> On Wed, Oct 10, 2012 at 05:12:01PM +0800, Hui Wang wrote:
-> > The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
-> > and don't support this API anymore.
-> > 
-> > The i.MX6q sabrelite platform equips an egalax touchscreen controller,
-> > and this platform already transfered to GENERIC_GPIO framework, to
-> > support this driver, we use a more generic way to get gpio.
-> 
-> Unfortunately this does break the driver for platforms that do still
-> support irq_to_gpio and have not transitioned to device tree (yet?).
-> It looks like the API suffered from premature deletion...
 
-The API was changed after all users of irq_to_gpio on ARM were assumed to
-be converted. The remaining users either had patches back then that were
-not merged in time or were merged after the conversion. Right now what
-we have left are:
+--===============5810964873148559958==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-mmD2qDIgIXUqRamvHdzi"
 
-drivers/ata/pata_rb532_cf.c: blackfin specific, not for ARM
 
-drivers/input/touchscreen/egalax_ts.c: currently broken, patches were sent a few times
+--=-mmD2qDIgIXUqRamvHdzi
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-drivers/pcmcia/db1xxx_ss.c: MIPS specific
+On Thu, 2012-10-04 at 15:14 +0200, Jean-Christophe PLAGNIOL-VILLARD
+wrote:
+> Do not use the platform_data to pass resource and be smart in the drivers=
+.
+> Just pass it via resource
+>=20
+> Switch to devm_request_and_ioremap at the sametime
+>=20
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 
-drivers/power/tosa_battery.c: has been broken for a long time, ARM PXA specific
+Pushed to l2-mtd.git, thanks!
 
-drivers/staging/iio/accel/lis3l02dq_core.c: patch was sent recently,
-					will get merged into 3.7
+--=20
+Best Regards,
+Artem Bityutskiy
 
-egalax_ts is currently the only thing that prevents us from building
-allyesconfig on ARM.
+--=-mmD2qDIgIXUqRamvHdzi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> I really do not want to add a new platform data structure with only gpio
-> in it, is there a better way to detect if irq_to_gpio() (even if only a
-> stub) is available?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-There are no platforms in the mainline kernel that define an egalax_ts
-platforms_device, I think we can safely assume all users are either DT
-based, or they need out of tree patches anyway.
+iQIcBAABAgAGBQJQdqpJAAoJECmIfjd9wqK0sAEP/0RmpdhuUygucA+ZlF9HufDS
+BYSmUJVMkuKZoZuAlHhFGxgGWNdCVbp0lnZ9DjkAQTVbszT9ECzOBlwJee/cAcPZ
+UZQMQ4CbwWQx0nR5tjWMNa2JnB04hn7ciE8VxtftX4CGur6/d2HwajLDfn2h1ylF
+bSHxu09YCZkvmfcmAenecQWCn3zFiqK9dMrP1N+ZQFMdnJDgeN20MPaVts5VVwxd
+lcAh3OV+I+wIca2z3RDNqVwo4+WQ7qYys+HKUWl8cc1gkw/H9lArgi07Dz4V2Bvc
+RIXWys6qb7uBJq6coVR62r3GJNHC+n/RoTsiWcdpago3Wspz3Rf4VVja4qfQCK55
+qqgTSDzhxQXTQIeVVQ5XIWt+9n0cLzhExJjpneIkyqh+9GRZRRbHbBrDzK9lBcMl
+TEJLH42eWWZicqdZOzbOpaF6j9WjLlHoUwpmbKcKdoHeubGD/R1x7hTm4YfAGZDL
+YwWYBinLA55g9a3Z7At6fEoWGa/Mmo2KtFfpLZ/xzXgYVw7hhFeRei3ujFLK/ts1
+2ItCNYlhKeDNJGuDawj3/odPE05IRC+etwdqzpYkv7elucWhruV92DrLLgGpEeK/
+naXNeFE6xxqeiRiXd4wo/fWVMnQtTsHSJWLaMafDtLKiEddXs7oZuZTZbY5B+V+a
+sagquHKHOVB39cRbC/mf
+=v4C9
+-----END PGP SIGNATURE-----
 
-	Arnd
+--=-mmD2qDIgIXUqRamvHdzi--
+
+
+--===============5810964873148559958==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5810964873148559958==--
