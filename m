@@ -1,33 +1,72 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: Re: [PATCH] pinctrl: remove duplicated include from pinctrl-xway.c
-Date: Thu, 11 Oct 2012 17:03:19 +0200
-Message-ID: <5076DFB7.40709@openwrt.org>
-References: <CAPgLHd_XnZU_E3zso2F1y1GFYHewrGUSSSf8yG9LRjVkbpGL=w@mail.gmail.com> <CACRpkdYxSRAVjsKyYwMDvZ7qGW1zBBQn4SwfEV-GGGPc=ukayw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: ARM_ATAG_DTB_COMPAT fails on fdt_ro.c compiling
+Date: Thu, 11 Oct 2012 10:08:04 -0600
+Message-ID: <5076EEE4.6000007@wwwdotorg.org>
+References: <20121009031715.GC21822@S2101-09.ap.freescale.net>
+ <alpine.LFD.2.02.1210090018470.16518@xanadu.home>
+ <20121009050109.GD21822@S2101-09.ap.freescale.net>
+ <50744DBA.3070900@wwwdotorg.org>
+ <CAOMZO5BgJ0eSPvhnjCx_DVAUdLKpEhp-amJQw-8NZDX9AfCDeA@mail.gmail.com>
+ <20121011072428.GA26298@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYxSRAVjsKyYwMDvZ7qGW1zBBQn4SwfEV-GGGPc=ukayw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Wei Yongjun <weiyj.lk@gmail.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121011072428.GA26298-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/10/12 16:00, Linus Walleij wrote:
-> On Wed, Oct 10, 2012 at 2:59 PM, Wei Yongjun<weiyj.lk@gmail.com>  wrote:
->
->> From: Wei Yongjun<yongjun_wei@trendmicro.com.cn>
+On 10/11/2012 01:24 AM, Shawn Guo wrote:
+> On Tue, Oct 09, 2012 at 01:21:02PM -0300, Fabio Estevam wrote:
+>> On Tue, Oct 9, 2012 at 1:15 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 >>
->> Remove duplicated include.
+>>>>> I just tried building mainline now.  It is at commit f5a246eab9.
+>>>>>
+>>>> The build still fails for me at this commit.
+>>>
+>>> I can't reproduce this.
 >>
->> dpatch engine is used to auto generate this patch.
->> (https://github.com/weiyj/dpatch)
+>> Same here. It builds fine for me.
 >>
->> Signed-off-by: Wei Yongjun<yongjun_wei@trendmicro.com.cn>
-> Applied to my fixes branch, unless John C has objections, I'll
-> keep it there.
->
+> Thanks all for confirming it works.
+> 
+> I just figured it out on my end.  Here is how it gets broken for me.
+> 
+> - Before commit cd29672 (dtc: import latest upstream dtc) gets in,
+>   I did a build without O=<output_dir>.  It results in a copy of those
+>   libfdt files in arch/arm/boot/compressed.
+> 
+> - After the commit gets in, I start a build with O=imx parameter.  When
+>   compiling imx/arch/arm/boot/compressed/fdt_ro.c, the #include <libfdt.h>
+>   in fdt_ro.c seems to match the one left in arch/arm/boot/compressed/
+>   from last build rather than imx/arch/arm/boot/compressed/libfdt.h.
+> 
+> Cleaning the libfdt copies in arch/arm/boot/compressed fixes the
+> problem.
 
-no objections from me ... thanks for the fix !
+> Not sure why it's not "libfdt.h" but <libfdt.h> is used as
+> the inclusion though, since the .h and .c are in the same folder.
 
-     John
+I imagine that's because the libfdt code is set up to support being
+built as a standalone library. In that case, <fdt.h> and <libfdt.h> are
+presumably the public interface to the library, and would hence be
+installed into /usr/include or similar. Still, I guess the libfdt source
+itself would still work with "libfdt.h" rather than <libfdt.h>.
+
+Note that looking at git history, fdt_ro.c included <libfdt.h> even
+before cd29672 (dtc: import latest upstream dtc), and
+arch/arm/boot/compressed/Makefile included fdt_ro.c before that commit,
+so I'm not sure why the problem only shows up now? Perhaps anything that
+caused your objects to be stale, and hence get rebuilt, would have
+caused the issue.
