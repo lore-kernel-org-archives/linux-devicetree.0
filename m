@@ -1,7 +1,7 @@
 From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v1 1/6] dts: exynos: add device tree support for exynos5 hdmi
-Date: Fri, 12 Oct 2012 00:27:42 +0530
-Message-ID: <1349981868-2116-2-git-send-email-rahul.sharma@samsung.com>
+Subject: [PATCH v1 2/6] dts: exynos: add device tree support for exynos5 mixer
+Date: Fri, 12 Oct 2012 00:27:43 +0530
+Message-ID: <1349981868-2116-3-git-send-email-rahul.sharma@samsung.com>
 References: <1349981868-2116-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-reply-to: <1349981868-2116-1-git-send-email-rahul.sharma@samsung.com>
@@ -11,67 +11,54 @@ Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, ink
 List-Id: devicetree@vger.kernel.org
 
 This patch adds support for device tree based discovery for exynos5
-hdmi. Hdmi node is also renamed with "exynos5-hdmi".
+mixer. Mixer node is also renamed with "exynos5-mixer".
 
 Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    4 ++++
- arch/arm/boot/dts/exynos5250.dtsi         |    7 +++++++
- arch/arm/mach-exynos/include/mach/map.h   |    1 +
- arch/arm/mach-exynos/mach-exynos5-dt.c    |    2 ++
- 4 files changed, 14 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/exynos5250.dtsi       |    8 ++++++++
+ arch/arm/mach-exynos/include/mach/map.h |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c  |    2 ++
+ 3 files changed, 11 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index a352df4..2a478ab 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -166,4 +166,8 @@
- 	spi_2: spi@12d40000 {
- 		status = "disabled";
- 	};
-+
-+	hdmi {
-+		hpd-gpio = <&gpx3 7 0xf 1 3>;
-+	};
- };
 diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index f69e389..4e019b5 100644
+index 4e019b5..e4483bc 100644
 --- a/arch/arm/boot/dts/exynos5250.dtsi
 +++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -492,4 +492,11 @@
- 			#gpio-cells = <4>;
- 		};
- 	};
+@@ -499,4 +499,12 @@
+ 		interrupts = <0 95 0>;
+ 		version = "1.4";
+         };
 +
-+	hdmi {
-+		compatible = "samsung,exynos5-hdmi";
-+		reg = <0x14530000 0x100000>;
-+		interrupts = <0 95 0>;
-+		version = "1.4";
++        mixer {
++		compatible = "samsung,exynos5-mixer";
++		reg = <0x14450000 0x10000>;
++		interrupts = <0 94 0>;
++		version = "16.0.33.0";
++		vp-support = <0>;
 +        };
  };
 diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index 5edbbe9..7b9efb2 100644
+index 7b9efb2..314ee75 100644
 --- a/arch/arm/mach-exynos/include/mach/map.h
 +++ b/arch/arm/mach-exynos/include/mach/map.h
 @@ -201,6 +201,7 @@
  #define EXYNOS4_PA_SDO			0x12C20000
  #define EXYNOS4_PA_HDMI			0x12D00000
  #define EXYNOS4_PA_IIC_HDMIPHY		0x138E0000
-+#define EXYNOS5_PA_HDMI		0x14530000
++#define EXYNOS5_PA_MIXER		0x14450000
+ #define EXYNOS5_PA_HDMI		0x14530000
  
  #define EXYNOS4_PA_IIC(x)		(0x13860000 + ((x) * 0x10000))
- #define EXYNOS5_PA_IIC(x)		(0x12C60000 + ((x) * 0x10000))
 diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index ce82f30..43449fb 100644
+index 43449fb..cdad7c1 100644
 --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
 +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -64,6 +64,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1", NULL),
+@@ -66,6 +66,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
  	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos5-hdmi", EXYNOS5_PA_HDMI,
-+				"exynos5-hdmi", NULL),
+ 	OF_DEV_AUXDATA("samsung,exynos5-hdmi", EXYNOS5_PA_HDMI,
+ 				"exynos5-hdmi", NULL),
++	OF_DEV_AUXDATA("samsung,exynos5-mixer", EXYNOS5_PA_MIXER,
++				"exynos5-mixer", NULL),
  	{},
  };
  
