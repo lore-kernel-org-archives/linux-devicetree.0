@@ -1,58 +1,100 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: ARM_ATAG_DTB_COMPAT fails on fdt_ro.c compiling
-Date: Thu, 11 Oct 2012 15:24:32 +0800
-Message-ID: <20121011072428.GA26298@S2101-09.ap.freescale.net>
-References: <20121009031715.GC21822@S2101-09.ap.freescale.net>
- <alpine.LFD.2.02.1210090018470.16518@xanadu.home>
- <20121009050109.GD21822@S2101-09.ap.freescale.net>
- <50744DBA.3070900@wwwdotorg.org>
- <CAOMZO5BgJ0eSPvhnjCx_DVAUdLKpEhp-amJQw-8NZDX9AfCDeA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5BgJ0eSPvhnjCx_DVAUdLKpEhp-amJQw-8NZDX9AfCDeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH v2 00/15] pinctrl: samsung: Usability and extensibiltiy
+ improvements
+Date: Thu, 11 Oct 2012 10:11:06 +0200
+Message-ID: <1349943081-27939-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, linus.walleij@linaro.org, swarren@wwwdotorg.org, tony@atomide.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2012 at 01:21:02PM -0300, Fabio Estevam wrote:
-> On Tue, Oct 9, 2012 at 1:15 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> 
-> >>> I just tried building mainline now.  It is at commit f5a246eab9.
-> >>>
-> >> The build still fails for me at this commit.
-> >
-> > I can't reproduce this.
-> 
-> Same here. It builds fine for me.
-> 
-Thanks all for confirming it works.
+This patch series is a work on improving usability and extensibiltiy of
+the pinctrl-samsung driver. It consists of three main parts:
+ - improving flexibility of SoC-specific data specification
+ - converting the driver to one GPIO chip and IRQ domain per pin bank
+ - improving wake-up IRQ setup and handling
 
-I just figured it out on my end.  Here is how it gets broken for me.
+1) What the first part does, in addition to various related fixes, is
+removing any unnecessary static data from pinctrl-exynos driver.
 
-- Before commit cd29672 (dtc: import latest upstream dtc) gets in,
-  I did a build without O=<output_dir>.  It results in a copy of those
-  libfdt files in arch/arm/boot/compressed.
+This is achieved mostly thanks to assigning pin numbers dynamically,
+with help of only pin counts of particular banks. It also simplifies
+adding next SoC variants, since much less static data needs to be
+specified.
 
-- After the commit gets in, I start a build with O=imx parameter.  When
-  compiling imx/arch/arm/boot/compressed/fdt_ro.c, the #include <libfdt.h>
-  in fdt_ro.c seems to match the one left in arch/arm/boot/compressed/
-  from last build rather than imx/arch/arm/boot/compressed/libfdt.h.
+2) The second part attempts to simplify usage of the driver and fix several
+problems of current implementation, in particular:
 
-Cleaning the libfdt copies in arch/arm/boot/compressed fixes the
-problem.  Not sure why it's not "libfdt.h" but <libfdt.h> is used as
-the inclusion though, since the .h and .c are in the same folder.
+  - Simplifies GPIO pin specification in device tree by using pin
+    namespace local to pin bank instead of local to pin controller, e.g.
 
-Shawn
+        gpios = <&gpj0 3 0>;
+
+    instead of
+
+        gpios = <&pinctrl0 115 0>;
+
+  - Simplifies GPIO interrupt specification in device tree by using
+    namespace local to pin bank (and equal to GPIO namespace), e.g.
+
+        interrupt-parent = <&gpj0>;
+        interrupts = <3 0>;
+
+    instead of
+
+        interrupt-parent = <&pinctrl0>;
+        interrupts = <115 0>;
+
+  - Simplifies internal GPIO pin to bank translation thanks to
+    correspondence of particular GPIO chips to pin banks. This allows
+    to remove the (costly in case of GPIO bit-banging drivers) lookup
+    over all banks to find the one that the pin is from.
+
+3) Third part is focused on removing the hard-coded description of wake-up
+interrupt layout.
+
+It moves wake-up interrupt description to bank struct and device tree,
+which allows to specify which pin banks support wake-up interrupts and
+how they are handled (direct or multiplexed/chained).
+
+See particular patches for more detailed descriptions and the last patch for
+updated device tree bindings.
+
+Changes since v1:
+ - dropped moving SoC-specific data to device tree
+   (might be added in further patches)
+ - dropped per-bank specification of configuration register offsets
+   (thus limiting scope of the driver to Exynos SoCs; will be added in
+    further patches)
+
+Tomasz Figa (15):
+  pinctrl: samsung: Detect and handle unsupported configuration types
+  pinctrl: samsung: Do not pass gpio_chip to pin_to_reg_bank
+  pinctrl: samsung: Assing pin numbers dynamically
+  pinctrl: samsung: Remove static pin enumerations
+  pinctrl: samsung: Distinguish between pin group and bank nodes
+  ARM: dts: exynos4210-pinctrl: Add nodes for pin banks
+  pinctrl: samsung: Match pin banks with their device nodes
+  pinctrl: samsung: Hold pointer to driver data in bank struct
+  pinctrl: samsung: Include bank-specific eint offset in bank struct
+  pinctrl: exynos: Use one IRQ domain per pin bank
+  pinctrl: samsung: Use one GPIO chip per pin bank
+  pinctrl: samsung: Use per-bank IRQ domain for wake-up interrupts
+  pinctrl: exynos: Set pin function to EINT in irq_set_type of wake-up
+    EINT
+  pinctrl: samsung: Add GPIO to IRQ translation
+  Documentation: Update samsung-pinctrl device tree bindings
+    documentation
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           | 118 +++++--
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi          | 278 ++++++++++++++++
+ arch/arm/boot/dts/exynos4210.dtsi                  | 241 +-------------
+ drivers/pinctrl/pinctrl-exynos.c                   | 367 ++++++++++-----------
+ drivers/pinctrl/pinctrl-exynos.h                   | 170 ++--------
+ drivers/pinctrl/pinctrl-samsung.c                  | 203 ++++++++----
+ drivers/pinctrl/pinctrl-samsung.h                  |  29 +-
+ 7 files changed, 741 insertions(+), 665 deletions(-)
+
+-- 
+1.7.12
