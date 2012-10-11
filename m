@@ -1,62 +1,86 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: dtc: import latest upstream dtc
-Date: Thu, 11 Oct 2012 11:14:44 +1100
-Message-ID: <20121011001444.GJ28467@truffula.fritz.box>
-References: <5069C042.40209@gmail.com>
- <5069C11C.6040505@wwwdotorg.org>
- <5069D946.1060502@gmail.com>
- <5069E1F0.5070902@wwwdotorg.org>
- <E1TIktZ-0000U4-Qh@jdl.com>
- <50749441.8030307@wwwdotorg.org>
- <5075ABB8.103@gmail.com>
- <5075BD21.2070106@firmworks.com>
- <5075C254.4040304@wwwdotorg.org>
- <5075C4CB.8020409@firmworks.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] usb: phy: add a new driver for usb3 phy
+Date: Wed, 10 Oct 2012 17:59:44 -0700
+Message-ID: <20121011005944.GX12552@atomide.com>
+References: <1348054229-27362-1-git-send-email-kishon@ti.com>
+ <1348054229-27362-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5075C4CB.8020409@firmworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1348054229-27362-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2012 at 08:56:11AM -1000, Mitch Bradley wrote:
-> On 10/10/2012 8:45 AM, Stephen Warren wrote:
-> > On 10/10/2012 12:23 PM, Mitch Bradley wrote:
-> >> On 10/10/2012 7:09 AM, Rob Herring wrote:
-> >>> On 10/09/2012 04:16 PM, Stephen Warren wrote:
-> >>>> On 10/01/2012 12:39 PM, Jon Loeliger wrote:
-[snip]
-> >> Instead of making a bunch of rules about how you can only use a small
-> >> subset of cpp, why not just add a "define name value" command to DTC?
-> > 
-> > I implemented a patch to do exactly that, and it was rejected because it
-> > only solved part of the problem (named constants) and not the reset (a
-> > completely generic macro language/... within dtc). The argument was that
-> > defining just the named constant syntax on its own without knowing what
-> > the unspecified future macro language will look like might result in the
-> > named constant syntax not fitting into it.
-> > 
-> > That all said, I now think that using cpp is actually a much better
-> > solution that adding yet more dtc-specific syntax. The *huge* benefit
-> > here is that it allows you to share .h files between *.dts and C code,
-> > so you don't have to write out the same set of #defines once in dtc
-> > syntax and once in cpp syntax.
+Hi,
+
+* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [120919 04:32]:
+> Added a driver for usb3 phy that handles the interaction between usb phy
+> device and dwc3 controller.
 > 
-> ... and it imposes an equally *huge* restriction that you have to
-> restrict the .h file to avoid avoid C constructs.  That can be done, but
-> I've personally experienced a lot of headaches when trying to share .h
-> files between different languages.
+> This also includes device tree support for usb3 phy driver and
+> the documentation with device tree binding information is updated.
+> 
+> Currently writing to control module register is taken care in this
+> driver which will be removed once the control module driver is in place.
 
-Yes, but we already deal with that for asm files.  And the sorts of
-defines we use in asm files are often the same ones we'd want in dts
-files.
+You may be able to set up the control module register with one
+of the following Linux standard frameworks:
 
+1. Fixed regulator defined in mach-omap2/control.c
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+   In this case the PHY driver can pick up the regulator by name.
+
+2. A mux mapped with pinctrl framework using pinctrl-single,bits
+   binding
+
+   And in this case the PHY driver can request the named pinctrl
+   states like "enabled" and "disabled".
+
+> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+> @@ -15,3 +15,21 @@ usb2phy@4a0ad080 {
+>  	reg = <0x4a0ad080 0x58>,
+>  	      <0x4a002300 0x4>;
+>  };
+
+The comments also apply to the omap_usb2.c driver for
+0x4a002300 above.
+
+> +
+> +OMAP USB3 PHY
+> +
+> +Required properties:
+> + - compatible: Should be "ti,omap-usb3"
+> + - reg : Address and length of the register set for the device. Also
+> +add the address of control module phy power register until a driver for
+> +control module is added
+> +
+> +This is usually a subnode of ocp2scp to which it is connected.
+> +
+> +usb3phy@4a084400 {
+> +	compatible = "ti,omap-usb3";
+> +	reg = <0x0x4a084400 0x80>,
+> +	      <0x4a084800 0x64>,
+> +	      <0x4a084c00 0x40>,
+> +	      <0x4a002370 0x4>;
+> +};
+
+And register 0x4a002370 here. Care to post some info what the
+0x4a002370 register bits do? Is that same as CONTROL_DEV_CONF
+on omap4, or does it have other bits there too?
+
+The advantage for using regulator fwk and pinctrl fwk is
+that the regulator and mux can be children of the SCM
+core driver when we have it. And no direct register tinkering
+or omap specific custom exported functions are needed ;)
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
