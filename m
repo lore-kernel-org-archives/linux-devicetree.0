@@ -1,58 +1,136 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
-Date: Thu, 11 Oct 2012 10:15:37 -0600
-Message-ID: <5076F0A9.6020101@wwwdotorg.org>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <2002286.8sbBLyKbDe@avalon> <5075A74C.80106@wwwdotorg.org> <2098605.jat554dMFe@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2098605.jat554dMFe@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+From: Matt Porter <mporter@ti.com>
+Subject: [RFC PATCH v2 00/16] DMA Engine support for AM33xx
+Date: Thu, 11 Oct 2012 15:04:25 -0400
+Message-ID: <1349982281-10785-1-git-send-email-mporter@ti.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 04:51 PM, Laurent Pinchart wrote:
-> On Wednesday 10 October 2012 10:50:20 Stephen Warren wrote:
->> On 10/10/2012 07:18 AM, Laurent Pinchart wrote:
->>> On Monday 08 October 2012 17:15:53 Guennadi Liakhovetski wrote:
->> ...
->>
->>>> But how do you get the subdev pointer? With the notifier I get it from
->>>> i2c_get_clientdata(client) and what do you do without it? How do you get
->>>> to the client?
->>>>
->>>>> And can't it get that from DT as well?
->>>>
->>>> No, I don't think there is a way to get a device pointer from a DT node.
->>
->> I don't believe there's a generic API for this (although perhaps there
->> could be), but it can be implemented quite easily.
->>
->> For example, on Tegra, the SMMU needs to flip a bit in the AHB register
->> space in order to enable itself. The SMMU DT node contains a phandle
->> that points at the AHB DT node. The SMMU driver parses the phandle and
->> passes the DT node pointer to the AHB driver. The AHB driver looks up
->> the struct device that was instantiated for that node. See
->> drivers/amba/tegra-ahb.c:tegra_ahb_enable_smmu(). There are a few other
->> cases of similar code in the kernel, although I can't remember the others!
-> 
-> That's a very naive approach, but what about storing the struct device in 
-> struct device_node when the device is instantiated ? It's so simple that 
-> there's probably a good reason why that hasn't been implemented though.
+Changes since v1:
+	- Rebased on top of mainline from 12250d8
+	- Dropped the feature removal schedule patch
+	- Implemented dma_request_slave_channel_compat() and
+	  converted the mmc and spi drivers to use it
+	- Dropped unneeded #address-cells and #size-cells from
+	  EDMA DT support
+	- Moved private EDMA header to linux/platform_data/ and
+	  removed some unneeded definitions
+	- Fixed parsing of optional properties
 
-It sounds like that would work.
+TODO:
+	- Add AM33xx crossbar support to the private EDMA API
+	  (any EDMA events on the crossbar are not supported)
+	- Add dmaengine support for per-channel caps so the
+	  hack to set the maximum segments can be replaced with
+	  a query to the dmaengine driver
 
-The advantage of calling a function in the driver for the node, rather
-than just grabbing something from the node directly in code unrelated to
-the driver for the node, is that it any knowledge of what kind of
-device/driver is handling that node is embedded into a function in the
-driver for the node, not the driver using the node, which makes
-everything a bit more type-safe.
+This series adds DMA Engine support for AM33xx, which uses
+an EDMA DMAC. The EDMA DMAC has been previously supported by only
+a private API implementation (much like the situation with OMAP
+DMA) found on the DaVinci family of SoCs.
 
-Now, perhaps the implementation of that function could just pull a field
-out of struct of_node rather than calling driver_find_device(), but it'd
-then have to validate that the struct device that was found was truly
-managed by the expected driver, for safety. I assume that's pretty
-simple, but haven't checked.
+The series applies on top of mainline from
+12250d843e8489ee00b5b7726da855e51694e792 and the following patches:
+
+	- Vaibhav's patch to fix AM33xx boot on mainline
+	  https://patchwork.kernel.org/patch/1569231/
+	- dmaengine DT support from Vinod's dmaengine_dt branch in
+	  git://git.infradead.org/users/vkoul/slave-dma.git since
+	  027478851791df751176398be02a3b1c5f6aa824
+
+The approach taken is similar to how OMAP DMA is being converted to
+DMA Engine support. With the functional EDMA private API already
+existing in mach-davinci/dma.c, we first move that to an ARM common
+area so it can be shared. Adding DT and runtime PM support to the
+private EDMA API implementation allows it to run on AM33xx. AM33xx
+*only* boots using DT so we leverage Jon's generic DT DMA helpers to
+register EDMA DMAC with the of_dma framework and then add support
+for calling the dma_request_slave_channel() API to both the mmc
+and spi drivers.
+
+What works? Well, with this series we now have MMC and SPI support
+on AM33xx. The only caveat for MMC is that the mmc3 controller has
+its events on the crossbar and is not usable yet.
+
+This is tested on BeagleBone with a SPI framebuffer driver and SD
+card. It is regression tested on AM180x-EVM (which also makes use
+of the EDMA dmaengine driver and the EDMA private API) using SD,
+SPI flash, and the onboard audio supported by the ASoC Davinci
+driver.
+
+After this series, the plan is to convert the last in-tree user
+of the private EDMA API (davinci-pcm/mcasp) and then eliminate
+the private EDMA API by folding its functionality into
+drivers/dma/edma.c.
+
+Matt Porter (16):
+  dmaengine: edma: fix slave config dependency on direction
+  ARM: davinci: move private EDMA API to arm/common
+  ARM: edma: remove unused transfer controller handlers
+  ARM: edma: add DT and runtime PM support for AM335x
+  dmaengine: edma: enable build for AM33XX
+  dmaengine: edma: Add TI EDMA device tree binding
+  ARM: dts: add AM33XX EDMA support
+  ARM: omap: add hsmmc am33xx specific init
+  dmaengine: add dma_request_slave_channel_compat()
+  mmc: omap_hsmmc: convert to dma_request_slave_channel_compat()
+  mmc: omap_hsmmc: limit max_segs with the EDMA DMAC
+  mmc: omap_hsmmc: add generic DMA request support to the DT binding
+  ARM: dts: add AM33XX MMC support
+  spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
+  spi: omap2-mcspi: add generic DMA request support to the DT binding
+  ARM: dts: add AM33XX SPI support
+
+ Documentation/devicetree/bindings/dma/ti-edma.txt  |   49 +
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   25 +-
+ Documentation/devicetree/bindings/spi/omap-spi.txt |   27 +-
+ arch/arm/Kconfig                                   |    1 +
+ arch/arm/boot/dts/am335x-bone.dts                  |   23 +
+ arch/arm/boot/dts/am33xx.dtsi                      |  100 ++
+ arch/arm/common/Kconfig                            |    3 +
+ arch/arm/common/Makefile                           |    1 +
+ arch/arm/common/edma.c                             | 1781 ++++++++++++++++++++
+ arch/arm/mach-davinci/Makefile                     |    2 +-
+ arch/arm/mach-davinci/board-da830-evm.c            |    4 +-
+ arch/arm/mach-davinci/board-da850-evm.c            |    8 +-
+ arch/arm/mach-davinci/board-dm646x-evm.c           |    4 +-
+ arch/arm/mach-davinci/board-omapl138-hawk.c        |    8 +-
+ arch/arm/mach-davinci/board-tnetv107x-evm.c        |    2 +-
+ arch/arm/mach-davinci/davinci.h                    |    2 +-
+ arch/arm/mach-davinci/devices-da8xx.c              |    8 +-
+ arch/arm/mach-davinci/devices-tnetv107x.c          |    6 +-
+ arch/arm/mach-davinci/devices.c                    |    7 +-
+ arch/arm/mach-davinci/dm355.c                      |    6 +-
+ arch/arm/mach-davinci/dm365.c                      |    6 +-
+ arch/arm/mach-davinci/dm644x.c                     |    6 +-
+ arch/arm/mach-davinci/dm646x.c                     |    6 +-
+ arch/arm/mach-davinci/dma.c                        | 1588 -----------------
+ arch/arm/mach-davinci/include/mach/da8xx.h         |    2 +-
+ arch/arm/mach-davinci/include/mach/edma.h          |  267 ---
+ arch/arm/mach-omap2/hsmmc.c                        |    7 +-
+ arch/arm/plat-omap/Kconfig                         |    1 +
+ drivers/dma/Kconfig                                |    2 +-
+ drivers/dma/edma.c                                 |   57 +-
+ drivers/mmc/host/davinci_mmc.c                     |    1 +
+ drivers/mmc/host/omap_hsmmc.c                      |   20 +-
+ drivers/spi/spi-omap2-mcspi.c                      |   65 +-
+ include/linux/dmaengine.h                          |   10 +
+ include/linux/mfd/davinci_voicecodec.h             |    3 +-
+ include/linux/platform_data/edma.h                 |  198 +++
+ include/linux/platform_data/spi-davinci.h          |    2 +-
+ sound/soc/davinci/davinci-evm.c                    |    1 +
+ sound/soc/davinci/davinci-pcm.c                    |    1 +
+ sound/soc/davinci/davinci-pcm.h                    |    2 +-
+ sound/soc/davinci/davinci-sffsdr.c                 |    6 +-
+ 41 files changed, 2361 insertions(+), 1957 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti-edma.txt
+ create mode 100644 arch/arm/common/edma.c
+ delete mode 100644 arch/arm/mach-davinci/dma.c
+ delete mode 100644 arch/arm/mach-davinci/include/mach/edma.h
+ create mode 100644 include/linux/platform_data/edma.h
+
+-- 
+1.7.9.5
+
