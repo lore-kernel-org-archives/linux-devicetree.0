@@ -1,86 +1,58 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: phy: add a new driver for usb3 phy
-Date: Wed, 10 Oct 2012 17:59:44 -0700
-Message-ID: <20121011005944.GX12552@atomide.com>
-References: <1348054229-27362-1-git-send-email-kishon@ti.com>
- <1348054229-27362-2-git-send-email-kishon@ti.com>
+From: Mitch Bradley <wmb@firmworks.com>
+Subject: Re: dtc: import latest upstream dtc
+Date: Wed, 10 Oct 2012 15:42:33 -1000
+Message-ID: <50762409.5060105@firmworks.com>
+References: <1349827466.26044.16@snotra> <ADE80D65-5170-4A8E-8D90-29161F8DB3BB@bsdimp.com> <20121010072401.GA28467@truffula.fritz.box> <50759152.9050407@wwwdotorg.org> <5075954B.8030008@gmail.com> <20121010231623.GG28467@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1348054229-27362-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121010231623.GG28467@truffula.fritz.box>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Rob Herring <robherring2@gmail.com>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Scott Wood <scottwood@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [120919 04:32]:
-> Added a driver for usb3 phy that handles the interaction between usb phy
-> device and dwc3 controller.
+On 10/10/2012 1:16 PM, David Gibson wrote:
+> On Wed, Oct 10, 2012 at 10:33:31AM -0500, Rob Herring wrote:
+>> On 10/10/2012 10:16 AM, Stephen Warren wrote:
+>>> On 10/10/2012 01:24 AM, David Gibson wrote:
+>>>> On Tue, Oct 09, 2012 at 10:43:50PM -0600, Warner Losh wrote:
+>>>>> On Oct 9, 2012, at 6:04 PM, Scott Wood wrote:
+> [snip]
+>>> That's probably a reasonable idea, although I imagined that people would
+>>> actually split out the portions of any header file they wanted to use
+>>> with dtc, so that any headers included by *.dts would only include
+>>> #defines. Those headers could be used by both dtc and other .h files (or
+>>> .c files).
+>>
+>> Used by what other files? kernel files? We ultimately want to split out
+>> dts files from the kernel, so whatever we add needs to be self
+>> contained. I don't see this as a huge issue though because the whole
+>> point of the DT data is to move that information out of the kernel. If
+>> it is needed in both places, then something is wrong.
 > 
-> This also includes device tree support for usb3 phy driver and
-> the documentation with device tree binding information is updated.
+> People get very hung up on this idea of having the DT move device
+> information out of the kernel, but that was never really the
+> motivation behind it.  Or at least, not the only or foremost
+> motivation.
 > 
-> Currently writing to control module register is taken care in this
-> driver which will be removed once the control module driver is in place.
+> The DT provides a consistent, flexible way of describing device
+> information.  That allows the core runtime the kernel to operate the
+> same way, regardless of how the DT information was obtained.  The DT
+> could come from firmware, but it could also come from an intermediate
+> bootloader or from early kernel code.  All are perfectly acceptable
+> options depending on the constraints of the platform.
+> 
+> The idea of firmware supplying the DT is much touted, but while it's a
+> theoretically nice idea, I think it's frequently a bad idea for
+> practical reasons.  Those being, in essence that a) firmware usually
+> sucks, b) it's usually harder (or at least no easier) to replace
+> firmware with a fixed version than the kernel/bootwrapper and c)
+> firmware usually *really* sucks.
+> 
 
-You may be able to set up the control module register with one
-of the following Linux standard frameworks:
-
-1. Fixed regulator defined in mach-omap2/control.c
-
-   In this case the PHY driver can pick up the regulator by name.
-
-2. A mux mapped with pinctrl framework using pinctrl-single,bits
-   binding
-
-   And in this case the PHY driver can request the named pinctrl
-   states like "enabled" and "disabled".
-
-> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
-> @@ -15,3 +15,21 @@ usb2phy@4a0ad080 {
->  	reg = <0x4a0ad080 0x58>,
->  	      <0x4a002300 0x4>;
->  };
-
-The comments also apply to the omap_usb2.c driver for
-0x4a002300 above.
-
-> +
-> +OMAP USB3 PHY
-> +
-> +Required properties:
-> + - compatible: Should be "ti,omap-usb3"
-> + - reg : Address and length of the register set for the device. Also
-> +add the address of control module phy power register until a driver for
-> +control module is added
-> +
-> +This is usually a subnode of ocp2scp to which it is connected.
-> +
-> +usb3phy@4a084400 {
-> +	compatible = "ti,omap-usb3";
-> +	reg = <0x0x4a084400 0x80>,
-> +	      <0x4a084800 0x64>,
-> +	      <0x4a084c00 0x40>,
-> +	      <0x4a002370 0x4>;
-> +};
-
-And register 0x4a002370 here. Care to post some info what the
-0x4a002370 register bits do? Is that same as CONTROL_DEV_CONF
-on omap4, or does it have other bits there too?
-
-The advantage for using regulator fwk and pinctrl fwk is
-that the regulator and mux can be children of the SCM
-core driver when we have it. And no direct register tinkering
-or omap specific custom exported functions are needed ;)
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gee, it sounds like you want firmware to suck.  Beating on the "firmware
+sucks" drum is sort of a self-fulfilling prophecy, discouraging talented
+programmers from doing firmware.  Who would want to work on something
+that "everyone knows sucks"?
