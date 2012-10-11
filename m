@@ -1,86 +1,127 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] dt: add helper inline for retrieving timeout-sec
- property
-Date: Thu, 11 Oct 2012 13:55:47 +0200
-Message-ID: <CAHkwnC9B7e-3bqar5ePmXQ9eNUnEAsnf+8mdjSKDshAHVQet6g@mail.gmail.com>
-References: <1349784251-28261-1-git-send-email-fabio.porcedda@gmail.com>
- <1349784251-28261-2-git-send-email-fabio.porcedda@gmail.com>
- <5075865C.3010606@gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH V2 3/3] ARM: dts: omap5-evm: LPDDR2 memory device details for EVM
+Date: Thu, 11 Oct 2012 18:17:49 +0530
+Message-ID: <1349959669-16366-4-git-send-email-lokeshvutla@ti.com>
+References: <1349959669-16366-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5075865C.3010606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1349959669-16366-1-git-send-email-lokeshvutla@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, lokeshvutla@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 10, 2012 at 4:29 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 10/09/2012 07:04 AM, Fabio Porcedda wrote:
->> The first user of this function is the watchdog framework.
->
-> Who is the 2nd user because I don't see any others. I don't see this
-> being a widely used property.
+Samsung's K3PE0E000B memory part is used in OMAP5-evm board.
+Adding timings and geometry details for Samsung's memory part and
+attaching the same to device-handle of EMIF1/2.
 
-Hi Rob, thanks for reviewing.
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+ arch/arm/boot/dts/omap5-evm.dts           |   11 +++++
+ arch/arm/boot/dts/samsung_k3pe0e000b.dtsi |   67 +++++++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+)
+ create mode 100644 arch/arm/boot/dts/samsung_k3pe0e000b.dtsi
 
-There is only one use of this function in my patchset.
-I added this function after Jean-Christophe repeatedly suggested to add it.
-
-On Fri, Oct 5, 2012 at 1:16 PM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> why I bother to comment
-> *make this of generic* this is not watchdog specific other driver can use it
-
-Maybe the idea was to have the helper ready when the dt support it's
-added to a drivers that use a "timeout" parameter.
-
-If it's for better i can just get rid of this function.
-I don't mind.
-
-Best regards
-
->
->>
->> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  include/linux/of.h | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index 72843b7..5870818 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -470,4 +470,15 @@ static inline int of_property_read_u32(const struct device_node *np,
->>       return of_property_read_u32_array(np, propname, out_value, 1);
->>  }
->>
->> +/**
->> + * of_get_timeout_sec() - Helper to read the timeout_sec property
->> + * @np:              device node from which the property value is to be read.
->> + * @timeout: adress of the output value
->> + */
->> +static inline int of_get_timeout_sec(const struct device_node *np,
->> +                                  u32 *timeout)
->> +{
->> +     return of_property_read_u32(np, "timeout-sec", timeout);
->> +}
->> +
->>  #endif /* _LINUX_OF_H */
->>
->
-
+diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
+index 6f87e1a..ed1d1b5 100644
+--- a/arch/arm/boot/dts/omap5-evm.dts
++++ b/arch/arm/boot/dts/omap5-evm.dts
+@@ -8,6 +8,7 @@
+ /dts-v1/;
+ 
+ /include/ "omap5.dtsi"
++/include/ "samsung_k3pe0e000b.dtsi"
+ 
+ / {
+ 	model = "TI OMAP5 EVM board";
+@@ -82,3 +83,13 @@
+ 			0x020700d9>;	/* SEARCH */
+ 	linux,input-no-autorepeat;
+ };
++
++&emif1 {
++	cs1-used;
++	device-handle = <&samsung_K3PE0E000B>;
++};
++
++&emif2 {
++	cs1-used;
++	device-handle = <&samsung_K3PE0E000B>;
++};
+diff --git a/arch/arm/boot/dts/samsung_k3pe0e000b.dtsi b/arch/arm/boot/dts/samsung_k3pe0e000b.dtsi
+new file mode 100644
+index 0000000..b352d69
+--- /dev/null
++++ b/arch/arm/boot/dts/samsung_k3pe0e000b.dtsi
+@@ -0,0 +1,67 @@
++/*
++ * Timings and Geometry for Samsung K3PE0E000B memory part
++ */
++
++/ {
++	samsung_K3PE0E000B: lpddr2 {
++		compatible	= "Samsung,K3PE0E000B","jedec,lpddr2-s4";
++		density		= <4096>;
++		io-width	= <32>;
++
++		tRPab-min-tck	= <3>;
++		tRCD-min-tck	= <3>;
++		tWR-min-tck	= <3>;
++		tRASmin-min-tck	= <3>;
++		tRRD-min-tck	= <2>;
++		tWTR-min-tck	= <2>;
++		tXP-min-tck	= <2>;
++		tRTP-min-tck	= <2>;
++		tCKE-min-tck	= <3>;
++		tCKESR-min-tck	= <3>;
++		tFAW-min-tck	= <8>;
++
++		timings_samsung_K3PE0E000B_533mhz: lpddr2-timings@0 {
++			compatible	= "jedec,lpddr2-timings";
++			min-freq	= <10000000>;
++			max-freq	= <533333333>;
++			tRPab		= <21000>;
++			tRCD		= <18000>;
++			tWR		= <15000>;
++			tRAS-min	= <42000>;
++			tRRD		= <10000>;
++			tWTR		= <7500>;
++			tXP		= <7500>;
++			tRTP		= <7500>;
++			tCKESR		= <15000>;
++			tDQSCK-max	= <5500>;
++			tFAW		= <50000>;
++			tZQCS		= <90000>;
++			tZQCL		= <360000>;
++			tZQinit		= <1000000>;
++			tRAS-max-ns	= <70000>;
++			tDQSCK-max-derated = <6000>;
++		};
++
++		timings_samsung_K3PE0E000B_266mhz: lpddr2-timings@1 {
++			compatible	= "jedec,lpddr2-timings";
++			min-freq	= <10000000>;
++			max-freq	= <266666666>;
++			tRPab		= <21000>;
++			tRCD		= <18000>;
++			tWR		= <15000>;
++			tRAS-min	= <42000>;
++			tRRD		= <10000>;
++			tWTR		= <7500>;
++			tXP		= <7500>;
++			tRTP		= <7500>;
++			tCKESR		= <15000>;
++			tDQSCK-max	= <5500>;
++			tFAW		= <50000>;
++			tZQCS		= <90000>;
++			tZQCL		= <360000>;
++			tZQinit		= <1000000>;
++			tRAS-max-ns	= <70000>;
++			tDQSCK-max-derated = <6000>;
++		};
++	};
++};
 -- 
-Fabio Porcedda
+1.7.10.4
+
