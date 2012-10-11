@@ -1,51 +1,56 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH V4 2/2] video: exynos_dp: device tree documentation
-Date: Thu, 11 Oct 2012 12:01:13 +0200
-Message-ID: <507698E9.7050007@samsung.com>
-References: <1349824101-32574-1-git-send-email-ajaykumar.rs@samsung.com>
- <1349824101-32574-3-git-send-email-ajaykumar.rs@samsung.com>
- <50749727.1020103@gmail.com>
- <CAEC9eQO5s5VG_qwRbH4K7TD_Z_rYbks=s_GEOfY3TxDMk7gPzw@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v4 RESEND 1/3] Input: egalax_ts: get gpio from
+	devicetree
+Date: Thu, 11 Oct 2012 11:19:43 +0100
+Message-ID: <20121011101943.GN4625@n2100.arm.linux.org.uk>
+References: <1349860323-12786-1-git-send-email-jason77.wang@gmail.com> <1349860323-12786-2-git-send-email-jason77.wang@gmail.com> <20121010163036.GC19335@core.coreip.homeip.net> <20121011085535.GA31464@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAEC9eQO5s5VG_qwRbH4K7TD_Z_rYbks=s_GEOfY3TxDMk7gPzw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, jg1.han@samsung.com, devicetree-discuss@lists.ozlabs.org, FlorianSchandinat@gmx.de, tomasz.figa@gmail.com, thomas.ab@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121011085535.GA31464@S2101-09.ap.freescale.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree-discuss@lists.ozlabs.org, Hui Wang <jason77.wang@gmail.com>, jiejing.zhang@freescale.com, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/11/2012 08:50 AM, Ajay kumar wrote:
->>> +     -samsung,interlaced:
->>> +             Interlace scan mode.
->>> +                     Progressive if defined, Interlaced if not defined
->>> +     -samsung,v_sync_polarity:
->>> +             VSYNC polarity configuration.
->>> +                     High if defined, Low if not defined
->>> +     -samsung,h_sync_polarity:
->>> +             HSYNC polarity configuration.
->>> +                     High if defined, Low if not defined
->>
->> So there is no common video bindings for things like these two ?
->> In V4L2 we decided to use vsync-active, hsync-active [1], the video
->> timings bindings [2] use hsync-active-high, hsync-active-high boolean
->> properties. Perhaps it is worth to pick some of those standard
->> definitions and use instead of the vendor specific ones ?
+On Thu, Oct 11, 2012 at 04:55:40PM +0800, Shawn Guo wrote:
+> Add LAKML ...
+> 
+> On Wed, Oct 10, 2012 at 09:30:36AM -0700, Dmitry Torokhov wrote:
+> > Hi Hui,
+> > 
+> > On Wed, Oct 10, 2012 at 05:12:01PM +0800, Hui Wang wrote:
+> > > The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
+> > > and don't support this API anymore.
+> > > 
+> > > The i.MX6q sabrelite platform equips an egalax touchscreen controller,
+> > > and this platform already transfered to GENERIC_GPIO framework, to
+> > > support this driver, we use a more generic way to get gpio.
+> > 
+> > Unfortunately this does break the driver for platforms that do still
+> > support irq_to_gpio and have not transitioned to device tree (yet?).
+> > It looks like the API suffered from premature deletion...
+> > 
+> > I really do not want to add a new platform data structure with only gpio
+> > in it, is there a better way to detect if irq_to_gpio() (even if only a
+> > stub) is available?
+> > 
+> If CONFIG_ARCH_HAVE_CUSTOM_GPIO_H is not enabled for an architecture,
+> the irq_to_gpio() in include/linux/gpio.h will tell unavailability by
+> returning -EINVAL.  But ARM architecture still selects ARCH_HAVE_CUSTOM_GPIO_H
+> because there are still some platforms having mach/gpio.h.
+> 
+> We may also need a stub irq_to_gpio simply returning -EINVAL into
+> arch/arm/include/asm/gpio.h when platform does not provide irq_to_gpio,
+> so that driver can detect if irq_to_gpio() is available.  And that
+> stub can be removed later when we deselect ARCH_HAVE_CUSTOM_GPIO_H
+> for ARM architecture.
 
-> hsync-active-high and vsync-active-high seems to hold good in our case.
-> Also, are you asking us to just use only the standard names or use standard
-> helper functions as well? Since we use only hsync and vsync polarity and no
-> other LCD timing properties, I think we need not use standard helper functions
-> for parsing display timings!
+Or fix the drivers using irq_to_gpio() not to use it.  I thought we had
+resolved to do that already, with Grant's agreement that irq_to_gpio()
+needed to die.
 
-My point was just to use common property names where possible. Any parsing
-helpers could be created afterwards, if you would rather avoid doing that
-right now. BTW, it seems 'interlaced' could also be reused.
-
-...
->> [1] http://www.mail-archive.com/linux-media@vger.kernel.org/msg52743.html
->> [2] http://www.mail-archive.com/linux-media@vger.kernel.org/msg53323.html
-
-Thanks,
-Sylwester
+(Mainly because neither gpiolib nor the IRQ layer provides any assistance
+for irq_to_gpio(), so it's not possible to make it work for all GPIOs in
+the system, especially when GPIOs are allocated dynamically.)
