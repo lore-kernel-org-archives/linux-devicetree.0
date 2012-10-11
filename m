@@ -1,61 +1,46 @@
-From: Hui Wang <jason77.wang@gmail.com>
-Subject: Re: [PATCH v4 RESEND 1/3] Input: egalax_ts: get gpio from devicetree
-Date: Thu, 11 Oct 2012 17:23:11 +0800
-Message-ID: <50768FFF.9060702@gmail.com>
-References: <1349860323-12786-1-git-send-email-jason77.wang@gmail.com> <1349860323-12786-2-git-send-email-jason77.wang@gmail.com> <20121010163036.GC19335@core.coreip.homeip.net> <20121011085535.GA31464@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20121011085535.GA31464@S2101-09.ap.freescale.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hui Wang <jason77.wang@gmail.com>, jiejing.zhang@freescale.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v1 0/6] arm: exynos: add dt based support for exynos5 hdmi
+Date: Fri, 12 Oct 2012 00:27:41 +0530
+Message-ID: <1349981868-2116-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Shawn Guo wrote:
-> Add LAKML ...
->
-> On Wed, Oct 10, 2012 at 09:30:36AM -0700, Dmitry Torokhov wrote:
->   
->> Hi Hui,
->>
->> On Wed, Oct 10, 2012 at 05:12:01PM +0800, Hui Wang wrote:
->>     
->>> The irq_to_gpio() is old, most platforms use GENERIC_GPIO framework
->>> and don't support this API anymore.
->>>
->>> The i.MX6q sabrelite platform equips an egalax touchscreen controller,
->>> and this platform already transfered to GENERIC_GPIO framework, to
->>> support this driver, we use a more generic way to get gpio.
->>>       
->> Unfortunately this does break the driver for platforms that do still
->> support irq_to_gpio and have not transitioned to device tree (yet?).
->> It looks like the API suffered from premature deletion...
->>
->> I really do not want to add a new platform data structure with only gpio
->> in it, is there a better way to detect if irq_to_gpio() (even if only a
->> stub) is available?
->>
->>     
-> If CONFIG_ARCH_HAVE_CUSTOM_GPIO_H is not enabled for an architecture,
-> the irq_to_gpio() in include/linux/gpio.h will tell unavailability by
-> returning -EINVAL.  But ARM
->   
-So far, the only way i can figure out is to add following in the 
-arch/arm/include/asm/gpio.h
+This patch set adds the DT based support for Samsung's Exynos5250. It adds
+device tree nodes for hdmi, mixer, hdmiphy and hdmiddc. The name of these
+devices are changed to the one matching with drivers. Exynos-drm and exynos
+hdmi-drm-commmon devices are removed from machine init code.
 
-static inline int arm_irq_to_gpio(unsigned int irq)
-{
-return -EINVAL;
-}
+Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
+init code. Patch set which adds this code is "add exynos-drm platform device
+registration to driver" is posted to dri-devel mailing list.
 
-#ifndef irq_to_gpio
-#define irq_to_gpio arm_irq_to_gpio
-#endif
+This patchset is based on linux v3.6-rc5, branch dt-samsung-new at
+git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
 
-And remove all irq_to_gpio() function definitions in the arch/arm/, if 
-mach want a specific irq_to_gpio, they can use macro to define their own.
+Rahul Sharma (6):
+  dts: exynos: add device tree support for exynos5 hdmi
+  dts: exynos: add device tree support for exynos5 mixer
+  dts: exynos: add device tree support for exynos5 hdmiphy
+  dts: exynos: add device tree support for exynos5 hdmiddc
+  arm: exynos: add clocks for exynos5 hdmi
+  arm: exynos: removing exynos-drm device registration from non-dt
+    platforms
 
-Regards,
-Hui.
+ arch/arm/boot/dts/exynos5250-smdk5250.dts  |   24 ++++++++++++++++++++++-
+ arch/arm/boot/dts/exynos5250.dtsi          |   23 ++++++++++++++++++++++
+ arch/arm/mach-exynos/Makefile              |    1 -
+ arch/arm/mach-exynos/clock-exynos5.c       |   14 +++++++++++-
+ arch/arm/mach-exynos/dev-drm.c             |   29 ----------------------------
+ arch/arm/mach-exynos/include/mach/map.h    |    2 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c     |    8 +++++++
+ arch/arm/mach-exynos/mach-nuri.c           |    3 --
+ arch/arm/mach-exynos/mach-origen.c         |    3 --
+ arch/arm/mach-exynos/mach-smdk4x12.c       |    3 --
+ arch/arm/mach-exynos/mach-smdkv310.c       |    3 --
+ arch/arm/mach-exynos/mach-universal_c210.c |    3 --
+ arch/arm/plat-samsung/include/plat/devs.h  |    2 -
+ 13 files changed, 68 insertions(+), 50 deletions(-)
+ delete mode 100644 arch/arm/mach-exynos/dev-drm.c
