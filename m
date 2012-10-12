@@ -1,275 +1,81 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V2 3/3] ARM: SPEAr13xx: Pass DW DMAC platform data from DT
-Date: Fri, 12 Oct 2012 20:01:43 +0530
-Message-ID: <2039bc164224b0068bc078b6cd8df6218e754fce.1350051925.git.viresh.kumar@linaro.org>
-References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350051925.git.viresh.kumar@linaro.org>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Fri, 12 Oct 2012 14:41:55 +0000
+Message-ID: <1350052912.10584.167.camel@smile>
+References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
+	 <91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
+	 <1350048519.10584.158.camel@smile>
+	 <CAKohpok=nv2XnFdPkD_yJgUsDqx2gEh=mG_Xhbe-BvT7swVsyg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350051925.git.viresh.kumar@linaro.org>
-In-Reply-To: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350051925.git.viresh.kumar@linaro.org>
-References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350051925.git.viresh.kumar@linaro.org>
+In-Reply-To: <CAKohpok=nv2XnFdPkD_yJgUsDqx2gEh=mG_Xhbe-BvT7swVsyg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <32EFD540BB052D47B5F326DB81C205FC@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com
-Cc: linux-kernel@vger.kernel.org, spear-devel@list.st.com, andriy.shevchenko@linux.intel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Koul, Vinod" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "spear-devel@list.st.com" <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dw_dmac's platform data to DT node. It also creates slave info
-node for SPEAr13xx, for the devices which were using dw_dmac.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-V1->V2:
-------
-- renamed filter function
-
- arch/arm/boot/dts/spear1340.dtsi             | 19 ++++++++++
- arch/arm/boot/dts/spear13xx.dtsi             | 38 ++++++++++++++++++++
- arch/arm/mach-spear13xx/include/mach/spear.h |  2 --
- arch/arm/mach-spear13xx/spear1310.c          |  4 +--
- arch/arm/mach-spear13xx/spear1340.c          | 27 +++-----------
- arch/arm/mach-spear13xx/spear13xx.c          | 54 ++--------------------------
- 6 files changed, 65 insertions(+), 79 deletions(-)
-
-diff --git a/arch/arm/boot/dts/spear1340.dtsi b/arch/arm/boot/dts/spear1340.dtsi
-index d71fe2a..8ea3f66 100644
---- a/arch/arm/boot/dts/spear1340.dtsi
-+++ b/arch/arm/boot/dts/spear1340.dtsi
-@@ -24,6 +24,25 @@
- 			status = "disabled";
- 		};
- 
-+		dma@ea800000 {
-+			slave_info {
-+				uart1_tx {
-+					bus_id = "uart1_tx";
-+					cfg_hi = <0x6000>;	/* 0xC << 11 */
-+					cfg_lo = <0>;
-+					src_master = <0>;
-+					dst_master = <1>;
-+				};
-+				uart1_tx {
-+					bus_id = "uart1_tx";
-+					cfg_hi = <0x680>;	/* 0xD << 7 */
-+					cfg_lo = <0>;
-+					src_master = <1>;
-+					dst_master = <0>;
-+				};
-+			};
-+		};
-+
- 		spi1: spi@5d400000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x5d400000 0x1000>;
-diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-index f7b84ac..f06bb50 100644
---- a/arch/arm/boot/dts/spear13xx.dtsi
-+++ b/arch/arm/boot/dts/spear13xx.dtsi
-@@ -91,6 +91,37 @@
- 			reg = <0xea800000 0x1000>;
- 			interrupts = <0 19 0x4>;
- 			status = "disabled";
-+
-+			nr_channels = <8>;
-+			chan_allocation_order = <1>;
-+			chan_priority = <1>;
-+			block_size = <0xfff>;
-+			nr_masters = <2>;
-+			data_width = <3 3 0 0>;
-+
-+			slave_info {
-+				ssp0_tx {
-+					bus_id = "ssp0_tx";
-+					cfg_hi = <0x2000>;	/* 0x4 << 11 */
-+					cfg_lo = <0>;
-+					src_master = <0>;
-+					dst_master = <0>;
-+				};
-+				ssp0_rx {
-+					bus_id = "ssp0_rx";
-+					cfg_hi = <0x280>;	/* 0x5 << 7 */
-+					cfg_lo = <0>;
-+					src_master = <0>;
-+					dst_master = <0>;
-+				};
-+				cf {
-+					bus_id = "cf";
-+					cfg_hi = <0>;
-+					cfg_lo = <0>;
-+					src_master = <0>;
-+					dst_master = <0>;
-+				};
-+			};
- 		};
- 
- 		dma@eb000000 {
-@@ -98,6 +129,13 @@
- 			reg = <0xeb000000 0x1000>;
- 			interrupts = <0 59 0x4>;
- 			status = "disabled";
-+
-+			nr_channels = <8>;
-+			chan_allocation_order = <1>;
-+			chan_priority = <1>;
-+			block_size = <0xfff>;
-+			nr_masters = <2>;
-+			data_width = <3 3 0 0>;
- 		};
- 
- 		fsmc: flash@b0000000 {
-diff --git a/arch/arm/mach-spear13xx/include/mach/spear.h b/arch/arm/mach-spear13xx/include/mach/spear.h
-index 07d90ac..71bf5b6 100644
---- a/arch/arm/mach-spear13xx/include/mach/spear.h
-+++ b/arch/arm/mach-spear13xx/include/mach/spear.h
-@@ -43,8 +43,6 @@
- #define VA_L2CC_BASE				IOMEM(UL(0xFB000000))
- 
- /* others */
--#define DMAC0_BASE				UL(0xEA800000)
--#define DMAC1_BASE				UL(0xEB000000)
- #define MCIF_CF_BASE				UL(0xB2800000)
- 
- /* Devices present in SPEAr1310 */
-diff --git a/arch/arm/mach-spear13xx/spear1310.c b/arch/arm/mach-spear13xx/spear1310.c
-index 9fbbfc5..0e60195 100644
---- a/arch/arm/mach-spear13xx/spear1310.c
-+++ b/arch/arm/mach-spear13xx/spear1310.c
-@@ -36,9 +36,7 @@ static struct pl022_ssp_controller ssp1_plat_data = {
- 
- /* Add SPEAr1310 auxdata to pass platform data */
- static struct of_dev_auxdata spear1310_auxdata_lookup[] __initdata = {
--	OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, &cf_dma_priv),
--	OF_DEV_AUXDATA("snps,dma-spear1340", DMAC0_BASE, NULL, &dmac_plat_data),
--	OF_DEV_AUXDATA("snps,dma-spear1340", DMAC1_BASE, NULL, &dmac_plat_data),
-+	OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, "cf"),
- 	OF_DEV_AUXDATA("arm,pl022", SSP_BASE, NULL, &pl022_plat_data),
- 
- 	OF_DEV_AUXDATA("arm,pl022", SPEAR1310_SSP1_BASE, NULL, &ssp1_plat_data),
-diff --git a/arch/arm/mach-spear13xx/spear1340.c b/arch/arm/mach-spear13xx/spear1340.c
-index 081014f..7301f14 100644
---- a/arch/arm/mach-spear13xx/spear1340.c
-+++ b/arch/arm/mach-spear13xx/spear1340.c
-@@ -20,7 +20,6 @@
- #include <linux/of_platform.h>
- #include <asm/hardware/gic.h>
- #include <asm/mach/arch.h>
--#include <mach/dma.h>
- #include <mach/generic.h>
- #include <mach/spear.h>
- 
-@@ -78,26 +77,10 @@
- 			(SPEAR1340_MIPHY_OSC_BYPASS_EXT | \
- 			SPEAR1340_MIPHY_PLL_RATIO_TOP(25))
- 
--static struct dw_dma_slave uart1_dma_param[] = {
--	{
--		/* Tx */
--		.cfg_hi = DWC_CFGH_DST_PER(SPEAR1340_DMA_REQ_UART1_TX),
--		.cfg_lo = 0,
--		.src_master = DMA_MASTER_MEMORY,
--		.dst_master = SPEAR1340_DMA_MASTER_UART1,
--	}, {
--		/* Rx */
--		.cfg_hi = DWC_CFGH_SRC_PER(SPEAR1340_DMA_REQ_UART1_RX),
--		.cfg_lo = 0,
--		.src_master = SPEAR1340_DMA_MASTER_UART1,
--		.dst_master = DMA_MASTER_MEMORY,
--	}
--};
--
- static struct amba_pl011_data uart1_data = {
--	.dma_filter = dw_dma_filter,
--	.dma_tx_param = &uart1_dma_param[0],
--	.dma_rx_param = &uart1_dma_param[1],
-+	.dma_filter = dw_dma_generic_filter,
-+	.dma_tx_param = "uart1_tx",
-+	.dma_rx_param = "uart1_rx",
- };
- 
- /* SATA device registration */
-@@ -158,9 +141,7 @@ static struct ahci_platform_data sata_pdata = {
- 
- /* Add SPEAr1340 auxdata to pass platform data */
- static struct of_dev_auxdata spear1340_auxdata_lookup[] __initdata = {
--	OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, &cf_dma_priv),
--	OF_DEV_AUXDATA("snps,dma-spear1340", DMAC0_BASE, NULL, &dmac_plat_data),
--	OF_DEV_AUXDATA("snps,dma-spear1340", DMAC1_BASE, NULL, &dmac_plat_data),
-+	OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, "cf"),
- 	OF_DEV_AUXDATA("arm,pl022", SSP_BASE, NULL, &pl022_plat_data),
- 
- 	OF_DEV_AUXDATA("snps,spear-ahci", SPEAR1340_SATA_BASE, NULL,
-diff --git a/arch/arm/mach-spear13xx/spear13xx.c b/arch/arm/mach-spear13xx/spear13xx.c
-index 5633d69..0e166fa 100644
---- a/arch/arm/mach-spear13xx/spear13xx.c
-+++ b/arch/arm/mach-spear13xx/spear13xx.c
-@@ -22,67 +22,19 @@
- #include <asm/hardware/gic.h>
- #include <asm/mach/map.h>
- #include <asm/smp_twd.h>
--#include <mach/dma.h>
- #include <mach/generic.h>
- #include <mach/spear.h>
- 
--/* common dw_dma filter routine to be used by peripherals */
--bool dw_dma_filter(struct dma_chan *chan, void *slave)
--{
--	struct dw_dma_slave *dws = (struct dw_dma_slave *)slave;
--
--	if (chan->device->dev == dws->dma_dev) {
--		chan->private = slave;
--		return true;
--	} else {
--		return false;
--	}
--}
--
- /* ssp device registration */
--static struct dw_dma_slave ssp_dma_param[] = {
--	{
--		/* Tx */
--		.cfg_hi = DWC_CFGH_DST_PER(DMA_REQ_SSP0_TX),
--		.cfg_lo = 0,
--		.src_master = DMA_MASTER_MEMORY,
--		.dst_master = DMA_MASTER_SSP0,
--	}, {
--		/* Rx */
--		.cfg_hi = DWC_CFGH_SRC_PER(DMA_REQ_SSP0_RX),
--		.cfg_lo = 0,
--		.src_master = DMA_MASTER_SSP0,
--		.dst_master = DMA_MASTER_MEMORY,
--	}
--};
--
- struct pl022_ssp_controller pl022_plat_data = {
- 	.bus_id = 0,
- 	.enable_dma = 1,
--	.dma_filter = dw_dma_filter,
--	.dma_rx_param = &ssp_dma_param[1],
--	.dma_tx_param = &ssp_dma_param[0],
-+	.dma_filter = dw_dma_generic_filter,
-+	.dma_rx_param = "ssp0_rx",
-+	.dma_tx_param = "ssp0_tx",
- 	.num_chipselect = 3,
- };
- 
--/* CF device registration */
--struct dw_dma_slave cf_dma_priv = {
--	.cfg_hi = 0,
--	.cfg_lo = 0,
--	.src_master = 0,
--	.dst_master = 0,
--};
--
--/* dmac device registeration */
--struct dw_dma_platform_data dmac_plat_data = {
--	.nr_channels = 8,
--	.chan_allocation_order = CHAN_ALLOCATION_DESCENDING,
--	.chan_priority = CHAN_PRIORITY_DESCENDING,
--	.block_size = 4095U,
--	.nr_masters = 2,
--	.data_width = { 3, 3, 0, 0 },
--};
--
- void __init spear13xx_l2x0_init(void)
- {
- 	/*
--- 
-1.7.12.rc2.18.g61b472e
+T24gRnJpLCAyMDEyLTEwLTEyIGF0IDE5OjM2ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6IA0K
+PiBPbiAxMiBPY3RvYmVyIDIwMTIgMTg6NTgsIFNoZXZjaGVua28sIEFuZHJpeQ0KPiA8YW5kcml5
+LnNoZXZjaGVua29AaW50ZWwuY29tPiB3cm90ZToNCj4gPiBPbiBGcmksIDIwMTItMTAtMTIgYXQg
+MTE6MTQgKzA1MzAsIFZpcmVzaCBLdW1hciB3cm90ZToNCj4gDQo+ID4+ICsgICAgIGlmICghb2Zf
+cHJvcGVydHlfcmVhZF91MzIobnAsICJucl9tYXN0ZXJzIiwgJnZhbCkpIHsNCj4gPj4gKyAgICAg
+ICAgICAgICBpZiAodmFsID4gNCkNCj4gPiBJIHRob3VnaHQgb25jZSB0aGF0IHdlIG1pZ2h0IGlu
+dHJvZHVjZSBjb25zdGFudCBsaWtlICNkZWZpbmUNCj4gPiBEV19NQVhfQUhCX01BU1RFUlMgNC4g
+SXQgc2VlbXMgYSBiaXQgdXNlbGVzcyBiZWNhdXNlIGh3IGlzIGRlc2lnbmVkIGZvcg0KPiA+IHRo
+YXQgbnVtYmVyIGFueXdheSwgYnV0IG1heWJlIHlvdSBoYXZlIGFub3RoZXIgb3Bpbmlvbi4NCj4g
+DQo+IE5vdCBldmVyeW9uZSBoYXZlIGZvdXIgbWFzdGVycyBpbiB0aGVyZSBTb0MgY29uZmlndXJh
+dGlvbnMuIFNvIGl0cyBiZXR0ZXINCj4gdG8gZXhwb3J0IGNvcnJlY3QgdmFsdWVzLg0KSSBtZWFu
+dCBpcyB0byB1c2UgdGhhdCBjb25zdGFudCBpbnN0ZWFkIG9mIGhhcmQgY29kaW5nIDQgZXZlcnl3
+aGVyZS4NCkl0J3MgYSBtYXhpbXVtIHZhbHVlLCBub3QgdGhlIFNvQyBzcGVjaWZpYy4NCg0KPiA+
+PiArICAgICBpZiAoIW9mX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KG5wLCAiZGF0YV93aWR0aCIs
+IGFyciwNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGRhdGEtPm5yX21hc3Rl
+cnMpKQ0KPiA+PiArICAgICAgICAgICAgIGZvciAoY291bnQgPSAwOyBjb3VudCA8IHBkYXRhLT5u
+cl9tYXN0ZXJzOyBjb3VudCsrKQ0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgcGRhdGEtPmRh
+dGFfd2lkdGhbY291bnRdID0gYXJyW2NvdW50XTsNCj4gPiBBaCwgaXQgd291bGQgYmUgbmljZSB0
+byBoYXZlIG9mX3Byb3BlcnR5X3JlYWRfdThfYXJyYXkgYW5kIHNvIG9uLi4uDQo+IA0KPiA6KQ0K
+PiBNYXliZSB5ZXMuIEkgZG9uJ3Qgd2FudCB0byBkbyBpdCB3aXRoIHRoaXMgcGF0Y2hzZXQsIGFz
+IHRoYXQgd2lsbCB0YWtlIG1vcmUNCj4gdGltZSB0byBnbyB0aHJvdWdoIG1haW50YWluZXJzLg0K
+QWdyZWVkLCB0aGUgY29tbWVudCBqdXN0IGZvciBmdXR1cmUuIEkgZG9uJ3Qga25vdyBpZiB0aGVy
+ZSBhbnkgb3RoZXINCnVzZXJzIG9mICpfdTgvdTE2X2FycmF5KCkuDQoNCj4gPiBpdCB3aWxsIHBy
+b2JhYmx5IHJlcXVpcmUgdG8gc3BsaXQgdGhpcyBwYXJ0IGluIGEgc2VwYXJhdGUgZnVuY3Rpb24g
+YW5kDQo+ID4gY2FsY3VsYXRlIGNvdW50IG9mIHNsYXZlX2luZm8gY2hpbGRyZW4gYmVmb3JlIHBk
+YXRhIG1lbW9yeSBhbGxvY2F0aW9uLg0KPiANCj4gTGlrZWQgdGhlIGlkZWEgcGFydGlhbGx5LiBD
+aGVjayBteSBuZXcgaW1wbGVtZW50YXRpb24gaW4gZml4dXAgZm9yIGFsbA0KPiB0aGVzZSBjb21t
+ZW50czoNCkxldCBtZSBzZWUuDQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL2R3X2RtYWMu
+YyBiL2RyaXZlcnMvZG1hL2R3X2RtYWMuYw0KDQo+IEBAIC0xNTE2LDcgKzE1MTYsNyBAQCBfX2Rl
+dmluaXQgZHdfZG1hX3BhcnNlX2R0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJ
+c3RydWN0IGRldmljZV9ub2RlICpzbiwgKmNuLCAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4g
+IAlzdHJ1Y3QgZHdfZG1hX3BsYXRmb3JtX2RhdGEgKnBkYXRhOw0KPiAgCXN0cnVjdCBkd19kbWFf
+c2xhdmUgKnNkOw0KPiAtCXUzMiBjb3VudCwgdmFsLCBhcnJbNF07DQo+ICsJdTMyIHZhbCwgYXJy
+WzRdOw0Kd2hhdCBhYm91dCB0byB1c2UgdG1wIG5hbWUgaW5zdGVhZCBvZiB2YWw/IEl0J3MgcmVh
+bGx5IG1pbm9yLCBidXQgSQ0KdGhpbmsgdmFsIG5hbWUgaXMgbGl0dGxlIGJpdCB1bnJlbGF0ZWQg
+dG8gYSBsb29wIGNvdW50ZXIuDQoNCj4gQEAgLTE1MzMsNjMgKzE1MzMsNTcgQEAgX19kZXZpbml0
+IGR3X2RtYV9wYXJzZV9kdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KDQo+IC0JY291
+bnQgPSAwOw0KPiArCXBkYXRhLT5zZCA9IHNkOw0KPiArCXBkYXRhLT5zZF9jb3VudCA9IHZhbDsN
+Cj4gKw0KPiAgCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoc24sIGNuKSB7DQo+IC0JCW9mX3Byb3Bl
+cnR5X3JlYWRfc3RyaW5nKGNuLCAiYnVzX2lkIiwgJnNkW2NvdW50XS5idXNfaWQpOw0KPiAtCQlv
+Zl9wcm9wZXJ0eV9yZWFkX3UzMihjbiwgImNmZ19oaSIsICZzZFtjb3VudF0uY2ZnX2hpKTsNCj4g
+LQkJb2ZfcHJvcGVydHlfcmVhZF91MzIoY24sICJjZmdfbG8iLCAmc2RbY291bnRdLmNmZ19sbyk7
+DQo+ICsJCXNkLT5kbWFfZGV2ID0gJnBkZXYtPmRldjsNCj4gKwkJb2ZfcHJvcGVydHlfcmVhZF9z
+dHJpbmcoY24sICJidXNfaWQiLCAmc2QtPmJ1c19pZCk7DQo+ICsJCW9mX3Byb3BlcnR5X3JlYWRf
+dTMyKGNuLCAiY2ZnX2hpIiwgJnNkLT5jZmdfaGkpOw0KPiArCQlvZl9wcm9wZXJ0eV9yZWFkX3Uz
+MihjbiwgImNmZ19sbyIsICZzZC0+Y2ZnX2xvKTsNCj4gIAkJaWYgKCFvZl9wcm9wZXJ0eV9yZWFk
+X3UzMihjbiwgInNyY19tYXN0ZXIiLCAmdmFsKSkNCj4gLQkJCXNkW2NvdW50XS5zcmNfbWFzdGVy
+ID0gKHU4KXZhbDsNCj4gKwkJCXNkLT5zcmNfbWFzdGVyID0gdmFsOw0KPiANCj4gIAkJaWYgKCFv
+Zl9wcm9wZXJ0eV9yZWFkX3UzMihjbiwgImRzdF9tYXN0ZXIiLCAmdmFsKSkNCj4gLQkJCXNkW2Nv
+dW50XS5kc3RfbWFzdGVyID0gKHU4KXZhbDsNCj4gLQ0KPiAtCQlzZFtjb3VudF0uZG1hX2RldiA9
+ICZwZGV2LT5kZXY7DQo+IC0JCWNvdW50Kys7DQo+ICsJCQlzZC0+ZHN0X21hc3RlciA9IHZhbDsN
+Cj4gKwkJc2QrKzsNCj4gIAl9DQpUaGlzIGxvb2tzIGdvb2QuDQoNCi0tIA0KQW5keSBTaGV2Y2hl
+bmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRlbC5jb20+DQpJbnRlbCBGaW5sYW5kIE95DQotLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KSW50ZWwgRmlubGFuZCBPeQpSZWdpc3RlcmVkIEFkZHJlc3M6IFBMIDI4MSwgMDAx
+ODEgSGVsc2lua2kgCkJ1c2luZXNzIElkZW50aXR5IENvZGU6IDAzNTc2MDYgLSA0IApEb21pY2ls
+ZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBjb250
+YWluIGNvbmZpZGVudGlhbCBtYXRlcmlhbCBmb3IKdGhlIHNvbGUgdXNlIG9mIHRoZSBpbnRlbmRl
+ZCByZWNpcGllbnQocykuIEFueSByZXZpZXcgb3IgZGlzdHJpYnV0aW9uCmJ5IG90aGVycyBpcyBz
+dHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQKcmVjaXBpZW50
+LCBwbGVhc2UgY29udGFjdCB0aGUgc2VuZGVyIGFuZCBkZWxldGUgYWxsIGNvcGllcy4K
