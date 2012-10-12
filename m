@@ -1,66 +1,87 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [RFC PATCH v2 08/16] ARM: omap: add hsmmc am33xx specific init
-Date: Fri, 12 Oct 2012 09:17:53 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EAA6374@DBDE01.ent.ti.com>
-References: <1349982281-10785-1-git-send-email-mporter@ti.com>
-	<1349982281-10785-9-git-send-email-mporter@ti.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Fri, 12 Oct 2012 12:25:30 +0300
+Message-ID: <CAHp75Ve9uETO0Wx=bNbPxjOxO_MoE_bkFCHtwBZAA6+7m8fdMw@mail.gmail.com>
+References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
+	<91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
+	<1350030203.10584.139.camel@smile>
+	<CAKohpon4FZdPXFOXvVqExY=xrwozELYvNbE3_zHoRw2O0nszhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1349982281-10785-9-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: "Porter, Matt" <mporter-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Nori,
-	Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dan, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohpon4FZdPXFOXvVqExY=xrwozELYvNbE3_zHoRw2O0nszhw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, vinod.koul@intel.com, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Matt
+On Fri, Oct 12, 2012 at 11:34 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 12 October 2012 13:53, Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+>> On Fri, 2012-10-12 at 11:14 +0530, Viresh Kumar wrote:
 
-On Fri, Oct 12, 2012 at 00:34:33, Porter, Matt wrote:
-> AM33xx requires special handling in hsmmc initialization
-> platform glue.
+>>> diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+>>> @@ -14,4 +34,28 @@ Example:
+>>>               reg = <0xfc000000 0x1000>;
+>>>               interrupt-parent = <&vic1>;
+>>>               interrupts = <12>;
+>>> +
+>>> +             nr_channels = <8>;
+>>> +             chan_allocation_order = <1>;
+>>> +             chan_priority = <1>;
+>>> +             block_size = <0xfff>;
+>>> +             nr_masters = <2>;
+>>> +             data_width = <3 3 0 0>;
+>>> +
+>>> +             slave_info {
+>>> +                     uart0-tx {
+>>> +                             bus_id = "uart0-tx";
+>>> +                             cfg_hi = <0x4000>;      /* 0x8 << 11 */
+>>> +                             cfg_lo = <0>;
+>>> +                             src_master = <0>;
+>>> +                             dst_master = <1>;
+>>> +                     };
+>>> +                     spi0-tx {
+>>> +                             bus_id = "spi0-tx";
+>>> +                             cfg_hi = <0x2000>;      /* 0x4 << 11 */
+>>> +                             cfg_lo = <0>;
+>>> +                             src_master = <0>;
+>>> +                             dst_master = <0>;
+>>> +                     };
+>>> +             };
+>> Why do you locate slave information under DMA controller node? From my
+>> point of view the slave info belongs to corresponding device. For
+>> example, above sections belong to UART0 and SPI0.
+>
+> Consider one spi driver is used on 5 different platforms with
+> different DMA controllers.
+> So, 5 DMA drivers and so 5 DMA platform_data. Wherever we add this node, this
+> data can't be processed by spi-driver, as we can't add DT processing routines
+> for all DMA drivers in spi.
+>
+> The best place to process DT nodes is DW_DMAC driver, because it is
+> dw_dmac's data.
+> That's why i added them under DMA.
+Fair enough.
 
-Since AM335x boots mainly through DT, do we still need this patch.
-This function will be called in case of initializing hsmmc with
-Platform data. 
+>>> diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
 
-> 
-> Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/mach-omap2/hsmmc.c |    7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
+>>> +static struct dw_dma_platform_data *
+>>> +__devinit dw_dma_parse_dt(struct platform_device *pdev)
+>>> +{
+>
+>>> +     for_each_child_of_node(sn, cn)
+>>> +             count++;
+>> Is there any other way to get amount of children?
+>
+> I tried my best to find one, referred to lots of drivers. And found
+> this way in most of the places. ex: drivers/pinctrl/***
+I understand your way of allocating memory, but what about using
+linked list instead of array?
 
-..snip..
-..snip..
+And one more thing. May be we could introduce backlink to the platform
+data in the dw_dma structure instead of copying certain parameters?
 
->  	name = "omap_hsmmc";
->  	res = snprintf(oh_name, MAX_OMAP_MMC_HWMOD_NAME_LEN,
-> -- 
-> 1.7.9.5
-> 
-> _______________________________________________
-> Davinci-linux-open-source mailing list
-> Davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source
-> 
-
-
-Regards, 
-Gururaja
-
-------------------------------------------------------------------------------
-Don't let slow site performance ruin your business. Deploy New Relic APM
-Deploy New Relic app performance management and know exactly
-what is happening inside your Ruby, Python, PHP, Java, and .NET app
-Try New Relic at no cost today and get our sweet Data Nerd shirt too!
-http://p.sf.net/sfu/newrelic-dev2dev
+-- 
+With Best Regards,
+Andy Shevchenko
