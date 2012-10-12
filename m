@@ -1,48 +1,63 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/6] ARM: bcm476x: Add infrastructure
-Date: Fri, 12 Oct 2012 13:01:39 +0200
-Message-ID: <20121012130139.6c3079c5@skate>
-References: <20121007015300.828366635@gmail.com>
- <201210120803.54539.arnd@arndb.de> <20121012101252.6c3b7dce@skate>
- <201210121048.24998.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201210121048.24998.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Domenico Andreoli <cavokz@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v2 0/6] arm: exynos: add dt based support for exynos5 hdmi
+Date: Sat, 13 Oct 2012 02:12:29 +0530
+Message-ID: <1350074555-26018-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd Bergmann,
+This patch set adds the DT based support for Samsung's Exynos5250. It adds
+device tree nodes for hdmi, mixer, hdmiphy and hdmiddc. The name of these
+devices are changed to the one matching with drivers. Exynos-drm and exynos
+hdmi-drm-commmon devices are removed from machine init code.
 
-On Fri, 12 Oct 2012 10:48:24 +0000, Arnd Bergmann wrote:
+Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
+init code. Patch set which adds this code is "add exynos-drm platform device
+registration to driver" is posted to dri-devel mailing list.
 
-> The main thing to watch out for are mappings that are not for MMIO,
-> such as the call to create_mapping() in map_lowmem() or in
-> devicemaps_init().
-> 
-> I would suggest making struct map_desc specific to callers of
-> iotable_init() and changing the prototype for create_mapping() to
-> 
-> void __init create_mapping(unsigned long virtual, unsigned long pfn,
-> 			   size_t length, unsigned int type);
+This patchset is based on linux v3.6-rc5, branch dt-samsung-new at
+git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
 
-Yes, this is exactly what I've done. I'll rebase my work, test and send
-it.
+v1:
+- dropped patch for hpd gpio initialisation from machine init.
+- dropped patch for platform device registration.
+- removed platform device registration from non-dt platforms.
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+v2:
+- removed version information from hdmi, mixer dt nodes.
+- added DT binding documentation for hdmi, mixer, hdmiphy and hdmiddc.
+
+Rahul Sharma (6):
+  dts: exynos: add device tree support for exynos5 hdmi
+  dts: exynos: add device tree support for exynos5 mixer
+  dts: exynos: add device tree support for exynos5 hdmiphy
+  dts: exynos: add device tree support for exynos5 hdmiddc
+  arm: exynos: add clocks for exynos5 hdmi
+  arm: exynos: removing exynos-drm device registration from non-dt
+    platforms
+
+ .../devicetree/bindings/drm/exynos/hdmi.txt        |   22 +++++++++++++++
+ .../devicetree/bindings/drm/exynos/hdmiddc.txt     |   12 ++++++++
+ .../devicetree/bindings/drm/exynos/hdmiphy.txt     |   12 ++++++++
+ .../devicetree/bindings/drm/exynos/mixer.txt       |   15 ++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   24 +++++++++++++++-
+ arch/arm/boot/dts/exynos5250.dtsi                  |   20 +++++++++++++
+ arch/arm/mach-exynos/Makefile                      |    1 -
+ arch/arm/mach-exynos/clock-exynos5.c               |   14 ++++++++-
+ arch/arm/mach-exynos/dev-drm.c                     |   29 --------------------
+ arch/arm/mach-exynos/include/mach/map.h            |    2 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 +++++
+ arch/arm/mach-exynos/mach-nuri.c                   |    3 --
+ arch/arm/mach-exynos/mach-origen.c                 |    3 --
+ arch/arm/mach-exynos/mach-smdk4x12.c               |    3 --
+ arch/arm/mach-exynos/mach-smdkv310.c               |    3 --
+ arch/arm/mach-exynos/mach-universal_c210.c         |    3 --
+ arch/arm/plat-samsung/include/plat/devs.h          |    2 -
+ 17 files changed, 126 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/mixer.txt
+ delete mode 100644 arch/arm/mach-exynos/dev-drm.c
