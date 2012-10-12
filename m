@@ -1,107 +1,174 @@
-From: Omar Ramirez Luna <omar.luna@linaro.org>
-Subject: Re: [PATCH 2/6] ARM: OMAP3/4: iommu: adapt to runtime pm
-Date: Fri, 12 Oct 2012 12:46:09 -0500
-Message-ID: <CALLhW=5k=tAXo_5ri2WgetRgju9rC_Wm-o9-pfHSNqpe6FU5qQ@mail.gmail.com>
-References: <1350003977-32744-1-git-send-email-omar.luna@linaro.org>
-	<1350003977-32744-5-git-send-email-omar.luna@linaro.org>
-	<CAMP44s2LTGPnXQuetVLV1tA8w90gUtoJ5coucBUZsbqb3vFnng@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAMP44s2LTGPnXQuetVLV1tA8w90gUtoJ5coucBUZsbqb3vFnng@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Felipe Contreras <felipe.contreras@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Joerg Roedel <joerg.roedel@amd.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Paul Walmsley <paul@pwsan.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, iommu@lists.linux-foundation.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH] dt: add helper function to read u8 & u16 variables & arrays
+Date: Fri, 12 Oct 2012 23:31:40 +0530
+Message-ID: <425b4bec021bce9a2de49959121907aeede6a0b9.1350064805.git.viresh.kumar@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rob.herring@calxeda.com, grant.likely@secretlab.ca
+Cc: spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12 October 2012 02:48, Felipe Contreras <felipe.contreras@gmail.com> wrote:
-> I already made most of these comments, but here they go again.
+This adds following helper routines:
+- of_property_read_u8_array()
+- of_property_read_u16_array()
+- of_property_read_u8()
+- of_property_read_u16()
 
-I replied to all, but here it goes again:
+First two actually share most of the code with of_property_read_u32_array(), so
+the common part is taken out into a macro, which can be used by all three
+*_array() routines.
 
->> @@ -142,11 +142,10 @@ static int iommu_enable(struct omap_iommu *obj)
->>                 }
->>         }
->>
->> -       clk_enable(obj->clk);
->> +       pm_runtime_get_sync(obj->dev);
->>
->>         err = arch_iommu->enable(obj);
->>
->> -       clk_disable(obj->clk);
->
-> The device will never go to sleep, until iommu_disable is called.
-> clk_enable -> pm_runtime_get_sync, clk_disable pm_runtime_put.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/of/base.c  | 73 +++++++++++++++++++++++++++++++++++++++++++-----------
+ include/linux/of.h | 30 ++++++++++++++++++++++
+ 2 files changed, 89 insertions(+), 14 deletions(-)
 
-Which is what you want... why would you want your iommu to be disabled
-if the client of that iommu could request a translation?
-
-Remember that these iommus, sit along of other processors not on the
-main processor side. So, this code should enable it for the other
-processor to use, and there is no point where the processor can say
-"I'm not using it, shut it down" or "I'm using it, turn it on" in the
-middle of execution, other than suspend/resume and if supported,
-autosuspend.
-
->> @@ -288,7 +285,7 @@ static int load_iotlb_entry(struct omap_iommu *obj, struct iotlb_entry *e)
->>         if (!obj || !obj->nr_tlb_entries || !e)
->>                 return -EINVAL;
->>
->> -       clk_enable(obj->clk);
->> +       pm_runtime_get_sync(obj->dev);
->>
->>         iotlb_lock_get(obj, &l);
->>         if (l.base == obj->nr_tlb_entries) {
->> @@ -318,7 +315,7 @@ static int load_iotlb_entry(struct omap_iommu *obj, struct iotlb_entry *e)
->>
->>         cr = iotlb_alloc_cr(obj, e);
->>         if (IS_ERR(cr)) {
->> -               clk_disable(obj->clk);
->> +               pm_runtime_put_sync(obj->dev);
->>                 return PTR_ERR(cr);
->>         }
->
-> If I'm correct, the above pm_runtime_get/put are redundant, because
-> the count can't possibly reach 0 because of the reason I explained
-> before.
->
-> The same for all the cases below.
-
-You can access this paths through debugfs, some of them doesn't work
-if the module is not enabled first, but in future if you just want to
-idle the iommu withouth freeing, these are needed to debug.
-
-BTW, the next patch in the series: ARM: OMAP: iommu: pm runtime save
-and restore context, let's you do a pm_runtime_[enable|put] through
-save/restore ctx functions, which is just for compatibility on how isp
-code uses the save and restore code.
-
->> @@ -1009,7 +1001,8 @@ static int __devexit omap_iommu_remove(struct platform_device *pdev)
->>         release_mem_region(res->start, resource_size(res));
->>         iounmap(obj->regbase);
->>
->> -       clk_put(obj->clk);
->> +       pm_runtime_disable(obj->dev);
->
-> This will turn on the device unnecessarily, wasting power, and there's
-> no need for that, kfree will take care of that without resuming.
-
-Left aside the aesthetics of having balanced calls, the device will be
-enabled if there was a pending resume to be executed, otherwise it
-won't, kfree won't increment the disable_depth counter and I don't
-think that freeing the pointer is enough reason to ignore
-pm_runtime_disable.
-
-> Also, I still think that something like this is needed:
-...
-> +static struct clk cam_fck = {
-> +       .name           = "cam_fck",
-> +       .ops            = &clkops_omap2_iclk_dflt,
-> +       .parent         = &l3_ick,
-> +       .enable_reg     = OMAP_CM_REGADDR(OMAP3430_CAM_MOD, CM_ICLKEN),
-
-a cam_fck name to enable the ick?
-
-Cheers,
-
-Omar
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 38892a9..446fe7f 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -670,6 +670,64 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+ }
+ EXPORT_SYMBOL(of_find_node_by_phandle);
+ 
++#define of_property_read_array(_np, _pname, _out, _sz, _type)		\
++	struct property *_prop = of_find_property(_np, _pname, NULL);	\
++	const __be32 *_val;						\
++									\
++	if (!_prop)							\
++		return -EINVAL;						\
++	if (!_prop->value)						\
++		return -ENODATA;					\
++	if ((_sz * sizeof(*_out)) > _prop->length)			\
++		return -EOVERFLOW;					\
++									\
++	_val = _prop->value;						\
++	while (_sz--)							\
++		*_out++ = (_type)be32_to_cpup(_val++);			\
++	return 0;
++
++/**
++ * of_property_read_u8_array - Find and read an array of u8 from a property.
++ *
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @out_value:	pointer to return value, modified only if return value is 0.
++ *
++ * Search for a property in a device node and read 8-bit value(s) from
++ * it. Returns 0 on success, -EINVAL if the property does not exist,
++ * -ENODATA if property does not have a value, and -EOVERFLOW if the
++ * property data isn't large enough.
++ *
++ * The out_value is modified only if a valid u8 value can be decoded.
++ */
++int of_property_read_u8_array(const struct device_node *np,
++			const char *propname, u8 *out_values, size_t sz)
++{
++	of_property_read_array(np, propname, out_values, sz, u8);
++}
++EXPORT_SYMBOL_GPL(of_property_read_u8_array);
++
++/**
++ * of_property_read_u16_array - Find and read an array of u16 from a property.
++ *
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ * @out_value:	pointer to return value, modified only if return value is 0.
++ *
++ * Search for a property in a device node and read 16-bit value(s) from
++ * it. Returns 0 on success, -EINVAL if the property does not exist,
++ * -ENODATA if property does not have a value, and -EOVERFLOW if the
++ * property data isn't large enough.
++ *
++ * The out_value is modified only if a valid u16 value can be decoded.
++ */
++int of_property_read_u16_array(const struct device_node *np,
++			const char *propname, u16 *out_values, size_t sz)
++{
++	of_property_read_array(np, propname, out_values, sz, u16);
++}
++EXPORT_SYMBOL_GPL(of_property_read_u16_array);
++
+ /**
+  * of_property_read_u32_array - Find and read an array of 32 bit integers
+  * from a property.
+@@ -689,20 +747,7 @@ int of_property_read_u32_array(const struct device_node *np,
+ 			       const char *propname, u32 *out_values,
+ 			       size_t sz)
+ {
+-	struct property *prop = of_find_property(np, propname, NULL);
+-	const __be32 *val;
+-
+-	if (!prop)
+-		return -EINVAL;
+-	if (!prop->value)
+-		return -ENODATA;
+-	if ((sz * sizeof(*out_values)) > prop->length)
+-		return -EOVERFLOW;
+-
+-	val = prop->value;
+-	while (sz--)
+-		*out_values++ = be32_to_cpup(val++);
+-	return 0;
++	of_property_read_array(np, propname, out_values, sz, u32);
+ }
+ EXPORT_SYMBOL_GPL(of_property_read_u32_array);
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 72843b7..e2d9b40 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -223,6 +223,10 @@ extern struct device_node *of_find_node_with_property(
+ extern struct property *of_find_property(const struct device_node *np,
+ 					 const char *name,
+ 					 int *lenp);
++extern int of_property_read_u8_array(const struct device_node *np,
++			const char *propname, u8 *out_values, size_t sz);
++extern int of_property_read_u16_array(const struct device_node *np,
++			const char *propname, u16 *out_values, size_t sz);
+ extern int of_property_read_u32_array(const struct device_node *np,
+ 				      const char *propname,
+ 				      u32 *out_values,
+@@ -357,6 +361,18 @@ static inline struct device_node *of_find_compatible_node(
+ 	return NULL;
+ }
+ 
++static inline int of_property_read_u8_array(const struct device_node *np,
++			const char *propname, u8 *out_values, size_t sz)
++{
++	return -ENOSYS;
++}
++
++static inline int of_property_read_u16_array(const struct device_node *np,
++			const char *propname, u16 *out_values, size_t sz)
++{
++	return -ENOSYS;
++}
++
+ static inline int of_property_read_u32_array(const struct device_node *np,
+ 					     const char *propname,
+ 					     u32 *out_values, size_t sz)
+@@ -463,6 +479,20 @@ static inline bool of_property_read_bool(const struct device_node *np,
+ 	return prop ? true : false;
+ }
+ 
++static inline int of_property_read_u8(const struct device_node *np,
++				       const char *propname,
++				       u8 *out_value)
++{
++	return of_property_read_u8_array(np, propname, out_value, 1);
++}
++
++static inline int of_property_read_u16(const struct device_node *np,
++				       const char *propname,
++				       u16 *out_value)
++{
++	return of_property_read_u16_array(np, propname, out_value, 1);
++}
++
+ static inline int of_property_read_u32(const struct device_node *np,
+ 				       const char *propname,
+ 				       u32 *out_value)
+-- 
+1.7.12.rc2.18.g61b472e
