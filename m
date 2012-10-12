@@ -1,81 +1,37 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Fri, 12 Oct 2012 14:41:55 +0000
-Message-ID: <1350052912.10584.167.camel@smile>
+Date: Fri, 12 Oct 2012 20:17:49 +0530
+Message-ID: <CAKohpokNE4Pao+tbAFvMC_Yyo-oNvwjbGjV2XKdard4=616e6Q@mail.gmail.com>
 References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
-	 <91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
-	 <1350048519.10584.158.camel@smile>
-	 <CAKohpok=nv2XnFdPkD_yJgUsDqx2gEh=mG_Xhbe-BvT7swVsyg@mail.gmail.com>
+	<91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
+	<1350048519.10584.158.camel@smile>
+	<CAKohpok=nv2XnFdPkD_yJgUsDqx2gEh=mG_Xhbe-BvT7swVsyg@mail.gmail.com>
+	<1350052912.10584.167.camel@smile>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohpok=nv2XnFdPkD_yJgUsDqx2gEh=mG_Xhbe-BvT7swVsyg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <32EFD540BB052D47B5F326DB81C205FC@intel.com>
+In-Reply-To: <1350052912.10584.167.camel@smile>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
 Cc: "Koul, Vinod" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "spear-devel@list.st.com" <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDEyLTEwLTEyIGF0IDE5OjM2ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6IA0K
-PiBPbiAxMiBPY3RvYmVyIDIwMTIgMTg6NTgsIFNoZXZjaGVua28sIEFuZHJpeQ0KPiA8YW5kcml5
-LnNoZXZjaGVua29AaW50ZWwuY29tPiB3cm90ZToNCj4gPiBPbiBGcmksIDIwMTItMTAtMTIgYXQg
-MTE6MTQgKzA1MzAsIFZpcmVzaCBLdW1hciB3cm90ZToNCj4gDQo+ID4+ICsgICAgIGlmICghb2Zf
-cHJvcGVydHlfcmVhZF91MzIobnAsICJucl9tYXN0ZXJzIiwgJnZhbCkpIHsNCj4gPj4gKyAgICAg
-ICAgICAgICBpZiAodmFsID4gNCkNCj4gPiBJIHRob3VnaHQgb25jZSB0aGF0IHdlIG1pZ2h0IGlu
-dHJvZHVjZSBjb25zdGFudCBsaWtlICNkZWZpbmUNCj4gPiBEV19NQVhfQUhCX01BU1RFUlMgNC4g
-SXQgc2VlbXMgYSBiaXQgdXNlbGVzcyBiZWNhdXNlIGh3IGlzIGRlc2lnbmVkIGZvcg0KPiA+IHRo
-YXQgbnVtYmVyIGFueXdheSwgYnV0IG1heWJlIHlvdSBoYXZlIGFub3RoZXIgb3Bpbmlvbi4NCj4g
-DQo+IE5vdCBldmVyeW9uZSBoYXZlIGZvdXIgbWFzdGVycyBpbiB0aGVyZSBTb0MgY29uZmlndXJh
-dGlvbnMuIFNvIGl0cyBiZXR0ZXINCj4gdG8gZXhwb3J0IGNvcnJlY3QgdmFsdWVzLg0KSSBtZWFu
-dCBpcyB0byB1c2UgdGhhdCBjb25zdGFudCBpbnN0ZWFkIG9mIGhhcmQgY29kaW5nIDQgZXZlcnl3
-aGVyZS4NCkl0J3MgYSBtYXhpbXVtIHZhbHVlLCBub3QgdGhlIFNvQyBzcGVjaWZpYy4NCg0KPiA+
-PiArICAgICBpZiAoIW9mX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KG5wLCAiZGF0YV93aWR0aCIs
-IGFyciwNCj4gPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGRhdGEtPm5yX21hc3Rl
-cnMpKQ0KPiA+PiArICAgICAgICAgICAgIGZvciAoY291bnQgPSAwOyBjb3VudCA8IHBkYXRhLT5u
-cl9tYXN0ZXJzOyBjb3VudCsrKQ0KPiA+PiArICAgICAgICAgICAgICAgICAgICAgcGRhdGEtPmRh
-dGFfd2lkdGhbY291bnRdID0gYXJyW2NvdW50XTsNCj4gPiBBaCwgaXQgd291bGQgYmUgbmljZSB0
-byBoYXZlIG9mX3Byb3BlcnR5X3JlYWRfdThfYXJyYXkgYW5kIHNvIG9uLi4uDQo+IA0KPiA6KQ0K
-PiBNYXliZSB5ZXMuIEkgZG9uJ3Qgd2FudCB0byBkbyBpdCB3aXRoIHRoaXMgcGF0Y2hzZXQsIGFz
-IHRoYXQgd2lsbCB0YWtlIG1vcmUNCj4gdGltZSB0byBnbyB0aHJvdWdoIG1haW50YWluZXJzLg0K
-QWdyZWVkLCB0aGUgY29tbWVudCBqdXN0IGZvciBmdXR1cmUuIEkgZG9uJ3Qga25vdyBpZiB0aGVy
-ZSBhbnkgb3RoZXINCnVzZXJzIG9mICpfdTgvdTE2X2FycmF5KCkuDQoNCj4gPiBpdCB3aWxsIHBy
-b2JhYmx5IHJlcXVpcmUgdG8gc3BsaXQgdGhpcyBwYXJ0IGluIGEgc2VwYXJhdGUgZnVuY3Rpb24g
-YW5kDQo+ID4gY2FsY3VsYXRlIGNvdW50IG9mIHNsYXZlX2luZm8gY2hpbGRyZW4gYmVmb3JlIHBk
-YXRhIG1lbW9yeSBhbGxvY2F0aW9uLg0KPiANCj4gTGlrZWQgdGhlIGlkZWEgcGFydGlhbGx5LiBD
-aGVjayBteSBuZXcgaW1wbGVtZW50YXRpb24gaW4gZml4dXAgZm9yIGFsbA0KPiB0aGVzZSBjb21t
-ZW50czoNCkxldCBtZSBzZWUuDQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1hL2R3X2RtYWMu
-YyBiL2RyaXZlcnMvZG1hL2R3X2RtYWMuYw0KDQo+IEBAIC0xNTE2LDcgKzE1MTYsNyBAQCBfX2Rl
-dmluaXQgZHdfZG1hX3BhcnNlX2R0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJ
-c3RydWN0IGRldmljZV9ub2RlICpzbiwgKmNuLCAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4g
-IAlzdHJ1Y3QgZHdfZG1hX3BsYXRmb3JtX2RhdGEgKnBkYXRhOw0KPiAgCXN0cnVjdCBkd19kbWFf
-c2xhdmUgKnNkOw0KPiAtCXUzMiBjb3VudCwgdmFsLCBhcnJbNF07DQo+ICsJdTMyIHZhbCwgYXJy
-WzRdOw0Kd2hhdCBhYm91dCB0byB1c2UgdG1wIG5hbWUgaW5zdGVhZCBvZiB2YWw/IEl0J3MgcmVh
-bGx5IG1pbm9yLCBidXQgSQ0KdGhpbmsgdmFsIG5hbWUgaXMgbGl0dGxlIGJpdCB1bnJlbGF0ZWQg
-dG8gYSBsb29wIGNvdW50ZXIuDQoNCj4gQEAgLTE1MzMsNjMgKzE1MzMsNTcgQEAgX19kZXZpbml0
-IGR3X2RtYV9wYXJzZV9kdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KDQo+IC0JY291
-bnQgPSAwOw0KPiArCXBkYXRhLT5zZCA9IHNkOw0KPiArCXBkYXRhLT5zZF9jb3VudCA9IHZhbDsN
-Cj4gKw0KPiAgCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoc24sIGNuKSB7DQo+IC0JCW9mX3Byb3Bl
-cnR5X3JlYWRfc3RyaW5nKGNuLCAiYnVzX2lkIiwgJnNkW2NvdW50XS5idXNfaWQpOw0KPiAtCQlv
-Zl9wcm9wZXJ0eV9yZWFkX3UzMihjbiwgImNmZ19oaSIsICZzZFtjb3VudF0uY2ZnX2hpKTsNCj4g
-LQkJb2ZfcHJvcGVydHlfcmVhZF91MzIoY24sICJjZmdfbG8iLCAmc2RbY291bnRdLmNmZ19sbyk7
-DQo+ICsJCXNkLT5kbWFfZGV2ID0gJnBkZXYtPmRldjsNCj4gKwkJb2ZfcHJvcGVydHlfcmVhZF9z
-dHJpbmcoY24sICJidXNfaWQiLCAmc2QtPmJ1c19pZCk7DQo+ICsJCW9mX3Byb3BlcnR5X3JlYWRf
-dTMyKGNuLCAiY2ZnX2hpIiwgJnNkLT5jZmdfaGkpOw0KPiArCQlvZl9wcm9wZXJ0eV9yZWFkX3Uz
-MihjbiwgImNmZ19sbyIsICZzZC0+Y2ZnX2xvKTsNCj4gIAkJaWYgKCFvZl9wcm9wZXJ0eV9yZWFk
-X3UzMihjbiwgInNyY19tYXN0ZXIiLCAmdmFsKSkNCj4gLQkJCXNkW2NvdW50XS5zcmNfbWFzdGVy
-ID0gKHU4KXZhbDsNCj4gKwkJCXNkLT5zcmNfbWFzdGVyID0gdmFsOw0KPiANCj4gIAkJaWYgKCFv
-Zl9wcm9wZXJ0eV9yZWFkX3UzMihjbiwgImRzdF9tYXN0ZXIiLCAmdmFsKSkNCj4gLQkJCXNkW2Nv
-dW50XS5kc3RfbWFzdGVyID0gKHU4KXZhbDsNCj4gLQ0KPiAtCQlzZFtjb3VudF0uZG1hX2RldiA9
-ICZwZGV2LT5kZXY7DQo+IC0JCWNvdW50Kys7DQo+ICsJCQlzZC0+ZHN0X21hc3RlciA9IHZhbDsN
-Cj4gKwkJc2QrKzsNCj4gIAl9DQpUaGlzIGxvb2tzIGdvb2QuDQoNCi0tIA0KQW5keSBTaGV2Y2hl
-bmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRlbC5jb20+DQpJbnRlbCBGaW5sYW5kIE95DQotLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0KSW50ZWwgRmlubGFuZCBPeQpSZWdpc3RlcmVkIEFkZHJlc3M6IFBMIDI4MSwgMDAx
-ODEgSGVsc2lua2kgCkJ1c2luZXNzIElkZW50aXR5IENvZGU6IDAzNTc2MDYgLSA0IApEb21pY2ls
-ZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUtbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBjb250
-YWluIGNvbmZpZGVudGlhbCBtYXRlcmlhbCBmb3IKdGhlIHNvbGUgdXNlIG9mIHRoZSBpbnRlbmRl
-ZCByZWNpcGllbnQocykuIEFueSByZXZpZXcgb3IgZGlzdHJpYnV0aW9uCmJ5IG90aGVycyBpcyBz
-dHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQKcmVjaXBpZW50
-LCBwbGVhc2UgY29udGFjdCB0aGUgc2VuZGVyIGFuZCBkZWxldGUgYWxsIGNvcGllcy4K
+On 12 October 2012 20:11, Shevchenko, Andriy
+<andriy.shevchenko@intel.com> wrote:
+> On Fri, 2012-10-12 at 19:36 +0530, Viresh Kumar wrote:
+> I meant is to use that constant instead of hard coding 4 everywhere.
+> It's a maximum value, not the SoC specific.
+
+Can be done.
+
+>> +     u32 val, arr[4];
+> what about to use tmp name instead of val? It's really minor, but I
+> think val name is little bit unrelated to a loop counter.
+
+Its not minor at all, its major. Even when i was coding it, i thought
+about renaming
+it several times during this last patch. But couldn't find a better name.
+
+I don't like tmp. Give me something better.
+
+viresh
