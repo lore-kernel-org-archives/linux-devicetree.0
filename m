@@ -1,31 +1,88 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [RFC PATCH v2 08/16] ARM: omap: add hsmmc am33xx specific init
-Date: Fri, 12 Oct 2012 07:54:37 -0400
-Message-ID: <20121012115437.GG13724@beef>
-References: <1349982281-10785-1-git-send-email-mporter@ti.com>
- <1349982281-10785-9-git-send-email-mporter@ti.com>
- <1BAFE6F6C881BF42822005164F1491C33EAA6374@DBDE01.ent.ti.com>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Fri, 12 Oct 2012 13:28:43 +0000
+Message-ID: <1350048519.10584.158.camel@smile>
+References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
+	 <91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EAA6374@DBDE01.ent.ti.com>
+In-Reply-To: <91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
+Content-Language: en-US
+Content-ID: <2EB5CA6FD0272640BF09A738D5796869@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, "Nori, Sekhar" <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "Cousson, Benoit" <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Koul, Vinod" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "spear-devel@list.st.com" <spear-devel@list.st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2012 at 09:17:53AM +0000, Hebbar, Gururaja wrote:
-> Matt
-> 
-> On Fri, Oct 12, 2012 at 00:34:33, Porter, Matt wrote:
-> > AM33xx requires special handling in hsmmc initialization
-> > platform glue.
-> 
-> Since AM335x boots mainly through DT, do we still need this patch.
-> This function will be called in case of initializing hsmmc with
-> Platform data. 
-
-Yes, thanks, will drop in v3.
-
--Matt
+T24gRnJpLCAyMDEyLTEwLTEyIGF0IDExOjE0ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6IA0K
+PiBkd19kbWFjIGRyaXZlciBhbHJlYWR5IHN1cHBvcnRzIGRldmljZSB0cmVlIGJ1dCBpdCB1c2Vk
+IHRvIGhhdmUgaXRzIHBsYXRmb3JtDQo+IGRhdGEgcGFzc2VkIHRoZSBub24tRFQgd2F5Lg0KQW5v
+dGhlciBwb3J0aW9uIG9mIGNvbW1lbnRzLg0KDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9k
+d19kbWFjLmMgYi9kcml2ZXJzL2RtYS9kd19kbWFjLmMNCg0KPiArc3RhdGljIHN0cnVjdCBkd19k
+bWFfcGxhdGZvcm1fZGF0YSAqDQo+ICtfX2RldmluaXQgZHdfZG1hX3BhcnNlX2R0KHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICt7DQo+ICsJc3RydWN0IGRldmljZV9ub2RlICpzbiwg
+KmNuLCAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4gKwlzdHJ1Y3QgZHdfZG1hX3BsYXRmb3Jt
+X2RhdGEgKnBkYXRhOw0KPiArCXN0cnVjdCBkd19kbWFfc2xhdmUgKnNkOw0KPiArCXUzMiBjb3Vu
+dCwgdmFsLCBhcnJbNF07DQo+ICsNCj4gKwlpZiAoIW5wKSB7DQo+ICsJCWRldl9lcnIoJnBkZXYt
+PmRldiwgIk1pc3NpbmcgRFQgZGF0YVxuIik7DQo+ICsJCXJldHVybiBOVUxMOw0KPiArCX0NCj4g
+Kw0KPiArCXBkYXRhID0gZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqcGRhdGEpLCBH
+RlBfS0VSTkVMKTsNCj4gKwlpZiAoIXBkYXRhKQ0KPiArCQlyZXR1cm4gTlVMTDsNCj4gKw0KPiAr
+CWlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm5yX2NoYW5uZWxzIiwgJnBkYXRhLT5ucl9j
+aGFubmVscykpDQo+ICsJCXJldHVybiBOVUxMOw0KPiArDQo+ICsJaWYgKG9mX3Byb3BlcnR5X3Jl
+YWRfYm9vbChucCwgImlzX3ByaXZhdGUiKSkNCj4gKwkJcGRhdGEtPmlzX3ByaXZhdGUgPSB0cnVl
+Ow0KPiArDQo+ICsJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImNoYW5fYWxsb2NhdGlv
+bl9vcmRlciIsDQo+ICsJCQkJJnZhbCkpDQpGaXRzIG9uZSBsaW5lPw0KDQo+ICsJCXBkYXRhLT5j
+aGFuX2FsbG9jYXRpb25fb3JkZXIgPSAodW5zaWduZWQgY2hhcil2YWw7DQpkbyB3ZSByZWFsbHkg
+bmVlZCBleHBsaWNpdCBjYXN0aW5nIGhlcmU/DQoNCj4gKw0KPiArCWlmICghb2ZfcHJvcGVydHlf
+cmVhZF91MzIobnAsICJjaGFuX3ByaW9yaXR5IiwgJnZhbCkpDQo+ICsJCXBkYXRhLT5jaGFuX3By
+aW9yaXR5ID0gKHVuc2lnbmVkIGNoYXIpdmFsOw0KZGl0dG8NCg0KPiArDQo+ICsJaWYgKCFvZl9w
+cm9wZXJ0eV9yZWFkX3UzMihucCwgImJsb2NrX3NpemUiLCAmdmFsKSkNCj4gKwkJcGRhdGEtPmJs
+b2NrX3NpemUgPSAodW5zaWduZWQgc2hvcnQpdmFsOw0KZGl0dG8gDQo+ICsNCj4gKwlpZiAoIW9m
+X3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAibnJfbWFzdGVycyIsICZ2YWwpKSB7DQo+ICsJCWlmICh2
+YWwgPiA0KQ0KSSB0aG91Z2h0IG9uY2UgdGhhdCB3ZSBtaWdodCBpbnRyb2R1Y2UgY29uc3RhbnQg
+bGlrZSAjZGVmaW5lDQpEV19NQVhfQUhCX01BU1RFUlMgNC4gSXQgc2VlbXMgYSBiaXQgdXNlbGVz
+cyBiZWNhdXNlIGh3IGlzIGRlc2lnbmVkIGZvcg0KdGhhdCBudW1iZXIgYW55d2F5LCBidXQgbWF5
+YmUgeW91IGhhdmUgYW5vdGhlciBvcGluaW9uLiANCg0KPiArCQkJcmV0dXJuIE5VTEw7DQo+ICsN
+Cj4gKwkJcGRhdGEtPm5yX21hc3RlcnMgPSAodW5zaWduZWQgY2hhcil2YWw7DQo+ICsJfQ0KPiAr
+DQo+ICsJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShucCwgImRhdGFfd2lkdGgiLCBh
+cnIsDQo+ICsJCQkJcGRhdGEtPm5yX21hc3RlcnMpKQ0KPiArCQlmb3IgKGNvdW50ID0gMDsgY291
+bnQgPCBwZGF0YS0+bnJfbWFzdGVyczsgY291bnQrKykNCj4gKwkJCXBkYXRhLT5kYXRhX3dpZHRo
+W2NvdW50XSA9IGFycltjb3VudF07DQpBaCwgaXQgd291bGQgYmUgbmljZSB0byBoYXZlIG9mX3By
+b3BlcnR5X3JlYWRfdThfYXJyYXkgYW5kIHNvIG9uLi4uDQoNCj4gKw0KPiArCS8qIHBhcnNlIHNs
+YXZlIGRhdGEgKi8NCj4gKwlzbiA9IG9mX2ZpbmRfbm9kZV9ieV9uYW1lKG5wLCAic2xhdmVfaW5m
+byIpOw0KPiArCWlmICghc24pDQo+ICsJCXJldHVybiBwZGF0YTsNCj4gKw0KPiArCWNvdW50ID0g
+MDsNCj4gKwkvKiBjYWxjdWxhdGUgbnVtYmVyIG9mIHNsYXZlcyAqLw0KPiArCWZvcl9lYWNoX2No
+aWxkX29mX25vZGUoc24sIGNuKQ0KPiArCQljb3VudCsrOw0KDQpvZi5oOiBzdGF0aWMgaW5saW5l
+IGludCBvZl9nZXRfY2hpbGRfY291bnQoY29uc3Qgc3RydWN0IGRldmljZV9ub2RlICpucCkNCg0K
+DQo+ICsNCj4gKwlpZiAoIWNvdW50KQ0KPiArCQlyZXR1cm4gTlVMTDsNCj4gKw0KPiArCXNkID0g
+ZGV2bV9remFsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqc2QpICogY291bnQsIEdGUF9LRVJORUwp
+Ow0KPiArCWlmICghc2QpDQo+ICsJCXJldHVybiBOVUxMOw0KPiArDQo+ICsJY291bnQgPSAwOw0K
+PiArCWZvcl9lYWNoX2NoaWxkX29mX25vZGUoc24sIGNuKSB7DQo+ICsJCW9mX3Byb3BlcnR5X3Jl
+YWRfc3RyaW5nKGNuLCAiYnVzX2lkIiwgJnNkW2NvdW50XS5idXNfaWQpOw0KPiArCQlvZl9wcm9w
+ZXJ0eV9yZWFkX3UzMihjbiwgImNmZ19oaSIsICZzZFtjb3VudF0uY2ZnX2hpKTsNCj4gKwkJb2Zf
+cHJvcGVydHlfcmVhZF91MzIoY24sICJjZmdfbG8iLCAmc2RbY291bnRdLmNmZ19sbyk7DQo+ICsJ
+CWlmICghb2ZfcHJvcGVydHlfcmVhZF91MzIoY24sICJzcmNfbWFzdGVyIiwgJnZhbCkpDQo+ICsJ
+CQlzZFtjb3VudF0uc3JjX21hc3RlciA9ICh1OCl2YWw7DQpFeHBsaWNpdCBjYXN0aW5nPw0KDQo+
+ICsNCj4gKwkJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMihjbiwgImRzdF9tYXN0ZXIiLCAmdmFs
+KSkNCj4gKwkJCXNkW2NvdW50XS5kc3RfbWFzdGVyID0gKHU4KXZhbDsNCmRpdHRvIA0KPiArDQo+
+ICsJCXNkW2NvdW50XS5kbWFfZGV2ID0gJnBkZXYtPmRldjsNCj4gKwkJY291bnQrKzsNCj4gKwl9
+DQoNCndoYXQgYWJvdXQgdG8gZGVmaW5lIHNkIGFzIHNkWzBdOyBpbiB0aGUgcGxhdGZvcm1fZGF0
+YSBzdHJ1Y3R1cmUgYW5kDQp0aGVuIHVzZSBzbXRoIGxpa2UgZm9sbG93aW5nDQoNCnN0cnVjdCAu
+Li4gKnNkID0gcGRhdGEtPnNkOw0KZm9yX2VhY2guLi4gew0Kc2QtPi4uLiA9IDsNCnNkKys7DQp9
+DQoNCml0IHdpbGwgcHJvYmFibHkgcmVxdWlyZSB0byBzcGxpdCB0aGlzIHBhcnQgaW4gYSBzZXBh
+cmF0ZSBmdW5jdGlvbiBhbmQNCmNhbGN1bGF0ZSBjb3VudCBvZiBzbGF2ZV9pbmZvIGNoaWxkcmVu
+IGJlZm9yZSBwZGF0YSBtZW1vcnkgYWxsb2NhdGlvbi4NCg0KDQo+ICsNCj4gKwlwZGF0YS0+c2Qg
+PSBzZDsNCj4gKwlwZGF0YS0+c2RfY291bnQgPSBjb3VudDsNCj4gKw0KPiArCXJldHVybiBwZGF0
+YTsNCj4gK30NCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4
+LmludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFu
+ZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCi0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVyZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxz
+aW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29kZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBI
+ZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29u
+ZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lw
+aWVudChzKS4gQW55IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5
+IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFz
+ZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
