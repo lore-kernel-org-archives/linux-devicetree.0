@@ -1,61 +1,107 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: dtc: import latest upstream dtc
-Date: Fri, 12 Oct 2012 11:24:43 -0600
-Message-ID: <5078525B.9030008@wwwdotorg.org>
-References: <1349827466.26044.16@snotra> <50759105.2000406@wwwdotorg.org> <1349885393.21493.2@snotra> <5075A0AA.2000605@wwwdotorg.org> <20121010231835.GH28467@truffula.fritz.box>
+From: Omar Ramirez Luna <omar.luna@linaro.org>
+Subject: Re: [PATCH 2/6] ARM: OMAP3/4: iommu: adapt to runtime pm
+Date: Fri, 12 Oct 2012 12:46:09 -0500
+Message-ID: <CALLhW=5k=tAXo_5ri2WgetRgju9rC_Wm-o9-pfHSNqpe6FU5qQ@mail.gmail.com>
+References: <1350003977-32744-1-git-send-email-omar.luna@linaro.org>
+	<1350003977-32744-5-git-send-email-omar.luna@linaro.org>
+	<CAMP44s2LTGPnXQuetVLV1tA8w90gUtoJ5coucBUZsbqb3vFnng@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121010231835.GH28467@truffula.fritz.box>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Scott Wood <scottwood@freescale.com>, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>, linux-kernel@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAMP44s2LTGPnXQuetVLV1tA8w90gUtoJ5coucBUZsbqb3vFnng@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Felipe Contreras <felipe.contreras@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Joerg Roedel <joerg.roedel@amd.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Paul Walmsley <paul@pwsan.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, iommu@lists.linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/10/2012 05:18 PM, David Gibson wrote:
+On 12 October 2012 02:48, Felipe Contreras <felipe.contreras@gmail.com> wrote:
+> I already made most of these comments, but here they go again.
+
+I replied to all, but here it goes again:
+
+>> @@ -142,11 +142,10 @@ static int iommu_enable(struct omap_iommu *obj)
+>>                 }
+>>         }
+>>
+>> -       clk_enable(obj->clk);
+>> +       pm_runtime_get_sync(obj->dev);
+>>
+>>         err = arch_iommu->enable(obj);
+>>
+>> -       clk_disable(obj->clk);
+>
+> The device will never go to sleep, until iommu_disable is called.
+> clk_enable -> pm_runtime_get_sync, clk_disable pm_runtime_put.
+
+Which is what you want... why would you want your iommu to be disabled
+if the client of that iommu could request a translation?
+
+Remember that these iommus, sit along of other processors not on the
+main processor side. So, this code should enable it for the other
+processor to use, and there is no point where the processor can say
+"I'm not using it, shut it down" or "I'm using it, turn it on" in the
+middle of execution, other than suspend/resume and if supported,
+autosuspend.
+
+>> @@ -288,7 +285,7 @@ static int load_iotlb_entry(struct omap_iommu *obj, struct iotlb_entry *e)
+>>         if (!obj || !obj->nr_tlb_entries || !e)
+>>                 return -EINVAL;
+>>
+>> -       clk_enable(obj->clk);
+>> +       pm_runtime_get_sync(obj->dev);
+>>
+>>         iotlb_lock_get(obj, &l);
+>>         if (l.base == obj->nr_tlb_entries) {
+>> @@ -318,7 +315,7 @@ static int load_iotlb_entry(struct omap_iommu *obj, struct iotlb_entry *e)
+>>
+>>         cr = iotlb_alloc_cr(obj, e);
+>>         if (IS_ERR(cr)) {
+>> -               clk_disable(obj->clk);
+>> +               pm_runtime_put_sync(obj->dev);
+>>                 return PTR_ERR(cr);
+>>         }
+>
+> If I'm correct, the above pm_runtime_get/put are redundant, because
+> the count can't possibly reach 0 because of the reason I explained
+> before.
+>
+> The same for all the cases below.
+
+You can access this paths through debugfs, some of them doesn't work
+if the module is not enabled first, but in future if you just want to
+idle the iommu withouth freeing, these are needed to debug.
+
+BTW, the next patch in the series: ARM: OMAP: iommu: pm runtime save
+and restore context, let's you do a pm_runtime_[enable|put] through
+save/restore ctx functions, which is just for compatibility on how isp
+code uses the save and restore code.
+
+>> @@ -1009,7 +1001,8 @@ static int __devexit omap_iommu_remove(struct platform_device *pdev)
+>>         release_mem_region(res->start, resource_size(res));
+>>         iounmap(obj->regbase);
+>>
+>> -       clk_put(obj->clk);
+>> +       pm_runtime_disable(obj->dev);
+>
+> This will turn on the device unnecessarily, wasting power, and there's
+> no need for that, kfree will take care of that without resuming.
+
+Left aside the aesthetics of having balanced calls, the device will be
+enabled if there was a pending resume to be executed, otherwise it
+won't, kfree won't increment the disable_depth counter and I don't
+think that freeing the pointer is enough reason to ignore
+pm_runtime_disable.
+
+> Also, I still think that something like this is needed:
 ...
-> And as stated elsewhere, cpp should be invoked with similar options to
-> the way it's done for asm files.  A -D__DTS__ or something like that
-> would probably be a good idea too, just in case some .h needs to be
-> conditional on that.
+> +static struct clk cam_fck = {
+> +       .name           = "cam_fck",
+> +       .ops            = &clkops_omap2_iclk_dflt,
+> +       .parent         = &l3_ick,
+> +       .enable_reg     = OMAP_CM_REGADDR(OMAP3430_CAM_MOD, CM_ICLKEN),
 
-Hmm. There are some problems here.
+a cam_fck name to enable the ick?
 
-Right now, the command I proposed is basically:
+Cheers,
 
-$(CPP) -x c $< | dtc ...
-
-Without "-x c", $(CPP) doesn't recognise the file extension of the input
-file, and defaults to assuming it's a linker script rather than an input
-file, even in pre-processing mode (CPP == $(CC) -E), which obviously
-doesn't work too well.
-
-I chose "-x c" because *.dts syntax is closest to C.
-
-However, related to your request above, "-x assembler" might be more
-appropriate, since this would presumably define __ASSEMBLY__, which is
-what the kernel headers currently use to determine whether to compile
-out anything other than #defines. However, executing $(CPP) -x assembler
-foo.dts yields a completely empty output! I'm not sure why that is yet.
-
-I also tried passing to $(CPP) the exact same options that the kernel
-uses for compiling true assembly files, namely $(a_flags). Doing so
-would presumably provide complete compatibility in the pre-defined
-#defines between compiling *.S and *.dtsp, which would reduce the
-likelihood of needing to do anything different in *.h to support usage
-by both *.S and *.dtsp. (Note that I still need to pass a -x option, and
-the issue I described above still applies here too). This doesn't work
-out, because on ARM you get arch/arm/include/asm/unified.h
-force-included, which emits true assembly macros into the output, which
-obviously dtc can't parse. This could be avoided by editing that file to
-add #ifndef __DTS__ around the offending parts (and passing -D__DTS__ to
-$(CPP)), and that does appear to currently be the only file requiring a
-change. I wonder if using $(a_flags) is inviting more issues like this
-in the future though?
-
-Given this, I'm not convinced we should try to make $(CPP) usage for
-*.dts too much like its usage for *.S. I agree it'd probably make sense
-to add -D__DTS__ to the command-line, but switching away from -x c or to
-using $(a_flags) seems like it'd increase the maintenance requirements
-rather than reduce them.
+Omar
