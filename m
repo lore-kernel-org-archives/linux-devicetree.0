@@ -1,7 +1,7 @@
 From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v2 1/6] dts: exynos: add device tree support for exynos5 hdmi
-Date: Sat, 13 Oct 2012 02:12:30 +0530
-Message-ID: <1350074555-26018-2-git-send-email-rahul.sharma@samsung.com>
+Subject: [PATCH v2 2/6] dts: exynos: add device tree support for exynos5 mixer
+Date: Sat, 13 Oct 2012 02:12:31 +0530
+Message-ID: <1350074555-26018-3-git-send-email-rahul.sharma@samsung.com>
 References: <1350074555-26018-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-reply-to: <1350074555-26018-1-git-send-email-rahul.sharma@samsung.com>
@@ -11,97 +11,76 @@ Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, ink
 List-Id: devicetree@vger.kernel.org
 
 This patch adds support for device tree based discovery for exynos5
-hdmi. Hdmi node is also renamed with "exynos5-hdmi".
+mixer. Mixer node is also renamed with "exynos5-mixer".
 
 Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- .../devicetree/bindings/drm/exynos/hdmi.txt        |   22 ++++++++++++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
- arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++++
+ .../devicetree/bindings/drm/exynos/mixer.txt       |   15 +++++++++++++++
+ arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++++
  arch/arm/mach-exynos/include/mach/map.h            |    1 +
- arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
- 5 files changed, 35 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 ++
+ 4 files changed, 24 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/mixer.txt
 
-diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+diff --git a/Documentation/devicetree/bindings/drm/exynos/mixer.txt b/Documentation/devicetree/bindings/drm/exynos/mixer.txt
 new file mode 100644
-index 0000000..8b0fa7c
+index 0000000..05e4731
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
-@@ -0,0 +1,22 @@
-+Device-Tree bindings for drm hdmi driver
++++ b/Documentation/devicetree/bindings/drm/exynos/mixer.txt
+@@ -0,0 +1,15 @@
++Device-Tree bindings for mixer driver
 +
 +Required properties:
-+- compatible: value should be "samsung,exynos5-hdmi".
-+- reg: physical base address of the hdmi and length of memory mapped
++- compatible: value should be "samsung,exynos5-mixer".
++- reg: physical base address of the mixer and length of memory mapped
 +	region.
 +- interrupts: interrupt number to the cpu.
-+- hpd-gpio: following information about the hotplug gpio pin.
-+	a) phandle of the gpio controller node.
-+	b) pin number within the gpio controller.
-+	c) pin function mode.
-+	d) optional flags and pull up/down.
-+	e) drive strength.
 +
 +Example:
 +
-+	hdmi {
-+		compatible = "samsung,exynos5-hdmi";
-+		reg = <0x14530000 0x100000>;
-+		interrupts = <0 95 0>;
-+		hpd-gpio = <&gpx3 7 0xf 1 3>;
++	mixer {
++		compatible = "samsung,exynos5-mixer";
++		reg = <0x14450000 0x10000>;
++		interrupts = <0 94 0>;
 +	};
 \ No newline at end of file
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index a352df4..2a478ab 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -166,4 +166,8 @@
- 	spi_2: spi@12d40000 {
- 		status = "disabled";
- 	};
-+
-+	hdmi {
-+		hpd-gpio = <&gpx3 7 0xf 1 3>;
-+	};
- };
 diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index f69e389..eea84a3 100644
+index eea84a3..6abadbf 100644
 --- a/arch/arm/boot/dts/exynos5250.dtsi
 +++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -492,4 +492,10 @@
- 			#gpio-cells = <4>;
- 		};
- 	};
+@@ -498,4 +498,10 @@
+ 		reg = <0x14530000 0x100000>;
+ 		interrupts = <0 95 0>;
+         };
 +
-+	hdmi {
-+		compatible = "samsung,exynos5-hdmi";
-+		reg = <0x14530000 0x100000>;
-+		interrupts = <0 95 0>;
++        mixer {
++		compatible = "samsung,exynos5-mixer";
++		reg = <0x14450000 0x10000>;
++		interrupts = <0 94 0>;
 +        };
  };
 diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index 5edbbe9..7b9efb2 100644
+index 7b9efb2..314ee75 100644
 --- a/arch/arm/mach-exynos/include/mach/map.h
 +++ b/arch/arm/mach-exynos/include/mach/map.h
 @@ -201,6 +201,7 @@
  #define EXYNOS4_PA_SDO			0x12C20000
  #define EXYNOS4_PA_HDMI			0x12D00000
  #define EXYNOS4_PA_IIC_HDMIPHY		0x138E0000
-+#define EXYNOS5_PA_HDMI		0x14530000
++#define EXYNOS5_PA_MIXER		0x14450000
+ #define EXYNOS5_PA_HDMI		0x14530000
  
  #define EXYNOS4_PA_IIC(x)		(0x13860000 + ((x) * 0x10000))
- #define EXYNOS5_PA_IIC(x)		(0x12C60000 + ((x) * 0x10000))
 diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-index ce82f30..43449fb 100644
+index 43449fb..cdad7c1 100644
 --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
 +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-@@ -64,6 +64,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1", NULL),
+@@ -66,6 +66,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
  	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos5-hdmi", EXYNOS5_PA_HDMI,
-+				"exynos5-hdmi", NULL),
+ 	OF_DEV_AUXDATA("samsung,exynos5-hdmi", EXYNOS5_PA_HDMI,
+ 				"exynos5-hdmi", NULL),
++	OF_DEV_AUXDATA("samsung,exynos5-mixer", EXYNOS5_PA_MIXER,
++				"exynos5-mixer", NULL),
  	{},
  };
  
