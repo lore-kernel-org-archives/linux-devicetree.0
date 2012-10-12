@@ -1,82 +1,31 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Fri, 12 Oct 2012 14:25:32 +0300
-Message-ID: <CAHp75Vcte64KF5k5gDjMtyff8KsOof-yT7iVWc3Gz_ECL+0+Mw@mail.gmail.com>
-References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
-	<91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
-	<1350030203.10584.139.camel@smile>
-	<CAOh2x=m8OVNfMm5Fn+cr9Gxuh6oyt+8d4n-bkG8Xiw5zGncLiA@mail.gmail.com>
-	<CAHp75VffAwZjfQLf=wS+nBhiRoMFOoyPeUCfrzF1G=+Kh7HHTA@mail.gmail.com>
-	<CAKohponxbjTTDMOA_0=MT36wRh1NpzTAH4LdkaE=Z-ahup4BFg@mail.gmail.com>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [RFC PATCH v2 08/16] ARM: omap: add hsmmc am33xx specific init
+Date: Fri, 12 Oct 2012 07:54:37 -0400
+Message-ID: <20121012115437.GG13724@beef>
+References: <1349982281-10785-1-git-send-email-mporter@ti.com>
+ <1349982281-10785-9-git-send-email-mporter@ti.com>
+ <1BAFE6F6C881BF42822005164F1491C33EAA6374@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohponxbjTTDMOA_0=MT36wRh1NpzTAH4LdkaE=Z-ahup4BFg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EAA6374@DBDE01.ent.ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, vinod.koul@intel.com, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, "Nori, Sekhar" <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "Cousson, Benoit" <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 12, 2012 at 2:01 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 12 October 2012 16:10, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->>>>> +     if (!found) {
->>>>> +             last_dw = dw;
->>>>> +             last_bus_id = param;
->>>>> +             return false;
->>>> Because of return here you could eliminate 'found' flag at all.
->
-> Here is the stuff copied from you ;)
->
->
-> diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
-> index a4ff04c..c24859e 100644
-> --- a/drivers/dma/dw_dmac.c
-> +++ b/drivers/dma/dw_dmac.c
-> @@ -1184,7 +1184,7 @@ bool dw_generic_filter(struct dma_chan *chan, void *param)
->         struct dw_dma *dw = to_dw_dma(chan->device);
->         static struct dw_dma *last_dw;
->         static char *last_bus_id;
-> -       int found = 0, i = -1;
-> +       int i = -1;
->
->         /*
->          * dmaengine framework calls this routine for all channels of all dma
-> @@ -1212,22 +1212,17 @@ bool dw_generic_filter(struct dma_chan *chan,
-> void *param)
->
->         while (++i < dw->sd_count) {
->                 if (!strcmp(dw->sd[i].bus_id, param)) {
-> -                       found = 1;
-> -                       break;
-> -               }
-> -       }
-> +                       chan->private = &dw->sd[i];
-> +                       last_dw = NULL;
-> +                       last_bus_id = NULL;
->
-> -       if (!found) {
-> -               last_dw = dw;
-> -               last_bus_id = param;
-> -               return false;
-> +                       return true;
-> +               }
->         }
->
-> -       chan->private = &dw->sd[i];
-> -       last_dw = NULL;
-> -       last_bus_id = NULL;
-> -
-> -       return true;
-> +       last_dw = dw;
-> +       last_bus_id = param;
-> +       return false;
->  }
-Yes, that what I refer to.
+On Fri, Oct 12, 2012 at 09:17:53AM +0000, Hebbar, Gururaja wrote:
+> Matt
+> 
+> On Fri, Oct 12, 2012 at 00:34:33, Porter, Matt wrote:
+> > AM33xx requires special handling in hsmmc initialization
+> > platform glue.
+> 
+> Since AM335x boots mainly through DT, do we still need this patch.
+> This function will be called in case of initializing hsmmc with
+> Platform data. 
 
->  EXPORT_SYMBOL(dw_generic_filter);
-Could we change a name to be more precise, like dw_dma_generic_filter ?
+Yes, thanks, will drop in v3.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+-Matt
