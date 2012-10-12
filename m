@@ -1,30 +1,37 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Subject: Re: [PATCH V2 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Fri, 12 Oct 2012 21:25:18 +0530
-Message-ID: <CAKohponCD3tFNom_JjBmP3vxQ5us39uPi2bp1JyjCALcmhmSYw@mail.gmail.com>
+Date: Fri, 12 Oct 2012 18:20:57 +0200
+Message-ID: <20121012162057.GG12801@game.jcrosoft.org>
 References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350051925.git.viresh.kumar@linaro.org>
-	<9688d98010716880c1bbd966ead312c446282204.1350051925.git.viresh.kumar@linaro.org>
-	<1350053897.10584.172.camel@smile>
-	<CAKohponS+mkj6rN6hzJC1FrbpSS+jWZBii4xQgN+4z2h=zFTWA@mail.gmail.com>
-	<CAHp75VdNVyWxvnHDFjg_5vC95M_LwJYUDLQb+NmBA6GRVsea9g@mail.gmail.com>
+ <9688d98010716880c1bbd966ead312c446282204.1350051925.git.viresh.kumar@linaro.org>
+ <20121012145027.GF12801@game.jcrosoft.org>
+ <CAKohpomvCkzSuP1GLBXmDTRCHeKXDgGwwXQ+TzU=Jekmozzo=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdNVyWxvnHDFjg_5vC95M_LwJYUDLQb+NmBA6GRVsea9g@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAKohpomvCkzSuP1GLBXmDTRCHeKXDgGwwXQ+TzU=Jekmozzo=A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, vinod.koul@intel.com, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 October 2012 21:23, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> 1. This is an equivalent of
-> if (last_dw && (last_bus_id == ... ) && (last_dw == dw))
->  return false;
-> 2. In case dw is always non-NULL the last_dw == dw is false if last_dw is NULL.
->
-> Where am I wrong?
+On 20:25 Fri 12 Oct     , Viresh Kumar wrote:
+> On 12 October 2012 20:20, Jean-Christophe PLAGNIOL-VILLARD
+> <plagnioj@jcrosoft.com> wrote:
+> > On 20:01 Fri 12 Oct     , Viresh Kumar wrote:
+> >> dw_dmac driver already supports device tree but it used to have its platform
+> >> data passed the non-DT way.
+> >>
+> >> This patch does following changes:
+> >> - pass platform data via DT, non-DT way still takes precedence if both are used.
+> > why keep it  all platform are DT
+> 
+> I would love to remove that, but not sure if somebody want's the non-DT
+> way too.
+> 
+> I didn't wanted to get into fixing user SoCs of this driver.
+no drop it at the mailine if do not need it
 
-Nowhere, I am drunk ;)
-
---
-viresh
+Best Regads,
+J.
