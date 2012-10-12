@@ -1,174 +1,43 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH] dt: add helper function to read u8 & u16 variables & arrays
-Date: Fri, 12 Oct 2012 23:31:40 +0530
-Message-ID: <425b4bec021bce9a2de49959121907aeede6a0b9.1350064805.git.viresh.kumar@linaro.org>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v2] TPM: Provide a tpm_tis OF driver
+Date: Fri, 12 Oct 2012 14:20:05 -0600
+Message-ID: <20121012202005.GL4124@obsidianresearch.com>
+References: <20121002210453.GA12231@obsidianresearch.com>
+ <20121010162428.GA5013@ennui.austin.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121010162428.GA5013@ennui.austin.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com, grant.likely@secretlab.ca
-Cc: spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, Viresh Kumar <viresh.kumar@linaro.org>
+To: Kent Yoder <key@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, tpmdd-devel@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This adds following helper routines:
-- of_property_read_u8_array()
-- of_property_read_u16_array()
-- of_property_read_u8()
-- of_property_read_u16()
+On Wed, Oct 10, 2012 at 11:24:28AM -0500, Kent Yoder wrote:
 
-First two actually share most of the code with of_property_read_u32_array(), so
-the common part is taken out into a macro, which can be used by all three
-*_array() routines.
+>   Why change the structs to const here? This generates warnings for me:
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/of/base.c  | 73 +++++++++++++++++++++++++++++++++++++++++++-----------
- include/linux/of.h | 30 ++++++++++++++++++++++
- 2 files changed, 89 insertions(+), 14 deletions(-)
+I should have dropped this, I was added when I added the __devinitdata
+annotations..
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 38892a9..446fe7f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -670,6 +670,64 @@ struct device_node *of_find_node_by_phandle(phandle handle)
- }
- EXPORT_SYMBOL(of_find_node_by_phandle);
- 
-+#define of_property_read_array(_np, _pname, _out, _sz, _type)		\
-+	struct property *_prop = of_find_property(_np, _pname, NULL);	\
-+	const __be32 *_val;						\
-+									\
-+	if (!_prop)							\
-+		return -EINVAL;						\
-+	if (!_prop->value)						\
-+		return -ENODATA;					\
-+	if ((_sz * sizeof(*_out)) > _prop->length)			\
-+		return -EOVERFLOW;					\
-+									\
-+	_val = _prop->value;						\
-+	while (_sz--)							\
-+		*_out++ = (_type)be32_to_cpup(_val++);			\
-+	return 0;
-+
-+/**
-+ * of_property_read_u8_array - Find and read an array of u8 from a property.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_value:	pointer to return value, modified only if return value is 0.
-+ *
-+ * Search for a property in a device node and read 8-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_value is modified only if a valid u8 value can be decoded.
-+ */
-+int of_property_read_u8_array(const struct device_node *np,
-+			const char *propname, u8 *out_values, size_t sz)
-+{
-+	of_property_read_array(np, propname, out_values, sz, u8);
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u8_array);
-+
-+/**
-+ * of_property_read_u16_array - Find and read an array of u16 from a property.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_value:	pointer to return value, modified only if return value is 0.
-+ *
-+ * Search for a property in a device node and read 16-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_value is modified only if a valid u16 value can be decoded.
-+ */
-+int of_property_read_u16_array(const struct device_node *np,
-+			const char *propname, u16 *out_values, size_t sz)
-+{
-+	of_property_read_array(np, propname, out_values, sz, u16);
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u16_array);
-+
- /**
-  * of_property_read_u32_array - Find and read an array of 32 bit integers
-  * from a property.
-@@ -689,20 +747,7 @@ int of_property_read_u32_array(const struct device_node *np,
- 			       const char *propname, u32 *out_values,
- 			       size_t sz)
- {
--	struct property *prop = of_find_property(np, propname, NULL);
--	const __be32 *val;
--
--	if (!prop)
--		return -EINVAL;
--	if (!prop->value)
--		return -ENODATA;
--	if ((sz * sizeof(*out_values)) > prop->length)
--		return -EOVERFLOW;
--
--	val = prop->value;
--	while (sz--)
--		*out_values++ = be32_to_cpup(val++);
--	return 0;
-+	of_property_read_array(np, propname, out_values, sz, u32);
- }
- EXPORT_SYMBOL_GPL(of_property_read_u32_array);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 72843b7..e2d9b40 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -223,6 +223,10 @@ extern struct device_node *of_find_node_with_property(
- extern struct property *of_find_property(const struct device_node *np,
- 					 const char *name,
- 					 int *lenp);
-+extern int of_property_read_u8_array(const struct device_node *np,
-+			const char *propname, u8 *out_values, size_t sz);
-+extern int of_property_read_u16_array(const struct device_node *np,
-+			const char *propname, u16 *out_values, size_t sz);
- extern int of_property_read_u32_array(const struct device_node *np,
- 				      const char *propname,
- 				      u32 *out_values,
-@@ -357,6 +361,18 @@ static inline struct device_node *of_find_compatible_node(
- 	return NULL;
- }
- 
-+static inline int of_property_read_u8_array(const struct device_node *np,
-+			const char *propname, u8 *out_values, size_t sz)
-+{
-+	return -ENOSYS;
-+}
-+
-+static inline int of_property_read_u16_array(const struct device_node *np,
-+			const char *propname, u16 *out_values, size_t sz)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_property_read_u32_array(const struct device_node *np,
- 					     const char *propname,
- 					     u32 *out_values, size_t sz)
-@@ -463,6 +479,20 @@ static inline bool of_property_read_bool(const struct device_node *np,
- 	return prop ? true : false;
- }
- 
-+static inline int of_property_read_u8(const struct device_node *np,
-+				       const char *propname,
-+				       u8 *out_value)
-+{
-+	return of_property_read_u8_array(np, propname, out_value, 1);
-+}
-+
-+static inline int of_property_read_u16(const struct device_node *np,
-+				       const char *propname,
-+				       u16 *out_value)
-+{
-+	return of_property_read_u16_array(np, propname, out_value, 1);
-+}
-+
- static inline int of_property_read_u32(const struct device_node *np,
- 				       const char *propname,
- 				       u32 *out_value)
--- 
-1.7.12.rc2.18.g61b472e
+> > +
+> > +static struct platform_driver tis_driver = {
+> >  	.driver = {
+> >  		.name = "tpm_tis",
+> >  		.owner		= THIS_MODULE,
+> >  		.pm		= &tpm_tis_pm,
+> > +		.of_match_table = of_match_ptr(tis_of_platform_match),
+> >  	},
+> 
+>   Patch v2 removes the ifdef around of_match_table, which now generates
+> an error:
+
+Yes, this update was following the style of other drivers. Obviously I
+never thought to try this on x86 (only PPC), so I will try to setup a
+compile for that as well and send v3.
+
+I suspect this is simply a missing #include.
+
+Regards,
+Jason
