@@ -1,39 +1,58 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [RFC PATCH v2 00/16] DMA Engine support for AM33xx
-Date: Thu, 11 Oct 2012 17:49:30 -0400
-Message-ID: <20121011214930.GF13724@beef>
-References: <1349982281-10785-1-git-send-email-mporter@ti.com>
- <CACxGe6vL2ieaYN_YhZn9=e7=prwdfwZtgPr4Ei3VMNnViib6XA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6vL2ieaYN_YhZn9=e7=prwdfwZtgPr4Ei3VMNnViib6XA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Robert Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, spi-devel-general@lists.sourceforge.net, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+From: Omar Ramirez Luna <omar.luna@linaro.org>
+Subject: [PATCH v3 0/6] OMAP: iommu: hwmod, reset handling and runtime PM
+Date: Thu, 11 Oct 2012 20:06:05 -0500
+Message-ID: <1350003977-32744-1-git-send-email-omar.luna@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Joerg Roedel <joerg.roedel@amd.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Omar Ramirez Luna <omar.luna@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>, Paul Walmsley <paul@pwsan.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, iommu@lists.linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 11, 2012 at 10:31:58PM +0100, Grant Likely wrote:
-> Hey Matt,
-> 
-> Do you know now similar are the EDMA engines on the am33xx and am389x? I've
-> been working on am389x upstreaming and I'll try these patches out if it is
-> the same engine.
+These patches are needed for remoteproc to work on OMAP4.
 
-Hi Grant,
+Introduced iommu hwmod support for OMAP3 (iva, isp) and
+OMAP4 (ipu, dsp), along with the corresponding runtime PM
+and routines to deassert reset lines, enable/disable clocks
+and configure sysc registers.
 
-It's the same one. am389x/ti816x and am387x/ti814x are part of the same
-architectural family as am33xx. They've just never had a lot of upstream
-support from TI. I heard rumors that you might be working with am389x
-and I'm glad you're confirming that for me! ;)
+Although IOMMU hwmod patches were already submitted in the past,
+this series adds few more changes, like:
+- New reset handling.
+- Save and restore context code rework.
+- Device tree bindings for OMAP3 and OMAP4.
 
-The only differences between am33xx's implementation and the others is
-going to be the number PaRAM slots, number of TCs, the channel mapping,
-and then the crossbar mapping. As you can see from the TODO list, I
-don't yet support the crossbar, but it'll be in the next version of this
-series. The other items are already covered in the DT binding so it
-should be straightforward to hook this up for am389x assuming your hwmod
-and clock data is good for that part.
+For this series I just dropped the patches already included in
+mainline.
 
--Matt
+Previous work can be found at:
+[v2]
+  http://www.mail-archive.com/linux-omap@vger.kernel.org/msg75701.html
+[v1]
+  http://www.mail-archive.com/linux-omap@vger.kernel.org/msg70447.html
+
+[old iteration without reset, save/restore and device tree]
+  http://www.mail-archive.com/linux-omap@vger.kernel.org/msg60133.html
+
+Omar Ramirez Luna (6):
+  ARM: OMAP3/4: iommu: migrate to hwmod framework
+  ARM: OMAP3/4: iommu: adapt to runtime pm
+  ARM: OMAP: iommu: pm runtime save and restore context
+  ARM: OMAP: iommu: optimize save and restore routines
+  ARM: OMAP: iommu: add device tree support
+  arm/dts: OMAP3/4: Add iommu nodes
+
+ .../devicetree/bindings/arm/omap/iommu.txt         |   10 ++
+ arch/arm/boot/dts/omap3.dtsi                       |   12 +-
+ arch/arm/boot/dts/omap4.dtsi                       |   17 +-
+ arch/arm/mach-omap2/devices.c                      |    2 +-
+ arch/arm/mach-omap2/iommu2.c                       |   74 ++------
+ arch/arm/mach-omap2/omap-iommu.c                   |  176 +++++---------------
+ arch/arm/plat-omap/include/plat/iommu.h            |   20 ++-
+ arch/arm/plat-omap/include/plat/iommu2.h           |    4 -
+ drivers/iommu/omap-iommu.c                         |  163 ++++++++++++++----
+ 9 files changed, 245 insertions(+), 233 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/iommu.txt
+
+-- 
+1.7.9.5
+
