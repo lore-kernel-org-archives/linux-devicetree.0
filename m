@@ -1,115 +1,95 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Fri, 12 Oct 2012 14:04:02 +0530
-Message-ID: <CAKohpon4FZdPXFOXvVqExY=xrwozELYvNbE3_zHoRw2O0nszhw@mail.gmail.com>
-References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
-	<91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
-	<1350030203.10584.139.camel@smile>
+From: kishon <kishon@ti.com>
+Subject: Re: [PATCH 1/4] usb: phy: add a new driver for usb3 phy
+Date: Fri, 12 Oct 2012 14:38:26 +0530
+Message-ID: <5077DE0A.4000301@ti.com>
+References: <1348054229-27362-1-git-send-email-kishon@ti.com> <1348054229-27362-2-git-send-email-kishon@ti.com> <20121011005944.GX12552@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1350030203.10584.139.camel@smile>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: vinod.koul@intel.com, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121011005944.GX12552@atomide.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Moiz Sonasath <m-sonasath@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12 October 2012 13:53, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Fri, 2012-10-12 at 11:14 +0530, Viresh Kumar wrote:
+Hi Tony,
 
-> My few comments are below.
+On Thursday 11 October 2012 06:29 AM, Tony Lindgren wrote:
+> Hi,
+>
+> * Kishon Vijay Abraham I <kishon@ti.com> [120919 04:32]:
+>> Added a driver for usb3 phy that handles the interaction between usb phy
+>> device and dwc3 controller.
+>>
+>> This also includes device tree support for usb3 phy driver and
+>> the documentation with device tree binding information is updated.
+>>
+>> Currently writing to control module register is taken care in this
+>> driver which will be removed once the control module driver is in place.
+>
+> You may be able to set up the control module register with one
+> of the following Linux standard frameworks:
+>
+> 1. Fixed regulator defined in mach-omap2/control.c
 
-Most welcome :)
+Is it control.c?
+>
+>     In this case the PHY driver can pick up the regulator by name.
 
->> diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
->> @@ -14,4 +34,28 @@ Example:
->>               reg = <0xfc000000 0x1000>;
->>               interrupt-parent = <&vic1>;
->>               interrupts = <12>;
+Do you mean we have to define something like fixed_voltage_config 
+defined in board-4430sdp.c?
+ From whatever I could make out from regulator/fixed.c, 
+enabling/disabling of regulator is done using only gpio. I'm not sure 
+how we can use that to write to control module register.
+>
+> 2. A mux mapped with pinctrl framework using pinctrl-single,bits
+>     binding
+>
+>     And in this case the PHY driver can request the named pinctrl
+>     states like "enabled" and "disabled".
+>
+>> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
+>> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+>> @@ -15,3 +15,21 @@ usb2phy@4a0ad080 {
+>>   	reg = <0x4a0ad080 0x58>,
+>>   	      <0x4a002300 0x4>;
+>>   };
+>
+> The comments also apply to the omap_usb2.c driver for
+> 0x4a002300 above.
+>
 >> +
->> +             nr_channels = <8>;
->> +             chan_allocation_order = <1>;
->> +             chan_priority = <1>;
->> +             block_size = <0xfff>;
->> +             nr_masters = <2>;
->> +             data_width = <3 3 0 0>;
+>> +OMAP USB3 PHY
 >> +
->> +             slave_info {
->> +                     uart0-tx {
->> +                             bus_id = "uart0-tx";
->> +                             cfg_hi = <0x4000>;      /* 0x8 << 11 */
->> +                             cfg_lo = <0>;
->> +                             src_master = <0>;
->> +                             dst_master = <1>;
->> +                     };
->> +                     spi0-tx {
->> +                             bus_id = "spi0-tx";
->> +                             cfg_hi = <0x2000>;      /* 0x4 << 11 */
->> +                             cfg_lo = <0>;
->> +                             src_master = <0>;
->> +                             dst_master = <0>;
->> +                     };
->> +             };
-> Why do you locate slave information under DMA controller node? From my
-> point of view the slave info belongs to corresponding device. For
-> example, above sections belong to UART0 and SPI0.
-
-Consider one spi driver is used on 5 different platforms with
-different DMA controllers.
-So, 5 DMA drivers and so 5 DMA platform_data. Wherever we add this node, this
-data can't be processed by spi-driver, as we can't add DT processing routines
-for all DMA drivers in spi.
-
-The best place to process DT nodes is DW_DMAC driver, because it is
-dw_dmac's data.
-That's why i added them under DMA.
-
->> diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
-
->> +     while (++i < dw->sd_count) {
->> +             if (!strcmp(dw->sd[i].bus_id, param)) {
->> +                     found = 1;
->> +                     break;
->> +             }
->> +     }
+>> +Required properties:
+>> + - compatible: Should be "ti,omap-usb3"
+>> + - reg : Address and length of the register set for the device. Also
+>> +add the address of control module phy power register until a driver for
+>> +control module is added
 >> +
->> +     if (!found) {
->> +             last_dw = dw;
->> +             last_bus_id = param;
->> +             return false;
-> Because of return here you could eliminate 'found' flag at all.
+>> +This is usually a subnode of ocp2scp to which it is connected.
+>> +
+>> +usb3phy@4a084400 {
+>> +	compatible = "ti,omap-usb3";
+>> +	reg = <0x0x4a084400 0x80>,
+>> +	      <0x4a084800 0x64>,
+>> +	      <0x4a084c00 0x40>,
+>> +	      <0x4a002370 0x4>;
+>> +};
+>
+> And register 0x4a002370 here. Care to post some info what the
+> 0x4a002370 register bits do? Is that same as CONTROL_DEV_CONF
+> on omap4, or does it have other bits there too?
 
-Yeah.
+It's CONTROL_PHY_POWER_USB register and it's structure looks like this.
+31:22 USB_PWRCTL_CLK_FREQ
+21:14 USB_PWRCTL_CLK_CMD
+13:0 RESERVED
 
->> +static struct dw_dma_platform_data *
->> +__devinit dw_dma_parse_dt(struct platform_device *pdev)
->> +{
+CLK_CMD takes values to power up/down the TX and RX in various combinations.
 
->> +     for_each_child_of_node(sn, cn)
->> +             count++;
-> Is there any other way to get amount of children?
+And CLK_FREQ takes values for clock configuration.
 
-I tried my best to find one, referred to lots of drivers. And found
-this way in most of the places. ex: drivers/pinctrl/***
-
->> +     return pdata;
-> Here you return NULL or valid pointer
->> +}
->> +#else
->> +static inline int dw_dma_parse_dt(struct platform_device *pdev)
->> +{
->> +     return -ENOSYS;
-> ...here you return an error.
-
-Look at prototype of both versions of these routines. Its a bug. Thanks
-for pointing out.
-
->>       if (!pdata || pdata->nr_channels > DW_DMA_MAX_NR_CHANNELS)
-> ...and here you didn't check for an error.
-
-With above bug fixed, this will be automatically resolved as NULL is treated as
-failure.
-
---
-viresh
+Thanks
+Kishon
