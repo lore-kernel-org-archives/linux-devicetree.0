@@ -1,40 +1,81 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Fri, 12 Oct 2012 20:48:56 +0530
-Message-ID: <CAKohponS+mkj6rN6hzJC1FrbpSS+jWZBii4xQgN+4z2h=zFTWA@mail.gmail.com>
-References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350051925.git.viresh.kumar@linaro.org>
-	<9688d98010716880c1bbd966ead312c446282204.1350051925.git.viresh.kumar@linaro.org>
-	<1350053897.10584.172.camel@smile>
+From: Domenico Andreoli <cavokz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: bcm476x: Add stub clock driver
+Date: Fri, 12 Oct 2012 17:28:35 +0200
+Message-ID: <20121012152835.GA2882@glitch>
+References: <20121007015300.828366635@gmail.com>
+ <20121007015407.154476821@gmail.com>
+ <20121012145221.2941.35101@nucleus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1350053897.10584.172.camel@smile>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: vinod.koul@intel.com, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121012145221.2941.35101@nucleus>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 October 2012 20:28, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Fri, 2012-10-12 at 20:01 +0530, Viresh Kumar wrote:
+On Fri, Oct 12, 2012 at 07:52:21AM -0700, Mike Turquette wrote:
+> Quoting Domenico Andreoli (2012-10-06 18:53:04)
+> > Index: b/drivers/clk/clk-bcm476x.c
+> > ===================================================================
+> > --- /dev/null
+> > +++ b/drivers/clk/clk-bcm476x.c
+> > @@ -0,0 +1,52 @@
+> > +/*
+> > + * Broadcom BCM476x SoCs clocks
+> > + *
+> > + * Copyright (C) 2011-2012 Domenico Andreoli <domenico.andreoli-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/clk-private.h>
+> 
+> Why clk-private.h?  That is deprecated and should not be used unless
+> absolutely necessary.  It will be removed once Tegra and OMAP stop using
+> it.
+> 
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/clkdev.h>
+> > +#include <linux/clk/bcm476x.h>
+> > +
+> > +/*
+> > + * These are fixed clocks (and device tree doesn't support clk!).
+> > + *
+> > + * They're probably not all root clocks and it may be possible to
+> > + * turn them on and off but until this is mapped out better it's
+> > + * the only way they can be used.
+> > + */
+> > +DEFINE_CLK_FIXED_RATE(sys_pclk,   CLK_IS_ROOT, 312000000, 0);
+> > +DEFINE_CLK_FIXED_RATE(apb_pclk,   CLK_IS_ROOT, 156000000, 0);
+> > +DEFINE_CLK_FIXED_RATE(uart0_pclk, CLK_IS_ROOT, 78000000, 0);
+> > +DEFINE_CLK_FIXED_RATE(uart1_pclk, CLK_IS_ROOT, 78000000, 0);
+> > +DEFINE_CLK_FIXED_RATE(uart2_pclk, CLK_IS_ROOT, 78000000, 0);
+> > +
+> 
+> Can you use clk_register_fixed_rate instead?
 
->> +     if (last_dw) {
->> +             if ((last_bus_id == param) && (last_dw == dw))
->> +                     return false;
->> +     }
+Stephen already warned me, it'll be fixed in the next post. Thanks.
 
-> Just came to my mind.
-> dw can't be NULL, can't it?
-> Then
-> if (last_dw) {
-> ...
-> }
-> is unneeded.
-
-dw can't be but last_dw can be, which we are making NULL when
-we find a channel :)
-
-You are already drunk.
-
---
-viresh
+Regards,
+Domenico
