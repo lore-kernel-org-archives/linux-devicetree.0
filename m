@@ -1,163 +1,82 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v2 6/6] arm: exynos: removing exynos-drm device registration
- from non-dt platforms
-Date: Sat, 13 Oct 2012 02:12:35 +0530
-Message-ID: <1350074555-26018-7-git-send-email-rahul.sharma@samsung.com>
-References: <1350074555-26018-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1350074555-26018-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Fri, 12 Oct 2012 14:25:32 +0300
+Message-ID: <CAHp75Vcte64KF5k5gDjMtyff8KsOof-yT7iVWc3Gz_ECL+0+Mw@mail.gmail.com>
+References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350020375.git.viresh.kumar@linaro.org>
+	<91e41b4cc972d298f714cbd6f400569a9710304c.1350020375.git.viresh.kumar@linaro.org>
+	<1350030203.10584.139.camel@smile>
+	<CAOh2x=m8OVNfMm5Fn+cr9Gxuh6oyt+8d4n-bkG8Xiw5zGncLiA@mail.gmail.com>
+	<CAHp75VffAwZjfQLf=wS+nBhiRoMFOoyPeUCfrzF1G=+Kh7HHTA@mail.gmail.com>
+	<CAKohponxbjTTDMOA_0=MT36wRh1NpzTAH4LdkaE=Z-ahup4BFg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohponxbjTTDMOA_0=MT36wRh1NpzTAH4LdkaE=Z-ahup4BFg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, vinod.koul@intel.com, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-As exynos-drm is a software device, its registration is moved to the
-exynos drm driver. This will provide generic solution for device registration
-for dt and non-dt platforms. Corresponding patches are posted to dri-devel
-list.
+On Fri, Oct 12, 2012 at 2:01 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 12 October 2012 16:10, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>>>>> +     if (!found) {
+>>>>> +             last_dw = dw;
+>>>>> +             last_bus_id = param;
+>>>>> +             return false;
+>>>> Because of return here you could eliminate 'found' flag at all.
+>
+> Here is the stuff copied from you ;)
+>
+>
+> diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
+> index a4ff04c..c24859e 100644
+> --- a/drivers/dma/dw_dmac.c
+> +++ b/drivers/dma/dw_dmac.c
+> @@ -1184,7 +1184,7 @@ bool dw_generic_filter(struct dma_chan *chan, void *param)
+>         struct dw_dma *dw = to_dw_dma(chan->device);
+>         static struct dw_dma *last_dw;
+>         static char *last_bus_id;
+> -       int found = 0, i = -1;
+> +       int i = -1;
+>
+>         /*
+>          * dmaengine framework calls this routine for all channels of all dma
+> @@ -1212,22 +1212,17 @@ bool dw_generic_filter(struct dma_chan *chan,
+> void *param)
+>
+>         while (++i < dw->sd_count) {
+>                 if (!strcmp(dw->sd[i].bus_id, param)) {
+> -                       found = 1;
+> -                       break;
+> -               }
+> -       }
+> +                       chan->private = &dw->sd[i];
+> +                       last_dw = NULL;
+> +                       last_bus_id = NULL;
+>
+> -       if (!found) {
+> -               last_dw = dw;
+> -               last_bus_id = param;
+> -               return false;
+> +                       return true;
+> +               }
+>         }
+>
+> -       chan->private = &dw->sd[i];
+> -       last_dw = NULL;
+> -       last_bus_id = NULL;
+> -
+> -       return true;
+> +       last_dw = dw;
+> +       last_bus_id = param;
+> +       return false;
+>  }
+Yes, that what I refer to.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/mach-exynos/Makefile              |    1 -
- arch/arm/mach-exynos/dev-drm.c             |   29 ----------------------------
- arch/arm/mach-exynos/mach-nuri.c           |    3 --
- arch/arm/mach-exynos/mach-origen.c         |    3 --
- arch/arm/mach-exynos/mach-smdk4x12.c       |    3 --
- arch/arm/mach-exynos/mach-smdkv310.c       |    3 --
- arch/arm/mach-exynos/mach-universal_c210.c |    3 --
- arch/arm/plat-samsung/include/plat/devs.h  |    2 -
- 8 files changed, 0 insertions(+), 47 deletions(-)
- delete mode 100644 arch/arm/mach-exynos/dev-drm.c
+>  EXPORT_SYMBOL(dw_generic_filter);
+Could we change a name to be more precise, like dw_dma_generic_filter ?
 
-diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
-index 9b58024..1797dee 100644
---- a/arch/arm/mach-exynos/Makefile
-+++ b/arch/arm/mach-exynos/Makefile
-@@ -53,7 +53,6 @@ obj-$(CONFIG_EXYNOS4_DEV_AHCI)		+= dev-ahci.o
- obj-$(CONFIG_EXYNOS4_DEV_DWMCI)		+= dev-dwmci.o
- obj-$(CONFIG_EXYNOS_DEV_DMA)		+= dma.o
- obj-$(CONFIG_EXYNOS4_DEV_USB_OHCI)	+= dev-ohci.o
--obj-$(CONFIG_EXYNOS_DEV_DRM)		+= dev-drm.o
- obj-$(CONFIG_EXYNOS_DEV_SYSMMU)		+= dev-sysmmu.o
- 
- obj-$(CONFIG_ARCH_EXYNOS)		+= setup-i2c0.o
-diff --git a/arch/arm/mach-exynos/dev-drm.c b/arch/arm/mach-exynos/dev-drm.c
-deleted file mode 100644
-index 17c9c6e..0000000
---- a/arch/arm/mach-exynos/dev-drm.c
-+++ /dev/null
-@@ -1,29 +0,0 @@
--/*
-- * linux/arch/arm/mach-exynos/dev-drm.c
-- *
-- * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-- *		http://www.samsung.com
-- *
-- * EXYNOS - core DRM device
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- */
--
--#include <linux/kernel.h>
--#include <linux/dma-mapping.h>
--#include <linux/platform_device.h>
--
--#include <plat/devs.h>
--
--static u64 exynos_drm_dma_mask = DMA_BIT_MASK(32);
--
--struct platform_device exynos_device_drm = {
--	.name	= "exynos-drm",
--	.dev	= {
--		.dma_mask		= &exynos_drm_dma_mask,
--		.coherent_dma_mask	= DMA_BIT_MASK(32),
--	}
--};
-diff --git a/arch/arm/mach-exynos/mach-nuri.c b/arch/arm/mach-exynos/mach-nuri.c
-index ea785fc..9267caf 100644
---- a/arch/arm/mach-exynos/mach-nuri.c
-+++ b/arch/arm/mach-exynos/mach-nuri.c
-@@ -1330,9 +1330,6 @@ static struct platform_device *nuri_devices[] __initdata = {
- 	&cam_vdda_fixed_rdev,
- 	&cam_8m_12v_fixed_rdev,
- 	&exynos4_bus_devfreq,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- };
- 
- static void __init nuri_map_io(void)
-diff --git a/arch/arm/mach-exynos/mach-origen.c b/arch/arm/mach-exynos/mach-origen.c
-index b45600f..be8fac7 100644
---- a/arch/arm/mach-exynos/mach-origen.c
-+++ b/arch/arm/mach-exynos/mach-origen.c
-@@ -709,9 +709,6 @@ static struct platform_device *origen_devices[] __initdata = {
- 	&s5p_device_mfc_l,
- 	&s5p_device_mfc_r,
- 	&s5p_device_mixer,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&exynos4_device_ohci,
- 	&origen_device_gpiokeys,
- 	&origen_lcd_hv070wsa,
-diff --git a/arch/arm/mach-exynos/mach-smdk4x12.c b/arch/arm/mach-exynos/mach-smdk4x12.c
-index 81bf59c..f02ee11 100644
---- a/arch/arm/mach-exynos/mach-smdk4x12.c
-+++ b/arch/arm/mach-exynos/mach-smdk4x12.c
-@@ -317,9 +317,6 @@ static struct platform_device *smdk4x12_devices[] __initdata = {
- 	&s5p_device_mfc,
- 	&s5p_device_mfc_l,
- 	&s5p_device_mfc_r,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&samsung_device_keypad,
- };
- 
-diff --git a/arch/arm/mach-exynos/mach-smdkv310.c b/arch/arm/mach-exynos/mach-smdkv310.c
-index 12a1db2..bffb1b2 100644
---- a/arch/arm/mach-exynos/mach-smdkv310.c
-+++ b/arch/arm/mach-exynos/mach-smdkv310.c
-@@ -300,9 +300,6 @@ static struct platform_device *smdkv310_devices[] __initdata = {
- 	&s5p_device_fimc_md,
- 	&s5p_device_g2d,
- 	&s5p_device_jpeg,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&exynos4_device_ac97,
- 	&exynos4_device_i2s0,
- 	&exynos4_device_ohci,
-diff --git a/arch/arm/mach-exynos/mach-universal_c210.c b/arch/arm/mach-exynos/mach-universal_c210.c
-index 4d1f40d..f7b1337 100644
---- a/arch/arm/mach-exynos/mach-universal_c210.c
-+++ b/arch/arm/mach-exynos/mach-universal_c210.c
-@@ -1084,9 +1084,6 @@ static struct platform_device *universal_devices[] __initdata = {
- 	&s5p_device_onenand,
- 	&s5p_device_fimd0,
- 	&s5p_device_jpeg,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&s3c_device_usb_hsotg,
- 	&s5p_device_mfc,
- 	&s5p_device_mfc_l,
-diff --git a/arch/arm/plat-samsung/include/plat/devs.h b/arch/arm/plat-samsung/include/plat/devs.h
-index 5da4b4f..133e3e4 100644
---- a/arch/arm/plat-samsung/include/plat/devs.h
-+++ b/arch/arm/plat-samsung/include/plat/devs.h
-@@ -133,8 +133,6 @@ extern struct platform_device exynos4_device_pcm1;
- extern struct platform_device exynos4_device_pcm2;
- extern struct platform_device exynos4_device_spdif;
- 
--extern struct platform_device exynos_device_drm;
--
- extern struct platform_device samsung_asoc_dma;
- extern struct platform_device samsung_asoc_idma;
- extern struct platform_device samsung_device_keypad;
+
 -- 
-1.7.0.4
+With Best Regards,
+Andy Shevchenko
