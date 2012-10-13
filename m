@@ -1,54 +1,107 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] ARM: SPEAr13xx: Pass DW DMAC platform data from DT
-Date: Sat, 13 Oct 2012 14:22:42 +0200
-Message-ID: <20121013122242.GL12801@game.jcrosoft.org>
-References: <142ef9170a2c69657d8a05ac127a9970d7b04965.1350051925.git.viresh.kumar@linaro.org>
- <2039bc164224b0068bc078b6cd8df6218e754fce.1350051925.git.viresh.kumar@linaro.org>
- <20121012144837.GE12801@game.jcrosoft.org>
- <CAKohpo=vMchmiz70evBB5bPqt4O4DWUocd5M1o9gc8fsY_Fkiw@mail.gmail.com>
- <20121012162148.GH12801@game.jcrosoft.org>
- <CAKohpok5ZOmz9CCJbTGc=_tncxnZYEW7UMh2FcFcs0dB87JAcQ@mail.gmail.com>
- <20121013064422.GJ12801@game.jcrosoft.org>
- <CAKohpokfei_ryGKMh4wE9D=wyRZCkddc+Da1cq+3facTHradKQ@mail.gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v1 1/6] dts: exynos: add device tree support for exynos5 hdmi
+Date: Sat, 13 Oct 2012 15:33:45 +0200
+Message-ID: <5536400.sBKdPAYhzo@flatron>
+References: <1349981868-2116-1-git-send-email-rahul.sharma@samsung.com> <2112429.s4dA1rqnG4@flatron> <CAPdUM4Nmyv1AeRxYxdTxL=WzFDfotz5xsNh_ADgdrnN_MJJBLw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpokfei_ryGKMh4wE9D=wyRZCkddc+Da1cq+3facTHradKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4Nmyv1AeRxYxdTxL=WzFDfotz5xsNh_ADgdrnN_MJJBLw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <r.sh.open@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 14:18 Sat 13 Oct     , Viresh Kumar wrote:
->    On Oct 13, 2012 12:16 PM, "Jean-Christophe PLAGNIOL-VILLARD"
->    <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
->    >
->    > On 22:42 Fri 12 Oct     , Viresh Kumar wrote:
->    > > On 12 October 2012 21:51, Jean-Christophe PLAGNIOL-VILLARD
->    > > <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
->    > > >> >> +     OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL,
->    "cf"),
->    > > >> > ?/
->    > > >>
->    > > >> Sorry. can't get it :(
->    > > > what is the "cf" as paltfrom data
->    > >
->    > > This is dma bus_id string, which matches with what is passed from dtb.
->    > so pass if via dtb too
+On Saturday 13 of October 2012 08:15:46 Rahul Sharma wrote:
+> Hi Tomasz,
 > 
->    Yes. Already passed in 13xx.dtsi.
-so why do you keep the AUXDATA
+> On Sat, Oct 13, 2012 at 3:34 AM, Tomasz Figa <tomasz.figa@gmail.com> 
+wrote:
+> > Hi Rahul,
+> > 
+> > On Friday 12 of October 2012 00:27:42 Rahul Sharma wrote:
+> >> This patch adds support for device tree based discovery for exynos5
+> >> hdmi. Hdmi node is also renamed with "exynos5-hdmi".
+> >> 
+> >> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> >> ---
+> >> 
+> >>  arch/arm/boot/dts/exynos5250-smdk5250.dts |    4 ++++
+> >>  arch/arm/boot/dts/exynos5250.dtsi         |    7 +++++++
+> >>  arch/arm/mach-exynos/include/mach/map.h   |    1 +
+> >>  arch/arm/mach-exynos/mach-exynos5-dt.c    |    2 ++
+> >>  4 files changed, 14 insertions(+), 0 deletions(-)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> >> b/arch/arm/boot/dts/exynos5250-smdk5250.dts index a352df4..2a478ab
+> >> 100644
+> >> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> >> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> >> @@ -166,4 +166,8 @@
+> >> 
+> >>       spi_2: spi@12d40000 {
+> >>       
+> >>               status = "disabled";
+> >>       
+> >>       };
+> >> 
+> >> +
+> >> +     hdmi {
+> >> +             hpd-gpio = <&gpx3 7 0xf 1 3>;
+> >> +     };
+> >> 
+> >>  };
+> >> 
+> >> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> >> b/arch/arm/boot/dts/exynos5250.dtsi index f69e389..4e019b5 100644
+> >> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> >> @@ -492,4 +492,11 @@
+> >> 
+> >>                       #gpio-cells = <4>;
+> >>               
+> >>               };
+> >>       
+> >>       };
+> >> 
+> >> +
+> >> +     hdmi {
+> > 
+> > hdmi@14530000
+> > 
+> >> +             compatible = "samsung,exynos5-hdmi";
+> >> +             reg = <0x14530000 0x100000>;
+> >> +             interrupts = <0 95 0>;
+> >> +             version = "1.4";
+> >> +        };
+> > 
+> > Is it just me or there is something wrong with indentation of this
+> > bracket?
+> > 
+> > Best regards,
+> > Tomasz Figa
+> 
+> My understanding was when there are multiple hardware instances of
+> same IP, addresses
+> are put along with the name like i2c, uart. But when only single hw IP
+> is present like
+> hdmi, mixer, watchdog, rtc etc address concatenation is optional.
+> Please correct me if
+> I am wrong. I will do the respective change.
 
-Best Regards,
-J.
+I guess there might be no strict convention on this, but whichever dts 
+file I look at, it has @addr in any node that contains reg property.
+ 
+> in V2 patchset "version", "vp-support" properties are dropped and made
+> part of driver data
+> inside driver. I also added DT binding documentation for new nodes.
+> 
+> I had posted V2 yesterday but not visible on samsung-soc mailing list.
+> I will forward you the
+> patches.
+
+I can see V2 now on linux-samsung-soc, so I will review it as well.
+
+Best regards,
+Tomasz Figa
