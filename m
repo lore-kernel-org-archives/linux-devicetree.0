@@ -1,51 +1,40 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
-Date: Sat, 13 Oct 2012 02:16:10 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1210130155490.23713@axis700.grange>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <201210051241.52205.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
- <201210051323.45571.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
- <20121011194845.GQ14107@valkosipuli.retiisi.org.uk>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v1 6/6] arm: exynos: removing exynos-drm device
+ registration from non-dt platforms
+Date: Sat, 13 Oct 2012 08:19:30 +0530
+Message-ID: <CAPdUM4O__EKEOPN5YS8s0+pszNGz7HS8f3z0NAuFVPN7ViW_Ag@mail.gmail.com>
+References: <1349981868-2116-1-git-send-email-rahul.sharma@samsung.com>
+	<1349981868-2116-7-git-send-email-rahul.sharma@samsung.com>
+	<1757629.b0fz3a83zj@flatron>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20121011194845.GQ14107@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1757629.b0fz3a83zj@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Tomasz,
 
-Bearing in mind the local time, I hope my brevity will be excused:-) Just 
-wanted to give a sign, that I just finished a first successful run of a 
-fully asynchronous and uniform multi-component non-DT video (soc-camera) 
-pipeline probing, verified by a sample capture. What this means:
+On Sat, Oct 13, 2012 at 3:42 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Rahul,
+>
+> On Friday 12 of October 2012 00:27:47 Rahul Sharma wrote:
+>> As exynos-drm is a software device, its registration is moved to the
+>> exynos drm driver. This will provide generic solution for device
+>> registration for dt and non-dt platforms. Corresponding patches are
+>> posted to dri-devel list.
+>
+> In which patch is exynos drm registration being moved to exynos drm
+> driver?
+>
+> Best regards,
+> Tomasz Figa
+>
 
-The pipeline consists of 3 components: a sensor, a CSI-2 interface, and a 
-bridge. The platform code registers 3 devices: 2 platform devices for the 
-bridge and CSI-2 and an I2C device for the sensor. The bridge driver gets 
-a list of device descriptors, which it passes to the (soc-camera) generic 
-code. That is used to initialise internal data and install bus (platform- 
-and i2c-) notifiers. After all components have been collected the normal 
-probing continues.
+Patch set is listed at
+http://comments.gmane.org/gmane.comp.video.dri.devel/75121.
 
-Next week I'll (hopefully) be cleaning all this up and converting from 
-soc-camera to V4L2 core... After that I'll start posting, beginning with 
-v2 of this DT series, taking into account possibly many comments:-)
-
-I think, it might make sense to first post and have a look at the purely 
-asynchronous code, first without DT additions, that we planned to 
-implement for bus notifiers and whatever is related to them. If that looks 
-reasonable, we can move on with adding DT. (One of) the ugly part(s) is 
-going to be, that with this we'll be supporting 3 (!) pipeline 
-initialisation modes: current (legacy) mode, generating I2C devices on the 
-fly, non-DT asynchronous with all devices probing independently, and DT... 
-Let's see if all this actually flies.
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+regards,
+Rahul Sharma
