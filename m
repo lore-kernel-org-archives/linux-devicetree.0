@@ -1,39 +1,51 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V5 1/2] video: exynos_dp: Add device tree support to DP driver
-Date: Sat, 13 Oct 2012 00:22:21 +0200
-Message-ID: <1836310.KzLg5kfvv2@flatron>
-References: <1350074859-23226-1-git-send-email-ajaykumar.rs@samsung.com> <1909932.BXc5ALaqMM@flatron> <5078964F.4000902@gmail.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH 05/14] media: add a V4L2 OF parser
+Date: Sat, 13 Oct 2012 02:16:10 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1210130155490.23713@axis700.grange>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <201210051241.52205.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210051250210.13761@axis700.grange>
+ <201210051323.45571.hverkuil@xs4all.nl> <Pine.LNX.4.64.1210081306240.12203@axis700.grange>
+ <20121011194845.GQ14107@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5078964F.4000902@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, jg1.han@samsung.com, devicetree-discuss@lists.ozlabs.org, FlorianSchandinat@gmx.de, thomas.ab@samsung.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20121011194845.GQ14107@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 13 of October 2012 00:14:39 Sylwester Nawrocki wrote:
-> On 10/12/2012 11:54 PM, Tomasz Figa wrote:
-> >>> +	if (of_get_property(dp_node, "interlaced", NULL))
-> >>> +		dp_video_config->interlaced = 1;
-> >> 
-> >> of_property_read_bool() could also be used here.
-> > 
-> > Wouldn't it make the property mandatory?
-> 
-> No, it wouldn't. of_property_read_bool() uses of_find_property()
-> internally. It just returns true if property is found or false
-> otherwise.
+Hi
 
-Right, sorry. I thought that all of_property_read_* return error in case 
-of missing property.
+Bearing in mind the local time, I hope my brevity will be excused:-) Just 
+wanted to give a sign, that I just finished a first successful run of a 
+fully asynchronous and uniform multi-component non-DT video (soc-camera) 
+pipeline probing, verified by a sample capture. What this means:
 
-> Anyway, it appears of_get_property(..., NULL) pattern
-> is commonly used for boolean properties.
+The pipeline consists of 3 components: a sensor, a CSI-2 interface, and a 
+bridge. The platform code registers 3 devices: 2 platform devices for the 
+bridge and CSI-2 and an I2C device for the sensor. The bridge driver gets 
+a list of device descriptors, which it passes to the (soc-camera) generic 
+code. That is used to initialise internal data and install bus (platform- 
+and i2c-) notifiers. After all components have been collected the normal 
+probing continues.
 
-I guess all three of them should be fine in this case, but since there is 
-a dedicated function for bool, it might be the best solution here indeed.
+Next week I'll (hopefully) be cleaning all this up and converting from 
+soc-camera to V4L2 core... After that I'll start posting, beginning with 
+v2 of this DT series, taking into account possibly many comments:-)
 
-Best regards,
-Tomasz Figa
+I think, it might make sense to first post and have a look at the purely 
+asynchronous code, first without DT additions, that we planned to 
+implement for bus notifiers and whatever is related to them. If that looks 
+reasonable, we can move on with adding DT. (One of) the ugly part(s) is 
+going to be, that with this we'll be supporting 3 (!) pipeline 
+initialisation modes: current (legacy) mode, generating I2C devices on the 
+fly, non-DT asynchronous with all devices probing independently, and DT... 
+Let's see if all this actually flies.
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
