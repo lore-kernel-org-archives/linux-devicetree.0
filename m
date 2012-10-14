@@ -1,64 +1,98 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH V2 3/3] ARM: SPEAr13xx: Pass DW DMAC platform data from DT
-Date: Sun, 14 Oct 2012 12:01:30 +0200
-Message-ID: <20121014100130.GM12801@game.jcrosoft.org>
-References: <2039bc164224b0068bc078b6cd8df6218e754fce.1350051925.git.viresh.kumar@linaro.org>
- <20121012144837.GE12801@game.jcrosoft.org>
- <CAKohpo=vMchmiz70evBB5bPqt4O4DWUocd5M1o9gc8fsY_Fkiw@mail.gmail.com>
- <20121012162148.GH12801@game.jcrosoft.org>
- <CAKohpok5ZOmz9CCJbTGc=_tncxnZYEW7UMh2FcFcs0dB87JAcQ@mail.gmail.com>
- <20121013064422.GJ12801@game.jcrosoft.org>
- <CAKohpokfei_ryGKMh4wE9D=wyRZCkddc+Da1cq+3facTHradKQ@mail.gmail.com>
- <20121013122242.GL12801@game.jcrosoft.org>
- <CAKohpom-P+=QfVNBsypq70+o+z_5J63RD72DA-_CakTM9LDCNA@mail.gmail.com>
- <CAKohpokj0Up23YEDTuSOHDgqcCuM3Q21cwnkAz5Ya=JhPKM98A@mail.gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [RFC] Common clock framework for external clock generators
+Date: Sun, 14 Oct 2012 12:59:02 +0200
+Message-ID: <507A9AF6.4030008@gmail.com>
+References: <4FAB15DB.5050702@googlemail.com> <5076847A.3010705@gmail.com> <5076ED22.3060803@gmail.com> <50785EBF.3060508@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpokj0Up23YEDTuSOHDgqcCuM3Q21cwnkAz5Ya=JhPKM98A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50785EBF.3060508@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Mike Turquette <mturquette@ti.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 19:40 Sat 13 Oct     , Viresh Kumar wrote:
-> On 13 October 2012 19:38, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 13 October 2012 17:52, Jean-Christophe PLAGNIOL-VILLARD
-> > <plagnioj@jcrosoft.com> wrote:
-> >> On 14:18 Sat 13 Oct     , Viresh Kumar wrote:
-> >>>    On Oct 13, 2012 12:16 PM, "Jean-Christophe PLAGNIOL-VILLARD"
-> >>>    <plagnioj@jcrosoft.com> wrote:
-> >>>    >
-> >>>    > On 22:42 Fri 12 Oct     , Viresh Kumar wrote:
-> >>>    > > On 12 October 2012 21:51, Jean-Christophe PLAGNIOL-VILLARD
-> >>>    > > <plagnioj@jcrosoft.com> wrote:
-> >>>    > > >> >> +     OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL,
-> >>>    "cf"),
-> >>>    > > >> > ?/
-> >>>    > > >>
-> >>>    > > >> Sorry. can't get it :(
-> >>>    > > > what is the "cf" as paltfrom data
-> >>>    > >
-> >>>    > > This is dma bus_id string, which matches with what is passed from dtb.
-> >>>    > so pass if via dtb too
-> >>>
-> >>>    Yes. Already passed in 13xx.dtsi.
-> 
-> Probably some confusion here. What i meant to say here is, dmac's
-> DT slave info has a node for cf and cf driver expects this string to come
-> via platform data currently.
+Adding LAKML and devtree as there might be people willing to comment about
+DT representation of i2c-attached clock generators, too.
 
-so use a phandle to connect them
+On 10/12/2012 08:17 PM, Daniel Mack wrote:
+> On 11.10.2012 18:00, Sebastian Hesselbarth wrote:
+ >> [...]
+>> Does any of you work rely on a working si5351 driver?
+>
+> Yes, it does actually. I can hack around it for now, but at some point,
+> a proper driver is needed. And yours looks quite feature complete, so it
+> would be easiest to finish this one :)
 
-Best Regards,
-J.
+Well, yes it is some kind of feature complete except regmap and DT. Adding
+regmap to the driver should be quite easy but with DT I am still thinking
+of the best way to represent the internal connections between OSC, PLLs, and
+CLKOUTs. In the last version of the driver I had a callback that was
+board specific to setup these connections but with DT there will be no board
+specific code anymore.
+
+Maybe one of the common clk maintainers can give a hint how this could be
+done in a clean way. The question is how to represent a i2c-attached clock
+generator config in DT where you want to setup clock parents of CLKOUTs and
+PLLs.
+
+A possible solution would be something like this:
+
+si5351a@60 {
+	compatible = "silabs,si5351a";
+	reg = <0x60>;
+
+	si_osc: osc {
+		compatible = "fixed-clock";
+		clock-frequency = <270000000>;
+	};
+
+	si_plla: pll@0 {
+		compatible = "silabs,si5351-pll";
+		/* hook-up plla to osc input */
+		clocks = <&si_osc>;
+	};
+
+	si_clkout0: clkout@0 {
+		compatible = "silabs,si5351-clkout";
+		/* hook-up clkout0 to plla */
+		clocks = <&si_plla>;
+		/* request target frequency */
+		clock-frequency = <148500000>;
+	};	
+};
+
+Although this perfectly describes the clock hierarchy I still don't like
+the sub-node style. Another flat solution would be something like:
+
+si_osc: osc {
+	compatible = "fixed-clock";
+	clock-frequency = <270000000>;
+};
+
+si5351a@60 {
+	compatible = "silabs,si5351a";
+	reg = <0x60>;
+	clocks = <&si_osc>;
+
+	si5351-pll-config = <0 0   /* pll A to osc */
+			     1 0>; /* pll B to osc */
+
+	si5351-clock-config = <0 0 148500000   /* clkout 0 to pll A, 148.5MHz */
+			       1 0         0   /* clkout 1 to pll A, disabled */
+			       2 1  24000000>; /* clkout 2 to pll B,  24.0Mhz */
+};
+
+> Do you still have access to hardware you wrote the driver for? Let me
+> know if you need any help around here.
+
+Yes, hardware is still available although I only have access to the Si5351a
+with 3 clkouts. The code should be compatible for Si5351a with 8 clkouts and
+code skeleton for 5351b (OSC and VXCO input) and 5351c (OSC and CLKIN) is
+there but untested.
+
+I've transferred the current driver version to my repository to work on. As soon
+as I have regmap done, I will push it online and give you a note.
+
+Sebastian
