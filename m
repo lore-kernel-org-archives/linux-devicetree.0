@@ -1,123 +1,59 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH V5 2/2] video: exynos_dp: device tree documentation
-Date: Mon, 15 Oct 2012 15:13:29 +0900
-Message-ID: <009b01cdaa9c$324d9de0$96e8d9a0$%han@samsung.com>
-References: <1350074859-23226-1-git-send-email-ajaykumar.rs@samsung.com>
- <1350074859-23226-2-git-send-email-ajaykumar.rs@samsung.com>
+From: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
+Date: Mon, 15 Oct 2012 08:49:20 +0200
+Message-ID: <20121015084920.75d4aa53@endymion.delvare>
+References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com>
+	<50588A8F.30203@wwwdotorg.org>
+	<50591C9C.2080809@atmel.com>
+	<5059E484.6090708@wwwdotorg.org>
+	<20120919175433.3841a954@endymion.delvare>
+	<5074E349.30605@atmel.com>
+	<507B7C07.3070702@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1350074859-23226-2-git-send-email-ajaykumar.rs@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Ajay Kumar' <ajaykumar.rs@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, FlorianSchandinat@gmx.de, sylvester.nawrocki@gmail.com, tomasz.figa@gmail.com, thomas.ab@samsung.com, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <507B7C07.3070702-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, October 13, 2012 5:48 AM Ajay kumar wrote
+On Mon, 15 Oct 2012 10:59:19 +0800, Bo Shen wrote:
+> On 10/10/2012 10:54, Bo Shen wrote:
+> > On 9/19/2012 23:54, Jean Delvare wrote:
+> >> On Wed, 19 Sep 2012 09:28:04 -0600, Stephen Warren wrote:
+> >>> The problematic code appears to be:
+> >>>
+> >>> snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+> >>>
+> >>> Instead, I think that should be something more like:
+> >>>
+> >>> adap->name = dev_name(&pdev->dev);
+> >>
+> >> strlcpy(adap->name, dev_name(&pdev->dev), sizeof(adap->name))
+>  >> if anything, as adap->name is a buffer, not a pointer.
+> >
+> > I am sorry for late. I have tested with DT, it works.
+> >
+> > Please send this patch to fix the issue.
+> > Thanks.
 > 
-> Add documentation for the DT bindings in exynos display port driver.
+> Ping?
 > 
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
->  .../devicetree/bindings/video/exynos_dp.txt        |   80 ++++++++++++++++++++
->  1 files changed, 80 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt
-> b/Documentation/devicetree/bindings/video/exynos_dp.txt
-> new file mode 100644
-> index 0000000..e19594b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-> @@ -0,0 +1,80 @@
-> +The Exynos display port interface should be configured based on the
-> +based on the type of panel connected to it.
+> Will you send this patch?
 
-'based on' is duplicated. So, please fix it as bellows:
+Which patch, please? On September 18th, you sent a first version.
+Stephen Warren asked you for a change, but you never sent version two
+of the patch including the requested change. So don't be surprised if
+your patch never got applied.
 
-+The Exynos display port interface should be configured based on
-+the type of panel connected to it.
+> Or, I send this patch and add your S.O.B, which do you prefer?
 
+I prefer that you send patch v2 and let the interested parties review
+and apply it. Do not add S-o-B for anyone else, ever.
 
-> +
-> +We use two nodes:
-> +	-display-port-controller node
-> +	-dptx-phy node(defined inside display-port-controller node)
-> +
-> +For the DP-PHY initialization, we use the dptx-phy node.
-> +Required properties for dptx-phy:
-> +	-reg:
-> +		Base address of DP PHY register.
-> +	-samsung,enable-mask:
-> +		The bit-mask used to enable/disable DP PHY.
-> +
-> +For the Panel initialization, we read data from display-port-controller node.
-> +Required properties for display-port-controller:
-> +	-compatible:
-> +		should be "samsung,exynos5-dp".
-> +	-reg:
-> +		physical base address of the controller and length
-> +		of memory mapped region.
-> +	-interrupts:
-> +		interrupt combiner values.
-> +	-interrupt-parent:
-> +		phandle to Interrupt combiner node.
-> +	-samsung,color-space:
-> +		input video data format.
-> +			COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
-> +	-samsung,dynamic-range:
-> +		dynamic range for input video data.
-> +			VESA = 0, CEA = 1
-> +	-samsung,ycbcr-coeff:
-> +		YCbCr co-efficients for input video.
-> +			COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
-> +	-samsung,color-depth:
-> +		number of bits per colour component.
-> +			COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
-> +	-samsung,link-rate:
-> +		link rate supported by the panel.
-> +			LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
-> +	-samsung,lane-count:
-> +		number of lanes supported by the panel.
-> +			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
-> +
-> +Optional properties for display-port-controller:
-> +	-interlaced:
-> +		interlace scan mode.
-> +			Progressive if defined, Interlaced if not defined
-> +	-vsync-active-high:
-> +		VSYNC polarity configuration.
-> +			High if defined, Low if not defined
-> +	-hsync-active-high:
-> +		HSYNC polarity configuration.
-> +			High if defined, Low if not defined
-> +
-> +Example:
-> +
-> +SOC specific portion:
-> +	display-port-controller {
-> +		compatible = "samsung,exynos5-dp";
-> +		reg = <0x145b0000 0x10000>;
-> +		interrupts = <10 3>;
-> +		interrupt-parent = <&combiner>;
-> +
-> +		dptx-phy {
-> +			reg = <0x10040720>;
-> +			samsung,enable-mask = <1>;
-> +		};
-> +
-> +        };
-> +
-> +Board Specific portion:
-> +	display-port-controller {
-> +		samsung,color-space = <0>;
-> +		samsung,dynamic-range = <0>;
-> +		samsung,ycbcr-coeff = <0>;
-> +		samsung,color-depth = <1>;
-> +		samsung,link-rate = <0x0a>;
-> +		samsung,lane-count = <2>;
-> +	};
-> --
-> 1.7.0.4
+Note that i2c-gpio is normally handled by Wolfram Sang, not me.
+
+-- 
+Jean Delvare
