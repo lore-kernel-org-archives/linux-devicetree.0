@@ -1,111 +1,85 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v2 1/6] dts: exynos: add device tree support for exynos5 hdmi
-Date: Mon, 15 Oct 2012 11:24:07 +0530
-Message-ID: <CAPdUM4M9cXau+3kfPudTb+sDResyAHTxjWtnjgTgD=CNLsRQeQ@mail.gmail.com>
-References: <1350074555-26018-1-git-send-email-rahul.sharma@samsung.com>
-	<1350074555-26018-2-git-send-email-rahul.sharma@samsung.com>
-	<10309437.yhpP5BHNDs@flatron>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] i2c: i2c-gpio: fix issue when DT node greater than 1
+Date: Mon, 15 Oct 2012 07:55:30 +0200
+Message-ID: <20121015055530.GP12801@game.jcrosoft.org>
+References: <1347958949-5598-1-git-send-email-voice.shen@atmel.com>
+ <50588A8F.30203@wwwdotorg.org> <50591C9C.2080809@atmel.com>
+ <5059E484.6090708@wwwdotorg.org>
+ <20120919175433.3841a954@endymion.delvare>
+ <5074E349.30605@atmel.com> <507B7C07.3070702@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <10309437.yhpP5BHNDs@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <507B7C07.3070702-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On 10:59 Mon 15 Oct     , Bo Shen wrote:
+> Hi Jean Delvare,
+> 
+> On 10/10/2012 10:54, Bo Shen wrote:
+> >
+> >Hi Jean Delvare,
+> >
+> >On 9/19/2012 23:54, Jean Delvare wrote:
+> >>On Wed, 19 Sep 2012 09:28:04 -0600, Stephen Warren wrote:
+> >>>On 09/18/2012 07:15 PM, Bo Shen wrote:
+> >>>>I add the debug info, and it give the following error without this
+> >>>>patch.
+> >>>>
+> >>>>--<8----------------------------------
+> >>>>adap->name = i2c-gpio-1
+> >>>>i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+> >>>>adap->name = i2c-gpio-1
+> >>>>i2c-gpio: probe of i2c.3 failed with error -16
+> >>>>-->8----------------------------------
+> >>>>
+> >>>>With this patch, it successfully registered.
+> >>>>--<8----------------------------------
+> >>>>adap->name = i2c-gpio0
+> >>>>i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
+> >>>>adap->name = i2c-gpio1
+> >>>>i2c-gpio i2c.3: using pins 90 (SDA) and 91 (SCL)
+> >>>>-->8----------------------------------
+> >>>
+> >>>Yes, that explains why the registration fails, but not why this patch is
+> >>>the correct solution to the problem.
+> >>>
+> >>>The problematic code appears to be:
+> >>>
+> >>>snprintf(adap->name, sizeof(adap->name), "i2c-gpio%d", pdev->id);
+> >>>
+> >>>Instead, I think that should be something more like:
+> >>>
+> >>>adap->name = dev_name(&pdev->dev);
+> >>
+> >>strlcpy(adap->name, dev_name(&pdev->dev), sizeof(adap->name))
+> >> if anything, as adap->name is a buffer, not a pointer.
+> >
+> >I am sorry for late. I have tested with DT, it works.
+> >
+> >Please send this patch to fix the issue.
+> >Thanks.
+> 
+> Ping?
+> 
+> Will you send this patch? Or, I send this patch and add your S.O.B,
+> which do you prefer?
 
-I will do the suggested changes.
-1) Indentation
-2) Name Change with @address.
+do it
 
-regards,
-Rahul Sharma
-
-On Sat, Oct 13, 2012 at 7:10 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On Saturday 13 of October 2012 02:12:30 Rahul Sharma wrote:
->> This patch adds support for device tree based discovery for exynos5
->> hdmi. Hdmi node is also renamed with "exynos5-hdmi".
->>
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> ---
->>  .../devicetree/bindings/drm/exynos/hdmi.txt        |   22
->> ++++++++++++++++++++ arch/arm/boot/dts/exynos5250-smdk5250.dts
->> |    4 +++ arch/arm/boot/dts/exynos5250.dtsi                  |    6
->> +++++ arch/arm/mach-exynos/include/mach/map.h            |    1 +
->>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
->>  5 files changed, 35 insertions(+), 0 deletions(-)
->>  create mode 100644
->> Documentation/devicetree/bindings/drm/exynos/hdmi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
->> b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt new file mode
->> 100644
->> index 0000000..8b0fa7c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
->> @@ -0,0 +1,22 @@
->> +Device-Tree bindings for drm hdmi driver
->> +
->> +Required properties:
->> +- compatible: value should be "samsung,exynos5-hdmi".
->> +- reg: physical base address of the hdmi and length of memory mapped
->> +     region.
->> +- interrupts: interrupt number to the cpu.
->> +- hpd-gpio: following information about the hotplug gpio pin.
->> +     a) phandle of the gpio controller node.
->> +     b) pin number within the gpio controller.
->> +     c) pin function mode.
->> +     d) optional flags and pull up/down.
->> +     e) drive strength.
->> +
->> +Example:
->> +
->> +     hdmi {
->> +             compatible = "samsung,exynos5-hdmi";
->> +             reg = <0x14530000 0x100000>;
->> +             interrupts = <0 95 0>;
->> +             hpd-gpio = <&gpx3 7 0xf 1 3>;
->> +     };
->> \ No newline at end of file
->> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> b/arch/arm/boot/dts/exynos5250-smdk5250.dts index a352df4..2a478ab
->> 100644
->> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> @@ -166,4 +166,8 @@
->>       spi_2: spi@12d40000 {
->>               status = "disabled";
->>       };
->> +
->> +     hdmi {
->> +             hpd-gpio = <&gpx3 7 0xf 1 3>;
->> +     };
->>  };
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
->> b/arch/arm/boot/dts/exynos5250.dtsi index f69e389..eea84a3 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -492,4 +492,10 @@
->>                       #gpio-cells = <4>;
->>               };
->>       };
->> +
->> +     hdmi {
->
-> I guess it's discussable, but I would follow the convention of adding
-> @ADDR to every node with reg property.
->
->> +             compatible = "samsung,exynos5-hdmi";
->> +             reg = <0x14530000 0x100000>;
->> +             interrupts = <0 95 0>;
->> +        };
->
-> Indentation of the closing bracket looks incorrect.
->
-> Rest of the patch looks fine.
->
-> Best regards,
-> Tomasz Figa
->
+Best Regards,
+J.
