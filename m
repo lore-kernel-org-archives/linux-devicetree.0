@@ -1,39 +1,30 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH 0/2 v6] of: add display helper
-Date: Mon, 15 Oct 2012 16:17:51 +0200
-Message-ID: <20121015141751.GA11396@pengutronix.de>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
- <CAL1wa8fP8LBCUBVJS1=dy3cyFe+bY-Gu2+wtJyuCrgbP93m3Wg@mail.gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH] crypto: convert to use be16_add_cpu()
+Date: Mon, 15 Oct 2012 22:31:49 +0800
+Message-ID: <20121015143149.GB25426@gondor.apana.org.au>
+References: <CAPgLHd83AK565T27aqLUcK4o8ZJh=RCaBaqcnHH8ivwQTBgcaA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL1wa8fP8LBCUBVJS1=dy3cyFe+bY-Gu2+wtJyuCrgbP93m3Wg@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+In-Reply-To: <CAPgLHd83AK565T27aqLUcK4o8ZJh=RCaBaqcnHH8ivwQTBgcaA@mail.gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-crypto@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
-
-On Mon, Oct 15, 2012 at 04:24:43PM +0530, Leela Krishna Amudala wrote:
-> Hello Steffen,
+On Fri, Sep 28, 2012 at 12:52:25PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 > 
-> To which version of the kernel we can expect this patch set to be merged into?
-> Because I'm waiting for this from long time to add DT support for my
-> display controller :)
+> Convert cpu_to_be16(be16_to_cpu(E1) + E2) to use be16_add_cpu().
 > 
+> dpatch engine is used to auto generate this patch.
+> (https://github.com/weiyj/dpatch)
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-I have no idea, sorry. It seems like we have almost settled with the binding
-(clock-name needs to be changed), but I'm not responsible for any merging/inclusions
-in the kernel.
-
-Regards,
-
-Steffen
-
+Patch applied.
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
