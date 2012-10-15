@@ -1,61 +1,61 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: dts: question about how to configure PIO used as i2c irq
-Date: Mon, 15 Oct 2012 07:57:20 +0200
-Message-ID: <20121015055720.GQ12801@game.jcrosoft.org>
-References: <507B7AC3.7090904@gmail.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v2 6/6] arm: exynos: removing exynos-drm device
+ registration from non-dt platforms
+Date: Mon, 15 Oct 2012 11:34:14 +0530
+Message-ID: <CAPdUM4PhVKcHq0f2SDOBwLUqLgt-0+nro85j13Sb-GSvW3vHaA@mail.gmail.com>
+References: <1350074555-26018-1-git-send-email-rahul.sharma@samsung.com>
+	<1350074555-26018-7-git-send-email-rahul.sharma@samsung.com>
+	<3753436.Oasjq2fFLk@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <507B7AC3.7090904-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bo Shen <voice.shen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3753436.Oasjq2fFLk@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 10:53 Mon 15 Oct     , Bo Shen wrote:
-> Hi All,
->   When moving atmel qt1070 linux driver with DT support. The atmel
-> qt1070 is an I2C device. I meet the following questions.
-> 
->   The qt1070 DT node
->   --<--------------
->   qt1070: keyboard@1b {
->         compatible = "atmel,qt1070";
->         reg = <0x1b>;
->         interrupt-parent = <&pioA>;
->         interrupts = <7 0x0>;
->   };
->   -->--------------
-> 
->   DT will parse this node and map irq, the i2c_client->irq. This can
-> be used directly in atmel qt1070 driver. However, the PIO which used
-> as irq need configure as a PIO input. Now, we can not use
-> irq_to_gpio() function to convert irq to gpio. So, if we can not
-> configure this gpio.
-> 
->   If we configure the pio in board-dt.c, I think this is not a good
-> place. For example, if the kernel image support multiplatform, while
-> on these platform, using different pio for qt1070, so this will
-> cause only one platform can use qt1070.
-> 
->   So, for this question, how should I solve it? Would you please
-> give me some advice?
-I already reply you in private 4 times
+On Sat, Oct 13, 2012 at 7:16 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> On Saturday 13 of October 2012 02:12:35 Rahul Sharma wrote:
+>> As exynos-drm is a software device, its registration is moved to the
+>> exynos drm driver. This will provide generic solution for device
+>> registration for dt and non-dt platforms. Corresponding patches are
+>> posted to dri-devel list.
+>>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> ---
+>>  arch/arm/mach-exynos/Makefile              |    1 -
+>>  arch/arm/mach-exynos/dev-drm.c             |   29
+>> ---------------------------- arch/arm/mach-exynos/mach-nuri.c
+>> |    3 --
+>>  arch/arm/mach-exynos/mach-origen.c         |    3 --
+>>  arch/arm/mach-exynos/mach-smdk4x12.c       |    3 --
+>>  arch/arm/mach-exynos/mach-smdkv310.c       |    3 --
+>>  arch/arm/mach-exynos/mach-universal_c210.c |    3 --
+>>  arch/arm/plat-samsung/include/plat/devs.h  |    2 -
+>>  8 files changed, 0 insertions(+), 47 deletions(-)
+>>  delete mode 100644 arch/arm/mach-exynos/dev-drm.c
+>
+> Hmm, shouldn't this patch belong to the series adding registration in the
+> driver?
+> (http://comments.gmane.org/gmane.comp.video.dri.devel/75121)
+>
+> It doesn't look to be directly related to adding dt support for exynos5
+> hdmi.
+>
+> Best regards,
+> Tomasz Figa
+>
 
-you have only 2 choice pass the gpio and manage in c
-or configure the gpio as input in the xlate or map of the gpio drivers and the
-mux via pinctrl
+Hi Tomasz,
 
-Best Regards,
-J.
+Actually other patch set is also about "adding platform device to drm
+driver", not a best place
+for the following patch. I added it here because these deletions are
+done as part of adding DT
+support for Exynos5. But If you still feel it is totally out of place,
+I will post it again as an
+independent patch.
+
+regards,
+Rahul Sharma.
