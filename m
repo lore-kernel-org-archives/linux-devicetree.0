@@ -1,118 +1,102 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH V6 2/2] video: exynos_dp: device tree documentation
-Date: Mon, 15 Oct 2012 18:13:28 +0900
-Message-ID: <009f01cdaab5$56a09760$03e1c620$%han@samsung.com>
-References: <009e01cdaab5$25cff2c0$716fd840$%han@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <009e01cdaab5$25cff2c0$716fd840$%han@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>
-Cc: linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Ajay Kumar' <ajaykumar.rs@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Jingoo Han' <jg1.han@samsung.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/2] i2c: change id to let i2c-gpio work
+Date: Mon, 15 Oct 2012 17:30:27 +0800
+Message-ID: <1350293428-24551-2-git-send-email-voice.shen@atmel.com>
+References: <1350293428-24551-1-git-send-email-voice.shen@atmel.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1350293428-24551-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org
+Cc: khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
+The i2c core driver will turn the platform device ID to busnum
+When using platfrom device ID as -1, it means dynamically assigned
+the busnum. When writing code, we need to make sure the busnum,
+and call i2c_register_board_info(int busnum, ...) to register device
+if using -1, we do not know the value of busnum
+	
+In order to solve this issue, set the platform device ID as a fix number
+Here using 0 to match the busnum used in i2c_regsiter_board_info()
 
-Add documentation for the DT bindings in exynos display port driver.
-
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
+Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
-Changes since v6:
-- Remove duplicated 'based on'
+Change since v2
+  Fix this issue for more boards
+Change since v1
+  Make the commit message more clear
+---
+ arch/arm/mach-at91/at91rm9200_devices.c  |    2 +-
+ arch/arm/mach-at91/at91sam9260_devices.c |    2 +-
+ arch/arm/mach-at91/at91sam9261_devices.c |    2 +-
+ arch/arm/mach-at91/at91sam9263_devices.c |    2 +-
+ arch/arm/mach-at91/at91sam9rl_devices.c  |    2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
- .../devicetree/bindings/video/exynos_dp.txt        |   80 ++++++++++++++++++++
- 1 files changed, 80 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
-
-diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
-new file mode 100644
-index 0000000..7cc7d9f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-@@ -0,0 +1,80 @@
-+The Exynos display port interface should be configured based on
-+the type of panel connected to it.
-+
-+We use two nodes:
-+	-display-port-controller node
-+	-dptx-phy node(defined inside display-port-controller node)
-+
-+For the DP-PHY initialization, we use the dptx-phy node.
-+Required properties for dptx-phy:
-+	-reg:
-+		Base address of DP PHY register.
-+	-samsung,enable-mask:
-+		The bit-mask used to enable/disable DP PHY.
-+
-+For the Panel initialization, we read data from display-port-controller node.
-+Required properties for display-port-controller:
-+	-compatible:
-+		should be "samsung,exynos5-dp".
-+	-reg:
-+		physical base address of the controller and length
-+		of memory mapped region.
-+	-interrupts:
-+		interrupt combiner values.
-+	-interrupt-parent:
-+		phandle to Interrupt combiner node.
-+	-samsung,color-space:
-+		input video data format.
-+			COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
-+	-samsung,dynamic-range:
-+		dynamic range for input video data.
-+			VESA = 0, CEA = 1
-+	-samsung,ycbcr-coeff:
-+		YCbCr co-efficients for input video.
-+			COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
-+	-samsung,color-depth:
-+		number of bits per colour component.
-+			COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
-+	-samsung,link-rate:
-+		link rate supported by the panel.
-+			LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
-+	-samsung,lane-count:
-+		number of lanes supported by the panel.
-+			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
-+
-+Optional properties for display-port-controller:
-+	-interlaced:
-+		interlace scan mode.
-+			Progressive if defined, Interlaced if not defined
-+	-vsync-active-high:
-+		VSYNC polarity configuration.
-+			High if defined, Low if not defined
-+	-hsync-active-high:
-+		HSYNC polarity configuration.
-+			High if defined, Low if not defined
-+
-+Example:
-+
-+SOC specific portion:
-+	display-port-controller {
-+		compatible = "samsung,exynos5-dp";
-+		reg = <0x145b0000 0x10000>;
-+		interrupts = <10 3>;
-+		interrupt-parent = <&combiner>;
-+
-+		dptx-phy {
-+			reg = <0x10040720>;
-+			samsung,enable-mask = <1>;
-+		};
-+
-+        };
-+
-+Board Specific portion:
-+	display-port-controller {
-+		samsung,color-space = <0>;
-+		samsung,dynamic-range = <0>;
-+		samsung,ycbcr-coeff = <0>;
-+		samsung,color-depth = <1>;
-+		samsung,link-rate = <0x0a>;
-+		samsung,lane-count = <4>;
-+	};
+diff --git a/arch/arm/mach-at91/at91rm9200_devices.c b/arch/arm/mach-at91/at91rm9200_devices.c
+index a563189..7cd8053 100644
+--- a/arch/arm/mach-at91/at91rm9200_devices.c
++++ b/arch/arm/mach-at91/at91rm9200_devices.c
+@@ -479,7 +479,7 @@ static struct i2c_gpio_platform_data pdata = {
+ 
+ static struct platform_device at91rm9200_twi_device = {
+ 	.name			= "i2c-gpio",
+-	.id			= -1,
++	.id			= 0,
+ 	.dev.platform_data	= &pdata,
+ };
+ 
+diff --git a/arch/arm/mach-at91/at91sam9260_devices.c b/arch/arm/mach-at91/at91sam9260_devices.c
+index 0f24cfb..805ef95 100644
+--- a/arch/arm/mach-at91/at91sam9260_devices.c
++++ b/arch/arm/mach-at91/at91sam9260_devices.c
+@@ -389,7 +389,7 @@ static struct i2c_gpio_platform_data pdata = {
+ 
+ static struct platform_device at91sam9260_twi_device = {
+ 	.name			= "i2c-gpio",
+-	.id			= -1,
++	.id			= 0,
+ 	.dev.platform_data	= &pdata,
+ };
+ 
+diff --git a/arch/arm/mach-at91/at91sam9261_devices.c b/arch/arm/mach-at91/at91sam9261_devices.c
+index 9752f17..0256a00 100644
+--- a/arch/arm/mach-at91/at91sam9261_devices.c
++++ b/arch/arm/mach-at91/at91sam9261_devices.c
+@@ -285,7 +285,7 @@ static struct i2c_gpio_platform_data pdata = {
+ 
+ static struct platform_device at91sam9261_twi_device = {
+ 	.name			= "i2c-gpio",
+-	.id			= -1,
++	.id			= 0,
+ 	.dev.platform_data	= &pdata,
+ };
+ 
+diff --git a/arch/arm/mach-at91/at91sam9263_devices.c b/arch/arm/mach-at91/at91sam9263_devices.c
+index 8dde220..23b6384 100644
+--- a/arch/arm/mach-at91/at91sam9263_devices.c
++++ b/arch/arm/mach-at91/at91sam9263_devices.c
+@@ -567,7 +567,7 @@ static struct i2c_gpio_platform_data pdata = {
+ 
+ static struct platform_device at91sam9263_twi_device = {
+ 	.name			= "i2c-gpio",
+-	.id			= -1,
++	.id			= 0,
+ 	.dev.platform_data	= &pdata,
+ };
+ 
+diff --git a/arch/arm/mach-at91/at91sam9rl_devices.c b/arch/arm/mach-at91/at91sam9rl_devices.c
+index d6ca054..3d2c81d 100644
+--- a/arch/arm/mach-at91/at91sam9rl_devices.c
++++ b/arch/arm/mach-at91/at91sam9rl_devices.c
+@@ -314,7 +314,7 @@ static struct i2c_gpio_platform_data pdata = {
+ 
+ static struct platform_device at91sam9rl_twi_device = {
+ 	.name			= "i2c-gpio",
+-	.id			= -1,
++	.id			= 0,
+ 	.dev.platform_data	= &pdata,
+ };
+ 
 -- 
-1.7.1
+1.7.9.5
