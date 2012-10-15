@@ -1,96 +1,71 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 0/7] usb: dwc3-omap: add dt support
-Date: Mon, 15 Oct 2012 15:35:08 +0300
-Message-ID: <20121015123508.GP24333@arwen.pp.htv.fi>
-References: <1349688236-22814-1-git-send-email-kishon@ti.com>
-Reply-To: <balbi@ti.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 3/7] usb: dwc3-omap: use runtime API's to enable clocks
+Date: Mon, 15 Oct 2012 18:57:56 +0530
+Message-ID: <1350307680-24938-4-git-send-email-kishon@ti.com>
+References: <1350307680-24938-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/NwG7NuG0/W8LcLh"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1349688236-22814-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: sshtylyov@mvista.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1350307680-24938-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---/NwG7NuG0/W8LcLh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Before accessing any register, runtime API's should be invoked to enable
+the clocks. runtime API's are added here to prevent abort during register
+access.
 
-Hi,
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+---
+ drivers/usb/dwc3/dwc3-omap.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-On Mon, Oct 08, 2012 at 02:53:49PM +0530, Kishon Vijay Abraham I wrote:
-> This patch series adds dt support to dwc3 core and fixes few minor
-> stuff in dwc3-omap glue to get dwc3 working.
->=20
-> While at that it also uses *of_platform* to create the child device
-> (dwc3-core) and fixes to use runtime API's to enable clock and write
-> to SYSCONFIG register.
->=20
-> Changes from v2:
-> * Fixed Sergei comment to use of_property_read_u32 insted of of_get_prope=
-rty
->=20
-> Changes from v1:
-> * made device_for_each_child() as a seperate patch
-> * made all other minor fixes wrt typos and function renames
->=20
-> This patch series is developed on:
-> git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git dwc3
-
-will any of the DT folks review this or should I take it as is ? I'd
-like to keep this in linux-next for a long time for v3.8 merge window.
-
-cheers
-
-> Kishon Vijay Abraham I (7):
->   usb: dwc3-omap: use device_for_each_child to handle child removal
->   usb: dwc3-omap: use of_platform API to create dwc3 core pdev
->   usb: dwc3-omap: use runtime API's to enable clocks
->   usb: dwc3-omap: Remove explicit writes to SYSCONFIG register
->   usb: dwc3-omap: Add an API to write to dwc mailbox
->   usb: dwc3-omap: Minor fixes to get dt working
->   usb: dwc3: core: add dt support for dwc3 core
->=20
->  Documentation/devicetree/bindings/usb/dwc3.txt |   23 ++++
->  drivers/usb/dwc3/core.c                        |   14 +-
->  drivers/usb/dwc3/dwc3-omap.c                   |  173 +++++++++++++-----=
-------
->  include/linux/usb/dwc3-omap.h                  |   30 ++++
->  4 files changed, 160 insertions(+), 80 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/dwc3.txt
->  create mode 100644 include/linux/usb/dwc3-omap.h
->=20
-> --=20
-> 1.7.9.5
->=20
-
---=20
-balbi
-
---/NwG7NuG0/W8LcLh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQfAL8AAoJEIaOsuA1yqREKPcQAKfi+shauNPvlbx3aNWcRxPc
-Xll49Fz4c5JHyLJXE/RIJaCz/V/vQR+vsju13VQZwi/WM/uBTAas4m9WTR7pk6nF
-1F/CQnfIlv/fjk86eMZ6aPat6wcTspfK4ZdgewTEcgPwrgChmRuDzZ3JLyIv6c54
-pDSXMhHhCkZy8P+gWIB3IS6YW+5+mN8KEvuylZJwPIBtr4drAxQzOJHIGzewI4JW
-SDdI3S8hiSjdq5nvze0bAoPrSQ5Zf9xvPMtdBaN4rreGdgiEqwa1goSPc5sVUXSC
-ICCS9XJNw8nwAlcOP1AbFzhKtECow3kaae8ifKKLIdTgGaUxL0RVe7f8k8PZohY2
-PqExNdqwFp4sX7RlnNzSbG4uLHvR826WuydmE4Di3vYm4Hzsqd/YAEhNSh97Labi
-0Ctr4P6Axl852gnsbL9lM3dDvQSpMPgIPXbK1wr8RnPWqj8ny7RGl+RiKXKnK+UG
-h/a5aYR9wfJWZBAUfe7ELxdWPqURVYWudta0o9JZn9a5nbrsgj1gz8rkFb2YMS4D
-rD0EHIsDY5BEQNiGYFrR0/277DKTVWSpUYmRuRzFYLeFCtOa395KO2TFyv4tXyMn
-L9YnvxHDIjuvzy1sG3i2EDrznHLthLaz8fQlp1nbAcCy38vzpn0pJfqnrD+IAjKc
-AiLFZkgGQBT/y2SRvrtP
-=zb/u
------END PGP SIGNATURE-----
-
---/NwG7NuG0/W8LcLh--
+diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+index 4aaeec4..1fdf7e2 100644
+--- a/drivers/usb/dwc3/dwc3-omap.c
++++ b/drivers/usb/dwc3/dwc3-omap.c
+@@ -43,6 +43,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/platform_device.h>
+ #include <linux/platform_data/dwc3-omap.h>
++#include <linux/pm_runtime.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/ioport.h>
+ #include <linux/io.h>
+@@ -336,6 +337,13 @@ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+ 	omap->irq	= irq;
+ 	omap->base	= base;
+ 
++	pm_runtime_enable(dev);
++	ret = pm_runtime_get_sync(dev);
++	if (ret < 0) {
++		dev_err(dev, "get_sync failed with err %d\n", ret);
++		return ret;
++	}
++
+ 	reg = dwc3_omap_readl(omap->base, USBOTGSS_UTMI_OTG_STATUS);
+ 
+ 	utmi_mode = of_get_property(node, "utmi-mode", &size);
+@@ -417,6 +425,9 @@ static int __devexit dwc3_omap_remove(struct platform_device *pdev)
+ 	platform_device_unregister(omap->usb2_phy);
+ 	platform_device_unregister(omap->usb3_phy);
+ 
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
+ 	device_for_each_child(&pdev->dev, NULL, dwc3_omap_remove_core);
+ 
+ 	return 0;
+-- 
+1.7.9.5
