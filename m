@@ -1,27 +1,47 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [RFC] Common clock framework for external clock generators
-Date: Sun, 14 Oct 2012 18:16:39 +0200
-Message-ID: <507AE567.7040701@gmail.com>
-References: <4FAB15DB.5050702@googlemail.com> <5076847A.3010705@gmail.com> <5076ED22.3060803@gmail.com> <50785EBF.3060508@gmail.com> <507A9AF6.4030008@gmail.com> <507A9E72.2030800@gmail.com>
+From: Bo Shen <voice.shen@gmail.com>
+Subject: dts: question about how to configure PIO used as i2c irq
+Date: Mon, 15 Oct 2012 10:53:55 +0800
+Message-ID: <507B7AC3.7090904@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <507A9E72.2030800@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Mike Turquette <mturquette@ti.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/14/2012 01:13 PM, Daniel Mack wrote:
-> I think the sub-node style above it nicer because it allows referencing
-> the individual clocks outputs with a phandle. We use this chip to
-> generate base-frequencies for audio clocks, and so we have to switch
-> between two freqs for the multiples of 22.5KHz and 24KHz at runtime.
+Hi All,
+   When moving atmel qt1070 linux driver with DT support. The atmel 
+qt1070 is an I2C device. I meet the following questions.
 
-Both examples allow you to have a phandle for all individual clock-outputs.
-The examples weren't complete but with the sub-node style you'll reference
-with e.g. <&clkout0> while the flat one will use <&si5351 0>. I still prefer
-the flat-style as it will not allow to have a phandle of plls.
+   The qt1070 DT node
+   --<--------------
+   qt1070: keyboard@1b {
+         compatible = "atmel,qt1070";
+         reg = <0x1b>;
+         interrupt-parent = <&pioA>;
+         interrupts = <7 0x0>;
+   };
+   -->--------------
 
-Sebastian
+   DT will parse this node and map irq, the i2c_client->irq. This can be 
+used directly in atmel qt1070 driver. However, the PIO which used as irq 
+need configure as a PIO input. Now, we can not use irq_to_gpio() 
+function to convert irq to gpio. So, if we can not configure this gpio.
+
+   If we configure the pio in board-dt.c, I think this is not a good 
+place. For example, if the kernel image support multiplatform, while on 
+these platform, using different pio for qt1070, so this will cause only 
+one platform can use qt1070.
+
+   So, for this question, how should I solve it? Would you please give 
+me some advice?
