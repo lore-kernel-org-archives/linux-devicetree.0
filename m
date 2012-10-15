@@ -1,28 +1,45 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: tegra: select SPARSE_IRQ
-Date: Mon, 15 Oct 2012 12:30:52 -0600
-Message-ID: <507C565C.7000101@wwwdotorg.org>
-References: <1348090279-22631-1-git-send-email-swarren@wwwdotorg.org> <1348090279-22631-5-git-send-email-swarren@wwwdotorg.org>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH 1/4] mtd: nand: omap2: Update nerrors using ecc.strength
+Date: Mon, 15 Oct 2012 20:56:40 +0200
+Message-ID: <87obk3va1j.fsf@macbook.be.48ers.dk>
+References: <1349274589-11389-1-git-send-email-avinashphilip@ti.com>
+	<1349274589-11389-2-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1348090279-22631-5-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1349274589-11389-2-git-send-email-avinashphilip@ti.com> (Avinash
+	Philip's message of "Wed, 3 Oct 2012 19:59:46 +0530")
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, tony@atomide.com, afzal@ti.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ivan.djelic@parrot.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2012 03:31 PM, Stephen Warren wrote:
-> SPARSE_IRQ is required for single zImage support.
-> 
-> With this enabled, we can delete <mach/irqs.h>. This requires removing
-> one unnecessary include of that file, and hard-coding the PCIe IRQ into
-> the PCIe driver. This is a hack that will be dealt with as part of
-> converting the PCIe driver into a true DT-supporting driver.
+>>>>> Philip, Avinash <avinashphilip@ti.com> writes:
 
-I have applied this series to Tegra's for-3.8/single-zimage branch.
+ > Update number of errors using nand ecc strength.
+ > Also add macro definitions BCH8_ERROR_MAX & BCH4_ERROR_MAX
 
-I'm not sure yet if Tegra will actually be able to be part of single
-zImage in 3.8, but this branch will certainly host a fair few changes to
-get it very close at least.
+ > Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+ > ---
+ > :100644 100644 5b31386... af511a9... M	drivers/mtd/nand/omap2.c
+ >  drivers/mtd/nand/omap2.c |   12 ++++++++----
+ >  1 files changed, 8 insertions(+), 4 deletions(-)
+
+ > diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+ > index 5b31386..af511a9 100644
+ > --- a/drivers/mtd/nand/omap2.c
+ > +++ b/drivers/mtd/nand/omap2.c
+ > @@ -111,6 +111,9 @@
+ >  #define	ECCCLEAR			0x100
+ >  #define	ECC1				0x1
+ 
+ > +#define BCH8_MAX_ERROR		8	/* upto 8 bit coorectable */
+ > +#define BCH4_MAX_ERROR		4	/* upto 4 bit correctable */
+
+First 'correctable' misspelled.
+
+I don't personally think these defines improve readability very much
+compared to to just using 4/8, though.
+
+-- 
+Bye, Peter Korsgaard
