@@ -1,7 +1,7 @@
 From: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: [PATCH] dtc: srcpos_verror() should print to stderr
-Date: Tue, 16 Oct 2012 17:58:56 +1100
-Message-ID: <1350370736-22789-1-git-send-email-michael@ellerman.id.au>
+Subject: [RFC/PATCH] Add documentation on how to submit patches
+Date: Tue, 16 Oct 2012 18:04:20 +1100
+Message-ID: <1350371060-24020-1-git-send-email-michael@ellerman.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -20,29 +20,36 @@ To: jdl-CYoMK+44s/E@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Errors should go to stderr.
-
 Signed-off-by: Michael Ellerman <michael-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
 ---
- srcpos.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/srcpos.c b/srcpos.c
-index 246ab4b..c20bc53 100644
---- a/srcpos.c
-+++ b/srcpos.c
-@@ -297,9 +297,9 @@ srcpos_verror(struct srcpos *pos, char const *fmt, va_list va)
+Assuming the details are correct? ..
+
+ Documentation/manual.txt |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+index 989c589..65c8540 100644
+--- a/Documentation/manual.txt
++++ b/Documentation/manual.txt
+@@ -3,6 +3,7 @@ Device Tree Compiler Manual
  
-        srcstr = srcpos_string(pos);
+ I - "dtc", the device tree compiler
+     1) Obtaining Sources
++    1.1) Submitting Patches
+     2) Description
+     3) Command Line
+     4) Source File
+@@ -44,6 +45,10 @@ Tarballs of the 1.0.0 and latest releases are here:
+     http://www.jdl.com/software/dtc-v1.2.0.tgz
+     http://www.jdl.com/software/dtc-latest.tgz
  
--       fprintf(stdout, "Error: %s ", srcstr);
--       vfprintf(stdout, fmt, va);
--       fprintf(stdout, "\n");
-+       fprintf(stderr, "Error: %s ", srcstr);
-+       vfprintf(stderr, fmt, va);
-+       fprintf(stderr, "\n");
- }
++1.1) Submitting Patches
++
++Patches should be sent to jdl-CYoMK+44s/E@public.gmane.org, and CC'ed to
++devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsieG/Ez6ZCGd0@public.gmane.org
  
- void
+ 2) Description
+ 
 -- 
 1.7.9.5
