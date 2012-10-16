@@ -1,117 +1,49 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: [PATCH V8 2/2] video: exynos_dp: device tree documentation
-Date: Tue, 16 Oct 2012 11:17:32 +0900
-Message-ID: <005c01cdab44$666eb6b0$334c2410$%han@samsung.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
+ DMA channel
+Date: Tue, 16 Oct 2012 10:43:22 +0800
+Message-ID: <20121016024318.GF24393@S2101-09.ap.freescale.net>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
+ <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
+ <1347852805.1943.130.camel@vkoul-udesk3>
+ <201209171159.27359.arnd@arndb.de>
+ <20120917223619.GC12445@n2100.arm.linux.org.uk>
+ <1347938035.1943.162.camel@vkoul-udesk3>
+ <5060DDEB.4000600@ti.com>
+ <1348547701.1943.190.camel@vkoul-udesk3>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-References: 
-In-reply-to: 
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>
-Cc: linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Ajay Kumar' <ajaykumar.rs@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1348547701.1943.190.camel@vkoul-udesk3>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
+On Tue, Sep 25, 2012 at 10:05:01AM +0530, Vinod Koul wrote:
+> On Mon, 2012-09-24 at 17:25 -0500, Jon Hunter wrote:
+> > > For DT bindings, I think the binding itself shouldn't change based on my
+> > > work but I would like these same bindings to help build the DMA engine
+> > > code mappings.
+> > > 
+> > > Now would it make sense to NOT merge these changes for 3.7 and postpone
+> > > to 3.8. I can host these patches on a topic branch and merge them when
+> > > we are ready. I plan to spend some good amount of time on my work this
+> > > week so we should be ready pretty soon.
+> > > One these changes are merged, users can start moving to this scheme.
+> > 
+> > I just wanted to see how things are progressing your side. Did you
+> > create a topic branch for this? If so let me know where I can find it, I
+> > did not find a branch on your infradead git tree.
+> > 
+> > I wanted to pull in the latest patches for some testing. 
+> Sorry for delay, I had everything ready, but couldn't manage to commit
+> and push. I have pushed to topic/dmaengine_dt, it is pushing out now...
+> 
+Vinod,
 
-Add documentation for the DT bindings in exynos display port driver.
+Looks it seemed 3.7-rc1.  Does that mean we have to wait for 3.8, or
+will it show on later -rc for 3.7?
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-Signed-off-by: Jingoo Han <jg1.han@samsung.com>
----
-No changes since v7:
-
- .../devicetree/bindings/video/exynos_dp.txt        |   80 ++++++++++++++++++++
- 1 files changed, 80 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
-
-diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
-new file mode 100644
-index 0000000..7cc7d9f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
-@@ -0,0 +1,80 @@
-+The Exynos display port interface should be configured based on
-+the type of panel connected to it.
-+
-+We use two nodes:
-+	-display-port-controller node
-+	-dptx-phy node(defined inside display-port-controller node)
-+
-+For the DP-PHY initialization, we use the dptx-phy node.
-+Required properties for dptx-phy:
-+	-reg:
-+		Base address of DP PHY register.
-+	-samsung,enable-mask:
-+		The bit-mask used to enable/disable DP PHY.
-+
-+For the Panel initialization, we read data from display-port-controller node.
-+Required properties for display-port-controller:
-+	-compatible:
-+		should be "samsung,exynos5-dp".
-+	-reg:
-+		physical base address of the controller and length
-+		of memory mapped region.
-+	-interrupts:
-+		interrupt combiner values.
-+	-interrupt-parent:
-+		phandle to Interrupt combiner node.
-+	-samsung,color-space:
-+		input video data format.
-+			COLOR_RGB = 0, COLOR_YCBCR422 = 1, COLOR_YCBCR444 = 2
-+	-samsung,dynamic-range:
-+		dynamic range for input video data.
-+			VESA = 0, CEA = 1
-+	-samsung,ycbcr-coeff:
-+		YCbCr co-efficients for input video.
-+			COLOR_YCBCR601 = 0, COLOR_YCBCR709 = 1
-+	-samsung,color-depth:
-+		number of bits per colour component.
-+			COLOR_6 = 0, COLOR_8 = 1, COLOR_10 = 2, COLOR_12 = 3
-+	-samsung,link-rate:
-+		link rate supported by the panel.
-+			LINK_RATE_1_62GBPS = 0x6, LINK_RATE_2_70GBPS = 0x0A
-+	-samsung,lane-count:
-+		number of lanes supported by the panel.
-+			LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
-+
-+Optional properties for display-port-controller:
-+	-interlaced:
-+		interlace scan mode.
-+			Progressive if defined, Interlaced if not defined
-+	-vsync-active-high:
-+		VSYNC polarity configuration.
-+			High if defined, Low if not defined
-+	-hsync-active-high:
-+		HSYNC polarity configuration.
-+			High if defined, Low if not defined
-+
-+Example:
-+
-+SOC specific portion:
-+	display-port-controller {
-+		compatible = "samsung,exynos5-dp";
-+		reg = <0x145b0000 0x10000>;
-+		interrupts = <10 3>;
-+		interrupt-parent = <&combiner>;
-+
-+		dptx-phy {
-+			reg = <0x10040720>;
-+			samsung,enable-mask = <1>;
-+		};
-+
-+        };
-+
-+Board Specific portion:
-+	display-port-controller {
-+		samsung,color-space = <0>;
-+		samsung,dynamic-range = <0>;
-+		samsung,ycbcr-coeff = <0>;
-+		samsung,color-depth = <1>;
-+		samsung,link-rate = <0x0a>;
-+		samsung,lane-count = <4>;
-+	};
--- 
-1.7.1
+Shawn
