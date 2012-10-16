@@ -1,56 +1,80 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH v3 2/2] i2c: change id to let i2c-at91 work
-Date: Tue, 16 Oct 2012 10:39:54 +0200
-Message-ID: <20121016083954.GB12801@game.jcrosoft.org>
-References: <1350293428-24551-1-git-send-email-voice.shen@atmel.com>
- <1350293428-24551-3-git-send-email-voice.shen@atmel.com>
- <20121015150244.GZ12801@game.jcrosoft.org>
- <507CD0CA.9010006@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <507CD0CA.9010006@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: broonie@opensource.wolfsonmicro.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, n.voss@weinmann.de, nicolas.ferre@atmel.com, w.sang@pengutronix.de, linux-i2c@vger.kernel.org, khali@linux-fr.org, manabian@gmail.com, linux-arm-kernel@lists.infradead.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v2 2/2] USB: DWC3: EXYNOS: Remove platform data for dwc3-exynos
+Date: Tue, 16 Oct 2012 14:15:57 +0530
+Message-ID: <1350377157-28465-3-git-send-email-gautam.vivek@samsung.com>
+References: <1350377157-28465-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-reply-to: <1350377157-28465-1-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: gregkh@linuxfoundation.org, balbi@ti.com, rob.herring@calxeda.com, thomas.abraham@linaro.org, kishon@ti.com, av.tikhomirov@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 11:13 Tue 16 Oct     , Bo Shen wrote:
-> Hi J,
-> 
-> On 10/15/2012 23:02, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >On 17:30 Mon 15 Oct     , Bo Shen wrote:
-> >>The i2c core driver will turn the platform device ID to busnum
-> >>When using platfrom device ID as -1, it means dynamically assigned
-> >>the busnum. When writing code, we need to make sure the busnum,
-> >>and call i2c_register_board_info(int busnum, ...) to register device
-> >>if using -1, we do not know the value of busnum
-> >>	
-> >>In order to solve this issue, set the platform device ID as a fix number
-> >>Here using 0 to match the busnum used in i2c_regsiter_board_info()
-> >>
-> >>Signed-off-by: Bo Shen <voice.shen@atmel.com>
-> >>---
-> >
-> >can you check when this append for the first time to schedule a patch for stable too
-> 
-> OK. I will resend it and add linux stable into the cc list.
-no this not how it work
+We are removing plat data which was used till now to init and
+exit phy. We no longer need this since dwc3-core takes care of
+initializing and shutting-down the phy using usb_phy_init()
+and usb_phy_shutdown().
 
-I ask you to check which patch add the regression and then when this is
-applied in the kernel we will request greg to apply it too to the stable
+Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+---
+ drivers/usb/dwc3/dwc3-exynos.c |   16 ----------------
+ 1 files changed, 0 insertions(+), 16 deletions(-)
 
-But before do that you MUST foudn the commit responsible
+diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+index d11ef49..5a2a73f 100644
+--- a/drivers/usb/dwc3/dwc3-exynos.c
++++ b/drivers/usb/dwc3/dwc3-exynos.c
+@@ -92,7 +92,6 @@ static u64 dwc3_exynos_dma_mask = DMA_BIT_MASK(32);
+ 
+ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+ {
+-	struct dwc3_exynos_data	*pdata = pdev->dev.platform_data;
+ 	struct platform_device	*dwc3;
+ 	struct dwc3_exynos	*exynos;
+ 	struct clk		*clk;
+@@ -150,14 +149,6 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+ 
+ 	clk_enable(exynos->clk);
+ 
+-	/* PHY initialization */
+-	if (!pdata) {
+-		dev_dbg(&pdev->dev, "missing platform data\n");
+-	} else {
+-		if (pdata->phy_init)
+-			pdata->phy_init(pdev, pdata->phy_type);
+-	}
+-
+ 	ret = platform_device_add_resources(dwc3, pdev->resource,
+ 			pdev->num_resources);
+ 	if (ret) {
+@@ -174,9 +165,6 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err4:
+-	if (pdata && pdata->phy_exit)
+-		pdata->phy_exit(pdev, pdata->phy_type);
+-
+ 	clk_disable(clk);
+ 	clk_put(clk);
+ err3:
+@@ -192,7 +180,6 @@ err0:
+ static int __devexit dwc3_exynos_remove(struct platform_device *pdev)
+ {
+ 	struct dwc3_exynos	*exynos = platform_get_drvdata(pdev);
+-	struct dwc3_exynos_data *pdata = pdev->dev.platform_data;
+ 
+ 	platform_device_unregister(exynos->dwc3);
+ 	platform_device_unregister(exynos->usb2_phy);
+@@ -200,9 +187,6 @@ static int __devexit dwc3_exynos_remove(struct platform_device *pdev)
+ 
+ 	dwc3_put_device_id(exynos->dwc3->id);
+ 
+-	if (pdata && pdata->phy_exit)
+-		pdata->phy_exit(pdev, pdata->phy_type);
+-
+ 	clk_disable(exynos->clk);
+ 	clk_put(exynos->clk);
+ 
+-- 
+1.7.6.5
 
-Best Regards,
-J.
