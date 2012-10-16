@@ -1,53 +1,66 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: change id to let i2c-at91 work
-Date: Tue, 16 Oct 2012 18:25:32 +0800
-Message-ID: <507D361C.6020403@atmel.com>
-References: <1350293428-24551-1-git-send-email-voice.shen@atmel.com> <1350293428-24551-3-git-send-email-voice.shen@atmel.com> <20121015150244.GZ12801@game.jcrosoft.org> <507CD0CA.9010006@atmel.com> <20121016083954.GB12801@game.jcrosoft.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v6 8/9] mmc: dw_mmc: add support for implementation
+ specific callbacks
+Date: Tue, 16 Oct 2012 16:25:01 +0530
+Message-ID: <CAJuYYwRpHzQGe1e8GcnNoO2L2o4NXGV_LQtVp4BzKkCuobFSBg@mail.gmail.com>
+References: <1347905803-22742-1-git-send-email-thomas.abraham@linaro.org>
+	<1347905803-22742-9-git-send-email-thomas.abraham@linaro.org>
+	<001401cd966c$5fe94590$1fbbd0b0$%jun@samsung.com>
+	<CAJuYYwRUhK858ixLfZPz9UVmqJBe0=LdgjhLfazPNHE3zckDjQ@mail.gmail.com>
+	<m3haqodsvb.fsf@pullcord.laptop.org>
+	<001e01cda22d$86383130$92a89390$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121016083954.GB12801-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <001e01cda22d$86383130$92a89390$%jun@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>
+Cc: Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, will.newton@imgtec.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, girish.shivananjappa@linaro.org, jh80.chung@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi J,
-
-On 10/16/2012 16:39, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 11:13 Tue 16 Oct     , Bo Shen wrote:
->> Hi J,
+On 4 October 2012 18:11, Seungwon Jeon <tgih.jun@samsung.com> wrote:
+> Monday, September 24, Chris Ball <cjb@laptop.org>
+>> Hi,
 >>
->> On 10/15/2012 23:02, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>> On 17:30 Mon 15 Oct     , Bo Shen wrote:
->>>> The i2c core driver will turn the platform device ID to busnum
->>>> When using platfrom device ID as -1, it means dynamically assigned
->>>> the busnum. When writing code, we need to make sure the busnum,
->>>> and call i2c_register_board_info(int busnum, ...) to register device
->>>> if using -1, we do not know the value of busnum
->>>> 	
->>>> In order to solve this issue, set the platform device ID as a fix number
->>>> Here using 0 to match the busnum used in i2c_regsiter_board_info()
->>>>
->>>> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>> ---
->>>
->>> can you check when this append for the first time to schedule a patch for stable too
+>> On Thu, Sep 20 2012, Thomas Abraham wrote:
+>> >> In non-Exynos platform, host->drv_data has NULL.
+>> >
+>> > Yes, sorry, I missed that.
+>> >
+>> > Chris, should I fix this and send the updated patch or shall I send a
+>> > separate fix patch.
 >>
->> OK. I will resend it and add linux stable into the cc list.
-> no this not how it work
+>> A separate fix patch would be good, please.
+>>
+>> (I'd normally take an updated patch but Stephen Rothwell's asked for
+>> people to hold off rebasing now that -rc7 is out, which is reasonable.)
+> Thomas,
 >
-> I ask you to check which patch add the regression and then when this is
-> applied in the kernel we will request greg to apply it too to the stable
-
-The code is using id = -1 appear 4 years ago. And after dig, I don't 
-find which patch cause this the regression.
-
-Sorry for that.
-
-> But before do that you MUST foudn the commit responsible
+> Is there any work for fix?
 >
-> Best Regards,
-> J.
+> Thanks,
+> Seungwon Jeon
+
+
+Hi Seungwon,
+
+I apologize for not being prompt in fixing this issue reported by you.
+James Hogan has now submitted a patch to fix this. ([PATCH] dw_mmc:
+fix multiple drv_data NULL dereferences)
+
+Thanks,
+Thomas.
+
+>
+>>
+>> Thanks,
+>>
+>> - Chris.
+>> --
+>> Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+>> One Laptop Per Child
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
