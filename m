@@ -1,53 +1,43 @@
-From: Vinod Koul <vinod.koul@linux.intel.com>
-Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a
- slave DMA channel
-Date: Tue, 16 Oct 2012 08:09:04 +0530
-Message-ID: <1350355144.1648.5259.camel@vkoul-udesk3>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
-	 <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
-	 <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>
-	 <20120917223619.GC12445@n2100.arm.linux.org.uk>
-	 <1347938035.1943.162.camel@vkoul-udesk3> <5060DDEB.4000600@ti.com>
-	 <1348547701.1943.190.camel@vkoul-udesk3>
-	 <20121016024318.GF24393@S2101-09.ap.freescale.net>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: change id to let i2c-at91 work
+Date: Tue, 16 Oct 2012 11:13:14 +0800
+Message-ID: <507CD0CA.9010006@atmel.com>
+References: <1350293428-24551-1-git-send-email-voice.shen@atmel.com> <1350293428-24551-3-git-send-email-voice.shen@atmel.com> <20121015150244.GZ12801@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20121016024318.GF24393@S2101-09.ap.freescale.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121015150244.GZ12801-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2012-10-16 at 10:43 +0800, Shawn Guo wrote:
-> On Tue, Sep 25, 2012 at 10:05:01AM +0530, Vinod Koul wrote:
-> > On Mon, 2012-09-24 at 17:25 -0500, Jon Hunter wrote:
-> > > > For DT bindings, I think the binding itself shouldn't change based on my
-> > > > work but I would like these same bindings to help build the DMA engine
-> > > > code mappings.
-> > > > 
-> > > > Now would it make sense to NOT merge these changes for 3.7 and postpone
-> > > > to 3.8. I can host these patches on a topic branch and merge them when
-> > > > we are ready. I plan to spend some good amount of time on my work this
-> > > > week so we should be ready pretty soon.
-> > > > One these changes are merged, users can start moving to this scheme.
-> > > 
-> > > I just wanted to see how things are progressing your side. Did you
-> > > create a topic branch for this? If so let me know where I can find it, I
-> > > did not find a branch on your infradead git tree.
-> > > 
-> > > I wanted to pull in the latest patches for some testing. 
-> > Sorry for delay, I had everything ready, but couldn't manage to commit
-> > and push. I have pushed to topic/dmaengine_dt, it is pushing out now...
-> > 
-> Vinod,
-> 
-> Looks it seemed 3.7-rc1.  Does that mean we have to wait for 3.8, or
-> will it show on later -rc for 3.7?
-Yes this will be merged once we work out the common interface, otherwise
-we will end up redoing interfaces for all drivers.
+Hi J,
 
--- 
-~Vinod
+On 10/15/2012 23:02, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 17:30 Mon 15 Oct     , Bo Shen wrote:
+>> The i2c core driver will turn the platform device ID to busnum
+>> When using platfrom device ID as -1, it means dynamically assigned
+>> the busnum. When writing code, we need to make sure the busnum,
+>> and call i2c_register_board_info(int busnum, ...) to register device
+>> if using -1, we do not know the value of busnum
+>> 	
+>> In order to solve this issue, set the platform device ID as a fix number
+>> Here using 0 to match the busnum used in i2c_regsiter_board_info()
+>>
+>> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> ---
+>
+> can you check when this append for the first time to schedule a patch for stable too
 
+OK. I will resend it and add linux stable into the cc list.
+
+Thanks.
+
+BRs,
+Bo Shen
+
+> Best Regards,
+> J.
+>
