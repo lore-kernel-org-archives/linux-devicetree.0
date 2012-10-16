@@ -1,129 +1,292 @@
-From: Felipe Contreras <felipe.contreras-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] ARM: OMAP3/4: iommu: adapt to runtime pm
-Date: Tue, 16 Oct 2012 05:23:01 +0200
-Message-ID: <CAMP44s0LSJhyG89mwJERHW0SsQrU+J4CC6=xhMUR=MSw0dxj-A@mail.gmail.com>
-References: <1350003977-32744-1-git-send-email-omar.luna@linaro.org>
-	<1350003977-32744-5-git-send-email-omar.luna@linaro.org>
-	<CAMP44s2LTGPnXQuetVLV1tA8w90gUtoJ5coucBUZsbqb3vFnng@mail.gmail.com>
-	<CALLhW=5k=tAXo_5ri2WgetRgju9rC_Wm-o9-pfHSNqpe6FU5qQ@mail.gmail.com>
-	<CAMP44s3wTYTFgSw7r+77zb0fxMSjo1R69Zx0nyM6Hgy2h=Gggw@mail.gmail.com>
-	<CALLhW=6_0Rnp7-gNhCexUVzxam54KhoqAF6e8eiH5yo-wKBxzQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CALLhW=6_0Rnp7-gNhCexUVzxam54KhoqAF6e8eiH5yo-wKBxzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V3 3/3] ARM: SPEAr13xx: Pass DW DMAC platform data from DT
+Date: Tue, 16 Oct 2012 09:49:18 +0530
+Message-ID: <e0e3b6ad8a235405bfa93df62449ab1582d39519.1350360935.git.viresh.kumar@linaro.org>
+References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org>
+In-Reply-To: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org>
+References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com
+Cc: linux-kernel@vger.kernel.org, spear-devel@list.st.com, andriy.shevchenko@linux.intel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds dw_dmac's platform data to DT node. It also creates slave i=
+nfo
+node for SPEAr13xx, for the devices which were using dw_dmac.
 
-On Tue, Oct 16, 2012 at 3:29 AM, Omar Ramirez Luna <omar.luna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V1->V3:
+------
+- renamed filter function
 
->> After your patch, even if I don't use the camera, or the DSP, the
->> iommu devices will be enabled, and will be consuming energy *all the
->> time*. Which I don't think is what we want.
->
-> Wrong, the iommu device will be enabled by pm_runtime_get_sync once
-> you decide to attach with iommu_attach_device, if you do not use
-> camera or the dsp, you won't turn ON the iommus.
+ arch/arm/boot/dts/spear1340.dtsi             | 19 ++++++++++
+ arch/arm/boot/dts/spear13xx.dtsi             | 38 ++++++++++++++++++++
+ arch/arm/mach-spear13xx/include/mach/spear.h |  2 --
+ arch/arm/mach-spear13xx/spear1310.c          |  4 +--
+ arch/arm/mach-spear13xx/spear1340.c          | 27 +++-----------
+ arch/arm/mach-spear13xx/spear13xx.c          | 54 ++----------------------=
+----
+ 6 files changed, 65 insertions(+), 79 deletions(-)
 
-I see, somehow I conflated the two functions.
-
-> On probe this patch does pm_runtime_enable, however this doesn't mean
-> the device is turned ON or resumed or kept ON all the time.
-
-In fact it's the other way around; pm_runtime_enable turns off the
-power (if it's ON).
-
->>>>> @@ -1009,7 +1001,8 @@ static int __devexit omap_iommu_remove(struct platform_device *pdev)
->>>>>         release_mem_region(res->start, resource_size(res));
->>>>>         iounmap(obj->regbase);
->>>>>
->>>>> -       clk_put(obj->clk);
->>>>> +       pm_runtime_disable(obj->dev);
->>>>
->>>> This will turn on the device unnecessarily, wasting power, and there's
->>>> no need for that, kfree will take care of that without resuming.
->>>
->>> Left aside the aesthetics of having balanced calls, the device will be
->>> enabled if there was a pending resume to be executed, otherwise it
->>> won't, kfree won't increment the disable_depth counter and I don't
->>> think that freeing the pointer is enough reason to ignore
->>> pm_runtime_disable.
->>
->> You are doing __pm_runtime_disable(dev, true), kfree will do
->> __pm_runtime_disable(dev, false), which is what we want. Both will
->> decrement the disable_depth.
->
-> I'm quite confused here, could you please point me to the kfree snip
-> that does __pm_runtime_disable(dev, false)?
-
-Sorry, not kfree, but the device removal process:
-
-device_del
- device_pm_remove
-  pm_runtime_remove
-   __pm_runtime_disable <- HERE
- bus_remove_device
-  device_release_driver
-   __device_release_driver
-    .remove => platform_drv_remove
-     .remove => omap_iommu_remove
-
-Actually, it seems the pm is disabled _before_ omap_iommu_remove is
-even called, so it's a no-op.
-
->> But at least you agree that there's a chance that the device will be waken up.
->
-> Of course, if there is a pending resume to be executed, it must honor
-> that resume request and then turn off the device before removing the
-> iommu, IMHO.
-
-Who will turn off the device afterwards?
-
->>>> Also, I still think that something like this is needed:
->>> ...
->>>> +static struct clk cam_fck = {
->>>> +       .name           = "cam_fck",
->>>> +       .ops            = &clkops_omap2_iclk_dflt,
->>>> +       .parent         = &l3_ick,
->>>> +       .enable_reg     = OMAP_CM_REGADDR(OMAP3430_CAM_MOD, CM_ICLKEN),
->>>
->>> a cam_fck name to enable the ick?
->>
->> Yeap, according to the TRM. Take a look at 12.3 Camera ISP Integration
->> Fig 12-50.
->
-> What I meant is that, you are using the CM_ICLKEN to enable a clock
-> named "cam_fck" which has l3_ick as a parent. And that is not
-> consistent with what that register is meant to do, which is:
->
-> 4.14.1.10 CAM_CM Registers
->
-> CM_ICKLEN_CAM
-> 0x0: CAM_L3_ICK and CAM_L4_ICLK are disabled
-> 0x1: CAM_L3_ICK and CAM_L4_ICLK are enabled
->
-> So, I'm complaining about the name "cam_fck", for an interface clock
-> with parent l3_ick. However I don't know why on section 12.3 they
-> refer to CAM_FCK to a l3_ick child clock.
-
-Because it's also used as a functional clock.  Anyway, I don't care
-much about the name of the clock, what is clear is that there's a link
-missing to the l3_ick.
-
-Cheers.
-
--- 
-Felipe Contreras
+diff --git a/arch/arm/boot/dts/spear1340.dtsi b/arch/arm/boot/dts/spear1340=
+.dtsi
+index d71fe2a..8ea3f66 100644
+--- a/arch/arm/boot/dts/spear1340.dtsi
++++ b/arch/arm/boot/dts/spear1340.dtsi
+@@ -24,6 +24,25 @@
+ =09=09=09status =3D "disabled";
+ =09=09};
+=20
++=09=09dma@ea800000 {
++=09=09=09slave_info {
++=09=09=09=09uart1_tx {
++=09=09=09=09=09bus_id =3D "uart1_tx";
++=09=09=09=09=09cfg_hi =3D <0x6000>;=09/* 0xC << 11 */
++=09=09=09=09=09cfg_lo =3D <0>;
++=09=09=09=09=09src_master =3D <0>;
++=09=09=09=09=09dst_master =3D <1>;
++=09=09=09=09};
++=09=09=09=09uart1_tx {
++=09=09=09=09=09bus_id =3D "uart1_tx";
++=09=09=09=09=09cfg_hi =3D <0x680>;=09/* 0xD << 7 */
++=09=09=09=09=09cfg_lo =3D <0>;
++=09=09=09=09=09src_master =3D <1>;
++=09=09=09=09=09dst_master =3D <0>;
++=09=09=09=09};
++=09=09=09};
++=09=09};
++
+ =09=09spi1: spi@5d400000 {
+ =09=09=09compatible =3D "arm,pl022", "arm,primecell";
+ =09=09=09reg =3D <0x5d400000 0x1000>;
+diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx=
+.dtsi
+index f7b84ac..f06bb50 100644
+--- a/arch/arm/boot/dts/spear13xx.dtsi
++++ b/arch/arm/boot/dts/spear13xx.dtsi
+@@ -91,6 +91,37 @@
+ =09=09=09reg =3D <0xea800000 0x1000>;
+ =09=09=09interrupts =3D <0 19 0x4>;
+ =09=09=09status =3D "disabled";
++
++=09=09=09nr_channels =3D <8>;
++=09=09=09chan_allocation_order =3D <1>;
++=09=09=09chan_priority =3D <1>;
++=09=09=09block_size =3D <0xfff>;
++=09=09=09nr_masters =3D <2>;
++=09=09=09data_width =3D <3 3 0 0>;
++
++=09=09=09slave_info {
++=09=09=09=09ssp0_tx {
++=09=09=09=09=09bus_id =3D "ssp0_tx";
++=09=09=09=09=09cfg_hi =3D <0x2000>;=09/* 0x4 << 11 */
++=09=09=09=09=09cfg_lo =3D <0>;
++=09=09=09=09=09src_master =3D <0>;
++=09=09=09=09=09dst_master =3D <0>;
++=09=09=09=09};
++=09=09=09=09ssp0_rx {
++=09=09=09=09=09bus_id =3D "ssp0_rx";
++=09=09=09=09=09cfg_hi =3D <0x280>;=09/* 0x5 << 7 */
++=09=09=09=09=09cfg_lo =3D <0>;
++=09=09=09=09=09src_master =3D <0>;
++=09=09=09=09=09dst_master =3D <0>;
++=09=09=09=09};
++=09=09=09=09cf {
++=09=09=09=09=09bus_id =3D "cf";
++=09=09=09=09=09cfg_hi =3D <0>;
++=09=09=09=09=09cfg_lo =3D <0>;
++=09=09=09=09=09src_master =3D <0>;
++=09=09=09=09=09dst_master =3D <0>;
++=09=09=09=09};
++=09=09=09};
+ =09=09};
+=20
+ =09=09dma@eb000000 {
+@@ -98,6 +129,13 @@
+ =09=09=09reg =3D <0xeb000000 0x1000>;
+ =09=09=09interrupts =3D <0 59 0x4>;
+ =09=09=09status =3D "disabled";
++
++=09=09=09nr_channels =3D <8>;
++=09=09=09chan_allocation_order =3D <1>;
++=09=09=09chan_priority =3D <1>;
++=09=09=09block_size =3D <0xfff>;
++=09=09=09nr_masters =3D <2>;
++=09=09=09data_width =3D <3 3 0 0>;
+ =09=09};
+=20
+ =09=09fsmc: flash@b0000000 {
+diff --git a/arch/arm/mach-spear13xx/include/mach/spear.h b/arch/arm/mach-s=
+pear13xx/include/mach/spear.h
+index 07d90ac..71bf5b6 100644
+--- a/arch/arm/mach-spear13xx/include/mach/spear.h
++++ b/arch/arm/mach-spear13xx/include/mach/spear.h
+@@ -43,8 +43,6 @@
+ #define VA_L2CC_BASE=09=09=09=09IOMEM(UL(0xFB000000))
+=20
+ /* others */
+-#define DMAC0_BASE=09=09=09=09UL(0xEA800000)
+-#define DMAC1_BASE=09=09=09=09UL(0xEB000000)
+ #define MCIF_CF_BASE=09=09=09=09UL(0xB2800000)
+=20
+ /* Devices present in SPEAr1310 */
+diff --git a/arch/arm/mach-spear13xx/spear1310.c b/arch/arm/mach-spear13xx/=
+spear1310.c
+index 9fbbfc5..0e60195 100644
+--- a/arch/arm/mach-spear13xx/spear1310.c
++++ b/arch/arm/mach-spear13xx/spear1310.c
+@@ -36,9 +36,7 @@ static struct pl022_ssp_controller ssp1_plat_data =3D {
+=20
+ /* Add SPEAr1310 auxdata to pass platform data */
+ static struct of_dev_auxdata spear1310_auxdata_lookup[] __initdata =3D {
+-=09OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, &cf_dma_priv)=
+,
+-=09OF_DEV_AUXDATA("snps,dma-spear1340", DMAC0_BASE, NULL, &dmac_plat_data)=
+,
+-=09OF_DEV_AUXDATA("snps,dma-spear1340", DMAC1_BASE, NULL, &dmac_plat_data)=
+,
++=09OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, "cf"),
+ =09OF_DEV_AUXDATA("arm,pl022", SSP_BASE, NULL, &pl022_plat_data),
+=20
+ =09OF_DEV_AUXDATA("arm,pl022", SPEAR1310_SSP1_BASE, NULL, &ssp1_plat_data)=
+,
+diff --git a/arch/arm/mach-spear13xx/spear1340.c b/arch/arm/mach-spear13xx/=
+spear1340.c
+index 081014f..7301f14 100644
+--- a/arch/arm/mach-spear13xx/spear1340.c
++++ b/arch/arm/mach-spear13xx/spear1340.c
+@@ -20,7 +20,6 @@
+ #include <linux/of_platform.h>
+ #include <asm/hardware/gic.h>
+ #include <asm/mach/arch.h>
+-#include <mach/dma.h>
+ #include <mach/generic.h>
+ #include <mach/spear.h>
+=20
+@@ -78,26 +77,10 @@
+ =09=09=09(SPEAR1340_MIPHY_OSC_BYPASS_EXT | \
+ =09=09=09SPEAR1340_MIPHY_PLL_RATIO_TOP(25))
+=20
+-static struct dw_dma_slave uart1_dma_param[] =3D {
+-=09{
+-=09=09/* Tx */
+-=09=09.cfg_hi =3D DWC_CFGH_DST_PER(SPEAR1340_DMA_REQ_UART1_TX),
+-=09=09.cfg_lo =3D 0,
+-=09=09.src_master =3D DMA_MASTER_MEMORY,
+-=09=09.dst_master =3D SPEAR1340_DMA_MASTER_UART1,
+-=09}, {
+-=09=09/* Rx */
+-=09=09.cfg_hi =3D DWC_CFGH_SRC_PER(SPEAR1340_DMA_REQ_UART1_RX),
+-=09=09.cfg_lo =3D 0,
+-=09=09.src_master =3D SPEAR1340_DMA_MASTER_UART1,
+-=09=09.dst_master =3D DMA_MASTER_MEMORY,
+-=09}
+-};
+-
+ static struct amba_pl011_data uart1_data =3D {
+-=09.dma_filter =3D dw_dma_filter,
+-=09.dma_tx_param =3D &uart1_dma_param[0],
+-=09.dma_rx_param =3D &uart1_dma_param[1],
++=09.dma_filter =3D dw_dma_generic_filter,
++=09.dma_tx_param =3D "uart1_tx",
++=09.dma_rx_param =3D "uart1_rx",
+ };
+=20
+ /* SATA device registration */
+@@ -158,9 +141,7 @@ static struct ahci_platform_data sata_pdata =3D {
+=20
+ /* Add SPEAr1340 auxdata to pass platform data */
+ static struct of_dev_auxdata spear1340_auxdata_lookup[] __initdata =3D {
+-=09OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, &cf_dma_priv)=
+,
+-=09OF_DEV_AUXDATA("snps,dma-spear1340", DMAC0_BASE, NULL, &dmac_plat_data)=
+,
+-=09OF_DEV_AUXDATA("snps,dma-spear1340", DMAC1_BASE, NULL, &dmac_plat_data)=
+,
++=09OF_DEV_AUXDATA("arasan,cf-spear1340", MCIF_CF_BASE, NULL, "cf"),
+ =09OF_DEV_AUXDATA("arm,pl022", SSP_BASE, NULL, &pl022_plat_data),
+=20
+ =09OF_DEV_AUXDATA("snps,spear-ahci", SPEAR1340_SATA_BASE, NULL,
+diff --git a/arch/arm/mach-spear13xx/spear13xx.c b/arch/arm/mach-spear13xx/=
+spear13xx.c
+index 5633d69..0e166fa 100644
+--- a/arch/arm/mach-spear13xx/spear13xx.c
++++ b/arch/arm/mach-spear13xx/spear13xx.c
+@@ -22,67 +22,19 @@
+ #include <asm/hardware/gic.h>
+ #include <asm/mach/map.h>
+ #include <asm/smp_twd.h>
+-#include <mach/dma.h>
+ #include <mach/generic.h>
+ #include <mach/spear.h>
+=20
+-/* common dw_dma filter routine to be used by peripherals */
+-bool dw_dma_filter(struct dma_chan *chan, void *slave)
+-{
+-=09struct dw_dma_slave *dws =3D (struct dw_dma_slave *)slave;
+-
+-=09if (chan->device->dev =3D=3D dws->dma_dev) {
+-=09=09chan->private =3D slave;
+-=09=09return true;
+-=09} else {
+-=09=09return false;
+-=09}
+-}
+-
+ /* ssp device registration */
+-static struct dw_dma_slave ssp_dma_param[] =3D {
+-=09{
+-=09=09/* Tx */
+-=09=09.cfg_hi =3D DWC_CFGH_DST_PER(DMA_REQ_SSP0_TX),
+-=09=09.cfg_lo =3D 0,
+-=09=09.src_master =3D DMA_MASTER_MEMORY,
+-=09=09.dst_master =3D DMA_MASTER_SSP0,
+-=09}, {
+-=09=09/* Rx */
+-=09=09.cfg_hi =3D DWC_CFGH_SRC_PER(DMA_REQ_SSP0_RX),
+-=09=09.cfg_lo =3D 0,
+-=09=09.src_master =3D DMA_MASTER_SSP0,
+-=09=09.dst_master =3D DMA_MASTER_MEMORY,
+-=09}
+-};
+-
+ struct pl022_ssp_controller pl022_plat_data =3D {
+ =09.bus_id =3D 0,
+ =09.enable_dma =3D 1,
+-=09.dma_filter =3D dw_dma_filter,
+-=09.dma_rx_param =3D &ssp_dma_param[1],
+-=09.dma_tx_param =3D &ssp_dma_param[0],
++=09.dma_filter =3D dw_dma_generic_filter,
++=09.dma_rx_param =3D "ssp0_rx",
++=09.dma_tx_param =3D "ssp0_tx",
+ =09.num_chipselect =3D 3,
+ };
+=20
+-/* CF device registration */
+-struct dw_dma_slave cf_dma_priv =3D {
+-=09.cfg_hi =3D 0,
+-=09.cfg_lo =3D 0,
+-=09.src_master =3D 0,
+-=09.dst_master =3D 0,
+-};
+-
+-/* dmac device registeration */
+-struct dw_dma_platform_data dmac_plat_data =3D {
+-=09.nr_channels =3D 8,
+-=09.chan_allocation_order =3D CHAN_ALLOCATION_DESCENDING,
+-=09.chan_priority =3D CHAN_PRIORITY_DESCENDING,
+-=09.block_size =3D 4095U,
+-=09.nr_masters =3D 2,
+-=09.data_width =3D { 3, 3, 0, 0 },
+-};
+-
+ void __init spear13xx_l2x0_init(void)
+ {
+ =09/*
+--=20
+1.7.12.rc2.18.g61b472e
