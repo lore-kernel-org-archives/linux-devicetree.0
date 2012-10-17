@@ -1,49 +1,62 @@
-From: Pritesh Raithatha <praithatha@nvidia.com>
-Subject: [PATCH 1/2] dt: Document: correct tegra20/30 pinctrl slew-rate name
-Date: Wed, 17 Oct 2012 17:07:00 +0530
-Message-ID: <1350473820-25662-1-git-send-email-praithatha@nvidia.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3 0/6] arm: exynos: add dt based support for exynos5 hdmi
+Date: Wed, 17 Oct 2012 20:41:44 +0900
+Message-ID: <006301cdac5c$61cdac10$25690430$%kim@samsung.com>
+References: <1350343834-23992-1-git-send-email-rahul.sharma@samsung.com>
+ <5746364.jIDeNjU3ph@amdc1227>
+ <CAPdUM4OtZ3Gh3UKeop8V4n5MVPh=DazJb8-HT+3CUfb79k4r6A@mail.gmail.com>
+ <CAH9JG2Wb-xnEJDQuR6jbqrb-VZc6jq4QguU=qRJUiacmaDFZaw@mail.gmail.com>
+ <CAPdUM4MuLXi2mj91QWnOLHJj=D=s8nmQ+_rxqqhrt+YAUuVZ1Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, swarren@nvidia.com, linus.walleij@linaro.org, dong.aisheng@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: praithatha@nvidia.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAPdUM4MuLXi2mj91QWnOLHJj=D=s8nmQ+_rxqqhrt+YAUuVZ1Q@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Rahul Sharma' <r.sh.open@gmail.com>, 'Kyungmin Park' <kyungmin.park@samsung.com>
+Cc: 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Tomasz Figa' <t.figa@samsung.com>, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-change nvidia,slew_rate* to nvidia,slew-rate*
+Rahul Sharma wrote:
+> 
+> Mr. Park,
+> 
+> Looks good to me.
+> Shall I divide the patch-set into two groups and re-post them?
+> 
+No, you don't need to divide this series. It should be OK to be sent to
+upstream via Samsung tree. But see my small comments on your patch before
+that.
 
-Signed-off-by: Pritesh Raithatha <praithatha@nvidia.com>
----
- .../bindings/pinctrl/nvidia,tegra20-pinmux.txt     |    2 +-
- .../bindings/pinctrl/nvidia,tegra30-pinmux.txt     |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+BTW, I'm not sure about 6th patch which removes to support non-DT for
+exynos4210 in Samsung tree because as you commented on the patch, the
+removed code should be replaced by corresponding patch is in exynos drm
+driver. So I think, topic branch I will provide for exynos drm tree can be a
+way to solve it. Or Kyungmin's suggestion can be a way for it too. Let you
+know which one is better...when I pick this up in my tree.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
-index c8e5782..683fde9 100644
---- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
-@@ -93,7 +93,7 @@ Valid values for pin and group names are:
- 
-     With some exceptions, these support nvidia,high-speed-mode,
-     nvidia,schmitt, nvidia,low-power-mode, nvidia,pull-down-strength,
--    nvidia,pull-up-strength, nvidia,slew_rate-rising, nvidia,slew_rate-falling.
-+    nvidia,pull-up-strength, nvidia,slew-rate-rising, nvidia,slew-rate-falling.
- 
-     drive_ao1, drive_ao2, drive_at1, drive_at2, drive_cdev1, drive_cdev2,
-     drive_csus, drive_dap1, drive_dap2, drive_dap3, drive_dap4, drive_dbg,
-diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
-index c275b70..6f426ed 100644
---- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
-@@ -83,7 +83,7 @@ Valid values for pin and group names are:
-   drive groups:
- 
-     These all support nvidia,pull-down-strength, nvidia,pull-up-strength,
--    nvidia,slew_rate-rising, nvidia,slew_rate-falling. Most but not all
-+    nvidia,slew-rate-rising, nvidia,slew-rate-falling. Most but not all
-     support nvidia,high-speed-mode, nvidia,schmitt, nvidia,low-power-mode.
- 
-     ao1, ao2, at1, at2, at3, at4, at5, cdev1, cdev2, cec, crt, csus, dap1,
--- 
-1.7.1
+> regards,
+> Rahul Sharma.
+> 
+> On Wed, Oct 17, 2012 at 9:09 AM, Kyungmin Park
+> <kyungmin.park@samsung.com> wrote:
+> > Hi,
+> >
+> > It's common case, one topic but two different tree.
+> > So I suggest merge it at samsung sub-soc tree and drm parts will be
+> > merged after arm-soc tree is merged. since arm-soc tree collect arm
+> > soc-soc and merged early at merge window. then drm tree will be merged
+> > later.
+> > Until that time, drm patches are hold only at local git.
+> >
+> > How do you think?
+> >
 
+Kyungmin, thanks for your suggestion :)
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
