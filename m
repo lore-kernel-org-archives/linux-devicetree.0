@@ -1,19 +1,11 @@
-From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4 4/5] dt/s3c64xx/spi: Use of_get_child_by_name to get a
- named child
-Date: Wed, 17 Oct 2012 16:13:46 +0900
-Message-ID: <001701cdac36$f2dcf1f0$d896d5d0$%kim@samsung.com>
-References: <1347952249-24672-1-git-send-email-srinivas.kandagatla@st.com>
- <20120922160732.GT4495@opensource.wolfsonmicro.com>
- <5060576D.1020905@gmail.com>
- <20120925110618.GA4428@opensource.wolfsonmicro.com>
- <506AF9A0.1030801@gmail.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 3.6.0] of: Add missing dummy functions
+Date: Wed, 17 Oct 2012 11:26:03 +0100
+Message-ID: <1350469563-19345-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <506AF9A0.1030801-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-language: ko
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,56 +16,122 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Rob Herring' <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Mark Brown' <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, 'Srinivas KANDAGATLA' <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote:
-> 
-> On 09/25/2012 06:06 AM, Mark Brown wrote:
-> > On Mon, Sep 24, 2012 at 07:51:57AM -0500, Rob Herring wrote:
-> >> On 09/22/2012 11:07 AM, Mark Brown wrote:
-> >>> On Tue, Sep 18, 2012 at 08:10:49AM +0100, Srinivas KANDAGATLA wrote:
-> >
-> >>>> As follow-up to "dt: introduce of_get_child_by_name to get child node
-> by
-> >>>> name." patch, This patch removes some of the code duplication in the
-> >>>> driver by replacing it with of_get_child_by_name instead.
-> >
-> >>> Applied, thanks.  Please do use subject lines consistent with the
-> thing
-> >>> you're submitting against.
-> >
-> >> This dependency here is not yet applied. I was waiting for some acks
-> for
-> >> some other conversions in the series. I can take it or ack the
-> >> dependency. Probably makes more sense for me to take it as there are
-> >> other non-spi patches.
-> >
-> > Ugh, this isn't in mainline...  looking at the original posting I see
-> > this wasn't sent as a threaded patch series, it was sent as a bunch of
-> > separate patches, so this got detached from the rest of the series.  I
-> > discarded the patch.
-> 
-> I've applied this one and it's dependency.
-> 
-Just note, happens following error with non-DT such as s3c6400_defconfig...
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-LD      drivers/mmc/built-in.o
-drivers/spi/spi-s3c64xx.c: In function 's3c64xx_get_slave_ctrldata':
-drivers/spi/spi-s3c64xx.c:838: error: implicit declaration of function
-'of_get_child_by_name'
-drivers/spi/spi-s3c64xx.c:838: warning: assignment makes pointer from
-integer without a cast
-make[3]: *** [drivers/spi/spi-s3c64xx.o] Error 1
-make[2]: *** [drivers/spi] Error 2
+Some functions in of.h have dummy functions and real implementations,
+however few of them have only real implementation.
+I think to be more consistent this patch adds below dummy functions if
+for non CONFIG_OF's.
 
-I'm not sure anyone is fixing it now?
+	of_find_node_by_type
+	of_device_is_available
+	of_find_node_with_property
+	of_find_matching_node
+	of_find_node_by_path
+	of_find_node_by_phandle
+	of_get_parent
+	of_get_next_parent
+	of_get_next_child
+	of_get_next_available_child
+	of_get_child_by_name
 
-Thanks.
+Hopefully this can eliminate the need to ifdef code in the drivers.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+Reported-by: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ include/linux/of.h |   61 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 61 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 72843b7..51ca94a 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -323,6 +323,12 @@ static inline struct device_node *of_find_node_by_name(struct device_node *from,
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_find_node_by_type(struct device_node *from,
++	const char *type)
++{
++	return NULL;
++}
++
+ static inline bool of_have_populated_dt(void)
+ {
+ 	return false;
+@@ -342,6 +348,17 @@ static inline int of_device_is_compatible(const struct device_node *device,
+ 	return 0;
+ }
+ 
++static inline int of_device_is_available(const struct device_node *device)
++{
++	return 0;
++}
++
++static inline struct device_node *of_find_node_with_property(
++	struct device_node *from, const char *prop_name)
++{
++	return NULL;
++}
++
+ static inline struct property *of_find_property(const struct device_node *np,
+ 						const char *name,
+ 						int *lenp)
+@@ -357,6 +374,50 @@ static inline struct device_node *of_find_compatible_node(
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_find_matching_node(
++	struct device_node *from, const struct of_device_id *matches)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_find_node_by_path(const char *path)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_find_node_by_phandle(phandle handle)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_get_parent(const struct device_node *node)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_get_next_parent(struct device_node *node)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_get_next_child(
++	const struct device_node *node, struct device_node *prev)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_get_next_available_child(
++	const struct device_node *node, struct device_node *prev)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_get_child_by_name(
++		const struct device_node *node,	const char *name)
++{
++	return NULL;
++}
++
+ static inline int of_property_read_u32_array(const struct device_node *np,
+ 					     const char *propname,
+ 					     u32 *out_values, size_t sz)
+-- 
+1.7.0.4
