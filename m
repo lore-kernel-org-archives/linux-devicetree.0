@@ -1,99 +1,83 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V4 1/2] kbuild: centralize .dts->.dtb rule
-Date: Wed, 17 Oct 2012 17:18:58 -0600
-Message-ID: <1350515939-31871-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Marek <mmarek@suse.cz>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Mitch Bradley <wmb@firmworks.com>, David Gibson <david@gibson.dropbear.id.au>, Scott Wood <scottwood@freescale.com>, Segher Boessenkool <segher@kernel.crashing.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v7 03/16] tegra: fdt: Add pwm binding and node
+Date: Wed, 17 Oct 2012 16:24:47 -0700
+Message-ID: <1350516300-27994-4-git-send-email-sjg@chromium.org>
+References: <1350516300-27994-1-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1350516300-27994-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+This binding will apparently soon be in linux-next. Bring it in now
+since we need to do something, and may as well try to target what
+Linux will have.
 
-All architectures that use cmd_dtc do so in the same way. Move the build
-rule to a central location to avoid duplication.
-
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-v4: No change.
-v3: No change.
-v2: New patch.
----
- arch/arm/boot/Makefile      |    4 ----
- arch/c6x/boot/Makefile      |    3 ---
- arch/openrisc/boot/Makefile |    3 ---
- arch/powerpc/boot/Makefile  |    4 ----
- scripts/Makefile.lib        |    3 +++
- 5 files changed, 3 insertions(+), 14 deletions(-)
+Changes in v5:
+- Update Tegra PWM binding s/duty cycle/period/
 
-diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-index 3fdab01..da33331 100644
---- a/arch/arm/boot/Makefile
-+++ b/arch/arm/boot/Makefile
-@@ -61,10 +61,6 @@ endif
- 
- targets += $(dtb-y)
- 
--# Rule to build device tree blobs
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
- 
- clean-files := *.dtb
-diff --git a/arch/c6x/boot/Makefile b/arch/c6x/boot/Makefile
-index 6891257..ad605fb 100644
---- a/arch/c6x/boot/Makefile
-+++ b/arch/c6x/boot/Makefile
-@@ -12,9 +12,6 @@ ifneq ($(DTB),)
- obj-y += linked_dtb.o
- endif
- 
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- quiet_cmd_cp = CP      $< $@$2
- 	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
- 
-diff --git a/arch/openrisc/boot/Makefile b/arch/openrisc/boot/Makefile
-index 0995835..fd329bd 100644
---- a/arch/openrisc/boot/Makefile
-+++ b/arch/openrisc/boot/Makefile
-@@ -10,6 +10,3 @@ obj-y += $(BUILTIN_DTB)
- clean-files := *.dtb.S
- 
- #DTC_FLAGS ?= -p 1024
--
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 6a15c96..90206f2 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -356,10 +356,6 @@ $(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- $(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- 	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
- 
--# Rule to build device tree blobs
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- # If there isn't a platform selected then just strip the vmlinux.
- ifeq (,$(image-y))
- image-y := vmlinux.strip
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 0be6f11..425578e 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -266,6 +266,9 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
- 
-+$(obj)/%.dtb: $(src)/dts/%.dts FORCE
-+	$(call if_changed_dep,dtc)
+Changes in v3:
+- Add new commit for pwm binding and node
+
+ arch/arm/dts/tegra20.dtsi                    |    7 +++++++
+ doc/device-tree-bindings/pwm/tegra20-pwm.txt |   18 ++++++++++++++++++
+ 2 files changed, 25 insertions(+), 0 deletions(-)
+ create mode 100644 doc/device-tree-bindings/pwm/tegra20-pwm.txt
+
+diff --git a/arch/arm/dts/tegra20.dtsi b/arch/arm/dts/tegra20.dtsi
+index d936b1e..3221bc9 100644
+--- a/arch/arm/dts/tegra20.dtsi
++++ b/arch/arm/dts/tegra20.dtsi
+@@ -211,4 +211,11 @@
+ 		compatible = "nvidia,tegra20-nand";
+ 		reg = <0x70008000 0x100>;
+ 	};
 +
- # Bzip2
- # ---------------------------------------------------------------------------
- 
++	pwm: pwm@7000a000 {
++		compatible = "nvidia,tegra20-pwm";
++		reg = <0x7000a000 0x100>;
++		#pwm-cells = <2>;
++	};
++
+ };
+diff --git a/doc/device-tree-bindings/pwm/tegra20-pwm.txt b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
+new file mode 100644
+index 0000000..01438ec
+--- /dev/null
++++ b/doc/device-tree-bindings/pwm/tegra20-pwm.txt
+@@ -0,0 +1,18 @@
++Tegra SoC PWFM controller
++
++Required properties:
++- compatible: should be one of:
++  - "nvidia,tegra20-pwm"
++  - "nvidia,tegra30-pwm"
++- reg: physical base address and length of the controller's registers
++- #pwm-cells: On Tegra the number of cells used to specify a PWM is 2. The
++  first cell specifies the per-chip index of the PWM to use and the second
++  cell is the period in nanoseconds.
++
++Example:
++
++	pwm: pwm@7000a000 {
++		compatible = "nvidia,tegra20-pwm";
++		reg = <0x7000a000 0x100>;
++		#pwm-cells = <2>;
++	};
 -- 
-1.7.0.4
+1.7.7.3
