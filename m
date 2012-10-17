@@ -1,201 +1,64 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] ARM: kernel: add device tree init map function
-Date: Tue, 16 Oct 2012 15:42:43 -0500
-Message-ID: <507DC6C3.6090403@gmail.com>
-References: <1350393709-23546-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1350393709-23546-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: change id to let i2c-at91 work
+Date: Wed, 17 Oct 2012 10:19:34 +0800
+Message-ID: <507E15B6.7040004@atmel.com>
+References: <1350293428-24551-1-git-send-email-voice.shen@atmel.com> <1350293428-24551-3-git-send-email-voice.shen@atmel.com> <20121015150244.GZ12801@game.jcrosoft.org> <507CD0CA.9010006@atmel.com> <20121016083954.GB12801@game.jcrosoft.org> <507D361C.6020403@atmel.com> <20121016111027.GE12801@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350393709-23546-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121016111027.GE12801-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/16/2012 08:21 AM, Lorenzo Pieralisi wrote:
-> When booting through a device tree, the kernel cpu logical id map can be
-> initialized using device tree data passed by FW or through an embedded blob.
-> 
-> This patch adds a function that parses device tree "cpu" nodes and
-> retrieves the corresponding CPUs hardware identifiers (MPIDR).
-> It sets the possible cpus and the cpu logical map values according to
-> the number of CPUs defined in the device tree and respective properties.
-> 
-> The primary CPU is assigned cpu logical number 0 to keep the current
-> convention valid.
-> 
-> Current bindings documentation is included in the patch:
-> 
-> Documentation/devicetree/bindings/arm/cpus.txt
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 42 +++++++++++++++++++++++
->  arch/arm/include/asm/prom.h                    |  2 ++
->  arch/arm/kernel/devtree.c                      | 47 ++++++++++++++++++++++++++
->  3 files changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> new file mode 100644
-> index 0000000..897f3b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -0,0 +1,42 @@
-> +* ARM CPUs binding description
-> +
-> +The device tree allows to describe the layout of CPUs in a system through
-> +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> +defining properties for every cpu.
-> +
-> +Bindings for CPU nodes follow the ePAPR standard, available from:
-> +
-> +http://devicetree.org
-> +
-> +For the ARM architecture every CPU node must contain the following property:
-> +
-> +- reg : property defining the CPU MPIDR[23:0] register bits
+Hi J,
 
-defining or matching the MPIDR?
+On 10/16/2012 19:10, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 18:25 Tue 16 Oct     , Bo Shen wrote:
+>> Hi J,
+>>
+>> On 10/16/2012 16:39, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>> On 11:13 Tue 16 Oct     , Bo Shen wrote:
+>>>> Hi J,
+>>>>
+>>>> On 10/15/2012 23:02, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>>> On 17:30 Mon 15 Oct     , Bo Shen wrote:
+>>>>>> The i2c core driver will turn the platform device ID to busnum
+>>>>>> When using platfrom device ID as -1, it means dynamically assigned
+>>>>>> the busnum. When writing code, we need to make sure the busnum,
+>>>>>> and call i2c_register_board_info(int busnum, ...) to register device
+>>>>>> if using -1, we do not know the value of busnum
+>>>>>> 	
+>>>>>> In order to solve this issue, set the platform device ID as a fix number
+>>>>>> Here using 0 to match the busnum used in i2c_regsiter_board_info()
+>>>>>>
+>>>>>> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>>> ---
+>>>>>
+>>>>> can you check when this append for the first time to schedule a patch for stable too
+>>>>
+>>>> OK. I will resend it and add linux stable into the cc list.
+>>> no this not how it work
+>>>
+>>> I ask you to check which patch add the regression and then when this is
+>>> applied in the kernel we will request greg to apply it too to the stable
+>>
+>> The code is using id = -1 appear 4 years ago. And after dig, I don't
+>> find which patch cause this the regression.
+> so use git bisect to find the commit responsible
 
-> +
-> +Every cpu node is required to set its device_type to "cpu".
+Thanks for your information.
 
-This is a bit questionable as device_type is deprecated for FDT.
-However, since the ePAPR defines using it
+Finally, I found the following commit add this:
 
-You should add a compatible property for the cpu model.
+3267c077e589bc146a0b45e220fcefafbf83fb80
+[ARM] 3396/2: AT91RM9200 Platform devices update
 
-> +
-> +Example:
-> +
-> +	cpus {
-> +		#size-cells = <0>;
-> +		#address-cells = <1>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			reg = <0x0>;
-> +		};
-> +
-> +		CPU1: cpu@1 {
-> +			device_type = "cpu";
-> +			reg = <0x1>;
-> +		};
-> +
-> +		CPU2: cpu@100 {
-> +			device_type = "cpu";
-> +			reg = <0x100>;
-> +		};
-> +
-> +		CPU3: cpu@101 {
-> +			device_type = "cpu";
-> +			reg = <0x101>;
-> +		};
-> +	};
-> diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
-> index aeae9c6..8dd51dc 100644
-> --- a/arch/arm/include/asm/prom.h
-> +++ b/arch/arm/include/asm/prom.h
-> @@ -15,6 +15,7 @@
->  
->  extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
->  extern void arm_dt_memblock_reserve(void);
-> +extern void __init arm_dt_init_cpu_maps(void);
->  
->  #else /* CONFIG_OF */
->  
-> @@ -24,6 +25,7 @@ static inline struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
->  }
->  
->  static inline void arm_dt_memblock_reserve(void) { }
-> +static inline void arm_dt_init_cpu_maps(void) { }
->  
->  #endif /* CONFIG_OF */
->  #endif /* ASMARM_PROM_H */
-> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> index bee7f9d..c86e414 100644
-> --- a/arch/arm/kernel/devtree.c
-> +++ b/arch/arm/kernel/devtree.c
-> @@ -19,8 +19,10 @@
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  
-> +#include <asm/cputype.h>
->  #include <asm/setup.h>
->  #include <asm/page.h>
-> +#include <asm/smp_plat.h>
->  #include <asm/mach/arch.h>
->  #include <asm/mach-types.h>
->  
-> @@ -61,6 +63,51 @@ void __init arm_dt_memblock_reserve(void)
->  	}
->  }
->  
-> +/*
-> + * arm_dt_init_cpu_maps - Function retrieves cpu nodes from the device tree
-> + * and builds the cpu logical map array containing MPIDR values related to
-> + * logical cpus
-> + *
-> + * Updates the cpu possible mask with the number of parsed cpu nodes
-> + */
-> +void __init arm_dt_init_cpu_maps(void)
-> +{
-> +	struct device_node *dn = NULL;
-> +	int i, cpu = 1;
-> +
-> +	while ((dn = of_find_node_by_type(dn, "cpu")) && cpu <= nr_cpu_ids) {
+BRs,
+Bo Shen
 
-I think all /cpu nodes would have the right type. You could use
-for_each_child_of_node here.
-
-> +		const u32 *hwid;
-> +		int len;
-> +
-> +		pr_debug("  * %s...\n", dn->full_name);
-> +
-> +		hwid = of_get_property(dn, "reg", &len);
-> +
-
-Use of_property_read_u32.
-
-> +		if (!hwid || len != 4) {
-> +			pr_err("  * %s missing reg property\n", dn->full_name);
-> +			continue;
-> +		}
-> +		/*
-> +		 * We want to assign the boot CPU logical id 0.
-> +		 * Boot CPU checks its own MPIDR and if matches the current
-> +		 * cpu node "reg" value it sets the logical cpu index to 0
-> +		 * and stores the physical id accordingly.
-> +		 * If MPIDR does not match, assign sequential cpu logical
-> +		 * id (starting from 1) and increments it.
-> +		 */
-> +		i = (be32_to_cpup(hwid) == (read_cpuid_mpidr() & 0xffffff))
-> +							? 0 : cpu++;
-> +
-> +		if (!i)
-> +			printk(KERN_INFO "Booting Linux on CPU HWID 0x%x\n",
-> +					be32_to_cpup(hwid));
-> +
-> +		cpu_logical_map(i) = be32_to_cpup(hwid);
-> +
-> +		set_cpu_possible(i, true);
-> +	}
-> +}
-> +
->  /**
->   * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
->   * @dt_phys: physical address of dt blob
-> 
+> Best Regards,
+> J.
+>
