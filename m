@@ -1,64 +1,213 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: change id to let i2c-at91 work
-Date: Wed, 17 Oct 2012 10:19:34 +0800
-Message-ID: <507E15B6.7040004@atmel.com>
-References: <1350293428-24551-1-git-send-email-voice.shen@atmel.com> <1350293428-24551-3-git-send-email-voice.shen@atmel.com> <20121015150244.GZ12801@game.jcrosoft.org> <507CD0CA.9010006@atmel.com> <20121016083954.GB12801@game.jcrosoft.org> <507D361C.6020403@atmel.com> <20121016111027.GE12801@game.jcrosoft.org>
+From: Kyungmin Park <kyungmin.park@samsung.com>
+Subject: Re: [PATCH v3 0/6] arm: exynos: add dt based support for exynos5 hdmi
+Date: Wed, 17 Oct 2012 12:39:07 +0900
+Message-ID: <CAH9JG2Wb-xnEJDQuR6jbqrb-VZc6jq4QguU=qRJUiacmaDFZaw@mail.gmail.com>
+References: <1350343834-23992-1-git-send-email-rahul.sharma@samsung.com>
+	<5746364.jIDeNjU3ph@amdc1227>
+	<CAPdUM4OtZ3Gh3UKeop8V4n5MVPh=DazJb8-HT+3CUfb79k4r6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121016111027.GE12801-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, n.voss-+umVssTZoCsb1SvskN2V4Q@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4OtZ3Gh3UKeop8V4n5MVPh=DazJb8-HT+3CUfb79k4r6A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <r.sh.open@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <t.figa@samsung.com>, kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi J,
+Hi,
 
-On 10/16/2012 19:10, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 18:25 Tue 16 Oct     , Bo Shen wrote:
->> Hi J,
+It's common case, one topic but two different tree.
+So I suggest merge it at samsung sub-soc tree and drm parts will be
+merged after arm-soc tree is merged. since arm-soc tree collect arm
+soc-soc and merged early at merge window. then drm tree will be merged
+later.
+Until that time, drm patches are hold only at local git.
+
+How do you think?
+
+Thank you,
+Kyungmin Park
+
+On 10/16/12, Rahul Sharma <r.sh.open@gmail.com> wrote:
+> Hi Mr. Park, Mr. Kim,
+>
+> I had a suggestion here from Tomasz about dividing this patch-set into
+> 2 portions:
+>
+> 1) DT related (patches 1-4) for samsung-dt branch.
+> 2) Clocks, Arch data related to Exynos5. (patches 5,6) for
+> exynos-drm-fixes branch.
+>
+> Rationale behind this is kgene tree with all 6 patches applied will
+> have broken drm
+> exynos4 and incomplete drm exynos5.
+>
+> I want to know your opinion on this.
+>
+> regards,
+> Rahul Sharma
+>
+> On Tue, Oct 16, 2012 at 3:01 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> Hi Rahul,
 >>
->> On 10/16/2012 16:39, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>> On 11:13 Tue 16 Oct     , Bo Shen wrote:
->>>> Hi J,
->>>>
->>>> On 10/15/2012 23:02, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>>>> On 17:30 Mon 15 Oct     , Bo Shen wrote:
->>>>>> The i2c core driver will turn the platform device ID to busnum
->>>>>> When using platfrom device ID as -1, it means dynamically assigned
->>>>>> the busnum. When writing code, we need to make sure the busnum,
->>>>>> and call i2c_register_board_info(int busnum, ...) to register device
->>>>>> if using -1, we do not know the value of busnum
->>>>>> 	
->>>>>> In order to solve this issue, set the platform device ID as a fix number
->>>>>> Here using 0 to match the busnum used in i2c_regsiter_board_info()
->>>>>>
->>>>>> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>>>> ---
->>>>>
->>>>> can you check when this append for the first time to schedule a patch for stable too
->>>>
->>>> OK. I will resend it and add linux stable into the cc list.
->>> no this not how it work
+>>
+>>
+>> On Tuesday 16 of October 2012 05:00:28 Rahul Sharma wrote:
+>>
+>>> This patch set adds the DT based support for Samsung's Exynos5250. It
+>>
+>>> adds device tree nodes for hdmi, mixer, hdmiphy and hdmiddc. The name
+>>
+>>> of these devices are changed to the one matching with drivers.
+>>
+>>> Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
+>>
+>>> init code.
+>>
 >>>
->>> I ask you to check which patch add the regression and then when this is
->>> applied in the kernel we will request greg to apply it too to the stable
 >>
->> The code is using id = -1 appear 4 years ago. And after dig, I don't
->> find which patch cause this the regression.
-> so use git bisect to find the commit responsible
-
-Thanks for your information.
-
-Finally, I found the following commit add this:
-
-3267c077e589bc146a0b45e220fcefafbf83fb80
-[ARM] 3396/2: AT91RM9200 Platform devices update
-
-BRs,
-Bo Shen
-
-> Best Regards,
-> J.
+>>> Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
+>>
+>>> init code. Patch set which adds this code is posted to dri-devel list at
+>>
+>>> http://comments.gmane.org/gmane.comp.video.dri.devel/75121.
+>>
+>>>
+>>
+>>> This patchset is based on linux v3.6-rc6, branch v3.7-next/dt-samsung at
+>>
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+>>
+>>>
+>>
+>>> v1:
+>>
+>>> - dropped patch for hpd gpio initialisation from machine init.
+>>
+>>> - dropped patch for platform device registration.
+>>
+>>> - removed platform device registration from non-dt platforms.
+>>
+>>>
+>>
+>>> v2:
+>>
+>>> - removed version information from hdmi, mixer dt nodes.
+>>
+>>> - added DT binding documentation for hdmi, mixer, hdmiphy and hdmiddc.
+>>
+>>>
+>>
+>>> v3:
+>>
+>>> - corrected indentations.
+>>
+>>> - changed dt node names to name@address format.
+>>
+>>>
+>>
+>>> Rahul Sharma (6):
+>>
+>>> dts: exynos: add device tree support for exynos5 hdmi
+>>
+>>> dts: exynos: add device tree support for exynos5 mixer
+>>
+>>> dts: exynos: add device tree support for exynos5 hdmiphy
+>>
+>>> dts: exynos: add device tree support for exynos5 hdmiddc
+>>
+>>> arm: exynos: add clocks for exynos5 hdmi
+>>
+>>> arm: exynos: removing exynos-drm device registration from non-dt
+>>
+>>> platforms
+>>
+>>>
+>>
+>>> .../devicetree/bindings/drm/exynos/hdmi.txt | 22
+>>
+>>> +++++++++++++++ .../devicetree/bindings/drm/exynos/hdmiddc.txt |
+>>
+>>> 12 ++++++++ .../devicetree/bindings/drm/exynos/hdmiphy.txt | 12
+>>
+>>> ++++++++ .../devicetree/bindings/drm/exynos/mixer.txt | 15
+>>
+>>> ++++++++++ arch/arm/boot/dts/exynos5250-smdk5250.dts | 24
+>>
+>>> +++++++++++++++- arch/arm/boot/dts/exynos5250.dtsi |
+>>
+>>> 20 +++++++++++++ arch/arm/mach-exynos/Makefile |
+>>
+>>> 1 -
+>>
+>>> arch/arm/mach-exynos/clock-exynos5.c | 14 ++++++++-
+>>
+>>> arch/arm/mach-exynos/dev-drm.c | 29
+>>
+>>> -------------------- arch/arm/mach-exynos/include/mach/map.h
+>>
+>>> | 2 +
+>>
+>>> arch/arm/mach-exynos/mach-exynos5-dt.c | 8 +++++
+>>
+>>> arch/arm/mach-exynos/mach-nuri.c | 3 --
+>>
+>>> arch/arm/mach-exynos/mach-origen.c | 3 --
+>>
+>>> arch/arm/mach-exynos/mach-smdk4x12.c | 3 --
+>>
+>>> arch/arm/mach-exynos/mach-smdkv310.c | 3 --
+>>
+>>> arch/arm/mach-exynos/mach-universal_c210.c | 3 --
+>>
+>>> arch/arm/plat-samsung/include/plat/devs.h | 2 -
+>>
+>>> 17 files changed, 126 insertions(+), 50 deletions(-)
+>>
+>>> create mode 100644
+>>
+>>> Documentation/devicetree/bindings/drm/exynos/hdmi.txt create mode
+>>
+>>> 100644 Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt create
+>>
+>>> mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
+>>
+>>> create mode 100644
+>>
+>>> Documentation/devicetree/bindings/drm/exynos/mixer.txt delete mode
+>>
+>>> 100644 arch/arm/mach-exynos/dev-drm.c
+>>
+>>
+>>
+>> The patches look fine, but Kukjin's tree doesn't contain all the
+>>
+>> dependencies for them to be usable.
+>>
+>>
+>>
+>> Shouldn't they be based on exynos-drm-next branch of Kyungmin's tree at
+>>
+>> infradead instead:
+>>
+>>
+>>
+>> http://git.infradead.org/users/kmpark/linux-samsung/shortlog/refs/heads/exynos-drm-next
+>>
+>>
+>>
+>> Best regards,
+>>
+>> --
+>>
+>> Tomasz Figa
+>>
+>> Samsung Poland R&D Center
+>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
