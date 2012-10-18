@@ -1,127 +1,68 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v5 4/4] misc: sram: add support for configurable allocation order
-Date: Thu, 18 Oct 2012 16:27:33 +0200
-Message-ID: <1350570453-24546-5-git-send-email-p.zabel@pengutronix.de>
-References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree fixes for 3.7
+Date: Thu, 18 Oct 2012 11:02:01 -0500
+Message-ID: <508027F9.3060908@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Matt Porter <mporter@ti.com>
+Linus,
 
-Adds support for setting the genalloc pool's minimum allocation
-order via DT or platform data. The allocation order is optional
-for both the DT property and platform data case. If it is not
-present then the order defaults to PAGE_SHIFT to preserve the
-current behavior.
+Please pull DeviceTree fixes for 3.7.
 
-Signed-off-by: Matt Porter <mporter@ti.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- Documentation/devicetree/bindings/misc/sram.txt |   12 ++++++++++-
- drivers/misc/sram.c                             |   14 ++++++++++++-
- include/linux/platform_data/sram.h              |   25 +++++++++++++++++++++++
- 3 files changed, 49 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/platform_data/sram.h
+Rob
 
-diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
-index b64136c..b1705ec 100644
---- a/Documentation/devicetree/bindings/misc/sram.txt
-+++ b/Documentation/devicetree/bindings/misc/sram.txt
-@@ -8,10 +8,20 @@ Required properties:
- 
- - reg : SRAM iomem address range
- 
--Example:
-+Optional properties:
-+
-+- alloc-order : Minimum allocation order for the SRAM pool
-+
-+Examples:
-+
-+sram: sram@5c000000 {
-+	compatible = "sram";
-+	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-+};
- 
- sram: sram@5c000000 {
- 	compatible = "sram";
- 	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
-+	alloc-order = <9>; /* Minimum 512 byte allocation */
- };
- 
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index 0cc2e75..3a04b77 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -28,6 +28,7 @@
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
- #include <linux/genalloc.h>
-+#include <linux/platform_data/sram.h>
- 
- struct sram_dev {
- 	struct gen_pool *pool;
-@@ -40,6 +41,7 @@ static int __devinit sram_probe(struct platform_device *pdev)
- 	struct sram_dev *sram;
- 	struct resource *res;
- 	unsigned long size;
-+	u32 alloc_order = PAGE_SHIFT;
- 	int ret;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -60,7 +62,17 @@ static int __devinit sram_probe(struct platform_device *pdev)
- 	if (!IS_ERR(sram->clk))
- 		clk_prepare_enable(sram->clk);
- 
--	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
-+	if (pdev->dev.of_node)
-+		of_property_read_u32(pdev->dev.of_node,
-+				     "alloc-order", &alloc_order);
-+	else
-+		if (pdev->dev.platform_data) {
-+			struct sram_pdata *pdata = pdev->dev.platform_data;
-+			if (pdata->alloc_order)
-+				alloc_order = pdata->alloc_order;
-+		}
-+
-+	sram->pool = gen_pool_create(alloc_order, -1);
- 	if (!sram->pool)
- 		return -ENOMEM;
- 
-diff --git a/include/linux/platform_data/sram.h b/include/linux/platform_data/sram.h
-new file mode 100644
-index 0000000..e17bdaa
---- /dev/null
-+++ b/include/linux/platform_data/sram.h
-@@ -0,0 +1,25 @@
-+/*
-+ * include/linux/platform_data/sram.h
-+ *
-+ * Platform data for generic sram driver
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _SRAM_H_
-+#define _SRAM_H_
-+
-+struct sram_pdata {
-+	unsigned alloc_order;	/* Optional: driver defaults to PAGE_SHIFT */
-+};
-+
-+#endif /* _SRAM_H_ */
--- 
-1.7.10.4
+The following changes since commit ddffeb8c4d0331609ef2581d84de4d763607bd37:
+
+  Linux 3.7-rc1 (2012-10-14 14:41:04 -0700)
+
+are available in the git repository at:
+
+  git://sources.calxeda.com/kernel/linux.git tags/dt-fixes-for-3.7
+
+for you to fetch changes up to 205a8eb7ce713c7f1722297dd97d19dcea6f266c:
+
+  dtc: fix for_each_*() to skip first object if deleted (2012-10-17 15:53:04 -0500)
+
+----------------------------------------------------------------
+DeviceTree fixes for 3.7
+
+A handful of fixes:
+- a fix for dtc from upstream
+- sparse fixes in DeviceTree code
+- stub of_get_child_by_name for !OF builds
+
+----------------------------------------------------------------
+Kim Phillips (3):
+      of/address: sparse fixes
+      of/irq: sparse fixes
+      of/platform: sparse fix
+
+Olof Johansson (1):
+      of: add stub of_get_child_by_name for non-OF builds
+
+Stephen Warren (1):
+      dtc: fix for_each_*() to skip first object if deleted
+
+ drivers/of/address.c       |   24 ++++++++++++------------
+ drivers/of/irq.c           |    8 +++++---
+ drivers/of/platform.c      |    2 +-
+ include/linux/of.h         |    7 +++++++
+ include/linux/of_address.h |    4 ++--
+ include/linux/of_irq.h     |    4 ++--
+ scripts/dtc/dtc.h          |   44 ++++++++++----------------------------------
+ 7 files changed, 39 insertions(+), 54 deletions(-)
