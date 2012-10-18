@@ -1,87 +1,61 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 10/10] document: devicetree: bind pinconf in pinctrl single
-Date: Thu, 18 Oct 2012 17:07:04 +0800
-Message-ID: <1350551224-12857-10-git-send-email-haojian.zhuang@gmail.com>
-References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM/dts: omap3: Fix mcbsp2/3 hwmods to be able to probe the drivers for audio
+Date: Thu, 18 Oct 2012 11:25:07 +0200
+Message-ID: <1350552307-10226-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350551224-12857-1-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add comments with pinconf & gpio range in the document of
-pinctrl-single.
+Fixes the following errors:
+[    2.318084] omap-mcbsp 49022000.mcbsp: invalid rx DMA channel
+[    2.324432] omap-mcbsp 49024000.mcbsp: invalid rx DMA channel
 
-Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Which is because we failed to link the sidetone hwmod for McBSP2/3. The
+missing sidetone hwmod link will prevent omap_device_alloc() to append the
+DMA resources since we - accidentally - end up having the same number of
+resources provided from DT (IO/IRQ) as we have in hwmod for the McBSP ports
+without the ST resources.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- .../devicetree/bindings/pinctrl/pinctrl-single.txt |   43 ++++++++++++++++++++
- 1 files changed, 43 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-index 5187f0d..b0e5059 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-@@ -15,6 +15,49 @@ Optional properties:
-   available and same for all registers; if not specified, disabling of
-   pin functions is ignored
+Hi Tony, Benoit,
+
+Can you please take this patch for 3.7 since if we boot with DT audio will not
+work on BeagleBoard and on boards which uses McBSP2 or 3 for audio.
+
+Thank you,
+Peter
+
+ arch/arm/boot/dts/omap3.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index f38ea87..696e929 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -257,7 +257,7 @@
+ 			interrupt-names = "common", "tx", "rx", "sidetone";
+ 			interrupt-parent = <&intc>;
+ 			ti,buffer-size = <1280>;
+-			ti,hwmods = "mcbsp2";
++			ti,hwmods = "mcbsp2", "mcbsp2_sidetone";
+ 		};
  
-+- pinctrl-single,gpio-mask : mask of enabling gpio function register
-+
-+- pinctrl-single,gpio-ranges : gpio range list
-+
-+- pinctrl-single,gpio : array with gpio range start, size & register
-+  offset
-+
-+- pinctrl-single,gpio-enable : value of enabling gpio function
-+
-+- pinctrl-single,gpio-disable : value of disabling gpio function
-+
-+- pinctrl-single,power-source-mask : mask of setting power source in
-+  the pinmux register
-+
-+- pinctrl-single,power-source-shift : shift of power source field in
-+  the pinmux register
-+
-+- pinctrl-single,power-source : value of setting power source field
-+  in the pinmux register
-+
-+- pinctrl-single,bias-mask : mask of setting bias value in the pinmux
-+  register
-+
-+- pinctrl-single,bias-shift : shift of setting bias value in the
-+  pinmux register
-+
-+- pinctrl-single,bias-disable : value of disabling bias in the pinmux
-+  register
-+
-+- pinctrl-single,bias-pull-down : value of setting bias pull down in
-+  the pinmux register
-+
-+- pinctrl-single,bias-pull-up : value of setting bias pull up in the
-+  pinmux register
-+
-+- pinctrl-single,bias : value of setting bias in the pinmux register
-+
-+- pinctrl-single,input-schmitt-mask : mask of setting input schmitt
-+  in the pinmux register
-+
-+- pinctrl-single,input-schmitt-shift : shift of setting input schmitt
-+  in the pinmux register
-+
- This driver assumes that there is only one register for each pin,
- and uses the common pinctrl bindings as specified in the pinctrl-bindings.txt
- document in this directory.
+ 		mcbsp3: mcbsp@49024000 {
+@@ -272,7 +272,7 @@
+ 			interrupt-names = "common", "tx", "rx", "sidetone";
+ 			interrupt-parent = <&intc>;
+ 			ti,buffer-size = <128>;
+-			ti,hwmods = "mcbsp3";
++			ti,hwmods = "mcbsp3", "mcbsp3_sidetone";
+ 		};
+ 
+ 		mcbsp4: mcbsp@49026000 {
 -- 
-1.7.0.4
+1.7.12.3
+
