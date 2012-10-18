@@ -1,13 +1,14 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 01/10] pinctrl: use postcore_initcall
-Date: Thu, 18 Oct 2012 16:18:19 -0600
-Message-ID: <5080802B.3000209@wwwdotorg.org>
+Subject: Re: [PATCH 03/10] tty: pxa: configure pin
+Date: Thu, 18 Oct 2012 16:20:59 -0600
+Message-ID: <508080CB.5010904@wwwdotorg.org>
 References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-3-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350551224-12857-1-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1350551224-12857-3-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,10 +24,18 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 List-Id: devicetree@vger.kernel.org
 
 On 10/18/2012 03:06 AM, Haojian Zhuang wrote:
-> Since pins are configured in device driver, pinctrl driver should be
-> loaded by those device driver. module_platform_driver() only declares
-> pinctrl driver is in module_initcall privilege. Use postcore_initcall
-> privilege instead.
+> Configure pins by pinctrl driver.
 
-I'm not convinced this is needed; doesn't deferred probe sort out the
-dependencies correctly?
+In general, it seems better to use pinctrl "hogs" if the driver is only
+going to statically set up one pinctrl state and never change it. The
+alternative is make every single driver execute these pinctrl calls,
+which could be tedious.
+
+However, that does raise one question: If all the pinctrl setup is done
+by hogs, then how do we ensure that the pinctrl driver is probed first,
+and hence sets up the pins before any driver relies on them being set
+up? If a driver explicitly enables a pinctrl state (as in this patch),
+then deferred probe ensures that, but without any explicit pinctrl
+action, it'll only work by luck.
+
+LinusW, what are your thoughts on that?
