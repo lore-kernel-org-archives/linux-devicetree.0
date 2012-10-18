@@ -1,11 +1,13 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree fixes for 3.7
-Date: Thu, 18 Oct 2012 11:02:01 -0500
-Message-ID: <508027F9.3060908@gmail.com>
+From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] ARM: mach-imx: Support for DryIce RTC in i.MX53
+Date: Thu, 18 Oct 2012 18:06:10 +0200
+Message-ID: <1350576370-29098-3-git-send-email-stigge@antcom.de>
+References: <1350576370-29098-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1350576370-29098-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,53 +18,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+This patch enables support for i.MX53 in addition to i.MX25 by providing a
+dummy clock on i.MX53 since this one doesn't have a separate clock for internal
+RTC but the driver requests one.
 
-Please pull DeviceTree fixes for 3.7.
+Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/mach-imx/clk-imx51-imx53.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-Rob
-
-The following changes since commit ddffeb8c4d0331609ef2581d84de4d763607bd37:
-
-  Linux 3.7-rc1 (2012-10-14 14:41:04 -0700)
-
-are available in the git repository at:
-
-  git://sources.calxeda.com/kernel/linux.git tags/dt-fixes-for-3.7
-
-for you to fetch changes up to 205a8eb7ce713c7f1722297dd97d19dcea6f266c:
-
-  dtc: fix for_each_*() to skip first object if deleted (2012-10-17 15:53:04 -0500)
-
-----------------------------------------------------------------
-DeviceTree fixes for 3.7
-
-A handful of fixes:
-- a fix for dtc from upstream
-- sparse fixes in DeviceTree code
-- stub of_get_child_by_name for !OF builds
-
-----------------------------------------------------------------
-Kim Phillips (3):
-      of/address: sparse fixes
-      of/irq: sparse fixes
-      of/platform: sparse fix
-
-Olof Johansson (1):
-      of: add stub of_get_child_by_name for non-OF builds
-
-Stephen Warren (1):
-      dtc: fix for_each_*() to skip first object if deleted
-
- drivers/of/address.c       |   24 ++++++++++++------------
- drivers/of/irq.c           |    8 +++++---
- drivers/of/platform.c      |    2 +-
- include/linux/of.h         |    7 +++++++
- include/linux/of_address.h |    4 ++--
- include/linux/of_irq.h     |    4 ++--
- scripts/dtc/dtc.h          |   44 ++++++++++----------------------------------
- 7 files changed, 39 insertions(+), 54 deletions(-)
+--- linux-2.6.orig/arch/arm/mach-imx/clk-imx51-imx53.c
++++ linux-2.6/arch/arm/mach-imx/clk-imx51-imx53.c
+@@ -467,6 +467,7 @@ int __init mx53_clocks_init(unsigned lon
+ 	clk_register_clkdev(clk[can1_serial_gate], "per", "53fc8000.can");
+ 	clk_register_clkdev(clk[can2_ipg_gate], "ipg", "53fcc000.can");
+ 	clk_register_clkdev(clk[can2_serial_gate], "per", "53fcc000.can");
++	clk_register_clkdev(clk[dummy], NULL, "53fa4000.rtc");
+ 
+ 	/* set SDHC root clock to 200MHZ*/
+ 	clk_set_rate(clk[esdhc_a_podf], 200000000);
