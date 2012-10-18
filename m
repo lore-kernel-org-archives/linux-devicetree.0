@@ -1,14 +1,14 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/10] pinctrl: remove mutex lock in groups show
-Date: Thu, 18 Oct 2012 20:29:51 +0200
-Message-ID: <CACRpkdYDe1ODiXbV8JSmzwqVHTasY1TfkWZ0GFYQqORog4x52A@mail.gmail.com>
+Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
+Date: Thu, 18 Oct 2012 20:30:55 +0200
+Message-ID: <CACRpkda0QLkdKns3CXNOijYBjaDtW1QyhNYjTqDvRH-in8pvZQ@mail.gmail.com>
 References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-7-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350551224-12857-7-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1350551224-12857-8-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -26,13 +26,13 @@ List-Id: devicetree@vger.kernel.org
 On Thu, Oct 18, 2012 at 11:07 AM, Haojian Zhuang
 <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Mutex is locked duplicatly by pinconf_groups_show() and
-> pin_config_group_get(). It results dead lock. So avoid to lock mutex
-> in pinconf_groups_show().
+> Add pinconf generic support with POWER SOURCE, BIAS PULL.
 >
 > Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Thanks! Applied to my fixes branch with a Cc: stable tag.
+I really like the looks of this, good job Haojian!
+
+Now we just need to hear what Tony says about it...
 
 Yours,
 Linus Walleij
