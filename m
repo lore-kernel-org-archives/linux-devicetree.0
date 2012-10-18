@@ -1,71 +1,80 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH] ARM/dts: omap3: Fix mcbsp2/3 hwmods to be able to probe
- the drivers for audio
-Date: Thu, 18 Oct 2012 12:00:12 +0200
-Message-ID: <507FD32C.7010108@ti.com>
-References: <1350552307-10226-1-git-send-email-peter.ujfalusi@ti.com>
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH] ARM: dts: AM33XX: Add tsl2550 ambient light sensor DT
+ data
+Date: Thu, 18 Oct 2012 11:24:38 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA54133@DBDE01.ent.ti.com>
+References: <1348242551-21293-1-git-send-email-anilkumar@ti.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA53C2B@DBDE01.ent.ti.com>
+ <507FB8FE.6010003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1350552307-10226-1-git-send-email-peter.ujfalusi@ti.com>
+In-Reply-To: <507FB8FE.6010003@ti.com>
+Content-Language: en-US
 Sender: linux-omap-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "tony@atomide.com" <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2012 11:25 AM, Peter Ujfalusi wrote:
-> Fixes the following errors:
-> [    2.318084] omap-mcbsp 49022000.mcbsp: invalid rx DMA channel
-> [    2.324432] omap-mcbsp 49024000.mcbsp: invalid rx DMA channel
-> 
-> Which is because we failed to link the sidetone hwmod for McBSP2/3. The
-> missing sidetone hwmod link will prevent omap_device_alloc() to append the
-> DMA resources since we - accidentally - end up having the same number of
-> resources provided from DT (IO/IRQ) as we have in hwmod for the McBSP ports
-> without the ST resources.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
++Grant, DTML
 
-Acked-by: Benoit Cousson <b-cousson@ti.com>
+On Thu, Oct 18, 2012 at 13:38:30, Cousson, Benoit wrote:
+> Hi Anil,
+> 
+> On 10/18/2012 07:46 AM, AnilKumar, Chimata wrote:
+> > On Fri, Sep 21, 2012 at 21:19:11, AnilKumar, Chimata wrote:
+> >> Add tsl2550 ambient light sensor DT data to am335x-evm.dts. In AM335x
+> >> EVM tsl2550 ambient light sensor is connected to I2C2 bus. So this patch
+> >> adds child node inside i2c2 node with i2c slave address.
+> >>
+> >> TAOS tsl2550 sensor with two-wire SMBus serial interface. This patch
+> >> also reduces I2C2 clock frequency to 100KHz from 400KHz because the
+> >> maximum clock frequency of SMBus is 100KHz.
+> >>
+> >> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> >> ---
+> >>  arch/arm/boot/dts/am335x-evm.dts |    7 ++++++-
+> >>  1 file changed, 6 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+> >> index 3b1f313..d99aa0f 100644
+> >> --- a/arch/arm/boot/dts/am335x-evm.dts
+> >> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> >> @@ -49,7 +49,7 @@
+> >>  
+> >>  		i2c2: i2c@4802a000 {
+> >>  			status = "okay";
+> >> -			clock-frequency = <400000>;
+> >> +			clock-frequency = <100000>;
+> >>  
+> >>  			lis331dlh: lis331dlh@18 {
+> >>  				compatible = "st,lis331dlh", "st,lis3lv02d";
+> >> @@ -79,6 +79,11 @@
+> >>  				st,max-limit-z = <750>;
+> >>  			};
+> >>  
+> >> +			tsl2550: tsl2550@39 {
+> >> +				compatible = "taos,tsl2550";
+> >> +				reg = <0x39>;
+> >> +			};
+> >> +
+> >>  			tmp275: tmp275@48 {
+> >>  				compatible = "ti,tmp275";
+> >>  				reg = <0x48>;
+> > 
+> > Hi Tony/Benoit,
+> > 
+> > If there are no comments in this patch could you please take this in?
+> 
+> Have you updated the binding documentation to list the device?
+> 
+> It should be in:
+> Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> 
 
-Regards,
-Benoit
+No I have not updated, I will send a separate patch by adding all the supported
+devices, missed from earlier (this device, tmp275 and lis331dlh)
 
-> ---
-> 
-> Hi Tony, Benoit,
-> 
-> Can you please take this patch for 3.7 since if we boot with DT audio will not
-> work on BeagleBoard and on boards which uses McBSP2 or 3 for audio.
-> 
-> Thank you,
-> Peter
-> 
->  arch/arm/boot/dts/omap3.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index f38ea87..696e929 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -257,7 +257,7 @@
->  			interrupt-names = "common", "tx", "rx", "sidetone";
->  			interrupt-parent = <&intc>;
->  			ti,buffer-size = <1280>;
-> -			ti,hwmods = "mcbsp2";
-> +			ti,hwmods = "mcbsp2", "mcbsp2_sidetone";
->  		};
->  
->  		mcbsp3: mcbsp@49024000 {
-> @@ -272,7 +272,7 @@
->  			interrupt-names = "common", "tx", "rx", "sidetone";
->  			interrupt-parent = <&intc>;
->  			ti,buffer-size = <128>;
-> -			ti,hwmods = "mcbsp3";
-> +			ti,hwmods = "mcbsp3", "mcbsp3_sidetone";
->  		};
->  
->  		mcbsp4: mcbsp@49026000 {
-> 
-
+Thanks
+AnilKumar
