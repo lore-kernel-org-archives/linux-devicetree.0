@@ -1,86 +1,200 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP: Add counter-32k nodes
-Date: Thu, 18 Oct 2012 09:27:30 -0500
-Message-ID: <508011D2.30806@ti.com>
-References: <1350498803-22150-1-git-send-email-jon-hunter@ti.com>
- <1350498803-22150-2-git-send-email-jon-hunter@ti.com>
- <508010E1.6010102@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <508010E1.6010102-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v5 2/4] misc: Generic on-chip SRAM allocation driver
+Date: Thu, 18 Oct 2012 16:27:31 +0200
+Message-ID: <1350570453-24546-3-git-send-email-p.zabel@pengutronix.de>
+References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+This driver requests and remaps a memory region as configured in the
+device tree. It serves memory from this region via the genalloc API.
 
-On 10/18/2012 09:23 AM, Benoit Cousson wrote:
-> Hi Jon,
-> 
-> This looks good to me, I just have a minor nit comment.
-> 
-> On 10/17/2012 08:33 PM, Jon Hunter wrote:
->> Adds the counter-32k timers nodes present in OMAP2/3/4 devices and
->> device-tree binding documentation for OMAP counter-32k.
->>
->> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/arm/omap/counter32k.txt    |   15 +++++++++++++++
->>  arch/arm/boot/dts/omap2420.dtsi                    |    6 ++++++
->>  arch/arm/boot/dts/omap2430.dtsi                    |    6 ++++++
->>  arch/arm/boot/dts/omap3.dtsi                       |    6 ++++++
->>  arch/arm/boot/dts/omap4.dtsi                       |    6 ++++++
->>  5 files changed, 39 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/omap/counter32k.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/omap/counter32k.txt b/Documentation/devicetree/bindings/arm/omap/counter32k.txt
->> new file mode 100644
->> index 0000000..1983fae
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/omap/counter32k.txt
->> @@ -0,0 +1,15 @@
->> +OMAP Counter-32K bindings
->> +
->> +Required properties:
->> +- compatible:	Must be "ti,omap-counter32k" for OMAP controllers
->> +- reg:		Contains timer register address range (base address and length)
->> +- ti,hwmods:	Name of the hwmod associated to the counter, which is typically
->> +		"counter_32k"
->> +
->> +Example:
->> +
->> +counter32k: counter32k@4a304000 {
->> +	compatible = "ti,omap-counter32k";
->> +	reg = <0x4a304000 0x001f>;
->> +	ti,hwmods = "counter_32k";
->> +};
->> diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
->> index 5f68a70..082193f 100644
->> --- a/arch/arm/boot/dts/omap2420.dtsi
->> +++ b/arch/arm/boot/dts/omap2420.dtsi
->> @@ -14,6 +14,12 @@
->>  	compatible = "ti,omap2420", "ti,omap2";
->>  
->>  	ocp {
->> +		counter32k: counter32k@48004000 {
-> 
-> I'd rather use "counter" as generic type to be consistent with the timer
-> type we are already using.
-> 
-> +		counter32k: counter@48004000 {
+Other drivers can retrieve the genalloc pool from a phandle pointing
+to this drivers' device node in the device tree.
 
-Sounds good. Will update.
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+---
+ Documentation/devicetree/bindings/misc/sram.txt |   17 ++++
+ drivers/misc/Kconfig                            |    9 ++
+ drivers/misc/Makefile                           |    1 +
+ drivers/misc/sram.c                             |  111 +++++++++++++++++++++++
+ 4 files changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/sram.txt
+ create mode 100644 drivers/misc/sram.c
 
-Cheers
-Jon
+diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
+new file mode 100644
+index 0000000..b64136c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/sram.txt
+@@ -0,0 +1,17 @@
++Generic on-chip SRAM
++
++Simple IO memory regions to be managed by the genalloc API.
++
++Required properties:
++
++- compatible : sram
++
++- reg : SRAM iomem address range
++
++Example:
++
++sram: sram@5c000000 {
++	compatible = "sram";
++	reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
++};
++
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index b151b7c..c5bbd00 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -499,6 +499,15 @@ config USB_SWITCH_FSA9480
+ 	  stereo and mono audio, video, microphone and UART data to use
+ 	  a common connector port.
+ 
++config SRAM
++	bool "Generic on-chip SRAM driver"
++	depends on HAS_IOMEM
++	select GENERIC_ALLOCATOR
++	help
++	  This driver allows to declare a memory region to be managed
++	  by the genalloc API. It is supposed to be used for small
++	  on-chip SRAM areas found on many ARM SoCs.
++
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index 2129377..d845690 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -49,3 +49,4 @@ obj-y				+= carma/
+ obj-$(CONFIG_USB_SWITCH_FSA9480) += fsa9480.o
+ obj-$(CONFIG_ALTERA_STAPL)	+=altera-stapl/
+ obj-$(CONFIG_INTEL_MEI)		+= mei/
++obj-$(CONFIG_SRAM)		+= sram.o
+diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+new file mode 100644
+index 0000000..7a363f2
+--- /dev/null
++++ b/drivers/misc/sram.c
+@@ -0,0 +1,111 @@
++/*
++ * Generic on-chip SRAM allocation driver
++ *
++ * Copyright (C) 2012 Philipp Zabel, Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
++ * MA 02110-1301, USA.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/spinlock.h>
++#include <linux/genalloc.h>
++
++struct sram_dev {
++	struct gen_pool *pool;
++};
++
++static int __devinit sram_probe(struct platform_device *pdev)
++{
++	void __iomem *virt_base;
++	struct sram_dev *sram;
++	struct resource *res;
++	unsigned long size;
++	int ret;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		return -EINVAL;
++
++	size = resource_size(res);
++
++	virt_base = devm_request_and_ioremap(&pdev->dev, res);
++	if (!virt_base)
++		return -EADDRNOTAVAIL;
++
++	sram = devm_kzalloc(&pdev->dev, sizeof(*sram), GFP_KERNEL);
++	if (!sram)
++		return -ENOMEM;
++
++	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
++	if (!sram->pool)
++		return -ENOMEM;
++
++	ret = gen_pool_add_virt(sram->pool, (unsigned long)virt_base,
++				res->start, size, -1);
++	if (ret < 0) {
++		gen_pool_destroy(sram->pool);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, sram);
++
++	dev_dbg(&pdev->dev, "SRAM pool: %ld KiB @ 0x%p\n", size / 1024, virt_base);
++
++	return 0;
++}
++
++static int __devexit sram_remove(struct platform_device *pdev)
++{
++	struct sram_dev *sram = platform_get_drvdata(pdev);
++
++	if (gen_pool_avail(sram->pool) < gen_pool_size(sram->pool))
++		dev_dbg(&pdev->dev, "removed while SRAM allocated\n");
++
++	gen_pool_destroy(sram->pool);
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static struct of_device_id sram_dt_ids[] = {
++	{ .compatible = "sram" },
++	{ /* sentinel */ }
++};
++#endif
++
++static struct platform_driver sram_driver = {
++	.driver = {
++		.name = "sram",
++		.of_match_table = of_match_ptr(sram_dt_ids),
++	},
++	.probe = sram_probe,
++	.remove = __devexit_p(sram_remove),
++};
++
++int __init sram_init(void)
++{
++	return platform_driver_register(&sram_driver);
++}
++
++postcore_initcall(sram_init);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Philipp Zabel, Pengutronix");
++MODULE_DESCRIPTION("Generic SRAM allocator driver");
+-- 
+1.7.10.4
