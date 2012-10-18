@@ -1,43 +1,82 @@
-From: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] ARM: mach-imx: Support for DryIce RTC in i.MX53
-Date: Thu, 18 Oct 2012 18:06:10 +0200
-Message-ID: <1350576370-29098-3-git-send-email-stigge@antcom.de>
+From: Roland Stigge <stigge@antcom.de>
+Subject: [PATCH 2/2] rtc-imxdi: Add devicetree support
+Date: Thu, 18 Oct 2012 18:06:09 +0200
+Message-ID: <1350576370-29098-2-git-send-email-stigge@antcom.de>
 References: <1350576370-29098-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350576370-29098-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1350576370-29098-1-git-send-email-stigge@antcom.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: a.zummo@towertech.it, grant.likely@secretlab.ca, rob.herring@calxeda.com, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Cc: Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables support for i.MX53 in addition to i.MX25 by providing a
-dummy clock on i.MX53 since this one doesn't have a separate clock for internal
-RTC but the driver requests one.
+This patch adds device tree support to the rtc-imxdi driver.
 
-Signed-off-by: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Roland Stigge <stigge@antcom.de>
 ---
- arch/arm/mach-imx/clk-imx51-imx53.c |    1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/rtc/imxdi-rtc.txt |   17 +++++++++++++++++
+ drivers/rtc/rtc-imxdi.c                             |   11 +++++++++++
+ 2 files changed, 28 insertions(+)
 
---- linux-2.6.orig/arch/arm/mach-imx/clk-imx51-imx53.c
-+++ linux-2.6/arch/arm/mach-imx/clk-imx51-imx53.c
-@@ -467,6 +467,7 @@ int __init mx53_clocks_init(unsigned lon
- 	clk_register_clkdev(clk[can1_serial_gate], "per", "53fc8000.can");
- 	clk_register_clkdev(clk[can2_ipg_gate], "ipg", "53fcc000.can");
- 	clk_register_clkdev(clk[can2_serial_gate], "per", "53fcc000.can");
-+	clk_register_clkdev(clk[dummy], NULL, "53fa4000.rtc");
+--- /dev/null
++++ linux-2.6/Documentation/devicetree/bindings/rtc/imxdi-rtc.txt
+@@ -0,0 +1,17 @@
++* i.MX25 Real Time Clock controller
++
++This binding supports the following chips: i.MX25, i.MX53
++
++Required properties:
++- compatible: should be: "fsl,imx25-rtc"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: rtc alarm interrupt
++
++Example:
++
++rtc@80056000 {
++	compatible = "fsl,imx53-rtc", "fsl,imx25-rtc";
++	reg = <0x80056000 2000>;
++	interrupts = <29>;
++};
+--- linux-2.6.orig/drivers/rtc/rtc-imxdi.c
++++ linux-2.6/drivers/rtc/rtc-imxdi.c
+@@ -37,6 +37,7 @@
+ #include <linux/rtc.h>
+ #include <linux/sched.h>
+ #include <linux/workqueue.h>
++#include <linux/of.h>
  
- 	/* set SDHC root clock to 200MHZ*/
- 	clk_set_rate(clk[esdhc_a_podf], 200000000);
+ /* DryIce Register Definitions */
+ 
+@@ -493,10 +494,20 @@ static int __devexit dryice_rtc_remove(s
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id dryice_dt_ids[] = {
++	{ .compatible = "fsl,imx25-rtc" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, dryice_dt_ids);
++#endif
++
+ static struct platform_driver dryice_rtc_driver = {
+ 	.driver = {
+ 		   .name = "imxdi_rtc",
+ 		   .owner = THIS_MODULE,
++		   .of_match_table = of_match_ptr(dryice_dt_ids),
+ 		   },
+ 	.remove = __devexit_p(dryice_rtc_remove),
+ };
