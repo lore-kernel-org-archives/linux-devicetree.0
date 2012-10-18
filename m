@@ -1,39 +1,31 @@
-From: Roland Stigge <stigge@antcom.de>
-Subject: [PATCH 1/2] rtc-imxdi: Support for i.MX53
-Date: Thu, 18 Oct 2012 18:06:08 +0200
-Message-ID: <1350576370-29098-1-git-send-email-stigge@antcom.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/10] pinctrl: use postcore_initcall
+Date: Thu, 18 Oct 2012 20:20:38 +0200
+Message-ID: <CACRpkdZ6jS-sgj9=WQ72Jbcb_mRAdZMcknp8V3oFS6WBgXTi2Q@mail.gmail.com>
+References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: a.zummo@towertech.it, grant.likely@secretlab.ca, rob.herring@calxeda.com, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, s.hauer@pengutronix.de, linux-arm-kernel@lists.infradead.org
-Cc: Roland Stigge <stigge@antcom.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1350551224-12857-1-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables support for i.MX53 in addition to i.MX25 by enabling the
-driver on ARCH_MXC generally.
+This patch has the wrong subject, should be pinctrl: single: or
+pinctrl/single: ...
 
-Signed-off-by: Roland Stigge <stigge@antcom.de>
----
- drivers/rtc/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Anyway, I need Tony to ACK them before merging.
 
---- linux-2.6.orig/drivers/rtc/Kconfig
-+++ linux-2.6/drivers/rtc/Kconfig
-@@ -768,7 +768,7 @@ config RTC_DRV_DAVINCI
- 
- config RTC_DRV_IMXDI
- 	tristate "Freescale IMX DryIce Real Time Clock"
--	depends on SOC_IMX25
-+	depends on ARCH_MXC
- 	help
- 	   Support for Freescale IMX DryIce RTC
+Yours,
+Linus Walleij
