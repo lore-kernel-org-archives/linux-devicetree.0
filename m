@@ -1,211 +1,58 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: [PATCH 1/3] ARM: dts: Update board files for pwm support
-Date: Fri, 19 Oct 2012 23:38:53 +1300
-Message-ID: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>, arm@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Tony Prisk <linux@prisktech.co.nz>
+From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Subject: [PATCH 3/3] DOC: PWM: Adding binding document for via,vt8500-pwm
+Date: Fri, 19 Oct 2012 23:38:55 +1300
+Message-ID: <1350643135-13197-3-git-send-email-linux@prisktech.co.nz>
+References: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1350643135-13197-1-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pwm support to arch-vt8500 board files, and adds
-the use-case of pwm-backlight.
+Add a binding document describing the PWM controller found
+on arch-vt8500 supported SoCs.
 
-Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 ---
- arch/arm/boot/dts/vt8500-bv07.dts |    8 ++++++++
- arch/arm/boot/dts/vt8500.dtsi     |   29 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/wm8505-ref.dts  |    8 ++++++++
- arch/arm/boot/dts/wm8505.dtsi     |   29 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/wm8650-mid.dts  |    8 ++++++++
- arch/arm/boot/dts/wm8650.dtsi     |   17 +++++++++++++----
- 6 files changed, 95 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/pwm/vt8500-pwm.txt         |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
 
-diff --git a/arch/arm/boot/dts/vt8500-bv07.dts b/arch/arm/boot/dts/vt8500-bv07.dts
-index 567cf4e..3cba367 100644
---- a/arch/arm/boot/dts/vt8500-bv07.dts
-+++ b/arch/arm/boot/dts/vt8500-bv07.dts
-@@ -33,4 +33,12 @@
- 			};
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt b/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
+new file mode 100644
+index 0000000..e8ba133
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
+@@ -0,0 +1,17 @@
++VIA/Wondermedia VT8500/WM8xxx series SoC PWM controller
 +
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000>;
++Required properties:
++- compatible: should be "via,vt8500-pwm"
++- reg: physical base address and length of the controller's registers
++- #pwm-cells: should be 2.  The first cell specifies the per-chip index
++  of the PWM to use and the second cell is the period in nanoseconds.
++- clocks: pHandle to the PWM source clock
 +
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <5>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/vt8500.dtsi b/arch/arm/boot/dts/vt8500.dtsi
-index d8645e9..e196b2e 100644
---- a/arch/arm/boot/dts/vt8500.dtsi
-+++ b/arch/arm/boot/dts/vt8500.dtsi
-@@ -40,14 +40,43 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
-+				ref25: ref25M {
-+					#clock-cells = <0>;
-+					compatible = "fixed-clock";
-+					clock-frequency = <25000000>;
-+				};
++Example:
 +
- 				ref24: ref24M {
- 					#clock-cells = <0>;
- 					compatible = "fixed-clock";
- 					clock-frequency = <24000000>;
- 				};
-+
-+				pllb: pllb {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-pll-clock";
-+					clocks = <&ref25>;
-+					reg = <0x204>;
-+				};
-+
-+				clkpwm: pwm {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-device-clock";
-+					clocks = <&pllb>;
-+					divisor-reg = <0x348>;
-+					enable-reg = <0x250>;
-+					enable-bit = <14>;
-+				};
- 			};
- 		};
- 
-+		pwm: pwm@d8220000 {
-+			#pwm-cells = <2>;
-+			compatible = "via,vt8500-pwm";
-+			reg = <0xd8220000 0x100>;
-+			clocks = <&clkpwm>;
-+		};
-+
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
-diff --git a/arch/arm/boot/dts/wm8505-ref.dts b/arch/arm/boot/dts/wm8505-ref.dts
-index fd4e248..f51c0ed 100644
---- a/arch/arm/boot/dts/wm8505-ref.dts
-+++ b/arch/arm/boot/dts/wm8505-ref.dts
-@@ -33,4 +33,12 @@
- 			};
- 		};
- 	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000>;
-+
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <5>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/wm8505.dtsi b/arch/arm/boot/dts/wm8505.dtsi
-index b459691..83c8ec5 100644
---- a/arch/arm/boot/dts/wm8505.dtsi
-+++ b/arch/arm/boot/dts/wm8505.dtsi
-@@ -54,14 +54,43 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
-+				ref25: ref25M {
-+					#clock-cells = <0>;
-+					compatible = "fixed-clock";
-+					clock-frequency = <25000000>;
-+				};
-+
- 				ref24: ref24M {
- 					#clock-cells = <0>;
- 					compatible = "fixed-clock";
- 					clock-frequency = <24000000>;
- 				};
-+
-+				pllb: pllb {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-pll-clock";
-+					clocks = <&ref25>;
-+					reg = <0x204>;
-+				};
-+
-+				clkpwm: pwm {
-+					#clock-cells = <0>;
-+					compatible = "via,vt8500-device-clock";
-+					clocks = <&pllb>;
-+					divisor-reg = <0x348>;
-+					enable-reg = <0x250>;
-+					enable-bit = <10>;
-+				};
- 			};
- 		};
- 
-+		pwm: pwm@d8220000 {
-+			#pwm-cells = <2>;
-+			compatible = "via,vt8500-pwm";
-+			reg = <0xd8220000 0x100>;
-+			clocks = <&clkpwm>;
-+		};
-+
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
-diff --git a/arch/arm/boot/dts/wm8650-mid.dts b/arch/arm/boot/dts/wm8650-mid.dts
-index cefd938..7a05dd5 100644
---- a/arch/arm/boot/dts/wm8650-mid.dts
-+++ b/arch/arm/boot/dts/wm8650-mid.dts
-@@ -33,4 +33,12 @@
- 			};
- 		};
- 	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000>;
-+
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <5>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/wm8650.dtsi b/arch/arm/boot/dts/wm8650.dtsi
-index 83b9467..a25d240 100644
---- a/arch/arm/boot/dts/wm8650.dtsi
-+++ b/arch/arm/boot/dts/wm8650.dtsi
-@@ -75,14 +75,16 @@
- 					reg = <0x204>;
- 				};
- 
--				arm: arm {
-+				clkpwm: pwm {
- 					#clock-cells = <0>;
- 					compatible = "via,vt8500-device-clock";
--					clocks = <&plla>;
--					divisor-reg = <0x300>;
-+					clocks = <&pllb>;
-+					divisor-reg = <0x348>;
-+					enable-reg = <0x250>;
-+					enable-bit = <10>;
- 				};
- 
--				sdhc: sdhc {
-+				clksdhc: sdhc {
- 					#clock-cells = <0>;
- 					compatible = "via,vt8500-device-clock";
- 					clocks = <&pllb>;
-@@ -94,6 +96,13 @@
- 			};
- 		};
- 
-+		pwm: pwm@d8220000 {
-+			#pwm-cells = <2>;
-+			compatible = "via,vt8500-pwm";
-+			reg = <0xd8220000 0x100>;
-+			clocks = <&clkpwm>;
-+		};
-+
- 		timer@d8130100 {
- 			compatible = "via,vt8500-timer";
- 			reg = <0xd8130100 0x28>;
++pwm1: pwm@d8220000 {
++	#pwm-cells = <2>;
++	compatible = "via,vt8500-pwm";
++	reg = <0xd8220000 0x1000>;
++	clocks = <&clkpwm>;
++};
 -- 
 1.7.9.5
