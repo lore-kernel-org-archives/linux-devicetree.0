@@ -1,51 +1,22 @@
-From: Pavel Roskin <proski-mXXj517/zsQ@public.gmane.org>
-Subject: Re: [ath9k-devel] [PATCH net-next 00/21] treewide: Use
- consistent api style for address testing
-Date: Fri, 19 Oct 2012 11:55:17 -0400
-Message-ID: <20121019115517.7b8514a8@mj>
-References: <cover.1350618006.git.joe@perches.com>
-	<1350630254.2293.183.camel@edumazet-glaptop>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v7 2/3] pwm_backlight: use power sequences
+Date: Fri, 19 Oct 2012 10:00:22 -0600
+Message-ID: <50817916.2060409@wwwdotorg.org>
+References: <1350637589-7405-1-git-send-email-acourbot@nvidia.com> <1350637589-7405-3-git-send-email-acourbot@nvidia.com> <1350638436.3339.2.camel@gitbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <dev-bounces-yBygre7rU0TnMu66kgdUjQ@public.gmane.org>
-In-Reply-To: <1350630254.2293.183.camel@edumazet-glaptop>
-List-Unsubscribe: <http://openvswitch.org/mailman/options/dev>,
-	<mailto:dev-request-yBygre7rU0TnMu66kgdUjQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://openvswitch.org/pipermail/dev>
-List-Post: <mailto:dev-yBygre7rU0TnMu66kgdUjQ@public.gmane.org>
-List-Help: <mailto:dev-request-yBygre7rU0TnMu66kgdUjQ@public.gmane.org?subject=help>
-List-Subscribe: <http://openvswitch.org/mailman/listinfo/dev>,
-	<mailto:dev-request-yBygre7rU0TnMu66kgdUjQ@public.gmane.org?subject=subscribe>
-Sender: dev-bounces-yBygre7rU0TnMu66kgdUjQ@public.gmane.org
-Errors-To: dev-bounces-yBygre7rU0TnMu66kgdUjQ@public.gmane.org
-To: Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, b.a.t.m.a.n-ZwoEplunGu2X36UT3dwllkB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, users-poMEt7QlJxcwIE2E9O76wjtx2kNaKg5H@public.gmane.org, linux-sctp-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-s9riP+hp16TNLxjTenLetw@public.gmane.org, dev-yBygre7rU0TnMu66kgdUjQ@public.gmane.org, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wimax-BPSAo7wm5JOHVYUYWc+uSQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bridge-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, lvs-devel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, coreteam-Cap9r6Oaw4JrovVCs/uTlw@public.gmane.org, b43-dev-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cbe-oss-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, user-mode-linux-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, user-mode-linux-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-nfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgl
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1350638436.3339.2.camel@gitbox>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tony Prisk <linux@prisktech.co.nz>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, linux-fbdev@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, linux-pm@vger.kernel.org, Leela Krishna Amudala <l.krishna@samsung.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <cbou@mail.ru>, linux-tegra@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 19 Oct 2012 09:04:14 +0200
-Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 10/19/2012 03:20 AM, Tony Prisk wrote:
+> On Fri, 2012-10-19 at 18:06 +0900, Alexandre Courbot wrote:
+>> Make use of the power sequences specified in the device tree or platform
+>> data to control how the backlight is powered on and off.
 
-> Yes they are some names discrepancies, thats a big deal.
-> 
-> And we have alloc_skb() / kfree_skb() / skb_clone() 
-> 
-> Why not skb_alloc() / skb_free() / skb_clone() ?
-> 
-> Some people actually know current code by name of functions, they dont
-> want to change their mind and having to grep include files and git log
-> to learn the new names of an old function, especially when traveling
-> and using a laptop.
-
-I agree.
-
-Also, it makes sense to introduce a more consistent name for a function
-when it's improved in some way and the callers need to be adjusted or
-re-checked.
-
-That way, the old name can be phased out as the code is made compatible
-with the new function.
-
--- 
-Regards,
-Pavel Roskin
+Tony, please do cut down the amount of the patch that you quote. If you
+don't, it's impossible to find your comments. Thanks.
