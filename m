@@ -1,189 +1,211 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: [PATCH 2/3] PWM: vt8500: Update vt8500 PWM driver support
-Date: Fri, 19 Oct 2012 23:38:54 +1300
-Message-ID: <1350643135-13197-2-git-send-email-linux@prisktech.co.nz>
-References: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350643135-13197-1-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: [PATCH 1/3] ARM: dts: Update board files for pwm support
+Date: Fri, 19 Oct 2012 23:38:53 +1300
+Message-ID: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>, arm@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Tony Prisk <linux@prisktech.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates pwm-vt8500.c to support devicetree probing and
-make use of the common clock subsystem.
+This patch adds pwm support to arch-vt8500 board files, and adds
+the use-case of pwm-backlight.
 
-Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
 ---
- drivers/pwm/pwm-vt8500.c |   79 ++++++++++++++++++++++++++++++----------------
- 1 file changed, 51 insertions(+), 28 deletions(-)
+ arch/arm/boot/dts/vt8500-bv07.dts |    8 ++++++++
+ arch/arm/boot/dts/vt8500.dtsi     |   29 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/wm8505-ref.dts  |    8 ++++++++
+ arch/arm/boot/dts/wm8505.dtsi     |   29 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/wm8650-mid.dts  |    8 ++++++++
+ arch/arm/boot/dts/wm8650.dtsi     |   17 +++++++++++++----
+ 6 files changed, 95 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-vt8500.c b/drivers/pwm/pwm-vt8500.c
-index ad14389..c2a71ee 100644
---- a/drivers/pwm/pwm-vt8500.c
-+++ b/drivers/pwm/pwm-vt8500.c
-@@ -1,7 +1,8 @@
- /*
-  * drivers/pwm/pwm-vt8500.c
-  *
-- *  Copyright (C) 2010 Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Copyright (C) 2012 Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-+ * Copyright (C) 2010 Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-  *
-  * This software is licensed under the terms of the GNU General Public
-  * License version 2, as published by the Free Software Foundation, and
-@@ -21,14 +22,24 @@
- #include <linux/io.h>
- #include <linux/pwm.h>
- #include <linux/delay.h>
-+#include <linux/clk.h>
- 
- #include <asm/div64.h>
- 
--#define VT8500_NR_PWMS 4
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
+diff --git a/arch/arm/boot/dts/vt8500-bv07.dts b/arch/arm/boot/dts/vt8500-bv07.dts
+index 567cf4e..3cba367 100644
+--- a/arch/arm/boot/dts/vt8500-bv07.dts
++++ b/arch/arm/boot/dts/vt8500-bv07.dts
+@@ -33,4 +33,12 @@
+ 			};
+ 		};
+ 	};
 +
-+/*
-+ * SoC architecture allocates register space for 4 PWMs but only
-+ * 2 are currently implemented.
-+ */
-+#define VT8500_NR_PWMS	2
- 
- struct vt8500_chip {
- 	struct pwm_chip chip;
- 	void __iomem *base;
-+	struct clk *clk;
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000>;
++
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <5>;
++	};
  };
+diff --git a/arch/arm/boot/dts/vt8500.dtsi b/arch/arm/boot/dts/vt8500.dtsi
+index d8645e9..e196b2e 100644
+--- a/arch/arm/boot/dts/vt8500.dtsi
++++ b/arch/arm/boot/dts/vt8500.dtsi
+@@ -40,14 +40,43 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  
- #define to_vt8500_chip(chip)	container_of(chip, struct vt8500_chip, chip)
-@@ -52,7 +63,7 @@ static int vt8500_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	unsigned long long c;
- 	unsigned long period_cycles, prescale, pv, dc;
++				ref25: ref25M {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++					clock-frequency = <25000000>;
++				};
++
+ 				ref24: ref24M {
+ 					#clock-cells = <0>;
+ 					compatible = "fixed-clock";
+ 					clock-frequency = <24000000>;
+ 				};
++
++				pllb: pllb {
++					#clock-cells = <0>;
++					compatible = "via,vt8500-pll-clock";
++					clocks = <&ref25>;
++					reg = <0x204>;
++				};
++
++				clkpwm: pwm {
++					#clock-cells = <0>;
++					compatible = "via,vt8500-device-clock";
++					clocks = <&pllb>;
++					divisor-reg = <0x348>;
++					enable-reg = <0x250>;
++					enable-bit = <14>;
++				};
+ 			};
+ 		};
  
--	c = 25000000/2; /* wild guess --- need to implement clocks */
-+	c = clk_get_rate(vt8500->clk);
- 	c = c * period_ns;
- 	do_div(c, 1000000000);
- 	period_cycles = c;
-@@ -107,12 +118,22 @@ static struct pwm_ops vt8500_pwm_ops = {
- 	.owner = THIS_MODULE,
++		pwm: pwm@d8220000 {
++			#pwm-cells = <2>;
++			compatible = "via,vt8500-pwm";
++			reg = <0xd8220000 0x100>;
++			clocks = <&clkpwm>;
++		};
++
+ 		timer@d8130100 {
+ 			compatible = "via,vt8500-timer";
+ 			reg = <0xd8130100 0x28>;
+diff --git a/arch/arm/boot/dts/wm8505-ref.dts b/arch/arm/boot/dts/wm8505-ref.dts
+index fd4e248..f51c0ed 100644
+--- a/arch/arm/boot/dts/wm8505-ref.dts
++++ b/arch/arm/boot/dts/wm8505-ref.dts
+@@ -33,4 +33,12 @@
+ 			};
+ 		};
+ 	};
++
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000>;
++
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <5>;
++	};
  };
+diff --git a/arch/arm/boot/dts/wm8505.dtsi b/arch/arm/boot/dts/wm8505.dtsi
+index b459691..83c8ec5 100644
+--- a/arch/arm/boot/dts/wm8505.dtsi
++++ b/arch/arm/boot/dts/wm8505.dtsi
+@@ -54,14 +54,43 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  
--static int __devinit pwm_probe(struct platform_device *pdev)
-+static const struct of_device_id vt8500_pwm_dt_ids[] = {
-+	{ .compatible = "via,vt8500-pwm", },
-+	{ /* Sentinel */ }
-+};
++				ref25: ref25M {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++					clock-frequency = <25000000>;
++				};
 +
-+static int __devinit vt8500_pwm_probe(struct platform_device *pdev)
- {
- 	struct vt8500_chip *chip;
--	struct resource *r;
-+	struct device_node *np = pdev->dev.of_node;
- 	int ret;
- 
-+	if (!np) {
-+		dev_err(&pdev->dev, "invalid devicetree node\n");
-+		return -EINVAL;
-+	}
+ 				ref24: ref24M {
+ 					#clock-cells = <0>;
+ 					compatible = "fixed-clock";
+ 					clock-frequency = <24000000>;
+ 				};
 +
- 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
- 	if (chip == NULL) {
- 		dev_err(&pdev->dev, "failed to allocate memory\n");
-@@ -123,26 +144,32 @@ static int __devinit pwm_probe(struct platform_device *pdev)
- 	chip->chip.ops = &vt8500_pwm_ops;
- 	chip->chip.base = -1;
- 	chip->chip.npwm = VT8500_NR_PWMS;
-+	chip->clk = of_clk_get(np, 0);
- 
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (r == NULL) {
--		dev_err(&pdev->dev, "no memory resource defined\n");
--		return -ENODEV;
-+	if (!chip->clk) {
-+		dev_err(&pdev->dev, "clock source not specified\n");
-+		return -EINVAL;
- 	}
- 
--	chip->base = devm_request_and_ioremap(&pdev->dev, r);
--	if (chip->base == NULL)
-+	chip->base = of_iomap(np, 0);
-+	if (!chip->base) {
-+		dev_err(&pdev->dev, "memory resource not available\n");
- 		return -EADDRNOTAVAIL;
-+	}
++				pllb: pllb {
++					#clock-cells = <0>;
++					compatible = "via,vt8500-pll-clock";
++					clocks = <&ref25>;
++					reg = <0x204>;
++				};
 +
-+	clk_prepare_enable(chip->clk);
++				clkpwm: pwm {
++					#clock-cells = <0>;
++					compatible = "via,vt8500-device-clock";
++					clocks = <&pllb>;
++					divisor-reg = <0x348>;
++					enable-reg = <0x250>;
++					enable-bit = <10>;
++				};
+ 			};
+ 		};
  
- 	ret = pwmchip_add(&chip->chip);
--	if (ret < 0)
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to add pwmchip\n");
- 		return ret;
-+	}
- 
- 	platform_set_drvdata(pdev, chip);
- 	return ret;
- }
- 
--static int __devexit pwm_remove(struct platform_device *pdev)
-+static int __devexit vt8500_pwm_remove(struct platform_device *pdev)
- {
- 	struct vt8500_chip *chip;
- 
-@@ -150,28 +177,24 @@ static int __devexit pwm_remove(struct platform_device *pdev)
- 	if (chip == NULL)
- 		return -ENODEV;
- 
-+	clk_disable_unprepare(chip->clk);
++		pwm: pwm@d8220000 {
++			#pwm-cells = <2>;
++			compatible = "via,vt8500-pwm";
++			reg = <0xd8220000 0x100>;
++			clocks = <&clkpwm>;
++		};
 +
- 	return pwmchip_remove(&chip->chip);
- }
- 
--static struct platform_driver pwm_driver = {
-+static struct platform_driver vt8500_pwm_driver = {
-+	.probe		= vt8500_pwm_probe,
-+	.remove		= __devexit_p(vt8500_pwm_remove),
- 	.driver		= {
- 		.name	= "vt8500-pwm",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = vt8500_pwm_dt_ids,
- 	},
--	.probe		= pwm_probe,
--	.remove		= __devexit_p(pwm_remove),
+ 		timer@d8130100 {
+ 			compatible = "via,vt8500-timer";
+ 			reg = <0xd8130100 0x28>;
+diff --git a/arch/arm/boot/dts/wm8650-mid.dts b/arch/arm/boot/dts/wm8650-mid.dts
+index cefd938..7a05dd5 100644
+--- a/arch/arm/boot/dts/wm8650-mid.dts
++++ b/arch/arm/boot/dts/wm8650-mid.dts
+@@ -33,4 +33,12 @@
+ 			};
+ 		};
+ 	};
++
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 50000>;
++
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <5>;
++	};
  };
+diff --git a/arch/arm/boot/dts/wm8650.dtsi b/arch/arm/boot/dts/wm8650.dtsi
+index 83b9467..a25d240 100644
+--- a/arch/arm/boot/dts/wm8650.dtsi
++++ b/arch/arm/boot/dts/wm8650.dtsi
+@@ -75,14 +75,16 @@
+ 					reg = <0x204>;
+ 				};
  
--static int __init pwm_init(void)
--{
--	return platform_driver_register(&pwm_driver);
--}
--arch_initcall(pwm_init);
--
--static void __exit pwm_exit(void)
--{
--	platform_driver_unregister(&pwm_driver);
--}
--module_exit(pwm_exit);
-+module_platform_driver(vt8500_pwm_driver);
+-				arm: arm {
++				clkpwm: pwm {
+ 					#clock-cells = <0>;
+ 					compatible = "via,vt8500-device-clock";
+-					clocks = <&plla>;
+-					divisor-reg = <0x300>;
++					clocks = <&pllb>;
++					divisor-reg = <0x348>;
++					enable-reg = <0x250>;
++					enable-bit = <10>;
+ 				};
  
--MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("VT8500 PWM Driver");
-+MODULE_AUTHOR("Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DEVICE_TABLE(of, vt8500_pwm_dt_ids);
+-				sdhc: sdhc {
++				clksdhc: sdhc {
+ 					#clock-cells = <0>;
+ 					compatible = "via,vt8500-device-clock";
+ 					clocks = <&pllb>;
+@@ -94,6 +96,13 @@
+ 			};
+ 		};
+ 
++		pwm: pwm@d8220000 {
++			#pwm-cells = <2>;
++			compatible = "via,vt8500-pwm";
++			reg = <0xd8220000 0x100>;
++			clocks = <&clkpwm>;
++		};
++
+ 		timer@d8130100 {
+ 			compatible = "via,vt8500-timer";
+ 			reg = <0xd8130100 0x28>;
 -- 
 1.7.9.5
