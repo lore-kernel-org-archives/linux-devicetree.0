@@ -1,46 +1,33 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH] arm/dts: am33xx rtc node
-Date: Fri, 19 Oct 2012 16:20:21 +0530
-Message-ID: <1350643825-9657-1-git-send-email-afzal@ti.com>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH] arm/dts: am33xx rtc node
+Date: Fri, 19 Oct 2012 10:54:53 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA00AFC@DBDE01.ent.ti.com>
+References: <1350643825-9657-1-git-send-email-afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1350643825-9657-1-git-send-email-afzal@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Afzal Mohammed <afzal@ti.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Vaibhav Hiremath <hvaibhav@ti.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-add am33xx rtc node.
-
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
-
-Based on v3.7-rc1,
-Dependent on series "rtc: omap dt support (for am33xx)",
-(https://lkml.org/lkml/2012/10/19/163)
-Tested on Beagle Bone.
-
- arch/arm/boot/dts/am33xx.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index bb31bff..356711e 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -210,5 +210,14 @@
- 			interrupt-parent = <&intc>;
- 			interrupts = <91>;
- 		};
-+
-+		rtc {
-+			compatible = "ti,da830-rtc";
-+			ti,hwmods = "rtc";
-+			reg = <0x44e3e000 0x1000>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <75
-+				      76>;
-+		};
- 	};
- };
--- 
-1.7.12
+KyBsaW51eC1vbWFwIGFuZCBEYW5pZWwNCg0KT24gRnJpLCBPY3QgMTksIDIwMTIgYXQgMTY6MjA6
+MjEsIE1vaGFtbWVkLCBBZnphbCB3cm90ZToNCj4gYWRkIGFtMzN4eCBydGMgbm9kZS4NCj4gDQo+
+IFNpZ25lZC1vZmYtYnk6IEFmemFsIE1vaGFtbWVkIDxhZnphbEB0aS5jb20+DQo+IC0tLQ0KPiAN
+Cj4gQmFzZWQgb24gdjMuNy1yYzEsDQo+IERlcGVuZGVudCBvbiBzZXJpZXMgInJ0Yzogb21hcCBk
+dCBzdXBwb3J0IChmb3IgYW0zM3h4KSIsDQo+IChodHRwczovL2xrbWwub3JnL2xrbWwvMjAxMi8x
+MC8xOS8xNjMpDQo+IFRlc3RlZCBvbiBCZWFnbGUgQm9uZS4NCj4gDQo+ICBhcmNoL2FybS9ib290
+L2R0cy9hbTMzeHguZHRzaSB8IDkgKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNl
+cnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYW0zM3h4LmR0
+c2kgYi9hcmNoL2FybS9ib290L2R0cy9hbTMzeHguZHRzaQ0KPiBpbmRleCBiYjMxYmZmLi4zNTY3
+MTFlIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hbTMzeHguZHRzaQ0KPiArKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9hbTMzeHguZHRzaQ0KPiBAQCAtMjEwLDUgKzIxMCwxNCBAQA0K
+PiAgCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47DQo+ICAJCQlpbnRlcnJ1cHRzID0gPDkx
+PjsNCj4gIAkJfTsNCj4gKw0KPiArCQlydGMgew0KPiArCQkJY29tcGF0aWJsZSA9ICJ0aSxkYTgz
+MC1ydGMiOw0KPiArCQkJdGksaHdtb2RzID0gInJ0YyI7DQo+ICsJCQlyZWcgPSA8MHg0NGUzZTAw
+MCAweDEwMDA+Ow0KPiArCQkJaW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47DQo+ICsJCQlpbnRl
+cnJ1cHRzID0gPDc1DQo+ICsJCQkJICAgICAgNzY+Ow0KPiArCQl9Ow0KPiAgCX07DQo+ICB9Ow0K
+PiAtLSANCj4gMS43LjEyDQo+IA0KPiANCg0K
