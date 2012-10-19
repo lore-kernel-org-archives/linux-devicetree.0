@@ -1,177 +1,73 @@
-From: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-Subject: [PATCH] Devicetree support for enc28j60 SPI Ethernet chip
-Date: Fri, 19 Oct 2012 09:58:28 +0200
-Message-ID: <50810824.8010305@vanka.net>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: Question about move atmel audio part to DT support
+Date: Fri, 19 Oct 2012 16:18:16 +0800
+Message-ID: <50810CC8.4050009@atmel.com>
+References: <5080F54F.4000600@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <5080F54F.4000600@atmel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: alsa-devel@alsa-project.org, "Lin, JM" <JM.Lin@atmel.com>, "Ferre,
+ Nicolas" <Nicolas.FERRE@atmel.com>, linux-sound@vger.kernel.org, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-the following patch adds generic openfirmware/devicetree support to
-enc28j60 driver.
+Cc:
+    linux-arm-kernel mailing list
+    devicetree-discuss mailing list
+    alsa-devel mailing list
+    linux-sound mailing list
 
-It also adds support for custom hardware based (FPGA) "interrupt line
-deasserter" for processors with level triggered interrupts
-(for example Altera Nios2), as the enc28j60 works only with
-processors with edge triggered interrupt.
 
-The patch was tested on custom Altera Nios2 system.
-
-Signed-off-by: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-
-diff -uprN
-a/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
-b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
---- a/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
-1969-12-31 19:00:00.000000000 -0500
-+++ b/Documentation/devicetree/bindings/net/microchip-enc28j60.txt
-2011-10-16 11:38:33.000000000 -0400
-@@ -0,0 +1,30 @@
-+* Microchip enc28j60 Ethernet
-+
-+Required properties:
-+- compatible : Should be "microchip,enc28j60"
-+- interrupts : Should contain 1 interrupt.
-+- reg : Should be 0
-+
-+Optional properties:
-+- interrupt_deassert_reg : should contain address of additional (FPGA)
-+  interrupt deassert hardware for processors with level triggered
-interrupts
-+
-+
-+Example (for enc28j60 under opencores tinyspi controller):
-+
-+tiny_spi_1: spi@0x2160 {
-+	compatible = "opencores,tiny-spi-1.0", "opencores,tiny-spi-rtlsvn2";
-+	reg = < 0x00002160 0x00000020 >;
-+	interrupt-parent = < &cpu >;
-+	interrupts = < 2 >;
-+	clock-frequency = < 100000000 >;
-+	baud-width = < 8 >;	/* BAUD_WIDTH type NUMBER */
-+	gpios = < &spi1_cs 0 0 >;
-+	ethernet: enc28j60@0 {
-+		compatible = "microchip,enc28j60";
-+		spi-max-frequency = < 20000000 >;
-+		reg = < 0 >;
-+		interrupts = < 4 >;
-+		interrupt_deassert_reg = < 0x00003000 >;
-+	};
-+}; //end spi@0x2160 (tiny_spi_1)
-diff -uprN a/drivers/net/ethernet/microchip/enc28j60.c
-b/drivers/net/ethernet/microchip/enc28j60.c
---- a/drivers/net/ethernet/microchip/enc28j60.c	2011-10-02
-07:31:43.000000000 -0400
-+++ b/drivers/net/ethernet/microchip/enc28j60.c	2011-10-16
-11:36:44.000000000 -0400
-@@ -32,7 +32,7 @@
-  #include "enc28j60_hw.h"
-
-  #define DRV_NAME	"enc28j60"
--#define DRV_VERSION	"1.01"
-+#define DRV_VERSION	"1.02"
-
-  #define SPI_OPLEN	1
-
-@@ -73,6 +73,7 @@ struct enc28j60_net {
-  	int rxfilter;
-  	u32 msg_enable;
-  	u8 spi_transfer_buf[SPI_TRANSFER_BUF_LEN];
-+	u8 *interrupt_deassert_reg;
-  };
-
-  /* use ethtool to change the level for any given device */
-@@ -1320,6 +1321,10 @@ static irqreturn_t enc28j60_irq(int irq,
-  	 * Remember that we access enc28j60 registers through SPI bus
-  	 * via spi_sync() call.
-  	 */
-+
-+	if (priv->interrupt_deassert_reg)
-+		writeb(1, priv->interrupt_deassert_reg);
-+
-  	schedule_work(&priv->irq_work);
-
-  	return IRQ_HANDLED;
-@@ -1541,6 +1546,37 @@ static const struct net_device_ops enc28
-  	.ndo_validate_addr	= eth_validate_addr,
-  };
-
-+#ifdef CONFIG_OF
-+#include <linux/of.h>
-+#include <linux/ioport.h>
-+#include <linux/io.h>
-+
-+static int __devinit enc28j60_of_probe(struct spi_device *spi,
-+					struct enc28j60_net *priv)
-+{
-+	u8 *reg;
-+	const __be32 *prop;
-+	int len;
-+
-+	if (!of_device_is_available(spi->dev.of_node))
-+		return -ENODEV;
-+
-+	prop = of_get_property(spi->dev.of_node,
-+					"interrupt_deassert_reg", &len);
-+
-+	if (prop && len >= sizeof(__be32))
-+		reg = be32_to_cpup(prop);
-+	else
-+		return -ENODEV;
-+
-+	if (!devm_request_mem_region(&spi->dev, reg, 4, DRV_NAME))
-+		return -ENOMEM;
-+
-+	priv->interrupt_deassert_reg = devm_ioremap_nocache(&spi->dev, reg, 4);
-+	return 0;
-+}
-+#endif
-+
-  static int __devinit enc28j60_probe(struct spi_device *spi)
-  {
-  	struct net_device *dev;
-@@ -1569,6 +1605,10 @@ static int __devinit enc28j60_probe(stru
-  	INIT_WORK(&priv->restart_work, enc28j60_restart_work_handler);
-  	dev_set_drvdata(&spi->dev, priv);	/* spi to priv reference */
-  	SET_NETDEV_DEV(dev, &spi->dev);
-+	priv->interrupt_deassert_reg = 0;
-+#ifdef CONFIG_OF
-+	enc28j60_of_probe(spi, priv);
-+#endif
-
-  	if (!enc28j60_chipset_init(dev)) {
-  		if (netif_msg_probe(priv))
-@@ -1631,10 +1671,20 @@ static int __devexit enc28j60_remove(str
-  	return 0;
-  }
-
-+#ifdef CONFIG_OF
-+static const struct of_device_id enc28j60_dt_ids[] = {
-+	{ .compatible = "microchip,enc28j60", },
-+	{ /* sentinel */ }
-+};
-+#else
-+#define enc28j60_dt_ids NULL
-+#endif
-+
-  static struct spi_driver enc28j60_driver = {
-  	.driver = {
-  		   .name = DRV_NAME,
-  		   .owner = THIS_MODULE,
-+		   .of_match_table = enc28j60_dt_ids,
-  	 },
-  	.probe = enc28j60_probe,
-  	.remove = __devexit_p(enc28j60_remove),
+On 10/19/2012 14:38, Bo Shen wrote:
+> Hi Mark Brown,
+>    Now, I am trying to move atmel audio part to DT support. I meet the
+> following issue.
+>
+>    Atmel audio part has three platform device:
+>      -> atmel ssc: ssc library (different SOC has different number)
+>      -> atmel ssc dai: dai for audio
+>      -> atmel pcm: for pdc or dma transfer (now only support pdc, dma
+> support will add soon)
+>
+>   In DT support kernel, I don't find any similar case. So, if I want to
+> keep ssc as library, and use dai to register pcm. Then the dts file will
+> like:
+> ---<8---
+> ssc0: ssc@fffbc000 {
+>                  status = "okay";
+> };
+>
+> dai0: dai {
+>                  compatible = "atmel,atmel-ssc-dai";
+>          };
+>
+> sound {
+>                  compatible = "atmel,at91sam9g20-audio";
+>                  atmel,model = "wm8731 @ sam9g20ek";
+>
+>                  atmel,audio-routing =
+>                          "Ext Spk", "LHPOUT",
+>                          "Int Mic", "MICIN";
+>
+>                  atmel,audio-codec = <&wm8731>;
+>                  atmel,dai = <&dai>;
+> };
+> --->8---
+>
+>    Would this be OK?
+>    If not, may I add some code for ssc which dedicate for audio into
+> sound/soc/atmel (using audio-ssc and ssc to distiguish which dedicate
+> for audio, which used for ssc library)? This will broken the exist code
+> for audio (only sam9g20-wm8731).
+>    Any suggestion?
