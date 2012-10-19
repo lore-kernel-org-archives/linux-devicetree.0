@@ -1,56 +1,48 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
-Date: Fri, 19 Oct 2012 12:13:33 -0700
-Message-ID: <20121019191333.GT4730@atomide.com>
-References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
+From: Albert ARIBAUD <albert.u.boot@aribaud.net>
+Subject: Re: [PATCH] arm: fdt: Relocate fdt along with other data
+Date: Fri, 19 Oct 2012 22:52:43 +0200
+Message-ID: <20121019225243.179ba7f3@lilith>
+References: <1348796515-29008-1-git-send-email-sjg@chromium.org>
+	<5065C0C8.6070503@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1350551224-12857-8-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <5065C0C8.6070503@wwwdotorg.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>
 List-Id: devicetree@vger.kernel.org
 
-* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:08]:
-> Add pinconf generic support with POWER SOURCE, BIAS PULL.
-...
+Hi Stephen,
 
-> +	case PIN_CONFIG_POWER_SOURCE:
-> +		if (pcs->psmask == PCS_OFF_DISABLED
-> +			|| pcs->psshift == PCS_OFF_DISABLED)
-> +			return -ENOTSUPP;
-> +		data &= pcs->psmask;
-> +		data = data >> pcs->psshift;
-> +		*config = data;
-> +		return 0;
-> +		break;
+On Fri, 28 Sep 2012 09:22:48 -0600, Stephen Warren
+<swarren@wwwdotorg.org> wrote:
 
-Hmm, only slightly related to this patch, mostly a generic
-question to others: Do others have any mux registers with
-status bits for things like PIN_CONFIG_POWER_SOURCE?
+> On 09/27/2012 07:41 PM, Simon Glass wrote:
+> > Rather than leave the fdt down next to the code/data, we really should
+> > relocate it along with everything else. For CONFIG_OF_EMBED this happens
+> > automatically, but for CONFIG_OF_SEPARATE it does not.
+> > 
+> > Add code to copy the fdt and point to the new copy after relocation.
+> 
+> Tested-by: Stephen Warren <swarren@nvidia.com>
+> 
+> (on Tegra Harmony board, on top of a merge of current u-boot/master,
+> u-boot-usb/master, u-boot-tegra/next plus my CONFIG_SYS_BOOTMAPSZ and
+> standard environment variable patches for Tegra)
+> 
 
-I could use PIN_CONFIG_POWER_SOURCE for controlling the PBIAS
-for omap MMC. But there's also a status bit that needs to be
-checked for that. I think there was some other similar mux
-register for USB PHY that has a status register.
+Applied to u-boot-arm/master, thanks!
 
-So I'm wondering should the checking for status bit be handled
-in the pinctrl consume driver? Or should we have some bindings
-for that?
-
-Regards,
-
-Tony
+Amicalement,
+-- 
+Albert.
