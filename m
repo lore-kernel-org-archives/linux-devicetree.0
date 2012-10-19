@@ -1,15 +1,15 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 06/10] pinctrl: single: support gpio request and free
-Date: Fri, 19 Oct 2012 15:37:35 -0700
-Message-ID: <20121019223734.GU4730@atomide.com>
+Subject: Re: [PATCH 10/10] document: devicetree: bind pinconf in pinctrl single
+Date: Fri, 19 Oct 2012 15:40:44 -0700
+Message-ID: <20121019224044.GV4730@atomide.com>
 References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-6-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-10-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1350551224-12857-6-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1350551224-12857-10-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,166 +24,42 @@ To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Few minor comments below.
-
-* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:08]:
-> Marvell's PXA/MMP silicon also match the behavior of pinctrl-single.
-> Each pin binds to one register. A lot of pins could be configured
-> as gpio.
+* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:09]:
+> Add comments with pinconf & gpio range in the document of
+> pinctrl-single.
 > 
-> Now add three properties in below.
-> pinctrl-single,gpio-mask: mask of enable/disable value of gpio
-> pinctrl-single,gpio-ranges: gpio range array
-> pinctrl-single,gpio: <gpio base, npins in range, pin base>
-> pinctrl-single,gpio-enable: <gpio enable register offset, enable
-> value>
-> pinctrl-single,gpio-disable: <gpio disable register offset, disable
-> value>
-
-Looks like this needs to be rebased also against v3.7-rc1 to apply
-cleanly. Maybe also undo the wrapping in the description above while
-at it?
- 
-> --- a/drivers/pinctrl/pinctrl-single.c
-> +++ b/drivers/pinctrl/pinctrl-single.c
-> @@ -75,6 +76,26 @@ struct pcs_function {
->  };
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pinctrl/pinctrl-single.txt |   43 ++++++++++++++++++++
+>  1 files changed, 43 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> index 5187f0d..b0e5059 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> @@ -15,6 +15,49 @@ Optional properties:
+>    available and same for all registers; if not specified, disabling of
+>    pin functions is ignored
 >  
->  /**
-> + * struct pcs_gpio_range - pinctrl gpio range
-> + * @range:	subrange of the GPIO number space
-> + * @reg_en:	register of enabling gpio function
-> + * @reg_dis:	register of disabling gpio function
-> + * @val_en:	enable value on gpio function
-> + * @val_dis:	disable value on gpio function
-> + * @need_en:	need to handle enable value on gpio function
-> + * @need_dis:	need to handle disable value on gpio function
-> + */
-> +struct pcs_gpio_range {
-> +	struct pinctrl_gpio_range range;
-> +	u32 reg_en;
-> +	u32 reg_dis;
-
-These should be void __iomem *reg_en and reg_dis to avoid casts?
-
-You now introduce few "warning: cast removes address space of
-expression" warnings when checking with sparse..
-
-> @@ -387,9 +414,48 @@ static void pcs_disable(struct pinctrl_dev *pctldev, unsigned fselector,
->  }
->  
->  static int pcs_request_gpio(struct pinctrl_dev *pctldev,
-> -			struct pinctrl_gpio_range *range, unsigned offset)
-> +			    struct pinctrl_gpio_range *range, unsigned offset)
->  {
-> -	return -ENOTSUPP;
-> +	struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
-> +	struct pcs_gpio_range *gpio = NULL;
-> +	int end;
-> +	unsigned data;
-
-Should you return -ENOTSUPP if not configured for GPIO here?
-
-> +	gpio = container_of(range, struct pcs_gpio_range, range);
-> +	if (!gpio->need_en)
-> +		return 0;
-> +	end = range->pin_base + range->npins - 1;
-> +	if (offset < range->pin_base || offset > end) {
-> +		dev_err(pctldev->dev, "offset %d isn't in the range of "
-> +			"%d to %d\n", offset, range->pin_base, end);
-> +		return -EINVAL;
-> +	}
-> +	data = pcs_readl((void __iomem *)gpio->reg_en) & ~pcs->gmask;
-> +	data |= gpio->val_en;
-> +	pcs_writel(data, (void __iomem *)gpio->reg_en);
-
-These casts should not be needed then.
-
-> +	return 0;
-> +}
+> +- pinctrl-single,gpio-mask : mask of enabling gpio function register
 > +
-> +static void pcs_disable_gpio(struct pinctrl_dev *pctldev,
-> +			     struct pinctrl_gpio_range *range, unsigned offset)
-> +{
-> +	struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
-> +	struct pcs_gpio_range *gpio = NULL;
-> +	int end;
-> +	unsigned data;
+> +- pinctrl-single,gpio-ranges : gpio range list
 > +
-> +	gpio = container_of(range, struct pcs_gpio_range, range);
-> +	if (!gpio->need_dis)
-> +		return;
-> +	end = range->pin_base + range->npins - 1;
-> +	if (offset < range->pin_base || offset > end) {
-> +		dev_err(pctldev->dev, "offset %d isn't in the range of "
-> +			"%d to %d\n", offset, range->pin_base, end);
-> +		return;
-> +	}
-> +	data = pcs_readl((void __iomem *)gpio->reg_dis) & ~pcs->gmask;
-> +	data |= gpio->val_dis;
-> +	pcs_writel(data, (void __iomem *)gpio->reg_dis);
-
-And these casts.
-
-> +static int __devinit pcs_add_gpio_range(struct device_node *node,
-> +					struct pcs_device *pcs)
-> +{
-> +	struct pcs_gpio_range *gpio;
-> +	struct device_node *np;
-> +	const __be32 *list;
-> +	const char list_name[] = "pinctrl-single,gpio-ranges";
-> +	const char name[] = "pinctrl-single";
-> +	u32 gpiores[PCS_MAX_GPIO_VALUES];
-> +	int ret, size, i, mux_bytes = 0;
+> +- pinctrl-single,gpio : array with gpio range start, size & register
+> +  offset
 > +
-> +	ret = of_property_read_u32(node, "pinctrl-single,gpio-mask",
-> +				&pcs->gmask);
-> +	if (ret < 0)
-> +		return 0;
-> +	list = of_get_property(node, list_name, &size);
-> +	if (!list)
-> +		return -ENOENT;
-> +	size = size / sizeof(*list);
-> +	for (i = 0; i < size; i++) {
-> +		np = of_parse_phandle(node, list_name, i);
-> +		memset(gpiores, 0, sizeof(u32) * PCS_MAX_GPIO_VALUES);
-> +		ret = of_property_read_u32_array(np, "pinctrl-single,gpio",
-> +						 gpiores, PCS_MAX_GPIO_VALUES);
-> +		if (ret < 0)
-> +			return -ENOENT;
-> +		gpio = devm_kzalloc(pcs->dev, sizeof(*gpio), GFP_KERNEL);
-> +		if (!gpio) {
-> +			dev_err(pcs->dev, "failed to allocate pcs gpio\n");
-> +			return -ENOMEM;
-> +		}
-> +		gpio->range.id = i;
-> +		gpio->range.base = gpiores[0];
-> +		gpio->range.npins = gpiores[1];
-> +		gpio->range.name = kmemdup(name, sizeof(name), GFP_KERNEL);
-> +		mux_bytes = pcs->width / BITS_PER_BYTE;
-> +		gpio->range.pin_base = gpiores[2] / mux_bytes;
-> +		memset(gpiores, 0, sizeof(u32) * PCS_MAX_GPIO_VALUES);
-> +		ret = of_property_read_u32_array(np,
-> +				"pinctrl-single,gpio-enable", gpiores, 2);
-> +		if (!ret) {
-> +			gpio->reg_en = (u32)pcs->base + gpiores[0];
-> +			gpio->val_en = gpiores[1];
-> +			gpio->need_en = 1;
-> +		}
-> +		memset(gpiores, 0, sizeof(u32) * PCS_MAX_GPIO_VALUES);
-> +		ret = of_property_read_u32_array(np,
-> +				"pinctrl-single,gpio-disable", gpiores, 2);
-> +		if (!ret) {
-> +			gpio->reg_dis = (u32)pcs->base + gpiores[0];
-> +			gpio->val_dis = gpiores[1];
-> +			gpio->need_dis = 1;
-> +		}
+> +- pinctrl-single,gpio-enable : value of enabling gpio function
+> +
+> +- pinctrl-single,gpio-disable : value of disabling gpio function
+> +
+> +- pinctrl-single,power-source-mask : mask of setting power source in
+> +  the pinmux register
+> +
+> +- pinctrl-single,power-source-shift : shift of power source field in
+> +  the pinmux register
 
-I think it's the u32 casts here that introduce the sparse warnings.
-
-Other than that looks OK to me.
+Maybe use "value of", "mask for", "shift for" here?
+Can somebody native english speaker maybe comment on that?
 
 Regards,
 
