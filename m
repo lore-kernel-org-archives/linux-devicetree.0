@@ -1,48 +1,224 @@
-From: Albert ARIBAUD <albert.u.boot@aribaud.net>
-Subject: Re: [PATCH] arm: fdt: Relocate fdt along with other data
-Date: Fri, 19 Oct 2012 22:52:43 +0200
-Message-ID: <20121019225243.179ba7f3@lilith>
-References: <1348796515-29008-1-git-send-email-sjg@chromium.org>
-	<5065C0C8.6070503@wwwdotorg.org>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: Re: [PATCH 1/3] ARM: dts: Update board files for pwm support
+Date: Sat, 20 Oct 2012 11:37:41 +1300
+Message-ID: <1350686261.17901.1.camel@gitbox>
+References: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <5065C0C8.6070503@wwwdotorg.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Jerry Van Baren <vanbaren@cideas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Fri, 28 Sep 2012 09:22:48 -0600, Stephen Warren
-<swarren@wwwdotorg.org> wrote:
-
-> On 09/27/2012 07:41 PM, Simon Glass wrote:
-> > Rather than leave the fdt down next to the code/data, we really should
-> > relocate it along with everything else. For CONFIG_OF_EMBED this happens
-> > automatically, but for CONFIG_OF_SEPARATE it does not.
-> > 
-> > Add code to copy the fdt and point to the new copy after relocation.
+On Fri, 2012-10-19 at 23:38 +1300, Tony Prisk wrote:
+> This patch adds pwm support to arch-vt8500 board files, and adds
+> the use-case of pwm-backlight.
 > 
-> Tested-by: Stephen Warren <swarren@nvidia.com>
+> Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
+> ---
+>  arch/arm/boot/dts/vt8500-bv07.dts |    8 ++++++++
+>  arch/arm/boot/dts/vt8500.dtsi     |   29 +++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/wm8505-ref.dts  |    8 ++++++++
+>  arch/arm/boot/dts/wm8505.dtsi     |   29 +++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/wm8650-mid.dts  |    8 ++++++++
+>  arch/arm/boot/dts/wm8650.dtsi     |   17 +++++++++++++----
+>  6 files changed, 95 insertions(+), 4 deletions(-)
 > 
-> (on Tegra Harmony board, on top of a merge of current u-boot/master,
-> u-boot-usb/master, u-boot-tegra/next plus my CONFIG_SYS_BOOTMAPSZ and
-> standard environment variable patches for Tegra)
-> 
+> diff --git a/arch/arm/boot/dts/vt8500-bv07.dts b/arch/arm/boot/dts/vt8500-bv07.dts
+> index 567cf4e..3cba367 100644
+> --- a/arch/arm/boot/dts/vt8500-bv07.dts
+> +++ b/arch/arm/boot/dts/vt8500-bv07.dts
+> @@ -33,4 +33,12 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm 0 50000>;
+> +
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <5>;
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/vt8500.dtsi b/arch/arm/boot/dts/vt8500.dtsi
+> index d8645e9..e196b2e 100644
+> --- a/arch/arm/boot/dts/vt8500.dtsi
+> +++ b/arch/arm/boot/dts/vt8500.dtsi
+> @@ -40,14 +40,43 @@
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  
+> +				ref25: ref25M {
+> +					#clock-cells = <0>;
+> +					compatible = "fixed-clock";
+> +					clock-frequency = <25000000>;
+> +				};
+> +
+>  				ref24: ref24M {
+>  					#clock-cells = <0>;
+>  					compatible = "fixed-clock";
+>  					clock-frequency = <24000000>;
+>  				};
+> +
+> +				pllb: pllb {
+> +					#clock-cells = <0>;
+> +					compatible = "via,vt8500-pll-clock";
+> +					clocks = <&ref25>;
+> +					reg = <0x204>;
+> +				};
+> +
+> +				clkpwm: pwm {
+> +					#clock-cells = <0>;
+> +					compatible = "via,vt8500-device-clock";
+> +					clocks = <&pllb>;
+> +					divisor-reg = <0x348>;
+> +					enable-reg = <0x250>;
+> +					enable-bit = <14>;
+> +				};
+>  			};
+>  		};
+>  
+> +		pwm: pwm@d8220000 {
+> +			#pwm-cells = <2>;
+> +			compatible = "via,vt8500-pwm";
+> +			reg = <0xd8220000 0x100>;
+> +			clocks = <&clkpwm>;
+> +		};
+> +
+>  		timer@d8130100 {
+>  			compatible = "via,vt8500-timer";
+>  			reg = <0xd8130100 0x28>;
+> diff --git a/arch/arm/boot/dts/wm8505-ref.dts b/arch/arm/boot/dts/wm8505-ref.dts
+> index fd4e248..f51c0ed 100644
+> --- a/arch/arm/boot/dts/wm8505-ref.dts
+> +++ b/arch/arm/boot/dts/wm8505-ref.dts
+> @@ -33,4 +33,12 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm 0 50000>;
+> +
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <5>;
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/wm8505.dtsi b/arch/arm/boot/dts/wm8505.dtsi
+> index b459691..83c8ec5 100644
+> --- a/arch/arm/boot/dts/wm8505.dtsi
+> +++ b/arch/arm/boot/dts/wm8505.dtsi
+> @@ -54,14 +54,43 @@
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  
+> +				ref25: ref25M {
+> +					#clock-cells = <0>;
+> +					compatible = "fixed-clock";
+> +					clock-frequency = <25000000>;
+> +				};
+> +
+>  				ref24: ref24M {
+>  					#clock-cells = <0>;
+>  					compatible = "fixed-clock";
+>  					clock-frequency = <24000000>;
+>  				};
+> +
+> +				pllb: pllb {
+> +					#clock-cells = <0>;
+> +					compatible = "via,vt8500-pll-clock";
+> +					clocks = <&ref25>;
+> +					reg = <0x204>;
+> +				};
+> +
+> +				clkpwm: pwm {
+> +					#clock-cells = <0>;
+> +					compatible = "via,vt8500-device-clock";
+> +					clocks = <&pllb>;
+> +					divisor-reg = <0x348>;
+> +					enable-reg = <0x250>;
+> +					enable-bit = <10>;
+> +				};
+>  			};
+>  		};
+>  
+> +		pwm: pwm@d8220000 {
+> +			#pwm-cells = <2>;
+> +			compatible = "via,vt8500-pwm";
+> +			reg = <0xd8220000 0x100>;
+> +			clocks = <&clkpwm>;
+> +		};
+> +
+>  		timer@d8130100 {
+>  			compatible = "via,vt8500-timer";
+>  			reg = <0xd8130100 0x28>;
+> diff --git a/arch/arm/boot/dts/wm8650-mid.dts b/arch/arm/boot/dts/wm8650-mid.dts
+> index cefd938..7a05dd5 100644
+> --- a/arch/arm/boot/dts/wm8650-mid.dts
+> +++ b/arch/arm/boot/dts/wm8650-mid.dts
+> @@ -33,4 +33,12 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm 0 50000>;
+> +
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <5>;
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/wm8650.dtsi b/arch/arm/boot/dts/wm8650.dtsi
+> index 83b9467..a25d240 100644
+> --- a/arch/arm/boot/dts/wm8650.dtsi
+> +++ b/arch/arm/boot/dts/wm8650.dtsi
+> @@ -75,14 +75,16 @@
+>  					reg = <0x204>;
+>  				};
+>  
+> -				arm: arm {
+> +				clkpwm: pwm {
+>  					#clock-cells = <0>;
+>  					compatible = "via,vt8500-device-clock";
+> -					clocks = <&plla>;
+> -					divisor-reg = <0x300>;
+> +					clocks = <&pllb>;
+> +					divisor-reg = <0x348>;
+> +					enable-reg = <0x250>;
+> +					enable-bit = <10>;
+>  				};
+>  
+> -				sdhc: sdhc {
+> +				clksdhc: sdhc {
+>  					#clock-cells = <0>;
+>  					compatible = "via,vt8500-device-clock";
+>  					clocks = <&pllb>;
+> @@ -94,6 +96,13 @@
+>  			};
+>  		};
+>  
+> +		pwm: pwm@d8220000 {
+> +			#pwm-cells = <2>;
+> +			compatible = "via,vt8500-pwm";
+> +			reg = <0xd8220000 0x100>;
+> +			clocks = <&clkpwm>;
+> +		};
+> +
+>  		timer@d8130100 {
+>  			compatible = "via,vt8500-timer";
+>  			reg = <0xd8130100 0x28>;
 
-Applied to u-boot-arm/master, thanks!
+Please don't pull Patch 1/3 to any trees. I will include in a
+pull-request for arm-soc with other dts updates later on.
 
-Amicalement,
--- 
-Albert.
+Patch 2/3 + 3/3 can be taken now or Ack'd and I'll do a pull-request
+later.
+
+Regards
+Tony P
