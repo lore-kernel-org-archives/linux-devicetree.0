@@ -1,90 +1,51 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH V2 2/2] ARM: OMAP2+: Add device-tree support for 32kHz counter
-Date: Fri, 19 Oct 2012 10:05:51 -0500
-Message-ID: <1350659151-13898-3-git-send-email-jon-hunter@ti.com>
-References: <1350659151-13898-1-git-send-email-jon-hunter@ti.com>
+From: Pavel Roskin <proski-mXXj517/zsQ@public.gmane.org>
+Subject: Re: [ath9k-devel] [PATCH net-next 00/21] treewide: Use
+ consistent api style for address testing
+Date: Fri, 19 Oct 2012 11:55:17 -0400
+Message-ID: <20121019115517.7b8514a8@mj>
+References: <cover.1350618006.git.joe@perches.com>
+	<1350630254.2293.183.camel@edumazet-glaptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1350659151-13898-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dev-bounces-yBygre7rU0TnMu66kgdUjQ@public.gmane.org>
+In-Reply-To: <1350630254.2293.183.camel@edumazet-glaptop>
+List-Unsubscribe: <http://openvswitch.org/mailman/options/dev>,
+	<mailto:dev-request-yBygre7rU0TnMu66kgdUjQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://openvswitch.org/pipermail/dev>
+List-Post: <mailto:dev-yBygre7rU0TnMu66kgdUjQ@public.gmane.org>
+List-Help: <mailto:dev-request-yBygre7rU0TnMu66kgdUjQ@public.gmane.org?subject=help>
+List-Subscribe: <http://openvswitch.org/mailman/listinfo/dev>,
+	<mailto:dev-request-yBygre7rU0TnMu66kgdUjQ@public.gmane.org?subject=subscribe>
+Sender: dev-bounces-yBygre7rU0TnMu66kgdUjQ@public.gmane.org
+Errors-To: dev-bounces-yBygre7rU0TnMu66kgdUjQ@public.gmane.org
+To: Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, b.a.t.m.a.n-ZwoEplunGu2X36UT3dwllkB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, users-poMEt7QlJxcwIE2E9O76wjtx2kNaKg5H@public.gmane.org, linux-sctp-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-s9riP+hp16TNLxjTenLetw@public.gmane.org, dev-yBygre7rU0TnMu66kgdUjQ@public.gmane.org, linux-s390-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wimax-BPSAo7wm5JOHVYUYWc+uSQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bridge-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, lvs-devel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, coreteam-Cap9r6Oaw4JrovVCs/uTlw@public.gmane.org, b43-dev-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cbe-oss-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, user-mode-linux-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, user-mode-linux-user-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-nfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-parisc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgl
 List-Id: devicetree@vger.kernel.org
 
-For OMAP devices, the 32kHz counter is the default clock-source for the kernel.
-However, this is not the only possible clock-source the kernel can use for OMAP
-devices.
+On Fri, 19 Oct 2012 09:04:14 +0200
+Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-When booting with device-tree, if the 32kHz counter is the desired clock-source
-for the kernel, then parse the device-tree blob to ensure that the counter is
-present and if so map memory for the counter using the device-tree of_iomap()
-function so we are no longer reliant on the OMAP HWMOD framework to do this for
-us.
+> Yes they are some names discrepancies, thats a big deal.
+> 
+> And we have alloc_skb() / kfree_skb() / skb_clone() 
+> 
+> Why not skb_alloc() / skb_free() / skb_clone() ?
+> 
+> Some people actually know current code by name of functions, they dont
+> want to change their mind and having to grep include files and git log
+> to learn the new names of an old function, especially when traveling
+> and using a laptop.
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- arch/arm/mach-omap2/timer.c |   28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+I agree.
 
-diff --git a/arch/arm/mach-omap2/timer.c b/arch/arm/mach-omap2/timer.c
-index 9a47f3d..6375dfa 100644
---- a/arch/arm/mach-omap2/timer.c
-+++ b/arch/arm/mach-omap2/timer.c
-@@ -159,6 +159,11 @@ static struct of_device_id omap_timer_match[] __initdata = {
- 	{ }
- };
- 
-+static struct of_device_id omap_counter_match[] __initdata = {
-+	{ .compatible = "ti,omap-counter32k", },
-+	{ }
-+};
-+
- /**
-  * omap_get_timer_dt - get a timer using device-tree
-  * @match	- device-tree match structure for matching a device type
-@@ -377,11 +382,26 @@ static u32 notrace dmtimer_read_sched_clock(void)
- static int __init omap2_sync32k_clocksource_init(void)
- {
- 	int ret;
-+	struct device_node *np = NULL;
- 	struct omap_hwmod *oh;
- 	void __iomem *vbase;
- 	const char *oh_name = "counter_32k";
- 
- 	/*
-+	 * If device-tree is present, then search the DT blob
-+	 * to see if the 32kHz counter is supported.
-+	 */
-+	if (of_have_populated_dt()) {
-+		np = omap_get_timer_dt(omap_counter_match, NULL);
-+		if (!np)
-+			return -ENODEV;
-+
-+		of_property_read_string_index(np, "ti,hwmods", 0, &oh_name);
-+		if (!oh_name)
-+			return -ENODEV;
-+	}
-+
-+	/*
- 	 * First check hwmod data is available for sync32k counter
- 	 */
- 	oh = omap_hwmod_lookup(oh_name);
-@@ -390,7 +410,13 @@ static int __init omap2_sync32k_clocksource_init(void)
- 
- 	omap_hwmod_setup_one(oh_name);
- 
--	vbase = omap_hwmod_get_mpu_rt_va(oh);
-+	if (np) {
-+		vbase = of_iomap(np, 0);
-+		of_node_put(np);
-+	} else {
-+		vbase = omap_hwmod_get_mpu_rt_va(oh);
-+	}
-+
- 	if (!vbase) {
- 		pr_warn("%s: failed to get counter_32k resource\n", __func__);
- 		return -ENXIO;
+Also, it makes sense to introduce a more consistent name for a function
+when it's improved in some way and the callers need to be adjusted or
+re-checked.
+
+That way, the old name can be phased out as the code is made compatible
+with the new function.
+
 -- 
-1.7.9.5
-
+Regards,
+Pavel Roskin
