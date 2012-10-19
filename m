@@ -1,17 +1,18 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 01/10] pinctrl: use postcore_initcall
-Date: Thu, 18 Oct 2012 19:38:18 -0700
-Message-ID: <20121019023818.GO30550@atomide.com>
+Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
+Date: Thu, 18 Oct 2012 19:40:13 -0700
+Message-ID: <20121019024012.GP30550@atomide.com>
 References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <5080802B.3000209@wwwdotorg.org>
- <20121018222802.GG30550@atomide.com>
- <CAN1soZy17wO2s7WoRSRod8k5Zh7fuUc1gxhQiHEb0=zwLhyj6A@mail.gmail.com>
+ <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
+ <CACRpkda0QLkdKns3CXNOijYBjaDtW1QyhNYjTqDvRH-in8pvZQ@mail.gmail.com>
+ <20121018222907.GH30550@atomide.com>
+ <CAN1soZzsruhWt7VFgf5Fi79npcjLiMSUEVwnE3hR5iWEh+9GRw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAN1soZy17wO2s7WoRSRod8k5Zh7fuUc1gxhQiHEb0=zwLhyj6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAN1soZzsruhWt7VFgf5Fi79npcjLiMSUEVwnE3hR5iWEh+9GRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -26,28 +27,22 @@ To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 19:17]:
-> On Fri, Oct 19, 2012 at 6:28 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > Specifically could you decribe the cases where this issue happens?
-> > Also check if one of your client drivers has some early initcall
-> > that's no longer needed.
+* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 19:25]:
 > 
-> Yes, the special case is PMIC. Most of PMIC are based on I2C/SPI bus.
-> It means that I2C/SPI bus driver should be initialized firstly. For example,
-> we could find that PMIC mfd driver are initialized in subsys init call level.
-> It means that pinctrl should be initialized earlier than I2C/SPI bus driver.
-> Otherwise, pins of I2C bus may not be configured as I2C function since
-> pinctrl driver is module init call level.
+> I wonder whether gpio function in OMAP is also configured in the pinmux
+> register. For example, the function is 3bit field in pinmux register
+> of Marvell's
+> PXA/MMP silicon. GPIO function is the one of function.
+> 
+> If the usage case is same in OMAP silicon, I can merge
+> "pinctrl-single,gpio-mask"
+> with "pinctrl-single,function-mask".
+> 
+> Do we need "pinctrl-single,gpio-disable" at here? I want to remove it,
+> but I don't
+> know whether it's necessary in OMAP case.
 
-Hmm, the order in drivers/Makefile is already:
-
-pinctrl/
-i2c/
-
-Maybe check that your i2c drivers don't have non-standard initcalls?
-
-Also the i2c drivers may need to return -EPROBE_DEFER?
+Maybe.. I'll take a look at at that tomorrow.
 
 Regards,
 
