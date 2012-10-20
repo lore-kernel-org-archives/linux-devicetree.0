@@ -1,68 +1,96 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 0/2 v6] of: add display helper
-Date: Sat, 20 Oct 2012 13:35:00 +0200
-Message-ID: <20121020113500.GA12978@avionic-0098.mockup.avionic-design.de>
-References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
- <CAL1wa8fP8LBCUBVJS1=dy3cyFe+bY-Gu2+wtJyuCrgbP93m3Wg@mail.gmail.com>
- <20121015141751.GA11396@pengutronix.de>
+From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 1/2] USB: Update EHCI-platform driver to devicetree.
+Date: Sat, 20 Oct 2012 15:01:18 +0200
+Message-ID: <2209384.BKaXW2gI8I@bender>
+References: <1350703053-4661-1-git-send-email-linux@prisktech.co.nz> <1350703053-4661-2-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121015141751.GA11396@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1350703053-4661-2-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Saturday 20 October 2012 16:17:32 Tony Prisk wrote:
+> This patch adds devicetree support to the EHCI-platform driver,
+> and removes the now unneeded ehci-vt8500.c
+> 
+> Existing platform properties are maintained, with the exception
+> the power_(on/off) and suspend function pointers.
 
-On Mon, Oct 15, 2012 at 04:17:51PM +0200, Steffen Trumtrar wrote:
-> Hi Leela,
->=20
-> On Mon, Oct 15, 2012 at 04:24:43PM +0530, Leela Krishna Amudala wrote:
-> > Hello Steffen,
-> >=20
-> > To which version of the kernel we can expect this patch set to be merge=
-d into?
-> > Because I'm waiting for this from long time to add DT support for my
-> > display controller :)
-> >=20
->=20
-> I have no idea, sorry. It seems like we have almost settled with the bind=
-ing
-> (clock-name needs to be changed), but I'm not responsible for any merging=
-/inclusions
-> in the kernel.
+Ok, so I have recently sent a bit patchset to remove most OHCI/EHCI drivers
+that could be converted to the generic variants, series starts here:
+1349701906-16481-1-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
 
-I want to use this in the Tegra DRM driver which I hope to get into 3.8.
-If you need any help with this, please let me know.
+in this patchset I added a new property to the EHCI platform data:
+need_io_watchdog, which needs to be handled too from DT ideally.
 
-Thierry
+Adding device tree bindings is on my TODO after having a generic way
+to pass clocks to the ehci/ohci platform drivers, so you are right on time :)
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature
+[snip]
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+> +	if (np) {
+> +		/*
+> +		 * No platform data is being passed, so initalize pdata.
+> +		 * Limitation: we can't support power_on, power_off or
+> +		 * power_suspend function pointers from DT.
+> +		 * TODO: The missing functions could be replaced with
+> +		 * power sequence handlers.
+> +		 */
+> +		pdata = devm_kzalloc(&dev->dev, sizeof(*pdata), GFP_KERNEL);
 
-iQIcBAEBAgAGBQJQgoxkAAoJEN0jrNd/PrOhgOMQAJW6PHzJr2s96wUKJnSpPErY
-Ydw2VxX2ouNc7BIwLYibMzwzCDy6CWQCITWHWx6KIIg4Vi4gg5J65fuS9a/lQlMK
-7Iuo7T3j0EYUiOw44omjmJbPm2o1iUEvx3B0GJvV2Udkvo3O8DcDpVZ/f/KH4+JF
-GBwjOZFQIttTHdTOwmAKrUolVk9Iqax1ILUqmG6SBs8cfe2p5qR8nYEQSFcZmuGQ
-6JBix2QHifR9ke/c9xhu9kKODjcRXd7MxqK8bILB7eqYppnXrdjktarwLBUduYEk
-DN8ozclyolwY7q1VtcUHS5hNF2QoEzyuA1cE3Ofkd+Gu6PuCQBFXLqHGOHQPq1lx
-TGoU+yLHU0MeUjt/iRVoII468z1J66lCPbECaKBCSvP0CJcVEDSNSERkIsS+KCpG
-W4W2eqh/BASWR6Bfnto0NSUSlXLB/5+OhEfCto4mTLyfkM2dG6Jr0lbqiuhHhN3E
-ZUNHicAnZKJLAUaQm/Ac+QH437b604I/LHEJzn4t5MBIEFCgnZhdihGAk4Nj6zao
-Me1HLN1UK2Hr9KrEB/gFATvYS6maiTHeNy/xSp9cN+sz5sdS2HhRIKze1cn3m76r
-sDRUf/5u1UV4kcOy/KFuYxnxxyc9Bykl2cSF0zsGxV98KkZx26rUJNEfnFKlnWkt
-WpzhT8aTF9kittx0VjyV
-=wh+K
------END PGP SIGNATURE-----
+Missing allocation failure handling here. And you should free this in
+ehci_platform_remove() accordingly.
 
---a8Wt8u1KmwUX3Y2C--
+> +		dev->dev.platform_data = pdata;
+> +
+> +		/* Read the optional properties from DT node */
+> +		of_property_read_u32(np, "caps-offset", &pdata->caps_offset);
+> +		if (of_property_read_bool(np, "has-tt"))
+> +			pdata->has_tt = 1;
+> +		if (of_property_read_bool(np, "has-synopsys-hc-bug"))
+> +			pdata->has_synopsys_hc_bug = 1;
+> +		if (of_property_read_bool(np, "big-endian-desc"))
+> +			pdata->big_endian_desc = 1;
+> +		if (of_property_read_bool(np, "big-endian-mmio"))
+> +			pdata->big_endian_mmio = 1;
+
+I would rather we remain compatible with ehci-ppc-of, by handling the 
+big-endian property you set big_endian_mmiod and big_endian_desc to 1, and
+by setting them individually, you get what you expect.
+
+> +
+> +		/* Right now device-tree probed devices don't get dma_mask set.
+> +		 * Since shared usb code relies on it, set it here for now.
+> +		 * Once we have dma capability bindings this can go away.
+> +		 */
+> +		if (!dev->dev.dma_mask)
+> +			dev->dev.dma_mask = &ehci_dma_mask;
+> +	}
+> +
+>  	if (!pdata) {
+>  		WARN_ON(1);
+>  		return -ENODEV;
+> @@ -215,6 +250,16 @@ static const struct platform_device_id ehci_platform_table[] = {
+>  	{ "ehci-platform", 0 },
+>  	{ }
+>  };
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id ehci_platform_ids[] = {
+> +	{ .compatible = "ehci-platform", },
+> +	{}
+
+ehci-platform is very linux-specific, so this should either be:
+"linux,ehci-platform", or "usb-ehci", pretty much like the ppc-of ehci driver.
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
