@@ -1,40 +1,68 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] usb: phy: samsung: Introducing usb phy driver for hsotg
-Date: Sat, 20 Oct 2012 21:19:19 +0200
-Message-ID: <20121020191919.GA555@elf.ucw.cz>
-References: <1349256393-11741-1-git-send-email-p.paneri@samsung.com>
- <1350036934-6051-1-git-send-email-p.paneri@samsung.com>
- <20121015132836.GT24333@arwen.pp.htv.fi>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 1/2 v6] of: add helper to parse display timings
+Date: Sat, 20 Oct 2012 21:59:51 +0200
+Message-ID: <20121020195950.GA13902@avionic-0098.mockup.avionic-design.de>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121015132836.GT24333@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Praveen Paneri <p.paneri@samsung.com>, l.majewski@samsung.com, linux-samsung-soc@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, grant.likely@secretlab.ca, kyungmin.park@samsung.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1349373560-11128-2-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robherring2@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-> > +#define S3C_PHYPWR				(0x00)
-...
-> > +#define S3C_PHYCLK				(0x04)
-> > +
-> > +#define S3C_PHYCLK_MODE_SERIAL			(1 << 6)
-> > +#define S3C_PHYCLK_EXT_OSC			(1 << 5)
-> > +#define S3C_PHYCLK_COMMON_ON_N			(1 << 4)
-> > +#define S3C_PHYCLK_ID_PULL			(1 << 2)
-> > +#define S3C_PHYCLK_CLKSEL_MASK			(0x3 << 0)
-> > +#define S3C_PHYCLK_CLKSEL_SHIFT			(0)
-> > +#define S3C_PHYCLK_CLKSEL_48M			(0x0 << 0)
-> > +#define S3C_PHYCLK_CLKSEL_12M			(0x2 << 0)
-> > +#define S3C_PHYCLK_CLKSEL_24M			(0x3 << 0)
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I believe these 0x 's should be removed. Ouch and << 0 is interesting,
-too, just remove it.
+On Thu, Oct 04, 2012 at 07:59:19PM +0200, Steffen Trumtrar wrote:
+[...]
+> diff --git a/include/linux/of_display_timings.h b/include/linux/of_display_timings.h
+[...]
+> +struct display_timings {
+> +	unsigned int num_timings;
+> +	unsigned int default_timing;
+> +
+> +	struct signal_timing **timings;
+> +};
+> +
+> +struct timing_entry {
+> +	u32 min;
+> +	u32 typ;
+> +	u32 max;
+> +};
+> +
+> +struct signal_timing {
 
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+I'm slightly confused by the naming here. signal_timing seems overly
+generic in this context. Is there any reason why this isn't called
+display_timing or even display_mode?
+
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQgwK2AAoJEN0jrNd/PrOh32YQAKjuEVeFaD/3jmolgP/AGhLt
+cK7cj0+eUX+fnExGUSQpGwkk+bzLVlAq84u+AeMzrEEIm5+2hsgZ344AWW0MAPDt
+WkyPdDXAvtHCmGen+65xYeez3edgSTGQ3nS3yajtDzGmfhyRqgqdWrqdqM68EcqM
+WO6ioWVcXpGoXd5Uju237Ngpjz6iMEHttgBgB6PJ07bt9IIDaWc/+Fbz6jeHurXV
+Te9aIZg9SuFAcxqqVzFlQJlfyE0rl7Ykk5bP1HogLv4mE5ktEYQOW2PIDZWXj5jM
+Q7hBuLkvhXsqhwZL5q8Ul7Rsn6gSqT9PSC5st6xVP/wxTQ5dQwyxyneZlQZrNFbs
+P5+w7nPU7/rLOnzfoniYj7H4dT9FPMPmjrKdPKFxjKRojZzXi55IhPI2APeOxMFG
+qAj0I7izoN+uk6H7c8oW1Oj3x4lqru1oUzScZEpjNbRHPearE8oao58//Y8ftJaK
+dTlQUtfame9oTxWlooGzxDAHs0XD0fXf6vgKV74TPlYLQtc2Xw5FjYDYigBcyd8F
+yDbjDNWrU3JV8quZLnk02SQCnScV1Izab4qmmBCQwVOmqVpvPlfW6HGb6ewEPvII
+g3XlFr0Ic5gQ+SuYetKlz2pg+Ed/09wvtVLNeqLhdVZe97T1jj8hzwXTcjTKKwW5
+eyP/5vVD4iucOvXEP7y9
+=hrqF
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
