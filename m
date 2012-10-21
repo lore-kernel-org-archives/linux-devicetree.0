@@ -1,120 +1,187 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V3 0/3]  Add clock framework for armada 370/XP
-Date: Sun, 21 Oct 2012 14:20:23 +0200
-Message-ID: <5083E887.9040905@free-electrons.com>
-References: <1350303499-30868-1-git-send-email-gregory.clement@free-electrons.com> <20121017153925.GR20922@titan.lakedaemon.net>
+From: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
+Subject: [PATCH] Add devicetree support to m25p80 driver
+Date: Sun, 21 Oct 2012 18:34:34 +0200
+Message-ID: <5084241A.5050801@vanka.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121017153925.GR20922@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kern
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: mike-UTnDXsALFwNjMdQLN6DIHgC/G2K4zDHf@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/17/2012 05:39 PM, Jason Cooper wrote:
-> Mike,
-> 
-> On Mon, Oct 15, 2012 at 02:18:16PM +0200, Gregory CLEMENT wrote:
->> Hello Mike,
->>
->> The v3.7-rc1 was released yesterday. So here it is the updated version
->> of my patch set. The rebase was flawless. An I have just fixed a typo
->> in the device tree and warnings from checkpatch. I built and test it
->> for the Armada 370 and Armada XP evaluation board.
->>
->> The purpose of this patch set is to add support for clock framework
->> for Armada 370 and Armada XP SoCs. All the support is done under the
->> directory drivers/clk/mvebu/ as the support for other mvebu SoCs was
->> in mind during the writing of the code.
->>
->> Two kinds of clocks are added:
->>
->> - The CPU clocks are only for Armada XP (which is multi-core)
->>
->> - The core clocks are clocks which have their rate fixed during
->>   reset.
->>
->> Many thanks to Thomas Petazzoni and Sebastian Hesselbarth for their
->> review and feedback. The device tree bindings were really improved
->> with the advices of Sebastian.
->>
->> Changelog:
->> V2 -> V3:
->> - Rebased on top of v3.7-rc1
->> - Fixed a typo in device trees
->> - Fixed warning from checkpatch
->>
->> V1 -> V2:
->>
->> - Improved the spelling and the wording of the documentation and the
->>   1st commit log
->> - Removed the "end_of_list" name which are unused here.
->> - Fix the cpu clock by using of_clk_src_onecell_get in the same way it
->>   was used for the core clocks
->>
->> Regards,
->>
->>
->> Gregory CLEMENT (3):
->>   clk: mvebu: add armada-370-xp specific clocks
->>   clk: armada-370-xp: add support for clock framework
->>   clocksource: time-armada-370-xp converted to clk framework
->>
->>  .../devicetree/bindings/clock/mvebu-core-clock.txt |   40 +++
->>  .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   21 ++
->>  arch/arm/boot/dts/armada-370-db.dts                |    4 -
->>  arch/arm/boot/dts/armada-370-xp.dtsi               |    1 +
->>  arch/arm/boot/dts/armada-370.dtsi                  |   12 +
->>  arch/arm/boot/dts/armada-xp.dtsi                   |   48 +++
->>  arch/arm/mach-mvebu/Kconfig                        |    5 +
->>  arch/arm/mach-mvebu/armada-370-xp.c                |    8 +-
->>  arch/arm/mach-mvebu/common.h                       |    1 +
->>  drivers/clk/Makefile                               |    1 +
->>  drivers/clk/mvebu/Makefile                         |    2 +
->>  drivers/clk/mvebu/clk-core.c                       |  312 ++++++++++++++++++++
->>  drivers/clk/mvebu/clk-core.h                       |   19 ++
->>  drivers/clk/mvebu/clk-cpu.c                        |  155 ++++++++++
->>  drivers/clk/mvebu/clk-cpu.h                        |   19 ++
->>  drivers/clk/mvebu/clk.c                            |   36 +++
->>  drivers/clocksource/time-armada-370-xp.c           |   11 +-
->>  17 files changed, 685 insertions(+), 10 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
->>  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
->>  create mode 100644 drivers/clk/mvebu/Makefile
->>  create mode 100644 drivers/clk/mvebu/clk-core.c
->>  create mode 100644 drivers/clk/mvebu/clk-core.h
->>  create mode 100644 drivers/clk/mvebu/clk-cpu.c
->>  create mode 100644 drivers/clk/mvebu/clk-cpu.h
->>  create mode 100644 drivers/clk/mvebu/clk.c
-> 
-> Would it be okay if we took this through the mvebu tree?  It looks like
-> the only potential merge conflict we would have would be in
-> drivers/clk/Makefile.  It would make dependency tracking easier.
-> 
+The following patch adds support for devicetree to m25p80 driver.
+Note that for jedec chips the chip identification was simplified.
+The particular chip is identified by jedec_id only.
+Tested on custom Altera Nios2 system.
 
-It will also be easier for me if it was possible, because I have
-patch series awaiting which will depend on the support of the
-clock framework for mvebu.
+Signed-off-by: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
 
-> Otherwise is fine as well, just let me know which you prefer.
-> 
-> Assuming, of course, everything looks good to you.
-> 
-> thx,
-> 
-> Jason.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+diff --git a/Documentation/devicetree/bindings/mtd/m25pxx.txt 
+b/Documentation/devicetree/bindings/mtd/m25pxx.txt
+index e69de29..c454a5b 100644
+--- a/Documentation/devicetree/bindings/mtd/m25pxx.txt
++++ b/Documentation/devicetree/bindings/mtd/m25pxx.txt
+@@ -0,0 +1,39 @@
++* M25PXX Serial Flash
++
++Required properties:
++- compatible : For jedec part should be "generic,m25pxx"
++               For non-jedec part should be one of the following:
++		"catalyst,cat25c11"
++		"catalyst,cat25c03"
++		"catalyst,cat25c09"
++		"catalyst,cat25c17"
++		"catalyst,cat25128"
++		"stmicro,m25p05-nonjedec"
++		"stmicro,m25p10-nonjedec"
++		"stmicro,m25p20-nonjedec"
++		"stmicro,m25p40-nonjedec"
++		"stmicro,m25p80-nonjedec"
++		"stmicro,m25p16-nonjedec"
++		"stmicro,m25p32-nonjedec"
++		"stmicro,m25p64-nonjedec"
++		"stmicro,m25p128-nonjedec"
++
++- spi-max-frequency : Maximum operating frequency for the given chip.
++- reg : Chipselect bit number on gpios chipselect port.
++
++Example: S25FL064K hooked to tinyspi controller:
++
++tiny_spi_2: spi@0x4000 {
++	compatible = "opencores,tiny-spi-1.0", "opencores,tiny-spi-rtlsvn2";
++	reg = < 0x00004000 0x00000020 >;
++	interrupt-parent = < &cpu >;
++	interrupts = < 5 >;
++	clock-frequency = < 100000000 >;
++	baud-width = < 8 >;	/* BAUD_WIDTH type NUMBER */
++	gpios = < &spi2_cs 0 0 >;
++	spansion_flash: m25pxx@0 {
++		compatible = "generic,m25pxx";
++		spi-max-frequency = < 20000000 >;
++		reg = <0>;
++	};
++};
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index 5d0d68c..1db2c63 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -744,6 +744,29 @@ static const struct spi_device_id m25p_ids[] = {
+  };
+  MODULE_DEVICE_TABLE(spi, m25p_ids);
 
++#ifdef CONFIG_OF
++static const struct of_device_id m25pxx_dt_ids[] = {
++	{ .compatible = "generic,m25pxx", },
++	{ .compatible = "catalyst,cat25c11", },
++	{ .compatible = "catalyst,cat25c03", },
++	{ .compatible = "catalyst,cat25c09", },
++	{ .compatible = "catalyst,cat25c17", },
++	{ .compatible = "catalyst,cat25128", },
++	{ .compatible = "stmicro,m25p05-nonjedec", },
++	{ .compatible = "stmicro,m25p10-nonjedec", },
++	{ .compatible = "stmicro,m25p20-nonjedec", },
++	{ .compatible = "stmicro,m25p40-nonjedec", },
++	{ .compatible = "stmicro,m25p80-nonjedec", },
++	{ .compatible = "stmicro,m25p16-nonjedec", },
++	{ .compatible = "stmicro,m25p32-nonjedec", },
++	{ .compatible = "stmicro,m25p64-nonjedec", },
++	{ .compatible = "stmicro,m25p128-nonjedec", },
++	{ /* sentinel */ }
++};
++#else
++#define m25pxx_dt_ids NULL
++#endif
++
+  static const struct spi_device_id *__devinit jedec_probe(struct 
+spi_device *spi)
+  {
+  	int			tmp;
+@@ -798,7 +821,7 @@ static int __devinit m25p_probe(struct spi_device *spi)
+  	unsigned			i;
+  	struct mtd_part_parser_data	ppdata;
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+-#ifdef CONFIG_MTD_OF_PARTS
++#if defined(CONFIG_MTD_OF_PARTS) || defined(CONFIG_OF)
+  	if (!of_device_is_available(spi->dev.of_node))
+  		return -ENODEV;
+  #endif
+@@ -825,27 +848,39 @@ static int __devinit m25p_probe(struct spi_device 
+*spi)
+  			dev_warn(&spi->dev, "unrecognized id %s\n", data->type);
+  	}
+
+-	info = (void *)id->driver_data;
+-
+-	if (info->jedec_id) {
+-		const struct spi_device_id *jid;
+-
+-		jid = jedec_probe(spi);
+-		if (IS_ERR(jid)) {
+-			return PTR_ERR(jid);
+-		} else if (jid != id) {
+-			/*
+-			 * JEDEC knows better, so overwrite platform ID. We
+-			 * can't trust partitions any longer, but we'll let
+-			 * mtd apply them anyway, since some partitions may be
+-			 * marked read-only, and we don't want to lose that
+-			 * information, even if it's not 100% accurate.
+-			 */
+-			dev_warn(&spi->dev, "found %s, expected %s\n",
+-				 jid->name, id->name);
+-			id = jid;
+-			info = (void *)jid->driver_data;
++	if (id) {
++		info = (void *)id->driver_data;
++		if (info->jedec_id) {
++			const struct spi_device_id *jid;
++
++			jid = jedec_probe(spi);
++			if (IS_ERR(jid)) {
++				return PTR_ERR(jid);
++			} else if (jid != id) {
++				/*
++				 * JEDEC knows better, so overwrite platform ID.
++				 * We can't trust partitions any longer, but
++				 * we'll let mtd apply them anyway, since some
++				 * partitions may be marked read-only,
++				 * and we don't want to lose that information,
++				 * even if it's not 100% accurate.
++				 */
++				dev_warn(&spi->dev, "found %s, expected %s\n",
++					 jid->name, id->name);
++				id = jid;
++				info = (void *)jid->driver_data;
++			}
+  		}
++	} else {
++		/*
++		 * No id -> we have been most likely configured
++		 * by devicetree "generic,m25pxx" record.
++		 */
++		id = jedec_probe(spi);
++		if (IS_ERR(id))
++			return PTR_ERR(id);
++
++		info = (void *)id->driver_data;
+  	}
+
+  	flash = kzalloc(sizeof *flash, GFP_KERNEL);
+@@ -968,6 +1003,7 @@ static struct spi_driver m25p80_driver = {
+  	.driver = {
+  		.name	= "m25p80",
+  		.owner	= THIS_MODULE,
++		.of_match_table = m25pxx_dt_ids,
+  	},
+  	.id_table	= m25p_ids,
+  	.probe	= m25p_probe,
