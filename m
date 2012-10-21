@@ -1,96 +1,53 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] USB: Update EHCI-platform driver to devicetree.
-Date: Sat, 20 Oct 2012 22:02:21 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1210202155430.5948-100000@netrider.rowland.org>
-References: <1350771032-11527-2-git-send-email-linux@prisktech.co.nz>
+From: Domenico Andreoli <cavokz@gmail.com>
+Subject: Re: [PATCH] usb: phy: samsung: Introducing usb phy driver for hsotg
+Date: Sun, 21 Oct 2012 09:16:19 +0200
+Message-ID: <20121021071619.GA1676@glitch>
+References: <1349256393-11741-1-git-send-email-p.paneri@samsung.com>
+ <1350036934-6051-1-git-send-email-p.paneri@samsung.com>
+ <005801cdac56$8da0c120$a8e24360$%kim@samsung.com>
+ <20121017191300.GL21164@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1350771032-11527-2-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121017191300.GL21164@n2100.arm.linux.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, 'Praveen Paneri' <p.paneri@samsung.com>, linux-usb@vger.kernel.org, l.majewski@samsung.com, linux-samsung-soc@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, balbi@ti.com, grant.likely@secretlab.ca, kyungmin.park@samsung.com, thomas.abraham@linaro.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 21 Oct 2012, Tony Prisk wrote:
-
-> This patch adds devicetree support to the EHCI-platform driver,
-> and removes the now unneeded ehci-vt8500.c
+On Wed, Oct 17, 2012 at 08:13:01PM +0100, Russell King - ARM Linux wrote:
+> On Wed, Oct 17, 2012 at 08:00:00PM +0900, Kukjin Kim wrote:
+> > > +static int samsung_usbphy_get_refclk_freq(struct samsung_usbphy *sphy)
+> > > +{
+> > > +	struct clk *ref_clk;
+> > > +	int refclk_freq = 0;
+> > > +
+> > > +	ref_clk = clk_get(sphy->dev, "xusbxti");
+> > > +	if (IS_ERR(ref_clk)) {
+> > 
+> > IS_ERR_OR_NULL(ref_clk)?
 > 
-> Existing platform properties are maintained, with the exception
-> the power_(on/off) and suspend function pointers.
+> For the N'th time, NO.  IS_ERR is correct here.
+> 
+> > > +		dev_err(sphy->dev, "Failed to get reference clock\n");
+> > > +		return PTR_ERR(ref_clk);
+> 
+> Look, it's the ABI.  Not only that but it's also TOTALLY AND UTTERLY WRONG
+> to use IS_ERR_OR_NULL(foo) and then follow it with return PTR_ERR(foo).
+> You end up returning ZERO.
+> 
+> Stop telling people to use IS_ERR_OR_NULL without properly thinking about
+> it first.  Virtually every single one of these done this way is a BUG.
+> 
+> Are we clear on this?
 
-Unfortunately this can't be accepted as is, because Florian's patches 
-are ahead of yours in the queue.  You'll have to respin this after his 
-stuff has been merged.
+Wouldn't be much easier to define PTR_ERR() to return -Esomething when
+its argument is NULL?
 
-> --- a/drivers/usb/host/ehci-platform.c
-> +++ b/drivers/usb/host/ehci-platform.c
-> @@ -19,6 +19,7 @@
->   * Licensed under the GNU/GPL. See COPYING for details.
->   */
->  #include <linux/platform_device.h>
-> +#include <linux/of.h>
->  #include <linux/usb/ehci_pdriver.h>
->  
->  static int ehci_platform_reset(struct usb_hcd *hcd)
-> @@ -78,14 +79,60 @@ static const struct hc_driver ehci_platform_hc_driver = {
->  	.clear_tt_buffer_complete = ehci_clear_tt_buffer_complete,
->  };
->  
-> +static u64 ehci_dma_mask = DMA_BIT_MASK(32);
+This would end the whole issue of "should I use IS_ERR*/PTR_ERR or look into
+the pointer myself?" story.  One could simply always use IS_ERR*/PTR_ERR
+and have the right thing done in whatever case.
 
-Just out of curiosity...  Instead of adding this same code (which will
-all have to be removed later) to millions of drivers, why doesn't
-somebody add support for DMA masks into DT?
-
-> +		 * No platform data is being passed, so initalize pdata.
-> +		 * Limitation: we can't support power_on, power_off or
-> +		 * power_suspend function pointers from DT.
-> +		 * TODO: The missing functions could be replaced with
-> +		 * power sequence handlers.
-> +		 */
-> +		pdata = devm_kzalloc(&dev->dev, sizeof(*pdata), GFP_KERNEL);
-> +		dev->dev.platform_data = pdata;
-> +
-> +		if (!pdata) {
-> +			pr_err("device tree platform data allocation failed\n");
-
-Don't use pr_err; use dev_err.
-
-> @@ -101,7 +148,7 @@ static int __devinit ehci_platform_probe(struct platform_device *dev)
->  	}
->  	res_mem = platform_get_resource(dev, IORESOURCE_MEM, 0);
->  	if (!res_mem) {
-> -		pr_err("no memory recourse provided");
-> +		pr_err("no memory resource provided");
-
-This has already been fixed in Florian's patches.
-
->  
-> @@ -163,6 +210,7 @@ static int __devexit ehci_platform_remove(struct platform_device *dev)
->  	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
->  	usb_put_hcd(hcd);
->  	platform_set_drvdata(dev, NULL);
-> +	devm_kfree(&dev->dev, pdata);
-
-This isn't needed.  That's the whole point of the devm_* family of 
-routines; the resources they allocate are automatically released when 
-the device is removed.
-
-> --- a/include/linux/usb/ehci_pdriver.h
-> +++ b/include/linux/usb/ehci_pdriver.h
-> @@ -41,6 +41,7 @@ struct usb_ehci_pdata {
->  	unsigned	big_endian_mmio:1;
->  	unsigned	port_power_on:1;
->  	unsigned	port_power_off:1;
-> +	unsigned	no_io_watchdog:1;
-
-This is also in Florian's patches.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Domenico
