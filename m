@@ -1,68 +1,96 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] mv643xx.c: Add basic device tree support.
-Date: Sat, 20 Oct 2012 21:52:34 -0400
-Message-ID: <20121021015234.GE25828@titan.lakedaemon.net>
-References: <1344350092-24050-1-git-send-email-ian.molton@codethink.co.uk>
- <5028D040.60604@codethink.co.uk> <502D201E.9030304@codethink.co.uk>
- <201209101422.13875.arnd@arndb.de>
- <1347343411.2603.42.camel@pasglop>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] USB: Update EHCI-platform driver to devicetree.
+Date: Sat, 20 Oct 2012 22:02:21 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1210202155430.5948-100000@netrider.rowland.org>
+References: <1350771032-11527-2-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1347343411.2603.42.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, dale-1viX+2+OPRFcxvNqPlePQg@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1350771032-11527-2-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Pong.  ;-)
+On Sun, 21 Oct 2012, Tony Prisk wrote:
 
-On Tue, Sep 11, 2012 at 04:03:31PM +1000, Benjamin Herrenschmidt wrote:
-> On Mon, 2012-09-10 at 14:22 +0000, Arnd Bergmann wrote:
-> > Following up on the old discussion, I talked briefly about this
-> > issue with BenH at the kernel summit. The outcome basically is that
-> > it's a bit sad to have incompatible bindings, but it's not the end
-> > of the world,and it's more important to do it right this time.
-> > 
-> > Just make sure that you use different values for the 'compatible'
-> > strings and then do what you need to get the ARM hardware working.
-> > 
-> > Ideally, the new binding should be written in a way that powerpc
-> > machines can use the same one, but the existing ones all use
-> > an version of Open Firmware that is not going to get updated
-> > and it's also not too likely that we are going to see new
-> > powerpc machines based on this chip.
+> This patch adds devicetree support to the EHCI-platform driver,
+> and removes the now unneeded ehci-vt8500.c
 > 
-> Right, mostly these machines where the Pegasos. Those came with a fairly
-> busted variant of Open Firmware which generated a pretty gross
-> device-tree.
-> 
-> For some reason, the manufacturer of those things was never willing to
-> fix anything in their firmware (despite the distributor providing
-> patches etc...), seemingly on the assumption that whatever they were
-> doing was perfect and operating system people like us didn't matter one
-> little bit :-)
-> 
-> So I don't care much about it. It would be nice to keep them working
-> since people in the community still have them but if it goes through
-> some "compat" code that detects old/broken device-trees and eventually
-> disappears when we finally drop support, then so be it.
+> Existing platform properties are maintained, with the exception
+> the power_(on/off) and suspend function pointers.
 
-Ian,
+Unfortunately this can't be accepted as is, because Florian's patches 
+are ahead of yours in the queue.  You'll have to respin this after his 
+stuff has been merged.
 
-What is the status of this work?
+> --- a/drivers/usb/host/ehci-platform.c
+> +++ b/drivers/usb/host/ehci-platform.c
+> @@ -19,6 +19,7 @@
+>   * Licensed under the GNU/GPL. See COPYING for details.
+>   */
+>  #include <linux/platform_device.h>
+> +#include <linux/of.h>
+>  #include <linux/usb/ehci_pdriver.h>
+>  
+>  static int ehci_platform_reset(struct usb_hcd *hcd)
+> @@ -78,14 +79,60 @@ static const struct hc_driver ehci_platform_hc_driver = {
+>  	.clear_tt_buffer_complete = ehci_clear_tt_buffer_complete,
+>  };
+>  
+> +static u64 ehci_dma_mask = DMA_BIT_MASK(32);
 
-thx,
+Just out of curiosity...  Instead of adding this same code (which will
+all have to be removed later) to millions of drivers, why doesn't
+somebody add support for DMA masks into DT?
 
-Jason.
+> +		 * No platform data is being passed, so initalize pdata.
+> +		 * Limitation: we can't support power_on, power_off or
+> +		 * power_suspend function pointers from DT.
+> +		 * TODO: The missing functions could be replaced with
+> +		 * power sequence handlers.
+> +		 */
+> +		pdata = devm_kzalloc(&dev->dev, sizeof(*pdata), GFP_KERNEL);
+> +		dev->dev.platform_data = pdata;
+> +
+> +		if (!pdata) {
+> +			pr_err("device tree platform data allocation failed\n");
+
+Don't use pr_err; use dev_err.
+
+> @@ -101,7 +148,7 @@ static int __devinit ehci_platform_probe(struct platform_device *dev)
+>  	}
+>  	res_mem = platform_get_resource(dev, IORESOURCE_MEM, 0);
+>  	if (!res_mem) {
+> -		pr_err("no memory recourse provided");
+> +		pr_err("no memory resource provided");
+
+This has already been fixed in Florian's patches.
+
+>  
+> @@ -163,6 +210,7 @@ static int __devexit ehci_platform_remove(struct platform_device *dev)
+>  	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
+>  	usb_put_hcd(hcd);
+>  	platform_set_drvdata(dev, NULL);
+> +	devm_kfree(&dev->dev, pdata);
+
+This isn't needed.  That's the whole point of the devm_* family of 
+routines; the resources they allocate are automatically released when 
+the device is removed.
+
+> --- a/include/linux/usb/ehci_pdriver.h
+> +++ b/include/linux/usb/ehci_pdriver.h
+> @@ -41,6 +41,7 @@ struct usb_ehci_pdata {
+>  	unsigned	big_endian_mmio:1;
+>  	unsigned	port_power_on:1;
+>  	unsigned	port_power_off:1;
+> +	unsigned	no_io_watchdog:1;
+
+This is also in Florian's patches.
+
+Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
