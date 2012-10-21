@@ -1,187 +1,75 @@
-From: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-Subject: [PATCH] Add devicetree support to m25p80 driver
-Date: Sun, 21 Oct 2012 18:34:34 +0200
-Message-ID: <5084241A.5050801@vanka.net>
+From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
+Date: Sun, 21 Oct 2012 19:34:07 +0200
+Message-ID: <201210211934.07427.florian@openwrt.org>
+References: <1350771032-11527-1-git-send-email-linux@prisktech.co.nz> <1350771032-11527-3-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: mike-UTnDXsALFwNjMdQLN6DIHgC/G2K4zDHf@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: Text/Plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1350771032-11527-3-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following patch adds support for devicetree to m25p80 driver.
-Note that for jedec chips the chip identification was simplified.
-The particular chip is identified by jedec_id only.
-Tested on custom Altera Nios2 system.
+Le dimanche 21 octobre 2012 00:10:32, Tony Prisk a =C3=A9crit :
+> Add a binding document for ehci-platform driver.
+>=20
+> Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/ehci-platform.txt      |   27
+> ++++++++++++++++++++ 1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ehci-platfo=
+rm.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/ehci-platform.txt
+> b/Documentation/devicetree/bindings/usb/ehci-platform.txt new file mo=
+de
+> 100644
+> index 0000000..930b19e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ehci-platform.txt
+> @@ -0,0 +1,27 @@
+> +Generic Platform EHCI Controller
+> +-----------------------------------------------------
+> +
+> +Required properties:
+> +- compatible : "linux,ehci-platform"
 
-Signed-off-by: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
+Here you changed to linux,ehci-platform, which is good, but in the exam=
+ple you=20
+forgot to update it.
 
-diff --git a/Documentation/devicetree/bindings/mtd/m25pxx.txt 
-b/Documentation/devicetree/bindings/mtd/m25pxx.txt
-index e69de29..c454a5b 100644
---- a/Documentation/devicetree/bindings/mtd/m25pxx.txt
-+++ b/Documentation/devicetree/bindings/mtd/m25pxx.txt
-@@ -0,0 +1,39 @@
-+* M25PXX Serial Flash
-+
-+Required properties:
-+- compatible : For jedec part should be "generic,m25pxx"
-+               For non-jedec part should be one of the following:
-+		"catalyst,cat25c11"
-+		"catalyst,cat25c03"
-+		"catalyst,cat25c09"
-+		"catalyst,cat25c17"
-+		"catalyst,cat25128"
-+		"stmicro,m25p05-nonjedec"
-+		"stmicro,m25p10-nonjedec"
-+		"stmicro,m25p20-nonjedec"
-+		"stmicro,m25p40-nonjedec"
-+		"stmicro,m25p80-nonjedec"
-+		"stmicro,m25p16-nonjedec"
-+		"stmicro,m25p32-nonjedec"
-+		"stmicro,m25p64-nonjedec"
-+		"stmicro,m25p128-nonjedec"
-+
-+- spi-max-frequency : Maximum operating frequency for the given chip.
-+- reg : Chipselect bit number on gpios chipselect port.
-+
-+Example: S25FL064K hooked to tinyspi controller:
-+
-+tiny_spi_2: spi@0x4000 {
-+	compatible = "opencores,tiny-spi-1.0", "opencores,tiny-spi-rtlsvn2";
-+	reg = < 0x00004000 0x00000020 >;
-+	interrupt-parent = < &cpu >;
-+	interrupts = < 5 >;
-+	clock-frequency = < 100000000 >;
-+	baud-width = < 8 >;	/* BAUD_WIDTH type NUMBER */
-+	gpios = < &spi2_cs 0 0 >;
-+	spansion_flash: m25pxx@0 {
-+		compatible = "generic,m25pxx";
-+		spi-max-frequency = < 20000000 >;
-+		reg = <0>;
-+	};
-+};
-diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-index 5d0d68c..1db2c63 100644
---- a/drivers/mtd/devices/m25p80.c
-+++ b/drivers/mtd/devices/m25p80.c
-@@ -744,6 +744,29 @@ static const struct spi_device_id m25p_ids[] = {
-  };
-  MODULE_DEVICE_TABLE(spi, m25p_ids);
+Otherwise, this is ok with me.
 
-+#ifdef CONFIG_OF
-+static const struct of_device_id m25pxx_dt_ids[] = {
-+	{ .compatible = "generic,m25pxx", },
-+	{ .compatible = "catalyst,cat25c11", },
-+	{ .compatible = "catalyst,cat25c03", },
-+	{ .compatible = "catalyst,cat25c09", },
-+	{ .compatible = "catalyst,cat25c17", },
-+	{ .compatible = "catalyst,cat25128", },
-+	{ .compatible = "stmicro,m25p05-nonjedec", },
-+	{ .compatible = "stmicro,m25p10-nonjedec", },
-+	{ .compatible = "stmicro,m25p20-nonjedec", },
-+	{ .compatible = "stmicro,m25p40-nonjedec", },
-+	{ .compatible = "stmicro,m25p80-nonjedec", },
-+	{ .compatible = "stmicro,m25p16-nonjedec", },
-+	{ .compatible = "stmicro,m25p32-nonjedec", },
-+	{ .compatible = "stmicro,m25p64-nonjedec", },
-+	{ .compatible = "stmicro,m25p128-nonjedec", },
-+	{ /* sentinel */ }
-+};
-+#else
-+#define m25pxx_dt_ids NULL
-+#endif
-+
-  static const struct spi_device_id *__devinit jedec_probe(struct 
-spi_device *spi)
-  {
-  	int			tmp;
-@@ -798,7 +821,7 @@ static int __devinit m25p_probe(struct spi_device *spi)
-  	unsigned			i;
-  	struct mtd_part_parser_data	ppdata;
+> +- reg : Should contain 1 register ranges(address and length)
+> +- interrupts : EHCI controller interrupt
+> +
+> +Optional properties:
+> +- caps-offset : offset to the capabilities register (default =3D 0)
+> +- has-tt : controller has transaction translator(s).
+> +- has-synopsys-hc-bug : controller has the synopsys hc bug
+> +- no-io-watchdog : controller does not need io watchdog
+> +
+> +- big-endian : descriptors and registers are both big endian. This
+> +  is the equivalent of specifying big-endian-desc and big-endian-reg=
+s.
+> +OR
+> +- big-endian-desc : descriptors are in big-endian format
+> +- big-endian-regs : mmio is in big-endian format
+> +
+> +Example:
+> +	ehci@d8007c00 {
+> +		compatible =3D "ehci-platform";
+> +		reg =3D <0xd8007c00 0x200>;
+> +		interrupts =3D <43>;
+> +		has-tt;
+> +	};
 
--#ifdef CONFIG_MTD_OF_PARTS
-+#if defined(CONFIG_MTD_OF_PARTS) || defined(CONFIG_OF)
-  	if (!of_device_is_available(spi->dev.of_node))
-  		return -ENODEV;
-  #endif
-@@ -825,27 +848,39 @@ static int __devinit m25p_probe(struct spi_device 
-*spi)
-  			dev_warn(&spi->dev, "unrecognized id %s\n", data->type);
-  	}
-
--	info = (void *)id->driver_data;
--
--	if (info->jedec_id) {
--		const struct spi_device_id *jid;
--
--		jid = jedec_probe(spi);
--		if (IS_ERR(jid)) {
--			return PTR_ERR(jid);
--		} else if (jid != id) {
--			/*
--			 * JEDEC knows better, so overwrite platform ID. We
--			 * can't trust partitions any longer, but we'll let
--			 * mtd apply them anyway, since some partitions may be
--			 * marked read-only, and we don't want to lose that
--			 * information, even if it's not 100% accurate.
--			 */
--			dev_warn(&spi->dev, "found %s, expected %s\n",
--				 jid->name, id->name);
--			id = jid;
--			info = (void *)jid->driver_data;
-+	if (id) {
-+		info = (void *)id->driver_data;
-+		if (info->jedec_id) {
-+			const struct spi_device_id *jid;
-+
-+			jid = jedec_probe(spi);
-+			if (IS_ERR(jid)) {
-+				return PTR_ERR(jid);
-+			} else if (jid != id) {
-+				/*
-+				 * JEDEC knows better, so overwrite platform ID.
-+				 * We can't trust partitions any longer, but
-+				 * we'll let mtd apply them anyway, since some
-+				 * partitions may be marked read-only,
-+				 * and we don't want to lose that information,
-+				 * even if it's not 100% accurate.
-+				 */
-+				dev_warn(&spi->dev, "found %s, expected %s\n",
-+					 jid->name, id->name);
-+				id = jid;
-+				info = (void *)jid->driver_data;
-+			}
-  		}
-+	} else {
-+		/*
-+		 * No id -> we have been most likely configured
-+		 * by devicetree "generic,m25pxx" record.
-+		 */
-+		id = jedec_probe(spi);
-+		if (IS_ERR(id))
-+			return PTR_ERR(id);
-+
-+		info = (void *)id->driver_data;
-  	}
-
-  	flash = kzalloc(sizeof *flash, GFP_KERNEL);
-@@ -968,6 +1003,7 @@ static struct spi_driver m25p80_driver = {
-  	.driver = {
-  		.name	= "m25p80",
-  		.owner	= THIS_MODULE,
-+		.of_match_table = m25pxx_dt_ids,
-  	},
-  	.id_table	= m25p_ids,
-  	.probe	= m25p_probe,
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
