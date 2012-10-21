@@ -1,53 +1,50 @@
-From: Domenico Andreoli <cavokz@gmail.com>
-Subject: Re: [PATCH] usb: phy: samsung: Introducing usb phy driver for hsotg
-Date: Sun, 21 Oct 2012 09:16:19 +0200
-Message-ID: <20121021071619.GA1676@glitch>
-References: <1349256393-11741-1-git-send-email-p.paneri@samsung.com>
- <1350036934-6051-1-git-send-email-p.paneri@samsung.com>
- <005801cdac56$8da0c120$a8e24360$%kim@samsung.com>
- <20121017191300.GL21164@n2100.arm.linux.org.uk>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] crypto: fix missing unlock on error case
+Date: Sun, 21 Oct 2012 19:56:42 +0800
+Message-ID: <CAPgLHd8f2UorFGa57n94k_7cbD8G3XNYVOkmHPqhySs2Nd0pNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121017191300.GL21164@n2100.arm.linux.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, 'Praveen Paneri' <p.paneri@samsung.com>, linux-usb@vger.kernel.org, l.majewski@samsung.com, linux-samsung-soc@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, balbi@ti.com, grant.likely@secretlab.ca, kyungmin.park@samsung.com, thomas.abraham@linaro.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-crypto@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 17, 2012 at 08:13:01PM +0100, Russell King - ARM Linux wrote:
-> On Wed, Oct 17, 2012 at 08:00:00PM +0900, Kukjin Kim wrote:
-> > > +static int samsung_usbphy_get_refclk_freq(struct samsung_usbphy *sphy)
-> > > +{
-> > > +	struct clk *ref_clk;
-> > > +	int refclk_freq = 0;
-> > > +
-> > > +	ref_clk = clk_get(sphy->dev, "xusbxti");
-> > > +	if (IS_ERR(ref_clk)) {
-> > 
-> > IS_ERR_OR_NULL(ref_clk)?
-> 
-> For the N'th time, NO.  IS_ERR is correct here.
-> 
-> > > +		dev_err(sphy->dev, "Failed to get reference clock\n");
-> > > +		return PTR_ERR(ref_clk);
-> 
-> Look, it's the ABI.  Not only that but it's also TOTALLY AND UTTERLY WRONG
-> to use IS_ERR_OR_NULL(foo) and then follow it with return PTR_ERR(foo).
-> You end up returning ZERO.
-> 
-> Stop telling people to use IS_ERR_OR_NULL without properly thinking about
-> it first.  Virtually every single one of these done this way is a BUG.
-> 
-> Are we clear on this?
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Wouldn't be much easier to define PTR_ERR() to return -Esomething when
-its argument is NULL?
+Add the missing unlock on the error handling path in function
+tegra_aes_get_random() and tegra_aes_rng_reset().
 
-This would end the whole issue of "should I use IS_ERR*/PTR_ERR or look into
-the pointer myself?" story.  One could simply always use IS_ERR*/PTR_ERR
-and have the right thing done in whatever case.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/crypto/tegra-aes.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Regards,
-Domenico
+diff --git a/drivers/crypto/tegra-aes.c b/drivers/crypto/tegra-aes.c
+index 37185e6..19adf1c 100644
+--- a/drivers/crypto/tegra-aes.c
++++ b/drivers/crypto/tegra-aes.c
+@@ -674,8 +674,10 @@ static int tegra_aes_get_random(struct crypto_rng *tfm, u8 *rdata,
+ 	mutex_lock(&aes_lock);
+ 
+ 	ret = clk_prepare_enable(dd->aes_clk);
+-	if (ret)
++	if (ret) {
++		mutex_unlock(&aes_lock);
+ 		return ret;
++	}
+ 
+ 	ctx->dd = dd;
+ 	dd->ctx = ctx;
+@@ -759,8 +761,10 @@ static int tegra_aes_rng_reset(struct crypto_rng *tfm, u8 *seed,
+ 	dd->flags = FLAGS_ENCRYPT | FLAGS_RNG;
+ 
+ 	ret = clk_prepare_enable(dd->aes_clk);
+-	if (ret)
++	if (ret) {
++		mutex_unlock(&aes_lock);
+ 		return ret;
++	}
+ 
+ 	aes_set_key(dd);
+ 
