@@ -1,68 +1,56 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] USB: Update EHCI-platform driver to devicetree.
-Date: Sun, 21 Oct 2012 11:20:20 +1300
-Message-ID: <1350771620.10819.3.camel@gitbox>
-References: <Pine.LNX.4.44L0.1210201027280.24222-100000@netrider.rowland.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] DT EHCI support for Kirkwood.
+Date: Sat, 20 Oct 2012 21:24:20 -0400
+Message-ID: <20121021012420.GD25828@titan.lakedaemon.net>
+References: <1350731401-21442-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1210201027280.24222-100000-pYrvlCTfrz9XsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1350731401-21442-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2012-10-20 at 10:31 -0400, Alan Stern wrote:
-> On Sat, 20 Oct 2012, Florian Fainelli wrote:
+On Sat, Oct 20, 2012 at 01:09:59PM +0200, Andrew Lunn wrote:
+> These two patches add DT support to ehci-orion and convert all
+> existing Kirkwood DT boards to using DT to instantiate the USB host.
 > 
-> > Hi Tony,
-> > 
-> > On Saturday 20 October 2012 16:17:32 Tony Prisk wrote:
-> > > This patch adds devicetree support to the EHCI-platform driver,
-> > > and removes the now unneeded ehci-vt8500.c
-> > > 
-> > > Existing platform properties are maintained, with the exception
-> > > the power_(on/off) and suspend function pointers.
-> > 
-> > Ok, so I have recently sent a bit patchset to remove most OHCI/EHCI drivers
-> > that could be converted to the generic variants, series starts here:
-> > 1349701906-16481-1-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
-> > 
-> > in this patchset I added a new property to the EHCI platform data:
-> > need_io_watchdog, which needs to be handled too from DT ideally.
+> v1->v2: Remove the phy property from DT. The previous implementation
+> was not compatible with the new ideas of a USB phy node. Only orion5x
+> needs it anyway, and currently converting orion5x to DT is low
+> priority. Adding a phy node later will also not affect backwards
+> compatibility.
 > 
-> Actually the new property is "no_io_watchdog".  See
+> Andrew Lunn (2):
+>   ARM: Kirkwood: ehci-orion: Add device tree binding
+>   ARM: Kirkwood: Convert all DT boards to EHCI via DT.
 > 
-> 	http://marc.info/?l=linux-usb&m=134970247511140&w=2
-> 
-> > Adding device tree bindings is on my TODO after having a generic way
-> > to pass clocks to the ehci/ohci platform drivers, so you are right on time :)
-> 
-> At some point we'll need a way to handle the power_{on,off,suspend} 
-> callbacks.  I don't know how that should be done.
-> 
-> Alan Stern
+>  .../devicetree/bindings/usb/ehci-orion.txt         |   15 ++++++++
+>  arch/arm/boot/dts/kirkwood.dtsi                    |    7 ++++
+>  arch/arm/mach-kirkwood/board-dnskw.c               |    1 -
+>  arch/arm/mach-kirkwood/board-dockstar.c            |    1 -
+>  arch/arm/mach-kirkwood/board-dreamplug.c           |    1 -
+>  arch/arm/mach-kirkwood/board-dt.c                  |    1 +
+>  arch/arm/mach-kirkwood/board-goflexnet.c           |    1 -
+>  arch/arm/mach-kirkwood/board-ib62x0.c              |    1 -
+>  arch/arm/mach-kirkwood/board-iconnect.c            |    1 -
+>  arch/arm/mach-kirkwood/board-iomega_ix2_200.c      |    2 --
+>  arch/arm/mach-kirkwood/board-km_kirkwood.c         |    1 -
+>  arch/arm/mach-kirkwood/board-lsxl.c                |    1 -
+>  arch/arm/mach-kirkwood/board-ts219.c               |    1 -
+>  drivers/usb/host/ehci-orion.c                      |   38 ++++++++++++++++++--
+>  14 files changed, 58 insertions(+), 14 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/ehci-orion.txt
 
-I actually included a comment in the patch regarding the missing
-functions:
+Applied to:
 
-> +                * No platform data is being passed, so initalize
-> pdata.
-> +                * Limitation: we can't support power_on, power_off or
-> +                * power_suspend function pointers from DT.
-> +                * TODO: The missing functions could be replaced with
-> +                * power sequence handlers.
-> +                */
+git://git.infradead.org/users/jcooper/linux.git kirkwood/dt
 
-I don't know anything about the power sequence code, but have seen some
-patches for pwm backlight using it. I don't know if it would allow
-everything that's needed, but it seems to have support for voltage
-regulators and gpios (among other things).
+thx,
 
-Regards
-Tony P
-
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
