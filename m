@@ -1,71 +1,95 @@
 From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v4 0/6] arm: exynos: add dt based support for exynos5 hdmi
-Date: Mon, 22 Oct 2012 17:01:01 +0530
-Message-ID: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
+Subject: [PATCH v4 1/6] dts: exynos: add device tree support for exynos5 hdmi
+Date: Mon, 22 Oct 2012 17:01:02 +0530
+Message-ID: <1350905467-23832-2-git-send-email-rahul.sharma@samsung.com>
+References: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 Cc: tomasz.figa@gmail.com, kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds the DT based support for Samsung's Exynos5250. It adds
-device tree nodes for hdmi, mixer, hdmiphy and hdmiddc. The name of these
-devices are changed to the one matching with drivers. Exynos-drm and exynos
-hdmi-drm-commmon devices are removed from machine init code.
+This patch adds support for device tree based discovery for exynos5
+hdmi. Hdmi node is also renamed with "exynos5-hdmi".
 
-Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
-init code. Patch set which adds this code is posted to dri-devel list at
-http://comments.gmane.org/gmane.comp.video.dri.devel/75121.
-
-This patchset is based on linux v3.6-rc6, branch v3.7-next/dt-samsung at
-git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-
-v1:
-- dropped patch for hpd gpio initialisation from machine init.
-- dropped patch for platform device registration.
-- removed platform device registration from non-dt platforms.
-
-v2:
-- removed version information from hdmi, mixer dt nodes.
-- added DT binding documentation for hdmi, mixer, hdmiphy and hdmiddc.
-
-v3:
-- corrected indentations.
-- changed dt node names to name@address format.
-
-v4:
-- added newline at end of device-tree binding document files.
-- removes macros for mixer, hdmi physical addresses.
-- removed @address from mixer and hdmi DT nodes.
-
-Rahul Sharma (6):
-  dts: exynos: add device tree support for exynos5 hdmi
-  dts: exynos: add device tree support for exynos5 mixer
-  dts: exynos: add device tree support for exynos5 hdmiphy
-  dts: exynos: add device tree support for exynos5 hdmiddc
-  arm: exynos: add clocks for exynos5 hdmi
-  arm: exynos: removing exynos-drm device registration from non-dt
-    platforms
-
- .../devicetree/bindings/drm/exynos/hdmi.txt        |   22 +++++++++++++++
- .../devicetree/bindings/drm/exynos/hdmiddc.txt     |   12 ++++++++
- .../devicetree/bindings/drm/exynos/hdmiphy.txt     |   12 ++++++++
- .../devicetree/bindings/drm/exynos/mixer.txt       |   15 ++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |   24 +++++++++++++++-
- arch/arm/boot/dts/exynos5250.dtsi                  |   20 +++++++++++++
- arch/arm/mach-exynos/Makefile                      |    1 -
- arch/arm/mach-exynos/clock-exynos5.c               |   14 ++++++++-
- arch/arm/mach-exynos/dev-drm.c                     |   29 --------------------
- arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 +++++
- arch/arm/mach-exynos/mach-nuri.c                   |    3 --
- arch/arm/mach-exynos/mach-origen.c                 |    3 --
- arch/arm/mach-exynos/mach-smdk4x12.c               |    3 --
- arch/arm/mach-exynos/mach-smdkv310.c               |    3 --
- arch/arm/mach-exynos/mach-universal_c210.c         |    3 --
- arch/arm/plat-samsung/include/plat/devs.h          |    2 -
- 16 files changed, 124 insertions(+), 50 deletions(-)
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+ .../devicetree/bindings/drm/exynos/hdmi.txt        |   22 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
+ arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++++
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
+ 4 files changed, 34 insertions(+), 0 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmi.txt
- create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
- create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
- create mode 100644 Documentation/devicetree/bindings/drm/exynos/mixer.txt
- delete mode 100644 arch/arm/mach-exynos/dev-drm.c
+
+diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+new file mode 100644
+index 0000000..589edee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+@@ -0,0 +1,22 @@
++Device-Tree bindings for drm hdmi driver
++
++Required properties:
++- compatible: value should be "samsung,exynos5-hdmi".
++- reg: physical base address of the hdmi and length of memory mapped
++	region.
++- interrupts: interrupt number to the cpu.
++- hpd-gpio: following information about the hotplug gpio pin.
++	a) phandle of the gpio controller node.
++	b) pin number within the gpio controller.
++	c) pin function mode.
++	d) optional flags and pull up/down.
++	e) drive strength.
++
++Example:
++
++	hdmi {
++		compatible = "samsung,exynos5-hdmi";
++		reg = <0x14530000 0x100000>;
++		interrupts = <0 95 0>;
++		hpd-gpio = <&gpx3 7 0xf 1 3>;
++	};
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index a352df4..2a478ab 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -166,4 +166,8 @@
+ 	spi_2: spi@12d40000 {
+ 		status = "disabled";
+ 	};
++
++	hdmi {
++		hpd-gpio = <&gpx3 7 0xf 1 3>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index f69e389..e43b321 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -492,4 +492,10 @@
+ 			#gpio-cells = <4>;
+ 		};
+ 	};
++
++	hdmi {
++		compatible = "samsung,exynos5-hdmi";
++		reg = <0x14530000 0x100000>;
++		interrupts = <0 95 0>;
++	};
+ };
+diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+index ce82f30..f37d676 100644
+--- a/arch/arm/mach-exynos/mach-exynos5-dt.c
++++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+@@ -64,6 +64,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
+ 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
+ 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA1, "dma-pl330.1", NULL),
+ 	OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_MDMA1, "dma-pl330.2", NULL),
++	OF_DEV_AUXDATA("samsung,exynos5-hdmi", 0x14530000,
++				"exynos5-hdmi", NULL),
+ 	{},
+ };
+ 
+-- 
+1.7.0.4
