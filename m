@@ -1,68 +1,75 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH] arm: dts: omap4-sdp: pinmux configuration for keypad
-Date: Mon, 22 Oct 2012 12:59:15 +0530
-Message-ID: <1350890955-29553-1-git-send-email-sourav.poddar@ti.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH 2/2 v6] of: add generic videomode description
+Date: Mon, 22 Oct 2012 09:35:10 +0200
+Message-ID: <20121022073510.GA12967@pengutronix.de>
+References: <1349373560-11128-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1349373560-11128-3-git-send-email-s.trumtrar@pengutronix.de>
+ <20121020110412.GD12545@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, b-cousson@ti.com
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sourav Poddar <sourav.poddar@ti.com>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121020110412.GD12545@avionic-0098.mockup.avionic-design.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robherring2@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, omap4 keypad mux settings are done in the board file.
-Populate the mux settings in the dts file for the keypad to
-work via dt.
+On Sat, Oct 20, 2012 at 01:04:12PM +0200, Thierry Reding wrote:
+> On Thu, Oct 04, 2012 at 07:59:20PM +0200, Steffen Trumtrar wrote:
+> [...]
+> > diff --git a/drivers/of/of_videomode.c b/drivers/of/of_videomode.c
+> [...]
+> > +#if defined(CONFIG_DRM)
+> 
+> This should be:
+> 
+> 	#if IS_ENABLED(CONFIG_DRM)
+> 
+> or the code below won't be included if DRM is built as a module. But see
+> my other replies as to how we can probably handle this better by moving
+> this into the DRM subsystem.
+> 
 
-Cc: Felipe Balbi <balbi@ti.com>
-Tested on omap4430 sdp with 3.7-rc1.
+I already started with moving...now I only need some time to finish with it.
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
- arch/arm/boot/dts/omap4-sdp.dts |   26 ++++++++++++++++++++++++++
- 1 files changed, 26 insertions(+), 0 deletions(-)
+> > +int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmode)
+> > +{
+> > +	memset(dmode, 0, sizeof(*dmode));
+> 
+> It appears the usual method to obtain a drm_display_mode to allocate it
+> using drm_mode_create(), which will allocate it and associate it with
+> the struct drm_device.
+> 
+> Now, if you do a memset() on the structure you'll overwrite a number of
+> fields that have previously been initialized and are actually required
+> to get everything cleaned up properly later on.
+> 
+> So I think we should remove the call to memset().
+> 
 
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 5b7e04f..5efb059 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -194,6 +194,27 @@
- 			0xbc 0x100	/* abe_mcbsp2_fsx.abe_mcbsp2_fsx INPUT | MODE0 */
- 		>;
- 	};
-+
-+	keypad_pins: pinmux_keypad_pins {
-+		pinctrl-single,pins = <
-+			0x24 0x4119   /* gpmc_a18.kpd_row6 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+			0x26 0x4119   /* gpmc_a19.kpd_row6 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+			0x2c 0x4001   /* gpmc_a22.kpd_col6 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x2e 0x4001   /* gpmc_a23.kpd_col7 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x13c 0x4001  /* kpd_col0.kpd_col0 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x13e 0x4001  /* kpd_col1.kpd_col1 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x140 0x4001  /* kpd_col2.kpd_col2 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x142 0x10F   /* kpd_col3.kpd_col3 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x144 0x4001  /* kpd_col4.kpd_col4 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x146 0x4001  /* kpd_col5.kpd_col5 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-+			0x148 0xc119  /* kpd_row0.kpd_row0 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+			0x14a 0x4119  /* kpd_row1.kpd_row1 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+			0x14c 0x4119  /* kpd_row2.kpd_row2 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+			0x14e 0x4119  /* kpd_row3.kpd_row3 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+			0x150 0x4119  /* kpd_row4.kpd_row4 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+			0x152 0x4119  /* kpd_row5.kpd_row5 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-+		>;
-+	};
- };
- 
- &i2c1 {
-@@ -406,3 +427,8 @@
- &mcbsp3 {
- 	status = "disabled";
- };
-+
-+&keypad {
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&keypad_pins>;
-+};
+I was not aware of that. The memset has to go than, of course.
+
+> > +int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
+> > +			int index)
+> > +{
+> [...]
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
+> 
+> This should be:
+> 
+> 	EXPORT_SYMBOL_GPL(of_get_fb_videomode);
+
+Oops.
+
+Regrads,
+
+Steffen
+
+
 -- 
-1.7.1
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
