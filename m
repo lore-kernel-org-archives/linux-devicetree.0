@@ -1,15 +1,15 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 07/10] pinctrl: remove mutex lock in groups show
-Date: Mon, 22 Oct 2012 10:53:01 +0200
-Message-ID: <CACRpkdYV=xr8j_7E_mMTQ3m7SS_X0P4=NbO_QCWYZX+n1dRMww@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
+Date: Mon, 22 Oct 2012 18:09:36 +0800
+Message-ID: <CAN1soZzE_tTkmPBechvUcdAbWKSScwcaqe_cb0TTmnRJi9gtRg@mail.gmail.com>
 References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-7-git-send-email-haojian.zhuang@gmail.com>
- <50808200.3080207@wwwdotorg.org>
+ <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
+ <20121019191333.GT4730@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50808200.3080207-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20121019191333.GT4730-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,45 +20,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 19, 2012 at 12:26 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 10/18/2012 03:07 AM, Haojian Zhuang wrote:
->> Mutex is locked duplicatly by pinconf_groups_show() and
->> pin_config_group_get(). It results dead lock. So avoid to lock mutex
->> in pinconf_groups_show().
+On Sat, Oct 20, 2012 at 3:13 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:08]:
+>> Add pinconf generic support with POWER SOURCE, BIAS PULL.
+> ...
 >
-> With this outer lock removed, how do we ensure that the pinctrl driver
-> that is being called into remains loaded? Does the existence of the
-> debugfs file ensure this, such that if it's open, the pinctrl driver
-> can't be removed?
-
-No, don't think so, dangling debugfs files is a common problem.
-
-> Related, I wonder if much of the variable setup at the start of the
-> function shouldn't happen inside the lock instead of outside:
+>> +     case PIN_CONFIG_POWER_SOURCE:
+>> +             if (pcs->psmask == PCS_OFF_DISABLED
+>> +                     || pcs->psshift == PCS_OFF_DISABLED)
+>> +                     return -ENOTSUPP;
+>> +             data &= pcs->psmask;
+>> +             data = data >> pcs->psshift;
+>> +             *config = data;
+>> +             return 0;
+>> +             break;
 >
-> static int pinconf_groups_show(struct seq_file *s, void *what)
-> {
->         struct pinctrl_dev *pctldev = s->private;
->         const struct pinctrl_ops *pctlops = pctldev->desc->pctlops;
->         const struct pinconf_ops *ops = pctldev->desc->confops;
->         unsigned ngroups = pctlops->get_groups_count(pctldev);
+> Hmm, only slightly related to this patch, mostly a generic
+> question to others: Do others have any mux registers with
+> status bits for things like PIN_CONFIG_POWER_SOURCE?
 >
-> since what if s->private is unregistered/destroyed while this function
-> is running?
+> I could use PIN_CONFIG_POWER_SOURCE for controlling the PBIAS
+> for omap MMC. But there's also a status bit that needs to be
+> checked for that. I think there was some other similar mux
+> register for USB PHY that has a status register.
+>
+> So I'm wondering should the checking for status bit be handled
+> in the pinctrl consume driver? Or should we have some bindings
+> for that?
+>
 
-The debugfs code is fragile by nature I think, that's why we are
-usually a bit relaxed here and it's also why it should be disabled
-on production systems.
+Do you mean that the status register only exists in USB PHY controller or
+MMC controller?
 
-But any hardening patches are welcome, however we need to
-get around the deadlock Haojian was seeing, maybe we should
-introduce a separate debugfs mutex?
+If so, could we use regulator framework in USB PHY or MMC driver?
 
-/me is slightly confused though...
-
-Yours,
-Linus Walleij
+Regards
+Haojian
