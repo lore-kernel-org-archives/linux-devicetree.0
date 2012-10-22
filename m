@@ -1,85 +1,53 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
-Date: Mon, 22 Oct 2012 10:09:18 -0700
-Message-ID: <20121022170917.GB4730@atomide.com>
-References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
- <20121019191333.GT4730@atomide.com>
- <CAN1soZzE_tTkmPBechvUcdAbWKSScwcaqe_cb0TTmnRJi9gtRg@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 3/5] arm: mvebu: Added IPI support via doorbells
+Date: Mon, 22 Oct 2012 19:30:28 +0200
+Message-ID: <20121022173028.GM21046@lunn.ch>
+References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
+ <1350925368-24243-4-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAN1soZzE_tTkmPBechvUcdAbWKSScwcaqe_cb0TTmnRJi9gtRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1350925368-24243-4-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.or
 List-Id: devicetree@vger.kernel.org
 
-* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 03:11]:
-> On Sat, Oct 20, 2012 at 3:13 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:08]:
-> >> Add pinconf generic support with POWER SOURCE, BIAS PULL.
-> > ...
-> >
-> >> +     case PIN_CONFIG_POWER_SOURCE:
-> >> +             if (pcs->psmask == PCS_OFF_DISABLED
-> >> +                     || pcs->psshift == PCS_OFF_DISABLED)
-> >> +                     return -ENOTSUPP;
-> >> +             data &= pcs->psmask;
-> >> +             data = data >> pcs->psshift;
-> >> +             *config = data;
-> >> +             return 0;
-> >> +             break;
-> >
-> > Hmm, only slightly related to this patch, mostly a generic
-> > question to others: Do others have any mux registers with
-> > status bits for things like PIN_CONFIG_POWER_SOURCE?
-> >
-> > I could use PIN_CONFIG_POWER_SOURCE for controlling the PBIAS
-> > for omap MMC. But there's also a status bit that needs to be
-> > checked for that. I think there was some other similar mux
-> > register for USB PHY that has a status register.
-> >
-> > So I'm wondering should the checking for status bit be handled
-> > in the pinctrl consume driver? Or should we have some bindings
-> > for that?
-> >
+On Mon, Oct 22, 2012 at 07:02:45PM +0200, Gregory CLEMENT wrote:
+> From: Yehuda Yitschak <yehuday@marvell.com>
 > 
-> Do you mean that the status register only exists in USB PHY controller or
-> MMC controller?
+> Signed-off-by: Yehuda Yitschak <yehuday@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  arch/arm/boot/dts/armada-xp.dtsi        |    2 +-
+>  arch/arm/mach-mvebu/armada-370-xp.h     |   10 ++++
+>  arch/arm/mach-mvebu/irq-armada-370-xp.c |   92 +++++++++++++++++++++++++++++--
+>  3 files changed, 97 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+> index f521ed8..531619f 100644
+> --- a/arch/arm/boot/dts/armada-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp.dtsi
+> @@ -24,7 +24,7 @@
+>  
+>  	mpic: interrupt-controller@d0020000 {
+>  	      reg = <0xd0020a00 0x1d0>,
+> -		    <0xd0021870 0x58>;
+> +		    <0xd0021070 0x58>;
+>  	};
 
-The status register is in the MMC PBIAS register that is mux
-related otherwise. From OMAP4470_ES1.0_PUBLIC_TRM_vE.pdf,
-Table 19-599. CONTROL_PBIASLITE:
+Hi Gregory
 
-Bits
-26	MMC1_PWDNZ
-25	MMC1_PBIASLITE_HIZ_MODE
-24	MMC1_PBIASLITE_SUPPLY_HI_OUT
-23	MMC1_PBIASLITE_VMODE_ERROR	then this bit needs to clear..
-22	MMC1_PBIASLITE_PWRDNZ
-21	MMC1_PBIASLITE_VMODE		..after VMODE bit is set to 3V
- 
-> If so, could we use regulator framework in USB PHY or MMC driver?
+Is this a bug fix needed for 3.7?
 
-Yes we could use regulator framework for that that. Or just read the
-status in the MMC driver for that bit if nobody else has mixed
-mux-regulator needs like this.
-
-The sequence is MMC specific, so from that point of view it would
-make sense to have the logic in the MMC driver.
-
-Regards,
-
-Tony
+   Andrew
