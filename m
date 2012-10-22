@@ -1,142 +1,54 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] pinctrl: single: support gpio request and free
-Date: Mon, 22 Oct 2012 13:28:07 -0700
-Message-ID: <20121022202805.GG4730@atomide.com>
-References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
- <1350922139-3693-3-git-send-email-haojian.zhuang@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM/dts: omap3: Fix mcbsp2/3 hwmods to be able to
+ probe the drivers for audio
+Date: Mon, 22 Oct 2012 13:38:01 -0700
+Message-ID: <20121022203800.GH4730@atomide.com>
+References: <1350552307-10226-1-git-send-email-peter.ujfalusi@ti.com>
+ <507FD32C.7010108@ti.com>
+ <508530CE.9000703@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1350922139-3693-3-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <508530CE.9000703@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?utf-8?B?UMOpdGVy?= Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 09:11]:
-> Marvell's PXA/MMP silicon also match the behavior of pinctrl-single.
-> Each pin binds to one register. A lot of pins could be configured
-> as gpio.
-> 
-> Now add three properties in below.
-> pinctrl-single,gpio-ranges: gpio range array
-> pinctrl-single,gpio: <gpio base, npins in range, pin base in range>
-> pinctrl-single,gpio-func: <gpio function value in mux>
-> 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/pinctrl/pinctrl-single.c |   94 +++++++++++++++++++++++++++++++++++++-
->  1 files changed, 92 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-> index 726a729..6a0b24b 100644
-> --- a/drivers/pinctrl/pinctrl-single.c
-> +++ b/drivers/pinctrl/pinctrl-single.c
-> @@ -28,8 +28,10 @@
->  #define DRIVER_NAME			"pinctrl-single"
->  #define PCS_MUX_PINS_NAME		"pinctrl-single,pins"
->  #define PCS_MUX_BITS_NAME		"pinctrl-single,bits"
-> +#define PCS_GPIO_FUNC_NAME		"pinctrl-single,gpio-func"
+* P=C3=A9ter Ujfalusi <peter.ujfalusi@ti.com> [121022 04:42]:
+> Hi Tony,
+>=20
+> On 10/18/2012 12:00 PM, Benoit Cousson wrote:
+> > On 10/18/2012 11:25 AM, Peter Ujfalusi wrote:
+> >> Fixes the following errors:
+> >> [    2.318084] omap-mcbsp 49022000.mcbsp: invalid rx DMA channel
+> >> [    2.324432] omap-mcbsp 49024000.mcbsp: invalid rx DMA channel
+> >>
+> >> Which is because we failed to link the sidetone hwmod for McBSP2/3=
+=2E The
+> >> missing sidetone hwmod link will prevent omap_device_alloc() to ap=
+pend the
+> >> DMA resources since we - accidentally - end up having the same num=
+ber of
+> >> resources provided from DT (IO/IRQ) as we have in hwmod for the Mc=
+BSP ports
+> >> without the ST resources.
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >=20
+> > Acked-by: Benoit Cousson <b-cousson@ti.com>
+>=20
+> Can you take this patch for -rc3?
 
-I think we can now get rid of these defines, I initially added
-them as we had a bit hard time finding a suitable name for the
-driver. These are only used in one location, so let's not add
-new ones here.
+Thanks will apply into omap-for-v3.7-rc2/fixes.
 
->  static int pcs_request_gpio(struct pinctrl_dev *pctldev,
-> -			struct pinctrl_gpio_range *range, unsigned offset)
-> +			    struct pinctrl_gpio_range *range, unsigned pin)
->  {
-> -	return -ENOTSUPP;
-> +	struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
-> +	struct pcs_gpio_range *gpio = NULL;
-> +	int end, mux_bytes;
-> +	unsigned data;
-> +
-> +	gpio = container_of(range, struct pcs_gpio_range, range);
-> +	if (!gpio->func_en)
-> +		return 0;
-> +	end = range->pin_base + range->npins - 1;
-> +	if (pin < range->pin_base || pin > end) {
-> +		dev_err(pctldev->dev, "pin %d isn't in the range of "
-> +			"%d to %d\n", pin, range->pin_base, end);
-> +		return -EINVAL;
-> +	}
-> +	mux_bytes = pcs->width / BITS_PER_BYTE;
-> +	data = pcs_readl(pcs->base + pin * mux_bytes) & ~pcs->fmask;
-> +	data |= gpio->gpio_func;
-> +	pcs_writel(data, pcs->base + pin * mux_bytes);
-> +	return 0;
->  }
+Regards,
 
-I think I already commented on this one.. Is this safe if you don't
-have GPIOs configured? Or should you return -ENODEV in that case?
-
-> +static int __devinit pcs_add_gpio_range(struct device_node *node,
-> +					struct pcs_device *pcs)
-> +{
-> +	struct pcs_gpio_range *gpio;
-> +	struct device_node *np;
-> +	const __be32 *list;
-> +	const char list_name[] = "pinctrl-single,gpio-ranges";
-> +	const char name[] = "pinctrl-single";
-> +	u32 gpiores[PCS_MAX_GPIO_VALUES];
-> +	int ret, size, i, mux_bytes = 0;
-> +
-> +	list = of_get_property(node, list_name, &size);
-> +	if (!list)
-> +		return -ENOENT;
-
-Here you should return 0 if not found, otherwise things go bad for
-me at least as I don't have GPIOs configured. See more below.
-
-> +		gpio->range.name = kmemdup(name, sizeof(name), GFP_KERNEL);
-> +		pinctrl_add_gpio_range(pcs->pctl, &gpio->range);
-
-Just checking.. These get released with pinctrl_unregister() when
-unloading, right? And nothing else to free in pinctrl-single.c
-either?
-
-> @@ -975,6 +1061,10 @@ static int __devinit pcs_probe(struct platform_device *pdev)
->  		goto free;
->  	}
->  
-> +	ret = pcs_add_gpio_range(np, pcs);
-> +	if (ret < 0)
-> +		return ret;
-> +
-
-Here you need to goto free on error. Maybe just fold in the
-attached fix if that looks OK to you:
-
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -930,7 +930,7 @@ static int __devinit pcs_add_gpio_range(struct device_node *node,
- 
- 	list = of_get_property(node, list_name, &size);
- 	if (!list)
--		return -ENOENT;
-+		return 0;
- 	size = size / sizeof(*list);
- 	for (i = 0; i < size; i++) {
- 		np = of_parse_phandle(node, list_name, i);
-@@ -1065,7 +1065,7 @@ static int __devinit pcs_probe(struct platform_device *pdev)
- 
- 	ret = pcs_add_gpio_range(np, pcs);
- 	if (ret < 0)
--		return ret;
-+		goto free;
- 
- 	dev_info(pcs->dev, "%i pins at pa %p size %u\n",
- 		 pcs->desc.npins, pcs->base, pcs->size);
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
