@@ -1,78 +1,88 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] pinctrl: single: support gpio request and free
-Date: Mon, 22 Oct 2012 14:37:09 -0700
-Message-ID: <20121022213709.GL4730@atomide.com>
-References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
- <1350922139-3693-3-git-send-email-haojian.zhuang@gmail.com>
- <20121022202805.GG4730@atomide.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
+Date: Mon, 22 Oct 2012 16:10:56 -0600
+Message-ID: <5085C470.4040707@wwwdotorg.org>
+References: <Pine.LNX.4.44L0.1210221443580.1724-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121022202805.GG4730-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1210221443580.1724-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [121022 13:29]:
-> * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 09:11]:
-> > --- a/drivers/pinctrl/pinctrl-single.c
-> > +++ b/drivers/pinctrl/pinctrl-single.c
-> > @@ -28,8 +28,10 @@
-> >  #define DRIVER_NAME			"pinctrl-single"
-> >  #define PCS_MUX_PINS_NAME		"pinctrl-single,pins"
-> >  #define PCS_MUX_BITS_NAME		"pinctrl-single,bits"
-> > +#define PCS_GPIO_FUNC_NAME		"pinctrl-single,gpio-func"
+On 10/22/2012 01:00 PM, Alan Stern wrote:
+> On Mon, 22 Oct 2012, Stephen Warren wrote:
 > 
-> I think we can now get rid of these defines, I initially added
-> them as we had a bit hard time finding a suitable name for the
-> driver. These are only used in one location, so let's not add
-> new ones here.
+>>>>> +- has-tt : controller has transaction translator(s).
+>>>>> +- has-synopsys-hc-bug : controller has the synopsys hc bug
+>>>>
+>>>> That would normally be determined by the driver based on the particular
+>>>> compatible value that is in device tree.
+>>>
+>>> I don't understand this comment.  Isn't "has-synopsys-hc-bug" the 
+>>> compatible value in question?
+>>
+>> "compatible value" in this context means that value of the property
+>> named "compatible".
 > 
-> >  static int pcs_request_gpio(struct pinctrl_dev *pctldev,
-> > -			struct pinctrl_gpio_range *range, unsigned offset)
-> > +			    struct pinctrl_gpio_range *range, unsigned pin)
-> >  {
-> > -	return -ENOTSUPP;
-> > +	struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
-> > +	struct pcs_gpio_range *gpio = NULL;
-> > +	int end, mux_bytes;
-> > +	unsigned data;
-> > +
-> > +	gpio = container_of(range, struct pcs_gpio_range, range);
-> > +	if (!gpio->func_en)
-> > +		return 0;
-> > +	end = range->pin_base + range->npins - 1;
-> > +	if (pin < range->pin_base || pin > end) {
-> > +		dev_err(pctldev->dev, "pin %d isn't in the range of "
-> > +			"%d to %d\n", pin, range->pin_base, end);
-> > +		return -EINVAL;
-> > +	}
-> > +	mux_bytes = pcs->width / BITS_PER_BYTE;
-> > +	data = pcs_readl(pcs->base + pin * mux_bytes) & ~pcs->fmask;
-> > +	data |= gpio->gpio_func;
-> > +	pcs_writel(data, pcs->base + pin * mux_bytes);
-> > +	return 0;
-> >  }
-> 
-> I think I already commented on this one.. Is this safe if you don't
-> have GPIOs configured? Or should you return -ENODEV in that case?
+> I see.  But why would it be done this way instead having a separate 
+> property?
 
-Oops also you should not use pcs_readl/pcs_writel in the driver
-directly but use pcs_read instead as you can have register width other
-than 32-bits.
+Well, I did say normally:-)
 
-Regards,
+I can certainly see an argument for representing these differences using
+custom properties, rather than deriving the information from the
+compatible value. It's probably be OK to do so for something generic
+like this; it's just perhaps not always the default choice.
 
-Tony
+Do note that even though this binding document dictates a particular
+value for the compatible property, every device tree should additionally
+add a separate value alongside it to indicate the specific HW model
+that's actually present, so that if some device-specific bug-fix or
+workaround needs to be applied, the model can be identified anyway.
+
+So, rather than:
+
+compatible = "usb-ehci";
+
+You should always have e.g.:
+
+compatible = "nvidia,tegra20-ehci", "usb-ehci";
+
+Given that, there is then always enough information in the device tree
+for the driver to be able to derive the other values from the compatible
+value.
+
+Whether you want to derive the information, or whether you want to
+explicitly represent it via properties, is a decision to make based on
+the trade-offs.
+
+Oh, and I note that quite a few device trees already use compatible
+value "usb-ehci" in their device-trees. Care needs to be taken not to
+usurp that value from any existing device drivers if that was to be
+picked as the compatible value required by this binding.
+
+> And doesn't the same reasoning apply to has-tt?  Doesn't that mean the 
+> driver would have to match four different hardware types?  What happens 
+> if a third characteristic like these comes around; would the driver 
+> then have to check against eight different types?
+
+No, the compatible value represents the model, so you'd have a table like:
+
+compatible          -> bugX has_tt
+nvidia,tegra20-ehci -> 0    1
+vendor1,foo-ehci    -> 0    1
+vendor2,bar-ehci    -> 1    1
+vendor3,baz-ehci    -> 0    1
+vendor4,qux-ehci    -> 0    1
+...
+
+So the table size isn't related to the number of options. The table size
+is probably bigger than subset of options combinations that make sense.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
