@@ -1,64 +1,44 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/3] PWM: vt8500: Update vt8500 PWM driver support
-Date: Mon, 22 Oct 2012 13:52:08 +0000
-Message-ID: <201210221352.08352.arnd@arndb.de>
-References: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
- <201210221150.22004.arnd@arndb.de>
- <20121022120706.GA19467@avionic-0098.mockup.avionic-design.de>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] USB: Update EHCI-platform driver to devicetree.
+Date: Mon, 22 Oct 2012 10:51:19 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1210221046140.1724-100000@iolanthe.rowland.org>
+References: <1350771032-11527-2-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121022120706.GA19467-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1350771032-11527-2-git-send-email-linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 October 2012, Thierry Reding wrote:
-> > As long as we get build warnings for leaving out the __devinit/__devexit
-> > annotations, I would generally recommend putting them in. If we do a
-> > patch to remove all of them, a couple extra instances will not cause
-> > any more troubles than we already have.
-> 
-> I've never seen any build warnings for leaving __devinit/__devexit out.
-> Where does that happen?
+On Sun, 21 Oct 2012, Tony Prisk wrote:
 
-Section mismatches usually result into warnings from modpost, like
+> +static u64 ehci_dma_mask = DMA_BIT_MASK(32);
 
-WARNING: modpost: Found 1 section mismatch(es).
-To see full details build your kernel with:
-'make CONFIG_DEBUG_SECTION_MISMATCH=y'
+...
 
-Actually doing that gives you an output like this (currently on exynos_defconfig):
+> +		/* Right now device-tree probed devices don't get dma_mask set.
+> +		 * Since shared usb code relies on it, set it here for now.
+> +		 * Once we have dma capability bindings this can go away.
+> +		 */
+> +		if (!dev->dev.dma_mask)
+> +			dev->dev.dma_mask = &ehci_dma_mask;
 
-$ make CONFIG_DEBUG_SECTION_MISMATCH=y
-WARNING: drivers/pinctrl/built-in.o(.devinit.text+0x124): Section mismatch in reference from the function samsung_pinctrl_probe() to the function .init.text:samsung_gpiolib_register()
-The function __devinit samsung_pinctrl_probe() references
-a function __init samsung_gpiolib_register().
-If samsung_gpiolib_register is only used by samsung_pinctrl_probe then
-annotate samsung_gpiolib_register with a matching annotation.
+Grant:
 
-or like this (now fixed in socfpga_defconfig):
+I have seen this sort of thing added to many drivers.  Why can't this 
+be centralized in a way that will apply once and for all to all 
+appropriate DT-based drivers?
 
-WARNING: drivers/net/ethernet/stmicro/stmmac/stmmac.o(.text+0x5d4c): Section mismatch in reference from the function stmmac_pltfr_probe() to the function .devinit.text:stmmac_probe_config_dt()
-The function stmmac_pltfr_probe() references
-the function __devinit stmmac_probe_config_dt().
-This is often because stmmac_pltfr_probe lacks a __devinit 
-annotation or the annotation of stmmac_probe_config_dt is wrong.
+Eventually DMA capabilities will be supported properly in DT, right?  
+Then all these additions made to hundreds(?) of drivers will have to be
+removed.  Why not start the ball rolling now and prevent things from
+getting even worse?
 
-I believe you normally don't get warnings for functions that could be
-marked __devinit and only call regular functions, but there are
-a couple of __devinit infrastructure functions that you can't call
-from a function that isn't __init or __devinit.
+Alan Stern
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
