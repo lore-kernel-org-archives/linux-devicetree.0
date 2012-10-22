@@ -1,86 +1,78 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 3/5] arm: mvebu: Added IPI support via doorbells
-Date: Mon, 22 Oct 2012 23:11:02 +0200
-Message-ID: <5085B666.1040500@free-electrons.com>
-References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
- <1350925368-24243-4-git-send-email-gregory.clement@free-electrons.com>
- <20121022173028.GM21046@lunn.ch> <50859976.6080601@free-electrons.com>
- <20121022200708.GO21046@lunn.ch>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] pinctrl: single: support gpio request and free
+Date: Mon, 22 Oct 2012 14:37:09 -0700
+Message-ID: <20121022213709.GL4730@atomide.com>
+References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350922139-3693-3-git-send-email-haojian.zhuang@gmail.com>
+ <20121022202805.GG4730@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121022200708.GO21046@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.p>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121022202805.GG4730-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2012 10:07 PM, Andrew Lunn wrote:
-> On Mon, Oct 22, 2012 at 09:07:34PM +0200, Gregory CLEMENT wrote:
->> On 10/22/2012 07:30 PM, Andrew Lunn wrote:
->>> On Mon, Oct 22, 2012 at 07:02:45PM +0200, Gregory CLEMENT wrote:
->>>> From: Yehuda Yitschak <yehuday@marvell.com>
->>>>
->>>> Signed-off-by: Yehuda Yitschak <yehuday@marvell.com>
->>>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->>>> ---
->>>>  arch/arm/boot/dts/armada-xp.dtsi        |    2 +-
->>>>  arch/arm/mach-mvebu/armada-370-xp.h     |   10 ++++
->>>>  arch/arm/mach-mvebu/irq-armada-370-xp.c |   92 +++++++++++++++++++++++++++++--
->>>>  3 files changed, 97 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
->>>> index f521ed8..531619f 100644
->>>> --- a/arch/arm/boot/dts/armada-xp.dtsi
->>>> +++ b/arch/arm/boot/dts/armada-xp.dtsi
->>>> @@ -24,7 +24,7 @@
->>>>  
->>>>  	mpic: interrupt-controller@d0020000 {
->>>>  	      reg = <0xd0020a00 0x1d0>,
->>>> -		    <0xd0021870 0x58>;
->>>> +		    <0xd0021070 0x58>;
->>>>  	};
->>>
->>> Hi Gregory
->>>
->>> Is this a bug fix needed for 3.7?
->>>
->>>    Andrew
->>>
->> I don't think so.
->> We extended the reg map to be able to use registers only used for SMP.
->> When we didn't have SMP support the mapping was correct, and now by
->> introducing SMP we extend it.
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [121022 13:29]:
+> * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 09:11]:
+> > --- a/drivers/pinctrl/pinctrl-single.c
+> > +++ b/drivers/pinctrl/pinctrl-single.c
+> > @@ -28,8 +28,10 @@
+> >  #define DRIVER_NAME			"pinctrl-single"
+> >  #define PCS_MUX_PINS_NAME		"pinctrl-single,pins"
+> >  #define PCS_MUX_BITS_NAME		"pinctrl-single,bits"
+> > +#define PCS_GPIO_FUNC_NAME		"pinctrl-single,gpio-func"
 > 
-> The length has stayed the same, so its not extended. Its now 0x800
-> bytes earlier in the address space.
+> I think we can now get rid of these defines, I initially added
+> them as we had a bit hard time finding a suitable name for the
+> driver. These are only used in one location, so let's not add
+> new ones here.
 > 
-
-Right!
-I didn't check it, sorry.
-
-The correct explanation is that the offset +21070 is a CPU virtual offset.
-That means that depending of the CPU core which will access to this register,
-the controller will internally change the offset automagically to point the
-correct offset.
-
-I should have added an explanation in the commit log. I will do it for V2.
-
->       Andrew
+> >  static int pcs_request_gpio(struct pinctrl_dev *pctldev,
+> > -			struct pinctrl_gpio_range *range, unsigned offset)
+> > +			    struct pinctrl_gpio_range *range, unsigned pin)
+> >  {
+> > -	return -ENOTSUPP;
+> > +	struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
+> > +	struct pcs_gpio_range *gpio = NULL;
+> > +	int end, mux_bytes;
+> > +	unsigned data;
+> > +
+> > +	gpio = container_of(range, struct pcs_gpio_range, range);
+> > +	if (!gpio->func_en)
+> > +		return 0;
+> > +	end = range->pin_base + range->npins - 1;
+> > +	if (pin < range->pin_base || pin > end) {
+> > +		dev_err(pctldev->dev, "pin %d isn't in the range of "
+> > +			"%d to %d\n", pin, range->pin_base, end);
+> > +		return -EINVAL;
+> > +	}
+> > +	mux_bytes = pcs->width / BITS_PER_BYTE;
+> > +	data = pcs_readl(pcs->base + pin * mux_bytes) & ~pcs->fmask;
+> > +	data |= gpio->gpio_func;
+> > +	pcs_writel(data, pcs->base + pin * mux_bytes);
+> > +	return 0;
+> >  }
 > 
+> I think I already commented on this one.. Is this safe if you don't
+> have GPIOs configured? Or should you return -ENODEV in that case?
 
+Oops also you should not use pcs_readl/pcs_writel in the driver
+directly but use pcs_read instead as you can have register width other
+than 32-bits.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Regards,
+
+Tony
