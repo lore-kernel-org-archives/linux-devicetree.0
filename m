@@ -1,15 +1,14 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] pinctrl: single: dump pinmux register value
-Date: Mon, 22 Oct 2012 15:27:44 -0700
-Message-ID: <20121022222744.GM4730@atomide.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 5/9] document: devicetree: bind pinconf with pin-single
+Date: Mon, 22 Oct 2012 16:44:15 -0600
+Message-ID: <5085CC3F.30708@wwwdotorg.org>
 References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
- <1350922139-3693-10-git-send-email-haojian.zhuang@gmail.com>
+ <1350922139-3693-6-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1350922139-3693-10-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1350922139-3693-6-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,51 +23,104 @@ To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 09:13]:
-> Dump pinmux register value, not only function part in the pinmux
-> register.
-
-This makes sense, but should be done using pcs_read, not pcs_readl,
-see below.
-
-> Also fix the issue on caluclating pin offset. The last parameter
-> should be pin number, not register offset.
->
+On 10/22/2012 10:08 AM, Haojian Zhuang wrote:
+> Add comments with pinconf & gpio range in the document of
+> pinctrl-single.
+> 
 > Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/pinctrl/pinctrl-single.c |    8 ++++----
->  1 files changed, 4 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/pinctrl/pinctrl-single.txt |   52 ++++++++++++++++++++
+>  arch/arm/boot/dts/pxa910.dtsi                      |    1 -
+>  2 files changed, 52 insertions(+), 1 deletions(-)
 > 
-> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-> index a20da78..6ba2a5d 100644
-> --- a/drivers/pinctrl/pinctrl-single.c
-> +++ b/drivers/pinctrl/pinctrl-single.c
-> @@ -284,15 +284,15 @@ static int pcs_get_group_pins(struct pinctrl_dev *pctldev,
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> index 2c81e45..6da2f13 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+> @@ -17,6 +17,36 @@ Optional properties:
+>  - pinctrl-single,bit-per-mux : boolean to indicate that one register controls
+>    more than one pin
 >  
->  static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
->  					struct seq_file *s,
-> -					unsigned offset)
-> +					unsigned pin)
->  {
->  	struct pcs_device *pcs;
-> -	unsigned val;
-> +	unsigned val, mux_bytes;
->  
->  	pcs = pinctrl_dev_get_drvdata(pctldev);
->  
-> -	val = pcs->read(pcs->base + offset);
-> -	val &= pcs->fmask;
-> +	mux_bytes = pcs->width / BITS_PER_BYTE;
-> +	val = pcs_readl(pcs->base + pin * mux_bytes);
->  
->  	seq_printf(s, "%08x %s " , val, DRIVER_NAME);
->  }
+> +- pinctrl-single,gpio-ranges : gpio range list
+> +
+> +- pinctrl-single,gpio : array with gpio range start, size & register
+> +  offset
+> +
+> +- pinctrl-single,gpio-func : gpio function value in the pinmux register
 
-You should not use pcs_readl here directly as the register
-width can vary. Can you please update the patch for that and
-make it independent from the rest of the series? That way we
-can merge the fix for v3.7-rc series.
+Some more explanation is needed here; some questions/comments:
 
-Regards,
+1) Looking at the example, pinctrl-single,gpio-ranges is a property
+within the main pinctrl node, whereas pinctrl-single,gpio and
+pinctrl-single,gpio-func are properties within some other node. There's
+no explanation of this in the binding description itself, only in the
+example. Related to this, the documentation for
+pinctrl-single,gpio-ranges doesn't say what it's a list of; it needs to
+say that it's a list of phandles.
 
-Tony
+2) pinctrl-single,gpio is listed as optional. Presumably it's not; every
+GPIO range node must have this property?
+
+3) Why is pinctrl-single,gpio-func optional? Presumably you always need
+to program the pinmux HW to select the GPIO function. Yet, the driver
+code in an earlier patch seems to deliberately do nothing if this
+property is missing. Shouldn't the DT parsing return an error instead?
+
+4) I'm a little confused re: the data model. Is the idea that if
+pinctrl-single,gpio-ranges is specified, then the node describes a
+combined pin controller and GPIO HW? Are the pin IDs of the pin
+controller expected to match the pin IDs of the GPIO HW? I'm left
+wondering exactly which numbering space the values in
+pinctrl-single,gpio are; do they describe the pin controller IDs that
+this GPIO range describes, or do they describe the GPIO IDs that this
+range describes and attempt to map them back to pin controller IDs?
+Similarly, I'm not sure why there's a register offset here rather than
+say a pin controller pin ID number. Shouldn't the property be a list of
+<pin-controller-pin-ID GPIO-controller-GPIO-ID number-of-GPIOs>
+
+> +- pinctrl-single,power-source-mask : mask of setting power source in
+> +  the pinmux register
+> +
+> +- pinctrl-single,power-source : value of setting power source field
+> +  in the pinmux register
+> +
+> +- pinctrl-single,bias-mask : mask of setting bias value in the pinmux
+> +  register
+> +
+> +- pinctrl-single,bias-disable : value of disabling bias in the pinmux
+> +  register
+> +
+> +- pinctrl-single,bias-pull-down : value of setting bias pull down in
+> +  the pinmux register
+> +
+> +- pinctrl-single,bias-pull-up : value of setting bias pull up in the
+> +  pinmux register
+> +
+> +- pinctrl-single,bias : value of setting bias in the pinmux register
+> +
+> +- pinctrl-single,input-schmitt-mask : mask of setting input schmitt
+> +  in the pinmux register
+
+I suppose it's OK that a generic pin controller binding would use the
+generic pin configuration config options. I'm still not convinced that
+the semantics of generic pin control make sense. Maybe if they're just
+arbitrary names for SoC-specific things it's fine though.
+
+Do these patches expose /all/ generic pin configuration options? It
+doesn't seem worth exposing only some of them and ignoring others.
+
+> +/* third controller instance for pins in gpio domain */
+> +pmx_gpio: pinmux@d401e000 {
+> +	compatible = "pinctrl-single";
+> +	reg = <0xd401e000 0x0330>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+#gpio-cells would be needed here for a GPIO controller.
+
+> diff --git a/arch/arm/boot/dts/pxa910.dtsi b/arch/arm/boot/dts/pxa910.dtsi
+
+> -				pinctrl-single,gpio-mask = <7>;
+
+I assume that's a mistake; the line shouldn't be removed in this
+documentation patch?
