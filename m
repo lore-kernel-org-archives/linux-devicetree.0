@@ -1,58 +1,87 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] arm: dts: omap4-sdp: pinmux configuration for keypad
-Date: Mon, 22 Oct 2012 09:19:10 -0700
-Message-ID: <20121022161909.GY4730@atomide.com>
-References: <1350890955-29553-1-git-send-email-sourav.poddar@ti.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 0/5] SMP support for Armada XP
+Date: Mon, 22 Oct 2012 19:02:42 +0200
+Message-ID: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1350890955-29553-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: b-cousson@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris
 List-Id: devicetree@vger.kernel.org
 
-* Sourav Poddar <sourav.poddar@ti.com> [121022 00:30]:
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -194,6 +194,27 @@
->  			0xbc 0x100	/* abe_mcbsp2_fsx.abe_mcbsp2_fsx INPUT | MODE0 */
->  		>;
->  	};
-> +
-> +	keypad_pins: pinmux_keypad_pins {
-> +		pinctrl-single,pins = <
-> +			0x24 0x4119   /* gpmc_a18.kpd_row6 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +			0x26 0x4119   /* gpmc_a19.kpd_row6 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +			0x2c 0x4001   /* gpmc_a22.kpd_col6 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x2e 0x4001   /* gpmc_a23.kpd_col7 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x13c 0x4001  /* kpd_col0.kpd_col0 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x13e 0x4001  /* kpd_col1.kpd_col1 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x140 0x4001  /* kpd_col2.kpd_col2 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x142 0x10F   /* kpd_col3.kpd_col3 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x144 0x4001  /* kpd_col4.kpd_col4 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x146 0x4001  /* kpd_col5.kpd_col5 OMAP_WAKEUP_EN | OMAP_MUX_MODE1 */
-> +			0x148 0xc119  /* kpd_row0.kpd_row0 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +			0x14a 0x4119  /* kpd_row1.kpd_row1 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +			0x14c 0x4119  /* kpd_row2.kpd_row2 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +			0x14e 0x4119  /* kpd_row3.kpd_row3 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +			0x150 0x4119  /* kpd_row4.kpd_row4 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +			0x152 0x4119  /* kpd_row5.kpd_row5 OMAP_PULL_ENA | OMAP_PULL_UP | OMAP_WAKEUP_EN | OMAP_MUX_MODE1 | OMAP_INPUT_EN */
-> +		>;
-> +	};
->  };
+Hello,
 
-Please shorten these to leave out OMAP_:
+The purpose of this patch set is to add the SMP support for the Armada
+XP SoCs. Beside the SMP support itself brought by the last 3 patches,
+this patch set also adds the support for the coherency fabric unit and
+the power management service unit.
 
-		pinctrl-single,pins = <
-			0x24 0x4119   /* gpmc_a18.kpd_row6 PULL_ENA | PULL_UP | WAKEUP_EN | MUX_MODE1 | INPUT_EN */
-			0x26 0x4119   /* gpmc_a19.kpd_row6 PULL_ENA | PULL_UP | WAKEUP_EN | MUX_MODE1 | INPUT_EN */
-			...
+The coherency fabric is responsible for ensuring hardware coherency
+between all CPUs and between CPUs and I/O masters. This unit is also
+available for Armada 370 and will be used in an incoming patch set
+for hardware I/O cache coherency.
 
-When we convert them over to use the preprocessor, we can still
-easily replace them.
+The power management service unit is responsible for powering down and
+waking up CPUs and other SOC units.
+
+The original code is from Yehuda Yitschak, it was reworked by myself
+and reviewed by Yehuda.
+
+This patch set is based on 3.7-rc2 and depends one the framework clock
+support (the last version was posted last week:
+http://thread.gmane.org/gmane.linux.kernel/1375701). The git branch
+called ArmadaXP-SMP-for-3.8 is also available at
+https://github.com/MISL-EBU-System-SW/mainline-public.git.
 
 Regards,
 
-Tony
+Yehuda Yitschak (5):
+  arm: mvebu: Added support for coherency fabric in mach-mvebu
+  arm: mvebu: Added initial support for power managmement service unit
+  arm: mvebu: Added IPI support via doorbells
+  arm: mm: Added support for PJ4B cpu and init routines
+  arm: mvebu: Added SMP support for Armada XP
+
+ .../devicetree/bindings/arm/armada-370-xp-pmsu.txt |   20 ++++
+ .../devicetree/bindings/arm/coherency-fabric.txt   |   16 +++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    5 +
+ arch/arm/boot/dts/armada-xp.dtsi                   |   12 +-
+ arch/arm/configs/mvebu_defconfig                   |    3 +
+ arch/arm/mach-mvebu/Kconfig                        |    3 +-
+ arch/arm/mach-mvebu/Makefile                       |    4 +-
+ arch/arm/mach-mvebu/armada-370-xp.c                |    1 +
+ arch/arm/mach-mvebu/armada-370-xp.h                |   10 ++
+ arch/arm/mach-mvebu/coherency.c                    |   92 +++++++++++++++
+ arch/arm/mach-mvebu/coherency.h                    |   20 ++++
+ arch/arm/mach-mvebu/common.h                       |    6 +
+ arch/arm/mach-mvebu/headsmp.S                      |   65 +++++++++++
+ arch/arm/mach-mvebu/hotplug.c                      |   30 +++++
+ arch/arm/mach-mvebu/irq-armada-370-xp.c            |   92 ++++++++++++++-
+ arch/arm/mach-mvebu/platsmp.c                      |  123 ++++++++++++++++++++
+ arch/arm/mach-mvebu/pmsu.c                         |   78 +++++++++++++
+ arch/arm/mach-mvebu/pmsu.h                         |   16 +++
+ arch/arm/mm/Kconfig                                |    4 +
+ arch/arm/mm/proc-v7.S                              |   46 ++++++++
+ 20 files changed, 637 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/coherency-fabric.txt
+ create mode 100644 arch/arm/mach-mvebu/coherency.c
+ create mode 100644 arch/arm/mach-mvebu/coherency.h
+ create mode 100644 arch/arm/mach-mvebu/headsmp.S
+ create mode 100644 arch/arm/mach-mvebu/hotplug.c
+ create mode 100644 arch/arm/mach-mvebu/platsmp.c
+ create mode 100644 arch/arm/mach-mvebu/pmsu.c
+ create mode 100644 arch/arm/mach-mvebu/pmsu.h
+
+-- 
+1.7.9.5
