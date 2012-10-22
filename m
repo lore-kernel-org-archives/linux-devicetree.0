@@ -1,54 +1,86 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM/dts: omap3: Fix mcbsp2/3 hwmods to be able to
- probe the drivers for audio
-Date: Mon, 22 Oct 2012 13:38:01 -0700
-Message-ID: <20121022203800.GH4730@atomide.com>
-References: <1350552307-10226-1-git-send-email-peter.ujfalusi@ti.com>
- <507FD32C.7010108@ti.com>
- <508530CE.9000703@ti.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 3/5] arm: mvebu: Added IPI support via doorbells
+Date: Mon, 22 Oct 2012 23:11:02 +0200
+Message-ID: <5085B666.1040500@free-electrons.com>
+References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
+ <1350925368-24243-4-git-send-email-gregory.clement@free-electrons.com>
+ <20121022173028.GM21046@lunn.ch> <50859976.6080601@free-electrons.com>
+ <20121022200708.GO21046@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <508530CE.9000703@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?utf-8?B?UMOpdGVy?= Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121022200708.GO21046@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.p>
 List-Id: devicetree@vger.kernel.org
 
-* P=C3=A9ter Ujfalusi <peter.ujfalusi@ti.com> [121022 04:42]:
-> Hi Tony,
->=20
-> On 10/18/2012 12:00 PM, Benoit Cousson wrote:
-> > On 10/18/2012 11:25 AM, Peter Ujfalusi wrote:
-> >> Fixes the following errors:
-> >> [    2.318084] omap-mcbsp 49022000.mcbsp: invalid rx DMA channel
-> >> [    2.324432] omap-mcbsp 49024000.mcbsp: invalid rx DMA channel
-> >>
-> >> Which is because we failed to link the sidetone hwmod for McBSP2/3=
-=2E The
-> >> missing sidetone hwmod link will prevent omap_device_alloc() to ap=
-pend the
-> >> DMA resources since we - accidentally - end up having the same num=
-ber of
-> >> resources provided from DT (IO/IRQ) as we have in hwmod for the Mc=
-BSP ports
-> >> without the ST resources.
-> >>
-> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >=20
-> > Acked-by: Benoit Cousson <b-cousson@ti.com>
->=20
-> Can you take this patch for -rc3?
+On 10/22/2012 10:07 PM, Andrew Lunn wrote:
+> On Mon, Oct 22, 2012 at 09:07:34PM +0200, Gregory CLEMENT wrote:
+>> On 10/22/2012 07:30 PM, Andrew Lunn wrote:
+>>> On Mon, Oct 22, 2012 at 07:02:45PM +0200, Gregory CLEMENT wrote:
+>>>> From: Yehuda Yitschak <yehuday@marvell.com>
+>>>>
+>>>> Signed-off-by: Yehuda Yitschak <yehuday@marvell.com>
+>>>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/armada-xp.dtsi        |    2 +-
+>>>>  arch/arm/mach-mvebu/armada-370-xp.h     |   10 ++++
+>>>>  arch/arm/mach-mvebu/irq-armada-370-xp.c |   92 +++++++++++++++++++++++++++++--
+>>>>  3 files changed, 97 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+>>>> index f521ed8..531619f 100644
+>>>> --- a/arch/arm/boot/dts/armada-xp.dtsi
+>>>> +++ b/arch/arm/boot/dts/armada-xp.dtsi
+>>>> @@ -24,7 +24,7 @@
+>>>>  
+>>>>  	mpic: interrupt-controller@d0020000 {
+>>>>  	      reg = <0xd0020a00 0x1d0>,
+>>>> -		    <0xd0021870 0x58>;
+>>>> +		    <0xd0021070 0x58>;
+>>>>  	};
+>>>
+>>> Hi Gregory
+>>>
+>>> Is this a bug fix needed for 3.7?
+>>>
+>>>    Andrew
+>>>
+>> I don't think so.
+>> We extended the reg map to be able to use registers only used for SMP.
+>> When we didn't have SMP support the mapping was correct, and now by
+>> introducing SMP we extend it.
+> 
+> The length has stayed the same, so its not extended. Its now 0x800
+> bytes earlier in the address space.
+> 
 
-Thanks will apply into omap-for-v3.7-rc2/fixes.
+Right!
+I didn't check it, sorry.
 
-Regards,
+The correct explanation is that the offset +21070 is a CPU virtual offset.
+That means that depending of the CPU core which will access to this register,
+the controller will internally change the offset automagically to point the
+correct offset.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I should have added an explanation in the commit log. I will do it for V2.
+
+>       Andrew
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
