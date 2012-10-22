@@ -1,227 +1,72 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: [PATCH v3] pwm: vt8500: Update vt8500 PWM driver support
-Date: Tue, 23 Oct 2012 07:10:24 +1300
-Message-ID: <1350929425-17516-1-git-send-email-linux@prisktech.co.nz>
-References: <20121022084000.GB29790@avionic-0098.mockup.avionic-design.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121022084000.GB29790@avionic-0098.mockup.avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@avionic-design.de
-Cc: devicetree-discuss@lists.ozlabs.org, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tony Prisk <linux@prisktech.co.nz>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 5/5] arm: mvebu: Added SMP support for Armada XP
+Date: Mon, 22 Oct 2012 20:45:37 +0200
+Message-ID: <20121022184537.GN21046@lunn.ch>
+References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
+ <1350925368-24243-6-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1350925368-24243-6-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.or
 List-Id: devicetree@vger.kernel.org
 
-This patch updates pwm-vt8500.c to support devicetree probing and
-make use of the common clock subsystem.
+Hi Gregory
 
-A binding document describing the PWM controller found on
-arch-vt8500 is also included.
+> +void __init set_secondary_cpus_clock(void)
+> +{
+> +	int cpu;
+> +	unsigned long rate;
+> +	struct clk *cpu_clk = NULL;
+> +	struct device_node *np = NULL;
+> +
+> +	cpu = smp_processor_id();
+> +	np = of_find_node_by_type(np, "cpu");
+> +	np = NULL;
+> +	while ((np = of_find_node_by_type(np, "cpu"))) {
+> +		const u32 *reg;
+> +		int len;
+> +		reg = of_get_property(np, "reg", &len);
+> +		if (!reg || len != 4) {
+> +			pr_err("%s missing reg property\n", np->full_name);
+> +			continue;
+> +		}
+> +		if (be32_to_cpup(reg) == cpu) {
+> +			cpu_clk = of_clk_get(np, 0);
+> +			break;
+> +		}
+> +	}
+> +	WARN_ON(IS_ERR(cpu_clk));
+> +	rate = clk_get_rate(cpu_clk);
+> +
+> +	/* set all the other CPU clk to the same rate than the boot CPU */
+> +	np = NULL;
+> +	while ((np = of_find_node_by_type(np, "cpu"))) {
+> +		const u32 *reg;
+> +		int len;
+> +		reg = of_get_property(np, "reg", &len);
+> +		if (!reg || len != 4) {
+> +			pr_err("%s missing reg property\n", np->full_name);
+> +			continue;
+> +		}
+> +		if (be32_to_cpup(reg) != cpu) {
+> +			cpu_clk = of_clk_get(np, 0);
+> +			clk_set_rate(cpu_clk, rate);
+> +		}
 
-Signed-off-by: Tony Prisk <linux@prisktech.co.nz>
----
- .../devicetree/bindings/pwm/vt8500-pwm.txt         |   17 ++++
- drivers/pwm/pwm-vt8500.c                           |   83 ++++++++++++++------
- 2 files changed, 77 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
+Maybe its hiding somewhere, but where is the clk_prepare_enable() for
+this cpu_clk clock?
 
-diff --git a/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt b/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
-new file mode 100644
-index 0000000..bcc6367
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/vt8500-pwm.txt
-@@ -0,0 +1,17 @@
-+VIA/Wondermedia VT8500/WM8xxx series SoC PWM controller
-+
-+Required properties:
-+- compatible: should be "via,vt8500-pwm"
-+- reg: physical base address and length of the controller's registers
-+- #pwm-cells: should be 2.  The first cell specifies the per-chip index
-+  of the PWM to use and the second cell is the period in nanoseconds.
-+- clocks: phandle to the PWM source clock
-+
-+Example:
-+
-+pwm1: pwm@d8220000 {
-+	#pwm-cells = <2>;
-+	compatible = "via,vt8500-pwm";
-+	reg = <0xd8220000 0x1000>;
-+	clocks = <&clkpwm>;
-+};
-diff --git a/drivers/pwm/pwm-vt8500.c b/drivers/pwm/pwm-vt8500.c
-index ad14389..ebbc41c 100644
---- a/drivers/pwm/pwm-vt8500.c
-+++ b/drivers/pwm/pwm-vt8500.c
-@@ -1,7 +1,8 @@
- /*
-  * drivers/pwm/pwm-vt8500.c
-  *
-- *  Copyright (C) 2010 Alexey Charkov <alchark@gmail.com>
-+ * Copyright (C) 2012 Tony Prisk <linux@prisktech.co.nz>
-+ * Copyright (C) 2010 Alexey Charkov <alchark@gmail.com>
-  *
-  * This software is licensed under the terms of the GNU General Public
-  * License version 2, as published by the Free Software Foundation, and
-@@ -21,14 +22,24 @@
- #include <linux/io.h>
- #include <linux/pwm.h>
- #include <linux/delay.h>
-+#include <linux/clk.h>
- 
- #include <asm/div64.h>
- 
--#define VT8500_NR_PWMS 4
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_address.h>
-+
-+/*
-+ * SoC architecture allocates register space for 4 PWMs but only
-+ * 2 are currently implemented.
-+ */
-+#define VT8500_NR_PWMS	2
- 
- struct vt8500_chip {
- 	struct pwm_chip chip;
- 	void __iomem *base;
-+	struct clk *clk;
- };
- 
- #define to_vt8500_chip(chip)	container_of(chip, struct vt8500_chip, chip)
-@@ -52,7 +63,7 @@ static int vt8500_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	unsigned long long c;
- 	unsigned long period_cycles, prescale, pv, dc;
- 
--	c = 25000000/2; /* wild guess --- need to implement clocks */
-+	c = clk_get_rate(vt8500->clk);
- 	c = c * period_ns;
- 	do_div(c, 1000000000);
- 	period_cycles = c;
-@@ -87,6 +98,11 @@ static int vt8500_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct vt8500_chip *vt8500 = to_vt8500_chip(chip);
- 
-+	if (!clk_enable(vt8500->clk)) {
-+		dev_err(chip->dev, "failed to enable clock\n");
-+		return -EBUSY;
-+	};
-+
- 	pwm_busy_wait(vt8500->base + 0x40 + pwm->hwpwm, (1 << 0));
- 	writel(5, vt8500->base + (pwm->hwpwm << 4));
- 	return 0;
-@@ -98,6 +114,8 @@ static void vt8500_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- 	pwm_busy_wait(vt8500->base + 0x40 + pwm->hwpwm, (1 << 0));
- 	writel(0, vt8500->base + (pwm->hwpwm << 4));
-+
-+	clk_disable(vt8500->clk);
- }
- 
- static struct pwm_ops vt8500_pwm_ops = {
-@@ -107,12 +125,24 @@ static struct pwm_ops vt8500_pwm_ops = {
- 	.owner = THIS_MODULE,
- };
- 
--static int __devinit pwm_probe(struct platform_device *pdev)
-+static const struct of_device_id vt8500_pwm_dt_ids[] = {
-+	{ .compatible = "via,vt8500-pwm", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, vt8500_pwm_dt_ids);
-+
-+static int vt8500_pwm_probe(struct platform_device *pdev)
- {
- 	struct vt8500_chip *chip;
- 	struct resource *r;
-+	struct device_node *np = pdev->dev.of_node;
- 	int ret;
- 
-+	if (!np) {
-+		dev_err(&pdev->dev, "invalid devicetree node\n");
-+		return -EINVAL;
-+	}
-+
- 	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
- 	if (chip == NULL) {
- 		dev_err(&pdev->dev, "failed to allocate memory\n");
-@@ -123,6 +153,12 @@ static int __devinit pwm_probe(struct platform_device *pdev)
- 	chip->chip.ops = &vt8500_pwm_ops;
- 	chip->chip.base = -1;
- 	chip->chip.npwm = VT8500_NR_PWMS;
-+	chip->clk = devm_clk_get(&pdev->dev, NULL);
-+
-+	if (IS_ERR_OR_NULL(chip->clk)) {
-+		dev_err(&pdev->dev, "clock source not specified\n");
-+		return PTR_ERR(chip->clk);
-+	}
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (r == NULL) {
-@@ -131,18 +167,25 @@ static int __devinit pwm_probe(struct platform_device *pdev)
- 	}
- 
- 	chip->base = devm_request_and_ioremap(&pdev->dev, r);
--	if (chip->base == NULL)
-+	if (!chip->base)
- 		return -EADDRNOTAVAIL;
- 
-+	if (!clk_prepare(chip->clk)) {
-+		dev_err(&pdev->dev, "failed to prepare clock\n");
-+		return -EBUSY;
-+	}
-+
- 	ret = pwmchip_add(&chip->chip);
--	if (ret < 0)
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to add pwmchip\n");
- 		return ret;
-+	}
- 
- 	platform_set_drvdata(pdev, chip);
- 	return ret;
- }
- 
--static int __devexit pwm_remove(struct platform_device *pdev)
-+static int vt8500_pwm_remove(struct platform_device *pdev)
- {
- 	struct vt8500_chip *chip;
- 
-@@ -150,28 +193,22 @@ static int __devexit pwm_remove(struct platform_device *pdev)
- 	if (chip == NULL)
- 		return -ENODEV;
- 
-+	clk_unprepare(chip->clk);
-+
- 	return pwmchip_remove(&chip->chip);
- }
- 
--static struct platform_driver pwm_driver = {
-+static struct platform_driver vt8500_pwm_driver = {
-+	.probe		= vt8500_pwm_probe,
-+	.remove		= vt8500_pwm_remove,
- 	.driver		= {
- 		.name	= "vt8500-pwm",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = vt8500_pwm_dt_ids,
- 	},
--	.probe		= pwm_probe,
--	.remove		= __devexit_p(pwm_remove),
- };
-+module_platform_driver(vt8500_pwm_driver);
- 
--static int __init pwm_init(void)
--{
--	return platform_driver_register(&pwm_driver);
--}
--arch_initcall(pwm_init);
--
--static void __exit pwm_exit(void)
--{
--	platform_driver_unregister(&pwm_driver);
--}
--module_exit(pwm_exit);
--
--MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("VT8500 PWM Driver");
-+MODULE_AUTHOR("Tony Prisk <linux@prisktech.co.nz>");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+     Andrew
