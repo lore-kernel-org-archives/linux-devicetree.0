@@ -1,163 +1,93 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v4 6/6] arm: exynos: removing exynos-drm device registration
- from non-dt platforms
-Date: Mon, 22 Oct 2012 17:01:07 +0530
-Message-ID: <1350905467-23832-7-git-send-email-rahul.sharma@samsung.com>
-References: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: tomasz.figa@gmail.com, kgene.kim@samsung.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com, rahul.sharma@samsung.com
+From: =?ISO-8859-1?Q?P=E9ter_Ujfalusi?= <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ARM/dts: omap3: Fix mcbsp2/3 hwmods to be able to probe
+ the drivers for audio
+Date: Mon, 22 Oct 2012 13:41:02 +0200
+Message-ID: <508530CE.9000703@ti.com>
+References: <1350552307-10226-1-git-send-email-peter.ujfalusi@ti.com> <507FD32C.7010108@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <507FD32C.7010108@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-As exynos-drm is a software device, its registration is moved to the
-exynos drm driver. This will provide generic solution for device registration
-for dt and non-dt platforms. Corresponding patches are posted to dri-devel
-list.
+Hi Tony,
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/mach-exynos/Makefile              |    1 -
- arch/arm/mach-exynos/dev-drm.c             |   29 ----------------------------
- arch/arm/mach-exynos/mach-nuri.c           |    3 --
- arch/arm/mach-exynos/mach-origen.c         |    3 --
- arch/arm/mach-exynos/mach-smdk4x12.c       |    3 --
- arch/arm/mach-exynos/mach-smdkv310.c       |    3 --
- arch/arm/mach-exynos/mach-universal_c210.c |    3 --
- arch/arm/plat-samsung/include/plat/devs.h  |    2 -
- 8 files changed, 0 insertions(+), 47 deletions(-)
- delete mode 100644 arch/arm/mach-exynos/dev-drm.c
+On 10/18/2012 12:00 PM, Benoit Cousson wrote:
+> On 10/18/2012 11:25 AM, Peter Ujfalusi wrote:
+>> Fixes the following errors:
+>> [    2.318084] omap-mcbsp 49022000.mcbsp: invalid rx DMA channel
+>> [    2.324432] omap-mcbsp 49024000.mcbsp: invalid rx DMA channel
+>>
+>> Which is because we failed to link the sidetone hwmod for McBSP2/3. =
+The
+>> missing sidetone hwmod link will prevent omap_device_alloc() to appe=
+nd the
+>> DMA resources since we - accidentally - end up having the same numbe=
+r of
+>> resources provided from DT (IO/IRQ) as we have in hwmod for the McBS=
+P ports
+>> without the ST resources.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>=20
+> Acked-by: Benoit Cousson <b-cousson@ti.com>
 
-diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
-index 9b58024..1797dee 100644
---- a/arch/arm/mach-exynos/Makefile
-+++ b/arch/arm/mach-exynos/Makefile
-@@ -53,7 +53,6 @@ obj-$(CONFIG_EXYNOS4_DEV_AHCI)		+= dev-ahci.o
- obj-$(CONFIG_EXYNOS4_DEV_DWMCI)		+= dev-dwmci.o
- obj-$(CONFIG_EXYNOS_DEV_DMA)		+= dma.o
- obj-$(CONFIG_EXYNOS4_DEV_USB_OHCI)	+= dev-ohci.o
--obj-$(CONFIG_EXYNOS_DEV_DRM)		+= dev-drm.o
- obj-$(CONFIG_EXYNOS_DEV_SYSMMU)		+= dev-sysmmu.o
- 
- obj-$(CONFIG_ARCH_EXYNOS)		+= setup-i2c0.o
-diff --git a/arch/arm/mach-exynos/dev-drm.c b/arch/arm/mach-exynos/dev-drm.c
-deleted file mode 100644
-index 17c9c6e..0000000
---- a/arch/arm/mach-exynos/dev-drm.c
-+++ /dev/null
-@@ -1,29 +0,0 @@
--/*
-- * linux/arch/arm/mach-exynos/dev-drm.c
-- *
-- * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-- *		http://www.samsung.com
-- *
-- * EXYNOS - core DRM device
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- */
--
--#include <linux/kernel.h>
--#include <linux/dma-mapping.h>
--#include <linux/platform_device.h>
--
--#include <plat/devs.h>
--
--static u64 exynos_drm_dma_mask = DMA_BIT_MASK(32);
--
--struct platform_device exynos_device_drm = {
--	.name	= "exynos-drm",
--	.dev	= {
--		.dma_mask		= &exynos_drm_dma_mask,
--		.coherent_dma_mask	= DMA_BIT_MASK(32),
--	}
--};
-diff --git a/arch/arm/mach-exynos/mach-nuri.c b/arch/arm/mach-exynos/mach-nuri.c
-index ea785fc..9267caf 100644
---- a/arch/arm/mach-exynos/mach-nuri.c
-+++ b/arch/arm/mach-exynos/mach-nuri.c
-@@ -1330,9 +1330,6 @@ static struct platform_device *nuri_devices[] __initdata = {
- 	&cam_vdda_fixed_rdev,
- 	&cam_8m_12v_fixed_rdev,
- 	&exynos4_bus_devfreq,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- };
- 
- static void __init nuri_map_io(void)
-diff --git a/arch/arm/mach-exynos/mach-origen.c b/arch/arm/mach-exynos/mach-origen.c
-index b45600f..be8fac7 100644
---- a/arch/arm/mach-exynos/mach-origen.c
-+++ b/arch/arm/mach-exynos/mach-origen.c
-@@ -709,9 +709,6 @@ static struct platform_device *origen_devices[] __initdata = {
- 	&s5p_device_mfc_l,
- 	&s5p_device_mfc_r,
- 	&s5p_device_mixer,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&exynos4_device_ohci,
- 	&origen_device_gpiokeys,
- 	&origen_lcd_hv070wsa,
-diff --git a/arch/arm/mach-exynos/mach-smdk4x12.c b/arch/arm/mach-exynos/mach-smdk4x12.c
-index 81bf59c..f02ee11 100644
---- a/arch/arm/mach-exynos/mach-smdk4x12.c
-+++ b/arch/arm/mach-exynos/mach-smdk4x12.c
-@@ -317,9 +317,6 @@ static struct platform_device *smdk4x12_devices[] __initdata = {
- 	&s5p_device_mfc,
- 	&s5p_device_mfc_l,
- 	&s5p_device_mfc_r,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&samsung_device_keypad,
- };
- 
-diff --git a/arch/arm/mach-exynos/mach-smdkv310.c b/arch/arm/mach-exynos/mach-smdkv310.c
-index 12a1db2..bffb1b2 100644
---- a/arch/arm/mach-exynos/mach-smdkv310.c
-+++ b/arch/arm/mach-exynos/mach-smdkv310.c
-@@ -300,9 +300,6 @@ static struct platform_device *smdkv310_devices[] __initdata = {
- 	&s5p_device_fimc_md,
- 	&s5p_device_g2d,
- 	&s5p_device_jpeg,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&exynos4_device_ac97,
- 	&exynos4_device_i2s0,
- 	&exynos4_device_ohci,
-diff --git a/arch/arm/mach-exynos/mach-universal_c210.c b/arch/arm/mach-exynos/mach-universal_c210.c
-index 4d1f40d..f7b1337 100644
---- a/arch/arm/mach-exynos/mach-universal_c210.c
-+++ b/arch/arm/mach-exynos/mach-universal_c210.c
-@@ -1084,9 +1084,6 @@ static struct platform_device *universal_devices[] __initdata = {
- 	&s5p_device_onenand,
- 	&s5p_device_fimd0,
- 	&s5p_device_jpeg,
--#ifdef CONFIG_DRM_EXYNOS
--	&exynos_device_drm,
--#endif
- 	&s3c_device_usb_hsotg,
- 	&s5p_device_mfc,
- 	&s5p_device_mfc_l,
-diff --git a/arch/arm/plat-samsung/include/plat/devs.h b/arch/arm/plat-samsung/include/plat/devs.h
-index 5da4b4f..133e3e4 100644
---- a/arch/arm/plat-samsung/include/plat/devs.h
-+++ b/arch/arm/plat-samsung/include/plat/devs.h
-@@ -133,8 +133,6 @@ extern struct platform_device exynos4_device_pcm1;
- extern struct platform_device exynos4_device_pcm2;
- extern struct platform_device exynos4_device_spdif;
- 
--extern struct platform_device exynos_device_drm;
--
- extern struct platform_device samsung_asoc_dma;
- extern struct platform_device samsung_asoc_idma;
- extern struct platform_device samsung_device_keypad;
--- 
-1.7.0.4
+Can you take this patch for -rc3?
+
+Thanks,
+P=E9ter
+
+>=20
+> Regards,
+> Benoit
+>=20
+>> ---
+>>
+>> Hi Tony, Benoit,
+>>
+>> Can you please take this patch for 3.7 since if we boot with DT audi=
+o will not
+>> work on BeagleBoard and on boards which uses McBSP2 or 3 for audio.
+>>
+>> Thank you,
+>> Peter
+>>
+>>  arch/arm/boot/dts/omap3.dtsi | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.=
+dtsi
+>> index f38ea87..696e929 100644
+>> --- a/arch/arm/boot/dts/omap3.dtsi
+>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>> @@ -257,7 +257,7 @@
+>>  			interrupt-names =3D "common", "tx", "rx", "sidetone";
+>>  			interrupt-parent =3D <&intc>;
+>>  			ti,buffer-size =3D <1280>;
+>> -			ti,hwmods =3D "mcbsp2";
+>> +			ti,hwmods =3D "mcbsp2", "mcbsp2_sidetone";
+>>  		};
+>> =20
+>>  		mcbsp3: mcbsp@49024000 {
+>> @@ -272,7 +272,7 @@
+>>  			interrupt-names =3D "common", "tx", "rx", "sidetone";
+>>  			interrupt-parent =3D <&intc>;
+>>  			ti,buffer-size =3D <128>;
+>> -			ti,hwmods =3D "mcbsp3";
+>> +			ti,hwmods =3D "mcbsp3", "mcbsp3_sidetone";
+>>  		};
+>> =20
+>>  		mcbsp4: mcbsp@49026000 {
+>>
+>=20
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
