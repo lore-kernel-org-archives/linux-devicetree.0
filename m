@@ -1,88 +1,74 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
-Date: Mon, 22 Oct 2012 16:10:56 -0600
-Message-ID: <5085C470.4040707@wwwdotorg.org>
-References: <Pine.LNX.4.44L0.1210221443580.1724-100000@iolanthe.rowland.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 9/9] pinctrl: single: dump pinmux register value
+Date: Mon, 22 Oct 2012 15:27:44 -0700
+Message-ID: <20121022222744.GM4730@atomide.com>
+References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350922139-3693-10-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1210221443580.1724-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1350922139-3693-10-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2012 01:00 PM, Alan Stern wrote:
-> On Mon, 22 Oct 2012, Stephen Warren wrote:
+* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 09:13]:
+> Dump pinmux register value, not only function part in the pinmux
+> register.
+
+This makes sense, but should be done using pcs_read, not pcs_readl,
+see below.
+
+> Also fix the issue on caluclating pin offset. The last parameter
+> should be pin number, not register offset.
+>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/pinctrl/pinctrl-single.c |    8 ++++----
+>  1 files changed, 4 insertions(+), 4 deletions(-)
 > 
->>>>> +- has-tt : controller has transaction translator(s).
->>>>> +- has-synopsys-hc-bug : controller has the synopsys hc bug
->>>>
->>>> That would normally be determined by the driver based on the particular
->>>> compatible value that is in device tree.
->>>
->>> I don't understand this comment.  Isn't "has-synopsys-hc-bug" the 
->>> compatible value in question?
->>
->> "compatible value" in this context means that value of the property
->> named "compatible".
-> 
-> I see.  But why would it be done this way instead having a separate 
-> property?
+> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+> index a20da78..6ba2a5d 100644
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -284,15 +284,15 @@ static int pcs_get_group_pins(struct pinctrl_dev *pctldev,
+>  
+>  static void pcs_pin_dbg_show(struct pinctrl_dev *pctldev,
+>  					struct seq_file *s,
+> -					unsigned offset)
+> +					unsigned pin)
+>  {
+>  	struct pcs_device *pcs;
+> -	unsigned val;
+> +	unsigned val, mux_bytes;
+>  
+>  	pcs = pinctrl_dev_get_drvdata(pctldev);
+>  
+> -	val = pcs->read(pcs->base + offset);
+> -	val &= pcs->fmask;
+> +	mux_bytes = pcs->width / BITS_PER_BYTE;
+> +	val = pcs_readl(pcs->base + pin * mux_bytes);
+>  
+>  	seq_printf(s, "%08x %s " , val, DRIVER_NAME);
+>  }
 
-Well, I did say normally:-)
+You should not use pcs_readl here directly as the register
+width can vary. Can you please update the patch for that and
+make it independent from the rest of the series? That way we
+can merge the fix for v3.7-rc series.
 
-I can certainly see an argument for representing these differences using
-custom properties, rather than deriving the information from the
-compatible value. It's probably be OK to do so for something generic
-like this; it's just perhaps not always the default choice.
+Regards,
 
-Do note that even though this binding document dictates a particular
-value for the compatible property, every device tree should additionally
-add a separate value alongside it to indicate the specific HW model
-that's actually present, so that if some device-specific bug-fix or
-workaround needs to be applied, the model can be identified anyway.
-
-So, rather than:
-
-compatible = "usb-ehci";
-
-You should always have e.g.:
-
-compatible = "nvidia,tegra20-ehci", "usb-ehci";
-
-Given that, there is then always enough information in the device tree
-for the driver to be able to derive the other values from the compatible
-value.
-
-Whether you want to derive the information, or whether you want to
-explicitly represent it via properties, is a decision to make based on
-the trade-offs.
-
-Oh, and I note that quite a few device trees already use compatible
-value "usb-ehci" in their device-trees. Care needs to be taken not to
-usurp that value from any existing device drivers if that was to be
-picked as the compatible value required by this binding.
-
-> And doesn't the same reasoning apply to has-tt?  Doesn't that mean the 
-> driver would have to match four different hardware types?  What happens 
-> if a third characteristic like these comes around; would the driver 
-> then have to check against eight different types?
-
-No, the compatible value represents the model, so you'd have a table like:
-
-compatible          -> bugX has_tt
-nvidia,tegra20-ehci -> 0    1
-vendor1,foo-ehci    -> 0    1
-vendor2,bar-ehci    -> 1    1
-vendor3,baz-ehci    -> 0    1
-vendor4,qux-ehci    -> 0    1
-...
-
-So the table size isn't related to the number of options. The table size
-is probably bigger than subset of options combinations that make sense.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
