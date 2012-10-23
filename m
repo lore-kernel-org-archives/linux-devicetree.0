@@ -1,112 +1,123 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 03/10] tty: pxa: configure pin
-Date: Tue, 23 Oct 2012 10:37:12 +0100
-Message-ID: <20121023093711.GS4477@opensource.wolfsonmicro.com>
-References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-3-git-send-email-haojian.zhuang@gmail.com>
- <508080CB.5010904@wwwdotorg.org>
- <CACRpkdb5Jiw71jBLDXpf2VTJQx7_gABqs03_20CeCLbVT=JkaA@mail.gmail.com>
- <5085AC06.8070508@wwwdotorg.org>
- <CACRpkdY-XyagxGU_ya_FZirzbqStTirOC5nuBBwwFY3f4bBTYA@mail.gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 2/3] PWM: vt8500: Update vt8500 PWM driver support
+Date: Tue, 23 Oct 2012 11:56:25 +0200
+Message-ID: <20121023095625.GA2062@avionic-0098.mockup.avionic-design.de>
+References: <1350643135-13197-2-git-send-email-linux@prisktech.co.nz>
+ <20121022063423.GA17181@avionic-0098.mockup.avionic-design.de>
+ <1350888712.3592.11.camel@gitbox>
+ <1350889747.3592.17.camel@gitbox>
+ <20121022072448.GB30026@avionic-0098.mockup.avionic-design.de>
+ <1350891382.3592.22.camel@gitbox>
+ <20121022080414.GB4931@avionic-0098.mockup.avionic-design.de>
+ <1350981706.20938.7.camel@gitbox>
+ <20121023092247.GA13220@avionic-0098.mockup.avionic-design.de>
+ <20121023093128.GR21164@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0719755022181276574=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdY-XyagxGU_ya_FZirzbqStTirOC5nuBBwwFY3f4bBTYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rickard ANDERSSON <rickard.andersson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121023093128.GR21164@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Tony Prisk <linux@prisktech.co.nz>, devicetree-discuss@lists.ozlabs.org, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
 
---===============0719755022181276574==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="o/5eNASeIIpuMggS"
-Content-Disposition: inline
-
-
---o/5eNASeIIpuMggS
+--k1lZvvs/B4yU6o8G
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 23, 2012 at 11:26:40AM +0200, Linus Walleij wrote:
+On Tue, Oct 23, 2012 at 10:31:28AM +0100, Russell King - ARM Linux wrote:
+> On Tue, Oct 23, 2012 at 11:22:47AM +0200, Thierry Reding wrote:
+> > On Tue, Oct 23, 2012 at 09:41:46PM +1300, Tony Prisk wrote:
+> > > Further to the discussion, my preference is still for of_clk_get()
+> > > (although I've changed the patch anyway as you saw because it makes no
+> > > difference in this case) :)
+> > >=20
+> > > clk_get(x, NULL) and devm_clk_get(x, NULL) both seems like 'hacks' to
+> > > allow platforms to convert to DT without having to update all their
+> > > drivers first. It only allows the first (default) clock, as your poin=
+ted
+> > > out. Getting a 2nd... clock relies on an optional property in DT (whi=
+ch
+> > > again, seems like it is there to support 'old' drivers) which allows =
+you
+> > > to request clocks by name.
+> > >=20
+> > > of_clk_get() on the other hand seems like a properly native DT functi=
+on.
+> > > You don't need to know anything about the clock, as long as the corre=
+ct
+> > > clock is specified in the correct order as documented by the binding.
+> > > Relying on 'pre-OF' code for a OF-only driver also seems
+> > > counter-intuitive.
+> >=20
+> > I do agree with those arguments. What I was saying is that for drivers
+> > which aren't DT only, of_clk_get() is not an option and that maybe
+> > others would be encouraged by the example to not use the generic APIs
+> > even if their driver could be used in non-DT setups. But maybe I'm
+> > worrying needlessly.
+> >=20
+> > That said, maybe somebody with a broader view of things like Arnd
+> > (Cc'ed) could share his thoughts.
+>=20
+> As I have already said, the way the DT bindings were done for the clk
+> stuff was wrong.  A little thought put into it would've come up with
+> a much better solution which wouldn't have needed of_clk_get() at all.
+>=20
+> How?
+>=20
+> The arguments for clk_get() are:
+> 1. the struct device, which you can get the OF-node from.
+> 2. a _device_ _specific_ _clock_ _input_ _name_ (or NULL if there's only
+>    one.)
+>=20
+> So, we have something that defines a hardware clock input name, which
+> can be used to generate a property name for OF.  So, what _could_ have
+> been done is this:
+>=20
+> 	clock-<input-name> =3D <&provider-node clk-output-index>;
+>=20
+> where the property name is generated by:
+>=20
+> 	snprintf(prop, sizeof(prop), "clk-%s", name ? name : "default");
 
-> I thought about that, but it does not allow us to control the
-> resource activation/deactivation order.
+But we already have this, only with slightly different syntax:
 
-> In some drivers the suspend() path could be:
+	clocks =3D <&provider foo-index>, <&provider bar-index>;
+	clock-names =3D "foo", "bar";
 
-> - pins to sleep
-> - clk_disable
-> - disable external regulator
-> - release power domain
+> So I continue to assert that our current design is wrong - and it will
+> cause driver authors to pointlessly have to make a choice at every stage
+> between DT and non-DT based systems.
 
-> In others:
+I think the reason that Tony brought this up is that with this API, the
+clock-names property becomes mandatory if you have more than one input
+clock.
 
-> - clk_disable()
-> - disable external regulator
-> - pins to sleep()
-> - release power domain
+Thierry
 
-> Ulf Hansson ran into this a while back.
-
-> Just like with the notifier approach, this approach assumes that either
-> the ordering above doesn't matter, or that it is the same for all drivers.
-
-Can we handle this with power domains - if different devices require
-different orderings they can be placed in power domains which implement
-the appropriate orderings for them?
-
-> We don't have hogs, bus notifiers and the like for regulators,
-> and IIRC Mark disliked the idea. Basically I think it's better if
-> all resources are atleast handled the same way.
-
-It'd be OK to have something that was manually activated for specific
-regulators but it's not sane to try and do something generic as you'll
-end up powering off all your wakeup sources which tends not to work so
-well.
-
---o/5eNASeIIpuMggS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQhmVBAAoJELSic+t+oim9stUP/jBdDHp/FfTwscnqgKa2GIJp
-YrvpQF0P8A4Vu0xBeZSQHHcAp3Yahqmfxa1F4hW1JSUNckvMUnAM8ZVtDD6xE5ii
-wGicvdeujCJ6fEQuSO8QBj9aUf9ruMH3tZ1GUlo1/ZDCDVOP+Bt8vvjNpmveTf25
-W0P3HoYCSo+wm+rYtCM1uvG6prYWEylftyHOJWPAQTYxvHUkHvkYGQ8AcHI5RKFu
-i4FkSrr+o56VbI3/J4gvxh2gtFhAoDyqlEq5BnTCqezELd9/2qjouh0DhC6h1C2B
-e8qKij6zgftlWB1ukW8HP9qWdSkSrVlZiKjb5h3xalg7wBL7Gict/6SdIh/zk6LB
-C02N2ANCR62RFaa6CFIG9jhd/vorhHGIWF8w93V8p24aNo6WlfeCeZYBibffMXKV
-ZVkQjHkiUopDBSCeNXEQZ4wBLtvKqrB2YMXoYPfN18f+qKbDfeQewFYA9ZUsLPjP
-AzvEUiXH2p3O0dq7USfw9p5qc3xJxop2F/cCGfSNgm+fSr6ymhASNXh8jjzjoNzL
-txtL6Az+xHXPOGQZGYIgvC+eIanBwOibzv+FA0E5ZoYiBXq5IdEG4PhsFUSRLDF1
-00LHMd6mKM9e1cFDaGj5XllNWLN7g8YtUhO2kt8gm0XGtwYs7aS27ZVGMmN8IHza
-B0xZiEKSLqpQroMnSR+T
-=tUer
+iQIcBAEBAgAGBQJQhmnJAAoJEN0jrNd/PrOh82oP/3rYF+GMTIX/9foqFXmWldyM
+HfRVJgwXIPGDAmFjTaHYqz2QrkshZ5RGcQNapT0sS+YcND2qKfRfUH//QCIJHgmG
+koACjYdgX1vQ1ydKxGUzp7bF/VHWW0JlilfuoH050DBDpjK6S1SKapvALx7OLwwL
+PdVJIXqX1kDhWY8xhUmq8LMGvCA2/BaGsQ17k5LNYzLaZLMeCk14XUPWFfOJWD0j
+6E8EXFoqgpYy90LRfVk/KbgfhVhKxtPL7DETRB5xMVZPvMZG0sDxKWO1mErH8o0/
+Hp9pD474YOZGLiSTQtQW0kcOzuL1cx4lQIVMIzOOXhHfCOydpfLEUbDVPBQKwS/8
+5sftxgX+7E76i34DWdtXflrE4cGYATnQcJsCwAFXcW+egjx4hXPlGFNdEUrHDQbB
+eXnIWjtO6+Z3iw8dAuUzDzJOH90b8lDFtWPEgB1DjZRD++18CzfAefZJHReHx9ht
+jPN8+mzpoQvkg4Lwko+GCtsNp9NduYjNMIvUco2gXTAcjar7FTA4jLLblyh+RDRf
+E1rLXm5b/wQZrJInRolB7HJE1sm1lRVFWrgv+6MjYLlqWq/XHUMTq5bQxD2xaNXv
+AjXcBaZUG7ybErD+s7Kp100e2R+kpG3gKHBEoYMwKiApNN4mMWR4r0zlbzwopgdY
+vpZHaOAnkNupsDHZt11+
+=Vr+q
 -----END PGP SIGNATURE-----
 
---o/5eNASeIIpuMggS--
-
---===============0719755022181276574==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0719755022181276574==--
+--k1lZvvs/B4yU6o8G--
