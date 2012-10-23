@@ -1,97 +1,89 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v4 0/6] arm: exynos: add dt based support for exynos5 hdmi
-Date: Tue, 23 Oct 2012 23:07:37 +0900
-Message-ID: <021001cdb127$c1e28060$45a78120$%kim@samsung.com>
-References: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
+ driver
+Date: Tue, 23 Oct 2012 10:10:46 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1210231004310.1635-100000@iolanthe.rowland.org>
+References: <5085C470.4040707@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: tomasz.figa@gmail.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5085C470.4040707-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rahul Sharma wrote:
-> 
-> This patch set adds the DT based support for Samsung's Exynos5250. It adds
-> device tree nodes for hdmi, mixer, hdmiphy and hdmiddc. The name of these
-> devices are changed to the one matching with drivers. Exynos-drm and
-> exynos
-> hdmi-drm-commmon devices are removed from machine init code.
-> 
-> Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
-> init code. Patch set which adds this code is posted to dri-devel list at
-> http://comments.gmane.org/gmane.comp.video.dri.devel/75121.
-> 
-> This patchset is based on linux v3.6-rc6, branch v3.7-next/dt-samsung at
-> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-> 
-> v1:
-> - dropped patch for hpd gpio initialisation from machine init.
-> - dropped patch for platform device registration.
-> - removed platform device registration from non-dt platforms.
-> 
-> v2:
-> - removed version information from hdmi, mixer dt nodes.
-> - added DT binding documentation for hdmi, mixer, hdmiphy and hdmiddc.
-> 
-> v3:
-> - corrected indentations.
-> - changed dt node names to name@address format.
-> 
-> v4:
-> - added newline at end of device-tree binding document files.
-> - removes macros for mixer, hdmi physical addresses.
-> - removed @address from mixer and hdmi DT nodes.
-> 
-> Rahul Sharma (6):
->   dts: exynos: add device tree support for exynos5 hdmi
->   dts: exynos: add device tree support for exynos5 mixer
->   dts: exynos: add device tree support for exynos5 hdmiphy
->   dts: exynos: add device tree support for exynos5 hdmiddc
->   arm: exynos: add clocks for exynos5 hdmi
->   arm: exynos: removing exynos-drm device registration from non-dt
->     platforms
-> 
->  .../devicetree/bindings/drm/exynos/hdmi.txt        |   22 +++++++++++++++
->  .../devicetree/bindings/drm/exynos/hdmiddc.txt     |   12 ++++++++
->  .../devicetree/bindings/drm/exynos/hdmiphy.txt     |   12 ++++++++
->  .../devicetree/bindings/drm/exynos/mixer.txt       |   15 ++++++++++
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   24
-+++++++++++++++-
->  arch/arm/boot/dts/exynos5250.dtsi                  |   20 +++++++++++++
->  arch/arm/mach-exynos/Makefile                      |    1 -
->  arch/arm/mach-exynos/clock-exynos5.c               |   14 ++++++++-
->  arch/arm/mach-exynos/dev-drm.c                     |   29
---------------------
->  arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 +++++
->  arch/arm/mach-exynos/mach-nuri.c                   |    3 --
->  arch/arm/mach-exynos/mach-origen.c                 |    3 --
->  arch/arm/mach-exynos/mach-smdk4x12.c               |    3 --
->  arch/arm/mach-exynos/mach-smdkv310.c               |    3 --
->  arch/arm/mach-exynos/mach-universal_c210.c         |    3 --
->  arch/arm/plat-samsung/include/plat/devs.h          |    2 -
->  16 files changed, 124 insertions(+), 50 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmi.txt
->  create mode 100644
-> Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
->  create mode 100644
-> Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
->  create mode 100644 Documentation/devicetree/bindings/drm/exynos/mixer.txt
->  delete mode 100644 arch/arm/mach-exynos/dev-drm.c
+On Mon, 22 Oct 2012, Stephen Warren wrote:
 
-Looks OK to me, will apply this whole series.
+> > I see.  But why would it be done this way instead having a separate 
+> > property?
+> 
+> Well, I did say normally:-)
+> 
+> I can certainly see an argument for representing these differences using
+> custom properties, rather than deriving the information from the
+> compatible value. It's probably be OK to do so for something generic
+> like this; it's just perhaps not always the default choice.
+> 
+> Do note that even though this binding document dictates a particular
+> value for the compatible property, every device tree should additionally
+> add a separate value alongside it to indicate the specific HW model
+> that's actually present, so that if some device-specific bug-fix or
+> workaround needs to be applied, the model can be identified anyway.
+> 
+> So, rather than:
+> 
+> compatible = "usb-ehci";
+> 
+> You should always have e.g.:
+> 
+> compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> 
+> Given that, there is then always enough information in the device tree
+> for the driver to be able to derive the other values from the compatible
+> value.
 
-Inki, if you want to need a topic branch for this series, please let me
-know. I will create it for you.
+Yes, I get it.
 
-Thanks.
+> Whether you want to derive the information, or whether you want to
+> explicitly represent it via properties, is a decision to make based on
+> the trade-offs.
+> 
+> Oh, and I note that quite a few device trees already use compatible
+> value "usb-ehci" in their device-trees. Care needs to be taken not to
+> usurp that value from any existing device drivers if that was to be
+> picked as the compatible value required by this binding.
 
-Best regards,
-Kgene.
+Right.  I think Tony's new binding should use compatible value 
+"usb-ehci-platform".  It will essentially be a superset of "usb-ehci".
+
+> > And doesn't the same reasoning apply to has-tt?  Doesn't that mean the 
+> > driver would have to match four different hardware types?  What happens 
+> > if a third characteristic like these comes around; would the driver 
+> > then have to check against eight different types?
+> 
+> No, the compatible value represents the model, so you'd have a table like:
+> 
+> compatible          -> bugX has_tt
+> nvidia,tegra20-ehci -> 0    1
+> vendor1,foo-ehci    -> 0    1
+> vendor2,bar-ehci    -> 1    1
+> vendor3,baz-ehci    -> 0    1
+> vendor4,qux-ehci    -> 0    1
+> ...
+> 
+> So the table size isn't related to the number of options. The table size
+> is probably bigger than subset of options combinations that make sense.
+
+Under the circumstances, and considering that usb-ehci-platform will be
+rather generic, IMO it will be better to make has-tt,
+has-synopsys-hc-bug, and no-io-watchdog separate properties, each
+naturally defaulting to "not present".  That will avoid the need to 
+update the driver's table each time a new board comes along.
+
+Alan Stern
+
 --
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
