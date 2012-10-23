@@ -1,69 +1,97 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 3.7.0-rc2] dt: match id-table before creating platform
- device
-Date: Tue, 23 Oct 2012 08:15:59 -0500
-Message-ID: <5086988F.6090107@gmail.com>
-References: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v4 0/6] arm: exynos: add dt based support for exynos5 hdmi
+Date: Tue, 23 Oct 2012 23:07:37 +0900
+Message-ID: <021001cdb127$c1e28060$45a78120$%kim@samsung.com>
+References: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: tomasz.figa@gmail.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Adding lkml. DT patches should go to both lists.
+Rahul Sharma wrote:
+> 
+> This patch set adds the DT based support for Samsung's Exynos5250. It adds
+> device tree nodes for hdmi, mixer, hdmiphy and hdmiddc. The name of these
+> devices are changed to the one matching with drivers. Exynos-drm and
+> exynos
+> hdmi-drm-commmon devices are removed from machine init code.
+> 
+> Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
+> init code. Patch set which adds this code is posted to dri-devel list at
+> http://comments.gmane.org/gmane.comp.video.dri.devel/75121.
+> 
+> This patchset is based on linux v3.6-rc6, branch v3.7-next/dt-samsung at
+> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+> 
+> v1:
+> - dropped patch for hpd gpio initialisation from machine init.
+> - dropped patch for platform device registration.
+> - removed platform device registration from non-dt platforms.
+> 
+> v2:
+> - removed version information from hdmi, mixer dt nodes.
+> - added DT binding documentation for hdmi, mixer, hdmiphy and hdmiddc.
+> 
+> v3:
+> - corrected indentations.
+> - changed dt node names to name@address format.
+> 
+> v4:
+> - added newline at end of device-tree binding document files.
+> - removes macros for mixer, hdmi physical addresses.
+> - removed @address from mixer and hdmi DT nodes.
+> 
+> Rahul Sharma (6):
+>   dts: exynos: add device tree support for exynos5 hdmi
+>   dts: exynos: add device tree support for exynos5 mixer
+>   dts: exynos: add device tree support for exynos5 hdmiphy
+>   dts: exynos: add device tree support for exynos5 hdmiddc
+>   arm: exynos: add clocks for exynos5 hdmi
+>   arm: exynos: removing exynos-drm device registration from non-dt
+>     platforms
+> 
+>  .../devicetree/bindings/drm/exynos/hdmi.txt        |   22 +++++++++++++++
+>  .../devicetree/bindings/drm/exynos/hdmiddc.txt     |   12 ++++++++
+>  .../devicetree/bindings/drm/exynos/hdmiphy.txt     |   12 ++++++++
+>  .../devicetree/bindings/drm/exynos/mixer.txt       |   15 ++++++++++
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   24
++++++++++++++++-
+>  arch/arm/boot/dts/exynos5250.dtsi                  |   20 +++++++++++++
+>  arch/arm/mach-exynos/Makefile                      |    1 -
+>  arch/arm/mach-exynos/clock-exynos5.c               |   14 ++++++++-
+>  arch/arm/mach-exynos/dev-drm.c                     |   29
+--------------------
+>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 +++++
+>  arch/arm/mach-exynos/mach-nuri.c                   |    3 --
+>  arch/arm/mach-exynos/mach-origen.c                 |    3 --
+>  arch/arm/mach-exynos/mach-smdk4x12.c               |    3 --
+>  arch/arm/mach-exynos/mach-smdkv310.c               |    3 --
+>  arch/arm/mach-exynos/mach-universal_c210.c         |    3 --
+>  arch/arm/plat-samsung/include/plat/devs.h          |    2 -
+>  16 files changed, 124 insertions(+), 50 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+>  create mode 100644
+> Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
+>  create mode 100644
+> Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
+>  create mode 100644 Documentation/devicetree/bindings/drm/exynos/mixer.txt
+>  delete mode 100644 arch/arm/mach-exynos/dev-drm.c
 
-On 10/23/2012 05:30 AM, Srinivas KANDAGATLA wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> 
-> As part of of_platform_populate call, the existing code iterates each
-> child node and then creates a platform device for each child, however
-> there is bug in the code which does not check the match table before
-> creating the platform device. This might result creating two platfrom
-> devices and also invoking driver probe twice, which is incorrect.
-> 
-> This patch moves a existing of_match_node check to start of the function
-> to fix the bug, doing this way will return immediately without creating
-> any datastructures if the child does not match the supplied match-table.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> ---
->  drivers/of/platform.c |    5 ++++-
->  1 files changed, 4 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b80891b..1aaa560 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -367,6 +367,9 @@ static int of_platform_bus_create(struct device_node *bus,
->  		return 0;
->  	}
->  
-> +	if (!of_match_node(matches, bus))
-> +		return 0;
-> +
+Looks OK to me, will apply this whole series.
 
-This is not right. This function is recursive and this change would
-break that. Perhaps we could only call of_platform_device_create_pdata
-if !of_match_node instead, but I'm not completely sure that would be the
-right thing to do. There's also some historical things we have to
-support which is why we have of_platform_populate and of_platform_bus_probe.
+Inki, if you want to need a topic branch for this series, please let me
+know. I will create it for you.
 
-Rob
+Thanks.
 
->  	auxdata = of_dev_lookup(lookup, bus);
->  	if (auxdata) {
->  		bus_id = auxdata->name;
-> @@ -379,7 +382,7 @@ static int of_platform_bus_create(struct device_node *bus,
->  	}
->  
->  	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
-> -	if (!dev || !of_match_node(matches, bus))
-> +	if (!dev)
->  		return 0;
->  
->  	for_each_child_of_node(bus, child) {
-> 
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
