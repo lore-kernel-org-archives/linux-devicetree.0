@@ -1,49 +1,102 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v5] ARM: EXYNOS: Add MFC device tree support
-Date: Fri, 19 Oct 2012 10:39:25 +0900
-Message-ID: <5080AF4D.4070402@samsung.com>
-References: <1348765784-7508-1-git-send-email-arun.kk@samsung.com>	<1348765784-7508-2-git-send-email-arun.kk@samsung.com>	<50864174.3020508@samsung.com> <CALt3h79k5XsAGM21oOOy0jDh47N8is7LF-bAGcH-PtjK6ekhUw@mail.gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v3] pwm: vt8500: Update vt8500 PWM driver support
+Date: Wed, 24 Oct 2012 00:14:19 +0200
+Message-ID: <20121023221419.GA8501@avionic-0098.mockup.avionic-design.de>
+References: <20121022084000.GB29790@avionic-0098.mockup.avionic-design.de>
+ <1350929425-17516-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CALt3h79k5XsAGM21oOOy0jDh47N8is7LF-bAGcH-PtjK6ekhUw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arunkk.samsung@gmail.com>
-Cc: sw0312.kim@samsung.com, Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, s.nawrocki@samsung.com, ch.naveen@samsung.com, joshi@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1350929425-17516-1-git-send-email-linux@prisktech.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Prisk <linux@prisktech.co.nz>
+Cc: devicetree-discuss@lists.ozlabs.org, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/12 19:12, Arun Kumar K wrote:
-> Hi Seungwoo Kim,
->
-> Thank you for the review.
->
->>> +
->>> +     /* Reserve memory for MFC only if it's available */
->>> +     mfc_mem.compatible = "samsung,mfc-v6";
->>> +     if (of_scan_flat_dt(s5p_fdt_find_mfc_mem,&mfc_mem))
->>
->> of_scan_flat_dt() is called but it does not have __init on its
->> definition. So this causes section mismatch.
->>
->
-> The function of_scan_flat_dt is having __init in its definition.
 
-Yes.
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I hope you meant the function s5p_fdt_find_mfc_mem which is not
-> defined with __init and causing section mismatch.
+On Tue, Oct 23, 2012 at 07:10:24AM +1300, Tony Prisk wrote:
+[...]
+> @@ -87,6 +98,11 @@ static int vt8500_pwm_enable(struct pwm_chip *chip, st=
+ruct pwm_device *pwm)
+>  {
+>  	struct vt8500_chip *vt8500 =3D to_vt8500_chip(chip);
+> =20
+> +	if (!clk_enable(vt8500->clk)) {
+> +		dev_err(chip->dev, "failed to enable clock\n");
+> +		return -EBUSY;
+> +	};
+> +
 
-I think so.
+I don't think that works. The clock API returns 0 on success and a
+negative error code on failure. So this should rather be something like:
 
-> I will correct this and post an updated patch.
+	err =3D clk_enable(vt8500->clk);
+	if (err < 0) {
+		dev_err(chip->dev, "failed to enable clock: %d\n", err);
+		return err;
+	}
 
-I fixed when I applied.
+> @@ -123,6 +153,12 @@ static int __devinit pwm_probe(struct platform_devic=
+e *pdev)
+>  	chip->chip.ops =3D &vt8500_pwm_ops;
+>  	chip->chip.base =3D -1;
+>  	chip->chip.npwm =3D VT8500_NR_PWMS;
+> +	chip->clk =3D devm_clk_get(&pdev->dev, NULL);
+> +
 
-Seung-Woo, thanks for your reporting.
+The blank line should go above the call to devm_clk_get().
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+> +	if (IS_ERR_OR_NULL(chip->clk)) {
+> +		dev_err(&pdev->dev, "clock source not specified\n");
+> +		return PTR_ERR(chip->clk);
+> +	}
+[...]
+> +	if (!clk_prepare(chip->clk)) {
+> +		dev_err(&pdev->dev, "failed to prepare clock\n");
+> +		return -EBUSY;
+> +	}
+> +
+
+Same comment here. I wonder how this code can work, since if the clock
+is properly prepared, then it will return 0, and the above will return
+-EBUSY.
+
+>  	ret =3D pwmchip_add(&chip->chip);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to add pwmchip\n");
+
+Error messages can be considered prose, so this should be: "failed to
+add PWM chip".
+
+Thierry
+
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQhxa7AAoJEN0jrNd/PrOhJAMQALLHYDTzGYbBMFzZBcqkAniQ
+JIHL0OArj+w3jYOdGfFcFpsEV4S4WOfuYJLtqFlEvCfB4SekSQmVLBzosP7OJZGJ
+fVuPvbiisrIENOAcA/+GJmS2Qqa7Vq9s/6xWN4IpyRtDgVBCpEbfF6KfEvTV7SnF
+DR4VABtEcJGoYcI1ENy7KJQNRVeqF3Akzz2446Wa/2Yo0ybSz6ONFaxAU6T0pGFB
+Ja1YuECbOhgLqDXamUmSlUrqOBpmYoryfCZCTQS5GlwRIe5RtHz9bENFQf0TrAut
+f1B983K7Ndfs2GIKEIvghi5Ax9e4vUTEjmXB5/q02019vv6485tYnI2xyFaeUHz7
+IMvUZ75MZcFfOig0eFXGcJkX2rIjQC2GQqz+qaFIbJKnmiJiER9shna9YjbVGroo
+Qrra8xW/Ndhb+pVhJka8nAeQ43hMK4M9dfMIl7+2f+FMEsQwW0uj6UrujKG1+ptQ
+nza3edzALK18qg5GZRvsRtCXRl8tBRn2OtpNTKnKZ5bCEtEDQJjDUgmb7aro1D41
+kmzxUipGKB0FHXQ8sDUkVI7X4ngKcWjSVObIxBeHv3io4DhYALAPcOb0zttGNqUQ
+yzDNctp6whRSAPc38YRp6QchXFHsyD3k2HUhcjc/1vKFp/6391H0ig+bcyJ4OIjr
+5Vcvubr+cq8G9zmWQh+y
+=KaBc
+-----END PGP SIGNATURE-----
+
+--x+6KMIRAuhnl3hBn--
