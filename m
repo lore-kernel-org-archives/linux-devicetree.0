@@ -1,135 +1,65 @@
-From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and custom getreg and setreg functions
-Date: Tue, 23 Oct 2012 17:03:57 +0200
-Message-ID: <1351004637-11049-3-git-send-email-andreas@gaisler.com>
-References: <1351004637-11049-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1351004637-11049-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap5: Update GPIO with address space
+ and interrupts
+Date: Tue, 23 Oct 2012 17:09:10 +0200
+Message-ID: <5086B316.6000001@ti.com>
+References: <1350981432-6750-1-git-send-email-s-guiriec@ti.com> <1350981432-6750-2-git-send-email-s-guiriec@ti.com> <5086AE8E.60106@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5086AE8E.60106@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Sebastien Guiriec <s-guiriec@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The registers in the GRLIB port of the controller are 32-bit and in big endian
-byte order. The PRELOW and PREHIGH registers are merged into one register. The
-subsequent registers have their offset decreased accordingly. Hence the register
-access needs to be handled in a non-standard manner using custom getreg and
-setreg functions.
+On 10/23/2012 04:49 PM, Jon Hunter wrote:
+> Hi Seb,
+> 
+> On 10/23/2012 03:37 AM, Sebastien Guiriec wrote:
+>> Add base address and interrupt line inside Device Tree data for
+>> OMAP5
+>>
+>> Signed-off-by: Sebastien Guiriec <s-guiriec@ti.com>
+>> ---
+>>  arch/arm/boot/dts/omap5.dtsi |   16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+>> index 42c78be..9e39f9f 100644
+>> --- a/arch/arm/boot/dts/omap5.dtsi
+>> +++ b/arch/arm/boot/dts/omap5.dtsi
+>> @@ -104,6 +104,8 @@
+>>  
+>>  		gpio1: gpio@4ae10000 {
+>>  			compatible = "ti,omap4-gpio";
+>> +			reg = <0x4ae10000 0x200>;
+>> +			interrupts = <0 29 0x4>;
+>>  			ti,hwmods = "gpio1";
+>>  			gpio-controller;
+>>  			#gpio-cells = <2>;
+> 
+> I am wondering if we should add the "interrupt-parent" property to add
+> nodes in the device-tree source. I know that today the interrupt-parent
+> is being defined globally, but when device-tree maps an interrupt for a
+> device it searches for the interrupt-parent starting the current device
+> node.
+> 
+> So in other words, for gpio1 it will search the gpio1 binding for
+> "interrupt-parent" and if not found move up a level and search again. It
+> will keep doing this until it finds the "interrupt-parent".
+> 
+> Therefore, I believe it will improve search time and hence, boot time if
+> we have interrupt-parent defined in each node.
 
-Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
----
- drivers/i2c/busses/i2c-ocores.c |   57 +++++++++++++++++++++++++++++++++++++-
- 1 files changed, 55 insertions(+), 2 deletions(-)
+Mmm, I'm not that sure. it will increase the size of the blob, so
+increase the time to load it and then to parse it. Where in the current
+case, it is just going up to the parent node using the already
+un-flatten tree in memory and thus that should not take that much time.
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index 1eb8a65..e3df62f 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -4,6 +4,9 @@
-  *
-  * Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-  *
-+ * Support for the GRLIB port of the controller by
-+ * Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-+ *
-  * This file is licensed under the terms of the GNU General Public License
-  * version 2.  This program is licensed "as is" without any warranty of any
-  * kind, whether express or implied.
-@@ -38,6 +41,8 @@ struct ocores_i2c {
- 	int nmsgs;
- 	int state; /* see STATE_ */
- 	int clock_khz;
-+	void (*setreg)(struct ocores_i2c *i2c, int reg, u8 value);
-+	u8 (*getreg)(struct ocores_i2c *i2c, int reg);
- };
- 
- /* registers */
-@@ -73,7 +78,9 @@ struct ocores_i2c {
- 
- static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
- {
--	if (i2c->reg_io_width == 4)
-+	if (i2c->setreg)
-+		i2c->setreg(i2c, reg, value);
-+	else if (i2c->reg_io_width == 4)
- 		iowrite32(value, i2c->base + (reg << i2c->reg_shift));
- 	else if (i2c->reg_io_width == 2)
- 		iowrite16(value, i2c->base + (reg << i2c->reg_shift));
-@@ -83,7 +90,9 @@ static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
- 
- static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
- {
--	if (i2c->reg_io_width == 4)
-+	if (i2c->getreg)
-+		return i2c->getreg(i2c, reg);
-+	else if (i2c->reg_io_width == 4)
- 		return ioread32(i2c->base + (reg << i2c->reg_shift));
- 	else if (i2c->reg_io_width == 2)
- 		return ioread16(i2c->base + (reg << i2c->reg_shift));
-@@ -91,6 +100,40 @@ static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
- 		return ioread8(i2c->base + (reg << i2c->reg_shift));
- }
- 
-+/* Read and write functions for the GRLIB port of the controller. Registers are
-+ * 32-bit big endian and the PRELOW and PREHIGH registers are merged into one
-+ * register. The subsequent registers has their offset decreased accordingly. */
-+static u8 oc_getreg_grlib(struct ocores_i2c *i2c, int reg)
-+{
-+	u32 rd;
-+	int rreg = reg;
-+	if (reg != OCI2C_PRELOW)
-+		rreg--;
-+	rd = ioread32be(i2c->base + (rreg << i2c->reg_shift));
-+	if (reg == OCI2C_PREHIGH)
-+		return (u8)rd >> 8;
-+	else
-+		return (u8)rd;
-+}
-+
-+static void oc_setreg_grlib(struct ocores_i2c *i2c, int reg, u8 value)
-+{
-+	u32 curr, wr;
-+	int rreg = reg;
-+	if (reg != OCI2C_PRELOW)
-+		rreg--;
-+	if (reg == OCI2C_PRELOW || reg == OCI2C_PREHIGH) {
-+		curr = ioread32be(i2c->base + (rreg << i2c->reg_shift));
-+		if (reg == OCI2C_PRELOW)
-+			wr = (curr & 0xff00) | value;
-+		else
-+			wr = (((u32)value) << 8) | (curr & 0xff);
-+	} else {
-+		wr = value;
-+	}
-+	iowrite32be(wr, i2c->base + (rreg << i2c->reg_shift));
-+}
-+
- static void ocores_process(struct ocores_i2c *i2c)
- {
- 	struct i2c_msg *msg = i2c->msg;
-@@ -233,6 +276,7 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
- {
- 	struct device_node *np = pdev->dev.of_node;
- 	u32 val;
-+	const char *name;
- 
- 	if (of_property_read_u32(np, "reg-shift", &i2c->reg_shift)) {
- 		/* no 'reg-shift', check for deprecated 'regstep' */
-@@ -257,6 +301,15 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
- 
- 	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
- 				&i2c->reg_io_width);
-+
-+	name = of_get_property(pdev->dev.of_node, "name", NULL);
-+	if (name && (!strcmp(name, "GAISLER_I2CMST") ||
-+		     !strcmp(name, "01_028"))) {
-+		dev_dbg(&pdev->dev, "GRLIB variant of i2c-ocores\n");
-+		i2c->setreg = oc_setreg_grlib;
-+		i2c->getreg = oc_getreg_grlib;
-+	}
-+
- 	return 0;
- }
- #else
--- 
-1.7.0.4
+That being said, it might be interesting to benchmark that to see what
+is the real impact.
+
+Regards,
+Benoit
