@@ -1,120 +1,26 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 03/10] tty: pxa: configure pin
-Date: Tue, 23 Oct 2012 12:58:07 +0100
-Message-ID: <20121023115806.GX4477@opensource.wolfsonmicro.com>
-References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-3-git-send-email-haojian.zhuang@gmail.com>
- <508080CB.5010904@wwwdotorg.org>
- <CACRpkdb5Jiw71jBLDXpf2VTJQx7_gABqs03_20CeCLbVT=JkaA@mail.gmail.com>
- <5085AC06.8070508@wwwdotorg.org>
- <CACRpkdY-XyagxGU_ya_FZirzbqStTirOC5nuBBwwFY3f4bBTYA@mail.gmail.com>
- <20121023093711.GS4477@opensource.wolfsonmicro.com>
- <CACRpkdb+DkZbTDZamGMN+9t07kPktuA_3QtHQJFv+Vu859r7KA@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH RESEND 0/9] ARM: davinci: DT boot support for DA850
+Date: Tue, 23 Oct 2012 18:06:57 +0530
+Message-ID: <50868F69.3010808@ti.com>
+References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0370986331441485147=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdb+DkZbTDZamGMN+9t07kPktuA_3QtHQJFv+Vu859r7KA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rickard ANDERSSON <rickard.andersson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@ti.com>, Heiko Schocher <hs@denx.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 9/12/2012 10:05 PM, Sekhar Nori wrote:
+> This series adds basic DT boot support for DA850 EVM and EnBW CMC board.
+> It applies to master branch of Linux DaVinci tree[1].
+> 
+> Resending this because I missed copying the DT and Documentation folks
+> last time around. Sorry about that. There is no change in patch contents.
 
---===============0370986331441485147==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oIMVlEQ///Q2JYC7"
-Content-Disposition: inline
+I will be queuing these patches for inclusion in v3.8.
 
-
---oIMVlEQ///Q2JYC7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Oct 23, 2012 at 11:59:30AM +0200, Linus Walleij wrote:
-> On Tue, Oct 23, 2012 at 11:37 AM, Mark Brown
-> > On Tue, Oct 23, 2012 at 11:26:40AM +0200, Linus Walleij wrote:
-
-> > Can we handle this with power domains - if different devices require
-> > different orderings they can be placed in power domains which implement
-> > the appropriate orderings for them?
-
-> clocks, regulators, pins and all in power domains?
-
-> Then we should rename them "device resource domains" or
-> something...
-
-We can call them Ichabod for all I care...
-
-> I have a strong sense of system-wide all-or-nothing approaches
-> to this problem.
-
-> - Either we use "power" domains to handle every resource the
->  device has.
-> - Or the device driver manages it's own resources.
-
-> I find it pretty hard to build consensus around either idea.
-
-Well, I don't think we want all or nothing approaches here.  One problem
-is that we don't have a home for the SoC integration so we're trying to
-shove it all into the drivers which just leads to a stack of pointless
-boilerplate when the driver isn't actually doing anything beyond the
-basic pattern of turning everything off when it goes idle and turning it
-on again when it needs to do something.  Having to open code that stuff
-in the drivers and then deal with the stubbing and error handling so the
-error handling in the drivers is painful.  There's also another axis
-where things aren't part of a SoC but are separate devices so you want
-to carry things along with the driver rather than have a separate bit of
-code which is required to glue things into the platform.
-
-For example it seems fairly clear to me that things like the pinctrl
-integration I see in something like sound/soc/fsl/imx-audmux.c shouldn't
-really be there as we're just setting up a static configration on boot.
-On the other hand where things are directly involved with the active
-operation of a device like changing clock rates then clearly the driver
-needs to know about and manage things.
-
---oIMVlEQ///Q2JYC7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQhoZIAAoJELSic+t+oim9Rn0QAIRD5YundQzdF3j7jDXv3Ij/
-hZAwKRQj6CbkCRd2VfwCNWelrYMwzBA0F7z6rX4OH2bHDBHSQkkX3cu86a1M+2HS
-9vrIiS9eRlKEXKObIv8R7kBzdNqu2YEw5L3SkLriZGP3XKxahUONx0Rh/7mrxkoj
-UuuGMmplSlmohWga4hzlwHXbHmb3olZ6zTEg65IRjzGsWw7S7lHJNlWPxl+b49DL
-S3V2YjUNS5KfABszvfSNsyK8MQJr/T/U3TJZYrSkOIv/THcAekWZaJbX2urZG7AU
-cTXwJm9lpP+nrH3oe3cwET0VbGQTs+DCeDX19wRj03zk8GD5ck7F6q/K54CxMVXS
-vfFCat4/ZJCgIKZw0esFlcbcM/bPsvXpEdbq//0clIlBL/O1tQGxIXMV7RjKUAPE
-lGgfNQ8l8/Z88thuWJVJM9e8922HaXI7VAH9nDaY3A2cd7L1YChfC5tsWlB2WBP1
-tDjE06UOKnfU6rfKRzAO9PRlppX9//RPxWCYS5IaADjTQO5hhTDHOmovMqutZbgq
-3YM3bKtrPk3aM1DT+zcvNLAOOpZsDb6tg/h8BXT1fcEU3eJukx+5iP5+o1c44+tW
-GRIhRQgvdTxcaZZzmwPEKDEFe42CqTIrBihVnMl2gB/6o7tA8gcYRQwuOYEcwkq2
-Y1CBQUTBCsnyeSgZ821a
-=NpSF
------END PGP SIGNATURE-----
-
---oIMVlEQ///Q2JYC7--
-
---===============0370986331441485147==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0370986331441485147==--
+Thanks,
+Sekhar
