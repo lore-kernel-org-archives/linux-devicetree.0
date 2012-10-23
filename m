@@ -1,126 +1,55 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] document: devicetree: bind pinconf with pin-single
-Date: Mon, 22 Oct 2012 16:44:15 -0600
-Message-ID: <5085CC3F.30708@wwwdotorg.org>
-References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
- <1350922139-3693-6-git-send-email-haojian.zhuang@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 3/5] arm: mvebu: Added IPI support via doorbells
+Date: Tue, 23 Oct 2012 07:14:19 +0200
+Message-ID: <20121023071419.222c46d3@skate>
+References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
+ <1350925368-24243-4-git-send-email-gregory.clement@free-electrons.com>
+ <20121022173028.GM21046@lunn.ch>
+ <50859976.6080601@free-electrons.com>
+ <20121022200708.GO21046@lunn.ch>
+ <5085B666.1040500@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350922139-3693-6-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5085B666.1040500@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.or
 List-Id: devicetree@vger.kernel.org
 
-On 10/22/2012 10:08 AM, Haojian Zhuang wrote:
-> Add comments with pinconf & gpio range in the document of
-> pinctrl-single.
-> 
-> Signed-off-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/pinctrl/pinctrl-single.txt |   52 ++++++++++++++++++++
->  arch/arm/boot/dts/pxa910.dtsi                      |    1 -
->  2 files changed, 52 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-> index 2c81e45..6da2f13 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
-> @@ -17,6 +17,36 @@ Optional properties:
->  - pinctrl-single,bit-per-mux : boolean to indicate that one register controls
->    more than one pin
->  
-> +- pinctrl-single,gpio-ranges : gpio range list
-> +
-> +- pinctrl-single,gpio : array with gpio range start, size & register
-> +  offset
-> +
-> +- pinctrl-single,gpio-func : gpio function value in the pinmux register
-
-Some more explanation is needed here; some questions/comments:
-
-1) Looking at the example, pinctrl-single,gpio-ranges is a property
-within the main pinctrl node, whereas pinctrl-single,gpio and
-pinctrl-single,gpio-func are properties within some other node. There's
-no explanation of this in the binding description itself, only in the
-example. Related to this, the documentation for
-pinctrl-single,gpio-ranges doesn't say what it's a list of; it needs to
-say that it's a list of phandles.
-
-2) pinctrl-single,gpio is listed as optional. Presumably it's not; every
-GPIO range node must have this property?
-
-3) Why is pinctrl-single,gpio-func optional? Presumably you always need
-to program the pinmux HW to select the GPIO function. Yet, the driver
-code in an earlier patch seems to deliberately do nothing if this
-property is missing. Shouldn't the DT parsing return an error instead?
-
-4) I'm a little confused re: the data model. Is the idea that if
-pinctrl-single,gpio-ranges is specified, then the node describes a
-combined pin controller and GPIO HW? Are the pin IDs of the pin
-controller expected to match the pin IDs of the GPIO HW? I'm left
-wondering exactly which numbering space the values in
-pinctrl-single,gpio are; do they describe the pin controller IDs that
-this GPIO range describes, or do they describe the GPIO IDs that this
-range describes and attempt to map them back to pin controller IDs?
-Similarly, I'm not sure why there's a register offset here rather than
-say a pin controller pin ID number. Shouldn't the property be a list of
-<pin-controller-pin-ID GPIO-controller-GPIO-ID number-of-GPIOs>
-
-> +- pinctrl-single,power-source-mask : mask of setting power source in
-> +  the pinmux register
-> +
-> +- pinctrl-single,power-source : value of setting power source field
-> +  in the pinmux register
-> +
-> +- pinctrl-single,bias-mask : mask of setting bias value in the pinmux
-> +  register
-> +
-> +- pinctrl-single,bias-disable : value of disabling bias in the pinmux
-> +  register
-> +
-> +- pinctrl-single,bias-pull-down : value of setting bias pull down in
-> +  the pinmux register
-> +
-> +- pinctrl-single,bias-pull-up : value of setting bias pull up in the
-> +  pinmux register
-> +
-> +- pinctrl-single,bias : value of setting bias in the pinmux register
-> +
-> +- pinctrl-single,input-schmitt-mask : mask of setting input schmitt
-> +  in the pinmux register
-
-I suppose it's OK that a generic pin controller binding would use the
-generic pin configuration config options. I'm still not convinced that
-the semantics of generic pin control make sense. Maybe if they're just
-arbitrary names for SoC-specific things it's fine though.
-
-Do these patches expose /all/ generic pin configuration options? It
-doesn't seem worth exposing only some of them and ignoring others.
-
-> +/* third controller instance for pins in gpio domain */
-> +pmx_gpio: pinmux@d401e000 {
-> +	compatible = "pinctrl-single";
-> +	reg = <0xd401e000 0x0330>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-
-#gpio-cells would be needed here for a GPIO controller.
-
-> diff --git a/arch/arm/boot/dts/pxa910.dtsi b/arch/arm/boot/dts/pxa910.dtsi
-
-> -				pinctrl-single,gpio-mask = <7>;
-
-I assume that's a mistake; the line shouldn't be removed in this
-documentation patch?
+Ck9uIE1vbiwgMjIgT2N0IDIwMTIgMjM6MTE6MDIgKzAyMDAsIEdyZWdvcnkgQ0xFTUVOVCB3cm90
+ZToKCj4gVGhlIGNvcnJlY3QgZXhwbGFuYXRpb24gaXMgdGhhdCB0aGUgb2Zmc2V0ICsyMTA3MCBp
+cyBhIENQVSB2aXJ0dWFsIG9mZnNldC4KPiBUaGF0IG1lYW5zIHRoYXQgZGVwZW5kaW5nIG9mIHRo
+ZSBDUFUgY29yZSB3aGljaCB3aWxsIGFjY2VzcyB0byB0aGlzIHJlZ2lzdGVyLAo+IHRoZSBjb250
+cm9sbGVyIHdpbGwgaW50ZXJuYWxseSBjaGFuZ2UgdGhlIG9mZnNldCBhdXRvbWFnaWNhbGx5IHRv
+IHBvaW50IHRoZQo+IGNvcnJlY3Qgb2Zmc2V0Lgo+IAo+IEkgc2hvdWxkIGhhdmUgYWRkZWQgYW4g
+ZXhwbGFuYXRpb24gaW4gdGhlIGNvbW1pdCBsb2cuIEkgd2lsbCBkbyBpdCBmb3IgVjIuCgpKdXN0
+IHRvIGV4cGFuZCBvbiBHcsOpZ29yeSdzIGNvbW1lbnQ6IHRoZXJlIGlzIHBlci1DUFUgYmFua2lu
+ZyBmb3IgdGhlCmludGVycnVwdCBjb250cm9sbGVyIHJlZ2lzdGVycy4gQXQgMHgyMTA3MCwgeW91
+IGhhdmUgInZpcnR1YWwiCnJlZ2lzdGVycyB0aGF0IGF1dG9tYXRpY2FsbHkgbWFwIHRvIHRoZSBp
+bnRlcnJ1cHQgY29udHJvbGxlciByZWdpc3RlcnMKb2YgdGhlIGN1cnJlbnQgQ1BVLiBBdCAweDIx
+ODcwLCB5b3UgaGF2ZSB0aGUgaW50ZXJydXB0IGNvbnRyb2xsZXJzCnJlZ2lzdGVycyBvZiBDUFUw
+LCByZWdhcmRsZXNzIG9mIHdoaWNoIENQVSB5b3UgYXJlIHJ1bm5pbmcgb24uCgpCZWZvcmUgdGhp
+cyBwYXRjaCBzZXQsIHRoZXJlIHdhcyBubyBTTVAgc3VwcG9ydCBmb3IgQXJtYWRhIDM3MC9YUCwg
+c28KYWNjZXNzaW5nIHRoZSBpbnRlcnJ1cHQgY29udHJvbGxlciByZWdpc3RlcnMgYXQgMHgyMTg3
+MCB3YXMgT0sKKGFjY2Vzc2luZyB0aGVtIGZyb20gMHgyMTA3MCB3b3VsZCBoYXZlIGJlZW4gT0sg
+YXMgd2VsbCkuIFdpdGggdGhlCmludHJvZHVjdGlvbiBvZiBTTVAgc3VwcG9ydCwgYWNjZXNzaW5n
+IHRoZW0gZnJvbSAweDIxODcwIG5vIGxvbmdlcgp3b3Jrcywgc28gd2Ugc3dpdGNoIHRvIHRoZSB2
+aXJ0dWFsIHJlZ2lzdGVycyBhdCAweDIxMDcwLgoKSW4gb3RoZXIgd29yZHM6IG5vIGl0IGlzIG5v
+dCBhIGJ1ZyBmaXggYW5kIGl0IHRoZXJlZm9yZSBkb2Vzbid0IG5lZWQgdG8KZ28gaW50byAzLjcu
+CgpCZXN0IHJlZ2FyZHMsCgpUaG9tYXMKLS0gClRob21hcyBQZXRhenpvbmksIEZyZWUgRWxlY3Ry
+b25zCktlcm5lbCwgZHJpdmVycywgcmVhbC10aW1lIGFuZCBlbWJlZGRlZCBMaW51eApkZXZlbG9w
+bWVudCwgY29uc3VsdGluZywgdHJhaW5pbmcgYW5kIHN1cHBvcnQuCmh0dHA6Ly9mcmVlLWVsZWN0
+cm9ucy5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
