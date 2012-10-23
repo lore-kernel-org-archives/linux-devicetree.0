@@ -1,97 +1,71 @@
-From: Sebastien Guiriec <s-guiriec@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap5: Update GPIO with address space
- and interrupts
-Date: Tue, 23 Oct 2012 18:15:24 +0200
-Message-ID: <5086C29C.5000209@ti.com>
-References: <1350981432-6750-1-git-send-email-s-guiriec@ti.com> <1350981432-6750-2-git-send-email-s-guiriec@ti.com> <5086AE8E.60106@ti.com> <5086B316.6000001@ti.com> <5086BECA.9070502@ti.com> <5086C0C3.1060305@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
+Date: Tue, 23 Oct 2012 10:15:44 -0600
+Message-ID: <5086C2B0.6070006@wwwdotorg.org>
+References: <Pine.LNX.4.44L0.1210231004310.1635-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5086C0C3.1060305@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1210231004310.1635-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit and John,
-
-On 10/23/2012 06:07 PM, Benoit Cousson wrote:
-> On 10/23/2012 05:59 PM, Jon Hunter wrote:
+On 10/23/2012 08:10 AM, Alan Stern wrote:
+> On Mon, 22 Oct 2012, Stephen Warren wrote:
+> 
+>>> I see.  But why would it be done this way instead having a separate 
+>>> property?
 >>
->> On 10/23/2012 10:09 AM, Benoit Cousson wrote:
->>> On 10/23/2012 04:49 PM, Jon Hunter wrote:
->>>> Hi Seb,
->>>>
->>>> On 10/23/2012 03:37 AM, Sebastien Guiriec wrote:
->>>>> Add base address and interrupt line inside Device Tree data for
->>>>> OMAP5
->>>>>
->>>>> Signed-off-by: Sebastien Guiriec <s-guiriec@ti.com>
->>>>> ---
->>>>>   arch/arm/boot/dts/omap5.dtsi |   16 ++++++++++++++++
->>>>>   1 file changed, 16 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
->>>>> index 42c78be..9e39f9f 100644
->>>>> --- a/arch/arm/boot/dts/omap5.dtsi
->>>>> +++ b/arch/arm/boot/dts/omap5.dtsi
->>>>> @@ -104,6 +104,8 @@
->>>>>
->>>>>   		gpio1: gpio@4ae10000 {
->>>>>   			compatible = "ti,omap4-gpio";
->>>>> +			reg = <0x4ae10000 0x200>;
->>>>> +			interrupts = <0 29 0x4>;
->>>>>   			ti,hwmods = "gpio1";
->>>>>   			gpio-controller;
->>>>>   			#gpio-cells = <2>;
->>>>
->>>> I am wondering if we should add the "interrupt-parent" property to add
->>>> nodes in the device-tree source. I know that today the interrupt-parent
->>>> is being defined globally, but when device-tree maps an interrupt for a
->>>> device it searches for the interrupt-parent starting the current device
->>>> node.
->>>>
->>>> So in other words, for gpio1 it will search the gpio1 binding for
->>>> "interrupt-parent" and if not found move up a level and search again. It
->>>> will keep doing this until it finds the "interrupt-parent".
->>>>
->>>> Therefore, I believe it will improve search time and hence, boot time if
->>>> we have interrupt-parent defined in each node.
->>>
->>> Mmm, I'm not that sure. it will increase the size of the blob, so
->>> increase the time to load it and then to parse it. Where in the current
->>> case, it is just going up to the parent node using the already
->>> un-flatten tree in memory and thus that should not take that much time.
+>> Well, I did say normally:-)
 >>
->> Yes it will definitely increase the size, so that could slow things down.
+>> I can certainly see an argument for representing these differences using
+>> custom properties, rather than deriving the information from the
+>> compatible value. It's probably be OK to do so for something generic
+>> like this; it's just perhaps not always the default choice.
 >>
->>> That being said, it might be interesting to benchmark that to see what
->>> is the real impact.
+>> Do note that even though this binding document dictates a particular
+>> value for the compatible property, every device tree should additionally
+>> add a separate value alongside it to indicate the specific HW model
+>> that's actually present, so that if some device-specific bug-fix or
+>> workaround needs to be applied, the model can be identified anyway.
 >>
->> Right, I wonder what the key functions are we need to benchmark to get
->> an overall feel for what is best? Right now I am seeing some people add
->> the interrupt-parent for device nodes and others not. Ideally we should
->> be consistent, but at the same time it is probably something that we can
->> easily sort out later. So not a big deal either way.
->
-> For consistency, I'd rather not add it at all for the moment.
-> Later, when we will only support DT boot, people will start complaining
-> about the boot time increase and then we will start optimizing a little
-> bit :-)
+>> So, rather than:
+>>
+>> compatible = "usb-ehci";
+>>
+>> You should always have e.g.:
+>>
+>> compatible = "nvidia,tegra20-ehci", "usb-ehci";
+>>
+>> Given that, there is then always enough information in the device tree
+>> for the driver to be able to derive the other values from the compatible
+>> value.
+> 
+> Yes, I get it.
+> 
+>> Whether you want to derive the information, or whether you want to
+>> explicitly represent it via properties, is a decision to make based on
+>> the trade-offs.
+>>
+>> Oh, and I note that quite a few device trees already use compatible
+>> value "usb-ehci" in their device-trees. Care needs to be taken not to
+>> usurp that value from any existing device drivers if that was to be
+>> picked as the compatible value required by this binding.
+> 
+> Right.  I think Tony's new binding should use compatible value 
+> "usb-ehci-platform".  It will essentially be a superset of "usb-ehci".
 
-I just do it like that to be consistent with what is inside OMAP4 dtsi 
-for those IPs (GPIO/UART/MMC/I2C). Now after checking Peter already add 
-the interrupt-parent for all audio IPs (OMAP3/4/5). But here we need 
-also interrupts name. So here we should try to be consistent.
+I know this is bike-shedding a little bit, but...
 
-So I can send back the series for OMAP5 and update the OMAP4 with
-   interrupts-parent = <&gic>
+The word "platform" isn't really about describing the HW, but rather is
+derived from the Linux SW used to program that HW. DT should be purely
+about describing the HW.
 
-As of today we are not consistent.
-
->
-> Regards,
-> Benoit
->
->
+Perhaps "usb-ehci-generic" or "usb-ehci-simple" would be better?
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
