@@ -1,92 +1,85 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 5/5] arm: mvebu: Added SMP support for Armada XP
-Date: Tue, 23 Oct 2012 11:30:29 +0200
-Message-ID: <20121023093029.GY11837@lunn.ch>
-References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
- <1350925368-24243-6-git-send-email-gregory.clement@free-electrons.com>
- <20121022184537.GN21046@lunn.ch>
- <50865F59.8000507@free-electrons.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] PWM: vt8500: Update vt8500 PWM driver support
+Date: Tue, 23 Oct 2012 10:31:28 +0100
+Message-ID: <20121023093128.GR21164@n2100.arm.linux.org.uk>
+References: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
+ <1350643135-13197-2-git-send-email-linux@prisktech.co.nz>
+ <20121022063423.GA17181@avionic-0098.mockup.avionic-design.de>
+ <1350888712.3592.11.camel@gitbox> <1350889747.3592.17.camel@gitbox>
+ <20121022072448.GB30026@avionic-0098.mockup.avionic-design.de>
+ <1350891382.3592.22.camel@gitbox>
+ <20121022080414.GB4931@avionic-0098.mockup.avionic-design.de>
+ <1350981706.20938.7.camel@gitbox>
+ <20121023092247.GA13220@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <50865F59.8000507@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.or
+In-Reply-To: <20121023092247.GA13220-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2012 at 11:11:53AM +0200, Gregory CLEMENT wrote:
-> On 10/22/2012 08:45 PM, Andrew Lunn wrote:
-> > Hi Gregory
+On Tue, Oct 23, 2012 at 11:22:47AM +0200, Thierry Reding wrote:
+> On Tue, Oct 23, 2012 at 09:41:46PM +1300, Tony Prisk wrote:
+> > Further to the discussion, my preference is still for of_clk_get()
+> > (although I've changed the patch anyway as you saw because it makes no
+> > difference in this case) :)
 > > 
-> >> +void __init set_secondary_cpus_clock(void)
-> >> +{
-> >> +	int cpu;
-> >> +	unsigned long rate;
-> >> +	struct clk *cpu_clk = NULL;
-> >> +	struct device_node *np = NULL;
-> >> +
-> >> +	cpu = smp_processor_id();
-> >> +	np = of_find_node_by_type(np, "cpu");
-> >> +	np = NULL;
-> >> +	while ((np = of_find_node_by_type(np, "cpu"))) {
-> >> +		const u32 *reg;
-> >> +		int len;
-> >> +		reg = of_get_property(np, "reg", &len);
-> >> +		if (!reg || len != 4) {
-> >> +			pr_err("%s missing reg property\n", np->full_name);
-> >> +			continue;
-> >> +		}
-> >> +		if (be32_to_cpup(reg) == cpu) {
-> >> +			cpu_clk = of_clk_get(np, 0);
-> >> +			break;
-> >> +		}
-> >> +	}
-> >> +	WARN_ON(IS_ERR(cpu_clk));
-> >> +	rate = clk_get_rate(cpu_clk);
-> >> +
-> >> +	/* set all the other CPU clk to the same rate than the boot CPU */
-> >> +	np = NULL;
-> >> +	while ((np = of_find_node_by_type(np, "cpu"))) {
-> >> +		const u32 *reg;
-> >> +		int len;
-> >> +		reg = of_get_property(np, "reg", &len);
-> >> +		if (!reg || len != 4) {
-> >> +			pr_err("%s missing reg property\n", np->full_name);
-> >> +			continue;
-> >> +		}
-> >> +		if (be32_to_cpup(reg) != cpu) {
-> >> +			cpu_clk = of_clk_get(np, 0);
-> >> +			clk_set_rate(cpu_clk, rate);
-> >> +		}
+> > clk_get(x, NULL) and devm_clk_get(x, NULL) both seems like 'hacks' to
+> > allow platforms to convert to DT without having to update all their
+> > drivers first. It only allows the first (default) clock, as your pointed
+> > out. Getting a 2nd... clock relies on an optional property in DT (which
+> > again, seems like it is there to support 'old' drivers) which allows you
+> > to request clocks by name.
 > > 
-> > Maybe its hiding somewhere, but where is the clk_prepare_enable() for
-> > this cpu_clk clock?
-> > 
+> > of_clk_get() on the other hand seems like a properly native DT function.
+> > You don't need to know anything about the clock, as long as the correct
+> > clock is specified in the correct order as documented by the binding.
+> > Relying on 'pre-OF' code for a OF-only driver also seems
+> > counter-intuitive.
 > 
-> Well the clocks are always enable. In the clock framework, the cpu clocks
-> don't provide an enable function.
+> I do agree with those arguments. What I was saying is that for drivers
+> which aren't DT only, of_clk_get() is not an option and that maybe
+> others would be encouraged by the example to not use the generic APIs
+> even if their driver could be used in non-DT setups. But maybe I'm
+> worrying needlessly.
+> 
+> That said, maybe somebody with a broader view of things like Arnd
+> (Cc'ed) could share his thoughts.
 
-Is it possible in the hardware to disable them? Turning them off might
-save some power. If these chips end up in some data center server, it
-might be that CPU hotplugging is used.
+As I have already said, the way the DT bindings were done for the clk
+stuff was wrong.  A little thought put into it would've come up with
+a much better solution which wouldn't have needed of_clk_get() at all.
 
-> But maybe it is cleaner to call clk_prepare_enable() even if it does
-> nothing except update the usage count.
+How?
 
-You also have to watch out for the late_initcall which will disable
-all clocks which are running but nobody has claimed. This will become
-an issue if you do have enable/disable function in later versions of
-the clock functions.
+The arguments for clk_get() are:
+1. the struct device, which you can get the OF-node from.
+2. a _device_ _specific_ _clock_ _input_ _name_ (or NULL if there's only
+   one.)
 
-	Andrew
+So, we have something that defines a hardware clock input name, which
+can be used to generate a property name for OF.  So, what _could_ have
+been done is this:
+
+	clock-<input-name> = <&provider-node clk-output-index>;
+
+where the property name is generated by:
+
+	snprintf(prop, sizeof(prop), "clk-%s", name ? name : "default");
+
+So I continue to assert that our current design is wrong - and it will
+cause driver authors to pointlessly have to make a choice at every stage
+between DT and non-DT based systems.
