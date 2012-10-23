@@ -1,114 +1,92 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/10] tty: pxa: configure pin
-Date: Tue, 23 Oct 2012 11:26:40 +0200
-Message-ID: <CACRpkdY-XyagxGU_ya_FZirzbqStTirOC5nuBBwwFY3f4bBTYA@mail.gmail.com>
-References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-3-git-send-email-haojian.zhuang@gmail.com>
- <508080CB.5010904@wwwdotorg.org>
- <CACRpkdb5Jiw71jBLDXpf2VTJQx7_gABqs03_20CeCLbVT=JkaA@mail.gmail.com>
- <5085AC06.8070508@wwwdotorg.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 5/5] arm: mvebu: Added SMP support for Armada XP
+Date: Tue, 23 Oct 2012 11:30:29 +0200
+Message-ID: <20121023093029.GY11837@lunn.ch>
+References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
+ <1350925368-24243-6-git-send-email-gregory.clement@free-electrons.com>
+ <20121022184537.GN21046@lunn.ch>
+ <50865F59.8000507@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5085AC06.8070508-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rickard ANDERSSON <rickard.andersson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <50865F59.8000507@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.or
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 22, 2012 at 10:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 10/22/2012 02:45 AM, Linus Walleij wrote:
+On Tue, Oct 23, 2012 at 11:11:53AM +0200, Gregory CLEMENT wrote:
+> On 10/22/2012 08:45 PM, Andrew Lunn wrote:
+> > Hi Gregory
+> > 
+> >> +void __init set_secondary_cpus_clock(void)
+> >> +{
+> >> +	int cpu;
+> >> +	unsigned long rate;
+> >> +	struct clk *cpu_clk = NULL;
+> >> +	struct device_node *np = NULL;
+> >> +
+> >> +	cpu = smp_processor_id();
+> >> +	np = of_find_node_by_type(np, "cpu");
+> >> +	np = NULL;
+> >> +	while ((np = of_find_node_by_type(np, "cpu"))) {
+> >> +		const u32 *reg;
+> >> +		int len;
+> >> +		reg = of_get_property(np, "reg", &len);
+> >> +		if (!reg || len != 4) {
+> >> +			pr_err("%s missing reg property\n", np->full_name);
+> >> +			continue;
+> >> +		}
+> >> +		if (be32_to_cpup(reg) == cpu) {
+> >> +			cpu_clk = of_clk_get(np, 0);
+> >> +			break;
+> >> +		}
+> >> +	}
+> >> +	WARN_ON(IS_ERR(cpu_clk));
+> >> +	rate = clk_get_rate(cpu_clk);
+> >> +
+> >> +	/* set all the other CPU clk to the same rate than the boot CPU */
+> >> +	np = NULL;
+> >> +	while ((np = of_find_node_by_type(np, "cpu"))) {
+> >> +		const u32 *reg;
+> >> +		int len;
+> >> +		reg = of_get_property(np, "reg", &len);
+> >> +		if (!reg || len != 4) {
+> >> +			pr_err("%s missing reg property\n", np->full_name);
+> >> +			continue;
+> >> +		}
+> >> +		if (be32_to_cpup(reg) != cpu) {
+> >> +			cpu_clk = of_clk_get(np, 0);
+> >> +			clk_set_rate(cpu_clk, rate);
+> >> +		}
+> > 
+> > Maybe its hiding somewhere, but where is the clk_prepare_enable() for
+> > this cpu_clk clock?
+> > 
+> 
+> Well the clocks are always enable. In the clock framework, the cpu clocks
+> don't provide an enable function.
 
->> For the Ux500 drivers we have found that all of those that have pin
->> resources actually have to be handled by the driver. The reason is
->> that all of them have idle and/or sleep states that need to be
->> handled at runtime.
->
-> Well, presumably the pinctrl driver itself could have both default/idle
-> states, and system sleep could engage the appropriate system-wide setting.
+Is it possible in the hardware to disable them? Turning them off might
+save some power. If these chips end up in some data center server, it
+might be that CPU hotplugging is used.
 
-I thought about that, but it does not allow us to control the
-resource activation/deactivation order.
+> But maybe it is cleaner to call clk_prepare_enable() even if it does
+> nothing except update the usage count.
 
-In some drivers the suspend() path could be:
+You also have to watch out for the late_initcall which will disable
+all clocks which are running but nobody has claimed. This will become
+an issue if you do have enable/disable function in later versions of
+the clock functions.
 
-- pins to sleep
-- clk_disable
-- disable external regulator
-- release power domain
-
-In others:
-
-- clk_disable()
-- disable external regulator
-- pins to sleep()
-- release power domain
-
-Ulf Hansson ran into this a while back.
-
-Just like with the notifier approach, this approach assumes that either
-the ordering above doesn't matter, or that it is the same for all drivers.
-
->> As an additional complication our drivers are used also by
->> the Versatile and SPEAr family of platforms, so the control
->> need to be tolerant (accept missing pinctrl handles and states)
->> as well. (I can see that other drivers take shortcuts by being less
->> elaborate since there is a 1:1 driver<->platform mapping.)
->
-> Isn't the driver (or DT binding) supposed to define what pinctrl states
-> must exist, and those state must always exist? There's no requirement
-> for a pinctrl state definition to always actually contain content that
-> changes the state. That's exactly why PIN_MAP_TYPE_DUMMY_STATE exists.
-
-Well, it could also define that e.g. the "sleep" state is optional.
-
-I'm sort of scared about imposing too strict usage patterns as
-it may cause more problems than it solves even if the code
-does look simpler.
-
->> An alternative to embedding the pin handling code into
->> the drivers is to use bus notifiers as is done with the
->> shmobile clocking by drivers/base/power/clock_ops.c
->> I could easily imagine pinctrl_ops.c like that for some
->> platforms. This mandates still binding the pin table entries
->> to a device but avoids adding any code to the drivers.
->>
->> However this latter approach does not work for us (Ux500) -
->> the three resources we have: clocks, pins and power domains
->> are dependent on state switch ordering (sometimes you need
->> to switch off the clock then set pin state, sometimes the
->> other way around) and it is not even
->> the same for all drivers - the notifier approach mandates
->> that all drivers do the clock, power domain and pin handling
->> uniformly.
->
-> That certainly does imply that individual drivers do need to handle this
-> explicitly. Although I still think that only specific drivers actually
-> affected by this should end up actively managing pinctrl; shouldn't
-> anything that can get away with relying on system hogs do so?
-
-I don't know. Having say regulator, clock and pin handling in the
-driver itself also gives a nice encapsulated view and sense of
-control when just reading that one driver.
-
-As one developer put it he does not really like that bus notifiers
-are doing things behind his back. The debugging of the
-driver can become very hairy, as you trace through bus
-notifiers etc to find out what is wrong with your pins/clock/voltage.
-
-We don't have hogs, bus notifiers and the like for regulators,
-and IIRC Mark disliked the idea. Basically I think it's better if
-all resources are atleast handled the same way.
-
-Yours,
-Linus Walleij
+	Andrew
