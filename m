@@ -1,11 +1,19 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: at91: dt: evk-pro3: enable uart0 and uart2
-Date: Tue, 23 Oct 2012 12:00:16 +0200
-Message-ID: <1350986416-16246-1-git-send-email-fabio.porcedda@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/10] tty: pxa: configure pin
+Date: Tue, 23 Oct 2012 11:59:30 +0200
+Message-ID: <CACRpkdb+DkZbTDZamGMN+9t07kPktuA_3QtHQJFv+Vu859r7KA@mail.gmail.com>
+References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-3-git-send-email-haojian.zhuang@gmail.com>
+ <508080CB.5010904@wwwdotorg.org>
+ <CACRpkdb5Jiw71jBLDXpf2VTJQx7_gABqs03_20CeCLbVT=JkaA@mail.gmail.com>
+ <5085AC06.8070508@wwwdotorg.org>
+ <CACRpkdY-XyagxGU_ya_FZirzbqStTirOC5nuBBwwFY3f4bBTYA@mail.gmail.com>
+ <20121023093711.GS4477@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121023093711.GS4477-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,33 +24,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rickard ANDERSSON <rickard.andersson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/evk-pro3.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Tue, Oct 23, 2012 at 11:37 AM, Mark Brown
+<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Tue, Oct 23, 2012 at 11:26:40AM +0200, Linus Walleij wrote:
+>> I thought about that, but it does not allow us to control the
+>> resource activation/deactivation order.
+>
+>> In some drivers the suspend() path could be:
+>
+>> - pins to sleep
+>> - clk_disable
+>> - disable external regulator
+>> - release power domain
+>
+>> In others:
+>
+>> - clk_disable()
+>> - disable external regulator
+>> - pins to sleep()
+>> - release power domain
+>
+>> Ulf Hansson ran into this a while back.
+>
+>> Just like with the notifier approach, this approach assumes that either
+>> the ordering above doesn't matter, or that it is the same for all drivers.
+>
+> Can we handle this with power domains - if different devices require
+> different orderings they can be placed in power domains which implement
+> the appropriate orderings for them?
 
-diff --git a/arch/arm/boot/dts/evk-pro3.dts b/arch/arm/boot/dts/evk-pro3.dts
-index ce959ee..96e50f5 100644
---- a/arch/arm/boot/dts/evk-pro3.dts
-+++ b/arch/arm/boot/dts/evk-pro3.dts
-@@ -22,6 +22,14 @@
- 				status = "okay";
- 			};
- 
-+			usart0: serial@fffb0000 {
-+				status = "okay";
-+			};
-+
-+			usart2: serial@fffb8000 {
-+				status = "okay";
-+			};
-+
- 			usb1: gadget@fffa4000 {
- 				atmel,vbus-gpio = <&pioC 5 0>;
- 				status = "okay";
--- 
-1.7.11.3
+clocks, regulators, pins and all in power domains?
+
+Then we should rename them "device resource domains" or
+something...
+
+I have a strong sense of system-wide all-or-nothing approaches
+to this problem.
+
+- Either we use "power" domains to handle every resource the
+ device has.
+- Or the device driver manages it's own resources.
+
+I find it pretty hard to build consensus around either idea.
+
+The problem is that the latter approach (devices drivers themselves
+take clocks, domain power, etc) is already quite widespread
+in the kernel so to get the entire world consistent to the former
+approach would be pretty painful I think. Especially in the case
+where a device driver is used on more than one SoC.
+
+Yours,
+Linus Walleij
