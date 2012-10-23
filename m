@@ -1,19 +1,17 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 2/3] PWM: vt8500: Update vt8500 PWM driver support
-Date: Tue, 23 Oct 2012 11:22:47 +0200
-Message-ID: <20121023092247.GA13220@avionic-0098.mockup.avionic-design.de>
-References: <1350643135-13197-1-git-send-email-linux@prisktech.co.nz>
- <1350643135-13197-2-git-send-email-linux@prisktech.co.nz>
- <20121022063423.GA17181@avionic-0098.mockup.avionic-design.de>
- <1350888712.3592.11.camel@gitbox> <1350889747.3592.17.camel@gitbox>
- <20121022072448.GB30026@avionic-0098.mockup.avionic-design.de>
- <1350891382.3592.22.camel@gitbox>
- <20121022080414.GB4931@avionic-0098.mockup.avionic-design.de>
- <1350981706.20938.7.camel@gitbox>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/10] tty: pxa: configure pin
+Date: Tue, 23 Oct 2012 11:26:40 +0200
+Message-ID: <CACRpkdY-XyagxGU_ya_FZirzbqStTirOC5nuBBwwFY3f4bBTYA@mail.gmail.com>
+References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-3-git-send-email-haojian.zhuang@gmail.com>
+ <508080CB.5010904@wwwdotorg.org>
+ <CACRpkdb5Jiw71jBLDXpf2VTJQx7_gABqs03_20CeCLbVT=JkaA@mail.gmail.com>
+ <5085AC06.8070508@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7346317279228493151=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350981706.20938.7.camel@gitbox>
+In-Reply-To: <5085AC06.8070508-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,194 +22,93 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rickard ANDERSSON <rickard.andersson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Oct 22, 2012 at 10:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 10/22/2012 02:45 AM, Linus Walleij wrote:
 
---===============7346317279228493151==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
-Content-Disposition: inline
+>> For the Ux500 drivers we have found that all of those that have pin
+>> resources actually have to be handled by the driver. The reason is
+>> that all of them have idle and/or sleep states that need to be
+>> handled at runtime.
+>
+> Well, presumably the pinctrl driver itself could have both default/idle
+> states, and system sleep could engage the appropriate system-wide setting.
 
+I thought about that, but it does not allow us to control the
+resource activation/deactivation order.
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In some drivers the suspend() path could be:
 
-On Tue, Oct 23, 2012 at 09:41:46PM +1300, Tony Prisk wrote:
-> On Mon, 2012-10-22 at 10:04 +0200, Thierry Reding wrote:
-> > On Mon, Oct 22, 2012 at 08:36:22PM +1300, Tony Prisk wrote:
-> > > On Mon, 2012-10-22 at 09:24 +0200, Thierry Reding wrote:
-> > > > On Mon, Oct 22, 2012 at 08:09:07PM +1300, Tony Prisk wrote:
-> > > > > On Mon, 2012-10-22 at 19:51 +1300, Tony Prisk wrote:
-> > > > > > >=20
-> > > > > > > >  	chip =3D devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERN=
-EL);
-> > > > > > > >  	if (chip =3D=3D NULL) {
-> > > > > > > >  		dev_err(&pdev->dev, "failed to allocate memory\n");
-> > > > > > > > @@ -123,26 +144,32 @@ static int __devinit pwm_probe(struct=
- platform_device *pdev)
-> > > > > > > >  	chip->chip.ops =3D &vt8500_pwm_ops;
-> > > > > > > >  	chip->chip.base =3D -1;
-> > > > > > > >  	chip->chip.npwm =3D VT8500_NR_PWMS;
-> > > > > > > > +	chip->clk =3D of_clk_get(np, 0);
-> > > > > > >=20
-> > > > > > > I thought this was supposed to work transparently across OF a=
-nd !OF
-> > > > > > > configurations by using just clk_get() or devm_clk_get()? I g=
-uess that
-> > > > > > > if the driver depends on OF, then this would be moot, but we =
-should
-> > > > > > > probably stick to the standard usage anyway.
-> > > > > > >=20
-> > > > > > > Furthermore, of_clk_get() doesn't seem to be managed, so you'=
-d need to
-> > > > > > > add explicit clk_put() in the error cleanup paths. One more a=
-rgument in
-> > > > > > > favour of using devm_clk_get() instead.
-> > > > > >=20
-> > > > > > Hmm good point. I stuck with of_ functions because its an OF on=
-ly driver
-> > > > > > and it seemed 'backward' to mix old code with new. It does pose=
- the
-> > > > > > question of 'why have of_clk_get() if existing functions work b=
-etter'.
-> > > > >=20
-> > > > > Was about to fix this but noticed why it wasn't like this to start
-> > > > > with :)
-> > > > >=20
-> > > > > struct clk *devm_clk_get(struct device *dev, const char *id);
-> > > > > struct clk *of_clk_get(struct device_node *np, int index);
-> > > > >=20
-> > > > > devm_clk_get requires me to 'get' the clock by name. arch-vt8500 =
-(and I
-> > > > > believe a lot of other arch's) don't enforce names for clocks def=
-ined in
-> > > > > devicetree, therefore there is no way for me to know what name th=
-e clk
-> > > > > has unless I include in the binding that the clock must be named =
-'xxx'.
-> > > >=20
-> > > > I thought clk_get() was supposed to return the first clock specifie=
-d in
-> > > > DT if you pass NULL as the consumer name. I haven't tested this tho=
-ugh.
-> > > > And I haven't looked at the code.
-> > > >=20
-> > > > > of_clk_get retrieves it by the dt-node + index, so it doesn't car=
-e as
-> > > > > long as its the 1st clock listed.
-> > > >=20
-> > > > So the usual way to do this, I believe, is:
-> > > >=20
-> > > > 	clocks =3D <&clk_foo>;
-> > > > 	clock-names =3D "foo";
-> > > >=20
-> > > > Then use:
-> > > >=20
-> > > > 	clk =3D devm_clk_get(&pdev->dev, "foo");
-> > > >=20
-> > > > And as I said above, I was under the impression that the default wo=
-uld
-> > > > be to use the first clock if NULL was specified instead of "foo".
-> > > >=20
-> > > > Thierry
-> > >=20
-> > > clock-names is an optional property (as defined in
-> > > bindings/clock/clock-bindings.txt) so relying on it is .. well,
-> > > unreliable.
-> > >=20
-> > > What you say makes sense, but it means the binding document has to ma=
-ke
-> > > an optional property into a required property simply to use an 'old'
-> > > function when a new function would 'work' (granted not as well, as you
-> > > pointed out) without requiring the optional property.
-> >=20
-> > Okay, I've just checked the core clock code, and indeed if you run
-> > clk_get() with con_id set to NULL, you'll eventually call of_clk_get()
-> > with index =3D=3D 0. That's exactly what you want, right? The only setup
-> > where this won't work out is if you need to handle multiple clocks, in
-> > which case I think it would make sense to make the clock-names property
-> > mandatory. But for this driver that won't be necessary, since it will
-> > never use a second clock, right?
-> >=20
-> > > Your subsystem - your rules. Let me know if I've managed to sway you =
-or
-> > > not :)
-> >=20
-> > I'd rather persuade you than force the issue. =3D)
-> >=20
-> > Thierry
->=20
-> Further to the discussion, my preference is still for of_clk_get()
-> (although I've changed the patch anyway as you saw because it makes no
-> difference in this case) :)
->=20
-> clk_get(x, NULL) and devm_clk_get(x, NULL) both seems like 'hacks' to
-> allow platforms to convert to DT without having to update all their
-> drivers first. It only allows the first (default) clock, as your pointed
-> out. Getting a 2nd... clock relies on an optional property in DT (which
-> again, seems like it is there to support 'old' drivers) which allows you
-> to request clocks by name.
->=20
-> of_clk_get() on the other hand seems like a properly native DT function.
-> You don't need to know anything about the clock, as long as the correct
-> clock is specified in the correct order as documented by the binding.
-> Relying on 'pre-OF' code for a OF-only driver also seems
-> counter-intuitive.
+- pins to sleep
+- clk_disable
+- disable external regulator
+- release power domain
 
-I do agree with those arguments. What I was saying is that for drivers
-which aren't DT only, of_clk_get() is not an option and that maybe
-others would be encouraged by the example to not use the generic APIs
-even if their driver could be used in non-DT setups. But maybe I'm
-worrying needlessly.
+In others:
 
-That said, maybe somebody with a broader view of things like Arnd
-(Cc'ed) could share his thoughts.
+- clk_disable()
+- disable external regulator
+- pins to sleep()
+- release power domain
 
-> Granted of_clk_get() doesn't provide the 'garbage-collection' of
-> devm_get_clk() but I think that is just an arguement to needing
-> of_devm_clk_get().
+Ulf Hansson ran into this a while back.
 
-That can be remedied by adding a corresponding function, so the argument
-doesn't really count.
+Just like with the notifier approach, this approach assumes that either
+the ordering above doesn't matter, or that it is the same for all drivers.
 
-Thierry
+>> As an additional complication our drivers are used also by
+>> the Versatile and SPEAr family of platforms, so the control
+>> need to be tolerant (accept missing pinctrl handles and states)
+>> as well. (I can see that other drivers take shortcuts by being less
+>> elaborate since there is a 1:1 driver<->platform mapping.)
+>
+> Isn't the driver (or DT binding) supposed to define what pinctrl states
+> must exist, and those state must always exist? There's no requirement
+> for a pinctrl state definition to always actually contain content that
+> changes the state. That's exactly why PIN_MAP_TYPE_DUMMY_STATE exists.
 
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature
+Well, it could also define that e.g. the "sleep" state is optional.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+I'm sort of scared about imposing too strict usage patterns as
+it may cause more problems than it solves even if the code
+does look simpler.
 
-iQIcBAEBAgAGBQJQhmHnAAoJEN0jrNd/PrOhTJ0P/jz6v1hV0ZPHe556ZmyFGafO
-oGKGkF3TbDi3ff3+Xv4oD02ppxmtetRLcrKYbTLYlQVVQfE+4DgAg48H+6PZjs6y
-WExO7GEINz/6YGdYz2LtpnGeRLXOXYZVS9Mtb77PmX+9TKrDRgvPqKnJ8ivnj/lP
-Ht/RWhT/iqTle003U6y5yIIvwMXmmt71zCecX+24Imp7LQEjVbOdSAX16plx9Sgk
-foiu9tl7+CHN7229u3WTl0+c/Mr295OaeAIxBapCELm5/v3tPWLiZ/ova2DbNv+G
-KeRLlHXgebaX1S2Ocj2NeSjdUspNotVeimUVV4xuDnJ8KX823VIBqYZRkrUuMoXw
-1u3yCuzTLagv8e2Q4B98+d/rHuP5shhAdi7WKX6hYng3ezVDCJIyTv9yS3NhLM9B
-mdjLUWLD7r6fdKjL8ZM89J2dUnxo0vxJltaOBIwc7Q5vJAKZ9sk4b+pF7BpBBJNg
-zVzVSb4gAXZQAOveFCEC7XW3BWOqnsE5fxkoxQD9ZyJPq2SBW2f3kgN7BVdnWlv7
-HWlJCgbKq7s27lOXfMGR+fx5vErF/1uIMtXOwz7ek9mwlq9th5xoA7gHWQIYbLjZ
-ex/JNL4RWjdTUeooyK/oXEB/mHIihyzGp30G8r/2RZyZG6ySG623G43LuES0PO/a
-OP1defE7uT7RcxeAS5AE
-=j0t/
------END PGP SIGNATURE-----
+>> An alternative to embedding the pin handling code into
+>> the drivers is to use bus notifiers as is done with the
+>> shmobile clocking by drivers/base/power/clock_ops.c
+>> I could easily imagine pinctrl_ops.c like that for some
+>> platforms. This mandates still binding the pin table entries
+>> to a device but avoids adding any code to the drivers.
+>>
+>> However this latter approach does not work for us (Ux500) -
+>> the three resources we have: clocks, pins and power domains
+>> are dependent on state switch ordering (sometimes you need
+>> to switch off the clock then set pin state, sometimes the
+>> other way around) and it is not even
+>> the same for all drivers - the notifier approach mandates
+>> that all drivers do the clock, power domain and pin handling
+>> uniformly.
+>
+> That certainly does imply that individual drivers do need to handle this
+> explicitly. Although I still think that only specific drivers actually
+> affected by this should end up actively managing pinctrl; shouldn't
+> anything that can get away with relying on system hogs do so?
 
---0OAP2g/MAC+5xKAE--
+I don't know. Having say regulator, clock and pin handling in the
+driver itself also gives a nice encapsulated view and sense of
+control when just reading that one driver.
 
---===============7346317279228493151==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+As one developer put it he does not really like that bus notifiers
+are doing things behind his back. The debugging of the
+driver can become very hairy, as you trace through bus
+notifiers etc to find out what is wrong with your pins/clock/voltage.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+We don't have hogs, bus notifiers and the like for regulators,
+and IIRC Mark disliked the idea. Basically I think it's better if
+all resources are atleast handled the same way.
 
---===============7346317279228493151==--
+Yours,
+Linus Walleij
