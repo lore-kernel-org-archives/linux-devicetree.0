@@ -1,102 +1,87 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v3] pwm: vt8500: Update vt8500 PWM driver support
-Date: Wed, 24 Oct 2012 00:14:19 +0200
-Message-ID: <20121023221419.GA8501@avionic-0098.mockup.avionic-design.de>
-References: <20121022084000.GB29790@avionic-0098.mockup.avionic-design.de>
- <1350929425-17516-1-git-send-email-linux@prisktech.co.nz>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap5: Update GPIO with address space
+ and interrupts
+Date: Tue, 23 Oct 2012 18:15:54 -0500
+Message-ID: <5087252A.50203@ti.com>
+References: <1350981432-6750-1-git-send-email-s-guiriec@ti.com>
+ <1350981432-6750-2-git-send-email-s-guiriec@ti.com> <5086AE8E.60106@ti.com>
+ <5086CC02.6070801@firmworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1350929425-17516-1-git-send-email-linux@prisktech.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Prisk <linux@prisktech.co.nz>
-Cc: devicetree-discuss@lists.ozlabs.org, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5086CC02.6070801-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sebastien Guiriec <s-guiriec-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mitch,
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/23/2012 11:55 AM, Mitch Bradley wrote:
+> On 10/23/2012 4:49 AM, Jon Hunter wrote:
+> 
+>> Therefore, I believe it will improve search time and hence, boot time if
+>> we have interrupt-parent defined in each node.
+> 
+> I strongly suspect (based on many years of performance tuning, with
+> special focus on boot time) that the time difference will be completely
+> insignificant.  The total extra time for walking up the interrupt tree
+> for every interrupt in a large system is comparable to the time it takes
+> to send a few characters out a UART.  So you can get more improvement
+> from eliminating a single printk() than from globally adding per-node
+> interrupt-parent.
+> 
+> Furthermore, the cost of processing all of the interrupt-parent
+> properties is probably similar to the cost of the avoided tree walks.
+> 
+> CPU cycles are very fast compared to I/O register accesses, say a factor
+> of 100.  Now consider that many modern devices contain embedded
+> microcontrollers (SD cards, network interface modules, USB hubs and
+> devices, ...), and those devices usually require various delays measured
+> in milliseconds, to ensure that the microcontroller is ready for the
+> next initialization step.  Those delays are extremely long compared to
+> CPU cycles.  Obviously, some of that can be overlapped by careful
+> multithreading, but that isn't free either.
+> 
+> The bottom line is that I'm pretty sure that adding per-node
+> interrupt-parent would not be worthwhile from the standpoint of speeding
+> up boot time.
 
-On Tue, Oct 23, 2012 at 07:10:24AM +1300, Tony Prisk wrote:
-[...]
-> @@ -87,6 +98,11 @@ static int vt8500_pwm_enable(struct pwm_chip *chip, st=
-ruct pwm_device *pwm)
->  {
->  	struct vt8500_chip *vt8500 =3D to_vt8500_chip(chip);
-> =20
-> +	if (!clk_enable(vt8500->clk)) {
-> +		dev_err(chip->dev, "failed to enable clock\n");
-> +		return -EBUSY;
-> +	};
-> +
+Absolutely, I don't expect this to miraculously improve the boot time or
+suggest that this is a major contributor to boot time, but what is the
+best approach in general in terms of efficiency (memory and time). In
+other words, is there a best practice? And from your feedback, I
+understand that adding a global interrupt-parent is a good practice.
 
-I don't think that works. The clock API returns 0 on success and a
-negative error code on failure. So this should rather be something like:
+For a bit of fun, I took an omap4430 board and benchmarked the time
+taken by the of_irq_find_parent() when interrupt-parent was defined for
+each node using interrupts and without.
 
-	err =3D clk_enable(vt8500->clk);
-	if (err < 0) {
-		dev_err(chip->dev, "failed to enable clock: %d\n", err);
-		return err;
-	}
+There were a total of 47 device nodes using interrupts. Adding the
+interrupt-parent to all 47 nodes increased the dtb from 13211 bytes to
+13963 bytes.
 
-> @@ -123,6 +153,12 @@ static int __devinit pwm_probe(struct platform_devic=
-e *pdev)
->  	chip->chip.ops =3D &vt8500_pwm_ops;
->  	chip->chip.base =3D -1;
->  	chip->chip.npwm =3D VT8500_NR_PWMS;
-> +	chip->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +
+On boot-up I saw 117 calls to of_irq_find_parent() for this platform
+(there appears to be multiple calls for a given device). Without
+interrupt-parent defined for each node total time spent in
+of_irq_find_parent() was 1.028 ms where as with interrupt-parent defined
+for each node the total time was 0.4032 ms. This was done using a
+38.4MHz timer and the overhead of reading the timer 117 times was about
+36 us.
 
-The blank line should go above the call to devm_clk_get().
+I understand that this does not provide the full picture, but I wanted
+to get a better handle on the times here. So yes the overall overhead
+here is not significant for us to worry about.
 
-> +	if (IS_ERR_OR_NULL(chip->clk)) {
-> +		dev_err(&pdev->dev, "clock source not specified\n");
-> +		return PTR_ERR(chip->clk);
-> +	}
-[...]
-> +	if (!clk_prepare(chip->clk)) {
-> +		dev_err(&pdev->dev, "failed to prepare clock\n");
-> +		return -EBUSY;
-> +	}
-> +
-
-Same comment here. I wonder how this code can work, since if the clock
-is properly prepared, then it will return 0, and the above will return
--EBUSY.
-
->  	ret =3D pwmchip_add(&chip->chip);
-> -	if (ret < 0)
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to add pwmchip\n");
-
-Error messages can be considered prose, so this should be: "failed to
-add PWM chip".
-
-Thierry
-
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQhxa7AAoJEN0jrNd/PrOhJAMQALLHYDTzGYbBMFzZBcqkAniQ
-JIHL0OArj+w3jYOdGfFcFpsEV4S4WOfuYJLtqFlEvCfB4SekSQmVLBzosP7OJZGJ
-fVuPvbiisrIENOAcA/+GJmS2Qqa7Vq9s/6xWN4IpyRtDgVBCpEbfF6KfEvTV7SnF
-DR4VABtEcJGoYcI1ENy7KJQNRVeqF3Akzz2446Wa/2Yo0ybSz6ONFaxAU6T0pGFB
-Ja1YuECbOhgLqDXamUmSlUrqOBpmYoryfCZCTQS5GlwRIe5RtHz9bENFQf0TrAut
-f1B983K7Ndfs2GIKEIvghi5Ax9e4vUTEjmXB5/q02019vv6485tYnI2xyFaeUHz7
-IMvUZ75MZcFfOig0eFXGcJkX2rIjQC2GQqz+qaFIbJKnmiJiER9shna9YjbVGroo
-Qrra8xW/Ndhb+pVhJka8nAeQ43hMK4M9dfMIl7+2f+FMEsQwW0uj6UrujKG1+ptQ
-nza3edzALK18qg5GZRvsRtCXRl8tBRn2OtpNTKnKZ5bCEtEDQJjDUgmb7aro1D41
-kmzxUipGKB0FHXQ8sDUkVI7X4ngKcWjSVObIxBeHv3io4DhYALAPcOb0zttGNqUQ
-yzDNctp6whRSAPc38YRp6QchXFHsyD3k2HUhcjc/1vKFp/6391H0ig+bcyJ4OIjr
-5Vcvubr+cq8G9zmWQh+y
-=KaBc
------END PGP SIGNATURE-----
-
---x+6KMIRAuhnl3hBn--
+Cheers
+Jon
