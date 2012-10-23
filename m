@@ -1,63 +1,67 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
- driver
-Date: Tue, 23 Oct 2012 15:33:43 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1210231522230.1635-100000@iolanthe.rowland.org>
-References: <5086E62D.8040407@wwwdotorg.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Tue, 23 Oct 2012 13:02:49 -0700
+Message-ID: <20121023200249.GA2712@core.coreip.homeip.net>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121022155028.GA13791@core.coreip.homeip.net>
+ <508660D4.9030507@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5086E62D.8040407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <508660D4.9030507@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Oct 2012, Stephen Warren wrote:
-
-> > Nothing intrinsically distinguishes this class of hardware.  The only
-> > thing these devices have in common is that they can be managed by
-> > Linux's ehci-platform driver.
+On Tue, Oct 23, 2012 at 11:18:12AM +0200, Benoit Cousson wrote:
+> Hi Dimitry,
 > 
-> I don't agree. They're all EHCI USB controllers (or all EHCI USB
-> controllers that don't require custom drivers due to quirks), which is a
-> much more general statement than anything related to which driver Linux
-> uses for them.
-
-That's true, but it doesn't distinguish these devices.  There are other
-EHCI controllers with no quirks that nevertheless can't be handled by
-ehci-platform because they have requirements (_not_ quirks) that
-ehci-platform is unable to deal with currently -- clocks or power
-supplies or special register settings or PHYs or etc.
-
-> > In essense, we're trying to say that the HW is compatible with a 
-> > particular driver rather than with some other type of HW.
+> On 10/22/2012 05:50 PM, Dmitry Torokhov wrote:
+> > Hi Sourav,
+> > 
+> > On Mon, Oct 22, 2012 at 06:43:00PM +0530, Sourav Poddar wrote:
+> >> Adapt keypad to use pinctrl framework.
+> >>
+> >> Tested on omap4430 sdp with 3.7-rc1 kernel.
+> > 
+> > I do not see anything in the driver that would directly use pinctrl. Is
+> > there a better place to select default pin configuration; maybe when
+> > instantiating platform device?
 > 
-> Using a compatible value in order to pick a specific driver in Linux is
-> explicitly against the device tree design principles; DT is supposed to
-> represent just the hardware.
-> 
-> > Maybe DT
-> > wasn't intended to provide this kind of information, but it seems like 
-> > a logical thing to do.  Unless DT already offers some other way to 
-> > accomplish the same thing?
-> 
-> The typical way is for the Linux driver to declare that is supports a
-> variety of different HW models.
-> 
-> Admittedly this is annoying when there are many HW models that otherwise
-> wouldn't need any driver changes, hence the desire to (additionally)
-> include some generic value in the compatible field, but again, what that
-> generic value is should be driven by the HW itself, not the SW that's
-> using it.
+> Why?
+> The devm_pinctrl_get_select_default is using the pinctrl.
 
-Okay, fine.  But then what should the binding documentation specify for
-the compatible value?  A list of all the HW models that the driver
-currently supports?
+No, I guess we ihave different understanding of what "directly use" means.
+This particular driver does directly use interrupts: it requests it and
+performs some actions when interrupt arrives. Same goes for IO memory -
+it gets requested, then we access it. With pinctrl we do not do anything
+- we just ask another layer to configure it and that is it.
 
-Alan Stern
+I have seen just in a few days 3 or 4 drivers having exactly the same
+change - call to devm_pinctrl_get_select_default(), and I guess I will
+receive the same patches for the rest of input drivers shortly.
+This suggests that the operation is done at the wrong level. Do the
+pin configuration as you parse DT data, the same way you set up i2c
+devices registers in of_i2c.c, and leave the individual drivers that do
+not care about specifics alone.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> That's why it is named "get_select_default" and not "get" only.
+> This API ensure that the pin will be set to the default state, and this
+> is all we need to do during the probe.
+
+Why during the probe and not by default? Realistically, the driver will
+be loaded as long as there is a matching device and pins will need to be
+configured.
+
+> 
+> There is no point to change the mux if the driver is not probed, because
+> potentially the pin can be use be another driver.
+
+What other driver would use it? Who would chose what driver to load?
+
+Thanks.
+
+-- 
+Dmitry
