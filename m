@@ -1,65 +1,91 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [RFC PATCH 3.7.0-rc2] dt: match id-table before creating platform
- device
-Date: Tue, 23 Oct 2012 11:30:59 +0100
-Message-ID: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Tue, 23 Oct 2012 13:29:03 +0300
+Message-ID: <20121023102903.GA24820@arwen.pp.htv.fi>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121022155028.GA13791@core.coreip.homeip.net>
+ <CACRpkdaQ1WfRWrx=RXMVkeFtwdERJsOpVa3DaXBTU2KZdgqhRQ@mail.gmail.com>
+ <508664CA.7000601@ti.com>
+ <CACRpkdbhCS-Vb0DtbTZQ_Zw_8SOh3Bqutme3Y2-QrxNqvMiNNw@mail.gmail.com>
+ <20121023100333.GA24418@arwen.pp.htv.fi>
+ <20121023122312.56b23e1c@skate>
+ <CACRpkdb+f44jw1vTYvJT0bnMOP8XQe8ztDUHiwtS2JHtPWAGXw@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb+f44jw1vTYvJT0bnMOP8XQe8ztDUHiwtS2JHtPWAGXw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, balbi@ti.com, Benoit Cousson <b-cousson@ti.com>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Amit Kucheria <amit.kucheria@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As part of of_platform_populate call, the existing code iterates each
-child node and then creates a platform device for each child, however
-there is bug in the code which does not check the match table before
-creating the platform device. This might result creating two platfrom
-devices and also invoking driver probe twice, which is incorrect.
+Hi,
 
-This patch moves a existing of_match_node check to start of the function
-to fix the bug, doing this way will return immediately without creating
-any datastructures if the child does not match the supplied match-table.
+On Tue, Oct 23, 2012 at 12:29:28PM +0200, Linus Walleij wrote:
+> On Tue, Oct 23, 2012 at 12:23 PM, Thomas Petazzoni
+> <thomas.petazzoni@free-electrons.com> wrote:
+> >
+> > On Tue, 23 Oct 2012 13:03:33 +0300, Felipe Balbi wrote:
+> >
+> >> > But it appears that shmobile prefer to get all resources using
+> >> > bus notifiers.
+> >> >
+> >> > So we need to form some kind of consensus ... or live with
+> >> > the fact that different systems do it different ways. Which will
+> >> > explode the day we need to use a driver on two systems,
+> >> > each using the other approach :-)
+> >>
+> >> I much prefer having drivers explicitly manage all their resources,
+> >> which would mean that pinctrl calls need to be done on probe() and, if
+> >> necessary, during suspend()/resume().
+> >>
+> >> Using bus notifiers for that is quite a hack IMHO.
+> >
+> > Agreed. Just like drivers do their ioremap, request_irq and others,
+> > they should also request their pin resources using the pinctrl API.
+> > Hiding this behind a bus notifier is not nice.
+>=20
+> So the biggest implementation of the notifier approach to resource
+> handling is the SH clock thing:
+> drivers/base/power/clock_ops.c
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
----
- drivers/of/platform.c |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+that's different right ? It's just creating the list of clocks, device
+drivers still have to call pm_clk_add().
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b80891b..1aaa560 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -367,6 +367,9 @@ static int of_platform_bus_create(struct device_node *bus,
- 		return 0;
- 	}
- 
-+	if (!of_match_node(matches, bus))
-+		return 0;
-+
- 	auxdata = of_dev_lookup(lookup, bus);
- 	if (auxdata) {
- 		bus_id = auxdata->name;
-@@ -379,7 +382,7 @@ static int of_platform_bus_create(struct device_node *bus,
- 	}
- 
- 	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
--	if (!dev || !of_match_node(matches, bus))
-+	if (!dev)
- 		return 0;
- 
- 	for_each_child_of_node(bus, child) {
--- 
-1.7.0.4
+That's ok, I guess, otherwise all struct device would allocate memory
+which hardly ever used (so far).
+
+--=20
+balbi
+
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQhnFvAAoJEIaOsuA1yqREgMsQAJNJcFLikO8MiSiiIpbOyOUf
+IOwqJUSqAx8BGrPQuUYeFWM6INwmmfyvkxvK3/G0gRzVD59hZGq5evMqgWDl/GDg
+TV47q7piCJUC9BadnoAB3q+SmMdSdn87QwID9tWJu1hbdxn2Nd3FofoPxTRjrpuK
+5d26eAHjhXcGP8DAww0AVlnokzepsODHoV9uN3D8UtLqDwQ0+ccLUFhdBd3uVSSV
+5GUkECwT7xvSDkOwyFoJXmMYe3e20mEVRjjs9g0I6Bjb/n7lF2Lw6otOv5mpFoKv
+Lp+gJtvLxJebCGlznMAVWEHNml9tAnTaY0GEpFzpwo2X73tM5cfRRdtuYeLRj1KO
+75a8u459UmAlJKCFDdux1TRKnxjAxZB46vbTCCjjERVAzvQn2kdnVmoH7PbhRkK8
+G+EK/FGpmsI8iyX7Qad0/LzW4XULfzEjUpyZub5sbwW5oRJQFNi9FP6cwoh/YACv
+vWHJpgI/fWT75jzH8ZtnkdHebIcX7Gjsk08tGTTmfv2jFA6WKtztxe5LVFqCuL3x
+eqRZJUtQsepYahRhls3l6m/SbBtuvjvcuBtoDOqSu2owE7BPt1Aj41QKdqfnI9AI
+R9pZePWEg8/eTDa7cJ5AgdVODiniMEaaOudASPwYu659EmK3r9TC4FRocAkeMkJh
+NFvLsVmrbTU7qacqueww
+=uAgI
+-----END PGP SIGNATURE-----
+
+--5vNYLRcllDrimb99--
