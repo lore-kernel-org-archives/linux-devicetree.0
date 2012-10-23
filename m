@@ -1,57 +1,65 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Tue, 23 Oct 2012 12:29:28 +0200
-Message-ID: <CACRpkdb+f44jw1vTYvJT0bnMOP8XQe8ztDUHiwtS2JHtPWAGXw@mail.gmail.com>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
-	<20121022155028.GA13791@core.coreip.homeip.net>
-	<CACRpkdaQ1WfRWrx=RXMVkeFtwdERJsOpVa3DaXBTU2KZdgqhRQ@mail.gmail.com>
-	<508664CA.7000601@ti.com>
-	<CACRpkdbhCS-Vb0DtbTZQ_Zw_8SOh3Bqutme3Y2-QrxNqvMiNNw@mail.gmail.com>
-	<20121023100333.GA24418@arwen.pp.htv.fi>
-	<20121023122312.56b23e1c@skate>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [RFC PATCH 3.7.0-rc2] dt: match id-table before creating platform
+ device
+Date: Tue, 23 Oct 2012 11:30:59 +0100
+Message-ID: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121023122312.56b23e1c@skate>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>
-Cc: balbi@ti.com, Benoit Cousson <b-cousson@ti.com>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Amit Kucheria <amit.kucheria@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2012 at 12:23 PM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
->
-> On Tue, 23 Oct 2012 13:03:33 +0300, Felipe Balbi wrote:
->
->> > But it appears that shmobile prefer to get all resources using
->> > bus notifiers.
->> >
->> > So we need to form some kind of consensus ... or live with
->> > the fact that different systems do it different ways. Which will
->> > explode the day we need to use a driver on two systems,
->> > each using the other approach :-)
->>
->> I much prefer having drivers explicitly manage all their resources,
->> which would mean that pinctrl calls need to be done on probe() and, if
->> necessary, during suspend()/resume().
->>
->> Using bus notifiers for that is quite a hack IMHO.
->
-> Agreed. Just like drivers do their ioremap, request_irq and others,
-> they should also request their pin resources using the pinctrl API.
-> Hiding this behind a bus notifier is not nice.
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-So the biggest implementation of the notifier approach to resource
-handling is the SH clock thing:
-drivers/base/power/clock_ops.c
+As part of of_platform_populate call, the existing code iterates each
+child node and then creates a platform device for each child, however
+there is bug in the code which does not check the match table before
+creating the platform device. This might result creating two platfrom
+devices and also invoking driver probe twice, which is incorrect.
 
-It's made to be generic but AFAICT only SH is using this.
+This patch moves a existing of_match_node check to start of the function
+to fix the bug, doing this way will return immediately without creating
+any datastructures if the child does not match the supplied match-table.
 
-So according to that paradigm most device resources should
-be handled that way if I understand correctly the basic idea.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/of/platform.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
 
-So let's get Rafael, Paul and Magnus in here to beat us up
-a bit :-)
-
-Yours,
-Linus Walleij
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index b80891b..1aaa560 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -367,6 +367,9 @@ static int of_platform_bus_create(struct device_node *bus,
+ 		return 0;
+ 	}
+ 
++	if (!of_match_node(matches, bus))
++		return 0;
++
+ 	auxdata = of_dev_lookup(lookup, bus);
+ 	if (auxdata) {
+ 		bus_id = auxdata->name;
+@@ -379,7 +382,7 @@ static int of_platform_bus_create(struct device_node *bus,
+ 	}
+ 
+ 	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
+-	if (!dev || !of_match_node(matches, bus))
++	if (!dev)
+ 		return 0;
+ 
+ 	for_each_child_of_node(bus, child) {
+-- 
+1.7.0.4
