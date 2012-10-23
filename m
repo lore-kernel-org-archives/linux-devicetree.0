@@ -1,98 +1,76 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Tue, 23 Oct 2012 20:51:23 +0300
-Message-ID: <20121023175123.GB32517@arwen.pp.htv.fi>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
- <20121022155028.GA13791@core.coreip.homeip.net>
- <CACRpkdaQ1WfRWrx=RXMVkeFtwdERJsOpVa3DaXBTU2KZdgqhRQ@mail.gmail.com>
- <508664CA.7000601@ti.com>
- <CACRpkdbhCS-Vb0DtbTZQ_Zw_8SOh3Bqutme3Y2-QrxNqvMiNNw@mail.gmail.com>
- <20121023100333.GA24418@arwen.pp.htv.fi>
- <5086CD91.9070101@firmworks.com>
- <20121023172035.GB32167@arwen.pp.htv.fi>
- <5086D91A.5080109@firmworks.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
+ driver
+Date: Tue, 23 Oct 2012 13:59:42 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1210231340340.1635-100000@iolanthe.rowland.org>
+References: <5086C2B0.6070006@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4671487114576664617=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5086D91A.5080109-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5086C2B0.6070006-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============4671487114576664617==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
-Content-Disposition: inline
+On Tue, 23 Oct 2012, Stephen Warren wrote:
 
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> So, rather than:
+> >>
+> >> compatible = "usb-ehci";
+> >>
+> >> You should always have e.g.:
+> >>
+> >> compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> >>
+> >> Given that, there is then always enough information in the device tree
+> >> for the driver to be able to derive the other values from the compatible
+> >> value.
+> > 
+> > Yes, I get it.
+> > 
+> >> Whether you want to derive the information, or whether you want to
+> >> explicitly represent it via properties, is a decision to make based on
+> >> the trade-offs.
+> >>
+> >> Oh, and I note that quite a few device trees already use compatible
+> >> value "usb-ehci" in their device-trees. Care needs to be taken not to
+> >> usurp that value from any existing device drivers if that was to be
+> >> picked as the compatible value required by this binding.
+> > 
+> > Right.  I think Tony's new binding should use compatible value 
+> > "usb-ehci-platform".  It will essentially be a superset of "usb-ehci".
+> 
+> I know this is bike-shedding a little bit, but...
+> 
+> The word "platform" isn't really about describing the HW, but rather is
+> derived from the Linux SW used to program that HW. DT should be purely
+> about describing the HW.
+> 
+> Perhaps "usb-ehci-generic" or "usb-ehci-simple" would be better?
 
-Hi,
+Neither of those really describes the hardware either.  Which name gets 
+used seems pretty arbitrary.
 
-(please don't top-post)
+Nothing intrinsically distinguishes this class of hardware.  The only
+thing these devices have in common is that they can be managed by
+Linux's ehci-platform driver.  For that purpose, "usb-ehci-platform"
+makes more sense than "usb-ehci-generic" or "usb-ehci-simple".
 
-On Tue, Oct 23, 2012 at 07:51:22AM -1000, Mitch Bradley wrote:
-> Perhaps I misunderstood what you were suggesting.  I thought that, when
-> you said "explicitly manage all their resources", you meant that the
-> driver should know the platform-specific details about clocks and power
-> domains.  That is one possible interpretation of the word "explicit".
+(It also allows the class to enlarge over time as the driver becomes
+more capable -- is that a bad thing?  Are DT board descriptions written
+for a later kernel supposed to be unusable with an earlier kernel that
+doesn't support the same features?)
 
-we had two suggestions in the thread:
+In essense, we're trying to say that the HW is compatible with a 
+particular driver rather than with some other type of HW.  Maybe DT 
+wasn't intended to provide this kind of information, but it seems like 
+a logical thing to do.  Unless DT already offers some other way to 
+accomplish the same thing?
 
-1) handle it in driver source code (explict)
-2) handle at bus notifiers level (hidden)
+Alan Stern
 
-archives would've helped you clear up that confusion ;-)
-
---=20
-balbi
-
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQhtkbAAoJEIaOsuA1yqREz2MP+wVOhQyD6TzW0tcGDMMS8MPH
-ckHhQ8hdoyfwlMI+9z99Fc1ckwGAt6rcP8w6AQY4Pi9jNB1f9GMr8Yy2PAaS23MF
-jtYTRnEUOHDfs1cehkXVts1fqc6aQnVw6quBEo0zmF9nO0dntvOSJahBoevaEgMi
-S1D0PEtOeQw3FDnRSeYwizBndRtvBll24G1tZ8drI20J98pUXKl9nCeKIGkUtvl+
-pkRPY0scJu+d00mVMu40vJZEDba6data70CxCnuoiySpIsb8nNDQ/2DtyoVJrCQB
-kn+fcaDC06al+jP5Koa0VKBIYVKywhwpdTUiQs3N5uAx/781J5IGldV1xemZ9s2L
-heQNx5HWjt3URgIf6jHyh2GBdfLmbH1LhIE+kxZNnYuc27EJqpYzS5UjnSkrUJ2Q
-ghwfpdDGAVzyVys5sWv/h7xgZ2yV7VqtZqOhzd1ZM9QOjZ7JD6GXI6sPoka/zn1U
-Bgci0/uaWpmXTEvc2zxBpz8vap58a15ONmSRz4QmkUYW+Pzz9+keWZ83xWBV1fMx
-9Nz/Q24YETq6pybVqY98nN4Bk9xFukU04GpA8T+8wfBMNzE5q52b6uG5hmuloHNM
-ov2YI9ONLetyUtFh0tpAu8Vq+eYmOX9YVtnhLoL472EVjngqRP7otvOv5hkQAlRG
-QcZHo/D99ab33Es+0sFu
-=Dt2e
------END PGP SIGNATURE-----
-
---tsOsTdHNUZQcU9Ye--
-
---===============4671487114576664617==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4671487114576664617==--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
