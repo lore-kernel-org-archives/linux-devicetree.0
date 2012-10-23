@@ -1,120 +1,120 @@
-From: Peter Korsgaard <jacmet@sunsite.dk>
-Subject: Re: [PATCH 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and custom getreg and setreg functions
-Date: Tue, 23 Oct 2012 22:24:33 +0200
-Message-ID: <87sj95lywu.fsf@macbook.be.48ers.dk>
-References: <1351004637-11049-1-git-send-email-andreas@gaisler.com>
-	<1351004637-11049-3-git-send-email-andreas@gaisler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [RFC PATCH] dt: describe base reset signal binding
+Date: Tue, 23 Oct 2012 15:45:56 -0600
+Message-ID: <1351028756-22309-1-git-send-email-swarren@wwwdotorg.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351004637-11049-3-git-send-email-andreas@gaisler.com> (Andreas
-	Larsson's message of "Tue, 23 Oct 2012 17:03:57 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-i2c@vger.kernel.org, Jean Delvare <khali@linux-fr.org>, Ben Dooks <ben-linux@fluff.org>, Wolfram Sang <w.sang@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+To: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rjw@sisk.pl>, Mike Turquette <mturquette@ti.com>
+Cc: Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Andreas" == Andreas Larsson <andreas@gaisler.com> writes:
+From: Stephen Warren <swarren@nvidia.com>
 
- Andreas> The registers in the GRLIB port of the controller are 32-bit
- Andreas> and in big endian byte order. The PRELOW and PREHIGH registers
- Andreas> are merged into one register. The subsequent registers have
- Andreas> their offset decreased accordingly. Hence the register access
- Andreas> needs to be handled in a non-standard manner using custom
- Andreas> getreg and
- Andreas> setreg functions.
+This binding is intended to represent the hardware reset signals present
+internally in most IC (SoC, FPGA, ...) designs.
 
- Andreas> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
- Andreas> ---
- Andreas>  drivers/i2c/busses/i2c-ocores.c |   57 +++++++++++++++++++++++++++++++++++++-
- Andreas>  1 files changed, 55 insertions(+), 2 deletions(-)
+Such a binding would allow the creation of a "reset subsystem", which
+could replace APIs such as the following Tegra-specific API:
 
- Andreas> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
- Andreas> index 1eb8a65..e3df62f 100644
- Andreas> --- a/drivers/i2c/busses/i2c-ocores.c
- Andreas> +++ b/drivers/i2c/busses/i2c-ocores.c
- Andreas> @@ -4,6 +4,9 @@
- Andreas>   *
- Andreas>   * Peter Korsgaard <jacmet@sunsite.dk>
- Andreas>   *
- Andreas> + * Support for the GRLIB port of the controller by
- Andreas> + * Andreas Larsson <andreas@gaisler.com>
- Andreas> + *
- Andreas>   * This file is licensed under the terms of the GNU General Public License
- Andreas>   * version 2.  This program is licensed "as is" without any warranty of any
- Andreas>   * kind, whether express or implied.
- Andreas> @@ -38,6 +41,8 @@ struct ocores_i2c {
- Andreas>  	int nmsgs;
- Andreas>  	int state; /* see STATE_ */
- Andreas>  	int clock_khz;
- Andreas> +	void (*setreg)(struct ocores_i2c *i2c, int reg, u8 value);
- Andreas> +	u8 (*getreg)(struct ocores_i2c *i2c, int reg);
- Andreas>  };
- 
- Andreas>  /* registers */
- Andreas> @@ -73,7 +78,9 @@ struct ocores_i2c {
- 
- Andreas>  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
- Andreas>  {
- Andreas> -	if (i2c->reg_io_width == 4)
- Andreas> +	if (i2c->setreg)
- Andreas> +		i2c->setreg(i2c, reg, value);
- Andreas> +	else if (i2c->reg_io_width == 4)
- Andreas>  		iowrite32(value, i2c->base + (reg << i2c->reg_shift));
- Andreas>  	else if (i2c->reg_io_width == 2)
- Andreas>  		iowrite16(value, i2c->base + (reg << i2c->reg_shift));
- Andreas> @@ -83,7 +90,9 @@ static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
- 
- Andreas>  static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
- Andreas>  {
- Andreas> -	if (i2c->reg_io_width == 4)
- Andreas> +	if (i2c->getreg)
- Andreas> +		return i2c->getreg(i2c, reg);
- Andreas> +	else if (i2c->reg_io_width == 4)
- Andreas>  		return ioread32(i2c->base + (reg << i2c->reg_shift));
- Andreas>  	else if (i2c->reg_io_width == 2)
- Andreas>  		return ioread16(i2c->base + (reg << i2c->reg_shift));
- Andreas> @@ -91,6 +100,40 @@ static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
- Andreas>  		return ioread8(i2c->base + (reg << i2c->reg_shift));
- Andreas>  }
- 
- Andreas> +/* Read and write functions for the GRLIB port of the controller. Registers are
- Andreas> + * 32-bit big endian and the PRELOW and PREHIGH registers are merged into one
- Andreas> + * register. The subsequent registers has their offset decreased accordingly. */
- Andreas> +static u8 oc_getreg_grlib(struct ocores_i2c *i2c, int reg)
- Andreas> +{
- Andreas> +	u32 rd;
- Andreas> +	int rreg = reg;
- Andreas> +	if (reg != OCI2C_PRELOW)
- Andreas> +		rreg--;
- Andreas> +	rd = ioread32be(i2c->base + (rreg << i2c->reg_shift));
- Andreas> +	if (reg == OCI2C_PREHIGH)
- Andreas> +		return (u8)rd >> 8;
- Andreas> +	else
- Andreas> +		return (u8)rd;
- Andreas> +}
- Andreas> +
- Andreas> +static void oc_setreg_grlib(struct ocores_i2c *i2c, int reg, u8 value)
- Andreas> +{
- Andreas> +	u32 curr, wr;
- Andreas> +	int rreg = reg;
- Andreas> +	if (reg != OCI2C_PRELOW)
- Andreas> +		rreg--;
- Andreas> +	if (reg == OCI2C_PRELOW || reg == OCI2C_PREHIGH) {
- Andreas> +		curr = ioread32be(i2c->base + (rreg << i2c->reg_shift));
- Andreas> +		if (reg == OCI2C_PRELOW)
- Andreas> +			wr = (curr & 0xff00) | value;
- Andreas> +		else
- Andreas> +			wr = (((u32)value) << 8) | (curr & 0xff);
- Andreas> +	} else {
- Andreas> +		wr = value;
- Andreas> +	}
- Andreas> +	iowrite32be(wr, i2c->base + (rreg << i2c->reg_shift));
+void tegra_periph_reset_deassert(struct clk *c);
+void tegra_periph_reset_assert(struct clk *c);
 
-Are all platforms using i2c-ocores guaranteed to provide ioread32be /
-iowrite32be or should we stick an #ifdef CONFIG_SPARC around it?
+(Note that at present, Tegra couples reset assertion with the clock for
+the affected peripheral module. However, reset and clocking are two
+separate, yet admittedly related, concepts).
 
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+What do people think of this? Does it sound like a good idea to go ahead
+with a reset subsystem? Should we simply add a new API to the common clock
+subsystem instead (and assume that reset and clock domains match 1:1).
+Should this be implemented as part of the generic power management domains;
+see include/linux/pm_domain.h instead?
 
+ Documentation/devicetree/bindings/reset/reset.txt |   75 +++++++++++++++++++++
+ 1 files changed, 75 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/reset.txt
 
+diff --git a/Documentation/devicetree/bindings/reset/reset.txt b/Documentation/devicetree/bindings/reset/reset.txt
+new file mode 100644
+index 0000000..31db6ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/reset.txt
+@@ -0,0 +1,75 @@
++= Reset Signal Device Tree Bindings =
++
++This binding is intended to represent the hardware reset signals present
++internally in most IC (SoC, FPGA, ...) designs. Reset signals for whole
++standalone chips are most likely better represented as GPIOs, although there
++are likely to be exceptions to this rule.
++
++Hardware blocks typically receive a reset signal. This signal is generated by
++a reset provider (e.g. power management or clock module) and received by a
++reset consumer (the module being reset, or a module managing when a sub-
++ordinate module is reset). This binding exists to represent the provider and
++consumer, and provide a way to couple the two together.
++
++A reset signal is represented by the phandle of the provider, plus a reset
++specifier - a list of DT cells that represents the reset signal within the
++provider. The length (number of cells) and semantics of the reset specifier
++are dictated by the binding of the reset provider, although common schemes
++are described below.
++
++A word on where to place reset signal consumers in device tree: It is possible
++in hardware for a reset signal to affect multiple logically separate HW blocks
++at once. In this case, it would be unwise to represent this reset signal in
++the DT node of each affected HW block, since if activated, an unrelated block
++may be reset. Instead, reset signals should be represented in the DT node
++where it makes most sense to control it; this may be a bus node if all
++children of the bus are affected by the reset signal, or an individual HW
++block node for dedicated reset signals. The intent of this binding is to give
++appropriate software access to the reset signals in order to manage the HW,
++rather than to slavishly enumerate the reset signal that affects each HW
++block.
++
++= Reset providers =
++
++Required properties:
++#reset-cells:	Number of cells in a reset specifier; Typically 0 for nodes
++		with a single reset output and 1 for nodes with multiple
++		reset outputs.
++
++For example:
++
++	rst: reset-controller {
++		#reset-cells = <1>;
++	};
++
++= Reset consumers =
++
++Required properties:
++resets:		List of phandle and reset specifier pairs, one pair
++		for each reset signal that affects the device, or that the
++		device manages. Note: if the reset provider specifies '0' for
++		#reset-cells, then only the phandle portion of the pair will
++		appear.
++
++Optional properties:
++reset-names:	List of reset signal name strings sorted in the same order as
++		the resets property. Consumers drivers will use reset-names to
++		match reset signal names with reset specifiers.
++
++For example:
++
++	device {
++		resets = <&rst 20>;
++		reset-names = "reset";
++	};
++
++This represents a device with a single reset signal named "reset".
++
++	bus {
++		resets = <&rst 10> <&rst 11> <&rst 12> <&rst 11>;
++		reset-names = "i2s1", "i2s2", "dma", "mixer";
++	};
++
++This represents a bus that controls the reset signal of each of four sub-
++ordinate devices. Consider for example a bus that fails to operate unless no
++child device has reset asserted.
 -- 
-Bye, Peter Korsgaard
+1.7.0.4
