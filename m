@@ -1,91 +1,117 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Tue, 23 Oct 2012 13:29:03 +0300
-Message-ID: <20121023102903.GA24820@arwen.pp.htv.fi>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
- <20121022155028.GA13791@core.coreip.homeip.net>
- <CACRpkdaQ1WfRWrx=RXMVkeFtwdERJsOpVa3DaXBTU2KZdgqhRQ@mail.gmail.com>
- <508664CA.7000601@ti.com>
- <CACRpkdbhCS-Vb0DtbTZQ_Zw_8SOh3Bqutme3Y2-QrxNqvMiNNw@mail.gmail.com>
- <20121023100333.GA24418@arwen.pp.htv.fi>
- <20121023122312.56b23e1c@skate>
- <CACRpkdb+f44jw1vTYvJT0bnMOP8XQe8ztDUHiwtS2JHtPWAGXw@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 5/5] arm: mvebu: Added SMP support for Armada XP
+Date: Tue, 23 Oct 2012 12:43:08 +0200
+Message-ID: <508674BC.2070301@free-electrons.com>
+References: <1350925368-24243-1-git-send-email-gregory.clement@free-electrons.com>
+ <1350925368-24243-6-git-send-email-gregory.clement@free-electrons.com>
+ <20121022184537.GN21046@lunn.ch> <50865F59.8000507@free-electrons.com>
+ <20121023093029.GY11837@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdb+f44jw1vTYvJT0bnMOP8XQe8ztDUHiwtS2JHtPWAGXw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, balbi@ti.com, Benoit Cousson <b-cousson@ti.com>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Amit Kucheria <amit.kucheria@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121023093029.GY11837@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/23/2012 11:30 AM, Andrew Lunn wrote:
+> On Tue, Oct 23, 2012 at 11:11:53AM +0200, Gregory CLEMENT wrote:
+>> On 10/22/2012 08:45 PM, Andrew Lunn wrote:
+>>> Hi Gregory
+>>>
+>>>> +void __init set_secondary_cpus_clock(void)
+>>>> +{
+>>>> +	int cpu;
+>>>> +	unsigned long rate;
+>>>> +	struct clk *cpu_clk = NULL;
+>>>> +	struct device_node *np = NULL;
+>>>> +
+>>>> +	cpu = smp_processor_id();
+>>>> +	np = of_find_node_by_type(np, "cpu");
+>>>> +	np = NULL;
+>>>> +	while ((np = of_find_node_by_type(np, "cpu"))) {
+>>>> +		const u32 *reg;
+>>>> +		int len;
+>>>> +		reg = of_get_property(np, "reg", &len);
+>>>> +		if (!reg || len != 4) {
+>>>> +			pr_err("%s missing reg property\n", np->full_name);
+>>>> +			continue;
+>>>> +		}
+>>>> +		if (be32_to_cpup(reg) == cpu) {
+>>>> +			cpu_clk = of_clk_get(np, 0);
+>>>> +			break;
+>>>> +		}
+>>>> +	}
+>>>> +	WARN_ON(IS_ERR(cpu_clk));
+>>>> +	rate = clk_get_rate(cpu_clk);
+>>>> +
+>>>> +	/* set all the other CPU clk to the same rate than the boot CPU */
+>>>> +	np = NULL;
+>>>> +	while ((np = of_find_node_by_type(np, "cpu"))) {
+>>>> +		const u32 *reg;
+>>>> +		int len;
+>>>> +		reg = of_get_property(np, "reg", &len);
+>>>> +		if (!reg || len != 4) {
+>>>> +			pr_err("%s missing reg property\n", np->full_name);
+>>>> +			continue;
+>>>> +		}
+>>>> +		if (be32_to_cpup(reg) != cpu) {
+>>>> +			cpu_clk = of_clk_get(np, 0);
+>>>> +			clk_set_rate(cpu_clk, rate);
+>>>> +		}
+>>>
+>>> Maybe its hiding somewhere, but where is the clk_prepare_enable() for
+>>> this cpu_clk clock?
+>>>
+>>
+>> Well the clocks are always enable. In the clock framework, the cpu clocks
+>> don't provide an enable function.
+> 
+> Is it possible in the hardware to disable them? Turning them off might
+> save some power. If these chips end up in some data center server, it
+> might be that CPU hotplugging is used.
 
-Hi,
+Well I didn't find anything about it. You can power off a CPU using the
+PMSU but not the clock itself. I guess that once you have power off the
+CPU the clock will be turned off as well.
 
-On Tue, Oct 23, 2012 at 12:29:28PM +0200, Linus Walleij wrote:
-> On Tue, Oct 23, 2012 at 12:23 PM, Thomas Petazzoni
-> <thomas.petazzoni@free-electrons.com> wrote:
-> >
-> > On Tue, 23 Oct 2012 13:03:33 +0300, Felipe Balbi wrote:
-> >
-> >> > But it appears that shmobile prefer to get all resources using
-> >> > bus notifiers.
-> >> >
-> >> > So we need to form some kind of consensus ... or live with
-> >> > the fact that different systems do it different ways. Which will
-> >> > explode the day we need to use a driver on two systems,
-> >> > each using the other approach :-)
-> >>
-> >> I much prefer having drivers explicitly manage all their resources,
-> >> which would mean that pinctrl calls need to be done on probe() and, if
-> >> necessary, during suspend()/resume().
-> >>
-> >> Using bus notifiers for that is quite a hack IMHO.
-> >
-> > Agreed. Just like drivers do their ioremap, request_irq and others,
-> > they should also request their pin resources using the pinctrl API.
-> > Hiding this behind a bus notifier is not nice.
->=20
-> So the biggest implementation of the notifier approach to resource
-> handling is the SH clock thing:
-> drivers/base/power/clock_ops.c
+> 
+>> But maybe it is cleaner to call clk_prepare_enable() even if it does
+>> nothing except update the usage count.
+> 
+> You also have to watch out for the late_initcall which will disable
+> all clocks which are running but nobody has claimed. This will become
+> an issue if you do have enable/disable function in later versions of
+> the clock functions.
 
-that's different right ? It's just creating the list of clocks, device
-drivers still have to call pm_clk_add().
+I don't think there will be enable/disable functions for the family
+clock currently used (armada-xp-cpu-clockctrl). But in future if a new
+version of mvebu SoC will use a new clock family which will have these
+functions, then it will be an issue. So to be future proof I will ad
+this call in the next version of the patch set.
 
-That's ok, I guess, otherwise all struct device would allocate memory
-which hardly ever used (so far).
+> 
+> 	Andrew
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
---=20
-balbi
 
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQhnFvAAoJEIaOsuA1yqREgMsQAJNJcFLikO8MiSiiIpbOyOUf
-IOwqJUSqAx8BGrPQuUYeFWM6INwmmfyvkxvK3/G0gRzVD59hZGq5evMqgWDl/GDg
-TV47q7piCJUC9BadnoAB3q+SmMdSdn87QwID9tWJu1hbdxn2Nd3FofoPxTRjrpuK
-5d26eAHjhXcGP8DAww0AVlnokzepsODHoV9uN3D8UtLqDwQ0+ccLUFhdBd3uVSSV
-5GUkECwT7xvSDkOwyFoJXmMYe3e20mEVRjjs9g0I6Bjb/n7lF2Lw6otOv5mpFoKv
-Lp+gJtvLxJebCGlznMAVWEHNml9tAnTaY0GEpFzpwo2X73tM5cfRRdtuYeLRj1KO
-75a8u459UmAlJKCFDdux1TRKnxjAxZB46vbTCCjjERVAzvQn2kdnVmoH7PbhRkK8
-G+EK/FGpmsI8iyX7Qad0/LzW4XULfzEjUpyZub5sbwW5oRJQFNi9FP6cwoh/YACv
-vWHJpgI/fWT75jzH8ZtnkdHebIcX7Gjsk08tGTTmfv2jFA6WKtztxe5LVFqCuL3x
-eqRZJUtQsepYahRhls3l6m/SbBtuvjvcuBtoDOqSu2owE7BPt1Aj41QKdqfnI9AI
-R9pZePWEg8/eTDa7cJ5AgdVODiniMEaaOudASPwYu659EmK3r9TC4FRocAkeMkJh
-NFvLsVmrbTU7qacqueww
-=uAgI
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
