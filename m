@@ -1,73 +1,97 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
-Date: Tue, 23 Oct 2012 15:06:46 -0500
-Message-ID: <5086F8D6.5050605@gmail.com>
-References: <Pine.LNX.4.44L0.1210231522230.1635-100000@iolanthe.rowland.org>
+From: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c: i2c-ocores: Add irq support for sparc
+Date: Tue, 23 Oct 2012 22:13:08 +0200
+Message-ID: <87wqyhlzfv.fsf@macbook.be.48ers.dk>
+References: <1351004637-11049-1-git-send-email-andreas@gaisler.com>
+ <1351004637-11049-2-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1210231522230.1635-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1351004637-11049-2-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> (Andreas
+ Larsson's message of "Tue, 23 Oct 2012 17:03:56 +0200")
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2012 02:33 PM, Alan Stern wrote:
-> On Tue, 23 Oct 2012, Stephen Warren wrote:
-> 
->>> Nothing intrinsically distinguishes this class of hardware.  The only
->>> thing these devices have in common is that they can be managed by
->>> Linux's ehci-platform driver.
->>
->> I don't agree. They're all EHCI USB controllers (or all EHCI USB
->> controllers that don't require custom drivers due to quirks), which is a
->> much more general statement than anything related to which driver Linux
->> uses for them.
-> 
-> That's true, but it doesn't distinguish these devices.  There are other
-> EHCI controllers with no quirks that nevertheless can't be handled by
-> ehci-platform because they have requirements (_not_ quirks) that
-> ehci-platform is unable to deal with currently -- clocks or power
-> supplies or special register settings or PHYs or etc.
+>>>>> "Andreas" == Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> writes:
 
-But what if the h/w has quirks you haven't yet discovered? You need the
-compatible property to be specific now, so if there are any future
-driver changes needed the DT does not have to change (as it may be in
-firmware which you can't change).
+ Andreas> There are no platform resources of type IORESOURCE_IRQ on
+ Andreas> sparc, so the irq number is acquired in a different manner for
+ Andreas> sparc. The general case uses platform_get_irq, that internally
+ Andreas> still uses platform_get_resource.
 
->>> In essense, we're trying to say that the HW is compatible with a 
->>> particular driver rather than with some other type of HW.
->>
->> Using a compatible value in order to pick a specific driver in Linux is
->> explicitly against the device tree design principles; DT is supposed to
->> represent just the hardware.
->>
->>> Maybe DT
->>> wasn't intended to provide this kind of information, but it seems like 
->>> a logical thing to do.  Unless DT already offers some other way to 
->>> accomplish the same thing?
->>
->> The typical way is for the Linux driver to declare that is supports a
->> variety of different HW models.
->>
->> Admittedly this is annoying when there are many HW models that otherwise
->> wouldn't need any driver changes, hence the desire to (additionally)
->> include some generic value in the compatible field, but again, what that
->> generic value is should be driven by the HW itself, not the SW that's
->> using it.
-> 
-> Okay, fine.  But then what should the binding documentation specify for
-> the compatible value?  A list of all the HW models that the driver
-> currently supports?
+I have no idea why sparc is being odd in this regard, but assuming this
+is how it's done, I'm fine with this change.
 
-The binding docs should be independent of the driver. There may be
-fields the driver ignores. So you need to document all defined
-compatible strings. It is fine if the driver only has "usb-ehci", but it
-is not fine for the DT to only have that.
+A quick grep doesn't find any other drivers doing this though:
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+git grep -l archdata.irqs drivers | xargs grep platform_get_irq
+
+Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+
+
+ Andreas> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+ Andreas> ---
+ Andreas>  drivers/i2c/busses/i2c-ocores.c |   13 +++++++++----
+ Andreas>  1 files changed, 9 insertions(+), 4 deletions(-)
+
+ Andreas> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+ Andreas> index bffd550..1eb8a65 100644
+ Andreas> --- a/drivers/i2c/busses/i2c-ocores.c
+ Andreas> +++ b/drivers/i2c/busses/i2c-ocores.c
+ Andreas> @@ -267,16 +267,21 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+ Andreas>  {
+ Andreas>  	struct ocores_i2c *i2c;
+ Andreas>  	struct ocores_i2c_platform_data *pdata;
+ Andreas> -	struct resource *res, *res2;
+ Andreas> +	struct resource *res;
+ Andreas>  	int ret;
+ Andreas>  	int i;
+ Andreas> +	int irq;
+ 
+ Andreas>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ Andreas>  	if (!res)
+ Andreas>  		return -ENODEV;
+ 
+ Andreas> -	res2 = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+ Andreas> -	if (!res2)
+ Andreas> +#ifdef CONFIG_SPARC
+ Andreas> +	irq = pdev->archdata.irqs[0];
+ Andreas> +#else
+ Andreas> +	irq = platform_get_irq(pdev, 0);
+ Andreas> +#endif
+ Andreas> +	if (irq < 0)
+ Andreas>  		return -ENODEV;
+ 
+ Andreas>  	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
+ Andreas> @@ -313,7 +318,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+ Andreas>  	ocores_init(i2c);
+ 
+ Andreas>  	init_waitqueue_head(&i2c->wait);
+ Andreas> -	ret = devm_request_irq(&pdev->dev, res2->start, ocores_isr, 0,
+ Andreas> +	ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+ pdev-> name, i2c);
+ Andreas>  	if (ret) {
+ Andreas>  		dev_err(&pdev->dev, "Cannot claim IRQ\n");
+ Andreas> -- 
+ Andreas> 1.7.0.4
+
+ Andreas> --
+ Andreas> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
+ Andreas> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ Andreas> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+-- 
+Bye, Peter Korsgaard
