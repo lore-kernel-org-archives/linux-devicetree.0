@@ -1,26 +1,69 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH RESEND 0/9] ARM: davinci: DT boot support for DA850
-Date: Tue, 23 Oct 2012 18:06:57 +0530
-Message-ID: <50868F69.3010808@ti.com>
-References: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH 3.7.0-rc2] dt: match id-table before creating platform
+ device
+Date: Tue, 23 Oct 2012 08:15:59 -0500
+Message-ID: <5086988F.6090107@gmail.com>
+References: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1347467732-1332-1-git-send-email-nsekhar@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@ti.com>, Heiko Schocher <hs@denx.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/12/2012 10:05 PM, Sekhar Nori wrote:
-> This series adds basic DT boot support for DA850 EVM and EnBW CMC board.
-> It applies to master branch of Linux DaVinci tree[1].
+Adding lkml. DT patches should go to both lists.
+
+On 10/23/2012 05:30 AM, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 > 
-> Resending this because I missed copying the DT and Documentation folks
-> last time around. Sorry about that. There is no change in patch contents.
+> As part of of_platform_populate call, the existing code iterates each
+> child node and then creates a platform device for each child, however
+> there is bug in the code which does not check the match table before
+> creating the platform device. This might result creating two platfrom
+> devices and also invoking driver probe twice, which is incorrect.
+> 
+> This patch moves a existing of_match_node check to start of the function
+> to fix the bug, doing this way will return immediately without creating
+> any datastructures if the child does not match the supplied match-table.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> ---
+>  drivers/of/platform.c |    5 ++++-
+>  1 files changed, 4 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index b80891b..1aaa560 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -367,6 +367,9 @@ static int of_platform_bus_create(struct device_node *bus,
+>  		return 0;
+>  	}
+>  
+> +	if (!of_match_node(matches, bus))
+> +		return 0;
+> +
 
-I will be queuing these patches for inclusion in v3.8.
+This is not right. This function is recursive and this change would
+break that. Perhaps we could only call of_platform_device_create_pdata
+if !of_match_node instead, but I'm not completely sure that would be the
+right thing to do. There's also some historical things we have to
+support which is why we have of_platform_populate and of_platform_bus_probe.
 
-Thanks,
-Sekhar
+Rob
+
+>  	auxdata = of_dev_lookup(lookup, bus);
+>  	if (auxdata) {
+>  		bus_id = auxdata->name;
+> @@ -379,7 +382,7 @@ static int of_platform_bus_create(struct device_node *bus,
+>  	}
+>  
+>  	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
+> -	if (!dev || !of_match_node(matches, bus))
+> +	if (!dev)
+>  		return 0;
+>  
+>  	for_each_child_of_node(bus, child) {
+> 
