@@ -1,48 +1,56 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v5] ARM: EXYNOS: Add MFC device tree support
-Date: Tue, 23 Oct 2012 23:30:00 +0900
-Message-ID: <021401cdb12a$e2793730$a76ba590$%kim@samsung.com>
-References: <1348765784-7508-1-git-send-email-arun.kk@samsung.com>
- <1348765784-7508-2-git-send-email-arun.kk@samsung.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap5: Update GPIO with address space
+ and interrupts
+Date: Tue, 23 Oct 2012 09:49:50 -0500
+Message-ID: <5086AE8E.60106@ti.com>
+References: <1350981432-6750-1-git-send-email-s-guiriec@ti.com> <1350981432-6750-2-git-send-email-s-guiriec@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1348765784-7508-2-git-send-email-arun.kk@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Arun Kumar K' <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: k.debski@samsung.com, jtp.park@samsung.com, thomas.abraham@linaro.org, k.lewandowsk@samsung.com, s.nawrocki@samsung.com, ch.naveen@samsung.com, joshi@samsung.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1350981432-6750-2-git-send-email-s-guiriec@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastien Guiriec <s-guiriec@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Arun Kumar K wrote:
+Hi Seb,
+
+On 10/23/2012 03:37 AM, Sebastien Guiriec wrote:
+> Add base address and interrupt line inside Device Tree data for
+> OMAP5
 > 
-> This patch adds device tree entry for MFC v6 in the Exynos5
-> SoC. Makes the required changes in the clock files and adds
-> MFC to the DT device list.
-> 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Signed-off-by: Sebastien Guiriec <s-guiriec@ti.com>
 > ---
->  .../devicetree/bindings/media/s5p-mfc.txt          |   23 +++++++++++++
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    5 +++
->  arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++
->  arch/arm/mach-exynos/Kconfig                       |    1 +
->  arch/arm/mach-exynos/clock-exynos5.c               |    2 +-
->  arch/arm/mach-exynos/mach-exynos5-dt.c             |   16 +++++++++
->  arch/arm/plat-samsung/devs.c                       |    1 +
->  arch/arm/plat-samsung/include/plat/mfc.h           |   11 ++++++
->  arch/arm/plat-samsung/s5p-dev-mfc.c                |   34
-++++++++++++++++++++
->  9 files changed, 98 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/s5p-mfc.txt
+>  arch/arm/boot/dts/omap5.dtsi |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-Looks ok to me, applied.
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index 42c78be..9e39f9f 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -104,6 +104,8 @@
+>  
+>  		gpio1: gpio@4ae10000 {
+>  			compatible = "ti,omap4-gpio";
+> +			reg = <0x4ae10000 0x200>;
+> +			interrupts = <0 29 0x4>;
+>  			ti,hwmods = "gpio1";
+>  			gpio-controller;
+>  			#gpio-cells = <2>;
 
-Thanks.
+I am wondering if we should add the "interrupt-parent" property to add
+nodes in the device-tree source. I know that today the interrupt-parent
+is being defined globally, but when device-tree maps an interrupt for a
+device it searches for the interrupt-parent starting the current device
+node.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+So in other words, for gpio1 it will search the gpio1 binding for
+"interrupt-parent" and if not found move up a level and search again. It
+will keep doing this until it finds the "interrupt-parent".
+
+Therefore, I believe it will improve search time and hence, boot time if
+we have interrupt-parent defined in each node.
+
+Cheers
+Jon
