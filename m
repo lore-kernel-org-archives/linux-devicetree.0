@@ -1,14 +1,14 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 8/9] i2c: pxa: configure pinmux
-Date: Tue, 23 Oct 2012 12:07:28 +0200
-Message-ID: <CACRpkdYsjkU45gNSc2bGqTWnjBtEY7syn-7Cv4C5uN=FO0uw6g@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] tty: pxa: configure pin
+Date: Tue, 23 Oct 2012 12:07:05 +0200
+Message-ID: <CACRpkdYihd9wkpa98+B7TgD87Y5TPn3mEX0NQ_ah43Z1CoFMaA@mail.gmail.com>
 References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
- <1350922139-3693-9-git-send-email-haojian.zhuang@gmail.com>
+ <1350922139-3693-7-git-send-email-haojian.zhuang@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350922139-3693-9-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1350922139-3693-7-git-send-email-haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
