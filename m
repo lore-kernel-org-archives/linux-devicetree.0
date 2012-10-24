@@ -1,84 +1,68 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+From: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
 Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
  driver
-Date: Wed, 24 Oct 2012 10:57:00 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1210241013310.1481-100000@iolanthe.rowland.org>
+Date: Wed, 24 Oct 2012 17:26:52 +0200
+Message-ID: <20121024152652.GG4368@breakpoint.cc>
 References: <5086F8D6.5050605@gmail.com>
+ <Pine.LNX.4.44L0.1210241013310.1481-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5086F8D6.5050605-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1210241013310.1481-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Oct 2012, Rob Herring wrote:
-
-> On 10/23/2012 02:33 PM, Alan Stern wrote:
-> > On Tue, 23 Oct 2012, Stephen Warren wrote:
-> > 
-> >>> Nothing intrinsically distinguishes this class of hardware.  The only
-> >>> thing these devices have in common is that they can be managed by
-> >>> Linux's ehci-platform driver.
-> >>
-> >> I don't agree. They're all EHCI USB controllers (or all EHCI USB
-> >> controllers that don't require custom drivers due to quirks), which is a
-> >> much more general statement than anything related to which driver Linux
-> >> uses for them.
-> > 
-> > That's true, but it doesn't distinguish these devices.  There are other
-> > EHCI controllers with no quirks that nevertheless can't be handled by
-> > ehci-platform because they have requirements (_not_ quirks) that
-> > ehci-platform is unable to deal with currently -- clocks or power
-> > supplies or special register settings or PHYs or etc.
+On Wed, Oct 24, 2012 at 10:57:00AM -0400, Alan Stern wrote:
+> Under the circumstances, do we really need a new binding document for 
+> the ehci-platform driver?  We should be able to use the existing 
+> usb-ehci binding, perhaps with some new properties added:
 > 
-> But what if the h/w has quirks you haven't yet discovered? You need the
-> compatible property to be specific now, so if there are any future
-> driver changes needed the DT does not have to change (as it may be in
-> firmware which you can't change).
+> 	has-synopsys-hc-bug
+> 	no-io-watchdog
+> 	has-tt
 
-That argument applies always, doesn't it?  There's always a chance that 
-you might discover a new quirk in a device for which the DT board file 
-has already been written and committed to firmware.  The board file 
-could declare that the device is compatible with something older, but 
-the new quirk might ruin that compatibility.
+On the PCI side we have VID, PID which is used for quirks. Sometimes we have a
+revision ID which can be used to figure out if "this quirk" is still required.
+The PCI driver probes by class so the ehci driver does not have a large table
+of VID/PID for each controller out there. And the USB controller in two
+different Intel boards has a different PID so a quirk, if required, could be
+applied only to the specific mainboard.
 
-> > Okay, fine.  But then what should the binding documentation specify for
-> > the compatible value?  A list of all the HW models that the driver
-> > currently supports?
+Based on this we need atleast two compatible entries one "HW-Specific"
+followed by a generic one (similar to PCI class).
+Doing it the PCI way we would have to have table and figure out which
+HW-specific compatible entry sets the TT flag and which one does the
+no-io-watchdog. Having has-tt in compatible isn't right.
+
+I'm all with Alan here, to make a shortcut and allow Linux specific properties
+which describe a specific quirk in less code lines. Other OS can just ignore
+those and build their table based on the compatible entry if they want to.
+
+So usb-ehci should be fine. It is a generic USB-EHCI controller after all.
+Quirks or no quirks, the register layout is the same, the functionality is the
+same. If you can't map memory >4GiB then you need a quirk for this but you may
+discover it way too late.
+If your platform driver requires extra code for the PHY then it is still an
+EHCI controller. The PHY wasn't setup by the bootloader / bios so Linux has to
+deal with it.
+
+> We probably can omit has-synopsys-hc-bug, as that is specific to one
+> type of MIPS ATH79 controller.  The driver can check for it explicitly,
+> if necessary.
 > 
-> The binding docs should be independent of the driver. There may be
-> fields the driver ignores. So you need to document all defined
-> compatible strings. It is fine if the driver only has "usb-ehci", but it
-> is not fine for the DT to only have that.
+> In fact, it's not clear that these new properties need to be added now.  
+> They can be added over time as needed, as existing drivers are
+> converted over to DT.  Or is it preferable to document these things
+> now, preemptively as it were?
 
-Under the circumstances, do we really need a new binding document for 
-the ehci-platform driver?  We should be able to use the existing 
-usb-ehci binding, perhaps with some new properties added:
+I would add it only if required / has users.
 
-	has-synopsys-hc-bug
-	no-io-watchdog
-	has-tt
+> Alan Stern
 
-We probably can omit has-synopsys-hc-bug, as that is specific to one
-type of MIPS ATH79 controller.  The driver can check for it explicitly,
-if necessary.
-
-In fact, it's not clear that these new properties need to be added now.  
-They can be added over time as needed, as existing drivers are
-converted over to DT.  Or is it preferable to document these things
-now, preemptively as it were?
-
-The one that matters most and is most clearly a property of the HW is
-"has-tt".  IMO it should be added right away, even though there may
-already be DT board files that could specify it but don't.  Right now,
-for example, the ehci-xilinx-of driver checks instead for the
-"support-usb-fs" property, as defined in
-Documentation/devicetree/bindings/xilinx.txt.
-
-Alan Stern
-
+Sebastian
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
