@@ -1,99 +1,514 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
-Date: Wed, 24 Oct 2012 12:09:49 -0600
-Message-ID: <50882EED.9020200@wwwdotorg.org>
-References: <Pine.LNX.4.44L0.1210241329230.1282-100000@iolanthe.rowland.org>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [PATCH V3 1/5] ARM: dts: OMAP: Add timer nodes
+Date: Wed, 24 Oct 2012 18:17:11 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EB49C1B@DBDE01.ent.ti.com>
+References: <1350496873-21337-1-git-send-email-jon-hunter@ti.com>
+ <1350496873-21337-2-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1210241329230.1282-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1350496873-21337-2-git-send-email-jon-hunter@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hunter, Jon" <jon-hunter@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2012 11:46 AM, Alan Stern wrote:
-> On Wed, 24 Oct 2012, Stephen Warren wrote:
+On Wed, Oct 17, 2012 at 23:31:09, Hunter, Jon wrote:
+> Add the 12 GP timers nodes present in OMAP2.
+> Add the 12 GP timers nodes present in OMAP3.
+> Add the 11 GP timers nodes present in OMAP4.
+> Add the 7 GP timers nodes present in AM33xx.
 > 
->>> How do we determine which existing drivers claim to support usb-ehci?  
->>> A quick search under arch/ and drivers/ turns up nothing but
->>> drivers/usb/host/ehci-ppc-of.c.  Changing it to a more HW-specific
->>> match should be easy enough, and then "usb-ehci" would be safe to use
->>> in ehci-platform.c.
->>
->> It's not drivers that claim to support usb-ehci, but device tree files
->> that contain nodes that include "usb-ehci" in their compatible value,
->> yet need to be handled by a driver that isn't the generic USB EHCI
->> driver, and that driver binds to the other more specific compatible value:
->>
->>> $ grep -HrnI usb-ehci arch/*/boot/dts
-...
->> and then search for all those other compatible values in drivers. The
->> ARM instances certainly all have this issue (although perhaps it's worth
->> investigating if a generic could work for them instead). The PPC
->> instances need more investigation; the values don't show up in of match
->> tables but rather in code.
+> Add documentation for timer properties specific to OMAP.
 > 
-> Ah, now I'm starting to get the picture.
+> Please note that for OMAP2/3 devices, there is only one interrupt controller
+> for the ARM CPU (which has the label "intc") and so globally define this as the
+> interrupt parent to save duplicating the interrupt parent for all device nodes.
 > 
-> So by listing "usb-ehci" in its device ID table, a driver would
-> essentially be saying that it can handle _all_ USB EHCI controllers.  
-
-Yes, exactly.
-
-> (Which means that the entry in ehci-ppc-of.c is questionable; perhaps
-> the intention is that this driver really does handle all EHCI
-> controllers on any PPC-based OpenFirmware platform bus.)
-
-Yes, that seems questionable, although perhaps within the context of
-only enabling the driver on PPC specifically, it may be reasonable.
-
->> This doesn't continue forever though; you typically only list the
->> specific HW model, the base specific model it's compatible with, and any
->> generic value needed. So, a hypothetical Tegra40 EHCI controller would be:
->>
->> compatible = "nvidia,tegra40-ehci", "nvidia,tegra20-ehci", "usb-ehci".
+> Thanks to Vaibhav Hiremath for creating the AM33xx timer nodes. I have modified
+> Vaibhav's original nodes adding information on which timers support a PWM
+> output.
 > 
-> What's the reason for listing the generic value if drivers can't key
-> off it?  Does it contain any information that's not already present in 
-> the specific values?
+> Cc: Benoit Cousson <b-cousson@ti.com>
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> ---
+>  .../devicetree/bindings/arm/omap/timer.txt         |   29 ++++++
+>  arch/arm/boot/dts/am33xx.dtsi                      |   61 +++++++++++++
+>  arch/arm/boot/dts/omap2.dtsi                       |   86 ++++++++++++++++++
+>  arch/arm/boot/dts/omap2420.dtsi                    |    8 ++
+>  arch/arm/boot/dts/omap2430.dtsi                    |    8 ++
+>  arch/arm/boot/dts/omap3.dtsi                       |   96 ++++++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       |   86 ++++++++++++++++++
+>  7 files changed, 374 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/omap/timer.txt
+> 
 
-This may or may not be a mistake.
+Although I have not tested this version of patch series at my end, but 
+whole patch-series Looks ok to me.
 
-The idea is that usb-ehci is included in the device node's compatible
-list iff the HW is 100% compatible with a "usb-ehci" HW device, and
-hence a pure usb-ehci driver can handle the hardware without any
-additional knowledge. (That's true in general for any compatible value).
+Acked-By: Vaibhav Hiremath <hvaibhav@ti.com>
 
-It's quite possible that this often gets translated to the subtly
-different "the HW is an EHCI controller, so it gets
-compatible="usb-ehci"" when writing .dts files.
+Thanks,
+Vaibhav
 
-So yes we probably should remove compatible="usb-ehci" from any device
-node for HW which really isn't a pure EHCI device. That would presumably
-require looking at the existing custom drivers and/or HW specs to
-determine what, if anything, is different about the HW.
+> diff --git a/Documentation/devicetree/bindings/arm/omap/timer.txt b/Documentation/devicetree/bindings/arm/omap/timer.txt
+> new file mode 100644
+> index 0000000..d9449d0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/omap/timer.txt
+> @@ -0,0 +1,29 @@
+> +OMAP Timer bindings
+> +
+> +Required properties:
+> +- compatible:	Must be "ti,omap2-timer" for OMAP2+ controllers
+> +- reg:		Contains timer register address range (base address and length)
+> +- interrupts: 	Contains the interrupt information for the timer. The format is
+> +		being dependent on which interrupt controller the OMAP device
+> +		uses.
+> +- ti,hwmods:	Name of the hwmod associated to the timer, "timer<X>", where
+> +		<X> is the instance number of the timer from the HW spec.
+> +
+> +Optional properties:
+> +- ti,timer-alwon:	Indicates the timer is in an alway-on power domain.
+> +- ti,timer-dsp:		Indicates the timer can interrupt the on-chip DSP in
+> +			addition to the ARM CPU.
+> +- ti,timer-pwm: 	Indicates the timer can generate a PWM output.
+> +- ti,timer-secure: 	Indicates the timer is reserved on a secure OMAP device
+> +			and therefore cannot be used by the kernel.
+> +
+> +Example:
+> +
+> +timer12: timer@48304000 {
+> +	compatible = "ti,omap2-timer";
+> +	reg = <0x48304000 0xfff>;
+> +	interrupts = <95>;
+> +	ti,hwmods = "timer12"
+> +	ti,timer-alwon;
+> +	ti,timer-secure;
+> +};
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index bb31bff..fd5074c 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -210,5 +210,66 @@
+>  			interrupt-parent = <&intc>;
+>  			interrupts = <91>;
+>  		};
+> +
+> +		timer1: timer@44e31000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x44e31000 0x1000>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <67>;
+> +			ti,hwmods = "timer1";
+> +			ti,timer-alwon;
+> +		};
+> +
+> +		timer2: timer@48040000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48040000 0x1000>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <68>;
+> +			ti,hwmods = "timer2";
+> +		};
+> +
+> +		timer3: timer@48042000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48042000 0x1000>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <69>;
+> +			ti,hwmods = "timer3";
+> +		};
+> +
+> +		timer4: timer@48044000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48044000 0x1000>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <92>;
+> +			ti,hwmods = "timer4";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer5: timer@48046000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48046000 0x1000>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <93>;
+> +			ti,hwmods = "timer5";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer6: timer@48048000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48048000 0x1000>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <94>;
+> +			ti,hwmods = "timer6";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer7: timer@4804a000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4804a000 0x1000>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <95>;
+> +			ti,hwmods = "timer7";
+> +			ti,timer-pwm;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
+> index 581cb08..731de55 100644
+> --- a/arch/arm/boot/dts/omap2.dtsi
+> +++ b/arch/arm/boot/dts/omap2.dtsi
+> @@ -12,6 +12,7 @@
+>  
+>  / {
+>  	compatible = "ti,omap2430", "ti,omap2420", "ti,omap2";
+> +	interrupt-parent = <&intc>;
+>  
+>  	aliases {
+>  		serial0 = &uart1;
+> @@ -65,5 +66,90 @@
+>  			ti,hwmods = "uart3";
+>  			clock-frequency = <48000000>;
+>  		};
+> +
+> +		timer2: timer@4802a000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4802a000 0xfff>;
+> +			interrupts = <38>;
+> +			ti,hwmods = "timer2";
+> +		};
+> +
+> +		timer3: timer@48078000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48078000 0xfff>;
+> +			interrupts = <39>;
+> +			ti,hwmods = "timer3";
+> +		};
+> +
+> +		timer4: timer@4807a000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4807a000 0xfff>;
+> +			interrupts = <40>;
+> +			ti,hwmods = "timer4";
+> +		};
+> +
+> +		timer5: timer@4807c000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4807c000 0xfff>;
+> +			interrupts = <41>;
+> +			ti,hwmods = "timer5";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer6: timer@4807e000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4807e000 0xfff>;
+> +			interrupts = <42>;
+> +			ti,hwmods = "timer6";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer7: timer@48080000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48080000 0xfff>;
+> +			interrupts = <43>;
+> +			ti,hwmods = "timer7";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer8: timer@48082000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48082000 0xfff>;
+> +			interrupts = <44>;
+> +			ti,hwmods = "timer8";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer9: timer@48084000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48084000 0xfff>;
+> +			interrupts = <45>;
+> +			ti,hwmods = "timer9";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer10: timer@48086000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48086000 0xfff>;
+> +			interrupts = <46>;
+> +			ti,hwmods = "timer10";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer11: timer@48088000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48088000 0xfff>;
+> +			interrupts = <47>;
+> +			ti,hwmods = "timer11";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer12: timer@4808a000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4808a000 0xfff>;
+> +			interrupts = <48>;
+> +			ti,hwmods = "timer12";
+> +			ti,timer-pwm;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
+> index bfd76b4..5f68a70 100644
+> --- a/arch/arm/boot/dts/omap2420.dtsi
+> +++ b/arch/arm/boot/dts/omap2420.dtsi
+> @@ -44,5 +44,13 @@
+>  			interrupt-parent = <&intc>;
+>  			ti,hwmods = "mcbsp2";
+>  		};
+> +
+> +		timer1: timer@48028000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48028000 0xfff>;
+> +			interrupts = <37>;
+> +			ti,hwmods = "timer1";
+> +			ti,timer-alwon;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+> index 4565d97..7439987 100644
+> --- a/arch/arm/boot/dts/omap2430.dtsi
+> +++ b/arch/arm/boot/dts/omap2430.dtsi
+> @@ -88,5 +88,13 @@
+>  			ti,buffer-size = <128>;
+>  			ti,hwmods = "mcbsp5";
+>  		};
+> +
+> +		timer1: timer@49018000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x49018000 0xfff>;
+> +			interrupts = <37>;
+> +			ti,hwmods = "timer1";
+> +			ti,timer-alwon;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index f38ea87..3fb910f 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -12,6 +12,7 @@
+>  
+>  / {
+>  	compatible = "ti,omap3430", "ti,omap3";
+> +	interrupt-parent = <&intc>;
+>  
+>  	aliases {
+>  		serial0 = &uart1;
+> @@ -300,5 +301,100 @@
+>  			ti,buffer-size = <128>;
+>  			ti,hwmods = "mcbsp5";
+>  		};
+> +
+> +		timer1: timer@48318000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48318000 0xfff>;
+> +			interrupts = <37>;
+> +			ti,hwmods = "timer1";
+> +			ti,timer-alwon;
+> +		};
+> +
+> +		timer2: timer@49032000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x49032000 0xfff>;
+> +			interrupts = <38>;
+> +			ti,hwmods = "timer2";
+> +		};
+> +
+> +		timer3: timer@49034000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x49034000 0xfff>;
+> +			interrupts = <39>;
+> +			ti,hwmods = "timer3";
+> +		};
+> +
+> +		timer4: timer@49036000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x49036000 0xfff>;
+> +			interrupts = <40>;
+> +			ti,hwmods = "timer4";
+> +		};
+> +
+> +		timer5: timer@49038000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x49038000 0xfff>;
+> +			interrupts = <41>;
+> +			ti,hwmods = "timer5";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer6: timer@4903a000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4903a000 0xfff>;
+> +			interrupts = <42>;
+> +			ti,hwmods = "timer6";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer7: timer@4903c000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4903c000 0xfff>;
+> +			interrupts = <43>;
+> +			ti,hwmods = "timer7";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer8: timer@4903e000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4903e000 0xfff>;
+> +			interrupts = <44>;
+> +			ti,hwmods = "timer8";
+> +			ti,timer-pwm;
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer9: timer@49040000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x49040000 0xfff>;
+> +			interrupts = <45>;
+> +			ti,hwmods = "timer9";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer10: timer@48086000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48086000 0xfff>;
+> +			interrupts = <46>;
+> +			ti,hwmods = "timer10";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer11: timer@48088000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48088000 0xfff>;
+> +			interrupts = <47>;
+> +			ti,hwmods = "timer11";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer12: timer@48304000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48304000 0xfff>;
+> +			interrupts = <95>;
+> +			ti,hwmods = "timer12";
+> +			ti,timer-alwon;
+> +			ti,timer-secure;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 3883f94..f6ac2b7 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -438,5 +438,91 @@
+>  			ranges;
+>  			ti,hwmods = "ocp2scp_usb_phy";
+>  		};
+> +
+> +		timer1: timer@4a318000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4a318000 0x7f>;
+> +			interrupts = <0 37 0x4>;
+> +			ti,hwmods = "timer1";
+> +			ti,timer-alwon;
+> +		};
+> +
+> +		timer2: timer@48032000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48032000 0x7f>;
+> +			interrupts = <0 38 0x4>;
+> +			ti,hwmods = "timer2";
+> +		};
+> +
+> +		timer3: timer@48034000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48034000 0x7f>;
+> +			interrupts = <0 39 0x4>;
+> +			ti,hwmods = "timer3";
+> +		};
+> +
+> +		timer4: timer@48036000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48036000 0x7f>;
+> +			interrupts = <0 40 0x4>;
+> +			ti,hwmods = "timer4";
+> +		};
+> +
+> +		timer5: timer@49038000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x49038000 0x7f>;
+> +			interrupts = <0 41 0x4>;
+> +			ti,hwmods = "timer5";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer6: timer@4903a000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4903a000 0x7f>;
+> +			interrupts = <0 42 0x4>;
+> +			ti,hwmods = "timer6";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer7: timer@4903c000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4903c000 0x7f>;
+> +			interrupts = <0 43 0x4>;
+> +			ti,hwmods = "timer7";
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer8: timer@4903e000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4903e000 0x7f>;
+> +			interrupts = <0 44 0x4>;
+> +			ti,hwmods = "timer8";
+> +			ti,timer-pwm;
+> +			ti,timer-dsp;
+> +		};
+> +
+> +		timer9: timer@4803e000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x4803e000 0x7f>;
+> +			interrupts = <0 45 0x4>;
+> +			ti,hwmods = "timer9";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer10: timer@48086000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48086000 0x7f>;
+> +			interrupts = <0 46 0x4>;
+> +			ti,hwmods = "timer10";
+> +			ti,timer-pwm;
+> +		};
+> +
+> +		timer11: timer@48088000 {
+> +			compatible = "ti,omap2-timer";
+> +			reg = <0x48088000 0x7f>;
+> +			interrupts = <0 47 0x4>;
+> +			ti,hwmods = "timer11";
+> +			ti,timer-pwm;
+> +		};
+>  	};
+>  };
+> -- 
+> 1.7.9.5
+> 
+> 
 
-Related, at least on Tegra, the PHY handling is IIRC pretty tightly
-coupled into the EHCI driver. We probably should have separate nodes
-for, and drivers for, the PHYs instead. I don't know if that would
-remove all the non-standard attributes of the Tegra EHCI HW and hence
-allow Tegra's EHCI to be handled by the generic driver. From memory,
-there are certainly some HW workarounds in the Tegra EHCI driver that
-would need to be ported though.
-
-> It sounds like the ehci-platform driver should simply list all the
-> specific HW device types (or base HW device types) that it handles, and
-> it shouldn't include "usb-ehci" in the list.  As more DT board files
-> are created or as ehci-platform becomes capable to taking over from
-> other drivers, its device list would grow.
-
-That's certainly a reasonable way to go too. I think the only downside
-with that approach is that every new device needs a kernel update to add
-it to the table, whereas using a generic compatible="usb-ehci" wouldn't,
-assuming no quirks were required for the new device.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
