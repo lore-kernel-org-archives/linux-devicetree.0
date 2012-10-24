@@ -1,104 +1,161 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 1/4] ARM: dts: omap5: Update GPIO with address space
- and interrupts
-Date: Wed, 24 Oct 2012 09:44:14 +0200
-Message-ID: <50879C4E.6020003@ti.com>
-References: <1350981432-6750-1-git-send-email-s-guiriec@ti.com> <1350981432-6750-2-git-send-email-s-guiriec@ti.com> <5086AE8E.60106@ti.com> <5086B316.6000001@ti.com> <5086BECA.9070502@ti.com> <5086C0C3.1060305@ti.com> <5086C29C.5000209@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Wed, 24 Oct 2012 11:37:04 +0300
+Message-ID: <20121024083704.GF5665@arwen.pp.htv.fi>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121022155028.GA13791@core.coreip.homeip.net>
+ <508660D4.9030507@ti.com>
+ <20121023200249.GA2712@core.coreip.homeip.net>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5086C29C.5000209@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastien Guiriec <s-guiriec@ti.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============4077942653443582064=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121023200249.GA2712-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2012 06:15 PM, Sebastien Guiriec wrote:
-> Hi Benoit and John,
-> 
-> On 10/23/2012 06:07 PM, Benoit Cousson wrote:
->> On 10/23/2012 05:59 PM, Jon Hunter wrote:
->>>
->>> On 10/23/2012 10:09 AM, Benoit Cousson wrote:
->>>> On 10/23/2012 04:49 PM, Jon Hunter wrote:
->>>>> Hi Seb,
->>>>>
->>>>> On 10/23/2012 03:37 AM, Sebastien Guiriec wrote:
->>>>>> Add base address and interrupt line inside Device Tree data for
->>>>>> OMAP5
->>>>>>
->>>>>> Signed-off-by: Sebastien Guiriec <s-guiriec@ti.com>
->>>>>> ---
->>>>>>   arch/arm/boot/dts/omap5.dtsi |   16 ++++++++++++++++
->>>>>>   1 file changed, 16 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/omap5.dtsi
->>>>>> b/arch/arm/boot/dts/omap5.dtsi
->>>>>> index 42c78be..9e39f9f 100644
->>>>>> --- a/arch/arm/boot/dts/omap5.dtsi
->>>>>> +++ b/arch/arm/boot/dts/omap5.dtsi
->>>>>> @@ -104,6 +104,8 @@
->>>>>>
->>>>>>           gpio1: gpio@4ae10000 {
->>>>>>               compatible = "ti,omap4-gpio";
->>>>>> +            reg = <0x4ae10000 0x200>;
->>>>>> +            interrupts = <0 29 0x4>;
->>>>>>               ti,hwmods = "gpio1";
->>>>>>               gpio-controller;
->>>>>>               #gpio-cells = <2>;
->>>>>
->>>>> I am wondering if we should add the "interrupt-parent" property to add
->>>>> nodes in the device-tree source. I know that today the
->>>>> interrupt-parent
->>>>> is being defined globally, but when device-tree maps an interrupt
->>>>> for a
->>>>> device it searches for the interrupt-parent starting the current
->>>>> device
->>>>> node.
->>>>>
->>>>> So in other words, for gpio1 it will search the gpio1 binding for
->>>>> "interrupt-parent" and if not found move up a level and search
->>>>> again. It
->>>>> will keep doing this until it finds the "interrupt-parent".
->>>>>
->>>>> Therefore, I believe it will improve search time and hence, boot
->>>>> time if
->>>>> we have interrupt-parent defined in each node.
->>>>
->>>> Mmm, I'm not that sure. it will increase the size of the blob, so
->>>> increase the time to load it and then to parse it. Where in the current
->>>> case, it is just going up to the parent node using the already
->>>> un-flatten tree in memory and thus that should not take that much time.
->>>
->>> Yes it will definitely increase the size, so that could slow things
->>> down.
->>>
->>>> That being said, it might be interesting to benchmark that to see what
->>>> is the real impact.
->>>
->>> Right, I wonder what the key functions are we need to benchmark to get
->>> an overall feel for what is best? Right now I am seeing some people add
->>> the interrupt-parent for device nodes and others not. Ideally we should
->>> be consistent, but at the same time it is probably something that we can
->>> easily sort out later. So not a big deal either way.
->>
->> For consistency, I'd rather not add it at all for the moment.
->> Later, when we will only support DT boot, people will start complaining
->> about the boot time increase and then we will start optimizing a little
->> bit :-)
-> 
-> I just do it like that to be consistent with what is inside OMAP4 dtsi
-> for those IPs (GPIO/UART/MMC/I2C). Now after checking Peter already add
-> the interrupt-parent for all audio IPs (OMAP3/4/5). But here we need
-> also interrupts name. So here we should try to be consistent.
-> 
-> So I can send back the series for OMAP5 and update the OMAP4 with
->   interrupts-parent = <&gic>
+--===============4077942653443582064==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l+goss899txtYvYf"
+Content-Disposition: inline
 
-No, you should not, as explained previously. You'd better remove the one
-already in audio IPs for consistency.
+--l+goss899txtYvYf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-Regards,
-Benoit
+On Tue, Oct 23, 2012 at 01:02:49PM -0700, Dmitry Torokhov wrote:
+> On Tue, Oct 23, 2012 at 11:18:12AM +0200, Benoit Cousson wrote:
+> > Hi Dimitry,
+> >=20
+> > On 10/22/2012 05:50 PM, Dmitry Torokhov wrote:
+> > > Hi Sourav,
+> > >=20
+> > > On Mon, Oct 22, 2012 at 06:43:00PM +0530, Sourav Poddar wrote:
+> > >> Adapt keypad to use pinctrl framework.
+> > >>
+> > >> Tested on omap4430 sdp with 3.7-rc1 kernel.
+> > >=20
+> > > I do not see anything in the driver that would directly use pinctrl. =
+Is
+> > > there a better place to select default pin configuration; maybe when
+> > > instantiating platform device?
+> >=20
+> > Why?
+> > The devm_pinctrl_get_select_default is using the pinctrl.
+>=20
+> No, I guess we ihave different understanding of what "directly use" means.
+> This particular driver does directly use interrupts: it requests it and
+> performs some actions when interrupt arrives. Same goes for IO memory -
+> it gets requested, then we access it. With pinctrl we do not do anything
+> - we just ask another layer to configure it and that is it.
+
+this is true for almost anything we do:
+
+- we ask another layer to allocate memory for us
+- we ask another layer to call our ISR once the IRQ line is asserted
+- we ask another layer to handle the input events we just received
+- we ask another layer to transfer data through DMA for us
+- we ask another layer to turn regulators on and off.
+
+and so on. This is just how abstractions work, we group common parts in
+a framework so that users don't need to know the details, but still need
+to tell the framework when to fiddle with those resources.
+
+> I have seen just in a few days 3 or 4 drivers having exactly the same
+> change - call to devm_pinctrl_get_select_default(), and I guess I will
+> receive the same patches for the rest of input drivers shortly.
+> This suggests that the operation is done at the wrong level. Do the
+> pin configuration as you parse DT data, the same way you set up i2c
+> devices registers in of_i2c.c, and leave the individual drivers that do
+> not care about specifics alone.
+
+Makes no sense to hide that from drivers. The idea here is that driver
+should know when it needs its pins to muxed correctly. 95% of the time
+it will be done during probe() but then again, so what ?
+
+doing that when parsing DT, or on bus notifiers is just plain wrong.
+Drivers should be required to handle all of their resources.
+
+> > That's why it is named "get_select_default" and not "get" only.
+> > This API ensure that the pin will be set to the default state, and this
+> > is all we need to do during the probe.
+>=20
+> Why during the probe and not by default? Realistically, the driver will
+> be loaded as long as there is a matching device and pins will need to be
+> configured.
+
+likewise memory will be allocated when matching happens, IRQs will be
+allocated, regulators will be turned on. So why don't we do all that by
+default ? Because it is wrong.
+
+> > There is no point to change the mux if the driver is not probed, because
+> > potentially the pin can be use be another driver.
+>=20
+> What other driver would use it? Who would chose what driver to load?
+
+Well, you _do_ know that on a SoC we have a limited amount of pins
+right ?
+
+Considering the amont of features which are packed inside a single die,
+it's not farfetched to assume we will have a lot less pins then we
+actually need, so we need muxers behind each pin in order to choose
+which functionality we want.
+
+If it happens that keypad's pins are shared with another IP (e.g. GPIO),
+we need to give the final user (a OEM/ODM) the choice of using those
+pins as either keypad or GPIOs, thus the need for pinctrl framework and
+the calls in the drivers.
+
+--=20
+balbi
+
+--l+goss899txtYvYf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQh6iwAAoJEIaOsuA1yqRE3wsQAJDG41hRCAID1+3a4PREBdYF
+cnw4MO0mIP0uZ6FvPskVLhg6v5khTHGJHyRAOJqo7nZG7mBqfRNrYfeoqZ2l1Tnx
+lIOJHOR7HO+XqTh2yTA1NuFK8pxGYnMm96lwg7C1DJK4sdJRKRonAp8uAoM88Ar1
+7uZveWZsGtb7AJBEo6y2lpyv3vlT+IigyA9VY537/kgCJZoW5M16mNEyWo7KEeTJ
+HIliGsWHavWEoxZsSQKiUxq46zT13RAuMKb1lVvHyE087PGerulgLJftHjxBIjlm
+3ErhuUJH48Y7CxhojaLxrV2wGqUmru2gVWaUQQshH/7HiAZ+eCmDhVk/r01M6ffY
+L6euFAp8INWU4ABpDEkEB34KIf9uLI/aZVlO8vGmDTAhdcTFjI7ft1E/TBPC327S
+kwp4m9tRLCmVUNjV0I/zNqE+jbUJ1qatCuzyuWa0tcOMnY26ezahQdmVZhgbHUYr
+VTDmelWTiw69inqa9Tjcj94uEabRSyRqQpsTbBpo72pniRPhCTx3QO3iN9WQw6EU
+YlkH5f46Hbx+NPta+2jJU8vOmD8u6b4l0PaQiXAPdAXbxh5y+LNBAMqHBjq7ceql
+MH0j3muvHGhpliFm+cQJQK/4x9+Yv1iPYUzoCbBrM1Ej9gXVYyfEpDn5ek4PY02b
+NpBjpu3zZX9P5brgrSIw
+=yt0R
+-----END PGP SIGNATURE-----
+
+--l+goss899txtYvYf--
+
+--===============4077942653443582064==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4077942653443582064==--
