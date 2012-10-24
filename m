@@ -1,61 +1,56 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH 2/2] i2c: i2c-ocores: Add support for the GRLIB port of
- the controller and custom getreg and setreg functions
-Date: Wed, 24 Oct 2012 11:05:10 +0200
-Message-ID: <5087AF46.1070707@gaisler.com>
-References: <1351004637-11049-1-git-send-email-andreas@gaisler.com> <1351004637-11049-3-git-send-email-andreas@gaisler.com> <87sj95lywu.fsf@macbook.be.48ers.dk>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] ARM: dts: Update OMAP5 with address space and
+ interrupts
+Date: Wed, 24 Oct 2012 11:15:02 +0200
+Message-ID: <5087B196.7090804@ti.com>
+References: <1351062434-22514-1-git-send-email-s-guiriec@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87sj95lywu.fsf@macbook.be.48ers.dk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Korsgaard <jacmet@sunsite.dk>
-Cc: linux-i2c@vger.kernel.org, Jean Delvare <khali@linux-fr.org>, Ben Dooks <ben-linux@fluff.org>, Wolfram Sang <w.sang@pengutronix.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1351062434-22514-1-git-send-email-s-guiriec-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastien Guiriec <s-guiriec-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2012 10:24 PM, Peter Korsgaard wrote:
->>>>>> "Andreas" == Andreas Larsson <andreas@gaisler.com> writes:
->   [...]
->   Andreas> +/* Read and write functions for the GRLIB port of the controller. Registers are
->   Andreas> + * 32-bit big endian and the PRELOW and PREHIGH registers are merged into one
->   Andreas> + * register. The subsequent registers has their offset decreased accordingly. */
->   Andreas> +static u8 oc_getreg_grlib(struct ocores_i2c *i2c, int reg)
->   Andreas> +{
->   Andreas> +	u32 rd;
->   Andreas> +	int rreg = reg;
->   Andreas> +	if (reg != OCI2C_PRELOW)
->   Andreas> +		rreg--;
->   Andreas> +	rd = ioread32be(i2c->base + (rreg << i2c->reg_shift));
->   Andreas> +	if (reg == OCI2C_PREHIGH)
->   Andreas> +		return (u8)rd >> 8;
->   Andreas> +	else
->   Andreas> +		return (u8)rd;
->   Andreas> +}
->   Andreas> +
->   Andreas> +static void oc_setreg_grlib(struct ocores_i2c *i2c, int reg, u8 value)
->   Andreas> +{
->   Andreas> +	u32 curr, wr;
->   Andreas> +	int rreg = reg;
->   Andreas> +	if (reg != OCI2C_PRELOW)
->   Andreas> +		rreg--;
->   Andreas> +	if (reg == OCI2C_PRELOW || reg == OCI2C_PREHIGH) {
->   Andreas> +		curr = ioread32be(i2c->base + (rreg << i2c->reg_shift));
->   Andreas> +		if (reg == OCI2C_PRELOW)
->   Andreas> +			wr = (curr & 0xff00) | value;
->   Andreas> +		else
->   Andreas> +			wr = (((u32)value) << 8) | (curr & 0xff);
->   Andreas> +	} else {
->   Andreas> +		wr = value;
->   Andreas> +	}
->   Andreas> +	iowrite32be(wr, i2c->base + (rreg << i2c->reg_shift));
->
-> Are all platforms using i2c-ocores guaranteed to provide ioread32be /
-> iowrite32be or should we stick an #ifdef CONFIG_SPARC around it?
+Hi Seb,
 
-As far as I can see, after digging around, the only platforms that have 
-ioread/write32, but not ioread/write32be are frv and mn10300. Do you 
-know if those platforms are using i2c-ocores?
+Sorry, I missed your previous email, your v2 was the right one.
+We do have a single INTC in every OMAP, there is no point to repeat the
+same data hundred times.
+The DTS are already big enough.
 
-Cheers,
-Andreas Larsson
+On 10/24/2012 09:07 AM, Sebastien Guiriec wrote:
+> Since kernel 3.7 the DTS data are not overwriten by hwmod data we can add the address space
+> and interrupt line description inside dtsi file for OMAP5. This serie is updating the
+> current OMAP5 IP with missing entry.
+> 
+> It has been tested on OMAP5 with 3.7-audio-display feature tree.
+> - MMC is probing and functional
+> - TWL6041 probing (GPIO/I2C)
+> - booting (UART)
+> 
+> Update since v1:
+> - Add Ack and review
+> - Fix up commit messages.
+> 
+> Update since v2:
+> - Add interrupt-parent.
+
+I will take the previous one to avoid the duplication of attributes.
+
+On top of that I will remove the ones introduce in audio IPs for
+consistency on OMAP3/4/5 platforms.
+
+Regards,
+Benoit
