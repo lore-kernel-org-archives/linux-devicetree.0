@@ -1,37 +1,80 @@
-From: Josh Cartwright <josh.cartwright@ni.com>
-Subject: [PATCH] arm: l2cc: doc: fix device tree example typo
-Date: Tue, 23 Oct 2012 19:53:06 -0500
-Message-ID: <20121024005306.GA32126@beefymiracle.amer.corp.natinst.com>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: Re: [PATCH v3] pwm: vt8500: Update vt8500 PWM driver support
+Date: Wed, 24 Oct 2012 16:48:55 +1300
+Message-ID: <1351050535.23151.1.camel@gitbox>
+References: <20121022084000.GB29790@avionic-0098.mockup.avionic-design.de>
+	 <1350929425-17516-1-git-send-email-linux@prisktech.co.nz>
+	 <20121023221419.GA8501@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <20121023221419.GA8501@avionic-0098.mockup.avionic-design.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: devicetree-discuss@lists.ozlabs.org, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The list of attributes above details the use of the 'filter-ranges'
-property, but the example improperly used 'filter-latency'.  Make these
-consistent by fixing up the example.
+On Wed, 2012-10-24 at 00:14 +0200, Thierry Reding wrote:
+> On Tue, Oct 23, 2012 at 07:10:24AM +1300, Tony Prisk wrote:
+> [...]
+> > @@ -87,6 +98,11 @@ static int vt8500_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> >  {
+> >  	struct vt8500_chip *vt8500 = to_vt8500_chip(chip);
+> >  
+> > +	if (!clk_enable(vt8500->clk)) {
+> > +		dev_err(chip->dev, "failed to enable clock\n");
+> > +		return -EBUSY;
+> > +	};
+> > +
+> 
+> I don't think that works. The clock API returns 0 on success and a
+> negative error code on failure. So this should rather be something like:
+> 
+> 	err = clk_enable(vt8500->clk);
+> 	if (err < 0) {
+> 		dev_err(chip->dev, "failed to enable clock: %d\n", err);
+> 		return err;
+> 	}
+> 
+> > @@ -123,6 +153,12 @@ static int __devinit pwm_probe(struct platform_device *pdev)
+> >  	chip->chip.ops = &vt8500_pwm_ops;
+> >  	chip->chip.base = -1;
+> >  	chip->chip.npwm = VT8500_NR_PWMS;
+> > +	chip->clk = devm_clk_get(&pdev->dev, NULL);
+> > +
+> 
+> The blank line should go above the call to devm_clk_get().
+> 
+> > +	if (IS_ERR_OR_NULL(chip->clk)) {
+> > +		dev_err(&pdev->dev, "clock source not specified\n");
+> > +		return PTR_ERR(chip->clk);
+> > +	}
+> [...]
+> > +	if (!clk_prepare(chip->clk)) {
+> > +		dev_err(&pdev->dev, "failed to prepare clock\n");
+> > +		return -EBUSY;
+> > +	}
+> > +
+> 
+> Same comment here. I wonder how this code can work, since if the clock
+> is properly prepared, then it will return 0, and the above will return
+> -EBUSY.
+> 
+> >  	ret = pwmchip_add(&chip->chip);
+> > -	if (ret < 0)
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "failed to add pwmchip\n");
+> 
+> Error messages can be considered prose, so this should be: "failed to
+> add PWM chip".
+> 
+> Thierry
 
-Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
----
- Documentation/devicetree/bindings/arm/l2cc.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I don't know why none of this caused a failure when boot tested. The
+clock should have been disabled 'automagically' at bootup, and never
+reenabled. *shrug* Fixed in new patch v3 (didn't notice there was
+already a v3).
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index 7ca5216..7c3ee3a 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -37,7 +37,7 @@ L2: cache-controller {
-         reg = <0xfff12000 0x1000>;
-         arm,data-latency = <1 1 1>;
-         arm,tag-latency = <2 2 2>;
--        arm,filter-latency = <0x80000000 0x8000000>;
-+        arm,filter-ranges = <0x80000000 0x8000000>;
-         cache-unified;
-         cache-level = <2>;
- 	interrupts = <45>;
--- 
-1.8.0
+Regards
+Tony P
