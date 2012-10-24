@@ -1,80 +1,55 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: Re: [PATCH v3] pwm: vt8500: Update vt8500 PWM driver support
-Date: Wed, 24 Oct 2012 16:48:55 +1300
-Message-ID: <1351050535.23151.1.camel@gitbox>
-References: <20121022084000.GB29790@avionic-0098.mockup.avionic-design.de>
-	 <1350929425-17516-1-git-send-email-linux@prisktech.co.nz>
-	 <20121023221419.GA8501@avionic-0098.mockup.avionic-design.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/10] tty: pxa: configure pin
+Date: Wed, 24 Oct 2012 07:43:22 +0200
+Message-ID: <CACRpkdb7jtj=J10A4pBQQH4kjWsVhCr8=5R=s3TMNi+jtiwNyg@mail.gmail.com>
+References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-3-git-send-email-haojian.zhuang@gmail.com>
+ <508080CB.5010904@wwwdotorg.org>
+ <CACRpkdb5Jiw71jBLDXpf2VTJQx7_gABqs03_20CeCLbVT=JkaA@mail.gmail.com>
+ <5085AC06.8070508@wwwdotorg.org>
+ <CACRpkdY-XyagxGU_ya_FZirzbqStTirOC5nuBBwwFY3f4bBTYA@mail.gmail.com>
+ <20121023093711.GS4477@opensource.wolfsonmicro.com>
+ <CACRpkdb+DkZbTDZamGMN+9t07kPktuA_3QtHQJFv+Vu859r7KA@mail.gmail.com>
+ <20121023115806.GX4477@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121023221419.GA8501@avionic-0098.mockup.avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: devicetree-discuss@lists.ozlabs.org, arm@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121023115806.GX4477-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rickard ANDERSSON <rickard.andersson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-10-24 at 00:14 +0200, Thierry Reding wrote:
-> On Tue, Oct 23, 2012 at 07:10:24AM +1300, Tony Prisk wrote:
-> [...]
-> > @@ -87,6 +98,11 @@ static int vt8500_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> >  {
-> >  	struct vt8500_chip *vt8500 = to_vt8500_chip(chip);
-> >  
-> > +	if (!clk_enable(vt8500->clk)) {
-> > +		dev_err(chip->dev, "failed to enable clock\n");
-> > +		return -EBUSY;
-> > +	};
-> > +
-> 
-> I don't think that works. The clock API returns 0 on success and a
-> negative error code on failure. So this should rather be something like:
-> 
-> 	err = clk_enable(vt8500->clk);
-> 	if (err < 0) {
-> 		dev_err(chip->dev, "failed to enable clock: %d\n", err);
-> 		return err;
-> 	}
-> 
-> > @@ -123,6 +153,12 @@ static int __devinit pwm_probe(struct platform_device *pdev)
-> >  	chip->chip.ops = &vt8500_pwm_ops;
-> >  	chip->chip.base = -1;
-> >  	chip->chip.npwm = VT8500_NR_PWMS;
-> > +	chip->clk = devm_clk_get(&pdev->dev, NULL);
-> > +
-> 
-> The blank line should go above the call to devm_clk_get().
-> 
-> > +	if (IS_ERR_OR_NULL(chip->clk)) {
-> > +		dev_err(&pdev->dev, "clock source not specified\n");
-> > +		return PTR_ERR(chip->clk);
-> > +	}
-> [...]
-> > +	if (!clk_prepare(chip->clk)) {
-> > +		dev_err(&pdev->dev, "failed to prepare clock\n");
-> > +		return -EBUSY;
-> > +	}
-> > +
-> 
-> Same comment here. I wonder how this code can work, since if the clock
-> is properly prepared, then it will return 0, and the above will return
-> -EBUSY.
-> 
-> >  	ret = pwmchip_add(&chip->chip);
-> > -	if (ret < 0)
-> > +	if (ret < 0) {
-> > +		dev_err(&pdev->dev, "failed to add pwmchip\n");
-> 
-> Error messages can be considered prose, so this should be: "failed to
-> add PWM chip".
-> 
-> Thierry
+On Tue, Oct 23, 2012 at 1:58 PM, Mark Brown
+<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
 
-I don't know why none of this caused a failure when boot tested. The
-clock should have been disabled 'automagically' at bootup, and never
-reenabled. *shrug* Fixed in new patch v3 (didn't notice there was
-already a v3).
+> One problem
+> is that we don't have a home for the SoC integration so we're trying to
+> shove it all into the drivers which just leads to a stack of pointless
+> boilerplate when the driver isn't actually doing anything beyond the
+> basic pattern of turning everything off when it goes idle and turning it
+> on again when it needs to do something.  Having to open code that stuff
+> in the drivers and then deal with the stubbing and error handling so the
+> error handling in the drivers is painful.  There's also another axis
+> where things aren't part of a SoC but are separate devices so you want
+> to carry things along with the driver rather than have a separate bit of
+> code which is required to glue things into the platform.
 
-Regards
-Tony P
+I agree. I'm thinking about the approach of adding helpers into the
+PM runtime layer so state handling is centralized, while only the
+event trigger goes into the driver. Basically it's just the implicit
+triggers from pm_runtime_[get|put][[_sync] that is causing
+problems.
+
+Yours,
+Linus Walleij
