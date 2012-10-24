@@ -1,81 +1,69 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
- driver
-Date: Wed, 24 Oct 2012 15:41:20 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1210241531300.1282-100000@iolanthe.rowland.org>
-References: <50882EED.9020200@wwwdotorg.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Wed, 24 Oct 2012 22:51:05 +0300
+Message-ID: <20121024195104.GA1175@arwen.pp.htv.fi>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <64355430.MNHe7H1cg3@dtor-d630.eng.vmware.com>
+ <20121024191042.GC772@arwen.pp.htv.fi>
+ <4612865.mWDXHX689T@dtor-d630.eng.vmware.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50882EED.9020200-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4612865.mWDXHX689T@dtor-d630.eng.vmware.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: balbi@ti.com, Linus Walleij <linus.walleij@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Oct 2012, Stephen Warren wrote:
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > What's the reason for listing the generic value if drivers can't key
-> > off it?  Does it contain any information that's not already present in 
-> > the specific values?
-> 
-> This may or may not be a mistake.
-> 
-> The idea is that usb-ehci is included in the device node's compatible
-> list iff the HW is 100% compatible with a "usb-ehci" HW device, and
+Hi,
 
-But there is no such thing as a "usb-ehci" HW device.  That's part of 
-the reason this whole discussion got started.
+On Wed, Oct 24, 2012 at 12:38:44PM -0700, Dmitry Torokhov wrote:
+> On Wednesday, October 24, 2012 10:10:42 PM Felipe Balbi wrote:
+> > >=20
+> > >
+> > > That is a valid concern and we'll need to find a compromise here. As I
+> > > said,
+> > WHAT ?? Silicon erratas are not a valid concern ? Power waste isn't a
+> > valid concern ? Tell that to the millions of devices shipped with Linux
+> > everyday. Power usage if it's the top concern in any product, is right
+> > there as the top five. Likewise for silicon erratas.
+>=20
+> I think we should come back to this discussion when you get more coffee
+> and start parsing other party e-mails properly.
 
-> hence a pure usb-ehci driver can handle the hardware without any
-> additional knowledge. (That's true in general for any compatible value).
+indeed. I really misparsed it. My bad. comments withdrawn.
 
-To as great an extent as is reasonable, ehci-platform is supposed to 
-be that "pure usb-ehci driver".
+--=20
+balbi
 
-> It's quite possible that this often gets translated to the subtly
-> different "the HW is an EHCI controller, so it gets
-> compatible="usb-ehci"" when writing .dts files.
-> 
-> So yes we probably should remove compatible="usb-ehci" from any device
-> node for HW which really isn't a pure EHCI device. That would presumably
-> require looking at the existing custom drivers and/or HW specs to
-> determine what, if anything, is different about the HW.
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Of course, removing it from the board files in the new kernel won't
-have any effect on old board files embedded in firmware.  Those old 
-firmwares then might not work with newer kernels.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> Related, at least on Tegra, the PHY handling is IIRC pretty tightly
-> coupled into the EHCI driver. We probably should have separate nodes
-> for, and drivers for, the PHYs instead. I don't know if that would
-> remove all the non-standard attributes of the Tegra EHCI HW and hence
-> allow Tegra's EHCI to be handled by the generic driver. From memory,
-> there are certainly some HW workarounds in the Tegra EHCI driver that
-> would need to be ported though.
+iQIcBAEBAgAGBQJQiEaoAAoJEIaOsuA1yqRE2kAQAIqVwPdCxEwcs4dAfXY8i1k0
+tTWRZWWRyGq9ZX+usVg24Xnz186bo2FpiCaMNXuhrVFLK7Z5L4mt80BcJSLj+htt
+21j+YJV+y4QHaN29gjJxTjO947VWc1SLjl4ztrlsPdiefFj0KC0NRLTtulAqe40t
+rxfZW5v4dkU/VY11UNkG6ACh+/2DMeefiot7O+hSevh8LPvoPzMoluC73HynVwEp
+tmCC3L1Neg4sfcegHMqNHkzto8NysOVSNrHFS2A68//KalmKp74jWlzw8Edo4iBh
+4HYOdyObMCcVbOWnaZkpPiZtS57JCCfX8VPgEv10Nx5Kh+MxGl+wBCwsDwDS+8sh
+7TWc/nUGTIfaaF8OAjqrFbOhr4+BcIE7/FkngRoMmcHJzRFKELRIAibA+2Vi8YP3
+hVMd4itvmwIvfR4IuEbIrqkGs3D/qD4GxREaiwhJg0d+aQ7v8iUdfgnhRM6YTcjf
+uNVBq/7EodILtfw4v1CJgi1ILrWpCRTAtEUUB4A1HTAfdmF+e2kviUTdnjMxzVqr
+58N66fyO9syUzc7UWXaXbzuzDcUkbPAWLXXiHtbCSbYAGSlZ7VOMDe3nLpbV9C5T
+XicyR2ursdlMJouvUDiFlaoPix+QNLuWRfo+SBb7gmwgcyElRtlJFTy9TJS+EW9r
+p25y75h/VpCAhEm2ZIP0
+=UWgz
+-----END PGP SIGNATURE-----
 
-In fact, ehci-tegra is probably the _most_ non-standard of the EHCI 
-drivers.
-
-> > It sounds like the ehci-platform driver should simply list all the
-> > specific HW device types (or base HW device types) that it handles, and
-> > it shouldn't include "usb-ehci" in the list.  As more DT board files
-> > are created or as ehci-platform becomes capable to taking over from
-> > other drivers, its device list would grow.
-> 
-> That's certainly a reasonable way to go too. I think the only downside
-> with that approach is that every new device needs a kernel update to add
-> it to the table, whereas using a generic compatible="usb-ehci" wouldn't,
-> assuming no quirks were required for the new device.
-
-New devices could list an older device they are upwardly compatible 
-with.  Then no kernel update would be needed.  Now, I agree that a 
-generic entry would be more logical, but there's no generic "standard" 
-hardware for it to describe.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--IS0zKkzwUGydFO0o--
