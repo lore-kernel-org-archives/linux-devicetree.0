@@ -1,123 +1,77 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
-Date: Wed, 24 Oct 2012 08:55:27 -1000
-Message-ID: <5088399F.2000102@firmworks.com>
-References: <Pine.LNX.4.44L0.1210241329230.1282-100000@iolanthe.rowland.org>
- <50882EED.9020200@wwwdotorg.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Wed, 24 Oct 2012 21:58:19 +0300
+Message-ID: <20121024185818.GB772@arwen.pp.htv.fi>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121024161429.GA16350@core.coreip.homeip.net>
+ <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
+ <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50882EED.9020200-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2012 8:09 AM, Stephen Warren wrote:
-> On 10/24/2012 11:46 AM, Alan Stern wrote:
->> On Wed, 24 Oct 2012, Stephen Warren wrote:
->>
->>>> How do we determine which existing drivers claim to support usb-ehci?  
->>>> A quick search under arch/ and drivers/ turns up nothing but
->>>> drivers/usb/host/ehci-ppc-of.c.  Changing it to a more HW-specific
->>>> match should be easy enough, and then "usb-ehci" would be safe to use
->>>> in ehci-platform.c.
->>>
->>> It's not drivers that claim to support usb-ehci, but device tree files
->>> that contain nodes that include "usb-ehci" in their compatible value,
->>> yet need to be handled by a driver that isn't the generic USB EHCI
->>> driver, and that driver binds to the other more specific compatible value:
->>>
->>>> $ grep -HrnI usb-ehci arch/*/boot/dts
-> ...
->>> and then search for all those other compatible values in drivers. The
->>> ARM instances certainly all have this issue (although perhaps it's worth
->>> investigating if a generic could work for them instead). The PPC
->>> instances need more investigation; the values don't show up in of match
->>> tables but rather in code.
->>
->> Ah, now I'm starting to get the picture.
->>
->> So by listing "usb-ehci" in its device ID table, a driver would
->> essentially be saying that it can handle _all_ USB EHCI controllers.  
+--61jdw2sOBCFtR2d/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-Actually, it means that the driver can handle at least USB EHCI
-controllers that are 100% compatible with the EHCI spec (requiring
-nothing extra).  The driver might be able to handle almost-compatible
-controllers, possibly with the help of additional properties.
+On Wed, Oct 24, 2012 at 10:28:46AM -0700, Dmitry Torokhov wrote:
+> > for more complex pinctrl use cases. These are my dogfood drivers ...
+> > Most of these will request more than one state and switch the driver
+> > between these different states at runtime, in these examples for power
+> > saving there are states named "default", "sleep" and in the I2C driver
+> > also "idle".
+> >=20
+> > These examples are more typical to how the ux500 platform will
+> > look, also the SKE input driver will move the devise to sleep/default
+> > states but we need to merge PM code before we can do that.
+>=20
+> I do not say that no drivers should ever touch pinctrl, just that most
+> of them do not have to if you have other layers to the right thing for
+> them.
 
-If a DT node lists "usb-ehci" as a "fallback", it's not guaranteed that
-a given version of that driver will work, but it's worth a try in the
-event that no more-specific driver is matched.
+It will be a much bigger mess. Some drivers don't need to care about
+pinctrl because drivers/base handle it for them, while some others will
+need a way to tell drivers/base "hey, don't touch pinctrl at all because
+I know what I'm doing" and that has to happen before probe() too,
+otherwise it's already too late and, according to what you suggest,
+drivers/base will already have touched pinctrl. The only way I see would
+be to add an extra "dont_touch_my_pins" field to every driver structure
+in the kernel. Clearly what you say is nonsense.
 
+--=20
+balbi
 
-> 
-> Yes, exactly.
-> 
->> (Which means that the entry in ehci-ppc-of.c is questionable; perhaps
->> the intention is that this driver really does handle all EHCI
->> controllers on any PPC-based OpenFirmware platform bus.)
-> 
-> Yes, that seems questionable, although perhaps within the context of
-> only enabling the driver on PPC specifically, it may be reasonable.
-> 
->>> This doesn't continue forever though; you typically only list the
->>> specific HW model, the base specific model it's compatible with, and any
->>> generic value needed. So, a hypothetical Tegra40 EHCI controller would be:
->>>
->>> compatible = "nvidia,tegra40-ehci", "nvidia,tegra20-ehci", "usb-ehci".
->>
->> What's the reason for listing the generic value if drivers can't key
->> off it?  Does it contain any information that's not already present in 
->> the specific values?
-> 
-> This may or may not be a mistake.
-> 
-> The idea is that usb-ehci is included in the device node's compatible
-> list iff the HW is 100% compatible with a "usb-ehci" HW device, and
-> hence a pure usb-ehci driver can handle the hardware without any
-> additional knowledge. (That's true in general for any compatible value).
-> 
-> It's quite possible that this often gets translated to the subtly
-> different "the HW is an EHCI controller, so it gets
-> compatible="usb-ehci"" when writing .dts files.
-> 
-> So yes we probably should remove compatible="usb-ehci" from any device
-> node for HW which really isn't a pure EHCI device. That would presumably
-> require looking at the existing custom drivers and/or HW specs to
-> determine what, if anything, is different about the HW.
-> 
-> Related, at least on Tegra, the PHY handling is IIRC pretty tightly
-> coupled into the EHCI driver. We probably should have separate nodes
-> for, and drivers for, the PHYs instead. I don't know if that would
-> remove all the non-standard attributes of the Tegra EHCI HW and hence
-> allow Tegra's EHCI to be handled by the generic driver. From memory,
-> there are certainly some HW workarounds in the Tegra EHCI driver that
-> would need to be ported though.
-> 
->> It sounds like the ehci-platform driver should simply list all the
->> specific HW device types (or base HW device types) that it handles, and
->> it shouldn't include "usb-ehci" in the list.  As more DT board files
->> are created or as ehci-platform becomes capable to taking over from
->> other drivers, its device list would grow.
-> 
-> That's certainly a reasonable way to go too. I think the only downside
-> with that approach is that every new device needs a kernel update to add
-> it to the table, whereas using a generic compatible="usb-ehci" wouldn't,
-> assuming no quirks were required for the new device.
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+--61jdw2sOBCFtR2d/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQiDpKAAoJEIaOsuA1yqREDIsP/0uhC5y1maA2qGHjnTqaWgxv
+DarRiOqoDKkQfsqIzF4D+Vm0pYzmy4u2zODrTZ/OicBIcoc3jzf9EmxeuR3FjQhZ
+KhUY0sxzii/5xSDKVThx2F4H0Cg8AgUCHKf6yq+3CUrQuxEatm30H0q9jJaYAcN7
+mvPEjgiKnd9U/xZqzKkU3OJX5Sblr1DN2Qg4YmHR0jB8QHVIU4p5FHMT7oV668ks
+SQjcvwDIzUc88rR4YkjpWKvWGTllZZnHK0yMbP1T8XRTyU5Gu3DbXM+NeMN7jUMw
+J/x9BOl20zLIhuCRUymidTCD79JP4rLhFS0fUrQN4ZEqXS5iW6ADoJahUa/6BE6s
+78XCqrj+Cwbpdb0/ROe2VK+gkbzFBQSG6GZ0+tOicwG76gnFTd8LJaoO2E+VOafH
+C3m+abV1MuEoNRNtQ4HgF9hmsPitZPujfGcMxGvT+L/H0iJ7ajKdp7A0btvOhrvg
+M+bk6KKY7I/QB0DifHpkBNo0bUNl+84dFekTcBquuV6I6cnMQMQrHKEh5ezFlW+u
+UNVhJ/LqYRLU8oPNwB8lN/fubc29Yrsndk+Y+k6Y3iXT+WLtPghF9H23NRg1tvp8
+9LIeCrGQQH1do3A4F6MOBR6xQkOictl32IlOkPUpVI0JTp9A4P1asencbYDzrfQV
+GX/RvXQmlTh+jtQp2+5S
+=vJXe
+-----END PGP SIGNATURE-----
+
+--61jdw2sOBCFtR2d/--
