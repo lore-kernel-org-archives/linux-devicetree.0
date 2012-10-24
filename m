@@ -1,49 +1,51 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
-Date: Wed, 24 Oct 2012 10:48:35 -0600
-Message-ID: <50881BE3.9020702@wwwdotorg.org>
-References: <Pine.LNX.4.44L0.1210241238570.1282-100000@iolanthe.rowland.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Wed, 24 Oct 2012 18:51:47 +0200
+Message-ID: <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+	<20121022155028.GA13791@core.coreip.homeip.net>
+	<508660D4.9030507@ti.com>
+	<20121023200249.GA2712@core.coreip.homeip.net>
+	<20121024083704.GF5665@arwen.pp.htv.fi>
+	<20121024161429.GA16350@core.coreip.homeip.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1210241238570.1282-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121024161429.GA16350@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/24/2012 10:44 AM, Alan Stern wrote:
-> On Wed, 24 Oct 2012, Stephen Warren wrote:
-> 
->> We should absolutely avoid Linux-specific properties where possible.
->>
->> That said, what Linux-specific properties are you talking about? The
->> properties discussed here (has-synopsys-hc-bug, no-io-watchdog, has-tt)
->> are all purely a description of HW, aren't they.
-> 
-> "has-tt" is definitely a description of the HW.
+On Wed, Oct 24, 2012 at 6:14 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Wed, Oct 24, 2012 at 11:37:04AM +0300, Felipe Balbi wrote:
 
-OK.
+>> - we ask another layer to allocate memory for us
+>> - we ask another layer to call our ISR once the IRQ line is asserted
+>> - we ask another layer to handle the input events we just received
+>> - we ask another layer to transfer data through DMA for us
+>> - we ask another layer to turn regulators on and off.
+>
+> But we are _directly_ _using_ all of these. You allocate memory and you
+> (the driver) stuff data into that memory. You ask for DMA and you take
+> the DMAed data and work with it. Not so with pinctrl in omap keypad and
+> other drivers I have seen so far.
 
-> "has-synopsys-hc-bug" is too, although determining whether or not it 
-> should apply to a particular controller might be difficult.  I'm 
-> inclined not to include it among the properties.
-> 
-> "no-io-watchdog" is not the greatest name.  It describes to controllers 
-> that always do generate IRQs for I/O events when they are supposed to 
-> (and hence the driver doesn't need to set up a watchdog timer to detect 
-> I/O completions that didn't generate an IRQ).  So while the concept is 
-> HW-specific, the name refers to a driver implementation issue.  A 
-> better name might be something like "reliable-IRQs".  Again, it's not 
-> such an easy thing to test for.  Almost all the existing drivers leave 
-> it unset.
+Consult:
+drivers/tty/serial/amba-pl011.c
+drivers/spi/spi-pl022.c
+drivers/i2c/busses/i2c-nomadik.c
 
-OK, I'd be inclined to drive those last two by quirks then, since they
-aren't architectural features of EHCI but rather implementation issues.
-And indeed have the quirk table have a "reliable IRQs" field instead of
-"no IO watchdog", to minimize the table size.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+for more complex pinctrl use cases. These are my dogfood drivers ...
+Most of these will request more than one state and switch the driver
+between these different states at runtime, in these examples for power
+saving there are states named "default", "sleep" and in the I2C driver
+also "idle".
+
+These examples are more typical to how the ux500 platform will
+look, also the SKE input driver will move the devise to sleep/default
+states but we need to merge PM code before we can do that.
+
+Yours,
+Linus Walleij
