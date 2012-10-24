@@ -1,41 +1,98 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
- driver
-Date: Wed, 24 Oct 2012 14:04:12 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1210241358090.1282-100000@iolanthe.rowland.org>
-References: <2721213.h9kKFkpVW0@flexo>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
+Date: Wed, 24 Oct 2012 12:09:49 -0600
+Message-ID: <50882EED.9020200@wwwdotorg.org>
+References: <Pine.LNX.4.44L0.1210241329230.1282-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2721213.h9kKFkpVW0@flexo>
+In-Reply-To: <Pine.LNX.4.44L0.1210241329230.1282-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Oct 2012, Florian Fainelli wrote:
+On 10/24/2012 11:46 AM, Alan Stern wrote:
+> On Wed, 24 Oct 2012, Stephen Warren wrote:
+> 
+>>> How do we determine which existing drivers claim to support usb-ehci?  
+>>> A quick search under arch/ and drivers/ turns up nothing but
+>>> drivers/usb/host/ehci-ppc-of.c.  Changing it to a more HW-specific
+>>> match should be easy enough, and then "usb-ehci" would be safe to use
+>>> in ehci-platform.c.
+>>
+>> It's not drivers that claim to support usb-ehci, but device tree files
+>> that contain nodes that include "usb-ehci" in their compatible value,
+>> yet need to be handled by a driver that isn't the generic USB EHCI
+>> driver, and that driver binds to the other more specific compatible value:
+>>
+>>> $ grep -HrnI usb-ehci arch/*/boot/dts
+...
+>> and then search for all those other compatible values in drivers. The
+>> ARM instances certainly all have this issue (although perhaps it's worth
+>> investigating if a generic could work for them instead). The PPC
+>> instances need more investigation; the values don't show up in of match
+>> tables but rather in code.
+> 
+> Ah, now I'm starting to get the picture.
+> 
+> So by listing "usb-ehci" in its device ID table, a driver would
+> essentially be saying that it can handle _all_ USB EHCI controllers.  
 
-> As long as no one enables both ehci-platform and ehci-ppc-of at the same time
-> there is no problem. ehci-ppc-of should be removed in favor of ehci-platform
-> and make sure that the specific quirk in ehci-ppc-of also gets ported, other 
-> that I see no issue using "usb-ehci" as the least detailed compatible property
-> name.
+Yes, exactly.
 
-Suppose a DT board file is created for a oontroller which ehci-platform
-can't handle.  Then by your proposal, the board file shouldn't have
-"usb-ehci" in its compatible property.
+> (Which means that the entry in ehci-ppc-of.c is questionable; perhaps
+> the intention is that this driver really does handle all EHCI
+> controllers on any PPC-based OpenFirmware platform bus.)
 
-Now later on, suppose ehci-platform is enhanced so that it can manage
-that controller.  It's too late to update the board file because the
-information has already been written to various firmwares.  The
-enhanced ehci-platform would have to include a special entry to match
-the controller.
+Yes, that seems questionable, although perhaps within the context of
+only enabling the driver on PPC specifically, it may be reasonable.
 
-Since this reasoning applies every time ehci-platform is updated, it 
-seems reasonable to use the same approach right from the beginning.
+>> This doesn't continue forever though; you typically only list the
+>> specific HW model, the base specific model it's compatible with, and any
+>> generic value needed. So, a hypothetical Tegra40 EHCI controller would be:
+>>
+>> compatible = "nvidia,tegra40-ehci", "nvidia,tegra20-ehci", "usb-ehci".
+> 
+> What's the reason for listing the generic value if drivers can't key
+> off it?  Does it contain any information that's not already present in 
+> the specific values?
 
-Alan Stern
+This may or may not be a mistake.
 
+The idea is that usb-ehci is included in the device node's compatible
+list iff the HW is 100% compatible with a "usb-ehci" HW device, and
+hence a pure usb-ehci driver can handle the hardware without any
+additional knowledge. (That's true in general for any compatible value).
+
+It's quite possible that this often gets translated to the subtly
+different "the HW is an EHCI controller, so it gets
+compatible="usb-ehci"" when writing .dts files.
+
+So yes we probably should remove compatible="usb-ehci" from any device
+node for HW which really isn't a pure EHCI device. That would presumably
+require looking at the existing custom drivers and/or HW specs to
+determine what, if anything, is different about the HW.
+
+Related, at least on Tegra, the PHY handling is IIRC pretty tightly
+coupled into the EHCI driver. We probably should have separate nodes
+for, and drivers for, the PHYs instead. I don't know if that would
+remove all the non-standard attributes of the Tegra EHCI HW and hence
+allow Tegra's EHCI to be handled by the generic driver. From memory,
+there are certainly some HW workarounds in the Tegra EHCI driver that
+would need to be ported though.
+
+> It sounds like the ehci-platform driver should simply list all the
+> specific HW device types (or base HW device types) that it handles, and
+> it shouldn't include "usb-ehci" in the list.  As more DT board files
+> are created or as ehci-platform becomes capable to taking over from
+> other drivers, its device list would grow.
+
+That's certainly a reasonable way to go too. I think the only downside
+with that approach is that every new device needs a kernel update to add
+it to the table, whereas using a generic compatible="usb-ehci" wouldn't,
+assuming no quirks were required for the new device.
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
