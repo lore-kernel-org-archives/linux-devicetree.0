@@ -1,81 +1,104 @@
-From: Sebastien Guiriec <s-guiriec@ti.com>
-Subject: [PATCH v3 2/4] ARM: dts: omap5: Update I2C with address space and interrupts
-Date: Wed, 24 Oct 2012 09:07:12 +0200
-Message-ID: <1351062434-22514-3-git-send-email-s-guiriec@ti.com>
-References: <1351062434-22514-1-git-send-email-s-guiriec@ti.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v2 1/4] ARM: dts: omap5: Update GPIO with address space
+ and interrupts
+Date: Wed, 24 Oct 2012 09:44:14 +0200
+Message-ID: <50879C4E.6020003@ti.com>
+References: <1350981432-6750-1-git-send-email-s-guiriec@ti.com> <1350981432-6750-2-git-send-email-s-guiriec@ti.com> <5086AE8E.60106@ti.com> <5086B316.6000001@ti.com> <5086BECA.9070502@ti.com> <5086C0C3.1060305@ti.com> <5086C29C.5000209@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351062434-22514-1-git-send-email-s-guiriec@ti.com>
+In-Reply-To: <5086C29C.5000209@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastien Guiriec <s-guiriec@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>
+To: Sebastien Guiriec <s-guiriec@ti.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add base address and interrupt line inside Device Tree data for
-OMAP5
+On 10/23/2012 06:15 PM, Sebastien Guiriec wrote:
+> Hi Benoit and John,
+> 
+> On 10/23/2012 06:07 PM, Benoit Cousson wrote:
+>> On 10/23/2012 05:59 PM, Jon Hunter wrote:
+>>>
+>>> On 10/23/2012 10:09 AM, Benoit Cousson wrote:
+>>>> On 10/23/2012 04:49 PM, Jon Hunter wrote:
+>>>>> Hi Seb,
+>>>>>
+>>>>> On 10/23/2012 03:37 AM, Sebastien Guiriec wrote:
+>>>>>> Add base address and interrupt line inside Device Tree data for
+>>>>>> OMAP5
+>>>>>>
+>>>>>> Signed-off-by: Sebastien Guiriec <s-guiriec@ti.com>
+>>>>>> ---
+>>>>>>   arch/arm/boot/dts/omap5.dtsi |   16 ++++++++++++++++
+>>>>>>   1 file changed, 16 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/omap5.dtsi
+>>>>>> b/arch/arm/boot/dts/omap5.dtsi
+>>>>>> index 42c78be..9e39f9f 100644
+>>>>>> --- a/arch/arm/boot/dts/omap5.dtsi
+>>>>>> +++ b/arch/arm/boot/dts/omap5.dtsi
+>>>>>> @@ -104,6 +104,8 @@
+>>>>>>
+>>>>>>           gpio1: gpio@4ae10000 {
+>>>>>>               compatible = "ti,omap4-gpio";
+>>>>>> +            reg = <0x4ae10000 0x200>;
+>>>>>> +            interrupts = <0 29 0x4>;
+>>>>>>               ti,hwmods = "gpio1";
+>>>>>>               gpio-controller;
+>>>>>>               #gpio-cells = <2>;
+>>>>>
+>>>>> I am wondering if we should add the "interrupt-parent" property to add
+>>>>> nodes in the device-tree source. I know that today the
+>>>>> interrupt-parent
+>>>>> is being defined globally, but when device-tree maps an interrupt
+>>>>> for a
+>>>>> device it searches for the interrupt-parent starting the current
+>>>>> device
+>>>>> node.
+>>>>>
+>>>>> So in other words, for gpio1 it will search the gpio1 binding for
+>>>>> "interrupt-parent" and if not found move up a level and search
+>>>>> again. It
+>>>>> will keep doing this until it finds the "interrupt-parent".
+>>>>>
+>>>>> Therefore, I believe it will improve search time and hence, boot
+>>>>> time if
+>>>>> we have interrupt-parent defined in each node.
+>>>>
+>>>> Mmm, I'm not that sure. it will increase the size of the blob, so
+>>>> increase the time to load it and then to parse it. Where in the current
+>>>> case, it is just going up to the parent node using the already
+>>>> un-flatten tree in memory and thus that should not take that much time.
+>>>
+>>> Yes it will definitely increase the size, so that could slow things
+>>> down.
+>>>
+>>>> That being said, it might be interesting to benchmark that to see what
+>>>> is the real impact.
+>>>
+>>> Right, I wonder what the key functions are we need to benchmark to get
+>>> an overall feel for what is best? Right now I am seeing some people add
+>>> the interrupt-parent for device nodes and others not. Ideally we should
+>>> be consistent, but at the same time it is probably something that we can
+>>> easily sort out later. So not a big deal either way.
+>>
+>> For consistency, I'd rather not add it at all for the moment.
+>> Later, when we will only support DT boot, people will start complaining
+>> about the boot time increase and then we will start optimizing a little
+>> bit :-)
+> 
+> I just do it like that to be consistent with what is inside OMAP4 dtsi
+> for those IPs (GPIO/UART/MMC/I2C). Now after checking Peter already add
+> the interrupt-parent for all audio IPs (OMAP3/4/5). But here we need
+> also interrupts name. So here we should try to be consistent.
+> 
+> So I can send back the series for OMAP5 and update the OMAP4 with
+>   interrupts-parent = <&gic>
 
-Signed-off-by: Sebastien Guiriec <s-guiriec@ti.com>
-Reviewed-by: Shubhrajyoti D <shubhrajyoti@ti.com>
----
- arch/arm/boot/dts/omap5.dtsi |   19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+No, you should not, as explained previously. You'd better remove the one
+already in audio IPs for consistency.
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 737a536..07d2607 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -200,6 +200,9 @@
- 
- 		i2c1: i2c@48070000 {
- 			compatible = "ti,omap4-i2c";
-+			reg = <0x48070000 0x100>;
-+			interrupts = <0 56 0x4>;
-+			interrupt-parent = <&gic>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c1";
-@@ -207,6 +210,9 @@
- 
- 		i2c2: i2c@48072000 {
- 			compatible = "ti,omap4-i2c";
-+			reg = <0x48072000 0x100>;
-+			interrupts = <0 57 0x4>;
-+			interrupt-parent = <&gic>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c2";
-@@ -214,20 +220,29 @@
- 
- 		i2c3: i2c@48060000 {
- 			compatible = "ti,omap4-i2c";
-+			reg = <0x48060000 0x100>;
-+			interrupts = <0 61 0x4>;
-+			interrupt-parent = <&gic>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c3";
- 		};
- 
--		i2c4: i2c@4807A000 {
-+		i2c4: i2c@4807a000 {
- 			compatible = "ti,omap4-i2c";
-+			reg = <0x4807a000 0x100>;
-+			interrupts = <0 62 0x4>;
-+			interrupt-parent = <&gic>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c4";
- 		};
- 
--		i2c5: i2c@4807C000 {
-+		i2c5: i2c@4807c000 {
- 			compatible = "ti,omap4-i2c";
-+			reg = <0x4807c000 0x100>;
-+			interrupts = <0 60 0x4>;
-+			interrupt-parent = <&gic>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c5";
--- 
-1.7.10.4
+
+Regards,
+Benoit
