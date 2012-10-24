@@ -1,46 +1,41 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
- driver
-Date: Wed, 24 Oct 2012 15:30:43 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1210241525550.1282-100000@iolanthe.rowland.org>
-References: <5088399F.2000102@firmworks.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Wed, 24 Oct 2012 12:38:44 -0700
+Message-ID: <4612865.mWDXHX689T@dtor-d630.eng.vmware.com>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <64355430.MNHe7H1cg3@dtor-d630.eng.vmware.com>
+ <20121024191042.GC772@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5088399F.2000102-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121024191042.GC772-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Oct 2012, Mitch Bradley wrote:
+On Wednesday, October 24, 2012 10:10:42 PM Felipe Balbi wrote:
+> > 
+> >
+> > That is a valid concern and we'll need to find a compromise here. As I
+> > said,
+> WHAT ?? Silicon erratas are not a valid concern ? Power waste isn't a
+> valid concern ? Tell that to the millions of devices shipped with Linux
+> everyday. Power usage if it's the top concern in any product, is right
+> there as the top five. Likewise for silicon erratas.
 
-> >> Ah, now I'm starting to get the picture.
-> >>
-> >> So by listing "usb-ehci" in its device ID table, a driver would
-> >> essentially be saying that it can handle _all_ USB EHCI controllers.  
-> 
-> 
-> Actually, it means that the driver can handle at least USB EHCI
-> controllers that are 100% compatible with the EHCI spec (requiring
-> nothing extra).  The driver might be able to handle almost-compatible
-> controllers, possibly with the help of additional properties.
+I think we should come back to this discussion when you get more coffee
+and start parsing other party e-mails properly.
 
-Unfortunately that's not saying very much.  The EHCI spec describes
-only PCI-based controllers.  Every other sort does require something
-extra.
-
-> If a DT node lists "usb-ehci" as a "fallback", it's not guaranteed that
-> a given version of that driver will work, but it's worth a try in the
-> event that no more-specific driver is matched.
-
-While I haven't checked in detail, it seems quite likely that this 
-would not work with some of the devices that have "usb-ehci" listed in 
-their compatible values.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
