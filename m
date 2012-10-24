@@ -1,136 +1,87 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Wed, 24 Oct 2012 19:46:15 +0200
-Message-ID: <50882967.6040800@ti.com>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com> <20121022155028.GA13791@core.coreip.homeip.net> <508660D4.9030507@ti.com> <20121023200249.GA2712@core.coreip.homeip.net> <20121024083704.GF5665@arwen.pp.htv.fi> <20121024161429.GA16350@core.coreip.homeip.net>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
+Date: Wed, 24 Oct 2012 13:46:42 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1210241329230.1282-100000@iolanthe.rowland.org>
+References: <50881B19.3080609@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20121024161429.GA16350@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50881B19.3080609-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On Wed, 24 Oct 2012, Stephen Warren wrote:
 
-On 10/24/2012 06:14 PM, Dmitry Torokhov wrote:
-> On Wed, Oct 24, 2012 at 11:37:04AM +0300, Felipe Balbi wrote:
->> Hi,
->>
->> On Tue, Oct 23, 2012 at 01:02:49PM -0700, Dmitry Torokhov wrote:
->>> On Tue, Oct 23, 2012 at 11:18:12AM +0200, Benoit Cousson wrote:
->>>> Hi Dimitry,
->>>>
->>>> On 10/22/2012 05:50 PM, Dmitry Torokhov wrote:
->>>>> Hi Sourav,
->>>>>
->>>>> On Mon, Oct 22, 2012 at 06:43:00PM +0530, Sourav Poddar wrote:
->>>>>> Adapt keypad to use pinctrl framework.
->>>>>>
->>>>>> Tested on omap4430 sdp with 3.7-rc1 kernel.
->>>>>
->>>>> I do not see anything in the driver that would directly use pinctrl. Is
->>>>> there a better place to select default pin configuration; maybe when
->>>>> instantiating platform device?
->>>>
->>>> Why?
->>>> The devm_pinctrl_get_select_default is using the pinctrl.
->>>
->>> No, I guess we ihave different understanding of what "directly use" means.
->>> This particular driver does directly use interrupts: it requests it and
->>> performs some actions when interrupt arrives. Same goes for IO memory -
->>> it gets requested, then we access it. With pinctrl we do not do anything
->>> - we just ask another layer to configure it and that is it.
->>
->> this is true for almost anything we do:
->>
->> - we ask another layer to allocate memory for us
->> - we ask another layer to call our ISR once the IRQ line is asserted
->> - we ask another layer to handle the input events we just received
->> - we ask another layer to transfer data through DMA for us
->> - we ask another layer to turn regulators on and off.
+> > How do we determine which existing drivers claim to support usb-ehci?  
+> > A quick search under arch/ and drivers/ turns up nothing but
+> > drivers/usb/host/ehci-ppc-of.c.  Changing it to a more HW-specific
+> > match should be easy enough, and then "usb-ehci" would be safe to use
+> > in ehci-platform.c.
 > 
-> But we are _directly_ _using_ all of these. You allocate memory and you
-> (the driver) stuff data into that memory. You ask for DMA and you take
-> the DMAed data and work with it. Not so with pinctrl in omap keypad and
-> other drivers I have seen so far.
-
-That's not really true. You select a pin mode and thanks to that you get
-the signal from an external pin that goes to your IP.
-And thanks to that the IP is doing what your are expecting it to do.
-
-Without that your IP will not get any input signal, which will make it a
-little bit useless, isn't it?
-
->> and so on. This is just how abstractions work, we group common parts in
->> a framework so that users don't need to know the details, but still need
->> to tell the framework when to fiddle with those resources.
->>
->>> I have seen just in a few days 3 or 4 drivers having exactly the same
->>> change - call to devm_pinctrl_get_select_default(), and I guess I will
->>> receive the same patches for the rest of input drivers shortly.
->>> This suggests that the operation is done at the wrong level. Do the
->>> pin configuration as you parse DT data, the same way you set up i2c
->>> devices registers in of_i2c.c, and leave the individual drivers that do
->>> not care about specifics alone.
->>
->> Makes no sense to hide that from drivers. The idea here is that driver
->> should know when it needs its pins to muxed correctly.
+> It's not drivers that claim to support usb-ehci, but device tree files
+> that contain nodes that include "usb-ehci" in their compatible value,
+> yet need to be handled by a driver that isn't the generic USB EHCI
+> driver, and that driver binds to the other more specific compatible value:
 > 
-> The driver also needs memory controller to be initialized, gpio chip be
-> ready and registered, DMA subsystem ready, input core reade, etc, etc,
-> etc. You however do not have every driver explicitly initialize any of
-> that; you expect certain working environment to be already operable. The
-> driver does manage resources it controls, it has ultimate knowledge
-> about, pin configuration is normally is not it. We just need to know
-> that we wired/muxed properly, otherwise we won't work. So please let
-> parent layers deal with it.
+> > $ grep -HrnI usb-ehci arch/*/boot/dts
+> > arch/arm/boot/dts/spear3xx.dtsi:76:			compatible = "st,spear600-ehci", "usb-ehci";
+> > arch/arm/boot/dts/at91sam9x5.dtsi:399:			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+> > arch/arm/boot/dts/spear13xx.dtsi:145:			compatible = "st,spear600-ehci", "usb-ehci";
+> > arch/arm/boot/dts/spear13xx.dtsi:152:			compatible = "st,spear600-ehci", "usb-ehci";
+> > arch/arm/boot/dts/tegra20.dtsip:215:		compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> > arch/arm/boot/dts/tegra20.dtsip:224:		compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> > arch/arm/boot/dts/tegra20.dtsip:232:		compatible = "nvidia,tegra20-ehci", "usb-ehci";
+> > arch/arm/boot/dts/spear600.dtsi:88:			compatible = "st,spear600-ehci", "usb-ehci";
+> > arch/arm/boot/dts/spear600.dtsi:96:			compatible = "st,spear600-ehci", "usb-ehci";
+> > arch/arm/boot/dts/at91sam9g45.dtsi:392:			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+> > arch/powerpc/boot/dts/sequoia.dts:156:			compatible = "ibm,usb-ehci-440epx", "usb-ehci";
+> > arch/powerpc/boot/dts/wii.dts:120:			compatible = "nintendo,hollywood-usb-ehci",
+> > arch/powerpc/boot/dts/wii.dts:121:					"usb-ehci";
+> > arch/powerpc/boot/dts/canyonlands.dts:167:			compatible = "ibm,usb-ehci-460ex", "usb-ehci";
 > 
->> 95% of the time
->> it will be done during probe() but then again, so what ?
->>
->> doing that when parsing DT, or on bus notifiers is just plain wrong.
->> Drivers should be required to handle all of their resources.
+> and then search for all those other compatible values in drivers. The
+> ARM instances certainly all have this issue (although perhaps it's worth
+> investigating if a generic could work for them instead). The PPC
+> instances need more investigation; the values don't show up in of match
+> tables but rather in code.
+
+Ah, now I'm starting to get the picture.
+
+So by listing "usb-ehci" in its device ID table, a driver would
+essentially be saying that it can handle _all_ USB EHCI controllers.  
+(Which means that the entry in ehci-ppc-of.c is questionable; perhaps
+the intention is that this driver really does handle all EHCI
+controllers on any PPC-based OpenFirmware platform bus.)
+
+> This doesn't continue forever though; you typically only list the
+> specific HW model, the base specific model it's compatible with, and any
+> generic value needed. So, a hypothetical Tegra40 EHCI controller would be:
 > 
-> All of _their_ resources, exactly. They do not own nor control pins so
-> they should not be bothered with them either. Look, when you see that
-> potentially _every_ driver in the system needs to set up the same object
-> that it doe snot use otherwise you should realize that individual driver
-> is not the proper place to do that.
+> compatible = "nvidia,tegra40-ehci", "nvidia,tegra20-ehci", "usb-ehci".
 
-What your are missing as well in that case is the explicit dependency
-that this API is creating with the pinctrl driver that we are going to
-miss otherwise.
+What's the reason for listing the generic value if drivers can't key
+off it?  Does it contain any information that's not already present in 
+the specific values?
 
-Hence the following code.
+It sounds like the ehci-platform driver should simply list all the
+specific HW device types (or base HW device types) that it handles, and
+it shouldn't include "usb-ehci" in the list.  As more DT board files
+are created or as ehci-platform becomes capable to taking over from
+other drivers, its device list would grow.
 
-+		if (PTR_ERR(keypad_data->pins) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
+And it sounds like the only property we really need to add to the 
+usb-ehci binding at the moment is "has-tt".
 
-If the pinctrl is not already there you defer the probe until it is there.
-
-Moreover, as already said, we are probably at some point going to handle
-as well the low power mode and thus change the pin mode upon idle/suspend.
-
-And again, selecting a pin mode during probe is doing something with the
-pins when and only when it is useful. It is not different than getting
-an IRQ or DMA request at probe time.
-
-You get it, use it for registration and that all you are doing with it.
-It is no different here.
-
-Doing that during device creation does not make sense, since that device
-might never be used.
-
-Is it like allocating the memory by default for every devices at boot
-time just in case a driver will probe it at some time or registering
-every IRQs at boot time just in case a driver will use it...
-
-That's just pointless. We are wasting resources for nothing and thus
-potentially power and that will not help the Earth getting any better.
-
-Regards,
-Benoit
-
+Alan Stern
