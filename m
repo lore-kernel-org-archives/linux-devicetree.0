@@ -1,508 +1,141 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH V4 1/5] ARM: dts: OMAP: Add timer nodes
-Date: Wed, 24 Oct 2012 17:41:13 +0200
-Message-ID: <50880C19.2090508@ti.com>
-References: <1350658744-13509-1-git-send-email-jon-hunter@ti.com> <1350658744-13509-2-git-send-email-jon-hunter@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Wed, 24 Oct 2012 09:14:29 -0700
+Message-ID: <20121024161429.GA16350@core.coreip.homeip.net>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121022155028.GA13791@core.coreip.homeip.net>
+ <508660D4.9030507@ti.com>
+ <20121023200249.GA2712@core.coreip.homeip.net>
+ <20121024083704.GF5665@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1350658744-13509-2-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Vaibhav Hiremath <hvaibhav@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121024083704.GF5665@arwen.pp.htv.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
-
-On 10/19/2012 04:59 PM, Jon Hunter wrote:
-> Add the 12 GP timers nodes present in OMAP2.
-> Add the 12 GP timers nodes present in OMAP3.
-> Add the 11 GP timers nodes present in OMAP4.
-> Add the 7 GP timers nodes present in AM33xx.
+On Wed, Oct 24, 2012 at 11:37:04AM +0300, Felipe Balbi wrote:
+> Hi,
 > 
-> Add documentation for timer properties specific to OMAP.
+> On Tue, Oct 23, 2012 at 01:02:49PM -0700, Dmitry Torokhov wrote:
+> > On Tue, Oct 23, 2012 at 11:18:12AM +0200, Benoit Cousson wrote:
+> > > Hi Dimitry,
+> > > 
+> > > On 10/22/2012 05:50 PM, Dmitry Torokhov wrote:
+> > > > Hi Sourav,
+> > > > 
+> > > > On Mon, Oct 22, 2012 at 06:43:00PM +0530, Sourav Poddar wrote:
+> > > >> Adapt keypad to use pinctrl framework.
+> > > >>
+> > > >> Tested on omap4430 sdp with 3.7-rc1 kernel.
+> > > > 
+> > > > I do not see anything in the driver that would directly use pinctrl. Is
+> > > > there a better place to select default pin configuration; maybe when
+> > > > instantiating platform device?
+> > > 
+> > > Why?
+> > > The devm_pinctrl_get_select_default is using the pinctrl.
+> > 
+> > No, I guess we ihave different understanding of what "directly use" means.
+> > This particular driver does directly use interrupts: it requests it and
+> > performs some actions when interrupt arrives. Same goes for IO memory -
+> > it gets requested, then we access it. With pinctrl we do not do anything
+> > - we just ask another layer to configure it and that is it.
 > 
-> Thanks to Vaibhav Hiremath for creating the AM33xx timer nodes. I have modified
-> Vaibhav's original nodes adding information on which timers support a PWM
-> output.
+> this is true for almost anything we do:
 > 
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> - we ask another layer to allocate memory for us
+> - we ask another layer to call our ISR once the IRQ line is asserted
+> - we ask another layer to handle the input events we just received
+> - we ask another layer to transfer data through DMA for us
+> - we ask another layer to turn regulators on and off.
 
-I updated the patch to remove the interrupt-parent from the DTS nodes and the documentation, as discussed on the list in the context of OMAP5 DTS for GPIO.
+But we are _directly_ _using_ all of these. You allocate memory and you
+(the driver) stuff data into that memory. You ask for DMA and you take
+the DMAed data and work with it. Not so with pinctrl in omap keypad and
+other drivers I have seen so far.
 
-If you are OK with that version, I'll push it to Tony along with the others DTS patches.
+> 
+> and so on. This is just how abstractions work, we group common parts in
+> a framework so that users don't need to know the details, but still need
+> to tell the framework when to fiddle with those resources.
+> 
+> > I have seen just in a few days 3 or 4 drivers having exactly the same
+> > change - call to devm_pinctrl_get_select_default(), and I guess I will
+> > receive the same patches for the rest of input drivers shortly.
+> > This suggests that the operation is done at the wrong level. Do the
+> > pin configuration as you parse DT data, the same way you set up i2c
+> > devices registers in of_i2c.c, and leave the individual drivers that do
+> > not care about specifics alone.
+> 
+> Makes no sense to hide that from drivers. The idea here is that driver
+> should know when it needs its pins to muxed correctly.
 
-Regards,
-Benoit
+The driver also needs memory controller to be initialized, gpio chip be
+ready and registered, DMA subsystem ready, input core reade, etc, etc,
+etc. You however do not have every driver explicitly initialize any of
+that; you expect certain working environment to be already operable. The
+driver does manage resources it controls, it has ultimate knowledge
+about, pin configuration is normally is not it. We just need to know
+that we wired/muxed properly, otherwise we won't work. So please let
+parent layers deal with it.
 
----
->From 531cc8142ecd6da7929628772c4035dcf7996fef Mon Sep 17 00:00:00 2001
-From: Jon Hunter <jon-hunter@ti.com>
-Date: Fri, 19 Oct 2012 09:59:00 -0500
-Subject: [PATCH] ARM: dts: OMAP: Add timer nodes
+> 95% of the time
+> it will be done during probe() but then again, so what ?
+> 
+> doing that when parsing DT, or on bus notifiers is just plain wrong.
+> Drivers should be required to handle all of their resources.
 
-Add the 12 GP timers nodes present in OMAP2.
-Add the 12 GP timers nodes present in OMAP3.
-Add the 11 GP timers nodes present in OMAP4.
-Add the 7 GP timers nodes present in AM33xx.
+All of _their_ resources, exactly. They do not own nor control pins so
+they should not be bothered with them either. Look, when you see that
+potentially _every_ driver in the system needs to set up the same object
+that it doe snot use otherwise you should realize that individual driver
+is not the proper place to do that.
 
-Add documentation for timer properties specific to OMAP.
+> 
+> > > That's why it is named "get_select_default" and not "get" only.
+> > > This API ensure that the pin will be set to the default state, and this
+> > > is all we need to do during the probe.
+> > 
+> > Why during the probe and not by default? Realistically, the driver will
+> > be loaded as long as there is a matching device and pins will need to be
+> > configured.
+> 
+> likewise memory will be allocated when matching happens, IRQs will be
+> allocated, regulators will be turned on. So why don't we do all that by
+> default ? Because it is wrong.
 
-Thanks to Vaibhav Hiremath for creating the AM33xx timer nodes. I have modified
-Vaibhav's original nodes adding information on which timers support a PWM
-output.
+No, because we do not know how. The generic layer does not know the ISR
+to install, how much memory to allocate, etc. Having regulator turned on
+before getting to probe might not be a bad idea.
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-[b-cousson@ti.com: Remove the interrupt-parent from nodes]
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
----
- .../devicetree/bindings/arm/omap/timer.txt         |   31 +++++++
- arch/arm/boot/dts/am33xx.dtsi                      |   54 +++++++++++
- arch/arm/boot/dts/omap2.dtsi                       |   85 +++++++++++++++++
- arch/arm/boot/dts/omap2420.dtsi                    |    8 ++
- arch/arm/boot/dts/omap2430.dtsi                    |    8 ++
- arch/arm/boot/dts/omap3.dtsi                       |   95 ++++++++++++++++++++
- arch/arm/boot/dts/omap4.dtsi                       |   86 ++++++++++++++++++
- 7 files changed, 367 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/omap/timer.txt
+> 
+> > > There is no point to change the mux if the driver is not probed, because
+> > > potentially the pin can be use be another driver.
+> > 
+> > What other driver would use it? Who would chose what driver to load?
+> 
+> Well, you _do_ know that on a SoC we have a limited amount of pins
+> right ?
+> 
+> Considering the amont of features which are packed inside a single die,
+> it's not farfetched to assume we will have a lot less pins then we
+> actually need, so we need muxers behind each pin in order to choose
+> which functionality we want.
+> 
+> If it happens that keypad's pins are shared with another IP (e.g. GPIO),
+> we need to give the final user (a OEM/ODM) the choice of using those
+> pins as either keypad or GPIOs, thus the need for pinctrl framework and
+> the calls in the drivers.
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/timer.txt b/Documentation/devicetree/bindings/arm/omap/timer.txt
-new file mode 100644
-index 0000000..b073d89
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/omap/timer.txt
-@@ -0,0 +1,31 @@
-+OMAP Timer bindings
-+
-+Required properties:
-+- compatible:		Must be "ti,omap2-timer" for OMAP2+ controllers.
-+- reg:			Contains timer register address range (base address and
-+			length).
-+- interrupts: 		Contains the interrupt information for the timer. The
-+			format is being dependent on which interrupt controller
-+			the OMAP device uses.
-+- ti,hwmods:		Name of the hwmod associated to the timer, "timer<X>",
-+			where <X> is the instance number of the timer from the
-+			HW spec.
-+
-+Optional properties:
-+- ti,timer-alwon:	Indicates the timer is in an alway-on power domain.
-+- ti,timer-dsp:		Indicates the timer can interrupt the on-chip DSP in
-+			addition to the ARM CPU.
-+- ti,timer-pwm: 	Indicates the timer can generate a PWM output.
-+- ti,timer-secure: 	Indicates the timer is reserved on a secure OMAP device
-+			and therefore cannot be used by the kernel.
-+
-+Example:
-+
-+timer12: timer@48304000 {
-+	compatible = "ti,omap2-timer";
-+	reg = <0x48304000 0xfff>;
-+	interrupts = <95>;
-+	ti,hwmods = "timer12"
-+	ti,timer-alwon;
-+	ti,timer-secure;
-+};
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 4709269..7522e16 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -237,5 +237,59 @@
- 			interrupts = <55>;
- 			status = "disabled";
- 		};
-+
-+		timer1: timer@44e31000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x44e31000 0x1000>;
-+			interrupts = <67>;
-+			ti,hwmods = "timer1";
-+			ti,timer-alwon;
-+		};
-+
-+		timer2: timer@48040000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48040000 0x1000>;
-+			interrupts = <68>;
-+			ti,hwmods = "timer2";
-+		};
-+
-+		timer3: timer@48042000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48042000 0x1000>;
-+			interrupts = <69>;
-+			ti,hwmods = "timer3";
-+		};
-+
-+		timer4: timer@48044000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48044000 0x1000>;
-+			interrupts = <92>;
-+			ti,hwmods = "timer4";
-+			ti,timer-pwm;
-+		};
-+
-+		timer5: timer@48046000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48046000 0x1000>;
-+			interrupts = <93>;
-+			ti,hwmods = "timer5";
-+			ti,timer-pwm;
-+		};
-+
-+		timer6: timer@48048000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48048000 0x1000>;
-+			interrupts = <94>;
-+			ti,hwmods = "timer6";
-+			ti,timer-pwm;
-+		};
-+
-+		timer7: timer@4804a000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4804a000 0x1000>;
-+			interrupts = <95>;
-+			ti,hwmods = "timer7";
-+			ti,timer-pwm;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-index f366482..731de55 100644
---- a/arch/arm/boot/dts/omap2.dtsi
-+++ b/arch/arm/boot/dts/omap2.dtsi
-@@ -66,5 +66,90 @@
- 			ti,hwmods = "uart3";
- 			clock-frequency = <48000000>;
- 		};
-+
-+		timer2: timer@4802a000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4802a000 0xfff>;
-+			interrupts = <38>;
-+			ti,hwmods = "timer2";
-+		};
-+
-+		timer3: timer@48078000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48078000 0xfff>;
-+			interrupts = <39>;
-+			ti,hwmods = "timer3";
-+		};
-+
-+		timer4: timer@4807a000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4807a000 0xfff>;
-+			interrupts = <40>;
-+			ti,hwmods = "timer4";
-+		};
-+
-+		timer5: timer@4807c000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4807c000 0xfff>;
-+			interrupts = <41>;
-+			ti,hwmods = "timer5";
-+			ti,timer-dsp;
-+		};
-+
-+		timer6: timer@4807e000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4807e000 0xfff>;
-+			interrupts = <42>;
-+			ti,hwmods = "timer6";
-+			ti,timer-dsp;
-+		};
-+
-+		timer7: timer@48080000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48080000 0xfff>;
-+			interrupts = <43>;
-+			ti,hwmods = "timer7";
-+			ti,timer-dsp;
-+		};
-+
-+		timer8: timer@48082000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48082000 0xfff>;
-+			interrupts = <44>;
-+			ti,hwmods = "timer8";
-+			ti,timer-dsp;
-+		};
-+
-+		timer9: timer@48084000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48084000 0xfff>;
-+			interrupts = <45>;
-+			ti,hwmods = "timer9";
-+			ti,timer-pwm;
-+		};
-+
-+		timer10: timer@48086000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48086000 0xfff>;
-+			interrupts = <46>;
-+			ti,hwmods = "timer10";
-+			ti,timer-pwm;
-+		};
-+
-+		timer11: timer@48088000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48088000 0xfff>;
-+			interrupts = <47>;
-+			ti,hwmods = "timer11";
-+			ti,timer-pwm;
-+		};
-+
-+		timer12: timer@4808a000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4808a000 0xfff>;
-+			interrupts = <48>;
-+			ti,hwmods = "timer12";
-+			ti,timer-pwm;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
-index 4d5ce91..eee3778 100644
---- a/arch/arm/boot/dts/omap2420.dtsi
-+++ b/arch/arm/boot/dts/omap2420.dtsi
-@@ -42,5 +42,13 @@
- 			interrupt-names = "tx", "rx";
- 			ti,hwmods = "mcbsp2";
- 		};
-+
-+		timer1: timer@48028000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48028000 0xfff>;
-+			interrupts = <37>;
-+			ti,hwmods = "timer1";
-+			ti,timer-alwon;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
-index fa84532..eea5b8e 100644
---- a/arch/arm/boot/dts/omap2430.dtsi
-+++ b/arch/arm/boot/dts/omap2430.dtsi
-@@ -83,5 +83,13 @@
- 			ti,buffer-size = <128>;
- 			ti,hwmods = "mcbsp5";
- 		};
-+
-+		timer1: timer@49018000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x49018000 0xfff>;
-+			interrupts = <37>;
-+			ti,hwmods = "timer1";
-+			ti,timer-alwon;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 955cbdc..904c07e 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -296,5 +296,100 @@
- 			ti,buffer-size = <128>;
- 			ti,hwmods = "mcbsp5";
- 		};
-+
-+		timer1: timer@48318000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48318000 0xfff>;
-+			interrupts = <37>;
-+			ti,hwmods = "timer1";
-+			ti,timer-alwon;
-+		};
-+
-+		timer2: timer@49032000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x49032000 0xfff>;
-+			interrupts = <38>;
-+			ti,hwmods = "timer2";
-+		};
-+
-+		timer3: timer@49034000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x49034000 0xfff>;
-+			interrupts = <39>;
-+			ti,hwmods = "timer3";
-+		};
-+
-+		timer4: timer@49036000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x49036000 0xfff>;
-+			interrupts = <40>;
-+			ti,hwmods = "timer4";
-+		};
-+
-+		timer5: timer@49038000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x49038000 0xfff>;
-+			interrupts = <41>;
-+			ti,hwmods = "timer5";
-+			ti,timer-dsp;
-+		};
-+
-+		timer6: timer@4903a000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4903a000 0xfff>;
-+			interrupts = <42>;
-+			ti,hwmods = "timer6";
-+			ti,timer-dsp;
-+		};
-+
-+		timer7: timer@4903c000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4903c000 0xfff>;
-+			interrupts = <43>;
-+			ti,hwmods = "timer7";
-+			ti,timer-dsp;
-+		};
-+
-+		timer8: timer@4903e000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4903e000 0xfff>;
-+			interrupts = <44>;
-+			ti,hwmods = "timer8";
-+			ti,timer-pwm;
-+			ti,timer-dsp;
-+		};
-+
-+		timer9: timer@49040000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x49040000 0xfff>;
-+			interrupts = <45>;
-+			ti,hwmods = "timer9";
-+			ti,timer-pwm;
-+		};
-+
-+		timer10: timer@48086000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48086000 0xfff>;
-+			interrupts = <46>;
-+			ti,hwmods = "timer10";
-+			ti,timer-pwm;
-+		};
-+
-+		timer11: timer@48088000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48088000 0xfff>;
-+			interrupts = <47>;
-+			ti,hwmods = "timer11";
-+			ti,timer-pwm;
-+		};
-+
-+		timer12: timer@48304000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48304000 0xfff>;
-+			interrupts = <95>;
-+			ti,hwmods = "timer12";
-+			ti,timer-alwon;
-+			ti,timer-secure;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 2ab6e68..77f9cc9 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -433,5 +433,91 @@
- 			ranges;
- 			ti,hwmods = "ocp2scp_usb_phy";
- 		};
-+
-+		timer1: timer@4a318000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4a318000 0x7f>;
-+			interrupts = <0 37 0x4>;
-+			ti,hwmods = "timer1";
-+			ti,timer-alwon;
-+		};
-+
-+		timer2: timer@48032000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48032000 0x7f>;
-+			interrupts = <0 38 0x4>;
-+			ti,hwmods = "timer2";
-+		};
-+
-+		timer3: timer@48034000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48034000 0x7f>;
-+			interrupts = <0 39 0x4>;
-+			ti,hwmods = "timer3";
-+		};
-+
-+		timer4: timer@48036000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48036000 0x7f>;
-+			interrupts = <0 40 0x4>;
-+			ti,hwmods = "timer4";
-+		};
-+
-+		timer5: timer@49038000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x49038000 0x7f>;
-+			interrupts = <0 41 0x4>;
-+			ti,hwmods = "timer5";
-+			ti,timer-dsp;
-+		};
-+
-+		timer6: timer@4903a000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4903a000 0x7f>;
-+			interrupts = <0 42 0x4>;
-+			ti,hwmods = "timer6";
-+			ti,timer-dsp;
-+		};
-+
-+		timer7: timer@4903c000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4903c000 0x7f>;
-+			interrupts = <0 43 0x4>;
-+			ti,hwmods = "timer7";
-+			ti,timer-dsp;
-+		};
-+
-+		timer8: timer@4903e000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4903e000 0x7f>;
-+			interrupts = <0 44 0x4>;
-+			ti,hwmods = "timer8";
-+			ti,timer-pwm;
-+			ti,timer-dsp;
-+		};
-+
-+		timer9: timer@4803e000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x4803e000 0x7f>;
-+			interrupts = <0 45 0x4>;
-+			ti,hwmods = "timer9";
-+			ti,timer-pwm;
-+		};
-+
-+		timer10: timer@48086000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48086000 0x7f>;
-+			interrupts = <0 46 0x4>;
-+			ti,hwmods = "timer10";
-+			ti,timer-pwm;
-+		};
-+
-+		timer11: timer@48088000 {
-+			compatible = "ti,omap2-timer";
-+			reg = <0x48088000 0x7f>;
-+			interrupts = <0 47 0x4>;
-+			ti,hwmods = "timer11";
-+			ti,timer-pwm;
-+		};
- 	};
- };
+Right, so please walk me through, step by step, how an OEM/ODM woudl
+select a particular configuration. Do you expect it to happen at
+runtime, or do you expect relevant data be put in DT?
+
+Thanks.
+
 -- 
-1.7.0.4
-
-
-
+Dmitry
