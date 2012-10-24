@@ -1,42 +1,142 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: dt: evk-pro3: enable uart0 and uart2
-Date: Wed, 24 Oct 2012 12:19:11 +0200
-Message-ID: <CAHkwnC9oap8hvHszoZyAxVssz3qC671X-Ktf4++Nfd1HdyKiwA@mail.gmail.com>
-References: <1350986416-16246-1-git-send-email-fabio.porcedda@gmail.com>
- <20121023104212.GD18964@game.jcrosoft.org>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [RFC PATCH 3.7.0-rc2] dt: match id-table before creating platform
+ device
+Date: Wed, 24 Oct 2012 11:45:46 +0100
+Message-ID: <5087C6DA.1070706@st.com>
+References: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com> <5086988F.6090107@gmail.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121023104212.GD18964-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5086988F.6090107@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 23, 2012 at 12:42 PM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> Hi,
+On 23/10/12 14:15, Rob Herring wrote:
+> Adding lkml. DT patches should go to both lists.
 >
->         You will have to wait a few I prepare a patch series for pinctrl
->
->         so most of the current drivers will support pinctrl and requere it
->
->         this will availabe rc3 or rc4 max
->
->         then I will merge more update and boards
+> On 10/23/2012 05:30 AM, Srinivas KANDAGATLA wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>
+>> As part of of_platform_populate call, the existing code iterates each
+>> child node and then creates a platform device for each child, however
+>> there is bug in the code which does not check the match table before
+>> creating the platform device. This might result creating two platfrom
+>> devices and also invoking driver probe twice, which is incorrect.
+>>
+>> This patch moves a existing of_match_node check to start of the function
+>> to fix the bug, doing this way will return immediately without creating
+>> any datastructures if the child does not match the supplied match-table.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>> ---
+>>  drivers/of/platform.c |    5 ++++-
+>>  1 files changed, 4 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index b80891b..1aaa560 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -367,6 +367,9 @@ static int of_platform_bus_create(struct device_node *bus,
+>>  		return 0;
+>>  	}
+>>  
+>> +	if (!of_match_node(matches, bus))
+>> +		return 0;
+>> +
+> This is not right. This function is recursive and this change would
+> break that. 
+You are correct, this change might break the functionality.
+> Perhaps we could only call of_platform_device_create_pdata
+> if !of_match_node instead, but I'm not completely sure that would be the
+> right thing to do. 
+I did try to do the same thing in the patch.
+May be I should have moved check just before calling
+of_platform_device_create_pdata?
+> There's also some historical things we have to
+> support which is why we have of_platform_populate and of_platform_bus_probe.
+Am just trying to understand the difference between of_platform_populate
+and of_platform_bus_probe.
+Looking at the function documentation, which states
+of_platform_bus_probe will only create children of the root which are
+selected by the @matches argument.
 
-Ok, i will wait.
+of_platform_populate walks the device tree and creates devices from
+nodes.  It differs in that it follows the modern convention of requiring
+all device nodes to have a 'compatible' property, and it is suitable for
+creating devices which are children of the root node.
 
-Best regards
--- 
-Fabio Porcedda
+Lets say If we call of_platform_populate(NULL, match_table, NULL, NULL)
+on a device trees like the below with
+struct of_device_id match_table[] = {
+    { .compatible = "simple-bus", }
+    {}
+};
+
+parent@0{
+    compatible    = "xxx,parent1", "simple-bus";
+    ...
+    child@0 {
+        compatible    = "xxx,child0", "simple-bus";
+        ...
+    };
+    child@1 {
+        compatible    = "xxx,child1";
+        ...
+    };
+    child@2 {
+        compatible    = "xxx,child2", "simple-bus";
+        ...
+    };
+};
+
+of_platform_bus_probewould create platform-devices for parent@0,
+child@0and child@2
+where as
+of_platform_populate would create platform-devices for parent@0,
+child@0, child@1 and child@2 nodes.
+
+So the question is
+why do we need to have @matches argument to of_platform_populate in the
+first place, if it creates all the devices by walking the dt nodes?
+
+It is bit confusion, As some platforms use of_platform_populate(NULL,
+of_default_bus_match_table, NULL, NULL) assuming that only matching
+nodes will end up having platform device.
+Also
+some platforms use of_platform_bus_probe(NULL, match_table, NULL), 
+where match table is of_default_bus_match_table.
+
+IMO, we could do two things to avoid this confusion in future.
+
+1. Remove matches from of_platform_populate
+2. add Lookup argument to of_platform_bus_probe
+
+What do you think?
+
+--srini
+
+
+
+
+>
+> Rob
+>
+>>  	auxdata = of_dev_lookup(lookup, bus);
+>>  	if (auxdata) {
+>>  		bus_id = auxdata->name;
+>> @@ -379,7 +382,7 @@ static int of_platform_bus_create(struct device_node *bus,
+>>  	}
+>>  
+>>  	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
+>> -	if (!dev || !of_match_node(matches, bus))
+>> +	if (!dev)
+>>  		return 0;
+>>  
+>>  	for_each_child_of_node(bus, child) {
+>>
+>
+>
