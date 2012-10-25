@@ -1,124 +1,86 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: RE: [PATCH v4 0/6] arm: exynos: add dt based support for exynos5 hdmi
-Date: Thu, 25 Oct 2012 21:08:15 +0900
-Message-ID: <03ec01cdb2a9$6a3d6cc0$3eb84640$%dae@samsung.com>
-References: <1350905467-23832-1-git-send-email-rahul.sharma@samsung.com>
- <021001cdb127$c1e28060$45a78120$%kim@samsung.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH V4 1/5] ARM: dts: OMAP: Add timer nodes
+Date: Thu, 25 Oct 2012 14:08:21 +0200
+Message-ID: <50892BB5.1010000@ti.com>
+References: <1350658744-13509-1-git-send-email-jon-hunter@ti.com> <1350658744-13509-2-git-send-email-jon-hunter@ti.com> <50880C19.2090508@ti.com> <79CD15C6BA57404B839C016229A409A83EB4A738@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <021001cdb127$c1e28060$45a78120$%kim@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: tomasz.figa@gmail.com, t.stanislaws@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, thomas.ab@samsung.com, prashanth.g@samsung.com, joshi@samsung.com, s.shirish@samsung.com, r.sh.open@gmail.com
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EB4A738@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: "Hunter, Jon" <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vaibhav,
 
+On 10/25/2012 02:05 PM, Hiremath, Vaibhav wrote:
+> On Wed, Oct 24, 2012 at 21:11:13, Cousson, Benoit wrote:
+>> Hi Jon,
+>>
+>> On 10/19/2012 04:59 PM, Jon Hunter wrote:
+>>> Add the 12 GP timers nodes present in OMAP2.
+>>> Add the 12 GP timers nodes present in OMAP3.
+>>> Add the 11 GP timers nodes present in OMAP4.
+>>> Add the 7 GP timers nodes present in AM33xx.
+>>>
+>>> Add documentation for timer properties specific to OMAP.
+>>>
+>>> Thanks to Vaibhav Hiremath for creating the AM33xx timer nodes. I have modified
+>>> Vaibhav's original nodes adding information on which timers support a PWM
+>>> output.
+>>>
+>>> Cc: Benoit Cousson <b-cousson@ti.com>
+>>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>>
+>> I updated the patch to remove the interrupt-parent from the DTS nodes and the documentation, as discussed on the list in the context of OMAP5 DTS for GPIO.
+>>
+>> If you are OK with that version, I'll push it to Tony along with the others DTS patches.
+>>
+>> Regards,
+>> Benoit
+>>
+>> ---
+>> From 531cc8142ecd6da7929628772c4035dcf7996fef Mon Sep 17 00:00:00 2001
+>> From: Jon Hunter <jon-hunter@ti.com>
+>> Date: Fri, 19 Oct 2012 09:59:00 -0500
+>> Subject: [PATCH] ARM: dts: OMAP: Add timer nodes
+>>
+>> Add the 12 GP timers nodes present in OMAP2.
+>> Add the 12 GP timers nodes present in OMAP3.
+>> Add the 11 GP timers nodes present in OMAP4.
+>> Add the 7 GP timers nodes present in AM33xx.
+>>
+>> Add documentation for timer properties specific to OMAP.
+>>
+>> Thanks to Vaibhav Hiremath for creating the AM33xx timer nodes. I have modified
+>> Vaibhav's original nodes adding information on which timers support a PWM
+>> output.
+>>
+>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>> [b-cousson@ti.com: Remove the interrupt-parent from nodes]
+>> Signed-off-by: Benoit Cousson <b-cousson@ti.com>
+>> ---
+>>  .../devicetree/bindings/arm/omap/timer.txt         |   31 +++++++
+>>  arch/arm/boot/dts/am33xx.dtsi                      |   54 +++++++++++
+>>  arch/arm/boot/dts/omap2.dtsi                       |   85 +++++++++++++++++
+>>  arch/arm/boot/dts/omap2420.dtsi                    |    8 ++
+>>  arch/arm/boot/dts/omap2430.dtsi                    |    8 ++
+>>  arch/arm/boot/dts/omap3.dtsi                       |   95 ++++++++++++++++++++
+>>  arch/arm/boot/dts/omap4.dtsi                       |   86 ++++++++++++++++++
+>>  7 files changed, 367 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/omap/timer.txt
+>>
+> 
+> Benoit,
+> 
+> I have boot tested this on BeagleBone, so,
+> 
+> Tested-By: Vaibhav Hiremath <hvaibhav@ti.com>
 
-> -----Original Message-----
-> From: Kukjin Kim [mailto:kgene.kim@samsung.com]
-> Sent: Tuesday, October 23, 2012 11:08 PM
-> To: 'Rahul Sharma'; linux-samsung-soc@vger.kernel.org; devicetree-
-> discuss@lists.ozlabs.org
-> Cc: tomasz.figa@gmail.com; t.stanislaws@samsung.com;
-> sw0312.kim@samsung.com; inki.dae@samsung.com; jy0922.shim@samsung.com;
-> kyungmin.park@samsung.com; thomas.ab@samsung.com; prashanth.g@samsung.com;
-> joshi@samsung.com; s.shirish@samsung.com; r.sh.open@gmail.com
-> Subject: RE: [PATCH v4 0/6] arm: exynos: add dt based support for exynos5
-> hdmi
-> 
-> Rahul Sharma wrote:
-> >
-> > This patch set adds the DT based support for Samsung's Exynos5250. It
-> adds
-> > device tree nodes for hdmi, mixer, hdmiphy and hdmiddc. The name of
-> these
-> > devices are changed to the one matching with drivers. Exynos-drm and
-> > exynos
-> > hdmi-drm-commmon devices are removed from machine init code.
-> >
-> > Exynos-drm and exynos hdmi-drm-commmon devices are removed from machine
-> > init code. Patch set which adds this code is posted to dri-devel list at
-> > http://comments.gmane.org/gmane.comp.video.dri.devel/75121.
-> >
-> > This patchset is based on linux v3.6-rc6, branch v3.7-next/dt-samsung at
-> > git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-> >
-> > v1:
-> > - dropped patch for hpd gpio initialisation from machine init.
-> > - dropped patch for platform device registration.
-> > - removed platform device registration from non-dt platforms.
-> >
-> > v2:
-> > - removed version information from hdmi, mixer dt nodes.
-> > - added DT binding documentation for hdmi, mixer, hdmiphy and hdmiddc.
-> >
-> > v3:
-> > - corrected indentations.
-> > - changed dt node names to name@address format.
-> >
-> > v4:
-> > - added newline at end of device-tree binding document files.
-> > - removes macros for mixer, hdmi physical addresses.
-> > - removed @address from mixer and hdmi DT nodes.
-> >
-> > Rahul Sharma (6):
-> >   dts: exynos: add device tree support for exynos5 hdmi
-> >   dts: exynos: add device tree support for exynos5 mixer
-> >   dts: exynos: add device tree support for exynos5 hdmiphy
-> >   dts: exynos: add device tree support for exynos5 hdmiddc
-> >   arm: exynos: add clocks for exynos5 hdmi
-> >   arm: exynos: removing exynos-drm device registration from non-dt
-> >     platforms
-> >
-> >  .../devicetree/bindings/drm/exynos/hdmi.txt        |   22
-+++++++++++++++
-> >  .../devicetree/bindings/drm/exynos/hdmiddc.txt     |   12 ++++++++
-> >  .../devicetree/bindings/drm/exynos/hdmiphy.txt     |   12 ++++++++
-> >  .../devicetree/bindings/drm/exynos/mixer.txt       |   15 ++++++++++
-> >  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   24
-> +++++++++++++++-
-> >  arch/arm/boot/dts/exynos5250.dtsi                  |   20 +++++++++++++
-> >  arch/arm/mach-exynos/Makefile                      |    1 -
-> >  arch/arm/mach-exynos/clock-exynos5.c               |   14 ++++++++-
-> >  arch/arm/mach-exynos/dev-drm.c                     |   29
-> --------------------
-> >  arch/arm/mach-exynos/mach-exynos5-dt.c             |    8 +++++
-> >  arch/arm/mach-exynos/mach-nuri.c                   |    3 --
-> >  arch/arm/mach-exynos/mach-origen.c                 |    3 --
-> >  arch/arm/mach-exynos/mach-smdk4x12.c               |    3 --
-> >  arch/arm/mach-exynos/mach-smdkv310.c               |    3 --
-> >  arch/arm/mach-exynos/mach-universal_c210.c         |    3 --
-> >  arch/arm/plat-samsung/include/plat/devs.h          |    2 -
-> >  16 files changed, 124 insertions(+), 50 deletions(-)
-> >  create mode 100644
-> Documentation/devicetree/bindings/drm/exynos/hdmi.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
-> >  create mode 100644
-> > Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
-> >  create mode 100644
-> Documentation/devicetree/bindings/drm/exynos/mixer.txt
-> >  delete mode 100644 arch/arm/mach-exynos/dev-drm.c
-> 
-> Looks OK to me, will apply this whole series.
-> 
-> Inki, if you want to need a topic branch for this series, please let me
-> know. I will create it for you.
-> 
+Excellent, thanks.
 
-Please merge them. After that, we will. So no need any topic branch. We had
-already been tested with the above patch set and worked fine.
+Regards,
+Benoit
 
-Thanks,
-Inki Dae
-
-> Thanks.
-> 
-> Best regards,
-> Kgene.
-> --
-> Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-> SW Solution Development Team, Samsung Electronics Co., Ltd.
