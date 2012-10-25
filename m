@@ -1,47 +1,79 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
- driver
-Date: Thu, 25 Oct 2012 10:36:14 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1210251035270.1278-100000@iolanthe.rowland.org>
-References: <20121025102301.GA3469@breakpoint.cc>
+From: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] usb: dwc3-omap: Minor fixes to get dt working
+Date: Thu, 25 Oct 2012 20:24:09 +0530
+Message-ID: <50895291.70106@ti.com>
+References: <1350307680-24938-1-git-send-email-kishon@ti.com>
+ <1350307680-24938-7-git-send-email-kishon@ti.com> <50894198.40003@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121025102301.GA3469-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Cc: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50894198.40003-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Oct 2012, Sebastian Andrzej Siewior wrote:
+Hi Benoit,
 
-> On Wed, Oct 24, 2012 at 08:55:27AM -1000, Mitch Bradley wrote:
-> > >> So by listing "usb-ehci" in its device ID table, a driver would
-> > >> essentially be saying that it can handle _all_ USB EHCI controllers.  
-> > 
-> > 
-> > Actually, it means that the driver can handle at least USB EHCI
-> > controllers that are 100% compatible with the EHCI spec (requiring
-> > nothing extra).  The driver might be able to handle almost-compatible
-> > controllers, possibly with the help of additional properties.
-> > 
-> > If a DT node lists "usb-ehci" as a "fallback", it's not guaranteed that
-> > a given version of that driver will work, but it's worth a try in the
-> > event that no more-specific driver is matched.
-> 
-> Not sure fallback is a good term here. The of parses the compatible from left
-> to right. If the device specific entry is not found (in the driver) then end
-> up with usb-ehci. If we need a quirk later on we add the device specific entry
-> to the driver (which will match before usb-ehci is found) and we could use
-> this entry to apply the quirk. That way you can apply quirks without touch the
-> firmware / device tree.
+On Thursday 25 October 2012 07:11 PM, Benoit Cousson wrote:
+> Hi Kishon,
+>
+> On 10/15/2012 03:27 PM, Kishon Vijay Abraham I wrote:
+>> Includes few minor fixes in dwc3-omap like populating the compatible
+>> string in a correct way, extracting the utmi-mode property properly and
+>> changing the index of get_irq since irq of core is removed from hwmod
+>> entry.
+>> Also updated the documentation with dwc3-omap device tree binding
+>> information.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/usb/dwc3/dwc3-omap.c |   14 ++++++--------
+>>   1 file changed, 6 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+>> index b84ddf3..10aad46 100644
+>> --- a/drivers/usb/dwc3/dwc3-omap.c
+>> +++ b/drivers/usb/dwc3/dwc3-omap.c
+>> @@ -318,11 +318,10 @@ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+>>   	struct resource		*res;
+>>   	struct device		*dev = &pdev->dev;
+>>
+>> -	int			size;
+>>   	int			ret = -ENOMEM;
+>>   	int			irq;
+>>
+>> -	const u32		*utmi_mode;
+>> +	u32			utmi_mode;
+>>   	u32			reg;
+>>
+>>   	void __iomem		*base;
+>> @@ -336,13 +335,13 @@ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+>>
+>>   	platform_set_drvdata(pdev, omap);
+>>
+>> -	irq = platform_get_irq(pdev, 1);
+>> +	irq = platform_get_irq(pdev, 0);
+>
+> Cannot you use the name of the resource to avoid that kind of trick?
 
-What happens if the drivers get probed in the wrong order?  That is, if 
-ehci-platform gets probed before ehci-spear (or whatever)?
+*name* is mostly used when we have multiple resource of the same type 
+for a single device. Previously we were clubbing wrapper resources and 
+core resources in a single hwmod device, so we had to use different 
+indexing.
+But with dt we have separated those under two different devices and 
+hence we can always use index as '0'. But if you think we should have 
+*name*, let me know, I can resend this patch :-)
 
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
