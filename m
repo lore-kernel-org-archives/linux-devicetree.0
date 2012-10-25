@@ -1,45 +1,92 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform driver
-Date: Thu, 25 Oct 2012 09:53:06 -0600
-Message-ID: <50896062.1090907@wwwdotorg.org>
-References: <Pine.LNX.4.44L0.1210241329230.1282-100000@iolanthe.rowland.org> <50882EED.9020200@wwwdotorg.org> <5088399F.2000102@firmworks.com> <20121025102301.GA3469@breakpoint.cc>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: Question about move atmel audio part to DT support
+Date: Thu, 25 Oct 2012 17:40:08 +0100
+Message-ID: <20121025164008.GQ18814@opensource.wolfsonmicro.com>
+References: <5080F54F.4000600@atmel.com>
+ <50810CC8.4050009@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121025102301.GA3469-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
-Cc: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6906792682529286330=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <50810CC8.4050009@atmel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: alsa-devel@alsa-project.org, "Lin, JM" <JM.Lin@atmel.com>, "Ferre,
+ Nicolas" <Nicolas.FERRE@atmel.com>, linux-sound@vger.kernel.org, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2012 04:23 AM, Sebastian Andrzej Siewior wrote:
-> On Wed, Oct 24, 2012 at 08:55:27AM -1000, Mitch Bradley wrote:
->>>> So by listing "usb-ehci" in its device ID table, a driver would
->>>> essentially be saying that it can handle _all_ USB EHCI controllers.  
->>
->>
->> Actually, it means that the driver can handle at least USB EHCI
->> controllers that are 100% compatible with the EHCI spec (requiring
->> nothing extra).  The driver might be able to handle almost-compatible
->> controllers, possibly with the help of additional properties.
->>
->> If a DT node lists "usb-ehci" as a "fallback", it's not guaranteed that
->> a given version of that driver will work, but it's worth a try in the
->> event that no more-specific driver is matched.
-> 
-> Not sure fallback is a good term here. The of parses the compatible from left
-> to right. If the device specific entry is not found (in the driver) then end
-> up with usb-ehci. If we need a quirk later on we add the device specific entry
-> to the driver (which will match before usb-ehci is found) and we could use
-> this entry to apply the quirk. That way you can apply quirks without touch the
-> firmware / device tree.
 
-That's the theory on how the compatible values are used, but in
-practice, each driver is tested against all the values in a node before
-moving on to the next driver, so the (current kernel's implementation of
-the) matching order is not what's needed to make that work.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============6906792682529286330==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A7FgPGrDEcSmmdo/"
+Content-Disposition: inline
+
+
+--A7FgPGrDEcSmmdo/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Oct 19, 2012 at 04:18:16PM +0800, Bo Shen wrote:
+
+> Cc:
+>    linux-arm-kernel mailing list
+>    devicetree-discuss mailing list
+>    alsa-devel mailing list
+>    linux-sound mailing list
+
+Better to resend for things like this rather than double quote.
+
+>=20
+> >   Atmel audio part has three platform device:
+> >     -> atmel ssc: ssc library (different SOC has different number)
+> >     -> atmel ssc dai: dai for audio
+> >     -> atmel pcm: for pdc or dma transfer (now only support pdc, dma
+> >support will add soon)
+
+> >  In DT support kernel, I don't find any similar case. So, if I want to
+> >keep ssc as library, and use dai to register pcm. Then the dts file will
+> >like:
+
+I'm not seeing anything at all unusual about the above situation - it'd
+help if you could explain what you think is complex here?
+
+--A7FgPGrDEcSmmdo/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQiWtgAAoJELSic+t+oim9cQIP/2KKIZXj/UlFaxqHvQXX8ni7
+8Rkt7/swlvMOFTv18AoUU8rrtZsgtizt9/A8+39qS4433viLCQNUPIHk89e1DqbI
+ch0J2uX5JuNjbR9xjiTjkpAOfiUX8Ap7GiJFhxnhj9uXFuoXCjsw0ZdQ3T5KUW8N
+7HnMFkQhFX7OrHhKHxGaYLhd8lzd54OIsTg0wRGtbRn78UJRq1MNdxNAXruSYHuo
+BuUavv4CJls+4cuYaMX6TU9vWkRQjvBGBT2WMz6oWABP7XvCsG98Q1sxxTvG/5p+
+r4F5mIxxT4ENEn6gpHRwP5GrP4U+a+3ZAXmgFaC60aLESJIjw+lqaiPeJ692CcSx
+3JJ7Rgn90Ee90uPL8Et98t2q7FQziU3fwawjwjbMzOHAhB+QVnbKYB51YUDYgGGE
+h6VsbsjkjPJ4veuyQZqo5Suk5Xne+VY66psyp7PqsqNRAZZFEXDe4yB5KyHV5gc1
+2XX1GDMGZxl0jB4E//jtb1AGv8AaJxLNMei+3X412BssGEjmIQOW4yqSNw527JYY
+p/bG/QmYiRCahWR/mJIo07NEHB+tyLHxxwMIGwBVzD4PrB4EqAOt/XRLdKoE9L0K
+hYVKyrBQIKBenE9PB45OB7cU925VqWOFDlMtSUBtgReo38Vd/FYN1lqYRSuCS3Jg
+NpPio8b9dPTN2jaeutrE
+=8PsA
+-----END PGP SIGNATURE-----
+
+--A7FgPGrDEcSmmdo/--
+
+--===============6906792682529286330==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6906792682529286330==--
