@@ -1,18 +1,18 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Thu, 25 Oct 2012 21:59:01 +0100
-Message-ID: <20121025205901.GA3827@sirena.org.uk>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
- <20121024161429.GA16350@core.coreip.homeip.net>
- <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
- <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
- <20121024185818.GB772@arwen.pp.htv.fi>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
+Date: Thu, 25 Oct 2012 16:43:28 -0700
+Message-ID: <20121025234328.GF11928@atomide.com>
+References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
+ <20121019191333.GT4730@atomide.com>
+ <CAN1soZzE_tTkmPBechvUcdAbWKSScwcaqe_cb0TTmnRJi9gtRg@mail.gmail.com>
+ <20121022170917.GB4730@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20121024185818.GB772-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+In-Reply-To: <20121022170917.GB4730-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,24 +23,72 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2012 at 09:58:19PM +0300, Felipe Balbi wrote:
+* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [121022 10:11]:
+> * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 03:11]:
+> > On Sat, Oct 20, 2012 at 3:13 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:08]:
+> > >> Add pinconf generic support with POWER SOURCE, BIAS PULL.
+> > > ...
+> > >
+> > >> +     case PIN_CONFIG_POWER_SOURCE:
+> > >> +             if (pcs->psmask == PCS_OFF_DISABLED
+> > >> +                     || pcs->psshift == PCS_OFF_DISABLED)
+> > >> +                     return -ENOTSUPP;
+> > >> +             data &= pcs->psmask;
+> > >> +             data = data >> pcs->psshift;
+> > >> +             *config = data;
+> > >> +             return 0;
+> > >> +             break;
+> > >
+> > > Hmm, only slightly related to this patch, mostly a generic
+> > > question to others: Do others have any mux registers with
+> > > status bits for things like PIN_CONFIG_POWER_SOURCE?
+> > >
+> > > I could use PIN_CONFIG_POWER_SOURCE for controlling the PBIAS
+> > > for omap MMC. But there's also a status bit that needs to be
+> > > checked for that. I think there was some other similar mux
+> > > register for USB PHY that has a status register.
+> > >
+> > > So I'm wondering should the checking for status bit be handled
+> > > in the pinctrl consume driver? Or should we have some bindings
+> > > for that?
+> > >
+> > 
+> > Do you mean that the status register only exists in USB PHY controller or
+> > MMC controller?
+> 
+> The status register is in the MMC PBIAS register that is mux
+> related otherwise. From OMAP4470_ES1.0_PUBLIC_TRM_vE.pdf,
+> Table 19-599. CONTROL_PBIASLITE:
+> 
+> Bits
+> 26	MMC1_PWDNZ
+> 25	MMC1_PBIASLITE_HIZ_MODE
+> 24	MMC1_PBIASLITE_SUPPLY_HI_OUT
+> 23	MMC1_PBIASLITE_VMODE_ERROR	then this bit needs to clear..
+> 22	MMC1_PBIASLITE_PWRDNZ
+> 21	MMC1_PBIASLITE_VMODE		..after VMODE bit is set to 3V
+>  
+> > If so, could we use regulator framework in USB PHY or MMC driver?
+> 
+> Yes we could use regulator framework for that that. Or just read the
+> status in the MMC driver for that bit if nobody else has mixed
+> mux-regulator needs like this.
+> 
+> The sequence is MMC specific, so from that point of view it would
+> make sense to have the logic in the MMC driver.
 
-> need a way to tell drivers/base "hey, don't touch pinctrl at all because
-> I know what I'm doing" and that has to happen before probe() too,
-> otherwise it's already too late and, according to what you suggest,
-> drivers/base will already have touched pinctrl. The only way I see would
-> be to add an extra "dont_touch_my_pins" field to every driver structure
-> in the kernel. Clearly what you say is nonsense.
+Well it turns out the VMODE_ERROR bit is not just for VMODE, it's a
+comparator that can also triggers for the other invalid states for
+CONTROL_PBIASLITE pinconf register. So hiding VMODE_ERROR into a
+regulator would be wrong. For now, VMODE best handled using
+PIN_CONFIG_POWER_SOURCE and let the MMC driver do the checking
+using the pinconf API.
 
-I suspect that's not actually a big deal and that if we went down this
-route we'd have the driver take over control from the core code during
-probe() with the core still setting up the default state.
+Regards,
 
-Personally I do think we want to be factoring bolierplate out of
-drivers, if they're not doing anything constructive with pinctrl they
-should be able to avoid having code for it.  There definitely are issues
-to work through but it seems like we ought to be able to do something.
+Tony
