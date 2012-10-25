@@ -1,90 +1,47 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/7] usb: dwc3-omap: use of_platform API to create
- dwc3 core pdev
-Date: Thu, 25 Oct 2012 17:19:44 +0300
-Message-ID: <20121025141944.GF16564@arwen.pp.htv.fi>
-References: <1350307680-24938-1-git-send-email-kishon@ti.com>
- <1350307680-24938-3-git-send-email-kishon@ti.com>
- <508946FC.7090704@ti.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
+ driver
+Date: Thu, 25 Oct 2012 10:36:14 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1210251035270.1278-100000@iolanthe.rowland.org>
+References: <20121025102301.GA3469@breakpoint.cc>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4921655480669072335=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <508946FC.7090704-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121025102301.GA3469-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Cc: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============4921655480669072335==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GLp9dJVi+aaipsRk"
-Content-Disposition: inline
+On Thu, 25 Oct 2012, Sebastian Andrzej Siewior wrote:
 
---GLp9dJVi+aaipsRk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Wed, Oct 24, 2012 at 08:55:27AM -1000, Mitch Bradley wrote:
+> > >> So by listing "usb-ehci" in its device ID table, a driver would
+> > >> essentially be saying that it can handle _all_ USB EHCI controllers.  
+> > 
+> > 
+> > Actually, it means that the driver can handle at least USB EHCI
+> > controllers that are 100% compatible with the EHCI spec (requiring
+> > nothing extra).  The driver might be able to handle almost-compatible
+> > controllers, possibly with the help of additional properties.
+> > 
+> > If a DT node lists "usb-ehci" as a "fallback", it's not guaranteed that
+> > a given version of that driver will work, but it's worth a try in the
+> > event that no more-specific driver is matched.
+> 
+> Not sure fallback is a good term here. The of parses the compatible from left
+> to right. If the device specific entry is not found (in the driver) then end
+> up with usb-ehci. If we need a quirk later on we add the device specific entry
+> to the driver (which will match before usb-ehci is found) and we could use
+> this entry to apply the quirk. That way you can apply quirks without touch the
+> firmware / device tree.
 
-On Thu, Oct 25, 2012 at 04:04:44PM +0200, Benoit Cousson wrote:
-> On 10/15/2012 03:27 PM, Kishon Vijay Abraham I wrote:
-> > Used of_platform_populate() to populate dwc3 core platform_device
-> > from device tree data. Since now the allocation of unique device id is
-> > handled by of_*, removed the call to dwc3_get_device_id.
->=20
-> Just for my understanding: How are these devices organized exactly?
->=20
-> Do we have : omap_wrapper -> dwc3-omap -> dwc3-core ?
+What happens if the drivers get probed in the wrong order?  That is, if 
+ehci-platform gets probed before ehci-spear (or whatever)?
 
-omap_wrapper =3D=3D dwc3-omap, so it becomes:
+Alan Stern
 
-dwc3-omap -> dwc3-core
-
---=20
-balbi
-
---GLp9dJVi+aaipsRk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQiUqAAAoJEIaOsuA1yqRE/kcP/07hQMsC45EW6YHymHu5x4cD
-wmUq5XivfkYzu9vM2TsnNBEjn8AzHqXQgXMorvT6XEDQukyE6p9k/maGtTdG/SxH
-dKbIpiZLnMUJ1Zzbr0TB6ye2l7y1HJuvnd0/ieojsjOEHfKgNTauxes+4Pi4DWjm
-OrIbAY9fUOLVHk3kR0+MAcTTIuZ4tqm3CmInAHHG3h8NBx2Um8rbHr8E4/KK8SqV
-pkP+leF1V0HrpMtFGejmuFsBDlax/4xWEcbiShScwBbuplaMw7JFSFBLmwxbNv/e
-rOWmOVSu7LQRwvLIfPV4gbvveDY3OLZL5XXjyKJ+LkzYPcw092y9DKaDD4CDSWLN
-Az+t3Y7yW2/wq0uw22ELAbEZXRGTt3+TDi3TH/xECIKH3uzBNhpzg76SDMt1RFrp
-ctdBGiYp0fa62ti+oWtW93psYBR9a6P/hcoRG5kD3dc6X2nSo/JDY+upV2fFblPu
-cGO626GH6ApR9qi0KkbSKqx+N4L7CHjyw/SrExBcBnwLsUt35Ae2OnkWZmP64JhJ
-mEitOAdOBJGluGWv9WDoSwCaC7ujYiGSZZedgrrZrCbLKKaD0H7ueLpbJfQg3g3q
-/VSkDrhcnnkf3Rzc+wf6bf5GRggowaRIRlH3jp1D8jZ4u6IR7yep0X0gJVNwumpl
-yOQ3t7pJy+0qH6E0IrSO
-=EIey
------END PGP SIGNATURE-----
-
---GLp9dJVi+aaipsRk--
-
---===============4921655480669072335==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4921655480669072335==--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
