@@ -1,175 +1,448 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH] s5p-mfc: Add device tree support
-Date: Thu, 25 Oct 2012 14:54:14 +0530
-Message-ID: <1351157054-19428-2-git-send-email-arun.kk@samsung.com>
-References: <1351157054-19428-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1351157054-19428-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: k.debski@samsung.com, jtp.park@samsung.com, s.nawrocki@samsung.com, ch.naveen@samsung.com, arun.kk@samsung.com, joshi@samsung.com
+From: Sourav <sourav.poddar@ti.com>
+Subject: Re: [PATCHv4] Input: keypad: Add smsc ece1099 keypad driver
+Date: Thu, 25 Oct 2012 14:47:09 +0530
+Message-ID: <50890395.8070900@ti.com>
+References: <1349421986-12467-1-git-send-email-sourav.poddar@ti.com> <20121024063559.GA14542@core.coreip.homeip.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20121024063559.GA14542@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-This patch will add the device tree support for MFC driver.
+Hi Dmitry,
+On Wednesday 24 October 2012 12:05 PM, Dmitry Torokhov wrote:
+> Hi Sourav,
+>
+> On Fri, Oct 05, 2012 at 12:56:26PM +0530, Sourav Poddar wrote:
+>> From: G, Manjunath Kondaiah <manjugk@ti.com>
+>>
+>> SMSC ECE1099 is a keyboard scan or GPIO expansion device.The device
+>> supports a keypad scan matrix of 23*8.This driver uses this
+>> device as a keypad driver.
+>>
+>> Tested on omap5430 evm with 3.6-rc6 custom kernel.
+>>
+>> Cc: Benoit Cousson <b-cousson@ti.com>
+>> Cc: Felipe Balbi <balbi@ti.com>
+>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
+>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+>> Acked-by: Felipe Balbi <balbi@ti.com>
+>> ---
+>> This patch was posted as a series initially
+>> http://www.spinics.net/lists/linux-omap/msg78772.html
+>>
+>> But the parent mfd driver has beeen already picked by mfd maintainer.
+>> So this patch can now posted as an standalone patch.
+>>
+>> v3->v4:
+>> Fix Dmitry's comments:
+>>   - Error patch(input_free_device/input_unregister_device).
+>>   - Few cleanups.
+>>   - Included INPUT_MATRIXKMAP
+>>   drivers/input/keyboard/Kconfig               |   12 +
+>>   drivers/input/keyboard/Makefile              |    1 +
+>>   drivers/input/keyboard/smsc-ece1099-keypad.c |  303 ++++++++++++++++++++++++++
+>>   3 files changed, 316 insertions(+), 0 deletions(-)
+>>   create mode 100644 drivers/input/keyboard/smsc-ece1099-keypad.c
+>>
+>> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+>> index c50fa75..e370b03 100644
+>> --- a/drivers/input/keyboard/Kconfig
+>> +++ b/drivers/input/keyboard/Kconfig
+>> @@ -593,6 +593,18 @@ config KEYBOARD_TWL4030
+>>   	  To compile this driver as a module, choose M here: the
+>>   	  module will be called twl4030_keypad.
+>>   
+>> +config KEYBOARD_SMSC
+>> +       tristate "SMSC ECE1099 keypad support"
+>> +       depends on I2C
+>> +       select INPUT_MATRIXKMAP
+> While I do not see hard dependencies in the driver itself, should we
+> also depend on MFD_SMSC?
+Ahh, may be yes. This driver will get probed only after parent driver 
+get probed.
+So may be we can follow the same order for building also.
+>> +       help
+>> +         Say Y here if your board use the smsc keypad controller
+>> +         for omap5 defconfig. It's safe to say enable this
+>> +         even on boards that don't use the keypad controller.
+>> +
+>> +         To compile this driver as a module, choose M here: the
+>> +         module will be called smsc-ece1099-keypad.
+>> +
+>>   config KEYBOARD_XTKBD
+>>   	tristate "XT keyboard"
+>>   	select SERIO
+>> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+>> index 44e7600..0f2aa26 100644
+>> --- a/drivers/input/keyboard/Makefile
+>> +++ b/drivers/input/keyboard/Makefile
+>> @@ -52,5 +52,6 @@ obj-$(CONFIG_KEYBOARD_TC3589X)		+= tc3589x-keypad.o
+>>   obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
+>>   obj-$(CONFIG_KEYBOARD_TNETV107X)	+= tnetv107x-keypad.o
+>>   obj-$(CONFIG_KEYBOARD_TWL4030)		+= twl4030_keypad.o
+>> +obj-$(CONFIG_KEYBOARD_SMSC)            += smsc-ece1099-keypad.o
+>>   obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
+>>   obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
+>> diff --git a/drivers/input/keyboard/smsc-ece1099-keypad.c b/drivers/input/keyboard/smsc-ece1099-keypad.c
+>> new file mode 100644
+>> index 0000000..a4a0dfe
+>> --- /dev/null
+>> +++ b/drivers/input/keyboard/smsc-ece1099-keypad.c
+>> @@ -0,0 +1,303 @@
+>> +/*
+>> + * SMSC_ECE1099 Keypad driver
+>> + *
+>> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/i2c.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/input.h>
+>> +#include <linux/gpio.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/jiffies.h>
+>> +#include <linux/input/matrix_keypad.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/smsc.h>
+>> +#include <linux/of_gpio.h>
+>> +#include <linux/of.h>
+>> +
+>> +#define KEYPRESS_TIME          200
+>> +
+>> +struct smsc_keypad {
+>> +	struct smsc *smsc;
+> I do not see this being actually used.
+Yes, will remove.
+>> +	struct matrix_keymap_data *keymap_data;
+> Does not seem to be used.
+Yes, will remove.
+>> +	unsigned int last_key_state[16];
+>> +	unsigned int last_col;
+>> +	unsigned int last_key_ms[16];
+>> +	unsigned short *keymap;
+>> +	struct i2c_client *client;
+>> +	struct input_dev *input;
+>> +	int rows, cols;
+>> +	int row_shift;
+>> +	bool no_autorepeat;
+>> +	unsigned        irq;
+> I do not think you need to store irq if you are using managed resources.
+>
+Don't, we need some variable to keep the irq number received after parsing
+the dt data.? This variable is basically used as a parameter in 
+"request_irq" api.
+I saw the patch on omap4_keypad switching to managed resource, and there 
+also we are
+keeping the keypad_data->irq intact??
+>> +	struct device *dev;
+>> +};
+>> +
+>> +static void smsc_kp_scan(struct smsc_keypad *kp)
+>> +{
+>> +	struct input_dev *input = kp->input;
+>> +	int i, j;
+>> +	int row, col;
+>> +	int temp, code;
+>> +	unsigned int new_state[16];
+>> +	unsigned int bits_changed;
+>> +	int this_ms;
+>> +
+>> +	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0x00);
+>> +	smsc_write(kp->dev, SMSC_KP_INT_STAT, 0xFF);
+>> +
+>> +	/* Scan for row and column */
+>> +	for (i = 0; i < kp->cols; i++) {
+>> +		smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_EVAL + i);
+>> +		/* Read Row Status */
+>> +		smsc_read(kp->dev, SMSC_KP_IN, &temp);
+>> +		if (temp == 0xFF)
+>> +			continue;
+>> +
+>> +		col = i;
+>> +		for (j = 0; j < kp->rows; j++) {
+>> +			if ((temp & 0x01) != 0x00) {
+>> +				temp = temp >> 1;
+>> +				continue;
+>> +			}
+>> +
+>> +			row = j;
+>> +			new_state[col] =  (1 << row);
+>> +			bits_changed = kp->last_key_state[col] ^ new_state[col];
+>> +			this_ms = jiffies_to_msecs(jiffies);
+>> +			if (bits_changed != 0 || (!bits_changed &&
+>> +					((this_ms - kp->last_key_ms[col]) >= KEYPRESS_TIME))) {
+>> +				code = MATRIX_SCAN_CODE(row, col, kp->row_shift);
+>> +				input_event(input, EV_MSC, MSC_SCAN, code);
+>> +				input_report_key(input, kp->keymap[code], 1);
+>> +				input_report_key(input, kp->keymap[code], 0);
+>> +				kp->last_key_state[col] = new_state[col];
+>> +				if (kp->last_col != col)
+>> +					kp->last_key_state[kp->last_col] = 0;
+>> +				kp->last_key_ms[col] = this_ms;
+>> +			}
+>> +			temp = temp >> 1;
+>> +		}
+>
+> Maybe split inner loop into separate function?
+Ok.
+>> +	}
+>> +	input_sync(input);
+>> +
+>> +	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0xFF);
+>> +
+>> +	/* Set up Low Power Mode (Wake-up) (0xFB) */
+>> +	smsc_write(kp->dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
+>> +
+>> +	/*Enable Keypad Scan (generate interrupt on key press) (0x40)*/
+>> +	smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
+>> +}
+>> +
+>> +static irqreturn_t do_kp_irq(int irq, void *_kp)
+>> +{
+>> +	struct smsc_keypad *kp = _kp;
+>> +	int int_status;
+>> +
+>> +	smsc_read(kp->dev, SMSC_KP_INT_STAT, &int_status);
+>> +	if (int_status)
+>> +		smsc_kp_scan(kp);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+>> +static int __devinit smsc_keypad_parse_dt(struct device *dev,
+>> +				struct smsc_keypad *kp)
+>> +{
+>> +	struct device_node *np = dev->of_node;
+>> +
+>> +	if (!np) {
+>> +		dev_err(dev, "missing DT data");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	of_property_read_u32(np, "keypad,num-rows", &kp->rows);
+>> +	of_property_read_u32(np, "keypad,num-columns", &kp->cols);
+>> +	if (!kp->rows || !kp->cols) {
+>> +		dev_err(dev, "number of keypad rows/columns not specified\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (of_property_read_bool(np, "linux,input-no-autorepeat"))
+>> +		kp->no_autorepeat = true;
+>> +
+>> +	return 0;
+>> +}
+>> +#else
+>> +static inline int smsc_keypad_parse_dt(struct device *dev,
+>> +				struct smsc_keypad *kp)
+>> +{
+>> +	return -ENOSYS;
+>> +}
+>> +#endif
+>> +
+>> +static int __devinit
+>> +smsc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct smsc *smsc = dev_get_drvdata(pdev->dev.parent);
+>> +	struct input_dev *input;
+>> +	struct smsc_keypad *kp;
+>> +	int ret = 0;
+>> +	int i, max_keys, row_shift;
+>> +	int irq;
+>> +	int addr;
+>> +
+>> +	kp = devm_kzalloc(dev, sizeof(*kp), GFP_KERNEL);
+>> +
+>> +	input = input_allocate_device();
+>> +	if (!kp || !input) {
+>> +		ret = -ENOMEM;
+>> +		goto err1;
+>> +	}
+>> +
+>> +	ret = smsc_keypad_parse_dt(&pdev->dev, kp);
+>> +	if (ret)
+>> +		goto err1;
+> So this is pure-DT driver. Please add Kconfig dependency on OF, drop
+> #ifdef guards and the stub.
+Ok.
+>> +
+>> +	/* Get the debug Device */
+>> +	kp->input = input;
+>> +	kp->smsc = smsc;
+>> +	kp->irq = platform_get_irq(pdev, 0);
+>> +	kp->dev = dev;
+>> +
+>> +	/* setup input device */
+>> +	 __set_bit(EV_KEY, input->evbit);
+>> +
+>> +	/* Enable auto repeat feature of Linux input subsystem */
+>> +	if (!kp->no_autorepeat)
+>> +		__set_bit(EV_REP, input->evbit);
+>> +
+>> +	input_set_capability(input, EV_MSC, MSC_SCAN);
+>> +	input->name             = "SMSC Keypad";
+>> +	input->phys             = "smsc_keypad/input0";
+>> +	input->dev.parent       = &pdev->dev;
+>> +	input->id.bustype       = BUS_HOST;
+>> +	input->id.vendor        = 0x0001;
+>> +	input->id.product       = 0x0001;
+>> +	input->id.version       = 0x0003;
+>> +
+>> +	/* Mask all GPIO interrupts (0x37-0x3B) */
+>> +	for (addr = SMSC_GPIO_INT_MASK_START;
+>> +			addr < SMSC_GPIO_INT_MASK_START + 4; addr++)
+>> +		smsc_write(dev, addr, 0);
+>> +
+>> +	/* Set all outputs high (0x05-0x09) */
+>> +	for (addr = SMSC_GPIO_DATA_OUT_START;
+>> +			addr < SMSC_GPIO_DATA_OUT_START + 4; addr++)
+>> +		smsc_write(dev, addr, 0xff);
+>> +
+>> +	/* Clear all GPIO interrupts (0x32-0x36) */
+>> +	for (addr = SMSC_GPIO_INT_STAT_START;
+>> +			addr < SMSC_GPIO_INT_STAT_START + 4; addr++)
+>> +		smsc_write(dev, addr, 0xff);
+> You use lowercase hex digits here but also uppercase in other parts of
+> the driver. Can we use lowercase throughout please?
+Will do.
+>> +
+>> +	/* Configure the smsc pins as Keyboard scan Input */
+>> +	for (i = 0; i <= kp->rows; i++) {
+> You sure you don't want < instead of <= ?
+>
+Really, "=" should not be there.
+>> +		addr = 0x12 + i;
+>> +		smsc_write(dev, addr, SMSC_KP_KSI);
+>> +	}
+>> +
+>> +	/* Configure the smsc pins as Keyboard scan output */
+>> +	for (i = 0; i <= kp->cols; i++) {
+>> +		addr = 0x1A + i;
+>> +		smsc_write(dev, addr, SMSC_KP_KSO);
+>> +	}
+>> +
+>> +	smsc_write(dev, SMSC_KP_INT_STAT, SMSC_KP_SET_HIGH);
+>> +	smsc_write(dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
+>> +	smsc_write(dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
+>> +
+>> +	row_shift = get_count_order(kp->cols);
+>> +	max_keys = kp->rows << row_shift;
+>> +
+>> +	kp->row_shift = row_shift;
+>> +	kp->keymap = devm_kzalloc(dev, max_keys * sizeof(kp->keymap[0]),
+>> +					GFP_KERNEL);
+>> +	if (!kp->keymap) {
+>> +		dev_err(&pdev->dev, "Not enough memory for keymap\n");
+>> +		ret = -ENOMEM;
+>> +	}
+>> +
+>> +	ret = matrix_keypad_build_keymap(NULL, NULL, kp->rows,
+>> +			kp->cols, kp->keymap, input);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "failed to build keymap\n");
+>> +		goto err1;
+>> +	}
+>> +
+>> +	/*
+>> +	* This ISR will always execute in kernel thread context because of
+>> +	* the need to access the SMSC over the I2C bus.
+>> +	*/
+>> +	ret = devm_request_threaded_irq(dev, kp->irq, NULL, do_kp_irq,
+>> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT, pdev->name, kp);
+>> +	if (ret) {
+>> +		dev_dbg(&pdev->dev, "request_irq failed for irq no=%d\n",
+>> +			irq);
+>> +		goto err1;
+>> +	}
+>> +
+>> +	/* Enable smsc keypad interrupts */
+>> +	ret = smsc_write(dev, SMSC_KP_INT_MASK, 0xff);
+>> +	if (ret < 0)
+>> +		goto err2;
+> Consider implementing ->open() and ->close() and putting the above
+> there.
+Ok.
+>> +
+>> +	ret = input_register_device(input);
+>> +	if (ret) {
+>> +		dev_err(kp->dev,
+>> +			"Unable to register twl4030 keypad device\n");
+>> +		goto err2;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +err2:
+>> +	free_irq(kp->irq, kp);
+> If you allocate IRQ with devm_request_threaded_irq then you should free
+> it with devm_free_irq().
+Ok. Will change.
+>> +err1:
+>> +	input_free_device(input);
+>> +	return ret;
+>> +}
+>> +
+>> +static int __devexit smsc_remove(struct platform_device *pdev)
+>> +{
+>> +	struct smsc_keypad *kp = platform_get_drvdata(pdev);
+>> +	input_unregister_device(kp->input);
+> This is wrong: input device is gone but IRQs are still active. You need
+> to disable or free IRQ first.
+>
+> However I just posted a patch adding support for managed input devices:
+>
+> 	http://www.spinics.net/lists/linux-input/msg23077.html
+>
+> so please either switch over, or go with unmanaged resources
+> throughout.
+Will switch to the managed protocol throughout.
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+> Since we require DT this ifdef is not needed.
+Will remove.
+>> +static const struct of_device_id smsc_keypad_dt_match[] = {
+>> +	{ .compatible = "smsc,keypad" },
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, smsc_keypad_dt_match);
+>> +#endif
+>> +
+>> +static struct platform_driver smsc_driver = {
+>> +	.driver = {
+>> +		.name	= "smsc-keypad",
+>> +		.of_match_table = of_match_ptr(smsc_keypad_dt_match),
+>> +		.owner  = THIS_MODULE,
+>> +	},
+>> +	.probe		= smsc_probe,
+>> +	.remove		= __devexit_p(smsc_remove),
+>> +};
+>> +
+>> +module_platform_driver(smsc_driver);
+>> +
+>> +MODULE_AUTHOR("G Kondaiah Manjunath <manjugk@ti.com>");
+>> +MODULE_DESCRIPTION("SMSC ECE1099 Keypad driver");
+>> +MODULE_LICENSE("GPL v2");
+>> -- 
+>> 1.7.1
+>>
+> Thanks.
+>
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- drivers/media/platform/s5p-mfc/s5p_mfc.c |  100 +++++++++++++++++++++++++-----
- 1 files changed, 84 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-index d5182d6..4432a82 100644
---- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
-+++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
-@@ -21,6 +21,7 @@
- #include <linux/videodev2.h>
- #include <media/v4l2-event.h>
- #include <linux/workqueue.h>
-+#include <linux/of.h>
- #include <media/videobuf2-core.h>
- #include "s5p_mfc_common.h"
- #include "s5p_mfc_ctrl.h"
-@@ -1028,6 +1029,8 @@ static int match_child(struct device *dev, void *data)
- 	return !strcmp(dev_name(dev), (char *)data);
- }
- 
-+static void *mfc_get_drv_data(struct platform_device *pdev);
-+
- /* MFC probe function */
- static int s5p_mfc_probe(struct platform_device *pdev)
- {
-@@ -1035,6 +1038,7 @@ static int s5p_mfc_probe(struct platform_device *pdev)
- 	struct video_device *vfd;
- 	struct resource *res;
- 	int ret;
-+	unsigned int mem_info[2];
- 
- 	pr_debug("%s++\n", __func__);
- 	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
-@@ -1051,8 +1055,7 @@ static int s5p_mfc_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	dev->variant = (struct s5p_mfc_variant *)
--		platform_get_device_id(pdev)->driver_data;
-+	dev->variant = mfc_get_drv_data(pdev);
- 
- 	ret = s5p_mfc_init_pm(dev);
- 	if (ret < 0) {
-@@ -1082,20 +1085,55 @@ static int s5p_mfc_probe(struct platform_device *pdev)
- 		goto err_res;
- 	}
- 
--	dev->mem_dev_l = device_find_child(&dev->plat_dev->dev, "s5p-mfc-l",
--					   match_child);
--	if (!dev->mem_dev_l) {
--		mfc_err("Mem child (L) device get failed\n");
--		ret = -ENODEV;
--		goto err_res;
--	}
-+	if (pdev->dev.of_node) {
-+		dev->mem_dev_l = kzalloc(sizeof(struct device), GFP_KERNEL);
-+		if (!dev->mem_dev_l) {
-+			mfc_err("Not enough memory\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
-+		of_property_read_u32_array(pdev->dev.of_node, "samsung,mfc-l",
-+				mem_info, 2);
-+		if (dma_declare_coherent_memory(dev->mem_dev_l, mem_info[0],
-+				mem_info[0], mem_info[1],
-+				DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE) == 0) {
-+			mfc_err("Failed to declare coherent memory for\n"
-+					"MFC device\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
- 
--	dev->mem_dev_r = device_find_child(&dev->plat_dev->dev, "s5p-mfc-r",
--					   match_child);
--	if (!dev->mem_dev_r) {
--		mfc_err("Mem child (R) device get failed\n");
--		ret = -ENODEV;
--		goto err_res;
-+		dev->mem_dev_r = kzalloc(sizeof(struct device), GFP_KERNEL);
-+		if (!dev->mem_dev_r) {
-+			mfc_err("Not enough memory\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
-+		of_property_read_u32_array(pdev->dev.of_node, "samsung,mfc-r",
-+				mem_info, 2);
-+		if (dma_declare_coherent_memory(dev->mem_dev_r, mem_info[0],
-+				mem_info[0], mem_info[1],
-+				DMA_MEMORY_MAP | DMA_MEMORY_EXCLUSIVE) == 0) {
-+			pr_err("Failed to declare coherent memory for\n"
-+					"MFC device\n");
-+			ret = -ENOMEM;
-+			goto err_res;
-+		}
-+	} else {
-+		dev->mem_dev_l = device_find_child(&dev->plat_dev->dev,
-+				"s5p-mfc-l", match_child);
-+		if (!dev->mem_dev_l) {
-+			mfc_err("Mem child (L) device get failed\n");
-+			ret = -ENODEV;
-+			goto err_res;
-+		}
-+		dev->mem_dev_r = device_find_child(&dev->plat_dev->dev,
-+				"s5p-mfc-r", match_child);
-+		if (!dev->mem_dev_r) {
-+			mfc_err("Mem child (R) device get failed\n");
-+			ret = -ENODEV;
-+			goto err_res;
-+		}
- 	}
- 
- 	dev->alloc_ctx[0] = vb2_dma_contig_init_ctx(dev->mem_dev_l);
-@@ -1374,6 +1412,35 @@ static struct platform_device_id mfc_driver_ids[] = {
- };
- MODULE_DEVICE_TABLE(platform, mfc_driver_ids);
- 
-+static const struct of_device_id exynos_mfc_match[] = {
-+	{
-+		.compatible = "samsung,mfc-v5",
-+		.data = &mfc_drvdata_v5,
-+	}, {
-+		.compatible = "samsung,mfc-v6",
-+		.data = &mfc_drvdata_v6,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, exynos_mfc_match);
-+
-+static void *mfc_get_drv_data(struct platform_device *pdev)
-+{
-+	struct s5p_mfc_variant *driver_data = NULL;
-+
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(of_match_ptr(exynos_mfc_match),
-+				pdev->dev.of_node);
-+		if (match)
-+			driver_data = (struct s5p_mfc_variant *)match->data;
-+	} else {
-+		driver_data = (struct s5p_mfc_variant *)
-+			platform_get_device_id(pdev)->driver_data;
-+	}
-+	return driver_data;
-+}
-+
- static struct platform_driver s5p_mfc_driver = {
- 	.probe		= s5p_mfc_probe,
- 	.remove		= __devexit_p(s5p_mfc_remove),
-@@ -1381,7 +1448,8 @@ static struct platform_driver s5p_mfc_driver = {
- 	.driver	= {
- 		.name	= S5P_MFC_NAME,
- 		.owner	= THIS_MODULE,
--		.pm	= &s5p_mfc_pm_ops
-+		.pm	= &s5p_mfc_pm_ops,
-+		.of_match_table = exynos_mfc_match,
- 	},
- };
- 
--- 
-1.7.0.4
