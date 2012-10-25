@@ -1,92 +1,36 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: Question about move atmel audio part to DT support
-Date: Thu, 25 Oct 2012 17:40:08 +0100
-Message-ID: <20121025164008.GQ18814@opensource.wolfsonmicro.com>
-References: <5080F54F.4000600@atmel.com>
- <50810CC8.4050009@atmel.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 1/5] ARM: dts: OMAP: Add timer nodes
+Date: Thu, 25 Oct 2012 13:38:07 -0500
+Message-ID: <5089870F.7040101@ti.com>
+References: <1350496873-21337-1-git-send-email-jon-hunter@ti.com> <1350496873-21337-2-git-send-email-jon-hunter@ti.com> <79CD15C6BA57404B839C016229A409A83EB49C1B@DBDE01.ent.ti.com> <50887315.2000509@ti.com> <79CD15C6BA57404B839C016229A409A83EB4A768@DBDE01.ent.ti.com> <50892E27.7070102@ti.com> <79CD15C6BA57404B839C016229A409A83EB4AB13@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6906792682529286330=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <50810CC8.4050009@atmel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: alsa-devel@alsa-project.org, "Lin, JM" <JM.Lin@atmel.com>, "Ferre,
- Nicolas" <Nicolas.FERRE@atmel.com>, linux-sound@vger.kernel.org, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EB4AB13@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============6906792682529286330==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="A7FgPGrDEcSmmdo/"
-Content-Disposition: inline
+On 10/25/2012 10:27 AM, Hiremath, Vaibhav wrote:
+
+...
+
+> Can you merge it to your test module? I am thinking of pushing application 
+> to github for others to use. I believe you are ok with this. I am planning 
+> to push all the application there.
+> 
+> https://github.com/hvaibhav/sample-applications
+
+Thanks. I have been meaning to do this. I have pushed my latest version
+here [1]. Should include the AM335x fix too. Let me know if this is
+working for you.
+
+Cheers
+Jon
+
+[1] https://github.com/jonhunter/omap-test
 
 
---A7FgPGrDEcSmmdo/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Oct 19, 2012 at 04:18:16PM +0800, Bo Shen wrote:
-
-> Cc:
->    linux-arm-kernel mailing list
->    devicetree-discuss mailing list
->    alsa-devel mailing list
->    linux-sound mailing list
-
-Better to resend for things like this rather than double quote.
-
->=20
-> >   Atmel audio part has three platform device:
-> >     -> atmel ssc: ssc library (different SOC has different number)
-> >     -> atmel ssc dai: dai for audio
-> >     -> atmel pcm: for pdc or dma transfer (now only support pdc, dma
-> >support will add soon)
-
-> >  In DT support kernel, I don't find any similar case. So, if I want to
-> >keep ssc as library, and use dai to register pcm. Then the dts file will
-> >like:
-
-I'm not seeing anything at all unusual about the above situation - it'd
-help if you could explain what you think is complex here?
-
---A7FgPGrDEcSmmdo/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQiWtgAAoJELSic+t+oim9cQIP/2KKIZXj/UlFaxqHvQXX8ni7
-8Rkt7/swlvMOFTv18AoUU8rrtZsgtizt9/A8+39qS4433viLCQNUPIHk89e1DqbI
-ch0J2uX5JuNjbR9xjiTjkpAOfiUX8Ap7GiJFhxnhj9uXFuoXCjsw0ZdQ3T5KUW8N
-7HnMFkQhFX7OrHhKHxGaYLhd8lzd54OIsTg0wRGtbRn78UJRq1MNdxNAXruSYHuo
-BuUavv4CJls+4cuYaMX6TU9vWkRQjvBGBT2WMz6oWABP7XvCsG98Q1sxxTvG/5p+
-r4F5mIxxT4ENEn6gpHRwP5GrP4U+a+3ZAXmgFaC60aLESJIjw+lqaiPeJ692CcSx
-3JJ7Rgn90Ee90uPL8Et98t2q7FQziU3fwawjwjbMzOHAhB+QVnbKYB51YUDYgGGE
-h6VsbsjkjPJ4veuyQZqo5Suk5Xne+VY66psyp7PqsqNRAZZFEXDe4yB5KyHV5gc1
-2XX1GDMGZxl0jB4E//jtb1AGv8AaJxLNMei+3X412BssGEjmIQOW4yqSNw527JYY
-p/bG/QmYiRCahWR/mJIo07NEHB+tyLHxxwMIGwBVzD4PrB4EqAOt/XRLdKoE9L0K
-hYVKyrBQIKBenE9PB45OB7cU925VqWOFDlMtSUBtgReo38Vd/FYN1lqYRSuCS3Jg
-NpPio8b9dPTN2jaeutrE
-=8PsA
------END PGP SIGNATURE-----
-
---A7FgPGrDEcSmmdo/--
-
---===============6906792682529286330==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6906792682529286330==--
