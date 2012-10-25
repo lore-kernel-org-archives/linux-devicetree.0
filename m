@@ -1,69 +1,101 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V3 1/5] ARM: dts: OMAP: Add timer nodes
-Date: Wed, 24 Oct 2012 18:00:37 -0500
-Message-ID: <50887315.2000509@ti.com>
-References: <1350496873-21337-1-git-send-email-jon-hunter@ti.com>
- <1350496873-21337-2-git-send-email-jon-hunter@ti.com>
- <79CD15C6BA57404B839C016229A409A83EB49C1B@DBDE01.ent.ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v2 1/2] USB: dwc3-exynos: Add support for device tree
+Date: Thu, 25 Oct 2012 11:37:33 +0530
+Message-ID: <CAFp+6iG1SuJ=wO61=D_pTdRzkM+t62mN3b7=3cZiom8tigyaBQ@mail.gmail.com>
+References: <1350377157-28465-1-git-send-email-gautam.vivek@samsung.com>
+	<1350377157-28465-2-git-send-email-gautam.vivek@samsung.com>
+	<20121016095333.GD5548@arwen.pp.htv.fi>
+	<507D31B3.40707@ti.com>
+	<20121016100838.GC17416@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A83EB49C1B-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20121016100838.GC17416@arwen.pp.htv.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com, rob.herring@calxeda.com
+Cc: kishon <kishon@ti.com>, av.tikhomirov@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, Vivek Gautam <gautam.vivek@samsung.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 10/24/2012 01:17 PM, Hiremath, Vaibhav wrote:
-> On Wed, Oct 17, 2012 at 23:31:09, Hunter, Jon wrote:
->> Add the 12 GP timers nodes present in OMAP2.
->> Add the 12 GP timers nodes present in OMAP3.
->> Add the 11 GP timers nodes present in OMAP4.
->> Add the 7 GP timers nodes present in AM33xx.
+On Tue, Oct 16, 2012 at 3:38 PM, Felipe Balbi <balbi@ti.com> wrote:
+> Hi,
+>
+> On Tue, Oct 16, 2012 at 03:36:43PM +0530, kishon wrote:
+>> Hi,
 >>
->> Add documentation for timer properties specific to OMAP.
+>> On Tuesday 16 October 2012 03:23 PM, Felipe Balbi wrote:
+>> >On Tue, Oct 16, 2012 at 02:15:56PM +0530, Vivek Gautam wrote:
+>> >>This patch adds support to parse probe data for
+>> >>dwc3-exynos driver using device tree.
+>> >>
+>> >>Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> >>---
+>> >>  drivers/usb/dwc3/dwc3-exynos.c |   20 ++++++++++++++++++++
+>> >>  1 files changed, 20 insertions(+), 0 deletions(-)
+>> >>
+>> >>diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+>> >>index ca65978..d11ef49 100644
+>> >>--- a/drivers/usb/dwc3/dwc3-exynos.c
+>> >>+++ b/drivers/usb/dwc3/dwc3-exynos.c
+>> >>@@ -21,6 +21,7 @@
+>> >>  #include <linux/clk.h>
+>> >>  #include <linux/usb/otg.h>
+>> >>  #include <linux/usb/nop-usb-xceiv.h>
+>> >>+#include <linux/of.h>
+>> >>
+>> >>  #include "core.h"
+>> >>
+>> >>@@ -87,6 +88,8 @@ err1:
+>> >>    return ret;
+>> >>  }
+>> >>
+>> >>+static u64 dwc3_exynos_dma_mask = DMA_BIT_MASK(32);
+>> >>+
+>> >>  static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+>> >>  {
+>> >>    struct dwc3_exynos_data *pdata = pdev->dev.platform_data;
+>> >>@@ -103,6 +106,14 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+>> >>            goto err0;
+>> >>    }
+>> >>
+>> >>+   /*
+>> >>+    * Right now device-tree probed devices don't get dma_mask set.
+>> >>+    * Since shared usb code relies on it, set it here for now.
+>> >>+    * Once we move to full device tree support this will vanish off.
+>> >>+    */
+>> >>+   if (!pdev->dev.dma_mask)
+>> >>+           pdev->dev.dma_mask = &dwc3_exynos_dma_mask;
+>> >
+>> >says who ?
+>> >
+>> >$ git grep -e dma_mask drivers/of/
+>> >drivers/of/platform.c:  dev->dev.dma_mask = &dev->archdata.dma_mask;
+>> >drivers/of/platform.c:  dev->archdata.dma_mask = 0xffffffffUL;
+>> >drivers/of/platform.c:  dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>> >drivers/of/platform.c:  dev->dev.coherent_dma_mask = ~0;
+>> >drivers/of/platform.c:  dev->dma_mask = ~0;
+>> >
+>> >-ECONFUSED
 >>
->> Please note that for OMAP2/3 devices, there is only one interrupt controller
->> for the ARM CPU (which has the label "intc") and so globally define this as the
->> interrupt parent to save duplicating the interrupt parent for all device nodes.
->>
->> Thanks to Vaibhav Hiremath for creating the AM33xx timer nodes. I have modified
->> Vaibhav's original nodes adding information on which timers support a PWM
->> output.
->>
->> Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/arm/omap/timer.txt         |   29 ++++++
->>  arch/arm/boot/dts/am33xx.dtsi                      |   61 +++++++++++++
->>  arch/arm/boot/dts/omap2.dtsi                       |   86 ++++++++++++++++++
->>  arch/arm/boot/dts/omap2420.dtsi                    |    8 ++
->>  arch/arm/boot/dts/omap2430.dtsi                    |    8 ++
->>  arch/arm/boot/dts/omap3.dtsi                       |   96 ++++++++++++++++++++
->>  arch/arm/boot/dts/omap4.dtsi                       |   86 ++++++++++++++++++
->>  7 files changed, 374 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/omap/timer.txt
->>
-> 
-> Although I have not tested this version of patch series at my end, but 
-> whole patch-series Looks ok to me.
-> 
-> Acked-By: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
+>> dma_mask is set under some ifdef except for "dev->dma_mask = ~0;".
+>> However I agree with you for coherent_dma_mask case.
+>
+> indeed. Should we try to patch that instead ?
+>
+> Rob, should we set dma_mask at the driver or do you have a nicer way to
+> handle it ??
+>
+Can i have suggestions here please ? :)
 
-Thanks. I made a couple cosmetic changes in V4 apart from the
-"interrupt-parent" addition which we are now dropping. Care to ACK
-patches 2-5 of V4?
+> --
+> balbi
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
 
-Thanks
-Jon
+Thanks & Regards
+Vivek
