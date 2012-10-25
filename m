@@ -1,40 +1,79 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] dt: add helper function to read u8 & u16 variables &
- arrays
-Date: Thu, 25 Oct 2012 08:19:01 -0500
-Message-ID: <50893C45.7010109@gmail.com>
-References: <425b4bec021bce9a2de49959121907aeede6a0b9.1350064805.git.viresh.kumar@linaro.org> <CAKohpom42SCMJ+=TdvAjqT0ibRugJi_gXkLy+49N6ExcRZqxLQ@mail.gmail.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] usb: dwc3-omap: Minor fixes to get dt working
+Date: Thu, 25 Oct 2012 15:41:44 +0200
+Message-ID: <50894198.40003@ti.com>
+References: <1350307680-24938-1-git-send-email-kishon@ti.com>
+ <1350307680-24938-7-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohpom42SCMJ+=TdvAjqT0ibRugJi_gXkLy+49N6ExcRZqxLQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: grant.likely@secretlab.ca, spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1350307680-24938-7-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2012 02:03 AM, Viresh Kumar wrote:
-> On 12 October 2012 23:31, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> This adds following helper routines:
->> - of_property_read_u8_array()
->> - of_property_read_u16_array()
->> - of_property_read_u8()
->> - of_property_read_u16()
->>
->> First two actually share most of the code with of_property_read_u32_array(), so
->> the common part is taken out into a macro, which can be used by all three
->> *_array() routines.
+Hi Kishon,
+
+On 10/15/2012 03:27 PM, Kishon Vijay Abraham I wrote:
+> Includes few minor fixes in dwc3-omap like populating the compatible
+> string in a correct way, extracting the utmi-mode property properly and
+> changing the index of get_irq since irq of core is removed from hwmod
+> entry.
+> Also updated the documentation with dwc3-omap device tree binding
+> information.
 > 
-> Hi Rob,
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/usb/dwc3/dwc3-omap.c |   14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
 > 
-> Any comment here?
+> diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+> index b84ddf3..10aad46 100644
+> --- a/drivers/usb/dwc3/dwc3-omap.c
+> +++ b/drivers/usb/dwc3/dwc3-omap.c
+> @@ -318,11 +318,10 @@ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+>  	struct resource		*res;
+>  	struct device		*dev = &pdev->dev;
+>  
+> -	int			size;
+>  	int			ret = -ENOMEM;
+>  	int			irq;
+>  
+> -	const u32		*utmi_mode;
+> +	u32			utmi_mode;
+>  	u32			reg;
+>  
+>  	void __iomem		*base;
+> @@ -336,13 +335,13 @@ static int __devinit dwc3_omap_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, omap);
+>  
+> -	irq = platform_get_irq(pdev, 1);
+> +	irq = platform_get_irq(pdev, 0);
 
-For some reason, this does not show up on the list either in my mail or
-mail list archives, but it is in patchwork. Can you resend it please.
+Cannot you use the name of the resource to avoid that kind of trick?
+This is for that reason that we added the resource name in DTS :-)
 
-The main question I have is be32_to_cpup() the right thing to do. I
-would expect byte arrays to not need endian conversion, but I haven't
-looked at how '/bits/ x' data is stored.
+>  	if (irq < 0) {
+>  		dev_err(dev, "missing IRQ resource\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
-Rob
+Same here.
+
+Regards,
+Benoit
