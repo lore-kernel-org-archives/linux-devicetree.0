@@ -1,98 +1,112 @@
 From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/5] drivers: usb: otg: make twl6030_usb as a
- comparator driver to omap_usb2
-Date: Fri, 26 Oct 2012 09:36:19 -0700
-Message-ID: <20121026163619.GB11908@atomide.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com>
- <1346943430-18236-3-git-send-email-kishon@ti.com>
- <CAH+eYFAj1ecvmiJCu8QDCr3LjHT5eXjq6zsZMiVRPROoWcDuNQ@mail.gmail.com>
- <CAAe_U6K1RXA3b5u9WvE=2VoXym9Vj3KM7c0J27jKz+2KrV4tsg@mail.gmail.com>
- <CAH+eYFAhVE8cAte2PFk3jinV9n3m+eDLtE43QxzRXMScnFGcrA@mail.gmail.com>
- <508AA94B.10504@ti.com>
- <508AAA85.6070905@ti.com>
+Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
+Date: Fri, 26 Oct 2012 10:29:54 -0700
+Message-ID: <20121026172953.GK11908@atomide.com>
+References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
+ <20121019191333.GT4730@atomide.com>
+ <CAN1soZzE_tTkmPBechvUcdAbWKSScwcaqe_cb0TTmnRJi9gtRg@mail.gmail.com>
+ <20121022170917.GB4730@atomide.com>
+ <20121025234328.GF11928@atomide.com>
+ <CAN1soZyosQJYZAT61tUig6PGVrfXzwDeiC1R0hnKWoFLVP4Ayw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <508AAA85.6070905-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, Rabin Vincent <rabin-66gdRtMMWGc@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAN1soZyosQJYZAT61tUig6PGVrfXzwDeiC1R0hnKWoFLVP4Ayw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org> [121026 08:23]:
-> Hi Roger,
+* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121025 18:49]:
+> On Fri, Oct 26, 2012 at 7:43 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [121022 10:11]:
+> >> * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 03:11]:
+> >> > On Sat, Oct 20, 2012 at 3:13 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> > > * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:08]:
+> >> > >> Add pinconf generic support with POWER SOURCE, BIAS PULL.
+> >> > > ...
+> >> > >
+> >> > >> +     case PIN_CONFIG_POWER_SOURCE:
+> >> > >> +             if (pcs->psmask == PCS_OFF_DISABLED
+> >> > >> +                     || pcs->psshift == PCS_OFF_DISABLED)
+> >> > >> +                     return -ENOTSUPP;
+> >> > >> +             data &= pcs->psmask;
+> >> > >> +             data = data >> pcs->psshift;
+> >> > >> +             *config = data;
+> >> > >> +             return 0;
+> >> > >> +             break;
+> >> > >
+> >> > > Hmm, only slightly related to this patch, mostly a generic
+> >> > > question to others: Do others have any mux registers with
+> >> > > status bits for things like PIN_CONFIG_POWER_SOURCE?
+> >> > >
+> >> > > I could use PIN_CONFIG_POWER_SOURCE for controlling the PBIAS
+> >> > > for omap MMC. But there's also a status bit that needs to be
+> >> > > checked for that. I think there was some other similar mux
+> >> > > register for USB PHY that has a status register.
+> >> > >
+> >> > > So I'm wondering should the checking for status bit be handled
+> >> > > in the pinctrl consume driver? Or should we have some bindings
+> >> > > for that?
+> >> > >
+> >> >
+> >> > Do you mean that the status register only exists in USB PHY controller or
+> >> > MMC controller?
+> >>
+> >> The status register is in the MMC PBIAS register that is mux
+> >> related otherwise. From OMAP4470_ES1.0_PUBLIC_TRM_vE.pdf,
+> >> Table 19-599. CONTROL_PBIASLITE:
+> >>
+> >> Bits
+> >> 26    MMC1_PWDNZ
+> >> 25    MMC1_PBIASLITE_HIZ_MODE
+> >> 24    MMC1_PBIASLITE_SUPPLY_HI_OUT
+> >> 23    MMC1_PBIASLITE_VMODE_ERROR      then this bit needs to clear..
+> >> 22    MMC1_PBIASLITE_PWRDNZ
+> >> 21    MMC1_PBIASLITE_VMODE            ..after VMODE bit is set to 3V
+> >>
+> >> > If so, could we use regulator framework in USB PHY or MMC driver?
+> >>
+> >> Yes we could use regulator framework for that that. Or just read the
+> >> status in the MMC driver for that bit if nobody else has mixed
+> >> mux-regulator needs like this.
+> >>
+> >> The sequence is MMC specific, so from that point of view it would
+> >> make sense to have the logic in the MMC driver.
+> >
+> > Well it turns out the VMODE_ERROR bit is not just for VMODE, it's a
+> > comparator that can also triggers for the other invalid states for
+> > CONTROL_PBIASLITE pinconf register. So hiding VMODE_ERROR into a
+> > regulator would be wrong. For now, VMODE best handled using
+> > PIN_CONFIG_POWER_SOURCE and let the MMC driver do the checking
+> > using the pinconf API.
+> >
+> > Regards,
+> >
+> > Tony
 > 
-> On 10/26/2012 05:16 PM, Roger Quadros wrote:
-> > Hi Kishon & Benoit,
-> > 
-> > On 09/24/2012 12:06 PM, Rabin Vincent wrote:
-> >> 2012/9/24 ABRAHAM, KISHON VIJAY <kishon-l0cyMroinI0@public.gmane.org>:
-> >>> On Sat, Sep 22, 2012 at 3:03 AM, Rabin Vincent <rabin-66gdRtMMWGc@public.gmane.org> wrote:
-> >>>> USB doesn't work on pandaboard on linux-next, and bisection shows this
-> >>>> patch.  Unfortunately, I can't provide a dmesg log because USB is the
-> >>>> only way I currently have to get one out(!), but presumably it's because
-> >>>> this omap-usb2 device is never registered?  Looks like this breaks
-> >>>> non-dt USB on pandaboard; is that intended?
-> >>>
-> >>> Yes. omap-usb2 is *only* dt supported (New drivers shouldn't have the
-> >>> old non-dt support).
-> >>
-> >> Well, USB used to work fine on Pandaboard without DT before the
-> >> introduction of "omap-usb2", so one would expected it to continue
-> >> working (until the board file is completely removed).
-> >>
-> >> Anyway, I've moved to DT now.
-> >>
-> >>> Some patches are queued only for 3.7.
-> >>>
-> >>> In case you want to use MUSB please use these patches on linux-next..
-> >>> [PATCH v2] arm: omap: hwmod: make *phy_48m* as the main_clk of ocp2scp
-> >>> [PATCH] ARM: OMAP2+: hwmod data: Fix ocp2scp_usb_phy and usb_host_hs
-> >>> entries (from Benoit)
-> >>> [PATCH 0/2] ARM: dts: Add subnode for ocp2scp (patch series)
-> >>> [PATCH v3 0/3] ARM: dts: omap: add dt data for MUSB (patch series)
-> >>
-> >> I got these by merging in Benoit's for_3.7/dts_part2 on top of
-> >> next-20120921.  Thanks.
-> >> --
-> >> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> >> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >>
-> > 
-> > I still can't get musb to work on 3.7-rc2. Apparently it is still
-> > missing the patches from Benoit's for_3.7/dts_part2.
-> > 
-> > Maybe I just need to wait for it to be merged?
-> 
-> They are now in a for_3.8/dts. Unfortunately, one patch that was adding
-> ctrl_module address in the USB data was rejected and thus I'm not sure
-> it will work without that.
-> 
-> I think Tony had an idea to map the ctrl_register to regulator fmwk or
-> something like that.
+> Could you share the link of downloading the spec?
 
-For device tree, we may be eventually able to handle the ctrl_register
-using pinctrl-single.c and pinconf API. It probably does not make
-sense to set it up as a regulator as the comparator can trigger errors
-also for the pinconf related bits at least for MMC PBIAS.
- 
-> > Till then, where can I get a tree where musb works on Panda?
+Yes here's the omap4470 public TRM:
 
-On panda, without using device tree, use v3.7-rc2 + the following patches:
+http://www.ti.com/litv/pdf/swpu270n
 
-ARM: OMAP: ocp2scp: create omap device for ocp2scp
-ARM: OMAP4: add _dev_attr_ to ocp2scp for representing usb_phy
-drivers: bus: ocp2scp: add pdata support
-
-Also you need to enable CONFIG_OMAP_USB2. No idea what all is needed
-to use MUSB with device tree at this point.
+See CONTROL_PBIASLITE, and also "19.4.9.3 PBIAS Error Generation"
+table on page 3520 for the combinations when the comparator can
+generate errors.
 
 Regards,
 
 Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
