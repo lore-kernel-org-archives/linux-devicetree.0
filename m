@@ -1,42 +1,44 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm2835: implement machine restart hook
-Date: Thu, 25 Oct 2012 20:51:17 -0600
-Message-ID: <5089FAA5.7050908@wwwdotorg.org>
-References: <1348805280-7647-1-git-send-email-swarren@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] arm: l2cc: doc: fix device tree example typo
+Date: Thu, 25 Oct 2012 22:27:51 -0500
+Message-ID: <508A0337.2000608@gmail.com>
+References: <20121024005306.GA32126@beefymiracle.amer.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348805280-7647-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121024005306.GA32126@beefymiracle.amer.corp.natinst.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Josh Cartwright <josh.cartwright@ni.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2012 10:08 PM, Stephen Warren wrote:
-> Implement the machine restart hook using the SoC's watchdog timer module.
-> To support this, define a DT binding for the watchdog module, and add it
-> to the device tree.
+On 10/23/2012 07:53 PM, Josh Cartwright wrote:
+> The list of attributes above details the use of the 'filter-ranges'
+> property, but the example improperly used 'filter-latency'.  Make these
+> consistent by fixing up the example.
 > 
-> The downstream rpi-split branch contains a full watchdog timer driver
-> implementation, which also implements the restart hook. However, the
-> restart function is largely separate from the watchdog driver, so for
-> simplicity, the restart hook is implemented here directly in the main
-> machine source file.
-> 
-> Overall structure (separate setup/restart) functions derived from the
-> picoxcell ARM support.
-> 
-> Watchdog register IO sequence taken from code by Simon Arlott. Note that
-> the watchdog module is not documented in BCM2835-ARM-Peripherals.pdf.
+> Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
 
-Applied to rpi's for-3.8/soc branch.
+Applied for 3.8 (unless I get more to send for 3.7).
+
+Rob
+
+> ---
+>  Documentation/devicetree/bindings/arm/l2cc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+> index 7ca5216..7c3ee3a 100644
+> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+> @@ -37,7 +37,7 @@ L2: cache-controller {
+>          reg = <0xfff12000 0x1000>;
+>          arm,data-latency = <1 1 1>;
+>          arm,tag-latency = <2 2 2>;
+> -        arm,filter-latency = <0x80000000 0x8000000>;
+> +        arm,filter-ranges = <0x80000000 0x8000000>;
+>          cache-unified;
+>          cache-level = <2>;
+>  	interrupts = <45>;
+> 
