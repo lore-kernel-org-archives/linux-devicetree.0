@@ -1,72 +1,82 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 06/14] fdt: Export fdtdec_lookup() and fix the name
-Date: Thu, 25 Oct 2012 19:31:03 -0700
-Message-ID: <1351218671-15228-7-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH 14/14] fdt: Set kernaddr if fdt indicates a kernel
+	is present
+Date: Thu, 25 Oct 2012 19:31:11 -0700
+Message-ID: <1351218671-15228-15-git-send-email-sjg@chromium.org>
 References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1351218671-15228-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1351218671-15228-1-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Tom Rini <trini@ti.com>, Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-The name of this function is not consistent, so fix it, and export
-the function for external use.
+If kernel-offset is specified in the fdt, set an environment variable
+so that scripts can access the attached kernel.
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+This can be used by a packaging program to tell U-Boot about a kernel
+that has been downloaded alongside U-Boot. The value in the fdt is
+the offset of the kernel from the start of the U-Boot image, so we can
+find it just by adding CONFIG_SYS_TEXT_BASE.
+
+It is then fairly easy to put something like this in the environment
+variables in the board header file:
+
+		"if test ${kernaddr} != \"\"; then "\
+			"echo \"Using bundled kernel\"; "\
+			"bootm ${kernaddr};" \
+		"fi; "\
+		/* rest of boot sequence follows here */
+
+Signed-off-by: Simon Glass <sjg@chromium.org>
 ---
- include/fdtdec.h |   13 +++++++++++++
- lib/fdtdec.c     |    2 +-
- 2 files changed, 14 insertions(+), 1 deletions(-)
+ common/main.c |   16 ++++++++++++++++
+ 1 files changed, 16 insertions(+), 0 deletions(-)
 
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index e566e47..3f1840c 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -110,6 +110,19 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 		enum fdt_compat_id id, int *upto);
- 
- /**
-+ * Find the compatible ID for a given node.
-+ *
-+ * Generally each node has at least one compatible string attached to it.
-+ * This function looks through our list of known compatible strings and
-+ * returns the corresponding ID which matches the compatible string.
-+ *
-+ * @param blob		FDT blob to use
-+ * @param node		Node containing compatible string to find
-+ * @return compatible ID, or COMPAT_UNKNOWN if we cannot find a match
-+ */
-+enum fdt_compat_id fdtdec_lookup(const void *blob, int node);
-+
-+/**
-  * Look in the FDT for an alias with the given name and return its node.
-  *
-  * @param blob	FDT blob
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 16435b7..efe9afe 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -128,7 +128,7 @@ int fdtdec_get_is_enabled(const void *blob, int node)
- 	return 1;
+diff --git a/common/main.c b/common/main.c
+index 03c63b4..3137b75 100644
+--- a/common/main.c
++++ b/common/main.c
+@@ -333,6 +333,20 @@ err:
+ 	hang();
  }
  
--enum fdt_compat_id fd_dec_lookup(const void *blob, int node)
-+enum fdt_compat_id fdtdec_lookup(const void *blob, int node)
- {
- 	enum fdt_compat_id id;
++static void process_fdt_options(const void *blob)
++{
++	ulong addr;
++
++	/* Add an env variable to point to a kernel payload, if available */
++	addr = fdtdec_get_config_int(gd->fdt_blob, "kernel-offset", 0);
++	if (addr)
++		setenv_addr("kernaddr", (void *)(CONFIG_SYS_TEXT_BASE + addr));
++
++	/* Add an env variable to point to a root disk, if available */
++	addr = fdtdec_get_config_int(gd->fdt_blob, "rootdisk-offset", 0);
++	if (addr)
++		setenv_addr("rootaddr", (void *)(CONFIG_SYS_TEXT_BASE + addr));
++}
+ #endif /* CONFIG_OF_CONTROL */
  
+ 
+@@ -451,6 +465,8 @@ void main_loop (void)
+ 	if (env)
+ 		s = env;
+ 
++	process_fdt_options(gd->fdt_blob);
++
+ 	/*
+ 	 * If the bootsecure option was chosen, use secure_boot_cmd().
+ 	 * Always use 'env' in this case, since bootsecure requres that the
 -- 
 1.7.7.3
