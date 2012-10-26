@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 11/14] fdt: Tell the FDT library where the device tree is
-Date: Thu, 25 Oct 2012 19:31:08 -0700
-Message-ID: <1351218671-15228-12-git-send-email-sjg@chromium.org>
+Subject: [PATCH 06/14] fdt: Export fdtdec_lookup() and fix the name
+Date: Thu, 25 Oct 2012 19:31:03 -0700
+Message-ID: <1351218671-15228-7-git-send-email-sjg@chromium.org>
 References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,48 +19,54 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Gabe Black <gabeblack-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gabe Black <gabeblack-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gabe Black <gabeblack-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+The name of this function is not consistent, so fix it, and export
+the function for external use.
 
-This change adds a call to set_working_fdt_addr near the end of u-boot
-initialization which tells the fdt command/library where the device tree is.
-This makes it possible to use the fdt command to look at the active device tree
-since otherwise there would be no way to know what address it was at to set
-things up manually.
-
-Signed-off-by: Gabe Black <gabeblack-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- common/main.c |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+ include/fdtdec.h |   13 +++++++++++++
+ lib/fdtdec.c     |    2 +-
+ 2 files changed, 14 insertions(+), 1 deletions(-)
 
-diff --git a/common/main.c b/common/main.c
-index 23a68ee..cf1b5f9 100644
---- a/common/main.c
-+++ b/common/main.c
-@@ -45,6 +45,10 @@
- #include <fdtdec.h>
- #endif
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index e566e47..3f1840c 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -110,6 +110,19 @@ int fdtdec_next_alias(const void *blob, const char *name,
+ 		enum fdt_compat_id id, int *upto);
  
-+#ifdef CONFIG_OF_LIBFDT
-+#include <fdt_support.h>
-+#endif /* CONFIG_OF_LIBFDT */
+ /**
++ * Find the compatible ID for a given node.
++ *
++ * Generally each node has at least one compatible string attached to it.
++ * This function looks through our list of known compatible strings and
++ * returns the corresponding ID which matches the compatible string.
++ *
++ * @param blob		FDT blob to use
++ * @param node		Node containing compatible string to find
++ * @return compatible ID, or COMPAT_UNKNOWN if we cannot find a match
++ */
++enum fdt_compat_id fdtdec_lookup(const void *blob, int node);
 +
- #include <post.h>
- #include <linux/ctype.h>
- #include <menu.h>
-@@ -418,6 +422,10 @@ void main_loop (void)
- #endif /* CONFIG_MENUKEY */
- #endif /* CONFIG_BOOTDELAY */
++/**
+  * Look in the FDT for an alias with the given name and return its node.
+  *
+  * @param blob	FDT blob
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index 16435b7..efe9afe 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -128,7 +128,7 @@ int fdtdec_get_is_enabled(const void *blob, int node)
+ 	return 1;
+ }
  
-+#if defined CONFIG_OF_CONTROL
-+	set_working_fdt_addr((void *)gd->fdt_blob);
-+#endif /* CONFIG_OF_CONTROL */
-+
- 	/*
- 	 * Main Loop for Monitor Command Processing
- 	 */
+-enum fdt_compat_id fd_dec_lookup(const void *blob, int node)
++enum fdt_compat_id fdtdec_lookup(const void *blob, int node)
+ {
+ 	enum fdt_compat_id id;
+ 
 -- 
 1.7.7.3
