@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 05/14] fdt: Export fdtdec_find_alias_node() function
-Date: Thu, 25 Oct 2012 19:31:02 -0700
-Message-ID: <1351218671-15228-6-git-send-email-sjg@chromium.org>
+Subject: [PATCH 01/14] fdt: Add function to get config int from device tree
+Date: Thu, 25 Oct 2012 19:30:58 -0700
+Message-ID: <1351218671-15228-2-git-send-email-sjg@chromium.org>
 References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,64 +19,77 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This function is useful outside fdtdec, so export it.
+From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
+Add a function to look up a configuration item such as machine id
+and return its value.
+
+Note: The code has been taken as is from the Chromium u-boot development
+tree and needs Simon Glass' sign-off.
+
+Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- include/fdtdec.h |    9 +++++++++
- lib/fdtdec.c     |    6 +++---
- 2 files changed, 12 insertions(+), 3 deletions(-)
+ include/fdtdec.h |   13 +++++++++++++
+ lib/fdtdec.c     |   22 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 0 deletions(-)
 
 diff --git a/include/fdtdec.h b/include/fdtdec.h
-index e70714b..e566e47 100644
+index 0b14075..d880fe8 100644
 --- a/include/fdtdec.h
 +++ b/include/fdtdec.h
-@@ -110,6 +110,15 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 		enum fdt_compat_id id, int *upto);
+@@ -354,6 +354,19 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
+  */
+ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio);
  
- /**
-+ * Look in the FDT for an alias with the given name and return its node.
-+ *
-+ * @param blob	FDT blob
-+ * @param name	alias name to look up
-+ * @return node offset if found, or an error code < 0 otherwise
-+ */
-+int fdtdec_find_alias_node(const void *blob, const char *name);
-+
 +/**
-  * Find the next compatible node for a peripheral.
-  *
-  * Do the first call with node = 0. This function will return a pointer to
++ * Look in the FDT for a config item with the given name and return its value
++ * as a 32-bit integer. The property must have at least 4 bytes of data. The
++ * value of the first cell is returned.
++ *
++ * @param blob		FDT blob to use
++ * @param prop_name	Node property name
++ * @param default_val	default value to return if the property is not found
++ * @return integer value, if found, or default_val if not
++ */
++int fdtdec_get_config_int(const void *blob, const char *prop_name,
++		int default_val);
++
+ /*
+  * Look up a property in a node and return its contents in a byte
+  * array of given length. The property must have at least enough data for
 diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 32f03cc..16435b7 100644
+index 4c23f45..1f50022 100644
 --- a/lib/fdtdec.c
 +++ b/lib/fdtdec.c
-@@ -59,12 +59,12 @@ const char *fdtdec_get_compatible(enum fdt_compat_id id)
-  * @param name	alias name to look up
-  * @return node offset if found, or an error code < 0 otherwise
-  */
--static int find_alias_node(const void *blob, const char *name)
-+int fdtdec_find_alias_node(const void *blob, const char *name)
- {
- 	const char *path;
- 	int alias_node;
- 
--	debug("find_alias_node: %s\n", name);
-+	debug("%s: %s\n", __func__, name);
- 	alias_node = fdt_path_offset(blob, "/aliases");
- 	if (alias_node < 0)
- 		return alias_node;
-@@ -171,7 +171,7 @@ int fdtdec_next_alias(const void *blob, const char *name,
- 	/* snprintf() is not available */
- 	assert(strlen(name) < MAX_STR_LEN);
- 	sprintf(str, "%.*s%d", MAX_STR_LEN, name, *upto);
--	node = find_alias_node(blob, str);
-+	node = fdtdec_find_alias_node(blob, str);
- 	if (node < 0)
- 		return node;
- 	err = fdt_node_check_compatible(blob, node, compat_names[id]);
+@@ -512,3 +512,25 @@ const u8 *fdtdec_locate_byte_array(const void *blob, int node,
+ 		return NULL;
+ 	return cell;
+ }
++
++/**
++ * Look in the FDT for a config item with the given name and return its value
++ * as a 32-bit integer. The property must have at least 4 bytes of data. The
++ * value of the first cell is returned.
++ *
++ * @param blob		FDT blob to use
++ * @param prop_name	Node property name
++ * @param default_val	default value to return if the property is not found
++ * @return integer value, if found, or default_val if not
++ */
++int fdtdec_get_config_int(const void *blob, const char *prop_name,
++		int default_val)
++{
++	int config_node;
++
++	debug("%s: %s\n", __func__, prop_name);
++	config_node = fdt_path_offset(blob, "/config");
++	if (config_node < 0)
++		return default_val;
++	return fdtdec_get_int(blob, config_node, prop_name, default_val);
++}
 -- 
 1.7.7.3
