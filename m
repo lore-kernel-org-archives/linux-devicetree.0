@@ -1,67 +1,89 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH 0/14] fdt: Add various device tree utilities and
-	features
-Date: Thu, 25 Oct 2012 19:30:57 -0700
-Message-ID: <1351218671-15228-1-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 08/14] fdt: Add fdtdec_get_uint64 to decode a 64-bit value
+ from a property
+Date: Thu, 25 Oct 2012 19:31:05 -0700
+Message-ID: <1351218671-15228-9-git-send-email-sjg@chromium.org>
+References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: U-Boot Mailing List <u-boot@lists.denx.de>
-Cc: Tom Rini <trini@ti.com>, Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1351218671-15228-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Che-Liang Chiou <clchiou-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series contains a number of features related to CONFIG_OF_CONTROL,
-such as:
+From: Che-Liang Chiou <clchiou-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-- reading fdt values
-- reading configuration from the fdt
-- allowing the fdt to specify a boot command
+It decodes a 64-bit value from a property that is at least 8 bytes long.
 
+Signed-off-by: Che-Liang Chiou <clchiou-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Abhilash Kesavan (2):
-  fdt: Add function to get config int from device tree
-  fdt: Add function for decoding multiple gpios globally available
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ include/fdtdec.h |   15 +++++++++++++++
+ lib/fdtdec.c     |   13 +++++++++++++
+ 2 files changed, 28 insertions(+), 0 deletions(-)
 
-Che-Liang Chiou (2):
-  fdt: Add fdtdec_get_uint64 to decode a 64-bit value from a property
-  fdt: Load boot command from device tree
-
-Doug Anderson (1):
-  fdt: Allow device tree to specify secure booting
-
-Gabe Black (3):
-  fdt: Add function to read boolean property
-  fdt: Tell the FDT library where the device tree is
-  fdt: Add option to default to most compatible conf in a fit image
-
-Sean Paul (1):
-  fdt: Add polarity-aware gpio functions to fdtdec
-
-Simon Glass (5):
-  fdt: Add function to get a config string from device tree
-  fdt: Add fdtdec_decode_region() to decode memory region
-  fdt: Export fdtdec_find_alias_node() function
-  fdt: Export fdtdec_lookup() and fix the name
-  fdt: Set kernaddr if fdt indicates a kernel is present
-
- README             |   11 +++++
- common/cmd_bootm.c |   11 +++++
- common/image.c     |  127 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- common/main.c      |  102 +++++++++++++++++++++++++++++++++++++++++-
- include/fdtdec.h   |  121 +++++++++++++++++++++++++++++++++++++++++++++++++
- include/image.h    |    1 +
- lib/fdtdec.c       |  107 +++++++++++++++++++++++++++++++++++++++++---
- 7 files changed, 472 insertions(+), 8 deletions(-)
-
+diff --git a/include/fdtdec.h b/include/fdtdec.h
+index 82fdb99..12f73a7 100644
+--- a/include/fdtdec.h
++++ b/include/fdtdec.h
+@@ -191,6 +191,21 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ 		s32 default_val);
+ 
+ /**
++ * Look up a 64-bit integer property in a node and return it. The property
++ * must have at least 8 bytes of data (2 cells). The first two cells are
++ * concatenated to form a 8 bytes value, where the first cell is top half and
++ * the second cell is bottom half.
++ *
++ * @param blob	FDT blob
++ * @param node	node to examine
++ * @param prop_name	name of property to find
++ * @param default_val	default value to return if the property is not found
++ * @return integer value, if found, or default_val if not
++ */
++uint64_t fdtdec_get_uint64(const void *blob, int node, const char *prop_name,
++		uint64_t default_val);
++
++/**
+  * Checks whether a node is enabled.
+  * This looks for a 'status' property. If this exists, then returns 1 if
+  * the status is 'ok' and 0 otherwise. If there is no status property,
+diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+index fbb2827..6c417d2 100644
+--- a/lib/fdtdec.c
++++ b/lib/fdtdec.c
+@@ -111,6 +111,19 @@ s32 fdtdec_get_int(const void *blob, int node, const char *prop_name,
+ 	return default_val;
+ }
+ 
++uint64_t fdtdec_get_uint64(const void *blob, int node, const char *prop_name,
++		uint64_t default_val)
++{
++	const uint64_t *cell64;
++	int length;
++
++	cell64 = fdt_getprop(blob, node, prop_name, &length);
++	if (!cell64 || length < sizeof(*cell64))
++		return default_val;
++
++	return fdt64_to_cpu(*cell64);
++}
++
+ int fdtdec_get_is_enabled(const void *blob, int node)
+ {
+ 	const char *cell;
 -- 
 1.7.7.3
