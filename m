@@ -1,44 +1,57 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] arm: l2cc: doc: fix device tree example typo
-Date: Thu, 25 Oct 2012 22:27:51 -0500
-Message-ID: <508A0337.2000608@gmail.com>
-References: <20121024005306.GA32126@beefymiracle.amer.corp.natinst.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH] dt: add helper function to read u8 & u16 variables & arrays
+Date: Fri, 26 Oct 2012 09:47:24 +0530
+Message-ID: <CAKohponSbbusMjcsEwKczvxaN54YKJPL05vLELSjW6dnKO_6Dg@mail.gmail.com>
+References: <425b4bec021bce9a2de49959121907aeede6a0b9.1350064805.git.viresh.kumar@linaro.org>
+	<CAKohpom42SCMJ+=TdvAjqT0ibRugJi_gXkLy+49N6ExcRZqxLQ@mail.gmail.com>
+	<50893C45.7010109@gmail.com>
+	<CAKohpom5QmO5vbREsMgi4EefLpBxXsk=QWVaZwTwC_Knf72GVA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20121024005306.GA32126@beefymiracle.amer.corp.natinst.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <josh.cartwright@ni.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohpom5QmO5vbREsMgi4EefLpBxXsk=QWVaZwTwC_Knf72GVA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: grant.likely@secretlab.ca, spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/23/2012 07:53 PM, Josh Cartwright wrote:
-> The list of attributes above details the use of the 'filter-ranges'
-> property, but the example improperly used 'filter-latency'.  Make these
-> consistent by fixing up the example.
-> 
-> Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
+On 25 October 2012 19:48, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> The problem i see here is:
+>
+> The data passed via DT comes as Little Endian in the kernel.
+>
+> For a little endian system, byte zero will contain the data and so
+> (u8) val
+>
+> look to be the correct thing.
+>
+> For a big endian system, byte 3 will contain data as it is swapped by
+> be32_to_cpup.
+> So (u8) val would return value stored by byte 0 instead. ??
 
-Applied for 3.8 (unless I get more to send for 3.7).
+I feel above explanation was wrong. I didn't had a big endian system
+to test this but this is what i derived theoretically. Consider following
+sequence of commands:
 
-Rob
+u32 x = 0x01;              //This will store off-0: 1, off-3:0 for LE system
+                                   // and will store off-0: 0, off-3:1
+for BE system
+u8 y = (u8) x;              // For any architecture type, i.e. big or
+little this must store
+                                   // 1 in y. This is ANCI C semantic
+and should be architecture
+                                   // independent.
 
-> ---
->  Documentation/devicetree/bindings/arm/l2cc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index 7ca5216..7c3ee3a 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -37,7 +37,7 @@ L2: cache-controller {
->          reg = <0xfff12000 0x1000>;
->          arm,data-latency = <1 1 1>;
->          arm,tag-latency = <2 2 2>;
-> -        arm,filter-latency = <0x80000000 0x8000000>;
-> +        arm,filter-ranges = <0x80000000 0x8000000>;
->          cache-unified;
->          cache-level = <2>;
->  	interrupts = <45>;
-> 
+Which would mean, type cast will give off-0 on LE and off-3 on BE systems. Don't
+confuse this with getting values using pointers, as we try to get data
+out of specific
+locations in those cases.
+
+So, my initial code seems to be doing the right thing. be32_to_cpup()
+will move the
+LSB to off-3 and that is what we will get during the cast.
+
+I will resend my original code to you.
+
+--
+viresh
