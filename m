@@ -1,13 +1,14 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 09/14] fdt: Add polarity-aware gpio functions to fdtdec
-Date: Thu, 25 Oct 2012 19:31:06 -0700
-Message-ID: <1351218671-15228-10-git-send-email-sjg@chromium.org>
-References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: bcm2835: enable GPIO/pinctrl
+Date: Thu, 25 Oct 2012 20:50:58 -0600
+Message-ID: <5089FA92.9090908@wwwdotorg.org>
+References: <1348805412-7804-1-git-send-email-swarren@wwwdotorg.org>
+ <1348805412-7804-2-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1351218671-15228-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1348805412-7804-2-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,79 +19,19 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+On 09/27/2012 10:10 PM, Stephen Warren wrote:
+> Enable GPIO and pinctrl in Kconfig.
+> 
+> Add required <mach/gpio.h> for gpiolib.
+> 
+> Instantiate the BCM2835 GPIO module in bcm2835.dtsi.
+> 
+> Add a pinctrl definition to bcm2835-rpi-b.dts that sets up all of the
+> board's required pinmux configuration. GPIO aren't specified; that's
+> left to gpio_request().
 
-Add get and set gpio functions to fdtdec that take into account the
-polarity field in fdtdec_gpio_state.flags.
-
-Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- include/fdtdec.h |   16 ++++++++++++++++
- lib/fdtdec.c     |   20 ++++++++++++++++++++
- 2 files changed, 36 insertions(+), 0 deletions(-)
-
-diff --git a/include/fdtdec.h b/include/fdtdec.h
-index 12f73a7..17daa99 100644
---- a/include/fdtdec.h
-+++ b/include/fdtdec.h
-@@ -90,6 +90,22 @@ struct fdt_gpio_state {
- #define fdt_gpio_isvalid(x) ((x)->gpio != FDT_GPIO_NONE)
- 
- /**
-+ * Read the GPIO taking into account the polarity of the pin.
-+ *
-+ * @param gpio		pointer to the decoded gpio
-+ * @return value of the gpio if successful, < 0 if unsuccessful
-+ */
-+int fdtdec_get_gpio(struct fdt_gpio_state *gpio);
-+
-+/**
-+ * Write the GPIO taking into account the polarity of the pin.
-+ *
-+ * @param gpio		pointer to the decoded gpio
-+ * @return 0 if successful
-+ */
-+int fdtdec_set_gpio(struct fdt_gpio_state *gpio, int val);
-+
-+/**
-  * Find the next numbered alias for a peripheral. This is used to enumerate
-  * all the peripherals of a certain type.
-  *
-diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 6c417d2..91ba558 100644
---- a/lib/fdtdec.c
-+++ b/lib/fdtdec.c
-@@ -487,6 +487,26 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
- 	return err == 1 ? 0 : err;
- }
- 
-+int fdtdec_get_gpio(struct fdt_gpio_state *gpio)
-+{
-+	int val;
-+
-+	if (!fdt_gpio_isvalid(gpio))
-+		return -1;
-+
-+	val = gpio_get_value(gpio->gpio);
-+	return gpio->flags & FDT_GPIO_ACTIVE_LOW ? val ^ 1 : val;
-+}
-+
-+int fdtdec_set_gpio(struct fdt_gpio_state *gpio, int val)
-+{
-+	if (!fdt_gpio_isvalid(gpio))
-+		return -1;
-+
-+	val = gpio->flags & FDT_GPIO_ACTIVE_LOW ? val ^ 1 : val;
-+	return gpio_set_value(gpio->gpio, val);
-+}
-+
- int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
- {
- 	/*
--- 
-1.7.7.3
+Applied to rpi's for-3.8/soc branch.
