@@ -1,100 +1,67 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 08/10] pinctrl: single: support pinconf generic
-Date: Fri, 26 Oct 2012 09:47:25 +0800
-Message-ID: <CAN1soZyosQJYZAT61tUig6PGVrfXzwDeiC1R0hnKWoFLVP4Ayw@mail.gmail.com>
-References: <1350551224-12857-1-git-send-email-haojian.zhuang@gmail.com>
- <1350551224-12857-8-git-send-email-haojian.zhuang@gmail.com>
- <20121019191333.GT4730@atomide.com>
- <CAN1soZzE_tTkmPBechvUcdAbWKSScwcaqe_cb0TTmnRJi9gtRg@mail.gmail.com>
- <20121022170917.GB4730@atomide.com>
- <20121025234328.GF11928@atomide.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH 0/14] fdt: Add various device tree utilities and
+	features
+Date: Thu, 25 Oct 2012 19:30:57 -0700
+Message-ID: <1351218671-15228-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121025234328.GF11928-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <u-boot-bounces@lists.denx.de>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: U-Boot Mailing List <u-boot@lists.denx.de>
+Cc: Tom Rini <trini@ti.com>, Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 26, 2012 at 7:43 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [121022 10:11]:
->> * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 03:11]:
->> > On Sat, Oct 20, 2012 at 3:13 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->> > > * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121018 02:08]:
->> > >> Add pinconf generic support with POWER SOURCE, BIAS PULL.
->> > > ...
->> > >
->> > >> +     case PIN_CONFIG_POWER_SOURCE:
->> > >> +             if (pcs->psmask == PCS_OFF_DISABLED
->> > >> +                     || pcs->psshift == PCS_OFF_DISABLED)
->> > >> +                     return -ENOTSUPP;
->> > >> +             data &= pcs->psmask;
->> > >> +             data = data >> pcs->psshift;
->> > >> +             *config = data;
->> > >> +             return 0;
->> > >> +             break;
->> > >
->> > > Hmm, only slightly related to this patch, mostly a generic
->> > > question to others: Do others have any mux registers with
->> > > status bits for things like PIN_CONFIG_POWER_SOURCE?
->> > >
->> > > I could use PIN_CONFIG_POWER_SOURCE for controlling the PBIAS
->> > > for omap MMC. But there's also a status bit that needs to be
->> > > checked for that. I think there was some other similar mux
->> > > register for USB PHY that has a status register.
->> > >
->> > > So I'm wondering should the checking for status bit be handled
->> > > in the pinctrl consume driver? Or should we have some bindings
->> > > for that?
->> > >
->> >
->> > Do you mean that the status register only exists in USB PHY controller or
->> > MMC controller?
->>
->> The status register is in the MMC PBIAS register that is mux
->> related otherwise. From OMAP4470_ES1.0_PUBLIC_TRM_vE.pdf,
->> Table 19-599. CONTROL_PBIASLITE:
->>
->> Bits
->> 26    MMC1_PWDNZ
->> 25    MMC1_PBIASLITE_HIZ_MODE
->> 24    MMC1_PBIASLITE_SUPPLY_HI_OUT
->> 23    MMC1_PBIASLITE_VMODE_ERROR      then this bit needs to clear..
->> 22    MMC1_PBIASLITE_PWRDNZ
->> 21    MMC1_PBIASLITE_VMODE            ..after VMODE bit is set to 3V
->>
->> > If so, could we use regulator framework in USB PHY or MMC driver?
->>
->> Yes we could use regulator framework for that that. Or just read the
->> status in the MMC driver for that bit if nobody else has mixed
->> mux-regulator needs like this.
->>
->> The sequence is MMC specific, so from that point of view it would
->> make sense to have the logic in the MMC driver.
->
-> Well it turns out the VMODE_ERROR bit is not just for VMODE, it's a
-> comparator that can also triggers for the other invalid states for
-> CONTROL_PBIASLITE pinconf register. So hiding VMODE_ERROR into a
-> regulator would be wrong. For now, VMODE best handled using
-> PIN_CONFIG_POWER_SOURCE and let the MMC driver do the checking
-> using the pinconf API.
->
-> Regards,
->
-> Tony
+This series contains a number of features related to CONFIG_OF_CONTROL,
+such as:
 
-Could you share the link of downloading the spec?
+- reading fdt values
+- reading configuration from the fdt
+- allowing the fdt to specify a boot command
 
-Regards
-Haojian
+
+Abhilash Kesavan (2):
+  fdt: Add function to get config int from device tree
+  fdt: Add function for decoding multiple gpios globally available
+
+Che-Liang Chiou (2):
+  fdt: Add fdtdec_get_uint64 to decode a 64-bit value from a property
+  fdt: Load boot command from device tree
+
+Doug Anderson (1):
+  fdt: Allow device tree to specify secure booting
+
+Gabe Black (3):
+  fdt: Add function to read boolean property
+  fdt: Tell the FDT library where the device tree is
+  fdt: Add option to default to most compatible conf in a fit image
+
+Sean Paul (1):
+  fdt: Add polarity-aware gpio functions to fdtdec
+
+Simon Glass (5):
+  fdt: Add function to get a config string from device tree
+  fdt: Add fdtdec_decode_region() to decode memory region
+  fdt: Export fdtdec_find_alias_node() function
+  fdt: Export fdtdec_lookup() and fix the name
+  fdt: Set kernaddr if fdt indicates a kernel is present
+
+ README             |   11 +++++
+ common/cmd_bootm.c |   11 +++++
+ common/image.c     |  127 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ common/main.c      |  102 +++++++++++++++++++++++++++++++++++++++++-
+ include/fdtdec.h   |  121 +++++++++++++++++++++++++++++++++++++++++++++++++
+ include/image.h    |    1 +
+ lib/fdtdec.c       |  107 +++++++++++++++++++++++++++++++++++++++++---
+ 7 files changed, 472 insertions(+), 8 deletions(-)
+
+-- 
+1.7.7.3
