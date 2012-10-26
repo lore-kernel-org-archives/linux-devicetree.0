@@ -1,191 +1,91 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH Resend V2] dt: add helper function to read u8 & u16 variables & arrays
-Date: Fri, 26 Oct 2012 09:50:56 +0530
-Message-ID: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com, grant.likely@secretlab.ca
-Cc: spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, linaro-dev@lists.linaro.org, patches@linaro.org, Viresh Kumar <viresh.kumar@linaro.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Fri, 26 Oct 2012 09:20:36 +0300
+Message-ID: <20121026062008.GA21734@arwen.pp.htv.fi>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121024161429.GA16350@core.coreip.homeip.net>
+ <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
+ <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
+ <20121024185818.GB772@arwen.pp.htv.fi>
+ <20121025205901.GA3827@sirena.org.uk>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ADZbWkCsHQ7r3kzd"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121025205901.GA3827@sirena.org.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Felipe Balbi <balbi@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds following helper routines:
-- of_property_read_u8_array()
-- of_property_read_u16_array()
-- of_property_read_u8()
-- of_property_read_u16()
+--ADZbWkCsHQ7r3kzd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-First two actually share most of the code with of_property_read_u32_array()=
-, so
-the common part is taken out into a macro, which can be used by all three
-*_array() routines.
+Hi,
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-V1->V2:
------
-- Use typeof() in of_property_read_array() macro instead of passing type to=
- it
+On Thu, Oct 25, 2012 at 09:59:01PM +0100, Mark Brown wrote:
+> On Wed, Oct 24, 2012 at 09:58:19PM +0300, Felipe Balbi wrote:
+>=20
+> > need a way to tell drivers/base "hey, don't touch pinctrl at all because
+> > I know what I'm doing" and that has to happen before probe() too,
+> > otherwise it's already too late and, according to what you suggest,
+> > drivers/base will already have touched pinctrl. The only way I see would
+> > be to add an extra "dont_touch_my_pins" field to every driver structure
+> > in the kernel. Clearly what you say is nonsense.
+>=20
+> I suspect that's not actually a big deal and that if we went down this
+> route we'd have the driver take over control from the core code during
+> probe() with the core still setting up the default state.
+>=20
+> Personally I do think we want to be factoring bolierplate out of
+> drivers, if they're not doing anything constructive with pinctrl they
+> should be able to avoid having code for it.  There definitely are issues
+> to work through but it seems like we ought to be able to do something.
 
- drivers/of/base.c  | 73 +++++++++++++++++++++++++++++++++++++++++++-------=
-----
- include/linux/of.h | 30 ++++++++++++++++++++++
- 2 files changed, 89 insertions(+), 14 deletions(-)
+IMHO this will come back to bite you in the *ss. Specially when the same
+driver is shared among multiple revisions of the same SoC or multiple
+different SoCs.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index af3b22a..039e178 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -670,6 +670,64 @@ struct device_node *of_find_node_by_phandle(phandle ha=
-ndle)
- }
- EXPORT_SYMBOL(of_find_node_by_phandle);
-=20
-+#define of_property_read_array(_np, _pname, _out, _sz)=09=09=09\
-+=09struct property *_prop =3D of_find_property(_np, _pname, NULL);=09\
-+=09const __be32 *_val;=09=09=09=09=09=09\
-+=09=09=09=09=09=09=09=09=09\
-+=09if (!_prop)=09=09=09=09=09=09=09\
-+=09=09return -EINVAL;=09=09=09=09=09=09\
-+=09if (!_prop->value)=09=09=09=09=09=09\
-+=09=09return -ENODATA;=09=09=09=09=09\
-+=09if ((_sz * sizeof(*_out)) > _prop->length)=09=09=09\
-+=09=09return -EOVERFLOW;=09=09=09=09=09\
-+=09=09=09=09=09=09=09=09=09\
-+=09_val =3D _prop->value;=09=09=09=09=09=09\
-+=09while (_sz--)=09=09=09=09=09=09=09\
-+=09=09*_out++ =3D (typeof(*_out))be32_to_cpup(_val++);=09=09\
-+=09return 0;
-+
-+/**
-+ * of_property_read_u8_array - Find and read an array of u8 from a propert=
-y.
-+ *
-+ * @np:=09=09device node from which the property value is to be read.
-+ * @propname:=09name of the property to be searched.
-+ * @out_value:=09pointer to return value, modified only if return value is=
- 0.
-+ *
-+ * Search for a property in a device node and read 8-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_value is modified only if a valid u8 value can be decoded.
-+ */
-+int of_property_read_u8_array(const struct device_node *np,
-+=09=09=09const char *propname, u8 *out_values, size_t sz)
-+{
-+=09of_property_read_array(np, propname, out_values, sz);
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u8_array);
-+
-+/**
-+ * of_property_read_u16_array - Find and read an array of u16 from a prope=
-rty.
-+ *
-+ * @np:=09=09device node from which the property value is to be read.
-+ * @propname:=09name of the property to be searched.
-+ * @out_value:=09pointer to return value, modified only if return value is=
- 0.
-+ *
-+ * Search for a property in a device node and read 16-bit value(s) from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
-+ *
-+ * The out_value is modified only if a valid u16 value can be decoded.
-+ */
-+int of_property_read_u16_array(const struct device_node *np,
-+=09=09=09const char *propname, u16 *out_values, size_t sz)
-+{
-+=09of_property_read_array(np, propname, out_values, sz);
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u16_array);
-+
- /**
-  * of_property_read_u32_array - Find and read an array of 32 bit integers
-  * from a property.
-@@ -689,20 +747,7 @@ int of_property_read_u32_array(const struct device_nod=
-e *np,
- =09=09=09       const char *propname, u32 *out_values,
- =09=09=09       size_t sz)
- {
--=09struct property *prop =3D of_find_property(np, propname, NULL);
--=09const __be32 *val;
--
--=09if (!prop)
--=09=09return -EINVAL;
--=09if (!prop->value)
--=09=09return -ENODATA;
--=09if ((sz * sizeof(*out_values)) > prop->length)
--=09=09return -EOVERFLOW;
--
--=09val =3D prop->value;
--=09while (sz--)
--=09=09*out_values++ =3D be32_to_cpup(val++);
--=09return 0;
-+=09of_property_read_array(np, propname, out_values, sz);
- }
- EXPORT_SYMBOL_GPL(of_property_read_u32_array);
-=20
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 72843b7..e2d9b40 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -223,6 +223,10 @@ extern struct device_node *of_find_node_with_property(
- extern struct property *of_find_property(const struct device_node *np,
- =09=09=09=09=09 const char *name,
- =09=09=09=09=09 int *lenp);
-+extern int of_property_read_u8_array(const struct device_node *np,
-+=09=09=09const char *propname, u8 *out_values, size_t sz);
-+extern int of_property_read_u16_array(const struct device_node *np,
-+=09=09=09const char *propname, u16 *out_values, size_t sz);
- extern int of_property_read_u32_array(const struct device_node *np,
- =09=09=09=09      const char *propname,
- =09=09=09=09      u32 *out_values,
-@@ -357,6 +361,18 @@ static inline struct device_node *of_find_compatible_n=
-ode(
- =09return NULL;
- }
-=20
-+static inline int of_property_read_u8_array(const struct device_node *np,
-+=09=09=09const char *propname, u8 *out_values, size_t sz)
-+{
-+=09return -ENOSYS;
-+}
-+
-+static inline int of_property_read_u16_array(const struct device_node *np,
-+=09=09=09const char *propname, u16 *out_values, size_t sz)
-+{
-+=09return -ENOSYS;
-+}
-+
- static inline int of_property_read_u32_array(const struct device_node *np,
- =09=09=09=09=09     const char *propname,
- =09=09=09=09=09     u32 *out_values, size_t sz)
-@@ -463,6 +479,20 @@ static inline bool of_property_read_bool(const struct =
-device_node *np,
- =09return prop ? true : false;
- }
-=20
-+static inline int of_property_read_u8(const struct device_node *np,
-+=09=09=09=09       const char *propname,
-+=09=09=09=09       u8 *out_value)
-+{
-+=09return of_property_read_u8_array(np, propname, out_value, 1);
-+}
-+
-+static inline int of_property_read_u16(const struct device_node *np,
-+=09=09=09=09       const char *propname,
-+=09=09=09=09       u16 *out_value)
-+{
-+=09return of_property_read_u16_array(np, propname, out_value, 1);
-+}
-+
- static inline int of_property_read_u32(const struct device_node *np,
- =09=09=09=09       const char *propname,
- =09=09=09=09       u32 *out_value)
+Hypothetical situation: OMAP4 has keypad as the default pin mode and low
+power is handled by the HW, so keypad could have pinctlr "boilerplate"
+factored out. Then comes OMAP5 and low power mode has to be handled by
+SW for whatever reason (maybe there are more than one low power mode).
+Then we will need to patch omap4-keypad.c to remove "dont_touch_my_pins"
+flag and add pinctrl support.
+
+When you think of the possibilities of every single driver going
+throught that it sounds a lot nicer to not make that decision IMHO and
+keep pinctrl explicit.
+
+This is not like module_*_driver() macro.
+
 --=20
-1.7.12.rc2.18.g61b472e
+balbi
+
+--ADZbWkCsHQ7r3kzd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQiiu0AAoJEIaOsuA1yqRERi4P/25UPM0I00rC+y1mzIxVv9Uv
+QUnLm6YLewXTTH/aEBQnJ7e6VCTuLfc8NXjSbGyvOxu1gESeSRPiBSr/meEwI2Cp
+3aXxW/wt3Q4zSzbCzn6o1cN7Gk+2GQWs75kxVepvwMmgIuIg2b826yPFEzCu1DTo
+YzEQz2oESCAGDk+ilLXxZ7J2Ozf6ZWHc8x2xSPQVLL4QgXUVo1ODIh0RSA95g6/4
+pmjj0XtBoNkCSfZHfSa8PL/NISNok4vIanu8bH9TGCmoYOVJIp3ThWk+H6gnMasW
+RqT6H6jMXc0+gRu+1irtnUXrNYyk/VdVvVomWDoGHQhXUuaMec8szm1CzvJpPY7v
+mGVGZSiZaUrnOLYBtx5dYFlLxdkFDlo4Iaec5daBRBVmdoj27DtyRSdNwGqH3vj0
+bW1sDGgld3ZSL2IbTdJkBdFVzUmPlpdFjWCTHpcQhW1BusL/kF4xM1ItxlXyZW1R
+tVFEbKyt2zWy4OfSqmkzV6gp5/kDwCTSDYJeCgymsvYC4BRev/xU7buS5PZ5kAVx
+6HMQwKWe4sGgFYJOv5Fd6MHAvTgtEU/CR9lbAe4fDnEfU5ro7ec/e3Z8evaNLGg0
+mnsBd4o8wxNjAry1JuRffqrT7P5fcf0iU6DmHQooc1eD5Fq/RElgYp+JzvM7/4q5
+YYJ5aOnic6wz5tKqtwWx
+=oMXy
+-----END PGP SIGNATURE-----
+
+--ADZbWkCsHQ7r3kzd--
