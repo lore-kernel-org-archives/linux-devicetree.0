@@ -1,64 +1,99 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/5] drivers: usb: otg: make twl6030_usb as a
- comparator driver to omap_usb2
-Date: Fri, 26 Oct 2012 12:01:30 -0700
-Message-ID: <20121026190129.GP11908@atomide.com>
-References: <1346943430-18236-1-git-send-email-kishon@ti.com>
- <1346943430-18236-3-git-send-email-kishon@ti.com>
- <CAH+eYFAj1ecvmiJCu8QDCr3LjHT5eXjq6zsZMiVRPROoWcDuNQ@mail.gmail.com>
- <CAAe_U6K1RXA3b5u9WvE=2VoXym9Vj3KM7c0J27jKz+2KrV4tsg@mail.gmail.com>
- <CAH+eYFAhVE8cAte2PFk3jinV9n3m+eDLtE43QxzRXMScnFGcrA@mail.gmail.com>
- <508AA94B.10504@ti.com>
- <508AAA85.6070905@ti.com>
- <alpine.DEB.2.00.1210261750430.7573@utopia.booyaka.com>
- <508ACF0B.60808@ti.com>
- <508AD1E7.3080101@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <508AD1E7.3080101@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, Roger Quadros <rogerq@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Rabin Vincent <rabin@rab.in>, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V4 REPOST 1/2] kbuild: centralize .dts->.dtb rule
+Date: Fri, 26 Oct 2012 13:29:56 -0600
+Message-ID: <1351279797-16450-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Michal Marek <mmarek@suse.cz>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <b-cousson@ti.com> [121026 11:11]:
-> On 10/26/2012 07:57 PM, Benoit Cousson wrote:
-> > Hi Paul,
-> > 
-> > On 10/26/2012 07:54 PM, Paul Walmsley wrote:
-> >> On Fri, 26 Oct 2012, Benoit Cousson wrote:
-> >>
-> >>> On 10/26/2012 05:16 PM, Roger Quadros wrote:
-> >>>
-> >>>> I still can't get musb to work on 3.7-rc2. Apparently it is still
-> >>>> missing the patches from Benoit's for_3.7/dts_part2.
-> >>>>
-> >>>> Maybe I just need to wait for it to be merged?
-> >>>
-> >>> They are now in a for_3.8/dts. Unfortunately, one patch that was adding
-> >>> ctrl_module address in the USB data was rejected and thus I'm not sure
-> >>> it will work without that.
-> >>
-> >> For v3.7-rc timeframe, looks like it's waiting on an ack from you:
-> >>
-> >> http://www.spinics.net/lists/arm-kernel/msg201028.html
-> > 
-> > Oups, I missed that one. But I thought Roger was mentioning the DT patch
-> > and not that one.
-> > 
-> > Anyway, I will answer to Tony. Thanks for the reminder Paul.
-> 
-> Well, in fact, I cannot even find the original email in my mailbox :-(
-> I was banned again from linux-omap around that time, so that might be
-> the reason.
-> 
-> So please take that hacky patch if it prevents the regression.
+From: Stephen Warren <swarren@nvidia.com>
 
-OK yes it seems like that's the only option we have until
-omap4 is device tree only.
+All architectures that use cmd_dtc do so in the same way. Move the build
+rule to a central location to avoid duplication.
 
-Regards,
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+v4: No change.
+v3: No change.
+v2: New patch.
+---
+ arch/arm/boot/Makefile      |    4 ----
+ arch/c6x/boot/Makefile      |    3 ---
+ arch/openrisc/boot/Makefile |    3 ---
+ arch/powerpc/boot/Makefile  |    4 ----
+ scripts/Makefile.lib        |    3 +++
+ 5 files changed, 3 insertions(+), 14 deletions(-)
 
-Tony
+diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
+index f2aa09e..208bb4c 100644
+--- a/arch/arm/boot/Makefile
++++ b/arch/arm/boot/Makefile
+@@ -61,10 +61,6 @@ endif
+ 
+ targets += $(dtb-y)
+ 
+-# Rule to build device tree blobs
+-$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+-	$(call if_changed_dep,dtc)
+-
+ $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
+ 
+ clean-files := *.dtb
+diff --git a/arch/c6x/boot/Makefile b/arch/c6x/boot/Makefile
+index 6891257..ad605fb 100644
+--- a/arch/c6x/boot/Makefile
++++ b/arch/c6x/boot/Makefile
+@@ -12,9 +12,6 @@ ifneq ($(DTB),)
+ obj-y += linked_dtb.o
+ endif
+ 
+-$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+-	$(call if_changed_dep,dtc)
+-
+ quiet_cmd_cp = CP      $< $@$2
+ 	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
+ 
+diff --git a/arch/openrisc/boot/Makefile b/arch/openrisc/boot/Makefile
+index 0995835..fd329bd 100644
+--- a/arch/openrisc/boot/Makefile
++++ b/arch/openrisc/boot/Makefile
+@@ -10,6 +10,3 @@ obj-y += $(BUILTIN_DTB)
+ clean-files := *.dtb.S
+ 
+ #DTC_FLAGS ?= -p 1024
+-
+-$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+-	$(call if_changed_dep,dtc)
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 6a15c96..90206f2 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -356,10 +356,6 @@ $(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
+ $(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits)
+ 	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
+ 
+-# Rule to build device tree blobs
+-$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+-	$(call if_changed_dep,dtc)
+-
+ # If there isn't a platform selected then just strip the vmlinux.
+ ifeq (,$(image-y))
+ image-y := vmlinux.strip
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 0be6f11..425578e 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -266,6 +266,9 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
+ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
+ 
++$(obj)/%.dtb: $(src)/dts/%.dts FORCE
++	$(call if_changed_dep,dtc)
++
+ # Bzip2
+ # ---------------------------------------------------------------------------
+ 
+-- 
+1.7.0.4
