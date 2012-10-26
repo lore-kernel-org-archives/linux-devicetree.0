@@ -1,40 +1,32 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] ARM: at91: using for_each_set_bit to simplify the code
-Date: Fri, 26 Oct 2012 22:50:54 +0800
-Message-ID: <CAPgLHd8V+pcvfhCnkjmc=oteRaav4p97Jiyd7NRJPQ1DCF+QhQ@mail.gmail.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: doc: Binding document for ehci-platform
+ driver
+Date: Fri, 26 Oct 2012 10:54:04 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1210261052230.6007-100000@iolanthe.rowland.org>
+References: <20121026080254.GD3009@breakpoint.cc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121026080254.GD3009-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>
+Cc: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Fri, 26 Oct 2012, Sebastian Andrzej Siewior wrote:
 
-Using for_each_set_bit() to simplify the code.
+> On Thu, Oct 25, 2012 at 10:36:14AM -0400, Alan Stern wrote:
+> > What happens if the drivers get probed in the wrong order?  That is, if 
+> > ehci-platform gets probed before ehci-spear (or whatever)?
+> 
+> The "wrong" driver may get loaded.
 
-dpatch engine is used to auto generate this patch.
-(https://github.com/weiyj/dpatch)
+That's my point.  That's why ehci-platform.c should not claim to match 
+all devices listing "usb-ehci" in their compatible property.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/pinctrl/pinctrl-at91.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Alan Stern
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 01bf924..cccac23 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1220,10 +1220,8 @@ static void gpio_irq_handler(unsigned irq, struct irq_desc *desc)
- 			continue;
- 		}
- 
--		n = find_first_bit(&isr, BITS_PER_LONG);
--		while (n < BITS_PER_LONG) {
-+		for_each_set_bit(n, &isr, BITS_PER_LONG) {
- 			generic_handle_irq(irq_find_mapping(at91_gpio->domain, n));
--			n = find_next_bit(&isr, BITS_PER_LONG, n + 1);
- 		}
- 	}
- 	chained_irq_exit(chip, desc);
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
