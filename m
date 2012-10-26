@@ -1,13 +1,11 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 1/2] of: add of_property_count_phandles
-Date: Fri, 26 Oct 2012 15:48:44 +0100
-Message-ID: <1351262925-10306-2-git-send-email-mark.rutland@arm.com>
-References: <1351262925-10306-1-git-send-email-mark.rutland@arm.com>
+Subject: [RFC 0/2] Representing interrupt affinity in devicetree
+Date: Fri, 26 Oct 2012 15:48:43 +0100
+Message-ID: <1351262925-10306-1-git-send-email-mark.rutland@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1351262925-10306-1-git-send-email-mark.rutland@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,92 +19,114 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: Mark Rutland <mark.rutland@arm.com>, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, devicetree-discuss@lists.ozlabs.org, will.deacon@arm.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Though of_parse_phandle handles lists of phandles, and takes an index
-parameter, there is no standard way of discovering how many phandles are
-present on a node. This patch adds a function to count how many phandles
-are in a phandle list.
+Current devicetree bindings for devices which use cpu-affine shared interrupts
+assume that interrupts are listed in ascending order of physical cpu id
+(MPIDR.Aff{2,1,0}). This is problematic for drivers because:
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
----
- drivers/of/base.c  |   39 +++++++++++++++++++++++++++++++++++++++
- include/linux/of.h |    8 ++++++++
- 2 files changed, 47 insertions(+), 0 deletions(-)
+(1) The driver must convert each physical id to a logical id for the purpose of
+    managing interrupts.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index af3b22a..30ae562 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -884,6 +884,45 @@ int of_property_count_strings(struct device_node *np, const char *propname)
- EXPORT_SYMBOL_GPL(of_property_count_strings);
- 
- /**
-+ * of_property_count_phandles - find and return the number of phandles from a
-+ * multiple phandles property.
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ *
-+ * Search for a property in a device tree node and retrieve the number of
-+ * phandles contained in it. Returns the number of phandles on success, -ENOENT
-+ * if the property does not exist, -ENODATA if there are no phandles, and
-+ * -EINVAL if the property is not correctly sized for an array of phandles.
-+ */
-+int of_property_count_phandles(struct device_node *np, const char *propname)
-+{
-+	int size, count, i;
-+	const __be32 *phandle;
-+
-+	phandle = of_get_property(np, propname, &size);
-+
-+	if (!phandle)
-+		return -ENOENT;
-+	if (size == 0)
-+		return -ENODATA;
-+	if (size % (sizeof *phandle))
-+		return -EINVAL;
-+
-+	count = size / (sizeof(*phandle));
-+
-+	/* Check the phandle targets actually exist */
-+	for (i = 0; i < count; i++) {
-+		struct device_node *node = of_parse_phandle(np, propname, i);
-+		if (!node)
-+			return -EINVAL;
-+		of_node_put(node);
-+	}
-+
-+	return count;
-+}
-+EXPORT_SYMBOL_GPL(of_property_count_phandles);
-+
-+/**
-  * of_parse_phandle - Resolve a phandle property to a device_node pointer
-  * @np: Pointer to device node holding phandle property
-  * @phandle_name: Name of property holding a phandle value
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b4e50d5..1f03f46 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -258,6 +258,8 @@ extern int of_modalias_node(struct device_node *node, char *modalias, int len);
- extern struct device_node *of_parse_phandle(struct device_node *np,
- 					    const char *phandle_name,
- 					    int index);
-+extern int of_property_count_phandles(struct device_node *np,
-+				      const char *propname);
- extern int of_parse_phandle_with_args(struct device_node *np,
- 	const char *list_name, const char *cells_name, int index,
- 	struct of_phandle_args *out_args);
-@@ -411,6 +413,12 @@ static inline int of_property_match_string(struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline int of_property_count_phandles(struct device_node *np,
-+					     const char *propname)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline struct device_node *of_parse_phandle(struct device_node *np,
- 						   const char *phandle_name,
- 						   int index)
--- 
-1.7.0.4
+(2) In multi-cluster systems the physical ids are not necessarily contiguous,
+    and drivers cannot simply iterate over ids from 0 to NR_CPUS.
+
+(3) It is not possible to specify sets of interrupts which are wired to a
+    subset of cpus (i.e. clusters) not starting at physical id 0, as we can't
+    specify which cpu to start from, and can't skip cpus. This makes it
+    impossible to represent some devices (e.g. cpu PMUs) which may not exist
+    in the first cluster.
+
+(4) Some devices may either be wired with PPIs or SPIs. It is not possible to
+    differentiate the two cases in general from the interrupts list (e.g. when
+    a device has multiple PPIs wired to all cpus).
+
+To represent the general case, we require a mechanism to describe the cpu
+affinity of a device, and a consistent way to map each interrupt to a cpu (or
+set of cpus). So far, the only usable mechanism I've been able to come up with
+is the following:
+
+In addition to the interrupts list, we add an optional 'affinity' list - a list
+of phandles, where each phandle points to a cpu node or a cluster node (from
+Lorenzo Pieralisi's cpu topology bindings [1]). Each element in the interrupts
+list has a corresponding element in the affinity list, at the same index.
+Interrupts defined as cluster affine are PPIs, and those defined cpu-affine are
+SPIs. This would look something like:
+
+> device@0 {
+> 	compatible = "example,example-affine-device"
+> 	interrupts = <0 130 4>,
+> 	             <0 131 4>,
+> 	             <1 12 4>;
+> 	affinity   = <&cpu0>,
+>                    <&cpu1>,
+> 	             <&cluster1>;
+> };
+
+To request/free interrupts, drivers would walk over all interrupts, and request
+the affine cpu(s), which can be automatically mapped to logical ids by common
+code. This fixes issues 1, 2, and 3. While 4 is partially solved, it doesn't
+provide any additional information when you may have multiple interrupts for a
+cpu.
+
+The following patches implement common code that could be used by drivers,
+assuming the devicetree uses the cluster topology bindings. To not break
+existing bindings, when an affinity parameter is not present, interrupts are
+assumed to be in increasing order of MPIDR.Aff0, starting at 0. Logical mapping
+is always applied to cpu ids.
+
+The patches are based on v3.7-rc2, with Lorenzo Pieralisi's logical mappings
+look-up patch [2] applied.
+
+Using this code, an interrupt registration loop would look something like:
+
+> void request_irqs(...)
+> {
+> 	int i, irqs, irq, c, cpus, cpu;
+>
+> 	irqs = pdev->num_resources;
+> 	for (i = 0; i < irqs; i++) {
+> 		irq = platform_get_irq(pdev, i);
+> 		cpus = count_irq_affine_cpus(pdev, i);
+>
+>		/* SPI if affine to 1 cpu */
+>		if (cpus == 1) {
+>			cpu = get_irq_affine_cpu(pdev, i, 1);
+>			if (cpu < 0)
+>				continue;
+>			irq_set_affinity(irq, cpumask_of(cpu));
+>			request_irq(...);
+>
+>			continue;
+>		}
+>
+>		/* PPI, build cpumask and register */
+> 		for (c = 0; c < cpus; c++) {
+> 			cpu = get_irq_affine_cpu(pdev, i, c);
+>
+> 			/* test, add to mask */
+> 			...
+> 		}
+>		
+>		request_percpu_irq(...);
+> 	}
+> }
+
+Does anyone have any better ideas?
+
+Any and all feedback welcome.
+
+Thanks,
+Mark.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-January/080869.html
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-October/125882.html
+
+Mark Rutland (2):
+  of: add of_property_count_phandles
+  ARM: Add functions to parse dt irq affinity
+
+ arch/arm/include/asm/dt_irq.h |   64 ++++++++++++++++
+ arch/arm/kernel/devtree.c     |  165 +++++++++++++++++++++++++++++++++++++++++
+ drivers/of/base.c             |   39 ++++++++++
+ include/linux/of.h            |    8 ++
+ 4 files changed, 276 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/include/asm/dt_irq.h
