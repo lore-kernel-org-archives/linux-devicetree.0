@@ -1,36 +1,112 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] ARM: at91: remove duplicated include from pinctrl-at91.c
-Date: Fri, 26 Oct 2012 22:48:02 +0800
-Message-ID: <CAPgLHd9=dL_pNFc4-a7ifuoi9rCgJT=gtCiowF9hRmragvq6fg@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 1/2] of: add of_property_count_phandles
+Date: Fri, 26 Oct 2012 15:48:44 +0100
+Message-ID: <1351262925-10306-2-git-send-email-mark.rutland@arm.com>
+References: <1351262925-10306-1-git-send-email-mark.rutland@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1351262925-10306-1-git-send-email-mark.rutland@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, devicetree-discuss@lists.ozlabs.org, will.deacon@arm.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Though of_parse_phandle handles lists of phandles, and takes an index
+parameter, there is no standard way of discovering how many phandles are
+present on a node. This patch adds a function to count how many phandles
+are in a phandle list.
 
-Remove duplicated include.
-
-dpatch engine is used to auto generate this patch.
-(https://github.com/weiyj/dpatch)
-
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
 ---
- drivers/pinctrl/pinctrl-at91.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/of/base.c  |   39 +++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h |    8 ++++++++
+ 2 files changed, 47 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 01bf924..7bfad34 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -20,7 +20,6 @@
- #include <linux/irqdomain.h>
- #include <linux/io.h>
- #include <linux/gpio.h>
--#include <linux/irqdomain.h>
- #include <linux/pinctrl/machine.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinctrl.h>
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index af3b22a..30ae562 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -884,6 +884,45 @@ int of_property_count_strings(struct device_node *np, const char *propname)
+ EXPORT_SYMBOL_GPL(of_property_count_strings);
+ 
+ /**
++ * of_property_count_phandles - find and return the number of phandles from a
++ * multiple phandles property.
++ * @np:		device node from which the property value is to be read.
++ * @propname:	name of the property to be searched.
++ *
++ * Search for a property in a device tree node and retrieve the number of
++ * phandles contained in it. Returns the number of phandles on success, -ENOENT
++ * if the property does not exist, -ENODATA if there are no phandles, and
++ * -EINVAL if the property is not correctly sized for an array of phandles.
++ */
++int of_property_count_phandles(struct device_node *np, const char *propname)
++{
++	int size, count, i;
++	const __be32 *phandle;
++
++	phandle = of_get_property(np, propname, &size);
++
++	if (!phandle)
++		return -ENOENT;
++	if (size == 0)
++		return -ENODATA;
++	if (size % (sizeof *phandle))
++		return -EINVAL;
++
++	count = size / (sizeof(*phandle));
++
++	/* Check the phandle targets actually exist */
++	for (i = 0; i < count; i++) {
++		struct device_node *node = of_parse_phandle(np, propname, i);
++		if (!node)
++			return -EINVAL;
++		of_node_put(node);
++	}
++
++	return count;
++}
++EXPORT_SYMBOL_GPL(of_property_count_phandles);
++
++/**
+  * of_parse_phandle - Resolve a phandle property to a device_node pointer
+  * @np: Pointer to device node holding phandle property
+  * @phandle_name: Name of property holding a phandle value
+diff --git a/include/linux/of.h b/include/linux/of.h
+index b4e50d5..1f03f46 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -258,6 +258,8 @@ extern int of_modalias_node(struct device_node *node, char *modalias, int len);
+ extern struct device_node *of_parse_phandle(struct device_node *np,
+ 					    const char *phandle_name,
+ 					    int index);
++extern int of_property_count_phandles(struct device_node *np,
++				      const char *propname);
+ extern int of_parse_phandle_with_args(struct device_node *np,
+ 	const char *list_name, const char *cells_name, int index,
+ 	struct of_phandle_args *out_args);
+@@ -411,6 +413,12 @@ static inline int of_property_match_string(struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
++static inline int of_property_count_phandles(struct device_node *np,
++					     const char *propname)
++{
++	return -ENOSYS;
++}
++
+ static inline struct device_node *of_parse_phandle(struct device_node *np,
+ 						   const char *phandle_name,
+ 						   int index)
+-- 
+1.7.0.4
