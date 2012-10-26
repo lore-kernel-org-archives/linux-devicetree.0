@@ -1,158 +1,103 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [RFC PATCH 3.7.0-rc2] dt: match id-table before creating platform
- device
-Date: Fri, 26 Oct 2012 08:12:38 +0100
-Message-ID: <508A37E6.8000401@st.com>
-References: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com>
- <5086988F.6090107@gmail.com>
-Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
+From: Lucas Stach <dev@lynxeye.de>
+Subject: Re: [PATCH 09/14] fdt: Add polarity-aware gpio functions
+ to fdtdec
+Date: Fri, 26 Oct 2012 09:17:22 +0200
+Message-ID: <1351235842.20572.10.camel@tellur>
+References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
+	<1351218671-15228-10-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5086988F.6090107-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1351218671-15228-10-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: Tom Rini <trini@ti.com>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Sean Paul <seanpaul@chromium.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/10/12 14:15, Rob Herring wrote:
-re-sending my reply again, as it did not appear in my inbox from dt
-mailing list.
-> Adding lkml. DT patches should go to both lists.
->
-> On 10/23/2012 05:30 AM, Srinivas KANDAGATLA wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->>
->> As part of of_platform_populate call, the existing code iterates each
->> child node and then creates a platform device for each child, however
->> there is bug in the code which does not check the match table before
->> creating the platform device. This might result creating two platfrom
->> devices and also invoking driver probe twice, which is incorrect.
->>
->> This patch moves a existing of_match_node check to start of the function
->> to fix the bug, doing this way will return immediately without creating
->> any datastructures if the child does not match the supplied match-table.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
->> ---
->>  drivers/of/platform.c |    5 ++++-
->>  1 files changed, 4 insertions(+), 1 deletions(-)
->>
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index b80891b..1aaa560 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -367,6 +367,9 @@ static int of_platform_bus_create(struct device_node *bus,
->>  		return 0;
->>  	}
->>  
->> +	if (!of_match_node(matches, bus))
->> +		return 0;
->> +
-> This is not right. This function is recursive and this change would
-> break that.
+Am Donnerstag, den 25.10.2012, 19:31 -0700 schrieb Simon Glass:
+> From: Sean Paul <seanpaul@chromium.org>
+> 
+> Add get and set gpio functions to fdtdec that take into account the
+> polarity field in fdtdec_gpio_state.flags.
+> 
+In another thread Stephen Warren and I came to the conclusion that we
+most likely should remove this polarity flag from the GPIO bindings.
 
-You are correct, this change might break the functionality.
+Currently it is only for the USB VBUS GPIO which should move over to
+regulators once they land in U-Boot. Do you have any other applications
+for this flag, so we might reconsider removing it?
 
-
->  Perhaps we could only call of_platform_device_create_pdata
-> if !of_match_node instead, but I'm not completely sure that would be the
-> right thing to do.
-
-I did try to do the same thing in the patch.
-May be I should have moved check just before calling
-of_platform_device_create_pdata?
-
->  There's also some historical things we have to
-> support which is why we have of_platform_populate and of_platform_bus_probe.
-
-m just trying to understand the difference between of_platform_populate
-and of_platform_bus_probe.
-Looking at the function documentation, which states
-of_platform_bus_probe will only create children of the root which are
-selected by the @matches argument.
-
-of_platform_populate walks the device tree and creates devices from
-nodes.  It differs in that it follows the modern convention of requiring
-all device nodes to have a 'compatible' property, and it is suitable for
-creating devices which are children of the root node.
-
-Lets say If we call of_platform_populate(NULL, match_table, NULL, NULL)
-on a device trees like the below with
-struct of_device_id match_table[] = {
-    { .compatible = "simple-bus", }
-    {}
-};
-
-parent@0{
-    compatible    = "xxx,parent1", "simple-bus";
-    ...
-    child@0 {
-        compatible    = "xxx,child0", "simple-bus";
-        ...
-    };
-    child@1 {
-        compatible    = "xxx,child1";
-        ...
-    };
-    child@2 {
-        compatible    = "xxx,child2", "simple-bus";
-        ...
-    };
-};
-
-of_platform_bus_probe would create platform-devices for parent@0,
-child@0and child@2
-where as
-of_platform_populate would create platform-devices for parent@0,
-child@0, child@1 and child@2 nodes.
-
-So the question is
-why do we need to have @matches argument to of_platform_populate in the
-first place, if it creates all the devices by walking the dt nodes?
-
-It is bit confusing, As some platforms use of_platform_populate(NULL,
-of_default_bus_match_table, NULL, NULL) assuming that only matching
-nodes will end up having platform device.
-Also
-some platforms use of_platform_bus_probe(NULL, match_table, NULL), 
-where match table is of_default_bus_match_table.
-
-Am not 100% sure what is the right solution, but I think lot of platforms would want behavior like of_platform_bus_probe which takes lookups aswell.
-
-IMO, we could do two things to avoid this confusion in future and achieve the expected behaviour.
-
-1. Remove matches from of_platform_populate
-2. add Lookup argument to of_platform_bus_probe
-
-??
-
---srini
-
-> Rob
->
->>  	auxdata = of_dev_lookup(lookup, bus);
->>  	if (auxdata) {
->>  		bus_id = auxdata->name;
->> @@ -379,7 +382,7 @@ static int of_platform_bus_create(struct device_node *bus,
->>  	}
->>  
->>  	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
->> -	if (!dev || !of_match_node(matches, bus))
->> +	if (!dev)
->>  		return 0;
->>  
->>  	for_each_child_of_node(bus, child) {
->>
->
->
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Simon Glass <sjg@chromium.org>
+> ---
+>  include/fdtdec.h |   16 ++++++++++++++++
+>  lib/fdtdec.c     |   20 ++++++++++++++++++++
+>  2 files changed, 36 insertions(+), 0 deletions(-)
+> 
+> diff --git a/include/fdtdec.h b/include/fdtdec.h
+> index 12f73a7..17daa99 100644
+> --- a/include/fdtdec.h
+> +++ b/include/fdtdec.h
+> @@ -90,6 +90,22 @@ struct fdt_gpio_state {
+>  #define fdt_gpio_isvalid(x) ((x)->gpio != FDT_GPIO_NONE)
+>  
+>  /**
+> + * Read the GPIO taking into account the polarity of the pin.
+> + *
+> + * @param gpio		pointer to the decoded gpio
+> + * @return value of the gpio if successful, < 0 if unsuccessful
+> + */
+> +int fdtdec_get_gpio(struct fdt_gpio_state *gpio);
+> +
+> +/**
+> + * Write the GPIO taking into account the polarity of the pin.
+> + *
+> + * @param gpio		pointer to the decoded gpio
+> + * @return 0 if successful
+> + */
+> +int fdtdec_set_gpio(struct fdt_gpio_state *gpio, int val);
+> +
+> +/**
+>   * Find the next numbered alias for a peripheral. This is used to enumerate
+>   * all the peripherals of a certain type.
+>   *
+> diff --git a/lib/fdtdec.c b/lib/fdtdec.c
+> index 6c417d2..91ba558 100644
+> --- a/lib/fdtdec.c
+> +++ b/lib/fdtdec.c
+> @@ -487,6 +487,26 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
+>  	return err == 1 ? 0 : err;
+>  }
+>  
+> +int fdtdec_get_gpio(struct fdt_gpio_state *gpio)
+> +{
+> +	int val;
+> +
+> +	if (!fdt_gpio_isvalid(gpio))
+> +		return -1;
+> +
+> +	val = gpio_get_value(gpio->gpio);
+> +	return gpio->flags & FDT_GPIO_ACTIVE_LOW ? val ^ 1 : val;
+> +}
+> +
+> +int fdtdec_set_gpio(struct fdt_gpio_state *gpio, int val)
+> +{
+> +	if (!fdt_gpio_isvalid(gpio))
+> +		return -1;
+> +
+> +	val = gpio->flags & FDT_GPIO_ACTIVE_LOW ? val ^ 1 : val;
+> +	return gpio_set_value(gpio->gpio, val);
+> +}
+> +
+>  int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
+>  {
+>  	/*
