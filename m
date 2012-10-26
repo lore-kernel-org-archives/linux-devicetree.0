@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 03/14] fdt: Add fdtdec_decode_region() to decode memory region
-Date: Thu, 25 Oct 2012 19:31:00 -0700
-Message-ID: <1351218671-15228-4-git-send-email-sjg@chromium.org>
+Subject: [PATCH 09/14] fdt: Add polarity-aware gpio functions to fdtdec
+Date: Thu, 25 Oct 2012 19:31:06 -0700
+Message-ID: <1351218671-15228-10-git-send-email-sjg@chromium.org>
 References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,82 +19,78 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A memory region has a start and a size and is often specified in
-a node by a 'reg' property. Add a function to decode this information
-from the fdt.
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
+Add get and set gpio functions to fdtdec that take into account the
+polarity field in fdtdec_gpio_state.flags.
+
+Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- include/fdtdec.h |   19 +++++++++++++++++++
- lib/fdtdec.c     |   17 +++++++++++++++++
+ include/fdtdec.h |   16 ++++++++++++++++
+ lib/fdtdec.c     |   20 ++++++++++++++++++++
  2 files changed, 36 insertions(+), 0 deletions(-)
 
 diff --git a/include/fdtdec.h b/include/fdtdec.h
-index e828662..341e6a1 100644
+index 12f73a7..17daa99 100644
 --- a/include/fdtdec.h
 +++ b/include/fdtdec.h
-@@ -40,10 +40,12 @@
- typedef u64 fdt_addr_t;
- #define FDT_ADDR_T_NONE (-1ULL)
- #define fdt_addr_to_cpu(reg) be64_to_cpu(reg)
-+#define fdt_size_to_cpu(reg) be64_to_cpu(reg)
- #else
- typedef u32 fdt_addr_t;
- #define FDT_ADDR_T_NONE (-1U)
- #define fdt_addr_to_cpu(reg) be32_to_cpu(reg)
-+#define fdt_size_to_cpu(reg) be32_to_cpu(reg)
- #endif
+@@ -90,6 +90,22 @@ struct fdt_gpio_state {
+ #define fdt_gpio_isvalid(x) ((x)->gpio != FDT_GPIO_NONE)
  
- /* Information obtained about memory from the FDT */
-@@ -408,4 +410,21 @@ int fdtdec_get_byte_array(const void *blob, int node, const char *prop_name,
-  */
- const u8 *fdtdec_locate_byte_array(const void *blob, int node,
- 			     const char *prop_name, int count);
+ /**
++ * Read the GPIO taking into account the polarity of the pin.
++ *
++ * @param gpio		pointer to the decoded gpio
++ * @return value of the gpio if successful, < 0 if unsuccessful
++ */
++int fdtdec_get_gpio(struct fdt_gpio_state *gpio);
 +
 +/**
-+ * Look up a property in a node which contains a memory region address and
-+ * size. Then return a pointer to this address.
++ * Write the GPIO taking into account the polarity of the pin.
 + *
-+ * The property must hold one address with a length. This is only tested on
-+ * 32-bit machines.
-+ *
-+ * @param blob		FDT blob
-+ * @param node		node to examine
-+ * @param prop_name	name of property to find
-+ * @param ptrp		returns pointer to region, or NULL if no address
-+ * @param size		returns size of region
-+ * @return 0 if ok, -1 on error (propery not found)
++ * @param gpio		pointer to the decoded gpio
++ * @return 0 if successful
 + */
-+int fdtdec_decode_region(const void *blob, int node,
-+		const char *prop_name, void **ptrp, size_t *size);
- #endif
++int fdtdec_set_gpio(struct fdt_gpio_state *gpio, int val);
++
++/**
+  * Find the next numbered alias for a peripheral. This is used to enumerate
+  * all the peripherals of a certain type.
+  *
 diff --git a/lib/fdtdec.c b/lib/fdtdec.c
-index 2d60c8a..5570972 100644
+index 6c417d2..91ba558 100644
 --- a/lib/fdtdec.c
 +++ b/lib/fdtdec.c
-@@ -542,3 +542,20 @@ char *fdtdec_get_config_string(const void *blob, const char *prop_name)
- 
- 	return (char *)nodep;
+@@ -487,6 +487,26 @@ int fdtdec_decode_gpio(const void *blob, int node, const char *prop_name,
+ 	return err == 1 ? 0 : err;
  }
-+
-+int fdtdec_decode_region(const void *blob, int node,
-+		const char *prop_name, void **ptrp, size_t *size)
+ 
++int fdtdec_get_gpio(struct fdt_gpio_state *gpio)
 +{
-+	const fdt_addr_t *cell;
-+	int len;
++	int val;
 +
-+	debug("%s: %s\n", __func__, prop_name);
-+	cell = fdt_getprop(blob, node, prop_name, &len);
-+	if (!cell || (len != sizeof(fdt_addr_t) * 2))
++	if (!fdt_gpio_isvalid(gpio))
 +		return -1;
 +
-+	*ptrp = (void *)fdt_addr_to_cpu(*cell);
-+	*size = fdt_size_to_cpu(cell[1]);
-+	debug("%s: size=%zx\n", __func__, *size);
-+	return 0;
++	val = gpio_get_value(gpio->gpio);
++	return gpio->flags & FDT_GPIO_ACTIVE_LOW ? val ^ 1 : val;
 +}
++
++int fdtdec_set_gpio(struct fdt_gpio_state *gpio, int val)
++{
++	if (!fdt_gpio_isvalid(gpio))
++		return -1;
++
++	val = gpio->flags & FDT_GPIO_ACTIVE_LOW ? val ^ 1 : val;
++	return gpio_set_value(gpio->gpio, val);
++}
++
+ int fdtdec_setup_gpio(struct fdt_gpio_state *gpio)
+ {
+ 	/*
 -- 
 1.7.7.3
