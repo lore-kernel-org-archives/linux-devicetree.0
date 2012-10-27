@@ -1,57 +1,65 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V4 REPOST 2/2] kbuild: run the pre-processor on *.dts
- files
-Date: Sat, 27 Oct 2012 23:06:39 +0100
-Message-ID: <20121027220638.GK4564@opensource.wolfsonmicro.com>
-References: <1351279797-16450-1-git-send-email-swarren@wwwdotorg.org>
- <1351279797-16450-2-git-send-email-swarren@wwwdotorg.org>
- <508AEB3E.6090405@gmail.com>
+Subject: Re: [PATCH 4/5] ASoC: sam9g20_wm8731: convert to device tree support
+Date: Sat, 27 Oct 2012 23:12:05 +0100
+Message-ID: <20121027221204.GL4564@opensource.wolfsonmicro.com>
+References: <1350901079-18307-1-git-send-email-voice.shen@atmel.com>
+ <1350901079-18307-4-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Jl+DbTnyraiZ/loT"
-Return-path: <linux-arch-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="4ybNbZnZ8tziJ7D6"
+Return-path: <linux-sound-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <508AEB3E.6090405@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@secretlab.ca>, Scott Wood <scottwood@freescale.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Stephen Warren <swarren@nvidia.com>
+In-Reply-To: <1350901079-18307-4-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, jm.lin@atmel.com
 List-Id: devicetree@vger.kernel.org
 
 
---Jl+DbTnyraiZ/loT
+--4ybNbZnZ8tziJ7D6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Oct 26, 2012 at 02:57:50PM -0500, Rob Herring wrote:
+On Mon, Oct 22, 2012 at 06:17:58PM +0800, Bo Shen wrote:
+> Covert sam9g20 wm8731 to device tree support
+> And enable it through dts file
+>  =20
+>   Tested on sam9g20 EK board
 
-> Like I said previously, I think we first need guidelines on what is and
-> isn't acceptable use of C preprocessor in dts files.
+This needs to add binding documentation for the board.
 
-Didn't we already say that it was just the same rules as for things tht
-get included in .S files?  Besides for plain .dts files (as opposed to
-.dtsi files) it seems like if people break things they get to keep all
-the pieces without disrupting other people too much.
+> +	dai: dai {
+> +		compatible =3D "atmel,atmel-ssc-dai";
+> +		atmel,dai-master =3D <&ssc0>;
+> +	};
 
---Jl+DbTnyraiZ/loT
+This looks wrong - this is a Linux-specific virtual device sitting on
+top of the SSC which is the actual physical device.  The usual patterns
+would be something like have the machine driver register the DAI based
+on the SSC specified in the bindings (much like how you're handling the
+platform already).
+
+--4ybNbZnZ8tziJ7D6
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQjFrlAAoJELSic+t+oim9iD0P/1Au8aMgersUUADYNp9shCZq
-8XAAQ1fU+gA+J3tTTgL7lJvRBeHwflnPunkorYf4dYx84mAD7n96HiFBZ4x5YWei
-ceeHR67YTrQs5g9XOymAsjEWFsiCDdvug4j+IJLiMzTJ/LLFrj+tKnLazikpM7h/
-zswjSeDQfl5w7lnP+y3MySBIUSWcpMeMHKC8MW3Jl6h2zAIsy/mSSsTpW1xjtMv2
-lfclHSlzT3RCeregNlzPdltAQGHr8pkG59FTKn4N8a6EWHhzMUui5U0PtlmmyYLG
-UPaHcJKwOria2DMCeYY728mSzMBnKTTNj11+vEvgxkNVs60rfS8dTbLferIUtK38
-lTLEMp7xu45XKOLLRKhjUDPUlmH1vyLUTEGWY6lpOV1shSSqMVCP9zz5ORYUj+o6
-o9LYH4cjRSoo9I4OO9fEwnXP5QUcMGjICu5A7XW6GneLp/hCKgb3XLGEKS1LDIkG
-7NKma7OFdp9TNWJz5+ak4lgIg0x4u/j6YTro5wDnj81Bact7hELKy/s3trj+0vUp
-2vcajFRn0EZejSMWq7lF2CMsYycFXQS1XEy4lMjhDoVzDpGAuebjLn3RmjS063O2
-crq5MjAcMf3FuK7To4PAamqrwgOZpynWPy8zjxRi0kKBEaSINIIGRtS0WZUsro5T
-lWClyWHIqfTjVAzzbXJF
-=zCIY
+iQIcBAEBAgAGBQJQjFwpAAoJELSic+t+oim9vRkQAJsIx+TBrM0+Of00c95zpjh/
+A5MLpFAKKZTzxJ2CqhGwi6o8rL21GoKPF2kyIivDC9UY6HnDL7ysSP8rytwaxveT
+rdqcg+2qr9fOJR+Pm1TiC56DmJdAqxBNe9+1h2wxwEGmBLaT8WCHFERyTTw6PmoS
+xX9vLnAZhcY6eTC2FQ1rFW/naR5iQ2QZbYAyir7bvsX4TbJe930eCg2OnVBAj3Ee
+aV6oofaIinxFd9wk/FJGRzJkruIU+o4ScQ0aa5/3wkFURhghXBx7Jvy8fp/fH2d9
+qkmSykJsY5TjhEB1iQnJtyFC0MX5dSUY8BWj5q4g1atzMFY4KALu3gZtwa+Ag/nO
+Y/42WxH78a2MyG2qZ0KcqABdKGovOdb5mY2f1mVQyRwJNjrpxtKbRdPZFyLPlyx2
+oZHrC0n9hGhpcc7W9KDeZWKLvUyQaNb6PGxDRA3kxPF9hjE1/3ODu5VePIqbwQec
+1vUAjMiycelOi+ngjA5YpGxFe5G3JV/e1h+fUo4o/vy5BvdTNGEebUwGWmqq+pgN
+3DZf98GRfMuY1YiMHSO0emCswofI2C9QaiI+vGQyRNEjWHUqHHyz1XeMgvcuM5/z
+5mJLq7J8IIc2nK+MhvnGkIx8EpqkqOCg+p0kPtu27TMKmEPJbWZnOfqbJ65XCFHT
+b/Go7YimgBHmEoSJKZQ4
+=FY/O
 -----END PGP SIGNATURE-----
 
---Jl+DbTnyraiZ/loT--
+--4ybNbZnZ8tziJ7D6--
