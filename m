@@ -1,29 +1,36 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH -next] ARM: at91: using for_each_set_bit to simplify the code
-Date: Sun, 28 Oct 2012 20:31:36 +0100
-Message-ID: <CACRpkdZvTHXkWk4gKZZ0opt2oSpBY7OFbfpKNsf_EpNk-aodcA@mail.gmail.com>
-References: <CAPgLHd8V+pcvfhCnkjmc=oteRaav4p97Jiyd7NRJPQ1DCF+QhQ@mail.gmail.com>
+Subject: Re: [PATCH -next] ARM: at91: remove unused variable in at91_dt_node_to_map()
+Date: Sun, 28 Oct 2012 20:33:42 +0100
+Message-ID: <CACRpkdZOizwF85viBS+PVKRtUmcBYC8BT7ffGPHQ2p-B8Ef7+A@mail.gmail.com>
+References: <CAPgLHd8wKSubYtsnSm28-5R7aJ6uKcO1K31LCJCWTnU2A8+iPA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd8V+pcvfhCnkjmc=oteRaav4p97Jiyd7NRJPQ1DCF+QhQ@mail.gmail.com>
+In-Reply-To: <CAPgLHd8wKSubYtsnSm28-5R7aJ6uKcO1K31LCJCWTnU2A8+iPA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Wei Yongjun <weiyj.lk@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 26, 2012 at 4:50 PM, Wei Yongjun <weiyj.lk@gmail.com> wrote:
+On Fri, Oct 26, 2012 at 4:54 PM, Wei Yongjun <weiyj.lk@gmail.com> wrote:
 
 > From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 >
-> Using for_each_set_bit() to simplify the code.
+> The variable pin is initialized but never used
+> otherwise, so remove the unused variable.
 >
 > dpatch engine is used to auto generate this patch.
 > (https://github.com/weiyj/dpatch)
 >
 > Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Thanks patch applied to my AT91 branch.
+Thanks, patch applied to my AT91 branch.
+
+BTW I will change the subject from ARM: AT91 to pinctrl/at91 on
+all of them.
+
+Of future mailings please include Mr. Jean-Christophe Plaiginol-Villard
+on patches to the AT91 pinctrl driver.
 
 Yours,
 Linus Walleij
