@@ -1,72 +1,57 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Sun, 28 Oct 2012 21:12:52 +0100
-Message-ID: <CACRpkdaiLXVeUg1quuw3XPTenbKOjn+aWbGQezpcyvzQCtCWow@mail.gmail.com>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
-	<20121024161429.GA16350@core.coreip.homeip.net>
-	<CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
-	<4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH V3 1/3] clk: mvebu: add armada-370-xp specific clocks
+Date: Sun, 28 Oct 2012 22:42:52 +0100
+Message-ID: <508DA6DC.4070601@gmail.com>
+References: <1350303499-30868-1-git-send-email-gregory.clement@free-electrons.com> <1350303499-30868-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
+In-Reply-To: <1350303499-30868-2-git-send-email-gregory.clement@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Ben Dooks <ben-linux@fluff.org>, Ian Molton <ian.molton@codethink.co.uk>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Li Li <li.li@canonical.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 24, 2012 at 7:28 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-
->> drivers/spi/spi-pl022.c
+On 10/15/2012 02:18 PM, Gregory CLEMENT wrote:
+> Add Armada 370/XP specific clocks: core clocks and CPU clocks.
 >
-> Default/sleep transitions could be moved into bus code.
-
-No that's not a good idea as long as we have both the platform bus
-and the AMBA bus doing essentially the same thing. We will then be
-having two copies of the same code in two different busses running
-out of sync. There may be other busses too.
-
-But I could prepare static helpers in <linux/pinctrl/consumer.h>
-that any bus could use. Or any driver. Probably any driver,
-because of this:
-
-As noted the bus cannot really execute the pinctrl calls to
-e.g. put a drivers pins into "sleep". Since if e.g. the bus is walking
-the suspend() ladder, shall it put the pins into sleep *before*
-or *after* calling the suspend() hook in the driver?
-
-The answer is that it does not know. Because drivers have
-different needs. Depending on how the hardware and
-system is done.
-
-I already tried to make this point:
-
-pinctrl_set_state(state_sleep);
-clk_disable();
-power_off_voltage_domain();
-
-May for some drivers have to be:
-
-clk_disable();
-power_off_voltage_domain();
-pinctrl_set_state(state_sleep);
-
-(etc)
-
-I'm not making this up, it is a very real phenomenon on the
-Ux500 and I don't think we are unique.
-
-Moving this handling to bus code or anywhere else
-invariably implies that resource acquisition/release order
-does not matter, and my point is that it does.
-
->> drivers/i2c/busses/i2c-nomadik.c
+> The CPU clocks are only for Armada XP for the SMP mode.
 >
-> Don't see pinctrl in linux-next.
+> ...
+> +static struct core_clk_fn armada_370_clk_fn = {
+> +	.get_tclk_freq = armada_370_get_tclk_freq,
+> +	.get_pck_freq = armada_370_get_pck_freq,
+> +	.get_fab_freq_opt = armada_370_get_fab_freq_opt,
+> +};
+> +
+> +static struct core_clk_fn armada_xp_clk_fn = {
+> +	.get_tclk_freq = armada_xp_get_tclk_freq,
+> +	.get_pck_freq = armada_xp_get_pck_freq,
+> +	.get_fab_freq_opt = armada_xp_get_fab_freq_opt,
+> +};
+> +
+> +static const __initconst struct of_device_id clk_match[] = {
+> +	{
+> +	 .compatible = "marvell,armada-370-core-clockctrl",
+> +	 .data =&armada_370_clk_fn,
+> +	 },
+> +
+> +	{
+> +	 .compatible = "marvell,armada-xp-core-clockctrl",
+> +	 .data =&armada_xp_clk_fn,
+> +	 },
+> +	{
+> +	 /* sentinel */
+> +	 }
+> +};
 
-This code is here:
-http://marc.info/?l=linux-i2c&m=134986995731695&w=2
+Gregory,
 
-Yours,
-Linus Walleij
+armada_370_clk_fn and armada_xp_clk_fn cause section mismatches
+as they are referenced within __initconst.
+
+You should either rename them to armada_xp_clk_ops or annotate them
+with the appropriate attribute.
+
+Sebastian
