@@ -1,52 +1,90 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 5/5] ASoC: sam9g20_wm8731: fix the issue for non-DT kernel
-Date: Sat, 27 Oct 2012 23:14:23 +0100
-Message-ID: <20121027221420.GN4564@opensource.wolfsonmicro.com>
-References: <1350901079-18307-1-git-send-email-voice.shen@atmel.com>
- <1350901079-18307-5-git-send-email-voice.shen@atmel.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 REPOST 2/2] kbuild: run the pre-processor on *.dts files
+Date: Sat, 27 Oct 2012 20:06:11 -0500
+Message-ID: <fb065651-fd9d-4435-9a61-884dcb1da8d0@email.android.com>
+References: <1351279797-16450-1-git-send-email-swarren@wwwdotorg.org>
+ <1351279797-16450-2-git-send-email-swarren@wwwdotorg.org>
+ <508AEB3E.6090405@gmail.com>
+ <20121027220638.GK4564@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YC8Ek3FeOE8ywfXk"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1350901079-18307-5-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, jm.lin@atmel.com
+Content-Type: multipart/mixed; boundary="===============1750549229080455137=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121027220638.GK4564-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+--===============1750549229080455137==
+Content-Type: multipart/alternative; boundary="----QCDDT3S8C7LAY1E4UQ0C3G0KEVSZFN"
 
---YC8Ek3FeOE8ywfXk
-Content-Type: text/plain; charset=us-ascii
+------QCDDT3S8C7LAY1E4UQ0C3G0KEVSZFN
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+
+>On Fri, Oct 26, 2012 at 02:57:50PM -0500, Rob Herring wrote:
+>
+>> Like I said previously, I think we first need guidelines on what is
+>and
+>> isn't acceptable use of C preprocessor in dts files.
+>
+>Didn't we already say that it was just the same rules as for things tht
+>get included in .S files?  Besides for plain .dts files (as opposed to
+>.dtsi files) it seems like if people break things they get to keep all
+>the pieces without disrupting other people too much.
+
+Yes, but can we document that. Also, I'd like others with more DT histori=
+cal knowledge to weigh in.
+
+Rob
+------QCDDT3S8C7LAY1E4UQ0C3G0KEVSZFN
+Content-Type: text/html;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<html><head/><body><html><head></head><body><div class=3D"gmail_quote">Ma=
+rk Brown &lt;broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org&gt; wrote:<blockquote cl=
+ass=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left: 1px =
+solid rgb(204, 204, 204); padding-left: 1ex;">
+<pre style=3D"white-space: pre-wrap; word-wrap:break-word; font-family: m=
+onospace; margin-top: 0px">On Fri, Oct 26, 2012 at 02:57:50PM -0500, Rob =
+Herring wrote:<br /><br /><blockquote class=3D"gmail_quote" style=3D"marg=
+in: 0pt 0pt 1ex 0.8ex; border-left: 1px solid #729fcf; padding-left: 1ex;=
+">Like I said previously, I think we first need guidelines on what is and=
+<br />isn't acceptable use of C preprocessor in dts files.</blockquote><b=
+r />Didn't we already say that it was just the same rules as for things t=
+ht<br />get included in .S files?  Besides for plain .dts files (as oppos=
+ed to<br />.dtsi files) it seems like if people break things they get to =
+keep all<br />the pieces without disrupting other people too much.<br /><=
+/pre></blockquote></div><br clear=3D"all">Yes, but can we document that. =
+Also, I&#39;d like others with more DT historical knowledge to weigh in.<=
+br>
+<br>
+Rob</body></html></body></html>
+------QCDDT3S8C7LAY1E4UQ0C3G0KEVSZFN--
+
+
+--===============1750549229080455137==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-On Mon, Oct 22, 2012 at 06:17:59PM +0800, Bo Shen wrote:
-> When register platform from DAIs, the platform device to PCM no longer
-> needed. So, fix it with this patch
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-This should be squashed into the change which changes the registeration
-to ensure that we don't get both methods used simultaneously.
-
---YC8Ek3FeOE8ywfXk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQjFy1AAoJELSic+t+oim9qzcP/jdIwPbBBbNULnYn3rRpWaWY
-ZporfDFAY4hgQLQfVinjPS+Br/xyxAyaqqta6m8BO5YIsPglj9c1BwSV1eXhGVks
-HY/cwHPq31jGplZCOHxTfTkz4oMmLgr1M2YE41YobJ3ojLk1rvlaVWWQxPYmJ5KI
-tC+aAedy7vl0jJxdtPTUFF5Mq4imngcDmcPzNWIePWzc7pDPFPtU7Mx2DNk82bkR
-LdlC00f77/itilWDpgTTPEFmvtjwov7qczlC8zMDLiZwc52QcXSHCN3aKPWycNY/
-qcTt/6bNelx9Wc1oBlDVCdtyo7G3kmd9T3bW93wYmN5ijDD9/p51mt0U2O3cY/q3
-+ee54AWlHVnL6R1aiwWSi0VHAwloMAJNcVIyMPu5JuvMsh4IsrezAy2rrcXZfAlC
-qEC2oMD2thXD5OHCZyzKl8N+ovp/TQIDfcIBGXJ10ajNzKs55RMsOvHSqCV7j722
-7PedAYr6oszCbRzVTZiT1tgNyAheked3BEGGHpa7OTh2K0k37rOl2CikCoDE8kOr
-ZvvPU/c8fJz0OkkLQPOujfzrXddEMqQ2nhGAp5oupMkW/fBR0/6mq19utX/efzIQ
-WgEhNbgmvf07TPGdG9phhZCC0GwjlDWRUqVcNFEq8Hn1+gLN34tRWK8rzR7NJBvA
-4iuqFNIWUzrAjA7hE+J9
-=45bO
------END PGP SIGNATURE-----
-
---YC8Ek3FeOE8ywfXk--
+--===============1750549229080455137==--
