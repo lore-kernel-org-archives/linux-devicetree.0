@@ -1,7 +1,7 @@
 From: Pratyush Anand <pratyush.anand@st.com>
-Subject: [PATCH 06/15] clk: SPEAr1310: Fix pcie clock name
-Date: Mon, 29 Oct 2012 12:31:20 +0530
-Message-ID: <adb41404ceb2e4e4baa6adfe7df0bfec6c42813f.1351492562.git.pratyush.anand@st.com>
+Subject: [PATCH 05/15] clk: SPEAr1340: Fix pcie0 clock name
+Date: Mon, 29 Oct 2012 12:31:19 +0530
+Message-ID: <bdf7a8419c5960c6d521b18f6e51cc5e170d1374.1351492562.git.pratyush.anand@st.com>
 References: <cover.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,34 +14,20 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
 ---
- drivers/clk/spear/spear1310_clock.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/clk/spear/spear1340_clock.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/clk/spear/spear1310_clock.c b/drivers/clk/spear/spear1310_clock.c
-index 52e418f..97c3981 100644
---- a/drivers/clk/spear/spear1310_clock.c
-+++ b/drivers/clk/spear/spear1310_clock.c
-@@ -733,19 +733,19 @@ void __init spear1310_clk_init(void)
- 	clk = clk_register_gate(NULL, "pcie_sata_0_clk", "ahb_clk", 0,
- 			SPEAR1310_PERIP1_CLK_ENB, SPEAR1310_PCIE_SATA_0_CLK_ENB,
+diff --git a/drivers/clk/spear/spear1340_clock.c b/drivers/clk/spear/spear1340_clock.c
+index 364c947..9f69a61 100644
+--- a/drivers/clk/spear/spear1340_clock.c
++++ b/drivers/clk/spear/spear1340_clock.c
+@@ -844,7 +844,7 @@ void __init spear1340_clk_init(void)
+ 	clk = clk_register_gate(NULL, "pcie_sata_clk", "ahb_clk", 0,
+ 			SPEAR1340_PERIP1_CLK_ENB, SPEAR1340_PCIE_SATA_CLK_ENB,
  			0, &_lock);
--	clk_register_clkdev(clk, NULL, "dw_pcie.0");
+-	clk_register_clkdev(clk, NULL, "dw_pcie");
 +	clk_register_clkdev(clk, NULL, "b1000000.pcie0");
  	clk_register_clkdev(clk, NULL, "b1000000.ahci");
- 
- 	clk = clk_register_gate(NULL, "pcie_sata_1_clk", "ahb_clk", 0,
- 			SPEAR1310_PERIP1_CLK_ENB, SPEAR1310_PCIE_SATA_1_CLK_ENB,
- 			0, &_lock);
--	clk_register_clkdev(clk, NULL, "dw_pcie.1");
-+	clk_register_clkdev(clk, NULL, "b1800000.pcie1");
- 	clk_register_clkdev(clk, NULL, "b1800000.ahci");
- 
- 	clk = clk_register_gate(NULL, "pcie_sata_2_clk", "ahb_clk", 0,
- 			SPEAR1310_PERIP1_CLK_ENB, SPEAR1310_PCIE_SATA_2_CLK_ENB,
- 			0, &_lock);
--	clk_register_clkdev(clk, NULL, "dw_pcie.2");
-+	clk_register_clkdev(clk, NULL, "b4000000.pcie2");
- 	clk_register_clkdev(clk, NULL, "b4000000.ahci");
  
  	clk = clk_register_gate(NULL, "sysram0_clk", "ahb_clk", 0,
 -- 
