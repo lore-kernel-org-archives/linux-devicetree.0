@@ -1,52 +1,113 @@
-From: Afzal Mohammed <x0148406-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] rtc: omap: dt support
-Date: Mon, 29 Oct 2012 13:33:35 +0530
-Message-ID: <508E3857.6080109@ti.com>
-References: <cover.1350633036.git.afzal@ti.com>
-	<061c670b0a05570d7b83d8a8f105ee5b35583f7f.1350633036.git.afzal@ti.com>
-	<5084523F.2070800@gmail.com>
+From: Pratyush Anand <pratyush.anand@st.com>
+Subject: Re: [PATCH 03/15] SPEAr13xx: Add mach/io.h
+Date: Mon, 29 Oct 2012 13:41:26 +0530
+Message-ID: <508E3A2E.3000204@st.com>
+References: <cover.1351492562.git.pratyush.anand@st.com> <cce9cba6020c30f0edb15e43fa51208524b59322.1351492562.git.pratyush.anand@st.com> <CAOh2x==1McRP4eNFZa8qH4hjnOr003Ozb6J3XP8B87E9yZB4zw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <5084523F.2070800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAOh2x==1McRP4eNFZa8qH4hjnOr003Ozb6J3XP8B87E9yZB4zw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: viresh kumar <viresh.kumar@linaro.org>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, Shiraz HASHIM <shiraz.hashim@st.com>, spear-devel <spear-devel@list.st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On 10/29/2012 12:59 PM, viresh kumar wrote:
+> On Mon, Oct 29, 2012 at 12:31 PM, Pratyush Anand <pratyush.anand@st.com> wrote:
+>> In case of PCIe we need to have a different __io macro, which can write
+>> into PCIe address space.
+>
+> You may find this interesting:
+>
+> Do, git log --stat -p dd9bf78040fa0da4cecc228e1682b9682b8cb180
+>
+> There is a series of commits like:
+>
+> commit dd9bf78040fa0da4cecc228e1682b9682b8cb180
+> Author: Rob Herring <rob.herring@calxeda.com>
+> Date:   Wed Jul 4 11:18:40 2012 -0500
+>
+>      ARM: iop3xx: use fixed PCI i/o mapping
+>
+>      Move iop33x and iop32x PCI to fixed i/o mapping and remove io.h. This
+>      changes the PCI bus addresses from the cpu address to 0 based. It appears
+>      that there is translation h/w for this, but its untested.
 
-On Monday 22 October 2012 01:21 AM, Daniel Mack wrote:
-> On 19.10.2012 11:59, Afzal Mohammed wrote:
+In case of SPEAr we can not translate a CPU address 0 to PCIe space. To 
+explain it better, lets say we allocate 0x0000 - 0xFFFF for PCIe IO 
+transaction. Now if CPU writes on these addressed, there is no way we 
+can route those transactions to PCIe bus.
 
->> +static const struct of_device_id omap_rtc_of_match[] = {
->> +	{	.compatible	= "ti,da830-rtc",
->> +		.data		=&omap_rtc_devtype[OMAP_RTC_DATA_DA830_IDX],
-
-> Wouldn't it make sense to list all the compatible models here? The
-> advantage of a compatible list is that we can name the models
-> explicitly, or maybe at least "davinci-rtc". Is there any reason for
-> this particular name?
-
-Exact name followed by compatible models needs to be
-specified in DT node only, right ? (when driver for the
-first variant can handle it)
-
-And when additional features of newer IP's has to be
-leveraged, new entries can be added in the driver
-match table.
-
-First known variant of SoC for DT is da830 (exact name),
-hence it was used.
+Any transaction between 0x80000000 to 0x8FFFFFFF can only be used for 
+any type(IO/MEM/CFG0/CFG1) of PCIe transaction. Therefore , we need to 
+have this mapping in io.h.
 
 Regards
-Afzal
+Pratyush
+
+>
+>      Not sure what to do with io_offset. I think it should always be 0.
+>      AFAICT, PCI setup is skipped if the ATU is already setup.
+>
+>      Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+>      Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+>
+> All mach/io.h are removed and you are adding one of those. :)
+>
+>>
+>> Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
+>> ---
+>>   arch/arm/mach-spear13xx/include/mach/io.h |   35 +++++++++++++++++++++++++++++
+>>   1 files changed, 35 insertions(+), 0 deletions(-)
+>>   create mode 100644 arch/arm/mach-spear13xx/include/mach/io.h
+>>
+>> diff --git a/arch/arm/mach-spear13xx/include/mach/io.h b/arch/arm/mach-spear13xx/include/mach/io.h
+>> new file mode 100644
+>> index 0000000..a0d93ca
+>> --- /dev/null
+>> +++ b/arch/arm/mach-spear13xx/include/mach/io.h
+>> @@ -0,0 +1,35 @@
+>> +/*
+>> + * arch/arm/mach-spear13xx/include/mach/io.h
+>> + *
+>> + * spear13xx machine family generic header file
+>
+> SPEAr
+>
+>> + *
+>> + * Copyright (C) 2012 ST Microelectronics
+>> + * Pratyush Anand <pratyush.anand@st.com>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2. This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#ifndef __MACH_IO_H
+>> +#define __MACH_IO_H
+>> +
+>> +#define IO_SPACE_LIMIT 0xFFFF
+>> +
+>> +#ifdef CONFIG_SPEAR13XX_PCI
+>> +extern void __iomem *spear13xx_pcie_io_base(unsigned long addr);
+>> +
+>> +static inline void __iomem *__io(unsigned long addr)
+>> +{
+>> +       return spear13xx_pcie_io_base(addr) + (addr & IO_SPACE_LIMIT);
+>> +}
+>> +#else
+>> +static inline void __iomem *__io(unsigned long addr)
+>> +{
+>> +       return (void __iomem *)addr;
+>> +}
+>> +#endif
+>> +
+>> +#define __io(a)                __io(a)
+>> +
+>> +#endif /* __MACH_IO_H */
+>> --
+>> 1.7.5.4
+>>
+> .
+>
