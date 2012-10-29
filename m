@@ -1,57 +1,50 @@
 From: Pratyush Anand <pratyush.anand@st.com>
-Subject: [PATCH 00/15] SPEAr13xx PCIe patches
-Date: Mon, 29 Oct 2012 12:31:14 +0530
-Message-ID: <cover.1351492562.git.pratyush.anand@st.com>
+Subject: [PATCH 02/15] arm: Call pcie_bus_configure_settings for pcie devices
+Date: Mon, 29 Oct 2012 12:31:16 +0530
+Message-ID: <6eff165d5aee88370855ff1cb9be2ff4be4ef50c.1351492562.git.pratyush.anand@st.com>
+References: <cover.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1351492562.git.pratyush.anand@st.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: arnd@arndb.de, shiraz.hashim@st.com, viresh.linux@gmail.com
 Cc: spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net, Pratyush Anand <pratyush.anand@st.com>
 List-Id: devicetree@vger.kernel.org
 
--- First two patches are common for all platforms on ARM architecture.
--- Remaining patches belongs to SPEAr13xx architecture.
--- SPEAr13xx supports both RC and EP mode of PCIe interface. This patchset
-	supports only RC mode.
+There could be some device which will work only after adjusting their
+"Max Packet Size" and/or "Max Read Request Size".
 
+This modification will only  be effective if proper 'pci=' bootargs is
+passed.
 
-Pratyush Anand (15):
-  arm: source drivers/pci/pcie/kconfig
-  arm: Call pcie_bus_configure_settings for pcie devices
-  SPEAr13xx: Add mach/io.h
-  SPEAr13xx: Add PCIe Root Complex driver support
-  clk: SPEAr1340: Fix pcie0 clock name
-  clk: SPEAr1310: Fix pcie clock name
-  SPEAr1340: Add PCIe auxdata for miphy clock initialization
-  SPEAr1310: Add PCIe auxdata for miphy clock initialization
-  SPEAr13xx: dts: Fix PCIe core address ranges
-  SPEAr13xx: DTS: Add auxiliary data for PCIe host
-  SPEAr1340-evb: dts: Enable PCIe0
-  SPEAr1310-EVB: DTS: Fix PCIe1 enable
-  SPEAr13xx: update kconfig for PCIe selection
-  SPEAR13xx: Update makefile for PCIe inclusion
-  SPEAR13xx: update defconfig for PCIe compilation
+Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
+---
+ arch/arm/kernel/bios32.c |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
 
- arch/arm/Kconfig                            |    1 +
- arch/arm/boot/dts/spear1310-evb.dts         |    4 -
- arch/arm/boot/dts/spear1340-evb.dts         |    4 +
- arch/arm/boot/dts/spear13xx.dtsi            |   33 +-
- arch/arm/configs/spear13xx_defconfig        |    1 +
- arch/arm/kernel/bios32.c                    |   12 +
- arch/arm/mach-spear13xx/Kconfig             |   12 +
- arch/arm/mach-spear13xx/Makefile            |    1 +
- arch/arm/mach-spear13xx/include/mach/io.h   |   35 +
- arch/arm/mach-spear13xx/include/mach/pcie.h |  233 ++++++
- arch/arm/mach-spear13xx/pcie.c              | 1145 +++++++++++++++++++++++++++
- arch/arm/mach-spear13xx/spear1310.c         |  148 ++++
- arch/arm/mach-spear13xx/spear1340.c         |   26 +
- drivers/clk/spear/spear1310_clock.c         |    6 +-
- drivers/clk/spear/spear1340_clock.c         |    2 +-
- 15 files changed, 1651 insertions(+), 12 deletions(-)
- create mode 100644 arch/arm/mach-spear13xx/include/mach/io.h
- create mode 100644 arch/arm/mach-spear13xx/include/mach/pcie.h
- create mode 100644 arch/arm/mach-spear13xx/pcie.c
-
+diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
+index 2555250..62d603f 100644
+--- a/arch/arm/kernel/bios32.c
++++ b/arch/arm/kernel/bios32.c
+@@ -490,6 +490,18 @@ void __init pci_common_init(struct hw_pci *hw)
+ 		struct pci_bus *bus = sys->bus;
+ 
+ 		if (!pci_has_flag(PCI_PROBE_ONLY)) {
++			struct pci_bus *child;
++
++			/*
++			 * Set MPS and readrq size
++			 */
++			list_for_each_entry(child, &bus->children, node) {
++				struct pci_dev *self = child->self;
++				if (!self)
++					continue;
++				pcie_bus_configure_settings(child,
++						self->pcie_mpss);
++			}
+ 			/*
+ 			 * Size the bridge windows.
+ 			 */
 -- 
 1.7.5.4
