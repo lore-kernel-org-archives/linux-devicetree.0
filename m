@@ -1,66 +1,57 @@
 From: Pratyush Anand <pratyush.anand@st.com>
-Subject: [PATCH 03/15] SPEAr13xx: Add mach/io.h
-Date: Mon, 29 Oct 2012 12:31:17 +0530
-Message-ID: <cce9cba6020c30f0edb15e43fa51208524b59322.1351492562.git.pratyush.anand@st.com>
-References: <cover.1351492562.git.pratyush.anand@st.com>
+Subject: [PATCH 00/15] SPEAr13xx PCIe patches
+Date: Mon, 29 Oct 2012 12:31:14 +0530
+Message-ID: <cover.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <cover.1351492562.git.pratyush.anand@st.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: arnd@arndb.de, shiraz.hashim@st.com, viresh.linux@gmail.com
 Cc: spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net, Pratyush Anand <pratyush.anand@st.com>
 List-Id: devicetree@vger.kernel.org
 
-In case of PCIe we need to have a different __io macro, which can write
-into PCIe address space.
+-- First two patches are common for all platforms on ARM architecture.
+-- Remaining patches belongs to SPEAr13xx architecture.
+-- SPEAr13xx supports both RC and EP mode of PCIe interface. This patchset
+	supports only RC mode.
 
-Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
----
- arch/arm/mach-spear13xx/include/mach/io.h |   35 +++++++++++++++++++++++++++++
- 1 files changed, 35 insertions(+), 0 deletions(-)
+
+Pratyush Anand (15):
+  arm: source drivers/pci/pcie/kconfig
+  arm: Call pcie_bus_configure_settings for pcie devices
+  SPEAr13xx: Add mach/io.h
+  SPEAr13xx: Add PCIe Root Complex driver support
+  clk: SPEAr1340: Fix pcie0 clock name
+  clk: SPEAr1310: Fix pcie clock name
+  SPEAr1340: Add PCIe auxdata for miphy clock initialization
+  SPEAr1310: Add PCIe auxdata for miphy clock initialization
+  SPEAr13xx: dts: Fix PCIe core address ranges
+  SPEAr13xx: DTS: Add auxiliary data for PCIe host
+  SPEAr1340-evb: dts: Enable PCIe0
+  SPEAr1310-EVB: DTS: Fix PCIe1 enable
+  SPEAr13xx: update kconfig for PCIe selection
+  SPEAR13xx: Update makefile for PCIe inclusion
+  SPEAR13xx: update defconfig for PCIe compilation
+
+ arch/arm/Kconfig                            |    1 +
+ arch/arm/boot/dts/spear1310-evb.dts         |    4 -
+ arch/arm/boot/dts/spear1340-evb.dts         |    4 +
+ arch/arm/boot/dts/spear13xx.dtsi            |   33 +-
+ arch/arm/configs/spear13xx_defconfig        |    1 +
+ arch/arm/kernel/bios32.c                    |   12 +
+ arch/arm/mach-spear13xx/Kconfig             |   12 +
+ arch/arm/mach-spear13xx/Makefile            |    1 +
+ arch/arm/mach-spear13xx/include/mach/io.h   |   35 +
+ arch/arm/mach-spear13xx/include/mach/pcie.h |  233 ++++++
+ arch/arm/mach-spear13xx/pcie.c              | 1145 +++++++++++++++++++++++++++
+ arch/arm/mach-spear13xx/spear1310.c         |  148 ++++
+ arch/arm/mach-spear13xx/spear1340.c         |   26 +
+ drivers/clk/spear/spear1310_clock.c         |    6 +-
+ drivers/clk/spear/spear1340_clock.c         |    2 +-
+ 15 files changed, 1651 insertions(+), 12 deletions(-)
  create mode 100644 arch/arm/mach-spear13xx/include/mach/io.h
+ create mode 100644 arch/arm/mach-spear13xx/include/mach/pcie.h
+ create mode 100644 arch/arm/mach-spear13xx/pcie.c
 
-diff --git a/arch/arm/mach-spear13xx/include/mach/io.h b/arch/arm/mach-spear13xx/include/mach/io.h
-new file mode 100644
-index 0000000..a0d93ca
---- /dev/null
-+++ b/arch/arm/mach-spear13xx/include/mach/io.h
-@@ -0,0 +1,35 @@
-+/*
-+ * arch/arm/mach-spear13xx/include/mach/io.h
-+ *
-+ * spear13xx machine family generic header file
-+ *
-+ * Copyright (C) 2012 ST Microelectronics
-+ * Pratyush Anand <pratyush.anand@st.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#ifndef __MACH_IO_H
-+#define __MACH_IO_H
-+
-+#define IO_SPACE_LIMIT	0xFFFF
-+
-+#ifdef CONFIG_SPEAR13XX_PCI
-+extern void __iomem *spear13xx_pcie_io_base(unsigned long addr);
-+
-+static inline void __iomem *__io(unsigned long addr)
-+{
-+	return spear13xx_pcie_io_base(addr) + (addr & IO_SPACE_LIMIT);
-+}
-+#else
-+static inline void __iomem *__io(unsigned long addr)
-+{
-+	return (void __iomem *)addr;
-+}
-+#endif
-+
-+#define __io(a)		__io(a)
-+
-+#endif /* __MACH_IO_H */
 -- 
 1.7.5.4
