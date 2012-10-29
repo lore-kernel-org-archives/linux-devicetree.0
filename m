@@ -1,57 +1,47 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH V3 1/3] clk: mvebu: add armada-370-xp specific clocks
-Date: Sun, 28 Oct 2012 22:42:52 +0100
-Message-ID: <508DA6DC.4070601@gmail.com>
-References: <1350303499-30868-1-git-send-email-gregory.clement@free-electrons.com> <1350303499-30868-2-git-send-email-gregory.clement@free-electrons.com>
+From: Kyungmin Park <kyungmin.park@samsung.com>
+Subject: Re: [PATCH 3/4] pinctrl: samsung: Add support for Exynos4x12
+Date: Mon, 29 Oct 2012 09:30:26 +0900
+Message-ID: <CAH9JG2V2UjuvjK2_sjLQsEt21duCqyoQuAi0KsMfB+CjRrh8KQ@mail.gmail.com>
+References: <1351089457-8205-1-git-send-email-t.figa@samsung.com>
+	<1351089457-8205-4-git-send-email-t.figa@samsung.com>
+	<CACRpkdaoQP2jat_mr2wr30M39eogKAq77Gw2VoNPWbgHjgW+zw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1350303499-30868-2-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Ben Dooks <ben-linux@fluff.org>, Ian Molton <ian.molton@codethink.co.uk>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Li Li <li.li@canonical.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaoQP2jat_mr2wr30M39eogKAq77Gw2VoNPWbgHjgW+zw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <t.figa@samsung.com>, kgene.kim@samsung.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, tomasz.figa@gmail.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/15/2012 02:18 PM, Gregory CLEMENT wrote:
-> Add Armada 370/XP specific clocks: core clocks and CPU clocks.
+On 10/29/12, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Oct 24, 2012 at 4:37 PM, Tomasz Figa <t.figa@samsung.com> wrote:
 >
-> The CPU clocks are only for Armada XP for the SMP mode.
+>> This patch extends the driver with any necessary SoC-specific
+>> definitions to support Exynos4x12 SoCs.
+>>
+>> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 >
-> ...
-> +static struct core_clk_fn armada_370_clk_fn = {
-> +	.get_tclk_freq = armada_370_get_tclk_freq,
-> +	.get_pck_freq = armada_370_get_pck_freq,
-> +	.get_fab_freq_opt = armada_370_get_fab_freq_opt,
-> +};
-> +
-> +static struct core_clk_fn armada_xp_clk_fn = {
-> +	.get_tclk_freq = armada_xp_get_tclk_freq,
-> +	.get_pck_freq = armada_xp_get_pck_freq,
-> +	.get_fab_freq_opt = armada_xp_get_fab_freq_opt,
-> +};
-> +
-> +static const __initconst struct of_device_id clk_match[] = {
-> +	{
-> +	 .compatible = "marvell,armada-370-core-clockctrl",
-> +	 .data =&armada_370_clk_fn,
-> +	 },
-> +
-> +	{
-> +	 .compatible = "marvell,armada-xp-core-clockctrl",
-> +	 .data =&armada_xp_clk_fn,
-> +	 },
-> +	{
-> +	 /* sentinel */
-> +	 }
-> +};
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> I guess you need all of this to go into my Samsung branch?
+> I need and ACK from the Samsung maintainer and preferably
+> Thomas A as well.
 
-Gregory,
+Hi,
 
-armada_370_clk_fn and armada_xp_clk_fn cause section mismatches
-as they are referenced within __initconst.
+Now we're trying to send the standalone patches to avoid the conflict.
+and hope to merge patches via proper subsystem. In this case, pinctl.
 
-You should either rename them to armada_xp_clk_ops or annotate them
-with the appropriate attribute.
-
-Sebastian
+Thank you,
+Kyungmin Park
+>
+> Yours,
+> Linus Walleij
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
