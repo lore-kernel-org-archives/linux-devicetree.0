@@ -1,97 +1,247 @@
-From: viresh kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 03/15] SPEAr13xx: Add mach/io.h
-Date: Mon, 29 Oct 2012 12:59:01 +0530
-Message-ID: <CAOh2x==1McRP4eNFZa8qH4hjnOr003Ozb6J3XP8B87E9yZB4zw@mail.gmail.com>
-References: <cover.1351492562.git.pratyush.anand@st.com>
-	<cce9cba6020c30f0edb15e43fa51208524b59322.1351492562.git.pratyush.anand@st.com>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: [PATCH 1/2] da8xx-fb: add DT support
+Date: Mon, 29 Oct 2012 12:51:05 +0530
+Message-ID: <1351495266-1202-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <cce9cba6020c30f0edb15e43fa51208524b59322.1351492562.git.pratyush.anand@st.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pratyush Anand <pratyush.anand@st.com>
-Cc: arnd@arndb.de, shiraz.hashim@st.com, spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, davinci-linux-open-source@linux.davincidsp.com, linux-doc@vger.kernel.org, rob@landley.net, s.trumtrar@pengutronix.de, "Manjunathappa, Prakash" <prakash.pm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2012 at 12:31 PM, Pratyush Anand <pratyush.anand@st.com> wrote:
-> In case of PCIe we need to have a different __io macro, which can write
-> into PCIe address space.
+adds device tree support for da8xx-fb driver.
 
-You may find this interesting:
+Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+---
+Depends on "of: Add display helper" [1] submitted by Steffen.
+Above mentioned patch under review in community and has got
+review comments. Preparing this patch to keep things moving.
+@Steffen: Could you please include this in your next version of
+your patch.
 
-Do, git log --stat -p dd9bf78040fa0da4cecc228e1682b9682b8cb180
+Applies on top of LCDC cleanup patches under community review [2].
 
-There is a series of commits like:
+[1]:http://marc.info/?l=dri-devel&m=134937362110396&w=2
+[2]:http://marc.info/?l=linux-fbdev&m=135036440702662&w=2
+ drivers/video/da8xx-fb.c |  165 +++++++++++++++++++++++++++++++++++++++++-----
+ 1 files changed, 149 insertions(+), 16 deletions(-)
 
-commit dd9bf78040fa0da4cecc228e1682b9682b8cb180
-Author: Rob Herring <rob.herring@calxeda.com>
-Date:   Wed Jul 4 11:18:40 2012 -0500
+diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
+index f0f21c8..8a2b0f8 100644
+--- a/drivers/video/da8xx-fb.c
++++ b/drivers/video/da8xx-fb.c
+@@ -36,6 +36,7 @@
+ #include <linux/slab.h>
+ #include <linux/delay.h>
+ #include <linux/lcm.h>
++#include <linux/of_videomode.h>
+ #include <video/da8xx-fb.h>
+ #include <asm/div64.h>
+ 
+@@ -1211,12 +1212,134 @@ static unsigned int da8xxfb_pixel_clk_period(struct da8xx_fb_par *par)
+ 	return pix_clk_period_picosec;
+ }
+ 
++#ifdef CONFIG_OF
++static struct da8xx_lcdc_platform_data
++	*da8xx_lcdc_of_get_pdata(struct platform_device *pdev,
++			struct fb_videomode **lcdc_info)
++{
++	struct device_node *np;
++	struct da8xx_lcdc_platform_data *pdata = NULL;
++	struct lcd_ctrl_config *lcd_cfg;
++	struct fb_videomode *panel_data = NULL;
++	u32 data;
++	int ret;
++
++	pdata = pdev->dev.platform_data;
++	if (!pdata) {
++		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata) {
++			dev_err(&pdev->dev, "Failed to allocate memory for struct da8xx_lcdc_platform_data\n");
++			goto nodata;
++		}
++	}
++
++	np = pdev->dev.of_node;
++	if (!np)
++		goto nodata;
++
++	*lcdc_info = devm_kzalloc(&pdev->dev, sizeof(struct fb_videomode),
++			GFP_KERNEL);
++	if (!*lcdc_info) {
++		dev_err(&pdev->dev, "Failed to allocate memory for struct fb_videomode\n");
++		pdata = NULL;
++		goto nodata;
++	}
++	panel_data = *lcdc_info;
++
++	lcd_cfg = devm_kzalloc(&pdev->dev, sizeof(struct lcd_ctrl_config),
++			GFP_KERNEL);
++	if (!lcd_cfg) {
++		dev_err(&pdev->dev, "Failed to allocate memory for struct lcd_ctrl_config\n");
++		pdata = NULL;
++		goto nodata;
++	}
++	pdata->controller_data = lcd_cfg;
++
++	ret = of_get_fb_videomode(np, panel_data, 0);
++	if (ret) {
++		dev_err(&pdev->dev, "fb videomode data not specified\n");
++		pdata = NULL;
++		goto nodata;
++	}
++	/* Pixel clock is expected in Hertz */
++	panel_data->pixclock = PICOS2KHZ(panel_data->pixclock) * 1000;
++
++	/* Required properties */
++	ret = of_property_read_u32(np, "panel-shade", &data);
++	if (ret) {
++		dev_err(&pdev->dev, "panel-shade not specified\n");
++		pdata = NULL;
++		goto nodata;
++	}
++	lcd_cfg->panel_shade = data;
++
++	ret = of_property_read_u32(np, "bpp", &data);
++	if (ret) {
++		dev_err(&pdev->dev, "BPP of panel not specified\n");
++		pdata = NULL;
++		goto nodata;
++	}
++	lcd_cfg->bpp = data;
++
++	/* Optional properties */
++	ret = of_property_read_u32(np, "ac-bias", &data);
++	if (!ret)
++		lcd_cfg->ac_bias = data;
++
++	ret = of_property_read_u32(np, "ac-bias-intrpt", &data);
++	if (!ret)
++		lcd_cfg->ac_bias_intrpt = data;
++
++	ret = of_property_read_u32(np, "dma-burst-sz", &data);
++	if (!ret)
++		lcd_cfg->dma_burst_sz = data;
++
++	ret = of_property_read_u32(np, "fdd", &data);
++	if (!ret)
++		lcd_cfg->fdd = data;
++
++	ret = of_property_read_u32(np, "tft-alt-mode", &data);
++	if (!ret)
++		lcd_cfg->tft_alt_mode = data;
++
++	ret = of_property_read_u32(np, "stn-565-mode", &data);
++	if (!ret)
++		lcd_cfg->stn_565_mode = data;
++
++	ret = of_property_read_u32(np, "mono-8bit-mode", &data);
++	if (!ret)
++		lcd_cfg->mono_8bit_mode = data;
++
++	ret = of_property_read_u32(np, "sync-edge", &data);
++	if (!ret)
++		lcd_cfg->sync_edge = data;
++
++	ret = of_property_read_u32(np, "raster-order", &data);
++	if (!ret)
++		lcd_cfg->raster_order = data;
++
++	ret = of_property_read_u32(np, "fifo-threshold", &data);
++	if (!ret)
++		lcd_cfg->fifo_th = data;
++
++	pdev->dev.platform_data = pdata;
++nodata:
++	return pdata;
++}
++#else
++static struct da8xx_lcdc_platform_data
++	*da8xx_lcdc_of_get_pdata(struct platform_device *pdev,
++			struct fb_videomode **lcdc_info)
++{
++	return pdev->dev.platform_data;
++}
++#endif
++
+ static int __devinit fb_probe(struct platform_device *device)
+ {
+-	struct da8xx_lcdc_platform_data *fb_pdata =
+-						device->dev.platform_data;
++	struct da8xx_lcdc_platform_data *fb_pdata = NULL;
+ 	struct lcd_ctrl_config *lcd_cfg;
+-	struct fb_videomode *lcdc_info;
++	struct fb_videomode *lcdc_info = NULL;
+ 	struct fb_info *da8xx_fb_info;
+ 	struct clk *fb_clk = NULL;
+ 	struct da8xx_fb_par *par;
+@@ -1224,6 +1347,7 @@ static int __devinit fb_probe(struct platform_device *device)
+ 	int ret, i;
+ 	unsigned long ulcm;
+ 
++	fb_pdata = da8xx_lcdc_of_get_pdata(device, &lcdc_info);
+ 	if (fb_pdata == NULL) {
+ 		dev_err(&device->dev, "Can not get platform data\n");
+ 		return -ENOENT;
+@@ -1274,20 +1398,22 @@ static int __devinit fb_probe(struct platform_device *device)
+ 		break;
+ 	}
+ 
+-	for (i = 0, lcdc_info = known_lcd_panels;
+-		i < ARRAY_SIZE(known_lcd_panels);
+-		i++, lcdc_info++) {
+-		if (strcmp(fb_pdata->type, lcdc_info->name) == 0)
+-			break;
+-	}
++	if (device->dev.of_node == NULL) {
++		for (i = 0, lcdc_info = known_lcd_panels;
++			i < ARRAY_SIZE(known_lcd_panels);
++			i++, lcdc_info++) {
++			if (strcmp(fb_pdata->type, lcdc_info->name) == 0)
++				break;
++		}
+ 
+-	if (i == ARRAY_SIZE(known_lcd_panels)) {
+-		dev_err(&device->dev, "GLCD: No valid panel found\n");
+-		ret = -ENODEV;
+-		goto err_pm_runtime_disable;
+-	} else
+-		dev_info(&device->dev, "GLCD: Found %s panel\n",
+-					fb_pdata->type);
++		if (i == ARRAY_SIZE(known_lcd_panels)) {
++			dev_err(&device->dev, "GLCD: No valid panel found\n");
++			ret = -ENODEV;
++			goto err_pm_runtime_disable;
++		} else
++			dev_info(&device->dev, "GLCD: Found %s panel\n",
++						fb_pdata->type);
++	}
+ 
+ 	lcd_cfg = (struct lcd_ctrl_config *)fb_pdata->controller_data;
+ 
+@@ -1577,6 +1703,12 @@ static int fb_resume(struct platform_device *dev)
+ #define fb_resume NULL
+ #endif
+ 
++static const struct of_device_id da830_lcdc_of_match[] = {
++	{.compatible = "ti,da830-lcd", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, da830_lcdc_of_match);
++
+ static struct platform_driver da8xx_fb_driver = {
+ 	.probe = fb_probe,
+ 	.remove = __devexit_p(fb_remove),
+@@ -1585,6 +1717,7 @@ static struct platform_driver da8xx_fb_driver = {
+ 	.driver = {
+ 		   .name = DRIVER_NAME,
+ 		   .owner = THIS_MODULE,
++		   .of_match_table = of_match_ptr(da830_lcdc_of_match),
+ 		   },
+ };
+ 
+-- 
+1.7.0.4
 
-    ARM: iop3xx: use fixed PCI i/o mapping
-
-    Move iop33x and iop32x PCI to fixed i/o mapping and remove io.h. This
-    changes the PCI bus addresses from the cpu address to 0 based. It appears
-    that there is translation h/w for this, but its untested.
-
-    Not sure what to do with io_offset. I think it should always be 0.
-    AFAICT, PCI setup is skipped if the ATU is already setup.
-
-    Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-    Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-
-All mach/io.h are removed and you are adding one of those. :)
-
->
-> Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
-> ---
->  arch/arm/mach-spear13xx/include/mach/io.h |   35 +++++++++++++++++++++++++++++
->  1 files changed, 35 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/mach-spear13xx/include/mach/io.h
->
-> diff --git a/arch/arm/mach-spear13xx/include/mach/io.h b/arch/arm/mach-spear13xx/include/mach/io.h
-> new file mode 100644
-> index 0000000..a0d93ca
-> --- /dev/null
-> +++ b/arch/arm/mach-spear13xx/include/mach/io.h
-> @@ -0,0 +1,35 @@
-> +/*
-> + * arch/arm/mach-spear13xx/include/mach/io.h
-> + *
-> + * spear13xx machine family generic header file
-
-SPEAr
-
-> + *
-> + * Copyright (C) 2012 ST Microelectronics
-> + * Pratyush Anand <pratyush.anand@st.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef __MACH_IO_H
-> +#define __MACH_IO_H
-> +
-> +#define IO_SPACE_LIMIT 0xFFFF
-> +
-> +#ifdef CONFIG_SPEAR13XX_PCI
-> +extern void __iomem *spear13xx_pcie_io_base(unsigned long addr);
-> +
-> +static inline void __iomem *__io(unsigned long addr)
-> +{
-> +       return spear13xx_pcie_io_base(addr) + (addr & IO_SPACE_LIMIT);
-> +}
-> +#else
-> +static inline void __iomem *__io(unsigned long addr)
-> +{
-> +       return (void __iomem *)addr;
-> +}
-> +#endif
-> +
-> +#define __io(a)                __io(a)
-> +
-> +#endif /* __MACH_IO_H */
-> --
-> 1.7.5.4
->
