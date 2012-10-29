@@ -1,115 +1,52 @@
-From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: [PATCH 2/2] video: da8xx-fb: add device tree binding information
-Date: Mon, 29 Oct 2012 12:51:06 +0530
-Message-ID: <1351495266-1202-2-git-send-email-prakash.pm@ti.com>
-References: <1351495266-1202-1-git-send-email-prakash.pm@ti.com>
+From: Afzal Mohammed <x0148406-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] rtc: omap: dt support
+Date: Mon, 29 Oct 2012 13:33:35 +0530
+Message-ID: <508E3857.6080109@ti.com>
+References: <cover.1350633036.git.afzal@ti.com>
+	<061c670b0a05570d7b83d8a8f105ee5b35583f7f.1350633036.git.afzal@ti.com>
+	<5084523F.2070800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1351495266-1202-1-git-send-email-prakash.pm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, davinci-linux-open-source@linux.davincidsp.com, linux-doc@vger.kernel.org, rob@landley.net, s.trumtrar@pengutronix.de, "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <5084523F.2070800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
----
- Documentation/devicetree/bindings/fb/da8xx-fb.txt |   86 +++++++++++++++++++++
- 1 files changed, 86 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/fb/da8xx-fb.txt
+Hi Daniel,
 
-diff --git a/Documentation/devicetree/bindings/fb/da8xx-fb.txt b/Documentation/devicetree/bindings/fb/da8xx-fb.txt
-new file mode 100644
-index 0000000..3fc2ef9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fb/da8xx-fb.txt
-@@ -0,0 +1,86 @@
-+* Texas Instruments DaVinci da8xx-fb
-+
-+This file provides information of da830-fb device node.
-+
-+Required properties:
-+- compatible :		"ti,da830-lcd" : for DA830, DA850 and am335x platforms
-+- reg :			Offset and length of the register set for the device.
-+- interrupts :		standard interrupt property.
-+- interrupt-parent :	The phandle for the interrupt controller that
-+			services interrupts for this device.
-+- panel_shade : 	panel shade for-ex MONOCHROME, PASSIVE, ACTIVE.
-+- bpp : 		bits per pixel resolution.
-+- display-timings: 	Panel timing information.
-+
-+Optional properties:
-+- ac-bias :		AC Bias Pin Frequency. This value defines the
-+			number of Line Clock (LCD_HSYNC) cycles to count
-+			before transitioning signal LCD_AC_ENB_CS. This
-+			output may be used to periodically invert the
-+			polarity of the power supply in order to prevent a
-+			display DC charge build-up on the LCD panel.
-+
-+- ac-bias-intrpt :	This value is used to specify the number of AC
-+			Bias(LCD_AC_ENB_CS) output transition counts
-+			before setting the AC bias interrupt bit in
-+			register LCD_STAT. This counter is stopped when
-+			the interrupt is set and remains stopped until the
-+			AC bias interrupt status is cleared. A value of
-+			zero will not produce an interrupt.
-+
-+- tft-alt-mode :	TFT Alternative Signal Mapping
-+- stn-565-mode :	12-Bit-Per-Pixel (5-6-5) Mode. This is only
-+			available in passive-color (STN) mode when 12 BPP
-+			is specified in the palette.
-+
-+- mono-8bit-mode :	Mono 8-bit Mode
-+
-+- sync-edge :		This determines whether the HSYNC/VSYNC is driven
-+			on the rising or falling edge of the pixel clock
-+
-+- raster-order :	Decides data order, if 0 frame buffer data is
-+			ordered from least-to-most significant bit/nibble/
-+			byte/word/d-word else most-to- least significant..
-+
-+- panel :		panel name along manufacturer name.
-+- dma-burst-sz :	Burst Size setting for DMA transfers
-+- fifo-threshold :	DMA FIFO threshold. The input FIFO becomes ready
-+			so that the Raster controller can start reading
-+			its content only when the number of dwords (1
-+			dword is 4 bytes) specified by TH_FIFO_READY have
-+			been loaded by the DMA from the frame buffer to
-+			the input FIFO.
-+
-+- fdd :			FIFO DMA Request Delay. Encoded value used to
-+			specify the number of clocks the input FIFO DMA
-+			request should be disabled. The delay clock count
-+			starts after 16 words are loaded into the input
-+			FIFO.
-+
-+Example for da850-evm:
-+	lcd0: lcd@1e13000 {
-+		compatible = "ti,da8xx-lcd";
-+		reg = <0x213000 0x1000>;
-+		clock-frequency = <150000000>;
-+		interrupts = <52>;
-+		interrupt-parent = <&intc>;
-+		panel_shade = <1>;
-+		bpp = <16>;
-+		display-timings {
-+			default-timing = <&timing0>;
-+			timing0: 480x272p53 {
-+				clock = <7833600>;
-+				hactive = <480>;
-+				vactive = <272>;
-+				hfront-porch = <2>;
-+				hback-porch = <2>;
-+				hsync-len = <41>;
-+				vback-porch = <3>;
-+				vfront-porch = <3>;
-+				vsync-len = <10>;
-+				hsync-active-high;
-+				vsync-active-high;
-+			};
-+		};
-+	};
-+
--- 
-1.7.0.4
+On Monday 22 October 2012 01:21 AM, Daniel Mack wrote:
+> On 19.10.2012 11:59, Afzal Mohammed wrote:
 
+>> +static const struct of_device_id omap_rtc_of_match[] = {
+>> +	{	.compatible	= "ti,da830-rtc",
+>> +		.data		=&omap_rtc_devtype[OMAP_RTC_DATA_DA830_IDX],
+
+> Wouldn't it make sense to list all the compatible models here? The
+> advantage of a compatible list is that we can name the models
+> explicitly, or maybe at least "davinci-rtc". Is there any reason for
+> this particular name?
+
+Exact name followed by compatible models needs to be
+specified in DT node only, right ? (when driver for the
+first variant can handle it)
+
+And when additional features of newer IP's has to be
+leveraged, new entries can be added in the driver
+match table.
+
+First known variant of SoC for DT is da830 (exact name),
+hence it was used.
+
+Regards
+Afzal
