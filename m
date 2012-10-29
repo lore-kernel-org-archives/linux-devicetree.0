@@ -1,33 +1,49 @@
-From: viresh kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 14/15] SPEAR13xx: Update makefile for PCIe inclusion
-Date: Mon, 29 Oct 2012 19:04:19 +0530
-Message-ID: <CAOh2x=m+rrH4eR23TPvgNJy0Ui4oQ6ChsbYAL5AU61g-i1o05Q@mail.gmail.com>
-References: <cover.1351492562.git.pratyush.anand@st.com>
-	<a52b6d280831df4d8a4e4fe3d72f3caaf985a88f.1351492562.git.pratyush.anand@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <a52b6d280831df4d8a4e4fe3d72f3caaf985a88f.1351492562.git.pratyush.anand@st.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Pratyush Anand <pratyush.anand@st.com>
-Cc: arnd@arndb.de, shiraz.hashim@st.com, spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v3 0/4] Adding usb2.0 host-phy support for exynos5250
+Date: Mon, 29 Oct 2012 19:12:36 +0530
+Message-ID: <1351518160-22369-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, jg1.han@samsung.com, yulgon.kim@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2012 at 12:31 PM, Pratyush Anand <pratyush.anand@st.com> wrote:
-> Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
-> ---
->  arch/arm/mach-spear13xx/Makefile |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/mach-spear13xx/Makefile b/arch/arm/mach-spear13xx/Makefile
-> index b721566..f7a42fb 100644
-> --- a/arch/arm/mach-spear13xx/Makefile
-> +++ b/arch/arm/mach-spear13xx/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_ARCH_SPEAR13XX)    += spear13xx.o
->  obj-$(CONFIG_SUSPEND)          += pm.o wakeup.o sleep_1340.o sleep_1310.o
->  obj-$(CONFIG_MACH_SPEAR1310)   += spear1310.o
->  obj-$(CONFIG_MACH_SPEAR1340)   += spear1340.o
-> +obj-$(CONFIG_SPEAR13XX_PCI)    += pcie.o
+This patchset is based on the work by Praveen Paneri for
+samsung-usbphy driver:
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/12653
 
-Add this before Machines. Also, you can add Kconfig and Makefile changes
-with drivers patch only.
+Changes from v2:
+ - Using "EXYNOS5_PHY_" as common prefix along with exact names for
+   PHY SFRs for register definitions
+ - Using register names with bit macros to make things more clear.
+ - Removed parentheses around 0x230 in definition for EXYNOS5_USB_CFG
+   in [patch 2/4 v2].
+
+Tested on smdk5250 target with usb-next branch along with arch patches
+for exynos5250:
+http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13042
+http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13048
+
+Vivek Gautam (4):
+  usb: phy: samsung: Add host phy support to samsung-phy driver
+  ARM: Exynos5250: Enabling samsung-usbphy driver
+  USB: ehci-s5p: Add phy driver support
+  USB: ohci-exynos: Add phy driver support
+
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   12 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    5 +
+ arch/arm/mach-exynos/Kconfig                       |    1 +
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |   10 +
+ arch/arm/mach-exynos/setup-usb-phy.c               |   45 ++-
+ arch/arm/mach-s3c64xx/setup-usb-phy.c              |    2 +-
+ arch/arm/plat-samsung/include/plat/usb-phy.h       |    3 +-
+ drivers/usb/host/ehci-s5p.c                        |   65 +++-
+ drivers/usb/host/ohci-exynos.c                     |   65 +++-
+ drivers/usb/phy/Kconfig                            |    1 -
+ drivers/usb/phy/samsung-usbphy.c                   |  369 ++++++++++++++++++--
+ include/linux/platform_data/samsung-usbphy.h       |    9 +-
+ 13 files changed, 508 insertions(+), 80 deletions(-)
+
+-- 
+1.7.6.5
