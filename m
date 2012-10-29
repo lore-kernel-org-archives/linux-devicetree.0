@@ -1,7 +1,7 @@
 From: Pratyush Anand <pratyush.anand@st.com>
-Subject: [PATCH 13/15] SPEAr13xx: update kconfig for PCIe selection
-Date: Mon, 29 Oct 2012 12:31:27 +0530
-Message-ID: <d13ec089ce3a327746ddf20674a0c1f5d22acb88.1351492562.git.pratyush.anand@st.com>
+Subject: [PATCH 15/15] SPEAR13xx: update defconfig for PCIe compilation
+Date: Mon, 29 Oct 2012 12:31:29 +0530
+Message-ID: <53de70245fabbcb671cdb10663bee3c4f4610b48.1351492562.git.pratyush.anand@st.com>
 References: <cover.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,30 +14,20 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
 ---
- arch/arm/mach-spear13xx/Kconfig |   12 ++++++++++++
- 1 files changed, 12 insertions(+), 0 deletions(-)
+ arch/arm/configs/spear13xx_defconfig |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-spear13xx/Kconfig b/arch/arm/mach-spear13xx/Kconfig
-index eaadc66..4817314 100644
---- a/arch/arm/mach-spear13xx/Kconfig
-+++ b/arch/arm/mach-spear13xx/Kconfig
-@@ -16,5 +16,17 @@ config MACH_SPEAR1340
- 	select PINCTRL_SPEAR1340
- 	help
- 	  Supports ST SPEAr1340 machine configured via the device-tree
-+
- endmenu
-+
-+config SPEAR13XX_PCI
-+	bool "PCI Express support"
-+	select PCI
-+	select PCIEPORTBUS
-+	select ARCH_SUPPORTS_MSI
-+	select PCI_MSI
-+	select NEED_MACH_IO_H
-+	help
-+	  Support SPEAr13xx PCIe Dual controler as a host
-+
- endif #ARCH_SPEAR13XX
+diff --git a/arch/arm/configs/spear13xx_defconfig b/arch/arm/configs/spear13xx_defconfig
+index 3b559b8..cd9a150 100644
+--- a/arch/arm/configs/spear13xx_defconfig
++++ b/arch/arm/configs/spear13xx_defconfig
+@@ -14,6 +14,7 @@ CONFIG_PLAT_SPEAR=y
+ CONFIG_ARCH_SPEAR13XX=y
+ CONFIG_MACH_SPEAR1310=y
+ CONFIG_MACH_SPEAR1340=y
++CONFIG_SPEAR13XX_PCI=y
+ # CONFIG_SWP_EMULATE is not set
+ CONFIG_SMP=y
+ # CONFIG_ARM_CPU_TOPOLOGY is not set
 -- 
 1.7.5.4
