@@ -1,75 +1,45 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv5] Input: keypad: Add smsc ece1099 keypad driver
-Date: Mon, 29 Oct 2012 13:45:20 -0700
-Message-ID: <20121029204520.GC13256@core.coreip.homeip.net>
-References: <1351507129-10229-1-git-send-email-sourav.poddar@ti.com>
- <20121029162045.GK27566@arwen.pp.htv.fi>
- <20121029170633.GA11558@core.coreip.homeip.net>
- <20121029190516.GA29230@arwen.pp.htv.fi>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 1/2] rtc-imxdi: Support for i.MX53
+Date: Mon, 29 Oct 2012 22:00:07 +0100
+Message-ID: <20121029210007.GU1641@pengutronix.de>
+References: <1350576370-29098-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121029190516.GA29230-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1350576370-29098-1-git-send-email-stigge@antcom.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roland Stigge <stigge@antcom.de>
+Cc: a.zummo@towertech.it, grant.likely@secretlab.ca, rob.herring@calxeda.com, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2012 at 09:05:53PM +0200, Felipe Balbi wrote:
-> Hi,
+On Thu, Oct 18, 2012 at 06:06:08PM +0200, Roland Stigge wrote:
+> This patch enables support for i.MX53 in addition to i.MX25 by enabling the
+> driver on ARCH_MXC generally.
 > 
-> On Mon, Oct 29, 2012 at 10:06:33AM -0700, Dmitry Torokhov wrote:
-> 
-> [ big snip ]
-> 
-> > > > +static int __devexit smsc_remove(struct platform_device *pdev)
-> > > > +{
-> > > 
-> > > shouldn't you unregister the input device here ??
-> > 
-> > And that is why I do not like devm_* interface myself... But no, since
-> > input device was allocated with devm_input_allocate_device() it does not
-> > need to be explicitly freed or unregistered.
-> 
-> IMHO, that's a fragility on current devm implementation for input
-> devices, then.
-> 
-> devm_input_allocate_device() is *only* allocating the input device (at
-> least judging by the name). Looks like you should introduce
-> devm_input_register_device() ? What happens if I
-> devm_input_allocate_device() but don't go as far as
-> input_register_device() (some error happens in-between) ?
-> 
+> Signed-off-by: Roland Stigge <stigge@antcom.de>
 
-It will be freed automatically.
+Acked-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-> I'm sure you have some proper handling for it, but it's quite misleading
-> the way this was implemented.
-
-Well, I could add devm_input_register_device(),
-devm_input_unregister_device(), devm_input_free_device() and then add
-checks to "normal" input_register_device(), input_unregister_device()
-and input_free_device() to throw warnings and errors if they are used
-with managed resources, and similarly add checks to devm_* API so that
-they are not called with unmanaged devices and make a big mess out of
-it.
-
-_OR_ I could just add one new call devm_input_allocate_device() to
-create managed input devices and make the rest of old API work with both
-managed and unmanaged input devices. I think the latter is much better.
-
-Thanks.
+> ---
+>  drivers/rtc/Kconfig |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-2.6.orig/drivers/rtc/Kconfig
+> +++ linux-2.6/drivers/rtc/Kconfig
+> @@ -768,7 +768,7 @@ config RTC_DRV_DAVINCI
+>  
+>  config RTC_DRV_IMXDI
+>  	tristate "Freescale IMX DryIce Real Time Clock"
+> -	depends on SOC_IMX25
+> +	depends on ARCH_MXC
+>  	help
+>  	   Support for Freescale IMX DryIce RTC
+>  
+> 
 
 -- 
-Dmitry
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
