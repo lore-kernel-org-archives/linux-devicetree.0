@@ -1,7 +1,7 @@
 From: Pratyush Anand <pratyush.anand@st.com>
-Subject: [PATCH 10/15] SPEAr13xx: DTS: Add auxiliary data for PCIe host
-Date: Mon, 29 Oct 2012 12:31:24 +0530
-Message-ID: <91c2505d23f161ce535b220dea497e2c3abfd7f6.1351492562.git.pratyush.anand@st.com>
+Subject: [PATCH 09/15] SPEAr13xx: dts: Fix PCIe core address ranges
+Date: Mon, 29 Oct 2012 12:31:23 +0530
+Message-ID: <6ed9683e3149a640b4333cf3039ae31063b23e3b.1351492562.git.pratyush.anand@st.com>
 References: <cover.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,59 +12,55 @@ To: arnd@arndb.de, shiraz.hashim@st.com, viresh.linux@gmail.com
 Cc: spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net, Pratyush Anand <pratyush.anand@st.com>
 List-Id: devicetree@vger.kernel.org
 
+Each PCIe controller has 256 MB of address space whcih is accessible by
+AHB and used to communicate with PCIe devices connected with the host
+controller.
+
 Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
 ---
- arch/arm/boot/dts/spear13xx.dtsi |   24 ++++++++++++++++++++++++
- 1 files changed, 24 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/spear13xx.dtsi |    9 +++++----
+ 1 files changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-index b7990754..fe55d21 100644
+index 9ff4f5f..b7990754 100644
 --- a/arch/arm/boot/dts/spear13xx.dtsi
 +++ b/arch/arm/boot/dts/spear13xx.dtsi
-@@ -199,6 +199,14 @@
+@@ -76,7 +76,8 @@
+ 		#size-cells = <1>;
+ 		compatible = "simple-bus";
+ 		ranges = <0x50000000 0x50000000 0x10000000
+-			  0xb0000000 0xb0000000 0x10000000
++			  0x80000000 0x80000000 0x20000000
++			  0xb0000000 0xb0000000 0x20000000
+ 			  0xd0000000 0xd0000000 0x02000000
+ 			  0xd8000000 0xd8000000 0x01000000
+ 			  0xe0000000 0xe0000000 0x10000000>;
+@@ -194,7 +195,7 @@
+ 		pcie0@b1000000 {
+ 			compatible = "st,pcie-gadget", "st,pcie-host" ;
+ 			reg = < 0xb1000000 0x4000
+-				0x80000000 0x2000
++				0x80000000 0x10000000
  				0xeb800000 0x1000 >;
  			interrupts = <0 68 0x4>;
  			status = "disabled";
-+			pcie-host,is_host = <1>;
-+			pcie-host,is_gen1 = <0>;
-+			pcie-host,cfg0_size = <0x100000>;
-+			pcie-host,cfg1_size = <0x100000>;
-+			pcie-host,mem_size = <0xFC00000>;
-+			pcie-host,msg_size = <0x100000>;
-+			/* Entire DDR Area */
-+			pcie-host,in_mem_size = <0x80000000>;
- 		};
- 
+@@ -203,7 +204,7 @@
  		pcie1@b1800000 {
-@@ -208,6 +216,14 @@
+ 			compatible = "st,pcie-gadget", "st,pcie-host" ;
+ 			reg = < 0xb1800000 0x4000
+-				0x90000000 0x2000
++				0x90000000 0x10000000
  				0xeb804000 0x1000 >;
  			interrupts = <0 69 0x4>;
  			status = "disabled";
-+			pcie-host,is_host = <1>;
-+			pcie-host,is_gen1 = <0>;
-+			pcie-host,cfg0_size = <0x100000>;
-+			pcie-host,cfg1_size = <0x100000>;
-+			pcie-host,mem_size = <0xFC00000>;
-+			pcie-host,msg_size = <0x100000>;
-+			/* Entire DDR Area */
-+			pcie-host,in_mem_size = <0x80000000>;
- 		};
- 
+@@ -212,7 +213,7 @@
  		pcie2@b4000000 {
-@@ -217,6 +233,14 @@
+ 			compatible = "st,pcie-gadget", "st,pcie-host" ;
+ 			reg = < 0xb4000000 0x4000
+-				0xc0000000 0x2000
++				0xc0000000 0x10000000
  				0xeb808000 0x1000 >;
  			interrupts = <0 70 0x4>;
  			status = "disabled";
-+			pcie-host,is_host = <1>;
-+			pcie-host,is_gen1 = <0>;
-+			pcie-host,cfg0_size = <0x100000>;
-+			pcie-host,cfg1_size = <0x100000>;
-+			pcie-host,mem_size = <0xFC00000>;
-+			pcie-host,msg_size = <0x100000>;
-+			/* Entire DDR Area */
-+			pcie-host,in_mem_size = <0x80000000>;
- 		};
- 
- 		c3@e1800000 {
 -- 
 1.7.5.4
