@@ -1,15 +1,13 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv5] Input: keypad: Add smsc ece1099 keypad driver
-Date: Mon, 29 Oct 2012 10:06:33 -0700
-Message-ID: <20121029170633.GA11558@core.coreip.homeip.net>
-References: <1351507129-10229-1-git-send-email-sourav.poddar@ti.com>
- <20121029162045.GK27566@arwen.pp.htv.fi>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Representation of external memory-mapped devices in DT (gpmc)
+Date: Mon, 29 Oct 2012 18:22:15 +0100
+Message-ID: <508EBB47.8070405@gmail.com>
+References: <508E9513.7050106@gmail.com> <508E9C42.10907@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121029162045.GK27566-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+In-Reply-To: <508E9C42.10907-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,141 +18,80 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "Nori,
+ Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2012 at 06:20:45PM +0200, Felipe Balbi wrote:
-> Hi,
+On 29.10.2012 16:09, Rob Herring wrote:
+> On 10/29/2012 09:39 AM, Daniel Mack wrote:
+>> Hi,
+>>
+>> we're currently working on a DT binding for the GPMC bus that is found
+>> on SoCs by TI. The implementation is based on CS lines and an 8, 16 or
+>> 32 bit parallel interface. That IP is quite flexible, and it can for
+>> example be used for physmap flash, external peripherals or even NAND.
+>>
+>> Depending on which CS is used to control the device, different memory
+>> regions are reserved, and there's code to calculate the location and
+>> size of them, given a CS number (see arch/arm/mach-omap2/gpmc.c).
 > 
-> On Mon, Oct 29, 2012 at 04:08:49PM +0530, Sourav Poddar wrote:
-> > +static int __devinit
-> > +smsc_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct input_dev *input;
-> > +	struct smsc_keypad *kp;
-> > +	int ret = 0;
-> > +	int i, max_keys, row_shift;
-> > +	int irq;
-> > +	int addr;
-> > +
-> > +	kp = devm_kzalloc(dev, sizeof(*kp), GFP_KERNEL);
-> > +
-> > +	input = devm_input_allocate_device(dev);
-> > +	if (!kp || !input)
-> > +		ret = -ENOMEM;
-> > +
-> > +	ret = smsc_keypad_parse_dt(dev, kp);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Get the debug Device */
-> > +	kp->input = input;
-> > +	kp->irq = platform_get_irq(pdev, 0);
-> > +	kp->dev = dev;
-> > +
-> > +	/* setup input device */
-> > +	 __set_bit(EV_KEY, input->evbit);
-> > +
-> > +	/* Enable auto repeat feature of Linux input subsystem */
-> > +	if (!kp->no_autorepeat)
-> > +		__set_bit(EV_REP, input->evbit);
-> > +
-> > +	input_set_capability(input, EV_MSC, MSC_SCAN);
-> > +	input->name             = "SMSC Keypad";
-> > +	input->phys             = "smsc_keypad/input0";
-> > +	input->dev.parent       = &pdev->dev;
-> > +	input->id.bustype       = BUS_HOST;
-> > +	input->id.vendor        = 0x0001;
-> > +	input->id.product       = 0x0001;
-> > +	input->id.version       = 0x0003;
-> > +
-> > +	input->open = smsc_keypad_open;
-> > +	input->close = smsc_keypad_close;
-> > +	input_set_drvdata(input, kp);
-> > +
-> > +	/* Mask all GPIO interrupts (0x37-0x3B) */
-> > +	for (addr = SMSC_GPIO_INT_MASK_START;
-> > +			addr < SMSC_GPIO_INT_MASK_START + 4; addr++)
-> > +		smsc_write(dev, addr, 0);
-> > +
-> > +	/* Set all outputs high (0x05-0x09) */
-> > +	for (addr = SMSC_GPIO_DATA_OUT_START;
-> > +			addr < SMSC_GPIO_DATA_OUT_START + 4; addr++)
-> > +		smsc_write(dev, addr, 0xff);
-> > +
-> > +	/* Clear all GPIO interrupts (0x32-0x36) */
-> > +	for (addr = SMSC_GPIO_INT_STAT_START;
-> > +			addr < SMSC_GPIO_INT_STAT_START + 4; addr++)
-> > +		smsc_write(dev, addr, 0xff);
-> > +
-> > +	/* Configure the smsc pins as Keyboard scan Input */
-> > +	for (i = 0; i < kp->rows; i++) {
-> > +		addr = 0x12 + i;
-> > +		smsc_write(dev, addr, SMSC_KP_KSI);
-> > +	}
-> > +
-> > +	/* Configure the smsc pins as Keyboard scan output */
-> > +	for (i = 0; i < kp->cols; i++) {
-> > +		addr = 0x1a + i;
-> > +		smsc_write(dev, addr, SMSC_KP_KSO);
-> > +	}
-> > +
-> > +	smsc_write(dev, SMSC_KP_INT_STAT, SMSC_KP_SET_HIGH);
-> > +	smsc_write(dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
-> > +	smsc_write(dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
-> > +
-> > +	row_shift = get_count_order(kp->cols);
-> > +	max_keys = kp->rows << row_shift;
-> > +
-> > +	kp->row_shift = row_shift;
-> > +	kp->keymap = devm_kzalloc(dev, max_keys * sizeof(kp->keymap[0]),
-> > +					GFP_KERNEL);
-> > +	if (!kp->keymap) {
-> > +		dev_err(dev, "Not enough memory for keymap\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	ret = matrix_keypad_build_keymap(NULL, NULL, kp->rows,
-> > +			kp->cols, kp->keymap, input);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to build keymap\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	/*
-> > +	* This ISR will always execute in kernel thread context because of
-> > +	* the need to access the SMSC over the I2C bus.
-> > +	*/
-> > +	ret = devm_request_threaded_irq(dev, kp->irq, NULL, do_kp_irq,
-> > +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT, pdev->name, kp);
-> > +	if (ret) {
-> > +		dev_dbg(dev, "request_irq failed for irq no=%d\n",
-> > +			irq);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = input_register_device(input);
-> > +	if (ret) {
-> > +		dev_err(kp->dev,
-> > +			"Unable to register twl4030 keypad device\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int __devexit smsc_remove(struct platform_device *pdev)
-> > +{
+> I don't know the details of the h/w, but I would think the DT core code
+> should be able work out the addresses. This can be done using ranges
+> property which defines the mapping of a child bus into the parent bus
+> addresses.
+
+In this case, the controller is @0x50000000 while the external device is
+mapped to address 0x0.
+
+>> The binding will use one top-level node to describe the GPMC controller
+>> itself and register the actual devices as sub-nodes to it. The NAND type
+>> is the only one that is currently supported. This is how it currently looks:
+>>
+>> 	gpmc: gpmc@50000000 {
+>> 		compatible = "ti,gpmc";
+>> 		ti,hwmods = "gpmc";
+>> 		reg = <0x50000000 0x2000>;
+>> 		interrupt-parent = <&intc>;
+>> 		interrupts = <100>;
+>> 		#address-cells = <1>;
+>> 		#size-cells = <0>;
+>>
+>> 		nand@0 {
 > 
-> shouldn't you unregister the input device here ??
+> You may want a CS0 node with nand as a child node of that.
 
-And that is why I do not like devm_* interface myself... But no, since
-input device was allocated with devm_input_allocate_device() it does not
-need to be explicitly freed or unregistered.
+Hmm, I don't see what that would buy us. The question is which way is
+feasible for storing both the memory region and the cs number in the
+device tree. The CS number should certainly go to the child node, no?
 
-Thanks.
+IOW, would it be a good idea to have something like the following layout?
 
--- 
-Dmitry
+	gpmc: gpmc@50000000 {
+		compatible = "ti,gpmc";
+		ti,hwmods = "gpmc";
+		reg = <0x50000000 0x2000>;
+
+		/* cs-reg stores the setup of the controller's
+		   memory map */
+
+			/* offset	size */
+		cs-reg = <0x0		0x1000000
+			  ....		.....
+			  ....		.....>;
+
+		nand: child@0 {
+			/* timings */
+			/* peripheral specifics */
+		};
+	};
+
+I would actually much prefer that approach.
+
+Afzal, because because that way, we can leave the code as-is for now and
+add the "cs-reg" property once the code is switched to dynamic handling.
+What do you think?
+
+
+Thanks,
+Daniel
