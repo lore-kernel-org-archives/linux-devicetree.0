@@ -1,97 +1,115 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Representation of external memory-mapped devices in DT (gpmc)
-Date: Mon, 29 Oct 2012 18:22:15 +0100
-Message-ID: <508EBB47.8070405@gmail.com>
-References: <508E9513.7050106@gmail.com> <508E9C42.10907@gmail.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: [PATCH] pwm: Device tree support for PWM polarity.
+Date: Mon, 29 Oct 2012 23:10:27 +0530
+Message-ID: <1351532427-19881-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <508E9C42.10907-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "Nori,
- Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: thierry.reding@avionic-design.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29.10.2012 16:09, Rob Herring wrote:
-> On 10/29/2012 09:39 AM, Daniel Mack wrote:
->> Hi,
->>
->> we're currently working on a DT binding for the GPMC bus that is found
->> on SoCs by TI. The implementation is based on CS lines and an 8, 16 or
->> 32 bit parallel interface. That IP is quite flexible, and it can for
->> example be used for physmap flash, external peripherals or even NAND.
->>
->> Depending on which CS is used to control the device, different memory
->> regions are reserved, and there's code to calculate the location and
->> size of them, given a CS number (see arch/arm/mach-omap2/gpmc.c).
-> 
-> I don't know the details of the h/w, but I would think the DT core code
-> should be able work out the addresses. This can be done using ranges
-> property which defines the mapping of a child bus into the parent bus
-> addresses.
+From: "Philip, Avinash" <avinashphilip@ti.com>
 
-In this case, the controller is @0x50000000 while the external device is
-mapped to address 0x0.
+Adds support for 3rd cell in pwm-specifier. PWM polarity is encoded in
+device tree support in bit encoded form. Platforms require polarity of
+PWM device initialized during PWM device initialization has to encode
+polarity in 3rd cell of pwm-specifier.
 
->> The binding will use one top-level node to describe the GPMC controller
->> itself and register the actual devices as sub-nodes to it. The NAND type
->> is the only one that is currently supported. This is how it currently looks:
->>
->> 	gpmc: gpmc@50000000 {
->> 		compatible = "ti,gpmc";
->> 		ti,hwmods = "gpmc";
->> 		reg = <0x50000000 0x2000>;
->> 		interrupt-parent = <&intc>;
->> 		interrupts = <100>;
->> 		#address-cells = <1>;
->> 		#size-cells = <0>;
->>
->> 		nand@0 {
-> 
-> You may want a CS0 node with nand as a child node of that.
+Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+---
+:100644 100644 73ec962... e522c59... M	Documentation/devicetree/bindings/pwm/pwm.txt
+:100644 100644 f5acdaa... 1c6d50b... M	drivers/pwm/core.c
+:100644 100644 112b314... d77c5b3... M	include/linux/pwm.h
+ Documentation/devicetree/bindings/pwm/pwm.txt |   22 +++++++++++++++++++---
+ drivers/pwm/core.c                            |   13 ++++++++++++-
+ include/linux/pwm.h                           |    7 +++++++
+ 3 files changed, 38 insertions(+), 4 deletions(-)
 
-Hmm, I don't see what that would buy us. The question is which way is
-feasible for storing both the memory region and the cs number in the
-device tree. The CS number should certainly go to the child node, no?
+diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
+index 73ec962..e522c59 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+@@ -37,10 +37,26 @@ device:
+ 		pwm-names = "backlight";
+ 	};
+ 
++Note that in the example above, specifying the "pwm-names" is redundant
++because the name "backlight" would be used as fallback anyway.
++
+ pwm-specifier typically encodes the chip-relative PWM number and the PWM
+-period in nanoseconds. Note that in the example above, specifying the
+-"pwm-names" is redundant because the name "backlight" would be used as
+-fallback anyway.
++period in nanoseconds.
++Optional pwm-specifier can be encoded in 3rd cell in bit encoded form.
++ -------------------------------------------------------------
++|     Property   |  BIT position | Encoding                   |
++|-------------------------------------------------------------|
++| Polarity       |   0           | Set   -> Polarity inversed |
++|                |               | Clear -> Polarity Normal   |
++ -------------------------------------------------------------
++
++Exapmple with optional PWM specifier for inversed polarity
++
++	bl: backlight {
++		pwms = <&pwm 0 5000000 1>;
++		pwm-names = "backlight";
++	};
++
+ 
+ 2) PWM controller nodes
+ -----------------------
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index f5acdaa..1c6d50b 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -146,6 +146,15 @@ of_pwm_simple_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
+ 
+ 	pwm_set_period(pwm, args->args[1]);
+ 
++	if (pc->of_pwm_n_cells > 2) {
++		enum pwm_polarity polarity;
++
++		/* Initialize polarity of PWM device */
++		polarity = args->args[2] & POLARITY_BIT ?
++			PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
++		pwm_set_polarity(pwm, polarity);
++	}
++
+ 	return pwm;
+ }
+ 
+@@ -156,7 +165,9 @@ static void of_pwmchip_add(struct pwm_chip *chip)
+ 
+ 	if (!chip->of_xlate) {
+ 		chip->of_xlate = of_pwm_simple_xlate;
+-		chip->of_pwm_n_cells = 2;
++
++		if (chip->of_pwm_n_cells != 3)
++			chip->of_pwm_n_cells = 2;
+ 	}
+ 
+ 	of_node_get(chip->dev->of_node);
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 112b314..d77c5b3 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -78,6 +78,13 @@ enum {
+ 	PWMF_ENABLED = 1 << 1,
+ };
+ 
++/*
++ * DT Platform property support.
++ * POLARITY - set bit 0 in DT platform property
++ */
++
++#define POLARITY_BIT	BIT(0)
++
+ struct pwm_device {
+ 	const char		*label;
+ 	unsigned long		flags;
+-- 
+1.7.9.5
 
-IOW, would it be a good idea to have something like the following layout?
-
-	gpmc: gpmc@50000000 {
-		compatible = "ti,gpmc";
-		ti,hwmods = "gpmc";
-		reg = <0x50000000 0x2000>;
-
-		/* cs-reg stores the setup of the controller's
-		   memory map */
-
-			/* offset	size */
-		cs-reg = <0x0		0x1000000
-			  ....		.....
-			  ....		.....>;
-
-		nand: child@0 {
-			/* timings */
-			/* peripheral specifics */
-		};
-	};
-
-I would actually much prefer that approach.
-
-Afzal, because because that way, we can leave the code as-is for now and
-add the "cs-reg" property once the code is switched to dynamic handling.
-What do you think?
-
-
-Thanks,
-Daniel
