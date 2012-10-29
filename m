@@ -1,51 +1,393 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/4] pinctrl: samsung: Add support for Exynos4x12
-Date: Mon, 29 Oct 2012 11:28:23 +0100
-Message-ID: <2350814.8tYbDqrzVz@amdc1227>
-References: <1351089457-8205-1-git-send-email-t.figa@samsung.com>
- <CACRpkdaoQP2jat_mr2wr30M39eogKAq77Gw2VoNPWbgHjgW+zw@mail.gmail.com>
- <CAH9JG2V2UjuvjK2_sjLQsEt21duCqyoQuAi0KsMfB+CjRrh8KQ@mail.gmail.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCHv5] Input: keypad: Add smsc ece1099 keypad driver
+Date: Mon, 29 Oct 2012 16:08:49 +0530
+Message-ID: <1351507129-10229-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAH9JG2V2UjuvjK2_sjLQsEt21duCqyoQuAi0KsMfB+CjRrh8KQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, kgene.kim@samsung.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, tomasz.figa@gmail.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: linux-input@vger.kernel.org, linux-omap@vger.kernel.org, b-cousson@ti.com, balbi@ti.com, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, sourav.poddar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus, Kyungmin,
+From: G, Manjunath Kondaiah <manjugk@ti.com>
 
-On Monday 29 of October 2012 09:30:26 Kyungmin Park wrote:
-> On 10/29/12, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Wed, Oct 24, 2012 at 4:37 PM, Tomasz Figa <t.figa@samsung.com> 
-wrote:
-> >> This patch extends the driver with any necessary SoC-specific
-> >> definitions to support Exynos4x12 SoCs.
-> >> 
-> >> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> >> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> > 
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> > 
-> > I guess you need all of this to go into my Samsung branch?
-> > I need and ACK from the Samsung maintainer and preferably
-> > Thomas A as well.
-> 
-> Hi,
-> 
-> Now we're trying to send the standalone patches to avoid the conflict.
-> and hope to merge patches via proper subsystem. In this case, pinctl.
+SMSC ECE1099 is a keyboard scan or GPIO expansion device.The device
+supports a keypad scan matrix of 23*8.This driver uses this
+device as a keypad driver.
 
-Since this depends on the patch adding Exynos4x12 dts files
-([PATCH] ARM: dts: exynos4: Add support for Exynos4x12 SoCs),
-which will be going through Kgene's tree and this patch series contains 
-mostly SoC-specific code, maybe this should rather go through Kgene's 
-tree? Or this is not a problem?
+Tested on omap5430 evm with 3.7-rc1 kernel.
 
-Best regards,
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Felipe Balbi <balbi@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: G, Manjunath Kondaiah <manjugk@ti.com>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+Acked-by: Felipe Balbi <balbi@ti.com>
+---
+v4->v5
+- changed to use manage resource input framework
+- rearrange report event into a seperate api.
+- change hex values to lowercase throughout.
+- Implement ->open and ->close apis.
+- cleanup of unused variable and structure.
+ drivers/input/keyboard/Kconfig               |   13 +
+ drivers/input/keyboard/Makefile              |    1 +
+ drivers/input/keyboard/smsc-ece1099-keypad.c |  310 ++++++++++++++++++++++++++
+ 3 files changed, 324 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/input/keyboard/smsc-ece1099-keypad.c
+
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index b4b65af..af3f3d0 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -593,6 +593,19 @@ config KEYBOARD_TWL4030
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called twl4030_keypad.
+ 
++config KEYBOARD_SMSC
++       tristate "SMSC ECE1099 keypad support"
++       depends on I2C && OF
++       depends on MFD_SMSC
++       select INPUT_MATRIXKMAP
++       help
++         Say Y here if your board use the smsc keypad controller
++         for omap5 defconfig. It's safe to say enable this
++         even on boards that don't use the keypad controller.
++
++         To compile this driver as a module, choose M here: the
++         module will be called smsc-ece1099-keypad.
++
+ config KEYBOARD_XTKBD
+ 	tristate "XT keyboard"
+ 	select SERIO
+diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+index 44e7600..0f2aa26 100644
+--- a/drivers/input/keyboard/Makefile
++++ b/drivers/input/keyboard/Makefile
+@@ -52,5 +52,6 @@ obj-$(CONFIG_KEYBOARD_TC3589X)		+= tc3589x-keypad.o
+ obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
+ obj-$(CONFIG_KEYBOARD_TNETV107X)	+= tnetv107x-keypad.o
+ obj-$(CONFIG_KEYBOARD_TWL4030)		+= twl4030_keypad.o
++obj-$(CONFIG_KEYBOARD_SMSC)            += smsc-ece1099-keypad.o
+ obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
+ obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
+diff --git a/drivers/input/keyboard/smsc-ece1099-keypad.c b/drivers/input/keyboard/smsc-ece1099-keypad.c
+new file mode 100644
+index 0000000..04e04fb
+--- /dev/null
++++ b/drivers/input/keyboard/smsc-ece1099-keypad.c
+@@ -0,0 +1,310 @@
++/*
++ * SMSC_ECE1099 Keypad driver
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/input.h>
++#include <linux/gpio.h>
++#include <linux/slab.h>
++#include <linux/jiffies.h>
++#include <linux/input/matrix_keypad.h>
++#include <linux/delay.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/smsc.h>
++#include <linux/of_gpio.h>
++#include <linux/of.h>
++
++#define KEYPRESS_TIME          200
++
++struct smsc_keypad {
++	unsigned int last_key_state[16];
++	unsigned int last_col;
++	unsigned int last_key_ms[16];
++	unsigned short *keymap;
++	struct i2c_client *client;
++	struct input_dev *input;
++	int rows, cols;
++	int row_shift;
++	bool no_autorepeat;
++	unsigned        irq;
++	struct device *dev;
++};
++
++static void smsc_kp_report_event(struct smsc_keypad *kp, int col, int temp)
++{
++	struct input_dev *input = kp->input;
++	int j, code, row;
++	unsigned int new_state[16];
++	unsigned int bits_changed;
++	int this_ms;
++
++	for (j = 0; j < kp->rows; j++) {
++		if ((temp & 0x01) != 0x00) {
++			temp = temp >> 1;
++			continue;
++		}
++
++		row = j;
++		new_state[col] =  (1 << row);
++		bits_changed = kp->last_key_state[col] ^ new_state[col];
++		this_ms = jiffies_to_msecs(jiffies);
++		if (bits_changed != 0 || (!bits_changed &&
++				((this_ms - kp->last_key_ms[col]) >= KEYPRESS_TIME))) {
++			code = MATRIX_SCAN_CODE(row, col, kp->row_shift);
++			input_event(input, EV_MSC, MSC_SCAN, code);
++			input_report_key(input, kp->keymap[code], 1);
++			input_report_key(input, kp->keymap[code], 0);
++			kp->last_key_state[col] = new_state[col];
++			if (kp->last_col != col)
++				kp->last_key_state[kp->last_col] = 0;
++			kp->last_key_ms[col] = this_ms;
++		}
++		temp = temp >> 1;
++	}
++}
++
++static void smsc_kp_scan(struct smsc_keypad *kp)
++{
++	struct input_dev *input = kp->input;
++	int i, col, temp;
++
++	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0x00);
++	smsc_write(kp->dev, SMSC_KP_INT_STAT, 0xff);
++
++	/* Scan for row and column */
++	for (i = 0; i < kp->cols; i++) {
++		smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_EVAL + i);
++		/* Read Row Status */
++		smsc_read(kp->dev, SMSC_KP_IN, &temp);
++		if (temp == 0xff)
++			continue;
++
++		col = i;
++		smsc_kp_report_event(kp, col, temp);
++	}
++	input_sync(input);
++
++	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0xff);
++
++	/* Set up Low Power Mode (Wake-up) (0xFB) */
++	smsc_write(kp->dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
++
++	/*Enable Keypad Scan (generate interrupt on key press) (0x40)*/
++	smsc_write(kp->dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
++}
++
++static int smsc_keypad_open(struct input_dev *input)
++{
++	struct smsc_keypad *kp = input_get_drvdata(input);
++	int ret;
++
++	ret = smsc_write(kp->dev, SMSC_KP_INT_MASK, 0xff);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static void smsc_keypad_close(struct input_dev *input)
++{
++	struct smsc_keypad *kp = input_get_drvdata(input);
++
++	smsc_write(kp->dev, SMSC_KP_INT_MASK, 0x0);
++}
++
++static irqreturn_t do_kp_irq(int irq, void *_kp)
++{
++	struct smsc_keypad *kp = _kp;
++	int int_status;
++
++	smsc_read(kp->dev, SMSC_KP_INT_STAT, &int_status);
++	if (int_status)
++		smsc_kp_scan(kp);
++
++	return IRQ_HANDLED;
++}
++
++#ifdef CONFIG_OF
++static int __devinit smsc_keypad_parse_dt(struct device *dev,
++				struct smsc_keypad *kp)
++{
++	struct device_node *np = dev->of_node;
++
++	if (!np) {
++		dev_err(dev, "missing DT data");
++		return -EINVAL;
++	}
++
++	of_property_read_u32(np, "keypad,num-rows", &kp->rows);
++	of_property_read_u32(np, "keypad,num-columns", &kp->cols);
++	if (!kp->rows || !kp->cols) {
++		dev_err(dev, "number of keypad rows/columns not specified\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_bool(np, "linux,input-no-autorepeat"))
++		kp->no_autorepeat = true;
++
++	return 0;
++}
++#else
++static inline int smsc_keypad_parse_dt(struct device *dev,
++				struct smsc_keypad *kp)
++{
++	return -ENOSYS;
++}
++#endif
++
++static int __devinit
++smsc_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct input_dev *input;
++	struct smsc_keypad *kp;
++	int ret = 0;
++	int i, max_keys, row_shift;
++	int irq;
++	int addr;
++
++	kp = devm_kzalloc(dev, sizeof(*kp), GFP_KERNEL);
++
++	input = devm_input_allocate_device(dev);
++	if (!kp || !input)
++		ret = -ENOMEM;
++
++	ret = smsc_keypad_parse_dt(dev, kp);
++	if (ret)
++		return ret;
++
++	/* Get the debug Device */
++	kp->input = input;
++	kp->irq = platform_get_irq(pdev, 0);
++	kp->dev = dev;
++
++	/* setup input device */
++	 __set_bit(EV_KEY, input->evbit);
++
++	/* Enable auto repeat feature of Linux input subsystem */
++	if (!kp->no_autorepeat)
++		__set_bit(EV_REP, input->evbit);
++
++	input_set_capability(input, EV_MSC, MSC_SCAN);
++	input->name             = "SMSC Keypad";
++	input->phys             = "smsc_keypad/input0";
++	input->dev.parent       = &pdev->dev;
++	input->id.bustype       = BUS_HOST;
++	input->id.vendor        = 0x0001;
++	input->id.product       = 0x0001;
++	input->id.version       = 0x0003;
++
++	input->open = smsc_keypad_open;
++	input->close = smsc_keypad_close;
++	input_set_drvdata(input, kp);
++
++	/* Mask all GPIO interrupts (0x37-0x3B) */
++	for (addr = SMSC_GPIO_INT_MASK_START;
++			addr < SMSC_GPIO_INT_MASK_START + 4; addr++)
++		smsc_write(dev, addr, 0);
++
++	/* Set all outputs high (0x05-0x09) */
++	for (addr = SMSC_GPIO_DATA_OUT_START;
++			addr < SMSC_GPIO_DATA_OUT_START + 4; addr++)
++		smsc_write(dev, addr, 0xff);
++
++	/* Clear all GPIO interrupts (0x32-0x36) */
++	for (addr = SMSC_GPIO_INT_STAT_START;
++			addr < SMSC_GPIO_INT_STAT_START + 4; addr++)
++		smsc_write(dev, addr, 0xff);
++
++	/* Configure the smsc pins as Keyboard scan Input */
++	for (i = 0; i < kp->rows; i++) {
++		addr = 0x12 + i;
++		smsc_write(dev, addr, SMSC_KP_KSI);
++	}
++
++	/* Configure the smsc pins as Keyboard scan output */
++	for (i = 0; i < kp->cols; i++) {
++		addr = 0x1a + i;
++		smsc_write(dev, addr, SMSC_KP_KSO);
++	}
++
++	smsc_write(dev, SMSC_KP_INT_STAT, SMSC_KP_SET_HIGH);
++	smsc_write(dev, SMSC_WKUP_CTRL, SMSC_KP_SET_LOW_PWR);
++	smsc_write(dev, SMSC_KP_OUT, SMSC_KSO_ALL_LOW);
++
++	row_shift = get_count_order(kp->cols);
++	max_keys = kp->rows << row_shift;
++
++	kp->row_shift = row_shift;
++	kp->keymap = devm_kzalloc(dev, max_keys * sizeof(kp->keymap[0]),
++					GFP_KERNEL);
++	if (!kp->keymap) {
++		dev_err(dev, "Not enough memory for keymap\n");
++		return -ENOMEM;
++	}
++
++	ret = matrix_keypad_build_keymap(NULL, NULL, kp->rows,
++			kp->cols, kp->keymap, input);
++	if (ret) {
++		dev_err(dev, "failed to build keymap\n");
++		return ret;
++	}
++
++	/*
++	* This ISR will always execute in kernel thread context because of
++	* the need to access the SMSC over the I2C bus.
++	*/
++	ret = devm_request_threaded_irq(dev, kp->irq, NULL, do_kp_irq,
++			IRQF_TRIGGER_FALLING | IRQF_ONESHOT, pdev->name, kp);
++	if (ret) {
++		dev_dbg(dev, "request_irq failed for irq no=%d\n",
++			irq);
++		return ret;
++	}
++
++	ret = input_register_device(input);
++	if (ret) {
++		dev_err(kp->dev,
++			"Unable to register twl4030 keypad device\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int __devexit smsc_remove(struct platform_device *pdev)
++{
++	return 0;
++}
++
++static const struct of_device_id smsc_keypad_dt_match[] = {
++	{ .compatible = "smsc,keypad" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, smsc_keypad_dt_match);
++
++static struct platform_driver smsc_driver = {
++	.driver = {
++		.name	= "smsc-keypad",
++		.of_match_table = of_match_ptr(smsc_keypad_dt_match),
++		.owner  = THIS_MODULE,
++	},
++	.probe		= smsc_probe,
++	.remove		= __devexit_p(smsc_remove),
++};
++
++module_platform_driver(smsc_driver);
++
++MODULE_AUTHOR("G Kondaiah Manjunath <manjugk@ti.com>");
++MODULE_DESCRIPTION("SMSC ECE1099 Keypad driver");
++MODULE_LICENSE("GPL v2");
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+1.7.1
+
