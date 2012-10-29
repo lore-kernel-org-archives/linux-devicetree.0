@@ -1,47 +1,78 @@
-From: Kyungmin Park <kyungmin.park@samsung.com>
-Subject: Re: [PATCH 3/4] pinctrl: samsung: Add support for Exynos4x12
-Date: Mon, 29 Oct 2012 09:30:26 +0900
-Message-ID: <CAH9JG2V2UjuvjK2_sjLQsEt21duCqyoQuAi0KsMfB+CjRrh8KQ@mail.gmail.com>
-References: <1351089457-8205-1-git-send-email-t.figa@samsung.com>
-	<1351089457-8205-4-git-send-email-t.figa@samsung.com>
-	<CACRpkdaoQP2jat_mr2wr30M39eogKAq77Gw2VoNPWbgHjgW+zw@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] pinctrl: single: support gpio request and free
+Date: Mon, 29 Oct 2012 09:55:48 +0800
+Message-ID: <CAN1soZzb-un9MqVGVy8iEzT_8ag8zQyFO=deB7=VQG2K73oouw@mail.gmail.com>
+References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350922139-3693-3-git-send-email-haojian.zhuang@gmail.com>
+ <20121022202805.GG4730@atomide.com>
+ <20121022213709.GL4730@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaoQP2jat_mr2wr30M39eogKAq77Gw2VoNPWbgHjgW+zw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <t.figa@samsung.com>, kgene.kim@samsung.com, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, tomasz.figa@gmail.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121022213709.GL4730-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/29/12, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Oct 24, 2012 at 4:37 PM, Tomasz Figa <t.figa@samsung.com> wrote:
->
->> This patch extends the driver with any necessary SoC-specific
->> definitions to support Exynos4x12 SoCs.
+On Tue, Oct 23, 2012 at 5:37 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [121022 13:29]:
+>> * Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121022 09:11]:
+>> > --- a/drivers/pinctrl/pinctrl-single.c
+>> > +++ b/drivers/pinctrl/pinctrl-single.c
+>> > @@ -28,8 +28,10 @@
+>> >  #define DRIVER_NAME                        "pinctrl-single"
+>> >  #define PCS_MUX_PINS_NAME          "pinctrl-single,pins"
+>> >  #define PCS_MUX_BITS_NAME          "pinctrl-single,bits"
+>> > +#define PCS_GPIO_FUNC_NAME         "pinctrl-single,gpio-func"
 >>
->> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
->> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> I think we can now get rid of these defines, I initially added
+>> them as we had a bit hard time finding a suitable name for the
+>> driver. These are only used in one location, so let's not add
+>> new ones here.
+>>
+>> >  static int pcs_request_gpio(struct pinctrl_dev *pctldev,
+>> > -                   struct pinctrl_gpio_range *range, unsigned offset)
+>> > +                       struct pinctrl_gpio_range *range, unsigned pin)
+>> >  {
+>> > -   return -ENOTSUPP;
+>> > +   struct pcs_device *pcs = pinctrl_dev_get_drvdata(pctldev);
+>> > +   struct pcs_gpio_range *gpio = NULL;
+>> > +   int end, mux_bytes;
+>> > +   unsigned data;
+>> > +
+>> > +   gpio = container_of(range, struct pcs_gpio_range, range);
+>> > +   if (!gpio->func_en)
+>> > +           return 0;
+>> > +   end = range->pin_base + range->npins - 1;
+>> > +   if (pin < range->pin_base || pin > end) {
+>> > +           dev_err(pctldev->dev, "pin %d isn't in the range of "
+>> > +                   "%d to %d\n", pin, range->pin_base, end);
+>> > +           return -EINVAL;
+>> > +   }
+>> > +   mux_bytes = pcs->width / BITS_PER_BYTE;
+>> > +   data = pcs_readl(pcs->base + pin * mux_bytes) & ~pcs->fmask;
+>> > +   data |= gpio->gpio_func;
+>> > +   pcs_writel(data, pcs->base + pin * mux_bytes);
+>> > +   return 0;
+>> >  }
+>>
+>> I think I already commented on this one.. Is this safe if you don't
+>> have GPIOs configured? Or should you return -ENODEV in that case?
 >
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Oops also you should not use pcs_readl/pcs_writel in the driver
+> directly but use pcs_read instead as you can have register width other
+> than 32-bits.
 >
-> I guess you need all of this to go into my Samsung branch?
-> I need and ACK from the Samsung maintainer and preferably
-> Thomas A as well.
 
-Hi,
-
-Now we're trying to send the standalone patches to avoid the conflict.
-and hope to merge patches via proper subsystem. In this case, pinctl.
-
-Thank you,
-Kyungmin Park
->
-> Yours,
-> Linus Walleij
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+I think you're meaning pcs->read(). I'll use this interface.
