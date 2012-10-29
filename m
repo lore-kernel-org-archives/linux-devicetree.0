@@ -1,56 +1,111 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH v3 11/16] mmc: omap_hsmmc: limit max_segs with the
- EDMA DMAC
-Date: Mon, 29 Oct 2012 13:48:46 +0530
-Message-ID: <508E3BE6.3070609@ti.com>
-References: <1350566815-409-1-git-send-email-mporter@ti.com>
- <1350566815-409-12-git-send-email-mporter@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 2/5] drivers: usb: otg: make twl6030_usb as a comparator
+ driver to omap_usb2
+Date: Mon, 29 Oct 2012 11:01:03 +0200
+Message-ID: <508E45CF.70303@ti.com>
+References: <1346943430-18236-1-git-send-email-kishon@ti.com> <1346943430-18236-3-git-send-email-kishon@ti.com> <CAH+eYFAj1ecvmiJCu8QDCr3LjHT5eXjq6zsZMiVRPROoWcDuNQ@mail.gmail.com> <CAAe_U6K1RXA3b5u9WvE=2VoXym9Vj3KM7c0J27jKz+2KrV4tsg@mail.gmail.com> <CAH+eYFAhVE8cAte2PFk3jinV9n3m+eDLtE43QxzRXMScnFGcrA@mail.gmail.com> <508AA94B.10504@ti.com> <508AAA85.6070905@ti.com> <20121026163619.GB11908@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350566815-409-12-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20121026163619.GB11908@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Rabin Vincent <rabin@rab.in>, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/18/2012 6:56 PM, Matt Porter wrote:
-> The EDMA DMAC has a hardware limitation that prevents supporting
-> scatter gather lists with any number of segments. Since the EDMA
-> DMA Engine driver sets the maximum segments to 16, we do the
-> same.
+Hi Tony,
+
+On 10/26/2012 07:36 PM, Tony Lindgren wrote:
+> * Benoit Cousson <b-cousson@ti.com> [121026 08:23]:
+>> Hi Roger,
+>>
+>> On 10/26/2012 05:16 PM, Roger Quadros wrote:
+>>> Hi Kishon & Benoit,
+>>>
+>>> On 09/24/2012 12:06 PM, Rabin Vincent wrote:
+>>>> 2012/9/24 ABRAHAM, KISHON VIJAY <kishon@ti.com>:
+>>>>> On Sat, Sep 22, 2012 at 3:03 AM, Rabin Vincent <rabin@rab.in> wrote:
+>>>>>> USB doesn't work on pandaboard on linux-next, and bisection shows this
+>>>>>> patch.  Unfortunately, I can't provide a dmesg log because USB is the
+>>>>>> only way I currently have to get one out(!), but presumably it's because
+>>>>>> this omap-usb2 device is never registered?  Looks like this breaks
+>>>>>> non-dt USB on pandaboard; is that intended?
+>>>>>
+>>>>> Yes. omap-usb2 is *only* dt supported (New drivers shouldn't have the
+>>>>> old non-dt support).
+>>>>
+>>>> Well, USB used to work fine on Pandaboard without DT before the
+>>>> introduction of "omap-usb2", so one would expected it to continue
+>>>> working (until the board file is completely removed).
+>>>>
+>>>> Anyway, I've moved to DT now.
+>>>>
+>>>>> Some patches are queued only for 3.7.
+>>>>>
+>>>>> In case you want to use MUSB please use these patches on linux-next..
+>>>>> [PATCH v2] arm: omap: hwmod: make *phy_48m* as the main_clk of ocp2scp
+>>>>> [PATCH] ARM: OMAP2+: hwmod data: Fix ocp2scp_usb_phy and usb_host_hs
+>>>>> entries (from Benoit)
+>>>>> [PATCH 0/2] ARM: dts: Add subnode for ocp2scp (patch series)
+>>>>> [PATCH v3 0/3] ARM: dts: omap: add dt data for MUSB (patch series)
+>>>>
+>>>> I got these by merging in Benoit's for_3.7/dts_part2 on top of
+>>>> next-20120921.  Thanks.
+>>>> --
+>>>> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+>>>> the body of a message to majordomo@vger.kernel.org
+>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>>
+>>>
+>>> I still can't get musb to work on 3.7-rc2. Apparently it is still
+>>> missing the patches from Benoit's for_3.7/dts_part2.
+>>>
+>>> Maybe I just need to wait for it to be merged?
+>>
+>> They are now in a for_3.8/dts. Unfortunately, one patch that was adding
+>> ctrl_module address in the USB data was rejected and thus I'm not sure
+>> it will work without that.
+>>
+>> I think Tony had an idea to map the ctrl_register to regulator fmwk or
+>> something like that.
 > 
-> TODO: this will be replaced once the DMA Engine API supports an
-> API to query the DMAC's segment size limit.
-> 
-> Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/mmc/host/omap_hsmmc.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index b327cd0..52bab01 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -1828,6 +1828,16 @@ static int __devinit omap_hsmmc_probe(struct platform_device *pdev)
->  	 * as we want. */
->  	mmc->max_segs = 1024;
+> For device tree, we may be eventually able to handle the ctrl_register
+> using pinctrl-single.c and pinconf API. It probably does not make
+> sense to set it up as a regulator as the comparator can trigger errors
+> also for the pinconf related bits at least for MMC PBIAS.
 >  
-> +	/* Eventually we should get our max_segs limitation for EDMA by
-> +	 * querying the dmaengine API */
+>>> Till then, where can I get a tree where musb works on Panda?
+> 
+> On panda, without using device tree, use v3.7-rc2 + the following patches:
+> 
+> ARM: OMAP: ocp2scp: create omap device for ocp2scp
+> ARM: OMAP4: add _dev_attr_ to ocp2scp for representing usb_phy
+> drivers: bus: ocp2scp: add pdata support
+>
 
-Nit picking: This is not as per multi-line comment style in
-Documentation/CodingStyle.
+The above 3 patches got it to work for me. Thanks for the hint.
 
-Thanks,
-Sekhar
+> Also you need to enable CONFIG_OMAP_USB2. No idea what all is needed
+> to use MUSB with device tree at this point.
+> 
+
+Yes, you need to enable a bunch of other things which are not so easy to
+figure out for someone who has not worked with MUSB. Do you think we
+should enable musb and all dependencies in omap2plus_defconfig?
+
+One more thing to note is that building CONFIG_OMAP_USB2 as module
+breaks the kernel build with the following error.
+
+drivers/built-in.o: In function `twl4030_usb_irq':
+/work/linux-2.6/drivers/usb/otg/twl4030-usb.c:518: undefined reference
+to `omap_musb_mailbox'
+drivers/built-in.o: In function `twl4030_usb_phy_init':
+/work/linux-2.6/drivers/usb/otg/twl4030-usb.c:540: undefined reference
+to `omap_musb_mailbox'
+make: *** [vmlinux] Error 1
+
+I bet the error would come while building twl6030-usb.c too.
+
+regards,
+-roger
