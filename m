@@ -1,247 +1,115 @@
 From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: [PATCH 1/2] da8xx-fb: add DT support
-Date: Mon, 29 Oct 2012 12:51:05 +0530
-Message-ID: <1351495266-1202-1-git-send-email-prakash.pm@ti.com>
+Subject: [PATCH 2/2] video: da8xx-fb: add device tree binding information
+Date: Mon, 29 Oct 2012 12:51:06 +0530
+Message-ID: <1351495266-1202-2-git-send-email-prakash.pm@ti.com>
+References: <1351495266-1202-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1351495266-1202-1-git-send-email-prakash.pm@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 Cc: FlorianSchandinat@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, davinci-linux-open-source@linux.davincidsp.com, linux-doc@vger.kernel.org, rob@landley.net, s.trumtrar@pengutronix.de, "Manjunathappa, Prakash" <prakash.pm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-adds device tree support for da8xx-fb driver.
-
 Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
 ---
-Depends on "of: Add display helper" [1] submitted by Steffen.
-Above mentioned patch under review in community and has got
-review comments. Preparing this patch to keep things moving.
-@Steffen: Could you please include this in your next version of
-your patch.
+ Documentation/devicetree/bindings/fb/da8xx-fb.txt |   86 +++++++++++++++++++++
+ 1 files changed, 86 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/fb/da8xx-fb.txt
 
-Applies on top of LCDC cleanup patches under community review [2].
-
-[1]:http://marc.info/?l=dri-devel&m=134937362110396&w=2
-[2]:http://marc.info/?l=linux-fbdev&m=135036440702662&w=2
- drivers/video/da8xx-fb.c |  165 +++++++++++++++++++++++++++++++++++++++++-----
- 1 files changed, 149 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
-index f0f21c8..8a2b0f8 100644
---- a/drivers/video/da8xx-fb.c
-+++ b/drivers/video/da8xx-fb.c
-@@ -36,6 +36,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/lcm.h>
-+#include <linux/of_videomode.h>
- #include <video/da8xx-fb.h>
- #include <asm/div64.h>
- 
-@@ -1211,12 +1212,134 @@ static unsigned int da8xxfb_pixel_clk_period(struct da8xx_fb_par *par)
- 	return pix_clk_period_picosec;
- }
- 
-+#ifdef CONFIG_OF
-+static struct da8xx_lcdc_platform_data
-+	*da8xx_lcdc_of_get_pdata(struct platform_device *pdev,
-+			struct fb_videomode **lcdc_info)
-+{
-+	struct device_node *np;
-+	struct da8xx_lcdc_platform_data *pdata = NULL;
-+	struct lcd_ctrl_config *lcd_cfg;
-+	struct fb_videomode *panel_data = NULL;
-+	u32 data;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/fb/da8xx-fb.txt b/Documentation/devicetree/bindings/fb/da8xx-fb.txt
+new file mode 100644
+index 0000000..3fc2ef9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fb/da8xx-fb.txt
+@@ -0,0 +1,86 @@
++* Texas Instruments DaVinci da8xx-fb
 +
-+	pdata = pdev->dev.platform_data;
-+	if (!pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata) {
-+			dev_err(&pdev->dev, "Failed to allocate memory for struct da8xx_lcdc_platform_data\n");
-+			goto nodata;
-+		}
-+	}
++This file provides information of da830-fb device node.
 +
-+	np = pdev->dev.of_node;
-+	if (!np)
-+		goto nodata;
++Required properties:
++- compatible :		"ti,da830-lcd" : for DA830, DA850 and am335x platforms
++- reg :			Offset and length of the register set for the device.
++- interrupts :		standard interrupt property.
++- interrupt-parent :	The phandle for the interrupt controller that
++			services interrupts for this device.
++- panel_shade : 	panel shade for-ex MONOCHROME, PASSIVE, ACTIVE.
++- bpp : 		bits per pixel resolution.
++- display-timings: 	Panel timing information.
 +
-+	*lcdc_info = devm_kzalloc(&pdev->dev, sizeof(struct fb_videomode),
-+			GFP_KERNEL);
-+	if (!*lcdc_info) {
-+		dev_err(&pdev->dev, "Failed to allocate memory for struct fb_videomode\n");
-+		pdata = NULL;
-+		goto nodata;
-+	}
-+	panel_data = *lcdc_info;
++Optional properties:
++- ac-bias :		AC Bias Pin Frequency. This value defines the
++			number of Line Clock (LCD_HSYNC) cycles to count
++			before transitioning signal LCD_AC_ENB_CS. This
++			output may be used to periodically invert the
++			polarity of the power supply in order to prevent a
++			display DC charge build-up on the LCD panel.
 +
-+	lcd_cfg = devm_kzalloc(&pdev->dev, sizeof(struct lcd_ctrl_config),
-+			GFP_KERNEL);
-+	if (!lcd_cfg) {
-+		dev_err(&pdev->dev, "Failed to allocate memory for struct lcd_ctrl_config\n");
-+		pdata = NULL;
-+		goto nodata;
-+	}
-+	pdata->controller_data = lcd_cfg;
++- ac-bias-intrpt :	This value is used to specify the number of AC
++			Bias(LCD_AC_ENB_CS) output transition counts
++			before setting the AC bias interrupt bit in
++			register LCD_STAT. This counter is stopped when
++			the interrupt is set and remains stopped until the
++			AC bias interrupt status is cleared. A value of
++			zero will not produce an interrupt.
 +
-+	ret = of_get_fb_videomode(np, panel_data, 0);
-+	if (ret) {
-+		dev_err(&pdev->dev, "fb videomode data not specified\n");
-+		pdata = NULL;
-+		goto nodata;
-+	}
-+	/* Pixel clock is expected in Hertz */
-+	panel_data->pixclock = PICOS2KHZ(panel_data->pixclock) * 1000;
++- tft-alt-mode :	TFT Alternative Signal Mapping
++- stn-565-mode :	12-Bit-Per-Pixel (5-6-5) Mode. This is only
++			available in passive-color (STN) mode when 12 BPP
++			is specified in the palette.
 +
-+	/* Required properties */
-+	ret = of_property_read_u32(np, "panel-shade", &data);
-+	if (ret) {
-+		dev_err(&pdev->dev, "panel-shade not specified\n");
-+		pdata = NULL;
-+		goto nodata;
-+	}
-+	lcd_cfg->panel_shade = data;
++- mono-8bit-mode :	Mono 8-bit Mode
 +
-+	ret = of_property_read_u32(np, "bpp", &data);
-+	if (ret) {
-+		dev_err(&pdev->dev, "BPP of panel not specified\n");
-+		pdata = NULL;
-+		goto nodata;
-+	}
-+	lcd_cfg->bpp = data;
++- sync-edge :		This determines whether the HSYNC/VSYNC is driven
++			on the rising or falling edge of the pixel clock
 +
-+	/* Optional properties */
-+	ret = of_property_read_u32(np, "ac-bias", &data);
-+	if (!ret)
-+		lcd_cfg->ac_bias = data;
++- raster-order :	Decides data order, if 0 frame buffer data is
++			ordered from least-to-most significant bit/nibble/
++			byte/word/d-word else most-to- least significant..
 +
-+	ret = of_property_read_u32(np, "ac-bias-intrpt", &data);
-+	if (!ret)
-+		lcd_cfg->ac_bias_intrpt = data;
++- panel :		panel name along manufacturer name.
++- dma-burst-sz :	Burst Size setting for DMA transfers
++- fifo-threshold :	DMA FIFO threshold. The input FIFO becomes ready
++			so that the Raster controller can start reading
++			its content only when the number of dwords (1
++			dword is 4 bytes) specified by TH_FIFO_READY have
++			been loaded by the DMA from the frame buffer to
++			the input FIFO.
 +
-+	ret = of_property_read_u32(np, "dma-burst-sz", &data);
-+	if (!ret)
-+		lcd_cfg->dma_burst_sz = data;
++- fdd :			FIFO DMA Request Delay. Encoded value used to
++			specify the number of clocks the input FIFO DMA
++			request should be disabled. The delay clock count
++			starts after 16 words are loaded into the input
++			FIFO.
 +
-+	ret = of_property_read_u32(np, "fdd", &data);
-+	if (!ret)
-+		lcd_cfg->fdd = data;
++Example for da850-evm:
++	lcd0: lcd@1e13000 {
++		compatible = "ti,da8xx-lcd";
++		reg = <0x213000 0x1000>;
++		clock-frequency = <150000000>;
++		interrupts = <52>;
++		interrupt-parent = <&intc>;
++		panel_shade = <1>;
++		bpp = <16>;
++		display-timings {
++			default-timing = <&timing0>;
++			timing0: 480x272p53 {
++				clock = <7833600>;
++				hactive = <480>;
++				vactive = <272>;
++				hfront-porch = <2>;
++				hback-porch = <2>;
++				hsync-len = <41>;
++				vback-porch = <3>;
++				vfront-porch = <3>;
++				vsync-len = <10>;
++				hsync-active-high;
++				vsync-active-high;
++			};
++		};
++	};
 +
-+	ret = of_property_read_u32(np, "tft-alt-mode", &data);
-+	if (!ret)
-+		lcd_cfg->tft_alt_mode = data;
-+
-+	ret = of_property_read_u32(np, "stn-565-mode", &data);
-+	if (!ret)
-+		lcd_cfg->stn_565_mode = data;
-+
-+	ret = of_property_read_u32(np, "mono-8bit-mode", &data);
-+	if (!ret)
-+		lcd_cfg->mono_8bit_mode = data;
-+
-+	ret = of_property_read_u32(np, "sync-edge", &data);
-+	if (!ret)
-+		lcd_cfg->sync_edge = data;
-+
-+	ret = of_property_read_u32(np, "raster-order", &data);
-+	if (!ret)
-+		lcd_cfg->raster_order = data;
-+
-+	ret = of_property_read_u32(np, "fifo-threshold", &data);
-+	if (!ret)
-+		lcd_cfg->fifo_th = data;
-+
-+	pdev->dev.platform_data = pdata;
-+nodata:
-+	return pdata;
-+}
-+#else
-+static struct da8xx_lcdc_platform_data
-+	*da8xx_lcdc_of_get_pdata(struct platform_device *pdev,
-+			struct fb_videomode **lcdc_info)
-+{
-+	return pdev->dev.platform_data;
-+}
-+#endif
-+
- static int __devinit fb_probe(struct platform_device *device)
- {
--	struct da8xx_lcdc_platform_data *fb_pdata =
--						device->dev.platform_data;
-+	struct da8xx_lcdc_platform_data *fb_pdata = NULL;
- 	struct lcd_ctrl_config *lcd_cfg;
--	struct fb_videomode *lcdc_info;
-+	struct fb_videomode *lcdc_info = NULL;
- 	struct fb_info *da8xx_fb_info;
- 	struct clk *fb_clk = NULL;
- 	struct da8xx_fb_par *par;
-@@ -1224,6 +1347,7 @@ static int __devinit fb_probe(struct platform_device *device)
- 	int ret, i;
- 	unsigned long ulcm;
- 
-+	fb_pdata = da8xx_lcdc_of_get_pdata(device, &lcdc_info);
- 	if (fb_pdata == NULL) {
- 		dev_err(&device->dev, "Can not get platform data\n");
- 		return -ENOENT;
-@@ -1274,20 +1398,22 @@ static int __devinit fb_probe(struct platform_device *device)
- 		break;
- 	}
- 
--	for (i = 0, lcdc_info = known_lcd_panels;
--		i < ARRAY_SIZE(known_lcd_panels);
--		i++, lcdc_info++) {
--		if (strcmp(fb_pdata->type, lcdc_info->name) == 0)
--			break;
--	}
-+	if (device->dev.of_node == NULL) {
-+		for (i = 0, lcdc_info = known_lcd_panels;
-+			i < ARRAY_SIZE(known_lcd_panels);
-+			i++, lcdc_info++) {
-+			if (strcmp(fb_pdata->type, lcdc_info->name) == 0)
-+				break;
-+		}
- 
--	if (i == ARRAY_SIZE(known_lcd_panels)) {
--		dev_err(&device->dev, "GLCD: No valid panel found\n");
--		ret = -ENODEV;
--		goto err_pm_runtime_disable;
--	} else
--		dev_info(&device->dev, "GLCD: Found %s panel\n",
--					fb_pdata->type);
-+		if (i == ARRAY_SIZE(known_lcd_panels)) {
-+			dev_err(&device->dev, "GLCD: No valid panel found\n");
-+			ret = -ENODEV;
-+			goto err_pm_runtime_disable;
-+		} else
-+			dev_info(&device->dev, "GLCD: Found %s panel\n",
-+						fb_pdata->type);
-+	}
- 
- 	lcd_cfg = (struct lcd_ctrl_config *)fb_pdata->controller_data;
- 
-@@ -1577,6 +1703,12 @@ static int fb_resume(struct platform_device *dev)
- #define fb_resume NULL
- #endif
- 
-+static const struct of_device_id da830_lcdc_of_match[] = {
-+	{.compatible = "ti,da830-lcd", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, da830_lcdc_of_match);
-+
- static struct platform_driver da8xx_fb_driver = {
- 	.probe = fb_probe,
- 	.remove = __devexit_p(fb_remove),
-@@ -1585,6 +1717,7 @@ static struct platform_driver da8xx_fb_driver = {
- 	.driver = {
- 		   .name = DRIVER_NAME,
- 		   .owner = THIS_MODULE,
-+		   .of_match_table = of_match_ptr(da830_lcdc_of_match),
- 		   },
- };
- 
 -- 
 1.7.0.4
 
