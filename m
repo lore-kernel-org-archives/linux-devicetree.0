@@ -1,7 +1,7 @@
 From: Pratyush Anand <pratyush.anand@st.com>
-Subject: [PATCH 01/15] arm: source drivers/pci/pcie/kconfig
-Date: Mon, 29 Oct 2012 12:31:15 +0530
-Message-ID: <aa6170ffb74697ac58dd4cbba9c82c2049e92cd3.1351492562.git.pratyush.anand@st.com>
+Subject: [PATCH 03/15] SPEAr13xx: Add mach/io.h
+Date: Mon, 29 Oct 2012 12:31:17 +0530
+Message-ID: <cce9cba6020c30f0edb15e43fa51208524b59322.1351492562.git.pratyush.anand@st.com>
 References: <cover.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,22 +12,55 @@ To: arnd@arndb.de, shiraz.hashim@st.com, viresh.linux@gmail.com
 Cc: spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net, Pratyush Anand <pratyush.anand@st.com>
 List-Id: devicetree@vger.kernel.org
 
+In case of PCIe we need to have a different __io macro, which can write
+into PCIe address space.
+
 Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
 ---
- arch/arm/Kconfig |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ arch/arm/mach-spear13xx/include/mach/io.h |   35 +++++++++++++++++++++++++++++
+ 1 files changed, 35 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/mach-spear13xx/include/mach/io.h
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 170e215..a644454 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1434,6 +1434,7 @@ config PCI_HOST_ITE8152
- 	select DMABOUNCE
- 
- source "drivers/pci/Kconfig"
-+source "drivers/pci/pcie/Kconfig"
- 
- source "drivers/pcmcia/Kconfig"
- 
+diff --git a/arch/arm/mach-spear13xx/include/mach/io.h b/arch/arm/mach-spear13xx/include/mach/io.h
+new file mode 100644
+index 0000000..a0d93ca
+--- /dev/null
++++ b/arch/arm/mach-spear13xx/include/mach/io.h
+@@ -0,0 +1,35 @@
++/*
++ * arch/arm/mach-spear13xx/include/mach/io.h
++ *
++ * spear13xx machine family generic header file
++ *
++ * Copyright (C) 2012 ST Microelectronics
++ * Pratyush Anand <pratyush.anand@st.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#ifndef __MACH_IO_H
++#define __MACH_IO_H
++
++#define IO_SPACE_LIMIT	0xFFFF
++
++#ifdef CONFIG_SPEAR13XX_PCI
++extern void __iomem *spear13xx_pcie_io_base(unsigned long addr);
++
++static inline void __iomem *__io(unsigned long addr)
++{
++	return spear13xx_pcie_io_base(addr) + (addr & IO_SPACE_LIMIT);
++}
++#else
++static inline void __iomem *__io(unsigned long addr)
++{
++	return (void __iomem *)addr;
++}
++#endif
++
++#define __io(a)		__io(a)
++
++#endif /* __MACH_IO_H */
 -- 
 1.7.5.4
