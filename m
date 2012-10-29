@@ -1,33 +1,77 @@
-From: Mike Turquette <mturquette@ti.com>
-Subject: Re: [RFC PATCH] dt: describe base reset signal binding
-Date: Mon, 29 Oct 2012 11:32:33 -0700
-Message-ID: <20121029183233.18780.11964@nucleus>
-References: <1351028756-22309-1-git-send-email-swarren@wwwdotorg.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCHv5] Input: keypad: Add smsc ece1099 keypad driver
+Date: Mon, 29 Oct 2012 21:05:53 +0200
+Message-ID: <20121029190516.GA29230@arwen.pp.htv.fi>
+References: <1351507129-10229-1-git-send-email-sourav.poddar@ti.com>
+ <20121029162045.GK27566@arwen.pp.htv.fi>
+ <20121029170633.GA11558@core.coreip.homeip.net>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351028756-22309-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wzJLGUyc3ArbnUjN"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121029170633.GA11558@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, b-cousson@ti.com, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Warren (2012-10-23 14:45:56)
-> What do people think of this? Does it sound like a good idea to go ahead
-> with a reset subsystem? Should we simply add a new API to the common clock
-> subsystem instead (and assume that reset and clock domains match 1:1).
-> Should this be implemented as part of the generic power management domains;
-> see include/linux/pm_domain.h instead?
-> 
+--wzJLGUyc3ArbnUjN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Stephen,
+Hi,
 
-I'm not sure a "reset subsystem" is necessary, but I also do not like
-using clocks as the keys for IP reset.  I think it is more common to map
-IPs to struct device, no?
+On Mon, Oct 29, 2012 at 10:06:33AM -0700, Dmitry Torokhov wrote:
 
-And of course for clocks shared by multiple users this will not scale.
+[ big snip ]
 
-Regards,
-Mike
+> > > +static int __devexit smsc_remove(struct platform_device *pdev)
+> > > +{
+> >=20
+> > shouldn't you unregister the input device here ??
+>=20
+> And that is why I do not like devm_* interface myself... But no, since
+> input device was allocated with devm_input_allocate_device() it does not
+> need to be explicitly freed or unregistered.
+
+IMHO, that's a fragility on current devm implementation for input
+devices, then.
+
+devm_input_allocate_device() is *only* allocating the input device (at
+least judging by the name). Looks like you should introduce
+devm_input_register_device() ? What happens if I
+devm_input_allocate_device() but don't go as far as
+input_register_device() (some error happens in-between) ?
+
+I'm sure you have some proper handling for it, but it's quite misleading
+the way this was implemented.
+
+--=20
+balbi
+
+--wzJLGUyc3ArbnUjN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQjtORAAoJEIaOsuA1yqRERcgQAIleHhFic5QAq+tLZLoguWGQ
+eu71a9MhZomd/tgdKP2KxTNFBHX/XQZQfEZov+D/AV9i+ELNsT9cWppuoJ6w8P6/
+7z2Gmp3QC9LHlr5G4yuIvneo1BmsyIFaRkukY3Jo/TpS2pyfAqgmzl51gzfvxq1p
+458obuS6xrbUpKeWmFAuWUJavBxZuiNFMkcuWPnsYzk0arrOXus4qFUIZf78nJNa
+To67IZm82qjQwCYDjykyeYU52uwNn71pN4PY270YFkbJy24BI8rkbnEYQwjpOVKq
+l7qS1bMJ7PcC2JwRNL3EX3C2e4j7oYe1FKLajVnOJjGf3SfS6ThYDH/4Fqn5rxIM
+DRHU5SsSEpD1DcU2m24VUW4HXob2yP+Ew1GcFR0h2Xl9F3rxDQr6PDhRPwjcbapb
+iMZTL3qYayezUhaxpyWrhQ5o/bcnm3mD2qWrMSz5aAmEfcp6usaq6orDPCyh4KAP
+7YJS9hrH5X5R0sl9/LKBkVPKd5VuXr346E2ZFhb9EvtS/D8dUPv9ZZNXCj2Qi60Y
+LrW+en70U9qvqpUvTtfHr3fPafrdecUoEXfHhob1dta2cYAmMnWI/rdmxFQIFiX8
+LFvOmLUqnyVNUr12XIBWoOlaXYIc4DE/TgKhNw1ZJMOd1fupCySSHQ+ryCYMeyk3
+5hyECXY+eH9hRB/oS0JR
+=BA/E
+-----END PGP SIGNATURE-----
+
+--wzJLGUyc3ArbnUjN--
