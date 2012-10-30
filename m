@@ -1,87 +1,80 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH V4 3/3] clocksource: time-armada-370-xp converted to clk framework
-Date: Tue, 30 Oct 2012 19:23:33 +0100
-Message-ID: <1351621413-3637-4-git-send-email-gregory.clement@free-electrons.com>
-References: <1351621413-3637-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351621413-3637-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Ben Dooks <ben-linux@fluff.org>, Ian Molton <ian.molton@codethink.co.uk>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>, David Marlin <dmarlin@redhat.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree-discuss@lists.ozlabs.orglinux
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Tue, 30 Oct 2012 18:37:04 +0000
+Message-ID: <20121030183704.GX4511@opensource.wolfsonmicro.com>
+References: <20121025205901.GA3827@sirena.org.uk>
+ <20121026062008.GA21734@arwen.pp.htv.fi>
+ <20121026160316.GY18814@opensource.wolfsonmicro.com>
+ <20121029194901.GA30152@arwen.pp.htv.fi>
+ <20121030112410.GM4511@opensource.wolfsonmicro.com>
+ <20121030114949.GC28722@arwen.pp.htv.fi>
+ <20121030140714.GO4511@opensource.wolfsonmicro.com>
+ <20121030151642.GE29159@arwen.pp.htv.fi>
+ <20121030155821.GU4511@opensource.wolfsonmicro.com>
+ <20121030172513.GA3993@arwen.pp.htv.fi>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DMefDzZywwCHZelG"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121030172513.GA3993@arwen.pp.htv.fi>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-cc: John Stultz <johnstul@us.ibm.com>
----
- arch/arm/boot/dts/armada-370-db.dts      |    4 ----
- arch/arm/boot/dts/armada-370-xp.dtsi     |    1 +
- drivers/clocksource/time-armada-370-xp.c |   11 ++++++-----
- 3 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index fffd5c2..4a31b03 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -34,9 +34,5 @@
- 			clock-frequency = <200000000>;
- 			status = "okay";
- 		};
--		timer@d0020300 {
--			clock-frequency = <600000000>;
--			status = "okay";
--		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 16cc82c..94b4b9e 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -62,6 +62,7 @@
- 			       compatible = "marvell,armada-370-xp-timer";
- 			       reg = <0xd0020300 0x30>;
- 			       interrupts = <37>, <38>, <39>, <40>;
-+			       clocks = <&coreclk 2>;
- 		};
- 
- 		addr-decoding@d0020000 {
-diff --git a/drivers/clocksource/time-armada-370-xp.c b/drivers/clocksource/time-armada-370-xp.c
-index 4674f94..a4605fd 100644
---- a/drivers/clocksource/time-armada-370-xp.c
-+++ b/drivers/clocksource/time-armada-370-xp.c
-@@ -18,6 +18,7 @@
- #include <linux/init.h>
- #include <linux/platform_device.h>
- #include <linux/kernel.h>
-+#include <linux/clk.h>
- #include <linux/timer.h>
- #include <linux/clockchips.h>
- #include <linux/interrupt.h>
-@@ -167,7 +168,6 @@ void __init armada_370_xp_timer_init(void)
- 	u32 u;
- 	struct device_node *np;
- 	unsigned int timer_clk;
--	int ret;
- 	np = of_find_compatible_node(NULL, NULL, "marvell,armada-370-xp-timer");
- 	timer_base = of_iomap(np, 0);
- 	WARN_ON(!timer_base);
-@@ -179,13 +179,14 @@ void __init armada_370_xp_timer_init(void)
- 		       timer_base + TIMER_CTRL_OFF);
- 		timer_clk = 25000000;
- 	} else {
--		u32 clk = 0;
--		ret = of_property_read_u32(np, "clock-frequency", &clk);
--		WARN_ON(!clk || ret < 0);
-+		unsigned long rate = 0;
-+		struct clk *clk = of_clk_get(np, 0);
-+		WARN_ON(IS_ERR(clk));
-+		rate =  clk_get_rate(clk);
- 		u = readl(timer_base + TIMER_CTRL_OFF);
- 		writel(u & ~(TIMER0_25MHZ | TIMER1_25MHZ),
- 		       timer_base + TIMER_CTRL_OFF);
--		timer_clk = clk / TIMER_DIVIDER;
-+		timer_clk = rate / TIMER_DIVIDER;
- 	}
- 
- 	/* We use timer 0 as clocksource, and timer 1 for
--- 
-1.7.9.5
+--DMefDzZywwCHZelG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Oct 30, 2012 at 07:25:13PM +0200, Felipe Balbi wrote:
+> On Tue, Oct 30, 2012 at 03:58:21PM +0000, Mark Brown wrote:
+
+> > But then this comes round to the mindless code that ought to be factored
+> > out :)  Only the more interesting cases that do something unusual really
+> > register here.
+
+> fair enough. I see your point. Not saying I agree though, just that this
+> discussion has been flying for far too long, so feel free to provide
+> patches implementing what you're defending here ;-)
+
+> Guess code will speak for itself. On way or another, we need OMAP keypad
+> driver working in mainline and I don't think your arguments are strong
+> enough to keep $SUBJECT from being merged, unless you can provide
+> something stable/tested for v3.8 merge window.
+
+Ship me an OMAP5 system and I might see what I can do :)
+
+More seriously the amount of time we seem to have been spending recently
+on changes which end up requiring us to go through essentially every
+driver and add code to them (often several times) doesn't seem like
+we're doing a good job here.  pinctrl is really noticable because it's
+new but it's not the only thing.  As a subsystem maintainer this code
+just makes me want to add new subsystem features to pull the code out of
+drivers but obviously that's not something that should be being done at
+the subsystem level.
+
+--DMefDzZywwCHZelG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQkB43AAoJELSic+t+oim9I0wP/1rfBcXfK+YljZUr1hkeCm28
+8C32AJqxiOv6udgo4yLnsJmfJkCXiyrLrg5Xl3mfXL/Jl+CQVYUM3GaqatPsqA08
+0Olfa5KM+Ftsfvb91lxjvqYvYHzmkFBUY4s3Kk5Xtu0ltEeTy9Dxvzb7Sh8Pj+/m
+cwBBqwf+milN3u84ZxHvgpLshzq+prsUMq0ym7gnr8+7VeDooSM+uao5uk/hSblw
+FloanO5OkNk/FSHfc9eAEDaJVHHrxM88bWwTNkR3IvFwdB8WFVwbHpuXHlg3PhLy
+3hoiDDW8yTJxXwYy9ld8jpTg4O36kSTF5+nHYkWTAm0UUocdAEy0z4/cNnj/Wjqp
+v20zhskCYp6O1TWa5Ws34fgeifVgOKTFEYuURox1g7CXJCbnO7coQvY4GAbV5nqQ
+9GCQTIkLomOocctANrABGNEAMcNmU3E5JEhDaPMZhKRHwuMB0X1msaE+E/knwRUi
+DX3XeV70DaiAqBKyVfmKQknzgE9qbyOSuEWzIyVvMFPQw8xYDJhUKxKeMOK2U3uf
+0pKEamahZbQ6heUuyz5K6i6rUu+1zXkx3jqpVJ/DKpSM6keanNWzph0pvbT5RQX2
+ubbVGu5yOe8wZfOWfmqlAK3cztUxMBw/raCM78BMV0CbNoA2eAXoJRrUr5bCHzmZ
+Ea9qpZRWusegfByl1USM
+=V4+A
+-----END PGP SIGNATURE-----
+
+--DMefDzZywwCHZelG--
