@@ -1,56 +1,87 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH v2] ARM: dts: am33xx: rtc node
-Date: Tue, 30 Oct 2012 15:04:01 +0530
-Message-ID: <1351589646-27082-1-git-send-email-afzal@ti.com>
+From: Sourav <sourav.poddar@ti.com>
+Subject: Re: [RESEND/PATCHv3] arm: dts: omap5-evm: Add keypad support
+Date: Tue, 30 Oct 2012 15:06:34 +0530
+Message-ID: <508F9FA2.4040407@ti.com>
+References: <1351507226-10328-1-git-send-email-sourav.poddar@ti.com> <508EB250.20607@ti.com> <508F64EC.9000809@ti.com> <508F9A3E.9020105@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <508F9A3E.9020105@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Afzal Mohammed <afzal@ti.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, AnilKumar Ch <anilkumar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Vaibhav Hiremath <hvaibhav@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add am33xx rtc node.
-
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
 Hi Benoit,
-
-This is based on your for_3.8/dts branch.
-
-This has been tested on Beagle Bone.
-
-Bindings along with driver changes for DT has been picked by Andrew
-Morton and is now present in linux-next.
-
-Regards
-Afzal
-
-v2
- 1. Remove interrupt parent in rtc node.
- 2. Modify subject as per new convention.
-
-
- arch/arm/boot/dts/am33xx.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 70d24b8..97a7bd3 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -291,5 +291,13 @@
- 			ti,hwmods = "timer7";
- 			ti,timer-pwm;
- 		};
-+
-+		rtc@44e3e000 {
-+			compatible = "ti,da830-rtc";
-+			reg = <0x44e3e000 0x1000>;
-+			interrupts = <75
-+				      76>;
-+			ti,hwmods = "rtc";
-+		};
- 	};
- };
--- 
-1.7.12
+On Tuesday 30 October 2012 02:43 PM, Cousson, Benoit wrote:
+> Hi Sourav,
+>
+> On 10/30/2012 6:26 AM, Sourav wrote:
+>> Hi Benoit,
+>> On Monday 29 October 2012 10:14 PM, Benoit Cousson wrote:
+>>> Hi Sourav,
+>>>
+>>> On 10/29/2012 11:40 AM, Sourav Poddar wrote:
+>>>> Add keypad data node in omap5-evm.
+>>>>
+>>>> Based on I2C support patch for omap5, which has been
+>>>> already posted as a different series.
+>>>>
+>>>> Tested on omap5430 evm with 3.7-rc1 kernel.
+>>>>
+>>>> Cc: Felipe Balbi <balbi@ti.com>
+>>>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>>>
+>>>> Tested on omap5430 sdp with 3.7-rc1 kernel.
+>>>>
+>>>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+>>>> ---
+>>>>   arch/arm/boot/dts/omap5-evm.dts |   95
+>>>> +++++++++++++++++++++++++++++++++++++++
+>>>>   1 files changed, 95 insertions(+), 0 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/omap5-evm.dts
+>>>> b/arch/arm/boot/dts/omap5-evm.dts
+>>>> index c663eba..b812d6d 100644
+>>>> --- a/arch/arm/boot/dts/omap5-evm.dts
+>>>> +++ b/arch/arm/boot/dts/omap5-evm.dts
+>>>> @@ -140,3 +140,98 @@
+>>>>   &mcbsp3 {
+>>>>       status = "disabled";
+>>>>   };
+>>>> +
+>>>> +&i2c5 {
+>>>> +    clock-frequency = <400000>;
+>>>> +
+>>>> +    smsc@38 {
+>>>> +        compatible = "smscece1099";
+>>>> +        reg = <0x38>;
+>>>> +        clock = <0x13>;
+>>> What does that "clock" mean?
+>> This chip supports a clock control register which is used to enable the
+>> interface used by the chip to communicate. Here, the interface which you
+>> can are
+>> SMBUS interface or BC-LINK interface.
+>
+> OK, so you should use a less generic name than "clock" and potentially 
+> prefix it with "smsc," since it is not a generic attribute at all.
+>
+Sure, will think of less generic name. May be "smsc, ctrl-reg" will do.
+> BTW, cannot we use the CCF in order to control that clock?
+I don't have much idea about the CCF, so cant really comment on this.
+> I guess it is just a clock mux?
+Yes.
+> Well, anyway we need CCF for OMAP to be merged first :-)
+>
+> But it might worth highlighting this is a temporary solution.
+>
+>>> I cannot find that in the binding documentation. BTW, did you add that
+>>> documentation in the driver patch?
+>> Nope, I missed out on the dt binding documentation for the driver. :(
+>>
+>> Will send a seperate patch for the bindings.
+>
+> Thanks,
+> Benoit
+>
