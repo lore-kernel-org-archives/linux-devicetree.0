@@ -1,567 +1,214 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: [PATCH v2 2/3] mtd: devices: elm: Add support for ELM error correction
-Date: Wed, 31 Oct 2012 12:38:26 +0530
-Message-ID: <1351667307-447-3-git-send-email-avinashphilip@ti.com>
-References: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 04/15] SPEAr13xx: Add PCIe Root Complex driver support
+Date: Tue, 30 Oct 2012 22:20:23 +0000
+Message-ID: <201210302220.23690.arnd@arndb.de>
+References: <cover.1351492562.git.pratyush.anand@st.com> <b26d316d6822888ccdeecf72346c7dbd618759eb.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, afzal@ti.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rmk+kernel@arm.linux.org.uk, gregkh@linuxfoundation.org
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, ivan.djelic@parrot.com, "Philip, Avinash" <avinashphilip@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <b26d316d6822888ccdeecf72346c7dbd618759eb.1351492562.git.pratyush.anand@st.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@st.com>
+Cc: shiraz.hashim@st.com, viresh.linux@gmail.com, spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-The ELM hardware module can be used to speedup BCH 4/8/16 ECC scheme
-error correction.
-For now only 4 & 8 bit support is added
+On Monday 29 October 2012, Pratyush Anand wrote:
+> SPEAr13xx has dual mode PCIe controller which can be used as Root
+> Complex as well as Endpoint. This driver supports RC mode of the
+> controller.
+> 
+> If CONFIG_PCI_MSI is defined then support of MSI interrupt for
+> downstream  PCIe devices will be enabled.
+> 
+> If CONFIG_PM is defined then it supports suspend/resume functionality.
 
-Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
----
-Changes since v1:
-	- change build attribute to CONFIG_MTD_NAND_OMAP_BCH
-	- Reduced indentation using by passing elm_info , offset
-	  to elm_read & elm_write
-	- Removed syndrome manipulation functions.
+I think I've seen the same hardware before used with another driver.
+IMHO we should really make sure this does not get duplicated again and
+move this stuff to a new subdirectory drivers/pci/host. We don't yet have
+a completely architecture independent way of defining a PCIe root complex,
+but we're getting there and given of how many ARM implementations we have,
+we can just as well start with this one and adapt it to another arch if
+necesary.
 
-:000000 100644 0000000... b88ee83... A	Documentation/devicetree/bindings/mtd/elm.txt
-:100644 100644 395733a... 369a194... M	drivers/mtd/devices/Makefile
-:000000 100644 0000000... bb36018... A	drivers/mtd/devices/elm.c
-:000000 100644 0000000... d4fce31... A	include/linux/platform_data/elm.h
- Documentation/devicetree/bindings/mtd/elm.txt |   18 +
- drivers/mtd/devices/Makefile                  |    4 +-
- drivers/mtd/devices/elm.c                     |  418 +++++++++++++++++++++++++
- include/linux/platform_data/elm.h             |   54 ++++
- 4 files changed, 493 insertions(+), 1 deletions(-)
+> +struct pcie_port {
+> +	u8			controller;
+> +	u8			root_bus_nr;
+> +	void __iomem		*dbi_base;
+> +	void __iomem		*va_dbi_base;
+> +	void __iomem		*app_base;
+> +	void __iomem		*va_app_base;
+> +	void __iomem		*base;
+> +	void __iomem		*phy_base;
+> +	void __iomem		*va_phy_base;
+> +	void __iomem		*cfg0_base;
+> +	void __iomem		*va_cfg0_base;
+> +	void __iomem		*cfg1_base;
+> +	void __iomem		*va_cfg1_base;
+> +	void __iomem		*mem_base;
+> +	void __iomem		*io_base;
+> +	spinlock_t		conf_lock;
+> +	char			mem_space_name[16];
+> +	char			io_space_name[16];
+> +	struct resource		res[2];
+> +	struct pcie_port_info	config;
+> +	struct list_head	next;
+> +	struct clk		*clk;
+> +	int			irq;
+> +	int			virt_irq_base;
+> +	int			susp_state;
+> +};
 
-diff --git a/Documentation/devicetree/bindings/mtd/elm.txt b/Documentation/devicetree/bindings/mtd/elm.txt
-new file mode 100644
-index 0000000..b88ee83
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/elm.txt
-@@ -0,0 +1,18 @@
-+Error location module
-+
-+Required properties:
-+- compatible: Must be "ti,elm"
-+- reg: physical base address and size of the registers map.
-+- interrupts: Interrupt number for the elm.
-+- interrupt-parent: The parent interrupt controller
-+
-+Optional properties:
-+- ti,hwmods: Name of the hwmod associated to the elm
-+
-+Example:
-+elm: elm@0 {
-+	compatible	= "ti,elm";
-+	reg = <0x48080000 0x2000>;
-+	interrupt-parent = <&intc>;
-+	interrupts = <4>;
-+};
-diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
-index 395733a..369a194 100644
---- a/drivers/mtd/devices/Makefile
-+++ b/drivers/mtd/devices/Makefile
-@@ -17,8 +17,10 @@ obj-$(CONFIG_MTD_LART)		+= lart.o
- obj-$(CONFIG_MTD_BLOCK2MTD)	+= block2mtd.o
- obj-$(CONFIG_MTD_DATAFLASH)	+= mtd_dataflash.o
- obj-$(CONFIG_MTD_M25P80)	+= m25p80.o
-+obj-$(CONFIG_MTD_NAND_OMAP_BCH)	+= elm.o
- obj-$(CONFIG_MTD_SPEAR_SMI)	+= spear_smi.o
- obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
- obj-$(CONFIG_MTD_BCM47XXSFLASH)	+= bcm47xxsflash.o
- 
--CFLAGS_docg3.o			+= -I$(src)
-\ No newline at end of file
-+
-+CFLAGS_docg3.o			+= -I$(src)
-diff --git a/drivers/mtd/devices/elm.c b/drivers/mtd/devices/elm.c
-new file mode 100644
-index 0000000..bb36018
---- /dev/null
-+++ b/drivers/mtd/devices/elm.c
-@@ -0,0 +1,418 @@
-+/*
-+ * Error Location Module
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/platform_data/elm.h>
-+
-+#define ELM_IRQSTATUS			0x018
-+#define ELM_IRQENABLE			0x01c
-+#define ELM_LOCATION_CONFIG		0x020
-+#define ELM_PAGE_CTRL			0x080
-+#define ELM_SYNDROME_FRAGMENT_0		0x400
-+#define ELM_SYNDROME_FRAGMENT_6		0x418
-+#define ELM_LOCATION_STATUS		0x800
-+#define ELM_ERROR_LOCATION_0		0x880
-+
-+/* ELM Interrupt Status Register */
-+#define INTR_STATUS_PAGE_VALID		BIT(8)
-+
-+/* ELM Interrupt Enable Register */
-+#define INTR_EN_PAGE_MASK		BIT(8)
-+
-+/* ELM Location Configuration Register */
-+#define ECC_BCH_LEVEL_MASK		0x3
-+
-+/* ELM syndrome */
-+#define ELM_SYNDROME_VALID		BIT(16)
-+
-+/* ELM_LOCATION_STATUS Register */
-+#define ECC_CORRECTABLE_MASK		BIT(8)
-+#define ECC_NB_ERRORS_MASK		0x1f
-+
-+/* ELM_ERROR_LOCATION_0-15 Registers */
-+#define ECC_ERROR_LOCATION_MASK		0x1fff
-+
-+#define ELM_ECC_SIZE			0x7ff
-+
-+#define SYNDROME_FRAGMENT_REG_SIZE	0x40
-+#define ERROR_LOCATION_SIZE		0x100
-+
-+struct elm_info {
-+	struct device *dev;
-+	void __iomem *elm_base;
-+	struct completion elm_completion;
-+	struct list_head list;
-+	enum bch_ecc bch_type;
-+};
-+
-+static LIST_HEAD(elm_devices);
-+
-+static void elm_write_reg(struct elm_info *info, int offset, u32 val)
-+{
-+	writel(val, info->elm_base + offset);
-+}
-+
-+static u32 elm_read_reg(struct elm_info *info, int offset)
-+{
-+	return readl(info->elm_base + offset);
-+}
-+
-+/**
-+ * elm_config - Configure ELM module
-+ * @info:	elm info
-+ */
-+static void elm_config(struct elm_info *info)
-+{
-+	u32 reg_val;
-+
-+	reg_val = (info->bch_type & ECC_BCH_LEVEL_MASK) | (ELM_ECC_SIZE << 16);
-+	elm_write_reg(info, ELM_LOCATION_CONFIG, reg_val);
-+}
-+
-+/**
-+ * elm_configure_page_mode - Enable/Disable page mode
-+ * @info:	elm info
-+ * @index:	index number of syndrome fragment vector
-+ * @enable:	enable/disable flag for page mode
-+ *
-+ * Enable page mode for syndrome fragment index
-+ */
-+static void elm_configure_page_mode(struct elm_info *info, int index,
-+		bool enable)
-+{
-+	u32 reg_val;
-+
-+	reg_val = elm_read_reg(info, ELM_PAGE_CTRL);
-+	if (enable)
-+		reg_val |= BIT(index);	/* enable page mode */
-+	else
-+		reg_val &= ~BIT(index);	/* disable page mode */
-+
-+	elm_write_reg(info, ELM_PAGE_CTRL, reg_val);
-+}
-+
-+/**
-+ * elm_load_syndrome - Load ELM syndrome reg
-+ * @info:	elm info
-+ * @err_vec:	elm error vectors
-+ * @ecc:	buffer with calculated ecc
-+ *
-+ * Load syndrome fragment registers with calculated ecc in reverse order.
-+ */
-+static void elm_load_syndrome(struct elm_info *info,
-+		struct elm_errorvec *err_vec, u8 *ecc)
-+{
-+	int i, offset;
-+	u32 val;
-+
-+	for (i = 0; i < ERROR_VECTOR_MAX; i++) {
-+
-+		/* Check error reported */
-+		if (err_vec[i].error_reported) {
-+			elm_configure_page_mode(info, i, true);
-+			offset = ELM_SYNDROME_FRAGMENT_0 +
-+				SYNDROME_FRAGMENT_REG_SIZE * i;
-+
-+			/* BCH8 */
-+			if (info->bch_type) {
-+
-+				/* syndrome fragment 0 = ecc[9-12B] */
-+				val = cpu_to_be32(*(u32 *) &ecc[9]);
-+				elm_write_reg(info, offset, val);
-+
-+				/* syndrome fragment 1 = ecc[5-8B] */
-+				offset += 4;
-+				val = cpu_to_be32(*(u32 *) &ecc[5]);
-+				elm_write_reg(info, offset, val);
-+
-+				/* syndrome fragment 2 = ecc[1-4B] */
-+				offset += 4;
-+				val = cpu_to_be32(*(u32 *) &ecc[1]);
-+				elm_write_reg(info, offset, val);
-+
-+				/* syndrome fragment 3 = ecc[0B] */
-+				offset += 4;
-+				val = ecc[0];
-+				elm_write_reg(info, offset, val);
-+			} else {
-+				/* syndrome fragment 0 = ecc[20-52b] bits */
-+				val = (cpu_to_be32(*(u32 *) &ecc[3]) >> 4) |
-+					((ecc[2] & 0xf) << 28);
-+				elm_write_reg(info, offset, val);
-+
-+				/* sydrome fragment 1 = ecc[0-20b] bits */
-+				offset += 4;
-+				val = cpu_to_be32(*(u32 *) &ecc[0]) >> 12;
-+				elm_write_reg(info, offset, val);
-+			}
-+		}
-+
-+		/* Update ecc pointer with ecc byte size */
-+		ecc += info->bch_type ? BCH8_SIZE : BCH4_SIZE;
-+	}
-+}
-+
-+/**
-+ * elm_start_processing - start elm syndrome processing
-+ * @info:	elm info
-+ * @err_vec:	elm error vectors
-+ *
-+ * Set syndrome valid bit for syndrome fragment registers for which
-+ * elm syndrome fragment registers are loaded. This enables elm module
-+ * to start processing syndrome vectors.
-+ */
-+static void elm_start_processing(struct elm_info *info,
-+		struct elm_errorvec *err_vec)
-+{
-+	int i, offset;
-+	u32 reg_val;
-+
-+	/*
-+	 * Set syndrome vector valid so that ELM module
-+	 * will process it for vectors error is reported
-+	 */
-+	for (i = 0; i < ERROR_VECTOR_MAX; i++) {
-+		if (err_vec[i].error_reported) {
-+			offset = ELM_SYNDROME_FRAGMENT_6 +
-+				SYNDROME_FRAGMENT_REG_SIZE * i;
-+			reg_val = elm_read_reg(info, offset);
-+			reg_val |= ELM_SYNDROME_VALID;
-+			elm_write_reg(info, offset, reg_val);
-+		}
-+	}
-+}
-+
-+/**
-+ * elm_error_correction - locate correctable error position
-+ * @info:	elm info
-+ * @err_vec:	elm error vectors
-+ *
-+ * On completion of processing by elm module, error location status
-+ * register updated with correctable/uncorrectable error information.
-+ * In case of correctable errors, number of errors located from
-+ * elm location status register & read the positions from
-+ * elm error location register.
-+ */
-+static void elm_error_correction(struct elm_info *info,
-+		struct elm_errorvec *err_vec)
-+{
-+	int i, j, errors = 0;
-+	int offset;
-+	u32 reg_val;
-+
-+	for (i = 0; i < ERROR_VECTOR_MAX; i++) {
-+
-+		/* Check error reported */
-+		if (err_vec[i].error_reported) {
-+			offset = ELM_LOCATION_STATUS + ERROR_LOCATION_SIZE * i;
-+			reg_val = elm_read_reg(info, offset);
-+
-+			/* Check correctable error or not */
-+			if (reg_val & ECC_CORRECTABLE_MASK) {
-+				offset = ELM_ERROR_LOCATION_0 +
-+					ERROR_LOCATION_SIZE * i;
-+
-+				/* Read count of correctable errors */
-+				err_vec[i].error_count = reg_val &
-+					ECC_NB_ERRORS_MASK;
-+
-+				/* Update the error locations in error vector */
-+				for (j = 0; j < err_vec[i].error_count; j++) {
-+
-+					reg_val = elm_read_reg(info, offset);
-+					err_vec[i].error_loc[j] = reg_val &
-+						ECC_ERROR_LOCATION_MASK;
-+
-+					/* Update error location register */
-+					offset += 4;
-+				}
-+
-+				errors += err_vec[i].error_count;
-+			} else {
-+				err_vec[i].error_uncorrectable = true;
-+			}
-+
-+			/* Clearing interrupts for processed error vectors */
-+			elm_write_reg(info, ELM_IRQSTATUS, BIT(i));
-+
-+			/* Disable page mode */
-+			elm_configure_page_mode(info, i, false);
-+		}
-+	}
-+}
-+
-+/**
-+ * elm_decode_bch_error_page - Locate error position
-+ * @dev:	device pointer
-+ * @ecc_calc:	calculated ECC bytes from GPMC
-+ * @err_vec:	elm error vectors
-+ *
-+ * Called with one or more error reported vectors & vectors with
-+ * error reported is updated in err_vec[].error_reported
-+ *
-+ */
-+void elm_decode_bch_error_page(struct device *dev, u8 *ecc_calc,
-+		struct elm_errorvec *err_vec)
-+{
-+	struct elm_info *info = dev_get_drvdata(dev);
-+	u32 reg_val;
-+
-+	/* Enable page mode interrupt */
-+	reg_val = elm_read_reg(info, ELM_IRQSTATUS);
-+	elm_write_reg(info, ELM_IRQSTATUS, reg_val & INTR_STATUS_PAGE_VALID);
-+	elm_write_reg(info, ELM_IRQENABLE, INTR_EN_PAGE_MASK);
-+
-+	/* Load valid ecc byte to syndrome fragment register */
-+	elm_load_syndrome(info, err_vec, ecc_calc);
-+
-+	/* Enable syndrome processing for which syndrome fragment is updated */
-+	elm_start_processing(info, err_vec);
-+
-+	/* Wait for ELM module to finish locating error correction */
-+	wait_for_completion(&info->elm_completion);
-+
-+	/* Disable page mode interrupt */
-+	reg_val = elm_read_reg(info, ELM_IRQENABLE);
-+	elm_write_reg(info, ELM_IRQENABLE, reg_val & ~INTR_EN_PAGE_MASK);
-+	elm_error_correction(info, err_vec);
-+}
-+EXPORT_SYMBOL(elm_decode_bch_error_page);
-+
-+static irqreturn_t elm_isr(int this_irq, void *dev_id)
-+{
-+	u32 reg_val;
-+	struct elm_info *info = dev_id;
-+
-+	reg_val = elm_read_reg(info, ELM_IRQSTATUS);
-+
-+	/* All error vectors processed */
-+	if (reg_val & INTR_STATUS_PAGE_VALID) {
-+		elm_write_reg(info, ELM_IRQSTATUS,
-+				reg_val & INTR_STATUS_PAGE_VALID);
-+		complete(&info->elm_completion);
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+struct device *elm_request(enum bch_ecc bch_type)
-+{
-+	struct elm_info *info;
-+
-+	list_for_each_entry(info, &elm_devices, list) {
-+		if (info && info->dev) {
-+				info->bch_type = bch_type;
-+				elm_config(info);
-+				return info->dev;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL(elm_request);
-+
-+static int __devinit elm_probe(struct platform_device *pdev)
-+{
-+	int ret = 0;
-+	struct resource *res, *irq;
-+	struct elm_info *info;
-+
-+	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-+	if (!info) {
-+		dev_err(&pdev->dev, "failed to allocate memory\n");
-+		return -ENOMEM;
-+	}
-+
-+	info->dev = &pdev->dev;
-+
-+	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!irq) {
-+		dev_err(&pdev->dev, "no irq resource defined\n");
-+		return -ENODEV;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "no memory resource defined\n");
-+		return -ENODEV;
-+	}
-+
-+	info->elm_base = devm_request_and_ioremap(&pdev->dev, res);
-+	if (!info->elm_base)
-+		return -EADDRNOTAVAIL;
-+
-+	ret = devm_request_irq(&pdev->dev, irq->start, elm_isr, 0,
-+			pdev->name, info);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failure requesting irq %i\n", irq->start);
-+		return ret;
-+	}
-+
-+	pm_runtime_enable(&pdev->dev);
-+	if (pm_runtime_get_sync(&pdev->dev)) {
-+		ret = -EINVAL;
-+		pm_runtime_disable(&pdev->dev);
-+		dev_err(&pdev->dev, "can't enable clock\n");
-+		return ret;
-+	}
-+
-+	init_completion(&info->elm_completion);
-+	INIT_LIST_HEAD(&info->list);
-+	list_add(&info->list, &elm_devices);
-+	platform_set_drvdata(pdev, info);
-+	return ret;
-+}
-+
-+static int __devexit elm_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	platform_set_drvdata(pdev, NULL);
-+	return 0;
-+}
-+
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id elm_of_match[] = {
-+	{ .compatible = "ti,elm" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, elm_of_match);
-+#endif
-+
-+static struct platform_driver elm_driver = {
-+	.driver	= {
-+		.name	= "elm",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(elm_of_match),
-+	},
-+	.probe	= elm_probe,
-+	.remove	= __devexit_p(elm_remove),
-+};
-+
-+module_platform_driver(elm_driver);
-+
-+MODULE_DESCRIPTION("ELM driver for BCH error correction");
-+MODULE_AUTHOR("Texas Instruments");
-+MODULE_ALIAS("platform: elm");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/platform_data/elm.h b/include/linux/platform_data/elm.h
-new file mode 100644
-index 0000000..d4fce31
---- /dev/null
-+++ b/include/linux/platform_data/elm.h
-@@ -0,0 +1,54 @@
-+/*
-+ * BCH Error Location Module
-+ *
-+ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#ifndef __ELM_H
-+#define __ELM_H
-+
-+enum bch_ecc {
-+	BCH4_ECC = 0,
-+	BCH8_ECC,
-+};
-+
-+/* ELM support 8 error syndrome process */
-+#define ERROR_VECTOR_MAX		8
-+
-+#define BCH8_ECC_OOB_BYTES		13
-+#define BCH4_ECC_OOB_BYTES		7
-+/* RBL requires 14 byte even though BCH8 uses only 13 byte */
-+#define BCH8_SIZE			(BCH8_ECC_OOB_BYTES + 1)
-+#define BCH4_SIZE			(BCH4_ECC_OOB_BYTES)
-+
-+/**
-+ * struct elm_errorvec - error vector for elm
-+ * @error_reported:		set true for vectors error is reported
-+ *
-+ * @error_count:		number of correctable errors in the sector
-+ * @error_uncorrectable:	number of uncorrectable errors
-+ * @error_loc:			buffer for error location
-+ *
-+ */
-+struct elm_errorvec {
-+	bool error_reported;
-+	bool error_uncorrectable;
-+	int error_count;
-+	int error_loc[ERROR_VECTOR_MAX];
-+};
-+
-+void elm_decode_bch_error_page(struct device *dev, u8 *ecc_calc,
-+		struct elm_errorvec *err_vec);
-+struct device *elm_request(enum bch_ecc bch_type);
-+#endif /* __ELM_H */
--- 
-1.7.0.4
+Can you explain why you need a total of 13 virtual memory areas?
 
+> +
+> +static struct list_head	pcie_port_list;
+
+I'm pretty sure you don't need your own list of ports, since we already enumerate the
+ports in the PCI code.
+
+> +static struct hw_pci pci;
+
+Why is this not statically initialized?
+
+> +	snprintf(pp->io_space_name, sizeof(pp->io_space_name),
+> +			"PCIe %d I/O", nr);
+> +	pp->io_space_name[sizeof(pp->io_space_name) - 1] = 0;
+> +	pp->res[1].name = pp->io_space_name;
+> +	pp->res[1].start = PCIBIOS_MIN_IO + nr * pp->config.io_size;
+> +	pp->res[1].end = pp->res[1].start + (pp->config.io_size - 1);
+> +	pp->res[1].flags = IORESOURCE_IO;
+> +	if (request_resource(&ioport_resource, &pp->res[1]))
+> +		panic("can't allocate PCIe IO space");
+> +	pci_add_resource_offset(&sys->resources, &pp->res[1], sys->io_offset);
+
+Is the io_offset ever nonzero?
+
+> +void __iomem *spear13xx_pcie_io_base(unsigned long addr)
+> +{
+> +	int controller = (addr - PCIBIOS_MIN_IO) / IO_SIZE_PER_PORT;
+> +	struct pcie_port *pp;
+> +
+> +	pp = controller_to_port(controller);
+> +
+> +	return pp->io_base;
+> +}
+
+This function looks completely bogus. Subtracting PCIBIOS_MIN_IO means that
+everything is shifted by 0x1000 ports, since secondary bridges don't
+have this offset. The I/O spaces are just mapped linearly into the virtual
+address space anyway, so looking up the I/O base like this is pointless.
+
+> +static void pcie_host_init(struct pcie_port *pp)
+> +{
+> +	struct pcie_port_info *config = &pp->config;
+> +	void __iomem *dbi_base = pp->va_dbi_base;
+> +	struct pcie_app_reg *app_reg = pp->va_app_base;
+> +	u32 exp_cap_off = PCI_CAP_ID_EXP_OFFSET;
+> +	u32 val;
+> +
+> +	/* Keep first 64K for IO */
+> +	pp->io_base = pp->base;
+> +	pp->mem_base = pp->io_base + config->io_size;
+> +	pp->cfg0_base = pp->mem_base + config->mem_size;
+> +	pp->cfg1_base = pp->cfg0_base + config->cfg0_size;
+
+Why is the memory space part of the virtual bus address range here?
+
+
+> +static int add_pcie_port(struct pcie_port *pp, struct platform_device *pdev)
+> +{
+> +	struct resource *base;
+> +	struct resource *dbi_base;
+> +	struct resource *phy_base;
+> +	int virt_irq_base;
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct irq_domain *irq_domain;
+> +	int num_virt_irqs = NUM_INTX_IRQS;
+> +
+> +	dbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!dbi_base) {
+> +		dev_err(&pdev->dev, "couldn't get dbi base resource\n");
+> +		return -EINVAL;
+> +	}
+> +	if (!devm_request_mem_region(&pdev->dev, dbi_base->start,
+> +				resource_size(dbi_base), pdev->name)) {
+> +		dev_err(&pdev->dev, "dbi base resource is busy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	pp->dbi_base = (void __iomem *)dbi_base->start;
+
+dbi_base is a resource here, which refers to a physical address. You cannot cast
+that to an __iomem token.
+
+> +	pp->va_dbi_base = devm_ioremap(&pdev->dev, dbi_base->start,
+> +			resource_size(dbi_base));
+
+Here you even pass that address into ioremap, so it certainly isn't a virtual address
+
+> +	pp->phy_base = (void __iomem *)phy_base->start;
+
+same here.
+
+> +	pp->va_phy_base = devm_ioremap(&pdev->dev, phy_base->start,
+> +			resource_size(phy_base));
+> +	if (!pp->va_phy_base) {
+> +		dev_err(&pdev->dev, "error with ioremap\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	base = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!base) {
+> +		dev_err(&pdev->dev, "couldn't get base resource\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pp->base = (void __iomem *)base->start;
+
+and here.
+
+> +	virt_irq_base = irq_alloc_descs(-1, 0, num_virt_irqs, 0);
+> +	if (IS_ERR_VALUE(virt_irq_base)) {
+> +		dev_err(&pdev->dev, "irq desc alloc failed\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	irq_domain = irq_domain_add_legacy(np, num_virt_irqs, virt_irq_base,
+> +			0, &irq_domain_simple_ops, NULL);
+
+Why not use a linear domain?
+
+> +	pp->virt_irq_base = irq_find_mapping(irq_domain, 0);
+
+Then you can get rid of virt_irq_base and use CONFIG_SPARSE_IRQ.
+
+> +	spin_lock_init(&pp->conf_lock);
+> +	if (pcie_link_up(pp->va_app_base)) {
+> +		dev_info(&pdev->dev, "link up\n");
+> +	} else {
+> +		dev_info(&pdev->dev, "link down\n");
+> +		pcie_host_init(pp);
+> +		pp->va_cfg0_base = devm_ioremap(&pdev->dev,
+> +				(resource_size_t)pp->cfg0_base,
+
+cfg0_base is an __iomem token, you cannot pass that into ioremap,
+which expects a physical address.
+
+> +	pp->config.io_size = IO_SIZE_PER_PORT;
+> +	of_property_read_u32(np, "pcie-host,is_host", &pp->config.is_host);
+> +	of_property_read_u32(np, "pcie-host,is_gen1", &pp->config.is_gen1);
+
+These should probably be derived from the "compatible" value.
+
+> +	of_property_read_u32(np, "pcie-host,cfg0_size", &pp->config.cfg0_size);
+> +	of_property_read_u32(np, "pcie-host,cfg1_size", &pp->config.cfg1_size);
+> +	of_property_read_u32(np, "pcie-host,mem_size", &pp->config.mem_size);
+> +	of_property_read_u32(np, "pcie-host,msg_size", &pp->config.msg_size);
+> +	of_property_read_u32(np, "pcie-host,in_mem_size",
+> +			&pp->config.in_mem_size);
+
+And these should come from the "ranges" property I suppose.
+
+	Arnd
