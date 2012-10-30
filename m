@@ -1,137 +1,49 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Tue, 30 Oct 2012 19:25:13 +0200
-Message-ID: <20121030172513.GA3993@arwen.pp.htv.fi>
-References: <20121024185818.GB772@arwen.pp.htv.fi>
- <20121025205901.GA3827@sirena.org.uk>
- <20121026062008.GA21734@arwen.pp.htv.fi>
- <20121026160316.GY18814@opensource.wolfsonmicro.com>
- <20121029194901.GA30152@arwen.pp.htv.fi>
- <20121030112410.GM4511@opensource.wolfsonmicro.com>
- <20121030114949.GC28722@arwen.pp.htv.fi>
- <20121030140714.GO4511@opensource.wolfsonmicro.com>
- <20121030151642.GE29159@arwen.pp.htv.fi>
- <20121030155821.GU4511@opensource.wolfsonmicro.com>
-Reply-To: <balbi@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC PATCH] dt: describe base reset signal binding
+Date: Tue, 30 Oct 2012 12:02:05 -0600
+Message-ID: <5090161D.2030702@wwwdotorg.org>
+References: <1351028756-22309-1-git-send-email-swarren@wwwdotorg.org> <20121029183233.18780.11964@nucleus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="azLHFNyN32YCQGCU"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121030155821.GU4511@opensource.wolfsonmicro.com>
+In-Reply-To: <20121029183233.18780.11964@nucleus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Felipe Balbi <balbi@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+To: Mike Turquette <mturquette@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rjw@sisk.pl>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
---azLHFNyN32YCQGCU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/29/2012 12:32 PM, Mike Turquette wrote:
+> Quoting Stephen Warren (2012-10-23 14:45:56)
+>> What do people think of this? Does it sound like a good idea to go ahead
+>> with a reset subsystem? Should we simply add a new API to the common clock
+>> subsystem instead (and assume that reset and clock domains match 1:1).
+>> Should this be implemented as part of the generic power management domains;
+>> see include/linux/pm_domain.h instead?
+>>
+> 
+> Hi Stephen,
+> 
+> I'm not sure a "reset subsystem" is necessary, but I also do not like
+> using clocks as the keys for IP reset.
 
-Hi,
+I'm not sure what you're suggesting as an alternative to a reset
+subsystem (or API if you want something that sounds smaller!) :-)
 
-On Tue, Oct 30, 2012 at 03:58:21PM +0000, Mark Brown wrote:
-> > > > and this is one of the issues we're all trying to solve today so we=
- have
-> > > > single zImage approach for the ARM port.
->=20
-> > > I don't see the relevance of single zImage here; device tree is suppo=
-sed
-> > > to solve that one.
->=20
-> > DT is part of the deal. DT alone will solve nothing.
->=20
-> If DT isn't relevant I'm not sure what you're saying about single
+> I think it is more common to map IPs to struct device, no?
 
-I didn't say DT is irrelevant. I said it's not the *only* thing.
+It is indeed probably common that there's a 1:1 mapping between IP
+blocks and struct device. However, I'm sure there are plenty of
+counter-examples; IP blocks with multiple reset domains (hence struct
+devices that encompass multiple reset domains, or reset domains that
+encompass multiple struct devices), just as there are many examples of
+non-1:1 mappings between struct device and struct clk.
 
-> zImage?  The only relevance I can see for that is the data and
-> configuration bloating the kernel, something that DT is supposed to
-> address - this is the main use case where DT has benefits.
->=20
-> > > Well, nothing's going to stop that happening if people are determined
-> > > enough - one could equally see that there'll be flags getting passed =
-to
-> > > control the ordering of calls if things are open coded.  I would expe=
-ct
-> > > that with a power domain style approach any data would be being passed
-> > > directly and bypassing the driver completely.
->=20
-> > situations like that would be a lot more rare in open coded case, don't
-> > you think ? Also a lot more local, since they will show up on a driver
-> > source code which is used in a small set of use cases, instead of being
-> > part of the pm domain implementation for the entire platform.
->=20
-> I don't see how open coding helps prevent people doing silly things, it
-> seems like it'd have at most neutral impact (and of course it does
-> require going round all the drivers every time someone comes up with a
-> new idea for doing things which is a bit tedious).
->=20
-> > > Essentially all the patches I'm seeing adding pinctrl are totally
-> > > mindless, most of them are just doing the initial setup on boot and n=
-ot
-> > > doing any active management at runtime at all.
->=20
-> > have you considered that might be just a first step ? I have mentioned
-> > this before. We first add the bare minimum and work on PM optimizations
-> > later. You can be sure most likely those mindless patches you're seeing
-> > are probably building blocks for upcoming patches adding sleep/idle
-> > modes.
->=20
-> The sleep/idle modes are just a basic extension of the same idea, I'd
-> not anticipate much difference there (and indeed anything where pinmux
-> power saving makes a meaningful impact will I suspect need to be using
-> runtime PM to allow SoC wide power savings anyway).
->=20
-> > > A big part of my point here is that it's not at all clear to me that =
-it
-> > > is the driver which knows what's going on.  For SoC-specific IPs you =
-can
-> > > be confident about how the SoC integration looks but for IPs that get
-> > > reused widely this becomes less true. =20
->=20
-> > I don't think so. As long as we keep the meaning of the 'default'
-> > pinctrl state to mean that this is the working state for the IP,
-> > underlying pinctrl-$arch implementation should know how to set muxing up
-> > properly, no ?
->=20
-> But then this comes round to the mindless code that ought to be factored
-> out :)  Only the more interesting cases that do something unusual really
-> register here.
+Even ignoring that, we'd still need to API say device_reset(struct
+device *dev) or device_reset(struct device *dev, const char *conid)
+wouldn't we? That's really all I meant by a reset subsystem.
 
-fair enough. I see your point. Not saying I agree though, just that this
-discussion has been flying for far too long, so feel free to provide
-patches implementing what you're defending here ;-)
-
-Guess code will speak for itself. On way or another, we need OMAP keypad
-driver working in mainline and I don't think your arguments are strong
-enough to keep $SUBJECT from being merged, unless you can provide
-something stable/tested for v3.8 merge window.
-
---=20
-balbi
-
---azLHFNyN32YCQGCU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQkA14AAoJEIaOsuA1yqRE7AsQAKJYP2aHJ4QbUdgHW6D6AOTW
-ydvJh/siK+rYQFnM/h5VcKjbB7igvFO+d+LheV48oQCBLLzqEeQLWjhTz2wYIasz
-WLUyMRzVN7U51i8FwQmujBgXGCdM7CsAWpy12NW8u8zD6e4p+2kTx3iOZcAKLHqd
-A1mI7kB5Xw60u3eVx53Hn/KYnUgb47YzWdgFMiCPHg2kBA9gtYF4nrpTpVejo1fR
-TqHxF3x0bXoYzNZ5XXkmQ0msdgh0KFbHDZB7WEguvCExDkbTmkx6BYdZARK7uzcb
-Bm6/UYShGkQp7SQmazoOgVjZ1jhDteeTB4vO4J7+6vAsZLF0lFEgip/EkA/SXaGm
-EPrXMpuXKPQTudyXIeHQdNMtqUGv7EYalQ+lthKE3v+sithAZMCYYj0EE583I8uC
-LoEn4TFWmGB/HRZfvKXMCu4zQp+4VgxTJgya60HGkiartks1ttRvPq2aSUMK2Ujx
-NnehPYdz7nStFvM2XPCCVwrmhjSaztfIMoWbOjT0vqKX9iTXzradNHcWgYKqeXGO
-36mbFePxfGc7YCbN40i9MO2YVNaL1VO9PetQVWwugFWWQU3MniLkJjSWgyCZtqMM
-NC7c8w2qy3R4Ks8t0/se9SItoGODiyM5LtNaSWHYxw724gBVHQc6mhUOrNhOKMQk
-sNkKDLeT4k15Sn+FKgnR
-=NEZa
------END PGP SIGNATURE-----
-
---azLHFNyN32YCQGCU--
+An alternative here would be to simply move Tegra's
+tegra_periph_reset_{de,}assert() function prototypes into a header in
+include/linux rather than mach-tegra/include/mach. However, I imagine at
+least some other SoC needs a similar API, so a common API might be useful?
