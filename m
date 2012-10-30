@@ -1,24 +1,85 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH 13/15] SPEAr13xx: update kconfig for PCIe selection
-Date: Tue, 30 Oct 2012 08:55:26 +0530
-Message-ID: <508F48A6.8070108@st.com>
-References: <cover.1351492562.git.pratyush.anand@st.com> <d13ec089ce3a327746ddf20674a0c1f5d22acb88.1351492562.git.pratyush.anand@st.com> <CAOh2x==OzbwA+4ArPG+yJuZHaQ-v_2VS8YNuFYH36ZqrkZLn3A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAOh2x==OzbwA+4ArPG+yJuZHaQ-v_2VS8YNuFYH36ZqrkZLn3A@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: viresh kumar <viresh.kumar@linaro.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, Shiraz HASHIM <shiraz.hashim@st.com>, spear-devel <spear-devel@list.st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>
+From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v7 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Tue, 30 Oct 2012 10:27:32 +0530
+Message-ID: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/29/2012 7:03 PM, viresh kumar wrote:
->> >  endmenu
->> >+
->> >+config SPEAR13XX_PCI
->> >+       bool "PCI Express support"
-> cant this be module
->
+Changes from v6:
+Modified register definitions according to the existing ones.
+Changed default PHY clk selection for SoCs.
+Improved binding text and rebased to the latest usb-next.
 
-No.
+Changes from v5:
+Moved clk_get() to driver's probe function. Now reference clock frequency
+selection value is stored in samsung_usbphy structure for later use. Used
+IS_ENABLED() instead of #ifdef in samsung_usbphy_get_driver_data().
+
+Changes from v4:
+Moved header file contents to driver's source file
+Removed unnecessary print message from driver's probe function
+Dropped the Free Software Foundation address from the header
+Changed the platform data code to use __initdata
+
+Changes from v3:
+Replaced susbsys_initcall()/module_exit() by module_platform_driver().
+Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
+is registered
+Removed unnecessary devm_usb_put_phy() call from the hsotg driver remove.
+
+Changes from v2:
+Changed the driver filenames to samsung-usbphy
+Changed 's3c' to 'samsung' for platform device as well as platform data
+Moved platform data structure to a separate file
+Rectified coding style related errors
+
+Changes from v1:
+Rebased patches to latest usb-next branch
+Changed the name 'sec_usbphy' to 'samsung_usbphy'
+
+This patch set introduces a phy driver for samsung SoCs. It uses the existing
+transceiver infrastructure to provide phy control functions. Use of this driver
+can be extended for usb host phy as well. Over the period of time all the phy
+related code for most of the samsung SoCs can be integrated here.
+Removing the existing phy code from mach-s3c64xx. Same can be done for other SoCs
+when they start supporting this phy driver. 
+This driver is tested with smdk6410 and Exynos4210(with DT).
+
+Praveen Paneri (5):
+  usb: phy: samsung: Introducing usb phy driver for hsotg
+  usb: s3c-hsotg: Adding phy driver support
+  ARM: S3C64XX: Removing old phy setup code
+  ARM: S3C64XX: Enabling samsung-usbphy driver
+  ARM: Exynos4210: Enabling samsung-usbphy driver
+
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   11 +
+ arch/arm/boot/dts/exynos4210-smdkv310.dts          |    5 +
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |    8 +
+ arch/arm/mach-exynos/setup-usb-phy.c               |   13 +
+ arch/arm/mach-s3c64xx/include/mach/map.h           |    2 +
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |   10 +-
+ arch/arm/mach-s3c64xx/mach-smartq.c                |   11 +-
+ arch/arm/mach-s3c64xx/mach-smdk6410.c              |   11 +-
+ arch/arm/mach-s3c64xx/setup-usb-phy.c              |   79 +----
+ arch/arm/plat-samsung/devs.c                       |   28 ++
+ arch/arm/plat-samsung/include/plat/devs.h          |    1 +
+ arch/arm/plat-samsung/include/plat/usb-phy.h       |    1 +
+ drivers/usb/gadget/s3c-hsotg.c                     |   37 ++-
+ drivers/usb/phy/Kconfig                            |    8 +
+ drivers/usb/phy/Makefile                           |    1 +
+ drivers/usb/phy/samsung-usbphy.c                   |  360 ++++++++++++++++++++
+ include/linux/platform_data/samsung-usbphy.h       |   27 ++
+ 18 files changed, 523 insertions(+), 91 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+ create mode 100644 drivers/usb/phy/samsung-usbphy.c
+ create mode 100644 include/linux/platform_data/samsung-usbphy.h
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
