@@ -1,45 +1,100 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Tue, 30 Oct 2012 11:20:07 -0700
-Message-ID: <20121030182007.GA21851@core.coreip.homeip.net>
-References: <20121025205901.GA3827@sirena.org.uk>
- <20121026062008.GA21734@arwen.pp.htv.fi>
- <20121026160316.GY18814@opensource.wolfsonmicro.com>
- <20121029194901.GA30152@arwen.pp.htv.fi>
- <20121030112410.GM4511@opensource.wolfsonmicro.com>
- <20121030114949.GC28722@arwen.pp.htv.fi>
- <20121030140714.GO4511@opensource.wolfsonmicro.com>
- <20121030151642.GE29159@arwen.pp.htv.fi>
- <20121030155821.GU4511@opensource.wolfsonmicro.com>
- <20121030172513.GA3993@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121030172513.GA3993@arwen.pp.htv.fi>
-Sender: linux-input-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Linus Walleij <linus.walleij@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH V4 0/3] Add clock framework for armada 370/XP
+Date: Tue, 30 Oct 2012 19:23:30 +0100
+Message-ID: <1351621413-3637-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Ben Dooks <ben-linux@fluff.org>, Ian Molton <ian.molton@codethink.co.uk>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>, David Marlin <dmarlin@redhat.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree-discuss@lists.ozlabs.orglinux
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2012 at 07:25:13PM +0200, Felipe Balbi wrote:
-> On Tue, Oct 30, 2012 at 03:58:21PM +0000, Mark Brown wrote:
-> > 
-> > But then this comes round to the mindless code that ought to be factored
-> > out :)  Only the more interesting cases that do something unusual really
-> > register here.
-> 
-> fair enough. I see your point. Not saying I agree though, just that this
-> discussion has been flying for far too long, so feel free to provide
-> patches implementing what you're defending here ;-)
-> 
-> Guess code will speak for itself. On way or another, we need OMAP keypad
-> driver working in mainline
+Hello Mike,
 
-Are you saying that introducing pincrtl infrastructure actually _broke_
-the driver in mainline?
+I hope this 4th version will meet your expectations. Beside the
+corrections you have asked I also changed the way I get resources for
+the clocks. Instead of referring to a node name, now I refer to a
+compatible name which should be a better use of the device tree.
 
-Thanks.
+Rather than taking this series in your git tree, would it possible to
+give your ack to the patches and let Jason Cooper take the patch set
+in his git tree. We have other series for mvebu which depend on this
+one (SMP, HWIOCC and SATA for now and more to come), and it will be
+easier for us to have everything in the same place.
+
+The purpose of this patch set is to add support for clock framework
+for Armada 370 and Armada XP SoCs. All the support is done under the
+directory drivers/clk/mvebu/ as the support for other mvebu SoCs was
+in mind during the writing of the code.
+
+Two kinds of clocks are added:
+
+- The CPU clocks are only for Armada XP (which is multi-core)
+
+- The core clocks are clocks which have their rate fixed during
+  reset.
+
+Many thanks to Thomas Petazzoni and Sebastian Hesselbarth for their
+review and feedback. The device tree bindings were really improved
+with the advices of Sebastian.
+
+Changelog:
+V3 -> V4
+- Rebased on top of 3.7-rc3
+- Replaced the whitespace by tab in the Documentation files
+- Fixed the comment style according to the CodingStyle documentation
+- Fixed incorrect indentation
+- Removed redundant header in clk-cpu.c
+- Replaced improper whitespace by tabs in armada-xp.dtsi
+- In the device tree, the resources for the clocks do not rely anymore
+  on the node name mvebu-sar but now only depend on the compatible
+  name. (Issue reported by Sebastian Hesselbarth)
+
+V2 -> V3:
+- Rebased on top of v3.7-rc1
+- Fixed a typo in device trees
+- Fixed warning from checkpatch
+
+V1 -> V2:
+- Improved the spelling and the wording of the documentation and the
+  1st commit log
+- Removed the "end_of_list" name which are unused here.
+- Fix the cpu clock by using of_clk_src_onecell_get in the same way it
+  was used for the core clocks
+
+Regards,
+
+
+Gregory CLEMENT (3):
+  clk: mvebu: add armada-370-xp specific clocks
+  clk: armada-370-xp: add support for clock framework
+  clocksource: time-armada-370-xp converted to clk framework
+
+ .../devicetree/bindings/clock/mvebu-core-clock.txt |   40 +++
+ .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   21 ++
+ arch/arm/boot/dts/armada-370-db.dts                |    4 -
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    1 +
+ arch/arm/boot/dts/armada-370.dtsi                  |   12 +
+ arch/arm/boot/dts/armada-xp.dtsi                   |   48 +++
+ arch/arm/mach-mvebu/Kconfig                        |    5 +
+ arch/arm/mach-mvebu/armada-370-xp.c                |    8 +-
+ arch/arm/mach-mvebu/common.h                       |    1 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/mvebu/Makefile                         |    2 +
+ drivers/clk/mvebu/clk-core.c                       |  318 ++++++++++++++++++++
+ drivers/clk/mvebu/clk-core.h                       |   19 ++
+ drivers/clk/mvebu/clk-cpu.c                        |  154 ++++++++++
+ drivers/clk/mvebu/clk-cpu.h                        |   19 ++
+ drivers/clk/mvebu/clk.c                            |   36 +++
+ drivers/clocksource/time-armada-370-xp.c           |   11 +-
+ 17 files changed, 690 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+ create mode 100644 drivers/clk/mvebu/Makefile
+ create mode 100644 drivers/clk/mvebu/clk-core.c
+ create mode 100644 drivers/clk/mvebu/clk-core.h
+ create mode 100644 drivers/clk/mvebu/clk-cpu.c
+ create mode 100644 drivers/clk/mvebu/clk-cpu.h
+ create mode 100644 drivers/clk/mvebu/clk.c
 
 -- 
-Dmitry
+1.7.9.5
