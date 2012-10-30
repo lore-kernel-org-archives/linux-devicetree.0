@@ -1,14 +1,14 @@
-From: Afzal Mohammed <x0148406@ti.com>
-Subject: Re: Representation of external memory-mapped devices in DT (gpmc)
-Date: Tue, 30 Oct 2012 16:20:53 +0530
-Message-ID: <508FB10D.9030906@ti.com>
-References: <508E9513.7050106@gmail.com> <508E9C42.10907@gmail.com>
- <508EBB47.8070405@gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH V2 1/3] clk: mvebu: add armada-370-xp specific clocks
+Date: Tue, 30 Oct 2012 04:20:25 -0700
+Message-ID: <20121030112025.18780.88390@nucleus>
+References: <1349125926-16144-1-git-send-email-gregory.clement@free-electrons.com>
+ <1349125926-16144-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <508EBB47.8070405@gmail.com>
+In-Reply-To: <1349125926-16144-2-git-send-email-gregory.clement@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,68 +18,446 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: Afzal Mohammed <afzal@ti.com>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "Nori,
- Sekhar" <nsekhar@ti.com>, Paul Walmsley <paul@pwsan.com>, Grant Likely <grant.likely@secretlab.ca>, "Hunter, Jon" <jon-hunter@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>Olof Johansson <o>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Quoting Gregory CLEMENT (2012-10-01 14:12:04)
+> Add Armada 370/XP specific clocks: core clocks and CPU clocks.
+> 
+> The CPU clocks are only for Armada XP for the SMP mode.
+> 
+> The core clocks are clocks which have their rate set during reset. The
+> code was written with the other SoCs of the mvebu family in
+> mind. Adding them should be pretty straight forward. For a new
+> SoC, only 3 binding have to be added:
+> - one to provide the tclk frequency
+> - one to provde the pclk frequency
+> - and one to provide the ratio between the pclk and the children
+>   clocks
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-On Monday 29 October 2012 10:52 PM, Daniel Mack wrote:
-> On 29.10.2012 16:09, Rob Herring wrote:
+Thanks for sending v2 Gregory.  Functionally this series looks good but
+unfortunately there are a few style and white space nitpicks below.
 
->> You may want a CS0 node with nand as a child node of that.
+> diff --git a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+> new file mode 100644
+> index 0000000..c524618
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+> @@ -0,0 +1,21 @@
+> +Device Tree Clock bindings for cpu clock of Marvell EBU platforms
+> +
+> +Required properties:
+> +- compatible : shall be one of the following:
+> +       "marvell,armada-xp-cpu-clockctrl" - cpu clocks for Armada XP
+> +- reg : Address and length of the clock complex register set
+> +- #clock-cells : should be set to 1.
+> +- clocks : shall be the input parent clock phandle for the clock.
+> +
+> +cpuclk: clock-complex@d0018700 {
+> +       #clock-cells = <1>;
+> +       compatible = "marvell,armada-xp-cpu-clockctrl";
+> +       reg = <0xd0018700 0xA0>;
+> +       clocks = <&coreclk 1>;
+> +}
+> +
+> +cpu@0 {
+> +       compatible = "marvell,sheeva-v7";
 
-> Hmm, I don't see what that would buy us. The question is which way is
-> feasible for storing both the memory region and the cs number in the
-> device tree. The CS number should certainly go to the child node, no?
->
-> IOW, would it be a good idea to have something like the following layout?
->
-> 	gpmc: gpmc@50000000 {
-> 		compatible = "ti,gpmc";
-> 		ti,hwmods = "gpmc";
-> 		reg =<0x50000000 0x2000>;
->
-> 		/* cs-reg stores the setup of the controller's
-> 		   memory map */
->
-> 			/* offset	size */
-> 		cs-reg =<0x0		0x1000000
-> 			  ....		.....
-> 			  ....		.....>;
->
-> 		nand: child@0 {
-> 			/* timings */
-> 			/* peripheral specifics */
-> 		};
-> 	};
->
-> I would actually much prefer that approach.
->
-> Afzal, because because that way, we can leave the code as-is for now and
-> add the "cs-reg" property once the code is switched to dynamic handling.
-> What do you think?
+Unnecessary white space before the tab in the line above.
 
-I don't know what to say, don't have a good grasp on DT to give
-right suggestion.
+> diff --git a/drivers/clk/mvebu/clk-core.c b/drivers/clk/mvebu/clk-core.c
+> new file mode 100644
+> index 0000000..5792cb5
+> --- /dev/null
+> +++ b/drivers/clk/mvebu/clk-core.c
+> @@ -0,0 +1,312 @@
+> +/*
+> + * Marvell EBU clock core handling defined at reset
+> + *
+> + * Copyright (C) 2012 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/clk.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +
+> +/* Sample At Reset is a 64 bit bitfiled split in two register of 32
+> + * bits*/
 
-It seems offset field may not be necessary. memory for connected
-peripherals is not fixed, only CS is fixed (as CS pin is hard-wired).
-Physical memory can be anywhere between 0-512MB (with
-alignment constraints depending on size, refer GPMC_CONFIG7
-register), even though right now memory region for peripheral
-seems to be fixed (for boards supported in mainline it will be
-what bootloader configures), it is possible to have it in a different
-region for those peripherals.
+Can you make this proper comment block style per CodingStyle convention?
 
-And this memory should be presented to child device as resource,
-say for smsc911x ethernet driver.
+> +
+> +#define SARL                               0   /* Low part [0:31] */
+> +#define            SARL_AXP_PCLK_FREQ_OPT          21
+> +#define            SARL_AXP_PCLK_FREQ_OPT_MASK     0x7
+> +#define            SARL_A370_PCLK_FREQ_OPT         11
+> +#define            SARL_A370_PCLK_FREQ_OPT_MASK    0xF
+> +#define            SARL_AXP_FAB_FREQ_OPT           24
+> +#define            SARL_AXP_FAB_FREQ_OPT_MASK      0xF
+> +#define            SARL_A370_FAB_FREQ_OPT          15
+> +#define            SARL_A370_FAB_FREQ_OPT_MASK     0x1F
+> +#define            SARL_A370_TCLK_FREQ_OPT         20
+> +#define            SARL_A370_TCLK_FREQ_OPT_MASK    0x1
+> +#define SARH                               4   /* High part [32:63] */
+> +#define            SARH_AXP_PCLK_FREQ_OPT          (52-32)
+> +#define            SARH_AXP_PCLK_FREQ_OPT_MASK     0x1
+> +#define            SARH_AXP_PCLK_FREQ_OPT_SHIFT    3
+> +#define            SARH_AXP_FAB_FREQ_OPT           (51-32)
+> +#define            SARH_AXP_FAB_FREQ_OPT_MASK      0x1
+> +#define            SARH_AXP_FAB_FREQ_OPT_SHIFT     4
+> +
+> +u32 *sar_reg;
+> +int sar_reg_size;
+> +
+> +enum core_clk {
+> +       tclk, pclk, nbclk, hclk, dramclk, clk_max
+> +};
+> +
+> +struct core_clk_fn {
+> +       u32(*get_tclk_freq) (void);
+> +       u32(*get_pck_freq) (void);
+> +       const int *(*get_fab_freq_opt) (void);
+> +};
+> +
+> +/* Ratio between VCO and each of the member in the following order:
+> +   CPU clock, L2 clock, DRAM controler clock, DDR clcok */
 
-I see some similarity with PCI - BAR's, where address space
-is configured (here a difference would be that size needs to
-be known while configuring). Size here would be based on
-connected peripheral (but no auto detection)
+ditto
 
-Regards
-Afzal
+> +static const int reset_core_ratio[32][4] = {
+> +       [0x01] = {1, 2, 2, 2},
+> +       [0x02] = {2, 2, 6, 3},
+> +       [0x03] = {2, 2, 3, 3},
+> +       [0x04] = {1, 2, 3, 3},
+> +       [0x05] = {1, 2, 4, 2},
+> +       [0x06] = {1, 1, 2, 2},
+> +       [0x07] = {2, 3, 6, 6},
+> +       [0x09] = {1, 2, 6, 3},
+> +       [0x0A] = {2, 4, 10, 5},
+> +       [0x0C] = {1, 2, 4, 4},
+> +       [0x0F] = {2, 2, 5, 5},
+> +       [0x13] = {1, 1, 2, 1},
+> +       [0x14] = {2, 3, 6, 3},
+> +       [0x1B] = {1, 1, 1, 1},
+> +};
+> +
+> +static struct clk *clks[clk_max];
+> +
+> +static struct clk_onecell_data clk_data;
+> +
+> +/* Frequency in MHz*/
+> +static u32 armada_370_pclk[] = { 400, 533, 667, 800, 1000, 1067, 1200 };
+> +
+> +static u32 armada_xp_pclk[] = { 1000, 1066, 1200, 1333, 1500, 1666,
+> +       1800, 2000, 667, 0, 800, 1600
+> +};
+> +
+> +static u32 armada_370_tclk[] = { 166, 200 };
+> +
+> +static const int *__init armada_370_get_fab_freq_opt(void)
+> +{
+> +       u8 fab_freq_opt = 0;
+> +
+> +       fab_freq_opt = ((sar_reg[0] >> SARL_A370_FAB_FREQ_OPT) &
+> +                       SARL_A370_FAB_FREQ_OPT_MASK);
+> +
+> +       if (reset_core_ratio[fab_freq_opt][0] == 0)
+> +               return NULL;
+> +       else
+> +               return reset_core_ratio[fab_freq_opt];
+> +}
+> +
+> +static u32 __init armada_370_get_pck_freq(void)
+> +{
+> +       u32 cpu_freq;
+> +       u8 cpu_freq_select = 0;
+> +
+> +       cpu_freq_select = ((sar_reg[0] >> SARL_A370_PCLK_FREQ_OPT) &
+> +                          SARL_A370_PCLK_FREQ_OPT_MASK);
+> +       if (cpu_freq_select > ARRAY_SIZE(armada_370_pclk)) {
+> +               pr_err("CPU freq select unsuported %d\n", cpu_freq_select);
+> +               cpu_freq = 0;
+> +       } else
+> +               cpu_freq = armada_370_pclk[cpu_freq_select];
+> +
+> +       return cpu_freq * 1000 * 1000;
+> +}
+> +
+> +static u32 __init armada_370_get_tclk_freq(void)
+> +{
+> +       u32 tclk_freq;
+> +       u8 tclk_freq_select = 0;
+> +
+> +       tclk_freq_select = ((sar_reg[0] >> SARL_A370_TCLK_FREQ_OPT) &
+> +                           SARL_A370_TCLK_FREQ_OPT_MASK);
+> +       if (tclk_freq_select > ARRAY_SIZE(armada_370_tclk)) {
+> +               pr_err("TCLK freq select unsuported %d\n", tclk_freq_select);
+> +               tclk_freq = 0;
+> +       } else
+> +               tclk_freq = armada_370_tclk[tclk_freq_select];
+> +
+> +       return tclk_freq * 1000 * 1000;
+> +}
+> +
+> +static const int *__init armada_xp_get_fab_freq_opt(void)
+> +{
+> +       u8 fab_freq_opt = 0;
+> +
+> +       fab_freq_opt = ((sar_reg[0] >> SARL_AXP_FAB_FREQ_OPT) &
+> +                       SARL_AXP_FAB_FREQ_OPT_MASK);
+> +       /* The upper bit is not contiguous to the other ones
+> +        * and located in the high part of the SAR
+> +        * registers */
+
+ditto
+
+> +       fab_freq_opt |= (((sar_reg[1] >> SARH_AXP_FAB_FREQ_OPT) &
+> +                         SARH_AXP_FAB_FREQ_OPT_MASK)
+> +                        << SARH_AXP_FAB_FREQ_OPT_SHIFT);
+> +
+> +       if (reset_core_ratio[fab_freq_opt][0] == 0)
+> +               return NULL;
+> +       else
+> +               return reset_core_ratio[fab_freq_opt];
+> +}
+> +
+> +static u32 __init armada_xp_get_pck_freq(void)
+> +{
+> +       u32 cpu_freq;
+> +       u8 cpu_freq_select = 0;
+> +
+> +       cpu_freq_select = ((sar_reg[0] >> SARL_AXP_PCLK_FREQ_OPT) &
+> +                          SARL_AXP_PCLK_FREQ_OPT_MASK);
+> +       /* The upper bit is not contiguous to the other ones
+> +        * and located in the high part of the SAR
+> +        * registers */
+
+ditto
+
+> +       cpu_freq_select |= (((sar_reg[1] >> SARH_AXP_PCLK_FREQ_OPT) &
+> +                            SARH_AXP_PCLK_FREQ_OPT_MASK)
+> +                           << SARH_AXP_PCLK_FREQ_OPT_SHIFT);
+> +       if (cpu_freq_select > ARRAY_SIZE(armada_xp_pclk)) {
+> +               pr_err("CPU freq select unsuported: %d\n", cpu_freq_select);
+> +               cpu_freq = 0;
+> +       } else
+> +               cpu_freq = armada_xp_pclk[cpu_freq_select];
+> +
+> +       return cpu_freq * 1000 * 1000;
+> +}
+> +
+> +/* For Armada XP TCLK frequency is fix: 250MHz */
+> +static u32 __init armada_xp_get_tclk_freq(void)
+> +{
+> +       return 250 * 1000 * 1000;
+> +}
+> +
+> +void __init of_core_clk_setup(struct device_node *node,
+> +                             struct core_clk_fn clk_fn)
+> +{
+> +       struct clk *clk;
+> +       unsigned long rate;
+> +       const char *clk_name;
+> +       int i;
+> +
+> +       /* clock 0 is tclk */
+> +       of_property_read_string_index(node, "clock-output-names", tclk,
+> +                               &clk_name);
+> +       rate = clk_fn.get_tclk_freq();
+> +       if (rate != 0)
+> +               clk = clk_register_fixed_rate(NULL, clk_name, NULL,
+> +                                             CLK_IS_ROOT, rate);
+> +       else {
+> +               pr_err("Invalid freq for %s\n", clk_name);
+> +               return;
+> +       }
+> +
+> +       if (WARN_ON(IS_ERR(clk)))
+> +               return;
+> +       clks[tclk] = clk;
+> +
+> +       /* clock 1 is pclk */
+> +       of_property_read_string_index(node, "clock-output-names", pclk,
+> +                               &clk_name);
+> +       rate = clk_fn.get_pck_freq();
+> +       if (rate != 0)
+> +               clk = clk_register_fixed_rate(NULL, clk_name, NULL,
+> +                                             CLK_IS_ROOT, rate);
+> +       else {
+> +               pr_err("Invalid freq for %s\n", clk_name);
+> +               return;
+> +       }
+> +       if (WARN_ON(IS_ERR(clk)))
+> +               return;
+> +       clks[pclk] = clk;
+> +
+> +       /* the clocks 2 to 4 are nbclk, hclk and dramclk and are all
+> +        * derivated from the clock 1: pclk */
+
+ditto
+
+> +
+> +       for (i = nbclk; i <= dramclk; i++) {
+> +               const int *ratio = clk_fn.get_fab_freq_opt();
+> +               const char *parent_clk_name;
+> +
+> +               of_property_read_string_index(node, "clock-output-names",
+> +                                        i, &clk_name);
+> +               of_property_read_string_index(node, "clock-output-names",
+> +                                        pclk, &parent_clk_name);
+> +
+> +               if (ratio != NULL)
+> +                       clk = clk_register_fixed_factor(NULL, clk_name,
+> +                                                       parent_clk_name, 0,
+> +                                                       ratio[0],
+> +                                                       ratio[i - nbclk + 1]);
+> +               else {
+> +                       pr_err("Invalid clk ratio for %s\n", clk_name);
+> +                       return;
+> +               }
+> +
+> +               if (WARN_ON(IS_ERR(clk)))
+> +                       return;
+> +               clks[i] = clk;
+> +       }
+> +       clk_data.clk_num = ARRAY_SIZE(clks);
+> +       clk_data.clks = clks;
+> +       of_clk_add_provider(node, of_clk_src_onecell_get, &clk_data);
+> +}
+> +
+> +static struct core_clk_fn armada_370_clk_fn = {
+> +       .get_tclk_freq = armada_370_get_tclk_freq,
+> +       .get_pck_freq = armada_370_get_pck_freq,
+> +       .get_fab_freq_opt = armada_370_get_fab_freq_opt,
+> +};
+> +
+> +static struct core_clk_fn armada_xp_clk_fn = {
+> +       .get_tclk_freq = armada_xp_get_tclk_freq,
+> +       .get_pck_freq = armada_xp_get_pck_freq,
+> +       .get_fab_freq_opt = armada_xp_get_fab_freq_opt,
+> +};
+> +
+> +static const __initconst struct of_device_id clk_match[] = {
+> +       {
+> +        .compatible = "marvell,armada-370-core-clockctrl",
+> +        .data = &armada_370_clk_fn,
+> +        },
+
+Indention is a bit weird here.  The members are just indented with one
+space and there is an extra white space in front of the closing bracket.
+Can you re-align?
+
+> +
+> +       {
+> +        .compatible = "marvell,armada-xp-core-clockctrl",
+> +        .data = &armada_xp_clk_fn,
+> +        },
+
+ditto
+
+> +       {
+> +        /* sentinel */
+> +        }
+
+ditto
+
+> +};
+> +
+> +void __init mvebu_core_clocks_init(void)
+> +{
+> +       struct device_node *np;
+> +       struct resource res;
+> +       void __iomem *sar_base;
+> +       int i;
+> +
+> +       np = of_find_node_by_name(NULL, "mvebu-sar");
+> +
+> +       if (!np)
+> +               goto err;
+> +
+> +       if (of_address_to_resource(np, 0, &res))
+> +               goto err;
+> +
+> +       sar_reg_size = resource_size(&res);
+> +       sar_reg = kmalloc(sar_reg_size, GFP_KERNEL);
+> +
+> +       sar_base = ioremap(res.start, sar_reg_size);
+> +       if (sar_base == NULL)
+> +               goto err;
+> +       for (i = 0; i < sar_reg_size; i += sizeof(*sar_reg))
+> +               sar_reg[i] = readl(sar_base + i);
+> +
+> +       iounmap(sar_base);
+> +
+> +       for_each_matching_node(np, clk_match) {
+> +               const struct of_device_id *match = of_match_node(clk_match, np);
+> +               struct core_clk_fn *clk_fn = match->data;
+> +               of_core_clk_setup(np, *clk_fn);
+> +       }
+> +
+> +       return;
+> +err:
+> +       pr_err("%s:SAR base adresse not set in DT\n", __func__);
+> +       return;
+> +}
+> diff --git a/drivers/clk/mvebu/clk-core.h b/drivers/clk/mvebu/clk-core.h
+> new file mode 100644
+> index 0000000..a04f80b
+> --- /dev/null
+> +++ b/drivers/clk/mvebu/clk-core.h
+> @@ -0,0 +1,19 @@
+> +/*
+> + *  * Marvell EBU clock core handling defined at reset
+> + *
+> + * Copyright (C) 2012 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#ifndef __MVEBU_CLK_CORE_H
+> +#define __MVEBU_CLK_CORE_H
+> +
+> +void __init of_core_clk_setup(struct device_node *node);
+> +void __init mvebu_core_clocks_init(void);
+> +
+> +#endif
+> diff --git a/drivers/clk/mvebu/clk-cpu.c b/drivers/clk/mvebu/clk-cpu.c
+> new file mode 100644
+> index 0000000..6b5c841
+> --- /dev/null
+> +++ b/drivers/clk/mvebu/clk-cpu.c
+> @@ -0,0 +1,155 @@
+> +/*
+> + * Marvell MVEBU CPU clock handling.
+> + *
+> + * Copyright (C) 2012 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/clk.h>
+
+clk-provider.h includes clk.h, so this is redundant.
+
+Regards,
+Mike
