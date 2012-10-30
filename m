@@ -1,89 +1,117 @@
 From: Marek Belisko <marek.belisko@open-nandra.com>
-Subject: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next generation) board.
-Date: Tue, 30 Oct 2012 22:42:47 +0100
-Message-ID: <1351633367-19082-1-git-send-email-marek.belisko@open-nandra.com>
+Subject: [PATCH 1/2] leds/tca6507: Add support for devicetree.
+Date: Tue, 30 Oct 2012 22:45:33 +0100
+Message-ID: <1351633534-20817-1-git-send-email-marek.belisko@open-nandra.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
+To: cooloney@gmail.com, rpurdie@rpsys.net
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
 List-Id: devicetree@vger.kernel.org
+
+Support added only for leds (not for gpio's).
 
 Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
 ---
- arch/arm/boot/dts/omap3-gta04.dts |   65 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
+ drivers/leds/leds-tca6507.c |   73 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 70 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
-new file mode 100644
-index 0000000..76efd13
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-gta04.dts
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright (C) 2012 Marek Belisko <marek.belisko@open-nandra.com>
-+ *
-+ * Based on omap3-beagle-xm.dts
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
+diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
+index dabcf7a..496dd98 100644
+--- a/drivers/leds/leds-tca6507.c
++++ b/drivers/leds/leds-tca6507.c
+@@ -667,6 +667,69 @@ static void tca6507_remove_gpio(struct tca6507_chip *tca)
+ }
+ #endif /* CONFIG_GPIOLIB */
+ 
++#ifdef CONFIG_OF
++static struct tca6507_platform_data * __devinit tca6507_led_dt_init(struct i2c_client *client)
++{
++	struct device_node *np = client->dev.of_node, *child;
++	struct tca6507_platform_data *pdata;
++	struct led_info *tca_leds;
++	int count = 0;
 +
-+/include/ "omap3.dtsi"
++	for_each_child_of_node(np, child)
++		count++;
++	if (!count)
++		return NULL;
 +
-+/ {
-+	model = "OMAP3 GTA04";
-+	compatible = "ti,omap3-gta04", "ti,omap3";
++	if (count > NUM_LEDS)
++		return NULL;
 +
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
++	tca_leds = devm_kzalloc(&client->dev, sizeof(struct led_info) * NUM_LEDS, GFP_KERNEL);
 +
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		aux-button {
-+			label = "AUX";
-+			linux,code = <169>;
-+			gpios = <&gpio1 7 1>;
-+			gpio-key,wakeup;
-+		};
-+	};
++	if (!tca_leds)
++		return NULL;
++
++
++	for_each_child_of_node(np, child) {
++		struct led_info led;
++		u32 reg;
++		int ret;
++
++		led.name = of_get_property(child, "label", NULL) ? : child->name;
++		led.default_trigger =
++			of_get_property(child, "linux,default-trigger", NULL);
++
++		ret = of_property_read_u32(child, "reg", &reg);
++
++		if (ret != 0)
++			continue;
++		tca_leds[reg] = led;
++	}
++	pdata = devm_kzalloc(&client->dev, sizeof(struct tca6507_platform_data), GFP_KERNEL);
++	if (!pdata) {
++		kfree(tca_leds);
++		return NULL;
++	}
++
++	pdata->leds.leds = tca_leds;
++	pdata->leds.num_leds = NUM_LEDS;
++
++	return pdata;
++}
++
++static const struct of_device_id of_tca6507_leds_match[] = {
++	{ .compatible = "leds-tca6507", },
++	{},
 +};
 +
-+&i2c1 {
-+	clock-frequency = <2600000>;
++#else
++static int __devinit tca6507_led_dt_init(struct i2c_client *client, struct tca6507_platform_data *data)
++{
++	return -1;
++}
 +
-+	twl: twl@48 {
-+		reg = <0x48>;
-+		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+		interrupt-parent = <&intc>;
-+	};
-+};
++#define of_tca6507_leds_match NULL
++#endif
 +
-+/include/ "twl4030.dtsi"
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+	/* Pressure Sensor */
-+	bmp085@77 {
-+		compatible = "bosch,bmp085";
-+		reg = <0x77>;
-+	};
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+};
-+
-+&mmc1 {
-+	vmmc-supply = <&vmmc1>;
-+	bus-width = <4>;
-+};
-+
+ static int __devinit tca6507_probe(struct i2c_client *client,
+ 				   const struct i2c_device_id *id)
+ {
+@@ -683,9 +746,12 @@ static int __devinit tca6507_probe(struct i2c_client *client,
+ 		return -EIO;
+ 
+ 	if (!pdata || pdata->leds.num_leds != NUM_LEDS) {
+-		dev_err(&client->dev, "Need %d entries in platform-data list\n",
+-			NUM_LEDS);
+-		return -ENODEV;
++		pdata = tca6507_led_dt_init(client);
++		if (!pdata) {
++			dev_err(&client->dev, "Need %d entries in platform-data list\n",
++				NUM_LEDS);
++			return -ENODEV;
++		}
+ 	}
+ 	tca = devm_kzalloc(&client->dev, sizeof(*tca), GFP_KERNEL);
+ 	if (!tca)
+@@ -750,6 +816,7 @@ static struct i2c_driver tca6507_driver = {
+ 	.driver   = {
+ 		.name    = "leds-tca6507",
+ 		.owner   = THIS_MODULE,
++		.of_match_table = of_tca6507_leds_match,
+ 	},
+ 	.probe    = tca6507_probe,
+ 	.remove   = __devexit_p(tca6507_remove),
 -- 
 1.7.9.5
