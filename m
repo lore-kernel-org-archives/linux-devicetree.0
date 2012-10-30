@@ -1,463 +1,108 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH V2 1/3] clk: mvebu: add armada-370-xp specific clocks
-Date: Tue, 30 Oct 2012 04:20:25 -0700
-Message-ID: <20121030112025.18780.88390@nucleus>
-References: <1349125926-16144-1-git-send-email-gregory.clement@free-electrons.com>
- <1349125926-16144-2-git-send-email-gregory.clement@free-electrons.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Tue, 30 Oct 2012 11:24:10 +0000
+Message-ID: <20121030112410.GM4511@opensource.wolfsonmicro.com>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121024161429.GA16350@core.coreip.homeip.net>
+ <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
+ <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
+ <20121024185818.GB772@arwen.pp.htv.fi>
+ <20121025205901.GA3827@sirena.org.uk>
+ <20121026062008.GA21734@arwen.pp.htv.fi>
+ <20121026160316.GY18814@opensource.wolfsonmicro.com>
+ <20121029194901.GA30152@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1349125926-16144-2-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Li Li <li.li@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>Olof Johansson <o>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eWmFpGZayiNrn4FL"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121029194901.GA30152@arwen.pp.htv.fi>
+Sender: linux-input-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Gregory CLEMENT (2012-10-01 14:12:04)
-> Add Armada 370/XP specific clocks: core clocks and CPU clocks.
-> 
-> The CPU clocks are only for Armada XP for the SMP mode.
-> 
-> The core clocks are clocks which have their rate set during reset. The
-> code was written with the other SoCs of the mvebu family in
-> mind. Adding them should be pretty straight forward. For a new
-> SoC, only 3 binding have to be added:
-> - one to provide the tclk frequency
-> - one to provde the pclk frequency
-> - and one to provide the ratio between the pclk and the children
->   clocks
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-Thanks for sending v2 Gregory.  Functionally this series looks good but
-unfortunately there are a few style and white space nitpicks below.
+--eWmFpGZayiNrn4FL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
-> new file mode 100644
-> index 0000000..c524618
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
-> @@ -0,0 +1,21 @@
-> +Device Tree Clock bindings for cpu clock of Marvell EBU platforms
-> +
-> +Required properties:
-> +- compatible : shall be one of the following:
-> +       "marvell,armada-xp-cpu-clockctrl" - cpu clocks for Armada XP
-> +- reg : Address and length of the clock complex register set
-> +- #clock-cells : should be set to 1.
-> +- clocks : shall be the input parent clock phandle for the clock.
-> +
-> +cpuclk: clock-complex@d0018700 {
-> +       #clock-cells = <1>;
-> +       compatible = "marvell,armada-xp-cpu-clockctrl";
-> +       reg = <0xd0018700 0xA0>;
-> +       clocks = <&coreclk 1>;
-> +}
-> +
-> +cpu@0 {
-> +       compatible = "marvell,sheeva-v7";
+On Mon, Oct 29, 2012 at 09:49:01PM +0200, Felipe Balbi wrote:
+> On Fri, Oct 26, 2012 at 05:03:16PM +0100, Mark Brown wrote:
 
-Unnecessary white space before the tab in the line above.
+> > You could have the driver explicitly set the flag, it would just be one
+> > extra line, but it seems marginally nicer to just do it.
 
-> diff --git a/drivers/clk/mvebu/clk-core.c b/drivers/clk/mvebu/clk-core.c
-> new file mode 100644
-> index 0000000..5792cb5
-> --- /dev/null
-> +++ b/drivers/clk/mvebu/clk-core.c
-> @@ -0,0 +1,312 @@
-> +/*
-> + * Marvell EBU clock core handling defined at reset
-> + *
-> + * Copyright (C) 2012 Marvell
-> + *
-> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/clk.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_address.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +
-> +/* Sample At Reset is a 64 bit bitfiled split in two register of 32
-> + * bits*/
+> You didn't get the whole picture I'm afraid. Consider the situation
+> where the same e.g. keypad driver is being used on OMAP4 and OMAP5 and
+> those have different requirements towards pinctrl.
 
-Can you make this proper comment block style per CodingStyle convention?
+No, I'm pretty certain that I do.
 
-> +
-> +#define SARL                               0   /* Low part [0:31] */
-> +#define            SARL_AXP_PCLK_FREQ_OPT          21
-> +#define            SARL_AXP_PCLK_FREQ_OPT_MASK     0x7
-> +#define            SARL_A370_PCLK_FREQ_OPT         11
-> +#define            SARL_A370_PCLK_FREQ_OPT_MASK    0xF
-> +#define            SARL_AXP_FAB_FREQ_OPT           24
-> +#define            SARL_AXP_FAB_FREQ_OPT_MASK      0xF
-> +#define            SARL_A370_FAB_FREQ_OPT          15
-> +#define            SARL_A370_FAB_FREQ_OPT_MASK     0x1F
-> +#define            SARL_A370_TCLK_FREQ_OPT         20
-> +#define            SARL_A370_TCLK_FREQ_OPT_MASK    0x1
-> +#define SARH                               4   /* High part [32:63] */
-> +#define            SARH_AXP_PCLK_FREQ_OPT          (52-32)
-> +#define            SARH_AXP_PCLK_FREQ_OPT_MASK     0x1
-> +#define            SARH_AXP_PCLK_FREQ_OPT_SHIFT    3
-> +#define            SARH_AXP_FAB_FREQ_OPT           (51-32)
-> +#define            SARH_AXP_FAB_FREQ_OPT_MASK      0x1
-> +#define            SARH_AXP_FAB_FREQ_OPT_SHIFT     4
-> +
-> +u32 *sar_reg;
-> +int sar_reg_size;
-> +
-> +enum core_clk {
-> +       tclk, pclk, nbclk, hclk, dramclk, clk_max
-> +};
-> +
-> +struct core_clk_fn {
-> +       u32(*get_tclk_freq) (void);
-> +       u32(*get_pck_freq) (void);
-> +       const int *(*get_fab_freq_opt) (void);
-> +};
-> +
-> +/* Ratio between VCO and each of the member in the following order:
-> +   CPU clock, L2 clock, DRAM controler clock, DDR clcok */
+> Now, we need to add OMAP5 support *to the same keypad driver*.
+> Unfortunately, OMAP5 needs to handle pinctrl explicitly for whatever
+> reason (SW-controlled sleep mode, errata fix, whatever).
 
-ditto
+> This will mean that we will have to remove the flag from the keypad
+> driver because that's not valid anymore for OMAP5.
 
-> +static const int reset_core_ratio[32][4] = {
-> +       [0x01] = {1, 2, 2, 2},
-> +       [0x02] = {2, 2, 6, 3},
-> +       [0x03] = {2, 2, 3, 3},
-> +       [0x04] = {1, 2, 3, 3},
-> +       [0x05] = {1, 2, 4, 2},
-> +       [0x06] = {1, 1, 2, 2},
-> +       [0x07] = {2, 3, 6, 6},
-> +       [0x09] = {1, 2, 6, 3},
-> +       [0x0A] = {2, 4, 10, 5},
-> +       [0x0C] = {1, 2, 4, 4},
-> +       [0x0F] = {2, 2, 5, 5},
-> +       [0x13] = {1, 1, 2, 1},
-> +       [0x14] = {2, 3, 6, 3},
-> +       [0x1B] = {1, 1, 1, 1},
-> +};
-> +
-> +static struct clk *clks[clk_max];
-> +
-> +static struct clk_onecell_data clk_data;
-> +
-> +/* Frequency in MHz*/
-> +static u32 armada_370_pclk[] = { 400, 533, 667, 800, 1000, 1067, 1200 };
-> +
-> +static u32 armada_xp_pclk[] = { 1000, 1066, 1200, 1333, 1500, 1666,
-> +       1800, 2000, 667, 0, 800, 1600
-> +};
-> +
-> +static u32 armada_370_tclk[] = { 166, 200 };
-> +
-> +static const int *__init armada_370_get_fab_freq_opt(void)
-> +{
-> +       u8 fab_freq_opt = 0;
-> +
-> +       fab_freq_opt = ((sar_reg[0] >> SARL_A370_FAB_FREQ_OPT) &
-> +                       SARL_A370_FAB_FREQ_OPT_MASK);
-> +
-> +       if (reset_core_ratio[fab_freq_opt][0] == 0)
-> +               return NULL;
-> +       else
-> +               return reset_core_ratio[fab_freq_opt];
-> +}
-> +
-> +static u32 __init armada_370_get_pck_freq(void)
-> +{
-> +       u32 cpu_freq;
-> +       u8 cpu_freq_select = 0;
-> +
-> +       cpu_freq_select = ((sar_reg[0] >> SARL_A370_PCLK_FREQ_OPT) &
-> +                          SARL_A370_PCLK_FREQ_OPT_MASK);
-> +       if (cpu_freq_select > ARRAY_SIZE(armada_370_pclk)) {
-> +               pr_err("CPU freq select unsuported %d\n", cpu_freq_select);
-> +               cpu_freq = 0;
-> +       } else
-> +               cpu_freq = armada_370_pclk[cpu_freq_select];
-> +
-> +       return cpu_freq * 1000 * 1000;
-> +}
-> +
-> +static u32 __init armada_370_get_tclk_freq(void)
-> +{
-> +       u32 tclk_freq;
-> +       u8 tclk_freq_select = 0;
-> +
-> +       tclk_freq_select = ((sar_reg[0] >> SARL_A370_TCLK_FREQ_OPT) &
-> +                           SARL_A370_TCLK_FREQ_OPT_MASK);
-> +       if (tclk_freq_select > ARRAY_SIZE(armada_370_tclk)) {
-> +               pr_err("TCLK freq select unsuported %d\n", tclk_freq_select);
-> +               tclk_freq = 0;
-> +       } else
-> +               tclk_freq = armada_370_tclk[tclk_freq_select];
-> +
-> +       return tclk_freq * 1000 * 1000;
-> +}
-> +
-> +static const int *__init armada_xp_get_fab_freq_opt(void)
-> +{
-> +       u8 fab_freq_opt = 0;
-> +
-> +       fab_freq_opt = ((sar_reg[0] >> SARL_AXP_FAB_FREQ_OPT) &
-> +                       SARL_AXP_FAB_FREQ_OPT_MASK);
-> +       /* The upper bit is not contiguous to the other ones
-> +        * and located in the high part of the SAR
-> +        * registers */
+This isn't a problem; either the pinctrl code for OMAP5 will do
+something sensible for OMAP4 in which case there's no difference to the
+resulting code or you're going to have to have conditional code for the
+two devices anyway and you're no worse off.
 
-ditto
+> This is why I think hiding things from drivers makes no sense. Also
+> consider the situations Linus W exposed on another subthread. If you
+> change ordering of certain calls, you will really break the
+> functionality of the IP. Because we can't make sure this won't work
+> automagically in all cases (just like we can't make sure $size memory
+> allocation is enough for all drivers) we don't hide that from the
+> driver. We require driver to manage its resources properly.
 
-> +       fab_freq_opt |= (((sar_reg[1] >> SARH_AXP_FAB_FREQ_OPT) &
-> +                         SARH_AXP_FAB_FREQ_OPT_MASK)
-> +                        << SARH_AXP_FAB_FREQ_OPT_SHIFT);
-> +
-> +       if (reset_core_ratio[fab_freq_opt][0] == 0)
-> +               return NULL;
-> +       else
-> +               return reset_core_ratio[fab_freq_opt];
-> +}
-> +
-> +static u32 __init armada_xp_get_pck_freq(void)
-> +{
-> +       u32 cpu_freq;
-> +       u8 cpu_freq_select = 0;
-> +
-> +       cpu_freq_select = ((sar_reg[0] >> SARL_AXP_PCLK_FREQ_OPT) &
-> +                          SARL_AXP_PCLK_FREQ_OPT_MASK);
-> +       /* The upper bit is not contiguous to the other ones
-> +        * and located in the high part of the SAR
-> +        * registers */
+We need some place to put the SoC integration; power domains seem like
+the obvious place to me but YMMV.  Nothing about having this out of the
+drivers requires that this be done by individual subsystems in isolation
+=66rom each other.  Half the point here is that for the reusable IPs this
+stuff often isn't driver specific at all, it's often more about the SoC
+integration than it is about the driver and so you'll get a consistent
+pattern for most IPs on the SoC.
 
-ditto
+> How can you make sure that this will work for at least 50% of the
+> drivers ? You just can't. We don't know the implementation details of
+> every arch/soc/platform supported by Linux today to make that decision.
 
-> +       cpu_freq_select |= (((sar_reg[1] >> SARH_AXP_PCLK_FREQ_OPT) &
-> +                            SARH_AXP_PCLK_FREQ_OPT_MASK)
-> +                           << SARH_AXP_PCLK_FREQ_OPT_SHIFT);
-> +       if (cpu_freq_select > ARRAY_SIZE(armada_xp_pclk)) {
-> +               pr_err("CPU freq select unsuported: %d\n", cpu_freq_select);
-> +               cpu_freq = 0;
-> +       } else
-> +               cpu_freq = armada_xp_pclk[cpu_freq_select];
-> +
-> +       return cpu_freq * 1000 * 1000;
-> +}
-> +
-> +/* For Armada XP TCLK frequency is fix: 250MHz */
-> +static u32 __init armada_xp_get_tclk_freq(void)
-> +{
-> +       return 250 * 1000 * 1000;
-> +}
-> +
-> +void __init of_core_clk_setup(struct device_node *node,
-> +                             struct core_clk_fn clk_fn)
-> +{
-> +       struct clk *clk;
-> +       unsigned long rate;
-> +       const char *clk_name;
-> +       int i;
-> +
-> +       /* clock 0 is tclk */
-> +       of_property_read_string_index(node, "clock-output-names", tclk,
-> +                               &clk_name);
-> +       rate = clk_fn.get_tclk_freq();
-> +       if (rate != 0)
-> +               clk = clk_register_fixed_rate(NULL, clk_name, NULL,
-> +                                             CLK_IS_ROOT, rate);
-> +       else {
-> +               pr_err("Invalid freq for %s\n", clk_name);
-> +               return;
-> +       }
-> +
-> +       if (WARN_ON(IS_ERR(clk)))
-> +               return;
-> +       clks[tclk] = clk;
-> +
-> +       /* clock 1 is pclk */
-> +       of_property_read_string_index(node, "clock-output-names", pclk,
-> +                               &clk_name);
-> +       rate = clk_fn.get_pck_freq();
-> +       if (rate != 0)
-> +               clk = clk_register_fixed_rate(NULL, clk_name, NULL,
-> +                                             CLK_IS_ROOT, rate);
-> +       else {
-> +               pr_err("Invalid freq for %s\n", clk_name);
-> +               return;
-> +       }
-> +       if (WARN_ON(IS_ERR(clk)))
-> +               return;
-> +       clks[pclk] = clk;
-> +
-> +       /* the clocks 2 to 4 are nbclk, hclk and dramclk and are all
-> +        * derivated from the clock 1: pclk */
+Well, we've managed to get along for rather a long time with essentially
+all architectures implementing this stuff by doing static setup for the
+pins on boot.  That does suggest we can get a reasonably long way with
+something simple, and it does seem to match up with how things usually
+look at an electrical level too.
 
-ditto
+It seems fairly obvious that if we need to add identical bolier plate
+code to lots of drivers we're doing something wrong, it's just churn for
+little practical gain and a problem if we ever decide to change how this
+stuff works in the future.
 
-> +
-> +       for (i = nbclk; i <= dramclk; i++) {
-> +               const int *ratio = clk_fn.get_fab_freq_opt();
-> +               const char *parent_clk_name;
-> +
-> +               of_property_read_string_index(node, "clock-output-names",
-> +                                        i, &clk_name);
-> +               of_property_read_string_index(node, "clock-output-names",
-> +                                        pclk, &parent_clk_name);
-> +
-> +               if (ratio != NULL)
-> +                       clk = clk_register_fixed_factor(NULL, clk_name,
-> +                                                       parent_clk_name, 0,
-> +                                                       ratio[0],
-> +                                                       ratio[i - nbclk + 1]);
-> +               else {
-> +                       pr_err("Invalid clk ratio for %s\n", clk_name);
-> +                       return;
-> +               }
-> +
-> +               if (WARN_ON(IS_ERR(clk)))
-> +                       return;
-> +               clks[i] = clk;
-> +       }
-> +       clk_data.clk_num = ARRAY_SIZE(clks);
-> +       clk_data.clks = clks;
-> +       of_clk_add_provider(node, of_clk_src_onecell_get, &clk_data);
-> +}
-> +
-> +static struct core_clk_fn armada_370_clk_fn = {
-> +       .get_tclk_freq = armada_370_get_tclk_freq,
-> +       .get_pck_freq = armada_370_get_pck_freq,
-> +       .get_fab_freq_opt = armada_370_get_fab_freq_opt,
-> +};
-> +
-> +static struct core_clk_fn armada_xp_clk_fn = {
-> +       .get_tclk_freq = armada_xp_get_tclk_freq,
-> +       .get_pck_freq = armada_xp_get_pck_freq,
-> +       .get_fab_freq_opt = armada_xp_get_fab_freq_opt,
-> +};
-> +
-> +static const __initconst struct of_device_id clk_match[] = {
-> +       {
-> +        .compatible = "marvell,armada-370-core-clockctrl",
-> +        .data = &armada_370_clk_fn,
-> +        },
+--eWmFpGZayiNrn4FL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Indention is a bit weird here.  The members are just indented with one
-space and there is an extra white space in front of the closing bracket.
-Can you re-align?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> +
-> +       {
-> +        .compatible = "marvell,armada-xp-core-clockctrl",
-> +        .data = &armada_xp_clk_fn,
-> +        },
+iQIcBAEBAgAGBQJQj7jQAAoJELSic+t+oim9WhwP/2CnMJ92z7eKpVpMjMMZa+yo
+5/P4MYtQFjHlOnsorDey5yLsO1YPbVyGzrHnAElsb0U38wIMQqqH7Z7p5ge00DTM
+fq/8oL8/FDGjZFW9wbsI/GOZyH4e0zAuKIu3G5hIBjZu8kIbmDXcu+tq+Mm1C4nL
+Rv+PZLnCGXQDTbQDrW7d/dip+IHj9y6N1955yLg6J+GEj/Pdr3Ym/p8xl0ul8/SU
+EMh3TfPar73HouozUERH+h20aHF5fMs0EiAGpmRdrflfxAMfN4AgPRT5LxZ6vJOR
+/HZoyJ8nQnlRExOhc0BTGV9PlcO9M/cQvI3P+3l78OFIGlmFaFiWZfgT+ELtp0sk
+DbvsaaW4ilhQDRyqQ8QSkt7GLRlWpiNXY64IDbtVigp5eqwXO5BRI+OpZWGc6W38
+/yXWmol6ewi7Qy8xEWzHV26J5kTWDY1hzbrm+WZr0rT++o4vI0zC1zCod+4yBEqQ
+f5SzJu0kdwDfqrujBiFQUV0tIkJptPmP12o8YRZxbRiIb3J7cFowhyB6gY6L5RCf
+kuFMV/VyoyqaQSX1+rb2EdzufMRdfHeZKTb3Jejkbj95SA+EBucJ7ASiTxbkxuC4
+wYKM/AJePPoFVJHXKmWkBgOk51MKgInrC/r+kId1x3IA3wB0yj8JWEtSvfVhSNiP
+rIeQvDw7ZClCyAB6gV8i
+=9wtN
+-----END PGP SIGNATURE-----
 
-ditto
-
-> +       {
-> +        /* sentinel */
-> +        }
-
-ditto
-
-> +};
-> +
-> +void __init mvebu_core_clocks_init(void)
-> +{
-> +       struct device_node *np;
-> +       struct resource res;
-> +       void __iomem *sar_base;
-> +       int i;
-> +
-> +       np = of_find_node_by_name(NULL, "mvebu-sar");
-> +
-> +       if (!np)
-> +               goto err;
-> +
-> +       if (of_address_to_resource(np, 0, &res))
-> +               goto err;
-> +
-> +       sar_reg_size = resource_size(&res);
-> +       sar_reg = kmalloc(sar_reg_size, GFP_KERNEL);
-> +
-> +       sar_base = ioremap(res.start, sar_reg_size);
-> +       if (sar_base == NULL)
-> +               goto err;
-> +       for (i = 0; i < sar_reg_size; i += sizeof(*sar_reg))
-> +               sar_reg[i] = readl(sar_base + i);
-> +
-> +       iounmap(sar_base);
-> +
-> +       for_each_matching_node(np, clk_match) {
-> +               const struct of_device_id *match = of_match_node(clk_match, np);
-> +               struct core_clk_fn *clk_fn = match->data;
-> +               of_core_clk_setup(np, *clk_fn);
-> +       }
-> +
-> +       return;
-> +err:
-> +       pr_err("%s:SAR base adresse not set in DT\n", __func__);
-> +       return;
-> +}
-> diff --git a/drivers/clk/mvebu/clk-core.h b/drivers/clk/mvebu/clk-core.h
-> new file mode 100644
-> index 0000000..a04f80b
-> --- /dev/null
-> +++ b/drivers/clk/mvebu/clk-core.h
-> @@ -0,0 +1,19 @@
-> +/*
-> + *  * Marvell EBU clock core handling defined at reset
-> + *
-> + * Copyright (C) 2012 Marvell
-> + *
-> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef __MVEBU_CLK_CORE_H
-> +#define __MVEBU_CLK_CORE_H
-> +
-> +void __init of_core_clk_setup(struct device_node *node);
-> +void __init mvebu_core_clocks_init(void);
-> +
-> +#endif
-> diff --git a/drivers/clk/mvebu/clk-cpu.c b/drivers/clk/mvebu/clk-cpu.c
-> new file mode 100644
-> index 0000000..6b5c841
-> --- /dev/null
-> +++ b/drivers/clk/mvebu/clk-cpu.c
-> @@ -0,0 +1,155 @@
-> +/*
-> + * Marvell MVEBU CPU clock handling.
-> + *
-> + * Copyright (C) 2012 Marvell
-> + *
-> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/clk.h>
-
-clk-provider.h includes clk.h, so this is redundant.
-
-Regards,
-Mike
+--eWmFpGZayiNrn4FL--
