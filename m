@@ -1,56 +1,64 @@
-From: Kim Phillips <kim.phillips@freescale.com>
-Subject: Re: [PATCH] libfdt: introduce fdt type annotation for use
- by endian checkers
-Date: Tue, 30 Oct 2012 17:27:34 -0500
-Message-ID: <20121030172734.887f5b3c0bb547b62b84c95c@freescale.com>
-References: <1350433728-24120-1-git-send-email-kim.phillips@freescale.com>
-	<507F4B0B.1020401@gmail.com>
-	<20121018121112.GI23523@truffula.fritz.box>
-	<20121018173022.32f1745249d162d1aa453694@freescale.com>
-	<20121019004324.GN23523@truffula.fritz.box>
-	<20121030165754.65b34c78cd0d3a0d6ab7d34e@freescale.com>
-	<50905385.5040808@wwwdotorg.org>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Tue, 30 Oct 2012 23:57:41 +0100
+Message-ID: <2288906.HJczx1g3gj@vostro.rjw.lan>
+References: <20121025205901.GA3827@sirena.org.uk> <20121030183704.GX4511@opensource.wolfsonmicro.com> <CACRpkdac=ztY0vXQ8Mu6H8fiAO4aFSSF-A6O1Q==zKOKEsJegw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <50905385.5040808@wwwdotorg.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: u-boot@lists.denx.de, Jon Loeliger <jdl@jdl.com>, devicetree-discuss@lists.ozlabs.org, David Gibson <david@gibson.dropbear.id.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdac=ztY0vXQ8Mu6H8fiAO4aFSSF-A6O1Q==zKOKEsJegw@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Felipe Balbi <balbi@ti.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 Oct 2012 16:24:05 -0600
-Stephen Warren <swarren@wwwdotorg.org> wrote:
-
-> On 10/30/2012 03:57 PM, Kim Phillips wrote:
-> > Projects such as linux and u-boot run sparse on libfdt.  libfdt
-> > contains the notion of endianness via usage of endian conversion
-> > functions such as fdt32_to_cpu.  As such, in order to pass endian
-> > checks, libfdt has to annotate its fdt variables as big endian.
-> > This patch does that ifdef __CHECKER__ (a symbol sparse defines),
-> > for two new fdt types: fdt32_t and fdt64_t, and subsequently
-> > silences warnings emitted by sparse when parsing libfdt.
+On Tuesday, October 30, 2012 10:51:11 PM Linus Walleij wrote:
+> On Tue, Oct 30, 2012 at 7:37 PM, Mark Brown
+> <broonie@opensource.wolfsonmicro.com> wrote:
 > 
-> Should libfdt patches be committed to the main dtc repository (which I
-> assume is also upstream for libfdt?) rather than U-Boot first?
+> > More seriously the amount of time we seem to have been spending recently
+> > on changes which end up requiring us to go through essentially every
+> > driver and add code to them (often several times) doesn't seem like
+> > we're doing a good job here.
+> 
+> If this is your main concern you should be made aware that there
+> are people out there planning to supplant the existing DT probe paths
+> that are now being added to each and every ARM-related driver
+> with an ACPI probe path as ARM servers come into the picture.
 
-that's what this is meant to be: a patch for dtc, cc: u-boot, since
-it was originally a patch to u-boot's copy.  Fyi, dtc sumbission
-guidelines dictate To: jdl, Cc: devicetree-discuss...
+That's correct.
 
-> Otherwise, if we want to bring in a new libfdt from upstream, that would
-> trash all the U-Boot-specific changes in U-Boot's copy of libfdt.
+> > pinctrl is really noticable because it's
+> > new but it's not the only thing.  As a subsystem maintainer this code
+> > just makes me want to add new subsystem features to pull the code out of
+> > drivers but obviously that's not something that should be being done at
+> > the subsystem level.
+> 
+> We did manage to drag the power/voltage domain per se out
+> of the AMBA bus, and recommend that people (like us) do that
+> business using the power domains.
+> 
+> I think most people (including OMAP) have bought
+> into the concept of using the runtime PM framework and power
+> domains to control the power domain switches.
+> 
+> It's this wider concept of using the loose concept "PM resource
+> domains" to control also clocks and pins that is at stake, and so
+> far the runtime PM core people (Rafael and Magnus) has not said
+> much so I think we need some kind of indication from them as to
+> what is to happen, long-term, with drivers handling their own clocks
+> and pins. Should it be centralized or not? If it's to be centralized it
+> needs to become a large piece of infrastructure refactoring and
+> needs the attention of Linaro and the like to happen.
 
-right, this patch is for the dtc.  I assume gvb will pull it into
-u-boot once it's applied.
+Well, I personally think it should be centralized somehow.  I'm not quite
+sure how to achieve that, though.
 
-Kim
+Thanks,
+Rafael
+
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
