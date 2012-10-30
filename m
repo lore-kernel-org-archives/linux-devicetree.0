@@ -1,65 +1,30 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 09/15] SPEAr13xx: dts: Fix PCIe core address ranges
-Date: Tue, 30 Oct 2012 21:55:04 +0000
-Message-ID: <201210302155.05206.arnd@arndb.de>
-References: <cover.1351492562.git.pratyush.anand@st.com> <6ed9683e3149a640b4333cf3039ae31063b23e3b.1351492562.git.pratyush.anand@st.com>
+Subject: Re: [PATCH 08/15] SPEAr1310: Add PCIe auxdata for miphy clock initialization
+Date: Tue, 30 Oct 2012 21:57:35 +0000
+Message-ID: <201210302157.36153.arnd@arndb.de>
+References: <cover.1351492562.git.pratyush.anand@st.com> <06c4b001f57084702b42a66565248ae871b909bf.1351492562.git.pratyush.anand@st.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <6ed9683e3149a640b4333cf3039ae31063b23e3b.1351492562.git.pratyush.anand@st.com>
+In-Reply-To: <06c4b001f57084702b42a66565248ae871b909bf.1351492562.git.pratyush.anand@st.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Pratyush Anand <pratyush.anand@st.com>
 Cc: shiraz.hashim@st.com, viresh.linux@gmail.com, spear-devel@list.st.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
 On Monday 29 October 2012, Pratyush Anand wrote:
-> sible by
-> AHB and used to communicate with PCIe devices connected with the host
-> controller.
+> Miphy Clock initialization is very specific to controller and its
+> instances. Pass this custom function using auxdata.
 > 
 > Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
 > ---
->  arch/arm/boot/dts/spear13xx.dtsi |    9 +++++----
->  1 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-> index 9ff4f5f..b7990754 100644
-> --- a/arch/arm/boot/dts/spear13xx.dtsi
-> +++ b/arch/arm/boot/dts/spear13xx.dtsi
-> @@ -76,7 +76,8 @@
->                 #size-cells = <1>;
->                 compatible = "simple-bus";
->                 ranges = <0x50000000 0x50000000 0x10000000
-> -                         0xb0000000 0xb0000000 0x10000000
-> +                         0x80000000 0x80000000 0x20000000
-> +                         0xb0000000 0xb0000000 0x20000000
->                           0xd0000000 0xd0000000 0x02000000
->                           0xd8000000 0xd8000000 0x01000000
->                           0xe0000000 0xe0000000 0x10000000>;
-> @@ -194,7 +195,7 @@
->                 pcie0@b1000000 {
->                         compatible = "st,pcie-gadget", "st,pcie-host" ;
->                         reg = < 0xb1000000 0x4000
-> -                               0x80000000 0x2000
-> +                               0x80000000 0x10000000
->                                 0xeb800000 0x1000 >;
->                         interrupts = <0 68 0x4>;
->                         status = "disabled";
+>  arch/arm/mach-spear13xx/spear1310.c |  148 +++++++++++++++++++++++++++++++++++
+>  1 files changed, 148 insertions(+), 0 deletions(-)
 
-The code that I'm looking at in the upstream kernel looks very different, so I don't
-see how this patch would apply. Also, the version that you are patching as well
-as the changes you do don't actually follow the generic PCI bindings at all
-and should be done quite differently.
-
-Please have a look at how to configure the PCI ranges in the IEEE1275 PCI
-bindings and in examples you find in arch/powerpc/.
-
-Most importantly, the compatible string used here can't really refer to both
-the host and the endpoint mode, you really need separate bindings for those
-and have only one of the two used in a particular system. What you can do is
-to put both into the dtsi file and mark them as "disabled" and then enable
-just one of the two on a given board file.
+I think you shouldn't have this in platform code. I don't have the full picture here
+but it looks like it could be a separate clock driver so you can use the regular clock
+functions. Platform data with callbacks is not acceptable here.
 
 	Arnd
