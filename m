@@ -1,70 +1,52 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: re-use kernel's kbasename()
-Date: Wed, 31 Oct 2012 16:42:32 +0100
-Message-ID: <CACxGe6uCGk5Ue2QZobwNQJ_eGdmit=Dy1dO+5AB4uHaOex7zHw@mail.gmail.com>
-References: <1351690226-28152-1-git-send-email-andriy.shevchenko@linux.intel.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: [RFC PATCH v1 06/40] of/vendor-prefixes: add Imagination Technologies
+Date: Wed, 31 Oct 2012 16:13:47 +0000
+Message-ID: <1351700061-7203-7-git-send-email-james.hogan@imgtec.com>
+References: <1351700061-7203-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1351690226-28152-1-git-send-email-andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1351700061-7203-1-git-send-email-james.hogan@imgtec.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: linux-arch@vger.kernel.org
+Cc: James Hogan <james.hogan@imgtec.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2012 at 2:30 PM, Andy Shevchenko
-<andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+The "powervr" prefix which is currently described as "Imagination
+Technologies" isn't really appropriate for non-PowerVR hardware, so
+change the description of "powervr" to "PowerVR (Imagination
+Technologies Ltd.)", and add a separate "img" prefix for "Imagination
+Technologies Ltd.".
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-Please merge through the same tree that adds the new kbasename function.
-
-g.
-
-> ---
->  drivers/of/fdt.c |   10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 91a375f..0ca0f9e 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -486,14 +486,8 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
->                 depth++;
->                 pathp = (char *)p;
->                 p = ALIGN(p + strlen(pathp) + 1, 4);
-> -               if ((*pathp) == '/') {
-> -                       char *lp, *np;
-> -                       for (lp = NULL, np = pathp; *np; np++)
-> -                               if ((*np) == '/')
-> -                                       lp = np+1;
-> -                       if (lp != NULL)
-> -                               pathp = lp;
-> -               }
-> +               if (*pathp == '/')
-> +                       pathp = kbasename(pathp);
->                 rc = it(p, pathp, depth, data);
->                 if (rc != 0)
->                         break;
-> --
-> 1.7.10.4
->
-
-
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index db4d3af..5a94721b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -24,6 +24,7 @@ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ hp	Hewlett Packard
+ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
++img	Imagination Technologies Ltd.
+ intercontrol	Inter Control Group
+ linux	Linux-specific binding
+ marvell	Marvell Technology Group Ltd.
+@@ -34,7 +35,7 @@ nintendo	Nintendo
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+ picochip	Picochip Ltd
+-powervr	Imagination Technologies
++powervr	PowerVR (Imagination Technologies Ltd.)
+ qcom	Qualcomm, Inc.
+ ramtron	Ramtron International
+ realtek Realtek Semiconductor Corp.
 -- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+1.7.7.6
