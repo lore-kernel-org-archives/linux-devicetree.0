@@ -1,82 +1,64 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] Adding usb2.0 host-phy support for exynos5250
-Date: Wed, 31 Oct 2012 16:07:23 +0200
-Message-ID: <20121031140723.GF10998@arwen.pp.htv.fi>
-References: <1351518160-22369-1-git-send-email-gautam.vivek@samsung.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org>
+Subject: [RESEND PATCH 10/11] ARM: OMAP4: USB: Add pin mux configuration for panda board
+Date: Wed, 31 Oct 2012 19:56:51 +0530
+Message-ID: <1351693612-23314-11-git-send-email-keshava_mgowda@ti.com>
+References: <1351693612-23314-1-git-send-email-keshava_mgowda@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3UPJqPzJiScbNEd6"
+Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1351518160-22369-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1351693612-23314-1-git-send-email-keshava_mgowda-l0cyMroinI0@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---3UPJqPzJiScbNEd6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The port1 of omap4 panda board is used in ULPI PHY mode.
+The pin mux of usbhs (usbb1) port 1 is configured accordingly.
 
-Hi,
+Signed-off-by: Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4-panda.dts |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-On Mon, Oct 29, 2012 at 07:12:36PM +0530, Vivek Gautam wrote:
-> This patchset is based on the work by Praveen Paneri for
-> samsung-usbphy driver:
-> http://comments.gmane.org/gmane.linux.kernel.samsung-soc/12653
->=20
-> Changes from v2:
->  - Using "EXYNOS5_PHY_" as common prefix along with exact names for
->    PHY SFRs for register definitions
->  - Using register names with bit macros to make things more clear.
->  - Removed parentheses around 0x230 in definition for EXYNOS5_USB_CFG
->    in [patch 2/4 v2].
->=20
-> Tested on smdk5250 target with usb-next branch along with arch patches
-> for exynos5250:
-> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13042
-> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13048
->=20
-> Vivek Gautam (4):
->   usb: phy: samsung: Add host phy support to samsung-phy driver
->   ARM: Exynos5250: Enabling samsung-usbphy driver
->   USB: ehci-s5p: Add phy driver support
->   USB: ohci-exynos: Add phy driver support
+diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+index dad0df6..ea374cf 100644
+--- a/arch/arm/boot/dts/omap4-panda.dts
++++ b/arch/arm/boot/dts/omap4-panda.dts
+@@ -65,6 +65,7 @@
+ 			&twl6040_pins
+ 			&mcpdm_pins
+ 			&mcbsp1_pins
++			&usbb1_pins   /* port 0 of omap usb host port pin mux configuration */
+ 	>;
+ 
+ 	twl6040_pins: pinmux_twl6040_pins {
+@@ -92,6 +93,23 @@
+ 			0xc4 0x100	/* abe_mcbsp1_fsx.abe_mcbsp1_fsx INPUT | MODE0 */
+ 		>;
+ 	};
++
++	usbb1_pins: pinmux_usbb1_pins {
++		pinctrl-single,pins = <
++			0x82 0x10C  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_clk INPUT | PULLDOWN */
++			0x84 0x4  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_stp OUTPUT */
++			0x86 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dir INPUT | PULLDOWN */
++			0x88 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_nxt INPUT | PULLDOWN */
++			0x8a 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat0 INPUT | PULLDOWN */
++			0x8c 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat1 INPUT | PULLDOWN */
++			0x8e 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat2 INPUT | PULLDOWN */
++			0x90 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat3 INPUT | PULLDOWN */
++			0x92 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat4 INPUT | PULLDOWN */
++			0x94 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat5 INPUT | PULLDOWN */
++			0x96 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat6 INPUT | PULLDOWN */
++			0x98 0x104  /* USBB1_ULPITLL_CLK_MUXMODE.usbb1_ulpiphy_dat7 INPUT | PULLDOWN */
++		>;
++	};
+ };
+ 
+ &i2c1 {
+-- 
+1.7.9.5
 
-you should join forces with Praveen Paneri so you guys have a single PHY
-code.
-
-(I haven't fully read your patches, so apologize if what I'm saying is
-already taken care of)
-
---=20
-balbi
-
---3UPJqPzJiScbNEd6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQkTCbAAoJEIaOsuA1yqREM7IP/2IGLE/qpSvUt1XhHxho0b3r
-Y83CtkVsYiUNRP29PvoULIxEt5AfEHgGvsuqmZgPKCSmDTCopYFq3N5hD/ZoFWHd
-Yi8Q9LzVvb2/fY6bpwwE/7fQyUI5zvc2IyqJ9IxeTKI6OP0MWUE52/nsOkr7a9lu
-ojOtuuQRQzWatkNOwhGRj6ScNNh3J+oIW3E8nmyiocYs/BCHqFOJzZTQcB9LwmDp
-F1c5lGiKgAW4KL2+tO55nDUAKGElFLtaBQT1jIQCatKXPvZDCIriYU66NBNpK2zi
-9w1jwjiLFKXwHoUWNi08gGBA978QzMd75FRhkrqj/6hGgRUZnYDhZ176sBFqZaBY
-UEW93/trJXQ3il8Uak/WlANQX5sUraxP2L41lMUC+4iyH0nrJUK0UFojPAlj3M7/
-x8fmVbU3vecJTJsVCursClaQEI9Ga36BxBE/Qx6gWKQHaHY5ucsYxQPnS/ITjzqw
-ZZd43/nbkskrz2onNd5IXL2kTU4luN8a4wvz2xier8gfzEcvPbLi4eLM+7EtFzcg
-ofC3KektqDe2+rJu/7vwzvWfRpO7YB+kZbfYJJn4aNDTCgJECpQy2SjTS9FehmFj
-xxu7tTO2I6qFjWKX8wEf6VVkKIeiqN46XOfZr/dDLheEaol9UQA4X5g8qOao+jAz
-dv4LyMmlGw/2Iq8Mi56K
-=Ee8P
------END PGP SIGNATURE-----
-
---3UPJqPzJiScbNEd6--
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
