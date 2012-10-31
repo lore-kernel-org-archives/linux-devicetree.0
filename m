@@ -1,142 +1,189 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: Exynos5250: Enabling ehci-s5p driver
-Date: Wed, 31 Oct 2012 12:27:40 +0530
-Message-ID: <CAFp+6iHmN48PgoarvOK_D8muqu-3=5Ep=hKyRP-bQryUfRGS6Q@mail.gmail.com>
-References: <1349431818-15639-1-git-send-email-gautam.vivek@samsung.com>
-	<1349431818-15639-2-git-send-email-gautam.vivek@samsung.com>
-	<003801cda5f7$f7fd9a30$e7f8ce90$%han@samsung.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Subject: RE: [RESEND PATCH] mmc: omap_hsmmc: Enable HSPE bit for high speed
+ cards
+Date: Wed, 31 Oct 2012 06:59:09 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EAB9C9F@DBDE01.ent.ti.com>
+References: <1351515408-19403-1-git-send-email-gururaja.hebbar@ti.com>
+ <20121029161719.GI27566@arwen.pp.htv.fi>
+ <1BAFE6F6C881BF42822005164F1491C33EAB96FB@DBDE01.ent.ti.com>
+ <20121031054428.GC6971@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <003801cda5f7$f7fd9a30$e7f8ce90$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, thomas.abraham@linaro.org, Vivek Gautam <gautam.vivek@samsung.com>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20121031054428.GC6971@arwen.pp.htv.fi>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: "Balbi, Felipe" <balbi@ti.com>
+Cc: "S, Venkatraman" <svenkatr@ti.com>, "cjb@laptop.org" <cjb@laptop.org>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Nori, Sekhar" <nsekhar@ti.com>, "Rajashekhara, Sudhakar" <sudhakar.raj@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Wed, Oct 31, 2012 at 11:14:28, Balbi, Felipe wrote:
+> Hi,
+> 
+> On Wed, Oct 31, 2012 at 06:17:02AM +0100, Hebbar, Gururaja wrote:
+> > On Mon, Oct 29, 2012 at 21:47:19, Balbi, Felipe wrote:
+> > > Hi,
+> > > 
+> > > On Mon, Oct 29, 2012 at 06:26:48PM +0530, Hebbar, Gururaja wrote:
+> > > > HSMMC IP on AM33xx need a special setting to handle High-speed cards.
+> > > > Other platforms like TI81xx, OMAP4 may need this as-well. This depends
+> > > > on the HSMMC IP timing closure done for the high speed cards.
+> > > > 
+> > > > From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
+> > > > 
+> > > > The MMC/SD/SDIO output signals can be driven on either falling edge or
+> > > > rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
+> > > > to reach better timing performance, and thus to increase data transfer
+> > > > frequency.
+> > > > 
+> > > > There are few pre-requisites for enabling the HSPE bit
+> > > > - Controller should support High-Speed-Enable Bit and
+> > > > - Controller should not be using DDR Mode and
+> > > > - Controller should advertise that it supports High Speed in
+> > > >   capabilities register and
+> > > > - MMC/SD clock coming out of controller > 25MHz
+> > > > 
+> > > > Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+> > > > ---
+> > > > Rebased on mmc-next (v3.7.0-rc1)
+> > > > Only Build tested since EDMA support for AM335x is not yet added
+> > > > 
+> > > > :100644 100644 be76a23... ed271fc... M	Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> > > > :100644 100644 8b4e4f2... 346af5b... M	arch/arm/plat-omap/include/plat/mmc.h
+> > > > :100644 100644 54bfd0c... 3fd95cb... M	drivers/mmc/host/omap_hsmmc.c
+> > > >  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    1 +
+> > > >  arch/arm/plat-omap/include/plat/mmc.h              |    1 +
+> > > >  drivers/mmc/host/omap_hsmmc.c                      |   30 +++++++++++++++++++-
+> > > >  3 files changed, 31 insertions(+), 1 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> > > > index be76a23..ed271fc 100644
+> > > > --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> > > > +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+> > > > @@ -19,6 +19,7 @@ ti,dual-volt: boolean, supports dual voltage cards
+> > > >  "supply-name" examples are "vmmc", "vmmc_aux" etc
+> > > >  ti,non-removable: non-removable slot (like eMMC)
+> > > >  ti,needs-special-reset: Requires a special softreset sequence
+> > > > +ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
+> > > 
+> > > can't you do runtime revision detection for this ?
+> > 
+> > Platforms like AM335x & TI814x both use the same IP. 
+> > But only AM335x needed this bit to be set in order to sustain high
+> > speed transfers. This was concluded after AM335x HSMMC IP timing
+> > closure was completed for High speed Cards.
+> 
+> fair enough.
+> 
+> > > >  Example:
+> > > >  	mmc1: mmc@0x4809c000 {
+> > > > diff --git a/arch/arm/plat-omap/include/plat/mmc.h b/arch/arm/plat-omap/include/plat/mmc.h
+> > > > index 8b4e4f2..346af5b 100644
+> > > > --- a/arch/arm/plat-omap/include/plat/mmc.h
+> > > > +++ b/arch/arm/plat-omap/include/plat/mmc.h
+> > > > @@ -126,6 +126,7 @@ struct omap_mmc_platform_data {
+> > > >  		/* we can put the features above into this variable */
+> > > >  #define HSMMC_HAS_PBIAS		(1 << 0)
+> > > >  #define HSMMC_HAS_UPDATED_RESET	(1 << 1)
+> > > > +#define HSMMC_HAS_HSPE_SUPPORT	(1 << 2)
+> > > >  		unsigned features;
+> > > >  
+> > > >  		int switch_pin;			/* gpio (card detect) */
+> > > > diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+> > > > index 54bfd0c..3fd95cb 100644
+> > > > --- a/drivers/mmc/host/omap_hsmmc.c
+> > > > +++ b/drivers/mmc/host/omap_hsmmc.c
+> > > > @@ -62,6 +62,7 @@
+> > > >  
+> > > >  #define VS18			(1 << 26)
+> > > >  #define VS30			(1 << 25)
+> > > > +#define HSS			(1 << 21)
+> > > >  #define SDVS18			(0x5 << 9)
+> > > >  #define SDVS30			(0x6 << 9)
+> > > >  #define SDVS33			(0x7 << 9)
+> > > > @@ -89,6 +90,7 @@
+> > > >  #define MSBS			(1 << 5)
+> > > >  #define BCE			(1 << 1)
+> > > >  #define FOUR_BIT		(1 << 1)
+> > > > +#define HSPE			(1 << 2)
+> > > >  #define DDR			(1 << 19)
+> > > >  #define DW8			(1 << 5)
+> > > >  #define CC			0x1
+> > > > @@ -489,6 +491,7 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+> > > >  	struct mmc_ios *ios = &host->mmc->ios;
+> > > >  	unsigned long regval;
+> > > >  	unsigned long timeout;
+> > > > +	unsigned long clkdiv;
+> > > >  
+> > > >  	dev_vdbg(mmc_dev(host->mmc), "Set clock to %uHz\n", ios->clock);
+> > > >  
+> > > > @@ -496,7 +499,8 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+> > > >  
+> > > >  	regval = OMAP_HSMMC_READ(host->base, SYSCTL);
+> > > >  	regval = regval & ~(CLKD_MASK | DTO_MASK);
+> > > > -	regval = regval | (calc_divisor(host, ios) << 6) | (DTO << 16);
+> > > > +	clkdiv = calc_divisor(host, ios);
+> > > > +	regval = regval | (clkdiv << 6) | (DTO << 16);
+> > > 
+> > > not part of $SUBJECT
+> > 
+> > The output of the calc_divisor() is reused in the below HSPE checking. So
+> > instead of calling it twice I have taken the output of that function into
+> > a variable and reused it.
+> 
+> looks like this could/should go into commit log ;-)
+
+Ok I will update the commit message in V2.
+
+> 
+> > > >  	OMAP_HSMMC_WRITE(host->base, SYSCTL, regval);
+> > > >  	OMAP_HSMMC_WRITE(host->base, SYSCTL,
+> > > >  		OMAP_HSMMC_READ(host->base, SYSCTL) | ICE);
+> > > > @@ -507,6 +511,27 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+> > > >  		&& time_before(jiffies, timeout))
+> > > >  		cpu_relax();
+> > > >  
+> > > > +	/*
+> > > > +	 * Enable High-Speed Support
+> > > > +	 * Pre-Requisites
+> > > > +	 *	- Controller should support High-Speed-Enable Bit
+> > > > +	 *	- Controller should not be using DDR Mode
+> > > > +	 *	- Controller should advertise that it supports High Speed
+> > > > +	 *	  in capabilities register
+> > > > +	 *	- MMC/SD clock coming out of controller > 25MHz
+> > > > +	 */
+> > > > +	if ((mmc_slot(host).features & HSMMC_HAS_HSPE_SUPPORT) &&
+> > > 
+> > > is this really needed...
+> > 
+> > As explained above, this is needed only on platforms which requires the
+> > Bit to be set (currently AM335x). Such platforms will set this
+> > parameter in it .dts file
+> > 
+> > > 
+> > > > +	    (ios->timing != MMC_TIMING_UHS_DDR50) &&
+> > > > +	    ((OMAP_HSMMC_READ(host->base, CAPA) & HSS) == HSS)) {
+> > > 
+> > > ... provided you check device's register ?
+> > 
+> > As explained above, both TI814x & AM335x support HSS but only AM335x
+> > require HSPE bit set.
+> 
+> ok, understood. Just one small simplification:
+> 
+> if (a & BIT(n)) will have the same effect as if ((a & BIT(n) == BIT(n))),
+> so you can simplify that a little bit.
+
+Ok I will correct it in V2. 
+
+Thanks for the review.
+
+> 
+> -- 
+> balbi
+> 
 
 
-On Tue, Oct 9, 2012 at 1:57 PM, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Friday, October 05, 2012 7:10 PM Vivek Gautam wrote
->>
->> Adding EHCI device tree node for Exynos5250 along with
->> the device base adress and gpio line for vbus.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->
-> It looks good. Also I have tested this patch with Exynos5250.
->
-> Acked-by: Jingoo Han <jg1.han@samsung.com>
->
-Any thoughts about this please.
-
->> ---
->>  .../devicetree/bindings/usb/exynos-usb.txt         |   25 ++++++++++++++++++++
->>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
->>  arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++
->>  arch/arm/mach-exynos/include/mach/map.h            |    1 +
->>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
->>  5 files changed, 38 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> new file mode 100644
->> index 0000000..56e35c7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> @@ -0,0 +1,25 @@
->> +Samsung Exynos SoC USB controller
->> +
->> +The USB devices interface with USB controllers on Exynos SOCs.
->> +The device node has following properties.
->> +
->> +EHCI
->> +Required properties:
->> + - compatible: should be "samsung,exynos-ehci" for USB 2.0
->> +   EHCI controller in host mode.
->> + - reg: physical base address of the controller and length of memory mapped
->> +   region.
->> + - interrupts: interrupt number to the cpu.
->> +
->> +Optional properties:
->> + - samsung,vbus-gpio:  if present, specifies the GPIO that
->> +   needs to be pulled up for the bus to be powered.
->> +
->> +Example:
->> +
->> +     ehci {
->> +             compatible = "samsung,exynos-ehci";
->> +             reg = <0x12110000 0x100>;
->> +             interrupts = <0 71 0>;
->> +             samsung,vbus-gpio = <&gpx2 6 1 3 3>;
->> +     };
->> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> index a352df4..089576b 100644
->> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
->> @@ -166,4 +166,8 @@
->>       spi_2: spi@12d40000 {
->>               status = "disabled";
->>       };
->> +
->> +     ehci {
->> +             samsung,vbus-gpio = <&gpx2 6 1 3 3>;
->> +     };
->>  };
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index dddfd6e..73ea844 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -218,6 +218,12 @@
->>               #size-cells = <0>;
->>       };
->>
->> +     ehci {
->> +             compatible = "samsung,exynos-ehci";
->> +             reg = <0x12110000 0x100>;
->> +             interrupts = <0 71 0>;
->> +     };
->> +
->>       amba {
->>               #address-cells = <1>;
->>               #size-cells = <1>;
->> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
->> index 8480849..825fe40 100644
->> --- a/arch/arm/mach-exynos/include/mach/map.h
->> +++ b/arch/arm/mach-exynos/include/mach/map.h
->> @@ -195,6 +195,7 @@
->>  #define EXYNOS4_PA_EHCI                      0x12580000
->>  #define EXYNOS4_PA_OHCI                      0x12590000
->>  #define EXYNOS4_PA_HSPHY             0x125B0000
->> +#define EXYNOS5_PA_EHCI                      0x12110000
->>  #define EXYNOS4_PA_MFC                       0x13400000
->>
->>  #define EXYNOS4_PA_UART                      0x13800000
->> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
->> index fee9dcd..6d950d7b 100644
->> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
->> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
->> @@ -72,6 +72,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
->>                               "exynos-gsc.2", NULL),
->>       OF_DEV_AUXDATA("samsung,exynos5-gsc", EXYNOS5_PA_GSC3,
->>                               "exynos-gsc.3", NULL),
->> +     OF_DEV_AUXDATA("samsung,exynos-ehci", EXYNOS5_PA_EHCI,
->> +                                     "s5p-ehci", NULL),
->>       {},
->>  };
->>
->> --
->> 1.7.6.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Thanks & Regards
-Vivek
+Regards, 
+Gururaja
