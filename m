@@ -1,340 +1,155 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [Patch v2 1/4] ARM: at91: atmel-ssc: add platform device id table
-Date: Wed, 31 Oct 2012 15:26:57 +0800
-Message-ID: <1351668420-18447-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-sound-owner@vger.kernel.org>
-Sender: linux-sound-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, nicolas.ferre@atmel.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, jm.lin@atmel.com, Bo Shen <voice.shen@atmel.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Subject: [RESEND PATCH V2] mmc: omap_hsmmc: Enable HSPE bit for high speed cards
+Date: Wed, 31 Oct 2012 13:58:35 +0530
+Message-ID: <1351672116-17309-1-git-send-email-gururaja.hebbar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: balbi@ti.com, svenkatr@ti.com, cjb@laptop.org, balajitk@ti.com, grant.likely@secretlab.ca
+Cc: nsekhar@ti.com, sudhakar.raj@ti.com, gururaja.hebbar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-Add platform device id to check whether the SSC controller support
-pdc or dam for data transfer
+HSMMC IP on AM33xx need a special setting to handle High-speed cards.
+Other platforms like TI81xx, OMAP4 may need this as-well. This depends
+on the HSMMC IP timing closure done for the high speed cards.
 
-If match "at91rm9200_ssc", which support pdc for data transfer
-If match "at91sam9g45_ssc", which support dma for data transfer
+>From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
+The MMC/SD/SDIO output signals can be driven on either falling edge or
+rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
+to reach better timing performance, and thus to increase data transfer
+frequency.
+
+There are few pre-requisites for enabling the HSPE bit
+- Controller should support High-Speed-Enable Bit and
+- Controller should not be using DDR Mode and
+- Controller should advertise that it supports High Speed in
+  capabilities register and
+- MMC/SD clock coming out of controller > 25MHz
+
+Note:
+The implementation reuses the output of calc_divisor() so as to reduce
+code addition.
+
+Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
 ---
-No change between v1 and v2
----
- arch/arm/mach-at91/at91rm9200.c          |    6 +++---
- arch/arm/mach-at91/at91rm9200_devices.c  |    6 +++---
- arch/arm/mach-at91/at91sam9260.c         |    2 +-
- arch/arm/mach-at91/at91sam9260_devices.c |    2 +-
- arch/arm/mach-at91/at91sam9261.c         |    6 +++---
- arch/arm/mach-at91/at91sam9261_devices.c |    6 +++---
- arch/arm/mach-at91/at91sam9263.c         |    4 ++--
- arch/arm/mach-at91/at91sam9263_devices.c |    4 ++--
- arch/arm/mach-at91/at91sam9g45.c         |    4 ++--
- arch/arm/mach-at91/at91sam9g45_devices.c |    4 ++--
- arch/arm/mach-at91/at91sam9rl.c          |    4 ++--
- arch/arm/mach-at91/at91sam9rl_devices.c  |    4 ++--
- drivers/misc/atmel-ssc.c                 |   23 +++++++++++++++++++++++
- include/linux/atmel-ssc.h                |    5 +++++
- 14 files changed, 54 insertions(+), 26 deletions(-)
+Rebased on mmc-next (v3.7.0-rc1)
+Only Build tested since EDMA support for AM335x is not yet added
 
-diff --git a/arch/arm/mach-at91/at91rm9200.c b/arch/arm/mach-at91/at91rm9200.c
-index b4f0565..85d53c5 100644
---- a/arch/arm/mach-at91/at91rm9200.c
-+++ b/arch/arm/mach-at91/at91rm9200.c
-@@ -184,9 +184,9 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.1", &tc3_clk),
- 	CLKDEV_CON_DEV_ID("t1_clk", "atmel_tcb.1", &tc4_clk),
- 	CLKDEV_CON_DEV_ID("t2_clk", "atmel_tcb.1", &tc5_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.0", &ssc0_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.1", &ssc1_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.2", &ssc2_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.2", &ssc2_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91rm9200", &twi_clk),
- 	/* fake hclk clock */
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
-diff --git a/arch/arm/mach-at91/at91rm9200_devices.c b/arch/arm/mach-at91/at91rm9200_devices.c
-index a563189..59ceea1 100644
---- a/arch/arm/mach-at91/at91rm9200_devices.c
-+++ b/arch/arm/mach-at91/at91rm9200_devices.c
-@@ -752,7 +752,7 @@ static struct resource ssc0_resources[] = {
- };
+Changes in V2
+	- Added note in commit message about code re-use
+	- replaced ((a & BIT(n) == BIT(n))) with (a & BIT(n)) since
+	  effectively both are same.
+
+:100644 100644 be76a23... ed271fc... M	Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+:100644 100644 8b4e4f2... 346af5b... M	arch/arm/plat-omap/include/plat/mmc.h
+:100644 100644 54bfd0c... 5ea4c9d... M	drivers/mmc/host/omap_hsmmc.c
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    1 +
+ arch/arm/plat-omap/include/plat/mmc.h              |    1 +
+ drivers/mmc/host/omap_hsmmc.c                      |   30 +++++++++++++++++++-
+ 3 files changed, 31 insertions(+), 1 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+index be76a23..ed271fc 100644
+--- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
++++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+@@ -19,6 +19,7 @@ ti,dual-volt: boolean, supports dual voltage cards
+ "supply-name" examples are "vmmc", "vmmc_aux" etc
+ ti,non-removable: non-removable slot (like eMMC)
+ ti,needs-special-reset: Requires a special softreset sequence
++ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
  
- static struct platform_device at91rm9200_ssc0_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 0,
- 	.dev	= {
- 		.dma_mask		= &ssc0_dmamask,
-@@ -794,7 +794,7 @@ static struct resource ssc1_resources[] = {
- };
+ Example:
+ 	mmc1: mmc@0x4809c000 {
+diff --git a/arch/arm/plat-omap/include/plat/mmc.h b/arch/arm/plat-omap/include/plat/mmc.h
+index 8b4e4f2..346af5b 100644
+--- a/arch/arm/plat-omap/include/plat/mmc.h
++++ b/arch/arm/plat-omap/include/plat/mmc.h
+@@ -126,6 +126,7 @@ struct omap_mmc_platform_data {
+ 		/* we can put the features above into this variable */
+ #define HSMMC_HAS_PBIAS		(1 << 0)
+ #define HSMMC_HAS_UPDATED_RESET	(1 << 1)
++#define HSMMC_HAS_HSPE_SUPPORT	(1 << 2)
+ 		unsigned features;
  
- static struct platform_device at91rm9200_ssc1_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 1,
- 	.dev	= {
- 		.dma_mask		= &ssc1_dmamask,
-@@ -836,7 +836,7 @@ static struct resource ssc2_resources[] = {
- };
+ 		int switch_pin;			/* gpio (card detect) */
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+index 54bfd0c..5ea4c9d 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -62,6 +62,7 @@
  
- static struct platform_device at91rm9200_ssc2_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 2,
- 	.dev	= {
- 		.dma_mask		= &ssc2_dmamask,
-diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
-index ad29f93..2c8aab0 100644
---- a/arch/arm/mach-at91/at91sam9260.c
-+++ b/arch/arm/mach-at91/at91sam9260.c
-@@ -210,7 +210,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.1", &tc3_clk),
- 	CLKDEV_CON_DEV_ID("t1_clk", "atmel_tcb.1", &tc4_clk),
- 	CLKDEV_CON_DEV_ID("t2_clk", "atmel_tcb.1", &tc5_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.0", &ssc_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20", &twi_clk),
- 	/* more usart lookup table for DT entries */
-diff --git a/arch/arm/mach-at91/at91sam9260_devices.c b/arch/arm/mach-at91/at91sam9260_devices.c
-index 805ef95..9cfdc3f 100644
---- a/arch/arm/mach-at91/at91sam9260_devices.c
-+++ b/arch/arm/mach-at91/at91sam9260_devices.c
-@@ -742,7 +742,7 @@ static struct resource ssc_resources[] = {
- };
+ #define VS18			(1 << 26)
+ #define VS30			(1 << 25)
++#define HSS			(1 << 21)
+ #define SDVS18			(0x5 << 9)
+ #define SDVS30			(0x6 << 9)
+ #define SDVS33			(0x7 << 9)
+@@ -89,6 +90,7 @@
+ #define MSBS			(1 << 5)
+ #define BCE			(1 << 1)
+ #define FOUR_BIT		(1 << 1)
++#define HSPE			(1 << 2)
+ #define DDR			(1 << 19)
+ #define DW8			(1 << 5)
+ #define CC			0x1
+@@ -489,6 +491,7 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+ 	struct mmc_ios *ios = &host->mmc->ios;
+ 	unsigned long regval;
+ 	unsigned long timeout;
++	unsigned long clkdiv;
  
- static struct platform_device at91sam9260_ssc_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 0,
- 	.dev	= {
- 		.dma_mask		= &ssc_dmamask,
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index 8d999eb..4e8c56e 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -174,9 +174,9 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.0", &tc0_clk),
- 	CLKDEV_CON_DEV_ID("t1_clk", "atmel_tcb.0", &tc1_clk),
- 	CLKDEV_CON_DEV_ID("t2_clk", "atmel_tcb.0", &tc2_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.0", &ssc0_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.1", &ssc1_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.2", &ssc2_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.2", &ssc2_clk),
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &hck0),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9261", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g10", &twi_clk),
-diff --git a/arch/arm/mach-at91/at91sam9261_devices.c b/arch/arm/mach-at91/at91sam9261_devices.c
-index 9752f17..299637f 100644
---- a/arch/arm/mach-at91/at91sam9261_devices.c
-+++ b/arch/arm/mach-at91/at91sam9261_devices.c
-@@ -706,7 +706,7 @@ static struct resource ssc0_resources[] = {
- };
+ 	dev_vdbg(mmc_dev(host->mmc), "Set clock to %uHz\n", ios->clock);
  
- static struct platform_device at91sam9261_ssc0_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 0,
- 	.dev	= {
- 		.dma_mask		= &ssc0_dmamask,
-@@ -748,7 +748,7 @@ static struct resource ssc1_resources[] = {
- };
+@@ -496,7 +499,8 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
  
- static struct platform_device at91sam9261_ssc1_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 1,
- 	.dev	= {
- 		.dma_mask		= &ssc1_dmamask,
-@@ -790,7 +790,7 @@ static struct resource ssc2_resources[] = {
- };
+ 	regval = OMAP_HSMMC_READ(host->base, SYSCTL);
+ 	regval = regval & ~(CLKD_MASK | DTO_MASK);
+-	regval = regval | (calc_divisor(host, ios) << 6) | (DTO << 16);
++	clkdiv = calc_divisor(host, ios);
++	regval = regval | (clkdiv << 6) | (DTO << 16);
+ 	OMAP_HSMMC_WRITE(host->base, SYSCTL, regval);
+ 	OMAP_HSMMC_WRITE(host->base, SYSCTL,
+ 		OMAP_HSMMC_READ(host->base, SYSCTL) | ICE);
+@@ -507,6 +511,27 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+ 		&& time_before(jiffies, timeout))
+ 		cpu_relax();
  
- static struct platform_device at91sam9261_ssc2_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 2,
- 	.dev	= {
- 		.dma_mask		= &ssc2_dmamask,
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index 6a01d03..95a5471 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -186,8 +186,8 @@ static struct clk *periph_clocks[] __initdata = {
- static struct clk_lookup periph_clocks_lookups[] = {
- 	/* One additional fake clock for macb_hclk */
- 	CLKDEV_CON_ID("hclk", &macb_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.0", &ssc0_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID("mci_clk", "atmel_mci.0", &mmc0_clk),
- 	CLKDEV_CON_DEV_ID("mci_clk", "atmel_mci.1", &mmc1_clk),
- 	CLKDEV_CON_DEV_ID("spi_clk", "atmel_spi.0", &spi0_clk),
-diff --git a/arch/arm/mach-at91/at91sam9263_devices.c b/arch/arm/mach-at91/at91sam9263_devices.c
-index 8dde220..df89a00 100644
---- a/arch/arm/mach-at91/at91sam9263_devices.c
-+++ b/arch/arm/mach-at91/at91sam9263_devices.c
-@@ -1199,7 +1199,7 @@ static struct resource ssc0_resources[] = {
- };
- 
- static struct platform_device at91sam9263_ssc0_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 0,
- 	.dev	= {
- 		.dma_mask		= &ssc0_dmamask,
-@@ -1241,7 +1241,7 @@ static struct resource ssc1_resources[] = {
- };
- 
- static struct platform_device at91sam9263_ssc1_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 1,
- 	.dev	= {
- 		.dma_mask		= &ssc1_dmamask,
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index 84af1b5..f4f96a6 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -239,8 +239,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.1", &tcb0_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g10.0", &twi0_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g10.1", &twi1_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.0", &ssc0_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91sam9g45_ssc.0", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91sam9g45_ssc.1", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel-trng", &trng_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_sha", &aestdessha_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_tdes", &aestdessha_clk),
-diff --git a/arch/arm/mach-at91/at91sam9g45_devices.c b/arch/arm/mach-at91/at91sam9g45_devices.c
-index b159607..27e3bf6 100644
---- a/arch/arm/mach-at91/at91sam9g45_devices.c
-+++ b/arch/arm/mach-at91/at91sam9g45_devices.c
-@@ -1459,7 +1459,7 @@ static struct resource ssc0_resources[] = {
- };
- 
- static struct platform_device at91sam9g45_ssc0_device = {
--	.name	= "ssc",
-+	.name	= "at91sam9g45_ssc",
- 	.id	= 0,
- 	.dev	= {
- 		.dma_mask		= &ssc0_dmamask,
-@@ -1501,7 +1501,7 @@ static struct resource ssc1_resources[] = {
- };
- 
- static struct platform_device at91sam9g45_ssc1_device = {
--	.name	= "ssc",
-+	.name	= "at91sam9g45_ssc",
- 	.id	= 1,
- 	.dev	= {
- 		.dma_mask		= &ssc1_dmamask,
-diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
-index 72e9084..4110b54 100644
---- a/arch/arm/mach-at91/at91sam9rl.c
-+++ b/arch/arm/mach-at91/at91sam9rl.c
-@@ -184,8 +184,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.0", &tc0_clk),
- 	CLKDEV_CON_DEV_ID("t1_clk", "atmel_tcb.0", &tc1_clk),
- 	CLKDEV_CON_DEV_ID("t2_clk", "atmel_tcb.0", &tc2_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.0", &ssc0_clk),
--	CLKDEV_CON_DEV_ID("pclk", "ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.0", &twi0_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.1", &twi1_clk),
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
-diff --git a/arch/arm/mach-at91/at91sam9rl_devices.c b/arch/arm/mach-at91/at91sam9rl_devices.c
-index d6ca054..01220c7 100644
---- a/arch/arm/mach-at91/at91sam9rl_devices.c
-+++ b/arch/arm/mach-at91/at91sam9rl_devices.c
-@@ -832,7 +832,7 @@ static struct resource ssc0_resources[] = {
- };
- 
- static struct platform_device at91sam9rl_ssc0_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 0,
- 	.dev	= {
- 		.dma_mask		= &ssc0_dmamask,
-@@ -874,7 +874,7 @@ static struct resource ssc1_resources[] = {
- };
- 
- static struct platform_device at91sam9rl_ssc1_device = {
--	.name	= "ssc",
-+	.name	= "at91rm9200_ssc",
- 	.id	= 1,
- 	.dev	= {
- 		.dma_mask		= &ssc1_dmamask,
-diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
-index ac00f83..f40abd8 100644
---- a/drivers/misc/atmel-ssc.c
-+++ b/drivers/misc/atmel-ssc.c
-@@ -68,6 +68,26 @@ void ssc_free(struct ssc_device *ssc)
- }
- EXPORT_SYMBOL(ssc_free);
- 
-+static struct atmel_ssc_platform_data at91rm9200_config = {
-+	.use_dma = 0,
-+};
++	/*
++	 * Enable High-Speed Support
++	 * Pre-Requisites
++	 *	- Controller should support High-Speed-Enable Bit
++	 *	- Controller should not be using DDR Mode
++	 *	- Controller should advertise that it supports High Speed
++	 *	  in capabilities register
++	 *	- MMC/SD clock coming out of controller > 25MHz
++	 */
++	if ((mmc_slot(host).features & HSMMC_HAS_HSPE_SUPPORT) &&
++	    (ios->timing != MMC_TIMING_UHS_DDR50) &&
++	    (OMAP_HSMMC_READ(host->base, CAPA) & HSS)) {
++		regval = OMAP_HSMMC_READ(host->base, HCTL);
++		if (clkdiv && (clk_get_rate(host->fclk)/clkdiv) > 25000000)
++			regval |= HSPE;
++		else
++			regval &= ~HSPE;
 +
-+static struct atmel_ssc_platform_data at91sam9g45_config = {
-+	.use_dma = 1,
-+};
-+
-+static const struct platform_device_id atmel_ssc_devtypes[] = {
-+	{
-+		.name = "at91rm9200_ssc",
-+		.driver_data = (unsigned long) &at91rm9200_config,
-+	}, {
-+		.name = "at91sam9g45_ssc",
-+		.driver_data = (unsigned long) &at91sam9g45_config,
-+	}, {
-+		/* sentinel */
++		OMAP_HSMMC_WRITE(host->base, HCTL, regval);
 +	}
-+};
 +
- static int ssc_probe(struct platform_device *pdev)
- {
- 	struct resource *regs;
-@@ -80,6 +100,8 @@ static int ssc_probe(struct platform_device *pdev)
- 	}
+ 	omap_hsmmc_start_clock(host);
+ }
  
- 	ssc->pdev = pdev;
-+	ssc->pdata = (struct atmel_ssc_platform_data *)
-+			platform_get_device_id(pdev)->driver_data;
+@@ -1700,6 +1725,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+ 	if (of_find_property(np, "ti,needs-special-reset", NULL))
+ 		pdata->slots[0].features |= HSMMC_HAS_UPDATED_RESET;
  
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!regs) {
-@@ -139,6 +161,7 @@ static struct platform_driver ssc_driver = {
- 		.name		= "ssc",
- 		.owner		= THIS_MODULE,
- 	},
-+	.id_table	= atmel_ssc_devtypes,
- 	.probe		= ssc_probe,
- 	.remove		= __devexit_p(ssc_remove),
- };
-diff --git a/include/linux/atmel-ssc.h b/include/linux/atmel-ssc.h
-index 4eb3175..1ca0e32 100644
---- a/include/linux/atmel-ssc.h
-+++ b/include/linux/atmel-ssc.h
-@@ -5,10 +5,15 @@
- #include <linux/list.h>
- #include <linux/io.h>
- 
-+struct atmel_ssc_platform_data {
-+	int			use_dma;
-+};
++	if (of_find_property(np, "ti,needs-special-hs-handling", NULL))
++		pdata->slots[0].features |= HSMMC_HAS_HSPE_SUPPORT;
 +
- struct ssc_device {
- 	struct list_head	list;
- 	void __iomem		*regs;
- 	struct platform_device	*pdev;
-+	struct atmel_ssc_platform_data *pdata;
- 	struct clk		*clk;
- 	int			user;
- 	int			irq;
+ 	return pdata;
+ }
+ #else
 -- 
-1.7.9.5
+1.7.0.4
 
