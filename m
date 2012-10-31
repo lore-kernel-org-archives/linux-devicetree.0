@@ -1,64 +1,53 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [RFC 0/7] Capebus; a bus for SoCs using simple expansion connectors
-Date: Thu, 1 Nov 2012 00:03:02 +0200
-Message-ID: <2EA1A7B9-5457-4CD3-92E2-F97D7E46D29D@antoniou-consulting.com>
-References: <1351702333-8456-1-git-send-email-panto@antoniou-consulting.com> <CA+Bv8XZEpw=811-EMCMFKgZ7z03=U-KxaXBh4oMphdzwO18f8Q@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+Bv8XZEpw=811-EMCMFKgZ7z03=U-KxaXBh4oMphdzwO18f8Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russ Dill <Russ.Dill@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 03/15] SPEAr13xx: Add mach/io.h
+Date: Wed, 31 Oct 2012 22:05:14 +0000
+Message-ID: <201210312205.14399.arnd@arndb.de>
+References: <cover.1351492562.git.pratyush.anand@st.com> <201210302145.47011.arnd@arndb.de> <50910A70.7050209@st.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <50910A70.7050209@st.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@st.com>
+Cc: viresh kumar <viresh.kumar@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>, spear-devel <spear-devel@list.st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russ,
+On Wednesday 31 October 2012, Pratyush Anand wrote:
+> Sorry, I could not find pci_ioremap_io function. May be you wanted to 
+> refer something else.
 
-On Oct 31, 2012, at 11:56 PM, Russ Dill wrote:
+$ git grep pci_ioremap_io
+arch/arm/include/asm/io.h:extern int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr);
+arch/arm/mach-dove/pcie.c:              pci_ioremap_io(sys->busnr * SZ_64K, DOVE_PCIE0_IO_PHYS_BASE);
+...
+arch/arm/mach-versatile/pci.c:  ret = pci_ioremap_io(0, VERSATILE_PCI_MEM_BASE0);
+arch/arm/mm/ioremap.c:int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
+arch/arm/mm/ioremap.c:EXPORT_SYMBOL_GPL(pci_ioremap_io);
 
-> On Wed, Oct 31, 2012 at 9:52 AM, Pantelis Antoniou
-> <panto@antoniou-consulting.com> wrote:
->> Capebus is created to address the problem of many SoCs that can provide a
->> multitude of hardware interfaces but in order to keep costs down the main
->> boards only support a limited number of them. The rest are typically brought
->> out to pin connectors on to which other boards, named capes are connected and
->> allow those peripherals to be used.
->> 
->> These capes connect to the SoC interfaces but might also contain various other
->> parts that may need some kind of driver to work.
->> 
->> Since SoCs have limited pins and pin muxing options, not all capes can work
->> together so some kind of resource tracking (at least for the pins in use) is
->> required.
->> 
->> Before capebus all of this took place in the board support file, and frankly
->> for boards with too many capes it was becoming unmanageable.
->> 
->> Capebus provides a virtual bus, which along with a board specific controller,
->> cape drivers can be written using the standard Linux device model.
->> 
->> The core capebus infrastructure is not depended on any specific board.
->> However capebus needs a board controller to provide services to the cape devices
->> it controls. Services like addressing and resource reservation are provided
->> by the board controller.
->> 
->> Capebus at the moment only support TI's Beaglebone platform.
->> 
->> This RFC introduces the core concept; most supporting patches
->> have been posted to the relevant places.
+
+> In case of SPEAr too , we can reserve first 32Kb per controller as PCIe 
+> IO space. So, lets say I fixed address 0x80000000--0x80007FFF for IO 
+> transaction. I need to register address range of this window somehow.
 > 
-> There are quite a few TODOs in the code, any chance you could
-> summarize them in the next header email?
+> But, issue which faced was that I was not able to successfully 
+> request_resource(&ioport_resource, &res]) with res.start = 0x80000000 
+> and res.end = 0x80007fff.
 
-Yes,
+That cannot work properly, because the ioport_resource lists ports between
+0 and 0x10000 normally, or possibly a little bit higher. You certainly
+don't want to waste 2 GB of virtual address space for having a PCI I/O window
+that you don't use.
 
-Most of them deal with dealing properly with removal of the board driver and the core
-capebus stuff. And of course PM is not yet handled properly.
+> So, I though first to change IO_SPACE_LIMIT. But I found it not a 
+> correct way.
+> 
+> May be I am missing something and not able to get how can I use 
+> pci_ioremap_io or something else to register 0x80000000--0x80007FFF 
+> window. A reference will help.
 
-After I get on with this part of the review, I plan to fill in the docs and 
-flesh out the TODOs more.
+Calling pci_ioremap_io will do the right thing, you just have to decide
+how you partition the I/O space between the root complexes you have.
 
-Regards
-
--- Pantelis
+	Arnd
