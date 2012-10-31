@@ -1,102 +1,78 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Wed, 31 Oct 2012 14:19:03 +0100
-Message-ID: <20121031131903.GF19021@game.jcrosoft.org>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
- <20121024161429.GA16350@core.coreip.homeip.net>
- <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
- <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
- <CACRpkdaiLXVeUg1quuw3XPTenbKOjn+aWbGQezpcyvzQCtCWow@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 00/11] ARM: OMAP: USB: Host: Device tree Adaptation
+Date: Wed, 31 Oct 2012 15:36:38 +0200
+Message-ID: <20121031133638.GV10998@arwen.pp.htv.fi>
+References: <1351685810-20616-1-git-send-email-keshava_mgowda@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="t4k3FX2BKM3OLyzG"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaiLXVeUg1quuw3XPTenbKOjn+aWbGQezpcyvzQCtCWow@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1351685810-20616-1-git-send-email-keshava_mgowda@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Keshava Munegowda <keshava_mgowda@ti.com>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, balbi@ti.com, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 21:12 Sun 28 Oct     , Linus Walleij wrote:
-> On Wed, Oct 24, 2012 at 7:28 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> 
-> >> drivers/spi/spi-pl022.c
-> >
-> > Default/sleep transitions could be moved into bus code.
-> 
-> No that's not a good idea as long as we have both the platform bus
-> and the AMBA bus doing essentially the same thing. We will then be
-> having two copies of the same code in two different busses running
-> out of sync. There may be other busses too.
-> 
-> But I could prepare static helpers in <linux/pinctrl/consumer.h>
-> that any bus could use. Or any driver. Probably any driver,
-> because of this:
-> 
-> As noted the bus cannot really execute the pinctrl calls to
-> e.g. put a drivers pins into "sleep". Since if e.g. the bus is walking
-> the suspend() ladder, shall it put the pins into sleep *before*
-> or *after* calling the suspend() hook in the driver?
-> 
-> The answer is that it does not know. Because drivers have
-> different needs. Depending on how the hardware and
-> system is done.
-> 
-> I already tried to make this point:
-> 
-> pinctrl_set_state(state_sleep);
-> clk_disable();
-> power_off_voltage_domain();
-> 
-> May for some drivers have to be:
-> 
-> clk_disable();
-> power_off_voltage_domain();
-> pinctrl_set_state(state_sleep);
-> 
-> (etc)
-> 
-> I'm not making this up, it is a very real phenomenon on the
-> Ux500 and I don't think we are unique.
-I agree with Linus
+--t4k3FX2BKM3OLyzG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-you can not handle pinctrl as bus levell
+Hi,
 
-as each driver need different requirement before enabling the pin
+On Wed, Oct 31, 2012 at 05:46:38PM +0530, Keshava Munegowda wrote:
+> The USB2 Host driver of OMAP3/OMAP4 are device tree complaiant with
+> this patch series.
+> The device tree data of UHH, EHCI, OHCI and TLL are included.
+> The drivers are updated to extract and use the register set and
+> interrupt numbers delivered by these device tree structures.
+>=20
+> Keshava Munegowda (11):
+>   ARM: OMAP4: USB: Host: Add USB2 Host Device Tree Node
+>   ARM: OMAP4: USB: Host: Panda board specific device tree node
+>   ARM: OMAP3: USB: Add USB2 Host Device Tree Node
+>   ARM: OMAP3: USB: Host: Beagle-XM board specific device tree node
+>   ARM: OMAP: USB: Host: usb host Device tree node Adaptation
+>   ARM: OMAP: USB: Host: USB TLL Device tree node Adaptation
+>   ARM: OMAP: USB: Host: Ehci driver uses the usbhs port data
+>   ARM: OMAP: USB: Change the TLL clock names
+>   ARM: OMAP: USB: Remove the device name for TLL channel clocks for
+>     OMAP3
+>   ARM: OMAP4: USB: Add pin mux configuration for panda board
+>   ARM: OMAP3: USB: Add pin mux configuration for beagle-xm board
 
-as example you may need to clock the ip before muxing the pin and invertly
+Benoit should be in Cc on this series since he's the one handling DT for
+OMAPs.
 
-on some IP the pinctrl is optionnal, on other mandatory
+Care to resend with him in Cc ?
 
-you can not expect every driver to have the same need and requirement
+(everyone else, please ignore this series, sorry for the noise)
 
-yes we will have a few code duplication
+--=20
+balbi
 
-but today it's few lines and those few lines will be place at different init
-stage on the drivers ditto for remove or sleep/idle
+--t4k3FX2BKM3OLyzG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> 
-> Moving this handling to bus code or anywhere else
-> invariably implies that resource acquisition/release order
-> does not matter, and my point is that it does.
+iQIcBAEBAgAGBQJQkSlmAAoJEIaOsuA1yqRE+OgP/16MeHKvCJKK5HlK37ar8CQi
+dZIxPwp7cZwI/vdX+JsU1UeP9DBDgRIeR/iq1KljQpWe4zkt3QtVjvafUsNk9tpO
+/DWMXQfczkFQYRWg5R9tQpQesKGtnh/0GeqWRx9C4vfx7CI2vTJyl6eld9p28L1I
+l/UfvngqIasWYkT3QPdXG7r/J5kEJxlui/i+CY1HC5c0VJDVVrCo8Tbj0Riv9jW4
+Gcs03/vVbkvYKo3UmtXiSPUiQHWXe+NUXrwTo+tqT4CVXPxpLARWGsjOlNOKtZA5
+0h23kfPQaRK/2YF+jbeCY2msPQYEP5hfBvUEVeEuiYFJTD1tnT3bmpBYPsILUEjR
+5BFTALyHBFt9P6D43Foe6P6m2aLgnDbH76dYZ4NZcDidoqs9yJd5xuRVaoFK7lZ0
+/3FA8m6hNTI3o9RBGduJyrCQ7hzgLSecLG0U0TH1YSBHrRK2wui83MnBWPN8ck6R
++w/6Wj5droYOa2zbBeKv9DB8BfLwgKRuabUpyQP0boYHiAzkIIByunRLvZGeAjRO
+wlMhcDfZn0JSiZ49gm0cUnO1r+yggnhy5cLd23vVbjnAUO8zwICLYnX0ZhvFktjy
+U5XxLwWHpI6QPL3XLunHoNolLt5DtSBMtszo3sZVIfMJ7MsRCXwVnx0BnDnCk/jO
+/a7i+L6Vzx94tHb/V+QI
+=LE6i
+-----END PGP SIGNATURE-----
 
-100% agreed
-
-Best Regards,
-J.
-> 
-> >> drivers/i2c/busses/i2c-nomadik.c
-> >
-> > Don't see pinctrl in linux-next.
-> 
-> This code is here:
-> http://marc.info/?l=linux-i2c&m=134986995731695&w=2
-> 
-> Yours,
-> Linus Walleij
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+--t4k3FX2BKM3OLyzG--
