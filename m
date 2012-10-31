@@ -1,222 +1,173 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V3] mmc: omap_hsmmc: Enable HSPE bit for high speed cards
-Date: Wed, 31 Oct 2012 14:26:39 +0200
-Message-ID: <20121031122639.GA10998@arwen.pp.htv.fi>
-References: <1351684656-30275-1-git-send-email-gururaja.hebbar@ti.com>
-Reply-To: <balbi@ti.com>
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v3] can: grcan: Add device driver for GRCAN and GRHCAN
+ cores
+Date: Wed, 31 Oct 2012 13:51:02 +0100
+Message-ID: <50911EB6.1070105@grandegger.com>
+References: <5087EDBF.2040108@gaisler.com> <1351588017-14357-1-git-send-email-andreas@gaisler.com> <508FA6D3.9000809@grandegger.com> <508FFF50.8050900@gaisler.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1351684656-30275-1-git-send-email-gururaja.hebbar@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Cc: balbi@ti.com, svenkatr@ti.com, cjb@laptop.org, balajitk@ti.com, grant.likely@secretlab.ca, nsekhar@ti.com, sudhakar.raj@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <508FFF50.8050900@gaisler.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 10/30/2012 05:24 PM, Andreas Larsson wrote:
+> On 10/30/2012 11:07 AM, Wolfgang Grandegger wrote:
+>>> +    /* AHB bus error interrupts (not CAN bus errors) - shut down the
+>>> +     * device.
+>>> +     */
+>>> +    if (sources & (GRCAN_IRQ_TXAHBERR | GRCAN_IRQ_RXAHBERR)) {
+>>> +        if (sources & GRCAN_IRQ_TXAHBERR) {
+>>> +            netdev_err(dev, "got AHB bus error on tx\n");
+>>> +            stats->tx_errors++;
+>>> +        } else {
+>>> +            netdev_err(dev, "got AHB bus error on rx\n");
+>>> +            stats->rx_errors++;
+>>> +        }
+>>> +        netdev_err(dev, "halting device\n");
+>>> +
+>>> +        /* Prevent anything to be enabled again and halt device */
+>>> +        SPIN_LOCK(&priv->lock);
+>>> +        priv->closing = true;
+>>> +        netif_stop_queue(dev);
+>>> +        grcan_stop(dev);
+>>> +        SPIN_UNLOCK(&priv->lock);
+>>
+>> Hm, does that really happen? How can the user/app realized the problem
+>> and recover?
+> 
+> My understanding of it is that if you get amba bus errors something is
+> seriously wrong and nothing can be done at driver level to recover.
+> Shutting down the device is to prevent the driver from spamming console
+> messages. I used to have a sysfs indication of such errors. Now dmesg is
+> the way to find out about the problem. The user can always bring the
+> interface down and up again and try again after such an error.
 
-Hi,
+Well, sounds like a fatal error. Did you ever saw it? If that happens
+frequently, or even once, the device/system seems not really usable.
 
-On Wed, Oct 31, 2012 at 05:27:36PM +0530, Hebbar, Gururaja wrote:
-> HSMMC IP on AM33xx need a special setting to handle High-speed cards.
-> Other platforms like TI81xx, OMAP4 may need this as-well. This depends
-> on the HSMMC IP timing closure done for the high speed cards.
->=20
-> From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
->=20
-> The MMC/SD/SDIO output signals can be driven on either falling edge or
-> rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
-> to reach better timing performance, and thus to increase data transfer
-> frequency.
->=20
-> There are few pre-requisites for enabling the HSPE bit
-> - Controller should support High-Speed-Enable Bit and
-> - Controller should not be using DDR Mode and
-> - Controller should advertise that it supports High Speed in
->   capabilities register and
-> - MMC/SD clock coming out of controller > 25MHz
->=20
-> Note:
-> The implementation reuses the output of calc_divisor() so as to reduce
-> code addition.
->=20
-> Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+>> Furthermore, why is a spin_clock enough here? THe interrupt may run a
+>> thread.
+> 
+> It should be enough because the function is only called
+> directly from the interrupt handler, right? Or did I miss something?
 
-this looks good to my eyes, hopefully I haven't missed anything:
+The interrupt handler may run as thread, e.g. if the -rt patch has been
+applied. Therefore it's safer to use the irqsave/restore variants of the
+spin_lock functions. At least that's my understanding. See also
+"Documentation/spinlock.txt".
 
-Reviewed-by: Felipe Balbi <balbi@ti.com>
+>>> +    priv->can.ctrlmode_supported  =
+>>> +        CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_ONE_SHOT;
+>>
+>> What about triple-sampling?
+> 
+> That is not supported by the hardware.
+> 
+> 
+>> I curious how the device behaves on bus errors and state changes. Could
+>> you please show the output of "candump -e any,0:0,#FFFFFFFF" while
+>> sending a CAN message with no other node on the bus (not connected) and
+>> with going bus off (by short-circuiting CAN high and low).
+> 
+> 
+> Here is the output (with long sequences of similar error frames
+> where only one counter is increasing cut out) from the the upcoming v4.
+> let me know if you see any problems with this.
 
-> ---
-> Rebased on mmc-next (v3.7.0-rc1)
-> Only Build tested since EDMA support for AM335x is not yet added
->=20
-> Changes in V2
-> 	- Added note in commit message about code re-use
-> 	- replaced ((a & BIT(n) =3D=3D BIT(n))) with (a & BIT(n)) since
-> 	  effectively both are same.
->=20
-> Changes in V3
-> 	- use symbolic define for hardcoded value (25000000)
-> 	- use of_property_read_bool() instead of of_find_property()
->=20
-> :100644 100644 be76a23... ed271fc... M	Documentation/devicetree/bindings/=
-mmc/ti-omap-hsmmc.txt
-> :100644 100644 8b4e4f2... 346af5b... M	arch/arm/plat-omap/include/plat/mm=
-c.h
-> :100644 100644 5434fd8... 4f7fcee... M	drivers/mmc/host/omap_hsmmc.c
->  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    1 +
->  arch/arm/plat-omap/include/plat/mmc.h              |    1 +
->  drivers/mmc/host/omap_hsmmc.c                      |   31 ++++++++++++++=
-+++++-
->  3 files changed, 32 insertions(+), 1 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Do=
-cumentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> index be76a23..ed271fc 100644
-> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> @@ -19,6 +19,7 @@ ti,dual-volt: boolean, supports dual voltage cards
->  "supply-name" examples are "vmmc", "vmmc_aux" etc
->  ti,non-removable: non-removable slot (like eMMC)
->  ti,needs-special-reset: Requires a special softreset sequence
-> +ti,needs-special-hs-handling: HSMMC IP needs special setting for handlin=
-g High Speed
-> =20
->  Example:
->  	mmc1: mmc@0x4809c000 {
-> diff --git a/arch/arm/plat-omap/include/plat/mmc.h b/arch/arm/plat-omap/i=
-nclude/plat/mmc.h
-> index 8b4e4f2..346af5b 100644
-> --- a/arch/arm/plat-omap/include/plat/mmc.h
-> +++ b/arch/arm/plat-omap/include/plat/mmc.h
-> @@ -126,6 +126,7 @@ struct omap_mmc_platform_data {
->  		/* we can put the features above into this variable */
->  #define HSMMC_HAS_PBIAS		(1 << 0)
->  #define HSMMC_HAS_UPDATED_RESET	(1 << 1)
-> +#define HSMMC_HAS_HSPE_SUPPORT	(1 << 2)
->  		unsigned features;
-> =20
->  		int switch_pin;			/* gpio (card detect) */
-> diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-> index 5434fd8..4f7fcee 100644
-> --- a/drivers/mmc/host/omap_hsmmc.c
-> +++ b/drivers/mmc/host/omap_hsmmc.c
-> @@ -63,6 +63,7 @@
-> =20
->  #define VS18			(1 << 26)
->  #define VS30			(1 << 25)
-> +#define HSS			(1 << 21)
->  #define SDVS18			(0x5 << 9)
->  #define SDVS30			(0x6 << 9)
->  #define SDVS33			(0x7 << 9)
-> @@ -90,6 +91,7 @@
->  #define MSBS			(1 << 5)
->  #define BCE			(1 << 1)
->  #define FOUR_BIT		(1 << 1)
-> +#define HSPE			(1 << 2)
->  #define DDR			(1 << 19)
->  #define DW8			(1 << 5)
->  #define CC			0x1
-> @@ -113,6 +115,7 @@
->  #define MMC_TIMEOUT_MS		20
->  #define OMAP_MMC_MIN_CLOCK	400000
->  #define OMAP_MMC_MAX_CLOCK	52000000
-> +#define HSMMC_CLKOUT	25000000
->  #define DRIVER_NAME		"omap_hsmmc"
-> =20
->  /*
-> @@ -495,6 +498,7 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_ho=
-st *host)
->  	struct mmc_ios *ios =3D &host->mmc->ios;
->  	unsigned long regval;
->  	unsigned long timeout;
-> +	unsigned long clkdiv;
-> =20
->  	dev_vdbg(mmc_dev(host->mmc), "Set clock to %uHz\n", ios->clock);
-> =20
-> @@ -502,7 +506,8 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_ho=
-st *host)
-> =20
->  	regval =3D OMAP_HSMMC_READ(host->base, SYSCTL);
->  	regval =3D regval & ~(CLKD_MASK | DTO_MASK);
-> -	regval =3D regval | (calc_divisor(host, ios) << 6) | (DTO << 16);
-> +	clkdiv =3D calc_divisor(host, ios);
-> +	regval =3D regval | (clkdiv << 6) | (DTO << 16);
->  	OMAP_HSMMC_WRITE(host->base, SYSCTL, regval);
->  	OMAP_HSMMC_WRITE(host->base, SYSCTL,
->  		OMAP_HSMMC_READ(host->base, SYSCTL) | ICE);
-> @@ -513,6 +518,27 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_h=
-ost *host)
->  		&& time_before(jiffies, timeout))
->  		cpu_relax();
-> =20
-> +	/*
-> +	 * Enable High-Speed Support
-> +	 * Pre-Requisites
-> +	 *	- Controller should support High-Speed-Enable Bit
-> +	 *	- Controller should not be using DDR Mode
-> +	 *	- Controller should advertise that it supports High Speed
-> +	 *	  in capabilities register
-> +	 *	- MMC/SD clock coming out of controller > 25MHz
-> +	 */
-> +	if ((mmc_slot(host).features & HSMMC_HAS_HSPE_SUPPORT) &&
-> +	    (ios->timing !=3D MMC_TIMING_UHS_DDR50) &&
-> +	    (OMAP_HSMMC_READ(host->base, CAPA) & HSS)) {
-> +		regval =3D OMAP_HSMMC_READ(host->base, HCTL);
-> +		if (clkdiv && (clk_get_rate(host->fclk)/clkdiv) > HSMMC_CLKOUT)
-> +			regval |=3D HSPE;
-> +		else
-> +			regval &=3D ~HSPE;
-> +
-> +		OMAP_HSMMC_WRITE(host->base, HCTL, regval);
-> +	}
-> +
->  	omap_hsmmc_start_clock(host);
->  }
-> =20
-> @@ -1709,6 +1735,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_=
-pdata(struct device *dev)
->  	if (!of_property_read_u32(np, "max-frequency", &max_freq))
->  		pdata->max_freq =3D max_freq;
-> =20
-> +	if (of_property_read_bool(np, "ti,needs-special-hs-handling"))
-> +		pdata->slots[0].features |=3D HSMMC_HAS_HSPE_SUPPORT;
-> +
->  	return pdata;
->  }
->  #else
-> --=20
-> 1.7.0.4
->=20
+How did your trigger that sequence? Short-circuit or not cable
+connected? The latter, I assume, as bus-off is not reached.
 
---=20
-balbi
+> 
+>   can0  20000006  [8] 00 00 00 00 00 00 10 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{}
+>         error-counter-tx-rx{{16}{0}}
 
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This is most probably an ack slot bus error similar to. You seem not to
+handle bus errors and it's not a controller problem as the state did not
+change.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+http://lxr.linux.no/#linux+v3.6.4/drivers/net/can/flexcan.c#L353
 
-iQIcBAEBAgAGBQJQkRj/AAoJEIaOsuA1yqREwWMQAJ+yMrdRn7sC1n+Cv5nKuoo7
-aD5GxMCmLVCicjoIN6w5sH8TAwy17Y9/+ZeCrU7c07p8Z5EGPE2gIeV78y99Ye0b
-pEZ40IVfe8iPwD+Zbvv4L1vA1Nn6mX++JDI4Mr3Ot8T4gPAHoiUwI5wIhnTkHW2Z
-EkIJofrvXj6+mVm/sLiQQqdFeNf5mqh5Qq4cglUpnO9Ly2tJ1FwoCF/jA1TSYUuw
-3hj/94UBxxahGelm/9CKVz0m9VtUwqfLxwP+98nbuE1sU3gn4GBaaLnvJRScp9QQ
-zXcfhrgU3bzOlNEvPw/ITFA7gguwdMgVJNiMSJiBpnMGElGNl5hpI3Vza/47BxWp
-Pn0ECd/30wpQtiGWUXHn+rSSCI5Jnn/Pz++yFQQAtT4MTgsHRK24/YZHb8cqF+n9
-DO3sJBXCV0VGqMDI9Zjx/MN1sskH7s4tRCk5HV9eveEkk+Dt9YB4F7H73wFjXeou
-90M18gS5PZ0GmNCYoapijHMaos9E8ez3SB4VhxaTN2qAqsnyr7cSper9yPlbVftD
-3RxeI15qdXRFcp3YTVRz8C98PjiX6d5RNv3ACrkUKY5vE4NKOZhMB4xmfURkGYcx
-QWn0RZRqDqMVvbE8ExGoNuldreu8cAjW+3FE1DpkmVmvMlIeqPOCVYjG8IWobEQE
-tCG4YiGiBeQbBoqJn+Hp
-=PjbK
------END PGP SIGNATURE-----
+>   can0  20000004  [8] 00 20 00 00 00 00 88 00   ERRORFRAME
+>         controller-problem{tx-error-passive}
+>         error-counter-tx-rx{{136}{0}}
 
---W/nzBZO5zC0uMSeA--
+OK, a state change to error passive. The device seems not to report
+changes to error warning.
+
+>   can0  20000006  [8] 00 20 00 00 00 00 90 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{tx-error-passive}
+>         error-counter-tx-rx{{144}{0}}
+
+State changes should be reported only once. But it did not change. This
+is then a bus error (CAN_ERR_PROT | CAN_ERR_BUSERROR). See also above.
+
+>   [...]
+>   can0  20000006  [8] 00 20 00 00 00 00 F0 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{tx-error-passive}
+>         error-counter-tx-rx{{240}{0}}
+>   can0  20000006  [8] 00 20 00 00 00 00 F8 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{tx-error-passive}
+>         error-counter-tx-rx{{248}{0}}
+>   can0  20000042  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         bus-off
+>         error-counter-tx-rx{{128}{0}}
+>   can0  20000006  [8] 00 00 00 00 00 00 18 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{}
+>         error-counter-tx-rx{{24}{0}}
+>   can0  20000004  [8] 00 10 00 00 00 00 4F 80   ERRORFRAME
+>         controller-problem{rx-error-passive}
+>         error-counter-tx-rx{{79}{128}}
+>   [...]
+>   can0  20000006  [8] 00 10 00 00 00 00 77 80   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{rx-error-passive}
+>         error-counter-tx-rx{{119}{128}}
+>   can0  20000006  [8] 00 30 00 00 00 00 7F 80   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{rx-error-passive,tx-error-passive}
+>         error-counter-tx-rx{{127}{128}}
+>   can0  20000006  [8] 00 30 00 00 00 00 87 80   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{rx-error-passive,tx-error-passive}
+>         error-counter-tx-rx{{135}{128}}
+>   [...]
+>   can0  20000006  [8] 00 30 00 00 00 00 F7 80   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{rx-error-passive,tx-error-passive}
+>         error-counter-tx-rx{{247}{128}}
+>   can0  20000006  [8] 00 30 00 00 00 00 FF 80   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{rx-error-passive,tx-error-passive}
+>         error-counter-tx-rx{{255}{128}}
+>   can0  20000042  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         bus-off
+>         error-counter-tx-rx{{128}{0}}
+>   can0  20000006  [8] 00 00 00 00 00 00 18 00   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{}
+>         error-counter-tx-rx{{24}{0}}
+>   can0  20000004  [8] 00 10 00 00 00 00 4F 80   ERRORFRAME
+>         controller-problem{rx-error-passive}
+>         error-counter-tx-rx{{79}{128}}
+>   can0  20000006  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
+>         lost-arbitration{at bit 0}
+>         controller-problem{rx-error-passive}
+>         error-counter-tx-rx{{87}{128}}
+>   [...]
+
+Also a sequence to bus-off including the recovery would be nice.
+
+Wolfgang.
+
