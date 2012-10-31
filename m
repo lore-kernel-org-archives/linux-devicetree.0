@@ -1,98 +1,91 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V5 2/2] kbuild: run the pre-processor on *.dts files
-Date: Wed, 31 Oct 2012 16:10:31 -0600
-Message-ID: <1351721431-26220-2-git-send-email-swarren@wwwdotorg.org>
-References: <1351721431-26220-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351721431-26220-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Marek <mmarek@suse.cz>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 5/9] document: devicetree: bind pinconf with pin-single
+Date: Wed, 31 Oct 2012 16:26:50 -0600
+Message-ID: <5091A5AA.7000207@wwwdotorg.org>
+References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
+ <1350922139-3693-6-git-send-email-haojian.zhuang@gmail.com>
+ <5085CC3F.30708@wwwdotorg.org>
+ <CAN1soZy8xXGs8zEiZV0kV0dGVdXfZ9ogx83sFgPG76d0i8yH4A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAN1soZy8xXGs8zEiZV0kV0dGVdXfZ9ogx83sFgPG76d0i8yH4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+On 10/31/2012 10:58 AM, Haojian Zhuang wrote:
+> On Tue, Oct 23, 2012 at 6:44 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 10/22/2012 10:08 AM, Haojian Zhuang wrote:
+>>> Add comments with pinconf & gpio range in the document of
+>>> pinctrl-single.
+...
+>>> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt
+...
+>>> @@ -17,6 +17,36 @@ Optional properties:
+>>>  - pinctrl-single,bit-per-mux : boolean to indicate that one register controls
+>>>    more than one pin
+>>>
+>>> +- pinctrl-single,gpio-ranges : gpio range list
+>>> +
+>>> +- pinctrl-single,gpio : array with gpio range start, size & register
+>>> +  offset
+>>> +
+>>> +- pinctrl-single,gpio-func : gpio function value in the pinmux register
+...
+>> 2) pinctrl-single,gpio is listed as optional. Presumably it's not; every
+>> GPIO range node must have this property?
+>>
+> Yes, they must be included in GPIO range node. But if GPIO feature
+> isn't supported in the pinctrl device, pinctrl-single,gpio is still optional.
+> I'll add more comments on this.
+> 
+>> 3) Why is pinctrl-single,gpio-func optional? Presumably you always need
+>> to program the pinmux HW to select the GPIO function. Yet, the driver
+>> code in an earlier patch seems to deliberately do nothing if this
+>> property is missing. Shouldn't the DT parsing return an error instead?
+>>
+> pinctrl-single,gpio-func is optional for above reason.
 
-Modify cmd_dtc to run the C pre-processor on the input .dts file before
-passing it to dtc for final compilation. This allows the use of #define
-and #include within the .dts file.
+Presumably the node that contains the pinctrl-single,gpio-func property
+is optional, but once you have such a node, pinctrl-single,gpio-func is
+required?
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-v5:
-* Update Documentation/kbuild for the new command and rule.
-v4:
-* Use -x assembler-with-cpp so pre-defined macros are set up so that
-  #included header files know to only use cpp syntax, not C syntax.
-* Define __DTS__ for similar reasons.
-* use $(CPP) not $(CC) -E, and use $(cpp_flags).
-* Save the pre-processed results so they can be easily inspected when
-  debugging build issues.
-* The use of -x assembler-with-cpp causes cpp to recognize directives in
-  column 1 only. Hence, there's no need to escape property names that
-  begin with #. Hence, there's no need for separate skeleton.dtsi and
-  skeleton.dtsip. Maintain a separate file extension and build rule so that
-  CPP-usage is opt-in. In particular, when using CPP, #include must be used
-  rather than /include/ so that dependencies work.
-v3: Pass "-x c" not "-xc" to cpp.
-v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
----
- Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
- scripts/Makefile.lib               |    9 +++++++++
- 2 files changed, 32 insertions(+), 0 deletions(-)
+>>> +- pinctrl-single,power-source-mask : mask of setting power source in
+>>> +  the pinmux register
+>>> +
+>>> +- pinctrl-single,power-source : value of setting power source field
+>>> +  in the pinmux register
+...
+>> I suppose it's OK that a generic pin controller binding would use the
+>> generic pin configuration config options. I'm still not convinced that
+>> the semantics of generic pin control make sense. Maybe if they're just
+>> arbitrary names for SoC-specific things it's fine though.
+>>
+>> Do these patches expose /all/ generic pin configuration options? It
+>> doesn't seem worth exposing only some of them and ignoring others.
+>
+> I believe general pinconf can't support all cases in different silicons.
 
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index a0b0671..dfe6838 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -1194,6 +1194,29 @@ When kbuild executes, the following steps are followed (roughly):
- 
- 		clean-files += ... *.dtb
- 
-+    dtc_cpp
-+	This is just like dtc as describe above, except that the C pre-
-+	processor is invoked upon the .dtsp file before compiling the result
-+	with dtc.
-+
-+	In order for build dependencies to work, all files compiled using
-+	dtc_cpp must use the C pre-processor's #include functionality and not
-+	dtc's /include/ functionality.
-+
-+	Using the C pre-processor allows use of #define to create named
-+	constants. In turn, the #defines will typically appear in a header
-+	file, which may be shared with regular C code. Since the dtc language
-+	represents a data structure rather than code in C syntax, similar
-+	restrictions are placed on a header file included by a device tree
-+	file as for a header file included by an assembly language file.
-+	In particular, the C pre-processor is passed -x assembler-with-cpp,
-+	which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
-+	files to restrict their content to that compatible with device tree
-+	source.
-+
-+	A central rule exists to create $(obj)/%.dtb from $(src)/dts/%.dtsp;
-+	architecture Makefiles do no need to explicitly write out that rule.
-+
- --- 6.8 Custom kbuild commands
- 
- 	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 425578e..33432f4 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
- $(obj)/%.dtb: $(src)/dts/%.dts FORCE
- 	$(call if_changed_dep,dtc)
- 
-+dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
-+
-+quiet_cmd_dtc_cpp = DTC+CPP $@
-+cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-+	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
-+
-+$(obj)/%.dtb: $(src)/dts/%.dtsp FORCE
-+	$(call if_changed_dep,dtc_cpp)
-+
- # Bzip2
- # ---------------------------------------------------------------------------
- 
--- 
-1.7.0.4
+I tend to agree.
+
+> And we still have some common features that could be covered in general
+> pinconf. So we need a structure to support both pinconf & specific pinconf.
+
+But that tends to imply that adding support for generic pinconf into the
+pinctrl-simple driver isnt' actually going to be useful for anyone. If
+pinctrl-single only supports some part of your HW, how can you use it?
+Or, do you intend to somehow make pinctrl-single support both the common
+generic pinconf stuff, and somehow be extensible to support any
+SoC-specific pin config fields?
