@@ -1,167 +1,103 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Subject: [PATCH V3] mmc: omap_hsmmc: Enable HSPE bit for high speed cards
-Date: Wed, 31 Oct 2012 17:27:36 +0530
-Message-ID: <1351684656-30275-1-git-send-email-gururaja.hebbar@ti.com>
+From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] USB: DWC3: EXYNOS: Remove platform data for dwc3-exynos
+Date: Wed, 31 Oct 2012 17:36:03 +0530
+Message-ID: <CAFp+6iE6cbF+2F5jgS9kH6_AzbwMksQfkPdjRqQiGV0Yu5oC2Q@mail.gmail.com>
+References: <1350377157-28465-1-git-send-email-gautam.vivek@samsung.com>
+	<1350377157-28465-3-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com, svenkatr@ti.com, cjb@laptop.org, balajitk@ti.com, grant.likely@secretlab.ca
-Cc: nsekhar@ti.com, sudhakar.raj@ti.com, gururaja.hebbar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1350377157-28465-3-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-HSMMC IP on AM33xx need a special setting to handle High-speed cards.
-Other platforms like TI81xx, OMAP4 may need this as-well. This depends
-on the HSMMC IP timing closure done for the high speed cards.
+Hi all,
 
->From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
 
-The MMC/SD/SDIO output signals can be driven on either falling edge or
-rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
-to reach better timing performance, and thus to increase data transfer
-frequency.
+On Tue, Oct 16, 2012 at 2:15 PM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> We are removing plat data which was used till now to init and
+> exit phy. We no longer need this since dwc3-core takes care of
+> initializing and shutting-down the phy using usb_phy_init()
+> and usb_phy_shutdown().
+>
+> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-There are few pre-requisites for enabling the HSPE bit
-- Controller should support High-Speed-Enable Bit and
-- Controller should not be using DDR Mode and
-- Controller should advertise that it supports High Speed in
-  capabilities register and
-- MMC/SD clock coming out of controller > 25MHz
+Any thoughts on this please ?
 
-Note:
-The implementation reuses the output of calc_divisor() so as to reduce
-code addition.
+> ---
+>  drivers/usb/dwc3/dwc3-exynos.c |   16 ----------------
+>  1 files changed, 0 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+> index d11ef49..5a2a73f 100644
+> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> @@ -92,7 +92,6 @@ static u64 dwc3_exynos_dma_mask = DMA_BIT_MASK(32);
+>
+>  static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+>  {
+> -       struct dwc3_exynos_data *pdata = pdev->dev.platform_data;
+>         struct platform_device  *dwc3;
+>         struct dwc3_exynos      *exynos;
+>         struct clk              *clk;
+> @@ -150,14 +149,6 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+>
+>         clk_enable(exynos->clk);
+>
+> -       /* PHY initialization */
+> -       if (!pdata) {
+> -               dev_dbg(&pdev->dev, "missing platform data\n");
+> -       } else {
+> -               if (pdata->phy_init)
+> -                       pdata->phy_init(pdev, pdata->phy_type);
+> -       }
+> -
+>         ret = platform_device_add_resources(dwc3, pdev->resource,
+>                         pdev->num_resources);
+>         if (ret) {
+> @@ -174,9 +165,6 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
+>         return 0;
+>
+>  err4:
+> -       if (pdata && pdata->phy_exit)
+> -               pdata->phy_exit(pdev, pdata->phy_type);
+> -
+>         clk_disable(clk);
+>         clk_put(clk);
+>  err3:
+> @@ -192,7 +180,6 @@ err0:
+>  static int __devexit dwc3_exynos_remove(struct platform_device *pdev)
+>  {
+>         struct dwc3_exynos      *exynos = platform_get_drvdata(pdev);
+> -       struct dwc3_exynos_data *pdata = pdev->dev.platform_data;
+>
+>         platform_device_unregister(exynos->dwc3);
+>         platform_device_unregister(exynos->usb2_phy);
+> @@ -200,9 +187,6 @@ static int __devexit dwc3_exynos_remove(struct platform_device *pdev)
+>
+>         dwc3_put_device_id(exynos->dwc3->id);
+>
+> -       if (pdata && pdata->phy_exit)
+> -               pdata->phy_exit(pdev, pdata->phy_type);
+> -
+>         clk_disable(exynos->clk);
+>         clk_put(exynos->clk);
+>
+> --
+> 1.7.6.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
----
-Rebased on mmc-next (v3.7.0-rc1)
-Only Build tested since EDMA support for AM335x is not yet added
 
-Changes in V2
-	- Added note in commit message about code re-use
-	- replaced ((a & BIT(n) == BIT(n))) with (a & BIT(n)) since
-	  effectively both are same.
-
-Changes in V3
-	- use symbolic define for hardcoded value (25000000)
-	- use of_property_read_bool() instead of of_find_property()
-
-:100644 100644 be76a23... ed271fc... M	Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-:100644 100644 8b4e4f2... 346af5b... M	arch/arm/plat-omap/include/plat/mmc.h
-:100644 100644 5434fd8... 4f7fcee... M	drivers/mmc/host/omap_hsmmc.c
- .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    1 +
- arch/arm/plat-omap/include/plat/mmc.h              |    1 +
- drivers/mmc/host/omap_hsmmc.c                      |   31 +++++++++++++++++++-
- 3 files changed, 32 insertions(+), 1 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-index be76a23..ed271fc 100644
---- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-@@ -19,6 +19,7 @@ ti,dual-volt: boolean, supports dual voltage cards
- "supply-name" examples are "vmmc", "vmmc_aux" etc
- ti,non-removable: non-removable slot (like eMMC)
- ti,needs-special-reset: Requires a special softreset sequence
-+ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
- 
- Example:
- 	mmc1: mmc@0x4809c000 {
-diff --git a/arch/arm/plat-omap/include/plat/mmc.h b/arch/arm/plat-omap/include/plat/mmc.h
-index 8b4e4f2..346af5b 100644
---- a/arch/arm/plat-omap/include/plat/mmc.h
-+++ b/arch/arm/plat-omap/include/plat/mmc.h
-@@ -126,6 +126,7 @@ struct omap_mmc_platform_data {
- 		/* we can put the features above into this variable */
- #define HSMMC_HAS_PBIAS		(1 << 0)
- #define HSMMC_HAS_UPDATED_RESET	(1 << 1)
-+#define HSMMC_HAS_HSPE_SUPPORT	(1 << 2)
- 		unsigned features;
- 
- 		int switch_pin;			/* gpio (card detect) */
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 5434fd8..4f7fcee 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -63,6 +63,7 @@
- 
- #define VS18			(1 << 26)
- #define VS30			(1 << 25)
-+#define HSS			(1 << 21)
- #define SDVS18			(0x5 << 9)
- #define SDVS30			(0x6 << 9)
- #define SDVS33			(0x7 << 9)
-@@ -90,6 +91,7 @@
- #define MSBS			(1 << 5)
- #define BCE			(1 << 1)
- #define FOUR_BIT		(1 << 1)
-+#define HSPE			(1 << 2)
- #define DDR			(1 << 19)
- #define DW8			(1 << 5)
- #define CC			0x1
-@@ -113,6 +115,7 @@
- #define MMC_TIMEOUT_MS		20
- #define OMAP_MMC_MIN_CLOCK	400000
- #define OMAP_MMC_MAX_CLOCK	52000000
-+#define HSMMC_CLKOUT	25000000
- #define DRIVER_NAME		"omap_hsmmc"
- 
- /*
-@@ -495,6 +498,7 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
- 	struct mmc_ios *ios = &host->mmc->ios;
- 	unsigned long regval;
- 	unsigned long timeout;
-+	unsigned long clkdiv;
- 
- 	dev_vdbg(mmc_dev(host->mmc), "Set clock to %uHz\n", ios->clock);
- 
-@@ -502,7 +506,8 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
- 
- 	regval = OMAP_HSMMC_READ(host->base, SYSCTL);
- 	regval = regval & ~(CLKD_MASK | DTO_MASK);
--	regval = regval | (calc_divisor(host, ios) << 6) | (DTO << 16);
-+	clkdiv = calc_divisor(host, ios);
-+	regval = regval | (clkdiv << 6) | (DTO << 16);
- 	OMAP_HSMMC_WRITE(host->base, SYSCTL, regval);
- 	OMAP_HSMMC_WRITE(host->base, SYSCTL,
- 		OMAP_HSMMC_READ(host->base, SYSCTL) | ICE);
-@@ -513,6 +518,27 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
- 		&& time_before(jiffies, timeout))
- 		cpu_relax();
- 
-+	/*
-+	 * Enable High-Speed Support
-+	 * Pre-Requisites
-+	 *	- Controller should support High-Speed-Enable Bit
-+	 *	- Controller should not be using DDR Mode
-+	 *	- Controller should advertise that it supports High Speed
-+	 *	  in capabilities register
-+	 *	- MMC/SD clock coming out of controller > 25MHz
-+	 */
-+	if ((mmc_slot(host).features & HSMMC_HAS_HSPE_SUPPORT) &&
-+	    (ios->timing != MMC_TIMING_UHS_DDR50) &&
-+	    (OMAP_HSMMC_READ(host->base, CAPA) & HSS)) {
-+		regval = OMAP_HSMMC_READ(host->base, HCTL);
-+		if (clkdiv && (clk_get_rate(host->fclk)/clkdiv) > HSMMC_CLKOUT)
-+			regval |= HSPE;
-+		else
-+			regval &= ~HSPE;
-+
-+		OMAP_HSMMC_WRITE(host->base, HCTL, regval);
-+	}
-+
- 	omap_hsmmc_start_clock(host);
- }
- 
-@@ -1709,6 +1735,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
- 	if (!of_property_read_u32(np, "max-frequency", &max_freq))
- 		pdata->max_freq = max_freq;
- 
-+	if (of_property_read_bool(np, "ti,needs-special-hs-handling"))
-+		pdata->slots[0].features |= HSMMC_HAS_HSPE_SUPPORT;
-+
- 	return pdata;
- }
- #else
 -- 
-1.7.0.4
-
+Thanks & Regards
+Vivek
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
