@@ -1,53 +1,67 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RESEND PATCH 05/11] ARM: OMAP: USB: Host: usb host Device
- tree node Adaptation
-Date: Wed, 31 Oct 2012 11:29:03 -0700
-Message-ID: <20121031182903.GN12739@atomide.com>
-References: <1351693612-23314-1-git-send-email-keshava_mgowda@ti.com>
- <1351693612-23314-6-git-send-email-keshava_mgowda@ti.com>
+From: Venkatraman S <svenkatr@ti.com>
+Subject: Re: [PATCH V3] mmc: omap_hsmmc: Enable HSPE bit for high speed cards
+Date: Thu, 1 Nov 2012 01:21:36 +0530
+Message-ID: <CAOyx1LrKBE+xzSRN4F=+e1DuMJL+5SAv-YkJWJdDw8p=kDojmw@mail.gmail.com>
+References: <1351684656-30275-1-git-send-email-gururaja.hebbar@ti.com>
+	<20121031122639.GA10998@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1351693612-23314-6-git-send-email-keshava_mgowda-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20121031122639.GA10998@arwen.pp.htv.fi>
+Sender: linux-mmc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, cjb@laptop.org, balajitk@ti.com, grant.likely@secretlab.ca, nsekhar@ti.com, sudhakar.raj@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org> [121031 07:29]:
-> The USB2 Host device node is extracted and used in the probe
-> of the driver to initialize the usb ports and controller. The
-> platform specific initialization is also performed.
-> 
-> Signed-off-by: Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/mach-omap2/usb-host.c         |    2 -
->  drivers/mfd/omap-usb-host.c            |  163 +++++++++++++++++++++++---------
->  include/linux/platform_data/usb-omap.h |   19 +++-
->  3 files changed, 133 insertions(+), 51 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/usb-host.c b/arch/arm/mach-omap2/usb-host.c
-> index d1dbe12..239c175 100644
-> --- a/arch/arm/mach-omap2/usb-host.c
-> +++ b/arch/arm/mach-omap2/usb-host.c
-> @@ -502,8 +502,6 @@ void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
->  	}
->  	ehci_data.phy_reset = pdata->phy_reset;
->  	ohci_data.es2_compatibility = pdata->es2_compatibility;
-> -	usbhs_data.ehci_data = &ehci_data;
-> -	usbhs_data.ohci_data = &ohci_data;
->  
->  	if (cpu_is_omap34xx()) {
->  		setup_ehci_io_mux(pdata->port_mode);
+On Wed, Oct 31, 2012 at 5:56 PM, Felipe Balbi <balbi@ti.com> wrote:
+> Hi,
+>
+> On Wed, Oct 31, 2012 at 05:27:36PM +0530, Hebbar, Gururaja wrote:
+>> HSMMC IP on AM33xx need a special setting to handle High-speed cards.
+>> Other platforms like TI81xx, OMAP4 may need this as-well. This depends
+>> on the HSMMC IP timing closure done for the high speed cards.
+>>
+>> From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
+>>
+>> The MMC/SD/SDIO output signals can be driven on either falling edge or
+>> rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
+>> to reach better timing performance, and thus to increase data transfer
+>> frequency.
+>>
+>> There are few pre-requisites for enabling the HSPE bit
+>> - Controller should support High-Speed-Enable Bit and
+>> - Controller should not be using DDR Mode and
+>> - Controller should advertise that it supports High Speed in
+>>   capabilities register and
+>> - MMC/SD clock coming out of controller > 25MHz
+>>
+>> Note:
+>> The implementation reuses the output of calc_divisor() so as to reduce
+>> code addition.
+>>
+>> Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+>
+> this looks good to my eyes, hopefully I haven't missed anything:
+>
+> Reviewed-by: Felipe Balbi <balbi@ti.com>
+>
 
-Just checking.. Have you tested that these patches also
-still work without device tree?
+Except for the excessively verbose comments which are just duplicating the code,
+<Quote>
+>> +      * Enable High-Speed Support
+>> +      * Pre-Requisites
+>> +      *      - Controller should support High-Speed-Enable Bit
+>> +      *      - Controller should not be using DDR Mode
+>> +      *      - Controller should advertise that it supports High Speed
+>> +      *        in capabilities register
+>> +      *      - MMC/SD clock coming out of controller > 25MHz
+>> +      */
+</Quote>
 
-Regards,
+I'm ok with this patch as well. I'm putting a few patches under test
+including this one,
+and will send it to Chris as part of that series.
+I'll strip out the above mentioned comments, unless there are any objections.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Venkat.
