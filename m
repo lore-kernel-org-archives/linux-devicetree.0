@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v7 6/8] fbmon: add of_videomode helpers
-Date: Wed, 31 Oct 2012 10:28:06 +0100
-Message-ID: <1351675689-26814-7-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v7 4/8] video: add videomode helpers
+Date: Wed, 31 Oct 2012 10:28:04 +0100
+Message-ID: <1351675689-26814-5-git-send-email-s.trumtrar@pengutronix.de>
 References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
@@ -10,85 +10,137 @@ To: devicetree-discuss@lists.ozlabs.org
 Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add helper to get fb_videomode from devicetree.
+Add helper functions to convert from display timings to a generic videomode
+structure. This videomode can then be converted to the corresponding subsystem
+mode representation (e.g. fb_videomode).
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 ---
- drivers/video/fbmon.c |   40 ++++++++++++++++++++++++++++++++++++++++
- include/linux/fb.h    |    3 +++
- 2 files changed, 43 insertions(+)
+ drivers/video/Kconfig     |    6 ++++++
+ drivers/video/Makefile    |    1 +
+ drivers/video/videomode.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/videomode.h |   36 ++++++++++++++++++++++++++++++++++++
+ 4 files changed, 87 insertions(+)
+ create mode 100644 drivers/video/videomode.c
+ create mode 100644 include/linux/videomode.h
 
-diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
-index b9e6ab3..871aa76 100644
---- a/drivers/video/fbmon.c
-+++ b/drivers/video/fbmon.c
-@@ -1408,6 +1408,46 @@ int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
- EXPORT_SYMBOL_GPL(videomode_to_fb_videomode);
- #endif
+diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+index 1421fc8..45dd393 100644
+--- a/drivers/video/Kconfig
++++ b/drivers/video/Kconfig
+@@ -38,6 +38,12 @@ config DISPLAY_TIMING
+        help
+          Say Y here, to use the display timing helpers.
  
-+#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+static void dump_fb_videomode(struct fb_videomode *m)
-+{
-+	pr_debug("fb_videomode = %ux%u@%uHz (%ukHz) %u %u %u %u %u %u %u %u %u\n",
-+		 m->xres, m->yres, m->refresh, m->pixclock, m->left_margin,
-+		 m->right_margin, m->upper_margin, m->lower_margin,
-+		 m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
-+}
++config VIDEOMODE
++       bool "Enable videomode helpers"
++       help
++         Say Y here, to use the generic videomode helpers. This allows
++	 converting from display timings to fb_videomode and drm_display_mode
 +
-+/**
-+ * of_get_fb_videomode - get a fb_videomode from devicetree
-+ * @np: device_node with the timing specification
-+ * @fb: will be set to the return value
-+ * @index: index into the list of display timings in devicetree
+ menuconfig FB
+ 	tristate "Support for frame buffer devices"
+ 	---help---
+diff --git a/drivers/video/Makefile b/drivers/video/Makefile
+index 552c045..fc30439 100644
+--- a/drivers/video/Makefile
++++ b/drivers/video/Makefile
+@@ -168,3 +168,4 @@ obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
+ #video output switch sysfs driver
+ obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) += output.o
+ obj-$(CONFIG_DISPLAY_TIMING) += display_timing.o
++obj-$(CONFIG_VIDEOMODE) += videomode.o
+diff --git a/drivers/video/videomode.c b/drivers/video/videomode.c
+new file mode 100644
+index 0000000..a9fe010
+--- /dev/null
++++ b/drivers/video/videomode.c
+@@ -0,0 +1,44 @@
++/*
++ * generic display timing functions
 + *
-+ * DESCRIPTION:
-+ * This function is expensive and should only be used, if only one mode is to be
-+ * read from DT. To get multiple modes start with of_get_display_timing_list ond
-+ * work with that instead.
++ * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pengutronix
++ *
++ * This file is released under the GPLv2
 + */
-+int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
-+			int index)
++
++#include <linux/kernel.h>
++#include <linux/export.h>
++#include <linux/errno.h>
++#include <linux/display_timing.h>
++#include <linux/videomode.h>
++
++int videomode_from_timing(struct display_timings *disp, struct videomode *vm,
++			  int index)
 +{
-+	struct videomode vm;
-+	int ret;
++	struct display_timing *dt = NULL;
 +
-+	ret = of_get_videomode(np, &vm, index);
-+	if (ret)
-+		return ret;
++	dt = display_timings_get(disp, index);
++	if (!dt) {
++		pr_err("%s: no signal timings found\n", __func__);
++		return -EINVAL;
++	}
 +
-+	videomode_to_fb_videomode(&vm, fb);
++	vm->pixelclock = display_timing_get_value(&dt->pixelclock, 0);
++	vm->hactive = display_timing_get_value(&dt->hactive, 0);
++	vm->hfront_porch = display_timing_get_value(&dt->hfront_porch, 0);
++	vm->hback_porch = display_timing_get_value(&dt->hback_porch, 0);
++	vm->hsync_len = display_timing_get_value(&dt->hsync_len, 0);
 +
-+	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
-+		vm.vactive, np->name);
-+	dump_fb_videomode(fb);
++	vm->vactive = display_timing_get_value(&dt->vactive, 0);
++	vm->vfront_porch = display_timing_get_value(&dt->vfront_porch, 0);
++	vm->vback_porch = display_timing_get_value(&dt->vback_porch, 0);
++	vm->vsync_len = display_timing_get_value(&dt->vsync_len, 0);
++
++	vm->vah = dt->vsync_pol_active;
++	vm->hah = dt->hsync_pol_active;
++	vm->interlaced = dt->interlaced;
++	vm->doublescan = dt->doublescan;
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(of_get_fb_videomode);
++EXPORT_SYMBOL_GPL(videomode_from_timing);
+diff --git a/include/linux/videomode.h b/include/linux/videomode.h
+new file mode 100644
+index 0000000..f932147
+--- /dev/null
++++ b/include/linux/videomode.h
+@@ -0,0 +1,36 @@
++/*
++ * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
++ *
++ * generic videomode description
++ *
++ * This file is released under the GPLv2
++ */
++
++#ifndef __LINUX_VIDEOMODE_H
++#define __LINUX_VIDEOMODE_H
++
++#include <linux/display_timing.h>
++
++struct videomode {
++	u32 pixelclock;
++	u32 refreshrate;
++
++	u32 hactive;
++	u32 hfront_porch;
++	u32 hback_porch;
++	u32 hsync_len;
++
++	u32 vactive;
++	u32 vfront_porch;
++	u32 vback_porch;
++	u32 vsync_len;
++
++	u32 hah;
++	u32 vah;
++	bool interlaced;
++	bool doublescan;
++};
++
++int videomode_from_timing(struct display_timings *disp, struct videomode *vm,
++			  int index);
 +#endif
- 
- #else
- int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 46c665b..9892fd6 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -14,6 +14,8 @@
- #include <linux/backlight.h>
- #include <linux/slab.h>
- #include <asm/io.h>
-+#include <linux/of.h>
-+#include <linux/of_videomode.h>
- 
- struct vm_area_struct;
- struct fb_info;
-@@ -714,6 +716,7 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
- extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
- extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
- 
-+extern int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb, int index);
- extern int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode);
- 
- /* drivers/video/modedb.c */
 -- 
 1.7.10.4
