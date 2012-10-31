@@ -1,173 +1,102 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v3] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Wed, 31 Oct 2012 13:51:02 +0100
-Message-ID: <50911EB6.1070105@grandegger.com>
-References: <5087EDBF.2040108@gaisler.com> <1351588017-14357-1-git-send-email-andreas@gaisler.com> <508FA6D3.9000809@grandegger.com> <508FFF50.8050900@gaisler.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
+Date: Wed, 31 Oct 2012 14:19:03 +0100
+Message-ID: <20121031131903.GF19021@game.jcrosoft.org>
+References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
+ <20121024161429.GA16350@core.coreip.homeip.net>
+ <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
+ <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
+ <CACRpkdaiLXVeUg1quuw3XPTenbKOjn+aWbGQezpcyvzQCtCWow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <508FFF50.8050900@gaisler.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaiLXVeUg1quuw3XPTenbKOjn+aWbGQezpcyvzQCtCWow@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2012 05:24 PM, Andreas Larsson wrote:
-> On 10/30/2012 11:07 AM, Wolfgang Grandegger wrote:
->>> +    /* AHB bus error interrupts (not CAN bus errors) - shut down the
->>> +     * device.
->>> +     */
->>> +    if (sources & (GRCAN_IRQ_TXAHBERR | GRCAN_IRQ_RXAHBERR)) {
->>> +        if (sources & GRCAN_IRQ_TXAHBERR) {
->>> +            netdev_err(dev, "got AHB bus error on tx\n");
->>> +            stats->tx_errors++;
->>> +        } else {
->>> +            netdev_err(dev, "got AHB bus error on rx\n");
->>> +            stats->rx_errors++;
->>> +        }
->>> +        netdev_err(dev, "halting device\n");
->>> +
->>> +        /* Prevent anything to be enabled again and halt device */
->>> +        SPIN_LOCK(&priv->lock);
->>> +        priv->closing = true;
->>> +        netif_stop_queue(dev);
->>> +        grcan_stop(dev);
->>> +        SPIN_UNLOCK(&priv->lock);
->>
->> Hm, does that really happen? How can the user/app realized the problem
->> and recover?
+On 21:12 Sun 28 Oct     , Linus Walleij wrote:
+> On Wed, Oct 24, 2012 at 7:28 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
 > 
-> My understanding of it is that if you get amba bus errors something is
-> seriously wrong and nothing can be done at driver level to recover.
-> Shutting down the device is to prevent the driver from spamming console
-> messages. I used to have a sysfs indication of such errors. Now dmesg is
-> the way to find out about the problem. The user can always bring the
-> interface down and up again and try again after such an error.
+> >> drivers/spi/spi-pl022.c
+> >
+> > Default/sleep transitions could be moved into bus code.
+> 
+> No that's not a good idea as long as we have both the platform bus
+> and the AMBA bus doing essentially the same thing. We will then be
+> having two copies of the same code in two different busses running
+> out of sync. There may be other busses too.
+> 
+> But I could prepare static helpers in <linux/pinctrl/consumer.h>
+> that any bus could use. Or any driver. Probably any driver,
+> because of this:
+> 
+> As noted the bus cannot really execute the pinctrl calls to
+> e.g. put a drivers pins into "sleep". Since if e.g. the bus is walking
+> the suspend() ladder, shall it put the pins into sleep *before*
+> or *after* calling the suspend() hook in the driver?
+> 
+> The answer is that it does not know. Because drivers have
+> different needs. Depending on how the hardware and
+> system is done.
+> 
+> I already tried to make this point:
+> 
+> pinctrl_set_state(state_sleep);
+> clk_disable();
+> power_off_voltage_domain();
+> 
+> May for some drivers have to be:
+> 
+> clk_disable();
+> power_off_voltage_domain();
+> pinctrl_set_state(state_sleep);
+> 
+> (etc)
+> 
+> I'm not making this up, it is a very real phenomenon on the
+> Ux500 and I don't think we are unique.
+I agree with Linus
 
-Well, sounds like a fatal error. Did you ever saw it? If that happens
-frequently, or even once, the device/system seems not really usable.
+you can not handle pinctrl as bus levell
 
->> Furthermore, why is a spin_clock enough here? THe interrupt may run a
->> thread.
-> 
-> It should be enough because the function is only called
-> directly from the interrupt handler, right? Or did I miss something?
+as each driver need different requirement before enabling the pin
 
-The interrupt handler may run as thread, e.g. if the -rt patch has been
-applied. Therefore it's safer to use the irqsave/restore variants of the
-spin_lock functions. At least that's my understanding. See also
-"Documentation/spinlock.txt".
+as example you may need to clock the ip before muxing the pin and invertly
 
->>> +    priv->can.ctrlmode_supported  =
->>> +        CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_ONE_SHOT;
->>
->> What about triple-sampling?
-> 
-> That is not supported by the hardware.
-> 
-> 
->> I curious how the device behaves on bus errors and state changes. Could
->> you please show the output of "candump -e any,0:0,#FFFFFFFF" while
->> sending a CAN message with no other node on the bus (not connected) and
->> with going bus off (by short-circuiting CAN high and low).
-> 
-> 
-> Here is the output (with long sequences of similar error frames
-> where only one counter is increasing cut out) from the the upcoming v4.
-> let me know if you see any problems with this.
+on some IP the pinctrl is optionnal, on other mandatory
 
-How did your trigger that sequence? Short-circuit or not cable
-connected? The latter, I assume, as bus-off is not reached.
+you can not expect every driver to have the same need and requirement
+
+yes we will have a few code duplication
+
+but today it's few lines and those few lines will be place at different init
+stage on the drivers ditto for remove or sleep/idle
+
 
 > 
->   can0  20000006  [8] 00 00 00 00 00 00 10 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{}
->         error-counter-tx-rx{{16}{0}}
+> Moving this handling to bus code or anywhere else
+> invariably implies that resource acquisition/release order
+> does not matter, and my point is that it does.
 
-This is most probably an ack slot bus error similar to. You seem not to
-handle bus errors and it's not a controller problem as the state did not
-change.
+100% agreed
 
-http://lxr.linux.no/#linux+v3.6.4/drivers/net/can/flexcan.c#L353
-
->   can0  20000004  [8] 00 20 00 00 00 00 88 00   ERRORFRAME
->         controller-problem{tx-error-passive}
->         error-counter-tx-rx{{136}{0}}
-
-OK, a state change to error passive. The device seems not to report
-changes to error warning.
-
->   can0  20000006  [8] 00 20 00 00 00 00 90 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{tx-error-passive}
->         error-counter-tx-rx{{144}{0}}
-
-State changes should be reported only once. But it did not change. This
-is then a bus error (CAN_ERR_PROT | CAN_ERR_BUSERROR). See also above.
-
->   [...]
->   can0  20000006  [8] 00 20 00 00 00 00 F0 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{tx-error-passive}
->         error-counter-tx-rx{{240}{0}}
->   can0  20000006  [8] 00 20 00 00 00 00 F8 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{tx-error-passive}
->         error-counter-tx-rx{{248}{0}}
->   can0  20000042  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         bus-off
->         error-counter-tx-rx{{128}{0}}
->   can0  20000006  [8] 00 00 00 00 00 00 18 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{}
->         error-counter-tx-rx{{24}{0}}
->   can0  20000004  [8] 00 10 00 00 00 00 4F 80   ERRORFRAME
->         controller-problem{rx-error-passive}
->         error-counter-tx-rx{{79}{128}}
->   [...]
->   can0  20000006  [8] 00 10 00 00 00 00 77 80   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{rx-error-passive}
->         error-counter-tx-rx{{119}{128}}
->   can0  20000006  [8] 00 30 00 00 00 00 7F 80   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{rx-error-passive,tx-error-passive}
->         error-counter-tx-rx{{127}{128}}
->   can0  20000006  [8] 00 30 00 00 00 00 87 80   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{rx-error-passive,tx-error-passive}
->         error-counter-tx-rx{{135}{128}}
->   [...]
->   can0  20000006  [8] 00 30 00 00 00 00 F7 80   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{rx-error-passive,tx-error-passive}
->         error-counter-tx-rx{{247}{128}}
->   can0  20000006  [8] 00 30 00 00 00 00 FF 80   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{rx-error-passive,tx-error-passive}
->         error-counter-tx-rx{{255}{128}}
->   can0  20000042  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         bus-off
->         error-counter-tx-rx{{128}{0}}
->   can0  20000006  [8] 00 00 00 00 00 00 18 00   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{}
->         error-counter-tx-rx{{24}{0}}
->   can0  20000004  [8] 00 10 00 00 00 00 4F 80   ERRORFRAME
->         controller-problem{rx-error-passive}
->         error-counter-tx-rx{{79}{128}}
->   can0  20000006  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
->         lost-arbitration{at bit 0}
->         controller-problem{rx-error-passive}
->         error-counter-tx-rx{{87}{128}}
->   [...]
-
-Also a sequence to bus-off including the recovery would be nice.
-
-Wolfgang.
-
+Best Regards,
+J.
+> 
+> >> drivers/i2c/busses/i2c-nomadik.c
+> >
+> > Don't see pinctrl in linux-next.
+> 
+> This code is here:
+> http://marc.info/?l=linux-i2c&m=134986995731695&w=2
+> 
+> Yours,
+> Linus Walleij
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
