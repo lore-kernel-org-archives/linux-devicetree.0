@@ -1,22 +1,75 @@
-From: Afzal Mohammed <x0148406@ti.com>
-Subject: Re: [PATCH v2] ARM: dts: am33xx: rtc node
-Date: Wed, 31 Oct 2012 17:07:49 +0530
-Message-ID: <50910D8D.60707@ti.com>
-References: <1351589646-27082-1-git-send-email-afzal@ti.com> <50910664.1010304@ti.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v3] ARM: dts: AM33xx: Add SPI node
+Date: Wed, 31 Oct 2012 12:43:38 +0100
+Message-ID: <50910EEA.7000904@ti.com>
+References: <1351680669-20718-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50910664.1010304@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, AnilKumar Ch <anilkumar@ti.com>, Rob Herring <rob.herring@calxeda.com>, Vaibhav Hiremath <hvaibhav@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1351680669-20718-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: tony@atomide.com, anilkumar@ti.com, rob.herring@calxeda.com, hvaibhav@ti.com, afzal@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 31 October 2012 04:37 PM, Benoit Cousson wrote:
-> I've just applied it in the branch with a slight change in the subject.
+On 10/31/2012 11:51 AM, Philip, Avinash wrote:
+> Add McSPI data node to AM33XX device tree file. The McSPI module (and so
+> as the driver) is reused from OMAP4.
+> 
+> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+> Tested-by: Matt Porter <mporter@ti.com>
+> ---
 
-Thanks Benoit
+Applied in for_3.8/dts
 
-Regards
-Afzal
+Thanks,
+Benoit
+
+> Changes since v2:
+>         - Commit message corrected.
+> 	- Rebase on top of for_3.8/dts
+> 
+> Changes since v1:
+>         - Corrected reg offset in reg DT entry.
+> 
+> :100644 100644 97a7bd3... 6e04789... M	arch/arm/boot/dts/am33xx.dtsi
+>  arch/arm/boot/dts/am33xx.dtsi |   24 ++++++++++++++++++++++++
+>  1 files changed, 24 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index 97a7bd3..6e04789 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -299,5 +299,29 @@
+>  				      76>;
+>  			ti,hwmods = "rtc";
+>  		};
+> +
+> +		spi0: spi@48030000 {
+> +			compatible = "ti,omap4-mcspi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x48030000 0x400>;
+> +			interrupt-parent = <&intc>;
+> +			interrupt = <65>;
+> +			ti,spi-num-cs = <2>;
+> +			ti,hwmods = "spi0";
+> +			status = "disabled";
+> +		};
+> +
+> +		spi1: spi@481a0000 {
+> +			compatible = "ti,omap4-mcspi";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x481a0000 0x400>;
+> +			interrupt-parent = <&intc>;
+> +			interrupt = <125>;
+> +			ti,spi-num-cs = <2>;
+> +			ti,hwmods = "spi1";
+> +			status = "disabled";
+> +		};
+>  	};
+>  };
+> 
+
