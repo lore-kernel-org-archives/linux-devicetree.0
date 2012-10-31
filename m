@@ -1,72 +1,77 @@
-From: Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 2/5] usb: s3c-hsotg: Adding phy driver support
-Date: Wed, 31 Oct 2012 15:44:07 +0100
-Message-ID: <20121031154407.4eb54dba@amdc308.digital.local>
-References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
- <1351573057-22249-3-git-send-email-p.paneri@samsung.com>
- <20121031140548.GE10998@arwen.pp.htv.fi>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: DT: of_platform_populate Vs of_platform_bus_probe.
+Date: Wed, 31 Oct 2012 14:54:59 +0000
+Message-ID: <50913BC3.7090103@st.com>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20121031140548.GE10998-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+Hi All, 
+I have few queries on of_platform_populate and of_platform_bus_probe functions.
 
-> Hi,
-> 
-> On Tue, Oct 30, 2012 at 10:27:34AM +0530, Praveen Paneri wrote:
-> > @@ -3501,20 +3511,27 @@ static int __devinit s3c_hsotg_probe(struct
-> > platform_device *pdev) int ret;
-> >  	int i;
-> >  
-> > -	plat = pdev->dev.platform_data;
-> > -	if (!plat) {
-> > -		dev_err(&pdev->dev, "no platform data defined\n");
-> > -		return -EINVAL;
-> > -	}
-> > -
-> >  	hsotg = devm_kzalloc(&pdev->dev, sizeof(struct s3c_hsotg),
-> > GFP_KERNEL); if (!hsotg) {
-> >  		dev_err(dev, "cannot get memory\n");
-> >  		return -ENOMEM;
-> >  	}
-> >  
-> > +	plat = pdev->dev.platform_data;
-> > +	if (!plat) {
-> > +		/* Fallback for transceiver */
-> > +		phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-> > +		if (IS_ERR_OR_NULL(phy)) {
-> > +			dev_err(&pdev->dev, "no platform data or
-> > transceiver defined\n");
-> > +			return -EPROBE_DEFER;
-> > +		} else {
-> > +			hsotg->phy = phy;
-> > +		}
-> > +	} else {
-> > +		hsotg->plat = plat;
-> > +	}
-> 
-> I think this should be the other way around, meaning you try to grab
-> the phy, if you can't, then you fallback to pdata.
-> 
+Use-case is, I want to explicitly register platform devices from some nodes at post-core or late-init level(like child@1).
+And I don't want of_platform_populate to register platform devices for that node again, so I pass "simple-bus" in match-table.
+Problem is that exiting code for of_platform_populate probes it.
 
-I agree.
+Looking at the function documentation, which states
+of_platform_bus_probe will only create children of the root which are
+selected by the @matches argument.
 
-The new approach is to use new PHY driver. And only when failed we
-shall use legacy approach.
+of_platform_populate walks the device tree and creates devices from
+nodes.  It differs in that it follows the modern convention of requiring
+all device nodes to have a 'compatible' property, and it is suitable for
+creating devices which are children of the root node.
 
--- 
-Best regards,
+Lets say If we call of_platform_populate(NULL, match_table, NULL, NULL)
+on a device trees like the below with
+struct of_device_id match_table[] = {
+    { .compatible = "simple-bus", }
+    {}
+};
 
-Lukasz Majewski
+parent@0{
+    compatible    = "xxx,parent1", "simple-bus";
+    ...
+    child@0 {
+        compatible    = "xxx,child0", "simple-bus";
+        ...
+    };
+    child@1 {
+        compatible    = "xxx,child1";
+        ...
+    };
+    child@2 {
+        compatible    = "xxx,child2", "simple-bus";
+        ...
+    };
+};
 
-Samsung Poland R&D Center | Linux Platform Group
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+of_platform_bus_probe would create platform-devices for parent@0,
+child@0 and child@2
+where as
+of_platform_populate would create platform-devices for parent@0,
+child@0, child@1 and child@2 nodes.
+
+So the question is
+why do we need to have @matches argument to of_platform_populate in the
+first place, if it creates all the devices by walking the dt nodes?
+
+It is bit confusing, As some platforms use of_platform_populate(NULL,
+of_default_bus_match_table, NULL, NULL) assuming that only matching
+nodes will end up having platform device.
+Also
+some platforms use of_platform_bus_probe(NULL, match_table, NULL), 
+where match table is of_default_bus_match_table.
+
+Am not 100% sure what is the right solution, but I think lot of platforms would want behavior like of_platform_bus_probe which takes lookups aswell.
+If the suggestion is to use of_platform_bus_probe, Which I can't use as It does not take Auxdata(lookups).
+
+
+Thanks,
+srini
