@@ -1,139 +1,49 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of/irq: stub out public API
-Date: Wed, 31 Oct 2012 18:37:34 -0500
-Message-ID: <5091B63E.7090208@gmail.com>
-References: <1351717765-29395-1-git-send-email-jhugo@codeaurora.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH 05/14] fdt: Export fdtdec_find_alias_node()
+	function
+Date: Wed, 31 Oct 2012 16:50:16 -0700
+Message-ID: <CAPnjgZ3J_G=cU+eo5fBuGUuNHL6=uX2ehMgHeLP0f7__5zSdSA@mail.gmail.com>
+References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
+	<1351218671-15228-6-git-send-email-sjg@chromium.org>
+	<20121026042433.GL7222@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1351717765-29395-1-git-send-email-jhugo@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <20121026042433.GL7222@truffula.fritz.box>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Tom Rini <trini@ti.com>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 04:09 PM, Jeffrey Hugo wrote:
-> Restructure of_irq.h so that the public API is defined as function stubs
-> when CONFIG_OF_IRQ is not defined.  This allows client drivers to
-> sucessfully compile in configurations where CONFIG_OF_IRQ is defined and
-> in configurations where it is not defined.
-> 
+Hi David,
 
-Do you have an example of where you need this? For many of these drivers
-should not be calling them directly as they are intended for core code.
+On Thu, Oct 25, 2012 at 9:24 PM, David Gibson
+<david@gibson.dropbear.id.au> wrote:
+> On Thu, Oct 25, 2012 at 07:31:02PM -0700, Simon Glass wrote:
+>> This function is useful outside fdtdec, so export it.
+>
+> Hrm.  fdt_path_offset() in libfdt itself will already look up aliases
+> if given a path that doesn't start with '/'.  So it's not clear why
+> you need this function at all.
 
-Rob
+Ahh, well I won't be needing that patch, then. I will submit one to
+remove this function. Thank you.
 
+Regards,
+Simon
 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  include/linux/of_irq.h |   71 +++++++++++++++++++++++++++++++++++------------
->  1 files changed, 53 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 1717cd9..1b5771a 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -1,8 +1,6 @@
->  #ifndef __OF_IRQ_H
->  #define __OF_IRQ_H
->  
-> -#if defined(CONFIG_OF)
-> -struct of_irq;
->  #include <linux/types.h>
->  #include <linux/errno.h>
->  #include <linux/irq.h>
-> @@ -10,14 +8,6 @@ struct of_irq;
->  #include <linux/ioport.h>
->  #include <linux/of.h>
->  
-> -/*
-> - * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
-> - * implements it differently.  However, the prototype is the same for all,
-> - * so declare it here regardless of the CONFIG_OF_IRQ setting.
-> - */
-> -extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-> -
-> -#if defined(CONFIG_OF_IRQ)
->  /**
->   * of_irq - container for device_node/irq_specifier pair for an irq controller
->   * @controller: pointer to interrupt controller device tree node
-> @@ -57,7 +47,23 @@ static inline int of_irq_map_oldworld(struct device_node *device, int index,
->  }
->  #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
->  
-> +#if defined(CONFIG_OF)
-> +/*
-> + * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
-> + * implements it differently.  However, the prototype is the same for all,
-> + * so declare it here regardless of the CONFIG_OF_IRQ setting.
-> + */
-> +extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-> +#else /* !CONFIG_OF */
-> +static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-> +						int index)
-> +{
-> +	return 0;
-> +}
-> +#endif /* !CONFIG_OF */
-> +
->  
-> +#if defined(CONFIG_OF_IRQ)
->  extern int of_irq_map_raw(struct device_node *parent, const u32 *intspec,
->  			  u32 ointsize, const u32 *addr,
->  			  struct of_irq *out_irq);
-> @@ -74,15 +80,44 @@ extern int of_irq_to_resource_table(struct device_node *dev,
->  extern struct device_node *of_irq_find_parent(struct device_node *child);
->  
->  extern void of_irq_init(const struct of_device_id *matches);
-> -
-> -#endif /* CONFIG_OF_IRQ */
-> -
-> -#else /* !CONFIG_OF */
-> -static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
-> -						int index)
-> +#else /* !CONFIG_OF_IRQ */
-> +static inline int of_irq_map_raw(struct device_node *parent, const u32 *intspec,
-> +			  u32 ointsize, const u32 *addr,
-> +			  struct of_irq *out_irq)
->  {
->  	return 0;
->  }
-> -#endif /* !CONFIG_OF */
-> -
-> +static inline int of_irq_map_one(struct device_node *device, int index,
-> +			  struct of_irq *out_irq)
-> +{
-> +	return 0;
-> +}
-> +static inline unsigned int irq_create_of_mapping(struct device_node *controller,
-> +					  const u32 *intspec,
-> +					  unsigned int intsize)
-> +{
-> +	return 0;
-> +}
-> +static inline int of_irq_to_resource(struct device_node *dev, int index,
-> +			      struct resource *r)
-> +{
-> +	return 0;
-> +}
-> +static inline int of_irq_count(struct device_node *dev)
-> +{
-> +	return 0;
-> +}
-> +static inline int of_irq_to_resource_table(struct device_node *dev,
-> +		struct resource *res, int nr_irqs)
-> +{
-> +	return 0;
-> +}
-> +static inline struct device_node *of_irq_find_parent(struct device_node *child)
-> +{
-> +	return NULL;
-> +}
-> +static inline void of_irq_init(const struct of_device_id *matches)
-> +{
-> +}
-> +#endif /* CONFIG_OF_IRQ */
->  #endif /* __OF_IRQ_H */
-> 
+>
+> --
+> David Gibson                    | I'll have my music baroque, and my code
+> david AT gibson.dropbear.id.au  | minimalist, thank you.  NOT _the_ _other_
+>                                 | _way_ _around_!
+> http://www.ozlabs.org/~dgibson
