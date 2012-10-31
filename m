@@ -1,56 +1,64 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: How about a gpio_get(device *, char *) function?
-Date: Wed, 31 Oct 2012 18:04:09 +0900
-Message-ID: <38620644.IyR5R8rjKP@percival>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCH v7 0/8] of: add display helper
+Date: Wed, 31 Oct 2012 10:28:00 +0100
+Message-ID: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi!
 
-Would anyone be opposed to having a gpio_get() function that works similarly 
-to e.g. regulator_get() and clk_get()?
+Finally, v7 of the series.
 
-I can see some good reasons to have this:
+Changes since v6:
+	- get rid of some empty lines etc.
+	- move functions to their subsystems
+	- split of_ from non-of_ functions
+	- add at least some kerneldoc to some functions
 
-- Less platform data to pass to drivers,
-- Consistency between different subsystems. Regulator, clock, PWM, ... all use 
-this scheme.
-- The "device-specific indirection" could make some DT structures more 
-reusable. Right now the only way to address a GPIO through the DT is via a 
-phandle that includes the GPIO number - thus hard-coded.
+Regards,
+Steffen
 
-The implementation would be rather simple, and the function would just return 
-the right GPIO number (acquired through gpio_request).
 
-Rationale for this: I would like to be able to share power sequences between 
-devices, e.g. to completely extract the per-device resources from the 
-sequence. Every power sequence step references either a regulator, PWM, or 
-GPIO. For regulators and PWMs separation is easy because their subsystems 
-provide regulator_get() and pwm_get() which allow the resource to be 
-referenced by name in the sequence, and resolved to different instances 
-depending on the device. GPIOs, on the other hand, can only be referenced by 
-number - and that makes it necessary to duplicate the sequence's structure in 
-memory for every device that may use it. It if was possible to reference GPIOs 
-by names that resolve to different GPIO numbers according to the device, then 
-the problem would be solved.
+Steffen Trumtrar (8):
+  video: add display_timing struct and helpers
+  of: add helper to parse display timings
+  of: add generic videomode description
+  video: add videomode helpers
+  fbmon: add videomode helpers
+  fbmon: add of_videomode helpers
+  drm_modes: add videomode helpers
+  drm_modes: add of_videomode helpers
 
-There are probably other use-cases that would benefit from this, if you know of 
-one please feel free to share.
+ .../devicetree/bindings/video/display-timings.txt  |  139 +++++++++++++++
+ drivers/gpu/drm/drm_modes.c                        |   78 +++++++++
+ drivers/of/Kconfig                                 |   12 ++
+ drivers/of/Makefile                                |    2 +
+ drivers/of/of_display_timings.c                    |  185 ++++++++++++++++++++
+ drivers/of/of_videomode.c                          |   47 +++++
+ drivers/video/Kconfig                              |   11 ++
+ drivers/video/Makefile                             |    2 +
+ drivers/video/display_timing.c                     |   24 +++
+ drivers/video/fbmon.c                              |   76 ++++++++
+ drivers/video/videomode.c                          |   44 +++++
+ include/drm/drmP.h                                 |    8 +
+ include/linux/display_timing.h                     |   69 ++++++++
+ include/linux/fb.h                                 |    5 +
+ include/linux/of_display_timings.h                 |   20 +++
+ include/linux/of_videomode.h                       |   15 ++
+ include/linux/videomode.h                          |   36 ++++
+ 17 files changed, 773 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
+ create mode 100644 drivers/of/of_display_timings.c
+ create mode 100644 drivers/of/of_videomode.c
+ create mode 100644 drivers/video/display_timing.c
+ create mode 100644 drivers/video/videomode.c
+ create mode 100644 include/linux/display_timing.h
+ create mode 100644 include/linux/of_display_timings.h
+ create mode 100644 include/linux/of_videomode.h
+ create mode 100644 include/linux/videomode.h
 
-Thanks,
-Alex.
+-- 
+1.7.10.4
