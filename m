@@ -1,184 +1,139 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: Merging device trees at runtime for module-based
-	systems
-Date: Thu, 01 Nov 2012 00:21:16 +0100
-Message-ID: <5091B26C.4070505@gmail.com>
-References: <5087B919.2010006@gmail.com> <508AD8F9.8030105@wwwdotorg.org>
-	<5091AD78.3060701@gmail.com> <5091B095.9080704@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of/irq: stub out public API
+Date: Wed, 31 Oct 2012 18:37:34 -0500
+Message-ID: <5091B63E.7090208@gmail.com>
+References: <1351717765-29395-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <5091B095.9080704@wwwdotorg.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, u-boot@lists.denx.de, Jerry Van Baren <vanbaren@cideas.com>, David Gibson <david@gibson.dropbear.id.au>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1351717765-29395-1-git-send-email-jhugo@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 01.11.2012 00:13, Stephen Warren wrote:
-> On 10/31/2012 05:00 PM, Daniel Mack wrote:
->> cc devicetree-discuss. Here's a reference to the full thread:
->>
->>   http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/145221/
->>
->> On 26.10.2012 20:39, Stephen Warren wrote:
->>> On 10/24/2012 03:47 AM, Daniel Mack wrote:
->>>> Hi,
->>>>
->>>> a project I'm involved in uses a module/baseboard combo, and components
->>>> on either board are described in DT. I'm currently using separate dts
->>>> files which build upon each other with include statements, which works
->>>> fine for development.
->>>>
->>>> In production though, we will certainly have running changes (and hence
->>>> different versions) over the lifetime of the product for both the
->>>> baseboard and the module, and the hardware has support for identifying
->>>> the versions of both sides at runtime.
->>>>
->>>> So let's say we have n versions of the baseboard and m versions of the
->>>> module, we would much like to only prepare n + m files, instead of n * m
->>>> by pre-compiling every possible combination (some of which may actually
->>>> never occur 'in the wild').
->>>>
->>>> So my question is: is it possible to do that kind of assembly of a
->>>> number of files at runtime in U-Boot? I guess all it takes is merging a
->>>> number of trees together, right? I browsed through the APIs but couldn't
->>>> yet find an clear approach to that kind of problem. If not, what would
->>>> it take to add that functionality? I can probably help with the
->>>> implementation if someone tells me what would be the right way.
->>>
->>> Yes, solving this would be very useful; it's a wide-spread problem.
->>>
->>> Some thoughts though:
->>>
->>> Simply overlaying two DTBs on top of each-other (in the same fashion
->>> that dtc's /include/ statement would do at compile-time) might not be
->>> fully general enough, although perhaps it would be sufficient for your
->>> immediate needs.
->>>
->>> For example, lets say that a GPIO is routed from a device on the main
->>> board to a device on a daughter board, or even from one daughter board
->>> into the main board and back out to a different daughter board. Now,
->>> consider that the different board(s) that are the source of the GPIO
->>> might use completely different SoCs or versions of the SoC, which might
->>> require using a different GPIO specifier to represent the signal. That
->>> means you need to change the .dtb file for the "client" of the GPIO
->>> depending on the HW or .dtb that provides the GPIO. That's certainly not
->>> a simple matter of merging multiple .dtb blobs together.
->>
->> Hmm. After implementing a very simple overlay approach, I can now see
->> your point :) Yes in fact, that's a real problem.
->>
->>> The same issue could easily apply to I2C or SPI buses, chip selects, etc.
->>>
->>> One solution would be to explicitly represent a connector or
->>> connection-point in DT, such that the connector can implement the naming
->>> of all signals that pass through it, and provide a translation point for
->>> hooking the two DT fragments together. This seems within the spirit of DT.
->>
->> Yes, but you still can't handle references that way.
->>
->> Let me try and conclude this for others. Say the "module" tree "A" looks
->> something like this:
->>
->> 	/ {
->> 		multi-regulator {
->> 			vcc1v8: regulator@0 {
->> 				/* ... */
->> 			};
->> 		};
->> 	};
->>
->> ... and the baseboard ("B"), that makes use of (and hence depends on)
->> the module, has something like this:
->>
->> 	/ {
->> 		consumer {
->> 			main-supply = <&vcc1v8>;
->> 		};
->> 	};
->>
->> Now, let's say in a subsequent version of the module, we change whatever
->> provides that supply for 1.8 volts, but the consumer on the baseboard
->> shouldn't care much of course, thanks to all the abstraction layers that
->> we have now in the kernel.
->>
->> However, the problem here is that I can't just compile trees A and B
->> individually into .dtbs that get merged later, because dtc will bail on
->> the unresolved reference of &vcc1v8 of course. And cases like this are
->> the whole reason why I started to think about modularization of trees in
->> the first place.
->>
->> So the simple overlay method doesn't help here at all, even though I can
->> share the code if anyone's interested.
+On 10/31/2012 04:09 PM, Jeffrey Hugo wrote:
+> Restructure of_irq.h so that the public API is defined as function stubs
+> when CONFIG_OF_IRQ is not defined.  This allows client drivers to
+> sucessfully compile in configurations where CONFIG_OF_IRQ is defined and
+> in configurations where it is not defined.
 > 
-> Yes, you've understood me exactly.
-> 
-> The connector-base approach I was thinking about might look (very very)
-> roughly as follows:
-> 
-> main board:
-> 
-> 	/ {
-> 		multi-regulator {
-> 			vcc1v8: regulator@0 {
-> 				/* ... */
-> 			};
-> 		};
-> 		connector {
-> 			compatible = "vendor,board-socket-a";
-> 			vcc1v8-supply = <&vcc1v8>;
-> 		};
-> 	};
-> 
-> child board:
-> 
-> 	/ {
-> 		connector {
-> 			compatible = "vendor,board-plug-a";
-> 			vcc1v8: regulator {
-> 			};
-> 		};
-> 		consumer {
-> 			main-supply = <&vcc1v8>;
-> 		};
-> 	};
 
-... which doesn't eally make the individual bits more readable.
+Do you have an example of where you need this? For many of these drivers
+should not be calling them directly as they are intended for core code.
 
-> ... plus some logic so that the "driver"s for the two connector nodes
-> get linked together, such that the code forwards "requests" for the
-> regulator that the plug receives on to the node for the socket, which
-> then lists the actual provider.
-> 
-> Obviously, the above DT is an extremely rough sketch, and we need to
-> think about:
-> 
-> a) Exactly how the plug/socket get linked together.
-> 
-> b) Can we make a generic driver for the plug/socket, so we don't have to
-> write a driver for each board's connector design. The driver would have
-> to forward all kinds of regulator, GPIO, interrupt, ... requests it
-> receives at one node, on to the node that's listed in the other
-> connector node. Kinda like "ranges" but for arbitrary resources, not
-> just memory maps, in a way.
-
-I really wonder if that's not fixing the wrong end after all. I mean, in
-dts files and using includes, all this works just beautifully, and what
-I really want is the same kind of flexibility in the bootloader.
-
-Any good reason for not doing the dt complilation at runtime? For the
-include issue, one could argue that /include/ statements are not
-allowed, but the same behaviour can be achieved by simply concatinating
-all the dts files right away.
+Rob
 
 
-Daniel
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  include/linux/of_irq.h |   71 +++++++++++++++++++++++++++++++++++------------
+>  1 files changed, 53 insertions(+), 18 deletions(-)
+> 
+> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+> index 1717cd9..1b5771a 100644
+> --- a/include/linux/of_irq.h
+> +++ b/include/linux/of_irq.h
+> @@ -1,8 +1,6 @@
+>  #ifndef __OF_IRQ_H
+>  #define __OF_IRQ_H
+>  
+> -#if defined(CONFIG_OF)
+> -struct of_irq;
+>  #include <linux/types.h>
+>  #include <linux/errno.h>
+>  #include <linux/irq.h>
+> @@ -10,14 +8,6 @@ struct of_irq;
+>  #include <linux/ioport.h>
+>  #include <linux/of.h>
+>  
+> -/*
+> - * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
+> - * implements it differently.  However, the prototype is the same for all,
+> - * so declare it here regardless of the CONFIG_OF_IRQ setting.
+> - */
+> -extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+> -
+> -#if defined(CONFIG_OF_IRQ)
+>  /**
+>   * of_irq - container for device_node/irq_specifier pair for an irq controller
+>   * @controller: pointer to interrupt controller device tree node
+> @@ -57,7 +47,23 @@ static inline int of_irq_map_oldworld(struct device_node *device, int index,
+>  }
+>  #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
+>  
+> +#if defined(CONFIG_OF)
+> +/*
+> + * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
+> + * implements it differently.  However, the prototype is the same for all,
+> + * so declare it here regardless of the CONFIG_OF_IRQ setting.
+> + */
+> +extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
+> +#else /* !CONFIG_OF */
+> +static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+> +						int index)
+> +{
+> +	return 0;
+> +}
+> +#endif /* !CONFIG_OF */
+> +
+>  
+> +#if defined(CONFIG_OF_IRQ)
+>  extern int of_irq_map_raw(struct device_node *parent, const u32 *intspec,
+>  			  u32 ointsize, const u32 *addr,
+>  			  struct of_irq *out_irq);
+> @@ -74,15 +80,44 @@ extern int of_irq_to_resource_table(struct device_node *dev,
+>  extern struct device_node *of_irq_find_parent(struct device_node *child);
+>  
+>  extern void of_irq_init(const struct of_device_id *matches);
+> -
+> -#endif /* CONFIG_OF_IRQ */
+> -
+> -#else /* !CONFIG_OF */
+> -static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
+> -						int index)
+> +#else /* !CONFIG_OF_IRQ */
+> +static inline int of_irq_map_raw(struct device_node *parent, const u32 *intspec,
+> +			  u32 ointsize, const u32 *addr,
+> +			  struct of_irq *out_irq)
+>  {
+>  	return 0;
+>  }
+> -#endif /* !CONFIG_OF */
+> -
+> +static inline int of_irq_map_one(struct device_node *device, int index,
+> +			  struct of_irq *out_irq)
+> +{
+> +	return 0;
+> +}
+> +static inline unsigned int irq_create_of_mapping(struct device_node *controller,
+> +					  const u32 *intspec,
+> +					  unsigned int intsize)
+> +{
+> +	return 0;
+> +}
+> +static inline int of_irq_to_resource(struct device_node *dev, int index,
+> +			      struct resource *r)
+> +{
+> +	return 0;
+> +}
+> +static inline int of_irq_count(struct device_node *dev)
+> +{
+> +	return 0;
+> +}
+> +static inline int of_irq_to_resource_table(struct device_node *dev,
+> +		struct resource *res, int nr_irqs)
+> +{
+> +	return 0;
+> +}
+> +static inline struct device_node *of_irq_find_parent(struct device_node *child)
+> +{
+> +	return NULL;
+> +}
+> +static inline void of_irq_init(const struct of_device_id *matches)
+> +{
+> +}
+> +#endif /* CONFIG_OF_IRQ */
+>  #endif /* __OF_IRQ_H */
+> 
