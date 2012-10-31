@@ -1,214 +1,56 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [Patch v2 4/4] ASoC: sam9g20-wm8731: convert to device tree support
-Date: Wed, 31 Oct 2012 10:42:27 +0100
-Message-ID: <5090F283.8080701@atmel.com>
-References: <1351668420-18447-1-git-send-email-voice.shen@atmel.com> <1351668420-18447-4-git-send-email-voice.shen@atmel.com>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: How about a gpio_get(device *, char *) function?
+Date: Wed, 31 Oct 2012 18:04:09 +0900
+Message-ID: <38620644.IyR5R8rjKP@percival>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <1351668420-18447-4-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: broonie@opensource.wolfsonmicro.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, jm.lin@atmel.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 08:27 AM, Bo Shen :
-> convert sam9g20-wm8731 to device tree support.
-> 
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+Hi,
 
-Seems ok for AT91. But will certainly need more eyes for the audio part...
+Would anyone be opposed to having a gpio_get() function that works similarly 
+to e.g. regulator_get() and clk_get()?
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+I can see some good reasons to have this:
 
-> ---
-> Change since v1:
->   Add sam9g20-wm8731 binding document
-> ---
->  .../bindings/sound/atmel-sam9g20-audio-wm8731.txt  |   21 ++++++++
->  arch/arm/boot/dts/at91sam9g20ek_common.dtsi        |   25 +++++++++-
->  sound/soc/atmel/Kconfig                            |    3 +-
->  sound/soc/atmel/sam9g20_wm8731.c                   |   51 +++++++++++++++++++-
->  4 files changed, 94 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9g20-audio-wm8731.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/atmel-sam9g20-audio-wm8731.txt b/Documentation/devicetree/bindings/sound/atmel-sam9g20-audio-wm8731.txt
-> new file mode 100644
-> index 0000000..04a39dd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/atmel-sam9g20-audio-wm8731.txt
-> @@ -0,0 +1,21 @@
-> +* Atmel sam9g20ek audio complex
-> +
-> +Required properties:
-> +  - compatible: "atmel,at91sam9g20-audio"
-> +  - atmel,model: The user-visible name of this sound complex.
-> +  - atmel,audio-routing: A list of the connections between audio components.
-> +  - atmel,dai: The phandle of the dai based on SSC controller
-> +  - atmel,audio-codec: The phandle of the WM8731 audio codec
-> +
-> +Example:
-> +sound {
-> +	compatible = "atmel,at91sam9g20-audio";
-> +	atmel,model = "wm8731 @ sam9g20ek";
-> +
-> +	atmel,audio-routing =
-> +		"Ext Spk", "LHPOUT",
-> +		"Int MIC", "MICIN";
-> +
-> +	atmel,dai = <&dai>;
-> +	atmel,audio-codec = <&wm8731>;
-> +};
-> diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-> index b06c0db..056ff33 100644
-> --- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-> @@ -51,6 +51,10 @@
->  				atmel,vbus-gpio = <&pioC 5 0>;
->  				status = "okay";
->  			};
-> +
-> +			ssc0: ssc@fffbc000 {
-> +				status = "okay";
-> +			};
->  		};
->  
->  		nand0: nand@40000000 {
-> @@ -114,8 +118,8 @@
->  			reg = <0x50>;
->  		};
->  
-> -		wm8731@1b {
-> -			compatible = "wm8731";
-> +		wm8731: wm8731@1b {
-> +			compatible = "wlf,wm8731";
->  			reg = <0x1b>;
->  		};
->  	};
-> @@ -139,4 +143,21 @@
->  			gpio-key,wakeup;
->  		};
->  	};
-> +
-> +	dai: dai {
-> +		compatible = "atmel,atmel-ssc-dai";
-> +		atmel,dai-master = <&ssc0>;
-> +	};
-> +
-> +	sound {
-> +		compatible = "atmel,at91sam9g20-audio";
-> +		atmel,model = "wm8731 @ sam9g20ek";
-> +
-> +		atmel,audio-routing =
-> +			"Ext Spk", "LHPOUT",
-> +			"Int Mic", "MICIN";
-> +
-> +		atmel,audio-codec = <&wm8731>;
-> +		atmel,dai = <&dai>;
-> +	};
->  };
-> diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-> index 72b09cf..397ec75 100644
-> --- a/sound/soc/atmel/Kconfig
-> +++ b/sound/soc/atmel/Kconfig
-> @@ -16,8 +16,7 @@ config SND_ATMEL_SOC_SSC
->  
->  config SND_AT91_SOC_SAM9G20_WM8731
->  	tristate "SoC Audio support for WM8731-based At91sam9g20 evaluation board"
-> -	depends on ATMEL_SSC && ARCH_AT91SAM9G20 && SND_ATMEL_SOC && \
-> -                   AT91_PROGRAMMABLE_CLOCKS
-> +	depends on ATMEL_SSC && SND_ATMEL_SOC && AT91_PROGRAMMABLE_CLOCKS
->  	select SND_ATMEL_SOC_SSC
->  	select SND_SOC_WM8731
->  	help
-> diff --git a/sound/soc/atmel/sam9g20_wm8731.c b/sound/soc/atmel/sam9g20_wm8731.c
-> index c3e1df5..0a275d0 100644
-> --- a/sound/soc/atmel/sam9g20_wm8731.c
-> +++ b/sound/soc/atmel/sam9g20_wm8731.c
-> @@ -197,13 +197,17 @@ static struct snd_soc_card snd_soc_at91sam9g20ek = {
->  
->  static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
->  {
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *codec_np, *cpu_np;
->  	struct clk *pllb;
->  	struct snd_soc_card *card =&snd_soc_at91sam9g20ek;
->  	int ret;
->  
-> -	if (!(machine_is_at91sam9g20ek() || machine_is_at91sam9g20ek_2mmc()))
-> +	if (!np) {
-> +		if (!(machine_is_at91sam9g20ek()
-> +			|| machine_is_at91sam9g20ek_2mmc()))
->  		return -ENODEV;
-> -
-> +	}
->  	/*
->  	 * Codec MCLK is supplied by PCK0 - set it up.
->  	 */
-> @@ -230,6 +234,40 @@ static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
->  	clk_set_rate(mclk, MCLK_RATE);
->  
->  	card->dev = &pdev->dev;
-> +
-> +	/* Parse device node info */
-> +	if (np) {
-> +		ret = snd_soc_of_parse_card_name(card, "atmel,model");
-> +		if (ret)
-> +			goto err;
-> +
-> +		ret = snd_soc_of_parse_audio_routing(card,
-> +						"atmel,audio-routing");
-> +		if (ret)
-> +			goto err;
-> +
-> +		/* Parse codec dai info */
-> +		at91sam9g20ek_dai.codec_name = NULL;
-> +		codec_np = of_parse_phandle(np, "atmel,audio-codec", 0);
-> +		if (!codec_np) {
-> +			dev_err(&pdev->dev, "codec info missing\n");
-> +			return -EINVAL;
-> +		}
-> +		at91sam9g20ek_dai.codec_of_node = codec_np;
-> +		at91sam9g20ek_dai.cpu_dai_name = NULL;
-> +		at91sam9g20ek_dai.platform_name = NULL;
-> +		cpu_np = of_parse_phandle(np, "atmel,dai", 0);
-> +		if (!cpu_np) {
-> +			dev_err(&pdev->dev, "dai info missing\n");
-> +			return -EINVAL;
-> +		}
-> +		at91sam9g20ek_dai.cpu_of_node = cpu_np;
-> +		at91sam9g20ek_dai.platform_of_node = cpu_np;
-> +
-> +		of_node_put(codec_np);
-> +		of_node_put(cpu_np);
-> +	}
-> +
->  	ret = snd_soc_register_card(card);
->  	if (ret) {
->  		printk(KERN_ERR "ASoC: snd_soc_register_card() failed\n");
-> @@ -255,10 +293,19 @@ static int __devexit at91sam9g20ek_audio_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id sam9g20ek_wm8731_dt_ids[] = {
-> +	{ .compatible = "atmel,at91sam9g20-audio", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sam9g20ek_wm8731_dt_ids);
-> +#endif
-> +
->  static struct platform_driver at91sam9g20ek_audio_driver = {
->  	.driver = {
->  		.name	= "at91sam9g20ek-audio",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(sam9g20ek_wm8731_dt_ids),
->  	},
->  	.probe	= at91sam9g20ek_audio_probe,
->  	.remove	= __devexit_p(at91sam9g20ek_audio_remove),
-> 
+- Less platform data to pass to drivers,
+- Consistency between different subsystems. Regulator, clock, PWM, ... all use 
+this scheme.
+- The "device-specific indirection" could make some DT structures more 
+reusable. Right now the only way to address a GPIO through the DT is via a 
+phandle that includes the GPIO number - thus hard-coded.
 
+The implementation would be rather simple, and the function would just return 
+the right GPIO number (acquired through gpio_request).
 
--- 
-Nicolas Ferre
+Rationale for this: I would like to be able to share power sequences between 
+devices, e.g. to completely extract the per-device resources from the 
+sequence. Every power sequence step references either a regulator, PWM, or 
+GPIO. For regulators and PWMs separation is easy because their subsystems 
+provide regulator_get() and pwm_get() which allow the resource to be 
+referenced by name in the sequence, and resolved to different instances 
+depending on the device. GPIOs, on the other hand, can only be referenced by 
+number - and that makes it necessary to duplicate the sequence's structure in 
+memory for every device that may use it. It if was possible to reference GPIOs 
+by names that resolve to different GPIO numbers according to the device, then 
+the problem would be solved.
+
+There are probably other use-cases that would benefit from this, if you know of 
+one please feel free to share.
+
+Thanks,
+Alex.
