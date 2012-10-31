@@ -1,53 +1,82 @@
 From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH 03/15] SPEAr13xx: Add mach/io.h
-Date: Wed, 31 Oct 2012 16:54:32 +0530
-Message-ID: <50910A70.7050209@st.com>
-References: <cover.1351492562.git.pratyush.anand@st.com> <CAOh2x==1McRP4eNFZa8qH4hjnOr003Ozb6J3XP8B87E9yZB4zw@mail.gmail.com> <508E3A2E.3000204@st.com> <201210302145.47011.arnd@arndb.de>
+Subject: Re: [PATCH 09/15] SPEAr13xx: dts: Fix PCIe core address ranges
+Date: Wed, 31 Oct 2012 16:54:38 +0530
+Message-ID: <50910A76.9030308@st.com>
+References: <cover.1351492562.git.pratyush.anand@st.com> <6ed9683e3149a640b4333cf3039ae31063b23e3b.1351492562.git.pratyush.anand@st.com> <201210302155.05206.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-15"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201210302145.47011.arnd@arndb.de>
+In-Reply-To: <201210302155.05206.arnd@arndb.de>
 Sender: linux-pci-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: viresh kumar <viresh.kumar@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>, spear-devel <spear-devel@list.st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>
+Cc: Shiraz HASHIM <shiraz.hashim@st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, spear-devel <spear-devel@list.st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 3:15 AM, Arnd Bergmann wrote:
+On 10/31/2012 3:25 AM, Arnd Bergmann wrote:
 > On Monday 29 October 2012, Pratyush Anand wrote:
->> Any transaction between 0x80000000 to 0x8FFFFFFF can only be used for
->> any type(IO/MEM/CFG0/CFG1) of PCIe transaction. Therefore , we need to
->> have this mapping in io.h.
+>> sible by
+>> AHB and used to communicate with PCIe devices connected with the host
+>> controller.
+>>
+>> Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
+>> ---
+>>   arch/arm/boot/dts/spear13xx.dtsi |    9 +++++----
+>>   1 files changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
+>> index 9ff4f5f..b7990754 100644
+>> --- a/arch/arm/boot/dts/spear13xx.dtsi
+>> +++ b/arch/arm/boot/dts/spear13xx.dtsi
+>> @@ -76,7 +76,8 @@
+>>                  #size-cells = <1>;
+>>                  compatible = "simple-bus";
+>>                  ranges = <0x50000000 0x50000000 0x10000000
+>> -                         0xb0000000 0xb0000000 0x10000000
+>> +                         0x80000000 0x80000000 0x20000000
+>> +                         0xb0000000 0xb0000000 0x20000000
+>>                            0xd0000000 0xd0000000 0x02000000
+>>                            0xd8000000 0xd8000000 0x01000000
+>>                            0xe0000000 0xe0000000 0x10000000>;
+>> @@ -194,7 +195,7 @@
+>>                  pcie0@b1000000 {
+>>                          compatible = "st,pcie-gadget", "st,pcie-host" ;
+>>                          reg = < 0xb1000000 0x4000
+>> -                               0x80000000 0x2000
+>> +                               0x80000000 0x10000000
+>>                                  0xeb800000 0x1000 >;
+>>                          interrupts = <0 68 0x4>;
+>>                          status = "disabled";
 >
-> No you don't.
+> The code that I'm looking at in the upstream kernel looks very different, so I don't
+> see how this patch would apply. Also, the version that you are patching as well
+> as the changes you do don't actually follow the generic PCI bindings at all
+> and should be done quite differently.
 >
-> The I/O space window will only be in one place on a given system, so you
-> should register that window using pci_ioremap_io() as all the other
 
-Sorry, I could not find pci_ioremap_io function. May be you wanted to 
-refer something else.
-
-In case of SPEAr too , we can reserve first 32Kb per controller as PCIe 
-IO space. So, lets say I fixed address 0x80000000--0x80007FFF for IO 
-transaction. I need to register address range of this window somehow.
-
-But, issue which faced was that I was not able to successfully 
-request_resource(&ioport_resource, &res]) with res.start = 0x80000000 
-and res.end = 0x80007fff.
-
-So, I though first to change IO_SPACE_LIMIT. But I found it not a 
-correct way.
-
-May be I am missing something and not able to get how can I use 
-pci_ioremap_io or something else to register 0x80000000--0x80007FFF 
-window. A reference will help.
+Yes, this was my mistake. I rebased with ST repo. Will send V2 with 
+correct rebase.
 
 
+> Please have a look at how to configure the PCI ranges in the IEEE1275 PCI
+> bindings and in examples you find in arch/powerpc/.
+>
+
+Will look into.
+
+> Most importantly, the compatible string used here can't really refer to both
+> the host and the endpoint mode, you really need separate bindings for those
+> and have only one of the two used in a particular system. What you can do is
+> to put both into the dtsi file and mark them as "disabled" and then enable
+> just one of the two on a given board file.
+
+Yes, we had though of this limitation and had decided to do exactly the 
+same way you have suggested.
+
+thanks for your review comments.
 Regards
 Pratyush
-> modern platforms. There is no excuse for having a per-platform mach/io.h
-> any more and that would prevent you from enabling spear in a multiplatform
-> configuration.
+
 >
 > 	Arnd
 > .
