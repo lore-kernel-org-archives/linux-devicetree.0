@@ -1,188 +1,111 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v3] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Wed, 31 Oct 2012 21:21:04 +0100
-Message-ID: <50918830.9040601@grandegger.com>
-References: <5087EDBF.2040108@gaisler.com> <1351588017-14357-1-git-send-email-andreas@gaisler.com> <508FA6D3.9000809@grandegger.com> <508FFF50.8050900@gaisler.com> <50911EB6.1070105@grandegger.com> <509152D5.2050701@gaisler.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH V3] mmc: omap_hsmmc: Enable HSPE bit for high speed cards
+Date: Wed, 31 Oct 2012 22:16:26 +0200
+Message-ID: <20121031201626.GA28784@arwen.pp.htv.fi>
+References: <1351684656-30275-1-git-send-email-gururaja.hebbar@ti.com>
+ <20121031122639.GA10998@arwen.pp.htv.fi>
+ <CAOyx1LrKBE+xzSRN4F=+e1DuMJL+5SAv-YkJWJdDw8p=kDojmw@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <509152D5.2050701@gaisler.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOyx1LrKBE+xzSRN4F=+e1DuMJL+5SAv-YkJWJdDw8p=kDojmw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Venkatraman S <svenkatr@ti.com>
+Cc: balbi@ti.com, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, cjb@laptop.org, balajitk@ti.com, grant.likely@secretlab.ca, nsekhar@ti.com, sudhakar.raj@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 05:33 PM, Andreas Larsson wrote:
-> On 2012-10-31 13:51, Wolfgang Grandegger wrote:
->> On 10/30/2012 05:24 PM, Andreas Larsson wrote:
->>> On 10/30/2012 11:07 AM, Wolfgang Grandegger wrote:
->>>>> +    /* AHB bus error interrupts (not CAN bus errors) - shut down the
->>>>> +     * device.
->>>>> +     */
->>>>> +    if (sources & (GRCAN_IRQ_TXAHBERR | GRCAN_IRQ_RXAHBERR)) {
->>>>> +        if (sources & GRCAN_IRQ_TXAHBERR) {
->>>>> +            netdev_err(dev, "got AHB bus error on tx\n");
->>>>> +            stats->tx_errors++;
->>>>> +        } else {
->>>>> +            netdev_err(dev, "got AHB bus error on rx\n");
->>>>> +            stats->rx_errors++;
->>>>> +        }
->>>>> +        netdev_err(dev, "halting device\n");
->>>>> +
->>>>> +        /* Prevent anything to be enabled again and halt device */
->>>>> +        SPIN_LOCK(&priv->lock);
->>>>> +        priv->closing = true;
->>>>> +        netif_stop_queue(dev);
->>>>> +        grcan_stop(dev);
->>>>> +        SPIN_UNLOCK(&priv->lock);
->>>>
->>>> Hm, does that really happen? How can the user/app realized the problem
->>>> and recover?
->>>
->>> My understanding of it is that if you get amba bus errors something is
->>> seriously wrong and nothing can be done at driver level to recover.
->>> Shutting down the device is to prevent the driver from spamming console
->>> messages. I used to have a sysfs indication of such errors. Now dmesg is
->>> the way to find out about the problem. The user can always bring the
->>> interface down and up again and try again after such an error.
->>
->> Well, sounds like a fatal error. Did you ever saw it? If that happens
->> frequently, or even once, the device/system seems not really usable.
-> 
-> Fatal and yes if this is ever seen something is very bad with the
-> system. I have never seen it. However the hardware reports if it would
-> happen, so why not try to take care of it in some manner. If this is
-> seen the can device is probably useless but it is possible that the rest
-> of the system might be usable. I don't really know in what circumstances
-> this would trigger.
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK, maybe a more serious message would just be fine.
+Hi,
 
->>>> Furthermore, why is a spin_clock enough here? THe interrupt may run a
->>>> thread.
->>>
->>> It should be enough because the function is only called
->>> directly from the interrupt handler, right? Or did I miss something?
->>
->> The interrupt handler may run as thread, e.g. if the -rt patch has been
->> applied. Therefore it's safer to use the irqsave/restore variants of the
->> spin_lock functions. At least that's my understanding. See also
->> "Documentation/spinlock.txt".
-> 
-> I'll look into this. Seems strange if the same cpu can be interrupted in
-> an interrupt handler to run the very same interrupt handler. Sounds like
-> a horrible situation for any driver that does not lock down most of its
-> interrupt handler. Or maybe there is some situation that I don't foresee.
+On Thu, Nov 01, 2012 at 01:21:36AM +0530, Venkatraman S wrote:
+> On Wed, Oct 31, 2012 at 5:56 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > Hi,
+> >
+> > On Wed, Oct 31, 2012 at 05:27:36PM +0530, Hebbar, Gururaja wrote:
+> >> HSMMC IP on AM33xx need a special setting to handle High-speed cards.
+> >> Other platforms like TI81xx, OMAP4 may need this as-well. This depends
+> >> on the HSMMC IP timing closure done for the high speed cards.
+> >>
+> >> From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
+> >>
+> >> The MMC/SD/SDIO output signals can be driven on either falling edge or
+> >> rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
+> >> to reach better timing performance, and thus to increase data transfer
+> >> frequency.
+> >>
+> >> There are few pre-requisites for enabling the HSPE bit
+> >> - Controller should support High-Speed-Enable Bit and
+> >> - Controller should not be using DDR Mode and
+> >> - Controller should advertise that it supports High Speed in
+> >>   capabilities register and
+> >> - MMC/SD clock coming out of controller > 25MHz
+> >>
+> >> Note:
+> >> The implementation reuses the output of calc_divisor() so as to reduce
+> >> code addition.
+> >>
+> >> Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+> >
+> > this looks good to my eyes, hopefully I haven't missed anything:
+> >
+> > Reviewed-by: Felipe Balbi <balbi@ti.com>
+> >
+>=20
+> Except for the excessively verbose comments which are just duplicating th=
+e code,
+> <Quote>
+> >> +      * Enable High-Speed Support
+> >> +      * Pre-Requisites
+> >> +      *      - Controller should support High-Speed-Enable Bit
+> >> +      *      - Controller should not be using DDR Mode
+> >> +      *      - Controller should advertise that it supports High Speed
+> >> +      *        in capabilities register
+> >> +      *      - MMC/SD clock coming out of controller > 25MHz
+> >> +      */
+> </Quote>
+>=20
+> I'm ok with this patch as well. I'm putting a few patches under test
+> including this one,
+> and will send it to Chris as part of that series.
+> I'll strip out the above mentioned comments, unless there are any
+> objections.
 
-As I said, if you use CONFIG_PREEMPT_RT all interrupt isr will be
-threaded (running by threads).
+please don't. Detailing the pre-requisites for getting HSP mode working
+isn't bad at all. Should someone decide to change the behavior and ends
+up breaking it, the comment will help putting things back together.
 
->>>>> +    priv->can.ctrlmode_supported  =
->>>>> +        CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_ONE_SHOT;
->>>>
->>>> What about triple-sampling?
->>>
->>> That is not supported by the hardware.
-> 
-> Well, now it will be in future versions of the controller, so support is
-> added to the driver.
-> 
-> 
->>>> I curious how the device behaves on bus errors and state changes. Could
->>>> you please show the output of "candump -e any,0:0,#FFFFFFFF" while
->>>> sending a CAN message with no other node on the bus (not connected) and
->>>> with going bus off (by short-circuiting CAN high and low).
->>>
->>>
->>> Here is the output (with long sequences of similar error frames
->>> where only one counter is increasing cut out) from the the upcoming v4.
->>> let me know if you see any problems with this.
->>
->> How did your trigger that sequence? Short-circuit or not cable
->> connected? The latter, I assume, as bus-off is not reached.
-> 
-> Triggered by short-circuiting, just as asked.
+my 2 cents, you've got the final decision though.
 
-I ask for both tests but I missed the bus-off forther down.
+--=20
+balbi
 
->>>
->>>    can0  20000006  [8] 00 00 00 00 00 00 10 00   ERRORFRAME
->>>          lost-arbitration{at bit 0}
->>>          controller-problem{}
->>>          error-counter-tx-rx{{16}{0}}
->>
->> This is most probably an ack slot bus error similar to. You seem not to
->> handle bus errors and it's not a controller problem as the state did not
->> change.
-> 
-> No, the hardware has no support for can-bus error reporting.
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-OK, but why is CAN_ERR_CRTL set?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
->> http://lxr.linux.no/#linux+v3.6.4/drivers/net/can/flexcan.c#L353
->>
->>>    can0  20000004  [8] 00 20 00 00 00 00 88 00   ERRORFRAME
->>>          controller-problem{tx-error-passive}
->>>          error-counter-tx-rx{{136}{0}}
->>
->> OK, a state change to error passive. The device seems not to report
->> changes to error warning.
-> 
-> No, there is no interrupts or anything that alert about the error
-> states. That is why I set the sate based on the error counters in the
-> error handler.
+iQIcBAEBAgAGBQJQkYcaAAoJEIaOsuA1yqRE+iUP/RHTNhUlndpVvGiedfuSlYjl
+33HSSXBgyl+Pu9INdGHf79rbX2y4hpKtOcrMCafG72UPqJXsr4m4vs93yY/RXm5i
+Sz+w9JmlkE7rmO2RKmOyL4faEXf64fGMCvHg6sP7nxcQJk8m350FnZqWYwoi2Ho1
+8M1v4ls3I+7nl+aU2cOUwYLijorKRgU2l3/xqlh5Dj8RSpcQny/Iu1N7VbdhDQuO
+UuxvN2D0Xa5goLxkw5DcluikyfOY0iak2okApBDwsfYYzlQqI/K1XjjO/G30TJoG
+OAiHEopcaH2KJNa2zPyus0w91JJkw0MXV2EP5yS2N3VLzKW/TfD71//q+X330f3m
+sm6fskFR/2j98jW/I7s0hrlwQmepwPKxUAYUfuNiEwitSZgYTBuy9rTuBTrq5zhl
+XKAYN8XMEWH4wM3ReyGgs7UKhplAEVnCgwH9ZWTSQmOa2PBj5yOaVZahA4XPccZx
+6V9iyugmSQB/kBHZ7ua3XWiEExuMqw/bkxaW7k6k2URsU8cbFltVde1D3rPN2RCS
+F9yJo/4Fo/UPmc4BcPj+USl/OWOLxB+qbToq7vZW+KJ8S6rA7R/MidxcLUtZ/+jc
+1GUai4q8ypKOegSSMcepUxQkMDVj5lP2hd9z3YysMnoKTxf24DkyI1UbvRhukE9Z
+4u1yhR3SU6uZX7/5ipT0
+=D5yN
+-----END PGP SIGNATURE-----
 
-Who does trigger the message above?
-
->>>    can0  20000006  [8] 00 20 00 00 00 00 90 00   ERRORFRAME
->>>          lost-arbitration{at bit 0}
->>>          controller-problem{tx-error-passive}
->>>          error-counter-tx-rx{{144}{0}}
->>
->> State changes should be reported only once.
-> 
-> Do you mean that an error message should only be sent on state change?
-
-Yes. On state change or another error, e.g. the lost-arbitration above.
-
->> But it did not change. This
->> is then a bus error (CAN_ERR_PROT | CAN_ERR_BUSERROR). See also above.
->>
->>>    [...]
->>>    can0  20000006  [8] 00 20 00 00 00 00 F0 00   ERRORFRAME
->>>          lost-arbitration{at bit 0}
->>>          controller-problem{tx-error-passive}
->>>          error-counter-tx-rx{{240}{0}}
->>>    can0  20000006  [8] 00 20 00 00 00 00 F8 00   ERRORFRAME
->>>          lost-arbitration{at bit 0}
->>>          controller-problem{tx-error-passive}
->>>          error-counter-tx-rx{{248}{0}}
->>>    can0  20000042  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
->>>          lost-arbitration{at bit 0}
->>>          bus-off
->>>          error-counter-tx-rx{{128}{0}}
->>>    can0  20000006  [8] 00 00 00 00 00 00 18 00   ERRORFRAME
->>>          lost-arbitration{at bit 0}
->>>          controller-problem{}
-
-Obviously the device restarts automatically after bus-off. Can this be
-switched off. The normal procedure is to call "ip ... type can restart"
-or to set "restart-ms" for automatic restart after the specified delay.
-
->> Also a sequence to bus-off including the recovery would be nice.
-
-The sequence with no cable connected would be nice as well.
-
-...
-
-> Thanks for the input! I'll send in v4 so you can see what the code that
-> generated the above.
-
-Please fix the error handling first.
-
-Thanks,
-
-Wolfgang.
-
+--pf9I7BMVVzbSWLtt--
