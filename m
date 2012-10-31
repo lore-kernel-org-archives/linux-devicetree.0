@@ -1,105 +1,127 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v7 8/8] drm_modes: add of_videomode helpers
-Date: Wed, 31 Oct 2012 10:28:08 +0100
-Message-ID: <1351675689-26814-9-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v7 3/8] of: add generic videomode description
+Date: Wed, 31 Oct 2012 10:28:03 +0100
+Message-ID: <1351675689-26814-4-git-send-email-s.trumtrar@pengutronix.de>
 References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
 To: devicetree-discuss@lists.ozlabs.org
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add helper to get drm_display_mode from devicetree.
+Get videomode from devicetree in a format appropriate for the
+backend. drm_display_mode and fb_videomode are supported atm.
+Uses the display signal timings from of_display_timings
 
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 ---
- drivers/gpu/drm/drm_modes.c |   42 ++++++++++++++++++++++++++++++++++++++++++
- include/drm/drmP.h          |    5 +++++
- 2 files changed, 47 insertions(+)
+ drivers/of/Kconfig           |    6 ++++++
+ drivers/of/Makefile          |    1 +
+ drivers/of/of_videomode.c    |   47 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_videomode.h |   15 ++++++++++++++
+ 4 files changed, 69 insertions(+)
+ create mode 100644 drivers/of/of_videomode.c
+ create mode 100644 include/linux/of_videomode.h
 
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index 049624d..d51afe6 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -35,6 +35,7 @@
- #include <linux/export.h>
- #include <drm/drmP.h>
- #include <drm/drm_crtc.h>
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 781e773..0575ffe 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -89,4 +89,10 @@ config OF_DISPLAY_TIMINGS
+ 	help
+ 	  helper to parse display timings from the devicetree
+ 
++config OF_VIDEOMODE
++	def_bool y
++	depends on VIDEOMODE
++	help
++	  helper to get videomodes from the devicetree
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index c8e9603..09d556f 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -12,3 +12,4 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_DISPLAY_TIMINGS) += of_display_timings.o
++obj-$(CONFIG_OF_VIDEOMODE) += of_videomode.o
+diff --git a/drivers/of/of_videomode.c b/drivers/of/of_videomode.c
+new file mode 100644
+index 0000000..91a26fc
+--- /dev/null
++++ b/drivers/of/of_videomode.c
+@@ -0,0 +1,47 @@
++/*
++ * generic videomode helper
++ *
++ * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pengutronix
++ *
++ * This file is released under the GPLv2
++ */
 +#include <linux/of.h>
- #include <linux/videomode.h>
- 
- /**
-@@ -540,6 +541,47 @@ int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmo
- EXPORT_SYMBOL_GPL(videomode_to_display_mode);
- #endif
- 
-+#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+static void dump_drm_displaymode(struct drm_display_mode *m)
-+{
-+	pr_debug("drm_displaymode = %d %d %d %d %d %d %d %d %d\n",
-+		 m->hdisplay, m->hsync_start, m->hsync_end, m->htotal,
-+		 m->vdisplay, m->vsync_start, m->vsync_end, m->vtotal,
-+		 m->clock);
-+}
++#include <linux/of_display_timings.h>
++#include <linux/of_videomode.h>
++#include <linux/export.h>
 +
 +/**
-+ * of_get_drm_display_mode - get a drm_display_mode from devicetree
-+ * @np: device_node with the timing specification
-+ * @dmode: will be set to the return value
-+ * @index: index into the list of display timings in devicetree
-+ * 
++ * of_get_videomode - get the videomode #<index> from devicetree
++ * @np - devicenode with the display_timings
++ * @vm - set to return value
++ * @index - index into list of display_timings
 + * DESCRIPTION:
-+ * This function is expensive and should only be used, if only one mode is to be
-+ * read from DT. To get multiple modes start with of_get_display_timing_list ond
-+ * work with that instead.
-+ */
-+int of_get_drm_display_mode(struct device_node *np, struct drm_display_mode *dmode,
-+			int index)
++ * Get a list of all display timings and put the one
++ * specified by index into *vm. This function should only be used, if
++ * only one videomode is to be retrieved. A driver that needs to work
++ * with multiple/all videomodes should work with
++ * of_get_display_timing_list instead.
++ **/
++int of_get_videomode(struct device_node *np, struct videomode *vm, int index)
 +{
-+	struct videomode vm;
++	struct display_timings *disp;
 +	int ret;
 +
-+	ret = of_get_videomode(np, &vm, index);
++	disp = of_get_display_timing_list(np);
++	if (!disp) {
++		pr_err("%s: no timings specified\n", __func__);
++		return -EINVAL;
++	}
++
++	if (index == OF_USE_NATIVE_MODE)
++		index = disp->native_mode;
++
++	ret = videomode_from_timing(disp, vm, index);
 +	if (ret)
 +		return ret;
 +
-+	videomode_to_display_mode(&vm, dmode);
-+
-+	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
-+		vm.vactive, np->name);
-+	dump_drm_displaymode(dmode);
++	display_timings_release(disp);
 +
 +	return 0;
-+
 +}
-+EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
-+#endif
- /**
-  * drm_mode_set_name - set the name on a mode
-  * @mode: name will be set in this mode
-diff --git a/include/drm/drmP.h b/include/drm/drmP.h
-index e9fa1e3..4f9c44e 100644
---- a/include/drm/drmP.h
-+++ b/include/drm/drmP.h
-@@ -56,6 +56,7 @@
- #include <linux/cdev.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- #include <linux/videomode.h>
- #if defined(__alpha__) || defined(__powerpc__)
- #include <asm/pgtable.h>	/* For pte_wrprotect */
-@@ -1457,6 +1458,10 @@ drm_mode_create_from_cmdline_mode(struct drm_device *dev,
- 
- extern int videomode_to_display_mode(struct videomode *vm,
- 				     struct drm_display_mode *dmode);
-+extern int of_get_drm_display_mode(struct device_node *np,
-+				   struct drm_display_mode *dmode,
-+				   int index);
++EXPORT_SYMBOL_GPL(of_get_videomode);
+diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
+new file mode 100644
+index 0000000..01518e6
+--- /dev/null
++++ b/include/linux/of_videomode.h
+@@ -0,0 +1,15 @@
++/*
++ * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
++ *
++ * videomode of-helpers
++ *
++ * This file is released under the GPLv2
++ */
 +
- /* Modesetting support */
- extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
- extern void drm_vblank_post_modeset(struct drm_device *dev, int crtc);
++#ifndef __LINUX_OF_VIDEOMODE_H
++#define __LINUX_OF_VIDEOMODE_H
++
++#include <linux/videomode.h>
++
++int of_get_videomode(struct device_node *np, struct videomode *vm, int index);
++#endif /* __LINUX_OF_VIDEOMODE_H */
 -- 
 1.7.10.4
