@@ -1,49 +1,44 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC PATCH] dt: describe base reset signal binding
-Date: Tue, 30 Oct 2012 12:02:05 -0600
-Message-ID: <5090161D.2030702@wwwdotorg.org>
-References: <1351028756-22309-1-git-send-email-swarren@wwwdotorg.org> <20121029183233.18780.11964@nucleus>
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: [PATCH] arm-dt: Enable DT proc updates.
+Date: Wed, 31 Oct 2012 17:57:49 +0200
+Message-ID: <1351699069-4661-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121029183233.18780.11964@nucleus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "Rafael J. Wysocki" <rjw@sisk.pl>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@arm.linux.org.uk>
+Cc: Matt Porter <mporter@ti.com>, devicetree-discuss@lists.ozlabs.org, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/29/2012 12:32 PM, Mike Turquette wrote:
-> Quoting Stephen Warren (2012-10-23 14:45:56)
->> What do people think of this? Does it sound like a good idea to go ahead
->> with a reset subsystem? Should we simply add a new API to the common clock
->> subsystem instead (and assume that reset and clock domains match 1:1).
->> Should this be implemented as part of the generic power management domains;
->> see include/linux/pm_domain.h instead?
->>
-> 
-> Hi Stephen,
-> 
-> I'm not sure a "reset subsystem" is necessary, but I also do not like
-> using clocks as the keys for IP reset.
+This simple patch enables dynamic changes of the DT tree on runtime
+to be visible to the device-tree proc interface.
 
-I'm not sure what you're suggesting as an alternative to a reset
-subsystem (or API if you want something that sounds smaller!) :-)
+Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+---
+ arch/arm/include/asm/prom.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> I think it is more common to map IPs to struct device, no?
-
-It is indeed probably common that there's a 1:1 mapping between IP
-blocks and struct device. However, I'm sure there are plenty of
-counter-examples; IP blocks with multiple reset domains (hence struct
-devices that encompass multiple reset domains, or reset domains that
-encompass multiple struct devices), just as there are many examples of
-non-1:1 mappings between struct device and struct clk.
-
-Even ignoring that, we'd still need to API say device_reset(struct
-device *dev) or device_reset(struct device *dev, const char *conid)
-wouldn't we? That's really all I meant by a reset subsystem.
-
-An alternative here would be to simply move Tegra's
-tegra_periph_reset_{de,}assert() function prototypes into a header in
-include/linux rather than mach-tegra/include/mach. However, I imagine at
-least some other SoC needs a similar API, so a common API might be useful?
+diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
+index aeae9c6..6d65ba2 100644
+--- a/arch/arm/include/asm/prom.h
++++ b/arch/arm/include/asm/prom.h
+@@ -11,6 +11,8 @@
+ #ifndef __ASMARM_PROM_H
+ #define __ASMARM_PROM_H
+ 
++#define HAVE_ARCH_DEVTREE_FIXUPS
++
+ #ifdef CONFIG_OF
+ 
+ extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
+-- 
+1.7.12
