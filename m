@@ -1,13 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7 1/8] video: add display_timing struct and helpers
-Date: Wed, 31 Oct 2012 18:09:30 +0100
-Message-ID: <1783334.5mdSA56Pjh@avalon>
-References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de> <1351675689-26814-2-git-send-email-s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v7 4/8] video: add videomode helpers
+Date: Wed, 31 Oct 2012 18:18:10 +0100
+Message-ID: <2142756.CuAAJDxjqo@avalon>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de> <1351675689-26814-5-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1351675689-26814-2-git-send-email-s.trumtrar@pengutronix.de>
+In-Reply-To: <1351675689-26814-5-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
 To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
@@ -15,56 +15,63 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Steffen,
 
-One more comment.
+Thanks for the patch.
 
-On Wednesday 31 October 2012 10:28:01 Steffen Trumtrar wrote:
-> Add display_timing structure and the according helper functions. This allows
-> the description of a display via its supported timing parameters.
-> 
-> Every timing parameter can be specified as a single value or a range
-> <min typ max>.
+On Wednesday 31 October 2012 10:28:04 Steffen Trumtrar wrote:
+> Add helper functions to convert from display timings to a generic videomode
+> structure. This videomode can then be converted to the corresponding
+> subsystem mode representation (e.g. fb_videomode).
 > 
 > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 > ---
->  drivers/video/Kconfig          |    5 +++
->  drivers/video/Makefile         |    1 +
->  drivers/video/display_timing.c |   24 ++++++++++++++
->  include/linux/display_timing.h |   69 +++++++++++++++++++++++++++++++++++++
->  4 files changed, 99 insertions(+)
->  create mode 100644 drivers/video/display_timing.c
->  create mode 100644 include/linux/display_timing.h
+>  drivers/video/Kconfig     |    6 ++++++
+>  drivers/video/Makefile    |    1 +
+>  drivers/video/videomode.c |   44 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/videomode.h |   36 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 87 insertions(+)
+>  create mode 100644 drivers/video/videomode.c
+>  create mode 100644 include/linux/videomode.h
 > 
 > diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> index d08d799..1421fc8 100644
+> index 1421fc8..45dd393 100644
 > --- a/drivers/video/Kconfig
 > +++ b/drivers/video/Kconfig
-> @@ -33,6 +33,11 @@ config VIDEO_OUTPUT_CONTROL
->  	  This framework adds support for low-level control of the video
->  	  output switch.
+> @@ -38,6 +38,12 @@ config DISPLAY_TIMING
+>         help
+>           Say Y here, to use the display timing helpers.
 > 
-> +config DISPLAY_TIMING
-> +       bool "Enable display timings helpers"
+> +config VIDEOMODE
+> +       bool "Enable videomode helpers"
+
+Shouldn't this option should be automatically selected through a select 
+statement in other options that depend on it instead of manually selected ? 
+Same for the DISPLAY_TIMING option in 1/8.
+
+There's so little code here, do you think it would be a good idea to merge 
+patches 1/8 and 4/8 and have a single Kconfig option ?
+
 > +       help
-> +         Say Y here, to use the display timing helpers.
+> +         Say Y here, to use the generic videomode helpers. This allows
+> +	 converting from display timings to fb_videomode and drm_display_mode
 > +
 >  menuconfig FB
 >  	tristate "Support for frame buffer devices"
 >  	---help---
 > diff --git a/drivers/video/Makefile b/drivers/video/Makefile
-> index 23e948e..552c045 100644
+> index 552c045..fc30439 100644
 > --- a/drivers/video/Makefile
 > +++ b/drivers/video/Makefile
-> @@ -167,3 +167,4 @@ obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
-> 
+> @@ -168,3 +168,4 @@ obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
 >  #video output switch sysfs driver
 >  obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) += output.o
-> +obj-$(CONFIG_DISPLAY_TIMING) += display_timing.o
-> diff --git a/drivers/video/display_timing.c b/drivers/video/display_timing.c
+>  obj-$(CONFIG_DISPLAY_TIMING) += display_timing.o
+> +obj-$(CONFIG_VIDEOMODE) += videomode.o
+> diff --git a/drivers/video/videomode.c b/drivers/video/videomode.c
 > new file mode 100644
-> index 0000000..9ccfdb3
+> index 0000000..a9fe010
 > --- /dev/null
-> +++ b/drivers/video/display_timing.c
-> @@ -0,0 +1,24 @@
+> +++ b/drivers/video/videomode.c
+> @@ -0,0 +1,44 @@
 > +/*
 > + * generic display timing functions
 > + *
@@ -73,99 +80,100 @@ On Wednesday 31 October 2012 10:28:01 Steffen Trumtrar wrote:
 > + * This file is released under the GPLv2
 > + */
 > +
-> +#include <linux/slab.h>
+> +#include <linux/kernel.h>
+> +#include <linux/export.h>
+> +#include <linux/errno.h>
 > +#include <linux/display_timing.h>
-> +
-> +void timings_release(struct display_timings *disp)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < disp->num_timings; i++)
-> +		kfree(disp->timings[i]);
-> +}
+> +#include <linux/videomode.h>
 
-This function doesn't seem to be called externally, you can make it static.
+As in 1/8, I try to keep #include's sorted alphabetically, but I won't push 
+for it here either :-)
 
-> +void display_timings_release(struct display_timings *disp)
+> +
+> +int videomode_from_timing(struct display_timings *disp, struct videomode
+> *vm,
+> +			  int index)
+
+unsigned int for index ?
+
 > +{
-> +	timings_release(disp);
-> +	kfree(disp->timings);
+> +	struct display_timing *dt = NULL;
+
+No need to initialize dt to NULL.
+
+> +	dt = display_timings_get(disp, index);
+> +	if (!dt) {
+> +		pr_err("%s: no signal timings found\n", __func__);
+
+I wonder whether this really deserves a pr_err() here. Would this be a caller 
+bug, or can there be valid use cases where this function would return an error 
+?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	vm->pixelclock = display_timing_get_value(&dt->pixelclock, 0);
+> +	vm->hactive = display_timing_get_value(&dt->hactive, 0);
+> +	vm->hfront_porch = display_timing_get_value(&dt->hfront_porch, 0);
+> +	vm->hback_porch = display_timing_get_value(&dt->hback_porch, 0);
+> +	vm->hsync_len = display_timing_get_value(&dt->hsync_len, 0);
+> +
+> +	vm->vactive = display_timing_get_value(&dt->vactive, 0);
+> +	vm->vfront_porch = display_timing_get_value(&dt->vfront_porch, 0);
+> +	vm->vback_porch = display_timing_get_value(&dt->vback_porch, 0);
+> +	vm->vsync_len = display_timing_get_value(&dt->vsync_len, 0);
+> +
+> +	vm->vah = dt->vsync_pol_active;
+> +	vm->hah = dt->hsync_pol_active;
+> +	vm->interlaced = dt->interlaced;
+> +	vm->doublescan = dt->doublescan;
+> +
+> +	return 0;
 > +}
-> diff --git a/include/linux/display_timing.h b/include/linux/display_timing.h
+> +EXPORT_SYMBOL_GPL(videomode_from_timing);
+> diff --git a/include/linux/videomode.h b/include/linux/videomode.h
 > new file mode 100644
-> index 0000000..aa02a12
+> index 0000000..f932147
 > --- /dev/null
-> +++ b/include/linux/display_timing.h
-> @@ -0,0 +1,69 @@
+> +++ b/include/linux/videomode.h
+> @@ -0,0 +1,36 @@
 > +/*
 > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
 > + *
-> + * description of display timings
+> + * generic videomode description
 > + *
 > + * This file is released under the GPLv2
 > + */
 > +
-> +#ifndef __LINUX_DISPLAY_TIMINGS_H
-> +#define __LINUX_DISPLAY_TIMINGS_H
+> +#ifndef __LINUX_VIDEOMODE_H
+> +#define __LINUX_VIDEOMODE_H
 > +
-> +#include <linux/types.h>
+> +#include <linux/display_timing.h>
 > +
-> +struct timing_entry {
-> +	u32 min;
-> +	u32 typ;
-> +	u32 max;
-> +};
+> +struct videomode {
+> +	u32 pixelclock;
+> +	u32 refreshrate;
 > +
-> +struct display_timing {
-> +	struct timing_entry pixelclock;
+> +	u32 hactive;
+> +	u32 hfront_porch;
+> +	u32 hback_porch;
+> +	u32 hsync_len;
 > +
-> +	struct timing_entry hactive;
-> +	struct timing_entry hfront_porch;
-> +	struct timing_entry hback_porch;
-> +	struct timing_entry hsync_len;
+> +	u32 vactive;
+> +	u32 vfront_porch;
+> +	u32 vback_porch;
+> +	u32 vsync_len;
 > +
-> +	struct timing_entry vactive;
-> +	struct timing_entry vfront_porch;
-> +	struct timing_entry vback_porch;
-> +	struct timing_entry vsync_len;
-> +
-> +	unsigned int vsync_pol_active;
-> +	unsigned int hsync_pol_active;
-> +	unsigned int de_pol_active;
-> +	unsigned int pixelclk_pol;
+> +	u32 hah;
+> +	u32 vah;
 > +	bool interlaced;
 > +	bool doublescan;
 > +};
 > +
-> +struct display_timings {
-> +	unsigned int num_timings;
-> +	unsigned int native_mode;
-> +
-> +	struct display_timing **timings;
-> +};
-> +
-> +/* placeholder function until ranges are really needed */
-> +static inline u32 display_timing_get_value(struct timing_entry *te, int
-> index) +{
-> +	return te->typ;
-> +}
-> +
-> +static inline struct display_timing *display_timings_get(struct
-> display_timings *disp, +							 int index)
-> +{
-> +	struct display_timing *dt;
-> +
-> +	if (disp->num_timings > index) {
-> +		dt = disp->timings[index];
-> +		return dt;
-> +	} else
-> +		return NULL;
-> +}
-> +void timings_release(struct display_timings *disp);
-> +void display_timings_release(struct display_timings *disp);
-> +
+> +int videomode_from_timing(struct display_timings *disp, struct videomode
+> *vm,
+> +			  int index);
 > +#endif
-
 -- 
 Regards,
 
