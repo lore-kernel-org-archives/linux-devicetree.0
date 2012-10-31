@@ -1,234 +1,167 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH v2] Input: matrix-keypad - Add device tree support
-Date: Wed, 31 Oct 2012 17:24:31 +0530
-Message-ID: <1351684471-29369-1-git-send-email-anilkumar@ti.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Subject: [PATCH V3] mmc: omap_hsmmc: Enable HSPE bit for high speed cards
+Date: Wed, 31 Oct 2012 17:27:36 +0530
+Message-ID: <1351684656-30275-1-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, grant.likely@secretlab.ca
-Cc: rob.herring@calxeda.com, dgdunix@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, svenkatr@ti.com, cjb@laptop.org, balajitk@ti.com, grant.likely@secretlab.ca
+Cc: nsekhar@ti.com, sudhakar.raj@ti.com, gururaja.hebbar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to matrix keypad driver and usage details
-are added to device tree documentation. Driver was tested on AM335x
-EVM.
+HSMMC IP on AM33xx need a special setting to handle High-speed cards.
+Other platforms like TI81xx, OMAP4 may need this as-well. This depends
+on the HSMMC IP timing closure done for the high speed cards.
 
-Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+>From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
+
+The MMC/SD/SDIO output signals can be driven on either falling edge or
+rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
+to reach better timing performance, and thus to increase data transfer
+frequency.
+
+There are few pre-requisites for enabling the HSPE bit
+- Controller should support High-Speed-Enable Bit and
+- Controller should not be using DDR Mode and
+- Controller should advertise that it supports High Speed in
+  capabilities register and
+- MMC/SD clock coming out of controller > 25MHz
+
+Note:
+The implementation reuses the output of calc_divisor() so as to reduce
+code addition.
+
+Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
 ---
-These patches were tested on AM335x-EVM with DT patches, DT data
-patches will be submitted once this is accepted.
+Rebased on mmc-next (v3.7.0-rc1)
+Only Build tested since EDMA support for AM335x is not yet added
 
-Changes from v1:
-	- Incorporated Rob's review comments on v1
-	  * Changed matix-keypad compatible to gpio-matrix-keypad
-	  * Removed unnecessary props (num of gpios)
-	  * Used of_match_ptr()
-	- Removed first patch based on Dmitry's comments on v1
+Changes in V2
+	- Added note in commit message about code re-use
+	- replaced ((a & BIT(n) == BIT(n))) with (a & BIT(n)) since
+	  effectively both are same.
 
- .../devicetree/bindings/input/matrix-keypad.txt    |   46 +++++++++
- drivers/input/keyboard/matrix_keypad.c             |  107 +++++++++++++++++++-
- 2 files changed, 152 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/matrix-keypad.txt
+Changes in V3
+	- use symbolic define for hardcoded value (25000000)
+	- use of_property_read_bool() instead of of_find_property()
 
-diff --git a/Documentation/devicetree/bindings/input/matrix-keypad.txt b/Documentation/devicetree/bindings/input/matrix-keypad.txt
-new file mode 100644
-index 0000000..199558c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/matrix-keypad.txt
-@@ -0,0 +1,46 @@
-+* GPIO driven matrix keypad device tree bindings
-+
-+GPIO driven matrix keypad is used to interface a SoC with a matrix keypad.
-+The matrix keypad supports multiple row and column lines, a key can be
-+placed at each intersection of a unique row and a unique column. The matrix
-+keypad can sense a key-press and key-release by means of GPIO lines and
-+report the event using GPIO interrupts to the cpu.
-+
-+Required Properties:
-+- compatible:		Should be "gpio-matix-keypad"
-+- row-gpios:		List of gpios used as row lines. The gpio specifier
-+			for this property depends on the gpio controller to
-+			which these row lines are connected.
-+- col-gpios:		List of gpios used as column lines. The gpio specifier
-+			for this property depends on the gpio controller to
-+			which these column lines are connected.
-+
-+Optional Properties:
-+- linux,no-autorepeat:	do no enable autorepeat feature.
-+- linux,wakeup:		use any event on keypad as wakeup event.
-+- debounce-delay-ms:	debounce interval in milliseconds
-+- col-scan-delay-us:	delay, measured in microseconds, that is needed
-+			before we can scan keypad after activating column gpio
-+- clustered-irq:	have clustered irq number
-+- clustered-irq-flags:	have clustered irq flags
-+
-+Example:
-+	matrix-keypad {
-+		compatible = "gpio-matrix-keypad";
-+		debounce-delay-ms = <5>;
-+		col-scan-delay-us = <2>;
-+
-+		row-gpios = <&gpio2 25 0
-+			     &gpio2 26 0
-+			     &gpio2 27 0>;
-+
-+		col-gpios = <&gpio2 21 0
-+			     &gpio2 22 0>;
-+
-+		linux,keymap = <0x0000008B
-+				0x0100009E
-+				0x02000069
-+				0x0001006A
-+				0x0101001C
-+				0x0201006C>;
-+	};
-diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-index 18b7237..960e9b05 100644
---- a/drivers/input/keyboard/matrix_keypad.c
-+++ b/drivers/input/keyboard/matrix_keypad.c
-@@ -23,6 +23,9 @@
- #include <linux/gpio.h>
- #include <linux/input/matrix_keypad.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
+:100644 100644 be76a23... ed271fc... M	Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+:100644 100644 8b4e4f2... 346af5b... M	arch/arm/plat-omap/include/plat/mmc.h
+:100644 100644 5434fd8... 4f7fcee... M	drivers/mmc/host/omap_hsmmc.c
+ .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    1 +
+ arch/arm/plat-omap/include/plat/mmc.h              |    1 +
+ drivers/mmc/host/omap_hsmmc.c                      |   31 +++++++++++++++++++-
+ 3 files changed, 32 insertions(+), 1 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+index be76a23..ed271fc 100644
+--- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
++++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
+@@ -19,6 +19,7 @@ ti,dual-volt: boolean, supports dual voltage cards
+ "supply-name" examples are "vmmc", "vmmc_aux" etc
+ ti,non-removable: non-removable slot (like eMMC)
+ ti,needs-special-reset: Requires a special softreset sequence
++ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
  
- struct matrix_keypad {
- 	const struct matrix_keypad_platform_data *pdata;
-@@ -394,6 +397,96 @@ static void matrix_keypad_free_gpio(struct matrix_keypad *keypad)
- 		gpio_free(pdata->col_gpios[i]);
+ Example:
+ 	mmc1: mmc@0x4809c000 {
+diff --git a/arch/arm/plat-omap/include/plat/mmc.h b/arch/arm/plat-omap/include/plat/mmc.h
+index 8b4e4f2..346af5b 100644
+--- a/arch/arm/plat-omap/include/plat/mmc.h
++++ b/arch/arm/plat-omap/include/plat/mmc.h
+@@ -126,6 +126,7 @@ struct omap_mmc_platform_data {
+ 		/* we can put the features above into this variable */
+ #define HSMMC_HAS_PBIAS		(1 << 0)
+ #define HSMMC_HAS_UPDATED_RESET	(1 << 1)
++#define HSMMC_HAS_HSPE_SUPPORT	(1 << 2)
+ 		unsigned features;
+ 
+ 		int switch_pin;			/* gpio (card detect) */
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+index 5434fd8..4f7fcee 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -63,6 +63,7 @@
+ 
+ #define VS18			(1 << 26)
+ #define VS30			(1 << 25)
++#define HSS			(1 << 21)
+ #define SDVS18			(0x5 << 9)
+ #define SDVS30			(0x6 << 9)
+ #define SDVS33			(0x7 << 9)
+@@ -90,6 +91,7 @@
+ #define MSBS			(1 << 5)
+ #define BCE			(1 << 1)
+ #define FOUR_BIT		(1 << 1)
++#define HSPE			(1 << 2)
+ #define DDR			(1 << 19)
+ #define DW8			(1 << 5)
+ #define CC			0x1
+@@ -113,6 +115,7 @@
+ #define MMC_TIMEOUT_MS		20
+ #define OMAP_MMC_MIN_CLOCK	400000
+ #define OMAP_MMC_MAX_CLOCK	52000000
++#define HSMMC_CLKOUT	25000000
+ #define DRIVER_NAME		"omap_hsmmc"
+ 
+ /*
+@@ -495,6 +498,7 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+ 	struct mmc_ios *ios = &host->mmc->ios;
+ 	unsigned long regval;
+ 	unsigned long timeout;
++	unsigned long clkdiv;
+ 
+ 	dev_vdbg(mmc_dev(host->mmc), "Set clock to %uHz\n", ios->clock);
+ 
+@@ -502,7 +506,8 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+ 
+ 	regval = OMAP_HSMMC_READ(host->base, SYSCTL);
+ 	regval = regval & ~(CLKD_MASK | DTO_MASK);
+-	regval = regval | (calc_divisor(host, ios) << 6) | (DTO << 16);
++	clkdiv = calc_divisor(host, ios);
++	regval = regval | (clkdiv << 6) | (DTO << 16);
+ 	OMAP_HSMMC_WRITE(host->base, SYSCTL, regval);
+ 	OMAP_HSMMC_WRITE(host->base, SYSCTL,
+ 		OMAP_HSMMC_READ(host->base, SYSCTL) | ICE);
+@@ -513,6 +518,27 @@ static void omap_hsmmc_set_clock(struct omap_hsmmc_host *host)
+ 		&& time_before(jiffies, timeout))
+ 		cpu_relax();
+ 
++	/*
++	 * Enable High-Speed Support
++	 * Pre-Requisites
++	 *	- Controller should support High-Speed-Enable Bit
++	 *	- Controller should not be using DDR Mode
++	 *	- Controller should advertise that it supports High Speed
++	 *	  in capabilities register
++	 *	- MMC/SD clock coming out of controller > 25MHz
++	 */
++	if ((mmc_slot(host).features & HSMMC_HAS_HSPE_SUPPORT) &&
++	    (ios->timing != MMC_TIMING_UHS_DDR50) &&
++	    (OMAP_HSMMC_READ(host->base, CAPA) & HSS)) {
++		regval = OMAP_HSMMC_READ(host->base, HCTL);
++		if (clkdiv && (clk_get_rate(host->fclk)/clkdiv) > HSMMC_CLKOUT)
++			regval |= HSPE;
++		else
++			regval &= ~HSPE;
++
++		OMAP_HSMMC_WRITE(host->base, HCTL, regval);
++	}
++
+ 	omap_hsmmc_start_clock(host);
  }
  
-+#ifdef CONFIG_OF
-+static
-+struct matrix_keypad_platform_data *matrix_keypad_parse_dt(struct device *dev)
-+{
-+	struct matrix_keypad_platform_data *pdata;
-+	struct matrix_keymap_data *keymap_data;
-+	struct device_node *np = dev->of_node;
-+	unsigned int *row_gpios;
-+	unsigned int *col_gpios;
-+	struct property *prop;
-+	int key_count = 0, length, row, col;
-+	uint32_t *keymap;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "could not allocate memory for platform data\n");
-+		return NULL;
-+	}
-+
-+	pdata->num_row_gpios = of_gpio_named_count(np, "row-gpios");
-+	pdata->num_col_gpios = of_gpio_named_count(np, "col-gpios");
-+	if (!pdata->num_row_gpios || !pdata->num_col_gpios) {
-+		dev_err(dev, "number of keypad rows/columns not specified\n");
-+		return NULL;
-+	}
-+
-+	keymap_data = devm_kzalloc(dev, sizeof(*keymap_data), GFP_KERNEL);
-+	if (!keymap_data) {
-+		dev_err(dev, "could not allocate memory for keymap data\n");
-+		return NULL;
-+	}
-+	pdata->keymap_data = keymap_data;
-+
-+	prop = of_find_property(np, "linux,keymap", &length);
-+	if (!prop)
-+		return NULL;
-+
-+	key_count = length / sizeof(u32);
-+	keymap_data->keymap_size = key_count;
-+	keymap = devm_kzalloc(dev, sizeof(uint32_t) * key_count, GFP_KERNEL);
-+	if (!keymap) {
-+		dev_err(dev, "could not allocate memory for keymap\n");
-+		return NULL;
-+	}
-+	keymap_data->keymap = keymap;
-+
-+	of_property_read_u32_array(np, "linux,keymap", keymap, key_count);
-+
-+	if (of_get_property(np, "linux,no-autorepeat", NULL))
-+		pdata->no_autorepeat = true;
-+	if (of_get_property(np, "linux,wakeup", NULL))
-+		pdata->wakeup = true;
-+	if (of_get_property(np, "gpio-activelow", NULL))
-+		pdata->active_low = true;
-+
-+	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
-+	of_property_read_u32(np, "col-scan-delay-us",
-+						&pdata->col_scan_delay_us);
-+	of_property_read_u32(np, "clustered-irq", &pdata->clustered_irq);
-+	of_property_read_u32(np, "clustered-irq-flags",
-+						&pdata->clustered_irq_flags);
-+
-+	row_gpios = devm_kzalloc(dev, sizeof(unsigned int) *
-+					pdata->num_row_gpios, GFP_KERNEL);
-+	col_gpios = devm_kzalloc(dev, sizeof(unsigned int) *
-+					pdata->num_col_gpios, GFP_KERNEL);
-+	if (!row_gpios || !col_gpios) {
-+		dev_err(dev, "could not allocate memory for gpios\n");
-+		return NULL;
-+	}
-+
-+	for (row = 0; row < pdata->num_row_gpios; row++)
-+		row_gpios[row] = of_get_named_gpio(np, "row-gpios", row);
-+
-+	for (col = 0; col < pdata->num_col_gpios; col++)
-+		col_gpios[col] = of_get_named_gpio(np, "col-gpios", col);
-+
-+	pdata->row_gpios = row_gpios;
-+	pdata->col_gpios = col_gpios;
-+
-+	return pdata;
-+}
-+#else
-+static
-+struct matrix_keypad_platform_data *matrix_keypad_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- {
- 	const struct matrix_keypad_platform_data *pdata;
-@@ -404,7 +497,10 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- 	size_t keymap_size;
- 	int err;
+@@ -1709,6 +1735,9 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+ 	if (!of_property_read_u32(np, "max-frequency", &max_freq))
+ 		pdata->max_freq = max_freq;
  
--	pdata = pdev->dev.platform_data;
-+	if (pdev->dev.of_node)
-+		pdata = matrix_keypad_parse_dt(&pdev->dev);
-+	else
-+		pdata = pdev->dev.platform_data;
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "no platform data defined\n");
- 		return -EINVAL;
-@@ -488,6 +584,14 @@ static int __devexit matrix_keypad_remove(struct platform_device *pdev)
- 	return 0;
++	if (of_property_read_bool(np, "ti,needs-special-hs-handling"))
++		pdata->slots[0].features |= HSMMC_HAS_HSPE_SUPPORT;
++
+ 	return pdata;
  }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id matrix_keypad_dt_match[] = {
-+	{ .compatible = "gpio-matrix-keypad" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, matrix_keypad_dt_match);
-+#endif
-+
- static struct platform_driver matrix_keypad_driver = {
- 	.probe		= matrix_keypad_probe,
- 	.remove		= __devexit_p(matrix_keypad_remove),
-@@ -495,6 +599,7 @@ static struct platform_driver matrix_keypad_driver = {
- 		.name	= "matrix-keypad",
- 		.owner	= THIS_MODULE,
- 		.pm	= &matrix_keypad_pm_ops,
-+		.of_match_table = of_match_ptr(matrix_keypad_dt_match),
- 	},
- };
- module_platform_driver(matrix_keypad_driver);
+ #else
 -- 
-1.7.9.5
+1.7.0.4
 
