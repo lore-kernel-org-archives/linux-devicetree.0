@@ -1,79 +1,61 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Thu, 1 Nov 2012 11:48:13 +0900
-Message-ID: <17133691.o4iLtizVux@percival>
-References: <38620644.IyR5R8rjKP@percival> <509142F5.4010307@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: Merging device trees at runtime for module-based
+	systems
+Date: Wed, 31 Oct 2012 22:36:08 -0600
+Message-ID: <5091FC38.2020806@wwwdotorg.org>
+References: <5087B919.2010006@gmail.com> <508AD8F9.8030105@wwwdotorg.org>
+	<5091AD78.3060701@gmail.com> <5091BAAA.5010809@firmworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <509142F5.4010307-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <5091BAAA.5010809@firmworks.com>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: u-boot@lists.denx.de, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 31 October 2012 23:25:41 Stephen Warren wrote:
-> On 10/31/2012 03:04 AM, Alex Courbot wrote:
-> > Hi,
-> > 
-> > Would anyone be opposed to having a gpio_get() function that works
-> > similarly to e.g. regulator_get() and clk_get()?
+On 10/31/2012 05:56 PM, Mitch Bradley wrote:
+> On 10/31/2012 1:00 PM, Daniel Mack wrote:
+>> cc devicetree-discuss. Here's a reference to the full thread:
+>>
+>>   http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/145221/
+>>
+>> On 26.10.2012 20:39, Stephen Warren wrote:
+>>> On 10/24/2012 03:47 AM, Daniel Mack wrote:
+>>>> Hi,
+>>>>
+>>>> a project I'm involved in uses a module/baseboard combo, and components
+>>>> on either board are described in DT. I'm currently using separate dts
+>>>> files which build upon each other with include statements, which works
+>>>> fine for development.
+>>>>
+>>>> In production though, we will certainly have running changes (and hence
+>>>> different versions) over the lifetime of the product for both the
+>>>> baseboard and the module, and the hardware has support for identifying
+>>>> the versions of both sides at runtime.
+...
+>> I start to believe that the cleanest solution to this would be to
+>> have full DTC functionality in U-Boot and compile the tree
 > 
-> One major stumbling block is that with device tree, each individual
-> binding gets to decide on the specific naming of the propert{y,ies} that
-> define the GPIO(s) for the device, and so there's no way to provide a
-> generic implementation of that function.
+> ... which is exactly the way that Open Firmware does it, since the
+> invention of the device tree.  The model is that the boot firmware,
+> which needs to know the system configuration to do its job anyway,
+> exports that configuration via the device tree.
 
-The idea is not to make every GPIOs declared so far accessible through this 
-function - as you point out this would be tricky at best - but to also define 
-how they should be properly declared (similarly to regulators and pals) for 
-bindings that need to use get_gpio(). Existing bindings and drivers that can 
-live without it should not be modified. And now that you mention it, the end of 
-the GPIO declaration anarchy would be another point in favor of this feature.
-
-Now I am aware that almost every subsystem comes with its own scheme for 
-declaring resources in the DT and there will be an long fight to decide which 
-one should apply here, but I'm willing to take that road.
-
-> Related, I've always wished that DT nodes looked like:
-> 
-> device {
->     reg = <...>;
->     compatible = <...>;
->     resources {
->         pwms = <...>;
->         regulators = <...>;
->         clocks = <...>;
->         gpios = <...>;
->         other-devices = <...>; /* for custom API dependencies */
->     };
->     config {
->         /* device-specific properties */
->     };
->     child-busses {
->         0 = { ... };
->         1 = { ... };
->     };
-> };
-> 
-> ... specifically so that all resource allocation, and perhaps even child
-> bus enumeration, could be completely standardized in the DT/device core.
-> This could also feed into deferred probe, which could then be purely
-> implemented inside the DT/driver core. However, that'd require something
-> incompatible like "device tree 2.0"
-
-I think this would be awesome. This could even probably be implemented without 
-breaking things, if everything takes place inside well-defined subnodes of the 
-device.
-
-Alex.
+Doesn't OF generate the DT from internal data structures (although I
+don't know where those come from...), whereas what Daniel mentions above
+is more like the bootloader having access to a bunch of .dts fragments,
+selecting the appropriate subset of those to use, parsing them into an
+internal data structure (i.e. running dtc), and then generating a DTB
+from it. The overall result is that the bootloader causes a DTB to be
+generated at run-time, so at that level it's the same, but the
+implementation seems pretty different.
