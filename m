@@ -1,113 +1,90 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v7 1/8] video: add display_timing struct and helpers
-Date: Thu, 1 Nov 2012 21:08:42 +0100
-Message-ID: <20121101200842.GA13137@avionic-0098.mockup.avionic-design.de>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v7 2/8] of: add helper to parse display timings
+Date: Thu, 1 Nov 2012 21:15:10 +0100
+Message-ID: <20121101201510.GB13137@avionic-0098.mockup.avionic-design.de>
 References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
- <1351675689-26814-2-git-send-email-s.trumtrar@pengutronix.de>
+ <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3835309913153741951=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1351675689-26814-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
 
---===============3835309913153741951==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Content-Disposition: inline
-
-
---ReaqsoxgOBHFXBhH
+--H+4ONPRPur6+Ovig
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Oct 31, 2012 at 10:28:01AM +0100, Steffen Trumtrar wrote:
+On Wed, Oct 31, 2012 at 10:28:02AM +0100, Steffen Trumtrar wrote:
 [...]
-> +void timings_release(struct display_timings *disp)
-> +{
-> +	int i;
+> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
+[...]
+> @@ -0,0 +1,139 @@
+> +display-timings bindings
+> +==================
 > +
-> +	for (i = 0; i < disp->num_timings; i++)
-> +		kfree(disp->timings[i]);
-> +}
-> +
-> +void display_timings_release(struct display_timings *disp)
-> +{
-> +	timings_release(disp);
-> +	kfree(disp->timings);
-> +}
+> +display-timings-node
+> +------------
 
-I'm not quite sure I understand how these are supposed to be used. The
-only use-case where a struct display_timings is dynamically allocated is
-for the OF helpers. In that case, wouldn't it be more useful to have a
-function that frees the complete structure, including the struct
-display_timings itself? Something like this, which has all of the above
-rolled into one:
+Maybe extend the underline to the length of the section and subsection
+titles respectively?
 
-	void display_timings_free(struct display_timings *disp)
-	{
-		if (disp->timings) {
-			unsigned int i;
+> +struct display_timing
+> +===================
 
-			for (i = 0; i < disp->num_timings; i++)
-				kfree(disp->timings[i]);
-		}
+Same here.
 
-		kfree(disp->timings);
-		kfree(disp);
-	}
+> +config OF_DISPLAY_TIMINGS
+> +	def_bool y
+> +	depends on DISPLAY_TIMING
 
-Is there a use-case where a struct display_timings is not dynamically
-allocated? The only one I can think of is where it is defined as
-platform data, but in that case you don't want to be calling
-display_timing_release() on it anyway.
+Maybe this should be called OF_DISPLAY_TIMING to match DISPLAY_TIMING,
+or rename DISPLAY_TIMING to DISPLAY_TIMINGS for the sake of consistency?
+
+> +/**
+> + * of_get_display_timing_list - parse all display_timing entries from a device_node
+> + * @np: device_node with the subnodes
+> + **/
+> +struct display_timings *of_get_display_timing_list(struct device_node *np)
+
+Perhaps this would better be named of_get_display_timings() to match the
+return type?
+
+> +	disp = kzalloc(sizeof(*disp), GFP_KERNEL);
+
+Shouldn't you be checking this for allocation failures?
+
+> +	disp->timings = kzalloc(sizeof(struct display_timing *)*disp->num_timings,
+> +				GFP_KERNEL);
+
+Same here.
 
 Thierry
 
---ReaqsoxgOBHFXBhH
+--H+4ONPRPur6+Ovig
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQktbKAAoJEN0jrNd/PrOhRqIQAJto5l4A26U8q1YNvZK1MaEv
-EuDvLFbR9zeRbL8/R+N1H0UXI2H8jpmrE2s3GddV41Xe124lJ7ps4gvjolFUiDFq
-OAxu6mVnnM4epoSzk2CgfwzNW3M+5e9Gi9g9/vGtlSoFf4UjhnP1TagSO0JXCoSS
-/tQB186aI9LU6KJGt4N7IlxDwllQm3w/SfH0PTK6QF5aCf8yRexkxuFcZZKvgw/R
-DZzSMJlUdDyI806P+V32JIcvRFGD1HYa4M7JXlY7U+jZ4wZ0MaJJNUnc/vK75rtP
-X6+RW7Kwe3bhbDUiHmWCfdO6LvpYuT7/ZRFY5NwtWmJUCrxlvd40xjBzVq2LmGQB
-cpVvY9fi8vBOp+/6RsLcmRfKmr1PO+czM+DDlS4MyiEX/D7psQQcNAOYkZz66LMg
-8teolpkyWmv/aAmx1HK+nW8siBDTNQk8I0t0DGl3PBobSkA/fBYnj8A1cTueqNvu
-aqeceAMJ2zdtv58agTT12zXV9oZf8tocZvtKRrG4/V+wgqWOZg3qLRX8xChRlF3T
-jG1LZOwgQufzQxAqqN+CKL+dBklK3WZ2q19CZhRdBePuY0eGvQ6kIVtpKINkRFgj
-W3+8I3/AOr1EOa+wLoqMlzY8qWNEy85hr9hdgS7rLqvkGomTAurpKlWth0dGsLEU
-EewZs/bEukAfWXwzHOxQ
-=T5rS
+iQIcBAEBAgAGBQJQkthOAAoJEN0jrNd/PrOh5oQQAKMOCiP5VHl1/kmm6+vDnRYl
+cLpDZftk5BNOTWtHtCBLZXZSvao+77Q33rTdsNBX+2R+5EIhE39DttNdGGnmIvuX
+XLqSbeswInP+HrsPgLJAG85V0lwgJxE8MlLe9L2Gb2P1tcgeTdcMbNPAMQ6d5caI
+fUS+b6oCg3yBqcHA93LQbKM7bhO3v5PoaQ4KVc/cK13+ohz/X+ekqm7e8EZG635T
+SN1HkQPH9vwcxPRa0Tr1W2fyYQXeT+dY76tRCQkgWkAVXRtbroqVtSIc7lOpm9Ix
+E9LXXs09zu0MGWzxXm1bzoBBqcIsu8KonImVwlQTyop2UJ5vmFjvSoPUm/20vyM4
+xe3Mne4y7NDQeWaGNWm3F16C74+WDS+SJskrY3FJk3uKNVwp7eCBtAaFDJRc2vfC
+767YAtBst6ZcS+CGoApywbJttZDqRwLvSMG3RXaectXoS4/32fZQDODCIAlnOy8E
+RzKQ9BTwsZjLP0vn7NLmo45yw4Lglc55hCEIsiOcxNw4TypSWDNDH9z9g4l4estN
+AyizcdnlQEkjv16Iv4npffmIp/soCFJdgBMb/60Z5fP9uiES2E/y5euWocOOmB5y
+0dfNJ7NhL9lLoAm7yUWOtTm4yW592WLFPIinXKxQ2yRysGWNRLVwJSQ8Zg25C/OL
+kGdy3JzMseTNog2fKV9e
+=EPmH
 -----END PGP SIGNATURE-----
 
---ReaqsoxgOBHFXBhH--
-
---===============3835309913153741951==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3835309913153741951==--
+--H+4ONPRPur6+Ovig--
