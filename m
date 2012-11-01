@@ -1,151 +1,99 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH] of/irq: stub out public API
-Date: Thu, 01 Nov 2012 10:50:55 -0600
-Message-ID: <5092A86F.3010603@codeaurora.org>
-References: <1351717765-29395-1-git-send-email-jhugo@codeaurora.org> <5091B63E.7090208@gmail.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: [GIT PULL] ARM: OMAP: DTS for 3.8
+Date: Thu, 1 Nov 2012 18:14:15 +0100
+Message-ID: <5092ADE7.1030709@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5091B63E.7090208@gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: "tony@atomide.com" <tony@atomide.com>, "Guiriec, Sebastien" <s-guiriec@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jon Hunter <jon-hunter@ti.com>, "AnilKumar, Chimata" <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 5:37 PM, Rob Herring wrote:
-> On 10/31/2012 04:09 PM, Jeffrey Hugo wrote:
->> Restructure of_irq.h so that the public API is defined as function stubs
->> when CONFIG_OF_IRQ is not defined.  This allows client drivers to
->> sucessfully compile in configurations where CONFIG_OF_IRQ is defined and
->> in configurations where it is not defined.
->>
-> Do you have an example of where you need this? For many of these drivers
-> should not be calling them directly as they are intended for core code.
->
-> Rob
-I'm sorry, I did not realize this was a private API not intended for 
-outside drivers.  I've found an alternate API that I can use to 
-accomplish the same tasks.  Please disregard this change, and thank you 
-for your time.
->
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>   include/linux/of_irq.h |   71 +++++++++++++++++++++++++++++++++++------------
->>   1 files changed, 53 insertions(+), 18 deletions(-)
->>
->> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
->> index 1717cd9..1b5771a 100644
->> --- a/include/linux/of_irq.h
->> +++ b/include/linux/of_irq.h
->> @@ -1,8 +1,6 @@
->>   #ifndef __OF_IRQ_H
->>   #define __OF_IRQ_H
->>   
->> -#if defined(CONFIG_OF)
->> -struct of_irq;
->>   #include <linux/types.h>
->>   #include <linux/errno.h>
->>   #include <linux/irq.h>
->> @@ -10,14 +8,6 @@ struct of_irq;
->>   #include <linux/ioport.h>
->>   #include <linux/of.h>
->>   
->> -/*
->> - * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
->> - * implements it differently.  However, the prototype is the same for all,
->> - * so declare it here regardless of the CONFIG_OF_IRQ setting.
->> - */
->> -extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
->> -
->> -#if defined(CONFIG_OF_IRQ)
->>   /**
->>    * of_irq - container for device_node/irq_specifier pair for an irq controller
->>    * @controller: pointer to interrupt controller device tree node
->> @@ -57,7 +47,23 @@ static inline int of_irq_map_oldworld(struct device_node *device, int index,
->>   }
->>   #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
->>   
->> +#if defined(CONFIG_OF)
->> +/*
->> + * irq_of_parse_and_map() is used by all OF enabled platforms; but SPARC
->> + * implements it differently.  However, the prototype is the same for all,
->> + * so declare it here regardless of the CONFIG_OF_IRQ setting.
->> + */
->> +extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
->> +#else /* !CONFIG_OF */
->> +static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
->> +						int index)
->> +{
->> +	return 0;
->> +}
->> +#endif /* !CONFIG_OF */
->> +
->>   
->> +#if defined(CONFIG_OF_IRQ)
->>   extern int of_irq_map_raw(struct device_node *parent, const u32 *intspec,
->>   			  u32 ointsize, const u32 *addr,
->>   			  struct of_irq *out_irq);
->> @@ -74,15 +80,44 @@ extern int of_irq_to_resource_table(struct device_node *dev,
->>   extern struct device_node *of_irq_find_parent(struct device_node *child);
->>   
->>   extern void of_irq_init(const struct of_device_id *matches);
->> -
->> -#endif /* CONFIG_OF_IRQ */
->> -
->> -#else /* !CONFIG_OF */
->> -static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
->> -						int index)
->> +#else /* !CONFIG_OF_IRQ */
->> +static inline int of_irq_map_raw(struct device_node *parent, const u32 *intspec,
->> +			  u32 ointsize, const u32 *addr,
->> +			  struct of_irq *out_irq)
->>   {
->>   	return 0;
->>   }
->> -#endif /* !CONFIG_OF */
->> -
->> +static inline int of_irq_map_one(struct device_node *device, int index,
->> +			  struct of_irq *out_irq)
->> +{
->> +	return 0;
->> +}
->> +static inline unsigned int irq_create_of_mapping(struct device_node *controller,
->> +					  const u32 *intspec,
->> +					  unsigned int intsize)
->> +{
->> +	return 0;
->> +}
->> +static inline int of_irq_to_resource(struct device_node *dev, int index,
->> +			      struct resource *r)
->> +{
->> +	return 0;
->> +}
->> +static inline int of_irq_count(struct device_node *dev)
->> +{
->> +	return 0;
->> +}
->> +static inline int of_irq_to_resource_table(struct device_node *dev,
->> +		struct resource *res, int nr_irqs)
->> +{
->> +	return 0;
->> +}
->> +static inline struct device_node *of_irq_find_parent(struct device_node *child)
->> +{
->> +	return NULL;
->> +}
->> +static inline void of_irq_init(const struct of_device_id *matches)
->> +{
->> +}
->> +#endif /* CONFIG_OF_IRQ */
->>   #endif /* __OF_IRQ_H */
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Tony,
+
+Please pull some more OMAP5 and AM33xx data for 3.8.
+The branch contains as well some cleanup and the omap3-beagle support since the previous one was in fact a beagle-xm.
+
+Thanks,
+Benoit
 
 
-Jeffrey Hugo
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation.
+The following changes since commit 8f0d8163b50e01f398b14bcd4dc039ac5ab18d64:
+  Linus Torvalds (1):
+        Linux 3.7-rc3
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.8/dts
+
+Afzal Mohammed (1):
+      ARM: dts: AM33XX: Add rtc node
+
+AnilKumar Ch (8):
+      ARM: dts: AM33XX: Add device tree OPP table
+      ARM: dts: AM33XX: Add basic pinctrl device tree data
+      ARM: dts: AM33XX: Add D_CAN device tree data
+      ARM: dts: AM33XX: Add lis331dlh device tree data to am335x-evm
+      ARM: dts: AM33XX: Add temperature sensor device tree data to am335x-evm
+      ARM: dts: AM33XX: Add tsl2550 ambient light sensor DT data
+      ARM: dts: Add am335x-evmsk.dts
+      Documentation: dt: i2c: Update trivial-devices list
+
+Benoit Cousson (2):
+      ARM: dts: OMAP: Move interrupt-parent to the root node to avoid duplication
+      ARM: dts: OMAP: Rename pandaES and var_som for consistency
+
+Jon Hunter (6):
+      ARM: dts: Add omap3-beagle.dts
+      ARM: dts: OMAP: Add timer nodes
+      ARM: dts: OMAP: Add counter-32k nodes
+      ARM: dts: OMAP4: Update timer addresses
+      ARM: dts: OMAP5: Add timer nodes
+      ARM: dts: OMAP5: Add counter node
+
+Kishon Vijay Abraham I (3):
+      ARM: dts: Add twl6030-usb data
+      ARM: dts: Add twl4030-usb data
+      ARM: dts: OMAP4: add *reg* property for ocp2scp
+
+Philip, Avinash (1):
+      ARM: dts: AM33XX: Add SPI node
+
+Sebastien Guiriec (4):
+      ARM: dts: omap5: Update GPIO with address space and interrupts
+      ARM: dts: omap5: Update I2C with address space and interrupts
+      ARM: dts: omap5: Update UART with address space and interrupts
+      ARM: dts: omap5: Update MMC with address space and interrupts
+
+ .../devicetree/bindings/arm/omap/counter.txt       |   15 ++
+ .../devicetree/bindings/arm/omap/timer.txt         |   31 ++++
+ .../devicetree/bindings/bus/omap-ocp2scp.txt       |   18 ++
+ .../devicetree/bindings/i2c/trivial-devices.txt    |    2 +
+ arch/arm/boot/dts/Makefile                         |    5 +-
+ arch/arm/boot/dts/am335x-bone.dts                  |    6 +
+ arch/arm/boot/dts/am335x-evm.dts                   |   55 +++++++
+ arch/arm/boot/dts/am335x-evmsk.dts                 |  166 ++++++++++++++++++++
+ arch/arm/boot/dts/am33xx.dtsi                      |  139 +++++++++++++++--
+ arch/arm/boot/dts/omap2.dtsi                       |   86 ++++++++++
+ arch/arm/boot/dts/omap2420.dtsi                    |   16 ++-
+ arch/arm/boot/dts/omap2430.dtsi                    |   19 ++-
+ arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 -
+ arch/arm/boot/dts/omap3-beagle.dts                 |   67 ++++++++
+ arch/arm/boot/dts/omap3.dtsi                       |  107 ++++++++++++-
+ .../dts/{omap4-pandaES.dts => omap4-panda-es.dts}  |    0
+ arch/arm/boot/dts/omap4-panda.dts                  |    4 +
+ arch/arm/boot/dts/omap4-sdp.dts                    |    4 +
+ .../dts/{omap4-var_som.dts => omap4-var-som.dts}   |    0
+ arch/arm/boot/dts/omap4.dtsi                       |  105 ++++++++++++-
+ arch/arm/boot/dts/omap5.dtsi                       |  156 +++++++++++++++++-
+ arch/arm/boot/dts/twl4030.dtsi                     |   27 +++
+ arch/arm/boot/dts/twl6030.dtsi                     |    5 +
+ 23 files changed, 989 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/counter.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/omap/timer.txt
+ create mode 100644 arch/arm/boot/dts/am335x-evmsk.dts
+ create mode 100644 arch/arm/boot/dts/omap3-beagle.dts
+ rename arch/arm/boot/dts/{omap4-pandaES.dts => omap4-panda-es.dts} (100%)
+ rename arch/arm/boot/dts/{omap4-var_som.dts => omap4-var-som.dts} (100%)
