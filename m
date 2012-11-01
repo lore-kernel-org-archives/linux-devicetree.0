@@ -1,95 +1,108 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: DT: of_platform_populate Vs of_platform_bus_probe.
-Date: Thu, 01 Nov 2012 10:10:13 +0000
-Message-ID: <50924A85.1080907@st.com>
-References: <50913BC3.7090103@st.com> <5091420D.8050603@gmail.com>
-Reply-To: srinivas.kandagatla@st.com
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [RESEND PATCH 05/11] ARM: OMAP: USB: Host: usb host Device tree
+ node Adaptation
+Date: Thu, 1 Nov 2012 12:21:04 +0200
+Message-ID: <20121101102104.GB410@arwen.pp.htv.fi>
+References: <1351693612-23314-1-git-send-email-keshava_mgowda@ti.com>
+ <1351693612-23314-6-git-send-email-keshava_mgowda@ti.com>
+ <20121031182903.GN12739@atomide.com>
+ <A5063B091B3D3440AC5162AF1265EB00F724DD@DBDE01.ent.ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5091420D.8050603@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <A5063B091B3D3440AC5162AF1265EB00F724DD@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Munegowda, Keshava" <keshava_mgowda@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "Cousson, Benoit" <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31/10/12 15:21, Rob Herring wrote:
-> On 10/31/2012 09:54 AM, Srinivas KANDAGATLA wrote:
->> Hi All, 
->> I have few queries on of_platform_populate and of_platform_bus_probe functions.
->>
->> Use-case is, I want to explicitly register platform devices from some nodes at post-core or late-init level(like child@1).
->> And I don't want of_platform_populate to register platform devices for that node again, so I pass "simple-bus" in match-table.
->> Problem is that exiting code for of_platform_populate probes it.
->>
->> Looking at the function documentation, which states
->> of_platform_bus_probe will only create children of the root which are
->> selected by the @matches argument.
->>
->> of_platform_populate walks the device tree and creates devices from
->> nodes.  It differs in that it follows the modern convention of requiring
->> all device nodes to have a 'compatible' property, and it is suitable for
->> creating devices which are children of the root node.
->>
->> Lets say If we call of_platform_populate(NULL, match_table, NULL, NULL)
->> on a device trees like the below with
->> struct of_device_id match_table[] = {
->>     { .compatible = "simple-bus", }
->>     {}
->> };
->>
->> parent@0{
->>     compatible    = "xxx,parent1", "simple-bus";
->>     ...
->>     child@0 {
->>         compatible    = "xxx,child0", "simple-bus";
-> Well simple-bus here is generally not right unless you want to create
-> devices for children of child@0.
->
->>         ...
->>     };
->>     child@1 {
->>         compatible    = "xxx,child1";
->>         ...
->>     };
->>     child@2 {
->>         compatible    = "xxx,child2", "simple-bus";
->>         ...
->>     };
->> };
->>
->> of_platform_bus_probe would create platform-devices for parent@0,
->> child@0 and child@2
->> where as
->> of_platform_populate would create platform-devices for parent@0,
->> child@0, child@1 and child@2 nodes.
->>
->> So the question is
->> why do we need to have @matches argument to of_platform_populate in the
->> first place, if it creates all the devices by walking the dt nodes?
-> The matches is for matching buses, not child devices. 
+--IiVenqGWf+H9Y6IX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> It is assumed you
-> want to create devices for all 1st level children.
-Thankyou Rob,
-my issue solved with the above understanding.
-I was creating device nodes without any parent, which is why
-of_platform_populate is probing them.
+On Thu, Nov 01, 2012 at 09:19:48AM +0100, Munegowda, Keshava wrote:
+>=20
+> ________________________________________
+> From: Tony Lindgren [tony@atomide.com]
+> Sent: Wednesday, October 31, 2012 11:59 PM
+> To: Munegowda, Keshava
+> Cc: linux-omap@vger.kernel.org; devicetree-discuss@lists.ozlabs.org; linu=
+x-doc@vger.kernel.org; linux-usb@vger.kernel.org; Balbi, Felipe; sameo@linu=
+x.intel.com; Cousson, Benoit
+> Subject: Re: [RESEND PATCH 05/11] ARM: OMAP: USB: Host: usb host Device t=
+ree node Adaptation
+>=20
+> * Keshava Munegowda <keshava_mgowda@ti.com> [121031 07:29]:
+> > The USB2 Host device node is extracted and used in the probe
+> > of the driver to initialize the usb ports and controller. The
+> > platform specific initialization is also performed.
+> >
+> > Signed-off-by: Keshava Munegowda <keshava_mgowda@ti.com>
+> > ---
+> >  arch/arm/mach-omap2/usb-host.c         |    2 -
+> >  drivers/mfd/omap-usb-host.c            |  163 +++++++++++++++++++++++-=
+--------
+> >  include/linux/platform_data/usb-omap.h |   19 +++-
+> >  3 files changed, 133 insertions(+), 51 deletions(-)
+> >
+> > diff --git a/arch/arm/mach-omap2/usb-host.c b/arch/arm/mach-omap2/usb-h=
+ost.c
+> > index d1dbe12..239c175 100644
+> > --- a/arch/arm/mach-omap2/usb-host.c
+> > +++ b/arch/arm/mach-omap2/usb-host.c
+> > @@ -502,8 +502,6 @@ void __init usbhs_init(const struct usbhs_omap_boar=
+d_data *pdata)
+> >       }
+> >       ehci_data.phy_reset =3D pdata->phy_reset;
+> >       ohci_data.es2_compatibility =3D pdata->es2_compatibility;
+> > -     usbhs_data.ehci_data =3D &ehci_data;
+> > -     usbhs_data.ohci_data =3D &ohci_data;
+> >
+> >       if (cpu_is_omap34xx()) {
+> >               setup_ehci_io_mux(pdata->port_mode);
+>=20
+> Just checking.. Have you tested that these patches also
+> still work without device tree?
+>=20
+> Regards,
+>=20
+> Tony
+>=20
+>=20
+> No ! with out device tree enabled , these patches does not work.
+> do I need to make a code such way that it works with and without
+> device tree..?
 
->> It is bit confusing, As some platforms use of_platform_populate(NULL,
->> of_default_bus_match_table, NULL, NULL) assuming that only matching
->> nodes will end up having platform device.
->> Also
->> some platforms use of_platform_bus_probe(NULL, match_table, NULL), 
->> where match table is of_default_bus_match_table.
-> There should be no new users of of_platform_bus_probe. It is there for
-> historical reasons on PPC.
->
->> Am not 100% sure what is the right solution, but I think lot of platforms would want behavior like of_platform_bus_probe which takes lookups aswell.
->> If the suggestion is to use of_platform_bus_probe, Which I can't use as It does not take Auxdata(lookups).
-> of_platform_populate is what you should use.
->
-> Rob
->
->
+yes. OMAP3/4 still have lots of legacy platform_data-only board support
+;-)
+
+--=20
+balbi
+
+--IiVenqGWf+H9Y6IX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQkk0QAAoJEIaOsuA1yqRE270QAIvA3qpyNwsLTdhrD/TLERE4
+iGEwNIzYWuoC/3UO3IoyATe8CbfINLFcI0LGFSweHMRd5HEYW59gtGmmddl15oIz
+VcR2I1dYU8m6jCxnAt688L0MoBUjI9RJcip4Y0j03YCvSZfGFSX5uDzZcnvTAn3t
+znRXMfv9XoYBys8xv4N1zajc1wiC6liu531BZ5Yj9bvhVZNdAEvWm4cBhe9aiCdh
+Lp3k1JKUxi8ah0OwmYZ8/p0YBLA7PzukH2a0cBHgB123Y6i4iIXw7Yf/+B0qI21O
+zhVpGTy3NdjXUzhtiaNIO0hPKmLgwKoazElnJWm12yuPlJPNKJ8TFMddfes8jdg8
+G3mw3WxsFbjieZMGG64KgNYYag34FYnNN05SYceeEjeKAEceYDLi4NptAbsKmOf/
+uMwY+YzM+kME9/SJNF8zJiCFF4UjC7WlRxfL5E0L/YXNK1jfKqN4409YNJrPsojF
+QCUQkgAv7ffg9SsuCAnylPcH0QORXGLzLBVqh22+lOUl0fpket/HYS70ul3/6UAJ
+6r3j+LVN6ARp+8ki8nHx9Ctyd9cVafg2/EBNmFWQNz/rFghWu+AQqiLltm5MymSD
+iVu+R0eCtBhkeLABFAy5RZGxQenJDLDasFYCh3XTKfMzKumA0Rbv33I6JoO4l4/5
+9HZtC9tfwliwHwHkxl1I
+=wZ/b
+-----END PGP SIGNATURE-----
+
+--IiVenqGWf+H9Y6IX--
