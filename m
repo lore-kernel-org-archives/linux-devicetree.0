@@ -1,33 +1,41 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v7 2/8] of: add helper to parse display timings
-Date: Thu, 01 Nov 2012 11:52:19 -0600
-Message-ID: <5092B6D3.8040501@wwwdotorg.org>
-References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de> <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH v2 3/4] ARM: OMAP: gpmc: don't create devices from initcall on DT
+Date: Thu,  1 Nov 2012 19:36:09 +0100
+Message-ID: <1351794970-14675-4-git-send-email-zonque@gmail.com>
+References: <1351794970-14675-1-git-send-email-zonque@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1351794970-14675-1-git-send-email-zonque@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-omap@vger.kernel.org, jon-hunter@ti.com, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 03:28 AM, Steffen Trumtrar wrote:
+On DT driven boards, the gpmc node will match the driver. Hence, there's
+no need to do that unconditionally from the initcall.
 
-Patch description? The patch defines the DT binding as well, which isn't
-mentioned in the patch subject.
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+---
+ arch/arm/mach-omap2/gpmc.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> new file mode 100644
-> index 0000000..04c94a3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/display-timings.txt
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index 60f1cce..1dcb30c 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -844,6 +844,13 @@ static int __init omap_gpmc_init(void)
+ 	struct platform_device *pdev;
+ 	char *oh_name = "gpmc";
+ 
++	/*
++	 * if the board boots up with a populated DT, do not
++	 * manually add the device from this initcall
++	 */
++	if (of_have_populated_dt())
++		return -ENODEV;
++
+ 	oh = omap_hwmod_lookup(oh_name);
+ 	if (!oh) {
+ 		pr_err("Could not look up %s\n", oh_name);
+-- 
+1.7.11.7
 
-> +Usage in backend
-> +================
-
-Everything before this point in the binding docs looks reasonable to me.
-Everything after this point is Linux-specific/internal implementation
-detail, and hence shouldn't be in the binding document.
-
-I only read the DT binding.
