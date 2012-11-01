@@ -1,58 +1,41 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH v1 06/40] of/vendor-prefixes: add Imagination Technologies
-Date: Wed, 31 Oct 2012 20:38:39 -0500
-Message-ID: <5091D29F.1050100@gmail.com>
-References: <1351700061-7203-1-git-send-email-james.hogan@imgtec.com> <1351700061-7203-7-git-send-email-james.hogan@imgtec.com>
+Subject: Re: [PATCH] arm-dt: Enable DT proc updates.
+Date: Wed, 31 Oct 2012 21:04:24 -0500
+Message-ID: <5091D8A8.9010307@gmail.com>
+References: <1351699069-4661-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1351700061-7203-7-git-send-email-james.hogan@imgtec.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: linux-arch@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1351699069-4661-1-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Matt Porter <mporter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 11:13 AM, James Hogan wrote:
-> The "powervr" prefix which is currently described as "Imagination
-> Technologies" isn't really appropriate for non-PowerVR hardware, so
-> change the description of "powervr" to "PowerVR (Imagination
-> Technologies Ltd.)", and add a separate "img" prefix for "Imagination
-> Technologies Ltd.".
+On 10/31/2012 10:57 AM, Pantelis Antoniou wrote:
+> This simple patch enables dynamic changes of the DT tree on runtime
+> to be visible to the device-tree proc interface.
 > 
-> Signed-off-by: James Hogan <james.hogan@imgtec.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    3 ++-
->  1 files changed, 2 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index db4d3af..5a94721b 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -24,6 +24,7 @@ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
->  hp	Hewlett Packard
->  ibm	International Business Machines (IBM)
->  idt	Integrated Device Technologies, Inc.
-> +img	Imagination Technologies Ltd.
->  intercontrol	Inter Control Group
->  linux	Linux-specific binding
->  marvell	Marvell Technology Group Ltd.
-> @@ -34,7 +35,7 @@ nintendo	Nintendo
->  nvidia	NVIDIA
->  nxp	NXP Semiconductors
->  picochip	Picochip Ltd
-> -powervr	Imagination Technologies
-> +powervr	PowerVR (Imagination Technologies Ltd.)
-
-Perhaps you should add "deprecated, use img"
-
-Otherwise, looks fine and I assume you are going to merge with the rest
-of the series:
+> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
 
 Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-Rob
+> ---
+>  arch/arm/include/asm/prom.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
+> index aeae9c6..6d65ba2 100644
+> --- a/arch/arm/include/asm/prom.h
+> +++ b/arch/arm/include/asm/prom.h
+> @@ -11,6 +11,8 @@
+>  #ifndef __ASMARM_PROM_H
+>  #define __ASMARM_PROM_H
+>  
+> +#define HAVE_ARCH_DEVTREE_FIXUPS
+> +
+>  #ifdef CONFIG_OF
+>  
+>  extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
+> 
