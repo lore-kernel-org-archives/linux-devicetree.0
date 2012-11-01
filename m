@@ -1,63 +1,68 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 09/14] fdt: Add polarity-aware gpio functions
- to fdtdec
-Date: Wed, 31 Oct 2012 22:50:19 -0600
-Message-ID: <5091FF8B.7040109@wwwdotorg.org>
-References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
-	<1351218671-15228-10-git-send-email-sjg@chromium.org>
-	<1351235842.20572.10.camel@tellur>
-	<CAPnjgZ0x=1mgwZ049amB1G4ADM_bBke3TY33Co7cNnHhc3V5zg@mail.gmail.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [U-Boot] Merging device trees at runtime for module-based systems
+Date: Wed, 31 Oct 2012 19:02:54 -1000
+Message-ID: <5092027E.1060806@firmworks.com>
+References: <5087B919.2010006@gmail.com> <508AD8F9.8030105@wwwdotorg.org>
+ <5091AD78.3060701@gmail.com> <5091BAAA.5010809@firmworks.com>
+ <5091FC38.2020806@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <CAPnjgZ0x=1mgwZ049amB1G4ADM_bBke3TY33Co7cNnHhc3V5zg@mail.gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Sean Paul <seanpaul@chromium.org>, Tom Rini <trini@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5091FC38.2020806-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/31/2012 05:59 PM, Simon Glass wrote:
-> Hi,
-> 
-> On Fri, Oct 26, 2012 at 12:17 AM, Lucas Stach <dev@lynxeye.de> wrote:
->> Am Donnerstag, den 25.10.2012, 19:31 -0700 schrieb Simon Glass:
->>> From: Sean Paul <seanpaul@chromium.org>
+On 10/31/2012 6:36 PM, Stephen Warren wrote:
+> On 10/31/2012 05:56 PM, Mitch Bradley wrote:
+>> On 10/31/2012 1:00 PM, Daniel Mack wrote:
+>>> cc devicetree-discuss. Here's a reference to the full thread:
 >>>
->>> Add get and set gpio functions to fdtdec that take into account the
->>> polarity field in fdtdec_gpio_state.flags.
+>>>   http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/145221/
 >>>
->> In another thread Stephen Warren and I came to the conclusion that we
->> most likely should remove this polarity flag from the GPIO bindings.
+>>> On 26.10.2012 20:39, Stephen Warren wrote:
+>>>> On 10/24/2012 03:47 AM, Daniel Mack wrote:
+>>>>> Hi,
+>>>>>
+>>>>> a project I'm involved in uses a module/baseboard combo, and components
+>>>>> on either board are described in DT. I'm currently using separate dts
+>>>>> files which build upon each other with include statements, which works
+>>>>> fine for development.
+>>>>>
+>>>>> In production though, we will certainly have running changes (and hence
+>>>>> different versions) over the lifetime of the product for both the
+>>>>> baseboard and the module, and the hardware has support for identifying
+>>>>> the versions of both sides at runtime.
+> ...
+>>> I start to believe that the cleanest solution to this would be to
+>>> have full DTC functionality in U-Boot and compile the tree
 >>
->> Currently it is only for the USB VBUS GPIO which should move over to
->> regulators once they land in U-Boot. Do you have any other applications
->> for this flag, so we might reconsider removing it?
->>
+>> ... which is exactly the way that Open Firmware does it, since the
+>> invention of the device tree.  The model is that the boot firmware,
+>> which needs to know the system configuration to do its job anyway,
+>> exports that configuration via the device tree.
 > 
-> Well, any time you have a flag which is inverted in meaning, it can be
-> useful. We have several switches on the board which can be active high
-> or low, and polarity is used for that.
-> 
-> In fact, it would be nice IMO to be able to specify input/output as
-> well. I know the exynos bindings do this. There is a noddy function
-> called fdtdec_setup_gpio() in U-Boot which really needs to be sorted
-> out. I discussed with Stephen some time ago how GPIOs should be
-> SOC-specific and it should be possible to set up a GPIO with a single
-> call, as Linux does. The more information there is in the binding, the
-> more it can do automatically.
-> 
-> Does the Tegra Linux GPIO binding still have a polarity?
+> Doesn't OF generate the DT from internal data structures (although I
+> don't know where those come from...), whereas what Daniel mentions above
+> is more like the bootloader having access to a bunch of .dts fragments,
+> selecting the appropriate subset of those to use, parsing them into an
+> internal data structure (i.e. running dtc), and then generating a DTB
+> from it. The overall result is that the bootloader causes a DTB to be
+> generated at run-time, so at that level it's the same, but the
+> implementation seems pretty different.
 
-Yes it does, although in practice it can't be used (and hence should
-really be removed), since not all GPIO bindings have such a flag, so
-there is always a need for a separate property to indicate the polarity
-(c.f. fixed-regulator with GPIO control bindings for example).
+Yes, which is why I cut the cited sentence at the place I did (before
+the part about dts fragments).
+
+> 
