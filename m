@@ -1,27 +1,71 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH 04/15] SPEAr13xx: Add PCIe Root Complex driver support
-Date: Thu, 1 Nov 2012 12:55:52 +0530
-Message-ID: <50922400.4090502@st.com>
-References: <cover.1351492562.git.pratyush.anand@st.com> <201210302220.23690.arnd@arndb.de> <50910A64.7040306@st.com> <201210312200.59324.arnd@arndb.de>
+From: "Munegowda, Keshava" <keshava_mgowda-l0cyMroinI0@public.gmane.org>
+Subject: RE: [RESEND PATCH 05/11] ARM: OMAP: USB: Host: usb host Device tree
+ node Adaptation
+Date: Thu, 1 Nov 2012 08:19:48 +0000
+Message-ID: <A5063B091B3D3440AC5162AF1265EB00F724DD@DBDE01.ent.ti.com>
+References: <1351693612-23314-1-git-send-email-keshava_mgowda@ti.com>
+ <1351693612-23314-6-git-send-email-keshava_mgowda@ti.com>,<20121031182903.GN12739@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-15"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201210312200.59324.arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Shiraz HASHIM <shiraz.hashim@st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, spear-devel <spear-devel@list.st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121031182903.GN12739-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/1/2012 3:30 AM, Arnd Bergmann wrote:
-> Thanks for the quick replies. I hope I managed to explain the I/O space accesses
-> now.
 
-Yes, I understood now :)
+________________________________________
+From: Tony Lindgren [tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org]
+Sent: Wednesday, October 31, 2012 11:59 PM
+To: Munegowda, Keshava
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Balbi, Felipe; sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org; Cousson, Benoit
+Subject: Re: [RESEND PATCH 05/11] ARM: OMAP: USB: Host: usb host Device tree node Adaptation
 
-Also looked into pci_ioremap_io. Things are clear now.
+* Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org> [121031 07:29]:
+> The USB2 Host device node is extracted and used in the probe
+> of the driver to initialize the usb ports and controller. The
+> platform specific initialization is also performed.
+>
+> Signed-off-by: Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/mach-omap2/usb-host.c         |    2 -
+>  drivers/mfd/omap-usb-host.c            |  163 +++++++++++++++++++++++---------
+>  include/linux/platform_data/usb-omap.h |   19 +++-
+>  3 files changed, 133 insertions(+), 51 deletions(-)
+>
+> diff --git a/arch/arm/mach-omap2/usb-host.c b/arch/arm/mach-omap2/usb-host.c
+> index d1dbe12..239c175 100644
+> --- a/arch/arm/mach-omap2/usb-host.c
+> +++ b/arch/arm/mach-omap2/usb-host.c
+> @@ -502,8 +502,6 @@ void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
+>       }
+>       ehci_data.phy_reset = pdata->phy_reset;
+>       ohci_data.es2_compatibility = pdata->es2_compatibility;
+> -     usbhs_data.ehci_data = &ehci_data;
+> -     usbhs_data.ohci_data = &ohci_data;
+>
+>       if (cpu_is_omap34xx()) {
+>               setup_ehci_io_mux(pdata->port_mode);
 
-Will send V2 after incorporating all comments.
+Just checking.. Have you tested that these patches also
+still work without device tree?
 
-Regards
-Pratyush
+Regards,
+
+Tony
+
+
+No ! with out device tree enabled , these patches does not work.
+do I need to make a code such way that it works with and without
+device tree..?
+
+regards
+keshava
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
