@@ -1,49 +1,27 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] usb: host: tegra: fix potential NULL pointer dereference
-Date: Thu, 1 Nov 2012 14:57:38 +0800
-Message-ID: <CAPgLHd9551qZuTY7uKGYT7OXYeGE7LL+fo7ynwDv9msHKRYkKw@mail.gmail.com>
+From: Pratyush Anand <pratyush.anand@st.com>
+Subject: Re: [PATCH 04/15] SPEAr13xx: Add PCIe Root Complex driver support
+Date: Thu, 1 Nov 2012 12:55:52 +0530
+Message-ID: <50922400.4090502@st.com>
+References: <cover.1351492562.git.pratyush.anand@st.com> <201210302220.23690.arnd@arndb.de> <50910A64.7040306@st.com> <201210312200.59324.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-15"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201210312200.59324.arnd@arndb.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Shiraz HASHIM <shiraz.hashim@st.com>, "viresh.linux@gmail.com" <viresh.linux@gmail.com>, spear-devel <spear-devel@list.st.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "olof@lixom.net" <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On 11/1/2012 3:30 AM, Arnd Bergmann wrote:
+> Thanks for the quick replies. I hope I managed to explain the I/O space accesses
+> now.
 
-The dereference should be moved below the NULL test.
+Yes, I understood now :)
 
-dpatch engine is used to auto generate this patch.
-(https://github.com/weiyj/dpatch)
+Also looked into pci_ioremap_io. Things are clear now.
 
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
- drivers/usb/host/ehci-tegra.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Will send V2 after incorporating all comments.
 
-diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
-index 6223d17..e40fcb0 100644
---- a/drivers/usb/host/ehci-tegra.c
-+++ b/drivers/usb/host/ehci-tegra.c
-@@ -776,9 +776,13 @@ fail_clk:
- static int tegra_ehci_remove(struct platform_device *pdev)
- {
- 	struct tegra_ehci_hcd *tegra = platform_get_drvdata(pdev);
--	struct usb_hcd *hcd = ehci_to_hcd(tegra->ehci);
-+	struct usb_hcd *hcd;
-+
-+	if (tegra == NULL)
-+		return -EINVAL;
- 
--	if (tegra == NULL || hcd == NULL)
-+	hcd = ehci_to_hcd(tegra->ehci);
-+	if (hcd == NULL)
- 		return -EINVAL;
- 
- 	pm_runtime_get_sync(&pdev->dev);
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Pratyush
