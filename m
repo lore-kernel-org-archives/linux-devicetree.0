@@ -1,62 +1,29 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Patch v2 3/4] ASoC: atmel-ssc-dai: register platform from DAIs
-Date: Thu, 1 Nov 2012 14:43:15 +0000
-Message-ID: <20121101144315.GM4413@opensource.wolfsonmicro.com>
-References: <1351668420-18447-1-git-send-email-voice.shen@atmel.com>
- <1351668420-18447-3-git-send-email-voice.shen@atmel.com>
+From: Alan Cox <alan@linux.intel.com>
+Subject: Re: [PATCH -next] tty: of_serial: fix return value check in
+ of_platform_serial_setup()
+Date: Thu, 1 Nov 2012 14:48:52 +0000
+Message-ID: <20121101144852.763ffa6f@bob.linux.org.uk>
+References: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
+	<50928060.3010806@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mI5TpPl/qDRoXxBg"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1351668420-18447-3-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, jm.lin@atmel.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <50928060.3010806@ti.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Wei Yongjun <weiyj.lk@gmail.com>, gregkh@linuxfoundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, seth.heasley@intel.com, yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---mI5TpPl/qDRoXxBg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >   				"clk or clock-frequency not
+> > defined\n");
+> > -			return -ENODEV;
+> > +			return PTR_ERR(info->clk);
+> I think this is wrong. it should return -ENODEV;
 
-On Wed, Oct 31, 2012 at 03:26:59PM +0800, Bo Shen wrote:
+Returning the clock error at least ensures the real reason for the fail
+is reported. I think its better to use the PTR_ERR but I'd not class
+either as wrong.
 
-> +Required properties:
-> +  - compatible: "atmel,atmel-ssc-dai"
-> +  - atmel,dai-master: this dai base on which ssc controller
-
-> +Example:
-> +dai: dai {
-> +	compatible = "atmel,atmel-ssc-dai";
-> +	atmel,dai-master = <&ssc0>;
-> +};
-
-This seems to be a purely virtual device which remaps the SSC onto the
-Linux audio subsystem?  If that is the case then it shouldn't appear in
-the device tree, the machine driver should just directly reference the
-SSC and instantiate any devices required in Linux directly.
-
---mI5TpPl/qDRoXxBg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQkop6AAoJELSic+t+oim97ZMQAJrZaTZvT5ZLJT0GFtbpWxBJ
-hwb1Z6VqNcsy4gDhRGZsKF7KqdByjbkLzEkfVpQWZzkpyYRZh55xwvzpTQL+82KI
-NA9QnYtcFu3NbYJtkGU/pyHWSnW+8lw6SFkP4ZW8jtejfQzaesTyJaeXjPo/xRFI
-930/gHH6EowVPWKnFkyG4JLLEHMT2bxDQ/ymDNHRpaq8Dfd0iZ+NwmOmm8zb/QOB
-Su1OW6RBJyUWOyaTMFdv9D/+PIlRhikK1kxLsu/QDf2KW7arZtm38cTx+TTjxdnk
-RhOERpK5QHHGEKD4ivEI1zxtaVAboCEQBd824eL3LoEnUo9uOFkWDaPzK018k27V
-ZT98fOikjTdFNDccWnyI0ZglRa/hGKIeBijVhbhGapmhWfnRfGRh0yLUlKO/YCNR
-5hNXfqw69u3Dxn7fPB+aHnvYkkm+8vKwPIrDil7LGxS5JUvuDH5JqxBpO3dGf0LI
-CYTwa9T3MWqcQs9VcHVLXvowR/5PoeQnI52Ley2H4hGGV0SDJmqPzXFQstUy4l1x
-XtHN9SmV2DxDTXMb2p9dea5pAM875ntRE1+iMHCcGgiSz2u03Nmc1NEqNnQcFN1U
-OLXCp1TT/GWp2yAYMEkYUDHjW6gHEGOjiPz6wRP3KBntsXSM+czaOR9+Bt0dZTLL
-KmK4TwhPg5+ih+kubyfw
-=Q8vq
------END PGP SIGNATURE-----
-
---mI5TpPl/qDRoXxBg--
+Alan
