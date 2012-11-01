@@ -1,29 +1,58 @@
-From: Alan Cox <alan@linux.intel.com>
-Subject: Re: [PATCH -next] tty: of_serial: fix return value check in
- of_platform_serial_setup()
-Date: Thu, 1 Nov 2012 14:48:52 +0000
-Message-ID: <20121101144852.763ffa6f@bob.linux.org.uk>
-References: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
-	<50928060.3010806@ti.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCH] usb: host: tegra: fix potential NULL pointer dereference
+Date: Thu, 1 Nov 2012 10:52:22 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1211011051260.1762-100000@iolanthe.rowland.org>
+References: <CAPgLHd9551qZuTY7uKGYT7OXYeGE7LL+fo7ynwDv9msHKRYkKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <50928060.3010806@ti.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: Wei Yongjun <weiyj.lk@gmail.com>, gregkh@linuxfoundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, seth.heasley@intel.com, yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPgLHd9551qZuTY7uKGYT7OXYeGE7LL+fo7ynwDv9msHKRYkKw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 1 Nov 2012, Wei Yongjun wrote:
 
-> >   				"clk or clock-frequency not
-> > defined\n");
-> > -			return -ENODEV;
-> > +			return PTR_ERR(info->clk);
-> I think this is wrong. it should return -ENODEV;
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> 
+> The dereference should be moved below the NULL test.
+> 
+> dpatch engine is used to auto generate this patch.
+> (https://github.com/weiyj/dpatch)
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> ---
+>  drivers/usb/host/ehci-tegra.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
+> index 6223d17..e40fcb0 100644
+> --- a/drivers/usb/host/ehci-tegra.c
+> +++ b/drivers/usb/host/ehci-tegra.c
+> @@ -776,9 +776,13 @@ fail_clk:
+>  static int tegra_ehci_remove(struct platform_device *pdev)
+>  {
+>  	struct tegra_ehci_hcd *tegra = platform_get_drvdata(pdev);
+> -	struct usb_hcd *hcd = ehci_to_hcd(tegra->ehci);
+> +	struct usb_hcd *hcd;
+> +
+> +	if (tegra == NULL)
+> +		return -EINVAL;
+>  
+> -	if (tegra == NULL || hcd == NULL)
+> +	hcd = ehci_to_hcd(tegra->ehci);
+> +	if (hcd == NULL)
+>  		return -EINVAL;
+>  
+>  	pm_runtime_get_sync(&pdev->dev);
 
-Returning the clock error at least ensures the real reason for the fail
-is reported. I think its better to use the PTR_ERR but I'd not class
-either as wrong.
+In fact it would be better to remove these tests entirely.  They should 
+never trigger, and if they do then an oops is the appropriate outcome.
 
-Alan
+Alan Stern
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
