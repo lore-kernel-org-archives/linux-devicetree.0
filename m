@@ -1,87 +1,62 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Deprecating reserve-map in favor of properties
-Date: Thu, 1 Nov 2012 15:21:23 +0100
-Message-ID: <CACxGe6sAXBJ9KkA8Urioe-VsbaLUO+=C_tb1vU+i_VKuedi=eg@mail.gmail.com>
-References: <1348179051.1132.32.camel@pasglop>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [Patch v2 3/4] ASoC: atmel-ssc-dai: register platform from DAIs
+Date: Thu, 1 Nov 2012 14:43:15 +0000
+Message-ID: <20121101144315.GM4413@opensource.wolfsonmicro.com>
+References: <1351668420-18447-1-git-send-email-voice.shen@atmel.com>
+ <1351668420-18447-3-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1348179051.1132.32.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mI5TpPl/qDRoXxBg"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1351668420-18447-3-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, jm.lin@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2012 at 12:10 AM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> Hi folks !
->
-> The reserve map is, imho, my biggest mistake when coming up with the FDT
-> format.
->
-> The main problem is that it doesn't survive the transition via a real
-> Open Firmware interface. There is no practical way to indicate reserved
-> regions of memory accross in that case, unless you have an OS that is
-> nice enough to try to keep OF alive and accomodate its advertised
-> "available" properties, but that's typically not the case of Linux on
-> ppc.
->
-> So I would like to propose that we add a new "better" way to convey
-> reserved memory information, via properties in the tree.
->
-> I originally though of having these in the "memory" nodes themselves but
-> this can be tricky on machines that have multiple nodes (ie, NUMA
-> generally means a memory node per NUMA node) since the reserved regions
-> can spawn accross nodes and I don't want to complicate FW life too much
-> by requiring breaking them up in that case.
->
-> So what about something at the root of the tree:
->
-> reserved-ranges: An array of ranges of reserved memory
->
-> reserved-names: A list of zero terminated strings, one for each entry in
-> the reserved-ranges array, providing optional "names" for the reserved
-> ranges.
 
-I think this makes sense. Cyril and I are just talking about what he
-needs. He wants to set aside per-device reserved regions and would
-like to have the ability to reference a particular reserved region
-from a device node, probably with a phandle. I like the look of the
-reserved-{ranges,names} properties in the root, but I see the argument
-that it isn't very flexible. What about something like this:
+--mI5TpPl/qDRoXxBg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-reserved-memory {
-        reserved@0x10000000 { reg = <0x10000000 0x08000000>; };
-        reserved@0x01000000 { reg = <0x01000000 0x00200000>; };
-}
+On Wed, Oct 31, 2012 at 03:26:59PM +0800, Bo Shen wrote:
 
-The node name of the child nodes could be different of course.
+> +Required properties:
+> +  - compatible: "atmel,atmel-ssc-dai"
+> +  - atmel,dai-master: this dai base on which ssc controller
 
->
-> The idea here is that we could have well defined names (using a similar
-> prefix we use for properties) such as linux,initrd, which indicates
-> clearly to the kernel that the only reason that range is reserved is
-> because it contains an initrd (ie, it can be freed once that's been
-> extracted).
->
-> It would also be generally handy in case a reserved area is meant to be
-> used by a specific driver, such as an in-memory framebuffer
-> pre-initialized by the firmware. The generic memory management code
-> doesn't need to know, but later on, the gfx driver can pick it up easily
-> provided the name is part of the binding for that device.
+> +Example:
+> +dai: dai {
+> +	compatible = "atmel,atmel-ssc-dai";
+> +	atmel,dai-master = <&ssc0>;
+> +};
 
-Right, that would work also even though I prefer phandle references in
-general. Is it conceivable that additional data would want to be
-attached to a particular reserved region?
+This seems to be a purely virtual device which remaps the SSC onto the
+Linux audio subsystem?  If that is the case then it shouldn't appear in
+the device tree, the machine driver should just directly reference the
+SSC and instantiate any devices required in Linux directly.
 
-g.
+--mI5TpPl/qDRoXxBg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQkop6AAoJELSic+t+oim97ZMQAJrZaTZvT5ZLJT0GFtbpWxBJ
+hwb1Z6VqNcsy4gDhRGZsKF7KqdByjbkLzEkfVpQWZzkpyYRZh55xwvzpTQL+82KI
+NA9QnYtcFu3NbYJtkGU/pyHWSnW+8lw6SFkP4ZW8jtejfQzaesTyJaeXjPo/xRFI
+930/gHH6EowVPWKnFkyG4JLLEHMT2bxDQ/ymDNHRpaq8Dfd0iZ+NwmOmm8zb/QOB
+Su1OW6RBJyUWOyaTMFdv9D/+PIlRhikK1kxLsu/QDf2KW7arZtm38cTx+TTjxdnk
+RhOERpK5QHHGEKD4ivEI1zxtaVAboCEQBd824eL3LoEnUo9uOFkWDaPzK018k27V
+ZT98fOikjTdFNDccWnyI0ZglRa/hGKIeBijVhbhGapmhWfnRfGRh0yLUlKO/YCNR
+5hNXfqw69u3Dxn7fPB+aHnvYkkm+8vKwPIrDil7LGxS5JUvuDH5JqxBpO3dGf0LI
+CYTwa9T3MWqcQs9VcHVLXvowR/5PoeQnI52Ley2H4hGGV0SDJmqPzXFQstUy4l1x
+XtHN9SmV2DxDTXMb2p9dea5pAM875ntRE1+iMHCcGgiSz2u03Nmc1NEqNnQcFN1U
+OLXCp1TT/GWp2yAYMEkYUDHjW6gHEGOjiPz6wRP3KBntsXSM+czaOR9+Bt0dZTLL
+KmK4TwhPg5+ih+kubyfw
+=Q8vq
+-----END PGP SIGNATURE-----
+
+--mI5TpPl/qDRoXxBg--
