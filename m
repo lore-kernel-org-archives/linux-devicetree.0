@@ -1,88 +1,87 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Thu, 1 Nov 2012 14:19:35 +0000
-Message-ID: <20121101141935.GD4413@opensource.wolfsonmicro.com>
-References: <20121024161429.GA16350@core.coreip.homeip.net>
- <CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
- <4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
- <CACRpkdaiLXVeUg1quuw3XPTenbKOjn+aWbGQezpcyvzQCtCWow@mail.gmail.com>
- <20121030113407.GA24335@sirena.org.uk>
- <CACRpkdapQJY0aoam741O0fb8EeM9BLk_Psq5TaPG84J7wEvCLw@mail.gmail.com>
- <87obji8kta.fsf@deeprootsystems.com>
- <CACRpkdbCk9+HSBPtfT-1dO8paSRYJ5VXX_0SxiyxgrObnJEvmQ@mail.gmail.com>
- <20121101120713.GA4413@opensource.wolfsonmicro.com>
- <CACRpkdawAdbwackZeST4iDkFZx9-exhTVoUzAABaWr1G89tATg@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Deprecating reserve-map in favor of properties
+Date: Thu, 1 Nov 2012 15:21:23 +0100
+Message-ID: <CACxGe6sAXBJ9KkA8Urioe-VsbaLUO+=C_tb1vU+i_VKuedi=eg@mail.gmail.com>
+References: <1348179051.1132.32.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdawAdbwackZeST4iDkFZx9-exhTVoUzAABaWr1G89tATg@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kevin Hilman <khilman@deeprootsystems.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1348179051.1132.32.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 21, 2012 at 12:10 AM, Benjamin Herrenschmidt
+<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> Hi folks !
+>
+> The reserve map is, imho, my biggest mistake when coming up with the FDT
+> format.
+>
+> The main problem is that it doesn't survive the transition via a real
+> Open Firmware interface. There is no practical way to indicate reserved
+> regions of memory accross in that case, unless you have an OS that is
+> nice enough to try to keep OF alive and accomodate its advertised
+> "available" properties, but that's typically not the case of Linux on
+> ppc.
+>
+> So I would like to propose that we add a new "better" way to convey
+> reserved memory information, via properties in the tree.
+>
+> I originally though of having these in the "memory" nodes themselves but
+> this can be tricky on machines that have multiple nodes (ie, NUMA
+> generally means a memory node per NUMA node) since the reserved regions
+> can spawn accross nodes and I don't want to complicate FW life too much
+> by requiring breaking them up in that case.
+>
+> So what about something at the root of the tree:
+>
+> reserved-ranges: An array of ranges of reserved memory
+>
+> reserved-names: A list of zero terminated strings, one for each entry in
+> the reserved-ranges array, providing optional "names" for the reserved
+> ranges.
 
---BI5RvnYi6R4T2M87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think this makes sense. Cyril and I are just talking about what he
+needs. He wants to set aside per-device reserved regions and would
+like to have the ability to reference a particular reserved region
+from a device node, probably with a phandle. I like the look of the
+reserved-{ranges,names} properties in the root, but I see the argument
+that it isn't very flexible. What about something like this:
 
-On Thu, Nov 01, 2012 at 03:01:28PM +0100, Linus Walleij wrote:
-> On Thu, Nov 1, 2012 at 1:07 PM, Mark Brown
->=20
-> > For the pin hogging I'd actually been thinking separately that we should
-> > just have the device core do a devm_pinctrl_get_set_default() prior to
-> > probing the device and store the result in the struct device.  That
+reserved-memory {
+        reserved@0x10000000 { reg = <0x10000000 0x08000000>; };
+        reserved@0x01000000 { reg = <0x01000000 0x00200000>; };
+}
 
-> What if I retrieve this in the pinctrl subsystem using
-> bus notifiers and then expose the struct pinctrl * to
-> the clients by using pinctrl_get() and when you get
-> such a handle in your probe() you know that the
-> pinctrl subsystem has already fetched the handle and
-> set it to "default" at that point?
+The node name of the child nodes could be different of course.
 
-I'm not sure I parse a problem from the above?
+>
+> The idea here is that we could have well defined names (using a similar
+> prefix we use for properties) such as linux,initrd, which indicates
+> clearly to the kernel that the only reason that range is reserved is
+> because it contains an initrd (ie, it can be freed once that's been
+> extracted).
+>
+> It would also be generally handy in case a reserved area is meant to be
+> used by a specific driver, such as an in-memory framebuffer
+> pre-initialized by the firmware. The generic memory management code
+> doesn't need to know, but later on, the gfx driver can pick it up easily
+> provided the name is part of the binding for that device.
 
-> I just worry whether there is a fringe case where the default
-> state is not be be default-selected in probe(), the API
-> semantics does not mandate that. But I think this is the case
-> for all in-kernel drivers so we wouldn't be breaking anything
-> by doing this right now. And platforms can just leave the
-> "default" state undefined in that case.
+Right, that would work also even though I prefer phandle references in
+general. Is it conceivable that additional data would want to be
+attached to a particular reserved region?
 
-Yes, that had been my thinking too though I'd really expect that the
-platform ought to be able to think of something sensible to do by
-default.
-
-> Then what to do with sleep and idle is a question we need
-> to handle next. Requiring PM domains for this is one
-> approach, albeit a bit controversial.
-
-Yup.  Notifiers are another option again I guess.  There's far fewer
-drivers doing anything at all with that so it's a bit less urgent.
-
---BI5RvnYi6R4T2M87
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQkoTvAAoJELSic+t+oim9T3wQAJT2fTjcoqAXIen2dnrccrmJ
-D6s1XbYfPoJdDLIivRMEXiYmzlKIutlEobY49P7qhfUnhfbv4cfE7nwi9k2V4xPR
-qtEhYhyDtUgFkRvI6czUTbd3ZKzt9jUGIhJ4W5Y/545Z0z3m0Rld0EgG6Wh53oyg
-GGBZgQA9kytWZwEYsT+wAjp6QCtsBIGp3zOTk1coEP3Sic+S32aRdsaYRvfUIIDN
-F4pC07KbhngWrYYmmFG9k92NcLx3npZdDYLfrTXgFAP4HEOIMVRv4ItZ1Q8O+te7
-S6VPvG0IthQDTx1jBWCVM5DwtbLW5EL+xALoYl/kiaz/LxaF/p2i9EwDqGsx0sQA
-ixhbf+73jmqlotF7/89gCrxDNab6+leHZ7Nvtoe9BPl/jvMfNUdSJGFPlo2NO9KK
-5u5ZgFqf5Bv79T8ynfFtw8Uj5BkvKcSUhHctkDzKkEaDhJxjgsk+K6xLNK7gjvUM
-4EiLCr402HqIbWCRQoyIEi8KwetscSGnuuKG7gASwXrTlLo5+97kWnCGuhJTJSYQ
-DVue1ifdgJxovlS6jaGWmRLYRkQvM33sX6BJhxoT6wRfLY8u6q7uEUdxNMOs8R2Y
-hoSgz3BS/k0qFDIG2ujGJ74UQRRq0M6G7q7kziL4HIhI7IjuMAFXFLORMrW7igXF
-wpHPrs85WBdYtGxdCYMf
-=PUlE
------END PGP SIGNATURE-----
-
---BI5RvnYi6R4T2M87--
+g.
