@@ -1,180 +1,115 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v7 4/8] video: add videomode helpers
-Date: Wed, 31 Oct 2012 18:18:10 +0100
-Message-ID: <2142756.CuAAJDxjqo@avalon>
-References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de> <1351675689-26814-5-git-send-email-s.trumtrar@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1351675689-26814-5-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: [RFC-v2 0/7] Capebus; a bus for SoCs using simple expansion connectors
+Date: Thu,  1 Nov 2012 17:32:25 +0200
+Message-ID: <1351783952-11804-1-git-send-email-panto@antoniou-consulting.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Paul Walmsley <paul@pwsan.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+Capebus is created to address the problem of many SoCs that can provide a
+multitude of hardware interfaces but in order to keep costs down the main
+boards only support a limited number of them. The rest are typically brought
+out to pin connectors on to which other boards, named capes are connected and
+allow those peripherals to be used.
 
-Thanks for the patch.
+These capes connect to the SoC interfaces but might also contain various other
+parts that may need some kind of driver to work.
 
-On Wednesday 31 October 2012 10:28:04 Steffen Trumtrar wrote:
-> Add helper functions to convert from display timings to a generic videomode
-> structure. This videomode can then be converted to the corresponding
-> subsystem mode representation (e.g. fb_videomode).
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> ---
->  drivers/video/Kconfig     |    6 ++++++
->  drivers/video/Makefile    |    1 +
->  drivers/video/videomode.c |   44 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/videomode.h |   36 ++++++++++++++++++++++++++++++++++++
->  4 files changed, 87 insertions(+)
->  create mode 100644 drivers/video/videomode.c
->  create mode 100644 include/linux/videomode.h
-> 
-> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> index 1421fc8..45dd393 100644
-> --- a/drivers/video/Kconfig
-> +++ b/drivers/video/Kconfig
-> @@ -38,6 +38,12 @@ config DISPLAY_TIMING
->         help
->           Say Y here, to use the display timing helpers.
-> 
-> +config VIDEOMODE
-> +       bool "Enable videomode helpers"
+Since SoCs have limited pins and pin muxing options, not all capes can work
+together so some kind of resource tracking (at least for the pins in use) is
+required.
 
-Shouldn't this option should be automatically selected through a select 
-statement in other options that depend on it instead of manually selected ? 
-Same for the DISPLAY_TIMING option in 1/8.
+Before capebus all of this took place in the board support file, and frankly
+for boards with too many capes it was becoming unmanageable.
 
-There's so little code here, do you think it would be a good idea to merge 
-patches 1/8 and 4/8 and have a single Kconfig option ?
+Capebus provides a virtual bus, which along with a board specific controller,
+cape drivers can be written using the standard Linux device model.
 
-> +       help
-> +         Say Y here, to use the generic videomode helpers. This allows
-> +	 converting from display timings to fb_videomode and drm_display_mode
-> +
->  menuconfig FB
->  	tristate "Support for frame buffer devices"
->  	---help---
-> diff --git a/drivers/video/Makefile b/drivers/video/Makefile
-> index 552c045..fc30439 100644
-> --- a/drivers/video/Makefile
-> +++ b/drivers/video/Makefile
-> @@ -168,3 +168,4 @@ obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
->  #video output switch sysfs driver
->  obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) += output.o
->  obj-$(CONFIG_DISPLAY_TIMING) += display_timing.o
-> +obj-$(CONFIG_VIDEOMODE) += videomode.o
-> diff --git a/drivers/video/videomode.c b/drivers/video/videomode.c
-> new file mode 100644
-> index 0000000..a9fe010
-> --- /dev/null
-> +++ b/drivers/video/videomode.c
-> @@ -0,0 +1,44 @@
-> +/*
-> + * generic display timing functions
-> + *
-> + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-> Pengutronix + *
-> + * This file is released under the GPLv2
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/export.h>
-> +#include <linux/errno.h>
-> +#include <linux/display_timing.h>
-> +#include <linux/videomode.h>
+The core capebus infrastructure is not depended on any specific board.
+However capebus needs a board controller to provide services to the cape devices
+it controls. Services like addressing and resource reservation are provided
+by the board controller.
 
-As in 1/8, I try to keep #include's sorted alphabetically, but I won't push 
-for it here either :-)
+Capebus at the moment only support TI's Beaglebone platform.
 
-> +
-> +int videomode_from_timing(struct display_timings *disp, struct videomode
-> *vm,
-> +			  int index)
+This RFC introduces the core concept; most supporting patches
+have been posted to the relevant places.
 
-unsigned int for index ?
+If you have a beaglebone and want to check it out, you can do
+so at:
 
-> +{
-> +	struct display_timing *dt = NULL;
+git://github.com/pantoniou/linux-bbxm.git branch capebus-v4
 
-No need to initialize dt to NULL.
+Changes from RFC-v1:
 
-> +	dt = display_timings_get(disp, index);
-> +	if (!dt) {
-> +		pr_err("%s: no signal timings found\n", __func__);
+The omap_platform device build has been moved out of capebus
+and placed in their proper place in arch/arm/mach-omap2
 
-I wonder whether this really deserves a pr_err() here. Would this be a caller 
-bug, or can there be valid use cases where this function would return an error 
-?
+Pantelis Antoniou (7):
+  capebus: Core capebus support
+  capebus: Add beaglebone board support
+  capebus: Beaglebone generic cape support
+  capebus: Beaglebone geiger cape support
+  capebus: Beaglebone capebus DT update
+  capebus: Document DT bindings
+  capebus: Documentation; capebus-summary
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	vm->pixelclock = display_timing_get_value(&dt->pixelclock, 0);
-> +	vm->hactive = display_timing_get_value(&dt->hactive, 0);
-> +	vm->hfront_porch = display_timing_get_value(&dt->hfront_porch, 0);
-> +	vm->hback_porch = display_timing_get_value(&dt->hback_porch, 0);
-> +	vm->hsync_len = display_timing_get_value(&dt->hsync_len, 0);
-> +
-> +	vm->vactive = display_timing_get_value(&dt->vactive, 0);
-> +	vm->vfront_porch = display_timing_get_value(&dt->vfront_porch, 0);
-> +	vm->vback_porch = display_timing_get_value(&dt->vback_porch, 0);
-> +	vm->vsync_len = display_timing_get_value(&dt->vsync_len, 0);
-> +
-> +	vm->vah = dt->vsync_pol_active;
-> +	vm->hah = dt->hsync_pol_active;
-> +	vm->interlaced = dt->interlaced;
-> +	vm->doublescan = dt->doublescan;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(videomode_from_timing);
-> diff --git a/include/linux/videomode.h b/include/linux/videomode.h
-> new file mode 100644
-> index 0000000..f932147
-> --- /dev/null
-> +++ b/include/linux/videomode.h
-> @@ -0,0 +1,36 @@
-> +/*
-> + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> + *
-> + * generic videomode description
-> + *
-> + * This file is released under the GPLv2
-> + */
-> +
-> +#ifndef __LINUX_VIDEOMODE_H
-> +#define __LINUX_VIDEOMODE_H
-> +
-> +#include <linux/display_timing.h>
-> +
-> +struct videomode {
-> +	u32 pixelclock;
-> +	u32 refreshrate;
-> +
-> +	u32 hactive;
-> +	u32 hfront_porch;
-> +	u32 hback_porch;
-> +	u32 hsync_len;
-> +
-> +	u32 vactive;
-> +	u32 vfront_porch;
-> +	u32 vback_porch;
-> +	u32 vsync_len;
-> +
-> +	u32 hah;
-> +	u32 vah;
-> +	bool interlaced;
-> +	bool doublescan;
-> +};
-> +
-> +int videomode_from_timing(struct display_timings *disp, struct videomode
-> *vm,
-> +			  int index);
-> +#endif
+ Documentation/capebus/capebus-summary              |  40 +
+ .../capebus/bone-capebus-slot-override.txt         |  28 +
+ .../devicetree/bindings/capebus/bone-capebus.txt   |  50 ++
+ .../bindings/capebus/bone-geiger-cape.txt          |  78 ++
+ .../bindings/capebus/bone-generic-cape.txt         |  97 +++
+ .../devicetree/bindings/capebus/da8xx-dt.txt       |  31 +
+ .../devicetree/bindings/capebus/i2c-dt.txt         |  42 +
+ .../devicetree/bindings/capebus/spi-dt.txt         |  37 +
+ .../devicetree/bindings/capebus/ti-tscadc-dt.txt   |  34 +
+ arch/arm/boot/dts/am335x-bone-common.dtsi          | 689 ++++++++++++++-
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   3 +
+ drivers/capebus/Kconfig                            |  17 +
+ drivers/capebus/Makefile                           |   8 +
+ drivers/capebus/boards/Kconfig                     |   6 +
+ drivers/capebus/boards/Makefile                    |   3 +
+ drivers/capebus/boards/capebus-bone-generic.c      | 237 ++++++
+ drivers/capebus/boards/capebus-bone-pdevs.c        | 328 ++++++++
+ drivers/capebus/boards/capebus-bone.c              | 931 +++++++++++++++++++++
+ drivers/capebus/capebus-driver.c                   | 608 ++++++++++++++
+ drivers/capebus/capebus-probe.c                    | 320 +++++++
+ drivers/capebus/capebus-sysfs.c                    |  52 ++
+ drivers/capebus/capes/Kconfig                      |  13 +
+ drivers/capebus/capes/Makefile                     |   2 +
+ drivers/capebus/capes/bone-geiger-cape.c           | 517 ++++++++++++
+ drivers/capebus/capes/bone-generic-cape.c          |  75 ++
+ include/linux/capebus.h                            | 298 +++++++
+ include/linux/capebus/capebus-bone.h               | 120 +++
+ 28 files changed, 4636 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/capebus/capebus-summary
+ create mode 100644 Documentation/devicetree/bindings/capebus/bone-capebus-slot-override.txt
+ create mode 100644 Documentation/devicetree/bindings/capebus/bone-capebus.txt
+ create mode 100644 Documentation/devicetree/bindings/capebus/bone-geiger-cape.txt
+ create mode 100644 Documentation/devicetree/bindings/capebus/bone-generic-cape.txt
+ create mode 100644 Documentation/devicetree/bindings/capebus/da8xx-dt.txt
+ create mode 100644 Documentation/devicetree/bindings/capebus/i2c-dt.txt
+ create mode 100644 Documentation/devicetree/bindings/capebus/spi-dt.txt
+ create mode 100644 Documentation/devicetree/bindings/capebus/ti-tscadc-dt.txt
+ create mode 100644 drivers/capebus/Kconfig
+ create mode 100644 drivers/capebus/Makefile
+ create mode 100644 drivers/capebus/boards/Kconfig
+ create mode 100644 drivers/capebus/boards/Makefile
+ create mode 100644 drivers/capebus/boards/capebus-bone-generic.c
+ create mode 100644 drivers/capebus/boards/capebus-bone-pdevs.c
+ create mode 100644 drivers/capebus/boards/capebus-bone.c
+ create mode 100644 drivers/capebus/capebus-driver.c
+ create mode 100644 drivers/capebus/capebus-probe.c
+ create mode 100644 drivers/capebus/capebus-sysfs.c
+ create mode 100644 drivers/capebus/capes/Kconfig
+ create mode 100644 drivers/capebus/capes/Makefile
+ create mode 100644 drivers/capebus/capes/bone-geiger-cape.c
+ create mode 100644 drivers/capebus/capes/bone-generic-cape.c
+ create mode 100644 include/linux/capebus.h
+ create mode 100644 include/linux/capebus/capebus-bone.h
+
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.12
