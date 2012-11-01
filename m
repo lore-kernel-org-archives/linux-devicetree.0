@@ -1,80 +1,91 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Fwd: [PATCHv2] Input: omap4-keypad: Add pinctrl support
-Date: Thu, 1 Nov 2012 14:22:11 +0100
-Message-ID: <CACRpkdarSNg1zACZKGBt1ypMzE+-KF-o594EcZ1EP484v+4HRw@mail.gmail.com>
-References: <1350911580-20307-1-git-send-email-sourav.poddar@ti.com>
-	<20121024161429.GA16350@core.coreip.homeip.net>
-	<CACRpkdai3NocZQnW6YRF+k6GXUSx3P_Ge=F-tkuivrFm6tBbLg@mail.gmail.com>
-	<4099134.xWUIfbbahk@dtor-d630.eng.vmware.com>
-	<CACRpkdaiLXVeUg1quuw3XPTenbKOjn+aWbGQezpcyvzQCtCWow@mail.gmail.com>
-	<20121030113407.GA24335@sirena.org.uk>
-	<CACRpkdapQJY0aoam741O0fb8EeM9BLk_Psq5TaPG84J7wEvCLw@mail.gmail.com>
-	<87obji8kta.fsf@deeprootsystems.com>
-	<CACRpkdbCk9+HSBPtfT-1dO8paSRYJ5VXX_0SxiyxgrObnJEvmQ@mail.gmail.com>
-	<CACRpkdaBmg7wtX0WsaxMw=n1sKDN5YphK=y8tzAx_CF=JnUqvw@mail.gmail.com>
-	<874nl9tuqq.fsf@deeprootsystems.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: AM33xx: Add SPI node
+Date: Thu, 1 Nov 2012 14:49:41 +0100
+Message-ID: <50927DF5.4080008@ti.com>
+References: <1351680669-20718-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <874nl9tuqq.fsf@deeprootsystems.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@deeprootsystems.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1351680669-20718-1-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
+Cc: afzal-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 1, 2012 at 12:42 PM, Kevin Hilman
-<khilman@deeprootsystems.com> wrote:
-> [Me]
->> Well, the pinctrl grabbers in these drivers are using these states also
->> for platforms that do not even select CONFIG_PM.  For example
->> mach-nomadik is quite happy that the PL011 driver is thusly
->> muxing in its pins. And would require refactoring to use PM
->> domains.
->
-> If CONFIG_PM is disabled, then is it safe to assume that the pins in
-> question are probably only done once at init time.  I assume during
-> ->probe(). ?
+Hi Avinash,
 
-Sadly no.
+On 10/31/2012 11:51 AM, Philip, Avinash wrote:
+> Add McSPI data node to AM33XX device tree file. The McSPI module (and so
+> as the driver) is reused from OMAP4.
+> 
+> Signed-off-by: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+> Tested-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
 
-Consider drivers/tty/serial/amba-pl011.c
+I've just realized the interrupt-parent was still there, so I removed both.
 
-Many ARM platforms have several instances of PL011, and not all of
-them have CONFIG_PM & friends, so it's a good example.
+Please find below the updated version.
 
-Here the driver will probe and currently fetch a pinctrl handle and
-looks up two states: "default", which refers to the situation you
-describe, and optionally "sleep" which will put pins into a
-low-power state.
+Regards,
+Benoit
 
-The driver will currently put the pins into the "sleep" state when
-.shutdown() is called by something (userspace or in-kernel users).
+----
+>From 9fd3c748aac9418cd377249ca463050783d2198f Mon Sep 17 00:00:00 2001
+From: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+Date: Wed, 31 Oct 2012 16:21:09 +0530
+Subject: [PATCH] ARM: dts: AM33XX: Add SPI node
 
-So in the new suggested scheme using runtime PM, this
-would have to be replaced by pm_runtime_get[_sync]()
-and pm_runtime_put() hints and the current pin handling
-deleted, and for each platform using this driver instead
-implement a PM domain to do the same thing.
+Add McSPI data node to AM33XX device tree file. The McSPI module (and so
+as the driver) is reused from OMAP4.
 
-Else you loose this runtime power optimization.
+Signed-off-by: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+Tested-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
+[b-cousson-l0cyMroinI0@public.gmane.org: Remove interrupt-parent]
+Signed-off-by: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am33xx.dtsi |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
 
-This is what I refer to the all-or-nothing charcter of
-runtime PM domains... but maybe it's a good thing,
-I haven't quite made my mind up about it.
-
-> (...) if what we want/need are only ways to introduce SoC-specific
-> integration details into non-PM transitions (e.g. probe/remove), maybe
-> bus notifiers would suffice here.  e.g. you'd get a bus notifier when
-> the device is added/attached and any init-time pinctrl setup could be
-> done then.  This still keeps drivers clean of SoC-specific integration
-> data/code, and also allows that to happen whether or not PM features are
-> enabled.
-
-It doesn't cut it for any of our drivers as shown above,
-but it would work for the patch in $SUBJECT.
-
-It sounds like the way silicon clocks are handled on
-SH am I right?
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 97a7bd3..5dfd682 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -299,5 +299,27 @@
+ 				      76>;
+ 			ti,hwmods = "rtc";
+ 		};
++
++		spi0: spi@48030000 {
++			compatible = "ti,omap4-mcspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x48030000 0x400>;
++			interrupt = <65>;
++			ti,spi-num-cs = <2>;
++			ti,hwmods = "spi0";
++			status = "disabled";
++		};
++
++		spi1: spi@481a0000 {
++			compatible = "ti,omap4-mcspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x481a0000 0x400>;
++			interrupt = <125>;
++			ti,spi-num-cs = <2>;
++			ti,hwmods = "spi1";
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+1.7.0.4
