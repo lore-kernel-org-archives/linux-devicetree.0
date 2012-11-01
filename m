@@ -1,52 +1,82 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] document: devicetree: bind pinconf with pin-single
-Date: Wed, 31 Oct 2012 17:25:07 -0700
-Message-ID: <20121101002506.GI15766@atomide.com>
-References: <1350922139-3693-1-git-send-email-haojian.zhuang@gmail.com>
- <1350922139-3693-6-git-send-email-haojian.zhuang@gmail.com>
- <5085CC3F.30708@wwwdotorg.org>
- <CAN1soZy8xXGs8zEiZV0kV0dGVdXfZ9ogx83sFgPG76d0i8yH4A@mail.gmail.com>
- <5091A5AA.7000207@wwwdotorg.org>
- <CAN1soZyc8Kox__yOER82Oe5OtaLJWYAoMzgWGhEonTfdf11MqQ@mail.gmail.com>
+From: Russ Dill <Russ.Dill@ti.com>
+Subject: Re: [RFC 1/7] capebus: Core capebus support
+Date: Wed, 31 Oct 2012 17:55:29 -0700
+Message-ID: <CA+Bv8XZ2bMNvb77R5gqz7FVaCF1RtfTbiaCDE6iAKk3UUmnj6w@mail.gmail.com>
+References: <1351702333-8456-1-git-send-email-panto@antoniou-consulting.com>
+	<1351702333-8456-2-git-send-email-panto@antoniou-consulting.com>
+	<CA+Bv8XZ5WnhsKqYA6TBv8wh6OvOdU-G8XhuV2dO49O1qX_FRgg@mail.gmail.com>
+	<EBB972CD-D9D9-4704-AABF-2DFCED584297@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAN1soZyc8Kox__yOER82Oe5OtaLJWYAoMzgWGhEonTfdf11MqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <EBB972CD-D9D9-4704-AABF-2DFCED584297@antoniou-consulting.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121031 15:53]:
-> On Wed, Oct 31, 2012 at 11:26 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> >
-> > But that tends to imply that adding support for generic pinconf into the
-> > pinctrl-simple driver isnt' actually going to be useful for anyone. If
-> > pinctrl-single only supports some part of your HW, how can you use it?
-> > Or, do you intend to somehow make pinctrl-single support both the common
-> > generic pinconf stuff, and somehow be extensible to support any
-> > SoC-specific pin config fields?
-> 
-> I'm intend to make pinctrl-single to support both the common generic pinconf
-> stuff and any SoC-specific pinconf. I'll try to handle it. But they
-> won't be included
-> in V3.
+On Wed, Oct 31, 2012 at 3:07 PM, Pantelis Antoniou
+<panto@antoniou-consulting.com> wrote:
+>
+> On Oct 31, 2012, at 11:55 PM, Russ Dill wrote:
+>
+>> On Wed, Oct 31, 2012 at 9:52 AM, Pantelis Antoniou
+>> <panto@antoniou-consulting.com> wrote:
+>>> Introducing capebus; a bus that allows small boards (capes) to connect
+>>> to a complex SoC using simple expansion connectors.
+>>>
+>
+> [snip]
+>>> +       if (drv) {
+>>> +               /* call the removed bus method (if added prev.) */
+>>> +               if (cape_dev->added) {
+>>> +                       BUG_ON(cape_dev->bus == NULL);
+>>> +                       BUG_ON(cape_dev->bus->ops == NULL);
+>>> +                       if (cape_dev->bus->ops->dev_removed)
+>>> +                               cape_dev->bus->ops->dev_removed(cape_dev);
+>>> +                       cape_dev->added = 0;
+>>> +               }
+>>
+>> Is there any case where added will not track drv?
+>
+>
+> Yes, there is a corner case here.
+>
+> There is the case where while the device is created there is no matching
+> driver yet. Either that's the case of a not supported cape, or the
+> cape driver hasn't been loaded yet.
+>
+> We do need the device to be created, so that the user can browse in the
+> sysfs it's eeprom attributes.
+>
+> There's some further complications with runtime cape overrides, but
+> that's the gist of it.
 
-The easiest way to support generic pinconf in pinctrl-single.c
-is to set up a separate driver instance for the register ranges
-that need it. Otherwise things can get messy.
+I'm trying to figure out how that would come about, here is where
+added is set to 1:
 
-Regards,
++       /* all is fine... */
++       cape_dev->driver = drv;
++       cape_dev->added = 1;
 
-Tony
+This is after calling drv->probe, so drv is not null.
+
+There is a brief time here where added is 0, but driver is not.
+
++       if (drv) {
++               /* call the removed bus method (if added prev.) */
++               if (cape_dev->added) {
++                       BUG_ON(cape_dev->bus == NULL);
++                       BUG_ON(cape_dev->bus->ops == NULL);
++                       if (cape_dev->bus->ops->dev_removed)
++                               cape_dev->bus->ops->dev_removed(cape_dev);
++                       cape_dev->added = 0;
++               }
++               if (drv->remove) {
++                       pm_runtime_get_sync(dev);
++                       drv->remove(cape_dev);
++                       pm_runtime_put_noidle(dev);
++               }
++               cape_dev->driver = NULL;
+
+Is one of the remove or resume functions check added in this case?
