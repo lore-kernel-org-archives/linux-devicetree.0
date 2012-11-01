@@ -1,99 +1,33 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: [GIT PULL] ARM: OMAP: DTS for 3.8
-Date: Thu, 1 Nov 2012 18:14:15 +0100
-Message-ID: <5092ADE7.1030709@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v7 2/8] of: add helper to parse display timings
+Date: Thu, 01 Nov 2012 11:52:19 -0600
+Message-ID: <5092B6D3.8040501@wwwdotorg.org>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de> <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: "tony@atomide.com" <tony@atomide.com>, "Guiriec, Sebastien" <s-guiriec@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Jon Hunter <jon-hunter@ti.com>, "AnilKumar, Chimata" <anilkumar@ti.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On 10/31/2012 03:28 AM, Steffen Trumtrar wrote:
 
-Please pull some more OMAP5 and AM33xx data for 3.8.
-The branch contains as well some cleanup and the omap3-beagle support since the previous one was in fact a beagle-xm.
+Patch description? The patch defines the DT binding as well, which isn't
+mentioned in the patch subject.
 
-Thanks,
-Benoit
+> new file mode 100644
+> index 0000000..04c94a3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/display-timings.txt
 
+> +Usage in backend
+> +================
 
-The following changes since commit 8f0d8163b50e01f398b14bcd4dc039ac5ab18d64:
-  Linus Torvalds (1):
-        Linux 3.7-rc3
+Everything before this point in the binding docs looks reasonable to me.
+Everything after this point is Linux-specific/internal implementation
+detail, and hence shouldn't be in the binding document.
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.8/dts
-
-Afzal Mohammed (1):
-      ARM: dts: AM33XX: Add rtc node
-
-AnilKumar Ch (8):
-      ARM: dts: AM33XX: Add device tree OPP table
-      ARM: dts: AM33XX: Add basic pinctrl device tree data
-      ARM: dts: AM33XX: Add D_CAN device tree data
-      ARM: dts: AM33XX: Add lis331dlh device tree data to am335x-evm
-      ARM: dts: AM33XX: Add temperature sensor device tree data to am335x-evm
-      ARM: dts: AM33XX: Add tsl2550 ambient light sensor DT data
-      ARM: dts: Add am335x-evmsk.dts
-      Documentation: dt: i2c: Update trivial-devices list
-
-Benoit Cousson (2):
-      ARM: dts: OMAP: Move interrupt-parent to the root node to avoid duplication
-      ARM: dts: OMAP: Rename pandaES and var_som for consistency
-
-Jon Hunter (6):
-      ARM: dts: Add omap3-beagle.dts
-      ARM: dts: OMAP: Add timer nodes
-      ARM: dts: OMAP: Add counter-32k nodes
-      ARM: dts: OMAP4: Update timer addresses
-      ARM: dts: OMAP5: Add timer nodes
-      ARM: dts: OMAP5: Add counter node
-
-Kishon Vijay Abraham I (3):
-      ARM: dts: Add twl6030-usb data
-      ARM: dts: Add twl4030-usb data
-      ARM: dts: OMAP4: add *reg* property for ocp2scp
-
-Philip, Avinash (1):
-      ARM: dts: AM33XX: Add SPI node
-
-Sebastien Guiriec (4):
-      ARM: dts: omap5: Update GPIO with address space and interrupts
-      ARM: dts: omap5: Update I2C with address space and interrupts
-      ARM: dts: omap5: Update UART with address space and interrupts
-      ARM: dts: omap5: Update MMC with address space and interrupts
-
- .../devicetree/bindings/arm/omap/counter.txt       |   15 ++
- .../devicetree/bindings/arm/omap/timer.txt         |   31 ++++
- .../devicetree/bindings/bus/omap-ocp2scp.txt       |   18 ++
- .../devicetree/bindings/i2c/trivial-devices.txt    |    2 +
- arch/arm/boot/dts/Makefile                         |    5 +-
- arch/arm/boot/dts/am335x-bone.dts                  |    6 +
- arch/arm/boot/dts/am335x-evm.dts                   |   55 +++++++
- arch/arm/boot/dts/am335x-evmsk.dts                 |  166 ++++++++++++++++++++
- arch/arm/boot/dts/am33xx.dtsi                      |  139 +++++++++++++++--
- arch/arm/boot/dts/omap2.dtsi                       |   86 ++++++++++
- arch/arm/boot/dts/omap2420.dtsi                    |   16 ++-
- arch/arm/boot/dts/omap2430.dtsi                    |   19 ++-
- arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 -
- arch/arm/boot/dts/omap3-beagle.dts                 |   67 ++++++++
- arch/arm/boot/dts/omap3.dtsi                       |  107 ++++++++++++-
- .../dts/{omap4-pandaES.dts => omap4-panda-es.dts}  |    0
- arch/arm/boot/dts/omap4-panda.dts                  |    4 +
- arch/arm/boot/dts/omap4-sdp.dts                    |    4 +
- .../dts/{omap4-var_som.dts => omap4-var-som.dts}   |    0
- arch/arm/boot/dts/omap4.dtsi                       |  105 ++++++++++++-
- arch/arm/boot/dts/omap5.dtsi                       |  156 +++++++++++++++++-
- arch/arm/boot/dts/twl4030.dtsi                     |   27 +++
- arch/arm/boot/dts/twl6030.dtsi                     |    5 +
- 23 files changed, 989 insertions(+), 50 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/omap/counter.txt
- create mode 100644 Documentation/devicetree/bindings/arm/omap/timer.txt
- create mode 100644 arch/arm/boot/dts/am335x-evmsk.dts
- create mode 100644 arch/arm/boot/dts/omap3-beagle.dts
- rename arch/arm/boot/dts/{omap4-pandaES.dts => omap4-panda-es.dts} (100%)
- rename arch/arm/boot/dts/{omap4-var_som.dts => omap4-var-som.dts} (100%)
+I only read the DT binding.
