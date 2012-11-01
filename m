@@ -1,82 +1,58 @@
-From: Russ Dill <Russ.Dill@ti.com>
-Subject: Re: [RFC 1/7] capebus: Core capebus support
-Date: Wed, 31 Oct 2012 17:55:29 -0700
-Message-ID: <CA+Bv8XZ2bMNvb77R5gqz7FVaCF1RtfTbiaCDE6iAKk3UUmnj6w@mail.gmail.com>
-References: <1351702333-8456-1-git-send-email-panto@antoniou-consulting.com>
-	<1351702333-8456-2-git-send-email-panto@antoniou-consulting.com>
-	<CA+Bv8XZ5WnhsKqYA6TBv8wh6OvOdU-G8XhuV2dO49O1qX_FRgg@mail.gmail.com>
-	<EBB972CD-D9D9-4704-AABF-2DFCED584297@antoniou-consulting.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH v1 06/40] of/vendor-prefixes: add Imagination Technologies
+Date: Wed, 31 Oct 2012 20:38:39 -0500
+Message-ID: <5091D29F.1050100@gmail.com>
+References: <1351700061-7203-1-git-send-email-james.hogan@imgtec.com> <1351700061-7203-7-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <EBB972CD-D9D9-4704-AABF-2DFCED584297@antoniou-consulting.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1351700061-7203-7-git-send-email-james.hogan@imgtec.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: linux-arch@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2012 at 3:07 PM, Pantelis Antoniou
-<panto@antoniou-consulting.com> wrote:
->
-> On Oct 31, 2012, at 11:55 PM, Russ Dill wrote:
->
->> On Wed, Oct 31, 2012 at 9:52 AM, Pantelis Antoniou
->> <panto@antoniou-consulting.com> wrote:
->>> Introducing capebus; a bus that allows small boards (capes) to connect
->>> to a complex SoC using simple expansion connectors.
->>>
->
-> [snip]
->>> +       if (drv) {
->>> +               /* call the removed bus method (if added prev.) */
->>> +               if (cape_dev->added) {
->>> +                       BUG_ON(cape_dev->bus == NULL);
->>> +                       BUG_ON(cape_dev->bus->ops == NULL);
->>> +                       if (cape_dev->bus->ops->dev_removed)
->>> +                               cape_dev->bus->ops->dev_removed(cape_dev);
->>> +                       cape_dev->added = 0;
->>> +               }
->>
->> Is there any case where added will not track drv?
->
->
-> Yes, there is a corner case here.
->
-> There is the case where while the device is created there is no matching
-> driver yet. Either that's the case of a not supported cape, or the
-> cape driver hasn't been loaded yet.
->
-> We do need the device to be created, so that the user can browse in the
-> sysfs it's eeprom attributes.
->
-> There's some further complications with runtime cape overrides, but
-> that's the gist of it.
+On 10/31/2012 11:13 AM, James Hogan wrote:
+> The "powervr" prefix which is currently described as "Imagination
+> Technologies" isn't really appropriate for non-PowerVR hardware, so
+> change the description of "powervr" to "PowerVR (Imagination
+> Technologies Ltd.)", and add a separate "img" prefix for "Imagination
+> Technologies Ltd.".
+> 
+> Signed-off-by: James Hogan <james.hogan@imgtec.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |    3 ++-
+>  1 files changed, 2 insertions(+), 1 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index db4d3af..5a94721b 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -24,6 +24,7 @@ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  hp	Hewlett Packard
+>  ibm	International Business Machines (IBM)
+>  idt	Integrated Device Technologies, Inc.
+> +img	Imagination Technologies Ltd.
+>  intercontrol	Inter Control Group
+>  linux	Linux-specific binding
+>  marvell	Marvell Technology Group Ltd.
+> @@ -34,7 +35,7 @@ nintendo	Nintendo
+>  nvidia	NVIDIA
+>  nxp	NXP Semiconductors
+>  picochip	Picochip Ltd
+> -powervr	Imagination Technologies
+> +powervr	PowerVR (Imagination Technologies Ltd.)
 
-I'm trying to figure out how that would come about, here is where
-added is set to 1:
+Perhaps you should add "deprecated, use img"
 
-+       /* all is fine... */
-+       cape_dev->driver = drv;
-+       cape_dev->added = 1;
+Otherwise, looks fine and I assume you are going to merge with the rest
+of the series:
 
-This is after calling drv->probe, so drv is not null.
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 
-There is a brief time here where added is 0, but driver is not.
-
-+       if (drv) {
-+               /* call the removed bus method (if added prev.) */
-+               if (cape_dev->added) {
-+                       BUG_ON(cape_dev->bus == NULL);
-+                       BUG_ON(cape_dev->bus->ops == NULL);
-+                       if (cape_dev->bus->ops->dev_removed)
-+                               cape_dev->bus->ops->dev_removed(cape_dev);
-+                       cape_dev->added = 0;
-+               }
-+               if (drv->remove) {
-+                       pm_runtime_get_sync(dev);
-+                       drv->remove(cape_dev);
-+                       pm_runtime_put_noidle(dev);
-+               }
-+               cape_dev->driver = NULL;
-
-Is one of the remove or resume functions check added in this case?
+Rob
