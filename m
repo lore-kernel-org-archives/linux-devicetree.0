@@ -1,14 +1,13 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: Deprecating reserve-map in favor of properties
-Date: Fri, 02 Nov 2012 06:41:36 +1100
-Message-ID: <1351798896.12271.241.camel@pasglop>
-References: <1348179051.1132.32.camel@pasglop>
- <CACxGe6sAXBJ9KkA8Urioe-VsbaLUO+=C_tb1vU+i_VKuedi=eg@mail.gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v7 1/8] video: add display_timing struct and helpers
+Date: Thu, 1 Nov 2012 21:08:42 +0100
+Message-ID: <20121101200842.GA13137@avionic-0098.mockup.avionic-design.de>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1351675689-26814-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============3835309913153741951=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6sAXBJ9KkA8Urioe-VsbaLUO+=C_tb1vU+i_VKuedi=eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1351675689-26814-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,65 +18,96 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2012-11-01 at 15:21 +0100, Grant Likely wrote:
 
-> I think this makes sense. Cyril and I are just talking about what he
-> needs. He wants to set aside per-device reserved regions and would
-> like to have the ability to reference a particular reserved region
-> from a device node, probably with a phandle. I like the look of the
-> reserved-{ranges,names} properties in the root, but I see the argument
-> that it isn't very flexible. What about something like this:
-> 
-> reserved-memory {
->         reserved@0x10000000 { reg = <0x10000000 0x08000000>; };
->         reserved@0x01000000 { reg = <0x01000000 0x00200000>; };
-> }
-> 
-> The node name of the child nodes could be different of course.
+--===============3835309913153741951==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Content-Disposition: inline
 
-I'm not that fan of different nodes, especially nodes with nodes in them
-for that purpose. Seems overkill.
 
-Can't he reference reserved entries as <phandle>,<index> pairs ?
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I still think a single property would do fine. We could mandate those be
-in the respective "memory" nodes but them you have potentially to break
-up reserved regions if you have multiple memory nodes (NUMA) etc...
+On Wed, Oct 31, 2012 at 10:28:01AM +0100, Steffen Trumtrar wrote:
+[...]
+> +void timings_release(struct display_timings *disp)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < disp->num_timings; i++)
+> +		kfree(disp->timings[i]);
+> +}
+> +
+> +void display_timings_release(struct display_timings *disp)
+> +{
+> +	timings_release(disp);
+> +	kfree(disp->timings);
+> +}
 
-I'd vote for the simpler approach here...
+I'm not quite sure I understand how these are supposed to be used. The
+only use-case where a struct display_timings is dynamically allocated is
+for the OF helpers. In that case, wouldn't it be more useful to have a
+function that frees the complete structure, including the struct
+display_timings itself? Something like this, which has all of the above
+rolled into one:
 
-> > The idea here is that we could have well defined names (using a similar
-> > prefix we use for properties) such as linux,initrd, which indicates
-> > clearly to the kernel that the only reason that range is reserved is
-> > because it contains an initrd (ie, it can be freed once that's been
-> > extracted).
-> >
-> > It would also be generally handy in case a reserved area is meant to be
-> > used by a specific driver, such as an in-memory framebuffer
-> > pre-initialized by the firmware. The generic memory management code
-> > doesn't need to know, but later on, the gfx driver can pick it up easily
-> > provided the name is part of the binding for that device.
-> 
-> Right, that would work also even though I prefer phandle references in
-> general. Is it conceivable that additional data would want to be
-> attached to a particular reserved region?
+	void display_timings_free(struct display_timings *disp)
+	{
+		if (disp->timings) {
+			unsigned int i;
 
-phandle references and names aren't exclusive from each other. The name
-remains a useful diagnostic tool.
+			for (i = 0; i < disp->num_timings; i++)
+				kfree(disp->timings[i]);
+		}
 
-If you want additional data, make a node somewhere to represent that
-region along with its additional data, that node can have a reference to
-the reserved map entry.
+		kfree(disp->timings);
+		kfree(disp);
+	}
 
-I'd keep the reserve map itself simple. It's a "synthetic property" a
-bit like the memory nodes. IE. The "memory" nodes don't have to
-represent physical memory controllers & DIMMs. They represent the
-overall view of memory by the CPUs. You can represent the MCs and the
-DIMMs elsewhere in the SoC node.
+Is there a use-case where a struct display_timings is not dynamically
+allocated? The only one I can think of is where it is defined as
+platform data, but in that case you don't want to be calling
+display_timing_release() on it anyway.
 
-Cheers,
-Ben.
+Thierry
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQktbKAAoJEN0jrNd/PrOhRqIQAJto5l4A26U8q1YNvZK1MaEv
+EuDvLFbR9zeRbL8/R+N1H0UXI2H8jpmrE2s3GddV41Xe124lJ7ps4gvjolFUiDFq
+OAxu6mVnnM4epoSzk2CgfwzNW3M+5e9Gi9g9/vGtlSoFf4UjhnP1TagSO0JXCoSS
+/tQB186aI9LU6KJGt4N7IlxDwllQm3w/SfH0PTK6QF5aCf8yRexkxuFcZZKvgw/R
+DZzSMJlUdDyI806P+V32JIcvRFGD1HYa4M7JXlY7U+jZ4wZ0MaJJNUnc/vK75rtP
+X6+RW7Kwe3bhbDUiHmWCfdO6LvpYuT7/ZRFY5NwtWmJUCrxlvd40xjBzVq2LmGQB
+cpVvY9fi8vBOp+/6RsLcmRfKmr1PO+czM+DDlS4MyiEX/D7psQQcNAOYkZz66LMg
+8teolpkyWmv/aAmx1HK+nW8siBDTNQk8I0t0DGl3PBobSkA/fBYnj8A1cTueqNvu
+aqeceAMJ2zdtv58agTT12zXV9oZf8tocZvtKRrG4/V+wgqWOZg3qLRX8xChRlF3T
+jG1LZOwgQufzQxAqqN+CKL+dBklK3WZ2q19CZhRdBePuY0eGvQ6kIVtpKINkRFgj
+W3+8I3/AOr1EOa+wLoqMlzY8qWNEy85hr9hdgS7rLqvkGomTAurpKlWth0dGsLEU
+EewZs/bEukAfWXwzHOxQ
+=T5rS
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
+
+--===============3835309913153741951==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3835309913153741951==--
