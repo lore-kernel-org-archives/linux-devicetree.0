@@ -1,59 +1,59 @@
-From: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] powerpc/gianfar: fix ethernet cannot work after restoring
- from hibernation
-Date: Fri, 2 Nov 2012 09:52:05 +0800
-Message-ID: <1351821125-9821-1-git-send-email-dongsheng.wang@freescale.com>
+From: Josh Cartwright <josh.cartwright@ni.com>
+Subject: Re: [PATCH 8/8] clocksource: xilinx_ttc: add OF_CLK support
+Date: Thu, 1 Nov 2012 20:56:47 -0600
+Message-ID: <20121102025647.GN5190@beefymiracle.amer.corp.natinst.com>
+References: <cover.1351721190.git.josh.cartwright@ni.com>
+ <0ea1ba71afb3f4551ac27a6dfa41bd97b63cef48.1351721190.git.josh.cartwright@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <0ea1ba71afb3f4551ac27a6dfa41bd97b63cef48.1351721190.git.josh.cartwright@ni.com>
+Content-Disposition: inline
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@ti.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Linn <John.Linn@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-we should make sure a ethernet has been taken down when system into hibernation
-status. when the system restoring form hibernation, the ethernet cannot be
-taken up.
-eg:
-~# ifconfig eth0 down
-~# echo disk > /sys/power/state
+On Wed, Oct 31, 2012 at 01:56:14PM -0600, Josh Cartwright wrote:
+> Add support for retrieving TTC configuration from device tree.  This
+> includes the ability to pull information about the driving clocks from
+> the of_clk bindings.
+> 
+> Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
+> ---
+> diff --git a/drivers/clocksource/xilinx_ttc.c b/drivers/clocksource/xilinx_ttc.c
+> index ff38b3e..a4718f7 100644
+> --- a/drivers/clocksource/xilinx_ttc.c
+> +++ b/drivers/clocksource/xilinx_ttc.c
+> @@ -209,7 +153,8 @@ static struct clocksource clocksource_xttcpss = {
+>  static int xttcpss_set_next_event(unsigned long cycles,
+>  					struct clock_event_device *evt)
+>  {
+> -	struct xttcpss_timer *timer = &timers[XTTCPSS_CLOCKEVENT];
+> +	struct xttcpss_timer_clockevent *xttce = to_xttcpss_timer_clkevent(evt);
+> +	struct xttcpss_timer *timer = &xttce->xttc;
+>  
+>  	xttcpss_set_interval(timer, cycles);
+>  	return 0;
+> @@ -224,12 +169,14 @@ static int xttcpss_set_next_event(unsigned long cycles,
+>  static void xttcpss_set_mode(enum clock_event_mode mode,
+>  					struct clock_event_device *evt)
+>  {
+> -	struct xttcpss_timer *timer = &timers[XTTCPSS_CLOCKEVENT];
+> +	struct xttcpss_timer_clockevent *xttce = to_xttcpss_timer_clkevent(evt);
+> +	struct xttcpss_timer *timer = &xttce->xttc;
+>  	u32 ctrl_reg;
+>  
+>  	switch (mode) {
+>  	case CLOCK_EVT_MODE_PERIODIC:
+> -		xttcpss_set_interval(timer, TIMER_RATE / HZ);
+> +		xttcpss_set_interval(timer,
+> +				     clk_get_rate(xttce->clk) / PRESCALE);
 
-hibernation restore
+I discovered with further testing that the above calculation is broken;
+calculated interval also needs to be divided by HZ.
 
-~# ifconfig eth0 up
-SIOCSIFFLAGS: No such device
+(I'll post a v2; just wanted to get this out there in the slim chance
+anyone's testing this ;)
 
-Signed-off-by: Wang Dongsheng <dongsheng.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/net/ethernet/freescale/gianfar.c |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index 4605f72..487b944 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -1345,8 +1345,11 @@ static int gfar_restore(struct device *dev)
- 	struct gfar_private *priv = dev_get_drvdata(dev);
- 	struct net_device *ndev = priv->ndev;
- 
--	if (!netif_running(ndev))
-+	if (!netif_running(ndev)) {
-+		netif_device_attach(ndev);
-+
- 		return 0;
-+	}
- 
- 	gfar_init_bds(ndev);
- 	init_registers(ndev);
--- 
-1.7.5.1
+  Josh
