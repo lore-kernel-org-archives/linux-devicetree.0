@@ -1,90 +1,91 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [U-Boot] Merging device trees at runtime for module-based systems
-Date: Fri, 2 Nov 2012 15:53:52 +1100
-Message-ID: <20121102045352.GP27695@truffula.fritz.box>
-References: <5087B919.2010006@gmail.com> <508AD8F9.8030105@wwwdotorg.org>
- <5091AD78.3060701@gmail.com> <5091BAAA.5010809@firmworks.com>
- <5091FC38.2020806@wwwdotorg.org>
+From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Subject: RE: [PATCH V3] mmc: omap_hsmmc: Enable HSPE bit for high speed cards
+Date: Fri, 2 Nov 2012 05:32:35 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EABDCB7@DBDE01.ent.ti.com>
+References: <1351684656-30275-1-git-send-email-gururaja.hebbar@ti.com>
+ <20121031122639.GA10998@arwen.pp.htv.fi>
+ <CAOyx1LrKBE+xzSRN4F=+e1DuMJL+5SAv-YkJWJdDw8p=kDojmw@mail.gmail.com>
+ <20121031201626.GA28784@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5091FC38.2020806-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121031201626.GA28784@arwen.pp.htv.fi>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Balbi, Felipe" <balbi@ti.com>, "S, Venkatraman" <svenkatr@ti.com>
+Cc: "cjb@laptop.org" <cjb@laptop.org>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Nori, Sekhar" <nsekhar@ti.com>, "Rajashekhara, Sudhakar" <sudhakar.raj@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "tony@atomide.com" <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2012 at 10:36:08PM -0600, Stephen Warren wrote:
-> On 10/31/2012 05:56 PM, Mitch Bradley wrote:
-> > On 10/31/2012 1:00 PM, Daniel Mack wrote:
-> >> cc devicetree-discuss. Here's a reference to the full thread:
-> >>
-> >>   http://thread.gmane.org/gmane.comp.boot-loaders.u-boot/145221/
-> >>
-> >> On 26.10.2012 20:39, Stephen Warren wrote:
-> >>> On 10/24/2012 03:47 AM, Daniel Mack wrote:
-> >>>> Hi,
-> >>>>
-> >>>> a project I'm involved in uses a module/baseboard combo, and components
-> >>>> on either board are described in DT. I'm currently using separate dts
-> >>>> files which build upon each other with include statements, which works
-> >>>> fine for development.
-> >>>>
-> >>>> In production though, we will certainly have running changes (and hence
-> >>>> different versions) over the lifetime of the product for both the
-> >>>> baseboard and the module, and the hardware has support for identifying
-> >>>> the versions of both sides at runtime.
-> ...
-> >> I start to believe that the cleanest solution to this would be to
-> >> have full DTC functionality in U-Boot and compile the tree
-> > 
-> > ... which is exactly the way that Open Firmware does it, since the
-> > invention of the device tree.  The model is that the boot firmware,
-> > which needs to know the system configuration to do its job anyway,
-> > exports that configuration via the device tree.
+On Thu, Nov 01, 2012 at 01:46:26, Balbi, Felipe wrote:
+> Hi,
 > 
-> Doesn't OF generate the DT from internal data structures (although I
-> don't know where those come from...),
+> On Thu, Nov 01, 2012 at 01:21:36AM +0530, Venkatraman S wrote:
+> > On Wed, Oct 31, 2012 at 5:56 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > > Hi,
+> > >
+> > > On Wed, Oct 31, 2012 at 05:27:36PM +0530, Hebbar, Gururaja wrote:
+> > >> HSMMC IP on AM33xx need a special setting to handle High-speed cards.
+> > >> Other platforms like TI81xx, OMAP4 may need this as-well. This depends
+> > >> on the HSMMC IP timing closure done for the high speed cards.
+> > >>
+> > >> From AM335x TRM (SPRUH73F - 18.3.12 Output Signals Generation)
+> > >>
+> > >> The MMC/SD/SDIO output signals can be driven on either falling edge or
+> > >> rising edge depending on the SD_HCTL[2] HSPE bit. This feature allows
+> > >> to reach better timing performance, and thus to increase data transfer
+> > >> frequency.
+> > >>
+> > >> There are few pre-requisites for enabling the HSPE bit
+> > >> - Controller should support High-Speed-Enable Bit and
+> > >> - Controller should not be using DDR Mode and
+> > >> - Controller should advertise that it supports High Speed in
+> > >>   capabilities register and
+> > >> - MMC/SD clock coming out of controller > 25MHz
+> > >>
+> > >> Note:
+> > >> The implementation reuses the output of calc_divisor() so as to reduce
+> > >> code addition.
+> > >>
+> > >> Signed-off-by: Hebbar, Gururaja <gururaja.hebbar@ti.com>
+> > >
+> > > this looks good to my eyes, hopefully I haven't missed anything:
+> > >
+> > > Reviewed-by: Felipe Balbi <balbi@ti.com>
+> > >
+> > 
+> > Except for the excessively verbose comments which are just duplicating the code,
+> > <Quote>
+> > >> +      * Enable High-Speed Support
+> > >> +      * Pre-Requisites
+> > >> +      *      - Controller should support High-Speed-Enable Bit
+> > >> +      *      - Controller should not be using DDR Mode
+> > >> +      *      - Controller should advertise that it supports High Speed
+> > >> +      *        in capabilities register
+> > >> +      *      - MMC/SD clock coming out of controller > 25MHz
+> > >> +      */
+> > </Quote>
+> > 
+> > I'm ok with this patch as well. I'm putting a few patches under test
+> > including this one,
+> > and will send it to Chris as part of that series.
+> > I'll strip out the above mentioned comments, unless there are any
+> > objections.
+> 
+> please don't. Detailing the pre-requisites for getting HSP mode working
+> isn't bad at all. Should someone decide to change the behavior and ends
+> up breaking it, the comment will help putting things back together.
+> 
+> my 2 cents, you've got the final decision though.
 
-Well.. in OF the device tree *is* a core live data structure.  It will
-be constructed as devices are probed, firmware level device drivers
-are attached to it and it might be modified by client interface
-operations.  Traditionally there is no tree in the flattened format,
-only the live tree which clients will query with OF calls.  Some
-recent OF implementations do use the flat tree in some ways - we've
-had some systems where a flattened tree is provided by an early boot
-to the full OF; it acts as a skeleton that is then extended in OF's
-live tree.  We've also had some OF implementations that for
-compatiblity with kernels that expect a flattened tree flatten their
-internal tree structure into the FDT format as the last thing before
-entering the OS.
+Same here. Description is required in commit message since it will help
+in during git bisect.
 
-> whereas what Daniel mentions above
-> is more like the bootloader having access to a bunch of .dts fragments,
-> selecting the appropriate subset of those to use, parsing them into an
-> internal data structure (i.e. running dtc), and then generating a DTB
-> from it. The overall result is that the bootloader causes a DTB to be
-> generated at run-time, so at that level it's the same, but the
-> implementation seems pretty different.
+> 
+> -- 
+> balbi
+> 
 
-How OF constructs its internal tree can vary a lot with the OF
-implementation, and I'm not terribly clear on what you had in mind, so
-I don't think either side is really sufficiently well defined to
-really say if they're similar or not.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Regards, 
+Gururaja
