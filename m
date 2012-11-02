@@ -1,244 +1,224 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH v3] Input: matrix-keypad - Add device tree support
-Date: Fri, 2 Nov 2012 16:33:02 +0530
-Message-ID: <1351854182-10978-1-git-send-email-anilkumar@ti.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH v2 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings
+ and NAND
+Date: Fri, 02 Nov 2012 12:14:28 +0100
+Message-ID: <5093AB14.9090402@gmail.com>
+References: <1351794970-14675-1-git-send-email-zonque@gmail.com> <1351794970-14675-5-git-send-email-zonque@gmail.com> <5093A36B.70101@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, grant.likely@secretlab.ca
-Cc: rob.herring@calxeda.com, dgdunix@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5093A36B.70101@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-omap@vger.kernel.org, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to matrix keypad driver and usage details
-are added to device tree documentation. Driver was tested on AM335x
-EVM.
+Hi Jon,
 
-Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
----
-This patch was tested on AM335x-EVM with DT patches, DT data
-patches will be submitted once this is accepted.
+as all comments so far focussed on patch 4/4, could we agree to merge
+1-3 of this series already? These are all small and straight-forward
+things that don't depend on 4/4. That way, I only need to resend the
+last one under discussion.
 
-Changes from v2:
-	- Incorporated Stephen Warren's review comments on v2
-	  * Renamed the bindings file to gpio-matrix-keypad.txt
-	  * Added description to clustered-irq binding
+On 02.11.2012 11:41, Jon Hunter wrote:
+> Hi Daniel,
+> 
+> On 11/01/2012 01:36 PM, Daniel Mack wrote:
+>> This patch adds basic DT bindings for OMAP GPMC.
+>>
+>> The actual peripherals are instanciated from child nodes within the GPMC
+>> node, and the only type of device that is currently supported is NAND.
+>>
+>> Code was added to parse the generic GPMC timing parameters and some
+>> documentation with examples on how to use them.
+>>
+>> Successfully tested on an AM33xx board.
+>>
+>> Signed-off-by: Daniel Mack <zonque@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  73 +++++++++++
+>>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  61 +++++++++
+>>  arch/arm/mach-omap2/gpmc.c                         | 139 +++++++++++++++++++++
+>>  3 files changed, 273 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>>  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> new file mode 100644
+>> index 0000000..6f44487
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> @@ -0,0 +1,73 @@
+>> +Device tree bindings for OMAP general purpose memory controllers (GPMC)
+>> +
+>> +The actual devices are instantiated from the child nodes of a GPMC node.
+>> +
+>> +Required properties:
+>> +
+>> + - compatible:		Should be set to "ti,gpmc"
+>> + - reg:			A resource specifier for the register space
+>> +			(see the example below)
+>> + - ti,hwmods:		Should be set to "ti,gpmc" until the DT transition is
+>> +			completed.
+>> + - #address-cells:	Must be set to 2 to allow memory address translation
+>> + - #size-cells:		Must be set to 1 to allow CS address passing
+>> + - ranges:		Must be set up to reflect the memory layout
+>> +			Note that this property is not currently parsed.
+>> +			Calculated values derived from the contents of
+>> +			GPMC_CS_CONFIG7 as set up by the bootloader. That will
+>> +			change in the future, so be sure to fill the correct
+>> +			values here.
+> 
+> I still think it would be good to add number of chip-selects and
+> wait-pins here.
 
-Changes from v1:
-	- Incorporated Rob's review comments on v1
-	  * Changed matix-keypad compatible to gpio-matrix-keypad
-	  * Removed unnecessary props (num of gpios)
-	  * Used of_match_ptr()
-	- Removed first patch based on Dmitry's comments on v1
+The number of chip-selects can be derived from the ranges property.
+Namely, each 4-value entry to this property maps to one chip-select. I
+can try and make the more clear in the documentation.
 
- .../bindings/input/gpio-matrix-keypad.txt          |   51 ++++++++++
- drivers/input/keyboard/matrix_keypad.c             |  107 +++++++++++++++++++-
- 2 files changed, 157 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+>> +Timing properties for child nodes. All are optional and default to 0.
+>> +
+>> + - gpmc,sync-clk:	Minimum clock period for synchronous mode, in picoseconds
+>> +
+>> + Chip-select signal timings corresponding to GPMC_CS_CONFIG2:
+>> + - gpmc,cs-on:		Assertion time
+>> + - gpmc,cs-rd-off:	Read deassertion time
+>> + - gpmc,cs-wr-off:	Write deassertion time
+>> +
+>> + ADV signal timings corresponding to GPMC_CONFIG3:
+>> + - gpmc,adv-on:		Assertion time
+>> + - gpmc,adv-rd-off:	Read deassertion time
+>> + - gpmc,adv-wr-off:	Write deassertion time
+> 
+> Nit-pick, looks like you are mixing GPMC_CS_CONFIGx and GPMC_CONFIGx
+> naming conventions in the above and below. Would be good to make this
+> consistent.
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-new file mode 100644
-index 0000000..0a1e81c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-@@ -0,0 +1,51 @@
-+* GPIO driven matrix keypad device tree bindings
-+
-+GPIO driven matrix keypad is used to interface a SoC with a matrix keypad.
-+The matrix keypad supports multiple row and column lines, a key can be
-+placed at each intersection of a unique row and a unique column. The matrix
-+keypad can sense a key-press and key-release by means of GPIO lines and
-+report the event using GPIO interrupts to the cpu.
-+
-+Required Properties:
-+- compatible:		Should be "gpio-matrix-keypad"
-+- row-gpios:		List of gpios used as row lines. The gpio specifier
-+			for this property depends on the gpio controller to
-+			which these row lines are connected.
-+- col-gpios:		List of gpios used as column lines. The gpio specifier
-+			for this property depends on the gpio controller to
-+			which these column lines are connected.
-+- linux,keymap:		The definition can be found at
-+			bindings/input/matrix-keymap.txt
-+
-+Optional Properties:
-+- linux,no-autorepeat:	do no enable autorepeat feature.
-+- linux,wakeup:		use any event on keypad as wakeup event.
-+- debounce-delay-ms:	debounce interval in milliseconds
-+- col-scan-delay-us:	delay, measured in microseconds, that is needed
-+			before we can scan keypad after activating column gpio
-+- clustered-irq:	have clustered irq number, that is needed if the irq
-+			is a combined irq source for the whole matix keypad.
-+			This is useful if rows and columns of the keypad are
-+			connected to a GPIO expander.
-+- clustered-irq-flags:	clustered irq flags
-+
-+Example:
-+	matrix-keypad {
-+		compatible = "gpio-matrix-keypad";
-+		debounce-delay-ms = <5>;
-+		col-scan-delay-us = <2>;
-+
-+		row-gpios = <&gpio2 25 0
-+			     &gpio2 26 0
-+			     &gpio2 27 0>;
-+
-+		col-gpios = <&gpio2 21 0
-+			     &gpio2 22 0>;
-+
-+		linux,keymap = <0x0000008B
-+				0x0100009E
-+				0x02000069
-+				0x0001006A
-+				0x0101001C
-+				0x0201006C>;
-+	};
-diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-index 18b7237..960e9b05 100644
---- a/drivers/input/keyboard/matrix_keypad.c
-+++ b/drivers/input/keyboard/matrix_keypad.c
-@@ -23,6 +23,9 @@
- #include <linux/gpio.h>
- #include <linux/input/matrix_keypad.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
- 
- struct matrix_keypad {
- 	const struct matrix_keypad_platform_data *pdata;
-@@ -394,6 +397,96 @@ static void matrix_keypad_free_gpio(struct matrix_keypad *keypad)
- 		gpio_free(pdata->col_gpios[i]);
- }
- 
-+#ifdef CONFIG_OF
-+static
-+struct matrix_keypad_platform_data *matrix_keypad_parse_dt(struct device *dev)
-+{
-+	struct matrix_keypad_platform_data *pdata;
-+	struct matrix_keymap_data *keymap_data;
-+	struct device_node *np = dev->of_node;
-+	unsigned int *row_gpios;
-+	unsigned int *col_gpios;
-+	struct property *prop;
-+	int key_count = 0, length, row, col;
-+	uint32_t *keymap;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "could not allocate memory for platform data\n");
-+		return NULL;
-+	}
-+
-+	pdata->num_row_gpios = of_gpio_named_count(np, "row-gpios");
-+	pdata->num_col_gpios = of_gpio_named_count(np, "col-gpios");
-+	if (!pdata->num_row_gpios || !pdata->num_col_gpios) {
-+		dev_err(dev, "number of keypad rows/columns not specified\n");
-+		return NULL;
-+	}
-+
-+	keymap_data = devm_kzalloc(dev, sizeof(*keymap_data), GFP_KERNEL);
-+	if (!keymap_data) {
-+		dev_err(dev, "could not allocate memory for keymap data\n");
-+		return NULL;
-+	}
-+	pdata->keymap_data = keymap_data;
-+
-+	prop = of_find_property(np, "linux,keymap", &length);
-+	if (!prop)
-+		return NULL;
-+
-+	key_count = length / sizeof(u32);
-+	keymap_data->keymap_size = key_count;
-+	keymap = devm_kzalloc(dev, sizeof(uint32_t) * key_count, GFP_KERNEL);
-+	if (!keymap) {
-+		dev_err(dev, "could not allocate memory for keymap\n");
-+		return NULL;
-+	}
-+	keymap_data->keymap = keymap;
-+
-+	of_property_read_u32_array(np, "linux,keymap", keymap, key_count);
-+
-+	if (of_get_property(np, "linux,no-autorepeat", NULL))
-+		pdata->no_autorepeat = true;
-+	if (of_get_property(np, "linux,wakeup", NULL))
-+		pdata->wakeup = true;
-+	if (of_get_property(np, "gpio-activelow", NULL))
-+		pdata->active_low = true;
-+
-+	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
-+	of_property_read_u32(np, "col-scan-delay-us",
-+						&pdata->col_scan_delay_us);
-+	of_property_read_u32(np, "clustered-irq", &pdata->clustered_irq);
-+	of_property_read_u32(np, "clustered-irq-flags",
-+						&pdata->clustered_irq_flags);
-+
-+	row_gpios = devm_kzalloc(dev, sizeof(unsigned int) *
-+					pdata->num_row_gpios, GFP_KERNEL);
-+	col_gpios = devm_kzalloc(dev, sizeof(unsigned int) *
-+					pdata->num_col_gpios, GFP_KERNEL);
-+	if (!row_gpios || !col_gpios) {
-+		dev_err(dev, "could not allocate memory for gpios\n");
-+		return NULL;
-+	}
-+
-+	for (row = 0; row < pdata->num_row_gpios; row++)
-+		row_gpios[row] = of_get_named_gpio(np, "row-gpios", row);
-+
-+	for (col = 0; col < pdata->num_col_gpios; col++)
-+		col_gpios[col] = of_get_named_gpio(np, "col-gpios", col);
-+
-+	pdata->row_gpios = row_gpios;
-+	pdata->col_gpios = col_gpios;
-+
-+	return pdata;
-+}
-+#else
-+static
-+struct matrix_keypad_platform_data *matrix_keypad_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- {
- 	const struct matrix_keypad_platform_data *pdata;
-@@ -404,7 +497,10 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- 	size_t keymap_size;
- 	int err;
- 
--	pdata = pdev->dev.platform_data;
-+	if (pdev->dev.of_node)
-+		pdata = matrix_keypad_parse_dt(&pdev->dev);
-+	else
-+		pdata = pdev->dev.platform_data;
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "no platform data defined\n");
- 		return -EINVAL;
-@@ -488,6 +584,14 @@ static int __devexit matrix_keypad_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id matrix_keypad_dt_match[] = {
-+	{ .compatible = "gpio-matrix-keypad" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, matrix_keypad_dt_match);
-+#endif
-+
- static struct platform_driver matrix_keypad_driver = {
- 	.probe		= matrix_keypad_probe,
- 	.remove		= __devexit_p(matrix_keypad_remove),
-@@ -495,6 +599,7 @@ static struct platform_driver matrix_keypad_driver = {
- 		.name	= "matrix-keypad",
- 		.owner	= THIS_MODULE,
- 		.pm	= &matrix_keypad_pm_ops,
-+		.of_match_table = of_match_ptr(matrix_keypad_dt_match),
- 	},
- };
- module_platform_driver(matrix_keypad_driver);
--- 
-1.7.9.5
+Ok, but these were just copied from arch/arm/mach-omap2/gpmc.h. So it's
+wrong there, too.
+
+>> + WE signals timings corresponding to GPMC_CONFIG4:
+>> + - gpmc,we-on:		Assertion time
+>> + - gpmc,we-off:		Deassertion time
+>> +
+>> + OE signals timings corresponding to GPMC_CONFIG4
+>> + - gpmc,oe-on:		Assertion time
+>> + - gpmc,oe-off:		Deassertion time
+>> +
+>> + Access time and cycle time timings corresponding to GPMC_CONFIG5
+>> + - gpmc,page-burst-access: Multiple access word delay
+>> + - gpmc,access:		Start-cycle to first data valid delay
+>> + - gpmc,rd-cycle:	Total read cycle time
+>> + - gpmc,wr-cycle:	Total write cycle time
+>> +
+>> +The following are only on OMAP3430
+>> + - gpmc,wr-access
+>> + - gpmc,wr-data-mux-bus
+>> +
+>> +
+>> +Example for an AM33xx board:
+>> +
+>> +	gpmc: gpmc@50000000 {
+>> +		compatible = "ti,gpmc";
+>> +		ti,hwmods = "gpmc";
+>> +		reg = <0x50000000 0x2000>;
+>> +		interrupt-parent = <&intc>;
+> 
+> We should drop interrupt-parent. We are declaring the interrupt-parent
+> globally in the dts files and so no need to replicate in each individual
+> binding.
+
+Right, will remove.
+
+>> +		interrupts = <100>;
+>> +		#address-cells = <2>;
+>> +		#size-cells = <1>;
+>> +		ranges = <0 0 0x08000000 0x10000000>;	/* CS0: NAND */
+>> +
+>> +		nand@0,0 {
+>> +			reg = <0 0 0>; /* CS0, offset 0 */
+> 
+> The above description says that this is just the chip-select number. Are
+> the other fields used here? If so, what for?
+
+Thanks to the translation done by the 'ranges' mechanism, these just
+denote the offset to the address range specified above. So they can be
+left 0.
+
+>> +			nand-bus-width = <16>;
+>> +			nand-ecc-mode = "none";
+> 
+> I am still wondering if the above needs to be mandatory. Or if not then
+> may be these should be documented as optional and if these a omitted
+> then what the default configuration would be.
+
+In my docs, I referred to Documentation/devicetree/bindings/mtd/nand.txt
+which states:
+
+- nand-ecc-mode : String, operation mode of the NAND ecc mode.
+  Supported values are: "none", "soft", "hw", "hw_syndrome",
+"hw_oob_first", "soft_bch".
+- nand-bus-width : 8 or 16 bus width if not present 8
+
+So ecc-mode is mandatory, even though the code currently really defaults
+to 0 ("none"). nand-bus-width isn't. I don't know if it makes sense to
+duplicate the Documentation here.
+
+>> +static int gpmc_probe_dt(struct platform_device *pdev)
+>> +{
+>> +	u32 val;
+>> +	struct device_node *child;
+>> +	struct gpmc_timings gpmc_t;
+>> +	const struct of_device_id *of_id =
+>> +		of_match_device(gpmc_dt_ids, &pdev->dev);
+>> +
+>> +	if (!of_id)
+>> +		return 0;
+>> +
+>> +	for_each_node_by_name(child, "nand") {
+>> +		struct omap_nand_platform_data *gpmc_nand_data;
+>> +
+>> +		if (of_property_read_u32(child, "reg", &val) < 0) {
+>> +			dev_err(&pdev->dev, "%s has no 'reg' property\n",
+>> +				child->full_name);
+>> +			continue;
+>> +		}
+>> +
+>> +		gpmc_nand_data = devm_kzalloc(&pdev->dev,
+>> +					      sizeof(*gpmc_nand_data),
+>> +					      GFP_KERNEL);
+>> +		if (!gpmc_nand_data) {
+>> +			dev_err(&pdev->dev, "unable to allocate memory?");
+>> +			return -ENOMEM;
+>> +		}
+>> +
+>> +		gpmc_nand_data->cs = val;
+>> +		gpmc_nand_data->of_node = child;
+>> +
+>> +		val = of_get_nand_ecc_mode(child);
+>> +		if (val >= 0)
+>> +			gpmc_nand_data->ecc_opt = val;
+>> +
+>> +		val = of_get_nand_bus_width(child);
+>> +		if (val == 16)
+>> +			gpmc_nand_data->devsize = NAND_BUSWIDTH_16;
+> 
+> Do we need any error checking here? I believe we only support 8-bit and
+> 16-bit width devices and so if 16-bit is not set then we default to 8-bit.
+
+Yes, that's that the code does. If val != 16, ->devsize is left set to 0
+(from kzalloc). There is no NAND_BUSWIDTH_8, so I think that should be ok?
+
+>> +
+>> +		gpmc_read_timings_dt(child, &gpmc_t);
+>> +		gpmc_nand_init(gpmc_nand_data, &gpmc_t);
+> 
+> I believe that you need an "of_node_put()" when you are done with the child.
+
+Good point.
+
+
+Thanks,
+Daniel
 
