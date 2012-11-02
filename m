@@ -1,120 +1,93 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH v2 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Fri, 02 Nov 2012 21:23:56 +0100
-Message-ID: <50942BDC.9060806@gmail.com>
-References: <1351794970-14675-1-git-send-email-zonque@gmail.com> <1351794970-14675-5-git-send-email-zonque@gmail.com> <5093A36B.70101@ti.com> <5093AB14.9090402@gmail.com> <50941C6C.3030403@ti.com> <50941DC4.2050209@gmail.com> <50942590.5010202@ti.com>
+From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
+Date: Fri, 2 Nov 2012 16:26:44 -0400
+Message-ID: <201211021626.50503.vapier@gentoo.org>
+References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50942590.5010202@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-omap@vger.kernel.org, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com
+Content-Type: multipart/mixed; boundary="===============2343845681159323509=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1332296626-19707-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02.11.2012 20:57, Jon Hunter wrote:
-> On 11/02/2012 02:23 PM, Daniel Mack wrote:
->> On 02.11.2012 20:18, Jon Hunter wrote:
->>> On 11/02/2012 06:14 AM, Daniel Mack wrote:
+--===============2343845681159323509==
+Content-Type: multipart/signed;
+  boundary="nextPart3769070.okbKvxx1uN";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 
->>>>>> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..6f44487
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>>>>> @@ -0,0 +1,73 @@
->>>>>> +Device tree bindings for OMAP general purpose memory controllers (GPMC)
->>>>>> +
->>>>>> +The actual devices are instantiated from the child nodes of a GPMC node.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +
->>>>>> + - compatible:		Should be set to "ti,gpmc"
->>>>>> + - reg:			A resource specifier for the register space
->>>>>> +			(see the example below)
->>>>>> + - ti,hwmods:		Should be set to "ti,gpmc" until the DT transition is
->>>>>> +			completed.
->>>>>> + - #address-cells:	Must be set to 2 to allow memory address translation
->>>>>> + - #size-cells:		Must be set to 1 to allow CS address passing
->>>>>> + - ranges:		Must be set up to reflect the memory layout
->>>>>> +			Note that this property is not currently parsed.
->>>>>> +			Calculated values derived from the contents of
->>>>>> +			GPMC_CS_CONFIG7 as set up by the bootloader. That will
->>>>>> +			change in the future, so be sure to fill the correct
->>>>>> +			values here.
->>>>>
->>>>> I still think it would be good to add number of chip-selects and
->>>>> wait-pins here.
->>>>
->>>> The number of chip-selects can be derived from the ranges property.
->>>> Namely, each 4-value entry to this property maps to one chip-select. I
->>>> can try and make the more clear in the documentation.
->>>
->>> Yes but that only tells you how many you are using. The binding should
->>> describe the hardware and so should tell us how many chip-selects we
->>> have. We should get away from using GPMC_CS_NUM in the code.
->>
->> Maybe I don't get your point, but we only need to care for as many cs
->> lines as we actually use, right?
-> 
-> But how many does your device have? How many clients can you support?
+--nextPart3769070.okbKvxx1uN
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Well, you state that in the ranges property. Even if the chip could in
-theory support 8 CS lines - if the actual setup only uses the first one
-of them, the code would only need to allocate and set up the one that is
-in use. And as the entries in "ranges" are mandatory, there can actually
-be no mis-allocation.
+On Tuesday 20 March 2012 22:23:46 Stephen Warren wrote:
+> On Ubuntu, /bin/sh is dash (at least by default), and dash's echo doesn't
+> accept the -e option. This means that fdtget-runtest.sh's EXPECT file will
+> contain "-e foo" rather than just "foo", which causes a test failure.
+>=20
+> To work around this, run /bin/echo instead of (builtin) echo, which has
+> more chance of supporting the -e option.
+>=20
+> Another possible fix is to change all the #! lines to /bin/bash rather
+> than /bin/sh, and change run_tests.sh to invoke sub-scripts using $SHELL
+> instead of just "sh". However, that would require bash specifically, which
+> may not be desirable.
+>=20
+> --- a/tests/fdtget-runtest.sh
+> +++ b/tests/fdtget-runtest.sh
+>=20
+> -echo -e $expect >$EXPECT
+> +/bin/echo -e $expect >$EXPECT
 
-I can still add the maximum number as a separate property, but I wanted
-to outline my idea here. Is "num-cs" a good name for the property?
+the better fix is to use printf and %b:
+	printf '%b\n' "$expect" > $EXPECT
+=2Dmike
 
-> If we know how many the device has and then we can get rid of "#define
-> GPMC_CS_NUM". We currently allocate the CS by calling gpmc_cs_request().
-> Hmmm ... I now see that your patch is not calling this before
-> configuring the CS and so that needs to be fixed too.
+--nextPart3769070.okbKvxx1uN
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-It does implicitly, by calling gpmc_nand_init().
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (GNU/Linux)
 
-> Without knowing the total CS available, how do we ensure we have the CS
-> available that someone is asking for?
-> 
->>> What about wait-pins?
->>
->> Afaik, their use depends on the driver acting as GPMC client, right?
->> Could you point me to code that acts conditionally and that should be
->> reflected in DT?
-> 
-> Again we need to know how many the device has. Clients may or may not
-> use these. However, if a client wants one they need to request one which
-> is just like a chip-select. This is not in the current driver but Afzal
-> has a patch for this [1].
+iQIcBAABAgAGBQJQlCyKAAoJEEFjO5/oN/WBmyYQAJDjSg3AjqXsaNOQtgC0ATzg
+jUmiBxVqisBjIBhwRWaGat+7YDsiS2qolB15XRSGVUZkcdI89Jf+e4QDclX5nB27
+tcZ8W7JP29B2R/pw2wr16ctcOElbsJvteBPMQnQ71qiaZWqj/yvJxLMqEf+vogCC
+D0IZpUOcoszBud5NFidgcrYj2ORa0c90D/nrthcFz5byrrxoaoOJhNZrGtZVkm5E
+RdDDeP0C8gbr5w3OPsRajDfnkiOu4ajTLOgwTN1rA9n8RHzxGPqSA+aTAds+gzqa
+mw3qr8riz+CiN2JYe6XxoHqYMSP6rpqgTZdhjNdQDDP8BsZOXIJ0ppOyZf0bebGf
+5Q03midtZ7OfS1KivT6V0NpSJocOgP1yWypFQTmNBN19msz7k5NwTAzG+EFgPWmT
+mPREkc+4jXnp0oJzXowILFGqV/Kbd1IWzgFpZ1uKNsmNUDbumMvMRkTrg8WC61Ef
+sJGWycWfu5q3LFyORqgUzy/jDT2SIR4sQe8jtFdzemybAsK4UdJIC0UFig/Q3r9n
+mNhRyQbW/2jMioSw1qPf2GBf0pCEjiiVynsQyF8b7vYux1mIeDolMPbegGYE7Xu1
+8rlQMKl49xN8fM+y1vvIgkQIX9gDdkog2AUIYKKFRDgjbfLGCkOGbgNjwuiyUkuu
+KFPIidzsSPmc529rZRME
+=2iYT
+-----END PGP SIGNATURE-----
 
-Ah, thanks for the pointer to the patch. Ok, I'll add a "num-waitpins"
-property. Does that name sound appropriate?
+--nextPart3769070.okbKvxx1uN--
 
-> Bottom line, for such hardware specific features, device tree is a good
-> place to describe how many resources we have. Then we can eliminate such
-> #defines from the driver code.
+--===============2343845681159323509==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Agreed.
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
->> Quoting Documentation/devicetree/bindings/mtd/gpmc-nand.txt:
->>
->> 	For NAND specific properties such as ECC modes or bus width,
->> 	please refer to Documentation/devicetree/bindings/mtd/nand.txt
-> 
-> Ok, thanks I see that now. Looking at other bindings, some also include
-> these details but not all. Could be worth listing ecc-mode under
-> mandatory and bus-width under optional with a reference to nand.txt
-> binding. I don't think it is worth duplicating but listing the actual
-> property names would be nice.
-
-Ok, I amended my local version. With the details above sorted out and
-"num-cs" and "num-waitpins" in place, do you think we're ready for v4?
-
-
-Thanks,
-Daniel
-
+--===============2343845681159323509==--
