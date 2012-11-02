@@ -1,362 +1,117 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH v3 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
-Date: Fri,  2 Nov 2012 16:25:56 +0100
-Message-ID: <1351869956-2787-5-git-send-email-zonque@gmail.com>
-References: <1351869956-2787-1-git-send-email-zonque@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1351869956-2787-1-git-send-email-zonque@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-omap@vger.kernel.org, jon-hunter@ti.com, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com, Daniel Mack <zonque@gmail.com>
+From: Josh Cartwright <josh.cartwright@ni.com>
+Subject: Re: [PATCH 5/8] ARM: zynq: add COMMON_CLK support
+Date: Fri, 2 Nov 2012 09:28:26 -0600
+Message-ID: <20121102152826.GQ5190@beefymiracle.amer.corp.natinst.com>
+References: <cover.1351721190.git.josh.cartwright@ni.com>
+ <94af5ee92c2d68f245eb902de74909aadf159be1.1351721190.git.josh.cartwright@ni.com>
+ <50939378.2050500@metafoo.de>
+ <20121102133850.GO5190@beefymiracle.amer.corp.natinst.com>
+ <5093E2D5.2000304@metafoo.de>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8268079967215480304=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5093E2D5.2000304@metafoo.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Michal Simek <monstr@monstr.eu>, Russell King <linux@arm.linux.org.uk>, John Stultz <johnstul@us.ibm.com>, devicetree-discuss@lists.ozlabs.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, John Linn <John.Linn@xilinx.com>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic DT bindings for OMAP GPMC.
 
-The actual peripherals are instanciated from child nodes within the GPMC
-node, and the only type of device that is currently supported is NAND.
+--===============8268079967215480304==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bZ2MuwyI/0uB8yuJ"
+Content-Disposition: inline
 
-Code was added to parse the generic GPMC timing parameters and some
-documentation with examples on how to use them.
 
-Successfully tested on an AM33xx board.
+--bZ2MuwyI/0uB8yuJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Daniel Mack <zonque@gmail.com>
----
- Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  76 +++++++++++
- .../devicetree/bindings/mtd/gpmc-nand.txt          |  60 +++++++++
- arch/arm/mach-omap2/gpmc.c                         | 141 +++++++++++++++++++++
- 3 files changed, 277 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
- create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+On Fri, Nov 02, 2012 at 04:12:21PM +0100, Lars-Peter Clausen wrote:
+> On 11/02/2012 02:38 PM, Josh Cartwright wrote:
+> > On Fri, Nov 02, 2012 at 10:33:44AM +0100, Lars-Peter Clausen wrote:
+> >> On 10/31/2012 07:58 PM, Josh Cartwright wrote:
+[...]
+> >>> +static void __init zynq_periph_clk_setup(struct device_node *np)
+> >>> +{
+> >>> +	struct zynq_periph_clk *periph;
+> >>> +	const char *parent_names[3];
+> >>> +	struct clk_init_data init;
+> >>> +	struct clk *clk;
+> >>> +	int err;
+> >>> +	u32 reg;
+> >>> +	int i;
+> >>> +
+> >>> +	err = of_property_read_u32(np, "reg", &reg);
+> >>> +	WARN_ON(err);
+> >>
+> >> Shouldn't the function abort if a error happens somewhere? Continuing here
+> >> will lead to undefined behavior. Same is probably true for the other WARN_ONs.
+> >
+> > The way I see it is: the kernel is will be left in a bad state in the
+> > case of any failure, regardless of if we bail out or continue.  AFAICT,
+> > there is no clean way to recover from a failure this early.
+> >
+> > Given that, it seems simpler (albeit marginally so) just to continue; so
+> > that's what I chose to do.  I'm not opposed to bailing out, just not
+> > convinced it does anything for us.
+> >
+> The issue with this approach is that, while you get a warning, unexpected
+> seemingly unrelated side-effects may happen later on. E.g. if no reg
+> property for the clock is specified the reg variable will be uninitialized
+> and contain whatever was on the stack before. The clock will be registered
+> nonetheless and the boot process continues. Now if the clock is enabled a
+> bit in a random register will be modified, which could result in strange and
+> abnormal behavior, which can be very hard to track down.
 
-diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-new file mode 100644
-index 0000000..4f4a602
---- /dev/null
-+++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-@@ -0,0 +1,76 @@
-+Device tree bindings for OMAP general purpose memory controllers (GPMC)
-+
-+The actual devices are instantiated from the child nodes of a GPMC node.
-+
-+Required properties:
-+
-+ - compatible:		Should be set to "ti,gpmc"
-+ - reg:			A resource specifier for the register space
-+			(see the example below)
-+ - ti,hwmods:		Should be set to "ti,gpmc" until the DT transition is
-+			completed.
-+ - #address-cells:	Must be set to 2 to allow memory address translation
-+ - #size-cells:		Must be set to 1 to allow CS address passing
-+ - ranges:		Must be set up to reflect the memory layout with four
-+			integer values for each chip-select line in use:
-+
-+			   <cs-number> 0 <physical address of mapping> <size>
-+
-+			Note that this property is not currently parsed.
-+			Calculated values derived from the contents of the
-+			per-CS register GPMC_CONFIG7 (as set up by the
-+			bootloader) are used. That will change in the future,
-+			so be sure to fill the correct values here.
-+
-+Timing properties for child nodes. All are optional and default to 0.
-+
-+ - gpmc,sync-clk:	Minimum clock period for synchronous mode, in picoseconds
-+
-+ Chip-select signal timings corresponding to GPMC_CONFIG2:
-+ - gpmc,cs-on:		Assertion time
-+ - gpmc,cs-rd-off:	Read deassertion time
-+ - gpmc,cs-wr-off:	Write deassertion time
-+
-+ ADV signal timings corresponding to GPMC_CONFIG3:
-+ - gpmc,adv-on:		Assertion time
-+ - gpmc,adv-rd-off:	Read deassertion time
-+ - gpmc,adv-wr-off:	Write deassertion time
-+
-+ WE signals timings corresponding to GPMC_CONFIG4:
-+ - gpmc,we-on:		Assertion time
-+ - gpmc,we-off:		Deassertion time
-+
-+ OE signals timings corresponding to GPMC_CONFIG4:
-+ - gpmc,oe-on:		Assertion time
-+ - gpmc,oe-off:		Deassertion time
-+
-+ Access time and cycle time timings corresponding to GPMC_CONFIG5:
-+ - gpmc,page-burst-access: Multiple access word delay
-+ - gpmc,access:		Start-cycle to first data valid delay
-+ - gpmc,rd-cycle:	Total read cycle time
-+ - gpmc,wr-cycle:	Total write cycle time
-+
-+The following are only on OMAP3430:
-+ - gpmc,wr-access
-+ - gpmc,wr-data-mux-bus
-+
-+
-+Example for an AM33xx board:
-+
-+	gpmc: gpmc@50000000 {
-+		compatible = "ti,gpmc";
-+		ti,hwmods = "gpmc";
-+		reg = <0x50000000 0x2000>;
-+		interrupts = <100>;
-+
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0x08000000 0x10000000>; /* CS0 @addr 0x8000000, size 0x10000000 */
-+
-+		/* child nodes go here */
-+	};
-+
-+
-+
-+
-+
-diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-new file mode 100644
-index 0000000..d78bf49
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-@@ -0,0 +1,60 @@
-+Device tree bindings for GPMC connected NANDs
-+
-+GPMC connected NAND (found on OMAP boards) are represented as child nodes of
-+the GPMC controller with a name of "nand".
-+
-+All timing relevant properties as well as generic gpmc child properties are
-+explained in a separate documents - please refer to
-+Documentation/devicetree/bindings/bus/ti-gpmc.txt
-+
-+For NAND specific properties such as ECC modes or bus width, please refer to
-+Documentation/devicetree/bindings/mtd/nand.txt
-+
-+
-+Required properties:
-+
-+ - reg: The CS line the peripheral is connected to
-+
-+For inline partiton table parsing (optional):
-+
-+ - #address-cells: should be set to 1
-+ - #size-cells: should be set to 1
-+
-+Example for an AM33xx board:
-+
-+	gpmc: gpmc@50000000 {
-+		compatible = "ti,gpmc";
-+		ti,hwmods = "gpmc";
-+		reg = <0x50000000 0x1000000>;
-+		interrupts = <100>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0x08000000 0x10000000>;	/* CS0: NAND */
-+
-+		nand@0,0 {
-+			reg = <0 0 0>; /* CS0, offset 0 */
-+			nand-bus-width = <16>;
-+			nand-ecc-mode = "none";
-+
-+			gpmc,sync-clk = <0>;
-+			gpmc,cs-on = <0>;
-+			gpmc,cs-rd-off = <36>;
-+			gpmc,cs-wr-off = <36>;
-+			gpmc,adv-on = <6>;
-+			gpmc,adv-rd-off = <24>;
-+			gpmc,adv-wr-off = <36>;
-+			gpmc,we-off = <30>;
-+			gpmc,oe-off = <48>;
-+			gpmc,access = <54>;
-+			gpmc,rd-cycle = <72>;
-+			gpmc,wr-cycle = <72>;
-+			gpmc,wr-access = <30>;
-+			gpmc,wr-data-mux-bus = <0>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			/* partitions go here */
-+		};
-+	};
-+
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index 1dcb30c..7ebe4fb 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -25,6 +25,10 @@
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_mtd.h>
-+#include <linux/of_device.h>
-+#include <linux/mtd/nand.h>
- 
- #include <linux/platform_data/mtd-nand-omap2.h>
- 
-@@ -37,6 +41,7 @@
- #include "soc.h"
- #include "common.h"
- #include "gpmc.h"
-+#include "gpmc-nand.h"
- 
- #define	DEVICE_NAME		"omap-gpmc"
- 
-@@ -751,6 +756,133 @@ static int __devinit gpmc_mem_init(void)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id gpmc_dt_ids[] = {
-+	{ .compatible = "ti,gpmc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpmc_dt_ids);
-+
-+static void gpmc_read_timings_dt(struct device_node *np,
-+				 struct gpmc_timings *gpmc_t)
-+{
-+	u32 val;
-+
-+	memset(gpmc_t, 0, sizeof(*gpmc_t));
-+
-+	/* minimum clock period for syncronous mode */
-+	if (!of_property_read_u32(np, "gpmc,sync-clk", &val))
-+		gpmc_t->sync_clk = val;
-+
-+	/* chip select timtings */
-+	if (!of_property_read_u32(np, "gpmc,cs-on", &val))
-+		gpmc_t->cs_on = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,cs-rd-off", &val))
-+		gpmc_t->cs_rd_off = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,cs-wr-off", &val))
-+		gpmc_t->cs_wr_off = val;
-+
-+	/* ADV signal timings */
-+	if (!of_property_read_u32(np, "gpmc,adv-on", &val))
-+		gpmc_t->adv_on = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,adv-rd-off", &val))
-+		gpmc_t->adv_rd_off = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,adv-wr-off", &val))
-+		gpmc_t->adv_wr_off = val;
-+
-+	/* WE signal timings */
-+	if (!of_property_read_u32(np, "gpmc,we-on", &val))
-+		gpmc_t->we_on = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,we-off", &val))
-+		gpmc_t->we_off = val;
-+
-+	/* OE signal timings */
-+	if (!of_property_read_u32(np, "gpmc,oe-on", &val))
-+		gpmc_t->oe_on = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,oe-off", &val))
-+		gpmc_t->oe_off = val;
-+
-+	/* access and cycle timings */
-+	if (!of_property_read_u32(np, "gpmc,page-burst-access", &val))
-+		gpmc_t->page_burst_access = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,access", &val))
-+		gpmc_t->access = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,rd-cycle", &val))
-+		gpmc_t->rd_cycle = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,wr-cycle", &val))
-+		gpmc_t->wr_cycle = val;
-+
-+	/* only for OMAP3430 */
-+	if (!of_property_read_u32(np, "gpmc,wr-access", &val))
-+		gpmc_t->wr_access = val;
-+
-+	if (!of_property_read_u32(np, "gpmc,wr-data-mux-bus", &val))
-+		gpmc_t->wr_data_mux_bus = val;
-+}
-+
-+static int gpmc_probe_dt(struct platform_device *pdev)
-+{
-+	u32 val;
-+	struct device_node *child;
-+	struct gpmc_timings gpmc_t;
-+	const struct of_device_id *of_id =
-+		of_match_device(gpmc_dt_ids, &pdev->dev);
-+
-+	if (!of_id)
-+		return 0;
-+
-+	for_each_node_by_name(child, "nand") {
-+		struct omap_nand_platform_data *gpmc_nand_data;
-+
-+		if (of_property_read_u32(child, "reg", &val) < 0) {
-+			dev_err(&pdev->dev, "%s has no 'reg' property\n",
-+				child->full_name);
-+			continue;
-+		}
-+
-+		gpmc_nand_data = devm_kzalloc(&pdev->dev,
-+					      sizeof(*gpmc_nand_data),
-+					      GFP_KERNEL);
-+		if (!gpmc_nand_data) {
-+			dev_err(&pdev->dev, "unable to allocate memory?");
-+			return -ENOMEM;
-+		}
-+
-+		gpmc_nand_data->cs = val;
-+		gpmc_nand_data->of_node = child;
-+
-+		val = of_get_nand_ecc_mode(child);
-+		if (val >= 0)
-+			gpmc_nand_data->ecc_opt = val;
-+
-+		val = of_get_nand_bus_width(child);
-+		if (val == 16)
-+			gpmc_nand_data->devsize = NAND_BUSWIDTH_16;
-+
-+		gpmc_read_timings_dt(child, &gpmc_t);
-+		gpmc_nand_init(gpmc_nand_data, &gpmc_t);
-+
-+		of_node_put(child);
-+	}
-+
-+	return 0;
-+}
-+#else
-+static int gpmc_probe_dt(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+#endif
-+
- static __devinit int gpmc_probe(struct platform_device *pdev)
- {
- 	int rc;
-@@ -804,6 +936,14 @@ static __devinit int gpmc_probe(struct platform_device *pdev)
- 	if (IS_ERR_VALUE(gpmc_setup_irq()))
- 		dev_warn(gpmc_dev, "gpmc_setup_irq failed\n");
- 
-+	rc = gpmc_probe_dt(pdev);
-+	if (rc < 0) {
-+		clk_disable_unprepare(gpmc_l3_clk);
-+		clk_put(gpmc_l3_clk);
-+		dev_err(gpmc_dev, "failed to probe DT parameters\n");
-+		return rc;
-+	}
-+
- 	return 0;
- }
- 
-@@ -821,6 +961,7 @@ static struct platform_driver gpmc_driver = {
- 	.driver		= {
- 		.name	= DEVICE_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(gpmc_dt_ids),
- 	},
- };
- 
--- 
-1.7.11.7
+Okay.....but any reasonable person would start their debugging quest at
+the source of the WARN_ON.  If someone sees the WARN_ON message but
+stupidly chooses to ignore it, they deserves to spend the time trying to
+track down abnormal behavior, so I'm still not convinced.
 
+  Josh
+
+--bZ2MuwyI/0uB8yuJ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQk+aaAAoJEEef0niEbw+lWcgQAMTdcIdNLeov4zNXCFyWaHRP
+Rc+pPQEfJzvX6Z61ashVfUdMu/rq3LosFutrfmKshDnjut7JGunhazAhhRedHeTK
+ImoPNlAdjW8stnTuauch9/gCpuOCWxqormemU/SLcs0FNjgPivqiK32E967RQb+7
+dAk4kF2ZmAjJY9vsfRCfuKXcKKMK4O128pqK9LsKRM3zqECv/fOjl6n/ik4P8CIH
+YXUnMTF9LaAR+Gm0E4fesg+N9E3wt/44BGZ9GpyoRp0U5W/FcUqE80lqJkRgBLNb
+FMgBqC1zO5zW6crHKRUVoGb1oOjPpR4bLXRlH7ug2rz4kSx1GrziC1IpFypjvjjr
+ezdoSeW+A3YdHb26aYqVfK7ISfvGGrky9PylWVt+YP6P5wfsUAL+/EBfeIWhkQV7
+9DSswBLBctSAyFsN/RQBoTjU0vJ8vTg3H2ApxNKwKTBqPA0kRobRcRdkORjDyNs/
+1om0myGGqwj0xxyzPUqbZ0l4mM72NTgBP5YV2YiqUsYfThslHSlr4LLBKL7x1mJW
+x82fmJVQOcfEtWRiNcBzpZxWBz6+1pGAXWg2JJ15Qa2WIxOtBFtYOOQwGJUnXSOt
+p/G7Id+Dv/6hH6+PN8lgmyZ14U9eZRzbhrmht443dCtH1pItLA1UA7ok2ulXJ4Lu
+XLsad0R5wCL8YrGf0pK6
+=7OXW
+-----END PGP SIGNATURE-----
+
+--bZ2MuwyI/0uB8yuJ--
+
+
+--===============8268079967215480304==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8268079967215480304==--
