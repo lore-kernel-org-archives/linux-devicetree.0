@@ -1,99 +1,63 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 5/8] ARM: zynq: add COMMON_CLK support
-Date: Fri, 02 Nov 2012 16:12:21 +0100
-Message-ID: <5093E2D5.2000304@metafoo.de>
-References: <cover.1351721190.git.josh.cartwright@ni.com> <94af5ee92c2d68f245eb902de74909aadf159be1.1351721190.git.josh.cartwright@ni.com> <50939378.2050500@metafoo.de> <20121102133850.GO5190@beefymiracle.amer.corp.natinst.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20121102133850.GO5190@beefymiracle.amer.corp.natinst.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Josh Cartwright <josh.cartwright@ni.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@ti.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Linn <John.Linn@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Michal Simek <monstr@monstr.eu>
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH v3 1/4] mtd: omap-nand: pass device_node in platform data
+Date: Fri,  2 Nov 2012 16:25:53 +0100
+Message-ID: <1351869956-2787-2-git-send-email-zonque@gmail.com>
+References: <1351869956-2787-1-git-send-email-zonque@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1351869956-2787-1-git-send-email-zonque@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-omap@vger.kernel.org, jon-hunter@ti.com, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2012 02:38 PM, Josh Cartwright wrote:
-> Thanks for the review.
-> 
-> On Fri, Nov 02, 2012 at 10:33:44AM +0100, Lars-Peter Clausen wrote:
->> On 10/31/2012 07:58 PM, Josh Cartwright wrote:
->>> [...]
->>> +#define PERIPH_CLK_CTRL_SRC(x)	(periph_clk_parent_map[((x)&3)>>4])
->>> +#define PERIPH_CLK_CTRL_DIV(x)	(((x)&0x3F00)>>8)
->>
->> A few more spaces wouldn't hurt ;)
-> 
-> Okay, sure.
-> 
->>> [...]
->>> +static void __init zynq_periph_clk_setup(struct device_node *np)
->>> +{
->>> +	struct zynq_periph_clk *periph;
->>> +	const char *parent_names[3];
->>> +	struct clk_init_data init;
->>> +	struct clk *clk;
->>> +	int err;
->>> +	u32 reg;
->>> +	int i;
->>> +
->>> +	err = of_property_read_u32(np, "reg", &reg);
->>> +	WARN_ON(err);
->>
->> Shouldn't the function abort if a error happens somewhere? Continuing here
->> will lead to undefined behavior. Same is probably true for the other WARN_ONs.
-> 
-> The way I see it is: the kernel is will be left in a bad state in the
-> case of any failure, regardless of if we bail out or continue.  AFAICT,
-> there is no clean way to recover from a failure this early.
-> 
-> Given that, it seems simpler (albeit marginally so) just to continue; so
-> that's what I chose to do.  I'm not opposed to bailing out, just not
-> convinced it does anything for us.
-> 
+Pass an optional device_node pointer in the platform data, which in turn
+will be put into a mtd_part_parser_data. This way, code that sets up the
+platform devices can pass along the node from DT so that the partitions
+can be parsed.
 
-The issue with this approach is that, while you get a warning, unexpected
-seemingly unrelated side-effects may happen later on. E.g. if no reg
-property for the clock is specified the reg variable will be uninitialized
-and contain whatever was on the stack before. The clock will be registered
-nonetheless and the boot process continues. Now if the clock is enabled a
-bit in a random register will be modified, which could result in strange and
-abnormal behavior, which can be very hard to track down.
+For non-DT boards, this change has no effect.
 
-Also if for example just one clock has its reg property missing the system
-will continue to boot if we bail out here. It is just that the peripherals
-using that clock won't work. Which will certainly be easier to diagnose than
-random abnormal behavior.
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+---
+ drivers/mtd/nand/omap2.c                     | 4 +++-
+ include/linux/platform_data/mtd-nand-omap2.h | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
->>> +
->>> +	periph = kzalloc(sizeof(*periph), GFP_KERNEL);
->>> +	WARN_ON(!periph);
->>> +
->>> +	periph->clk_ctrl = slcr_base + reg;
->>> +	spin_lock_init(&periph->clkact_lock);
->>> +
->>> +	init.name = np->name;
->>> +	init.ops = &zynq_periph_clk_ops;
->>> +	for (i = 0; i < ARRAY_SIZE(parent_names); i++)
->>> +		parent_names[i] = of_clk_get_parent_name(np, i);
->>> +	init.parent_names = parent_names;
->>> +	init.num_parents = ARRAY_SIZE(parent_names);
->>> +
->>> +	periph->hw.init = &init;
->>> +
->>> +	clk = clk_register(NULL, &periph->hw);
->>> +	WARN_ON(IS_ERR(clk));
->>> +
->>> +	err = of_clk_add_provider(np, of_clk_src_simple_get, clk);
->>> +	WARN_ON(err);
->>> +
->>> +	for (i = 0; i < 2; i++) {
->>
->> Not all of the peripheral clock generators have two output clocks. I think
->> it makes sense to use the number entries in clock-output-names here.
-> 
-> Yes, I agree.  I'll also update the bindings documentation.
-> 
-> Thanks again,
->   Josh
+diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+index 3282b15..a733f15 100644
+--- a/drivers/mtd/nand/omap2.c
++++ b/drivers/mtd/nand/omap2.c
+@@ -1331,6 +1331,7 @@ static int __devinit omap_nand_probe(struct platform_device *pdev)
+ 	dma_cap_mask_t mask;
+ 	unsigned sig;
+ 	struct resource			*res;
++	struct mtd_part_parser_data	ppdata = {};
+ 
+ 	pdata = pdev->dev.platform_data;
+ 	if (pdata == NULL) {
+@@ -1556,7 +1557,8 @@ static int __devinit omap_nand_probe(struct platform_device *pdev)
+ 		goto out_release_mem_region;
+ 	}
+ 
+-	mtd_device_parse_register(&info->mtd, NULL, NULL, pdata->parts,
++	ppdata.of_node = pdata->of_node;
++	mtd_device_parse_register(&info->mtd, NULL, &ppdata, pdata->parts,
+ 				  pdata->nr_parts);
+ 
+ 	platform_set_drvdata(pdev, &info->mtd);
+diff --git a/include/linux/platform_data/mtd-nand-omap2.h b/include/linux/platform_data/mtd-nand-omap2.h
+index 24d32ca..5217d6e 100644
+--- a/include/linux/platform_data/mtd-nand-omap2.h
++++ b/include/linux/platform_data/mtd-nand-omap2.h
+@@ -60,6 +60,8 @@ struct omap_nand_platform_data {
+ 	int			devsize;
+ 	enum omap_ecc           ecc_opt;
+ 	struct gpmc_nand_regs	reg;
++	/* for passing the partitions */
++	struct device_node	*of_node;
+ };
+ 
+ #endif
+-- 
+1.7.11.7
 
