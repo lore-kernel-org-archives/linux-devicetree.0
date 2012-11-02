@@ -1,164 +1,94 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
-Date: Fri, 2 Nov 2012 14:32:51 +0200
-Message-ID: <0EC43413-1DD7-4E2A-879B-0B5B926FFDFE@antoniou-consulting.com>
-References: <50924DA3.1060901@ti.com> <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com> <20121101110418.GF410@arwen.pp.htv.fi> <3AF5A6FC-61D9-40CA-85B3-81C2C788CB76@antoniou-consulting.com> <20121101124025.GA12489@arwen.pp.htv.fi> <A16B0ABF-AB9D-4F48-88BD-96F123FFEF2F@antoniou-consulting.com> <20121101131609.GC12489@arwen.pp.htv.fi> <E911D0B7-0397-4ED0-828E-71F9531E84E0@antoniou-consulting.com> <20121101135148.382aec00@pyramind.ukuu.org.uk> <9F25E89E-9194-4725-8A8C-053DCBADA1DB@antoniou-consulting.com> <20121101220518.GE14982@arwen.pp.htv.fi> <CA+Bv8XbAvEXe=zDaA8W2+ROD2duYMRcJu4-bms31OH=V_ScKow@mail.gmail.com> <20121102112104.4657fb7b@pyramind.ukuu.org.uk>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121102112104.4657fb7b@pyramind.ukuu.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
+From: Josh Cartwright <josh.cartwright@ni.com>
+Subject: Re: [PATCH 5/8] ARM: zynq: add COMMON_CLK support
+Date: Fri, 2 Nov 2012 07:38:50 -0600
+Message-ID: <20121102133850.GO5190@beefymiracle.amer.corp.natinst.com>
+References: <cover.1351721190.git.josh.cartwright@ni.com>
+ <94af5ee92c2d68f245eb902de74909aadf159be1.1351721190.git.josh.cartwright@ni.com>
+ <50939378.2050500@metafoo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <50939378.2050500@metafoo.de>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Michal Simek <monstr@monstr.eu>, Russell King <linux@arm.linux.org.uk>, John Stultz <johnstul@us.ibm.com>, devicetree-discuss@lists.ozlabs.org, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, John Linn <John.Linn@xilinx.com>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+Thanks for the review.
 
-On Nov 2, 2012, at 1:21 PM, Alan Cox wrote:
+On Fri, Nov 02, 2012 at 10:33:44AM +0100, Lars-Peter Clausen wrote:
+> On 10/31/2012 07:58 PM, Josh Cartwright wrote:
+> > [...]
+> > +#define PERIPH_CLK_CTRL_SRC(x)	(periph_clk_parent_map[((x)&3)>>4])
+> > +#define PERIPH_CLK_CTRL_DIV(x)	(((x)&0x3F00)>>8)
+> 
+> A few more spaces wouldn't hurt ;)
 
->>>> Fair enough. But there's no such thing a 'hotplug enumeration
->>>> construct' in Linux yet, and a bus is the closest thing to it. It =
-does
->>>> take advantage of the nice way device code matches drivers and dev=
-ices
->>>> though.
->=20
-> A bus is the wrong construct. You need something to add devices onto =
-the
-> busses. You can do that. The Intel SFI layer on phones for example
-> enumerates devices through a firmware table set and creates them on t=
-he
-> right actual physical bus not on their own fake one.
->=20
-> It's not hotplug in the sense that the phone happens be a fixed
-> configuration but it does support hotplug behaviour because the order=
- of
-> the drivers and enumeration is undefined (and both orders work).
+Okay, sure.
 
-I see. The firmware table format is similar to our case where we use DT=
-=2E
-We don't have to come up with another firmware table format, like SFI h=
-ere.
-The problem is that we have to inject DT fragments to the kernel's runt=
-ime
-device tree, at some arbitrary point in time, after the cape probing is=
- complete.
-Not only that, the DT fragment for each device is not self contained; i=
-t contains
-references to other nodes which have to be resolved in runtime.
+> > [...]
+> > +static void __init zynq_periph_clk_setup(struct device_node *np)
+> > +{
+> > +	struct zynq_periph_clk *periph;
+> > +	const char *parent_names[3];
+> > +	struct clk_init_data init;
+> > +	struct clk *clk;
+> > +	int err;
+> > +	u32 reg;
+> > +	int i;
+> > +
+> > +	err = of_property_read_u32(np, "reg", &reg);
+> > +	WARN_ON(err);
+>
+> Shouldn't the function abort if a error happens somewhere? Continuing here
+> will lead to undefined behavior. Same is probably true for the other WARN_ONs.
 
-Let me demonstrate what the problem is - take for example the very simp=
-le
-example of a (non-versioned) cape, with a single I2C device.
+The way I see it is: the kernel is will be left in a bad state in the
+case of any failure, regardless of if we bail out or continue.  AFAICT,
+there is no clean way to recover from a failure this early.
 
-------8<-----------8<--------------
-Kernel's boot DT:
+Given that, it seems simpler (albeit marginally so) just to continue; so
+that's what I chose to do.  I'm not opposed to bailing out, just not
+convinced it does anything for us.
 
-i2c2: i2c@4819c000 {
-        compatible =3D "ti,omap4-i2c";
-        #address-cells =3D <1>;
-        #size-cells =3D <0>;
-        ti,hwmods =3D "i2c3";     /* TODO: Fix hwmod */
-        reg =3D <0x4819c000 0x1000>;
-        interrupt-parent =3D <&intc>;
-        interrupts =3D <30>;
+> > +
+> > +	periph = kzalloc(sizeof(*periph), GFP_KERNEL);
+> > +	WARN_ON(!periph);
+> > +
+> > +	periph->clk_ctrl = slcr_base + reg;
+> > +	spin_lock_init(&periph->clkact_lock);
+> > +
+> > +	init.name = np->name;
+> > +	init.ops = &zynq_periph_clk_ops;
+> > +	for (i = 0; i < ARRAY_SIZE(parent_names); i++)
+> > +		parent_names[i] = of_clk_get_parent_name(np, i);
+> > +	init.parent_names = parent_names;
+> > +	init.num_parents = ARRAY_SIZE(parent_names);
+> > +
+> > +	periph->hw.init = &init;
+> > +
+> > +	clk = clk_register(NULL, &periph->hw);
+> > +	WARN_ON(IS_ERR(clk));
+> > +
+> > +	err = of_clk_add_provider(np, of_clk_src_simple_get, clk);
+> > +	WARN_ON(err);
+> > +
+> > +	for (i = 0; i < 2; i++) {
+> 
+> Not all of the peripheral clock generators have two output clocks. I think
+> it makes sense to use the number entries in clock-output-names here.
 
-        status =3D "on-demand";	/* there's no on-demand status property=
- defined yet */
-				/* means that it will be set to "okay" when a i2c   */
-				/* device node turn it to "okay"                    */
-				/* we can't enable it at boot because of possible   */
-				/* conflicts with other peripherals                 */=20
-        pinctrl-names =3D "default";
-        pinctrl-0 =3D <&i2c2_pins>;
+Yes, I agree.  I'll also update the bindings documentation.
 
-        clock-frequency =3D <100000>;
-
-};
-------8<-----------8<--------------
-
-A cape DT fragment (probable syntax) :
-
-i2c2-devices {
-	parent =3D <&i2c2>;
-
-        /* Ambient light sensor */
-         tsl2550@39 {
-         	compatible =3D "tsl,tsl2550";
-                reg =3D <0x39>;
-        };     =20
-};
-
-------8<-----------8<--------------
-
-The i2c2 alias cannot be resolved at compile time; there has to be
-
-a) A DT object format where unresolved aliases (symbols) are tracked
-b) A runtime DT linker that will resolve the alias, and will insert the
-   i2c2-devices child nodes as children in the i2c2 node.
-c) A method to trigger platform device creation for the child nodes jus=
-t
-   inserted.
-
-DT core changes aren't bound to be easily accepted, so without having a=
- clear
-signal from the DT maintainers that they would consider such a method p=
-eople
-are just hesitant to go down this road.
-
-
->=20
->>>>=20
->>>> I'm afraid that having the I2C/SPI drivers doing the detection won=
-'t
->>>> work.  The capes can have arbitrary I2C/SPI devices (and even more
->>>> weird components).  There is no way to assure for example that the=
- I2C
->>>> device responding to address 'foo' in cape A is the same I2C devic=
-e
->>>> responding to the same address in cape B.
->>>=20
->>> your ->detect() method should take care of that.
->>=20
->> There isn't some magical serial number in I=B2C devices that a
->> ->detect() method can read and the implementation of I=B2C is somewh=
-at
->=20
-> It doesn't matter.
->=20
-> What you are basically talking about is
->=20
->=20
-> 	cape layer
-> 		- wtf is this
-> 		- how do I plumb it
->=20
-> 		- create device nodes with correct name for
-> 		  binding, address etc on the right bus
->=20
->=20
-> 	i2c layer
-> 		- ooh a new i2c device
-> 		- probe as indicated by device name
-> 		- attach correct driver
->=20
->=20
-> Architecturally its possible you want to make some caps MFDs if they =
-have
-> their own bus heirarchies etc but generally I doubt it.
->=20
->=20
-> Take a look at arch/x86/platform/mrst/mrst.c. It's a specific example=
- of
-> a platform which parses tables and attaches devices to the right phys=
-ical
-> bus in a manner they can be reliably probed even when the device has =
-no
-> sane autodetect.
->=20
-> Alan
-
-Regards
-
--- Pantelis
+Thanks again,
+  Josh
