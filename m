@@ -1,169 +1,516 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH 5/5] usb: musb: dsps: control module handling (quirk)
-Date: Fri, 2 Nov 2012 22:02:53 +0530
-Message-ID: <329ef24ebe4c496dcfe3bb1b6a53d71175b2732b.1351870620.git.afzal@ti.com>
-References: <cover.1351870620.git.afzal@ti.com>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCH v7 2/8] of: add helper to parse display timings
+Date: Fri, 2 Nov 2012 22:49:47 +0530
+Message-ID: <CAL1wa8dGiS-UDk7vjPKBaxQHB2FyNgLRYr5jsJZe4GjdzHELLQ@mail.gmail.com>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de> <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1351870620.git.afzal@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Santhapuri Damodar <damodar.santhapuri@ti.com>, Ravi Babu <ravibabu@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: "Santhapuri, Damodar" <damodar.santhapuri@ti.com>
+Hello Steffen,
 
-am335x uses nop transceiver driver and need to enable builtin phy
-by writing into usb_ctrl register available in system control
-module register space. This is being added at musb glue driver
-layer until a separate system control module driver is available.
+On Wed, Oct 31, 2012 at 2:58 PM, Steffen Trumtrar
+<s.trumtrar@pengutronix.de> wrote:
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> ---
+>  .../devicetree/bindings/video/display-timings.txt  |  139 ++++++++++=
++++++
+>  drivers/of/Kconfig                                 |    6 +
+>  drivers/of/Makefile                                |    1 +
+>  drivers/of/of_display_timings.c                    |  185 ++++++++++=
+++++++++++
+>  include/linux/of_display_timings.h                 |   20 +++
+>  5 files changed, 351 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/display-t=
+imings.txt
+>  create mode 100644 drivers/of/of_display_timings.c
+>  create mode 100644 include/linux/of_display_timings.h
+>
+> diff --git a/Documentation/devicetree/bindings/video/display-timings.=
+txt b/Documentation/devicetree/bindings/video/display-timings.txt
+> new file mode 100644
+> index 0000000..04c94a3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/display-timings.txt
+> @@ -0,0 +1,139 @@
+> +display-timings bindings
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +display-timings-node
+> +------------
+> +
+> +required properties:
+> + - none
+> +
+> +optional properties:
+> + - native-mode: the native mode for the display, in case multiple mo=
+des are
+> +               provided. When omitted, assume the first node is the =
+native.
+> +
+> +timings-subnode
+> +---------------
+> +
+> +required properties:
+> + - hactive, vactive: Display resolution
+> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing p=
+arameters
+> +   in pixels
+> +   vfront-porch, vback-porch, vsync-len: Vertical display timing par=
+ameters in
+> +   lines
+> + - clock-frequency: displayclock in Hz
+> +
+> +optional properties:
+> + - hsync-active : Hsync pulse is active low/high/ignored
+> + - vsync-active : Vsync pulse is active low/high/ignored
+> + - de-active : Data-Enable pulse is active low/high/ignored
+> + - pixelclk-inverted : pixelclock is inverted/non-inverted/ignored
+> + - interlaced (bool)
+> + - doublescan (bool)
+> +
+> +All the optional properties that are not bool follow the following l=
+ogic:
+> +    <1> : high active
+> +    <0> : low active
+> +    omitted : not used on hardware
+> +
+> +There are different ways of describing the capabilities of a display=
+=2E The devicetree
+> +representation corresponds to the one commonly found in datasheets f=
+or displays.
+> +If a display supports multiple signal timings, the native-mode can b=
+e specified.
+> +
+> +The parameters are defined as
+> +
+> +struct display_timing
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +  +----------+---------------------------------------------+--------=
+--+-------+
+> +  |          |                =E2=86=91                            |=
+          |       |
+> +  |          |                |vback_porch                 |        =
+  |       |
+> +  |          |                =E2=86=93                            |=
+          |       |
+> +  +----------###############################################--------=
+--+-------+
+> +  |          #                =E2=86=91                            #=
+          |       |
+> +  |          #                |                            #        =
+  |       |
+> +  |  hback   #                |                            #  hfront=
+  | hsync |
+> +  |   porch  #                |       hactive              #  porch =
+  |  len  |
+> +  |<-------->#<---------------+--------------------------->#<-------=
+->|<----->|
+> +  |          #                |                            #        =
+  |       |
+> +  |          #                |vactive                     #        =
+  |       |
+> +  |          #                |                            #        =
+  |       |
+> +  |          #                =E2=86=93                            #=
+          |       |
+> +  +----------###############################################--------=
+--+-------+
+> +  |          |                =E2=86=91                            |=
+          |       |
+> +  |          |                |vfront_porch                |        =
+  |       |
+> +  |          |                =E2=86=93                            |=
+          |       |
+> +  +----------+---------------------------------------------+--------=
+--+-------+
+> +  |          |                =E2=86=91                            |=
+          |       |
+> +  |          |                |vsync_len                   |        =
+  |       |
+> +  |          |                =E2=86=93                            |=
+          |       |
+> +  +----------+---------------------------------------------+--------=
+--+-------+
+> +
+> +
+> +Example:
+> +
+> +       display-timings {
+> +               native-mode =3D <&timing0>;
+> +               timing0: 1920p24 {
+> +                       /* 1920x1080p24 */
+> +                       clock =3D <52000000>;
+> +                       hactive =3D <1920>;
+> +                       vactive =3D <1080>;
+> +                       hfront-porch =3D <25>;
+> +                       hback-porch =3D <25>;
+> +                       hsync-len =3D <25>;
+> +                       vback-porch =3D <2>;
+> +                       vfront-porch =3D <2>;
+> +                       vsync-len =3D <2>;
+> +                       hsync-active =3D <1>;
+> +               };
+> +       };
+> +
+> +Every required property also supports the use of ranges, so the comm=
+only used
+> +datasheet description with <min typ max>-tuples can be used.
+> +
+> +Example:
+> +
+> +       timing1: timing {
+> +               /* 1920x1080p24 */
+> +               clock =3D <148500000>;
+> +               hactive =3D <1920>;
+> +               vactive =3D <1080>;
+> +               hsync-len =3D <0 44 60>;
+> +               hfront-porch =3D <80 88 95>;
+> +               hback-porch =3D <100 148 160>;
+> +               vfront-porch =3D <0 4 6>;
+> +               vback-porch =3D <0 36 50>;
+> +               vsync-len =3D <0 5 6>;
+> +       };
+> +
+> +
+> +Usage in backend
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +A backend driver may choose to use the display-timings directly and =
+convert the timing
+> +ranges to a suitable mode. Or it may just use the conversion of the =
+display timings
+> +to the required mode via the generic videomode struct.
+> +
+> +                                       dtb
+> +                                        |
+> +                                        |  of_get_display_timing_lis=
+t
+> +                                        =E2=86=93
+> +                             struct display_timings
+> +                                        |
+> +                                        |  videomode_from_timing
+> +                                        =E2=86=93
+> +                           ---  struct videomode ---
+> +                           |                       |
+> + videomode_to_displaymode   |                      |   videomode_to_=
+fb_videomode
+> +                           =E2=86=93                       =E2=86=93
+> +                    drm_display_mode         fb_videomode
+> +
+> +The functions of_get_fb_videomode and of_get_display_mode are provid=
+ed
+> +to conveniently get the respective mode representation from the devi=
+cetree.
+> +
+> +Conversion to videomode
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +As device drivers normally work with some kind of video mode, the ti=
+mings can be
+> +converted (may be just a simple copying of the typical value) to a g=
+eneric videomode
+> +structure which then can be converted to the according mode used by =
+the backend.
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index dfba3e6..781e773 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -83,4 +83,10 @@ config OF_MTD
+>         depends on MTD
+>         def_bool y
+>
+> +config OF_DISPLAY_TIMINGS
+> +       def_bool y
+> +       depends on DISPLAY_TIMING
+> +       help
+> +         helper to parse display timings from the devicetree
+> +
+>  endmenu # OF
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index e027f44..c8e9603 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -11,3 +11,4 @@ obj-$(CONFIG_OF_MDIO) +=3D of_mdio.o
+>  obj-$(CONFIG_OF_PCI)   +=3D of_pci.o
+>  obj-$(CONFIG_OF_PCI_IRQ)  +=3D of_pci_irq.o
+>  obj-$(CONFIG_OF_MTD)   +=3D of_mtd.o
+> +obj-$(CONFIG_OF_DISPLAY_TIMINGS) +=3D of_display_timings.o
+> diff --git a/drivers/of/of_display_timings.c b/drivers/of/of_display_=
+timings.c
+> new file mode 100644
+> index 0000000..388fe4c
+> --- /dev/null
+> +++ b/drivers/of/of_display_timings.c
+> @@ -0,0 +1,185 @@
+> +/*
+> + * OF helpers for parsing display timings
+> + *
+> + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, =
+Pengutronix
+> + *
+> + * based on of_videomode.c by Sascha Hauer <s.hauer@pengutronix.de>
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +#include <linux/of.h>
+> +#include <linux/slab.h>
+> +#include <linux/export.h>
+> +#include <linux/of_display_timings.h>
+> +
+> +/**
+> + * parse_property - parse timing_entry from device_node
+> + * @np: device_node with the property
+> + * @name: name of the property
+> + * @result: will be set to the return value
+> + *
+> + * DESCRIPTION:
+> + * Every display_timing can be specified with either just the typica=
+l value or
+> + * a range consisting of min/typ/max. This function helps handling t=
+his
+> + **/
+> +static int parse_property(struct device_node *np, char *name,
+> +                               struct timing_entry *result)
+> +{
+> +       struct property *prop;
+> +       int length;
+> +       int cells;
+> +       int ret;
+> +
+> +       prop =3D of_find_property(np, name, &length);
+> +       if (!prop) {
+> +               pr_err("%s: could not find property %s\n", __func__, =
+name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       cells =3D length / sizeof(u32);
+> +       if (cells =3D=3D 1) {
+> +               ret =3D of_property_read_u32_array(np, name, &result-=
+>typ, cells);
 
-Proper solution is to make use of control module driver, but it is
-not expected to be ready soon.
+As you are reading only one vaue, you can use of_property_read_u32 inst=
+ead.
 
-Other options available are providing control module register space
-as memory resource via DT or using omap hwmod.
+> +               result->min =3D result->typ;
+> +               result->max =3D result->typ;
+> +       } else if (cells =3D=3D 3) {
+> +               ret =3D of_property_read_u32_array(np, name, &result-=
+>min, cells);
 
-DT approach has been rejected by Rob Herring, while resources are
-being moved from hwmod to DT. And both of the above approaches
-require that control module registers be configured in wrapper
-itself requring a quirk in driver as well as DT or hwmod.
+You are considering only min element, what about typ and max elements?
 
-Here another option is used, providing driver with control module
-register physical address. Even though this a hack, there is no other
-option left till control module driver is ready. As of now only
-am335x is using dsps wrapper, and so driver is made aware of am335x
-control module physical address.
+> +       } else {
+> +               pr_err("%s: illegal timing specification in %s\n", __=
+func__, name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +/**
+> + * of_get_display_timing - parse display_timing entry from device_no=
+de
+> + * @np: device_node with the properties
+> + **/
+> +struct display_timing *of_get_display_timing(struct device_node *np)
+> +{
+> +       struct display_timing *dt;
+> +       int ret =3D 0;
+> +
+> +       dt =3D kzalloc(sizeof(*dt), GFP_KERNEL);
+> +       if (!dt) {
+> +               pr_err("%s: could not allocate display_timing struct\=
+n", __func__);
+> +               return NULL;
+> +       }
+> +
+> +       ret |=3D parse_property(np, "hback-porch", &dt->hback_porch);
+> +       ret |=3D parse_property(np, "hfront-porch", &dt->hfront_porch=
+);
+> +       ret |=3D parse_property(np, "hactive", &dt->hactive);
+> +       ret |=3D parse_property(np, "hsync-len", &dt->hsync_len);
+> +       ret |=3D parse_property(np, "vback-porch", &dt->vback_porch);
+> +       ret |=3D parse_property(np, "vfront-porch", &dt->vfront_porch=
+);
+> +       ret |=3D parse_property(np, "vactive", &dt->vactive);
+> +       ret |=3D parse_property(np, "vsync-len", &dt->vsync_len);
+> +       ret |=3D parse_property(np, "clock-frequency", &dt->pixelcloc=
+k);
+> +
+> +       of_property_read_u32(np, "vsync-active", &dt->vsync_pol_activ=
+e);
+> +       of_property_read_u32(np, "hsync-active", &dt->hsync_pol_activ=
+e);
+> +       of_property_read_u32(np, "de-active", &dt->de_pol_active);
+> +       of_property_read_u32(np, "pixelclk-inverted", &dt->pixelclk_p=
+ol);
+> +       dt->interlaced =3D of_property_read_bool(np, "interlaced");
+> +       dt->doublescan =3D of_property_read_bool(np, "doublescan");
+> +
+> +       if (ret) {
+> +               pr_err("%s: error reading timing properties\n", __fun=
+c__);
+> +               return NULL;
+> +       }
+> +
+> +       return dt;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_display_timing);
+> +
+> +/**
+> + * of_get_display_timing_list - parse all display_timing entries fro=
+m a device_node
+> + * @np: device_node with the subnodes
+> + **/
+> +struct display_timings *of_get_display_timing_list(struct device_nod=
+e *np)
+> +{
+> +       struct device_node *timings_np;
+> +       struct device_node *entry;
+> +       struct device_node *native_mode;
+> +       struct display_timings *disp;
+> +
+> +       if (!np) {
+> +               pr_err("%s: no devicenode given\n", __func__);
+> +               return NULL;
+> +       }
+> +
+> +       timings_np =3D of_find_node_by_name(np, "display-timings");
+> +       if (!timings_np) {
+> +               pr_err("%s: could not find display-timings node\n", _=
+_func__);
+> +               return NULL;
+> +       }
+> +
+> +       disp =3D kzalloc(sizeof(*disp), GFP_KERNEL);
+> +
+> +       entry =3D of_parse_phandle(timings_np, "native-mode", 0);
+> +       /* assume first child as native mode if none provided */
+> +       if (!entry)
+> +               entry =3D of_get_next_child(np, NULL);
+> +       if (!entry) {
+> +               pr_err("%s: no timing specifications given\n", __func=
+__);
+> +               return NULL;
+> +       }
+> +
+> +       pr_info("%s: using %s as default timing\n", __func__, entry->=
+name);
+> +
+> +       native_mode =3D entry;
+> +
+> +       disp->num_timings =3D of_get_child_count(timings_np);
+> +       disp->timings =3D kzalloc(sizeof(struct display_timing *)*dis=
+p->num_timings,
+> +                               GFP_KERNEL);
+> +       disp->num_timings =3D 0;
+> +       disp->native_mode =3D 0;
+> +
+> +       for_each_child_of_node(timings_np, entry) {
+> +               struct display_timing *dt;
+> +
+> +               dt =3D of_get_display_timing(entry);
+> +               if (!dt) {
+> +                       /* to not encourage wrong devicetrees, fail i=
+n case of an error */
+> +                       pr_err("%s: error in timing %d\n", __func__, =
+disp->num_timings+1);
+> +                       return NULL;
+> +               }
+> +
+> +               if (native_mode =3D=3D entry)
+> +                       disp->native_mode =3D disp->num_timings;
+> +
+> +               disp->timings[disp->num_timings] =3D dt;
+> +               disp->num_timings++;
+> +       }
+> +       of_node_put(timings_np);
+> +
+> +       if (disp->num_timings > 0)
+> +               pr_info("%s: got %d timings. Using timing #%d as defa=
+ult\n", __func__,
+> +                       disp->num_timings , disp->native_mode + 1);
+> +       else {
+> +               pr_err("%s: no valid timings specified\n", __func__);
+> +               return NULL;
+> +       }
+> +       return disp;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_display_timing_list);
+> +
+> +/**
+> + * of_display_timings_exists - check if a display-timings node is pr=
+ovided
+> + * @np: device_node with the timing
+> + **/
+> +int of_display_timings_exists(struct device_node *np)
+> +{
+> +       struct device_node *timings_np;
+> +       struct device_node *default_np;
+> +
+> +       if (!np)
+> +               return -EINVAL;
+> +
+> +       timings_np =3D of_parse_phandle(np, "display-timings", 0);
+> +       if (!timings_np)
+> +               return -EINVAL;
+> +
+> +       return -EINVAL;
 
-Please note that this is a temporary arrangment till omap control
-module driver is available.
+Here it should return success instead of -EINVAL.
 
-[afzal@ti.com: limit quirk to dsps wrapper]
+And one query.. are the binding properties names and "display-timings"
+node structure template  finalized..?
 
-Signed-off-by: Santhapuri, Damodar <damodar.santhapuri@ti.com>
-Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
-Signed-off-by: Ravi Babu <ravibabu@ti.com>
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
- drivers/usb/musb/musb_dsps.c | 69 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Best Wishes,
+Leela Krishna Amudala.
 
-diff --git a/drivers/usb/musb/musb_dsps.c b/drivers/usb/musb/musb_dsps.c
-index c90e4d3..e770f79 100644
---- a/drivers/usb/musb/musb_dsps.c
-+++ b/drivers/usb/musb/musb_dsps.c
-@@ -124,8 +124,44 @@ struct dsps_glue {
- 	const struct dsps_musb_wrapper *wrp; /* wrapper register offsets */
- 	struct timer_list timer[2];	/* otg_workaround timer */
- 	unsigned long last_timer[2];    /* last timer data for each instance */
-+	u32 __iomem *usb_ctrl[2];
- };
- 
-+#define	DSPS_AM33XX_CONTROL_MODULE_PHYS_0	0x44e10620
-+#define	DSPS_AM33XX_CONTROL_MODULE_PHYS_1	0x44e10628
-+
-+static const resource_size_t dsps_control_module_phys[] = {
-+	DSPS_AM33XX_CONTROL_MODULE_PHYS_0,
-+	DSPS_AM33XX_CONTROL_MODULE_PHYS_1,
-+};
-+
-+/**
-+ * musb_dsps_phy_control - phy on/off
-+ * @glue: struct dsps_glue *
-+ * @id: musb instance
-+ * @on: flag for phy to be switched on or off
-+ *
-+ * This is to enable the PHY using usb_ctrl register in system control
-+ * module space.
-+ *
-+ * XXX: This function will be removed once we have a seperate driver for
-+ * control module
-+ */
-+static void musb_dsps_phy_control(struct dsps_glue *glue, u8 id, u8 on)
-+{
-+	u32 usbphycfg;
-+
-+	usbphycfg = readl(glue->usb_ctrl[id]);
-+
-+	if (on) {
-+		usbphycfg &= ~(USBPHY_CM_PWRDN | USBPHY_OTG_PWRDN);
-+		usbphycfg |= USBPHY_OTGVDET_EN | USBPHY_OTGSESSEND_EN;
-+	} else {
-+		usbphycfg |= USBPHY_CM_PWRDN | USBPHY_OTG_PWRDN;
-+	}
-+
-+	writel(usbphycfg, glue->usb_ctrl[id]);
-+}
- /**
-  * dsps_musb_enable - enable interrupts
-  */
-@@ -393,6 +429,9 @@ static int dsps_musb_init(struct musb *musb)
- 	/* Reset the musb */
- 	dsps_writel(reg_base, wrp->control, (1 << wrp->reset));
- 
-+	/* Start the on-chip PHY and its PLL. */
-+	musb_dsps_phy_control(glue, pdev->id, 1);
-+
- 	musb->isr = dsps_interrupt;
- 
- 	/* reset the otgdisable bit, needed for host mode to work */
-@@ -418,6 +457,9 @@ static int dsps_musb_exit(struct musb *musb)
- 
- 	del_timer_sync(&glue->timer[pdev->id]);
- 
-+	/* Shutdown the on-chip PHY and its PLL. */
-+	musb_dsps_phy_control(glue, pdev->id, 0);
-+
- 	/* NOP driver needs change if supporting dual instance */
- 	usb_put_phy(musb->xceiv);
- 	usb_nop_xceiv_unregister();
-@@ -450,6 +492,17 @@ static int __devinit dsps_create_musb_pdev(struct dsps_glue *glue, u8 id)
- 	char res_name[10];
- 	int ret;
- 
-+	resources[0].start = dsps_control_module_phys[id];
-+	resources[0].end = resources[0].start + SZ_4 - 1;
-+	resources[0].flags = IORESOURCE_MEM;
-+
-+	glue->usb_ctrl[id] = devm_request_and_ioremap(&pdev->dev, resources);
-+	if (glue->usb_ctrl[id] == NULL) {
-+		dev_err(dev, "Failed to obtain usb_ctrl%d memory\n", id);
-+		ret = -ENODEV;
-+		goto err0;
-+	}
-+
- 	/* first resource is for usbss, so start index from 1 */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, id + 1);
- 	if (!res) {
-@@ -636,11 +689,27 @@ static int __devexit dsps_remove(struct platform_device *pdev)
- #ifdef CONFIG_PM_SLEEP
- static int dsps_suspend(struct device *dev)
- {
-+	struct platform_device *pdev = to_platform_device(dev->parent);
-+	struct dsps_glue *glue = platform_get_drvdata(pdev);
-+	const struct dsps_musb_wrapper *wrp = glue->wrp;
-+	int i;
-+
-+	for (i = 0; i < wrp->instances; i++)
-+		musb_dsps_phy_control(glue, i, 0);
-+
- 	return 0;
- }
- 
- static int dsps_resume(struct device *dev)
- {
-+	struct platform_device *pdev = to_platform_device(dev->parent);
-+	struct dsps_glue *glue = platform_get_drvdata(pdev);
-+	const struct dsps_musb_wrapper *wrp = glue->wrp;
-+	int i;
-+
-+	for (i = 0; i < wrp->instances; i++)
-+		musb_dsps_phy_control(glue, i, 1);
-+
- 	return 0;
- }
- #endif
--- 
-1.7.12
-
+> +}
+> +EXPORT_SYMBOL_GPL(of_display_timings_exists);
+> diff --git a/include/linux/of_display_timings.h b/include/linux/of_di=
+splay_timings.h
+> new file mode 100644
+> index 0000000..e4e1f22
+> --- /dev/null
+> +++ b/include/linux/of_display_timings.h
+> @@ -0,0 +1,20 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> + *
+> + * display timings of helpers
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_OF_DISPLAY_TIMINGS_H
+> +#define __LINUX_OF_DISPLAY_TIMINGS_H
+> +
+> +#include <linux/display_timing.h>
+> +
+> +#define OF_USE_NATIVE_MODE -1
+> +
+> +struct display_timings *of_get_display_timing_list(struct device_nod=
+e *np);
+> +struct display_timing *of_get_display_timing(struct device_node *np)=
+;
+> +int of_display_timings_exists(struct device_node *np);
+> +
+> +#endif
+> --
+> 1.7.10.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fbdev=
+" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
