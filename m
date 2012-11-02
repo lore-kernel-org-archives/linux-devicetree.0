@@ -1,224 +1,164 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH v2 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Fri, 02 Nov 2012 12:14:28 +0100
-Message-ID: <5093AB14.9090402@gmail.com>
-References: <1351794970-14675-1-git-send-email-zonque@gmail.com> <1351794970-14675-5-git-send-email-zonque@gmail.com> <5093A36B.70101@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5093A36B.70101@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-omap@vger.kernel.org, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
+Date: Fri, 2 Nov 2012 14:32:51 +0200
+Message-ID: <0EC43413-1DD7-4E2A-879B-0B5B926FFDFE@antoniou-consulting.com>
+References: <50924DA3.1060901@ti.com> <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com> <20121101110418.GF410@arwen.pp.htv.fi> <3AF5A6FC-61D9-40CA-85B3-81C2C788CB76@antoniou-consulting.com> <20121101124025.GA12489@arwen.pp.htv.fi> <A16B0ABF-AB9D-4F48-88BD-96F123FFEF2F@antoniou-consulting.com> <20121101131609.GC12489@arwen.pp.htv.fi> <E911D0B7-0397-4ED0-828E-71F9531E84E0@antoniou-consulting.com> <20121101135148.382aec00@pyramind.ukuu.org.uk> <9F25E89E-9194-4725-8A8C-053DCBADA1DB@antoniou-consulting.com> <20121101220518.GE14982@arwen.pp.htv.fi> <CA+Bv8XbAvEXe=zDaA8W2+ROD2duYMRcJu4-bms31OH=V_ScKow@mail.gmail.com> <20121102112104.4657fb7b@pyramind.ukuu.org.uk>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121102112104.4657fb7b@pyramind.ukuu.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Cc: Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+Hi Alan,
 
-as all comments so far focussed on patch 4/4, could we agree to merge
-1-3 of this series already? These are all small and straight-forward
-things that don't depend on 4/4. That way, I only need to resend the
-last one under discussion.
+On Nov 2, 2012, at 1:21 PM, Alan Cox wrote:
 
-On 02.11.2012 11:41, Jon Hunter wrote:
-> Hi Daniel,
-> 
-> On 11/01/2012 01:36 PM, Daniel Mack wrote:
->> This patch adds basic DT bindings for OMAP GPMC.
->>
->> The actual peripherals are instanciated from child nodes within the GPMC
->> node, and the only type of device that is currently supported is NAND.
->>
->> Code was added to parse the generic GPMC timing parameters and some
->> documentation with examples on how to use them.
->>
->> Successfully tested on an AM33xx board.
->>
->> Signed-off-by: Daniel Mack <zonque@gmail.com>
->> ---
->>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  73 +++++++++++
->>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  61 +++++++++
->>  arch/arm/mach-omap2/gpmc.c                         | 139 +++++++++++++++++++++
->>  3 files changed, 273 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
->>
->> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> new file mode 100644
->> index 0000000..6f44487
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> @@ -0,0 +1,73 @@
->> +Device tree bindings for OMAP general purpose memory controllers (GPMC)
->> +
->> +The actual devices are instantiated from the child nodes of a GPMC node.
->> +
->> +Required properties:
->> +
->> + - compatible:		Should be set to "ti,gpmc"
->> + - reg:			A resource specifier for the register space
->> +			(see the example below)
->> + - ti,hwmods:		Should be set to "ti,gpmc" until the DT transition is
->> +			completed.
->> + - #address-cells:	Must be set to 2 to allow memory address translation
->> + - #size-cells:		Must be set to 1 to allow CS address passing
->> + - ranges:		Must be set up to reflect the memory layout
->> +			Note that this property is not currently parsed.
->> +			Calculated values derived from the contents of
->> +			GPMC_CS_CONFIG7 as set up by the bootloader. That will
->> +			change in the future, so be sure to fill the correct
->> +			values here.
-> 
-> I still think it would be good to add number of chip-selects and
-> wait-pins here.
+>>>> Fair enough. But there's no such thing a 'hotplug enumeration
+>>>> construct' in Linux yet, and a bus is the closest thing to it. It =
+does
+>>>> take advantage of the nice way device code matches drivers and dev=
+ices
+>>>> though.
+>=20
+> A bus is the wrong construct. You need something to add devices onto =
+the
+> busses. You can do that. The Intel SFI layer on phones for example
+> enumerates devices through a firmware table set and creates them on t=
+he
+> right actual physical bus not on their own fake one.
+>=20
+> It's not hotplug in the sense that the phone happens be a fixed
+> configuration but it does support hotplug behaviour because the order=
+ of
+> the drivers and enumeration is undefined (and both orders work).
 
-The number of chip-selects can be derived from the ranges property.
-Namely, each 4-value entry to this property maps to one chip-select. I
-can try and make the more clear in the documentation.
+I see. The firmware table format is similar to our case where we use DT=
+=2E
+We don't have to come up with another firmware table format, like SFI h=
+ere.
+The problem is that we have to inject DT fragments to the kernel's runt=
+ime
+device tree, at some arbitrary point in time, after the cape probing is=
+ complete.
+Not only that, the DT fragment for each device is not self contained; i=
+t contains
+references to other nodes which have to be resolved in runtime.
 
->> +Timing properties for child nodes. All are optional and default to 0.
->> +
->> + - gpmc,sync-clk:	Minimum clock period for synchronous mode, in picoseconds
->> +
->> + Chip-select signal timings corresponding to GPMC_CS_CONFIG2:
->> + - gpmc,cs-on:		Assertion time
->> + - gpmc,cs-rd-off:	Read deassertion time
->> + - gpmc,cs-wr-off:	Write deassertion time
->> +
->> + ADV signal timings corresponding to GPMC_CONFIG3:
->> + - gpmc,adv-on:		Assertion time
->> + - gpmc,adv-rd-off:	Read deassertion time
->> + - gpmc,adv-wr-off:	Write deassertion time
-> 
-> Nit-pick, looks like you are mixing GPMC_CS_CONFIGx and GPMC_CONFIGx
-> naming conventions in the above and below. Would be good to make this
-> consistent.
+Let me demonstrate what the problem is - take for example the very simp=
+le
+example of a (non-versioned) cape, with a single I2C device.
 
-Ok, but these were just copied from arch/arm/mach-omap2/gpmc.h. So it's
-wrong there, too.
+------8<-----------8<--------------
+Kernel's boot DT:
 
->> + WE signals timings corresponding to GPMC_CONFIG4:
->> + - gpmc,we-on:		Assertion time
->> + - gpmc,we-off:		Deassertion time
->> +
->> + OE signals timings corresponding to GPMC_CONFIG4
->> + - gpmc,oe-on:		Assertion time
->> + - gpmc,oe-off:		Deassertion time
->> +
->> + Access time and cycle time timings corresponding to GPMC_CONFIG5
->> + - gpmc,page-burst-access: Multiple access word delay
->> + - gpmc,access:		Start-cycle to first data valid delay
->> + - gpmc,rd-cycle:	Total read cycle time
->> + - gpmc,wr-cycle:	Total write cycle time
->> +
->> +The following are only on OMAP3430
->> + - gpmc,wr-access
->> + - gpmc,wr-data-mux-bus
->> +
->> +
->> +Example for an AM33xx board:
->> +
->> +	gpmc: gpmc@50000000 {
->> +		compatible = "ti,gpmc";
->> +		ti,hwmods = "gpmc";
->> +		reg = <0x50000000 0x2000>;
->> +		interrupt-parent = <&intc>;
-> 
-> We should drop interrupt-parent. We are declaring the interrupt-parent
-> globally in the dts files and so no need to replicate in each individual
-> binding.
+i2c2: i2c@4819c000 {
+        compatible =3D "ti,omap4-i2c";
+        #address-cells =3D <1>;
+        #size-cells =3D <0>;
+        ti,hwmods =3D "i2c3";     /* TODO: Fix hwmod */
+        reg =3D <0x4819c000 0x1000>;
+        interrupt-parent =3D <&intc>;
+        interrupts =3D <30>;
 
-Right, will remove.
+        status =3D "on-demand";	/* there's no on-demand status property=
+ defined yet */
+				/* means that it will be set to "okay" when a i2c   */
+				/* device node turn it to "okay"                    */
+				/* we can't enable it at boot because of possible   */
+				/* conflicts with other peripherals                 */=20
+        pinctrl-names =3D "default";
+        pinctrl-0 =3D <&i2c2_pins>;
 
->> +		interrupts = <100>;
->> +		#address-cells = <2>;
->> +		#size-cells = <1>;
->> +		ranges = <0 0 0x08000000 0x10000000>;	/* CS0: NAND */
->> +
->> +		nand@0,0 {
->> +			reg = <0 0 0>; /* CS0, offset 0 */
-> 
-> The above description says that this is just the chip-select number. Are
-> the other fields used here? If so, what for?
+        clock-frequency =3D <100000>;
 
-Thanks to the translation done by the 'ranges' mechanism, these just
-denote the offset to the address range specified above. So they can be
-left 0.
+};
+------8<-----------8<--------------
 
->> +			nand-bus-width = <16>;
->> +			nand-ecc-mode = "none";
-> 
-> I am still wondering if the above needs to be mandatory. Or if not then
-> may be these should be documented as optional and if these a omitted
-> then what the default configuration would be.
+A cape DT fragment (probable syntax) :
 
-In my docs, I referred to Documentation/devicetree/bindings/mtd/nand.txt
-which states:
+i2c2-devices {
+	parent =3D <&i2c2>;
 
-- nand-ecc-mode : String, operation mode of the NAND ecc mode.
-  Supported values are: "none", "soft", "hw", "hw_syndrome",
-"hw_oob_first", "soft_bch".
-- nand-bus-width : 8 or 16 bus width if not present 8
+        /* Ambient light sensor */
+         tsl2550@39 {
+         	compatible =3D "tsl,tsl2550";
+                reg =3D <0x39>;
+        };     =20
+};
 
-So ecc-mode is mandatory, even though the code currently really defaults
-to 0 ("none"). nand-bus-width isn't. I don't know if it makes sense to
-duplicate the Documentation here.
+------8<-----------8<--------------
 
->> +static int gpmc_probe_dt(struct platform_device *pdev)
->> +{
->> +	u32 val;
->> +	struct device_node *child;
->> +	struct gpmc_timings gpmc_t;
->> +	const struct of_device_id *of_id =
->> +		of_match_device(gpmc_dt_ids, &pdev->dev);
->> +
->> +	if (!of_id)
->> +		return 0;
->> +
->> +	for_each_node_by_name(child, "nand") {
->> +		struct omap_nand_platform_data *gpmc_nand_data;
->> +
->> +		if (of_property_read_u32(child, "reg", &val) < 0) {
->> +			dev_err(&pdev->dev, "%s has no 'reg' property\n",
->> +				child->full_name);
->> +			continue;
->> +		}
->> +
->> +		gpmc_nand_data = devm_kzalloc(&pdev->dev,
->> +					      sizeof(*gpmc_nand_data),
->> +					      GFP_KERNEL);
->> +		if (!gpmc_nand_data) {
->> +			dev_err(&pdev->dev, "unable to allocate memory?");
->> +			return -ENOMEM;
->> +		}
->> +
->> +		gpmc_nand_data->cs = val;
->> +		gpmc_nand_data->of_node = child;
->> +
->> +		val = of_get_nand_ecc_mode(child);
->> +		if (val >= 0)
->> +			gpmc_nand_data->ecc_opt = val;
->> +
->> +		val = of_get_nand_bus_width(child);
->> +		if (val == 16)
->> +			gpmc_nand_data->devsize = NAND_BUSWIDTH_16;
-> 
-> Do we need any error checking here? I believe we only support 8-bit and
-> 16-bit width devices and so if 16-bit is not set then we default to 8-bit.
+The i2c2 alias cannot be resolved at compile time; there has to be
 
-Yes, that's that the code does. If val != 16, ->devsize is left set to 0
-(from kzalloc). There is no NAND_BUSWIDTH_8, so I think that should be ok?
+a) A DT object format where unresolved aliases (symbols) are tracked
+b) A runtime DT linker that will resolve the alias, and will insert the
+   i2c2-devices child nodes as children in the i2c2 node.
+c) A method to trigger platform device creation for the child nodes jus=
+t
+   inserted.
 
->> +
->> +		gpmc_read_timings_dt(child, &gpmc_t);
->> +		gpmc_nand_init(gpmc_nand_data, &gpmc_t);
-> 
-> I believe that you need an "of_node_put()" when you are done with the child.
-
-Good point.
+DT core changes aren't bound to be easily accepted, so without having a=
+ clear
+signal from the DT maintainers that they would consider such a method p=
+eople
+are just hesitant to go down this road.
 
 
-Thanks,
-Daniel
+>=20
+>>>>=20
+>>>> I'm afraid that having the I2C/SPI drivers doing the detection won=
+'t
+>>>> work.  The capes can have arbitrary I2C/SPI devices (and even more
+>>>> weird components).  There is no way to assure for example that the=
+ I2C
+>>>> device responding to address 'foo' in cape A is the same I2C devic=
+e
+>>>> responding to the same address in cape B.
+>>>=20
+>>> your ->detect() method should take care of that.
+>>=20
+>> There isn't some magical serial number in I=B2C devices that a
+>> ->detect() method can read and the implementation of I=B2C is somewh=
+at
+>=20
+> It doesn't matter.
+>=20
+> What you are basically talking about is
+>=20
+>=20
+> 	cape layer
+> 		- wtf is this
+> 		- how do I plumb it
+>=20
+> 		- create device nodes with correct name for
+> 		  binding, address etc on the right bus
+>=20
+>=20
+> 	i2c layer
+> 		- ooh a new i2c device
+> 		- probe as indicated by device name
+> 		- attach correct driver
+>=20
+>=20
+> Architecturally its possible you want to make some caps MFDs if they =
+have
+> their own bus heirarchies etc but generally I doubt it.
+>=20
+>=20
+> Take a look at arch/x86/platform/mrst/mrst.c. It's a specific example=
+ of
+> a platform which parses tables and attaches devices to the right phys=
+ical
+> bus in a manner they can be reliably probed even when the device has =
+no
+> sane autodetect.
+>=20
+> Alan
 
+Regards
+
+-- Pantelis
