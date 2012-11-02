@@ -1,59 +1,77 @@
-From: Josh Cartwright <josh.cartwright@ni.com>
-Subject: Re: [PATCH 8/8] clocksource: xilinx_ttc: add OF_CLK support
-Date: Thu, 1 Nov 2012 20:56:47 -0600
-Message-ID: <20121102025647.GN5190@beefymiracle.amer.corp.natinst.com>
-References: <cover.1351721190.git.josh.cartwright@ni.com>
- <0ea1ba71afb3f4551ac27a6dfa41bd97b63cef48.1351721190.git.josh.cartwright@ni.com>
+From: Praveen Paneri <p.paneri@samsung.com>
+Subject: Re: [PATCH v7 2/5] usb: s3c-hsotg: Adding phy driver support
+Date: Fri, 2 Nov 2012 09:56:37 +0530
+Message-ID: <CAD6zSYOvGSTF18Zr1zPFduz3povs7qiiU8p=iUtAAyDX_LUy+A@mail.gmail.com>
+References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
+	<1351573057-22249-3-git-send-email-p.paneri@samsung.com>
+	<20121031140548.GE10998@arwen.pp.htv.fi>
+	<20121031154407.4eb54dba@amdc308.digital.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <0ea1ba71afb3f4551ac27a6dfa41bd97b63cef48.1351721190.git.josh.cartwright@ni.com>
-Content-Disposition: inline
-Sender: linux-serial-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@ti.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Linn <John.Linn@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Michal Simek <monstr@monstr.eu>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20121031154407.4eb54dba@amdc308.digital.local>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: balbi@ti.com, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, t.figa@samsung.com, gautam.vivek@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2012 at 01:56:14PM -0600, Josh Cartwright wrote:
-> Add support for retrieving TTC configuration from device tree.  This
-> includes the ability to pull information about the driving clocks from
-> the of_clk bindings.
-> 
-> Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
-> ---
-> diff --git a/drivers/clocksource/xilinx_ttc.c b/drivers/clocksource/xilinx_ttc.c
-> index ff38b3e..a4718f7 100644
-> --- a/drivers/clocksource/xilinx_ttc.c
-> +++ b/drivers/clocksource/xilinx_ttc.c
-> @@ -209,7 +153,8 @@ static struct clocksource clocksource_xttcpss = {
->  static int xttcpss_set_next_event(unsigned long cycles,
->  					struct clock_event_device *evt)
->  {
-> -	struct xttcpss_timer *timer = &timers[XTTCPSS_CLOCKEVENT];
-> +	struct xttcpss_timer_clockevent *xttce = to_xttcpss_timer_clkevent(evt);
-> +	struct xttcpss_timer *timer = &xttce->xttc;
->  
->  	xttcpss_set_interval(timer, cycles);
->  	return 0;
-> @@ -224,12 +169,14 @@ static int xttcpss_set_next_event(unsigned long cycles,
->  static void xttcpss_set_mode(enum clock_event_mode mode,
->  					struct clock_event_device *evt)
->  {
-> -	struct xttcpss_timer *timer = &timers[XTTCPSS_CLOCKEVENT];
-> +	struct xttcpss_timer_clockevent *xttce = to_xttcpss_timer_clkevent(evt);
-> +	struct xttcpss_timer *timer = &xttce->xttc;
->  	u32 ctrl_reg;
->  
->  	switch (mode) {
->  	case CLOCK_EVT_MODE_PERIODIC:
-> -		xttcpss_set_interval(timer, TIMER_RATE / HZ);
-> +		xttcpss_set_interval(timer,
-> +				     clk_get_rate(xttce->clk) / PRESCALE);
+On Wed, Oct 31, 2012 at 8:14 PM, Lukasz Majewski <l.majewski@samsung.com> wrote:
+> Hi Felipe,
+>
+>> Hi,
+>>
+>> On Tue, Oct 30, 2012 at 10:27:34AM +0530, Praveen Paneri wrote:
+>> > @@ -3501,20 +3511,27 @@ static int __devinit s3c_hsotg_probe(struct
+>> > platform_device *pdev) int ret;
+>> >     int i;
+>> >
+>> > -   plat = pdev->dev.platform_data;
+>> > -   if (!plat) {
+>> > -           dev_err(&pdev->dev, "no platform data defined\n");
+>> > -           return -EINVAL;
+>> > -   }
+>> > -
+>> >     hsotg = devm_kzalloc(&pdev->dev, sizeof(struct s3c_hsotg),
+>> > GFP_KERNEL); if (!hsotg) {
+>> >             dev_err(dev, "cannot get memory\n");
+>> >             return -ENOMEM;
+>> >     }
+>> >
+>> > +   plat = pdev->dev.platform_data;
+>> > +   if (!plat) {
+>> > +           /* Fallback for transceiver */
+>> > +           phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+>> > +           if (IS_ERR_OR_NULL(phy)) {
+>> > +                   dev_err(&pdev->dev, "no platform data or
+>> > transceiver defined\n");
+>> > +                   return -EPROBE_DEFER;
+>> > +           } else {
+>> > +                   hsotg->phy = phy;
+>> > +           }
+>> > +   } else {
+>> > +           hsotg->plat = plat;
+>> > +   }
+>>
+>> I think this should be the other way around, meaning you try to grab
+>> the phy, if you can't, then you fallback to pdata.
+Agreed! Will swap it
 
-I discovered with further testing that the above calculation is broken;
-calculated interval also needs to be divided by HZ.
-
-(I'll post a v2; just wanted to get this out there in the slim chance
-anyone's testing this ;)
-
-  Josh
+regards,
+Praveen
+>>
+>
+> I agree.
+>
+> The new approach is to use new PHY driver. And only when failed we
+> shall use legacy approach.
+>
+> --
+> Best regards,
+>
+> Lukasz Majewski
+>
+> Samsung Poland R&D Center | Linux Platform Group
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
