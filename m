@@ -1,34 +1,33 @@
 From: Ralf Baechle <ralf@linux-mips.org>
 Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
-Date: Fri, 2 Nov 2012 10:58:01 +0100
-Message-ID: <20121102095801.GC17860@linux-mips.org>
+Date: Fri, 2 Nov 2012 11:23:35 +0100
+Message-ID: <20121102102335.GF2905@linux-mips.org>
 References: <1351721431-26220-1-git-send-email-swarren@wwwdotorg.org>
+ <20121102095801.GC17860@linux-mips.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arch-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1351721431-26220-1-git-send-email-swarren@wwwdotorg.org>
+In-Reply-To: <20121102095801.GC17860@linux-mips.org>
 Sender: linux-arch-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
 Cc: Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2012 at 04:10:30PM -0600, Stephen Warren wrote:
+On Fri, Nov 02, 2012 at 10:58:01AM +0100, Ralf Baechle wrote:
 
-> From: Stephen Warren <swarren@nvidia.com>
-> 
-> All architectures that use cmd_dtc do so in the same way. Move the build
-> rule to a central location to avoid duplication.
+> Can you fold these MIPS bits into your patch?
 
-Can you fold these MIPS bits into your patch?
+I missed Lantiq.
 
   Ralf
 
 Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 
  arch/mips/cavium-octeon/Makefile | 3 ---
+ arch/mips/lantiq/dts/Makefile    | 3 ---
  arch/mips/netlogic/dts/Makefile  | 3 ---
- 2 files changed, 6 deletions(-)
+ 3 files changed, 9 deletions(-)
 
 diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
 index bc96e29..6e927cf 100644
@@ -44,6 +43,15 @@ index bc96e29..6e927cf 100644
  # Let's keep the .dtb files around in case we want to look at them.
  .SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
  
+diff --git a/arch/mips/lantiq/dts/Makefile b/arch/mips/lantiq/dts/Makefile
+index 674fca4..6fa72dd 100644
+--- a/arch/mips/lantiq/dts/Makefile
++++ b/arch/mips/lantiq/dts/Makefile
+@@ -1,4 +1 @@
+ obj-$(CONFIG_DT_EASY50712) := easy50712.dtb.o
+-
+-$(obj)/%.dtb: $(obj)/%.dts
+-	$(call if_changed,dtc)
 diff --git a/arch/mips/netlogic/dts/Makefile b/arch/mips/netlogic/dts/Makefile
 index 67ae3fe2..d117d46 100644
 --- a/arch/mips/netlogic/dts/Makefile
