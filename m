@@ -1,78 +1,35 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH v3 2/2] USB: DWC3: EXYNOS: Remove platform data for dwc3-exynos
-Date: Sat, 03 Nov 2012 18:00:28 +0530
-Message-ID: <1351945828-28559-3-git-send-email-gautam.vivek@samsung.com>
-References: <1351945828-28559-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-reply-to: <1351945828-28559-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, balbi@ti.com, rob.herring@calxeda.com, av.tikhomirov@samsung.com, kishon@ti.com
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 0/5] ARM: Exynos: Enable device tree support for MCT controller
+Date: Sat, 03 Nov 2012 20:15:33 +0530
+Message-ID: <1351953938-13487-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-We are removing plat data which was used till now to init and
-exit phy. We no longer need this since dwc3-core takes care of
-initializing and shutting-down the phy using usb_phy_init()
-and usb_phy_shutdown().
+This patch series adds device tree support for Exynos4/5 MCT controller. This
+series depends on the device tree and smp support patches for Exynos4x12 posted
+by Tomasz Figa. This patch series has been tested on Exynos4210 based Origen
+board, Exynos4412 based SMDK board and Exynos5250 based SMDK board.
 
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
----
- drivers/usb/dwc3/dwc3-exynos.c |   16 ----------------
- 1 files changed, 0 insertions(+), 16 deletions(-)
+Thomas Abraham (5):
+  ARM: Exynos: add a register base address variable in mct controller driver
+  ARM: Exynos: prepare an array of MCT interrupt numbers and use it
+  ARM: Exynos: add device tree support for MCT controller driver
+  ARM: Exynos: remove static io-remapping of mct registers for Exynos5
+  ARM: dts: add mct device tree node for all supported Exynos SoC's
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index 6471d78..dc35c54 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -92,7 +92,6 @@ static u64 dwc3_exynos_dma_mask = DMA_BIT_MASK(32);
- 
- static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
- {
--	struct dwc3_exynos_data	*pdata = pdev->dev.platform_data;
- 	struct platform_device	*dwc3;
- 	struct dwc3_exynos	*exynos;
- 	struct clk		*clk;
-@@ -145,14 +144,6 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
- 
- 	clk_enable(exynos->clk);
- 
--	/* PHY initialization */
--	if (!pdata) {
--		dev_dbg(&pdev->dev, "missing platform data\n");
--	} else {
--		if (pdata->phy_init)
--			pdata->phy_init(pdev, pdata->phy_type);
--	}
--
- 	ret = platform_device_add_resources(dwc3, pdev->resource,
- 			pdev->num_resources);
- 	if (ret) {
-@@ -169,9 +160,6 @@ static int __devinit dwc3_exynos_probe(struct platform_device *pdev)
- 	return 0;
- 
- err4:
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, pdata->phy_type);
--
- 	clk_disable(clk);
- 	clk_put(clk);
- err3:
-@@ -185,15 +173,11 @@ err0:
- static int __devexit dwc3_exynos_remove(struct platform_device *pdev)
- {
- 	struct dwc3_exynos	*exynos = platform_get_drvdata(pdev);
--	struct dwc3_exynos_data *pdata = pdev->dev.platform_data;
- 
- 	platform_device_unregister(exynos->dwc3);
- 	platform_device_unregister(exynos->usb2_phy);
- 	platform_device_unregister(exynos->usb3_phy);
- 
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, pdata->phy_type);
--
- 	clk_disable(exynos->clk);
- 	clk_put(exynos->clk);
- 
--- 
-1.7.6.5
-
+ .../bindings/timer/samsung,exynos4210-mct.txt      |   70 ++++++++
+ arch/arm/boot/dts/exynos4210.dtsi                  |    8 +
+ arch/arm/boot/dts/exynos4212.dtsi                  |   10 +
+ arch/arm/boot/dts/exynos4412.dtsi                  |    8 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |   21 +++
+ arch/arm/mach-exynos/common.c                      |    5 -
+ arch/arm/mach-exynos/include/mach/irqs.h           |    6 -
+ arch/arm/mach-exynos/include/mach/map.h            |    1 -
+ arch/arm/mach-exynos/include/mach/regs-mct.h       |   53 ------
+ arch/arm/mach-exynos/mct.c                         |  176 +++++++++++++-------
+ 10 files changed, 234 insertions(+), 124 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
+ delete mode 100644 arch/arm/mach-exynos/include/mach/regs-mct.h
