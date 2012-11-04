@@ -1,40 +1,72 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 0/2] net: at91_ether add dt and pinctrl support
-Date: Sun, 4 Nov 2012 16:49:54 +0100
-Message-ID: <20121104154954.GJ19021@game.jcrosoft.org>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v7 1/8] video: add display_timing struct and helpers
+Date: Sun, 4 Nov 2012 17:53:18 +0100
+Message-ID: <20121104165318.GA5894@pengutronix.de>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1351675689-26814-2-git-send-email-s.trumtrar@pengutronix.de>
+ <20121101200842.GA13137@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>
+In-Reply-To: <20121101200842.GA13137@avionic-0098.mockup.avionic-design.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Nov 01, 2012 at 09:08:42PM +0100, Thierry Reding wrote:
+> On Wed, Oct 31, 2012 at 10:28:01AM +0100, Steffen Trumtrar wrote:
+> [...]
+> > +void timings_release(struct display_timings *disp)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; i < disp->num_timings; i++)
+> > +		kfree(disp->timings[i]);
+> > +}
+> > +
+> > +void display_timings_release(struct display_timings *disp)
+> > +{
+> > +	timings_release(disp);
+> > +	kfree(disp->timings);
+> > +}
+> 
+> I'm not quite sure I understand how these are supposed to be used. The
+> only use-case where a struct display_timings is dynamically allocated is
+> for the OF helpers. In that case, wouldn't it be more useful to have a
+> function that frees the complete structure, including the struct
+> display_timings itself? Something like this, which has all of the above
+> rolled into one:
+> 
+> 	void display_timings_free(struct display_timings *disp)
+> 	{
+> 		if (disp->timings) {
+> 			unsigned int i;
+> 
+> 			for (i = 0; i < disp->num_timings; i++)
+> 				kfree(disp->timings[i]);
+> 		}
+> 
+> 		kfree(disp->timings);
+> 		kfree(disp);
+> 	}
+> 
 
-	This patch serie add dt and pinctrl support to the at91 ether
+Well, you are right. They can be rolled into one function.
+The extra function call is useless and as it seems confusing.
 
-	this is need to use the network on at91rm9200 as we now have dt
-	support on it
+Regards,
+Steffen
 
-Jean-Christophe PLAGNIOL-VILLARD (2):
-      net: at91_ether: add dt support
-      net: at91_ether: add pinctrl support
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
- Documentation/devicetree/bindings/net/cdns-emac.txt |   23 +++++++++++++++++++++++
- drivers/net/ethernet/cadence/at91_ether.c           |   83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 99 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/cdns-emac.txt
 
-Best Regards,
-J.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
