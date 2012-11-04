@@ -1,68 +1,90 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v7 1/8] video: add display_timing struct and helpers
-Date: Sun, 4 Nov 2012 17:53:18 +0100
-Message-ID: <20121104165318.GA5894@pengutronix.de>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7 2/8] of: add helper to parse display timings
+Date: Sun, 4 Nov 2012 18:10:20 +0100
+Message-ID: <20121104171020.GB5894@pengutronix.de>
 References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
- <1351675689-26814-2-git-send-email-s.trumtrar@pengutronix.de>
- <20121101200842.GA13137@avionic-0098.mockup.avionic-design.de>
+ <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
+ <20121101201510.GB13137@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20121101200842.GA13137@avionic-0098.mockup.avionic-design.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+In-Reply-To: <20121101201510.GB13137-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 01, 2012 at 09:08:42PM +0100, Thierry Reding wrote:
-> On Wed, Oct 31, 2012 at 10:28:01AM +0100, Steffen Trumtrar wrote:
+On Thu, Nov 01, 2012 at 09:15:10PM +0100, Thierry Reding wrote:
+> On Wed, Oct 31, 2012 at 10:28:02AM +0100, Steffen Trumtrar wrote:
 > [...]
-> > +void timings_release(struct display_timings *disp)
-> > +{
-> > +	int i;
+> > diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
+> [...]
+> > @@ -0,0 +1,139 @@
+> > +display-timings bindings
+> > +==================
 > > +
-> > +	for (i = 0; i < disp->num_timings; i++)
-> > +		kfree(disp->timings[i]);
-> > +}
-> > +
-> > +void display_timings_release(struct display_timings *disp)
-> > +{
-> > +	timings_release(disp);
-> > +	kfree(disp->timings);
-> > +}
+> > +display-timings-node
+> > +------------
 > 
-> I'm not quite sure I understand how these are supposed to be used. The
-> only use-case where a struct display_timings is dynamically allocated is
-> for the OF helpers. In that case, wouldn't it be more useful to have a
-> function that frees the complete structure, including the struct
-> display_timings itself? Something like this, which has all of the above
-> rolled into one:
+> Maybe extend the underline to the length of the section and subsection
+> titles respectively?
 > 
-> 	void display_timings_free(struct display_timings *disp)
-> 	{
-> 		if (disp->timings) {
-> 			unsigned int i;
+> > +struct display_timing
+> > +===================
 > 
-> 			for (i = 0; i < disp->num_timings; i++)
-> 				kfree(disp->timings[i]);
-> 		}
+> Same here.
 > 
-> 		kfree(disp->timings);
-> 		kfree(disp);
-> 	}
+> > +config OF_DISPLAY_TIMINGS
+> > +	def_bool y
+> > +	depends on DISPLAY_TIMING
+> 
+> Maybe this should be called OF_DISPLAY_TIMING to match DISPLAY_TIMING,
+> or rename DISPLAY_TIMING to DISPLAY_TIMINGS for the sake of consistency?
 > 
 
-Well, you are right. They can be rolled into one function.
-The extra function call is useless and as it seems confusing.
+Yes, to all three above.
+
+> > +/**
+> > + * of_get_display_timing_list - parse all display_timing entries from a device_node
+> > + * @np: device_node with the subnodes
+> > + **/
+> > +struct display_timings *of_get_display_timing_list(struct device_node *np)
+> 
+> Perhaps this would better be named of_get_display_timings() to match the
+> return type?
+> 
+
+Hm, I'm not really sure about that. I found it to error prone, to have a function
+of_get_display_timing and of_get_display_timings. That's why I chose
+of_get_display_timing_list. But you are correct, that it doesn't match the return
+value. Maybe I should just make the first function static and change the name as you
+suggested.
+
+> > +	disp = kzalloc(sizeof(*disp), GFP_KERNEL);
+> 
+> Shouldn't you be checking this for allocation failures?
+> 
+> > +	disp->timings = kzalloc(sizeof(struct display_timing *)*disp->num_timings,
+> > +				GFP_KERNEL);
+> 
+> Same here.
+> 
+
+Yes, to both.
 
 Regards,
 Steffen
-
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
 
 -- 
