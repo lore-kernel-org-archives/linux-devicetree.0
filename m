@@ -1,67 +1,71 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Sun, 4 Nov 2012 19:04:33 +0100
-Message-ID: <CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com>
-References: <38620644.IyR5R8rjKP@percival>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 2/2] net: at91_ether: add pinctrl support
+Date: Sun,  4 Nov 2012 19:10:37 +0100
+Message-ID: <1352052637-5154-2-git-send-email-plagnioj@jcrosoft.com>
+References: <20121104154954.GJ19021@game.jcrosoft.org>
+ <1352052637-5154-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <38620644.IyR5R8rjKP@percival>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1352052637-5154-1-git-send-email-plagnioj@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Joachim Eastwood <manabian@gmail.com>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 31, 2012 at 10:04 AM, Alex Courbot <acourbot@nvidia.com> wrote:
+If no pinctrl available just report a warning as some architecture may not
+need to do anything.
 
-> Would anyone be opposed to having a gpio_get() function that works similarly
-> to e.g. regulator_get() and clk_get()?
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Joachim Eastwood <manabian@gmail.com>
+Cc: netdev@vger.kernel.org
+---
+ drivers/net/ethernet/cadence/at91_ether.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I understand the concept and why you want to do this.
-
-However I think the global GPIO numberspace defeats the
-purpose.
-
-gpio_get() should get an abstract handle just like clk_get() or
-regulator_get(), not a fixed numeral.
-
-That is the only way to really transit away from the global GPIO
-numberspace.
-
-The proper refactoring I can see is to introduce an orthogonal
-mechanism that will return something like a struct gpio_handle *
-when you call gpio_get(), and then use a new set of accessor
-functions to manipulate the GPIO, like gpio_handle_set()/ etc
-for all known GPIO operations.
-
-So defined in a new #ifdef CONFIG_GPIO_HANDLES or so
-in a new <linux/gpio-handles.h> header and like the other
-subsystems handling abstract resources just passing an
-opaque pointer cookie around.
-
-Then when migrating a driver to use this mechanism, only
-include <linux/gpio-handles.h> and make that one driver only
-use the abstract interface and get rid of the global numberspace.
-
-Then we can have drivers that under a transition period will
-support both the global numberspace and this new
-handle-based access pattern.
-
-Then migrate all clients over to <linux/gpio-handle.h> and
-finally kill off the old global numberspace and only use
-handles with that driver.
-
-So a much more thorough refactoring is needed, just doing
-a simple int lookup returning global GPIO numbers will likely
-only make the current mess worse.
-
-This more ambitious refactoring path is going to be a large
-endavour and will likely go through a lot of reviews and
-debate, but something like this is badly needed for the
-GPIO subsystem.
-
-Maybe Grant will have different opinions though so this is
-not the final word on this issue...
-
-Yours,
-Linus Walleij
+diff --git a/drivers/net/ethernet/cadence/at91_ether.c b/drivers/net/ethernet/cadence/at91_ether.c
+index 3e843b4..ffcdbc3 100644
+--- a/drivers/net/ethernet/cadence/at91_ether.c
++++ b/drivers/net/ethernet/cadence/at91_ether.c
+@@ -34,6 +34,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/of_net.h>
++#include <linux/pinctrl/consumer.h>
+ 
+ #include "macb.h"
+ 
+@@ -500,11 +501,21 @@ static int __init at91ether_probe(struct platform_device *pdev)
+ 	struct phy_device *phydev;
+ 	struct macb *lp;
+ 	int res;
++	struct pinctrl *pinctrl;
+ 
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!regs)
+ 		return -ENOENT;
+ 
++	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
++	if (IS_ERR(pinctrl)) {
++		res = PTR_ERR(pinctrl);
++		if (res == -EPROBE_DEFER)
++			return res;
++
++		dev_warn(&pdev->dev, "No pinctrl provided\n");
++	}
++
+ 	dev = alloc_etherdev(sizeof(struct macb));
+ 	if (!dev)
+ 		return -ENOMEM;
+-- 
+1.7.10.4
