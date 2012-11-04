@@ -1,97 +1,61 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v7 2/8] of: add helper to parse display timings
-Date: Sun, 4 Nov 2012 18:23:13 +0100
-Message-ID: <20121104172312.GC5894@pengutronix.de>
-References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
- <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
- <CAL1wa8dGiS-UDk7vjPKBaxQHB2FyNgLRYr5jsJZe4GjdzHELLQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
+Date: Sun, 4 Nov 2012 18:37:44 +0100
+Message-ID: <CACRpkdY_db3ju4LVnoR=0Wq8TFUxa48jNFGhvGM-3uSrmGZVew@mail.gmail.com>
+References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
+	<CACRpkdbSY-aH_Vf3Q4h-ufz35m6=vVXCEecGGS-WOsG7vmPZ0g@mail.gmail.com>
+	<331ABD5ECB02734CA317220B2BBEABC13EA3E24E@DBDE01.ent.ti.com>
+	<CACRpkdZ_NxST-oJ=MWC5L=r8uQD_71eHUVUR85v4jfsYpqz=UQ@mail.gmail.com>
+	<20121001154451.GI4840@atomide.com>
+	<CACRpkdaib2M1_UwSbyUG8qwZC2h7xaT5VU7WMj=y+h4S4LianQ@mail.gmail.com>
+	<331ABD5ECB02734CA317220B2BBEABC13EA3F22E@DBDE01.ent.ti.com>
+	<CACRpkdaeu3JaLqSbqETT=D0mdUu5VpwRpS_Xohd6M963rw8QMg@mail.gmail.com>
+	<331ABD5ECB02734CA317220B2BBEABC13EA5C598@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL1wa8dGiS-UDk7vjPKBaxQHB2FyNgLRYr5jsJZe4GjdzHELLQ@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA5C598@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, "dong.aisheng@linaro.org" <dong.aisheng@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Tue, Oct 30, 2012 at 3:12 PM, AnilKumar, Chimata <anilkumar@ti.com> wrote:
 
-On Fri, Nov 02, 2012 at 10:49:47PM +0530, Leela Krishna Amudala wrote:
-> Hello Steffen,
-> 
-> On Wed, Oct 31, 2012 at 2:58 PM, Steffen Trumtrar
-> > +static int parse_property(struct device_node *np, char *name,
-> > +                               struct timing_entry *result)
-> > +{
-> > +       struct property *prop;
-> > +       int length;
-> > +       int cells;
-> > +       int ret;
-> > +
-> > +       prop = of_find_property(np, name, &length);
-> > +       if (!prop) {
-> > +               pr_err("%s: could not find property %s\n", __func__, name);
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       cells = length / sizeof(u32);
-> > +       if (cells == 1) {
-> > +               ret = of_property_read_u32_array(np, name, &result->typ, cells);
-> 
-> As you are reading only one vaue, you can use of_property_read_u32 instead.
-> 
+> I completely understood this named modes, I have added named
+> modes like this in am335x-xxx.dts files
 
-Yes, thats copypasta, no need for _array here.
+I do not understand how the pinctrl-single dts files work actually,
+so please get Tony to review this part.
 
-> > +               result->min = result->typ;
-> > +               result->max = result->typ;
-> > +       } else if (cells == 3) {
-> > +               ret = of_property_read_u32_array(np, name, &result->min, cells);
-> 
-> You are considering only min element, what about typ and max elements?
-> 
+> I think "pinctrl-1" state will be used in driver
+> suspend/resume calls.
 
-I start at the address of result->min and read three u32-values, therefore all
-three (min,typ,max) are filled with values.
+Hopefully, I think you should test the code and monitor the
+system to make sure the right thing happens.
 
-> > +
-> > +/**
-> > + * of_display_timings_exists - check if a display-timings node is provided
-> > + * @np: device_node with the timing
-> > + **/
-> > +int of_display_timings_exists(struct device_node *np)
-> > +{
-> > +       struct device_node *timings_np;
-> > +       struct device_node *default_np;
-> > +
-> > +       if (!np)
-> > +               return -EINVAL;
-> > +
-> > +       timings_np = of_parse_phandle(np, "display-timings", 0);
-> > +       if (!timings_np)
-> > +               return -EINVAL;
-> > +
-> > +       return -EINVAL;
-> 
-> Here it should return success instead of -EINVAL.
-> 
+> I have the pinmux/conf settings for default state but fully
+> optimized pinmux/conf values in idle & suspend states are not
+> available yet.
 
-Yes.
+You have defined a "sleep" state which is what should be used
+for suspend? Or do you mean that you do have a state but
+you're just not defining it to the most optimal setting yet?
 
-> And one query.. are the binding properties names and "display-timings"
-> node structure template  finalized..?
-> 
+> Even though if I add here, I am unable to test
+> these pins in suspend state because suspend/resume of AM35xx
+> is not added yet
 
-I sure hope so. There actually is one error in the examples though.
-The property clock is called clock-frequency. I included it correctly
-at the top of display-timings.txt, but overlooked it in the examples.
+Aha.
 
-Regards,
-Steffen
+> I have two options now
+> - add only default states for now, I can add reset of
+> the state details once suspend/resume is supported.
+> - add same values in all the states, modify those once
+> suspend/resume is added for AM335x.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+The OMAP maintainer gets to choose how this is to be done,
+it's none of my business :-)
+
+Yours,
+Linus Walleij
