@@ -1,91 +1,94 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 Subject: Re: [PATCH v7 2/8] of: add helper to parse display timings
-Date: Sun, 4 Nov 2012 18:10:20 +0100
-Message-ID: <20121104171020.GB5894@pengutronix.de>
+Date: Sun, 4 Nov 2012 18:23:13 +0100
+Message-ID: <20121104172312.GC5894@pengutronix.de>
 References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
  <1351675689-26814-3-git-send-email-s.trumtrar@pengutronix.de>
- <20121101201510.GB13137@avionic-0098.mockup.avionic-design.de>
+ <CAL1wa8dGiS-UDk7vjPKBaxQHB2FyNgLRYr5jsJZe4GjdzHELLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121101201510.GB13137-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAL1wa8dGiS-UDk7vjPKBaxQHB2FyNgLRYr5jsJZe4GjdzHELLQ@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Leela Krishna Amudala <l.krishna@samsung.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 01, 2012 at 09:15:10PM +0100, Thierry Reding wrote:
-> On Wed, Oct 31, 2012 at 10:28:02AM +0100, Steffen Trumtrar wrote:
-> [...]
-> > diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
-> [...]
-> > @@ -0,0 +1,139 @@
-> > +display-timings bindings
-> > +==================
+Hi!
+
+On Fri, Nov 02, 2012 at 10:49:47PM +0530, Leela Krishna Amudala wrote:
+> Hello Steffen,
+> 
+> On Wed, Oct 31, 2012 at 2:58 PM, Steffen Trumtrar
+> > +static int parse_property(struct device_node *np, char *name,
+> > +                               struct timing_entry *result)
+> > +{
+> > +       struct property *prop;
+> > +       int length;
+> > +       int cells;
+> > +       int ret;
 > > +
-> > +display-timings-node
-> > +------------
+> > +       prop = of_find_property(np, name, &length);
+> > +       if (!prop) {
+> > +               pr_err("%s: could not find property %s\n", __func__, name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       cells = length / sizeof(u32);
+> > +       if (cells == 1) {
+> > +               ret = of_property_read_u32_array(np, name, &result->typ, cells);
 > 
-> Maybe extend the underline to the length of the section and subsection
-> titles respectively?
-> 
-> > +struct display_timing
-> > +===================
-> 
-> Same here.
-> 
-> > +config OF_DISPLAY_TIMINGS
-> > +	def_bool y
-> > +	depends on DISPLAY_TIMING
-> 
-> Maybe this should be called OF_DISPLAY_TIMING to match DISPLAY_TIMING,
-> or rename DISPLAY_TIMING to DISPLAY_TIMINGS for the sake of consistency?
+> As you are reading only one vaue, you can use of_property_read_u32 instead.
 > 
 
-Yes, to all three above.
+Yes, thats copypasta, no need for _array here.
 
+> > +               result->min = result->typ;
+> > +               result->max = result->typ;
+> > +       } else if (cells == 3) {
+> > +               ret = of_property_read_u32_array(np, name, &result->min, cells);
+> 
+> You are considering only min element, what about typ and max elements?
+> 
+
+I start at the address of result->min and read three u32-values, therefore all
+three (min,typ,max) are filled with values.
+
+> > +
 > > +/**
-> > + * of_get_display_timing_list - parse all display_timing entries from a device_node
-> > + * @np: device_node with the subnodes
+> > + * of_display_timings_exists - check if a display-timings node is provided
+> > + * @np: device_node with the timing
 > > + **/
-> > +struct display_timings *of_get_display_timing_list(struct device_node *np)
+> > +int of_display_timings_exists(struct device_node *np)
+> > +{
+> > +       struct device_node *timings_np;
+> > +       struct device_node *default_np;
+> > +
+> > +       if (!np)
+> > +               return -EINVAL;
+> > +
+> > +       timings_np = of_parse_phandle(np, "display-timings", 0);
+> > +       if (!timings_np)
+> > +               return -EINVAL;
+> > +
+> > +       return -EINVAL;
 > 
-> Perhaps this would better be named of_get_display_timings() to match the
-> return type?
-> 
-
-Hm, I'm not really sure about that. I found it to error prone, to have a function
-of_get_display_timing and of_get_display_timings. That's why I chose
-of_get_display_timing_list. But you are correct, that it doesn't match the return
-value. Maybe I should just make the first function static and change the name as you
-suggested.
-
-> > +	disp = kzalloc(sizeof(*disp), GFP_KERNEL);
-> 
-> Shouldn't you be checking this for allocation failures?
-> 
-> > +	disp->timings = kzalloc(sizeof(struct display_timing *)*disp->num_timings,
-> > +				GFP_KERNEL);
-> 
-> Same here.
+> Here it should return success instead of -EINVAL.
 > 
 
-Yes, to both.
+Yes.
+
+> And one query.. are the binding properties names and "display-timings"
+> node structure template  finalized..?
+> 
+
+I sure hope so. There actually is one error in the examples though.
+The property clock is called clock-frequency. I included it correctly
+at the top of display-timings.txt, but overlooked it in the examples.
 
 Regards,
 Steffen
-
 
 -- 
 Pengutronix e.K.                           |                             |
