@@ -1,61 +1,67 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] leds: leds-gpio: adopt pinctrl support
-Date: Sun, 4 Nov 2012 18:37:44 +0100
-Message-ID: <CACRpkdY_db3ju4LVnoR=0Wq8TFUxa48jNFGhvGM-3uSrmGZVew@mail.gmail.com>
-References: <1346487390-11399-1-git-send-email-anilkumar@ti.com>
-	<CACRpkdbSY-aH_Vf3Q4h-ufz35m6=vVXCEecGGS-WOsG7vmPZ0g@mail.gmail.com>
-	<331ABD5ECB02734CA317220B2BBEABC13EA3E24E@DBDE01.ent.ti.com>
-	<CACRpkdZ_NxST-oJ=MWC5L=r8uQD_71eHUVUR85v4jfsYpqz=UQ@mail.gmail.com>
-	<20121001154451.GI4840@atomide.com>
-	<CACRpkdaib2M1_UwSbyUG8qwZC2h7xaT5VU7WMj=y+h4S4LianQ@mail.gmail.com>
-	<331ABD5ECB02734CA317220B2BBEABC13EA3F22E@DBDE01.ent.ti.com>
-	<CACRpkdaeu3JaLqSbqETT=D0mdUu5VpwRpS_Xohd6M963rw8QMg@mail.gmail.com>
-	<331ABD5ECB02734CA317220B2BBEABC13EA5C598@DBDE01.ent.ti.com>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Sun, 4 Nov 2012 19:04:33 +0100
+Message-ID: <CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com>
+References: <38620644.IyR5R8rjKP@percival>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA5C598@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: "bryan.wu@canonical.com" <bryan.wu@canonical.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, "dong.aisheng@linaro.org" <dong.aisheng@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <38620644.IyR5R8rjKP@percival>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2012 at 3:12 PM, AnilKumar, Chimata <anilkumar@ti.com> wrote:
+On Wed, Oct 31, 2012 at 10:04 AM, Alex Courbot <acourbot@nvidia.com> wrote:
 
-> I completely understood this named modes, I have added named
-> modes like this in am335x-xxx.dts files
+> Would anyone be opposed to having a gpio_get() function that works similarly
+> to e.g. regulator_get() and clk_get()?
 
-I do not understand how the pinctrl-single dts files work actually,
-so please get Tony to review this part.
+I understand the concept and why you want to do this.
 
-> I think "pinctrl-1" state will be used in driver
-> suspend/resume calls.
+However I think the global GPIO numberspace defeats the
+purpose.
 
-Hopefully, I think you should test the code and monitor the
-system to make sure the right thing happens.
+gpio_get() should get an abstract handle just like clk_get() or
+regulator_get(), not a fixed numeral.
 
-> I have the pinmux/conf settings for default state but fully
-> optimized pinmux/conf values in idle & suspend states are not
-> available yet.
+That is the only way to really transit away from the global GPIO
+numberspace.
 
-You have defined a "sleep" state which is what should be used
-for suspend? Or do you mean that you do have a state but
-you're just not defining it to the most optimal setting yet?
+The proper refactoring I can see is to introduce an orthogonal
+mechanism that will return something like a struct gpio_handle *
+when you call gpio_get(), and then use a new set of accessor
+functions to manipulate the GPIO, like gpio_handle_set()/ etc
+for all known GPIO operations.
 
-> Even though if I add here, I am unable to test
-> these pins in suspend state because suspend/resume of AM35xx
-> is not added yet
+So defined in a new #ifdef CONFIG_GPIO_HANDLES or so
+in a new <linux/gpio-handles.h> header and like the other
+subsystems handling abstract resources just passing an
+opaque pointer cookie around.
 
-Aha.
+Then when migrating a driver to use this mechanism, only
+include <linux/gpio-handles.h> and make that one driver only
+use the abstract interface and get rid of the global numberspace.
 
-> I have two options now
-> - add only default states for now, I can add reset of
-> the state details once suspend/resume is supported.
-> - add same values in all the states, modify those once
-> suspend/resume is added for AM335x.
+Then we can have drivers that under a transition period will
+support both the global numberspace and this new
+handle-based access pattern.
 
-The OMAP maintainer gets to choose how this is to be done,
-it's none of my business :-)
+Then migrate all clients over to <linux/gpio-handle.h> and
+finally kill off the old global numberspace and only use
+handles with that driver.
+
+So a much more thorough refactoring is needed, just doing
+a simple int lookup returning global GPIO numbers will likely
+only make the current mess worse.
+
+This more ambitious refactoring path is going to be a large
+endavour and will likely go through a lot of reviews and
+debate, but something like this is badly needed for the
+GPIO subsystem.
+
+Maybe Grant will have different opinions though so this is
+not the final word on this issue...
 
 Yours,
 Linus Walleij
