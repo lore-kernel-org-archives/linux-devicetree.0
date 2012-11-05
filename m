@@ -1,92 +1,54 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V2 2/5] arm: mvebu: Added initial support for power
- managmement service unit
-Date: Mon, 5 Nov 2012 14:05:58 +0000
-Message-ID: <20121105140558.GP3351@mudshark.cambridge.arm.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-3-git-send-email-gregory.clement@free-electrons.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
+Date: Mon, 5 Nov 2012 14:34:01 +0000
+Message-ID: <CACxGe6ubcRqDEGyRbNmwvAMGg5ujAKvPRWe9Vmd9tiHeB7=qNw@mail.gmail.com>
+References: <1351783082-11411-1-git-send-email-panto@antoniou-consulting.com>
+ <20121031175219.GH12739@atomide.com> <C9715CB7-D3E2-4CA7-8A93-2B10E8B70640@antoniou-consulting.com>
+ <20121031180935.GL12739@atomide.com> <50918223.6080003@ti.com>
+ <8AD2F7AF-8315-442B-A394-1A38DAB29F52@antoniou-consulting.com>
+ <20121031212639.GQ12739@atomide.com> <8B058B00-6C21-4410-A24B-75651D49F6EC@antoniou-consulting.com>
+ <20121031221402.GA29490@arwen.pp.htv.fi> <E4EE0D1F-C7AC-4620-86F2-D9C7C56E279F@antoniou-consulting.com>
+ <50924DA3.1060901@ti.com> <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com>
+ <50925C49.7060004@ti.com> <CBDE21C5-1980-4BDC-9153-7653A07D0024@dominion.thruhere.net>
+ <50938108.5040507@ti.com> <40797D3D-D62C-4E15-B0DF-75636C1637EE@antoniou-consulting.com>
+ <CACxGe6s8qrP0itLgCyv1mBnekc-7K1n_q-kTKUR=MOJ57W_a1w@mail.gmail.com> <C9F4DFD1-4BF4-423C-B749-74E37D51192A@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1351545108-18954-3-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C9F4DFD1-4BF4-423C-B749-74E37D51192A@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel <linux-kernel@vger.kernel.org>, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2012 at 09:11:45PM +0000, Gregory CLEMENT wrote:
-> diff --git a/arch/arm/mach-mvebu/pmsu.c b/arch/arm/mach-mvebu/pmsu.c
-> new file mode 100644
-> index 0000000..cee020b
-> --- /dev/null
-> +++ b/arch/arm/mach-mvebu/pmsu.c
-> @@ -0,0 +1,78 @@
-> +/*
-> + * Power Management Service Unit(PMSU) support for Armada 370/XP platforms.
-> + *
-> + * Copyright (C) 2012 Marvell
-> + *
-> + * Yehuda Yitschak <yehuday@marvell.com>
-> + * Gregory Clement <gregory.clement@free-electrons.com>
-> + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + *
-> + * The Armada 370 and Armada XP SOCs have a power management service
-> + * unit which is responsible for powering down and waking up CPUs and
-> + * other SOC units
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/of_address.h>
-> +#include <linux/io.h>
-> +#include <linux/smp.h>
-> +#include <asm/smp_plat.h>
-> +
-> +static void __iomem *pmsu_mp_base;
-> +static void __iomem *pmsu_reset_base;
-> +
-> +#define PMSU_BOOT_ADDR_REDIRECT_OFFSET(cpu)	((cpu * 0x100) + 0x24)
-> +#define PMSU_RESET_CTL_OFFSET(cpu)		(cpu * 0x8)
-> +
-> +static struct of_device_id of_pmsu_table[] = {
-> +	{.compatible = "marvell,armada-370-xp-pmsu"},
-> +	{ /* end of list */ },
-> +};
-> +
-> +#ifdef CONFIG_SMP
-> +int armada_xp_boot_cpu(unsigned int cpu_id, void __iomem *boot_addr)
-> +{
-> +	int reg, hw_cpu;
-> +
-> +	if (!pmsu_mp_base || !pmsu_reset_base) {
-> +		pr_warn("Can't boot CPU. PMSU is uninitialized\n");
-> +		return 1;
-> +	}
-> +
-> +	hw_cpu = cpu_logical_map(cpu_id);
-> +
-> +	writel(virt_to_phys(boot_addr), pmsu_mp_base +
-> +			PMSU_BOOT_ADDR_REDIRECT_OFFSET(hw_cpu));
+On Mon, Nov 5, 2012 at 1:25 PM, Pantelis Antoniou
+<panto@antoniou-consulting.com> wrote:
+>
+> On Nov 5, 2012, at 1:22 AM, Grant Likely wrote:
+>
+>> On Fri, Nov 2, 2012 at 8:43 AM, Pantelis Antoniou
+>> <panto@antoniou-consulting.com> wrote:
+>>> Assuming that we do work on a DT object format, and that the runtime resolution mechanism is approved,
+>>> then I agree that this part of the capebus patches can be dropped and the functionality assumed by generic
+>>> DT core.
+>>>
+>>> The question is that this will take time, with no guarantees that this would be acceptable from
+>>> the device tree maintainers. So I am putting them in the CC list, to see what they think about it.
+>>
+>> This is actually exactly the direction I want to go with DT, which the
+>> ability to load supplemental DT data blobs from either a kernel module
+>> or userspace using the firmware loading infrastructure.
+>>
+>> g.
+>
+> Hi Grant,
+>
+> That's pretty much our use case.
+>
+> Regards
 
-virt_to_phys on an __iomem * doesn't feel right to me...
+Good. I'm about 80% though putting together a project plan of what is
+required to implement this. I'll post it for RFC shortly. I would
+appreciate feedback and help on flushing out the design.
 
-> +	/* Make sure value hits memory before reset */
-> +	dsb();
-
-writel has barrier semantics -- you shouldn't need this dsb.
-
-Will
+g.
