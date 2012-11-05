@@ -1,60 +1,80 @@
 From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH V2 0/3] ARM: dts: omap5: EMIF and LPDDR2 device tree data
-Date: Mon, 5 Nov 2012 11:51:00 +0100
-Message-ID: <50979A14.1050805@ti.com>
-References: <1349959669-16366-1-git-send-email-lokeshvutla@ti.com> <50975581.7010508@ti.com>
+Subject: Re: [PATCH V2 2/3] ARM: dts: omap5: EMIF device tree data for OMAP5
+ boards
+Date: Mon, 5 Nov 2012 11:55:48 +0100
+Message-ID: <50979B34.8010009@ti.com>
+References: <1349959669-16366-1-git-send-email-lokeshvutla@ti.com> <1349959669-16366-3-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50975581.7010508@ti.com>
+In-Reply-To: <1349959669-16366-3-git-send-email-lokeshvutla@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Lokesh Vutla <lokeshvutla@ti.com>
 Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lokesh,
+On 10/11/2012 02:47 PM, Lokesh Vutla wrote:
+> Adding EMIF device tree data for OMAP5 boards.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  arch/arm/boot/dts/omap5.dtsi |   24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index 5db33f4..445aeea 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -319,5 +319,29 @@
+>  			ti,buffer-size = <128>;
+>  			ti,hwmods = "mcbsp3";
+>  		};
+> +
+> +		emif1: emif@0x4c000000 {
+> +			compatible	= "ti,emif-4d5";
+> +			ti,hwmods	= "emif1";
+> +			phy-type	= <2>;
+> +			reg = <0x4c000000 0x3ff>;
 
-On 11/05/2012 06:58 AM, Lokesh Vutla wrote:
-> Hi,
-> On Thursday 11 October 2012 06:17 PM, Lokesh Vutla wrote:
->> This patch series adds Device tree data for the EMIF
->> sdram controllers in OMAP5 and LPDDR2 memory devices
->> in OMAP5-evm board.
->>
->> Testing:
->> - Boot tested on OMAP5430 evm.
->> - Built EMIF as a module.
->>
->> Changes from v1:
->> * Created a seperate dtsi file for Samsung LPDDR2 memory device
->>    used in OMAP5-evm.
->> * Passing reg and interrupt fields from dt for EMIF1 and EMIF2.
-> Gentle ping on this series.
+Should 0x400. This parameter is the size, not the end address.
 
-Sorry, I missed it. It might be too late for 3.8, since Tony wanted us
-to push before -rc4. I'll pull the series anyway just in case.
+> +			interrupts = <0 110 0x4>;
+> +			interrupt-parent = <&gic>;
 
-I have a least one comment.
+Please remove the interrupt-parent. It is not needed since DT will use
+the parent node to get it. It will avoid duplicating the entry for every
+nodes.
+
+> +			hw-caps-read-idle-ctrl;
+> +			hw-caps-ll-interface;
+> +			hw-caps-temp-alert;
+> +		};
+> +
+> +		emif2: emif@0x4d000000 {
+> +			compatible	= "ti,emif-4d5";
+> +			ti,hwmods	= "emif2";
+> +			phy-type	= <2>;
+
+Can you just add a comment to give more information. I know this is in
+the binding documentation, but some more comment never hurt.
+
+> +			reg = <0x4d000000 0x3ff>;
+
+0x400 as well.
+
+> +			interrupts = <0 111 0x4>;
+> +			interrupt-parent = <&gic>;
+
+Ditto.
+
+> +			hw-caps-read-idle-ctrl;
+> +			hw-caps-ll-interface;
+> +			hw-caps-temp-alert;
+> +		};
+>  	};
+>  };
+> 
 
 Regards,
 Benoit
-
-> 
-> Thanks
-> Lokesh
->>
->> Lokesh Vutla (3):
->>    ARM: dts: omap5-evm: Fix size of memory defined for EVM
->>    ARM: dts: omap5: EMIF device tree data for OMAP5 boards
->>    ARM: dts: omap5-evm: LPDDR2 memory device details for EVM
->>
->>   arch/arm/boot/dts/omap5-evm.dts           |   13 +++++-
->>   arch/arm/boot/dts/omap5.dtsi              |   24 +++++++++++
->>   arch/arm/boot/dts/samsung_k3pe0e000b.dtsi |   67
->> +++++++++++++++++++++++++++++
->>   3 files changed, 103 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/arm/boot/dts/samsung_k3pe0e000b.dtsi
->>
-> 
-
