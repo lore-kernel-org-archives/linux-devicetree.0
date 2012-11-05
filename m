@@ -1,37 +1,170 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
-Date: Mon, 5 Nov 2012 00:37:25 +0000
-Message-ID: <CACxGe6uuK6ew5uxh0BjtYAtPZCTLeUpHc4emXRAnMUtNmEzmGg@mail.gmail.com>
-References: <50924DA3.1060901@ti.com> <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com>
- <20121101110418.GF410@arwen.pp.htv.fi> <3AF5A6FC-61D9-40CA-85B3-81C2C788CB76@antoniou-consulting.com>
- <20121101124025.GA12489@arwen.pp.htv.fi> <A16B0ABF-AB9D-4F48-88BD-96F123FFEF2F@antoniou-consulting.com>
- <20121101131609.GC12489@arwen.pp.htv.fi> <E911D0B7-0397-4ED0-828E-71F9531E84E0@antoniou-consulting.com>
- <20121101135148.382aec00@pyramind.ukuu.org.uk> <9F25E89E-9194-4725-8A8C-053DCBADA1DB@antoniou-consulting.com>
- <20121101220518.GE14982@arwen.pp.htv.fi> <CA+Bv8XbAvEXe=zDaA8W2+ROD2duYMRcJu4-bms31OH=V_ScKow@mail.gmail.com>
- <20121102112104.4657fb7b@pyramind.ukuu.org.uk> <0EC43413-1DD7-4E2A-879B-0B5B926FFDFE@antoniou-consulting.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [Patch v2 3/4] ASoC: atmel-ssc-dai: register
+	platform from DAIs
+Date: Mon, 05 Nov 2012 13:25:58 +0800
+Message-ID: <50974DE6.50506@atmel.com>
+References: <1351668420-18447-1-git-send-email-voice.shen@atmel.com>
+ <1351668420-18447-3-git-send-email-voice.shen@atmel.com>
+ <20121101144315.GM4413@opensource.wolfsonmicro.com>
+ <5093312D.4070408@atmel.com>
+ <20121102142444.GY4413@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0EC43413-1DD7-4E2A-879B-0B5B926FFDFE@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20121102142444.GY4413@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, plagnioj@jcrosoft.com, jm.lin@atmel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 2, 2012 at 12:32 PM, Pantelis Antoniou
-<panto@antoniou-consulting.com> wrote:
-> The i2c2 alias cannot be resolved at compile time; there has to be
->
-> a) A DT object format where unresolved aliases (symbols) are tracked
-> b) A runtime DT linker that will resolve the alias, and will insert the
->    i2c2-devices child nodes as children in the i2c2 node.
-> c) A method to trigger platform device creation for the child nodes just
->    inserted.
->
-> DT core changes aren't bound to be easily accepted, so without having a clear
-> signal from the DT maintainers that they would consider such a method people
-> are just hesitant to go down this road.
+Hi Mark Brown,
 
-I do agree and will accept such a method.
+On 11/2/2012 22:24, Mark Brown wrote:
+> On Fri, Nov 02, 2012 at 10:34:21AM +0800, Bo Shen wrote:
+>> On 11/1/2012 22:43, Mark Brown wrote:
+>>> On Wed, Oct 31, 2012 at 03:26:59PM +0800, Bo Shen wrote:
+>
+>>>> +dai: dai {
+>>>> +	compatible = "atmel,atmel-ssc-dai";
+>>>> +	atmel,dai-master = <&ssc0>;
+>>>> +};
+>
+>>> This seems to be a purely virtual device which remaps the SSC onto the
+>>> Linux audio subsystem?  If that is the case then it shouldn't appear in
+>>> the device tree,
+>
+>> Yes. This is a purely virtual device. I add this as to the following reason.
+>
+>> In our case, the ssc can connect to audio codec, DAC and other
+>> devices. In order to avoid duplicate the code, so keep ssc as a
+>> library, register it directly in Linux and use remap method to let
+>> it work onto other different subsystem.
+>
+> Your quote appears to have deleted the bit of my mail where I told you
+> how to fix this.  Is there something unclear in my suggestion that the
+> machine driver directly reference the SSC node?
+>
 
-g.
+Sorry for misunderstand. I split your e-mail into two parts. May be you 
+miss some parts of my e-mail. You can check the last mail from me. Or 
+check the following fully quote.
+
+--------------------------------------------------------------------------
+On 11/1/2012 22:43, Mark Brown wrote:
+ > On Wed, Oct 31, 2012 at 03:26:59PM +0800, Bo Shen wrote:
+ >
+ >> +Required properties:
+ >> +  - compatible: "atmel,atmel-ssc-dai"
+ >> +  - atmel,dai-master: this dai base on which ssc controller
+ >
+ >> +Example:
+ >> +dai: dai {
+ >> +    compatible = "atmel,atmel-ssc-dai";
+ >> +    atmel,dai-master = <&ssc0>;
+ >> +};
+ >
+ > This seems to be a purely virtual device which remaps the SSC onto the
+ > Linux audio subsystem?  If that is the case then it shouldn't appear in
+ > the device tree,
+
+Yes. This is a purely virtual device. I add this as to the following reason.
+
+In our case, the ssc can connect to audio codec, DAC and other devices. 
+In order to avoid duplicate the code, so keep ssc as a library, register 
+it directly in Linux and use remap method to let it work onto other 
+different subsystem.
+
+So, for ssc connect to audio codec, use dai to remap the SSC onto the 
+Linux audio subsystem. In this way, just let the dai know which ssc 
+channel it based on. The remap is just a simple way. Please take 
+following code as a reference.
+
+---<8---
+         if (pdev->dev.of_node) {
+                 struct device_node *np = pdev->dev.of_node;
+                 struct device_node *dai_master_np;
+
+                 dai_master_np = of_parse_phandle(np, 
+"atmel,dai-master", 0);
+                 if (!dai_master_np) {
+                         dev_err(&pdev->dev, "No SSC for atmel dai");
+                         return -EINVAL;
+                 }
+
+                 id = of_alias_get_id(dai_master_np, "ssc");
+         } else {
+                 id = to_platform_device(pdev->dev.parent)->id;
+         }
+
+         ssc = ssc_request(id);
+         if (IS_ERR(ssc)) {
+                 dev_err(&pdev->dev, "Failed to request SSC %d\n", id);
+                 return PTR_ERR(ssc);
+         }
+         ssc_info.ssc = ssc;
+         pdev->dev.parent = &(ssc->pdev->dev);
+--->8---
+
+If ssc connect to other devices, also need to remap to other subsystem.
+
+ > the machine driver should just directly reference the
+ > SSC and instantiate any devices required in Linux directly.
+
+I am not fully understand this. So, which do you mean as the following 
+two method or any other else?
+
+Our old method:
+   using audio machine driver (e.g: sam9g20_wm8731.c) call 
+atmel_ssc_set_audio function to allocate the platform device for 
+atmel-ssc-dai and atmel-pcm-audio and then add device.
+
+Code as following:
+---<8---
+/* Allocate a dummy device for DMA if we don't have one already */
+         if (!dma_pdev) {
+                 dma_pdev = platform_device_alloc("atmel-pcm-audio", -1);
+                 if (!dma_pdev)
+                         return -ENOMEM;
+
+                 ret = platform_device_add(dma_pdev);
+                 if (ret < 0) {
+                         platform_device_put(dma_pdev);
+                         dma_pdev = NULL;
+                         return ret;
+                 }
+         }
+
+         ssc_pdev = platform_device_alloc("atmel-ssc-dai", ssc_id);
+         if (!ssc_pdev)
+                 return -ENOMEM;
+
+         /* If we can grab the SSC briefly to parent the DAI device off 
+it */
+         ssc = ssc_request(ssc_id);
+         if (IS_ERR(ssc))
+                 pr_warn("Unable to parent ASoC SSC DAI on SSC: %ld\n",
+                         PTR_ERR(ssc));
+         else {
+                 ssc_pdev->dev.parent = &(ssc->pdev->dev);
+                 ssc_free(ssc);
+         }
+
+         ret = platform_device_add(ssc_pdev);
+--->8---
+
+Other SoC do like this:
+   register i2s device, and then register dai, finally register 
+platform. So, only one device.
+--------------------------------------------------------------------------
+
+Best regards,
+Bo Shen
