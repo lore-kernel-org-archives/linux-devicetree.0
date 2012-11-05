@@ -1,78 +1,161 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
-Date: Mon, 05 Nov 2012 09:56:28 -0600
-Message-ID: <5097E1AC.5080806@gmail.com>
-References: <1351783082-11411-1-git-send-email-panto@antoniou-consulting.com>
- <20121031175219.GH12739@atomide.com>
- <C9715CB7-D3E2-4CA7-8A93-2B10E8B70640@antoniou-consulting.com>
- <20121031180935.GL12739@atomide.com> <50918223.6080003@ti.com>
- <8AD2F7AF-8315-442B-A394-1A38DAB29F52@antoniou-consulting.com>
- <20121031212639.GQ12739@atomide.com>
- <8B058B00-6C21-4410-A24B-75651D49F6EC@antoniou-consulting.com>
- <20121031221402.GA29490@arwen.pp.htv.fi>
- <E4EE0D1F-C7AC-4620-86F2-D9C7C56E279F@antoniou-consulting.com>
- <50924DA3.1060901@ti.com>
- <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com>
- <50925C49.7060004@ti.com>
- <CBDE21C5-1980-4BDC-9153-7653A07D0024@dominion.thruhere.net>
- <50938108.5040507@ti.com>
- <40797D3D-D62C-4E15-B0DF-75636C1637EE@antoniou-consulting.com>
- <CACxGe6s8qrP0itLgCyv1mBnekc-7K1n_q-kTKUR=MOJ57W_a1w@mail.gmail.com>
- <C9F4DFD1-4BF4-423C-B749-74E37D51192A@antoniou-consulting.com>
- <CACxGe6ubcRqDEGyRbNmwvAMGg5ujAKvPRWe9Vmd9tiHeB7=qNw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6ubcRqDEGyRbNmwvAMGg5ujAKvPRWe9Vmd9tiHeB7=qNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Subject: [PATCH] Input: tca8418 - convert to dt
+Date: Mon,  5 Nov 2012 17:10:29 +0100
+Message-ID: <1352131829-19449-1-git-send-email-alban.bedel@avionic-design.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Alban Bedel <alban.bedel@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2012 08:34 AM, Grant Likely wrote:
-> On Mon, Nov 5, 2012 at 1:25 PM, Pantelis Antoniou
-> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->>
->> On Nov 5, 2012, at 1:22 AM, Grant Likely wrote:
->>
->>> On Fri, Nov 2, 2012 at 8:43 AM, Pantelis Antoniou
->>> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->>>> Assuming that we do work on a DT object format, and that the runtime resolution mechanism is approved,
->>>> then I agree that this part of the capebus patches can be dropped and the functionality assumed by generic
->>>> DT core.
->>>>
->>>> The question is that this will take time, with no guarantees that this would be acceptable from
->>>> the device tree maintainers. So I am putting them in the CC list, to see what they think about it.
->>>
->>> This is actually exactly the direction I want to go with DT, which the
->>> ability to load supplemental DT data blobs from either a kernel module
->>> or userspace using the firmware loading infrastructure.
->>>
->>> g.
->>
->> Hi Grant,
->>
->> That's pretty much our use case.
->>
->> Regards
-> 
-> Good. I'm about 80% though putting together a project plan of what is
-> required to implement this. I'll post it for RFC shortly. I would
-> appreciate feedback and help on flushing out the design.
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ .../devicetree/bindings/input/tca8418_keypad.txt   |    8 +++
+ drivers/input/keyboard/tca8418_keypad.c            |   54 +++++++++++++-------
+ 2 files changed, 44 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/tca8418_keypad.txt
 
-The FPGA folks are also interested in dynamic DT configuration. There's
-been some discussion and postings on the DT list in the last few months
-you may have missed. It's maybe not completely the same use case, but
-there is some overlap here.
+diff --git a/Documentation/devicetree/bindings/input/tca8418_keypad.txt b/Documentation/devicetree/bindings/input/tca8418_keypad.txt
+new file mode 100644
+index 0000000..2a1538f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/tca8418_keypad.txt
+@@ -0,0 +1,8 @@
++
++Required properties:
++- compatible: "ti,tca8418"
++- reg: the I2C address
++- interrupts: IRQ line number, should trigger on falling edge
++- keypad,num-rows: The number of rows
++- keypad,num-columns: The number of columns
++- linux,keymap: Keys definitions, see keypad-matrix.
+diff --git a/drivers/input/keyboard/tca8418_keypad.c b/drivers/input/keyboard/tca8418_keypad.c
+index 893869b..fc9cc94 100644
+--- a/drivers/input/keyboard/tca8418_keypad.c
++++ b/drivers/input/keyboard/tca8418_keypad.c
+@@ -35,6 +35,7 @@
+ #include <linux/i2c.h>
+ #include <linux/input.h>
+ #include <linux/input/tca8418_keypad.h>
++#include <linux/of.h>
+ 
+ /* TCA8418 hardware limits */
+ #define TCA8418_MAX_ROWS	8
+@@ -116,6 +117,12 @@ static const struct i2c_device_id tca8418_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tca8418_id);
+ 
++static const struct of_device_id tca8418_dt_ids[] __devinitconst = {
++	{ .compatible = "ti,tca8418", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, tca8418_dt_ids);
++
+ struct tca8418_keypad {
+ 	unsigned int rows;
+ 	unsigned int cols;
+@@ -277,25 +284,36 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
+ 						client->dev.platform_data;
+ 	struct tca8418_keypad *keypad_data;
+ 	struct input_dev *input;
++	const struct matrix_keymap_data *keymap_data = NULL;
++	u32 rows = 0, cols = 0;
++	bool rep = false;
++	bool irq_is_gpio = false;
+ 	int error, row_shift, max_keys;
+ 
+ 	/* Copy the platform data */
+-	if (!pdata) {
+-		dev_dbg(&client->dev, "no platform data\n");
+-		return -EINVAL;
+-	}
+-
+-	if (!pdata->keymap_data) {
+-		dev_err(&client->dev, "no keymap data defined\n");
+-		return -EINVAL;
++	if (pdata) {
++		if (!pdata->keymap_data) {
++			dev_err(&client->dev, "no keymap data defined\n");
++			return -EINVAL;
++		}
++		keymap_data = pdata->keymap_data;
++		rows = pdata->rows;
++		cols = pdata->cols;
++		rep  = pdata->rep;
++		irq_is_gpio = pdata->irq_is_gpio;
++	} else {
++		struct device_node *np = client->dev.of_node;
++		of_property_read_u32(np, "keypad,num-rows", &rows);
++		of_property_read_u32(np, "keypad,num-columns", &cols);
++		rep = of_property_read_bool(np, "keypad,autorepeat");
+ 	}
+ 
+-	if (!pdata->rows || pdata->rows > TCA8418_MAX_ROWS) {
++	if (!rows || rows > TCA8418_MAX_ROWS) {
+ 		dev_err(&client->dev, "invalid rows\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!pdata->cols || pdata->cols > TCA8418_MAX_COLS) {
++	if (!cols || cols > TCA8418_MAX_COLS) {
+ 		dev_err(&client->dev, "invalid columns\n");
+ 		return -EINVAL;
+ 	}
+@@ -307,8 +325,8 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
+ 		return -ENODEV;
+ 	}
+ 
+-	row_shift = get_count_order(pdata->cols);
+-	max_keys = pdata->rows << row_shift;
++	row_shift = get_count_order(cols);
++	max_keys = rows << row_shift;
+ 
+ 	/* Allocate memory for keypad_data, keymap and input device */
+ 	keypad_data = kzalloc(sizeof(*keypad_data) +
+@@ -316,8 +334,8 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
+ 	if (!keypad_data)
+ 		return -ENOMEM;
+ 
+-	keypad_data->rows = pdata->rows;
+-	keypad_data->cols = pdata->cols;
++	keypad_data->rows = rows;
++	keypad_data->cols = cols;
+ 	keypad_data->client = client;
+ 	keypad_data->row_shift = row_shift;
+ 
+@@ -342,21 +360,20 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
+ 	input->id.product = 0x001;
+ 	input->id.version = 0x0001;
+ 
+-	error = matrix_keypad_build_keymap(pdata->keymap_data, NULL,
+-					   pdata->rows, pdata->cols,
++	error = matrix_keypad_build_keymap(keymap_data, NULL, rows, cols,
+ 					   keypad_data->keymap, input);
+ 	if (error) {
+ 		dev_dbg(&client->dev, "Failed to build keymap\n");
+ 		goto fail2;
+ 	}
+ 
+-	if (pdata->rep)
++	if (rep)
+ 		__set_bit(EV_REP, input->evbit);
+ 	input_set_capability(input, EV_MSC, MSC_SCAN);
+ 
+ 	input_set_drvdata(input, keypad_data);
+ 
+-	if (pdata->irq_is_gpio)
++	if (irq_is_gpio)
+ 		client->irq = gpio_to_irq(client->irq);
+ 
+ 	error = request_threaded_irq(client->irq, NULL, tca8418_irq_handler,
+@@ -406,6 +423,7 @@ static struct i2c_driver tca8418_keypad_driver = {
+ 	.driver = {
+ 		.name	= TCA8418_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(tca8418_dt_ids),
+ 	},
+ 	.probe		= tca8418_keypad_probe,
+ 	.remove		= __devexit_p(tca8418_keypad_remove),
+-- 
+1.7.0.4
 
-Rob
