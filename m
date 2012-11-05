@@ -1,188 +1,52 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH 1/2] net: at91_ether: add dt support
-Date: Sun, 4 Nov 2012 23:21:54 +0100
-Message-ID: <CAGhQ9VwUr=ak3Rjo0JVTkdP=4k6xkAKCDEwFyO5v3Fui0Md4Lg@mail.gmail.com>
-References: <20121104154954.GJ19021@game.jcrosoft.org>
-	<1352052637-5154-1-git-send-email-plagnioj@jcrosoft.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
+Date: Mon, 5 Nov 2012 00:22:30 +0000
+Message-ID: <CACxGe6s8qrP0itLgCyv1mBnekc-7K1n_q-kTKUR=MOJ57W_a1w@mail.gmail.com>
+References: <1351783082-11411-1-git-send-email-panto@antoniou-consulting.com>
+ <20121031175219.GH12739@atomide.com>
+ <C9715CB7-D3E2-4CA7-8A93-2B10E8B70640@antoniou-consulting.com>
+ <20121031180935.GL12739@atomide.com> <50918223.6080003@ti.com>
+ <8AD2F7AF-8315-442B-A394-1A38DAB29F52@antoniou-consulting.com>
+ <20121031212639.GQ12739@atomide.com>
+ <8B058B00-6C21-4410-A24B-75651D49F6EC@antoniou-consulting.com>
+ <20121031221402.GA29490@arwen.pp.htv.fi>
+ <E4EE0D1F-C7AC-4620-86F2-D9C7C56E279F@antoniou-consulting.com>
+ <50924DA3.1060901@ti.com>
+ <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com>
+ <50925C49.7060004@ti.com>
+ <CBDE21C5-1980-4BDC-9153-7653A07D0024@dominion.thruhere.net>
+ <50938108.5040507@ti.com>
+ <40797D3D-D62C-4E15-B0DF-75636C1637EE@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1352052637-5154-1-git-send-email-plagnioj@jcrosoft.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, netdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <40797D3D-D62C-4E15-B0DF-75636C1637EE-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Christophe,
+On Fri, Nov 2, 2012 at 8:43 AM, Pantelis Antoniou
+<panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> Assuming that we do work on a DT object format, and that the runtime resolution mechanism is approved,
+> then I agree that this part of the capebus patches can be dropped and the functionality assumed by generic
+> DT core.
+>
+> The question is that this will take time, with no guarantees that this would be acceptable from
+> the device tree maintainers. So I am putting them in the CC list, to see what they think about it.
 
-Some minor comments below.
+This is actually exactly the direction I want to go with DT, which the
+ability to load supplemental DT data blobs from either a kernel module
+or userspace using the firmware loading infrastructure.
 
-On 4 November 2012 19:10, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj@jcrosoft.com> wrote:
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Cc: Joachim Eastwood <manabian@gmail.com>
-> Cc: netdev@vger.kernel.org
-> ---
->  .../devicetree/bindings/net/cdns-emac.txt          |   23 +++++++
->  drivers/net/ethernet/cadence/at91_ether.c          |   72 ++++++++++++++++++--
->  2 files changed, 88 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/cdns-emac.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/cdns-emac.txt b/Documentation/devicetree/bindings/net/cdns-emac.txt
-> new file mode 100644
-> index 0000000..45b8760
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/cdns-emac.txt
-> @@ -0,0 +1,23 @@
-> +* Cadence EMAC Ethernet controller
-> +
-> +Required properties:
-> +- compatible: Should be "cdns,[<chip>-]{emac}"
-> +  Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
-> +  or the generic form: "cdns,emac".
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain macb interrupt
-> +- phy-mode: String, operation mode of the PHY interface.
-> +  Supported values are: "mii", "rmii".
-> +
-> +Optional properties:
-> +- local-mac-address: 6 bytes, mac address
-> +
-> +Examples:
-> +
-> +       macb0: ethernet@fffc4000 {
-> +               compatible = "cdns,atrm9200-emac";
-
-Typo in the compatible string. Should be "cdns,at91rm9200-emac"
-
-> +               reg = <0xfffc4000 0x4000>;
-> +               interrupts = <21>;
-> +               phy-mode = "rmii";
-> +               local-mac-address = [3a 0e 03 04 05 06];
-> +       };
-> diff --git a/drivers/net/ethernet/cadence/at91_ether.c b/drivers/net/ethernet/cadence/at91_ether.c
-> index 0d6392d..3e843b4 100644
-> --- a/drivers/net/ethernet/cadence/at91_ether.c
-> +++ b/drivers/net/ethernet/cadence/at91_ether.c
-> @@ -31,6 +31,9 @@
->  #include <linux/gfp.h>
->  #include <linux/phy.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_net.h>
->
->  #include "macb.h"
->
-> @@ -443,6 +446,49 @@ static const struct net_device_ops at91ether_netdev_ops = {
->  #endif
->  };
->
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id at91ether_dt_ids[] = {
-> +       { .compatible = "cdns,at91rm9200-emac" },
-> +       { .compatible = "cdns,emac" },
-> +       { /* sentinel */ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, at91ether_dt_ids);
-> +
-> +static int at91ether_get_phy_mode_dt(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +
-> +       if (np)
-> +               return of_get_phy_mode(np);
-> +
-> +       return -ENODEV;
-> +}
-> +
-> +static int at91ether_get_hwaddr_dt(struct macb *bp)
-> +{
-> +       struct device_node *np = bp->pdev->dev.of_node;
-
-Space between variables and code, please.
-
-> +       if (np) {
-> +               const char *mac = of_get_mac_address(np);
-> +               if (mac) {
-> +                       memcpy(bp->dev->dev_addr, mac, ETH_ALEN);
-> +                       return 0;
-> +               }
-> +       }
-> +
-> +       return -ENODEV;
-> +}
-> +#else
-> +static int at91ether_get_phy_mode_dt(struct platform_device *pdev)
-> +{
-> +       return -ENODEV;
-> +}
-> +static int at91ether_get_hwaddr_dt(struct macb *bp)
-> +{
-> +       return -ENODEV;
-> +}
-> +#endif
-> +
->  /*
->   * Detect MAC & PHY and perform ethernet interface initialization
->   */
-> @@ -466,7 +512,8 @@ static int __init at91ether_probe(struct platform_device *pdev)
->         lp = netdev_priv(dev);
->         lp->pdev = pdev;
->         lp->dev = dev;
-> -       lp->board_data = *board_data;
-> +       if (board_data)
-> +               lp->board_data = *board_data;
->         spin_lock_init(&lp->lock);
->
->         dev->base_addr = regs->start;           /* physical base address */
-> @@ -496,18 +543,28 @@ static int __init at91ether_probe(struct platform_device *pdev)
->         platform_set_drvdata(pdev, dev);
->         SET_NETDEV_DEV(dev, &pdev->dev);
->
-> -       get_mac_address(dev);           /* Get ethernet address and store it in dev->dev_addr */
-> +       res = at91ether_get_hwaddr_dt(lp);
-> +       if (res < 0)
-> +               get_mac_address(dev);           /* Get ethernet address and store it in dev->dev_addr */
-> +
->         update_mac_address(dev);        /* Program ethernet address into MAC */
->
-> +       res = at91ether_get_phy_mode_dt(pdev);
-> +       if (res < 0) {
-> +               if (board_data && board_data->is_rmii)
-> +                       lp->phy_interface = PHY_INTERFACE_MODE_RMII;
-> +               else
-> +                       lp->phy_interface = PHY_INTERFACE_MODE_MII;
-> +       } else {
-> +               lp->phy_interface = res;
-> +       }
-> +
->         macb_writel(lp, NCR, 0);
->
-> -       if (board_data->is_rmii) {
-> +       if (lp->phy_interface == PHY_INTERFACE_MODE_RMII)
->                 macb_writel(lp, NCFGR, MACB_BF(CLK, MACB_CLK_DIV32) | MACB_BIT(BIG) | MACB_BIT(RM9200_RMII));
-> -               lp->phy_interface = PHY_INTERFACE_MODE_RMII;
-> -       } else {
-> +       else
->                 macb_writel(lp, NCFGR, MACB_BF(CLK, MACB_CLK_DIV32) | MACB_BIT(BIG));
-> -               lp->phy_interface = PHY_INTERFACE_MODE_MII;
-> -       }
->
->         /* Register the network interface */
->         res = register_netdev(dev);
-> @@ -602,6 +659,7 @@ static struct platform_driver at91ether_driver = {
->         .driver         = {
->                 .name   = DRV_NAME,
->                 .owner  = THIS_MODULE,
-> +               .of_match_table = of_match_ptr(at91ether_dt_ids),
->         },
->  };
->
-
-Tested-by: Joachim Eastwood <manabian@gmail.com>
-
-regards
-Joachim Eastwood
+g.
