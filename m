@@ -1,105 +1,59 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric
- in mach-mvebu
-Date: Tue, 06 Nov 2012 00:53:16 +0100
-Message-ID: <5098516C.6060609@free-electrons.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
- <20121105140258.GO3351@mudshark.cambridge.arm.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
+Date: Mon, 05 Nov 2012 23:58:25 +0000
+Message-ID: <7dbed965-f75d-4ad3-9f88-4c3cd0b9e602@email.android.com>
+References: <50924DA3.1060901@ti.com> <20121101124025.GA12489@arwen.pp.htv.fi> <A16B0ABF-AB9D-4F48-88BD-96F123FFEF2F@antoniou-consulting.com> <20121101131609.GC12489@arwen.pp.htv.fi> <E911D0B7-0397-4ED0-828E-71F9531E84E0@antoniou-consulting.com> <20121101135148.382aec00@pyramind.ukuu.org.uk> <9F25E89E-9194-4725-8A8C-053DCBADA1DB@antoniou-consulting.com> <20121101220518.GE14982@arwen.pp.htv.fi> <CA+Bv8XbAvEXe=zDaA8W2+ROD2duYMRcJu4-bms31OH=V_ScKow@mail.gmail.com> <20121102112104.4657fb7b@pyramind.ukuu.org.uk> <0EC43413-1DD7-4E2A-879B-0B5B926FFDFE@antoniou-consulting.com> <CACxGe6uuK6ew5uxh0BjtYAtPZCTLeUpHc4emXRAnMUtNmEzmGg@mail.gmail.com> <AC5129F0-FF30-46ED-AD57-3FA6CA919F99@antoniou-consulting.com> <CACxGe6v9cyybV4+5tQJ-DG8qdyEHfsLa7t+-3CTL+97Q9msrFw@mail.gmail.com> <18667A4E-5513-4D74-922
+ F-30D091609F16@antoniou-consulting.com> <CACxGe6uR5VhHsCS1vmayURkGBKmhagaeWBBaCnyfsfOjZ2Dutg@mail.gmail.com> <CAD=GYpYc9L5yKqgar5jB2jG8+GiX7Lb0zevP9Pxaq0HdaVXQ5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121105140258.GO3351@mudshark.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=GYpYc9L5yKqgar5jB2jG8+GiX7Lb0zevP9Pxaq0HdaVXQ5Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel A Fernandes <agnel.joel@gmail.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2012 03:02 PM, Will Deacon wrote:
-> Hi Gregory,
 
-Hi Will,
 
-> 
-> On Mon, Oct 29, 2012 at 09:11:44PM +0000, Gregory CLEMENT wrote:
->> diff --git a/arch/arm/mach-mvebu/coherency.c b/arch/arm/mach-mvebu/coherency.c
->> new file mode 100644
->> index 0000000..69e130d
->> --- /dev/null
->> +++ b/arch/arm/mach-mvebu/coherency.c
->> @@ -0,0 +1,89 @@
->> +/*
->> + * Coherency fabric (Aurora) support for Armada 370 and XP platforms.
->> + *
->> + * Copyright (C) 2012 Marvell
->> + *
->> + * Yehuda Yitschak <yehuday@marvell.com>
->> + * Gregory Clement <gregory.clement@free-electrons.com>
->> + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + *
->> + * The Armada 370 and Armada XP SOCs have a coherency fabric which is
->> + * responsible for ensuring hardware coherency between all CPUs and between
->> + * CPUs and I/O masters. This file initializes the coherency fabric and
->> + * supplies basic routines for configuring and controlling hardware coherency
->> + */
-> 
-> [...]
-> 
->> +int set_cpu_coherent(unsigned int hw_cpu_id, int smp_group_id)
->> +{
->> +	int reg;
->> +
->> +	if (!coherency_base) {
->> +		pr_warn("Can't make CPU %d cache coherent.\n", hw_cpu_id);
->> +		pr_warn("Coherency fabric is not initialized\n");
->> +		return 1;
->> +	}
->> +
->> +	/* Enable the CPU in coherency fabric */
->> +	reg = readl(coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
->> +	reg |= 1 << (24 + hw_cpu_id);
->> +	writel(reg, coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
->> +
->> +	/* Add CPU to SMP group */
->> +	reg = readl(coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
->> +	reg |= 1 << (16 + hw_cpu_id + (smp_group_id == 0 ? 8 : 0));
->> +	writel(reg, coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
->> +
->> +	return 0;
->> +}
-> 
-> These writels may expand to code containing calls to outer_sync(), which
-> will attempt to take a spinlock for the aurora l2. Given that the CPU isn't
-> coherent, how does this play out with the exclusive store instruction in the
-> lock?
+Joel A Fernandes <agnel.joel@gmail.com> wrote:
 
-I forward this question to the Marvell experts.
+>Hi Grant,
+>
+>On Mon, Nov 5, 2012 at 2:14 PM, Grant Likely
+><grant.likely@secretlab.ca> wrote:
+>> I'm open to suggestions if anyone has any. I have not objections to a
+>> fixup approach, but I'm not comfortable with anything that is fragile
+>> to modifications to the fragment.
+>
+>I am fairly new to the DT world so please bear with me, but how about
+>a method that resolves symbols the same way that the linux dynamic
+>linker does when shared libraries are loaded?
+>
+>A separate table (similar to .PLT/GOT sections  in the ELF object
+>format) could be created when the fragment is loaded, and the phandle
+>references could be fixed to point to the table offsets during compile
+>time. This table would be a second level indirection and the kernel
+>would populate this table with the in-kernel values of the phandles
+>that the dt fragment refers to.
 
-> 
-> Will
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+That's an interesting idea that is worth exploring. That would make it possible to avoid a fixup stage, but it also means that any parsing code must know how to handle the got-like table. It won't be backwards compatible with existing tools. It also wouldn't easily support the case of firmware applying the overlay and passing the resulting tree to the kernel. Hmmm.... Not being backwards compatible at the data level is a big problem. I really want a method that can resolve back to the current data format or is a compatible extension of it.
 
+>
+>This might involve changes to the DT core, but as such, this method
+>wouldn't suffer from the fragility problem of either base or fragment
+>DT trees being modified.
+>
+>The table itself could be added to the tree by the compiler, and the
+>phandles could point to it (fixed). such phandles could be marked for
+>special handling to facilitate the 1-level indirection.
+
+That's part of the problem. Property values are essentially anaonymous data. There is no mechanism currently for marking data such as indicate which data values are phandles. If there were then it would be a simple matter to find all the phandles and fix them up.
+
+We could possibly add data type suppplementary properties to the tree to solve that problem. They would have to be optional for the base tree to retain backwards compatibility, but could be required on overlays.
+
+g.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Sent from my Android phone with K-9 Mail. Please excuse my brevity.
