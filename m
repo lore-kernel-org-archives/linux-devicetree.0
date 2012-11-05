@@ -1,136 +1,108 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH v2 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Mon, 5 Nov 2012 15:46:17 -0600
-Message-ID: <509833A9.8080902@ti.com>
-References: <1351794970-14675-1-git-send-email-zonque@gmail.com> <1351794970-14675-5-git-send-email-zonque@gmail.com> <5093A36B.70101@ti.com> <5093AB14.9090402@gmail.com> <50941C6C.3030403@ti.com> <50941DC4.2050209@gmail.com> <50942590.5010202@ti.com> <50942BDC.9060806@gmail.com>
+From: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>
+Subject: Re: [PATCH 2/8] ARM: zynq: move ttc timer code to drivers/clocksource
+Date: Mon, 5 Nov 2012 15:47:53 -0600
+Message-ID: <20121105214753.GB1254@beefymiracle.amer.corp.natinst.com>
+References: <cover.1351721190.git.josh.cartwright@ni.com>
+ <c0347788fbad559a249a25128a23f40c85d9cbda.1351721190.git.josh.cartwright@ni.com>
+ <CAHTX3d++0fGSw7GQHcc-S1X1Qh-rfekpr-E8Jkg2_vFqdCFFTg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50942BDC.9060806@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, robherring2@gmail.com, linux-omap@vger.kernel.org, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com
+Content-Type: multipart/mixed; boundary="===============6776083213139229172=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAHTX3d++0fGSw7GQHcc-S1X1Qh-rfekpr-E8Jkg2_vFqdCFFTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 11/02/2012 03:23 PM, Daniel Mack wrote:
-> On 02.11.2012 20:57, Jon Hunter wrote:
->> On 11/02/2012 02:23 PM, Daniel Mack wrote:
->>> On 02.11.2012 20:18, Jon Hunter wrote:
->>>> On 11/02/2012 06:14 AM, Daniel Mack wrote:
-> 
->>>>>>> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>>>>>> new file mode 100644
->>>>>>> index 0000000..6f44487
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>>>>>> @@ -0,0 +1,73 @@
->>>>>>> +Device tree bindings for OMAP general purpose memory controllers (GPMC)
->>>>>>> +
->>>>>>> +The actual devices are instantiated from the child nodes of a GPMC node.
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +
->>>>>>> + - compatible:		Should be set to "ti,gpmc"
->>>>>>> + - reg:			A resource specifier for the register space
->>>>>>> +			(see the example below)
->>>>>>> + - ti,hwmods:		Should be set to "ti,gpmc" until the DT transition is
->>>>>>> +			completed.
->>>>>>> + - #address-cells:	Must be set to 2 to allow memory address translation
->>>>>>> + - #size-cells:		Must be set to 1 to allow CS address passing
->>>>>>> + - ranges:		Must be set up to reflect the memory layout
->>>>>>> +			Note that this property is not currently parsed.
->>>>>>> +			Calculated values derived from the contents of
->>>>>>> +			GPMC_CS_CONFIG7 as set up by the bootloader. That will
->>>>>>> +			change in the future, so be sure to fill the correct
->>>>>>> +			values here.
->>>>>>
->>>>>> I still think it would be good to add number of chip-selects and
->>>>>> wait-pins here.
->>>>>
->>>>> The number of chip-selects can be derived from the ranges property.
->>>>> Namely, each 4-value entry to this property maps to one chip-select. I
->>>>> can try and make the more clear in the documentation.
->>>>
->>>> Yes but that only tells you how many you are using. The binding should
->>>> describe the hardware and so should tell us how many chip-selects we
->>>> have. We should get away from using GPMC_CS_NUM in the code.
->>>
->>> Maybe I don't get your point, but we only need to care for as many cs
->>> lines as we actually use, right?
->>
->> But how many does your device have? How many clients can you support?
-> 
-> Well, you state that in the ranges property. Even if the chip could in
-> theory support 8 CS lines - if the actual setup only uses the first one
-> of them, the code would only need to allocate and set up the one that is
-> in use. And as the entries in "ranges" are mandatory, there can actually
-> be no mis-allocation.
+--===============6776083213139229172==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mojUlQ0s9EVzWg2t"
+Content-Disposition: inline
 
-Ah, I see your point now. Well typically, we have been putting the
-device-level peripheral info in the device's *.dtsi (ie. am33xx.dtsi)
-and then board specific stuff in the board *.dts file (am335x-bone.dts).
-So I would envision that the device-level info (reg, ti,hwmods,
-interrupt, num-cs) be in am33xx.dtsi and ranges be in am335x.dts. So it
-would still be nice to catch any badly configured ranges property in the
-driver by querying in the number of chip-selects.
 
-> I can still add the maximum number as a separate property, but I wanted
-> to outline my idea here. Is "num-cs" a good name for the property?
+--mojUlQ0s9EVzWg2t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sounds good.
+On Mon, Nov 05, 2012 at 12:22:55PM +0100, Michal Simek wrote:
+> 2012/10/29 Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>:
+> > Suggested cleanup by Arnd Bergmann.  Move the ttc timer.c code to
+> > drivers/clocksource, and out of the mach-zynq directory.
+> >
+> > The common.h (which only held the timer declaration) was renamed to
+> > xilinx_ttc.h and moved into include/linux.
+> >
+> > Signed-off-by: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>
+> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > ---
+> >  arch/arm/mach-zynq/Makefile                                    | 2 +-
+> >  arch/arm/mach-zynq/common.c                                    | 2 +-
+> >  drivers/clocksource/Makefile                                   | 1 +
+> >  arch/arm/mach-zynq/timer.c => drivers/clocksource/xilinx_ttc.c | 1 -
+> >  arch/arm/mach-zynq/common.h => include/linux/xilinx_ttc.h      | 4 ++--
+> >  5 files changed, 5 insertions(+), 5 deletions(-)
+> >  rename arch/arm/mach-zynq/timer.c => drivers/clocksource/xilinx_ttc.c (99%)
+> >  rename arch/arm/mach-zynq/common.h => include/linux/xilinx_ttc.h (91%)
+>
+> Not going to apply this patch till there is clean way how to move all
+> drivers there.  Especially I don't like to add xilinx_ttc.h to
+> include/linux folder.
 
->> If we know how many the device has and then we can get rid of "#define
->> GPMC_CS_NUM". We currently allocate the CS by calling gpmc_cs_request().
->> Hmmm ... I now see that your patch is not calling this before
->> configuring the CS and so that needs to be fixed too.
-> 
-> It does implicitly, by calling gpmc_nand_init().
+Okay;  I think it's best to defer the moving of the ttc driver from this
+patchset.  It is not a dependency of the clk driver support stuff.
+If you agree, I can spin up a v2 of the patchset w/o this change, and
+without the serial CONFIG_OF stuff.  Should v2 contain the patches
+you've already pulled into testing?
 
-Yes, you are right!
+I'll give Rob's irqchip-like suggestion a spin and see how that works
+out in parallel.
 
->> Without knowing the total CS available, how do we ensure we have the CS
->> available that someone is asking for?
->>
->>>> What about wait-pins?
->>>
->>> Afaik, their use depends on the driver acting as GPMC client, right?
->>> Could you point me to code that acts conditionally and that should be
->>> reflected in DT?
->>
->> Again we need to know how many the device has. Clients may or may not
->> use these. However, if a client wants one they need to request one which
->> is just like a chip-select. This is not in the current driver but Afzal
->> has a patch for this [1].
-> 
-> Ah, thanks for the pointer to the patch. Ok, I'll add a "num-waitpins"
-> property. Does that name sound appropriate?
+Thanks,
 
-Yes, that would be great!
+  Josh
 
->> Bottom line, for such hardware specific features, device tree is a good
->> place to describe how many resources we have. Then we can eliminate such
->> #defines from the driver code.
-> 
-> Agreed.
-> 
->>> Quoting Documentation/devicetree/bindings/mtd/gpmc-nand.txt:
->>>
->>> 	For NAND specific properties such as ECC modes or bus width,
->>> 	please refer to Documentation/devicetree/bindings/mtd/nand.txt
->>
->> Ok, thanks I see that now. Looking at other bindings, some also include
->> these details but not all. Could be worth listing ecc-mode under
->> mandatory and bus-width under optional with a reference to nand.txt
->> binding. I don't think it is worth duplicating but listing the actual
->> property names would be nice.
-> 
-> Ok, I amended my local version. With the details above sorted out and
-> "num-cs" and "num-waitpins" in place, do you think we're ready for v4?
+--mojUlQ0s9EVzWg2t
+Content-Type: application/pgp-signature
 
-Yes, thanks for doing this.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-Cheers
-Jon
+iQIcBAEBAgAGBQJQmDQJAAoJEEef0niEbw+lxMoP/AoAAAJVkxDC33NFPtqLVnTp
+v8NZdPf7Yf62YFRr4c9uYzX91FH9Ksz8qmxGSlRLSLvsneeuIqt0rSXXLa72I370
+ufAFpusrK1JMEZCX9SKOp34M6QUVqFAe6RdnRUrHku+uCKlVuD1s38uScRacnJpQ
+udEblFpV9dZ+UYyvXUv6RpUP8EZI0Xh7ftSlvTU/Tq4237VCJb52nsocJaicZJbO
+2oBiamHS2zxIX2gEzfRdOSzGgWeUwuoijwB//r5pEUTvqcGWRQpFfJ3PM9+6L67g
+qBwvb+xtxkfI7LqU88k2gwAYD8pJgVKVrLGTrv3/1EXRD2INWkNrGABJBbHdSrHu
+91m7rBPNpcs6Q5Tw6F2hsYv9WH0bgN/Tb/RcYuNLSheVjiFBl28MHh/jweB5fIwB
+T6YgKrLfD+0bfYlV9V3Um2PVaw0Z2wrY5kSbsRT613d2T6TUiKFnUGE+OpA+8+b2
+vebLx/i5lPV37yX19c0ATrAy5EoTzLs7O7S8c5Fw9r7N8LI3akSEu989RH+I1Hjk
+ck3ezZq2nE41kicwNM+yi6vb2WnxBdMZ1lS0efxYVNZtWDSEXcpsTJkg++AYwHGr
+FSGhXppIs3bzEPmj0mPxAQVC19SZpBHsU5bpgDOxRtzHco+su/v7oefkTxeD//Ep
+kZSyWIpq+NYJkNXnD9Kw
+=H11z
+-----END PGP SIGNATURE-----
+
+--mojUlQ0s9EVzWg2t--
+
+--===============6776083213139229172==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6776083213139229172==--
