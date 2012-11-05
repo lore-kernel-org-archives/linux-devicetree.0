@@ -1,44 +1,105 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Mon, 5 Nov 2012 15:22:19 -0800
-Message-ID: <20121105232218.GA8284@atomide.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric
+ in mach-mvebu
+Date: Tue, 06 Nov 2012 00:53:16 +0100
+Message-ID: <5098516C.6060609@free-electrons.com>
+References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
+ <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
+ <20121105140258.GO3351@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tabi Timur-B04825 <B04825@freescale.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wood Scott-B07421 <B07421@freescale.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121105140258.GO3351@mudshark.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 11/05/2012 03:02 PM, Will Deacon wrote:
+> Hi Gregory,
 
-* Tabi Timur-B04825 <B04825@freescale.com> [121105 13:42]:
-> On Mon, Nov 5, 2012 at 2:40 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+Hi Will,
+
 > 
-> > Jane is building custom BeagleBone expansion boards called 'capes'. She
-> > can boot the system with a stock BeagleBoard device tree, but additional
-> > data is needed before a cape can be used. She could replace the FDT file
-> > used by U-Boot with one that contains the extra data, but she uses the
-> > same Linux system image regardless of the cape, and it is inconvenient
-> > to have to select a different device tree at boot time depending on the
-> > cape.
+> On Mon, Oct 29, 2012 at 09:11:44PM +0000, Gregory CLEMENT wrote:
+>> diff --git a/arch/arm/mach-mvebu/coherency.c b/arch/arm/mach-mvebu/coherency.c
+>> new file mode 100644
+>> index 0000000..69e130d
+>> --- /dev/null
+>> +++ b/arch/arm/mach-mvebu/coherency.c
+>> @@ -0,0 +1,89 @@
+>> +/*
+>> + * Coherency fabric (Aurora) support for Armada 370 and XP platforms.
+>> + *
+>> + * Copyright (C) 2012 Marvell
+>> + *
+>> + * Yehuda Yitschak <yehuday@marvell.com>
+>> + * Gregory Clement <gregory.clement@free-electrons.com>
+>> + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + *
+>> + * The Armada 370 and Armada XP SOCs have a coherency fabric which is
+>> + * responsible for ensuring hardware coherency between all CPUs and between
+>> + * CPUs and I/O masters. This file initializes the coherency fabric and
+>> + * supplies basic routines for configuring and controlling hardware coherency
+>> + */
 > 
-> What's wrong with having the boot loader detect the presence of the
-> Cape and update the device tree accordingly?  We do this all the time
-> in U-Boot.  Doing stuff like reading EEPROMs and testing for the
-> presence of hardware is easier in U-Boot than in Linux.
+> [...]
 > 
-> For configurations that can be determined by the boot loader, I'm not
-> sure overlays are practical.
+>> +int set_cpu_coherent(unsigned int hw_cpu_id, int smp_group_id)
+>> +{
+>> +	int reg;
+>> +
+>> +	if (!coherency_base) {
+>> +		pr_warn("Can't make CPU %d cache coherent.\n", hw_cpu_id);
+>> +		pr_warn("Coherency fabric is not initialized\n");
+>> +		return 1;
+>> +	}
+>> +
+>> +	/* Enable the CPU in coherency fabric */
+>> +	reg = readl(coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
+>> +	reg |= 1 << (24 + hw_cpu_id);
+>> +	writel(reg, coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
+>> +
+>> +	/* Add CPU to SMP group */
+>> +	reg = readl(coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
+>> +	reg |= 1 << (16 + hw_cpu_id + (smp_group_id == 0 ? 8 : 0));
+>> +	writel(reg, coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
+>> +
+>> +	return 0;
+>> +}
+> 
+> These writels may expand to code containing calls to outer_sync(), which
+> will attempt to take a spinlock for the aurora l2. Given that the CPU isn't
+> coherent, how does this play out with the exclusive store instruction in the
+> lock?
 
-I guess the beaglebone capes could be stackable and hotpluggable if
-handled carefully enough.
+I forward this question to the Marvell experts.
 
-Regards,
+> 
+> Will
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-Tony
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
