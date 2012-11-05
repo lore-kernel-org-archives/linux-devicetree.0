@@ -1,89 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Mon, 5 Nov 2012 13:09:20 +0100
-Message-ID: <CACRpkda9c18E3Msx0dpr8APjSfx5iz4XcS=V1wQaH81ejz7GJQ@mail.gmail.com>
-References: <38620644.IyR5R8rjKP@percival>
-	<CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com>
-	<7471321.6NJDeDGfYW@percival>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 6/8] serial: xilinx_uartps: kill CONFIG_OF conditional
+Date: Mon, 5 Nov 2012 13:16:05 +0100
+Message-ID: <CAHTX3dKSn0JwHsgCfLrgitb41OakHmw1o=uDRkshYi88fp2h1w@mail.gmail.com>
+References: <cover.1351721190.git.josh.cartwright@ni.com>
+	<61e872b2cd4abc25c2dab82668e5094b590571a0.1351721190.git.josh.cartwright@ni.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7471321.6NJDeDGfYW@percival>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <61e872b2cd4abc25c2dab82668e5094b590571a0.1351721190.git.josh.cartwright@ni.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Josh Cartwright <josh.cartwright@ni.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@ti.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Linn <John.Linn@xilinx.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 5, 2012 at 8:31 AM, Alex Courbot <acourbot@nvidia.com> wrote:
+2012/10/30 Josh Cartwright <josh.cartwright@ni.com>:
+> The Zynq platform requires the use of CONFIG_OF.  Remove the #ifdef
+> conditionals in the uartps driver.
+>
+> Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
+> ---
+>  drivers/tty/serial/xilinx_uartps.c | 9 ---------
+>  1 file changed, 9 deletions(-)
 
-> Interesting. I see you already gave the whole thing a thought. What I don't
-> understand however is what is so wrong with the current GPIO numberspace that
-> you want to replace it? Whether we use simple integers or blind pointers, the
-> adressable space will basically remain the same. GPIO numbers can actually be
-> considered as handles, and actually I would not mind typedef'ing "int" to a
-> GPIO handle type in order to add more opacity to the framework.
+Please send this separately out of this patchset.
+Also if you do this change which is understandable, you should also
+add
+depends on OF
 
-So the basic problem is scalability and multiplatform support.
-
-Currently we have a global "roof" on GPIO numbers, ARCH_NR_GPIOS,
-which is helpfully set to 256 in include/asm-generic/gpio.h.
-
-In the embedded case "ARCH" is a particular board for a particular
-SoC so this number is actually roof:ed for some arbitrary combination
-of SoC + electronics, at compile time, for that very machine.
-
-So what happens when we try to achieve multiplatform support in the
-ARM tree (same for others, I expect ACPI etc to run into the same
-problem) is that this has to be set to some arbitrarily high value so
-that all GPIOs will fit, and they are not sparse, so if you're just using
-GPIOs 0 .. 15 and 199935..200000 you will need to reserve
-200000 * sizeof(int) bytes.
-
-So to avoid this, arch maintainers try with different clever
-macros to pack the GPIO number assignments per board
-downward to begin at 0 and keep the array at minimum size,
-and do not dynamically grab GPIO numbers as they like.
-
-Contrast this to IRQs which are in the CONFIG_SPARSE_IRQ
-case stored in a radix tree and IRQs can be sparse like this
-without wasting much memory. So IRQdomains can for example
-just grab a number of free IRQ descriptors and the actual
-numbers returned do not matter.
-
-Using static number assignments also has the side effect
-that developers will just int mygpio = 42; directly in the code
-to cut corners and invites such laziness instead of allocating
-and propagating resources. With abstract handles this does
-not happen.
-
-So moving forward we need a dynamic, radix tree of sparse GPIOs,
-and we need to follow the design pattern of IRQ descriptors to
-keep the kernel consistent, for example pinctrl does this with
-pins - these are sparse and dynamically allocated. They do not
-have integer numbers other than locally for a particular pin
-controller.
-
-> Also the current DT bindings will likely continue to require the legacy API
-> anyway, so I am not sure we can make it go away.
-
-We can make any DT business go away as long as all DTS
-files are maintained in the kernel and especially if their
-structure is not future-proof. The "DT contract" to make
-bindings stable and everlasting is being broken every day
-as things are right now.
-
-Not that I know the DT stuff by
-heart, but if the way we're doing GPIO in DT is requiring the
-OS to use a certain type of static array implementation it must
-be wrong since DT is supposed to be OS-neutral.
-
-> My initial thought was to build something on top of the existing scheme to
-> address my immediate needs - what you are talking about is much more scary. :)
-> Could you elaborate on your motivations for such a radical direction?
-
-See above.
-
-I suspect Grant have similar thoughts, but let's see...
-
-Yours,
-Linus Walleij
+Thanks,
+Michal
