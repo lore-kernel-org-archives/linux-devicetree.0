@@ -1,49 +1,47 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Mon, 5 Nov 2012 16:31:23 +0900
-Message-ID: <7471321.6NJDeDGfYW@percival>
-References: <38620644.IyR5R8rjKP@percival> <CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 0/2 v2] net: at91_ether add dt and pinctrl support
+Date: Mon, 5 Nov 2012 08:30:15 +0100
+Message-ID: <20121105073015.GM19021@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Joachim Eastwood <manabian@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus, thanks for the reply!
+Hi,
 
-On Monday 05 November 2012 02:04:33 Linus Walleij wrote:
-> On Wed, Oct 31, 2012 at 10:04 AM, Alex Courbot <acourbot@nvidia.com> wrote:
-> > Would anyone be opposed to having a gpio_get() function that works
-> > similarly to e.g. regulator_get() and clk_get()?
-> 
-> I understand the concept and why you want to do this.
-> 
-> However I think the global GPIO numberspace defeats the
-> purpose.
-> 
-> gpio_get() should get an abstract handle just like clk_get() or
-> regulator_get(), not a fixed numeral.
-> 
-> That is the only way to really transit away from the global GPIO
-> numberspace.
+	v2: fix typo in doc + miising empty line
 
-Interesting. I see you already gave the whole thing a thought. What I don't 
-understand however is what is so wrong with the current GPIO numberspace that 
-you want to replace it? Whether we use simple integers or blind pointers, the 
-adressable space will basically remain the same. GPIO numbers can actually be 
-considered as handles, and actually I would not mind typedef'ing "int" to a 
-GPIO handle type in order to add more opacity to the framework.
+	This patch serie add dt and pinctrl support to the at91 ether
 
-Also the current DT bindings will likely continue to require the legacy API 
-anyway, so I am not sure we can make it go away.
+	this is need to use the network on at91rm9200 as we now have dt
+	support on it
 
-My initial thought was to build something on top of the existing scheme to 
-address my immediate needs - what you are talking about is much more scary. :) 
-Could you elaborate on your motivations for such a radical direction? 
+Jean-Christophe PLAGNIOL-VILLARD (2):
+      net: at91_ether: add dt support
+      net: at91_ether: add pinctrl support
 
-Thanks,
-Alex.
+ Documentation/devicetree/bindings/net/cdns-emac.txt |   23 +++++++++++++++++++++++
+ drivers/net/ethernet/cadence/at91_ether.c           |   84 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 100 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/cdns-emac.txt
+
+Best Regards,
+J.
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
