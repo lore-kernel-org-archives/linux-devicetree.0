@@ -1,170 +1,73 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v3] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Mon, 05 Nov 2012 10:28:32 +0100
-Message-ID: <509786C0.9070703@grandegger.com>
-References: <5087EDBF.2040108@gaisler.com> <1351588017-14357-1-git-send-email-andreas@gaisler.com> <508FA6D3.9000809@grandegger.com> <508FFF50.8050900@gaisler.com> <50911EB6.1070105@grandegger.com> <509152D5.2050701@gaisler.com> <50918830.9040601@grandegger.com> <50929E7F.1090205@gaisler.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: [PATCH 0/8] Support for AM33xx PWM Susbsytem
+Date: Mon, 5 Nov 2012 14:42:21 +0530
+Message-ID: <1352106749-9437-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <50929E7F.1090205@gaisler.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: thierry.reding@avionic-design.de, paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, b-cousson@ti.com
+Cc: hvaibhav@ti.com, anilkumar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/2012 05:08 PM, Andreas Larsson wrote:
-> On 2012-10-31 21:21, Wolfgang Grandegger wrote:
-...
->>>> This is most probably an ack slot bus error similar to. You seem not to
->>>> handle bus errors and it's not a controller problem as the state did
->>>> not
->>>> change.
->>>
->>> No, the hardware has no support for can-bus error reporting.
->>
->> OK, but why is CAN_ERR_CRTL set?
-> 
-> Maybe I am just confused with the terminology. What I mean is that the
-> only error reporting that is supported by the hardware (apart from AMBA
-> bus errors, but that is unrelated to the discussion) is the error
-> counter related errors.
+In AM33xx PWM sub modules like ECAP, EHRPWM & EQEP are  integrated to
+PWM subsystem. All these submodules shares the resources (clock) & has
+a clock gating register in PWM Subsystem. This patch series creates a
+parent PWM Subsystem driver to handle access synchronization of shared
+resources & clock gating from PWM Subsystem configuration space.
+Also Device tree nodes populated to support parent child relation
+between PWMSS, ECAP & EHRPWM submodules.
+In addition EHRPWM module requires explicit clock gating from control
+module & is handled by patch #2 & 6.
 
-We have to distinguish between state changes, bus error and other
-errors. To make that clear, I have added an (old) annotated output from
-the SJA1000, which is the defacto reference. Bus error reporting is
-enabled and no cable is connected. Watch the TX error count increasing
-and how the state changes:
+Patch #4 & 5 submitted is a second revision as suggested by  Thierry
+for handling clock gating with a global function . This requires config
+space handling done independent from driver and is done at parent driver.
+So the parent<->child relation adopted to handle
+1. pm runtime synchronization
+2. PWM subsystem common config space clock gating for PWM submodules.
 
-  $ ./candump -e 0xffff any
-  can0  20000088  [8] 00 00 80 19 00 08 00 00   ERRORFRAME
-               \             \  \-- ACK slot.
-                \             \-- error occured on transmission
-                 \-- Bus-error | Protocol violations (data[2], data[3]).
+Patches supports
+- Driver support for parent child relation handled patch #1
+- Optional EHRPWM tb clock in patch #2
+- Parent child in HWMOD handled at patch #3
+- Device tree binding support handled in patch #4-6
+- DT node populated in patch #7-8.
 
-  can0  20000088  [8] 00 00 80 19 00 10 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 18 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 20 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 28 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 30 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 38 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 40 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 48 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 50 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 58 00 00   ERRORFRAME
-  can0  2000008C  [8] 00 08 80 19 00 60 00 00   ERRORFRAME
-               \          \--  reached warning level for TX errors
-                \-- | Controller problems (see data[1]).
+This patch series based on linux-next/20121102 and tested on AM335x-evm.
+It depends on [1]
 
-  can0  20000088  [8] 00 00 80 19 00 68 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 70 00 00   ERRORFRAME
-  can0  20000088  [8] 00 00 80 19 00 78 00 00   ERRORFRAME
-  can0  2000008C  [8] 00 20 80 19 00 80 00 00   ERRORFRAME
-               \          \--   reached passive level for TX errors
-                \-- | Controller problems (see data[1]).
+1. https://lkml.org/lkml/2012/10/29/589
+pwm: Device tree support for PWM polarity
 
-  can0  20000088  [8] 00 00 80 19 00 80 00 00   ERRORFRAME
-                                      \  \-- RXerror count
-                                       \-- TXerror count
+Philip, Avinash (8):
+  PWMSS: Add PWM Subsystem driver for parent<->child relationship
+  ARM: am33xx: clk: Add optional clock for EHRPWM
+  ARM: OMAP: AM33xx hwmod: Add parent-child relationship for PWM
+    subsystem
+  pwm: pwm-tiecap: Add device-tree binding support for APWM driver
+  pwm: pwm-tiehrpwm: Add device-tree binding support for EHRPWM driver
+  pwm: pwm-tiehrpwm: Adding TBCLK gating support.
+  ARM: dts: AM33XX: Add PWMSS device tree nodes
+  ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evm
 
-  can0  20000088  [8] 00 00 80 19 00 80 00 00   ERRORFRAME
-  ...
-  can0  20000088  [8] 00 00 80 19 00 80 00 00   ERRORFRAME
-
-
-> From what I can see CAN_ERR_BUSERROR is not reported in the error
-> counter related cases by the other drivers I looked in. The grcan
-> hardware does not support reporting errors like form and stuff errors
-> and which bits the errors occured in and the like.
-
-CAN controller normally report state changes and some, like the SJA1000,
-also individual bus errors including more information about the cause of
-the problem. That information is not available for your controller and
-therefore it does not make sense to report empty bus errors to the app.
-
-> Have I understood it correctly that reporting about protocol errors like
-> that is what it is to support CAN_CTRLMODE_BERR_REPORTING? This seems to
-> be the case but the janz-ican3 driver connects
-> CAN_CTRLMODE_BERR_REPORTING to all error frame reporting, so I am not
-> entirely sure.
-
-The "berr-reporting" has been introduced some time ago, because the
-bus-error rate can be quite high and may hang the system, especially
-low-end systems. On the SJA1000 or Flexcan this can be simply achieved
-by enabling bus-error interrupts. Signaling of state changes should
-always work, though.
-
->>>> http://lxr.linux.no/#linux+v3.6.4/drivers/net/can/flexcan.c#L353
->>>>
->>>>>     can0  20000004  [8] 00 20 00 00 00 00 88 00   ERRORFRAME
->>>>>           controller-problem{tx-error-passive}
->>>>>           error-counter-tx-rx{{136}{0}}
->>>>
->>>> OK, a state change to error passive. The device seems not to report
->>>> changes to error warning.
->>>
->>> No, there is no interrupts or anything that alert about the error
->>> states. That is why I set the sate based on the error counters in the
->>> error handler.
->>
->> Who does trigger the message above?
-> 
-> Sorry for confusing the matter. There is no interrupt for error warning,
-> but there are interrupts for increases of the error counters and the
-> other state changes. So to be able to report on error warning I check
-> the error counters and do it manually.
-
-OK.
-
->> Obviously the device restarts automatically after bus-off. Can this be
->> switched off. The normal procedure is to call "ip ... type can restart"
->> or to set "restart-ms" for automatic restart after the specified delay.
-> 
-> Yes, the hardware becomes error active after having monitored 11
-> consecutive recessive bits on the bus 128 times (as allowed by the 2.0
-> CAN spec). There is no way of turning this off, so to conform to the
-> normal linux procedure of not doing this, I shut down the device on bus
-> off interrupt.
-
-This should be handled in the following way:
-
-1. If priv->can.restart_ms == 0: do *not* allow automatic restart
-   That's what you alredy have implemented.
-
-2. If priv->can.restart_ms  > 0 : do allow automatic restart.
-   This requires to send CAN_ERR_RESTARTED when the system goes
-   bus-on. See at91_can and mcp251x as example.
-
-> In addition I have thrown out the arbitration lost error frame
-> generation as arbitration errors can not be singled out. The TXLOSS
-> interrupt might be due to arbitration error, but is also triggered in
-> great numbers when there is no one else on the can bus or when there is
-> a problem with the hardware interface or the bus itself.
-> 
-> This is how things look currently with no one else on the bus:
-> ~ # cansend can0 123#45
->   can0  20000004  [8] 00 08 00 00 00 00 60 00   ERRORFRAME
->         controller-problem{tx-error-warning}
->         error-counter-tx-rx{{96}{0}}
->   can0  20000004  [8] 00 20 00 00 00 00 80 00   ERRORFRAME
->         controller-problem{tx-error-passive}
->         error-counter-tx-rx{{128}{0}}
-> ~ #
-> 
-> And this is how it looks with a short-circuited bus:
-> ~ # cansend can0 123#45
->   can0  20000004  [8] 00 08 00 00 00 00 90 00   ERRORFRAME
->         controller-problem{tx-error-warning}
->         error-counter-tx-rx{{144}{0}}
->   can0  20000004  [8] 00 20 00 00 00 00 98 00   ERRORFRAME
->         controller-problem{tx-error-passive}
->         error-counter-tx-rx{{152}{0}}
->   can0  20000040  [8] 00 00 00 00 00 00 00 00   ERRORFRAME
->         bus-off
-> ~ #
-
-This looks good now. Just the automatic restart is missing as described
-above.
-
-Wolfgang.
+ .../devicetree/bindings/pwm/pwm-tiecap.txt         |   22 +
+ .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   25 ++
+ Documentation/devicetree/bindings/pwm/tipwmss.txt  |   30 ++
+ arch/arm/boot/dts/am335x-evm.dts                   |   21 +
+ arch/arm/boot/dts/am33xx.dtsi                      |   90 +++++
+ arch/arm/mach-omap2/clock33xx_data.c               |   37 ++
+ arch/arm/mach-omap2/control.h                      |    8 +
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c         |  414 +++++++++++++-------
+ drivers/pwm/Kconfig                                |   11 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-tiecap.c                           |   36 ++-
+ drivers/pwm/pwm-tiehrpwm.c                         |   53 +++-
+ drivers/pwm/tipwmss.c                              |  136 +++++++
+ drivers/pwm/tipwmss.h                              |    8 +
+ 14 files changed, 754 insertions(+), 138 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/tipwmss.txt
+ create mode 100644 drivers/pwm/tipwmss.c
+ create mode 100644 drivers/pwm/tipwmss.h
