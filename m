@@ -1,135 +1,78 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
-Date: Mon, 5 Nov 2012 16:37:14 +0100
-Message-ID: <AC5129F0-FF30-46ED-AD57-3FA6CA919F99@antoniou-consulting.com>
-References: <50924DA3.1060901@ti.com> <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com> <20121101110418.GF410@arwen.pp.htv.fi> <3AF5A6FC-61D9-40CA-85B3-81C2C788CB76@antoniou-consulting.com> <20121101124025.GA12489@arwen.pp.htv.fi> <A16B0ABF-AB9D-4F48-88BD-96F123FFEF2F@antoniou-consulting.com> <20121101131609.GC12489@arwen.pp.htv.fi> <E911D0B7-0397-4ED0-828E-71F9531E84E0@antoniou-consulting.com> <20121101135148.382aec00@pyramind.ukuu.org.uk> <9F25E89E-9194-4725-8A8C-053DCBADA1DB@antoniou-consulting.com> <20121101220518.GE14982@arwen.pp.htv.fi> <CA+Bv8XbAvEXe=zDaA8W2+ROD2duYMRcJu4-bms31OH=V_ScKow@mail.gmail.com> <20121102112104.4657fb7b@pyramind.ukuu.org.uk> <0EC43413-1DD7-4E2A-879B-0B5B926FFDFE@antoniou-consulting.com> <CACxGe6uuK6ew5uxh0BjtYAtPZCTLeUpHc4emXRAnMUtNmEzmGg@mail.g
- mail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6uuK6ew5uxh0BjtYAtPZCTLeUpHc4emXRAnMUtNmEzmGg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>
+Date: Mon, 05 Nov 2012 09:56:28 -0600
+Message-ID: <5097E1AC.5080806@gmail.com>
+References: <1351783082-11411-1-git-send-email-panto@antoniou-consulting.com>
+ <20121031175219.GH12739@atomide.com>
+ <C9715CB7-D3E2-4CA7-8A93-2B10E8B70640@antoniou-consulting.com>
+ <20121031180935.GL12739@atomide.com> <50918223.6080003@ti.com>
+ <8AD2F7AF-8315-442B-A394-1A38DAB29F52@antoniou-consulting.com>
+ <20121031212639.GQ12739@atomide.com>
+ <8B058B00-6C21-4410-A24B-75651D49F6EC@antoniou-consulting.com>
+ <20121031221402.GA29490@arwen.pp.htv.fi>
+ <E4EE0D1F-C7AC-4620-86F2-D9C7C56E279F@antoniou-consulting.com>
+ <50924DA3.1060901@ti.com>
+ <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com>
+ <50925C49.7060004@ti.com>
+ <CBDE21C5-1980-4BDC-9153-7653A07D0024@dominion.thruhere.net>
+ <50938108.5040507@ti.com>
+ <40797D3D-D62C-4E15-B0DF-75636C1637EE@antoniou-consulting.com>
+ <CACxGe6s8qrP0itLgCyv1mBnekc-7K1n_q-kTKUR=MOJ57W_a1w@mail.gmail.com>
+ <C9F4DFD1-4BF4-423C-B749-74E37D51192A@antoniou-consulting.com>
+ <CACxGe6ubcRqDEGyRbNmwvAMGg5ujAKvPRWe9Vmd9tiHeB7=qNw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6ubcRqDEGyRbNmwvAMGg5ujAKvPRWe9Vmd9tiHeB7=qNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On Nov 5, 2012, at 1:37 AM, Grant Likely wrote:
-
-> On Fri, Nov 2, 2012 at 12:32 PM, Pantelis Antoniou
-> <panto@antoniou-consulting.com> wrote:
->> The i2c2 alias cannot be resolved at compile time; there has to be
->> 
->> a) A DT object format where unresolved aliases (symbols) are tracked
->> b) A runtime DT linker that will resolve the alias, and will insert the
->>   i2c2-devices child nodes as children in the i2c2 node.
->> c) A method to trigger platform device creation for the child nodes just
->>   inserted.
->> 
->> DT core changes aren't bound to be easily accepted, so without having a clear
->> signal from the DT maintainers that they would consider such a method people
->> are just hesitant to go down this road.
+On 11/05/2012 08:34 AM, Grant Likely wrote:
+> On Mon, Nov 5, 2012 at 1:25 PM, Pantelis Antoniou
+> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>
+>> On Nov 5, 2012, at 1:22 AM, Grant Likely wrote:
+>>
+>>> On Fri, Nov 2, 2012 at 8:43 AM, Pantelis Antoniou
+>>> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>>> Assuming that we do work on a DT object format, and that the runtime resolution mechanism is approved,
+>>>> then I agree that this part of the capebus patches can be dropped and the functionality assumed by generic
+>>>> DT core.
+>>>>
+>>>> The question is that this will take time, with no guarantees that this would be acceptable from
+>>>> the device tree maintainers. So I am putting them in the CC list, to see what they think about it.
+>>>
+>>> This is actually exactly the direction I want to go with DT, which the
+>>> ability to load supplemental DT data blobs from either a kernel module
+>>> or userspace using the firmware loading infrastructure.
+>>>
+>>> g.
+>>
+>> Hi Grant,
+>>
+>> That's pretty much our use case.
+>>
+>> Regards
 > 
-> I do agree and will accept such a method.
-> 
-> g.
+> Good. I'm about 80% though putting together a project plan of what is
+> required to implement this. I'll post it for RFC shortly. I would
+> appreciate feedback and help on flushing out the design.
 
-Understood.
+The FPGA folks are also interested in dynamic DT configuration. There's
+been some discussion and postings on the DT list in the last few months
+you may have missed. It's maybe not completely the same use case, but
+there is some overlap here.
 
-I'll think about the issues and come up with a design for the format, but
-let's talk about this in the open for a while.
-
-I don't want to modify the DTB format, in order to avoid impacting any other
-DT users.
-
-So would something like this work for you?
-
------8<--------8<--------
-
-/* booting DT (all symbols are resolved) */
-/* this is a valid DTB today */
-
-/ {
-
-	i2c2: i2c@4819c000 { 
-		compatible = "ti,omap4-i2c";
-		#address-cells = <1>;
-		#size-cells = <0>;
-		ti,hwmods = "i2c3"; /* TODO: Fix hwmod */
-		reg = <0x4819c000 0x1000>;
-		interrupt-parent = <&intc>;
-		interrupts = <30>;
-		status = "on-demand";
-	}; 
-	
-	/* .... others nodes .... */
-
-	/* the symbols node can be generated by the DTC */
-	symbols {
-		compatible = "dt,symbols";
-
-		symbol@0 {
-			name = "i2c2";
-			phandle = <&i2c2>;
-		};
-
-		...
-	};
-};
-
------8<--------8<--------
-
-/* fragment DT (not all symbols are resolved) */
-
-/ {
-	i2c2-append {
-		compatible = "dt,append";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		append-at = <&i2c2>;	/* offset F00, either -1 (end of list) */
-					/* or next offset in the list of i2c2 refs. */
-
-		/* Ambient light sensor */ 
-		tsl2550@39 {
-			compatible = "tsl,tsl2550";
-			reg = <0x39>;
-		};
-	};
-};
-
------8<--------8<--------
-
-The <&i2c2> value can't be resolved at compile time.
-
-We can use a simple linked list method for keeping track of the
-locations in the fragment which we need to resolve, terminating with -1.
-
-The compiler can add the following nodes to mark the entries requiring
-resolution.
-
-For example i2c2...
-
-dt-resolution {
-	i2c2 = <0xf00>; /* first offset in the dtb fragment requiring */
-			/* resolution of i2c2 */
-	....
-};
-
-The dt-resolution node, can be appended to the dt fragment contents and
-can be generated by the compiler.
-
-Upon injection of the DT fragment the in-kernel loader can perform
-symbol resolution and replace the phandles with the in-kernel values.
-
-I know there's an aliases node, but I don't know if it's wise to modify it.
-
-What do you think?
-
-Regards
-
--- Pantelis
-
-
+Rob
