@@ -1,35 +1,28 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v3] ARM: dts: AM33xx: Add SPI node
-Date: Mon, 5 Nov 2012 11:32:40 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9DAB5F@DBDE01.ent.ti.com>
-References: <1351680669-20718-1-git-send-email-avinashphilip@ti.com>
- <50927DF5.4080008@ti.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 3/8] ARM: zynq: dts: add description of the second uart
+Date: Mon, 5 Nov 2012 12:35:30 +0100
+Message-ID: <CAHTX3d+WePMm16xK0Mub9EZMSX9vg_FTFQG-u0vxXXxuv9j4Vg@mail.gmail.com>
+References: <cover.1351721190.git.josh.cartwright@ni.com>
+	<8c2fac7167cd7c5201d5e1d8e1ceeb183ee2f63f.1351721190.git.josh.cartwright@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50927DF5.4080008@ti.com>
-Content-Language: en-US
+In-Reply-To: <8c2fac7167cd7c5201d5e1d8e1ceeb183ee2f63f.1351721190.git.josh.cartwright@ni.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "tony@atomide.com" <tony@atomide.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+To: Josh Cartwright <josh.cartwright@ni.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@ti.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Linn <John.Linn@xilinx.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 01, 2012 at 19:19:41, Cousson, Benoit wrote:
-> Hi Avinash,
-> 
-> On 10/31/2012 11:51 AM, Philip, Avinash wrote:
-> > Add McSPI data node to AM33XX device tree file. The McSPI module (and so
-> > as the driver) is reused from OMAP4.
-> > 
-> > Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
-> > Tested-by: Matt Porter <mporter@ti.com>
-> 
-> I've just realized the interrupt-parent was still there, so I removed both.
-> 
-> Please find below the updated version.
+2012/10/31 Josh Cartwright <josh.cartwright@ni.com>:
+> The zynq-7000 has an additional UART at 0xE0001000.  Describe it in the
+> device tree.
+>
+> Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
+> ---
+>  arch/arm/boot/dts/zynq-ep107.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-I tested it and thanks for the fix.
+Applied to my testing branch.
 
-Thanks
-Avinash
+Thanks,
+Michal
