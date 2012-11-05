@@ -1,53 +1,70 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 2/8] ARM: zynq: move ttc timer code to drivers/clocksource
-Date: Mon, 05 Nov 2012 08:49:12 -0600
-Message-ID: <5097D1E8.2000403@gmail.com>
-References: <cover.1351721190.git.josh.cartwright@ni.com> <c0347788fbad559a249a25128a23f40c85d9cbda.1351721190.git.josh.cartwright@ni.com> <CAHTX3d++0fGSw7GQHcc-S1X1Qh-rfekpr-E8Jkg2_vFqdCFFTg@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
+Date: Mon, 5 Nov 2012 07:34:45 -0800
+Message-ID: <20121105153444.GG4953@atomide.com>
+References: <E4EE0D1F-C7AC-4620-86F2-D9C7C56E279F@antoniou-consulting.com>
+ <50924DA3.1060901@ti.com>
+ <F49CA12D-4DAC-4293-AD4D-FC7EDCEA6993@antoniou-consulting.com>
+ <50925C49.7060004@ti.com>
+ <CBDE21C5-1980-4BDC-9153-7653A07D0024@dominion.thruhere.net>
+ <50938108.5040507@ti.com>
+ <40797D3D-D62C-4E15-B0DF-75636C1637EE@antoniou-consulting.com>
+ <CACxGe6s8qrP0itLgCyv1mBnekc-7K1n_q-kTKUR=MOJ57W_a1w@mail.gmail.com>
+ <C9F4DFD1-4BF4-423C-B749-74E37D51192A@antoniou-consulting.com>
+ <CACxGe6ubcRqDEGyRbNmwvAMGg5ujAKvPRWe9Vmd9tiHeB7=qNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAHTX3d++0fGSw7GQHcc-S1X1Qh-rfekpr-E8Jkg2_vFqdCFFTg@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Josh Cartwright <josh.cartwright@ni.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@ti.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Linn <John.Linn@xilinx.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6ubcRqDEGyRbNmwvAMGg5ujAKvPRWe9Vmd9tiHeB7=qNw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11/05/2012 05:22 AM, Michal Simek wrote:
-> 2012/10/29 Josh Cartwright <josh.cartwright@ni.com>:
->> Suggested cleanup by Arnd Bergmann.  Move the ttc timer.c code to
->> drivers/clocksource, and out of the mach-zynq directory.
->>
->> The common.h (which only held the timer declaration) was renamed to
->> xilinx_ttc.h and moved into include/linux.
->>
->> Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> ---
->>  arch/arm/mach-zynq/Makefile                                    | 2 +-
->>  arch/arm/mach-zynq/common.c                                    | 2 +-
->>  drivers/clocksource/Makefile                                   | 1 +
->>  arch/arm/mach-zynq/timer.c => drivers/clocksource/xilinx_ttc.c | 1 -
->>  arch/arm/mach-zynq/common.h => include/linux/xilinx_ttc.h      | 4 ++--
->>  5 files changed, 5 insertions(+), 5 deletions(-)
->>  rename arch/arm/mach-zynq/timer.c => drivers/clocksource/xilinx_ttc.c (99%)
->>  rename arch/arm/mach-zynq/common.h => include/linux/xilinx_ttc.h (91%)
+* Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> [121105 06:36]:
+> On Mon, Nov 5, 2012 at 1:25 PM, Pantelis Antoniou
+> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> >
+> > On Nov 5, 2012, at 1:22 AM, Grant Likely wrote:
+> >
+> >> On Fri, Nov 2, 2012 at 8:43 AM, Pantelis Antoniou
+> >> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+> >>> Assuming that we do work on a DT object format, and that the runtime resolution mechanism is approved,
+> >>> then I agree that this part of the capebus patches can be dropped and the functionality assumed by generic
+> >>> DT core.
+> >>>
+> >>> The question is that this will take time, with no guarantees that this would be acceptable from
+> >>> the device tree maintainers. So I am putting them in the CC list, to see what they think about it.
+> >>
+> >> This is actually exactly the direction I want to go with DT, which the
+> >> ability to load supplemental DT data blobs from either a kernel module
+> >> or userspace using the firmware loading infrastructure.
+> >>
+> >> g.
+> >
+> > Hi Grant,
+> >
+> > That's pretty much our use case.
+> >
+> > Regards
 > 
-> Not going to apply this patch till there is clean way how to move all
-> drivers there.
-> Especially I don't like to add xilinx_ttc.h to include/linux folder.
-> 
+> Good. I'm about 80% though putting together a project plan of what is
+> required to implement this. I'll post it for RFC shortly. I would
+> appreciate feedback and help on flushing out the design.
 
-A cleaner way is how we are doing irqchips [1]. This needs a single
-function (or one each for clksrc and clkevt) that has a DT match list of
-all known timers and calls their init function. It should be a bit
-simpler than irqchips init function because you don't need to worry
-about hierarchy init ordering. That doesn't solve non-DT though and if
-there are any extra functions like we have with irqchips, you still need
-the header in include/linux.
+Great, sounds like almost-a-plan then :)
 
-Rob
+Regards,
 
-[1] http://www.spinics.net/lists/arm-kernel/msg203687.html
+Tony
