@@ -1,97 +1,49 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v2 1/5] clk: samsung: add common clock framework support
- for Samsung platforms
-Date: Mon, 5 Nov 2012 12:52:00 +0530
-Message-ID: <CAJuYYwScWunaVsg=4whrt4gRZYOVBbvAwFhYmN2PCQS723B3og@mail.gmail.com>
-References: <1349629855-4962-1-git-send-email-thomas.abraham@linaro.org>
-	<1349629855-4962-2-git-send-email-thomas.abraham@linaro.org>
-	<20121030163012.18780.19304@nucleus>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Mon, 5 Nov 2012 16:31:23 +0900
+Message-ID: <7471321.6NJDeDGfYW@percival>
+References: <38620644.IyR5R8rjKP@percival> <CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20121030163012.18780.19304@nucleus>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Hi Linus, thanks for the reply!
 
-Thanks for your review.
+On Monday 05 November 2012 02:04:33 Linus Walleij wrote:
+> On Wed, Oct 31, 2012 at 10:04 AM, Alex Courbot <acourbot@nvidia.com> wrote:
+> > Would anyone be opposed to having a gpio_get() function that works
+> > similarly to e.g. regulator_get() and clk_get()?
+> 
+> I understand the concept and why you want to do this.
+> 
+> However I think the global GPIO numberspace defeats the
+> purpose.
+> 
+> gpio_get() should get an abstract handle just like clk_get() or
+> regulator_get(), not a fixed numeral.
+> 
+> That is the only way to really transit away from the global GPIO
+> numberspace.
 
-On 30 October 2012 22:00, Mike Turquette <mturquette@ti.com> wrote:
-> Hi Thomas,
->
-> Quoting Thomas Abraham (2012-10-07 10:10:51)
->> +/* determine the output clock speed of the pll */
->> +static unsigned long samsung_pll_clock_recalc_rate(struct clk_hw *hw,
->> +                               unsigned long parent_rate)
->> +{
->> +       struct samsung_pll_clock *clk_pll = to_clk_pll(hw);
->> +
->> +       if (clk_pll->get_rate)
->> +               return to_clk_pll(hw)->get_rate(parent_rate);
->
-> Why the extra indirection?  Does your samsung_pll_clock abstract several
-> different PLL implementations (with separate clock ops)?  If so, why not
-> make a unique struct for each PLL type?
+Interesting. I see you already gave the whole thing a thought. What I don't 
+understand however is what is so wrong with the current GPIO numberspace that 
+you want to replace it? Whether we use simple integers or blind pointers, the 
+adressable space will basically remain the same. GPIO numbers can actually be 
+considered as handles, and actually I would not mind typedef'ing "int" to a 
+GPIO handle type in order to add more opacity to the framework.
 
-Yes, it abstracts several PLL types. There are multiple PLL types used
-by Samsung SoC's and this clock type was supposed to abstract all the
-types of PLL's. But yes, you are right. It is better to have a unique
-implementation for each type of PLL. That way, multiple user's of a
-PLL type need not be worried about setting up runtime callbacks for
-clock operations.
+Also the current DT bindings will likely continue to require the legacy API 
+anyway, so I am not sure we can make it go away.
 
->
->> +
->> +       return 0;
->> +}
->> +
->> +/* round operation not supported */
->> +static long samsung_pll_clock_round_rate(struct clk_hw *hw, unsigned long drate,
->> +                               unsigned long *prate)
->> +{
->> +       return samsung_pll_clock_recalc_rate(hw, *prate);
->
-> Why is round_rate not supported?  How is returning the recalculated rate
-> the right thing here?
-
-The PLL does not include a divider for the rounding operation. So the
-output of the PLL clock type is not something that can be divided
-down. The parent clock of the PLL clock type is usually a low
-frequency oscillator. Hence, the round rate operation has not been
-implemented for the PLL clock type.
-
->
->> +/*
->> + * Allow platform specific implementations to attach set_rate and get_rate
->> + * callbacks for the pll type clock. Typical calling sequence..
->> + *
->> + * struct clk *clk = clk_get(NULL, "pll-clk-name");
->> + * samsung_pll_clk_set_cb(clk, pll_set_rate, pll_get_rate);
->> + */
->> +void __init samsung_pll_clk_set_cb(struct clk *clk,
->> +                       int (*set_rate)(unsigned long rate),
->> +                       unsigned long (*get_rate)(unsigned long rate))
->> +{
->> +       struct samsung_pll_clock *clk_pll;
->> +       struct clk_hw *hw = __clk_get_hw(clk);
->> +
->> +       clk_pll = to_clk_pll(hw);
->> +       clk_pll->set_rate = set_rate;
->> +       clk_pll->get_rate = get_rate;
->> +}
->
-> This answers my questions above having different PLL types.  Why not
-> just make seprate clk_hw structs for each PLL type instead of the extra
-> layer of abstraction + runtime assignment of clk ops?
-
-Ok. I will redo this in the next version of this patch.
+My initial thought was to build something on top of the existing scheme to 
+address my immediate needs - what you are talking about is much more scary. :) 
+Could you elaborate on your motivations for such a radical direction? 
 
 Thanks,
-Thomas.
-
->
-> Regards,
-> Mike
+Alex.
