@@ -1,80 +1,27 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: [PATCH 5/7] mfd: max8925: support dt for regulator
-Date: Tue,  6 Nov 2012 15:44:52 +0800
-Message-ID: <1352187892-9940-1-git-send-email-qingx@marvell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: qingx@marvell.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [RFC PATCH 1/2] memory: davinci - add aemif controller platform
+ driver
+Date: Tue, 6 Nov 2012 13:14:33 +0530
+Message-ID: <5098BFE1.3020906@ti.com>
+References: <1351873278-27325-1-git-send-email-m-karicheri2@ti.com> <1351873278-27325-2-git-send-email-m-karicheri2@ti.com> <50967307.5030500@gmail.com> <50982AC3.8030000@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50982AC3.8030000@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, b32955@freescale.com, shubhrajyoti@ti.com, wim@iguana.be, hs@denx.de, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob@landley.net, gregkh@linuxfoundation.org, swarren@wwwdotorg.org, hdoyu@nvidia.com, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Qing Xu <qingx@marvell.com>
+On 11/6/2012 2:38 AM, Murali Karicheri wrote:
+> On 11/04/2012 08:52 AM, Rob Herring wrote:
+>> OMAP GPMC
+> Could you send me a link please?
 
-Signed-off-by: Qing Xu <qingx@marvell.com>
----
- drivers/regulator/max8925-regulator.c |   35 ++++++++++++++++++++++++++++++++-
- 1 files changed, 34 insertions(+), 1 deletions(-)
+https://www.google.com/search?q=RFC+OMAP+GPMC+DT+bindings
 
-diff --git a/drivers/regulator/max8925-regulator.c b/drivers/regulator/max8925-regulator.c
-index 9bb0be3..16d9457 100644
---- a/drivers/regulator/max8925-regulator.c
-+++ b/drivers/regulator/max8925-regulator.c
-@@ -17,6 +17,8 @@
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
- #include <linux/mfd/max8925.h>
-+#include <linux/of.h>
-+#include <linux/regulator/of_regulator.h>
- 
- #define SD1_DVM_VMIN		850000
- #define SD1_DVM_VMAX		1000000
-@@ -214,6 +216,34 @@ static struct max8925_regulator_info max8925_regulator_info[] = {
- 	MAX8925_LDO(20, 750, 3900, 50),
- };
- 
-+#ifdef CONFIG_OF
-+static int max8925_regulator_dt_init(struct platform_device *pdev,
-+				    struct max8925_regulator_info *info,
-+				    struct regulator_config *config)
-+{
-+	struct device_node *nproot, *np;
-+	nproot = pdev->dev.parent->of_node;
-+	if (!nproot)
-+		return -ENODEV;
-+	nproot = of_find_node_by_name(nproot, "regulators");
-+	if (!nproot) {
-+		dev_err(&pdev->dev, "failed to find regulators node\n");
-+		return -ENODEV;
-+	}
-+	for_each_child_of_node(nproot, np) {
-+		if (!of_node_cmp(np->name, info->desc.name)) {
-+			config->init_data =
-+				of_get_regulator_init_data(&pdev->dev, np);
-+			config->of_node = np;
-+			break;
-+		}
-+	}
-+	return 0;
-+}
-+#else
-+#define max8925_regulator_dt_init(x, y, z)	(-1)
-+#endif
-+
- static int __devinit max8925_regulator_probe(struct platform_device *pdev)
- {
- 	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-@@ -243,9 +273,12 @@ static int __devinit max8925_regulator_probe(struct platform_device *pdev)
- 	ri->chip = chip;
- 
- 	config.dev = &pdev->dev;
--	config.init_data = pdata;
- 	config.driver_data = ri;
- 
-+	if (max8925_regulator_dt_init(pdev, ri, &config))
-+		if (pdata)
-+			config.init_data = pdata;
-+
- 	rdev = regulator_register(&ri->desc, &config);
- 	if (IS_ERR(rdev)) {
- 		dev_err(&pdev->dev, "failed to register regulator %s\n",
--- 
-1.7.0.4
+The patches series is sent by Daniel Mack. v3 was the last version sent.
+
+Thanks,
+Sekhar
