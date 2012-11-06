@@ -1,116 +1,121 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] usb: musb: dsps: dt binding - add resources, example
-Date: Tue, 6 Nov 2012 18:44:45 +0200
-Message-ID: <20121106164445.GE3993@arwen.pp.htv.fi>
-References: <1352210166-7253-1-git-send-email-afzal@ti.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH 2/4] rtc: OMAP: Add system pm_power_off to rtc driver
+Date: Tue, 6 Nov 2012 17:56:54 +0100
+Message-ID: <50994156.4080305@ti.com>
+References: <1352108549-9341-1-git-send-email-anilkumar@ti.com> <1352108549-9341-3-git-send-email-anilkumar@ti.com> <5097ECAD.9010101@ti.com> <331ABD5ECB02734CA317220B2BBEABC13EA64F14@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VdOwlNaOFKGAtAAV"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1352210166-7253-1-git-send-email-afzal-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Santhapuri Damodar <damodar.santhapuri-l0cyMroinI0@public.gmane.org>, Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA64F14@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: Colin Foe-Parker <colin.foeparker@logicpd.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
---VdOwlNaOFKGAtAAV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Anil,
 
-Hi,
+On 11/06/2012 06:07 AM, AnilKumar, Chimata wrote:
+> On Mon, Nov 05, 2012 at 22:13:25, Cousson, Benoit wrote:
+>> Hi Anil / Colin,
+>>
+>> On 11/05/2012 10:42 AM, AnilKumar Ch wrote:
+>>> From: Colin Foe-Parker <colin.foeparker@logicpd.com>
+>>>
+>>> Add system power off control to rtc driver which is the in-charge
+>>> of controlling the BeagleBone system power. The power_off routine
+>>> can be hooked up to "pm_power_off" system call.
+>>>
+>>> System power off sequence:-
+>>> * Set PMIC STATUS_OFF when PMIC_POWER_EN is pulled low
+>>> * Enable PMIC_POWER_EN in rtc module
+>>> * Set rtc ALARM2 time
+>>> * Enable ALARM2 interrupt
+>>>
+>>> Added while (1); after the above steps to make sure that no other
+>>> process acquire cpu. Otherwise we might see an unexpected behaviour
+>>> because we are shutting down all the power rails of SoC except RTC.
+>>>
+>>> Signed-off-by: Colin Foe-Parker <colin.foeparker@logicpd.com>
+>>> [anilkumar@ti.com: move poweroff additions to rtc driver]
+>>> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |    5 ++
+>>>  drivers/rtc/rtc-omap.c                             |   79 +++++++++++++++++++-
+>>>  2 files changed, 83 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>>> index b47aa41..8d9f4f9 100644
+>>> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>>> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+>>> @@ -6,6 +6,10 @@ Required properties:
+>>>  - interrupts: rtc timer, alarm interrupts in order
+>>>  - interrupt-parent: phandle for the interrupt controller
+>>>  
+>>> +Optional properties:
+>>> +- ti,system-power-controller: Telling whether or not rtc is controlling
+>>> +  the system power.
+>>
+>> I don't know how it is connected at board level, but I'm not sure the
+>> binding is the proper one.
+> 
+> Hi Benoit,
+>  ________________________________
+> |   ______          _______      |
+> |  |      |        |       |     |
+> |  |RTC   |        |       |     |
+> |  |PMIC  |  Line  |       |     |
+> |  |PWR_EN|=======>|PWR_EN |     |
+> |  |______|        |_______|     |
+> |  AM335x SoC       TPS65217     |
+> |                                |
+> |________________________________|
+>           BeagleBone
+> 
+> This is how RTC PMIC_PWR_EN is connected to PWR_EN of TPS65217 PMIC. Only when
+> RTC pull low in PMIC_PWR_EN then PMIC will go to power off state provided TPS65217
+> status should be changed to STATUS_OFF.
+> 
+> ALARM2 event should be trigger to configure PMIC_PWR_EN properly then the "Line"
+> driven low so that PMIC will go to shutdown mode.
 
-On Tue, Nov 06, 2012 at 07:26:06PM +0530, Afzal Mohammed wrote:
-> OMAP2+ family of devices are now obtaining resources via DT, earlier
-> it was obtained from hwmod. Update binding document accrodingly, while
-> at it add example.
->=20
-> Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+Thanks for the nice diagram :-)
 
-this looks fine to me:
+I'm wondering if we cannot abuse the gpio binding to describe that
+connection instead of creating two custom attributes (PMIC + RTC).
 
-Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Ideally we should do that without having to change the RTC to use the
+gpiolib at all.
 
-Benoit, do you take Documentation patches too ?
 
-> ---
->=20
-> v2: node name changed to "usb"
->=20
->  .../devicetree/bindings/usb/am33xx-usb.txt          | 21 +++++++++++++++=
-++++++
->  1 file changed, 21 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Docum=
-entation/devicetree/bindings/usb/am33xx-usb.txt
-> index a922505..ea840f7 100644
-> --- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-> @@ -1,5 +1,7 @@
->  AM33XX MUSB GLUE
->   - compatible : Should be "ti,musb-am33xx"
-> + - reg : offset and length of register sets, first usbss, then for musb =
-instances
-> + - interrupts : usbss, musb instance interrupts in order
->   - ti,hwmods : must be "usb_otg_hs"
->   - multipoint : Should be "1" indicating the musb controller supports
->     multipoint. This is a MUSB configuration-specific setting.
-> @@ -12,3 +14,22 @@ AM33XX MUSB GLUE
->     represents PERIPHERAL.
->   - power : Should be "250". This signifies the controller can supply upto
->     500mA when operating in host mode.
-> +
-> +Example:
-> +
-> +usb@47400000  {
-> +	compatible =3D "ti,musb-am33xx";
-> +	reg =3D <0x47400000 0x1000	/* usbss */
-> +	       0x47401000 0x800		/* musb instance 0 */
-> +	       0x47401800 0x800>;	/* musb instance 1 */
-> +	interrupts =3D <17		/* usbss */
-> +		      18		/* musb instance 0 */
-> +		      19>;		/* musb instance 1 */
-> +	multipoint =3D <1>;
-> +	num-eps =3D <16>;
-> +	ram-bits =3D <12>;
-> +	port0-mode =3D <3>;
-> +	port1-mode =3D <3>;
-> +	power =3D <250>;
-> +	ti,hwmods =3D "usb_otg_hs";
-> +};
-> --=20
-> 1.7.12
->=20
+rtc: rtc@44e3e000 {
+	compatible = "ti,da830-rtc";
+	reg = <0x44e3e000 0x1000>;
+	interrupts = <75, 76>;
+	ti,hwmods = "rtc";
 
---=20
-balbi
+	/* expose the PWR_EN functionality of this RTC*/
+	gpio-controller;
+	#gpio-cells = <0>; /* assuming we can use 0 ??? */
+};
 
---VdOwlNaOFKGAtAAV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+tps: tps@24 {
+ 	compatible = "ti,tps65217";
+	/*
+         * Enable the power enable feature from
+         * the input line if that attribute is there.
+         */
+	gpio-power-en = <&rtc>; /* PWR_EN */
 
-iQIcBAEBAgAGBQJQmT59AAoJEIaOsuA1yqREVkEP/R4FP39QR4XBy80kqIGrdGOC
-xCRBgBWuYG0WMlX0mHMf2kmKODucs/wVTUuBMmmxq6DUyI6zZHTDyRIhwM0n7A0c
-vOkkXqgfCxLr8E49S8UoYSoWHcTQbd8e+TNOhudHoln7d+AtJ/GxvkZnaaW/BGM2
-jG7wMbphBh28lOYCqrf32S8ntG99xzq/T75YrSJUJnuDTlt+f17sbuYmPYSTx2pL
-6+yD5G0eo02N4YVyXXCGeie0QwbQpAANbcJWlrRed/hlj8laqmF0WwMl0Zrh1kTu
-2uHUfuwKWzlpuI0mnwiCxEP24OuQvDXliHoyg90CMWTUIKJzPlIAcxIDJclxlvhN
-Ze9zRL7unjjJRQq3OR0IC4AtaiBrjhWgrBhuxfFCwbTGFjGO2f8MZueb2eP0NLaL
-5qAscsGCvRctAVuFGdxWy2oLIJoaDQKr5ztlh9oVJdt0jbdFACUR1nZt1b3cICZ3
-ft8yhKbJ0Ry+RklhGf7JYZO7sp5QF2Lv7KstZm1LCX78+jlJcXkCAwOGIGLnXMF5
-CgSDYlapsgexjt+dkSlDorVgC8+9clclDQIle29AeRV5N9c+MCBe7NIG75wA8KWs
-AoI4P1yec/JOFDVOWh/0K4I9mZVvfp6NFNRNWSyQOB2Z5K7EoXmCCK6i0uqSRsGN
-SQr4HjRHTL5ZQ3RKd/lr
-=wPeN
------END PGP SIGNATURE-----
+	...
+}	
 
---VdOwlNaOFKGAtAAV--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any thought?
+
+Regards,
+Benoit
+
+
+
