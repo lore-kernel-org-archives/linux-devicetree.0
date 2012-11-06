@@ -1,76 +1,112 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2] usb: musb: dsps: dt binding - add resources, example
-Date: Tue, 6 Nov 2012 20:22:07 +0200
-Message-ID: <20121106182207.GB5252@arwen.pp.htv.fi>
-References: <1352210166-7253-1-git-send-email-afzal@ti.com>
- <20121106164445.GE3993@arwen.pp.htv.fi>
- <509941D1.6020405@ti.com>
-Reply-To: <balbi@ti.com>
+From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] misc: sram: Add optional clock
+Date: Tue, 6 Nov 2012 13:28:31 -0500
+Message-ID: <509956CF.4010408@windriver.com>
+References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
+ <1350570453-24546-4-git-send-email-p.zabel@pengutronix.de>
+ <CAP=VYLpwahaxVssP1bXmp+ttM_eArF9B2DX1auiOmterdHHUGw@mail.gmail.com>
+ <1351513257.5872.104.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <509941D1.6020405@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: balbi@ti.com, Afzal Mohammed <afzal@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Santhapuri Damodar <damodar.santhapuri@ti.com>, Ravi Babu <ravibabu@ti.com>, Daniel Mack <zonque@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1351513257.5872.104.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---OwLcNYc0lM97+oe1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12-10-29 08:20 AM, Philipp Zabel wrote:
+> Am Freitag, den 26.10.2012, 12:17 -0400 schrieb Paul Gortmaker:
+>> On Thu, Oct 18, 2012 at 10:27 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>>> On some platforms the SRAM needs a clock to be enabled explicitly.
+>>>
+>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> ---
+>>>  drivers/misc/sram.c |   10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+>>> index 7a363f2..0cc2e75 100644
+>>> --- a/drivers/misc/sram.c
+>>> +++ b/drivers/misc/sram.c
+>>> @@ -21,6 +21,8 @@
+>>>  #include <linux/kernel.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/init.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/err.h>
+>>>  #include <linux/io.h>
+>>>  #include <linux/of.h>
+>>>  #include <linux/platform_device.h>
+>>> @@ -29,6 +31,7 @@
+>>>
+>>>  struct sram_dev {
+>>>         struct gen_pool *pool;
+>>> +       struct clk *clk;
+>>>  };
+>>
+>> I see another field gets added to the struct here.  (yet another
+>> reason to have it folded into the original)   But you still
+>> really don't need to create a sram_dev for this, because...
+>>
+>>>
+>>>  static int __devinit sram_probe(struct platform_device *pdev)
+>>> @@ -53,6 +56,10 @@ static int __devinit sram_probe(struct platform_device *pdev)
+>>>         if (!sram)
+>>>                 return -ENOMEM;
+>>>
+>>> +       sram->clk = devm_clk_get(&pdev->dev, NULL);
+>>> +       if (!IS_ERR(sram->clk))
+>>> +               clk_prepare_enable(sram->clk);
+>>> +
+>>>         sram->pool = gen_pool_create(PAGE_SHIFT, -1);
+>>>         if (!sram->pool)
+>>>                 return -ENOMEM;
+>>> @@ -80,6 +87,9 @@ static int __devexit sram_remove(struct platform_device *pdev)
+>>>
+>>>         gen_pool_destroy(sram->pool);
+>>>
+>>> +       if (!IS_ERR(sram->clk))
+>>> +               clk_disable_unprepare(sram->clk);
+>>> +
+>>
+>> ...here, this looks confusing with the use of IS_ERR on
+>> an entity that was not recently assigned to.
+> 
+> Right.
+> How about I set sram->clk = NULL in sram_probe if devm_clk_get returns
+> an error value?
 
-Hi,
+Sorry for delayed reply ; was out last week.
+And yes, I like that better than the double call as well.
 
-On Tue, Nov 06, 2012 at 05:58:57PM +0100, Benoit Cousson wrote:
-> On 11/06/2012 05:44 PM, Felipe Balbi wrote:
-> > Hi,
-> >=20
-> > On Tue, Nov 06, 2012 at 07:26:06PM +0530, Afzal Mohammed wrote:
-> >> OMAP2+ family of devices are now obtaining resources via DT, earlier
-> >> it was obtained from hwmod. Update binding document accrodingly, while
-> >> at it add example.
-> >>
-> >> Signed-off-by: Afzal Mohammed <afzal@ti.com>
-> >=20
-> > this looks fine to me:
-> >=20
-> > Reviewed-by: Felipe Balbi <balbi@ti.com>
-> >=20
-> > Benoit, do you take Documentation patches too ?
->=20
-> Well, ideally it should go with the driver change. But if this is a
-> simple change related to generic attribute I can take it.
+Thanks,
+Paul.
+--
 
-ok, cool. Please take this via your tree.
-
-thanks
-
---=20
-balbi
-
---OwLcNYc0lM97+oe1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQmVVPAAoJEIaOsuA1yqREPRYQAIzqJLx25l2XtKXXKPpxsoEA
-v0oiyxzdhaa3xuYRc7UTETdceLMA3YpoIERJvh4fnSxBPOAH3vUF/UIBV3lGJ9BV
-yKqr2LJioz7K2uQfYq7ySE0XZS5LhemccYcWNTOPJAKqY3m6YMn7MylhnU58UHQp
-sx4hWyJT31ioHJ3Xf5jK4WcYWFUHC0m+9Dfl+jA0VjgAk69rVWos7ZmW7uxVxbCX
-Ngv3c/Fqup61JMY20ZqgCRsed5otGuGhCI3J8j1Hf8ca2LLVIqVST11tPCH05H27
-hsGSkGa24sXeOsI9J9yX3M+owubPn17P9xHBqqWA2ByDpxviQ5lLohjQprzuZHL3
-1h668DRegVIB0emOj31xPkNgRRg/CUoH4PceYBEdkA4hWnqYzDVt3avI51BglXGN
-KUu4ATgecDTIvT0hoqMM5/EEw/ZNPdSy+KjaZRCLf5Oos0sn/0dl+Qq9jHclcEgJ
-7A/0+Q6jk/tNeTyinTdXZlcX0Y467oGCgQ8MpQQ41aaaqoXFonWI4yLo1aMxILNM
-G7BXArcb4ArEA9B4KcE3Kbsbk//fJDdVQWl+YGiRo5xXvEUWO0LBz1no6LEj/9sC
-FZXKI8CJV8iW0Mu/HDqNe7DCUPsem9kkyKCcEqc8WP2veqTKylZJdgd2yudpVonp
-Me+Qb/kBJYdHrn8xbguO
-=ILMi
------END PGP SIGNATURE-----
-
---OwLcNYc0lM97+oe1--
+> 
+>> Instead, just
+>> put a "struct clk *clk;" on the stack and do the
+>>
+>>    clk = devm_clk_get(&pdev->dev, NULL);
+>>
+>> in both the init and the teardown.  Then the code will be
+>> more readable.
+> 
+> Calling devm_clk_get on the same clock twice seems a bit weird.
+> I expect that eventually someone will want to disable clocks during
+> suspend, so I'd prefer to keep the clk pointer around.
+> 
+> regards
+> Philipp
+> 
