@@ -1,71 +1,36 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH RESEND 00/10] ARM: dts: AM33XX: Add device tree data
-Date: Tue, 6 Nov 2012 15:56:48 +0100
-Message-ID: <50992530.8030501@ti.com>
-References: <1352209718-5586-1-git-send-email-anilkumar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1352209718-5586-1-git-send-email-anilkumar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: AnilKumar Ch <anilkumar@ti.com>
-Cc: tony@atomide.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: EXYNOS5250: Add support for USB 3.0 dwc3 controller
+Date: Tue, 06 Nov 2012 20:58:48 +0530
+Message-ID: <1352215729-11703-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anil,
+Here we add the required support for device tree and further
+clocks and device reigster base address.
 
-On 11/06/2012 02:48 PM, AnilKumar Ch wrote:
-> Add device tree date for GPIO based various drivers matrix keypad,
-> volume keys, push buttons and use leds accross three AM33XX devices
-> viz EVM, BeagleBone and Starter Kit.
-> 
-> To make it functional this series also adds pinctrl data for all
-> the GPIOs used by various drivers. In this series only default state
-> pinmux/conf settings are added because of sleep/idle state pinctrl
-> values are not available.
-> 
-> These patches are based on linux-omap-dt:for_3.8/dts_part2 tree and
-> these were tested on am33xx devices according to added functionality.
-> 
-> Change log:
-> 	- Rebased on for_3.8/dts_part2
+Based on 'for-next' branch of linux-samsung tree.
+Tested with required driver DT patches for dwc3-exynos:
+http://www.spinics.net/lists/linux-usb/msg73857.html
+and USB 3.0 phy support patches:
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-November/021915.html
 
-Thanks for the update. Applied in for_3.8/dts_part2.
+Vivek Gautam (1):
+  ARM: Exynos5250: Enabling dwc3-exynos driver
 
-BTW, I've just noticed that am335x-evmsk is not built with make dtbs. The target was missing from the arch/arm/boot/dts/Makefile.
+ arch/arm/boot/dts/exynos5250.dtsi       |    6 ++++++
+ arch/arm/mach-exynos/clock-exynos5.c    |   24 ++++++++++++++++++++++++
+ arch/arm/mach-exynos/include/mach/map.h |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c  |    2 ++
+ drivers/usb/Kconfig                     |    1 +
+ 5 files changed, 34 insertions(+), 0 deletions(-)
 
-Please find below the patch to add it.
-
-Thanks,
-Benoit
-
----
->From 6990451aca80a5107206688308302241f799057a Mon Sep 17 00:00:00 2001
-From: Benoit Cousson <b-cousson@ti.com>
-Date: Tue, 6 Nov 2012 15:52:23 +0100
-Subject: [PATCH] ARM: dts: Makefile: Add the am335x-evmsk target in dtbs list
-
-The EVMSK was not built with the 'make dtbs' command.
-Add the missing antry in the dts Makefile.
-
-Signed-off-by: Benoit Cousson <b-cousson@ti.com>
----
- arch/arm/boot/dts/Makefile |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 634bd42..2458b69 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -73,6 +73,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	omap4-sdp.dtb \
- 	omap5-evm.dtb \
- 	am335x-evm.dtb \
-+	am335x-evmsk.dtb \
- 	am335x-bone.dtb
- dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
- dtb-$(CONFIG_ARCH_U8500) += snowball.dtb
 -- 
-1.7.0.4
+1.7.6.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
