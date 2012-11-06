@@ -1,142 +1,76 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH 1/2] leds/tca6507: Add support for devicetree.
-Date: Tue, 6 Nov 2012 10:24:51 -0800
-Message-ID: <CAK5ve-+fE7T3U9KZ-C5-sZN9PUPq6RybCu+nv9UDb2x0bnarzw@mail.gmail.com>
-References: <1351633534-20817-1-git-send-email-marek.belisko@open-nandra.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2] usb: musb: dsps: dt binding - add resources, example
+Date: Tue, 6 Nov 2012 20:22:07 +0200
+Message-ID: <20121106182207.GB5252@arwen.pp.htv.fi>
+References: <1352210166-7253-1-git-send-email-afzal@ti.com>
+ <20121106164445.GE3993@arwen.pp.htv.fi>
+ <509941D1.6020405@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351633534-20817-1-git-send-email-marek.belisko@open-nandra.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek.belisko@open-nandra.com>
-Cc: rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OwLcNYc0lM97+oe1"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <509941D1.6020405@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: balbi@ti.com, Afzal Mohammed <afzal@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Santhapuri Damodar <damodar.santhapuri@ti.com>, Ravi Babu <ravibabu@ti.com>, Daniel Mack <zonque@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2012 at 2:45 PM, Marek Belisko
-<marek.belisko@open-nandra.com> wrote:
-> Support added only for leds (not for gpio's).
->
-> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
-> ---
->  drivers/leds/leds-tca6507.c |   73 +++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 70 insertions(+), 3 deletions(-)
->
+--OwLcNYc0lM97+oe1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Overall, this looks good to me. Maybe some question as below,
+Hi,
 
--Bryan
+On Tue, Nov 06, 2012 at 05:58:57PM +0100, Benoit Cousson wrote:
+> On 11/06/2012 05:44 PM, Felipe Balbi wrote:
+> > Hi,
+> >=20
+> > On Tue, Nov 06, 2012 at 07:26:06PM +0530, Afzal Mohammed wrote:
+> >> OMAP2+ family of devices are now obtaining resources via DT, earlier
+> >> it was obtained from hwmod. Update binding document accrodingly, while
+> >> at it add example.
+> >>
+> >> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+> >=20
+> > this looks fine to me:
+> >=20
+> > Reviewed-by: Felipe Balbi <balbi@ti.com>
+> >=20
+> > Benoit, do you take Documentation patches too ?
+>=20
+> Well, ideally it should go with the driver change. But if this is a
+> simple change related to generic attribute I can take it.
 
-> diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
-> index dabcf7a..496dd98 100644
-> --- a/drivers/leds/leds-tca6507.c
-> +++ b/drivers/leds/leds-tca6507.c
-> @@ -667,6 +667,69 @@ static void tca6507_remove_gpio(struct tca6507_chip *tca)
->  }
->  #endif /* CONFIG_GPIOLIB */
->
-> +#ifdef CONFIG_OF
-> +static struct tca6507_platform_data * __devinit tca6507_led_dt_init(struct i2c_client *client)
-> +{
-> +       struct device_node *np = client->dev.of_node, *child;
-> +       struct tca6507_platform_data *pdata;
-> +       struct led_info *tca_leds;
-> +       int count = 0;
-> +
-> +       for_each_child_of_node(np, child)
-> +               count++;
-> +       if (!count)
-> +               return NULL;
-> +
+ok, cool. Please take this via your tree.
 
-I saw many 'return NULL' here, why not return some error code in ERR_PTR?
+thanks
 
-> +       if (count > NUM_LEDS)
-> +               return NULL;
-> +
-> +       tca_leds = devm_kzalloc(&client->dev, sizeof(struct led_info) * NUM_LEDS, GFP_KERNEL);
-> +
+--=20
+balbi
 
-useless empty line.
+--OwLcNYc0lM97+oe1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +       if (!tca_leds)
-> +               return NULL;
-> +
-> +
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-useless empty line.
+iQIcBAEBAgAGBQJQmVVPAAoJEIaOsuA1yqREPRYQAIzqJLx25l2XtKXXKPpxsoEA
+v0oiyxzdhaa3xuYRc7UTETdceLMA3YpoIERJvh4fnSxBPOAH3vUF/UIBV3lGJ9BV
+yKqr2LJioz7K2uQfYq7ySE0XZS5LhemccYcWNTOPJAKqY3m6YMn7MylhnU58UHQp
+sx4hWyJT31ioHJ3Xf5jK4WcYWFUHC0m+9Dfl+jA0VjgAk69rVWos7ZmW7uxVxbCX
+Ngv3c/Fqup61JMY20ZqgCRsed5otGuGhCI3J8j1Hf8ca2LLVIqVST11tPCH05H27
+hsGSkGa24sXeOsI9J9yX3M+owubPn17P9xHBqqWA2ByDpxviQ5lLohjQprzuZHL3
+1h668DRegVIB0emOj31xPkNgRRg/CUoH4PceYBEdkA4hWnqYzDVt3avI51BglXGN
+KUu4ATgecDTIvT0hoqMM5/EEw/ZNPdSy+KjaZRCLf5Oos0sn/0dl+Qq9jHclcEgJ
+7A/0+Q6jk/tNeTyinTdXZlcX0Y467oGCgQ8MpQQ41aaaqoXFonWI4yLo1aMxILNM
+G7BXArcb4ArEA9B4KcE3Kbsbk//fJDdVQWl+YGiRo5xXvEUWO0LBz1no6LEj/9sC
+FZXKI8CJV8iW0Mu/HDqNe7DCUPsem9kkyKCcEqc8WP2veqTKylZJdgd2yudpVonp
+Me+Qb/kBJYdHrn8xbguO
+=ILMi
+-----END PGP SIGNATURE-----
 
-> +       for_each_child_of_node(np, child) {
-> +               struct led_info led;
-> +               u32 reg;
-> +               int ret;
-> +
-> +               led.name = of_get_property(child, "label", NULL) ? : child->name;
-> +               led.default_trigger =
-> +                       of_get_property(child, "linux,default-trigger", NULL);
-> +
-> +               ret = of_property_read_u32(child, "reg", &reg);
-> +
-> +               if (ret != 0)
-> +                       continue;
-> +               tca_leds[reg] = led;
-> +       }
-> +       pdata = devm_kzalloc(&client->dev, sizeof(struct tca6507_platform_data), GFP_KERNEL);
-> +       if (!pdata) {
-> +               kfree(tca_leds);
-
-Do we need to kfree here? I think devm_zalloc() will take care of this
-if the driver failed to register.
-
-> +               return NULL;
-> +       }
-> +
-> +       pdata->leds.leds = tca_leds;
-> +       pdata->leds.num_leds = NUM_LEDS;
-> +
-> +       return pdata;
-> +}
-> +
-> +static const struct of_device_id of_tca6507_leds_match[] = {
-> +       { .compatible = "leds-tca6507", },
-> +       {},
-> +};
-> +
-> +#else
-> +static int __devinit tca6507_led_dt_init(struct i2c_client *client, struct tca6507_platform_data *data)
-> +{
-> +       return -1;
-> +}
-> +
-> +#define of_tca6507_leds_match NULL
-> +#endif
-> +
->  static int __devinit tca6507_probe(struct i2c_client *client,
->                                    const struct i2c_device_id *id)
->  {
-> @@ -683,9 +746,12 @@ static int __devinit tca6507_probe(struct i2c_client *client,
->                 return -EIO;
->
->         if (!pdata || pdata->leds.num_leds != NUM_LEDS) {
-> -               dev_err(&client->dev, "Need %d entries in platform-data list\n",
-> -                       NUM_LEDS);
-> -               return -ENODEV;
-> +               pdata = tca6507_led_dt_init(client);
-> +               if (!pdata) {
-> +                       dev_err(&client->dev, "Need %d entries in platform-data list\n",
-> +                               NUM_LEDS);
-> +                       return -ENODEV;
-> +               }
->         }
->         tca = devm_kzalloc(&client->dev, sizeof(*tca), GFP_KERNEL);
->         if (!tca)
-> @@ -750,6 +816,7 @@ static struct i2c_driver tca6507_driver = {
->         .driver   = {
->                 .name    = "leds-tca6507",
->                 .owner   = THIS_MODULE,
-> +               .of_match_table = of_tca6507_leds_match,
->         },
->         .probe    = tca6507_probe,
->         .remove   = __devexit_p(tca6507_remove),
-> --
-> 1.7.9.5
->
+--OwLcNYc0lM97+oe1--
