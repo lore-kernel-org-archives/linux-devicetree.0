@@ -1,79 +1,92 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
- to mach-omap2)
-Date: Tue, 06 Nov 2012 15:17:58 -0700
-Message-ID: <50998C96.9090601@wwwdotorg.org>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com> <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com> <20121106183531.GH6801@atomide.com> <CA+Bv8XZOt7h3dtDsk1SaR71J3tYFOTsPJSjZLSP3RVuLdYdFDg@mail.gmail.com> <56051C08-3ECF-4C0A-9B88-64B4C1DDDF45@antoniou-consulting.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
+Date: Wed, 7 Nov 2012 08:34:44 +1100
+Message-ID: <20121106213444.GJ23553@truffula.fritz.box>
+References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
+ <201211021626.50503.vapier@gentoo.org>
+ <5097F9D2.2040103@wwwdotorg.org>
+ <20121106072656.GF23553@truffula.fritz.box>
+ <50994892.1070504@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <56051C08-3ECF-4C0A-9B88-64B4C1DDDF45@antoniou-consulting.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Russ Dill <Russ.Dill@ti.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50994892.1070504-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2012 12:41 PM, Pantelis Antoniou wrote:
-> Hi Russ,
->=20
-> On Nov 6, 2012, at 8:29 PM, Russ Dill wrote:
->=20
->> On Tue, Nov 6, 2012 at 10:35 AM, Tony Lindgren <tony@atomide.com> wr=
-ote:
->>> * Grant Likely <grant.likely@secretlab.ca> [121106 03:16]:
->>>> On Tue, Nov 6, 2012 at 10:30 AM, Pantelis Antoniou
->>>> <panto@antoniou-consulting.com> wrote:
->>>>>
->>>>> Another can of worms is the pinctrl nodes.
->>>>
->>>> Yes... new pinctrl data would need to trigger adding new data to
->>>> pinctrl. I don't know if the pinctrl api supports that.
->>>
->>> The actual pins stay the same, just their configuration
->>> changes. AFAIK all that is already supported using the
->>> pinctrl framework.
->>>
->>> For example, considering hotplugging capes on the beaglebone:
-=2E..
->> That assumes that for a particular external bus, certain pins aren't
->> already shared with functions already on the board, for instance if =
-an
->> I=B2C bus brought out to the external bus already has a chip connect=
-ed
->> to it.
->=20
-> This is our case on the bone. We don't enable the peripheral until
-> a cape that references it is enabled.
->=20
-> I don't think that very big changes are going to be needed TBH.
-=2E..
-> Ideally if we could do this in the cape definition:
->=20
-> 	cape_pinmux {
-> 		parent =3D <&am3358_pinmux>;
+On Tue, Nov 06, 2012 at 10:27:46AM -0700, Stephen Warren wrote:
+> On 11/06/2012 12:26 AM, David Gibson wrote:
+> > On Mon, Nov 05, 2012 at 10:39:30AM -0700, Stephen Warren wrote:
+> >> On 11/02/2012 02:26 PM, Mike Frysinger wrote:
+> >>> On Tuesday 20 March 2012 22:23:46 Stephen Warren wrote:
+> >>>> On Ubuntu, /bin/sh is dash (at least by default), and dash's echo
+> >>>> doesn't accept the -e option. This means that fdtget-runtest.sh's
+> >>>> EXPECT file will contain "-e foo" rather than just "foo", which
+> >>>> causes a test failure.
+> >>>>
+> >>>> To work around this, run /bin/echo instead of (builtin) echo,
+> >>>> which has more chance of supporting the -e option.
+> >>>>
+> >>>> Another possible fix is to change all the #! lines to /bin/bash
+> >>>> rather than /bin/sh, and change run_tests.sh to invoke
+> >>>> sub-scripts using $SHELL instead of just "sh". However, that
+> >>>> would require bash specifically, which may not be desirable.
+> >>>>
+> >>>> --- a/tests/fdtget-runtest.sh +++ b/tests/fdtget-runtest.sh
+> >>>>
+> >>>> -echo -e $expect >$EXPECT +/bin/echo -e $expect >$EXPECT
+> >>>
+> >>> the better fix is to use printf and %b: printf '%b\n' "$expect" >
+> >>> $EXPECT
+> >>
+> >> What is the relative availability (e.g. on anything other than a
+> >> modern Linux distro) of a printf binary vs. a /bin/echo binary that
+> >> supports -e? I certainly heard about /bin/echo -e long before I knew
+> >> about /usr/bin/printf, although it's quite possible that has no
+> >> correlation with where /usr/bin/printf is actually installed.
+> > 
+> > That's the crux of the matter, really.  I just had a look on a FreeBSD
+> > box I have access to and /bin/echo does *not* support -e, but there is
+> > a printf(1).  So the /bin/echo -e approach is definitely no good,
+> > printf might be but I don't know how widespread it is.
+> 
+> Out of curiosity, does FreeBSD's sh's built-in echo accept the -e
+> option? In other words, did the switch to /bin/echo break anything
+> there?
 
-I think the cape overlay would simply add nodes to the existing pin
-controller node, so I'd presume you would replace the two lines
-immediately above with:
+Yes it does, so yes it does.
 
-am3358_pinmux: pinmux {
+> For reference, I just booted my ancient Red Hat 7.3 virtual machine, and
+> it has printf, so I guess it's fairly widely available.
+> 
+> A quick search yields the following:
+> 
+> http://old.nabble.com/Re%3A-portability-of-%27printf%27-command-td28144087.html
+> 
+> which comes to the conclusion that printf is widely available enough to
+> be OK.
+> 
+> Oh, and if you find "Portable Shell Scripting" by Peter Seebach on
+> Google Books or in print, page 18 discusses the portability of printf,
+> and concludes that it's almost pervasive.
 
->=20
->                 bone_dvi_cape_led_pins: pinmux_bone_dvi_cape_led_pins=
- {
->                         pinctrl-single,pins =3D <
->                                 0x48 0x07       /* gpmc_a2.gpio1_18, =
-OUTPUT | MODE7 */
->                                 0x4c 0x07       /* gpmc_a3.gpio1_19, =
-OUTPUT | MODE7 */
->                         >;
-> 	};
->=20
->         pinctrl-0 =3D <&bone_geiger_cape_pins>;
+Ok, good to hear.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
