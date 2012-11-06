@@ -1,71 +1,56 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH 3/7] ARM: OMAP3+: hwmod: Add AM33XX HWMOD data for davinci_mdio
- module
-Date: Tue, 6 Nov 2012 19:00:42 +0530
-Message-ID: <50991102.3080302@ti.com>
-References: <1352189545-26303-1-git-send-email-mugunthanvnm@ti.com> <1352189545-26303-4-git-send-email-mugunthanvnm@ti.com> <B5906170F1614E41A8A28DE3B8D121433EC049CC@DBDE01.ent.ti.com>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH RESEND 02/10] ARM: dts: AM33XX: Add matrix keypad device tree data to am335x-evm
+Date: Tue, 6 Nov 2012 19:18:30 +0530
+Message-ID: <1352209718-5586-3-git-send-email-anilkumar@ti.com>
+References: <1352209718-5586-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <B5906170F1614E41A8A28DE3B8D121433EC049CC@DBDE01.ent.ti.com>
+In-Reply-To: <1352209718-5586-1-git-send-email-anilkumar@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: "Bedia, Vaibhav" <vaibhav.bedia@ti.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul@pwsan.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: tony@atomide.com
+Cc: b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/6/2012 3:39 PM, Bedia, Vaibhav wrote:
-> On Tue, Nov 06, 2012 at 13:42:21, N, Mugunthan V wrote:
-> [...]
->> +struct omap_hwmod_addr_space am33xx_mdio_addr_space[] = {
->> +	{
->> +		.pa_start	= 0x4A101000,
->> +		.pa_end		= 0x4A101000 + SZ_256 - 1,
->> +		.flags		= ADDR_MAP_ON_INIT,
-> Based on the recent discussions and looking the hwmod code,
-> I guess ADDR_MAP_ON_INIT does not make sense here. Since you
-> are just creating a parent-child relationship here, maybe no
-> flag is needed?
-Will remove this flag as it is a parrent-child relationship
->
->> +	},
->> +	{ }
->> +};
->> +
->> +struct omap_hwmod_ocp_if am33xx_cpgmac0__mdio = {
->> +	.master		= &am33xx_cpgmac0_hwmod,
->> +	.slave		= &am33xx_mdio_hwmod,
->> +	.addr		= am33xx_mdio_addr_space,
->> +	.user		= OCP_USER_MPU,
-> Is this flag necessary? Shouldn't you just skip the
-> user field since there's nothing for the hwmod code
-> to do here?
-This flag is necessary as MPU is going to access to device.
+Add matrix keypad device tree data to am335x-evm by adding all
+the necessary parameters like keymap, row & column gpios and etc.
 
-The patch will look like
-@@ -2501,6 +2516,21 @@ static struct omap_hwmod_ocp_if 
-am33xx_l4_hs__cpgmac0 = {
-         .user           = OCP_USER_MPU,
-  };
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+---
+ arch/arm/boot/dts/am335x-evm.dts |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-+struct omap_hwmod_addr_space am33xx_mdio_addr_space[] = {
-+       {
-+               .pa_start       = 0x4A101000,
-+               .pa_end         = 0x4A101000 + SZ_256 - 1,
-+       },
-+       { }
-+};
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 9199456..8076e66 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -110,6 +110,26 @@
+ 		regulator-name = "lis3_reg";
+ 		regulator-boot-on;
+ 	};
 +
-+struct omap_hwmod_ocp_if am33xx_cpgmac0__mdio = {
-+       .master         = &am33xx_cpgmac0_hwmod,
-+       .slave          = &am33xx_mdio_hwmod,
-+       .addr           = am33xx_mdio_addr_space,
-+       .user           = OCP_USER_MPU,
-+};
++	matrix_keypad: matrix_keypad@0 {
++		compatible = "gpio-matrix-keypad";
++		debounce-delay-ms = <5>;
++		col-scan-delay-us = <2>;
 +
-  static struct omap_hwmod_addr_space am33xx_elm_addr_space[] = {
-         {
-                 .pa_start       = 0x48080000,
++		row-gpios = <&gpio2 25 0	/* Bank1, pin25 */
++			     &gpio2 26 0	/* Bank1, pin26 */
++			     &gpio2 27 0>;	/* Bank1, pin27 */
++
++		col-gpios = <&gpio2 21 0	/* Bank1, pin21 */
++			     &gpio2 22 0>;	/* Bank1, pin22 */
++
++		linux,keymap = <0x0000008b	/* MENU */
++				0x0100009e	/* BACK */
++				0x02000069	/* LEFT */
++				0x0001006a	/* RIGHT */
++				0x0101001c	/* ENTER */
++				0x0201006c>;	/* DOWN */
++	};
+ };
+ 
+ /include/ "tps65910.dtsi"
+-- 
+1.7.9.5
 
-Regards
-Mugunthan V N
