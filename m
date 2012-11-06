@@ -1,57 +1,142 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] fdtget-runtest.sh: use printf instead of /bin/echo -e
-Date: Tue,  6 Nov 2012 11:00:31 -0700
-Message-ID: <1352224831-1355-1-git-send-email-swarren@wwwdotorg.org>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH 1/2] leds/tca6507: Add support for devicetree.
+Date: Tue, 6 Nov 2012 10:24:51 -0800
+Message-ID: <CAK5ve-+fE7T3U9KZ-C5-sZN9PUPq6RybCu+nv9UDb2x0bnarzw@mail.gmail.com>
+References: <1351633534-20817-1-git-send-email-marek.belisko@open-nandra.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, jdl-CYoMK+44s/E@public.gmane.org, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1351633534-20817-1-git-send-email-marek.belisko@open-nandra.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Belisko <marek.belisko@open-nandra.com>
+Cc: rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tue, Oct 30, 2012 at 2:45 PM, Marek Belisko
+<marek.belisko@open-nandra.com> wrote:
+> Support added only for leds (not for gpio's).
+>
+> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+> ---
+>  drivers/leds/leds-tca6507.c |   73 +++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 70 insertions(+), 3 deletions(-)
+>
 
-Not all /bin/echo implementations support the -e option. Instead, use
-printf, which appears to be more widely available than /bin/echo -e.
+Overall, this looks good to me. Maybe some question as below,
 
-See commit eaec1db "fdtget-runtest.sh: Fix failures when /bin/sh isn't
-bash" for history.
+-Bryan
 
-I have tested this on Ubuntu 10.04 with /bin/sh pointing to both dash
-and bash.
+> diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
+> index dabcf7a..496dd98 100644
+> --- a/drivers/leds/leds-tca6507.c
+> +++ b/drivers/leds/leds-tca6507.c
+> @@ -667,6 +667,69 @@ static void tca6507_remove_gpio(struct tca6507_chip *tca)
+>  }
+>  #endif /* CONFIG_GPIOLIB */
+>
+> +#ifdef CONFIG_OF
+> +static struct tca6507_platform_data * __devinit tca6507_led_dt_init(struct i2c_client *client)
+> +{
+> +       struct device_node *np = client->dev.of_node, *child;
+> +       struct tca6507_platform_data *pdata;
+> +       struct led_info *tca_leds;
+> +       int count = 0;
+> +
+> +       for_each_child_of_node(np, child)
+> +               count++;
+> +       if (!count)
+> +               return NULL;
+> +
 
-Reported-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> # and implemented-by
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Mike, should I re-write this with you as the git author? If so, could
-you please supply an S-o-b line for this?
----
- tests/fdtget-runtest.sh |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+I saw many 'return NULL' here, why not return some error code in ERR_PTR?
 
-diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
-index c3a3559..8d8b058 100755
---- a/tests/fdtget-runtest.sh
-+++ b/tests/fdtget-runtest.sh
-@@ -8,7 +8,7 @@ rm -f $LOG $EXPECT
- trap "rm -f $LOG $EXPECT" 0
- 
- expect="$1"
--/bin/echo -e $expect >$EXPECT
-+printf '%b\n' "$expect" > $EXPECT
- shift
- 
- verbose_run_log_check "$LOG" $VALGRIND $DTGET "$@"
--- 
-1.7.0.4
+> +       if (count > NUM_LEDS)
+> +               return NULL;
+> +
+> +       tca_leds = devm_kzalloc(&client->dev, sizeof(struct led_info) * NUM_LEDS, GFP_KERNEL);
+> +
+
+useless empty line.
+
+> +       if (!tca_leds)
+> +               return NULL;
+> +
+> +
+
+useless empty line.
+
+> +       for_each_child_of_node(np, child) {
+> +               struct led_info led;
+> +               u32 reg;
+> +               int ret;
+> +
+> +               led.name = of_get_property(child, "label", NULL) ? : child->name;
+> +               led.default_trigger =
+> +                       of_get_property(child, "linux,default-trigger", NULL);
+> +
+> +               ret = of_property_read_u32(child, "reg", &reg);
+> +
+> +               if (ret != 0)
+> +                       continue;
+> +               tca_leds[reg] = led;
+> +       }
+> +       pdata = devm_kzalloc(&client->dev, sizeof(struct tca6507_platform_data), GFP_KERNEL);
+> +       if (!pdata) {
+> +               kfree(tca_leds);
+
+Do we need to kfree here? I think devm_zalloc() will take care of this
+if the driver failed to register.
+
+> +               return NULL;
+> +       }
+> +
+> +       pdata->leds.leds = tca_leds;
+> +       pdata->leds.num_leds = NUM_LEDS;
+> +
+> +       return pdata;
+> +}
+> +
+> +static const struct of_device_id of_tca6507_leds_match[] = {
+> +       { .compatible = "leds-tca6507", },
+> +       {},
+> +};
+> +
+> +#else
+> +static int __devinit tca6507_led_dt_init(struct i2c_client *client, struct tca6507_platform_data *data)
+> +{
+> +       return -1;
+> +}
+> +
+> +#define of_tca6507_leds_match NULL
+> +#endif
+> +
+>  static int __devinit tca6507_probe(struct i2c_client *client,
+>                                    const struct i2c_device_id *id)
+>  {
+> @@ -683,9 +746,12 @@ static int __devinit tca6507_probe(struct i2c_client *client,
+>                 return -EIO;
+>
+>         if (!pdata || pdata->leds.num_leds != NUM_LEDS) {
+> -               dev_err(&client->dev, "Need %d entries in platform-data list\n",
+> -                       NUM_LEDS);
+> -               return -ENODEV;
+> +               pdata = tca6507_led_dt_init(client);
+> +               if (!pdata) {
+> +                       dev_err(&client->dev, "Need %d entries in platform-data list\n",
+> +                               NUM_LEDS);
+> +                       return -ENODEV;
+> +               }
+>         }
+>         tca = devm_kzalloc(&client->dev, sizeof(*tca), GFP_KERNEL);
+>         if (!tca)
+> @@ -750,6 +816,7 @@ static struct i2c_driver tca6507_driver = {
+>         .driver   = {
+>                 .name    = "leds-tca6507",
+>                 .owner   = THIS_MODULE,
+> +               .of_match_table = of_tca6507_leds_match,
+>         },
+>         .probe    = tca6507_probe,
+>         .remove   = __devexit_p(tca6507_remove),
+> --
+> 1.7.9.5
+>
