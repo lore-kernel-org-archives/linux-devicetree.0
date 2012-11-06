@@ -1,205 +1,64 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16 variables
- & arrays
-Date: Tue, 06 Nov 2012 08:18:41 -0600
-Message-ID: <50991C41.50705@gmail.com>
-References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
+From: Afzal Mohammed <afzal@ti.com>
+Subject: [PATCH v2] ARM: dts: AM33XX: Add usbss node
+Date: Tue, 6 Nov 2012 19:59:38 +0530
+Message-ID: <1352212178-8472-1-git-send-email-afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: rob.herring@calxeda.com, grant.likely@secretlab.ca, linaro-dev@lists.linaro.org, andriy.shevchenko@intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Felipe Balbi <balbi@ti.com>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Rob Herring <rob.herring@calxeda.com>, Vaibhav Hiremath <hvaibhav@ti.com>, AnilKumar Ch <anilkumar@ti.com>, Ravi Babu <ravibabu@ti.com>, Santhapuri Damodar <damodar.santhapuri@ti.com>, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/25/2012 11:20 PM, Viresh Kumar wrote:
-> This adds following helper routines:
-> - of_property_read_u8_array()
-> - of_property_read_u16_array()
-> - of_property_read_u8()
-> - of_property_read_u16()
-> 
-> First two actually share most of the code with of_property_read_u32_array(), so
-> the common part is taken out into a macro, which can be used by all three
-> *_array() routines.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> V1->V2:
-> -----
-> - Use typeof() in of_property_read_array() macro instead of passing type to it
-> 
->  drivers/of/base.c  | 73 +++++++++++++++++++++++++++++++++++++++++++-----------
->  include/linux/of.h | 30 ++++++++++++++++++++++
->  2 files changed, 89 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index af3b22a..039e178 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -670,6 +670,64 @@ struct device_node *of_find_node_by_phandle(phandle handle)
->  }
->  EXPORT_SYMBOL(of_find_node_by_phandle);
->  
-> +#define of_property_read_array(_np, _pname, _out, _sz)			\
-> +	struct property *_prop = of_find_property(_np, _pname, NULL);	\
-> +	const __be32 *_val;						\
-> +									\
-> +	if (!_prop)							\
-> +		return -EINVAL;						\
-> +	if (!_prop->value)						\
-> +		return -ENODATA;					\
-> +	if ((_sz * sizeof(*_out)) > _prop->length)			\
-> +		return -EOVERFLOW;					\
-> +									\
-> +	_val = _prop->value;						\
-> +	while (_sz--)							\
-> +		*_out++ = (typeof(*_out))be32_to_cpup(_val++);		\
+From: Ajay Kumar Gupta <ajay.gupta@ti.com>
 
-This will not work. You are incrementing _out by 1, 2, or 4 bytes, but
-_val is always incremented by 4 bytes.
+Device tree node for usbss on AM33XX. There are two musb
+controllers on am33xx platform so have port0-mode and
+port1-mode data.
 
-According to the dtc commit adding this feature, the values are packed:
+[afzal@ti.com: reg & interrupt property addition]
 
-With this patch the following property assignment:
+Signed-off-by: Ajay Kumar Gupta <ajay.gupta@ti.com>
+Signed-off-by: Santhapuri, Damodar <damodar.santhapuri@ti.com>
+Signed-off-by: Ravi Babu <ravibabu@ti.com>
+Signed-off-by: Afzal Mohammed <afzal@ti.com>
+---
 
-    property = /bits/ 16 <0x1234 0x5678 0x0 0xffff>;
+v2: node named as "usb"
 
-is equivalent to:
+Depends on "usb: musb: dsps: dt binding - add resources, example"
+(https://patchwork.kernel.org/patch/1704691/)
 
-    property = <0x12345678 0x0000ffff>;
+ arch/arm/boot/dts/am33xx.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 5dfd682..20a3f29 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -321,5 +321,22 @@
+ 			ti,hwmods = "spi1";
+ 			status = "disabled";
+ 		};
++
++		usb@47400000 {
++			compatible = "ti,musb-am33xx";
++			reg = <0x47400000 0x1000	/* usbss */
++			       0x47401000 0x800		/* musb instance 0 */
++			       0x47401800 0x800>;	/* musb instance 1 */
++			interrupts = <17		/* usbss */
++				      18		/* musb instance 0 */
++				      19>;		/* musb instance 1 */
++			multipoint = <1>;
++			num-eps = <16>;
++			ram-bits = <12>;
++			port0-mode = <3>;
++			port1-mode = <3>;
++			power = <250>;
++			ti,hwmods = "usb_otg_hs";
++		};
+ 	};
+ };
+-- 
+1.7.12
 
-> +	return 0;
-> +
-> +/**
-> + * of_property_read_u8_array - Find and read an array of u8 from a property.
-> + *
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @out_value:	pointer to return value, modified only if return value is 0.
-> + *
-
-Missing sz
-
-> + * Search for a property in a device node and read 8-bit value(s) from
-> + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> + * property data isn't large enough.
-> + *
-> + * The out_value is modified only if a valid u8 value can be decoded.
-> + */
-> +int of_property_read_u8_array(const struct device_node *np,
-> +			const char *propname, u8 *out_values, size_t sz)
-> +{
-> +	of_property_read_array(np, propname, out_values, sz);
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_read_u8_array);
-> +
-> +/**
-> + * of_property_read_u16_array - Find and read an array of u16 from a property.
-> + *
-> + * @np:		device node from which the property value is to be read.
-> + * @propname:	name of the property to be searched.
-> + * @out_value:	pointer to return value, modified only if return value is 0.
-> + *
-
-Ditto.
-
-> + * Search for a property in a device node and read 16-bit value(s) from
-> + * it. Returns 0 on success, -EINVAL if the property does not exist,
-> + * -ENODATA if property does not have a value, and -EOVERFLOW if the
-> + * property data isn't large enough.
-> + *
-> + * The out_value is modified only if a valid u16 value can be decoded.
-> + */
-> +int of_property_read_u16_array(const struct device_node *np,
-> +			const char *propname, u16 *out_values, size_t sz)
-> +{
-> +	of_property_read_array(np, propname, out_values, sz);
-> +}
-> +EXPORT_SYMBOL_GPL(of_property_read_u16_array);
-> +
->  /**
->   * of_property_read_u32_array - Find and read an array of 32 bit integers
->   * from a property.
-> @@ -689,20 +747,7 @@ int of_property_read_u32_array(const struct device_node *np,
->  			       const char *propname, u32 *out_values,
->  			       size_t sz)
->  {
-> -	struct property *prop = of_find_property(np, propname, NULL);
-> -	const __be32 *val;
-> -
-> -	if (!prop)
-> -		return -EINVAL;
-> -	if (!prop->value)
-> -		return -ENODATA;
-> -	if ((sz * sizeof(*out_values)) > prop->length)
-> -		return -EOVERFLOW;
-> -
-> -	val = prop->value;
-> -	while (sz--)
-> -		*out_values++ = be32_to_cpup(val++);
-> -	return 0;
-> +	of_property_read_array(np, propname, out_values, sz);
->  }
->  EXPORT_SYMBOL_GPL(of_property_read_u32_array);
->  
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 72843b7..e2d9b40 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -223,6 +223,10 @@ extern struct device_node *of_find_node_with_property(
->  extern struct property *of_find_property(const struct device_node *np,
->  					 const char *name,
->  					 int *lenp);
-> +extern int of_property_read_u8_array(const struct device_node *np,
-> +			const char *propname, u8 *out_values, size_t sz);
-> +extern int of_property_read_u16_array(const struct device_node *np,
-> +			const char *propname, u16 *out_values, size_t sz);
->  extern int of_property_read_u32_array(const struct device_node *np,
->  				      const char *propname,
->  				      u32 *out_values,
-> @@ -357,6 +361,18 @@ static inline struct device_node *of_find_compatible_node(
->  	return NULL;
->  }
->  
-> +static inline int of_property_read_u8_array(const struct device_node *np,
-> +			const char *propname, u8 *out_values, size_t sz)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
-> +static inline int of_property_read_u16_array(const struct device_node *np,
-> +			const char *propname, u16 *out_values, size_t sz)
-> +{
-> +	return -ENOSYS;
-> +}
-> +
->  static inline int of_property_read_u32_array(const struct device_node *np,
->  					     const char *propname,
->  					     u32 *out_values, size_t sz)
-> @@ -463,6 +479,20 @@ static inline bool of_property_read_bool(const struct device_node *np,
->  	return prop ? true : false;
->  }
->  
-> +static inline int of_property_read_u8(const struct device_node *np,
-> +				       const char *propname,
-> +				       u8 *out_value)
-> +{
-> +	return of_property_read_u8_array(np, propname, out_value, 1);
-> +}
-> +
-> +static inline int of_property_read_u16(const struct device_node *np,
-> +				       const char *propname,
-> +				       u16 *out_value)
-> +{
-> +	return of_property_read_u16_array(np, propname, out_value, 1);
-> +}
-> +
->  static inline int of_property_read_u32(const struct device_node *np,
->  				       const char *propname,
->  				       u32 *out_value)
-> 
