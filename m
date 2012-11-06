@@ -1,43 +1,73 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Tue, 6 Nov 2012 20:50:17 +0000
-Message-ID: <CACxGe6t-_CLOdkMLbErSu_dYkXRkCpwHA=obRr=nRCUCSOCW5Q@mail.gmail.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
- <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
- <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com> <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [RESEND:PATCH] mtd: davinci-nand: add support for partition binding nodes
+Date: Tue, 6 Nov 2012 16:18:41 -0500
+Message-ID: <1352236721-22913-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2012 at 8:45 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
-> The back of a napkin calculation indicates that on this platform
-> /proc/devicetree costs 76kB and /sys/device-tree costs 60kb. I'm happy
-> to see that using /sys instead of /proc appears to be slightly cheaper
-> which makes it easier to justify the change. The diffstat makes me
-> even happier:
->
-> arch/arm/plat-omap/Kconfig                |    1 -
->  arch/powerpc/platforms/pseries/dlpar.c    |   23 -----------
->  arch/powerpc/platforms/pseries/reconfig.c |   40 ------------------
->  drivers/of/Kconfig                        |    8 ----
->  drivers/of/base.c                         |  116
-> ++++++++++++++++++++++++++++------------------------
->  drivers/of/fdt.c                          |    5 ++-
->  fs/proc/Makefile                          |    1 -
->  fs/proc/proc_devtree.c                    |   13 +-----
->  fs/proc/root.c                            |    4 +-
->  include/linux/of.h                        |   35 ++++++++++++----
->  include/linux/proc_fs.h                   |   16 --------
->  include/linux/string.h                    |   11 +++++
->  12 files changed, 107 insertions(+), 166 deletions(-)
+Enhance the driver to support partition subnodes inside the nand
+device bindings to describe partitions on the nand device.
 
-Make that 96 insertions. I got an extra patch caught up in that diffstat.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ .../devicetree/bindings/arm/davinci/nand.txt       |    8 ++++++++
+ drivers/mtd/nand/davinci_nand.c                    |   13 ++++++++++---
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
-g.
+diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
+index e37241f..4746452 100644
+--- a/Documentation/devicetree/bindings/arm/davinci/nand.txt
++++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
+@@ -23,6 +23,9 @@ Recommended properties :
+ - ti,davinci-nand-buswidth: buswidth 8 or 16
+ - ti,davinci-nand-use-bbt: use flash based bad block table support.
+ 
++nand device bindings may contain additional sub-nodes describing
++partitions of the address space. See partition.txt for more detail.
++
+ Example (enbw_cmc board):
+ aemif@60000000 {
+ 	compatible = "ti,davinci-aemif";
+@@ -47,5 +50,10 @@ aemif@60000000 {
+ 		ti,davinci-ecc-mode = "hw";
+ 		ti,davinci-ecc-bits = <4>;
+ 		ti,davinci-nand-use-bbt;
++
++		partition@180000 {
++			label = "ubifs";
++			reg = <0x180000 0x7e80000>;
++		};
+ 	};
+ };
+diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci_nand.c
+index df1ab7d..321b053 100644
+--- a/drivers/mtd/nand/davinci_nand.c
++++ b/drivers/mtd/nand/davinci_nand.c
+@@ -821,9 +821,16 @@ syndrome_done:
+ 	if (ret < 0)
+ 		goto err_scan;
+ 
+-	ret = mtd_device_parse_register(&info->mtd, NULL, NULL, pdata->parts,
+-					pdata->nr_parts);
+-
++	if (pdata->parts)
++		ret = mtd_device_parse_register(&info->mtd, NULL, NULL,
++					pdata->parts, pdata->nr_parts);
++	else {
++		struct mtd_part_parser_data	ppdata;
++
++		ppdata.of_node = pdev->dev.of_node;
++		ret = mtd_device_parse_register(&info->mtd, NULL, &ppdata,
++						NULL, 0);
++	}
+ 	if (ret < 0)
+ 		goto err_scan;
+ 
+-- 
+1.7.9.5
+
