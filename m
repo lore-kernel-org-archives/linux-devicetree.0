@@ -1,74 +1,54 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 5/7] mfd: max8925: support dt for regulator
-Date: Tue, 6 Nov 2012 10:01:38 +0100
-Message-ID: <20121106090137.GH5044@opensource.wolfsonmicro.com>
-References: <1352187892-9940-1-git-send-email-qingx@marvell.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [RFC patch v3 3/4] ASoC: atmel-ssc-dai: register
+ dai and pcm directly
+Date: Tue, 06 Nov 2012 17:32:32 +0800
+Message-ID: <5098D930.8030403@atmel.com>
+References: <1352181474-19597-1-git-send-email-voice.shen@atmel.com>
+ <1352181474-19597-3-git-send-email-voice.shen@atmel.com>
+ <20121106084814.GC5044@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jRdC2OsRnuV8iIl8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352187892-9940-1-git-send-email-qingx@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: lrg@ti.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20121106084814.GC5044@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/6/2012 16:48, Mark Brown wrote:
+> On Tue, Nov 06, 2012 at 01:57:53PM +0800, Bo Shen wrote:
+>
+>>   static struct platform_device at91sam9260_ssc_device = {
+>> -	.name	= "at91rm9200_ssc",
+>> +	.name	= "at91rm9200_ssc_dai",
+>>   	.id	= 0,
+>>   	.dev	= {
+>
+> No, this isn't converting things to device tree which presumably is the
+> goal here and obviously just doing the rename doesn't accomplish an
+> enormous amount.  What I said was that you should instantiate the ASoC
+> adaption when the machine driver needs to use them.  You shouldn't even
+> need a separate device for this.
 
---jRdC2OsRnuV8iIl8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Maybe this is not the best solution, but just abstract audio as a 
+separate device. The other's still keep as a ssc library.
 
-On Tue, Nov 06, 2012 at 03:44:52PM +0800, Qing Xu wrote:
-> From: Qing Xu <qingx@marvell.com>
->=20
-> Signed-off-by: Qing Xu <qingx@marvell.com>
-> ---
->  drivers/regulator/max8925-regulator.c |   35 +++++++++++++++++++++++++++=
-+++++-
->  1 files changed, 34 insertions(+), 1 deletions(-)
+> Please do look at other platforms with similar hardware and do something
+> similar to them.
 
-There is no binding document here, documentation is required for all new
-bindings.
+I take some reference (e.g: freescale, marvell, invidia soc, this RFC 
+implement is similar with them), but don't find the similar hardware 
+with us. Please help provide the information who's HW is similar with 
+us. Thanks.
 
-> +	nproot =3D of_find_node_by_name(nproot, "regulators");
-> +	if (!nproot) {
-> +		dev_err(&pdev->dev, "failed to find regulators node\n");
-> +		return -ENODEV;
-> +	}
-> +	for_each_child_of_node(nproot, np) {
-> +		if (!of_node_cmp(np->name, info->desc.name)) {
-> +			config->init_data =3D
-> +				of_get_regulator_init_data(&pdev->dev, np);
-> +			config->of_node =3D np;
-> +			break;
-> +		}
-> +	}
-
-You appear to be open coding something like the standard helpers in
-of_regulator.h, you should use those helpers.
-
---jRdC2OsRnuV8iIl8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQmNHmAAoJELSic+t+oim9Y34P/iZshhKw7FQXJ0noCBB2fdMq
-M0Qz9pElSZfr6urxvCCfqEHdE7HDQUzL2yBRrAJvE/HbLHPKe6IBmi26YAC0lgrj
-E1w6UaLemW9fhVOFlarMu5OCLe7g/+/ZW9Vg7cFe18SDeNjugwa8tb6Ev+frXuv+
-Fm56fh9G/Qir6moTfkVI95mgFSvWdYHgFOvV2qvRIgqWh1YakAdVk3MXgU2lmutV
-FEn1WaqAW5NvDQ2+7QERpLPOx4KoKcXN/iXL8kB4ZK3VBM7ov7YlJ69xAu/HtEyF
-SWMkIO0KJO0RXcLEsDhhxCXPcMztl2OjO6bpn3ivL5EjaRzMugrqLE97JCym4rA7
-7nWQVYEoN3qOv2phfuKKrURd9wd37HupWlKPasgtrP8ASJv0+2pwr9t87t4sBss9
-ewb8ygRnUFX5Lz4HBV6VsBqiTPa21l0P+0NeJDIW2NXMqtAln4M8RAzgxk/m98Zo
-+Z8W6qG0chnnxQyysCiiz27y53xdQGPJoGtepG7d8ujyv17uudScsUjIBxF1I5KU
-fPziep/ifR2XpO27fuOfb2pAHD3RU78S4HND1ZhCostxw86vvpy4zAGiAzDkFDci
-WdHFreMWFl4yET8COSJ/PkaCxyzCwGSHZabO4W9LQlACELPNTX/omwRSqdvdcfPA
-cgqLWduQ2Ejs7TpKvwqn
-=za1r
------END PGP SIGNATURE-----
-
---jRdC2OsRnuV8iIl8--
+BRs,
+Bo Shen
