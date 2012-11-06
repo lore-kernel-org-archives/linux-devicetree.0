@@ -1,55 +1,80 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH RESEND 05/10] ARM: dts: AM33XX: Add pinmux configuration for user-leds to BONE
-Date: Tue, 6 Nov 2012 19:18:33 +0530
-Message-ID: <1352209718-5586-6-git-send-email-anilkumar@ti.com>
-References: <1352209718-5586-1-git-send-email-anilkumar@ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v3 0/4] Adding usb2.0 host-phy support for exynos5250
+Date: Tue, 6 Nov 2012 19:23:12 +0530
+Message-ID: <CAFp+6iH=hs-Rr5CkcCWXLMeFQ+Q=xYC6xtZ1tybz=yeFRUcUwg@mail.gmail.com>
+References: <1351518160-22369-1-git-send-email-gautam.vivek@samsung.com>
+	<20121106131453.GL11931@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1352209718-5586-1-git-send-email-anilkumar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20121106131453.GL11931@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, rob.herring@calxeda.com, kgene.kim@samsung.com, jg1.han@samsung.com, yulgon.kim@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add pinmux configurations for gpio based user-keys to am335x-bone.
-In this patch, only single named mode/state is added and these pins
-are configured during pinctrl driver initialization.
+Hi Balbi,
 
-Default mode is nothing but the values required for the module during
-active state. With this configurations module is functional as
-expected.
 
-Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
----
- arch/arm/boot/dts/am335x-bone.dts |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Tue, Nov 6, 2012 at 6:44 PM, Felipe Balbi <balbi@ti.com> wrote:
+> Hi,
+>
+> On Mon, Oct 29, 2012 at 07:12:36PM +0530, Vivek Gautam wrote:
+>> This patchset is based on the work by Praveen Paneri for
+>> samsung-usbphy driver:
+>> http://comments.gmane.org/gmane.linux.kernel.samsung-soc/12653
+>>
+>> Changes from v2:
+>>  - Using "EXYNOS5_PHY_" as common prefix along with exact names for
+>>    PHY SFRs for register definitions
+>>  - Using register names with bit macros to make things more clear.
+>>  - Removed parentheses around 0x230 in definition for EXYNOS5_USB_CFG
+>>    in [patch 2/4 v2].
+>>
+>> Tested on smdk5250 target with usb-next branch along with arch patches
+>> for exynos5250:
+>> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13042
+>> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/13048
+>>
+>> Vivek Gautam (4):
+>>   usb: phy: samsung: Add host phy support to samsung-phy driver
+>>   ARM: Exynos5250: Enabling samsung-usbphy driver
+>>   USB: ehci-s5p: Add phy driver support
+>>   USB: ohci-exynos: Add phy driver support
+>
+> I really don't know what to do with this series. I know it depends on
+> the other PHY changes which I have in my queue, but it touches too much
+> arch specific code, plus the USB Host code which I don't maintain.
+>
 
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index 91eee97..1aac58b 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -24,6 +24,20 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- 
-+	am33xx_pinmux: pinmux@44e10800 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&user_leds_s0>;
-+
-+		user_leds_s0: user_leds_s0 {
-+			pinctrl-single,pins = <
-+				0x54 0x7	/* gpmc_a5.gpio1_21, OUTPUT | MODE7 */
-+				0x58 0x17	/* gpmc_a6.gpio1_22, OUTPUT_PULLUP | MODE7 */
-+				0x5c 0x7	/* gpmc_a7.gpio1_23, OUTPUT | MODE7 */
-+				0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
-+			>;
-+		};
-+	};
-+
- 	ocp {
- 		uart1: serial@44e09000 {
- 			status = "okay";
+True, that it has dependency on the work by Praveen Paneri for samsung-usbphy
+driver plus the arch support patches.
+
+This is based on usb-next branch, so the host-code can be taken care of ?
+
+> On top of all that, I have no platform to test these patches, which
+> makes me even more worried about signing off under this series ;-)
+>
+The patches have however been tested. The two patches:
+"USB: ehci-s5p: Add phy driver support",
+"USB: ohci-exynos: Add phy driver support" have been acked by Jingoo Han
+based on the patch-series.
+
+Possibly Kukjin Kim can help on this one.
+
+Kukjin,
+Can we have a thought on this please.
+
+> Would it be ok if we delay this to v3.9 ? At least the dependency with
+> other PHY changes would be dropped by then.
+>
+This changes are almost in shape ;-) and i am updating the next patchset soon.
+If possible can we try to get this in 3.8 please. :-)
+
+> --
+> balbi
+
+
 -- 
-1.7.9.5
-
+Thanks & Regards
+Vivek
