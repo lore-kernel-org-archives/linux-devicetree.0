@@ -1,18 +1,14 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
-Date: Wed, 7 Nov 2012 08:34:44 +1100
-Message-ID: <20121106213444.GJ23553@truffula.fritz.box>
-References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
- <201211021626.50503.vapier@gentoo.org>
- <5097F9D2.2040103@wwwdotorg.org>
- <20121106072656.GF23553@truffula.fritz.box>
- <50994892.1070504@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Tue, 06 Nov 2012 15:37:57 -0700
+Message-ID: <50999145.2070306@wwwdotorg.org>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50994892.1070504-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,70 +19,104 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2012 at 10:27:46AM -0700, Stephen Warren wrote:
-> On 11/06/2012 12:26 AM, David Gibson wrote:
-> > On Mon, Nov 05, 2012 at 10:39:30AM -0700, Stephen Warren wrote:
-> >> On 11/02/2012 02:26 PM, Mike Frysinger wrote:
-> >>> On Tuesday 20 March 2012 22:23:46 Stephen Warren wrote:
-> >>>> On Ubuntu, /bin/sh is dash (at least by default), and dash's echo
-> >>>> doesn't accept the -e option. This means that fdtget-runtest.sh's
-> >>>> EXPECT file will contain "-e foo" rather than just "foo", which
-> >>>> causes a test failure.
-> >>>>
-> >>>> To work around this, run /bin/echo instead of (builtin) echo,
-> >>>> which has more chance of supporting the -e option.
-> >>>>
-> >>>> Another possible fix is to change all the #! lines to /bin/bash
-> >>>> rather than /bin/sh, and change run_tests.sh to invoke
-> >>>> sub-scripts using $SHELL instead of just "sh". However, that
-> >>>> would require bash specifically, which may not be desirable.
-> >>>>
-> >>>> --- a/tests/fdtget-runtest.sh +++ b/tests/fdtget-runtest.sh
-> >>>>
-> >>>> -echo -e $expect >$EXPECT +/bin/echo -e $expect >$EXPECT
-> >>>
-> >>> the better fix is to use printf and %b: printf '%b\n' "$expect" >
-> >>> $EXPECT
-> >>
-> >> What is the relative availability (e.g. on anything other than a
-> >> modern Linux distro) of a printf binary vs. a /bin/echo binary that
-> >> supports -e? I certainly heard about /bin/echo -e long before I knew
-> >> about /usr/bin/printf, although it's quite possible that has no
-> >> correlation with where /usr/bin/printf is actually installed.
-> > 
-> > That's the crux of the matter, really.  I just had a look on a FreeBSD
-> > box I have access to and /bin/echo does *not* support -e, but there is
-> > a printf(1).  So the /bin/echo -e approach is definitely no good,
-> > printf might be but I don't know how widespread it is.
+On 11/05/2012 01:40 PM, Grant Likely wrote:
+> Hey folks,
 > 
-> Out of curiosity, does FreeBSD's sh's built-in echo accept the -e
-> option? In other words, did the switch to /bin/echo break anything
-> there?
+> As promised, here is my early draft to try and capture what device
+> tree overlays need to do and how to get there. Comments and
+> suggestions greatly appreciated.
 
-Yes it does, so yes it does.
+Interesting. This just came up internally at NVIDIA within the last
+couple weeks, and was discussed on the U-Boot mailing list very recently
+too:
 
-> For reference, I just booted my ancient Red Hat 7.3 virtual machine, and
-> it has printf, so I guess it's fairly widely available.
-> 
-> A quick search yields the following:
-> 
-> http://old.nabble.com/Re%3A-portability-of-%27printf%27-command-td28144087.html
-> 
-> which comes to the conclusion that printf is widely available enough to
-> be OK.
-> 
-> Oh, and if you find "Portable Shell Scripting" by Peter Seebach on
-> Google Books or in print, page 18 discusses the portability of printf,
-> and concludes that it's almost pervasive.
+http://lists.denx.de/pipermail/u-boot/2012-October/thread.html#138227
+(it spills into the November archive too)
 
-Ok, good to hear.
+> For these cases it is proposed to implement an overlay feature for the
+> so that the initial device tree data can be modified by userspace at
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+I don't know if you're maintaining this as a document and taking patches
+to it, but if so:
+
+"for the so" split across those two lines.
+
+> Jane solves this problem by storing an FDT overlay for each cape in the
+> root filesystem. When the kernel detects that a cape is installed it
+> reads the cape's eeprom to identify it and uses request_firmware() to
+> obtain the appropriate overlay. Userspace passes the overlay to the
+> kernel in the normal way. If the cape doesn't have an eeprom, then the
+> kernel will still use firmware_request(), but userspace needs to already
+> know which cape is installed.
+
+As mentioned by Pantelis, multiple versions of a board is also very
+common. We already have the following .dts files in the kernel where
+this applies, for the main board even:
+
+arch/arm/boot/dts/tegra30-cardhu.dtsi
+arch/arm/boot/dts/tegra30-cardhu-a02.dts
+arch/arm/boot/dts/tegra30-cardhu-a04.dts
+
+> Summary points:
+
+>   - SHOULD reliably handle changes between different underlying overlays
+>     (ie. what happens to existing .dtb overly files if the structure of
+>     the dtb it is layered over changes. If not possible, then SHALL
+>     detect when the base tree doesn't match and refuse to apply the
+>     overlay.
+
+Perhaps use (versioned) DT bindings to represent the interface between
+the two .dts files? See the links to the U-Boot mailing list discussions
+below?
+
+> - What is the model for overlays?
+>   - Can an overlay modify existing properties?
+>   - Can an overlay add new properties to existing nodes?
+>   - Can an overlay delete existing nodes/properties?
+
+This proposal is very oriented at an overlay-based approach. I'm not
+totally convinced that a pure overlay approach (as in how dtc does
+overlayed DT nodes) will be flexible enough, but would love to be
+persuaded. Again see below.
+
+> It may be sufficient to solve it by making the phandle values less
+> volatile. Right now dtc generates phandles linearly. Generated phandles
+> could be overridden with explicit phandle properties, but it isn't a
+> fantastic solution. Perhaps generating the phandle from a hash of the
+> node name would be sufficient.
+
+Node names don't have to be unique though right; perhaps hash the
+path-name instead of the node-name? But then, why not just reference by
+path name; similar to <{&/path/to/node}> rather than <&label>?
+
+> This handles many of the use cases, but it assumes that an overlay is
+> board specific. If it ever is required to support multiple base boards
+> with a single overlay file then there is a problem. The .dtb overlays
+> generated in this manor cannot handle different phandles or nodes that
+> are in a different place. On the other hand, the overlay source files
+> should have no problem being compiled for multiple targets.
+
+s/manor/manner/
+
+I do rather suspect this use-case is quite common. NVIDIA certainly has
+a bunch of development boards with pluggable
+PMIC/audio/WiFi/display/..., and I believe there's some ability to
+re-use the pluggable components with a variety of base-boards.
+
+Given people within NVIDIA started talking about this recently, I asked
+them to enumerate all the boards we have that support pluggable
+components, and how common it is that some boards support being plugged
+into different main boards. I don't know when that enumeration will
+complete (or even start) but hopefully I can provide some feedback on
+how common the use-case is for us once it's done.
+
+My earlier thoughts on how to support this included explicit
+inter-board/-component connector objects in the .dts files that allow
+"renaming" of GPIOs, I2C buses, regulators, etc.:
+
+http://lists.denx.de/pipermail/u-boot/2012-October/138476.html
+http://lists.denx.de/pipermail/u-boot/2012-November/138925.html
