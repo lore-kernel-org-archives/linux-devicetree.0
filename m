@@ -1,170 +1,79 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] ARM: gic: use a private mapping for CPU target
- interfaces
-Date: Tue, 6 Nov 2012 22:16:51 +0000
-Message-ID: <20121106221651.GE21764@mudshark.cambridge.arm.com>
-References: <1350393709-23546-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1350393709-23546-5-git-send-email-lorenzo.pieralisi@arm.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
+ to mach-omap2)
+Date: Tue, 06 Nov 2012 15:17:58 -0700
+Message-ID: <50998C96.9090601@wwwdotorg.org>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com> <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com> <20121106183531.GH6801@atomide.com> <CA+Bv8XZOt7h3dtDsk1SaR71J3tYFOTsPJSjZLSP3RVuLdYdFDg@mail.gmail.com> <56051C08-3ECF-4C0A-9B88-64B4C1DDDF45@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1350393709-23546-5-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <56051C08-3ECF-4C0A-9B88-64B4C1DDDF45@antoniou-consulting.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Russ Dill <Russ.Dill@ti.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 16, 2012 at 02:21:48PM +0100, Lorenzo Pieralisi wrote:
-> From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> The GIC interface numbering does not necessarily follow the logical
-> CPU numbering, especially for complex topologies such as multi-cluster
-> systems.
-> 
-> Fortunately we can easily probe the GIC to create a mapping as the
-> Interrupt Processor Targets Registers for the first 32 interrupts are
-> read-only, and each field returns a value that always corresponds to
-> the processor reading the register.
-> 
-> Initially all mappings target all CPUs in case an IPI is required to
-> boot secondary CPUs.  It is refined as those CPUs discover what their
-> actual mapping is.
-> 
-> Signed-off-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 11/06/2012 12:41 PM, Pantelis Antoniou wrote:
+> Hi Russ,
+>=20
+> On Nov 6, 2012, at 8:29 PM, Russ Dill wrote:
+>=20
+>> On Tue, Nov 6, 2012 at 10:35 AM, Tony Lindgren <tony@atomide.com> wr=
+ote:
+>>> * Grant Likely <grant.likely@secretlab.ca> [121106 03:16]:
+>>>> On Tue, Nov 6, 2012 at 10:30 AM, Pantelis Antoniou
+>>>> <panto@antoniou-consulting.com> wrote:
+>>>>>
+>>>>> Another can of worms is the pinctrl nodes.
+>>>>
+>>>> Yes... new pinctrl data would need to trigger adding new data to
+>>>> pinctrl. I don't know if the pinctrl api supports that.
+>>>
+>>> The actual pins stay the same, just their configuration
+>>> changes. AFAIK all that is already supported using the
+>>> pinctrl framework.
+>>>
+>>> For example, considering hotplugging capes on the beaglebone:
+=2E..
+>> That assumes that for a particular external bus, certain pins aren't
+>> already shared with functions already on the board, for instance if =
+an
+>> I=B2C bus brought out to the external bus already has a chip connect=
+ed
+>> to it.
+>=20
+> This is our case on the bone. We don't enable the peripheral until
+> a cape that references it is enabled.
+>=20
+> I don't think that very big changes are going to be needed TBH.
+=2E..
+> Ideally if we could do this in the cape definition:
+>=20
+> 	cape_pinmux {
+> 		parent =3D <&am3358_pinmux>;
 
-This is a really neat idea!
+I think the cape overlay would simply add nodes to the existing pin
+controller node, so I'd presume you would replace the two lines
+immediately above with:
 
-> ---
->  arch/arm/common/gic.c | 42 ++++++++++++++++++++++++++++++++++--------
->  1 file changed, 34 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
-> index aa52699..1338a55 100644
-> --- a/arch/arm/common/gic.c
-> +++ b/arch/arm/common/gic.c
-> @@ -70,6 +70,13 @@ struct gic_chip_data {
->  static DEFINE_RAW_SPINLOCK(irq_controller_lock);
->  
->  /*
-> + * The GIC mapping of CPU interfaces does not necessarily match
-> + * the logical CPU numbering.  Let's use a mapping as returned
-> + * by the GIC itself.
-> + */
-> +static u8 gic_cpu_map[8] __read_mostly;
+am3358_pinmux: pinmux {
 
-Can we have a #define for the number CPUs supported by the GIC? It gets
-used a fair amount in this patch for loop bounds etc.
+>=20
+>                 bone_dvi_cape_led_pins: pinmux_bone_dvi_cape_led_pins=
+ {
+>                         pinctrl-single,pins =3D <
+>                                 0x48 0x07       /* gpmc_a2.gpio1_18, =
+OUTPUT | MODE7 */
+>                                 0x4c 0x07       /* gpmc_a3.gpio1_19, =
+OUTPUT | MODE7 */
+>                         >;
+> 	};
+>=20
+>         pinctrl-0 =3D <&bone_geiger_cape_pins>;
 
-> +/*
->   * Supported arch specific GIC irq extension.
->   * Default make them NULL.
->   */
-> @@ -242,7 +249,7 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
->  		return -EINVAL;
->  
->  	mask = 0xff << shift;
-> -	bit = 1 << (cpu_logical_map(cpu) + shift);
-> +	bit = gic_cpu_map[cpu] << shift;
->  
->  	raw_spin_lock(&irq_controller_lock);
->  	val = readl_relaxed(reg) & ~mask;
-> @@ -349,11 +356,6 @@ static void __init gic_dist_init(struct gic_chip_data *gic)
->  	u32 cpumask;
->  	unsigned int gic_irqs = gic->gic_irqs;
->  	void __iomem *base = gic_data_dist_base(gic);
-> -	u32 cpu = cpu_logical_map(smp_processor_id());
-> -
-> -	cpumask = 1 << cpu;
-> -	cpumask |= cpumask << 8;
-> -	cpumask |= cpumask << 16;
->  
->  	writel_relaxed(0, base + GIC_DIST_CTRL);
->  
-> @@ -366,6 +368,7 @@ static void __init gic_dist_init(struct gic_chip_data *gic)
->  	/*
->  	 * Set all global interrupts to this CPU only.
->  	 */
-> +	cpumask = readl_relaxed(base + GIC_DIST_TARGET + 0);
->  	for (i = 32; i < gic_irqs; i += 4)
->  		writel_relaxed(cpumask, base + GIC_DIST_TARGET + i * 4 / 4);
->  
-> @@ -389,9 +392,25 @@ static void __cpuinit gic_cpu_init(struct gic_chip_data *gic)
->  {
->  	void __iomem *dist_base = gic_data_dist_base(gic);
->  	void __iomem *base = gic_data_cpu_base(gic);
-> +	unsigned int cpu_mask, cpu = smp_processor_id();
->  	int i;
->  
->  	/*
-> +	 * Get what the GIC says our CPU mask is.
-> +	 */
-> +	BUG_ON(cpu >= 8);
-> +	cpu_mask = readl_relaxed(dist_base + GIC_DIST_TARGET + 0);
-
-Making the mask a u8 and using readb_relaxed here makes this bit of code
-clearer to me (and the GIC apparently allows such an access to this
-register).
-
-> +	gic_cpu_map[cpu] = cpu_mask;
-> +
-> +	/*
-> +	 * Clear our mask from the other map entries in case they're
-> +	 * still undefined.
-> +	 */
-> +	for (i = 0; i < 8; i++)
-> +		if (i != cpu)
-> +			gic_cpu_map[i] &= ~cpu_mask;
-> +
-> +	/*
->  	 * Deal with the banked PPI and SGI interrupts - disable all
->  	 * PPI interrupts, ensure all SGI interrupts are enabled.
->  	 */
-> @@ -646,7 +665,7 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->  {
->  	irq_hw_number_t hwirq_base;
->  	struct gic_chip_data *gic;
-> -	int gic_irqs, irq_base;
-> +	int gic_irqs, irq_base, i;
->  
->  	BUG_ON(gic_nr >= MAX_GIC_NR);
->  
-> @@ -683,6 +702,13 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->  	}
->  
->  	/*
-> +	 * Initialize the CPU interface map to all CPUs.
-> +	 * It will be refined as each CPU probes its ID.
-> +	 */
-> +	for (i = 0; i < 8; i++)
-> +		gic_cpu_map[i] = 0xff;
-> +
-> +	/*
->  	 * For primary GICs, skip over SGIs.
->  	 * For secondary GICs, skip over PPIs, too.
->  	 */
-> @@ -737,7 +763,7 @@ void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
->  
->  	/* Convert our logical CPU mask into a physical one. */
->  	for_each_cpu(cpu, mask)
-> -		map |= 1 << cpu_logical_map(cpu);
-> +		map |= gic_cpu_map[cpu];
->  
->  	/*
->  	 * Ensure that stores to Normal memory are visible to the
-
-With those changes:
-
-Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-
-Will
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
