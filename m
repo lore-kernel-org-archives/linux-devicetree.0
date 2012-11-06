@@ -1,43 +1,66 @@
-From: "Bedia, Vaibhav" <vaibhav.bedia@ti.com>
-Subject: RE: [PATCH 8/8] ARM: dts: AM33XX: Add PWM backlight DT data to
- am335x-evm
-Date: Tue, 6 Nov 2012 06:46:13 +0000
-Message-ID: <B5906170F1614E41A8A28DE3B8D121433EC04488@DBDE01.ent.ti.com>
-References: <1352106749-9437-1-git-send-email-avinashphilip@ti.com>
- <1352106749-9437-9-git-send-email-avinashphilip@ti.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
+Date: Tue, 6 Nov 2012 18:26:56 +1100
+Message-ID: <20121106072656.GF23553@truffula.fritz.box>
+References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
+ <201211021626.50503.vapier@gentoo.org>
+ <5097F9D2.2040103@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1352106749-9437-9-git-send-email-avinashphilip@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Philip, Avinash" <avinashphilip@ti.com>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "paul@pwsan.com" <paul@pwsan.com>, "tony@atomide.com" <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hiremath,
- Vaibhav" <hvaibhav@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5097F9D2.2040103-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 05, 2012 at 14:42:29, Philip, Avinash wrote:
-[...]
+On Mon, Nov 05, 2012 at 10:39:30AM -0700, Stephen Warren wrote:
+> On 11/02/2012 02:26 PM, Mike Frysinger wrote:
+> > On Tuesday 20 March 2012 22:23:46 Stephen Warren wrote:
+> >> On Ubuntu, /bin/sh is dash (at least by default), and dash's echo
+> >> doesn't accept the -e option. This means that fdtget-runtest.sh's
+> >> EXPECT file will contain "-e foo" rather than just "foo", which
+> >> causes a test failure.
+> >> 
+> >> To work around this, run /bin/echo instead of (builtin) echo,
+> >> which has more chance of supporting the -e option.
+> >> 
+> >> Another possible fix is to change all the #! lines to /bin/bash
+> >> rather than /bin/sh, and change run_tests.sh to invoke
+> >> sub-scripts using $SHELL instead of just "sh". However, that
+> >> would require bash specifically, which may not be desirable.
+> >> 
+> >> --- a/tests/fdtget-runtest.sh +++ b/tests/fdtget-runtest.sh
+> >> 
+> >> -echo -e $expect >$EXPECT +/bin/echo -e $expect >$EXPECT
+> > 
+> > the better fix is to use printf and %b: printf '%b\n' "$expect" >
+> > $EXPECT
+> 
+> What is the relative availability (e.g. on anything other than a
+> modern Linux distro) of a printf binary vs. a /bin/echo binary that
+> supports -e? I certainly heard about /bin/echo -e long before I knew
+> about /usr/bin/printf, although it's quite possible that has no
+> correlation with where /usr/bin/printf is actually installed.
 
-> +	am33xx_pinmux: pinmux@44e10800 {
-> +		ecap0_pins: backlight_pins {
-> +			pinctrl-single,pins = <
-> +				0x164 0x0	/* eCAP0_in_PWM0_out.eCAP0_in_PWM0_out MODE0 */
-> +			>;
-> +		};
-> +	};
-> +
-Ok I see the pinctrl entries here. Shouldn't this be done before
-the change in the driver?
+That's the crux of the matter, really.  I just had a look on a FreeBSD
+box I have access to and /bin/echo does *not* support -e, but there is
+a printf(1).  So the /bin/echo -e approach is definitely no good,
+printf might be but I don't know how widespread it is.
 
-Regards.
-Vaibhav
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
