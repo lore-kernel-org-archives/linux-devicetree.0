@@ -1,10 +1,10 @@
 From: Qing Xu <qingx@marvell.com>
 Subject: [PATCH 4/7] mfd: max8925: support dt for power supply
-Date: Tue,  6 Nov 2012 15:40:18 +0800
-Message-ID: <1352187618-9867-1-git-send-email-qingx@marvell.com>
+Date: Tue,  6 Nov 2012 15:42:44 +0800
+Message-ID: <1352187764-9901-1-git-send-email-qingx@marvell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: qingx@marvell.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: qingx@marvell.com, cbou@mail.ru, dwmw2@infradead.org, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 From: Qing Xu <qingx@marvell.com>
