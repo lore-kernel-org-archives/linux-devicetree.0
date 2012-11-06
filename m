@@ -1,379 +1,725 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: =?UTF-8?q?=5BRFC=20v2=20PATCH=202/2=5D=20mtd=3A=20davinci=20-=20remove=20DaVinci=20architecture=20depedency?=
-Date: Tue, 6 Nov 2012 16:47:07 -0500
-Message-ID: <1352238427-26085-3-git-send-email-m-karicheri2@ti.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: [RFC v2 PATCH 1/2] memory: davinci - add aemif controller platform
+	driver
+Date: Tue, 6 Nov 2012 16:47:06 -0500
+Message-ID: <1352238427-26085-2-git-send-email-m-karicheri2@ti.com>
 References: <1352238427-26085-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1352238427-26085-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, gregkh@linuxfoundation.org, swarren@wwwdotorg.org, hdoyu@nvidia.com, santosh.shilimkar@ti.com
-Cc: Murali Karicheri <m-karicheri2@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1352238427-26085-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DaVinci NAND driver is a controller driver based on the AEMIF hardware
-IP found on TI SoCs. It is also used on SoCs that are not DaVinci based=
-=2E This
-patch removes the driver dependency on DaVinci architecture so that it
-can be used on other architectures such as c6x, keystone etc.
+This is a platform driver for asynchronous external memory interface
+available on TI SoCs. This driver was previously located inside the
+mach-davinci folder. As this DaVinci IP is re-used across multiple
+family of devices such as c6x, keystone etc, the driver is moved to drivers.
+The driver configures async bus parameters associated with a particular
+chip select. For DaVinci NAND controller driver and driver for other async
+devices such as NOR flash, ASRAM etc, the bus confuguration is
+done by this driver at probe. A set of APIs (set/get) are provided to
+update the values based on specific driver usage.
 
-Also migrate the driver to use the new AEMIF platform driver API and
-moving Documentation to Documentation/devicetree/bindings/mtd/davinci-n=
-and.txt
-as this is expected to be used outside of arm/davinci.
+This supports configuration of the bus either through platform_data or
+through DT bindings.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 ---
- .../devicetree/bindings/arm/davinci/nand.txt       |   59 ------------=
--
- .../devicetree/bindings/mtd/davinci-nand.txt       |   59 ++++++++++++=
-+
- drivers/mtd/nand/Kconfig                           |    6 +-
- drivers/mtd/nand/davinci_nand.c                    |   40 ++++-----
- include/linux/platform_data/davinci-nand.h         |   87 ++++++++++++=
-++++++++
- 5 files changed, 166 insertions(+), 85 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/davinci/nand.=
-txt
- create mode 100644 Documentation/devicetree/bindings/mtd/davinci-nand.=
-txt
- create mode 100644 include/linux/platform_data/davinci-nand.h
+ .../devicetree/bindings/memory/davinci-aemif.txt   |  103 +++++
+ drivers/memory/Kconfig                             |   10 +
+ drivers/memory/Makefile                            |    1 +
+ drivers/memory/davinci-aemif.c                     |  479 ++++++++++++++++++++
+ include/linux/platform_data/davinci-aemif.h        |   47 ++
+ 5 files changed, 640 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory/davinci-aemif.txt
+ create mode 100644 drivers/memory/davinci-aemif.c
+ create mode 100644 include/linux/platform_data/davinci-aemif.h
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/D=
-ocumentation/devicetree/bindings/arm/davinci/nand.txt
-deleted file mode 100644
-index 4746452..0000000
---- a/Documentation/devicetree/bindings/arm/davinci/nand.txt
-+++ /dev/null
-@@ -1,59 +0,0 @@
--* Texas Instruments Davinci NAND
--
--This file provides information, what the device node for the
--davinci nand interface contain.
--
--Required properties:
--- compatible: "ti,davinci-nand";
--- reg : contain 2 offset/length values:
--        - offset and length for the access window
--        - offset and length for accessing the aemif control registers
--- ti,davinci-chipselect: Indicates on the davinci_nand driver which
--                         chipselect is used for accessing the nand.
--
--Recommended properties :
--- ti,davinci-mask-ale: mask for ale
--- ti,davinci-mask-cle: mask for cle
--- ti,davinci-mask-chipsel: mask for chipselect
--- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
--		- "none"
--		- "soft"
--		- "hw"
--- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
--- ti,davinci-nand-buswidth: buswidth 8 or 16
--- ti,davinci-nand-use-bbt: use flash based bad block table support.
--
--nand device bindings may contain additional sub-nodes describing
--partitions of the address space. See partition.txt for more detail.
--
--Example (enbw_cmc board):
--aemif@60000000 {
--	compatible =3D "ti,davinci-aemif";
--	#address-cells =3D <2>;
--	#size-cells =3D <1>;
--	reg =3D <0x68000000 0x80000>;
--	ranges =3D <2 0 0x60000000 0x02000000
--		  3 0 0x62000000 0x02000000
--		  4 0 0x64000000 0x02000000
--		  5 0 0x66000000 0x02000000
--		  6 0 0x68000000 0x02000000>;
--	nand@3,0 {
--		compatible =3D "ti,davinci-nand";
--		reg =3D <3 0x0 0x807ff
--			6 0x0 0x8000>;
--		#address-cells =3D <1>;
--		#size-cells =3D <1>;
--		ti,davinci-chipselect =3D <1>;
--		ti,davinci-mask-ale =3D <0>;
--		ti,davinci-mask-cle =3D <0>;
--		ti,davinci-mask-chipsel =3D <0>;
--		ti,davinci-ecc-mode =3D "hw";
--		ti,davinci-ecc-bits =3D <4>;
--		ti,davinci-nand-use-bbt;
--
--		partition@180000 {
--			label =3D "ubifs";
--			reg =3D <0x180000 0x7e80000>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt b/D=
-ocumentation/devicetree/bindings/mtd/davinci-nand.txt
+diff --git a/Documentation/devicetree/bindings/memory/davinci-aemif.txt b/Documentation/devicetree/bindings/memory/davinci-aemif.txt
 new file mode 100644
-index 0000000..4746452
+index 0000000..a79b3ed
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
-@@ -0,0 +1,59 @@
-+* Texas Instruments Davinci NAND
++++ b/Documentation/devicetree/bindings/memory/davinci-aemif.txt
+@@ -0,0 +1,103 @@
++* Texas Instruments Davinci AEMIF bus interface
 +
-+This file provides information, what the device node for the
-+davinci nand interface contain.
++This file provides information for the davinci-emif device and
++async bus bindings.
 +
-+Required properties:
-+- compatible: "ti,davinci-nand";
-+- reg : contain 2 offset/length values:
-+        - offset and length for the access window
-+        - offset and length for accessing the aemif control registers
-+- ti,davinci-chipselect: Indicates on the davinci_nand driver which
-+                         chipselect is used for accessing the nand.
++Required properties:=
++- compatible: "ti,davinci-aemif";
++- #address-cells : Should be either two or three.  The first cell is the
++                   chipselect number, and the remaining cells are the
++                   offset into the chipselect.
++- #size-cells : Either one or two, depending on how large each chipselect
++                can be.
++- reg : contains offset/length value for AEMIF control registers space
++- ranges : Each range corresponds to a single chipselect, and cover
++           the entire access window as configured.
 +
-+Recommended properties :
-+- ti,davinci-mask-ale: mask for ale
-+- ti,davinci-mask-cle: mask for cle
-+- ti,davinci-mask-chipsel: mask for chipselect
-+- ti,davinci-ecc-mode: ECC mode valid values for davinci driver:
-+		- "none"
-+		- "soft"
-+		- "hw"
-+- ti,davinci-ecc-bits: used ECC bits, currently supported 1 or 4.
-+- ti,davinci-nand-buswidth: buswidth 8 or 16
-+- ti,davinci-nand-use-bbt: use flash based bad block table support.
++Child device nodes describe the devices connected to IFC such as NOR (e.g.
++cfi-flash) and NAND (ti,davinci-nand, see Documentation/devicetree/bindings/
++mtd/davinci-nand.txt). There might be board specific devices like FPGAs.
 +
-+nand device bindings may contain additional sub-nodes describing
-+partitions of the address space. See partition.txt for more detail.
++In addition, optional child sub nodes contains bindings for the async bus
++interface for a given chip select.
 +
-+Example (enbw_cmc board):
++Optional cs node properties:-
++- compatible: "ti,davinci-cs"
++
++  All of the params below in nanoseconds and are optional
++
++- ti,davinci-cs-asize - asynchronous data bus width (0 - 8bit, 1 - 16 bit)
++- ti,davinci-cs-ta - Minimum turn around time
++- ti,davinci-cs-rhold - read hold width
++- ti,davinci-cs-rstobe - read strobe width
++- ti,davinci-cs-rsetup - read setup width
++- ti,davinci-cs-whold - write hold width
++- ti,davinci-cs-wstrobe - write strobe width
++- ti,davinci-cs-wsetup - write setup width
++- ti,davinci-cs-ss - enable/disable select strobe (0 - disable, 1 - enable)
++- ti,davinci-cs-ew - enable/disable extended wait cycles (0 - disable, 1 - enable)
++
++if any of the above parameters are absent, hardware register default or that
++set by a boot loader are used.
++
++Example for aemif, davinci nand and nor flash chip select shown below.
++
 +aemif@60000000 {
-+	compatible =3D "ti,davinci-aemif";
-+	#address-cells =3D <2>;
-+	#size-cells =3D <1>;
-+	reg =3D <0x68000000 0x80000>;
-+	ranges =3D <2 0 0x60000000 0x02000000
++	compatible = "ti,davinci-aemif";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	reg = <0x68000000 0x80000>;
++	ranges = <2 0 0x60000000 0x02000000
 +		  3 0 0x62000000 0x02000000
 +		  4 0 0x64000000 0x02000000
 +		  5 0 0x66000000 0x02000000
 +		  6 0 0x68000000 0x02000000>;
-+	nand@3,0 {
-+		compatible =3D "ti,davinci-nand";
-+		reg =3D <3 0x0 0x807ff
-+			6 0x0 0x8000>;
-+		#address-cells =3D <1>;
-+		#size-cells =3D <1>;
-+		ti,davinci-chipselect =3D <1>;
-+		ti,davinci-mask-ale =3D <0>;
-+		ti,davinci-mask-cle =3D <0>;
-+		ti,davinci-mask-chipsel =3D <0>;
-+		ti,davinci-ecc-mode =3D "hw";
-+		ti,davinci-ecc-bits =3D <4>;
-+		ti,davinci-nand-use-bbt;
 +
-+		partition@180000 {
-+			label =3D "ubifs";
-+			reg =3D <0x180000 0x7e80000>;
-+		};
++	nand_cs:cs2@60000000 {
++		compatible = "ti,davinci-cs";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		/* all timings in nanoseconds */
++		ti,davinci-cs-ta = <0>;
++		ti,davinci-cs-rhold = <7>;
++		ti,davinci-cs-rstrobe = <42>;
++		ti,davinci-cs-rsetup = <14>;
++		ti,davinci-cs-whold = <7>;
++		ti,davinci-cs-wstrobe = <42>;
++		ti,davinci-cs-wsetup = <14>;
++	};
++
++	nor_cs:cs3@62000000 {
++		compatible = "ti,davinci-cs";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		/* all timings in nanoseconds */
++		ti,davinci-cs-ta = <0>;
++		ti,davinci-cs-rhold = <7>;
++		ti,davinci-cs-rstrobe = <42>;
++		ti,davinci-cs-rsetup = <14>;
++		ti,davinci-cs-whold = <7>;
++		ti,davinci-cs-wstrobe = <42>;
++		ti,davinci-cs-wsetup = <14>;
++		ti,davinci-cs-asize = <1>;
++	};
++
++	nand@3,0 {
++		compatible = "ti,davinci-nand";
++		reg = <3 0x0 0x807ff
++			6 0x0 0x8000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		.. See Documentation/devicetree/bindings/mtd/davinci-nand.txt
++	};
++
++	flash@2,0 {
++		compatible = "cfi-flash";
++		reg = <2 0x0 0x400000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		bank-width = <2>;
++		device-width = <2>;
 +	};
 +};
-diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
-index 8ca4176..390cc95 100644
---- a/drivers/mtd/nand/Kconfig
-+++ b/drivers/mtd/nand/Kconfig
-@@ -569,11 +569,11 @@ config MTD_NAND_SH_FLCTL
- 	  for NAND Flash using FLCTL.
-=20
- config MTD_NAND_DAVINCI
--        tristate "Support NAND on DaVinci SoC"
--        depends on ARCH_DAVINCI
-+        tristate "Support NAND on SoCs with AEMIF"
-+	select TI_DAVINCI_AEMIF
-         help
- 	  Enable the driver for NAND flash chips on Texas Instruments
--	  DaVinci processors.
-+	  SoCs that has Asynchronous External Memory Interface (AEMIF).
-=20
- config MTD_NAND_TXX9NDFMC
- 	tristate "NAND Flash support for TXx9 SoC"
-diff --git a/drivers/mtd/nand/davinci_nand.c b/drivers/mtd/nand/davinci=
-_nand.c
-index 321b053..306959e 100644
---- a/drivers/mtd/nand/davinci_nand.c
-+++ b/drivers/mtd/nand/davinci_nand.c
-@@ -35,8 +35,8 @@
- #include <linux/slab.h>
- #include <linux/of_device.h>
-=20
--#include <mach/nand.h>
--#include <mach/aemif.h>
-+#include <linux/platform_data/davinci-nand.h>
-+#include <linux/platform_data/davinci-aemif.h>
-=20
- /*
-  * This is a device driver for the NAND flash controller found on the
-@@ -73,7 +73,7 @@ struct davinci_nand_info {
-=20
- 	uint32_t		core_chipsel;
-=20
--	struct davinci_aemif_timing	*timing;
-+	struct davinci_aemif_cs_data	*cs_data;
- };
-=20
- static DEFINE_SPINLOCK(davinci_nand_lock);
-@@ -652,7 +652,6 @@ static int __init nand_davinci_probe(struct platfor=
-m_device *pdev)
- 	info->chip.options	=3D pdata->options;
- 	info->chip.bbt_td	=3D pdata->bbt_td;
- 	info->chip.bbt_md	=3D pdata->bbt_md;
--	info->timing		=3D pdata->timing;
-=20
- 	info->ioaddr		=3D (uint32_t __force) vaddr;
-=20
-@@ -731,26 +730,21 @@ static int __init nand_davinci_probe(struct platf=
-orm_device *pdev)
- 		goto err_clk_enable;
- 	}
-=20
--	/*
--	 * Setup Async configuration register in case we did not boot from
--	 * NAND and so bootloader did not bother to set it up.
--	 */
--	val =3D davinci_nand_readl(info, A1CR_OFFSET + info->core_chipsel * 4=
-);
--
--	/* Extended Wait is not valid and Select Strobe mode is not used */
--	val &=3D ~(ACR_ASIZE_MASK | ACR_EW_MASK | ACR_SS_MASK);
--	if (info->chip.options & NAND_BUSWIDTH_16)
--		val |=3D 0x1;
-+	if (info->chip.options & NAND_BUSWIDTH_16) {
-+		info->cs_data =3D
-+			davinci_aemif_get_abus_params(info->core_chipsel);
-+		if (info->cs_data =3D=3D NULL)
-+			goto err_bus_config;
-=20
--	davinci_nand_writel(info, A1CR_OFFSET + info->core_chipsel * 4, val);
-+		/* asize =3D 1 for 16bit bus */
-+		info->cs_data->asize =3D 1;
-+		ret =3D davinci_aemif_set_abus_params(info->core_chipsel,
-+						info->cs_data);
-=20
--	ret =3D 0;
--	if (info->timing)
--		ret =3D davinci_aemif_setup_timing(info->timing, info->base,
--							info->core_chipsel);
--	if (ret < 0) {
--		dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
--		goto err_timing;
-+		if (ret < 0) {
-+			dev_dbg(&pdev->dev, "NAND timing values setup fail\n");
-+			goto err_bus_config;
-+		}
- 	}
-=20
- 	spin_lock_irq(&davinci_nand_lock);
-@@ -841,7 +835,7 @@ syndrome_done:
- 	return 0;
-=20
- err_scan:
--err_timing:
-+err_bus_config:
- 	clk_disable_unprepare(info->clk);
-=20
- err_clk_enable:
-diff --git a/include/linux/platform_data/davinci-nand.h b/include/linux=
-/platform_data/davinci-nand.h
+diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+index 067f311..2636a95 100644
+--- a/drivers/memory/Kconfig
++++ b/drivers/memory/Kconfig
+@@ -40,4 +40,14 @@ config TEGRA30_MC
+ 	  analysis, especially for IOMMU/SMMU(System Memory Management
+ 	  Unit) module.
+ 
++config TI_DAVINCI_AEMIF
++	bool "Texas Instruments DaVinci AEMIF driver"
++	help
++	  This driver is for the AEMIF module available in Texas Instruments
++	  SoCs. AEMIF stands for Asynchronous External Memory Interface and
++	  is intended to provide a glue-less interface to a variety of
++	  asynchronuous memory devices like ASRAM, NOR and NAND memory. A total
++	  of 256M bytes of any of these memories can be accessed at a given
++	  time via four chip selects with 64M byte access per chip select.
++
+ endif
+diff --git a/drivers/memory/Makefile b/drivers/memory/Makefile
+index 42b3ce9..246aa61 100644
+--- a/drivers/memory/Makefile
++++ b/drivers/memory/Makefile
+@@ -5,3 +5,4 @@
+ obj-$(CONFIG_TI_EMIF)		+= emif.o
+ obj-$(CONFIG_TEGRA20_MC)	+= tegra20-mc.o
+ obj-$(CONFIG_TEGRA30_MC)	+= tegra30-mc.o
++obj-$(CONFIG_TI_DAVINCI_AEMIF)	+= davinci-aemif.o
+diff --git a/drivers/memory/davinci-aemif.c b/drivers/memory/davinci-aemif.c
 new file mode 100644
-index 0000000..df1fc66
+index 0000000..27a6995
 --- /dev/null
-+++ b/include/linux/platform_data/davinci-nand.h
-@@ -0,0 +1,87 @@
++++ b/drivers/memory/davinci-aemif.c
+@@ -0,0 +1,479 @@
 +/*
-+ * mach-davinci/nand.h
++ * AEMIF support for DaVinci SoCs
 + *
-+ * Copyright =C2=A9 2006 Texas Instruments.
++ * Copyright (C) 2010 Texas Instruments Incorporated. http://www.ti.com/
++ * Copyright (C) Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 + *
-+ * Ported to 2.6.23 Copyright =C2=A9 2008 by
-+ *   Sander Huijsen <Shuijsen@optelecom-nkf.com>
-+ *   Troy Kisky <troy.kisky@boundarydevices.com>
-+ *   Dirk Behme <Dirk.Behme@gmail.com>
-+ *
-+ * -------------------------------------------------------------------=
--------
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License as published b=
-y
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#ifndef __ARCH_ARM_DAVINCI_NAND_H
-+#define __ARCH_ARM_DAVINCI_NAND_H
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_data/davinci-aemif.h>
++#include <linux/platform_device.h>
++#include <linux/time.h>
 +
-+#include <linux/mtd/nand.h>
++#define TA_SHIFT	2
++#define RHOLD_SHIFT	4
++#define RSTROBE_SHIFT	7
++#define RSETUP_SHIFT	13
++#define WHOLD_SHIFT	17
++#define WSTROBE_SHIFT	20
++#define WSETUP_SHIFT	26
++#define EW_SHIFT	30
++#define SS_SHIFT	31
 +
-+#define NANDFCR_OFFSET		0x60
-+#define NANDFSR_OFFSET		0x64
-+#define NANDF1ECC_OFFSET	0x70
++#define TA(x)		((x) << TA_SHIFT)
++#define RHOLD(x)	((x) << RHOLD_SHIFT)
++#define RSTROBE(x)	((x) << RSTROBE_SHIFT)
++#define RSETUP(x)	((x) << RSETUP_SHIFT)
++#define WHOLD(x)	((x) << WHOLD_SHIFT)
++#define WSTROBE(x)	((x) << WSTROBE_SHIFT)
++#define WSETUP(x)	((x) << WSETUP_SHIFT)
++#define EW(x)		((x) << EW_SHIFT)
++#define SS(x)		((x) << SS_SHIFT)
 +
-+/* 4-bit ECC syndrome registers */
-+#define NAND_4BIT_ECC_LOAD_OFFSET	0xbc
-+#define NAND_4BIT_ECC1_OFFSET		0xc0
-+#define NAND_4BIT_ECC2_OFFSET		0xc4
-+#define NAND_4BIT_ECC3_OFFSET		0xc8
-+#define NAND_4BIT_ECC4_OFFSET		0xcc
-+#define NAND_ERR_ADD1_OFFSET		0xd0
-+#define NAND_ERR_ADD2_OFFSET		0xd4
-+#define NAND_ERR_ERRVAL1_OFFSET		0xd8
-+#define NAND_ERR_ERRVAL2_OFFSET		0xdc
++#define ASIZE_MAX	0x1
++#define TA_MAX		0x3
++#define RHOLD_MAX	0x7
++#define RSTROBE_MAX	0x3f
++#define RSETUP_MAX	0xf
++#define WHOLD_MAX	0x7
++#define WSTROBE_MAX	0x3f
++#define WSETUP_MAX	0xf
++#define EW_MAX		0x1
++#define SS_MAX		0x1
++#define NUM_CS		4
 +
-+/* NOTE:  boards don't need to use these address bits
-+ * for ALE/CLE unless they support booting from NAND.
-+ * They're used unless platform data overrides them.
-+ */
-+#define	MASK_ALE		0x08
-+#define	MASK_CLE		0x10
++#define TA_VAL(x)	(((x) & TA(TA_MAX)) >> TA_SHIFT)
++#define RHOLD_VAL(x)	(((x) & RHOLD(RHOLD_MAX)) >> RHOLD_SHIFT)
++#define RSTROBE_VAL(x)	(((x) & RSTROBE(RSTROBE_MAX)) >> RSTROBE_SHIFT)
++#define RSETUP_VAL(x)	(((x) & RSETUP(RSETUP_MAX)) >> RSETUP_SHIFT)
++#define WHOLD_VAL(x)	(((x) & WHOLD(WHOLD_MAX)) >> WHOLD_SHIFT)
++#define WSTROBE_VAL(x)	(((x) & WSTROBE(WSTROBE_MAX)) >> WSTROBE_SHIFT)
++#define WSETUP_VAL(x)	(((x) & WSETUP(WSETUP_MAX)) >> WSETUP_SHIFT)
++#define EW_VAL(x)	(((x) & EW(EW_MAX)) >> EW_SHIFT)
++#define SS_VAL(x)	(((x) & SS(SS_MAX)) >> SS_SHIFT)
 +
-+struct davinci_nand_pdata {		/* platform_data */
-+	uint32_t		mask_ale;
-+	uint32_t		mask_cle;
 +
-+	/* for packages using two chipselects */
-+	uint32_t		mask_chipsel;
++#define CONFIG_MASK	(TA(TA_MAX) | \
++				RHOLD(RHOLD_MAX) | \
++				RSTROBE(RSTROBE_MAX) |	\
++				RSETUP(RSETUP_MAX) | \
++				WHOLD(WHOLD_MAX) | \
++				WSTROBE(WSTROBE_MAX) | \
++				WSETUP(WSETUP_MAX) | \
++				EW(EW_MAX) | SS(SS_MAX) | \
++				ASIZE_MAX)
 +
-+	/* board's default static partition info */
-+	struct mtd_partition	*parts;
-+	unsigned		nr_parts;
++#define DRV_NAME "davinci-aemif"
 +
-+	/* none  =3D=3D NAND_ECC_NONE (strongly *not* advised!!)
-+	 * soft  =3D=3D NAND_ECC_SOFT
-+	 * else  =3D=3D NAND_ECC_HW, according to ecc_bits
-+	 *
-+	 * All DaVinci-family chips support 1-bit hardware ECC.
-+	 * Newer ones also support 4-bit ECC, but are awkward
-+	 * using it with large page chips.
-+	 */
-+	nand_ecc_modes_t	ecc_mode;
-+	u8			ecc_bits;
-+
-+	/* e.g. NAND_BUSWIDTH_16 */
-+	unsigned		options;
-+	/* e.g. NAND_BBT_USE_FLASH */
-+	unsigned		bbt_options;
-+
-+	/* Main and mirror bbt descriptor overrides */
-+	struct nand_bbt_descr	*bbt_td;
-+	struct nand_bbt_descr	*bbt_md;
++struct aemif_device {
++	struct davinci_aemif_pdata *cfg;
++	void __iomem *base;
++	struct clk *clk;
++	/* clock rate in KHz */
++	unsigned long clk_rate;
 +};
 +
-+#endif	/* __ARCH_ARM_DAVINCI_NAND_H */
---=20
++static struct aemif_device *aemif;
++/**
++ * aemif_calc_rate - calculate timing data.
++ * @wanted: The cycle time needed in nanoseconds.
++ * @clk: The input clock rate in kHz.
++ * @max: The maximum divider value that can be programmed.
++ *
++ * On success, returns the calculated timing value minus 1 for easy
++ * programming into AEMIF timing registers, else negative errno.
++ */
++static int aemif_calc_rate(int wanted, unsigned long clk, int max)
++{
++	int result;
++
++	result = DIV_ROUND_UP((wanted * clk), NSEC_PER_MSEC) - 1;
++
++	pr_debug("%s: result %d from %ld, %d\n", __func__, result, clk, wanted);
++
++	/* It is generally OK to have a more relaxed timing than requested... */
++	if (result < 0)
++		result = 0;
++
++	/* ... But configuring tighter timings is not an option. */
++	else if (result > max)
++		result = -EINVAL;
++
++	return result;
++}
++
++/**
++ * davinci_aemif_config_abus - configure async bus parameters given
++ * AEMIF interface
++ * @cs: chip-select to program the timing values for
++ * @data: aemif chip select configuration
++ * @base: aemif io mapped configuration base
++ *
++ * This function programs the given timing values (in real clock) into the
++ * AEMIF registers taking the AEMIF clock into account.
++ *
++ * This function does not use any locking while programming the AEMIF
++ * because it is expected that there is only one user of a given
++ * chip-select.
++ *
++ * Returns 0 on success, else negative errno.
++ */
++static int davinci_aemif_config_abus(unsigned int cs,
++				void __iomem *base,
++				struct davinci_aemif_cs_data *data)
++{
++	int ta, rhold, rstrobe, rsetup, whold, wstrobe, wsetup;
++	unsigned offset = A1CR_OFFSET + cs * 4;
++	u32 set, val;
++
++	if (!data)
++		return -EINVAL;
++
++	ta	= aemif_calc_rate(data->ta, aemif->clk_rate, TA_MAX);
++	rhold	= aemif_calc_rate(data->rhold, aemif->clk_rate, RHOLD_MAX);
++	rstrobe	= aemif_calc_rate(data->rstrobe, aemif->clk_rate, RSTROBE_MAX);
++	rsetup	= aemif_calc_rate(data->rsetup, aemif->clk_rate, RSETUP_MAX);
++	whold	= aemif_calc_rate(data->whold, aemif->clk_rate, WHOLD_MAX);
++	wstrobe	= aemif_calc_rate(data->wstrobe, aemif->clk_rate, WSTROBE_MAX);
++	wsetup	= aemif_calc_rate(data->wsetup, aemif->clk_rate, WSETUP_MAX);
++
++	if (ta < 0 || rhold < 0 || rstrobe < 0 || rsetup < 0 ||
++			whold < 0 || wstrobe < 0 || wsetup < 0) {
++		pr_err("%s: cannot get suitable timings\n", __func__);
++		return -EINVAL;
++	}
++
++	set = TA(ta) | RHOLD(rhold) | RSTROBE(rstrobe) | RSETUP(rsetup) |
++		WHOLD(whold) | WSTROBE(wstrobe) | WSETUP(wsetup);
++
++	set |= (data->asize & ACR_ASIZE_MASK);
++	if (data->enable_ew)
++		set |= ACR_EW_MASK;
++	if (data->enable_ss)
++		set |= ACR_SS_MASK;
++
++	val = readl(aemif->base + offset);
++	val &= ~CONFIG_MASK;
++	val |= set;
++	writel(val, aemif->base + offset);
++
++	return 0;
++}
++
++inline int aemif_cycles_to_nsec(int val)
++{
++	return (val * NSEC_PER_MSEC) / aemif->clk_rate;
++}
++
++/**
++ * davinci_aemif_get_hw_params - function to read hw register values
++ * @cs: chip select
++ * @data: ptr to cs data
++ *
++ * This function reads the defaults from the registers and update
++ * the timing values. Required for get/set commands and also for
++ * the case when driver needs to use defaults in hardware.
++ */
++static void davinci_aemif_get_hw_params(int cs,
++		struct davinci_aemif_cs_data *data)
++{
++	u32 val, offset = A1CR_OFFSET + cs * 4;
++
++	val = readl(aemif->base + offset);
++	data->ta = aemif_cycles_to_nsec(TA_VAL(val));
++	data->rhold = aemif_cycles_to_nsec(RHOLD_VAL(val));
++	data->rstrobe = aemif_cycles_to_nsec(RSTROBE_VAL(val));
++	data->rsetup = aemif_cycles_to_nsec(RSETUP_VAL(val));
++	data->whold = aemif_cycles_to_nsec(WHOLD_VAL(val));
++	data->wstrobe = aemif_cycles_to_nsec(WSTROBE_VAL(val));
++	data->wsetup = aemif_cycles_to_nsec(WSETUP_VAL(val));
++	data->enable_ew = EW_VAL(val);
++	data->enable_ss = SS_VAL(val);
++	data->asize = val & ASIZE_MAX;
++}
++
++/**
++ * get_cs_data - helper function to get bus configuration data for a given cs
++ * @cs: chip-select, values 2-5
++ */
++static struct davinci_aemif_cs_data *get_cs_data(int cs)
++{
++	int i;
++
++	for (i = 0; i < aemif->cfg->num_cs; i++) {
++		if (cs == aemif->cfg->cs_data[i].cs)
++			break;
++	}
++
++	if (i == aemif->cfg->num_cs)
++		return NULL;
++
++	return &aemif->cfg->cs_data[i];
++}
++
++/**
++ * davinci_aemif_set_abus_params - Set bus configuration data for a given cs
++ * @cs: chip-select, values 2-5
++ * @data: ptr to a struct to hold the configuration data to be set
++ *
++ * This function is called to configure emif bus parameters for a given cs.
++ * Users call this function after calling davinci_aemif_get_abus_params()
++ * to get current parameters, modify and call this function
++ */
++int davinci_aemif_set_abus_params(unsigned int cs,
++			struct davinci_aemif_cs_data *data)
++{
++	struct davinci_aemif_cs_data *curr_cs_data;
++	int ret = -EINVAL, chip_cs;
++
++	if (data == NULL)
++		return ret;
++
++	if (aemif->base == NULL)
++		return ret;
++
++	/* translate to chip CS which starts at 2 */
++	chip_cs = cs + 2;
++
++	curr_cs_data = get_cs_data(chip_cs);
++	if (curr_cs_data) {
++		/* for configuration we use cs since it is used to index ACR */
++		ret = davinci_aemif_config_abus(chip_cs, aemif->base, data);
++		if (!ret) {
++			*curr_cs_data = *data;
++			return 0;
++		}
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL(davinci_aemif_set_abus_params);
++
++/**
++ * davinci_aemif_get_abus_params - Get bus configuration data for a given cs
++ * @cs: chip-select, values 2-5
++ * returns: ptr to a struct having the current configuration data
++ */
++struct davinci_aemif_cs_data *davinci_aemif_get_abus_params(unsigned int cs)
++{
++	/* translate to chip CS which starts at 2 */
++	return get_cs_data(cs + 2);
++}
++EXPORT_SYMBOL(davinci_aemif_get_abus_params);
++
++#if defined(CONFIG_OF)
++/**
++ * dv_get_value - helper function to read a attribute valye
++ * @np: device node ptr
++ * @name: name of the attribute
++ * returns: value of the attribute
++ */
++static int dv_get_value(struct device_node *np, const char *name)
++{
++	u32 data;
++	int ret = -EINVAL;
++
++	ret = of_property_read_u32(np, name, &data);
++	if (ret != 0)
++		return ret;
++
++	return data;
++}
++
++/**
++ * of_davinci_aemif_parse_abus_config - parse bus config data from a cs node
++ * @np: device node ptr
++ *
++ * This function update the emif async bus configuration based on the values
++ * configured in a cs device binding node.
++ */
++static int of_davinci_aemif_parse_abus_config(struct device_node *np)
++{
++	struct davinci_aemif_cs_data *data;
++	unsigned long cs;
++	int val;
++
++	if (kstrtoul(np->name + 2, 10, &cs) < 0)
++		return -EINVAL;
++
++	if (cs < 2 || cs >= NUM_CS)
++		return -EINVAL;
++
++	if (aemif->cfg->num_cs >= NUM_CS)
++		return -EINVAL;
++
++	data = &aemif->cfg->cs_data[aemif->cfg->num_cs++];
++	data->cs = cs;
++
++	/* read the current value in the hw register */
++	davinci_aemif_get_hw_params(cs - 2, data);
++
++	/* override the values from device node */
++	val = dv_get_value(np, "davinci-cs-ta");
++	if (val >= 0)
++		data->ta = val;
++	val = dv_get_value(np, "davinci-cs-rhold");
++	if (val >= 0)
++		data->rhold	= val;
++	val = dv_get_value(np, "davinci-cs-rstrobe");
++	if (val >= 0)
++		data->rstrobe = val;
++	val = dv_get_value(np, "davinci-cs-rsetup");
++	if (val >= 0)
++		data->rsetup = val;
++	val = dv_get_value(np, "davinci-cs-whold");
++	if (val >= 0)
++		data->whold = val;
++	val = dv_get_value(np, "davinci-cs-wstrobe");
++	if (val >= 0)
++		data->wstrobe = val;
++	val = dv_get_value(np, "davinci-cs-wsetup");
++	if (val >= 0)
++		data->wsetup = val;
++	val = dv_get_value(np, "davinci-cs-asize");
++	if (val >= 0)
++		data->asize = val;
++	val = dv_get_value(np, "davinci-cs-ew");
++	if (val >= 0)
++		data->enable_ew	= val;
++	val = dv_get_value(np, "davinci-cs-ss");
++	if (val >= 0)
++		data->enable_ss	= val;
++	return 0;
++}
++#endif
++
++static const struct of_device_id davinci_aemif_of_match[] __devinitconst = {
++	{ .compatible = "ti,davinci-aemif", },
++	{},
++};
++
++static const struct of_device_id davinci_cs_of_match[] __devinitconst = {
++	{ .compatible = "ti,davinci-cs", },
++	{},
++};
++
++/**
++ * of_davinci_aemif_cs_init - init cs data based on cs device nodes
++ * @np: device node ptr
++ *
++ * For every controller device node, there is a cs device node that
++ * describe the bus configuration parameters. This functions iterate
++ * over these nodes and update the cs data array.
++ */
++static int of_davinci_aemif_cs_init(struct device_node *aemif_np)
++{
++	struct device_node *np = aemif_np;
++
++	/* cs nodes are optional. So just return success */
++	if (!np)
++		return 0;
++
++	for_each_matching_node(np, davinci_cs_of_match)
++		of_davinci_aemif_parse_abus_config(np);
++	return 0;
++}
++
++static int __devinit davinci_aemif_probe(struct platform_device *pdev)
++{
++	struct davinci_aemif_pdata *cfg;
++	int ret  = -ENODEV, i;
++	struct resource *res;
++
++	aemif = devm_kzalloc(&pdev->dev, sizeof(*aemif), GFP_KERNEL);
++
++	if (!aemif)
++		return -ENOMEM;
++
++	aemif->clk = clk_get(NULL, "aemif");
++	if (IS_ERR(aemif->clk))
++		return PTR_ERR(aemif->clk);
++
++	clk_prepare_enable(aemif->clk);
++	aemif->clk_rate = clk_get_rate(aemif->clk) / 1000;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		pr_err("No IO memory address defined\n");
++		goto error;
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++
++	aemif->base = devm_request_and_ioremap(&pdev->dev, res);
++	if (!aemif->base) {
++		ret = -EBUSY;
++		pr_err("ioremap failed\n");
++		goto error;
++	}
++
++	if (pdev->dev.platform_data == NULL) {
++		/* Not platform data, we get the cs data from the cs nodes */
++		cfg = devm_kzalloc(&pdev->dev, sizeof(*cfg), GFP_KERNEL);
++		if (cfg == NULL)
++			return -ENOMEM;
++
++		aemif->cfg = cfg;
++		if (of_davinci_aemif_cs_init(pdev->dev.of_node) < 0) {
++			pr_err("No platform data or cs of node present\n");
++			goto error;
++		}
++	} else {
++		cfg = pdev->dev.platform_data;
++		aemif->cfg = cfg;
++	}
++
++	for (i = 0; i < cfg->num_cs; i++) {
++		/* cs is from 2-5. Internally we use cs-2 to access ACR */
++		ret = davinci_aemif_config_abus(cfg->cs_data[i].cs - 2,
++				aemif->base, &cfg->cs_data[i]);
++		if (ret < 0) {
++			pr_err("Error configuring chip select %d\n",
++				cfg->cs_data[i].cs);
++			goto error;
++		}
++	}
++	return 0;
++error:
++	clk_disable_unprepare(aemif->clk);
++	clk_put(aemif->clk);
++	return ret;
++}
++
++static struct platform_driver davinci_aemif_driver = {
++	.probe = davinci_aemif_probe,
++	.driver = {
++		.name = DRV_NAME,
++		.owner = THIS_MODULE,
++		.of_match_table = davinci_aemif_of_match,
++	},
++};
++
++static int __init davinci_aemif_init(void)
++{
++	return platform_driver_register(&davinci_aemif_driver);
++}
++subsys_initcall(davinci_aemif_init);
++
++static void __exit davinci_aemif_exit(void)
++{
++	clk_disable_unprepare(aemif->clk);
++	clk_put(aemif->clk);
++	platform_driver_unregister(&davinci_aemif_driver);
++}
++module_exit(davinci_aemif_exit);
++
++MODULE_AUTHOR("Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>");
++MODULE_DESCRIPTION("Texas Instruments AEMIF driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" DRV_NAME);
+diff --git a/include/linux/platform_data/davinci-aemif.h b/include/linux/platform_data/davinci-aemif.h
+new file mode 100644
+index 0000000..03f3ad0
+--- /dev/null
++++ b/include/linux/platform_data/davinci-aemif.h
+@@ -0,0 +1,47 @@
++/*
++ * TI DaVinci AEMIF support
++ *
++ * Copyright 2010 (C) Texas Instruments, Inc. http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2. This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++#ifndef _MACH_DAVINCI_AEMIF_H
++#define _MACH_DAVINCI_AEMIF_H
++
++#define NRCSR_OFFSET		0x00
++#define AWCCR_OFFSET		0x04
++#define A1CR_OFFSET		0x10
++
++#define ACR_ASIZE_MASK		0x3
++#define ACR_EW_MASK		BIT(30)
++#define ACR_SS_MASK		BIT(31)
++#define ASIZE_16BIT		1
++
++struct davinci_aemif_cs_data {
++	u8	cs;
++	u16	wstrobe;
++	u16	rstrobe;
++	u8	wsetup;
++	u8	whold;
++	u8	rsetup;
++	u8	rhold;
++	u8	ta;
++	u8	enable_ss;
++	u8	enable_ew;
++	u8	asize;
++};
++
++struct davinci_aemif_pdata {
++	u8	num_cs;
++	struct davinci_aemif_cs_data cs_data[4];
++};
++
++/* API to Get current Asynchrnous emif bus parameters */
++struct davinci_aemif_cs_data *davinci_aemif_get_abus_params(unsigned int cs);
++
++/* API to Set current Asynchrnous emif bus parameters */
++int davinci_aemif_set_abus_params(unsigned int cs,
++			struct davinci_aemif_cs_data *data);
++#endif
+-- 
 1.7.9.5
-
