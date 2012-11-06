@@ -1,124 +1,116 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] ARM: Exynos5250: Enabling dwc3-exynos driver
-Date: Tue, 6 Nov 2012 18:43:05 +0200
-Message-ID: <20121106164304.GD3993@arwen.pp.htv.fi>
-References: <1352215729-11703-1-git-send-email-gautam.vivek@samsung.com>
- <1352215729-11703-2-git-send-email-gautam.vivek@samsung.com>
-Reply-To: <balbi@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] usb: musb: dsps: dt binding - add resources, example
+Date: Tue, 6 Nov 2012 18:44:45 +0200
+Message-ID: <20121106164445.GE3993@arwen.pp.htv.fi>
+References: <1352210166-7253-1-git-send-email-afzal@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="VdOwlNaOFKGAtAAV"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1352215729-11703-2-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, av.tikhomirov@samsung.com, yulgon.kim@samsung.com, thomas.abraham@linaro.org, p.paneri@samsung.com
+In-Reply-To: <1352210166-7253-1-git-send-email-afzal-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Santhapuri Damodar <damodar.santhapuri-l0cyMroinI0@public.gmane.org>, Ravi Babu <ravibabu-l0cyMroinI0@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---mSxgbZZZvrAyzONB
+--VdOwlNaOFKGAtAAV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 06, 2012 at 08:58:49PM +0530, Vivek Gautam wrote:
-> Adding DWC3 device tree node for Exynos5250 along with the
-> device address and clock support needed for the controller.
+Hi,
+
+On Tue, Nov 06, 2012 at 07:26:06PM +0530, Afzal Mohammed wrote:
+> OMAP2+ family of devices are now obtaining resources via DT, earlier
+> it was obtained from hwmod. Update binding document accrodingly, while
+> at it add example.
 >=20
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+
+this looks fine to me:
+
+Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+
+Benoit, do you take Documentation patches too ?
+
 > ---
->  arch/arm/boot/dts/exynos5250.dtsi       |    6 ++++++
->  arch/arm/mach-exynos/clock-exynos5.c    |   24 ++++++++++++++++++++++++
->  arch/arm/mach-exynos/include/mach/map.h |    1 +
->  arch/arm/mach-exynos/mach-exynos5-dt.c  |    2 ++
->  drivers/usb/Kconfig                     |    1 +
->  5 files changed, 34 insertions(+), 0 deletions(-)
 >=20
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos=
-5250.dtsi
-> index cf6a02d..52bca54 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -68,6 +68,12 @@
->  		interrupts =3D <0 96 0>;
->  	};
-> =20
-> +	dwc3 {
-
-shouldn't this be usb@12000000 ??
-
-> +		compatible =3D "samsung,exynos-dwc3";
-> +		reg =3D <0x12000000 0x10000>;
-> +		interrupts =3D <0 72 0>;
-> +	};
+> v2: node name changed to "usb"
+>=20
+>  .../devicetree/bindings/usb/am33xx-usb.txt          | 21 +++++++++++++++=
+++++++
+>  1 file changed, 21 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Docum=
+entation/devicetree/bindings/usb/am33xx-usb.txt
+> index a922505..ea840f7 100644
+> --- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
+> @@ -1,5 +1,7 @@
+>  AM33XX MUSB GLUE
+>   - compatible : Should be "ti,musb-am33xx"
+> + - reg : offset and length of register sets, first usbss, then for musb =
+instances
+> + - interrupts : usbss, musb instance interrupts in order
+>   - ti,hwmods : must be "usb_otg_hs"
+>   - multipoint : Should be "1" indicating the musb controller supports
+>     multipoint. This is a MUSB configuration-specific setting.
+> @@ -12,3 +14,22 @@ AM33XX MUSB GLUE
+>     represents PERIPHERAL.
+>   - power : Should be "250". This signifies the controller can supply upto
+>     500mA when operating in host mode.
 > +
->  	rtc {
->  		compatible =3D "samsung,s3c6410-rtc";
->  		reg =3D <0x101E0000 0x100>;
-> diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/=
-clock-exynos5.c
-> index a88e0d9..ee094ee 100644
-> --- a/arch/arm/mach-exynos/clock-exynos5.c
-> +++ b/arch/arm/mach-exynos/clock-exynos5.c
-> @@ -740,6 +740,11 @@ static struct clk exynos5_init_clocks_off[] =3D {
->  		.enable		=3D exynos5_clk_ip_fsys_ctrl ,
->  		.ctrlbit	=3D (1 << 18),
->  	}, {
-> +		.name		=3D "usbdrd30",
-> +		.parent		=3D &exynos5_clk_aclk_200.clk,
-> +		.enable		=3D exynos5_clk_ip_fsys_ctrl,
-> +		.ctrlbit	=3D (1 << 19),
-> +	}, {
->  		.name		=3D "usbotg",
->  		.enable		=3D exynos5_clk_ip_fsys_ctrl,
->  		.ctrlbit	=3D (1 << 7),
-> @@ -1004,6 +1009,16 @@ struct clksrc_sources exynos5_clkset_group =3D {
->  	.nr_sources	=3D ARRAY_SIZE(exynos5_clkset_group_list),
->  };
-> =20
-> +struct clk *exynos5_clkset_usbdrd30_list[] =3D {
-> +	[0] =3D &exynos5_clk_mout_mpll.clk,
-> +	[1] =3D &exynos5_clk_mout_cpll.clk,
-
-looks like [0] and [1] indexes are unnecessary ?!? Not sure about
-mach-exynos' preferred array initialization style, though ;-)
-
-> diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
-> index 4c90b51..0454b8a 100644
-> --- a/drivers/usb/Kconfig
-> +++ b/drivers/usb/Kconfig
-> @@ -53,6 +53,7 @@ config USB_ARCH_HAS_EHCI
->  # some non-PCI HCDs implement xHCI
->  config USB_ARCH_HAS_XHCI
->  	boolean
-> +	default y if ARCH_EXYNOS5
-
-NAK, this should be done on your arch/arm/mach-exynos/Kconfig. Just
-select USB_ARCH_HAS_XHCI.
+> +Example:
+> +
+> +usb@47400000  {
+> +	compatible =3D "ti,musb-am33xx";
+> +	reg =3D <0x47400000 0x1000	/* usbss */
+> +	       0x47401000 0x800		/* musb instance 0 */
+> +	       0x47401800 0x800>;	/* musb instance 1 */
+> +	interrupts =3D <17		/* usbss */
+> +		      18		/* musb instance 0 */
+> +		      19>;		/* musb instance 1 */
+> +	multipoint =3D <1>;
+> +	num-eps =3D <16>;
+> +	ram-bits =3D <12>;
+> +	port0-mode =3D <3>;
+> +	port1-mode =3D <3>;
+> +	power =3D <250>;
+> +	ti,hwmods =3D "usb_otg_hs";
+> +};
+> --=20
+> 1.7.12
+>=20
 
 --=20
 balbi
 
---mSxgbZZZvrAyzONB
+--VdOwlNaOFKGAtAAV
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQmT4YAAoJEIaOsuA1yqREiZ0P/RlocdGNvhhI0Tt6JTm0nyEU
-YEsT50lz8Qb+gcOs9/nHqUpVJa2F8a6fo438QoBmTVyEf+xyzTIDE8Wy/F2ZcIJI
-hsqgQqC+urBM9K47YVkFLZbwM/6ISAF2qKkRHpseNykybdahR2xWlNRhfiCaLA9+
-hNbfQHH3SFFcEajR/x/heYjsG1DDytOkVZO0hq4FLW0r+ZVzQNOFcmYGiEbFhM+2
-fwmlg+3HlkCBMpktnaSMyeIbejutPAyn/Fmoegy/HSzRkQp/pHBz+uOKOVPzB9W+
-iEb4g7mkHiLkhB2b4g2EKP4VriT6OzyCbZVTD7QwmPqEoAUKPW9Tn0nMTmWkLv+a
-nWed+NSCIe7p4RElNZQR7LHE8FyTcMuz76bVDq4irKtZrcrDL/ghNh3B3IH/xLlN
-YPLpK6bDOIwDixMj4nasit+iJjPXzIfN8A47X3Oag9NLFZh1bck6069fOxsxmUJm
-DyCoD3PmWfphJkSwZAbjsM9OqZlZKJR5PD6uaQp7G1I/V/TowavAISYJlh4f7v3y
-ATXFvlgBUH8uFxFug1E3iT/Ke0Mrbao4+omvLNtXsnRBj158YBxxqEc/yiWG/Wx2
-97Xt2BEN3e7SN2LYB9hIF7kRa2yz2otLMeKQhNxiECAke1w9a9ypuDmeYd9LoZqi
-OrCMTGxx2SWRCXLVWzep
-=EzPA
+iQIcBAEBAgAGBQJQmT59AAoJEIaOsuA1yqREVkEP/R4FP39QR4XBy80kqIGrdGOC
+xCRBgBWuYG0WMlX0mHMf2kmKODucs/wVTUuBMmmxq6DUyI6zZHTDyRIhwM0n7A0c
+vOkkXqgfCxLr8E49S8UoYSoWHcTQbd8e+TNOhudHoln7d+AtJ/GxvkZnaaW/BGM2
+jG7wMbphBh28lOYCqrf32S8ntG99xzq/T75YrSJUJnuDTlt+f17sbuYmPYSTx2pL
+6+yD5G0eo02N4YVyXXCGeie0QwbQpAANbcJWlrRed/hlj8laqmF0WwMl0Zrh1kTu
+2uHUfuwKWzlpuI0mnwiCxEP24OuQvDXliHoyg90CMWTUIKJzPlIAcxIDJclxlvhN
+Ze9zRL7unjjJRQq3OR0IC4AtaiBrjhWgrBhuxfFCwbTGFjGO2f8MZueb2eP0NLaL
+5qAscsGCvRctAVuFGdxWy2oLIJoaDQKr5ztlh9oVJdt0jbdFACUR1nZt1b3cICZ3
+ft8yhKbJ0Ry+RklhGf7JYZO7sp5QF2Lv7KstZm1LCX78+jlJcXkCAwOGIGLnXMF5
+CgSDYlapsgexjt+dkSlDorVgC8+9clclDQIle29AeRV5N9c+MCBe7NIG75wA8KWs
+AoI4P1yec/JOFDVOWh/0K4I9mZVvfp6NFNRNWSyQOB2Z5K7EoXmCCK6i0uqSRsGN
+SQr4HjRHTL5ZQ3RKd/lr
+=wPeN
 -----END PGP SIGNATURE-----
 
---mSxgbZZZvrAyzONB--
+--VdOwlNaOFKGAtAAV--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
