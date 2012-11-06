@@ -1,85 +1,77 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2] usb: musb: dsps: dt binding - add resources, example
-Date: Tue, 6 Nov 2012 17:58:57 +0100
-Message-ID: <509941D1.6020405@ti.com>
-References: <1352210166-7253-1-git-send-email-afzal@ti.com> <20121106164445.GE3993@arwen.pp.htv.fi>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] fdtget-runtest.sh: Fix failures when /bin/sh isn't bash
+Date: Tue, 06 Nov 2012 10:27:46 -0700
+Message-ID: <50994892.1070504@wwwdotorg.org>
+References: <1332296626-19707-1-git-send-email-swarren@wwwdotorg.org>
+ <201211021626.50503.vapier@gentoo.org> <5097F9D2.2040103@wwwdotorg.org>
+ <20121106072656.GF23553@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20121106164445.GE3993@arwen.pp.htv.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Afzal Mohammed <afzal@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Santhapuri Damodar <damodar.santhapuri@ti.com>, Ravi Babu <ravibabu@ti.com>, Daniel Mack <zonque@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121106072656.GF23553-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2012 05:44 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Tue, Nov 06, 2012 at 07:26:06PM +0530, Afzal Mohammed wrote:
->> OMAP2+ family of devices are now obtaining resources via DT, earlier
->> it was obtained from hwmod. Update binding document accrodingly, while
->> at it add example.
+On 11/06/2012 12:26 AM, David Gibson wrote:
+> On Mon, Nov 05, 2012 at 10:39:30AM -0700, Stephen Warren wrote:
+>> On 11/02/2012 02:26 PM, Mike Frysinger wrote:
+>>> On Tuesday 20 March 2012 22:23:46 Stephen Warren wrote:
+>>>> On Ubuntu, /bin/sh is dash (at least by default), and dash's echo
+>>>> doesn't accept the -e option. This means that fdtget-runtest.sh's
+>>>> EXPECT file will contain "-e foo" rather than just "foo", which
+>>>> causes a test failure.
+>>>>
+>>>> To work around this, run /bin/echo instead of (builtin) echo,
+>>>> which has more chance of supporting the -e option.
+>>>>
+>>>> Another possible fix is to change all the #! lines to /bin/bash
+>>>> rather than /bin/sh, and change run_tests.sh to invoke
+>>>> sub-scripts using $SHELL instead of just "sh". However, that
+>>>> would require bash specifically, which may not be desirable.
+>>>>
+>>>> --- a/tests/fdtget-runtest.sh +++ b/tests/fdtget-runtest.sh
+>>>>
+>>>> -echo -e $expect >$EXPECT +/bin/echo -e $expect >$EXPECT
+>>>
+>>> the better fix is to use printf and %b: printf '%b\n' "$expect" >
+>>> $EXPECT
 >>
->> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+>> What is the relative availability (e.g. on anything other than a
+>> modern Linux distro) of a printf binary vs. a /bin/echo binary that
+>> supports -e? I certainly heard about /bin/echo -e long before I knew
+>> about /usr/bin/printf, although it's quite possible that has no
+>> correlation with where /usr/bin/printf is actually installed.
 > 
-> this looks fine to me:
-> 
-> Reviewed-by: Felipe Balbi <balbi@ti.com>
-> 
-> Benoit, do you take Documentation patches too ?
+> That's the crux of the matter, really.  I just had a look on a FreeBSD
+> box I have access to and /bin/echo does *not* support -e, but there is
+> a printf(1).  So the /bin/echo -e approach is definitely no good,
+> printf might be but I don't know how widespread it is.
 
-Well, ideally it should go with the driver change. But if this is a
-simple change related to generic attribute I can take it.
+Out of curiosity, does FreeBSD's sh's built-in echo accept the -e
+option? In other words, did the switch to /bin/echo break anything there?
 
-Regards,
-Benoit
+For reference, I just booted my ancient Red Hat 7.3 virtual machine, and
+it has printf, so I guess it's fairly widely available.
 
-> 
->> ---
->>
->> v2: node name changed to "usb"
->>
->>  .../devicetree/bindings/usb/am33xx-usb.txt          | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
->> index a922505..ea840f7 100644
->> --- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
->> @@ -1,5 +1,7 @@
->>  AM33XX MUSB GLUE
->>   - compatible : Should be "ti,musb-am33xx"
->> + - reg : offset and length of register sets, first usbss, then for musb instances
->> + - interrupts : usbss, musb instance interrupts in order
->>   - ti,hwmods : must be "usb_otg_hs"
->>   - multipoint : Should be "1" indicating the musb controller supports
->>     multipoint. This is a MUSB configuration-specific setting.
->> @@ -12,3 +14,22 @@ AM33XX MUSB GLUE
->>     represents PERIPHERAL.
->>   - power : Should be "250". This signifies the controller can supply upto
->>     500mA when operating in host mode.
->> +
->> +Example:
->> +
->> +usb@47400000  {
->> +	compatible = "ti,musb-am33xx";
->> +	reg = <0x47400000 0x1000	/* usbss */
->> +	       0x47401000 0x800		/* musb instance 0 */
->> +	       0x47401800 0x800>;	/* musb instance 1 */
->> +	interrupts = <17		/* usbss */
->> +		      18		/* musb instance 0 */
->> +		      19>;		/* musb instance 1 */
->> +	multipoint = <1>;
->> +	num-eps = <16>;
->> +	ram-bits = <12>;
->> +	port0-mode = <3>;
->> +	port1-mode = <3>;
->> +	power = <250>;
->> +	ti,hwmods = "usb_otg_hs";
->> +};
->> -- 
->> 1.7.12
->>
-> 
+A quick search yields the following:
 
+http://old.nabble.com/Re%3A-portability-of-%27printf%27-command-td28144087.html
+
+which comes to the conclusion that printf is widely available enough to
+be OK.
+
+Oh, and if you find "Portable Shell Scripting" by Peter Seebach on
+Google Books or in print, page 18 discusses the portability of printf,
+and concludes that it's almost pervasive.
