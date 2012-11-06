@@ -1,220 +1,115 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: [PATCH 7/7] mfd: max8925: add dts
-Date: Tue,  6 Nov 2012 15:49:40 +0800
-Message-ID: <1352188180-10028-1-git-send-email-qingx@marvell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: qingx@marvell.com, linux@arm.linux.org.uk, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH 5/7] arm/dts: am33xx: Add CPSW and MDIO module nodes for AM33XX
+Date: Tue, 6 Nov 2012 13:42:23 +0530
+Message-ID: <1352189545-26303-6-git-send-email-mugunthanvnm@ti.com>
+References: <1352189545-26303-1-git-send-email-mugunthanvnm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1352189545-26303-1-git-send-email-mugunthanvnm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>, Vaibhav Hiremath <hvaibhav@ti.com>, Richard Cochran <richardcochran@gmail.com>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Qing Xu <qingx@marvell.com>
+Add CPSW and MDIO related device tree data for AM33XX.
+Also enable them into board/evm dts files by providing
+respective phy-id.
 
-add max8925 dts support into mmp2 brownstone platform
-
-Signed-off-by: Qing Xu <qingx@marvell.com>
+Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
 ---
- arch/arm/boot/dts/mmp2-brownstone.dts |  166 +++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/mmp2.dtsi           |    4 +-
- 2 files changed, 169 insertions(+), 1 deletions(-)
+ arch/arm/boot/dts/am335x-bone.dts |    8 +++++++
+ arch/arm/boot/dts/am335x-evm.dts  |    8 +++++++
+ arch/arm/boot/dts/am33xx.dtsi     |   42 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 58 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
-index c9b4f27..e22f58c 100644
---- a/arch/arm/boot/dts/mmp2-brownstone.dts
-+++ b/arch/arm/boot/dts/mmp2-brownstone.dts
-@@ -29,6 +29,172 @@
- 			};
- 			twsi1: i2c@d4011000 {
- 				status = "okay";
-+				pmic: max8925@3c {
-+					compatible = "marvell,max8925";
-+					reg = <0x3c>;
-+					interrupts = <1 0>;
-+					interrupt-parent = <&intcmux4>;
-+					interrupt-controller;
-+					#interrupt-cells = <1>;
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index c634f87..e233cfa 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -78,3 +78,11 @@
+ 		};
+ 	};
+ };
 +
-+					regulators {
-+						SDV1 {
-+							regulator-min-microvolt = <637500>;
-+							regulator-max-microvolt = <1425000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						SDV2 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2225000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						SDV3 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO1 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO2 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO3 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO4 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO5 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO6 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO7 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO8 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO9 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO10 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+						};
-+						LDO11 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO12 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO13 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO14 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO15 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO16 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO17 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO18 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO19 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO20 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+					};
-+					backlight {
-+						dual-string = <0>;
-+					};
-+					charger {
-+						batt-detect = <0>;
-+						topoff-threshold = <1>;
-+						fast-charge = <7>;
-+						no-temp-support = <0>;
-+						no-insert-detect = <0>;
-+					};
-+					rtc {
++&cpsw_emac0 {
++	phy_id = "4a101000.mdio:00";
++};
 +
-+					};
-+					onkey {
++&cpsw_emac1 {
++	phy_id = "4a101000.mdio:01";
++};
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 185d632..415c3b3 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -118,3 +118,11 @@
+ 		};
+ 	};
+ };
 +
-+					};
-+					touch {
++&cpsw_emac0 {
++	phy_id = "4a101000.mdio:00";
++};
 +
-+					};
-+				};
- 			};
- 			rtc: rtc@d4010000 {
- 				status = "okay";
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 80f74e2..2165a17 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -41,7 +41,7 @@
- 				mrvl,intc-nr-irqs = <64>;
- 			};
- 
--			intcmux4@d4282150 {
-+			intcmux4: intcmux4@d4282150 {
- 				compatible = "mrvl,mmp2-mux-intc";
- 				interrupts = <4>;
- 				interrupt-controller;
-@@ -196,6 +196,8 @@
- 				compatible = "mrvl,mmp-twsi";
- 				reg = <0xd4011000 0x1000>;
- 				interrupts = <7>;
++&cpsw_emac1 {
++	phy_id = "4a101000.mdio:01";
++};
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index bb31bff..2a0c8fe 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -210,5 +210,47 @@
+ 			interrupt-parent = <&intc>;
+ 			interrupts = <91>;
+ 		};
++
++		mac: ethernet@4A100000 {
++			compatible = "ti,cpsw";
++			ti,hwmods = "cpgmac0";
++			cpdma_channels = <8>;
++			ale_entries = <1024>;
++			bd_ram_size = <0x2000>;
++			no_bd_ram = <0>;
++			rx_descs = <64>;
++			mac_control = <0x20>;
++			slaves = <2>;
++			cpts_active_slave = <0>;
++			cpts_clock_mult = <0x80000000>;
++			cpts_clock_shift = <29>;
++			reg = <0x4a100000 0x800
++				0x4a101200 0x100
++				0x4a101000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			interrupt-parent = <&intc>;
++			/* c0_rx_thresh_pend c0_rx_pend c0_tx_pend c0_misc_pend*/
++			interrupts = <40 41 42 43>;
++			ranges;
++			cpsw_emac0: slave@0 {
++				phy_id = "davinci_mdio.16:00";
++				/* Filled in by U-Boot */
++				mac-address = [ 00 00 00 00 00 00 ];
++			};
++			cpsw_emac1: slave@1 {
++				/* Filled in by U-Boot */
++				mac-address = [ 00 00 00 00 00 00 ];
++			};
++
++			davinci_mdio: mdio@4a101000 {
++				compatible = "ti,davinci_mdio";
 +				#address-cells = <1>;
 +				#size-cells = <0>;
- 				mrvl,i2c-fast-mode;
- 				status = "disabled";
- 			};
++				ti,hwmods = "davinci_mdio";
++				bus_freq = <1000000>;
++				reg = <0x4a101000 0x100>;
++			};
++		};
+ 	};
+ };
 -- 
 1.7.0.4
+
