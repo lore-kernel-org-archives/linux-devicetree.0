@@ -1,117 +1,60 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [RFC PATCH 1/2] memory: davinci - add aemif controller platform
- driver
-Date: Tue, 6 Nov 2012 13:30:21 -0500
-Message-ID: <5099573D.2090707@ti.com>
-References: <1351873278-27325-1-git-send-email-m-karicheri2@ti.com> <1351873278-27325-2-git-send-email-m-karicheri2@ti.com> <50941960.3060407@wwwdotorg.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Tue, 6 Nov 2012 10:35:32 -0800
+Message-ID: <20121106183531.GH6801@atomide.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+ <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50941960.3060407@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, b32955@freescale.com, shubhrajyoti@ti.com, wim@iguana.be, hs@denx.de, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, hdoyu@nvidia.com, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2012 03:05 PM, Stephen Warren wrote:
-> On 11/02/2012 10:21 AM, Murali Karicheri wrote:
->> This is a platform driver for asynchronous external memory interface
->> available on TI SoCs. This driver was previously located inside the
->> mach-davinci folder. As this DaVinci IP is re-used across multiple
->> family of devices such as c6x, keystone etc, the driver is moved to drivers.
->> The driver configures async bus parameters associated with a particular
->> chip select. For DaVinci controller driver and driver for other async
->> devices such as NOR flash, ASRAM etc, the bus confuguration is
->> done by this driver at init time. A set of APIs (set/get) provided to
->> update the values based on specific driver usage.
->> +++ b/Documentation/devicetree/bindings/arm/davinci/aemif.txt
-> If the HW/binding is generic, I'd assume the documentation would be
-> place somewhere more like
-> Documentation/devicetree/bindings/memory/davinci-aemif.txt?
-Thanks for your comments.
+* Grant Likely <grant.likely@secretlab.ca> [121106 03:16]:
+> On Tue, Nov 6, 2012 at 10:30 AM, Pantelis Antoniou
+> <panto@antoniou-consulting.com> wrote:
+> >
+> > Another can of worms is the pinctrl nodes.
+> 
+> Yes... new pinctrl data would need to trigger adding new data to
+> pinctrl. I don't know if the pinctrl api supports that.
 
-I think this is a generic driver that should be re-usable across 
-multiple architectures such as arm, c6x and other new SoCs from TI that 
-uses the AEMIF IP. AEMIF IP can be configured on a per chip select 
-basis.  There will be nand controller, NOR flash and other async devices 
-on this bus. So cs bindings for each of this device will be a sub node 
-under thie aemif device. AEMIF driver iterate over the cs sub nodes and 
-configure the bus.
+The actual pins stay the same, just their configuration
+changes. AFAIK all that is already supported using the
+pinctrl framework.
 
-Let me post the complete bindings in the next revision so that this will 
-be more clear and we can discuss it based on that. I will also move the 
-nand documentation to a generic place and refer the bindings inside the 
-aemif documentation. I will address some of the comments below in my 
-next revision of the patch, but some of the comments discussion will 
-have to be deferred to version v2 of the patch.
+For example, considering hotplugging capes on the beaglebone:
 
-Murali
->> @@ -0,0 +1,62 @@
->> +* Texas Instruments Davinci AEMIF bus interface
->> +
->> +This file provides information for the davinci-emif chip select
->> +bindings.
-> Shouldn't the binding be for an IP block (the AEMIF bus controller I
-> assume), rather than for a particular chip-select generated by the
-> controller?
-AEMIF has multiple functions such as it functions as a NAND controller, 
-it provides interfaces to async devices. The bus is configured using the 
-CS sub node inside the aemif device node (compatible ti, davinci-emif).
+1. You need to map all the sensible modes for the pins exposed
+   to the capes in the board specific .dts file. This will
+   add roughly 4 x nr_capbus_pins named modes in the .dts file
+   so not too bad.
 
->> +This is a sub device node inside the davinci-emif device node
->> +to describe a async bus for a specific chip select. For NAND,
->> +CFI flash device bindings described inside an aemif node,
->> +etc, a cs sub node is defined to associate the bus parameter
->> +bindings used by the device.
-> Oh, this file only documents part of the controller's node? It seems
-> unusual to do that; the documentation for an entire node would usually
-> be in a single file, which seems to be
-> Documentation/devicetree/bindings/arm/davinci/nand.txt right now. Is
-> this "cs" sub-node really something that gets re-used across multiple
-> different memory controller IPs?
->
-> If so, I guess this file should be called something more like
-> davinci-aemif-cs.txt than davinci-aemif.txt. I'd suggest moving
-> arm/davinci/nand.txt into a common location too (and renaming it to
-> davici-nand.txt to better represent the compatible value it documents).
->
->> +Required properties:=
->> +- compatible: "ti,davinci-cs";
->> +- #address-cells = <1>;
->> +- #size-cells = <1>;
->> +- cs - cs used by the device (NAND, CFI flash etc. values in the range: 2-5
->> +
->> +Optional properties:-
->> +- asize - asynchronous data bus width (0 - 8bit, 1 - 16 bit)
->> +  All of the params below in nanoseconds
->> +
->> +- ta - Minimum turn around time
->> +- rhold - read hold width
->> +- rstobe - read strobe width
->> +- rsetup - read setup width
->> +- whold - write hold width
->> +- wstrobe - write strobe width
->> +- wsetup - write setup width
->> +- ss - enable/disable select strobe (0 - disable, 1 - enable)
->> +- ew - enable/disable extended wait cycles (0 - disable, 1 - enable)
-> I assume all of those are pretty custom to this binding, and not
-> something you'd expect to re-use across multiple vendors' bindings? If
-> so, shouldn't they have a "ti," vendor prefix?
->
->> +Example for davinci nand chip select
->> +
->> +aemif@60000000 {
->> +
->> +	compatible = "ti,davinci-aemif";
-> You need a reg property here.
->
->> +	#address-cells = <2>;
->> +	#size-cells = <1>;
->> +
->> +	nand_cs:cs2@70000000 {
->> +		compatible = "ti,davinci-cs";
-> You need a reg property here. The unit address "@70000000" in the node
-> name only has one address cell, whereas the parent node sets
-> #address-cells = <2>.
+2. Claim all the capebus pins during the capbus driver probe
+   and set them to some safe mode.
 
+3. Try to detect the connected cape(s) over i2c.
+
+4. Use pinctr_select_state to set the desired modes for
+   the pins used by the cape(s).
+
+5. Enable capebus regulators and clocks etc.
+
+6. Load the driver modules for whatever omap internal
+   devices the cape supports.
+
+You could also claim the pin for the omap internal
+devices instead of claiming them in the capebus, but then
+things can get messy with binding and unbinding the
+drivers. So just claiming all the pins in the capebus
+probably keeps things simpler.
+
+Regards,
+
+Tony
