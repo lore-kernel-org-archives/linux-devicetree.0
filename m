@@ -1,40 +1,45 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 0/7] ARM: AM33XX: net: Add DT support to CPGMAC and
- MDIO driver
-Date: Tue, 6 Nov 2012 11:40:42 +0100
-Message-ID: <20121106104042.GA10955@netboy.at.omicron.at>
-References: <1352189545-26303-1-git-send-email-mugunthanvnm@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH] ARM: dts: exynos4: Add support for Exynos4x12 SoCs
+Date: Tue, 06 Nov 2012 19:52:16 +0900
+Message-ID: <0be601cdbc0c$c97a7e50$5c6f7af0$%kim@samsung.com>
+References: <1351089359-7318-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352189545-26303-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1351089359-7318-1-git-send-email-t.figa@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2012 at 01:42:18PM +0530, Mugunthan V N wrote:
-> This patch-series adds support for,
+Tomasz Figa wrote:
 > 
-> [1/7]: Typo mistake in CPSW driver while invoking runtime_pm api's
+> This patch adds device tree sources for Exynos4x12 SoC series (currently
+> Exynos4212 and Exynos4412) and enables mach-exynos4-dt to support these
+> SoCs.
 > 
-> [2/7]: Adds parent<->child relation between CPSW & MDIO module inside cpsw
->        driver, as in case of AM33XX, the resources are shared and common
->        register bit-field is provided to control module/clock enable/disable,
->        makes it difficult to handle common resource.
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4212.dtsi      | 28 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos4412.dtsi      | 28 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos4x12.dtsi      | 31
+> +++++++++++++++++++++++++++++++
+>  arch/arm/mach-exynos/mach-exynos4-dt.c |  2 ++
+>  4 files changed, 89 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/exynos4212.dtsi
+>  create mode 100644 arch/arm/boot/dts/exynos4412.dtsi
+>  create mode 100644 arch/arm/boot/dts/exynos4x12.dtsi
 > 
->        So the solution here is, to create parent<->child relation between them.
-> 
-> [3/7]: Add hwmod entry for MDIO module, required for MDIO driver.
-> 
-> [4/7]: cpsw: simplify the setup of the register pointers
-> 
-> [5/7]: Add DT device nodes for both CPSW and MDIO modules in am33xx.dtsi,
->        am335x-evm.dts and am335x-bone.dts file
-> 
-> [6/7]: Enable CPSW support to omap2plus_defconfig
-> 
-> [7/7]: cpsw: Kernel warn fix during suspend
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Looks good to me, applied.
+
+Thanks.
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
