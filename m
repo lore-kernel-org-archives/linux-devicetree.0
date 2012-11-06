@@ -1,111 +1,77 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH] ARM: dts: add board dts file for Exynos4412 based SMDK
- board
-Date: Tue, 06 Nov 2012 20:28:13 +0900
-Message-ID: <0bef01cdbc11$cf1bbd60$6d533820$%kim@samsung.com>
-References: <1351954172-13645-1-git-send-email-thomas.abraham@linaro.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [RFC patch v3 3/4] ASoC: atmel-ssc-dai: register dai and pcm
+ directly
+Date: Tue, 6 Nov 2012 12:39:08 +0100
+Message-ID: <20121106113908.GC10080@opensource.wolfsonmicro.com>
+References: <1352181474-19597-1-git-send-email-voice.shen@atmel.com>
+ <1352181474-19597-3-git-send-email-voice.shen@atmel.com>
+ <20121106084814.GC5044@opensource.wolfsonmicro.com>
+ <5098D930.8030403@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1351954172-13645-1-git-send-email-thomas.abraham@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, chaos.youn@samsung.com, t.figa@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RIYY1s2vRbPFwWeW"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5098D930.8030403@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com
 List-Id: devicetree@vger.kernel.org
 
-Thomas Abraham wrote:
-> 
-> Add a minimal board dts file for Samsung Exynos4412 based SMDK board.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
-> This patch depends the on the following patch posted by Tomasz Figa.
-> "ARM: dts: exynos4: Add support for Exynos4x12 SoCs"
-> 
->  arch/arm/boot/dts/Makefile                |    1 +
->  arch/arm/boot/dts/exynos4412-smdk4412.dts |   45
-> +++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+), 0 deletions(-)
->  create mode 100644 arch/arm/boot/dts/exynos4412-smdk4412.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index f37cf9f..36488a5 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -23,6 +23,7 @@ dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
->  dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->  	exynos4210-smdkv310.dtb \
->  	exynos4210-trats.dtb \
-> +	exynos4412-smdk4412.dtb \
->  	exynos5250-smdk5250.dtb
->  dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb
->  dtb-$(CONFIG_ARCH_INTEGRATOR) += integratorap.dtb \
-> diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts
-> b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-> new file mode 100644
-> index 0000000..f05bf57
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-> @@ -0,0 +1,45 @@
-> +/*
-> + * Samsung's Exynos4412 based SMDK board device tree source
-> + *
-> + * Copyright (c) 2012-2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * Device tree source file for Samsung's SMDK4412 board which is based on
-> + * Samsung's Exynos4412 SoC.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +/include/ "exynos4412.dtsi"
-> +
-> +/ {
-> +	model = "Samsung SMDK evaluation board based on Exynos4412";
-> +	compatible = "samsung,smdk4412", "samsung,exynos4412";
-> +
-> +	memory {
-> +		reg = <0x40000000 0x40000000>;
-> +	};
-> +
-> +	chosen {
-> +		bootargs ="root=/dev/ram0 rw ramdisk=8192
-> initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
-> +	};
-> +
-> +	serial@13800000 {
-> +		status = "okay";
-> +	};
-> +
-> +	serial@13810000 {
-> +		status = "okay";
-> +	};
-> +
-> +	serial@13820000 {
-> +		status = "okay";
-> +	};
-> +
-> +	serial@13830000 {
-> +		status = "okay";
-> +	};
-> +};
-> --
-> 1.6.6.rc2
 
-Looks good to me, will apply.
+--RIYY1s2vRbPFwWeW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-BTW, its default console is ttySAC1 not ttySAC2?
+On Tue, Nov 06, 2012 at 05:32:32PM +0800, Bo Shen wrote:
+> On 11/6/2012 16:48, Mark Brown wrote:
+> >On Tue, Nov 06, 2012 at 01:57:53PM +0800, Bo Shen wrote:
 
-Thanks.
+> >No, this isn't converting things to device tree which presumably is the
+> >goal here and obviously just doing the rename doesn't accomplish an
+> >enormous amount.  What I said was that you should instantiate the ASoC
+> >adaption when the machine driver needs to use them.  You shouldn't even
+> >need a separate device for this.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+> Maybe this is not the best solution, but just abstract audio as a
+> separate device. The other's still keep as a ssc library.
+
+It's not abstracting things, that's the whole problem.  It's putting the
+internals of how the Linux audio stack is organised into the device
+tree.  The point is that the SSC should be a library to all users.
+
+> >Please do look at other platforms with similar hardware and do something
+> >similar to them.
+
+> I take some reference (e.g: freescale, marvell, invidia soc, this
+> RFC implement is similar with them), but don't find the similar
+> hardware with us. Please help provide the information who's HW is
+> similar with us. Thanks.
+
+A *huge* range of SoCs have generic serial ports - off the top of my
+head this includes at least OMAP, PXA and Freescale.  The same issue
+also applies to DMA controllers which affects almost all SoCs.
+
+--RIYY1s2vRbPFwWeW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQmPbBAAoJELSic+t+oim9nvkP/Aq7tuIm/tpRBbRhFXhUgYWk
+qRwrVjHgoDHIryKYVmtVxApazcw68eCP97zNWPIhwNCE+VAMmSnS+GESONRir1/u
+1XNZjczforjel74BA82QiPbhyO2rYeaWvTu4oTHUYpJiLnUtrgx3Sq2h6xEcozmG
+AkYYI4nPMXxr9CliiCtKqwXzIuVJZHH6a6Yc4AXvneSivmRM0e4syjlMSxptv7+d
+F3AzzxniDIQyFkxBMWz0JJYupfxRdhZQDVqOnH+8kfCXhU1RLE2XPjWMwp2FuHag
+By5MaV3aUm1mJrXj3vxwycjt1EueDaR+2gs+XfvCJ9PvLpvYmHAJmUkbTDkQvDJp
+CENQKU7MoWoX6/q1OhKwwEBv9yDrGnHTA7cPIBXWwM0rW9YZ03qyrF85MrnBjkts
+1Np+67T1FYjfxo8LerbBQsoGJary8bIGVFkhbIfH4ifeNEE8W5+FyjgrH3O6xvre
+B13qBU8zQs4T2Op5nz0fAp9SA/SqKTLNidbR/7naR2dGyuzMwEV92PaxYTOzXcSB
+3OQ52d8gJ5rYCvfpidzjLss9aIy61plmc4aZYgzKMzxR2G9WzU5maq0uy7PyEmuD
+O38cVQy+wuExWtB+7CUY286twuKE1l8dOn8nXHrTicabYWqtyO8M7hireQFWp7JG
+dWUwF7IhZW+yBSspUCgx
+=gtOn
+-----END PGP SIGNATURE-----
+
+--RIYY1s2vRbPFwWeW--
