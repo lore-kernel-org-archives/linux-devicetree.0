@@ -1,57 +1,78 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 0/3] capebus moving omap_devices to mach-omap2
-Date: Mon, 05 Nov 2012 23:58:25 +0000
-Message-ID: <7dbed965-f75d-4ad3-9f88-4c3cd0b9e602@email.android.com>
-References: <50924DA3.1060901@ti.com> <20121101124025.GA12489@arwen.pp.htv.fi> <A16B0ABF-AB9D-4F48-88BD-96F123FFEF2F@antoniou-consulting.com> <20121101131609.GC12489@arwen.pp.htv.fi> <E911D0B7-0397-4ED0-828E-71F9531E84E0@antoniou-consulting.com> <20121101135148.382aec00@pyramind.ukuu.org.uk> <9F25E89E-9194-4725-8A8C-053DCBADA1DB@antoniou-consulting.com> <20121101220518.GE14982@arwen.pp.htv.fi> <CA+Bv8XbAvEXe=zDaA8W2+ROD2duYMRcJu4-bms31OH=V_ScKow@mail.gmail.com> <20121102112104.4657fb7b@pyramind.ukuu.org.uk> <0EC43413-1DD7-4E2A-879B-0B5B926FFDFE@antoniou-consulting.com> <CACxGe6uuK6ew5uxh0BjtYAtPZCTLeUpHc4emXRAnMUtNmEzmGg@mail.gmail.com> <AC5129F0-FF30-46ED-AD57-3FA6CA919F99@antoniou-consulting.com> <CACxGe6v9cyybV4+5tQJ-DG8qdyEHfsLa7t+-3CTL+97Q9msrFw@mail.gmail.com> <18667A4E-5513-4D74-922
- F-30D091609F16@antoniou-consulting.com> <CACxGe6uR5VhHsCS1vmayURkGBKmhagaeWBBaCnyfsfOjZ2Dutg@mail.gmail.com> <CAD=GYpYc9L5yKqgar5jB2jG8+GiX7Lb0zevP9Pxaq0HdaVXQ5Q@mail.gmail.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
+Date: Tue, 06 Nov 2012 00:07:03 +0000
+Message-ID: <f5e162ce-090e-4561-b27c-2b041ca0bee9@email.android.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=GYpYc9L5yKqgar5jB2jG8+GiX7Lb0zevP9Pxaq0HdaVXQ5Q@mail.gmail.com>
+In-Reply-To: <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel A Fernandes <agnel.joel@gmail.com>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>
+To: Tabi Timur-B04825 <B04825@freescale.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wood Scott-B07421 <B07421@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-Joel A Fernandes <agnel.joel@gmail.com> wrote:
+Tabi Timur-B04825 <B04825@freescale.com> wrote:
 
->Hi Grant,
->
->On Mon, Nov 5, 2012 at 2:14 PM, Grant Likely
+>On Mon, Nov 5, 2012 at 2:40 PM, Grant Likely
 ><grant.likely@secretlab.ca> wrote:
->> I'm open to suggestions if anyone has any. I have not objections to a
->> fixup approach, but I'm not comfortable with anything that is fragile
->> to modifications to the fragment.
 >
->I am fairly new to the DT world so please bear with me, but how about
->a method that resolves symbols the same way that the linux dynamic
->linker does when shared libraries are loaded?
+>> Jane is building custom BeagleBone expansion boards called 'capes'.
+>She
+>> can boot the system with a stock BeagleBoard device tree, but
+>additional
+>> data is needed before a cape can be used. She could replace the FDT
+>file
+>> used by U-Boot with one that contains the extra data, but she uses
+>the
+>> same Linux system image regardless of the cape, and it is
+>inconvenient
+>> to have to select a different device tree at boot time depending on
+>the
+>> cape.
 >
->A separate table (similar to .PLT/GOT sections  in the ELF object
->format) could be created when the fragment is loaded, and the phandle
->references could be fixed to point to the table offsets during compile
->time. This table would be a second level indirection and the kernel
->would populate this table with the in-kernel values of the phandles
->that the dt fragment refers to.
+>What's wrong with having the boot loader detect the presence of the
+>Cape and update the device tree accordingly?  We do this all the time
+>in U-Boot.  Doing stuff like reading EEPROMs and testing for the
+>presence of hardware is easier in U-Boot than in Linux.
+>
+>For configurations that can be determined by the boot loader, I'm not
+>sure overlays are practical.
 
-That's an interesting idea that is worth exploring. That would make it possible to avoid a fixup stage, but it also means that any parsing code must know how to handle the got-like table. It won't be backwards compatible with existing tools. It also wouldn't easily support the case of firmware applying the overlay and passing the resulting tree to the kernel. Hmmm.... Not being backwards compatible at the data level is a big problem. I really want a method that can resolve back to the current data format or is a compatible extension of it.
+>From the discussion in the previous thread, I'm sufficiently convinced that it is an important use case. I certainly disagree with the assertion that it is always easier to do it in U-Boot. Sometimes the kernel is the better place.
 
 >
->This might involve changes to the DT core, but as such, this method
->wouldn't suffer from the fragility problem of either base or fragment
->DT trees being modified.
+>> Nigel is building a real-time video processing system around a MIPS
+>SoC
+>> and a Virtex FPGA. Video data is streamed through the FPGA for post
+>> processing operations like motion tracking or compression. The FPGA
+>is
+>> configured via the SPI bus, and is also connected to GPIO lines and
+>the
+>> memory mapped peripheral bus. Nigel has designed several FPGA
+>> configurations for different video processing tasks. The user will
+>> choose which configuration to load which can even be reprogrammed at
+>> runtime to switch tasks.
 >
->The table itself could be added to the tree by the compiler, and the
->phandles could point to it (fixed). such phandles could be marked for
->special handling to facilitate the 1-level indirection.
+>Now this, on the other hand, makes more sense.  If the hardware
+>configuration is literally user-configurable, then okay.  However, I'm
+>not sure I see the need to update the device tree.  The device tree is
+>generally for hardware that cannot be discovered/probed by the device
+>driver.  If we're loading a configuration from user space, doesn't the
+>driver already know what the hardware's capabilities are, since it's
+>the one doing the uploading of a new FPGA code?
 
-That's part of the problem. Property values are essentially anaonymous data. There is no mechanism currently for marking data such as indicate which data values are phandles. If there were then it would be a simple matter to find all the phandles and fix them up.
+Not if the driver is only responsible for loading the bitstream. There is already a xilinx driver that does things this way.
 
-We could possibly add data type suppplementary properties to the tree to solve that problem. They would have to be optional for the base tree to retain backwards compatibility, but could be required on overlays.
+> Why not skip the
+>device tree update and just tell the driver what the new capabilities
+>are?
+
+How? What format will that data be in if not device tree?
 
 g.
 
