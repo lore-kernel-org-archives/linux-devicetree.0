@@ -1,54 +1,47 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [RFC patch v3 3/4] ASoC: atmel-ssc-dai: register
- dai and pcm directly
-Date: Tue, 06 Nov 2012 17:32:32 +0800
-Message-ID: <5098D930.8030403@atmel.com>
-References: <1352181474-19597-1-git-send-email-voice.shen@atmel.com>
- <1352181474-19597-3-git-send-email-voice.shen@atmel.com>
- <20121106084814.GC5044@opensource.wolfsonmicro.com>
+From: "Bedia, Vaibhav" <vaibhav.bedia@ti.com>
+Subject: RE: [PATCH 3/7] ARM: OMAP3+: hwmod: Add AM33XX HWMOD data for
+ davinci_mdio module
+Date: Tue, 6 Nov 2012 10:09:08 +0000
+Message-ID: <B5906170F1614E41A8A28DE3B8D121433EC049CC@DBDE01.ent.ti.com>
+References: <1352189545-26303-1-git-send-email-mugunthanvnm@ti.com>
+ <1352189545-26303-4-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20121106084814.GC5044@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1352189545-26303-4-git-send-email-mugunthanvnm@ti.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: "N, Mugunthan V" <mugunthanvnm@ti.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc: Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul@pwsan.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/6/2012 16:48, Mark Brown wrote:
-> On Tue, Nov 06, 2012 at 01:57:53PM +0800, Bo Shen wrote:
->
->>   static struct platform_device at91sam9260_ssc_device = {
->> -	.name	= "at91rm9200_ssc",
->> +	.name	= "at91rm9200_ssc_dai",
->>   	.id	= 0,
->>   	.dev	= {
->
-> No, this isn't converting things to device tree which presumably is the
-> goal here and obviously just doing the rename doesn't accomplish an
-> enormous amount.  What I said was that you should instantiate the ASoC
-> adaption when the machine driver needs to use them.  You shouldn't even
-> need a separate device for this.
+On Tue, Nov 06, 2012 at 13:42:21, N, Mugunthan V wrote:
+[...]
+> +struct omap_hwmod_addr_space am33xx_mdio_addr_space[] = {
+> +	{
+> +		.pa_start	= 0x4A101000,
+> +		.pa_end		= 0x4A101000 + SZ_256 - 1,
+> +		.flags		= ADDR_MAP_ON_INIT,
 
-Maybe this is not the best solution, but just abstract audio as a 
-separate device. The other's still keep as a ssc library.
+Based on the recent discussions and looking the hwmod code,
+I guess ADDR_MAP_ON_INIT does not make sense here. Since you
+are just creating a parent-child relationship here, maybe no
+flag is needed? 
 
-> Please do look at other platforms with similar hardware and do something
-> similar to them.
+> +	},
+> +	{ }
+> +};
+> +
+> +struct omap_hwmod_ocp_if am33xx_cpgmac0__mdio = {
+> +	.master		= &am33xx_cpgmac0_hwmod,
+> +	.slave		= &am33xx_mdio_hwmod,
+> +	.addr		= am33xx_mdio_addr_space,
+> +	.user		= OCP_USER_MPU,
 
-I take some reference (e.g: freescale, marvell, invidia soc, this RFC 
-implement is similar with them), but don't find the similar hardware 
-with us. Please help provide the information who's HW is similar with 
-us. Thanks.
+Is this flag necessary? Shouldn't you just skip the
+user field since there's nothing for the hwmod code
+to do here?
 
-BRs,
-Bo Shen
+Regards,
+Vaibhav
