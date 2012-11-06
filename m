@@ -1,113 +1,80 @@
 From: Qing Xu <qingx@marvell.com>
-Subject: [PATCH 4/7] mfd: max8925: support dt for power supply
-Date: Tue,  6 Nov 2012 15:42:44 +0800
-Message-ID: <1352187764-9901-1-git-send-email-qingx@marvell.com>
+Subject: [PATCH 5/7] mfd: max8925: support dt for regulator
+Date: Tue,  6 Nov 2012 15:44:52 +0800
+Message-ID: <1352187892-9940-1-git-send-email-qingx@marvell.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: qingx@marvell.com, cbou@mail.ru, dwmw2@infradead.org, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: qingx@marvell.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 From: Qing Xu <qingx@marvell.com>
 
 Signed-off-by: Qing Xu <qingx@marvell.com>
 ---
- drivers/power/max8925_power.c |   57 ++++++++++++++++++++++++++++++++++++----
- 1 files changed, 51 insertions(+), 6 deletions(-)
+ drivers/regulator/max8925-regulator.c |   35 ++++++++++++++++++++++++++++++++-
+ 1 files changed, 34 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/power/max8925_power.c b/drivers/power/max8925_power.c
-index daa333b..dd2ac2d 100644
---- a/drivers/power/max8925_power.c
-+++ b/drivers/power/max8925_power.c
-@@ -426,14 +426,58 @@ static __devexit int max8925_deinit_charger(struct max8925_power_info *info)
- 	return 0;
- }
+diff --git a/drivers/regulator/max8925-regulator.c b/drivers/regulator/max8925-regulator.c
+index 9bb0be3..16d9457 100644
+--- a/drivers/regulator/max8925-regulator.c
++++ b/drivers/regulator/max8925-regulator.c
+@@ -17,6 +17,8 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ #include <linux/mfd/max8925.h>
++#include <linux/of.h>
++#include <linux/regulator/of_regulator.h>
+ 
+ #define SD1_DVM_VMIN		850000
+ #define SD1_DVM_VMAX		1000000
+@@ -214,6 +216,34 @@ static struct max8925_regulator_info max8925_regulator_info[] = {
+ 	MAX8925_LDO(20, 750, 3900, 50),
+ };
  
 +#ifdef CONFIG_OF
-+static int max8925_power_dt_init(struct platform_device *pdev,
-+			      struct max8925_power_pdata *pdata)
++static int max8925_regulator_dt_init(struct platform_device *pdev,
++				    struct max8925_regulator_info *info,
++				    struct regulator_config *config)
 +{
-+	struct device_node *nproot = pdev->dev.parent->of_node, *np;
-+	int batt_detect, topoff_threshold, fast_charge,
-+		no_temp_support, no_insert_detect;
-+
++	struct device_node *nproot, *np;
++	nproot = pdev->dev.parent->of_node;
 +	if (!nproot)
 +		return -ENODEV;
-+	np = of_find_node_by_name(nproot, "charger");
-+	if (!np) {
-+		dev_err(&pdev->dev, "failed to find charger node\n");
++	nproot = of_find_node_by_name(nproot, "regulators");
++	if (!nproot) {
++		dev_err(&pdev->dev, "failed to find regulators node\n");
 +		return -ENODEV;
 +	}
-+	of_property_read_u32(np, "topoff-threshold", &topoff_threshold);
-+	of_property_read_u32(np, "batt-detect", &batt_detect);
-+	of_property_read_u32(np, "fast-charge", &fast_charge);
-+	of_property_read_u32(np, "no-insert-detect", &no_insert_detect);
-+	of_property_read_u32(np, "no-temp-support", &no_temp_support);
-+
-+	pdata->batt_detect = batt_detect;
-+	pdata->fast_charge = fast_charge;
-+	pdata->topoff_threshold = topoff_threshold;
-+	pdata->no_insert_detect = no_insert_detect;
-+	pdata->no_temp_support = no_temp_support;
-+	pr_err("batt_detect%d, topoff_threshold%d, fast_charge%d,no_temp_support%d, no_insert_detect%d\n",
-+		batt_detect, topoff_threshold, fast_charge,
-+		no_temp_support, no_insert_detect);
++	for_each_child_of_node(nproot, np) {
++		if (!of_node_cmp(np->name, info->desc.name)) {
++			config->init_data =
++				of_get_regulator_init_data(&pdev->dev, np);
++			config->of_node = np;
++			break;
++		}
++	}
 +	return 0;
 +}
 +#else
-+#define max8925_power_dt_init(x, y)	(-1)
++#define max8925_regulator_dt_init(x, y, z)	(-1)
 +#endif
 +
-+static char *power_supplicants[] = {
-+	"max8925-battery",
-+};
-+
- static __devinit int max8925_power_probe(struct platform_device *pdev)
+ static int __devinit max8925_regulator_probe(struct platform_device *pdev)
  {
  	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
--	struct max8925_power_pdata *pdata = NULL;
-+	struct max8925_power_pdata *pdata = pdev->dev.platform_data;
- 	struct max8925_power_info *info;
- 	int ret;
+@@ -243,9 +273,12 @@ static int __devinit max8925_regulator_probe(struct platform_device *pdev)
+ 	ri->chip = chip;
  
--	pdata = pdev->dev.platform_data;
-+	if (pdev->dev.parent->of_node && !pdata) {
-+		pdata = devm_kzalloc(&pdev->dev,
-+				     sizeof(struct max8925_power_pdata),
-+				     GFP_KERNEL);
-+		max8925_power_dt_init(pdev, pdata);
-+	}
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "platform data isn't assigned to "
- 			"power supply\n");
-@@ -453,8 +497,8 @@ static __devinit int max8925_power_probe(struct platform_device *pdev)
- 	info->ac.properties = max8925_ac_props;
- 	info->ac.num_properties = ARRAY_SIZE(max8925_ac_props);
- 	info->ac.get_property = max8925_ac_get_prop;
--	info->ac.supplied_to = pdata->supplied_to;
--	info->ac.num_supplicants = pdata->num_supplicants;
-+	info->ac.supplied_to = power_supplicants;
-+	info->ac.num_supplicants = ARRAY_SIZE(power_supplicants);
- 	ret = power_supply_register(&pdev->dev, &info->ac);
- 	if (ret)
- 		goto out;
-@@ -465,8 +509,8 @@ static __devinit int max8925_power_probe(struct platform_device *pdev)
- 	info->usb.properties = max8925_usb_props;
- 	info->usb.num_properties = ARRAY_SIZE(max8925_usb_props);
- 	info->usb.get_property = max8925_usb_get_prop;
--	info->usb.supplied_to = pdata->supplied_to;
--	info->usb.num_supplicants = pdata->num_supplicants;
-+	info->usb.supplied_to = power_supplicants;
-+	info->usb.num_supplicants = ARRAY_SIZE(power_supplicants);
+ 	config.dev = &pdev->dev;
+-	config.init_data = pdata;
+ 	config.driver_data = ri;
  
- 	ret = power_supply_register(&pdev->dev, &info->usb);
- 	if (ret)
-@@ -491,6 +535,7 @@ static __devinit int max8925_power_probe(struct platform_device *pdev)
- 	info->no_insert_detect = pdata->no_insert_detect;
- 
- 	max8925_init_charger(chip, info);
++	if (max8925_regulator_dt_init(pdev, ri, &config))
++		if (pdata)
++			config.init_data = pdata;
 +
- 	return 0;
- out_battery:
- 	power_supply_unregister(&info->battery);
+ 	rdev = regulator_register(&ri->desc, &config);
+ 	if (IS_ERR(rdev)) {
+ 		dev_err(&pdev->dev, "failed to register regulator %s\n",
 -- 
 1.7.0.4
