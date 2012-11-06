@@ -1,74 +1,37 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH 2/2] ARM: Exynos5250: Enabling USB 3.0 phy for samsung-usbphy
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [RFC PATCH 1/2] memory: davinci - add aemif controller platform
  driver
-Date: Tue, 06 Nov 2012 21:06:37 +0530
-Message-ID: <1352216197-11828-3-git-send-email-gautam.vivek@samsung.com>
-References: <1352216197-11828-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1352216197-11828-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: gregkh@linuxfoundation.org, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, yulgon.kim@samsung.com, av.tikhomirov@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com
+Date: Tue, 6 Nov 2012 11:04:33 -0500
+Message-ID: <50993511.3020906@ti.com>
+References: <1351873278-27325-1-git-send-email-m-karicheri2@ti.com> <1351873278-27325-2-git-send-email-m-karicheri2@ti.com> <50967307.5030500@gmail.com> <50982AC3.8030000@ti.com> <5098BFE1.3020906@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5098BFE1.3020906@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Rob Herring <robherring2@gmail.com>, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, b32955@freescale.com, shubhrajyoti@ti.com, wim@iguana.be, hs@denx.de, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob@landley.net, gregkh@linuxfoundation.org, swarren@wwwdotorg.org, hdoyu@nvidia.com, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-Adding base address information and required platform data
-support for enabling USB DRD phy on exynos5250 SOC.
+On 11/06/2012 02:44 AM, Sekhar Nori wrote:
+> On 11/6/2012 2:38 AM, Murali Karicheri wrote:
+>> On 11/04/2012 08:52 AM, Rob Herring wrote:
+>>> OMAP GPMC
+>> Could you send me a link please?
+> https://www.google.com/search?q=RFC+OMAP+GPMC+DT+bindings
+>
+> The patches series is sent by Daniel Mack. v3 was the last version sent.
+>
+> Thanks,
+> Sekhar
+>
+>
+One of the question I have on this is what is the final location of the 
+GPMC driver? The patch referred here is located inside the mach-omap2. 
+This will not work for us as AEMIF driver is used across multiple 
+architecture. range is also used in AEMIF bindings to refer the CS 
+memory map. So there is no issue here. I will fix the documentation. Or 
+Am I missing something?
 
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
----
- arch/arm/boot/dts/exynos5250.dtsi            |    3 ++-
- arch/arm/mach-exynos/include/mach/regs-pmu.h |    4 ++++
- arch/arm/mach-exynos/setup-usb-phy.c         |    9 +++++++++
- 3 files changed, 15 insertions(+), 1 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 82bf042..51693af 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -220,7 +220,8 @@
- 
- 	usbphy {
- 		compatible = "samsung,exynos5250-usbphy";
--		reg = <0x12130000 0x100>;
-+		reg = <0x12130000 0x100>,
-+		      <0x12100000 0x100>;
- 	};
- 
- 	amba {
-diff --git a/arch/arm/mach-exynos/include/mach/regs-pmu.h b/arch/arm/mach-exynos/include/mach/regs-pmu.h
-index d4e392b..67132b4 100644
---- a/arch/arm/mach-exynos/include/mach/regs-pmu.h
-+++ b/arch/arm/mach-exynos/include/mach/regs-pmu.h
-@@ -39,6 +39,10 @@
- #define S5P_HDMI_PHY_CONTROL			S5P_PMUREG(0x0700)
- #define S5P_HDMI_PHY_ENABLE			(1 << 0)
- 
-+/* only for EXYNOS5250*/
-+#define S5P_USBDRD_PHY_CONTROL			S5P_PMUREG(0x0704)
-+#define S5P_USBDRD_PHY_ENABLE			(1 << 0)
-+
- #define S5P_DAC_PHY_CONTROL			S5P_PMUREG(0x070C)
- #define S5P_DAC_PHY_ENABLE			(1 << 0)
- 
-diff --git a/arch/arm/mach-exynos/setup-usb-phy.c b/arch/arm/mach-exynos/setup-usb-phy.c
-index 6c768e0..5e46fdd 100644
---- a/arch/arm/mach-exynos/setup-usb-phy.c
-+++ b/arch/arm/mach-exynos/setup-usb-phy.c
-@@ -238,6 +238,15 @@ void s5p_usb_phy_pmu_isolation(int on, int type)
- 			writel(readl(S5P_USBHOST_PHY_CONTROL)
- 				| S5P_USBHOST_PHY_ENABLE,
- 					S5P_USBHOST_PHY_CONTROL);
-+	} else if (type == USB_PHY_TYPE_DRD) {
-+		if (on)
-+			writel(readl(S5P_USBDRD_PHY_CONTROL)
-+				& ~S5P_USBDRD_PHY_ENABLE,
-+					S5P_USBDRD_PHY_CONTROL);
-+		else
-+			writel(readl(S5P_USBDRD_PHY_CONTROL)
-+				| S5P_USBDRD_PHY_ENABLE,
-+					S5P_USBDRD_PHY_CONTROL);
- 	} else {
- 		if (on)
- 			writel(readl(S5P_USBDEVICE_PHY_CONTROL)
--- 
-1.7.6.5
+Murali
