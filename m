@@ -1,60 +1,290 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Tue, 6 Nov 2012 10:35:32 -0800
-Message-ID: <20121106183531.GH6801@atomide.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
- <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
+From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] misc: Generic on-chip SRAM allocation driver
+Date: Tue, 6 Nov 2012 13:43:03 -0500
+Message-ID: <50995A37.1090703@windriver.com>
+References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
+ <1350570453-24546-3-git-send-email-p.zabel@pengutronix.de>
+ <CAP=VYLp50SkV=57why1ME2_hz3nFp6c-Cb_apYka5fF=PCDBQQ@mail.gmail.com>
+ <1351513256.5872.103.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1351513256.5872.103.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely <grant.likely@secretlab.ca> [121106 03:16]:
-> On Tue, Nov 6, 2012 at 10:30 AM, Pantelis Antoniou
-> <panto@antoniou-consulting.com> wrote:
-> >
-> > Another can of worms is the pinctrl nodes.
+On 12-10-29 08:20 AM, Philipp Zabel wrote:
+> Hi Paul,
 > 
-> Yes... new pinctrl data would need to trigger adding new data to
-> pinctrl. I don't know if the pinctrl api supports that.
+> thank you for your comments.
+> 
+> Am Freitag, den 26.10.2012, 12:07 -0400 schrieb Paul Gortmaker:
+>> On Thu, Oct 18, 2012 at 10:27 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>>> This driver requests and remaps a memory region as configured in the
+>>> device tree. It serves memory from this region via the genalloc API.
+>>>
+>>> Other drivers can retrieve the genalloc pool from a phandle pointing
+>>> to this drivers' device node in the device tree.
+>>>
+>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/misc/sram.txt |   17 ++++
+>>>  drivers/misc/Kconfig                            |    9 ++
+>>>  drivers/misc/Makefile                           |    1 +
+>>>  drivers/misc/sram.c                             |  111 +++++++++++++++++++++++
+>>>  4 files changed, 138 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/misc/sram.txt
+>>>  create mode 100644 drivers/misc/sram.c
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
+>>> new file mode 100644
+>>> index 0000000..b64136c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/misc/sram.txt
+>>> @@ -0,0 +1,17 @@
+>>> +Generic on-chip SRAM
+>>> +
+>>> +Simple IO memory regions to be managed by the genalloc API.
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible : sram
+>>> +
+>>> +- reg : SRAM iomem address range
+>>> +
+>>> +Example:
+>>> +
+>>> +sram: sram@5c000000 {
+>>> +       compatible = "sram";
+>>> +       reg = <0x5c000000 0x40000>; /* 256 KiB SRAM at address 0x5c000000 */
+>>> +};
+>>> +
+>>> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+>>> index b151b7c..c5bbd00 100644
+>>> --- a/drivers/misc/Kconfig
+>>> +++ b/drivers/misc/Kconfig
+>>> @@ -499,6 +499,15 @@ config USB_SWITCH_FSA9480
+>>>           stereo and mono audio, video, microphone and UART data to use
+>>>           a common connector port.
+>>>
+>>> +config SRAM
+>>> +       bool "Generic on-chip SRAM driver"
+>>
+>> If it is bool, then why bother with module.h and all the
+>> MODULE_AUTHOR and similar stuff?
+> 
+> Yes. This driver was a module before I noticed that I then would have to
+> keep track in genalloc to avoid module unloading while some SRAM is
+> allocated. It seemed a bit too invasive.
+> 
+>>> +       depends on HAS_IOMEM
+>>> +       select GENERIC_ALLOCATOR
+>>> +       help
+>>> +         This driver allows to declare a memory region to be managed
+>>> +         by the genalloc API. It is supposed to be used for small
+>>> +         on-chip SRAM areas found on many ARM SoCs.
+>>
+>> Probably no need to call out ARM specifically here.  I'm pretty sure
+>> quite a few of the powerpc parts have SRAM too.
+> 
+> Sure, I'll just s/ARM // then.
+> 
+>>> +
+>>>  source "drivers/misc/c2port/Kconfig"
+>>>  source "drivers/misc/eeprom/Kconfig"
+>>>  source "drivers/misc/cb710/Kconfig"
+>>> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+>>> index 2129377..d845690 100644
+>>> --- a/drivers/misc/Makefile
+>>> +++ b/drivers/misc/Makefile
+>>> @@ -49,3 +49,4 @@ obj-y                         += carma/
+>>>  obj-$(CONFIG_USB_SWITCH_FSA9480) += fsa9480.o
+>>>  obj-$(CONFIG_ALTERA_STAPL)     +=altera-stapl/
+>>>  obj-$(CONFIG_INTEL_MEI)                += mei/
+>>> +obj-$(CONFIG_SRAM)             += sram.o
+>>> diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
+>>> new file mode 100644
+>>> index 0000000..7a363f2
+>>> --- /dev/null
+>>> +++ b/drivers/misc/sram.c
+>>> @@ -0,0 +1,111 @@
+>>> +/*
+>>> + * Generic on-chip SRAM allocation driver
+>>> + *
+>>> + * Copyright (C) 2012 Philipp Zabel, Pengutronix
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or
+>>> + * modify it under the terms of the GNU General Public License
+>>> + * as published by the Free Software Foundation; either version 2
+>>> + * of the License, or (at your option) any later version.
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + *
+>>> + * You should have received a copy of the GNU General Public License
+>>> + * along with this program; if not, write to the Free Software
+>>> + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+>>> + * MA 02110-1301, USA.
+>>> + */
+>>> +
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/spinlock.h>
+>>> +#include <linux/genalloc.h>
+>>> +
+>>> +struct sram_dev {
+>>> +       struct gen_pool *pool;
+>>> +};
+>>
+>> Assuming you don't ever intend adding more to the struct, then:
+> 
+> See the clock patch. I'm not sure if further functionality will be
+> needed on any architecture.
 
-The actual pins stay the same, just their configuration
-changes. AFAIK all that is already supported using the
-pinctrl framework.
+Yes, the clock patch will make the above struct less lonely, once
+it gets folded back into this patch.
 
-For example, considering hotplugging capes on the beaglebone:
+> 
+>> static struct gen_pool *sram_pool;
+>>
+>> instead?
+> 
+> No, a global variable would mean that only one instance of the SRAM
+> driver can be used. What about chips that have separate SRAM regions?
 
-1. You need to map all the sensible modes for the pins exposed
-   to the capes in the board specific .dts file. This will
-   add roughly 4 x nr_capbus_pins named modes in the .dts file
-   so not too bad.
+True; moot point now that the clock patch gets folded in and
+adds to the struct anyways...
 
-2. Claim all the capebus pins during the capbus driver probe
-   and set them to some safe mode.
+> 
+>> And you'll lose the needless indirections in the
+>> remaining code below, and the kzalloc too (which you
+>> currently leak, btw).
+> 
+> Memory allocated by devm_kzalloc should be freed by the devres
+> framework. If I am missing something, could you please elaborate?
 
-3. Try to detect the connected cape(s) over i2c.
+Right; my mind must have missed the devm_ prefix on the
+kzalloc in my quick scan of it.
 
-4. Use pinctr_select_state to set the desired modes for
-   the pins used by the cape(s).
+Paul.
+--
 
-5. Enable capebus regulators and clocks etc.
-
-6. Load the driver modules for whatever omap internal
-   devices the cape supports.
-
-You could also claim the pin for the omap internal
-devices instead of claiming them in the capebus, but then
-things can get messy with binding and unbinding the
-drivers. So just claiming all the pins in the capebus
-probably keeps things simpler.
-
-Regards,
-
-Tony
+> 
+>> I'd also delete the "/* sentinel */"
+>> comment too, since it is self evident. (The disease has
+>> spread by copying from other drivers I see).
+> 
+> I can do that.
+> 
+>> P.
+>> --
+>>
+>>> +
+>>> +static int __devinit sram_probe(struct platform_device *pdev)
+>>> +{
+>>> +       void __iomem *virt_base;
+>>> +       struct sram_dev *sram;
+>>> +       struct resource *res;
+>>> +       unsigned long size;
+>>> +       int ret;
+>>> +
+>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +       if (!res)
+>>> +               return -EINVAL;
+>>> +
+>>> +       size = resource_size(res);
+>>> +
+>>> +       virt_base = devm_request_and_ioremap(&pdev->dev, res);
+>>> +       if (!virt_base)
+>>> +               return -EADDRNOTAVAIL;
+>>> +
+>>> +       sram = devm_kzalloc(&pdev->dev, sizeof(*sram), GFP_KERNEL);
+>>> +       if (!sram)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       sram->pool = gen_pool_create(PAGE_SHIFT, -1);
+>>> +       if (!sram->pool)
+>>> +               return -ENOMEM;
+>>> +
+>>> +       ret = gen_pool_add_virt(sram->pool, (unsigned long)virt_base,
+>>> +                               res->start, size, -1);
+>>> +       if (ret < 0) {
+>>> +               gen_pool_destroy(sram->pool);
+>>> +               return ret;
+>>> +       }
+>>> +
+>>> +       platform_set_drvdata(pdev, sram);
+>>> +
+>>> +       dev_dbg(&pdev->dev, "SRAM pool: %ld KiB @ 0x%p\n", size / 1024, virt_base);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int __devexit sram_remove(struct platform_device *pdev)
+>>> +{
+>>> +       struct sram_dev *sram = platform_get_drvdata(pdev);
+>>> +
+>>> +       if (gen_pool_avail(sram->pool) < gen_pool_size(sram->pool))
+>>> +               dev_dbg(&pdev->dev, "removed while SRAM allocated\n");
+>>> +
+>>> +       gen_pool_destroy(sram->pool);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_OF
+>>> +static struct of_device_id sram_dt_ids[] = {
+>>> +       { .compatible = "sram" },
+>>> +       { /* sentinel */ }
+>>> +};
+>>> +#endif
+>>> +
+>>> +static struct platform_driver sram_driver = {
+>>> +       .driver = {
+>>> +               .name = "sram",
+>>> +               .of_match_table = of_match_ptr(sram_dt_ids),
+>>> +       },
+>>> +       .probe = sram_probe,
+>>> +       .remove = __devexit_p(sram_remove),
+>>> +};
+>>> +
+>>> +int __init sram_init(void)
+>>> +{
+>>> +       return platform_driver_register(&sram_driver);
+>>> +}
+>>> +
+>>> +postcore_initcall(sram_init);
+>>> +
+>>> +MODULE_LICENSE("GPL");
+>>> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
+>>> +MODULE_DESCRIPTION("Generic SRAM allocator driver");
+>>> --
+>>> 1.7.10.4
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> Please read the FAQ at  http://www.tux.org/lkml/
+> 
+> regards
+> Philipp
+> 
