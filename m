@@ -1,54 +1,74 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC patch v3 2/4] ARM: at91: atmel-ssc: add device tree support
-Date: Tue, 6 Nov 2012 09:58:57 +0100
-Message-ID: <20121106085856.GG5044@opensource.wolfsonmicro.com>
-References: <1352181474-19597-1-git-send-email-voice.shen@atmel.com>
- <1352181474-19597-2-git-send-email-voice.shen@atmel.com>
+Subject: Re: [PATCH 5/7] mfd: max8925: support dt for regulator
+Date: Tue, 6 Nov 2012 10:01:38 +0100
+Message-ID: <20121106090137.GH5044@opensource.wolfsonmicro.com>
+References: <1352187892-9940-1-git-send-email-qingx@marvell.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hTiIB9CRvBOLTyqY"
-Return-path: <linux-sound-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="jRdC2OsRnuV8iIl8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1352181474-19597-2-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com
+In-Reply-To: <1352187892-9940-1-git-send-email-qingx@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qing Xu <qingx@marvell.com>
+Cc: lrg@ti.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---hTiIB9CRvBOLTyqY
+--jRdC2OsRnuV8iIl8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 06, 2012 at 01:57:52PM +0800, Bo Shen wrote:
-> Add atmel-ssc for device tree support
+On Tue, Nov 06, 2012 at 03:44:52PM +0800, Qing Xu wrote:
+> From: Qing Xu <qingx@marvell.com>
 >=20
-> Match "atmel,at91rm9200-ssc" for using pdc for data transfer
-> Match "atmel,at91sam9g45-ssc" for using pdc for data transfer
+> Signed-off-by: Qing Xu <qingx@marvell.com>
+> ---
+>  drivers/regulator/max8925-regulator.c |   35 +++++++++++++++++++++++++++=
++++++-
+>  1 files changed, 34 insertions(+), 1 deletions(-)
 
-Applied, thanks.
+There is no binding document here, documentation is required for all new
+bindings.
 
---hTiIB9CRvBOLTyqY
+> +	nproot =3D of_find_node_by_name(nproot, "regulators");
+> +	if (!nproot) {
+> +		dev_err(&pdev->dev, "failed to find regulators node\n");
+> +		return -ENODEV;
+> +	}
+> +	for_each_child_of_node(nproot, np) {
+> +		if (!of_node_cmp(np->name, info->desc.name)) {
+> +			config->init_data =3D
+> +				of_get_regulator_init_data(&pdev->dev, np);
+> +			config->of_node =3D np;
+> +			break;
+> +		}
+> +	}
+
+You appear to be open coding something like the standard helpers in
+of_regulator.h, you should use those helpers.
+
+--jRdC2OsRnuV8iIl8
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQmNFEAAoJELSic+t+oim9IYIP/i7LF9yS2NgT2SPYnqU2+VNE
-wML/m7223HFtJgaEFS1foA76dZVQK02n4Q+gNsSk5gQlwuR+uar46jjf6xOiLCUe
-+1CpW6pFZA+jaq6dBLRPd9totI6zMSY8J+5wsyonQvuqHLvWbjRcdGvDXL1UdqLf
-C/JLUyFq3fExvljs4n/0nNYnJDPJz6pHCam0+9/+skRrJhdocqfsnPX1vf7XhE5T
-iKpNB8KTXy6jVuRv98l+jJxVhkGPe0Z7QPsKb69bTG3KPzoNSdsyVe0rTMf3EQci
-Y0T/z04rnU/b5Dsvc38q5RujY10Gu/7rWiM97EBjIKH34WTwYDGQ8zgsh4GoMH94
-tG0+3DNjq9Hw1YOUfYRSn3CJ3kkRLMEjInhqPtVvShXJnyyJp5edAXMHagbXRnpv
-2PiVITuanPguYS8oTIhncseOfc3y+A+inBi9nVKpGh9t41F5Wdv36l8dwREi8DqJ
-nT+y+xj8fEjpZ0k2fxVGZ0mvNhHjco8epbk2yAPoQ9jP7S5a2FX9zxmKtIV1JyNj
-jp7NVk6r9/anU7ylK/BsZ9BbLVk+YOc5sEEfHWu08b7atR6MEN1jFVGdffilpceb
-QutEfB3A+2cPPpRP3ESo1F7I1Kg1gQ/51NhaA5t7CTrygUWznuNNwrS+LdNLJB5R
-1XQcxKCfcjB+c+PROuSM
-=XJyV
+iQIcBAEBAgAGBQJQmNHmAAoJELSic+t+oim9Y34P/iZshhKw7FQXJ0noCBB2fdMq
+M0Qz9pElSZfr6urxvCCfqEHdE7HDQUzL2yBRrAJvE/HbLHPKe6IBmi26YAC0lgrj
+E1w6UaLemW9fhVOFlarMu5OCLe7g/+/ZW9Vg7cFe18SDeNjugwa8tb6Ev+frXuv+
+Fm56fh9G/Qir6moTfkVI95mgFSvWdYHgFOvV2qvRIgqWh1YakAdVk3MXgU2lmutV
+FEn1WaqAW5NvDQ2+7QERpLPOx4KoKcXN/iXL8kB4ZK3VBM7ov7YlJ69xAu/HtEyF
+SWMkIO0KJO0RXcLEsDhhxCXPcMztl2OjO6bpn3ivL5EjaRzMugrqLE97JCym4rA7
+7nWQVYEoN3qOv2phfuKKrURd9wd37HupWlKPasgtrP8ASJv0+2pwr9t87t4sBss9
+ewb8ygRnUFX5Lz4HBV6VsBqiTPa21l0P+0NeJDIW2NXMqtAln4M8RAzgxk/m98Zo
++Z8W6qG0chnnxQyysCiiz27y53xdQGPJoGtepG7d8ujyv17uudScsUjIBxF1I5KU
+fPziep/ifR2XpO27fuOfb2pAHD3RU78S4HND1ZhCostxw86vvpy4zAGiAzDkFDci
+WdHFreMWFl4yET8COSJ/PkaCxyzCwGSHZabO4W9LQlACELPNTX/omwRSqdvdcfPA
+cgqLWduQ2Ejs7TpKvwqn
+=za1r
 -----END PGP SIGNATURE-----
 
---hTiIB9CRvBOLTyqY--
+--jRdC2OsRnuV8iIl8--
