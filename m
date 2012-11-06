@@ -1,102 +1,57 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH V4 2/7] net: cpsw: Add parent<->child relation support between cpsw and mdio
-Date: Tue, 6 Nov 2012 23:02:34 +0530
-Message-ID: <1352223159-27504-3-git-send-email-mugunthanvnm@ti.com>
-References: <1352223159-27504-1-git-send-email-mugunthanvnm@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] fdtget-runtest.sh: use printf instead of /bin/echo -e
+Date: Tue,  6 Nov 2012 11:00:31 -0700
+Message-ID: <1352224831-1355-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1352223159-27504-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Vaibhav Hiremath <hvaibhav@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, jdl-CYoMK+44s/E@public.gmane.org, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Vaibhav Hiremath <hvaibhav@ti.com>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-CPGMAC SubSystem consist of various sub-modules, like, mdio, cpdma,
-cpsw, etc... These sub-modules are also used in some of Davinci family
-of devices. Now based on requirement, use-case and available technology
-nodes the integration of these sub-modules varies across devices.
+Not all /bin/echo implementations support the -e option. Instead, use
+printf, which appears to be more widely available than /bin/echo -e.
 
-So coming back to Linux net driver, currently separate and independent
-platform devices & drivers for CPSW and MDIO is implemented. In case of
-Davinci they both has separate control, from resources perspective,
-like clock.
+See commit eaec1db "fdtget-runtest.sh: Fix failures when /bin/sh isn't
+bash" for history.
 
-In case of AM33XX, the resources are shared and only one register
-bit-field is provided to control module/clock enable/disable, makes it
-difficult to handle common resource.
+I have tested this on Ubuntu 10.04 with /bin/sh pointing to both dash
+and bash.
 
-So the solution here implemented in this patch is,
-
-Create parent<->child relationship between both the drivers, making
-CPSW as a parent and MDIO as its child and enumerate all the child nodes
-under CPSW module.
-Both the drivers will function exactly the way it was operating before,
-including runtime-pm functionality. No change is required in MDIO driver
-(for that matter to any child driver).
-
-As this is only supported during DT boot, the parent<->child relationship
-is created and populated in DT execution flow. The only required change
-is inside DTS file, making MDIO as a child to CPSW node.
-
-Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Reported-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> # and implemented-by
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/net/ethernet/ti/cpsw.c |   16 ++++++++++++++--
- 1 files changed, 14 insertions(+), 2 deletions(-)
+Mike, should I re-write this with you as the git author? If so, could
+you please supply an S-o-b line for this?
+---
+ tests/fdtget-runtest.sh |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 7654a62..7007aba 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -1144,7 +1144,7 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
- 	}
- 	data->mac_control = prop;
+diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
+index c3a3559..8d8b058 100755
+--- a/tests/fdtget-runtest.sh
++++ b/tests/fdtget-runtest.sh
+@@ -8,7 +8,7 @@ rm -f $LOG $EXPECT
+ trap "rm -f $LOG $EXPECT" 0
  
--	for_each_child_of_node(node, slave_node) {
-+	for_each_node_by_name(slave_node, "slave") {
- 		struct cpsw_slave_data *slave_data = data->slave_data + i;
- 		const char *phy_id = NULL;
- 		const void *mac_addr = NULL;
-@@ -1179,6 +1179,14 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
- 		i++;
- 	}
+ expect="$1"
+-/bin/echo -e $expect >$EXPECT
++printf '%b\n' "$expect" > $EXPECT
+ shift
  
-+	/*
-+	 * Populate all the child nodes here...
-+	 */
-+	ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
-+	/* We do not want to force this, as in some cases may not have child */
-+	if (ret)
-+		pr_warn("Doesn't have any child node\n");
-+
- 	return 0;
- 
- error_ret:
-@@ -1212,6 +1220,11 @@ static int __devinit cpsw_probe(struct platform_device *pdev)
- 	priv->msg_enable = netif_msg_init(debug_level, CPSW_DEBUG);
- 	priv->rx_packet_max = max(rx_packet_max, 128);
- 
-+	/*
-+	 * This may be required here for child devices.
-+	 */
-+	pm_runtime_enable(&pdev->dev);
-+
- 	if (cpsw_probe_dt(&priv->data, pdev)) {
- 		pr_err("cpsw: platform data missing\n");
- 		ret = -ENODEV;
-@@ -1238,7 +1251,6 @@ static int __devinit cpsw_probe(struct platform_device *pdev)
- 	for (i = 0; i < data->slaves; i++)
- 		priv->slaves[i].slave_num = i;
- 
--	pm_runtime_enable(&pdev->dev);
- 	priv->clk = clk_get(&pdev->dev, "fck");
- 	if (IS_ERR(priv->clk)) {
- 		dev_err(&pdev->dev, "fck is not found\n");
+ verbose_run_log_check "$LOG" $VALGRIND $DTGET "$@"
 -- 
 1.7.0.4
-
