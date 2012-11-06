@@ -1,97 +1,220 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] libfdt: introduce fdt type annotation for use by endian
- checkers
-Date: Tue, 6 Nov 2012 18:48:19 +1100
-Message-ID: <20121106074819.GG23553@truffula.fritz.box>
-References: <1350433728-24120-1-git-send-email-kim.phillips@freescale.com>
- <507F4B0B.1020401@gmail.com>
- <20121018121112.GI23523@truffula.fritz.box>
- <20121018173022.32f1745249d162d1aa453694@freescale.com>
- <20121019004324.GN23523@truffula.fritz.box>
- <20121030165754.65b34c78cd0d3a0d6ab7d34e@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121030165754.65b34c78cd0d3a0d6ab7d34e-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, Jerry Van Baren <gvb.uboot-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Qing Xu <qingx@marvell.com>
+Subject: [PATCH 7/7] mfd: max8925: add dts
+Date: Tue,  6 Nov 2012 15:49:40 +0800
+Message-ID: <1352188180-10028-1-git-send-email-qingx@marvell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: qingx@marvell.com, linux@arm.linux.org.uk, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 30, 2012 at 04:57:54PM -0500, Kim Phillips wrote:
-> Projects such as linux and u-boot run sparse on libfdt.  libfdt
-> contains the notion of endianness via usage of endian conversion
-> functions such as fdt32_to_cpu.  As such, in order to pass endian
-> checks, libfdt has to annotate its fdt variables as big endian.
-> This patch does that ifdef __CHECKER__ (a symbol sparse defines),
-> for two new fdt types: fdt32_t and fdt64_t, and subsequently
-> silences warnings emitted by sparse when parsing libfdt.
-> 
-> Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> note: wasn't sure whether to introduce the new fdt32 types, or
-> just have libfdt use __be32 directly.
+From: Qing Xu <qingx@marvell.com>
 
-I prefer having the fdt32 types, to match the cpu_to_fdt32() and so
-forth functions we already use.
+add max8925 dts support into mmp2 brownstone platform
 
-So I like this in principle, but a couple of nits.
+Signed-off-by: Qing Xu <qingx@marvell.com>
+---
+ arch/arm/boot/dts/mmp2-brownstone.dts |  166 +++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/mmp2.dtsi           |    4 +-
+ 2 files changed, 169 insertions(+), 1 deletions(-)
 
-First, I'd really like to see an accompanying patch that adds targets
-to the dtc makefiles to run sparse over the sources.  I couldn't
-really test this, because I couldn't figure out quite what options I
-needed to invoke sparse with to get it to work properly.
-
-And I'd also like to see the default libfdt_env.h updated to supply
-the necessary sparse stuff - including the necessary __force casts in
-its byteswap functions.
-
-[snip]
-> diff --git a/libfdt/fdt.h b/libfdt/fdt.h
-> index 48ccfd9..0d9c856 100644
-> --- a/libfdt/fdt.h
-> +++ b/libfdt/fdt.h
-> @@ -3,46 +3,54 @@
->  
->  #ifndef __ASSEMBLY__
->  
-> +#ifdef __CHECKER__
-
-So, I'd prefer not to use __CHECKER__ directly here.  I'd rather we
-defined a new specific symbol, that libfdt_env.h can set based on
-__CHECKER__ if it wants.  Let's say _FDT_SPARSE The reason is
-because..
-
-> +typedef __be32 fdt32_t;
-> +typedef __be64 fdt64_t;
-
-..just running sparse does *not* immediately give you __be32 and
-__be64 types - those have to be defined in terms of
-__attribute__((bitwise)) and whatnot.  Your uboot env probably does
-that already, but the default libfdt_env.h certainly doesn't.
-Effectively _FDT_SPARSE is sayint two things, first that we're
-compiling under sparse, but also that we have suitably defined endian
-types in the environment.
-
-Actually, given that libfdt_env.h is already required to provide the
-cpu_to_fdt32() and so forth macros, I think it's slightly neater to
-just require it to directly supply the fdt32_t etc. types when it
-defines _FDT_SPARSE as well, rather than defining them in terms of
-__beXX here then in terms of the attributes in the environment.
-
+diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
+index c9b4f27..e22f58c 100644
+--- a/arch/arm/boot/dts/mmp2-brownstone.dts
++++ b/arch/arm/boot/dts/mmp2-brownstone.dts
+@@ -29,6 +29,172 @@
+ 			};
+ 			twsi1: i2c@d4011000 {
+ 				status = "okay";
++				pmic: max8925@3c {
++					compatible = "marvell,max8925";
++					reg = <0x3c>;
++					interrupts = <1 0>;
++					interrupt-parent = <&intcmux4>;
++					interrupt-controller;
++					#interrupt-cells = <1>;
++
++					regulators {
++						SDV1 {
++							regulator-min-microvolt = <637500>;
++							regulator-max-microvolt = <1425000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						SDV2 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2225000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						SDV3 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO1 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO2 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO3 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO4 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO5 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO6 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO7 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO8 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO9 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO10 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++						};
++						LDO11 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO12 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO13 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO14 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO15 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO16 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO17 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO18 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO19 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO20 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++					};
++					backlight {
++						dual-string = <0>;
++					};
++					charger {
++						batt-detect = <0>;
++						topoff-threshold = <1>;
++						fast-charge = <7>;
++						no-temp-support = <0>;
++						no-insert-detect = <0>;
++					};
++					rtc {
++
++					};
++					onkey {
++
++					};
++					touch {
++
++					};
++				};
+ 			};
+ 			rtc: rtc@d4010000 {
+ 				status = "okay";
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index 80f74e2..2165a17 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -41,7 +41,7 @@
+ 				mrvl,intc-nr-irqs = <64>;
+ 			};
+ 
+-			intcmux4@d4282150 {
++			intcmux4: intcmux4@d4282150 {
+ 				compatible = "mrvl,mmp2-mux-intc";
+ 				interrupts = <4>;
+ 				interrupt-controller;
+@@ -196,6 +196,8 @@
+ 				compatible = "mrvl,mmp-twsi";
+ 				reg = <0xd4011000 0x1000>;
+ 				interrupts = <7>;
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				mrvl,i2c-fast-mode;
+ 				status = "disabled";
+ 			};
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.0.4
