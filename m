@@ -1,120 +1,67 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH v3] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Wed, 07 Nov 2012 08:32:36 +0100
-Message-ID: <509A0E94.1040103@gaisler.com>
-References: <5087EDBF.2040108@gaisler.com> <1351588017-14357-1-git-send-email-andreas@gaisler.com> <508FA6D3.9000809@grandegger.com> <508FFF50.8050900@gaisler.com> <50911EB6.1070105@grandegger.com> <509152D5.2050701@gaisler.com> <50918830.9040601@grandegger.com> <50929E7F.1090205@gaisler.com> <509786C0.9070703@grandegger.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [RFC patch v3 3/4] ASoC: atmel-ssc-dai: register
+ dai and pcm directly
+Date: Wed, 07 Nov 2012 15:38:24 +0800
+Message-ID: <509A0FF0.7030501@atmel.com>
+References: <1352181474-19597-1-git-send-email-voice.shen@atmel.com>
+ <1352181474-19597-3-git-send-email-voice.shen@atmel.com>
+ <20121106084814.GC5044@opensource.wolfsonmicro.com>
+ <5098D930.8030403@atmel.com>
+ <20121106113908.GC10080@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <509786C0.9070703@grandegger.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>
-Cc: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20121106113908.GC10080@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/05/2012 10:28 AM, Wolfgang Grandegger wrote:
-> On 11/01/2012 05:08 PM, Andreas Larsson wrote:
->> On 2012-10-31 21:21, Wolfgang Grandegger wrote:
-...
->> Yes, the hardware becomes error active after having monitored 11
->> consecutive recessive bits on the bus 128 times (as allowed by the 2.0
->> CAN spec). There is no way of turning this off, so to conform to the
->> normal linux procedure of not doing this, I shut down the device on bus
->> off interrupt.
+On 11/6/2012 19:39, Mark Brown wrote:
+> On Tue, Nov 06, 2012 at 05:32:32PM +0800, Bo Shen wrote:
+>> On 11/6/2012 16:48, Mark Brown wrote:
+>>> On Tue, Nov 06, 2012 at 01:57:53PM +0800, Bo Shen wrote:
 >
-> This should be handled in the following way:
+>>> No, this isn't converting things to device tree which presumably is the
+>>> goal here and obviously just doing the rename doesn't accomplish an
+>>> enormous amount.  What I said was that you should instantiate the ASoC
+>>> adaption when the machine driver needs to use them.  You shouldn't even
+>>> need a separate device for this.
 >
-> 1. If priv->can.restart_ms == 0: do *not* allow automatic restart
->     That's what you alredy have implemented.
+>> Maybe this is not the best solution, but just abstract audio as a
+>> separate device. The other's still keep as a ssc library.
 >
-> 2. If priv->can.restart_ms  > 0 : do allow automatic restart.
->     This requires to send CAN_ERR_RESTARTED when the system goes
->     bus-on. See at91_can and mcp251x as example.
+> It's not abstracting things, that's the whole problem.  It's putting the
+> internals of how the Linux audio stack is organised into the device
+> tree.  The point is that the SSC should be a library to all users.
+
+OK. I will keep the SSC as a library for all users.
+
+>>> Please do look at other platforms with similar hardware and do something
+>>> similar to them.
 >
->> In addition I have thrown out the arbitration lost error frame
->> generation as arbitration errors can not be singled out. The TXLOSS
->> interrupt might be due to arbitration error, but is also triggered in
->> great numbers when there is no one else on the can bus or when there is
->> a problem with the hardware interface or the bus itself.
->>
->> This is how things look currently with no one else on the bus:
->> ~ # cansend can0 123#45
->>    can0  20000004  [8] 00 08 00 00 00 00 60 00   ERRORFRAME
->>          controller-problem{tx-error-warning}
->>          error-counter-tx-rx{{96}{0}}
->>    can0  20000004  [8] 00 20 00 00 00 00 80 00   ERRORFRAME
->>          controller-problem{tx-error-passive}
->>          error-counter-tx-rx{{128}{0}}
->> ~ #
->>
->> And this is how it looks with a short-circuited bus:
->> ~ # cansend can0 123#45
->>    can0  20000004  [8] 00 08 00 00 00 00 90 00   ERRORFRAME
->>          controller-problem{tx-error-warning}
->>          error-counter-tx-rx{{144}{0}}
->>    can0  20000004  [8] 00 20 00 00 00 00 98 00   ERRORFRAME
->>          controller-problem{tx-error-passive}
->>          error-counter-tx-rx{{152}{0}}
->>    can0  20000040  [8] 00 00 00 00 00 00 00 00   ERRORFRAME
->>          bus-off
->> ~ #
+>> I take some reference (e.g: freescale, marvell, invidia soc, this
+>> RFC implement is similar with them), but don't find the similar
+>> hardware with us. Please help provide the information who's HW is
+>> similar with us. Thanks.
 >
-> This looks good now. Just the automatic restart is missing as described
-> above.
+> A *huge* range of SoCs have generic serial ports - off the top of my
+> head this includes at least OMAP, PXA and Freescale.  The same issue
+> also applies to DMA controllers which affects almost all SoCs.
 
-When doing the bus_off handling as in at91_can, on a short-circuited bus with 
-restart-ms != 0, the result of a cansend is an endless and frequent stream of
+Thanks for this information, I will try to implement the SSC framework 
+like this. If it is finished, I will send out v4 patch series.
 
-   can0  20000004  [8] 00 20 00 00 00 00 88 00   ERRORFRAME
-         controller-problem{tx-error-passive}
-         error-counter-tx-rx{{136}{0}}
-   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
-         bus-off
-         error-counter-tx-rx{{128}{0}}
-   can0  20000104  [8] 00 00 00 00 00 00 10 00   ERRORFRAME
-         controller-problem{}
-         restarted-after-bus-off
-         error-counter-tx-rx{{16}{0}}
-   can0  20000004  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
-         controller-problem{rx-error-passive}
-         error-counter-tx-rx{{87}{128}}
-   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
-         bus-off
-         error-counter-tx-rx{{128}{0}}
-   can0  20000104  [8] 00 00 00 00 00 00 08 00   ERRORFRAME
-         controller-problem{}
-         restarted-after-bus-off
-         error-counter-tx-rx{{8}{0}}
-   can0  20000004  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
-         controller-problem{rx-error-passive}
-         error-counter-tx-rx{{87}{128}}
-   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
-         bus-off
-         error-counter-tx-rx{{128}{0}}
-   can0  20000104  [8] 00 00 00 00 00 00 08 00   ERRORFRAME
-         controller-problem{}
-         restarted-after-bus-off
-         error-counter-tx-rx{{8}{0}}
-   [...]
+Thanks again.
 
-as the grcan core continues to try to resend the frame when it comes back again. 
-To mimic the sja1000 behavior as closely as possible, I guess that the driver 
-also would need to make sure that the tx and rx buffers are cleaned out so that 
-this resending does not happen, right?
-
-To do this, the hardware needs to be stopped anyway. Therefore, in my opinion it 
-is much simpler to handle it as it is in v5: always shut down the hardware on 
-bus off and, in the case of a non-zero restart_ms, let restart timer trigger 
-can_restart that will call grcan_set_mode which will restart the hardware with 
-empty buffers. Do you see any problems with this approach?
-
-The added benefit of this approach is that then the actual millisecond value of 
-the non-zero restart_ms is used instead of having the hardware quickly restart 
-regardless of the value.
-
-In any case I have some other fixes for v6.
-
-Cheers,
-Andreas
+BRs,
+Bo Shen
