@@ -1,134 +1,180 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 1/2] USB: PHY: Add support for USB 3.0 phy for exynos5250
-Date: Wed, 07 Nov 2012 20:27:49 +0100
-Message-ID: <509AB635.3080603@gmail.com>
-References: <1352216197-11828-1-git-send-email-gautam.vivek@samsung.com> <1352216197-11828-2-git-send-email-gautam.vivek@samsung.com> <50999FD0.8050406@gmail.com> <CAFp+6iFowuVCKdVEf_ythJ829ZVZqF8t=Aq+GzXadXD5nJiUxg@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC v2 PATCH 1/2] memory: davinci - add aemif controller platform
+ driver
+Date: Wed, 07 Nov 2012 13:05:38 -0700
+Message-ID: <509ABF12.5080804@wwwdotorg.org>
+References: <1352238427-26085-1-git-send-email-m-karicheri2@ti.com> <1352238427-26085-2-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iFowuVCKdVEf_ythJ829ZVZqF8t=Aq+GzXadXD5nJiUxg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, balbi@ti.com, Rob Herring <rob.herring@calxeda.com>, kgene.kim@samsung.com, yulgon.kim@samsung.com, av.tikhomirov@samsung.com, Thomas Abraham <thomas.abraham@linaro.org>, kishon <kishon@ti.com>, Praveen Paneri <p.paneri@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1352238427-26085-2-git-send-email-m-karicheri2@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, gregkh@linuxfoundation.org, hdoyu@nvidia.com, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2012 02:35 PM, Vivek Gautam wrote:
->>> @@ -180,10 +273,12 @@ enum samsung_cpu_type {
->>>    /*
->>>     * struct samsung_usbphy - transceiver driver state
->>>     * @phy: transceiver structure
->>> + * @phy3: transceiver structure for USB 3.0
->>>     * @plat: platform data
->>>     * @dev: The parent device supplied to the probe function
->>>     * @clk: usb phy clock
->>>     * @regs: usb phy register memory base
->>> + * @regs_phy3: usb 3.0 phy register memory base
->>>     * @ref_clk_freq: reference clock frequency selection
->>>     * @cpu_type: machine identifier
->>>     * @phy_type: It keeps track of the PHY type.
->>> @@ -191,10 +286,12 @@ enum samsung_cpu_type {
->>>     */
->>>    struct samsung_usbphy {
->>>          struct usb_phy  phy;
->>> +       struct usb_phy  phy3;
->>>          struct samsung_usbphy_data *plat;
->>>          struct device   *dev;
->>>          struct clk      *clk;
->>>          void __iomem    *regs;
->>> +       void __iomem    *regs_phy3;
->>
->>
->> Wouldn't it be better to create a new data structure for USB 3.0
->> and embedding it here, rather than adding multiple fields with "3"
->> suffix ? E.g.
->>
->>          struct {
->>                  void __iomem    *phy_regs;
->>                  struct usb_phy  phy;
->>          } usb3;
->> ?
->>
-> Yes, thanks for suggesting. This way things will look clearer.
-> Will update this.
->
->> And why do you need to duplicate those fields in first place ?
->> I guess phy and phy3 are dependant and you can't register 2 PHYs
->> separately ?
->>
-> Controllers like DWC3 needs two different PHYs. One of USB2 type and
-> one of USB3 type. So we needed to register two separate PHYs.
+On 11/06/2012 02:47 PM, Murali Karicheri wrote:
+> This is a platform driver for asynchronous external memory interface
+> available on TI SoCs. This driver was previously located inside the
+> mach-davinci folder. As this DaVinci IP is re-used across multiple
+> family of devices such as c6x, keystone etc, the driver is moved to drivers.
+> The driver configures async bus parameters associated with a particular
+> chip select. For DaVinci NAND controller driver and driver for other async
+> devices such as NOR flash, ASRAM etc, the bus confuguration is
+> done by this driver at probe. A set of APIs (set/get) are provided to
+> update the values based on specific driver usage.
 
-OK, I was just wondering if there is any dependency between those two phys
-so you need to aggregate them in one struct samsung_usbphy, rather than
-creating two separate struct samsung_usbphy objects for them.
+> diff --git a/Documentation/devicetree/bindings/memory/davinci-aemif.txt b/Documentation/devicetree/bindings/memory/davinci-aemif.txt
 
->>> +/*
->>> + * The function passed to the usb driver for phy initialization
->>> + */
->>>    static int samsung_usbphy_init(struct usb_phy *phy)
->>>    {
->>>          struct samsung_usbphy *sphy;
->>> @@ -570,6 +872,8 @@ static int __devinit samsung_usbphy_probe(struct platform_device *pdev)
->>>          struct device *dev =&pdev->dev;
->>>
->>>          struct resource *phy_mem;
->>>          void __iomem    *phy_base;
->>> +       struct resource *phy3_mem;
->>> +       void __iomem    *phy3_base = NULL;
->>>          struct clk *clk;
->>>          int     ret = 0;
->>>
->>> @@ -618,7 +922,38 @@ static int __devinit samsung_usbphy_probe(struct platform_device *pdev)
->>>
->>>          sphy->clk = clk;
->>>
->>> +       if (sphy->cpu_type == TYPE_EXYNOS5250) {
->>> +               phy3_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->>> +               if (!phy3_mem) {
->>> +                       dev_err(dev, "%s: missing mem resource\n", __func__);
->>> +                       return -ENODEV;
->>> +               }
->>> +
->>> +               phy3_base = devm_request_and_ioremap(dev, phy3_mem);
->>> +               if (!phy3_base) {
->>> +                       dev_err(dev, "%s: register mapping failed\n", __func__);
->>> +                       return -ENXIO;
->>> +               }
->>> +       }
->>> +
->>> +       sphy->regs_phy3         = phy3_base;
->>> +       sphy->phy3.dev          = sphy->dev;
->>> +       sphy->phy3.label        = "samsung-usbphy3";
->>> +       sphy->phy3.init         = samsung_usbphy3_init;
->>> +       sphy->phy3.shutdown     = samsung_usbphy3_shutdown;
->>> +
->>>          ret = usb_add_phy(&sphy->phy, USB_PHY_TYPE_USB2);
->>> +       if (ret)
->>> +               return ret;
->>> +
->>> +       if (sphy->cpu_type != TYPE_EXYNOS5250) {
->>> +               dev_warn(dev, "Not a valid cpu_type for USB 3.0\n");
->>> +       } else {
->>> +               ret = usb_add_phy(&sphy->phy3, USB_PHY_TYPE_USB3);
->>> +               if (ret)
->>> +                       return ret;
->>
->>
->> 2 redundant lines here.
->>
-> Will two returns under if return not error codes ? The last return
-> actually returns success.
-> If still it needs modification, will do that.
+> +* Texas Instruments Davinci AEMIF bus interface
+> +
+> +This file provides information for the davinci-emif device and
+> +async bus bindings.
+> +
+> +Required properties:=
+> +- compatible: "ti,davinci-aemif";
+> +- #address-cells : Should be either two or three.  The first cell is the
+> +                   chipselect number, and the remaining cells are the
+> +                   offset into the chipselect.
+> +- #size-cells : Either one or two, depending on how large each chipselect
+> +                can be.
 
-It's up to you how you structure it. The last return returns whatever
-value ret has. I can't see what is an advantage of doing something like:
+What about "how large each chipselect can be" determines 2-vs-3
+(address) or 1-vs-2 (size) cells? I assume it's 32-vs-64-bit bus? It
+might be best to make that explicit.
 
-	if (ret)
-		return ret;
+> +- reg : contains offset/length value for AEMIF control registers space
+> +- ranges : Each range corresponds to a single chipselect, and cover
 
-	return ret;
---
+add "s" at the end of that line.
 
-Thanks,
-Sylwester
+> +           the entire access window as configured.
+> +
+> +Child device nodes describe the devices connected to IFC such as NOR (e.g.
+> +cfi-flash) and NAND (ti,davinci-nand, see Documentation/devicetree/bindings/
+> +mtd/davinci-nand.txt). There might be board specific devices like FPGAs.
+> +
+> +In addition, optional child sub nodes contains bindings for the async bus
+> +interface for a given chip select.
+
+Hmmm. That's two different kinds of children, which appear to use
+different addressing schemes given the examples below; more on that below.
+
+> +Optional cs node properties:-
+> +- compatible: "ti,davinci-cs"
+> +
+> +  All of the params below in nanoseconds and are optional
+> +
+> +- ti,davinci-cs-asize - asynchronous data bus width (0 - 8bit, 1 - 16 bit)
+
+Perhaps s/asize/bus-width/? Also, directly using values 8 and 16 would
+be a lot more obvious to read than 0 and 1.
+
+> +- ti,davinci-cs-ta - Minimum turn around time
+> +- ti,davinci-cs-rhold - read hold width
+> +- ti,davinci-cs-rstobe - read strobe width
+> +- ti,davinci-cs-rsetup - read setup width
+> +- ti,davinci-cs-whold - write hold width
+> +- ti,davinci-cs-wstrobe - write strobe width
+> +- ti,davinci-cs-wsetup - write setup width
+
+The comments in the examples indicate these are in nS. This should be
+mentioned here instead I think.
+
+Does there need to be a specification of bus clock rate? How does the
+driver convert nS into number-of-clock-cycles, which I assume is what
+the HW would be programmed with?
+
+> +- ti,davinci-cs-ss - enable/disable select strobe (0 - disable, 1 - enable)
+> +- ti,davinci-cs-ew - enable/disable extended wait cycles (0 - disable, 1 - enable)
+
+Boolean properties are usually represented as present (on/enabled/1) or
+missing (off/disabled/0). Shouldn't these two properties work that way?
+I see the comment below:
+
+> +if any of the above parameters are absent, hardware register default or that
+> +set by a boot loader are used.
+
+implied they're really tri-state (explicitly off or on, or just not
+programmed). However, I think it'd be better if the DT always
+represented the complete configuration, since the DT and binding should
+be a full description of the HW rather than just the data you expect a
+particular Linux driver to need after a particular boot loader has
+executed first.
+
+> +Example for aemif, davinci nand and nor flash chip select shown below.
+> +
+> +aemif@60000000 {
+> +	compatible = "ti,davinci-aemif";
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
+> +	reg = <0x68000000 0x80000>;
+> +	ranges = <2 0 0x60000000 0x02000000
+> +		  3 0 0x62000000 0x02000000
+> +		  4 0 0x64000000 0x02000000
+> +		  5 0 0x66000000 0x02000000
+> +		  6 0 0x68000000 0x02000000>;
+> +
+> +	nand_cs:cs2@60000000 {
+
+This node has no reg property, but it needs one if you use a unit
+address ("@60000000") in the node name.
+
+The numbering scheme unit address above doesn't seem to match the
+addresses provided to child nodes by the ranges property. Perhaps the
+node layout you want is:
+
+
+aemif {
+    chip-selects {
+        nand_cs:cs2@60000000 {
+        };
+    };
+    devices {
+        nand@3,0 {
+        }
+    };
+};
+
+so that the chip-selects and devices nodes can both set appropriate and
+different #address-cells and #size-cells?
+
+That does feel a bit wierd though, and I imagine writing the ranges
+property in the aemif node would be hard.
+
+Perhaps the chip-select timings should just be written as properties in
+the aemif controller, rather than child nodes?
+
+ti,cs-timings =
+    < ... > /* 0 */
+    < ... > /* 1 */
+    < ... > /* 2 */
+    ;
+
+with each <...> being a list of n cells in a specific order?
+
+> +		compatible = "ti,davinci-cs";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		/* all timings in nanoseconds */
+> +		ti,davinci-cs-ta = <0>;
+> +		ti,davinci-cs-rhold = <7>;
+> +		ti,davinci-cs-rstrobe = <42>;
+> +		ti,davinci-cs-rsetup = <14>;
+> +		ti,davinci-cs-whold = <7>;
+> +		ti,davinci-cs-wstrobe = <42>;
+> +		ti,davinci-cs-wsetup = <14>;
+> +	};
+...
+> +	nand@3,0 {
+> +		compatible = "ti,davinci-nand";
+> +		reg = <3 0x0 0x807ff
+> +			6 0x0 0x8000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		.. See Documentation/devicetree/bindings/mtd/davinci-nand.txt
+> +	};
+
+
