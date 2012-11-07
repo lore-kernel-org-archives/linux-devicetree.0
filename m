@@ -1,115 +1,177 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Wed, 07 Nov 2012 10:48:37 +0100
-Message-ID: <509A2E75.5060307@gmail.com>
-References: <1351869956-2787-1-git-send-email-zonque@gmail.com>
- <1351869956-2787-5-git-send-email-zonque@gmail.com>
- <518397C60809E147AF5323E0420B992E3E9DA81F@DBDE01.ent.ti.com>
- <5097B7EE.3000508@gmail.com>
- <518397C60809E147AF5323E0420B992E3E9DC1F1@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9DC1F1-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Qing Xu <qingx@marvell.com>
+Subject: [PATCH v4 5/7] mfd: max8925: support dt for regulator
+Date: Wed,  7 Nov 2012 18:09:53 +0800
+Message-ID: <1352282993-26449-1-git-send-email-qingx@marvell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: qingx@marvell.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 05.11.2012 14:29, Philip, Avinash wrote:
-> On Mon, Nov 05, 2012 at 18:28:22, Daniel Mack wrote:
->> On 05.11.2012 12:03, Philip, Avinash wrote:
->>> On Fri, Nov 02, 2012 at 20:55:56, Daniel Mack wrote:
->>>> This patch adds basic DT bindings for OMAP GPMC.
->>>>
->>>> The actual peripherals are instanciated from child nodes within the GPMC
->>>> node, and the only type of device that is currently supported is NAND.
->>>>
->>>> Code was added to parse the generic GPMC timing parameters and some
->>>> documentation with examples on how to use them.
->>>>
->>>> Successfully tested on an AM33xx board.
->>>>
->>>> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> [...]
->>>> +
->>>> +		nand@0,0 {
->>>> +			reg = <0 0 0>; /* CS0, offset 0 */
->>>> +			nand-bus-width = <16>;
->>>> +			nand-ecc-mode = "none";
->>>> +
->>>> +			gpmc,sync-clk = <0>;
->>>> +			gpmc,cs-on = <0>;
->>>> +			gpmc,cs-rd-off = <36>;
->>>> +			gpmc,cs-wr-off = <36>;
->>>> +			gpmc,adv-on = <6>;
->>>> +			gpmc,adv-rd-off = <24>;
->>>> +			gpmc,adv-wr-off = <36>;
->>>> +			gpmc,we-off = <30>;
->>>> +			gpmc,oe-off = <48>;
->>>> +			gpmc,access = <54>;
->>>> +			gpmc,rd-cycle = <72>;
->>>> +			gpmc,wr-cycle = <72>;
->>>> +			gpmc,wr-access = <30>;
->>>> +			gpmc,wr-data-mux-bus = <0>;
->>>> +
->>>> +			#address-cells = <1>;
->>>> +			#size-cells = <1>;
->>>> +
->>>
->>> Can you take the timings (for example) from arago tree. The timings is tested in am335x-evm
->>> So the timings can be directly used to populate GPMC timings. Timings can found at
->>>
->>> http://arago-project.org/git/projects/?p=linux-am33x.git;a=commitdiff;
->>> h=66bfbd2c5b35dc81edce0c24843c476161ab5978;hp=370630359cb8db711cf0941cd2a242e28ccfb61e
->>>
->>> [...]
->>>> +static int gpmc_probe_dt(struct platform_device *pdev)
->>>
->>> Can you take care of the following section mismatch.
->>> WARNING: vmlinux.o(.text+0x1e2d0): Section mismatch in reference
->>> from the function gpmc_probe_dt() to the function .init.text:gpmc_nand_init().
->>
->> Sore, both fixed for v4.
->>
->>> [...]
->>>> +
->>>> +		val = of_get_nand_ecc_mode(child);
->>>> +		if (val >= 0)
->>>> +			gpmc_nand_data->ecc_opt = val;
->>>
->>> This will fail for BCH. Index of "soft_bch" is 5 & also don't have selection
->>> option between for BCH4 & BCH8 also.
->>> Can you use the of_property_read_u32 (as done early) to pass the ecc selection
->>> from dt file. This will help selection of BCH4 & BCH8 ecc options.
->>
->> Hmm. Shouldn't we rather teach of_get_nand_ecc_mode() that two modes and
->> bring the enum in sync?
-> 
-> ecc_opt is for selecting different ecc layout and not for selecting ecc mode.
-> 
-> In omap2 driver NAND_ECC_HW ecc mode supports 3 ecc layout
-> 	OMAP_ECC_HAMMING_CODE_HW_ROMCODE
-> 	OMAP_ECC_BCH4_CODE_HW
-> 	OMAP_ECC_BCH8_CODE_HW
-> 
-> So selection of ecc layout data should come from DT not ecc mode.
+From: Qing Xu <qingx@marvell.com>
 
-Ok, I see. I would still like to set them by string rather than magic
-numbers that map to enum entries. Valid values would be "none", "hw",
-"hw-romcode", "bch4" and "bch8". Are you ok with that?
+Signed-off-by: Qing Xu <qingx@marvell.com>
+---
+ .../bindings/regulator/max8925-regulator.txt       |   29 ++++++++
+ drivers/regulator/max8925-regulator.c              |   72 +++++++++++++++++++-
+ 2 files changed, 98 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/max8925-regulator.txt
 
-
-Thanks,
-Daniel
+diff --git a/Documentation/devicetree/bindings/regulator/max8925-regulator.txt b/Documentation/devicetree/bindings/regulator/max8925-regulator.txt
+new file mode 100644
+index 0000000..073b41d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/max8925-regulator.txt
+@@ -0,0 +1,29 @@
++Max8925 Voltage regulators
++
++max8925 regulator device register is still handled by mfd_add_devices, not by
++of_xxx, so, it is not necessary to add compatible name. Also, those reg
++offset and id info is stored in mfd_cell(see max8925-core.c), as a result
++there is not private properties in dts.
++
++node's name should match with the definition in max8925_regulator_matches
++(see max8925-regulator.c)
++
++
++Optional properties:
++- Any optional property defined in bindings/regulator/regulator.txt
++
++
++Example:
++
++
++	regulators {
++		SDV1 {
++			regulator-min-microvolt = <637500>;
++			regulator-max-microvolt = <1425000>;
++			regulator-boot-on;
++			regulator-always-on;
++		};
++
++		...
++		...
++	}
+diff --git a/drivers/regulator/max8925-regulator.c b/drivers/regulator/max8925-regulator.c
+index 9bb0be3..2b54979 100644
+--- a/drivers/regulator/max8925-regulator.c
++++ b/drivers/regulator/max8925-regulator.c
+@@ -17,6 +17,8 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/machine.h>
+ #include <linux/mfd/max8925.h>
++#include <linux/of.h>
++#include <linux/regulator/of_regulator.h>
+ 
+ #define SD1_DVM_VMIN		850000
+ #define SD1_DVM_VMAX		1000000
+@@ -187,6 +189,34 @@ static struct regulator_ops max8925_regulator_ldo_ops = {
+ 	.enable_reg	= MAX8925_LDOCTL##_id,			\
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_regulator_match max8925_regulator_matches[] = {
++	{ .name	= "SDV1",},
++	{ .name = "SDV2",},
++	{ .name = "SDV3",},
++	{ .name = "LDO1",},
++	{ .name = "LDO2",},
++	{ .name = "LDO3",},
++	{ .name = "LDO4",},
++	{ .name = "LDO5",},
++	{ .name = "LDO6",},
++	{ .name = "LDO7",},
++	{ .name = "LDO8",},
++	{ .name = "LDO9",},
++	{ .name = "LDO10",},
++	{ .name = "LDO11",},
++	{ .name = "LDO12",},
++	{ .name = "LDO13",},
++	{ .name = "LDO14",},
++	{ .name = "LDO15",},
++	{ .name = "LDO16",},
++	{ .name = "LDO17",},
++	{ .name = "LDO18",},
++	{ .name = "LDO19",},
++	{ .name = "LDO20",},
++};
++#endif
++
+ static struct max8925_regulator_info max8925_regulator_info[] = {
+ 	MAX8925_SDV(1, 637.5, 1425, 12.5),
+ 	MAX8925_SDV(2,   650, 2225,   25),
+@@ -214,6 +244,36 @@ static struct max8925_regulator_info max8925_regulator_info[] = {
+ 	MAX8925_LDO(20, 750, 3900, 50),
+ };
+ 
++#ifdef CONFIG_OF
++static int max8925_regulator_dt_init(struct platform_device *pdev,
++				    struct max8925_regulator_info *info,
++				    struct regulator_config *config,
++				    int ridx)
++{
++	struct device_node *nproot, *np;
++	int rcount;
++	nproot = pdev->dev.parent->of_node;
++	if (!nproot)
++		return -ENODEV;
++	np = of_find_node_by_name(nproot, "regulators");
++	if (!np) {
++		dev_err(&pdev->dev, "failed to find regulators node\n");
++		return -ENODEV;
++	}
++
++	rcount = of_regulator_match(&pdev->dev, np,
++				&max8925_regulator_matches[ridx], 1);
++	if (rcount < 0)
++		return -ENODEV;
++	config->init_data =	max8925_regulator_matches[ridx].init_data;
++	config->of_node = max8925_regulator_matches[ridx].of_node;
++
++	return 0;
++}
++#else
++#define max8925_regulator_dt_init(w, x, y, z)	(-1)
++#endif
++
+ static int __devinit max8925_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
+@@ -222,7 +282,7 @@ static int __devinit max8925_regulator_probe(struct platform_device *pdev)
+ 	struct max8925_regulator_info *ri;
+ 	struct resource *res;
+ 	struct regulator_dev *rdev;
+-	int i;
++	int i, regulator_idx;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
+ 	if (!res) {
+@@ -231,9 +291,12 @@ static int __devinit max8925_regulator_probe(struct platform_device *pdev)
+ 	}
+ 	for (i = 0; i < ARRAY_SIZE(max8925_regulator_info); i++) {
+ 		ri = &max8925_regulator_info[i];
+-		if (ri->vol_reg == res->start)
++		if (ri->vol_reg == res->start) {
++			regulator_idx = i;
+ 			break;
++		}
+ 	}
++
+ 	if (i == ARRAY_SIZE(max8925_regulator_info)) {
+ 		dev_err(&pdev->dev, "Failed to find regulator %llu\n",
+ 			(unsigned long long)res->start);
+@@ -243,9 +306,12 @@ static int __devinit max8925_regulator_probe(struct platform_device *pdev)
+ 	ri->chip = chip;
+ 
+ 	config.dev = &pdev->dev;
+-	config.init_data = pdata;
+ 	config.driver_data = ri;
+ 
++	if (max8925_regulator_dt_init(pdev, ri, &config, regulator_idx))
++		if (pdata)
++			config.init_data = pdata;
++
+ 	rdev = regulator_register(&ri->desc, &config);
+ 	if (IS_ERR(rdev)) {
+ 		dev_err(&pdev->dev, "failed to register regulator %s\n",
+-- 
+1.7.0.4
