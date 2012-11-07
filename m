@@ -1,141 +1,55 @@
-From: viresh kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
- variables & arrays
-Date: Wed, 7 Nov 2012 09:52:05 +0530
-Message-ID: <CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
-References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
-	<50991C41.50705@gmail.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 2/4] gpio: samsung: Skip registration if pinctrl driver is
+ present on Exynos4x12
+Date: Wed, 07 Nov 2012 13:41:44 +0900
+Message-ID: <0c5301cdbca2$30320240$909606c0$%kim@samsung.com>
+References: <1351089457-8205-1-git-send-email-t.figa@samsung.com>
+ <1351089457-8205-3-git-send-email-t.figa@samsung.com>
+ <CACRpkdYNDSp0K3wpvUem9ecsW-JQ9L6aKqaOmHNUR65DQTMNHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50991C41.50705@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: rob.herring@calxeda.com, grant.likely@secretlab.ca, linaro-dev@lists.linaro.org, andriy.shevchenko@intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CACRpkdYNDSp0K3wpvUem9ecsW-JQ9L6aKqaOmHNUR65DQTMNHA@mail.gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Linus Walleij' <linus.walleij@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2012 at 7:48 PM, Rob Herring <robherring2@gmail.com> wro=
-te:
->> +#define of_property_read_array(_np, _pname, _out, _sz)             =
-          \
+Linus Walleij wrote:
+> 
+> On Wed, Oct 24, 2012 at 4:37 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> 
+> > This patch modifies the Samsung GPIO driver to check for pinctrl driver
+> > presence earlier and use generic matching instead of a single compatible
+> > value.
+> >
+> > This allows us to fix warning about unrecognized SoC in case of
+> > Exynos4x12, which is not supported by this driver.
+> >
+> > Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Tell me if there is something you want merged through
+> the GPIO or pinctrl tree. I have this Samsung branch on the
+> pinctrl tree...
+> 
+Hi Linus, 
 
->> +     while (_sz--)                                                 =
-  \
->> +             *_out++ =3D (typeof(*_out))be32_to_cpup(_val++);      =
-    \
+A commit 1b6056d6 ("pinctrl: samsung: Include bank-specific eint offset in
+bank struct") which is in your pinctrl tree (samsung branch) changed
+macro(EXYNOS_PIN_BANK_EINTG) to add offset. Eventually, this series(due to
+3rd patch, pinctrl: samsung: Add support for Exynos4x12) breaks compilation
+without the commit. So if you don't have a plan to rebase samsung branch of
+your pinctrl tree, I'd like to merge it in my tree. Is it ok to you?
 
-> This will not work. You are incrementing _out by 1, 2, or 4 bytes, bu=
-t
-> _val is always incremented by 4 bytes.
->
-> According to the dtc commit adding this feature, the values are packe=
-d:
->
-> With this patch the following property assignment:
->
->     property =3D /bits/ 16 <0x1234 0x5678 0x0 0xffff>;
->
-> is equivalent to:
->
->     property =3D <0x12345678 0x0000ffff>;
+Thanks.
 
-I thought of it a bit more and wasn't actually aligned with your explan=
-ation :(
-
-If that is the case, how will current implementation of u32 array will =
-work
-if we pass something like: 0x88 0x84000000 0x5890 from DT?
-
-So, i did a dummy test of my current implementation, with following cha=
-nges
-in one of my drivers:
-
-dts changes:
-
-                cluster0: cluster@0 {
-+                       data1 =3D <0x50 0x60 0x70>;
-+                       data2 =3D <0x5000 0x6000 0x7000>;
-+                       data3 =3D <0x50000000 0x60000000 0x70000000>;
-               }
-
-driver changes:
-
-+void test(struct device_node *cluster)
-+{
-+       u8 data1[3];
-+       u16 data2[3];
-+       u32 data3[3], i;
-+
-+       of_property_read_u8_array(cluster, "data1", data1, 3);
-+       of_property_read_u16_array(cluster, "data2", data2, 3);
-+       of_property_read_u32_array(cluster, "data3", data3, 3);
-+
-+       for (i =3D 0; i < 3; i++) {
-+               printk(KERN_INFO "u8 %d: %x\n", i, data1[i]);
-+               printk(KERN_INFO "u16 %d: %x\n", i, data2[i]);
-+               printk(KERN_INFO "u32 %d: %x\n", i, data3[i]);
-+       }
-+}
-
-And following is the output
-
-[=A0=A0=A0 4.087205] u8 0: 50
-[=A0=A0=A0 4.093746] u16 0: 5000
-[=A0=A0=A0 4.101067] u32 0: 50000000
-[=A0=A0=A0 4.109512] u8 1: 60
-[=A0=A0=A0 4.116036] u16 1: 6000
-[=A0=A0=A0 4.123357] u32 1: 60000000
-[=A0=A0=A0 4.131718] u8 2: 70
-[=A0=A0=A0 4.138241] u16 2: 7000
-[=A0=A0=A0 4.145573] u32 2: 70000000
-
-which looks to be what we were looking for, isn't it?
-
-=46ollowing is fixup for the doc comment missing:
-
-commit 00803aed0781de451048df0d15a3e8c814a343c8
-Author: Viresh Kumar <viresh.kumar@linaro.org>
-Date:   Wed Nov 7 09:48:46 2012 +0530
-
-    fixup! dt: add helper function to read u8 & u16 variables & arrays
----
- drivers/of/base.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index fbb634b..4a6632e 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -669,6 +669,7 @@ EXPORT_SYMBOL(of_find_node_by_phandle);
-  * @np:                device node from which the property value is to=
- be read.
-  * @propname:  name of the property to be searched.
-  * @out_value: pointer to return value, modified only if return value =
-is 0.
-+ * @sz:                number of array elements to read
-  *
-  * Search for a property in a device node and read 8-bit value(s) from
-  * it. Returns 0 on success, -EINVAL if the property does not exist,
-@@ -690,6 +691,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u8_array);
-  * @np:                device node from which the property value is to=
- be read.
-  * @propname:  name of the property to be searched.
-  * @out_value: pointer to return value, modified only if return value =
-is 0.
-+ * @sz:                number of array elements to read
-  *
-  * Search for a property in a device node and read 16-bit value(s) fro=
-m
-  * it. Returns 0 on success, -EINVAL if the property does not exist,
-@@ -712,6 +714,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u16_array);
-  * @np:                device node from which the property value is to=
- be read.
-  * @propname:  name of the property to be searched.
-  * @out_value: pointer to return value, modified only if return value =
-is 0.
-+ * @sz:                number of array elements to read
-  *
-  * Search for a property in a device node and read 32-bit value(s) fro=
-m
-  * it. Returns 0 on success, -EINVAL if the property does not exist,
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
