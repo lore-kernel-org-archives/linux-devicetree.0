@@ -1,56 +1,66 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree
-	support
-Date: Wed, 7 Nov 2012 14:05:35 +0000
-Message-ID: <20121107140535.GA28954@opensource.wolfsonmicro.com>
-References: <1352259701-19847-1-git-send-email-voice.shen@atmel.com> <20121107084932.GE20063@game.jcrosoft.org> <20121107092124.GE12323@opensource.wolfsonmicro.com> <20121107104121.GG20063@game.jcrosoft.org>
+Subject: Re: [PATCH v4 5/7] mfd: max8925: support dt for regulator
+Date: Wed, 7 Nov 2012 15:20:08 +0100
+Message-ID: <20121107142007.GB20844@opensource.wolfsonmicro.com>
+References: <1352282993-26449-1-git-send-email-qingx@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121107104121.GG20063@game.jcrosoft.org>
-Sender: linux-sound-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, fengguang.wu@intel.com
+In-Reply-To: <1352282993-26449-1-git-send-email-qingx@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qing Xu <qingx@marvell.com>
+Cc: lrg@ti.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 07, 2012 at 11:41:21AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 10:21 Wed 07 Nov     , Mark Brown wrote:
 
-> > Like I say it's not an issue right now and it seems like it should be
-> > trivial to fix.  Is anything needed here other than adding the
-> > pinctrl_get_set_default() call, in which case would it not be less
-> > effort all round to just send the patch?  If there is more involved then
-> > what is needed?
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> for the driver point of view I agreee with you for the dtsi I disagree I miss
-> 100 lignes of pinctrl description
+On Wed, Nov 07, 2012 at 06:09:53PM +0800, Qing Xu wrote:
+> From: Qing Xu <qingx@marvell.com>
+>=20
+> Signed-off-by: Qing Xu <qingx@marvell.com>
 
-> so today if no pinctrl the pin are input gpio and the drivers will not work
+Applied, thanks.
 
-> if this code was tested this work MUST have been done otherwise we will apply
-> non tested work
+> +max8925 regulator device register is still handled by mfd_add_devices, n=
+ot by
+> +of_xxx, so, it is not necessary to add compatible name. Also, those reg
+> +offset and id info is stored in mfd_cell(see max8925-core.c), as a result
+> +there is not private properties in dts.
 
-> so dor the dtsi part I do NACK it and the pinctrl code is arropund for 2 or 3
-> months so no excuse even Joachim who add the rm9200 support to DT handled the
-> pinctrl so no exeption on at91 when switching to DT the pinctrl is mandatory
+> +node's name should match with the definition in max8925_regulator_matches
+> +(see max8925-regulator.c)
 
-> If you want to apply the part of the patch that touch only the drivers I'm
-> fine but for the dtsi no
+Please submit a followup which removes all the Linux-specific references
+and just enumerates the supported regulators.  Please do also use a
+subject line appropriate for the subsystem - this is for the regulator
+driver so it should be regulator:
 
-So what the above is saying is that we should have a followup patch to
-add the pinctrl setup to the DT (probably one that goes along with the
-pinctrl changes and adds complete pinctrl setup for the affected boards
-rather than just doing the audio piecemeal) and do the mindless call in
-the driver.  That doesn't seem impossible.
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-So long as we get those things in place prior to the merge window we
-should be fine.  Even if we don't manage that it still seems like having
-the patch is better than not having it, from the sounds of it the boards
-are going to be totally broken if they boot with DT but without the
-pinctrl setup and the ASoC bindings are pretty much an orthogonal issue
-to that.  Having the bindings for the SSC (which depend on this AFAICT)
-will allow other machines which are doing a better job with pinctrl to
-work.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Does that seem reasonable?
+iQIcBAEBAgAGBQJQmm4MAAoJELSic+t+oim92OsP/AprjJEzDPZwSjm8VNna7DRH
+PwNHbFMeo5nMIOACZglZTwHNBAtLa/vT5FG19/I4/gtXPGrtRSBwqPKZfnjf79bl
+lcWxRSGqp32SPEEd4nDSW4UKQBer+0K4lUUGIpIZbTJwxZSlLgDoX/ULxdO+vDZb
+g+DdEd/Fik/J5/zLC8r/jnRvB9x45JCNVn3WBizgLIJizUFT4zbML4ICzEEJh8eK
+v3bP+r5y0dhvzIvTMS1QEBeWXtLwagbsf0eCujYNnYHC574mAHCuYxnBqX0S2X2N
+KKGGRui7ztW1aCCzhN8RooSxt7kiIf8rqB3N5WUj4CFz2aPX/jIlEi8krZKeMyM0
+b5dyhRx76H29blFIEYjdS5Du2XQOaE7AsInTb8Q1EomUhpk5jacCyQyyHuCZ3/09
+GFooMBNeMJAgiFIRFtfjtp8miwYpYp8FFktKsZJFlxgi/eRlcd6GJoxnuNNt60Ue
+6GVdTn3NsIQNvXDuDELp+KTZGyG2togU6Ly2YDBDXk3KBciqyk6CkGmVI5GfDxvx
+E2vQ7xilRQrz3RDFiU1mo6vB78KashYNIR926miP9IGAprrh96WV3twBexhyF/LN
+fXe6HUJ6i9TZF79Eo8dzil/yATx0cWWfmCo+D/UekoDLfKXCk6gMRDaeh+H0gA6x
+IR1pSdri7Piery3bmAeM
+=b/xp
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
