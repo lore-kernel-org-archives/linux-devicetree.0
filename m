@@ -1,17 +1,21 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] ARM: kernel: add device tree init map function
-Date: Wed, 7 Nov 2012 11:05:42 +0000
-Message-ID: <20121107110542.GH23305@mudshark.cambridge.arm.com>
-References: <1350393709-23546-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1350393709-23546-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20121106215044.GB21764@mudshark.cambridge.arm.com>
- <20121107102349.GC17831@e102568-lin.cambridge.arm.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Wed, 7 Nov 2012 12:12:50 +0100
+Message-ID: <509A4232.9090709@ti.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+ <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
+ <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com>
+ <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
+ <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com>
+ <509A3595.7050600@ti.com>
+ <A6697FB9-3614-4027-A71B-59C7556005BF@antoniou-consulting.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121107102349.GC17831-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <A6697FB9-3614-4027-A71B-59C7556005BF-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,79 +26,153 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 07, 2012 at 10:23:49AM +0000, Lorenzo Pieralisi wrote:
-> On Tue, Nov 06, 2012 at 09:50:44PM +0000, Will Deacon wrote:
-> > > +	while ((dn = of_find_node_by_type(dn, "cpu")) && cpu <= nr_cpu_ids) {
-> > > +		const u32 *hwid;
-> > > +		int len;
-> > > +
-> > > +		pr_debug("  * %s...\n", dn->full_name);
-> > > +
-> > > +		hwid = of_get_property(dn, "reg", &len);
-> > > +
-> > > +		if (!hwid || len != 4) {
-> > > +			pr_err("  * %s missing reg property\n", dn->full_name);
-> > > +			continue;
-> > > +		}
-> > > +		/*
-> > > +		 * We want to assign the boot CPU logical id 0.
-> > > +		 * Boot CPU checks its own MPIDR and if matches the current
-> > > +		 * cpu node "reg" value it sets the logical cpu index to 0
-> > > +		 * and stores the physical id accordingly.
-> > > +		 * If MPIDR does not match, assign sequential cpu logical
-> > > +		 * id (starting from 1) and increments it.
-> > > +		 */
-> > > +		i = (be32_to_cpup(hwid) == (read_cpuid_mpidr() & 0xffffff))
-> > > +							? 0 : cpu++;
-> > > +
-> > > +		if (!i)
-> > > +			printk(KERN_INFO "Booting Linux on CPU HWID 0x%x\n",
-> > > +					be32_to_cpup(hwid));
-> > 
-> > I don't think we should bother with this print -- we already print something
-> > in smp_setup_processor_id, which cannot differ for the boot CPU, If you want
-> > the full mpidr, we could change that code to include it as well.
+On 11/07/2012 12:02 PM, Pantelis Antoniou wrote:
+> Hi Benoit,
 > 
-> Yes, it is duplicate code, I will remove it. Extending the printk in
-> smp_setup_processor_id() to include the entire MPIDR should be done
-> though, otherwise we might have printk aliases on system with multiple
-> clusters.
-
-Feel free to make that change. You could also replace NR_CPUS in
-smp_setup_processor_id with nr_cpu_ids for consistency (they'll be the same
-this early on).
-
-> > 
-> > We might also want some sanity checking that we do indeed end up with
-> > logical id 0 for the boot CPU. If not, I think we should scream and fall
-> > back on the simple mapping created earlier.
+> On Nov 7, 2012, at 11:19 AM, Benoit Cousson wrote:
 > 
-> Well, this basically means that we have to make sure this function is
-> executed on the boot CPU (and it is as the code stands now), right ?
-
-Yes, smp is not up yet which is why we're allowed to play with the logical
-map.
-
-> Since we are reading the MPIDR of the CPU parsing the tree and assign logical
-> cpu 0 accordingly I think we have this check carried out automatically,
-> unless for any given reason someone calls this function on a CPU that is
-> not the boot one (Why ?).
+>> Hi Panto,
+>>
+>> On 11/07/2012 09:13 AM, Pantelis Antoniou wrote:
+>>> Hi Grant
+>>>
+>>> On Nov 6, 2012, at 9:45 PM, Grant Likely wrote:
+>>>
+>>>> On Tue, Nov 6, 2012 at 7:34 PM, Pantelis Antoniou
+>>>> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>>
+>>> [ snip ]
+>>>>
+>>>> g.
+>>>
+>>> Since we've started talking about longer term goals, and the versioning
+>>> provision seems to stand, I hope we address how much the fragment versioning
+>>> thing is similar to the way board revisions progress.
+>>>
+>>> If a versioning syntax is available then one could create a single DT 
+>>> file for a bunch of 'almost' similar board and board revisions.
+>>
+>> I even think that the version issue is probably much more important for the short term than the overlay aspect. Well at least as important. We start having as well a bunch a panda board version with different HW setup.
+>>
+>> Having a single board-XXX.dts that will support all these versions is probably the best approach to avoid choosing that from the bootloader.
+>>
+>> We need to figure out a format + mechanism compatible with the current non-versioned format to allow filtering the nodes at runtime to keep only the relevant one.
+>>
+>> Something that can find the driver that will provide the proper board version or subsystem version or whatever like that:
+>>
+>> 	compatible-version = "ti,panda-version", "panda";
+>>
+>> Then at runtime we should create only the node with the correct match between the driver version and the string version.
+>>
+>>
 > 
-> Basically I could add a check like:
+> This is exactly what we need. FWIW the capebus syntax is a little bit different.
 > 
-> if (WARN_ON(smp_processor_id())
-> 	return;
+>> /* regular panda audio routing */
+>> sound: sound {
+>> 	compatible = "ti,abe-twl6040";
+>> 	ti,model = "PandaBoard";
+>> 	compatible-version = "ti,panda-version", "panda";
+>>
+>> 	/* Audio routing */
+>> 	ti,audio-routing =
+>> 		"Headset Stereophone", "HSOL",
+>> 		"Headset Stereophone", "HSOR",
+>> 		"Ext Spk", "HFL",
+>> 		"Ext Spk", "HFR",
+>> 		"Line Out", "AUXL",
+>> 		"Line Out", "AUXR",
+>> 		"HSMIC", "Headset Mic",
+>> 		"Headset Mic", "Headset Mic Bias",
+>> 		"AFML", "Line In",
+>> 		"AFMR", "Line In";
+>> };
+>>
+>>
+>> /* Audio routing is different between PandaBoard4430 and PandaBoardES */
+>> &sound {
+>> 	ti,model = "PandaBoardES";
+>> 	compatible-version = "ti,panda-version", "panda-es";
+>>
+>> 	/* Audio routing */
+>> 	ti,audio-routing =
+>> 		"Headset Stereophone", "HSOL",
+>> 		"Headset Stereophone", "HSOR",
+>> 		"Ext Spk", "HFL",
+>> 		"Ext Spk", "HFR",
+>> 		"Line Out", "AUXL",
+>> 		"Line Out", "AUXR",
+>> 		"AFML", "Line In",
+>> 		"AFMR", "Line In";
+>> };
+>>
 > 
-> to fall back to the previous mapping, but that's overkill IMHO.
+> We use this syntax for capebus (totally non-standard of-course),
+> 
+> sound: sound {
+> 	compatible = "ti,abe-twl6040";
+> 	
+> 
+> 	model@0 {
+> 		ti,model = "PandaBoard";
+> 		ti,audio-routing =
+> 			"Headset Stereophone", "HSOL",
+> 			"Headset Stereophone", "HSOR",
+> 			"Ext Spk", "HFL",
+> 			"Ext Spk", "HFR",
+> 			"Line Out", "AUXL",
+> 			"Line Out", "AUXR",
+> 			"HSMIC", "Headset Mic",
+> 			"Headset Mic", "Headset Mic Bias",
+> 			"AFML", "Line In",
+> 			"AFMR", "Line In";
+> 	};
+> 
+> 	model@1 {
+> 		ti,model = "PandaBoardES";
+> 		ti,audio-routing =
+> 			"Headset Stereophone", "HSOL",
+> 			"Headset Stereophone", "HSOR",
+> 			"Ext Spk", "HFL",
+> 			"Ext Spk", "HFR",
+> 			"Line Out", "AUXL",
+> 			"Line Out", "AUXR",
+> 			"AFML", "Line In",
+> 			"AFMR", "Line In";
+> 	};
+> 
+> 	/* common properties for either model */
+> };
+> 
+> The difference is that you don't get to repeat the common properties.
+> 
+> I don't know if this breaks any conventions but seems to work fine for our case.
 
-No, I was thinking about what happens if the devicetree doesn't contain an
-mpidr property that matches the boot cpu. In this case, we will fail to
-assign logical ID 0, right? If this happens, we should complain about an
-invalid devicetree and try to fall back on the logical_map that was
-generated earlier on.
+Yeah, my main concern with that approach is that you change the
+structure of the tree by adding an extra node/hierarchy that will not be
+there in case of non-versioned tree.
+That's why I think we should have something lighter that will not change
+the structure.
+Ideally we should be able to add extra versioned node to the original
+dts without changing it at all.
 
-Will
+>> Maybe some extra version match table can just be passed during the board machine_init 
+>>
+>> 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL, panda_version_match_table);
+>>
+> 
+> Would we need explicit of_platform_populate calls if we have node modification notifiers?
+> In that case the notifier would pick it up automatically, and can do the per
+> version matching internally.
+
+Yes indeed, but here I was thinking about an intermediate step, i.e.
+now, without any dynamic node insertion mechanism.
+Thanks to this simple approach, when can already fix the board
+versionning problem.
+
+Regards,
+Benoit
