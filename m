@@ -1,11 +1,20 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: [PATCH] backlight: Add of_find_backlight_by_node() function
-Date: Wed,  7 Nov 2012 23:08:39 +0100
-Message-ID: <1352326119-7301-1-git-send-email-thierry.reding@avionic-design.de>
-Mime-Version: 1.0
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Wed, 7 Nov 2012 23:10:34 +0100
+Message-ID: <37BFD75A-5A27-4E3F-A494-A0707E48B236@antoniou-consulting.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+ <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
+ <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com>
+ <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
+ <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com>
+ <509A3595.7050600@ti.com> <509A9984.3000709@wwwdotorg.org>
+Mime-Version: 1.0 (Apple Message framework v1085)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <509A9984.3000709-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,66 +25,115 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This function finds the struct backlight_device for a given device tree
-node. A dummy function is provided so that it safely compiles out if OF
-support is disabled.
+Hi Stephen,
 
-Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
----
- drivers/video/backlight/backlight.c | 17 +++++++++++++++++
- include/linux/backlight.h           | 10 ++++++++++
- 2 files changed, 27 insertions(+)
+On Nov 7, 2012, at 6:25 PM, Stephen Warren wrote:
 
-diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-index 297db2f..0d1ed4f 100644
---- a/drivers/video/backlight/backlight.c
-+++ b/drivers/video/backlight/backlight.c
-@@ -370,6 +370,23 @@ void backlight_device_unregister(struct backlight_device *bd)
- }
- EXPORT_SYMBOL(backlight_device_unregister);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static int of_parent_match(struct device *dev, void *data)
-+{
-+	return dev->parent && dev->parent->of_node == data;
-+}
-+
-+struct backlight_device *of_find_backlight_by_node(struct device_node *node)
-+{
-+	struct device *dev;
-+
-+	dev = class_find_device(backlight_class, NULL, node, of_parent_match);
-+
-+	return dev ? to_backlight_device(dev) : NULL;
-+}
-+EXPORT_SYMBOL(of_find_backlight_by_node);
-+#endif
-+
- static void __exit backlight_class_exit(void)
- {
- 	class_destroy(backlight_class);
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index 5ffc6dd..11840e9 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -134,4 +134,14 @@ struct generic_bl_info {
- 	void (*kick_battery)(void);
- };
- 
-+#if IS_ENABLED(CONFIG_OF)
-+struct backlight_device *of_find_backlight_by_node(struct device_node *node);
-+#else
-+static inline struct backlight_device *
-+of_find_backlight_by_node(struct device_node *node)
-+{
-+	return NULL;
-+}
-+#endif
-+
- #endif
--- 
-1.8.0
+> On 11/07/2012 03:19 AM, Benoit Cousson wrote:
+>> Hi Panto,
+>> 
+>> On 11/07/2012 09:13 AM, Pantelis Antoniou wrote:
+>>> Hi Grant
+>>> 
+>>> On Nov 6, 2012, at 9:45 PM, Grant Likely wrote:
+>>> 
+>>>> On Tue, Nov 6, 2012 at 7:34 PM, Pantelis Antoniou
+>>>> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>>> 
+>>> [ snip ]
+>>>> 
+>>>> g.
+>>> 
+>>> Since we've started talking about longer term goals, and the versioning
+>>> provision seems to stand, I hope we address how much the fragment versioning
+>>> thing is similar to the way board revisions progress.
+>>> 
+>>> If a versioning syntax is available then one could create a single DT 
+>>> file for a bunch of 'almost' similar board and board revisions.
+>> 
+>> I even think that the version issue is probably much more important for the short term than the overlay aspect. Well at least as important. We start having as well a bunch a panda board version with different HW setup.
+>> 
+>> Having a single board-XXX.dts that will support all these versions is probably the best approach to avoid choosing that from the bootloader.
+>> 
+>> We need to figure out a format + mechanism compatible with the current non-versioned format to allow filtering the nodes at runtime to keep only the relevant one.
+>> 
+>> Something that can find the driver that will provide the proper board version or subsystem version or whatever like that:
+>> 
+>> 	compatible-version = "ti,panda-version", "panda";
+>> 
+>> Then at runtime we should create only the node with the correct match between the driver version and the string version.
+>> 
+>> 
+>> /* regular panda audio routing */
+>> sound: sound {
+>> 	compatible = "ti,abe-twl6040";
+>> 	ti,model = "PandaBoard";
+>> 	compatible-version = "ti,panda-version", "panda";
+>> 
+>> 	/* Audio routing */
+>> 	ti,audio-routing =
+>> 		"Headset Stereophone", "HSOL",
+>> 		"Headset Stereophone", "HSOR",
+>> 		"Ext Spk", "HFL",
+>> 		"Ext Spk", "HFR",
+>> 		"Line Out", "AUXL",
+>> 		"Line Out", "AUXR",
+>> 		"HSMIC", "Headset Mic",
+>> 		"Headset Mic", "Headset Mic Bias",
+>> 		"AFML", "Line In",
+>> 		"AFMR", "Line In";
+>> };
+>> 
+>> 
+>> /* Audio routing is different between PandaBoard4430 and PandaBoardES */
+>> &sound {
+>> 	ti,model = "PandaBoardES";
+>> 	compatible-version = "ti,panda-version", "panda-es";
+>> 
+>> 	/* Audio routing */
+>> 	ti,audio-routing =
+>> 		"Headset Stereophone", "HSOL",
+>> 		"Headset Stereophone", "HSOR",
+>> 		"Ext Spk", "HFL",
+>> 		"Ext Spk", "HFR",
+>> 		"Line Out", "AUXL",
+>> 		"Line Out", "AUXR",
+>> 		"AFML", "Line In",
+>> 		"AFMR", "Line In";
+>> };
+>> 
+>> 
+>> Maybe some extra version match table can just be passed during the board machine_init 
+>> 
+>> 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL, panda_version_match_table);
+> 
+> Is the only difference here the content of the ti,audio-routing
+> property? If so, then I don't think there's any need for infra-structure
+> for this; the driver code already reads that property and adjusts its
+> behaviour based upon it.
+> 
+> I do see that "Headset Mic" exists only in one of the tables above.
+> Perhaps the driver could scan the routing table, and only create the
+> ASoC object for the headset if it's mentioned in the routing table?
+> 
+> If there are additional differences, then you can always use the .data
+> field in of_device_id to automatically associate some configuration data
+> with different compatible values.
+> 
+> Even better might be to extend the binding so that all HW differences
+> are represented explicitly as properties; that way you wouldn't even
+> need different compatible values.
+
+I think that perhaps the choice of the SoC specific driver was unfortunate.
+
+There are cases where a standard driver should be configured differently
+depending on the board revision/model. In that case per-revision 
+driver changes are out of the question.
+
+Regards
+
+-- Pantelis
