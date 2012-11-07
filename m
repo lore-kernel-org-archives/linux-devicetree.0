@@ -1,70 +1,153 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree
- support
-Date: Wed, 7 Nov 2012 11:41:21 +0100
-Message-ID: <20121107104121.GG20063@game.jcrosoft.org>
-References: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
- <20121107084932.GE20063@game.jcrosoft.org>
- <20121107092124.GE12323@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121107092124.GE12323-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
+Date: Wed, 7 Nov 2012 12:02:32 +0100
+Message-ID: <A6697FB9-3614-4027-A71B-59C7556005BF@antoniou-consulting.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com> <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com> <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com> <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com> <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com> <509A3595.7050600@ti.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <509A3595.7050600@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 10:21 Wed 07 Nov     , Mark Brown wrote:
-> On Wed, Nov 07, 2012 at 09:49:32AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> 
-> > yes the pinctrl is mainline in -next via pinctrl tree
-> 
-> > s code does not work on the DT kernel untill it's done
-> 
-> > NACK stand I refuse this touch the at91 dtsi untiol it's done correctly
-> 
-> ...and here's another mail (plus a further private mail on the same
-> subject) by the time I managed to reply to the first one, the timestamps
-> say in about ten minutes :/  What I'm seeing here is two of the Atmel
-> maintainers disagreeing about a patch so I've got to pick one view and
-> right now applying the patch looks like it moves us further forwards.
-> 
-> Like I say it's not an issue right now and it seems like it should be
-> trivial to fix.  Is anything needed here other than adding the
-> pinctrl_get_set_default() call, in which case would it not be less
-> effort all round to just send the patch?  If there is more involved then
-> what is needed?
-for the driver point of view I agreee with you for the dtsi I disagree I miss
-100 lignes of pinctrl description
+Hi Benoit,
 
-so today if no pinctrl the pin are input gpio and the drivers will not work
+On Nov 7, 2012, at 11:19 AM, Benoit Cousson wrote:
 
-if this code was tested this work MUST have been done otherwise we will apply
-non tested work
-
-so dor the dtsi part I do NACK it and the pinctrl code is arropund for 2 or 3
-months so no excuse even Joachim who add the rm9200 support to DT handled the
-pinctrl so no exeption on at91 when switching to DT the pinctrl is mandatory
-
-If you want to apply the part of the patch that touch only the drivers I'm
-fine but for the dtsi no
-
-
-Best Regards,
-J.
+> Hi Panto,
 > 
-> Thinking about it a little more I'm actually wondering why whatever
-> pinctrl change made this mandatory didn't go through and update all the
-> drivers.
+> On 11/07/2012 09:13 AM, Pantelis Antoniou wrote:
+>> Hi Grant
+>> 
+>> On Nov 6, 2012, at 9:45 PM, Grant Likely wrote:
+>> 
+>>> On Tue, Nov 6, 2012 at 7:34 PM, Pantelis Antoniou
+>>> <panto@antoniou-consulting.com> wrote:
+>> 
+>> [ snip ]
+>>> 
+>>> g.
+>> 
+>> Since we've started talking about longer term goals, and the versioning
+>> provision seems to stand, I hope we address how much the fragment versioning
+>> thing is similar to the way board revisions progress.
+>> 
+>> If a versioning syntax is available then one could create a single DT 
+>> file for a bunch of 'almost' similar board and board revisions.
+> 
+> I even think that the version issue is probably much more important for the short term than the overlay aspect. Well at least as important. We start having as well a bunch a panda board version with different HW setup.
+> 
+> Having a single board-XXX.dts that will support all these versions is probably the best approach to avoid choosing that from the bootloader.
+> 
+> We need to figure out a format + mechanism compatible with the current non-versioned format to allow filtering the nodes at runtime to keep only the relevant one.
+> 
+> Something that can find the driver that will provide the proper board version or subsystem version or whatever like that:
+> 
+> 	compatible-version = "ti,panda-version", "panda";
+> 
+> Then at runtime we should create only the node with the correct match between the driver version and the string version.
+> 
+> 
+
+This is exactly what we need. FWIW the capebus syntax is a little bit different.
+
+> /* regular panda audio routing */
+> sound: sound {
+> 	compatible = "ti,abe-twl6040";
+> 	ti,model = "PandaBoard";
+> 	compatible-version = "ti,panda-version", "panda";
+> 
+> 	/* Audio routing */
+> 	ti,audio-routing =
+> 		"Headset Stereophone", "HSOL",
+> 		"Headset Stereophone", "HSOR",
+> 		"Ext Spk", "HFL",
+> 		"Ext Spk", "HFR",
+> 		"Line Out", "AUXL",
+> 		"Line Out", "AUXR",
+> 		"HSMIC", "Headset Mic",
+> 		"Headset Mic", "Headset Mic Bias",
+> 		"AFML", "Line In",
+> 		"AFMR", "Line In";
+> };
+> 
+> 
+> /* Audio routing is different between PandaBoard4430 and PandaBoardES */
+> &sound {
+> 	ti,model = "PandaBoardES";
+> 	compatible-version = "ti,panda-version", "panda-es";
+> 
+> 	/* Audio routing */
+> 	ti,audio-routing =
+> 		"Headset Stereophone", "HSOL",
+> 		"Headset Stereophone", "HSOR",
+> 		"Ext Spk", "HFL",
+> 		"Ext Spk", "HFR",
+> 		"Line Out", "AUXL",
+> 		"Line Out", "AUXR",
+> 		"AFML", "Line In",
+> 		"AFMR", "Line In";
+> };
+> 
+
+We use this syntax for capebus (totally non-standard of-course),
+
+sound: sound {
+	compatible = "ti,abe-twl6040";
+	
+
+	model@0 {
+		ti,model = "PandaBoard";
+		ti,audio-routing =
+			"Headset Stereophone", "HSOL",
+			"Headset Stereophone", "HSOR",
+			"Ext Spk", "HFL",
+			"Ext Spk", "HFR",
+			"Line Out", "AUXL",
+			"Line Out", "AUXR",
+			"HSMIC", "Headset Mic",
+			"Headset Mic", "Headset Mic Bias",
+			"AFML", "Line In",
+			"AFMR", "Line In";
+	};
+
+	model@1 {
+		ti,model = "PandaBoardES";
+		ti,audio-routing =
+			"Headset Stereophone", "HSOL",
+			"Headset Stereophone", "HSOR",
+			"Ext Spk", "HFL",
+			"Ext Spk", "HFR",
+			"Line Out", "AUXL",
+			"Line Out", "AUXR",
+			"AFML", "Line In",
+			"AFMR", "Line In";
+	};
+
+	/* common properties for either model */
+};
+
+The difference is that you don't get to repeat the common properties.
+
+I don't know if this breaks any conventions but seems to work fine for our case.
+
+> 
+> Maybe some extra version match table can just be passed during the board machine_init 
+> 
+> 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL, panda_version_match_table);
+> 
+
+Would we need explicit of_platform_populate calls if we have node modification notifiers?
+In that case the notifier would pick it up automatically, and can do the per
+version matching internally.
+
+> 
+> Regards,
+> Benoit  
+
+Regards
+
+-- Pantelis
