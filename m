@@ -1,193 +1,92 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [RFC v2 PATCH 1/2] memory: davinci - add aemif controller platform
- driver
-Date: Wed, 7 Nov 2012 10:39:21 -0500
-Message-ID: <509A80A9.7050800@ti.com>
-References: <1352238427-26085-1-git-send-email-m-karicheri2@ti.com> <1352238427-26085-2-git-send-email-m-karicheri2@ti.com> <5099AFF6.50400@ti.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH V4 0/7] ARM: AM33XX: net: Add DT support to CPGMAC and
+ MDIO driver
+Date: Wed, 7 Nov 2012 16:45:41 +0100
+Message-ID: <509A8225.8050508@ti.com>
+References: <1352223159-27504-1-git-send-email-mugunthanvnm@ti.com> <509A7D39.8050506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5099AFF6.50400@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, gregkh@linuxfoundation.org, swarren@wwwdotorg.org, hdoyu@nvidia.com
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <509A7D39.8050506@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: davem@davemloft.net, Paul Walmsley <paul@pwsan.com>, netdev@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Santhosh,
+Hi Mugunthan,
 
-Thanks for the review. Some of the comments below applies to the 
-original code as this driver is moved from mach-davinci to memory. I 
-will fix them though. See below my response.
->> +
->> +    curr_cs_data = get_cs_data(chip_cs);
->> +    if (curr_cs_data) {
->> +        /* for configuration we use cs since it is used to index ACR */
->> +        ret = davinci_aemif_config_abus(chip_cs, aemif->base, data);
->> +        if (!ret) {
->> +            *curr_cs_data = *data;
->> +            return 0;
->> +        }
->> +    }
->> +
->> +    return ret;
->> +}
->> +EXPORT_SYMBOL(davinci_aemif_set_abus_params);
->> +
-> Who is the user of this EXPORT ?
-Mostly not needed, but there is a use case for connecting FPGA that 
-needs to do the configuration dynamically I guess. Want to hear from 
-others if this is needed? Same for below comment. May be we can remove 
-this now and add it later if needed.
->
->> +/**
->> + * davinci_aemif_get_abus_params - Get bus configuration data for a 
->> given cs
->> + * @cs: chip-select, values 2-5
->> + * returns: ptr to a struct having the current configuration data
->> + */
->> +struct davinci_aemif_cs_data *davinci_aemif_get_abus_params(unsigned 
->> int cs)
->> +{
->> +    /* translate to chip CS which starts at 2 */
->> +    return get_cs_data(cs + 2);
->> +}
->> +EXPORT_SYMBOL(davinci_aemif_get_abus_params);
->> +
-> This one too.
->
-> [...]
->
->> +static int __devinit davinci_aemif_probe(struct platform_device *pdev)
->> +{
->> +    struct davinci_aemif_pdata *cfg;
->> +    int ret  = -ENODEV, i;
->> +    struct resource *res;
->> +
->> +    aemif = devm_kzalloc(&pdev->dev, sizeof(*aemif), GFP_KERNEL);
->> +
->> +    if (!aemif)
->> +        return -ENOMEM;
->> +
->> +    aemif->clk = clk_get(NULL, "aemif");
-> Please use dev attributes. Above usage of clk_get isn't recommonded
-> in drivers. You might have to add alias entries in your clock data for
-> it to work though.
->
-Need to investigate.
->> +    if (IS_ERR(aemif->clk))
->> +        return PTR_ERR(aemif->clk);
->> +
->> +    clk_prepare_enable(aemif->clk);
->> +    aemif->clk_rate = clk_get_rate(aemif->clk) / 1000;
->> +
-> /1000 for what ? Converting it into KHz ?
->
-Yes. WIll add a comment.
->> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +    if (!res) {
->> +        pr_err("No IO memory address defined\n");
->> +        goto error;
->> +    }
->> +
->> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +
->> +    aemif->base = devm_request_and_ioremap(&pdev->dev, res);
->> +    if (!aemif->base) {
->> +        ret = -EBUSY;
->> +        pr_err("ioremap failed\n");
->> +        goto error;
->> +    }
->> +
->> +    if (pdev->dev.platform_data == NULL) {
->> +        /* Not platform data, we get the cs data from the cs nodes */
->> +        cfg = devm_kzalloc(&pdev->dev, sizeof(*cfg), GFP_KERNEL);
->> +        if (cfg == NULL)
->> +            return -ENOMEM;
->> +
->> +        aemif->cfg = cfg;
->> +        if (of_davinci_aemif_cs_init(pdev->dev.of_node) < 0) {
->> +            pr_err("No platform data or cs of node present\n");
->> +            goto error;
->> +        }
->> +    } else {
->> +        cfg = pdev->dev.platform_data;
->> +        aemif->cfg = cfg;
->> +    }
->> +
->> +    for (i = 0; i < cfg->num_cs; i++) {
->> +        /* cs is from 2-5. Internally we use cs-2 to access ACR */
->> +        ret = davinci_aemif_config_abus(cfg->cs_data[i].cs - 2,
->> +                aemif->base, &cfg->cs_data[i]);
->> +        if (ret < 0) {
->> +            pr_err("Error configuring chip select %d\n",
->> +                cfg->cs_data[i].cs);
->> +            goto error;
->> +        }
->> +    }
->> +    return 0;
->> +error:
->> +    clk_disable_unprepare(aemif->clk);
->> +    clk_put(aemif->clk);
-> Alos unmap 'aemif->base' here..
->
-I thought devm_ API do this automatically. I will check.
->> +    return ret;
->> +}
->> +
->> +static struct platform_driver davinci_aemif_driver = {
->> +    .probe = davinci_aemif_probe,
->> +    .driver = {
->> +        .name = DRV_NAME,
->> +        .owner = THIS_MODULE,
->> +        .of_match_table = davinci_aemif_of_match,
->> +    },
->> +};
->> +
->> +static int __init davinci_aemif_init(void)
->> +{
->> +    return platform_driver_register(&davinci_aemif_driver);
->> +}
->> +subsys_initcall(davinci_aemif_init);
->> +
->> +static void __exit davinci_aemif_exit(void)
->> +{
->> +    clk_disable_unprepare(aemif->clk);
->> +    clk_put(aemif->clk);
->> +    platform_driver_unregister(&davinci_aemif_driver);
->> +}
->> +module_exit(davinci_aemif_exit);
->> +
->> +MODULE_AUTHOR("Murali Karicheri <m-karicheri2@ti.com>");
->> +MODULE_DESCRIPTION("Texas Instruments AEMIF driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:" DRV_NAME);
->> diff --git a/include/linux/platform_data/davinci-aemif.h 
->> b/include/linux/platform_data/davinci-aemif.h
->> new file mode 100644
->> index 0000000..03f3ad0
->> --- /dev/null
->> +++ b/include/linux/platform_data/davinci-aemif.h
->> @@ -0,0 +1,47 @@
->> +/*
->> + * TI DaVinci AEMIF support
->> + *
->> + * Copyright 2010 (C) Texas Instruments, Inc. http://www.ti.com/
->> + *
-> s/2010/2012
->> + * This file is licensed under the terms of the GNU General Public 
->> License
->> + * version 2. This program is licensed "as is" without any warranty 
->> of any
->> + * kind, whether express or implied.
->> + */
->> +#ifndef _MACH_DAVINCI_AEMIF_H
->> +#define _MACH_DAVINCI_AEMIF_H
-> Fix the header guard as per new directory
->
-Ok.
-> Regards
-> Santosh
->
->
+On 11/07/2012 04:24 PM, Mugunthan V N wrote:
+> On 11/6/2012 11:02 PM, Mugunthan V N wrote:
+>> This patch-series adds support for,
+>>
+>> [1/7]: Typo mistake in CPSW driver while invoking runtime_pm api's
+>>
+>> [2/7]: Adds parent<->child relation between CPSW & MDIO module inside
+>> cpsw
+>>         driver, as in case of AM33XX, the resources are shared and common
+>>         register bit-field is provided to control module/clock
+>> enable/disable,
+>>         makes it difficult to handle common resource.
+>>
+>>         So the solution here is, to create parent<->child relation
+>> between them.
+>>
+>> [3/7]: Add hwmod entry for MDIO module, required for MDIO driver.
+>>
+>> [4/7]: cpsw: simplify the setup of the register pointers
+>>
+>> [5/7]: Add DT device nodes for both CPSW and MDIO modules in am33xx.dtsi,
+>>         am335x-evm.dts and am335x-bone.dts file
+>>
+>> [6/7]: Enable CPSW support to omap2plus_defconfig
+>>
+>> [7/7]: cpsw: Kernel warn fix during suspend
+>>
+>> This patch series has been created on top of net-next/master and tested
+>> on BeagleBone platform for NFS boot and basic ping test cases.
+>>
+>> Changes from V3:
+>> * Removed unnecessary flags in Davinci MDIO Hwmod entry.
+>>
+>> Mugunthan V N (4):
+>>    ARM: OMAP3+: hwmod: Add AM33XX HWMOD data for davinci_mdio module
+>>    arm/dts: am33xx: Add CPSW and MDIO module nodes for AM33XX
+>>    ARM: OMAP2+: omap2plus_defconfig: Enable CPSW support
+>>    net: cpsw: halt network stack before halting the device during
+>>      suspend
+>>
+>> Richard Cochran (1):
+>>    cpsw: simplify the setup of the register pointers
+>>
+>> Vaibhav Hiremath (2):
+>>    net: davinci_mdio: Fix typo mistake in calling runtime-pm api
+>>    net: cpsw: Add parent<->child relation support between cpsw and mdio
+>>
+>>   Documentation/devicetree/bindings/net/cpsw.txt |   34 ----
+>>   arch/arm/boot/dts/am335x-bone.dts              |    8 +
+>>   arch/arm/boot/dts/am335x-evm.dts               |    8 +
+>>   arch/arm/boot/dts/am33xx.dtsi                  |   42 +++++
+>>   arch/arm/configs/omap2plus_defconfig           |    3 +
+>>   arch/arm/mach-omap2/omap_hwmod_33xx_data.c     |   31 ++++
+>>   drivers/net/ethernet/ti/cpsw.c                 |  231
+>> ++++++++++--------------
+>>   drivers/net/ethernet/ti/davinci_mdio.c         |    2 +-
+>>   include/linux/platform_data/cpsw.h             |   19 --
+>>   9 files changed, 192 insertions(+), 186 deletions(-)
+>>
+> Paul/Benoit
+> 
+> Do you any comments
+
+The DTS looks better thanks to Richard cleanup.
+But you did not take into account the minor cosmetic comments I did last
+time.
+
+Could you just clean the DTS based on last time comments and change the
+subject to be compliant with the other ones and I will take it in my
+for_3.8/dts_part2 branch.
+
+Thanks,
+Benoit
 
