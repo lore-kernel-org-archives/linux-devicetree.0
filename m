@@ -1,54 +1,143 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree
- support
-Date: Wed, 7 Nov 2012 09:24:20 +0100
-Message-ID: <20121107082419.GB12323@opensource.wolfsonmicro.com>
-References: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, fengguang.wu@intel.com
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
+Date: Wed, 7 Nov 2012 09:47:47 +0100
+Message-ID: <5A5C45CB-CDF8-4D93-8698-46A27143ABFA@antoniou-consulting.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50999145.2070306@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---eAbsdosE1cNLO4uF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Nov 6, 2012, at 11:37 PM, Stephen Warren wrote:
 
-On Wed, Nov 07, 2012 at 11:41:41AM +0800, Bo Shen wrote:
-> Add atmel-ssc for device tree support
->=20
-> Match "atmel,at91rm9200-ssc" for using pdc for data transfer
-> Match "atmel,at91sam9g45-ssc" for using dma for data transfer
+> On 11/05/2012 01:40 PM, Grant Likely wrote:
+>> Hey folks,
+>> 
+>> As promised, here is my early draft to try and capture what device
+>> tree overlays need to do and how to get there. Comments and
+>> suggestions greatly appreciated.
+> 
+> Interesting. This just came up internally at NVIDIA within the last
+> couple weeks, and was discussed on the U-Boot mailing list very recently
+> too:
+> 
+> http://lists.denx.de/pipermail/u-boot/2012-October/thread.html#138227
+> (it spills into the November archive too)
 
-Applied, thanks.
+I am aware of this discussion. For our use case u-boot DT manipulation was
+tried, but then abandoned. Asking our user base to modify anything in u-boot
+was ruled out.
+ 
+> 
+>> For these cases it is proposed to implement an overlay feature for the
+>> so that the initial device tree data can be modified by userspace at
+> 
+> I don't know if you're maintaining this as a document and taking patches
+> to it, but if so:
+> 
+> "for the so" split across those two lines.
+> 
+>> Jane solves this problem by storing an FDT overlay for each cape in the
+>> root filesystem. When the kernel detects that a cape is installed it
+>> reads the cape's eeprom to identify it and uses request_firmware() to
+>> obtain the appropriate overlay. Userspace passes the overlay to the
+>> kernel in the normal way. If the cape doesn't have an eeprom, then the
+>> kernel will still use firmware_request(), but userspace needs to already
+>> know which cape is installed.
+> 
+> As mentioned by Pantelis, multiple versions of a board is also very
+> common. We already have the following .dts files in the kernel where
+> this applies, for the main board even:
+> 
+> arch/arm/boot/dts/tegra30-cardhu.dtsi
+> arch/arm/boot/dts/tegra30-cardhu-a02.dts
+> arch/arm/boot/dts/tegra30-cardhu-a04.dts
+> 
 
---eAbsdosE1cNLO4uF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Exactly. I've made this point in another email, but IMHO board-revision
+management is exactly the same with cape revision management.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Ideally you'd like to get rid of those three, and replace it with only
+one that's properly versioned.
 
-iQIcBAEBAgAGBQJQmhqqAAoJELSic+t+oim9pfEP/Awe0fnA/zfcS+lVuzQ9EXWO
-5F4jp1yF+KXOv53VnvJ5lgkJzeiDvNk+oA8MDOXUgsrvhRa25/UEBjDESfSJol++
-iM9ubN42xU11Hn4kfmwZt63t5jTg+6aqI4UewnA1aZRoc6S4fYl2f8LvOH5DbPQ9
-o5n0wN5qrCq+jfX5j6DmVSw/4603ghC2ePdPLzluxwdbiMx7FbNrxBEnzgPMrMbq
-fQ9OCPLRuOP12W1ndlQZJu//nJ9gWWV00SmaPM5lNqh6yMgy4ys5zfKbGYUlSh/Q
-v4yqbSZGhR/tko/bwqyC9PW7y9JqR6aT1P3+CgCpXUSHMG9CsMHNK3B6A4kl0Mb+
-JyP0MpSca2VbsHDWwpROgpo76ozhONCfAH00uXdoVXHe71rBbgtOmZat3LkrJ5Hw
-kBFi1n1DoovgYqwxdmVpTCkbwMvEvevCx7EWJAxR8L6nfxUKMn9voNK6GGTGqaZN
-P2xQm6XqPNpsuWxBlDeedKJVDOqXQHgCPS+0h6DDPbc7Hj+P9QeY1fdwFLjE0M+T
-j0zuTVMz0bE0sm4y7qUIhm5r0zdmmbv2eXI+JZhytV/EIcA9Hyy3zBrSTEb9vhWI
-7hcO8BlzkNz17d4VhjdBM9f1lkjQ1onX+ZQr6sM07xxsrrE6HX1/GSA1g6LZnutg
-Sgl2Fkr5gii4BvPRO0oT
-=g2oQ
------END PGP SIGNATURE-----
 
---eAbsdosE1cNLO4uF--
+>> Summary points:
+> 
+>>  - SHOULD reliably handle changes between different underlying overlays
+>>    (ie. what happens to existing .dtb overly files if the structure of
+>>    the dtb it is layered over changes. If not possible, then SHALL
+>>    detect when the base tree doesn't match and refuse to apply the
+>>    overlay.
+> 
+> Perhaps use (versioned) DT bindings to represent the interface between
+> the two .dts files? See the links to the U-Boot mailing list discussions
+> below?
+> 
+>> - What is the model for overlays?
+>>  - Can an overlay modify existing properties?
+>>  - Can an overlay add new properties to existing nodes?
+>>  - Can an overlay delete existing nodes/properties?
+> 
+> This proposal is very oriented at an overlay-based approach. I'm not
+> totally convinced that a pure overlay approach (as in how dtc does
+> overlayed DT nodes) will be flexible enough, but would love to be
+> persuaded. Again see below.
+> 
+>> It may be sufficient to solve it by making the phandle values less
+>> volatile. Right now dtc generates phandles linearly. Generated phandles
+>> could be overridden with explicit phandle properties, but it isn't a
+>> fantastic solution. Perhaps generating the phandle from a hash of the
+>> node name would be sufficient.
+> 
+> Node names don't have to be unique though right; perhaps hash the
+> path-name instead of the node-name? But then, why not just reference by
+> path name; similar to <{&/path/to/node}> rather than <&label>?
+> 
+
+It would work for references to the known base DTS. If you have a
+cape that's cross-device compatible that can simply fail.
+
+I like this for it's simplicity though.
+
+>> This handles many of the use cases, but it assumes that an overlay is
+>> board specific. If it ever is required to support multiple base boards
+>> with a single overlay file then there is a problem. The .dtb overlays
+>> generated in this manor cannot handle different phandles or nodes that
+>> are in a different place. On the other hand, the overlay source files
+>> should have no problem being compiled for multiple targets.
+> 
+> s/manor/manner/
+> 
+> I do rather suspect this use-case is quite common. NVIDIA certainly has
+> a bunch of development boards with pluggable
+> PMIC/audio/WiFi/display/..., and I believe there's some ability to
+> re-use the pluggable components with a variety of base-boards.
+> 
+> Given people within NVIDIA started talking about this recently, I asked
+> them to enumerate all the boards we have that support pluggable
+> components, and how common it is that some boards support being plugged
+> into different main boards. I don't know when that enumeration will
+> complete (or even start) but hopefully I can provide some feedback on
+> how common the use-case is for us once it's done.
+> 
+> My earlier thoughts on how to support this included explicit
+> inter-board/-component connector objects in the .dts files that allow
+> "renaming" of GPIOs, I2C buses, regulators, etc.:
+> 
+> http://lists.denx.de/pipermail/u-boot/2012-October/138476.html
+> http://lists.denx.de/pipermail/u-boot/2012-November/138925.html
+
+Sounds very similar to our case.
+
+Very interesting to say the least ;)
+
+Regards
+
+-- Pantelis
