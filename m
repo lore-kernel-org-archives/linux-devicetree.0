@@ -1,426 +1,104 @@
-From: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 6/6 v4] cpufreq, highbank: add support for highbank cpufreq
-Date: Wed,  7 Nov 2012 12:32:46 -0600
-Message-ID: <1352313166-28980-7-git-send-email-mark.langsdorf@calxeda.com>
-References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
- <1352313166-28980-1-git-send-email-mark.langsdorf@calxeda.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: Exynos5250: Enabling USB 3.0 phy for samsung-usbphy
+ driver
+Date: Wed, 07 Nov 2012 19:34:54 +0100
+Message-ID: <509AA9CE.8050808@gmail.com>
+References: <1352216197-11828-1-git-send-email-gautam.vivek@samsung.com> <1352216197-11828-3-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352313166-28980-1-git-send-email-mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1352216197-11828-3-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, yulgon.kim@samsung.com, av.tikhomirov@samsung.com, thomas.abraham@linaro.org, kishon@ti.com, p.paneri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Highbank processors depend on the external ECME to perform voltage
-management based on a requested frequency. Communication between the
-highbank and ECME cores happens over the pl320 IPC channel.
+Hi Vivek,
 
-Signed-off-by: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rafael J. Wysocki <rjw-KKrjLPT3xs0@public.gmane.org>
----
-Changes from v3
-	None
-Changes from v2
-	Changed transition latency binding in code to match documentation
-Changes from v1
-        Added highbank specific Kconfig changes
+On 11/06/2012 04:36 PM, Vivek Gautam wrote:
+> Adding base address information and required platform data
+> support for enabling USB DRD phy on exynos5250 SOC.
+>
+> Signed-off-by: Vivek Gautam<gautam.vivek@samsung.com>
+> ---
+>   arch/arm/boot/dts/exynos5250.dtsi            |    3 ++-
+>   arch/arm/mach-exynos/include/mach/regs-pmu.h |    4 ++++
+>   arch/arm/mach-exynos/setup-usb-phy.c         |    9 +++++++++
+>   3 files changed, 15 insertions(+), 1 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 82bf042..51693af 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -220,7 +220,8 @@
+>
+>   	usbphy {
+>   		compatible = "samsung,exynos5250-usbphy";
+> -		reg =<0x12130000 0x100>;
+> +		reg =<0x12130000 0x100>,
+> +		<0x12100000 0x100>;
+>   	};
+>
+>   	amba {
+> diff --git a/arch/arm/mach-exynos/include/mach/regs-pmu.h b/arch/arm/mach-exynos/include/mach/regs-pmu.h
+> index d4e392b..67132b4 100644
+> --- a/arch/arm/mach-exynos/include/mach/regs-pmu.h
+> +++ b/arch/arm/mach-exynos/include/mach/regs-pmu.h
+> @@ -39,6 +39,10 @@
+>   #define S5P_HDMI_PHY_CONTROL			S5P_PMUREG(0x0700)
+>   #define S5P_HDMI_PHY_ENABLE			(1<<  0)
+>
+> +/* only for EXYNOS5250*/
+> +#define S5P_USBDRD_PHY_CONTROL			S5P_PMUREG(0x0704)
+> +#define S5P_USBDRD_PHY_ENABLE			(1<<  0)
 
- .../bindings/cpufreq/highbank-cpufreq.txt          |  53 +++++
- arch/arm/Kconfig                                   |   2 +
- arch/arm/boot/dts/highbank.dts                     |  10 +
- arch/arm/mach-highbank/Kconfig                     |   2 +
- drivers/cpufreq/Kconfig.arm                        |  15 ++
- drivers/cpufreq/Makefile                           |   1 +
- drivers/cpufreq/highbank-cpufreq.c                 | 229 +++++++++++++++++++++
- 7 files changed, 312 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt
- create mode 100644 drivers/cpufreq/highbank-cpufreq.c
+Hmm, couldn't it be added to your usbphy node above and then this register
+left for the usb phy driver to do ioremap and control it directly ? Rather
+than relying on the platform data callback ? I hoped this static mapping
+can be dropped once there is a proper usb phy driver in place. AFAIU
+arch/arm/mach-exynos/setup-usb-phy.c is supposed to be a non-dt only thing.
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt
-new file mode 100644
-index 0000000..3ec2cec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt
-@@ -0,0 +1,53 @@
-+Highbank cpufreq driver
-+
-+This is cpufreq driver for Calxeda ECX-1000 (highbank) processor. It is based
-+on the generic cpu0 driver and uses a similar format for bindings. Since
-+the EnergyCore Management Engine maintains the voltage based on the
-+frequency, the voltage component of the operating points can be set to any
-+arbitrary values.
-+
-+Both required properties listed below must be defined under node /cpus/cpu@0.
-+
-+Required properties:
-+- operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
-+  for details
-+- transition-latency: Specify the possible maximum transition latency for clock,
-+  in unit of nanoseconds.
-+
-+Examples:
-+
-+cpus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	cpu@0 {
-+		compatible = "arm,cortex-a9";
-+		reg = <0>;
-+		next-level-cache = <&L2>;
-+		operating-points = <
-+			/* kHz  ignored */
-+			790000  1000000
-+			396000  1000000
-+			198000  1000000
-+		>;
-+		transition-latency = <200000>;
-+	};
-+
-+	cpu@1 {
-+		compatible = "arm,cortex-a9";
-+		reg = <1>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@2 {
-+		compatible = "arm,cortex-a9";
-+		reg = <2>;
-+		next-level-cache = <&L2>;
-+	};
-+
-+	cpu@3 {
-+		compatible = "arm,cortex-a9";
-+		reg = <3>;
-+		next-level-cache = <&L2>;
-+	};
-+};
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index ade7e92..4ed0b7b 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -391,6 +391,8 @@ config ARCH_SIRF
- 	select PINCTRL
- 	select PINCTRL_SIRF
- 	select USE_OF
-+	select ARCH_HAS_CPUFREQ
-+	select ARCH_HAS_OPP
- 	help
- 	  Support for CSR SiRFprimaII/Marco/Polo platforms
- 
-diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
-index 0c6fc34..7c4c27d 100644
---- a/arch/arm/boot/dts/highbank.dts
-+++ b/arch/arm/boot/dts/highbank.dts
-@@ -36,6 +36,16 @@
- 			next-level-cache = <&L2>;
- 			clocks = <&a9pll>;
- 			clock-names = "cpu";
-+			operating-points = <
-+				/* kHz    ignored */
-+				 1300000  1000000
-+				 1200000  1000000
-+				 1100000  1000000
-+				  800000  1000000
-+				  400000  1000000
-+				  200000  1000000
-+			>;
-+			transition-latency = <100000>;
- 		};
- 
- 		cpu@1 {
-diff --git a/arch/arm/mach-highbank/Kconfig b/arch/arm/mach-highbank/Kconfig
-index 0e1d0a4..ee83af6 100644
---- a/arch/arm/mach-highbank/Kconfig
-+++ b/arch/arm/mach-highbank/Kconfig
-@@ -13,3 +13,5 @@ config ARCH_HIGHBANK
- 	select HAVE_SMP
- 	select SPARSE_IRQ
- 	select USE_OF
-+	select ARCH_HAS_CPUFREQ
-+	select ARCH_HAS_OPP
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 5961e64..bc3ef55 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -76,3 +76,18 @@ config ARM_EXYNOS5250_CPUFREQ
- 	help
- 	  This adds the CPUFreq driver for Samsung EXYNOS5250
- 	  SoC.
-+
-+config ARM_HIGHBANK_CPUFREQ
-+       tristate "Calxeda Highbank-based"
-+       depends on ARCH_HIGHBANK
-+       select CPU_FREQ_TABLE
-+       select HAVE_CLK
-+       select PM_OPP
-+       select OF
-+       default m
-+       help
-+         This adds the CPUFreq driver for Calxeda Highbank SoC
-+         based boards.
-+
-+         If in doubt, say N.
-+
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index 1bc90e1..9e8f12a 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -50,6 +50,7 @@ obj-$(CONFIG_ARM_EXYNOS4210_CPUFREQ)	+= exynos4210-cpufreq.o
- obj-$(CONFIG_ARM_EXYNOS4X12_CPUFREQ)	+= exynos4x12-cpufreq.o
- obj-$(CONFIG_ARM_EXYNOS5250_CPUFREQ)	+= exynos5250-cpufreq.o
- obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)     += omap-cpufreq.o
-+obj-$(CONFIG_ARM_HIGHBANK_CPUFREQ)	+= highbank-cpufreq.o
- 
- ##################################################################################
- # PowerPC platform drivers
-diff --git a/drivers/cpufreq/highbank-cpufreq.c b/drivers/cpufreq/highbank-cpufreq.c
-new file mode 100644
-index 0000000..a167073
---- /dev/null
-+++ b/drivers/cpufreq/highbank-cpufreq.c
-@@ -0,0 +1,229 @@
-+/*
-+ * Copyright (C) 2012 Calxeda, Inc.
-+ *
-+ * derived from cpufreq-cpu0 by Freescale Semiconductor
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-+
-+#include <linux/clk.h>
-+#include <linux/cpu.h>
-+#include <linux/cpufreq.h>
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/opp.h>
-+#include <linux/slab.h>
-+#include <asm/pl320-ipc.h>
-+
-+#define HB_CPUFREQ_CHANGE_NOTE 0x80000001
-+
-+static unsigned int transition_latency;
-+
-+static struct device *cpu_dev;
-+static struct clk *cpu_clk;
-+static struct cpufreq_frequency_table *freq_table;
-+
-+static int hb_verify_speed(struct cpufreq_policy *policy)
-+{
-+	return cpufreq_frequency_table_verify(policy, freq_table);
-+}
-+
-+static unsigned int hb_get_speed(unsigned int cpu)
-+{
-+	return clk_get_rate(cpu_clk) / 1000;
-+}
-+
-+static int hb_voltage_change(unsigned int freq)
-+{
-+	int i;
-+	u32 msg[7];
-+
-+	msg[0] = HB_CPUFREQ_CHANGE_NOTE;
-+	msg[1] = freq / 1000;
-+	for (i = 2; i < 7; i++)
-+		msg[i] = 0;
-+
-+	return ipc_call_slow(msg);
-+}
-+
-+static int hb_set_target(struct cpufreq_policy *policy,
-+			   unsigned int target_freq, unsigned int relation)
-+{
-+	struct cpufreq_freqs freqs;
-+	unsigned long freq_Hz;
-+	unsigned int index, cpu;
-+	int ret;
-+
-+	ret = cpufreq_frequency_table_target(policy, freq_table, target_freq,
-+					     relation, &index);
-+	if (ret) {
-+		pr_err("failed to match target freqency %d: %d\n",
-+		       target_freq, ret);
-+		return ret;
-+	}
-+
-+	freq_Hz = clk_round_rate(cpu_clk, freq_table[index].frequency * 1000);
-+	if (freq_Hz < 0)
-+		freq_Hz = freq_table[index].frequency * 1000;
-+	freqs.new = freq_Hz / 1000;
-+	freqs.old = clk_get_rate(cpu_clk) / 1000;
-+
-+	if (freqs.old == freqs.new)
-+		return 0;
-+
-+	for_each_online_cpu(cpu) {
-+		freqs.cpu = cpu;
-+		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
-+	}
-+
-+	pr_debug("%u MHz --> %u MHz\n", freqs.old / 1000, freqs.new / 1000);
-+
-+	/* scaling up?  scale voltage before frequency */
-+	if (freqs.new > freqs.old) {
-+		ret = hb_voltage_change(freqs.new);
-+		if (ret) {
-+			freqs.new = freqs.old;
-+			return -EAGAIN;
-+		}
-+	}
-+
-+	ret = clk_set_rate(cpu_clk, freqs.new * 1000);
-+	if (ret) {
-+		pr_err("failed to set clock rate: %d\n", ret);
-+		hb_voltage_change(freqs.old);
-+		return ret;
-+	}
-+
-+	/* scaling down?  scale voltage after frequency */
-+	if (freqs.new < freqs.old) {
-+		ret = hb_voltage_change(freqs.new);
-+		if (ret) {
-+			if (clk_set_rate(cpu_clk, freqs.old * 1000))
-+				pr_err("also failed to reset freq\n");
-+			freqs.new = freqs.old;
-+			return -EAGAIN;
-+		}
-+	}
-+
-+	for_each_online_cpu(cpu) {
-+		freqs.cpu = cpu;
-+		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hb_cpufreq_init(struct cpufreq_policy *policy)
-+{
-+	int ret;
-+
-+	if (policy->cpu != 0)
-+		return -EINVAL;
-+
-+	ret = cpufreq_frequency_table_cpuinfo(policy, freq_table);
-+	if (ret) {
-+		pr_err("invalid frequency table: %d\n", ret);
-+		return ret;
-+	}
-+
-+	policy->cpuinfo.transition_latency = transition_latency;
-+	policy->cur = clk_get_rate(cpu_clk) / 1000;
-+
-+	policy->shared_type = CPUFREQ_SHARED_TYPE_ANY;
-+	cpumask_setall(policy->cpus);
-+
-+	cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
-+
-+	return 0;
-+}
-+
-+static int hb_cpufreq_exit(struct cpufreq_policy *policy)
-+{
-+	cpufreq_frequency_table_put_attr(policy->cpu);
-+
-+	return 0;
-+}
-+
-+static struct freq_attr *hb_cpufreq_attr[] = {
-+	&cpufreq_freq_attr_scaling_available_freqs,
-+	NULL,
-+};
-+
-+static struct cpufreq_driver hb_cpufreq_driver = {
-+	.flags = CPUFREQ_STICKY,
-+	.verify = hb_verify_speed,
-+	.target = hb_set_target,
-+	.get = hb_get_speed,
-+	.init = hb_cpufreq_init,
-+	.exit = hb_cpufreq_exit,
-+	.name = "highbank-cpufreq",
-+	.attr = hb_cpufreq_attr,
-+};
-+
-+static int __devinit hb_cpufreq_driver_init(void)
-+{
-+	struct device_node *np;
-+	int ret;
-+
-+	np = of_find_node_by_path("/cpus/cpu@0");
-+	if (!np) {
-+		pr_err("failed to find highbank cpufreq node\n");
-+		return -ENOENT;
-+	}
-+
-+	cpu_dev = get_cpu_device(0);
-+	if (!cpu_dev) {
-+		pr_err("failed to get highbank cpufreq device\n");
-+		ret = -ENODEV;
-+		goto out_put_node;
-+	}
-+
-+	cpu_dev->of_node = np;
-+
-+	cpu_clk = clk_get(cpu_dev, NULL);
-+	if (IS_ERR(cpu_clk)) {
-+		ret = PTR_ERR(cpu_clk);
-+		pr_err("failed to get cpu0 clock: %d\n", ret);
-+		goto out_put_node;
-+	}
-+
-+	ret = of_init_opp_table(cpu_dev);
-+	if (ret) {
-+		pr_err("failed to init OPP table: %d\n", ret);
-+		goto out_put_node;
-+	}
-+
-+	ret = opp_init_cpufreq_table(cpu_dev, &freq_table);
-+	if (ret) {
-+		pr_err("failed to init cpufreq table: %d\n", ret);
-+		goto out_put_node;
-+	}
-+
-+	if (of_property_read_u32(np, "transition-latency", &transition_latency))
-+		transition_latency = CPUFREQ_ETERNAL;
-+
-+	ret = cpufreq_register_driver(&hb_cpufreq_driver);
-+	if (ret) {
-+		pr_err("failed register driver: %d\n", ret);
-+		goto out_free_table;
-+	}
-+
-+	of_node_put(np);
-+	return 0;
-+
-+out_free_table:
-+	opp_free_cpufreq_table(cpu_dev, &freq_table);
-+out_put_node:
-+	of_node_put(np);
-+	return ret;
-+}
-+late_initcall(hb_cpufreq_driver_init);
-+
-+MODULE_AUTHOR("Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>");
-+MODULE_DESCRIPTION("Calxeda Highbank cpufreq driver");
-+MODULE_LICENSE("GPL");
--- 
-1.7.11.7
+> +
+>   #define S5P_DAC_PHY_CONTROL			S5P_PMUREG(0x070C)
+>   #define S5P_DAC_PHY_ENABLE			(1<<  0)
+>
+> diff --git a/arch/arm/mach-exynos/setup-usb-phy.c b/arch/arm/mach-exynos/setup-usb-phy.c
+> index 6c768e0..5e46fdd 100644
+> --- a/arch/arm/mach-exynos/setup-usb-phy.c
+> +++ b/arch/arm/mach-exynos/setup-usb-phy.c
+> @@ -238,6 +238,15 @@ void s5p_usb_phy_pmu_isolation(int on, int type)
+>   			writel(readl(S5P_USBHOST_PHY_CONTROL)
+>   				| S5P_USBHOST_PHY_ENABLE,
+>   					S5P_USBHOST_PHY_CONTROL);
+> +	} else if (type == USB_PHY_TYPE_DRD) {
+> +		if (on)
+> +			writel(readl(S5P_USBDRD_PHY_CONTROL)
+> +				&  ~S5P_USBDRD_PHY_ENABLE,
+> +					S5P_USBDRD_PHY_CONTROL);
+
+This is horrible coding style IMHO BTW. Why not just do
+
+		u32 reg = readl(S5P_USBDRD_PHY_CONTROL);
+		if (on)
+			reg &= ~S5P_USBDRD_PHY_ENABLE;
+		else
+			reg |= ~S5P_USBDRD_PHY_ENABLE;
+		writel(reg, S5P_USBDRD_PHY_CONTROL);
+
+Or to create some read/modify/write helper ? Anyway, I suppose this whole
+setup-usb-phy.c file is going to be removed, once exynos is completely dt
+only.
+
+> +		else
+> +			writel(readl(S5P_USBDRD_PHY_CONTROL)
+> +				| S5P_USBDRD_PHY_ENABLE,
+> +					S5P_USBDRD_PHY_CONTROL);
+>   	} else {
+>   		if (on)
+>   			writel(readl(S5P_USBDEVICE_PHY_CONTROL)
+
+--
+
+Thanks,
+Sylwester
