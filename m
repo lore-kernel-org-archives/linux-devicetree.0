@@ -1,65 +1,70 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree
  support
-Date: Wed, 7 Nov 2012 10:04:16 +0100
-Message-ID: <20121107090416.GD12323@opensource.wolfsonmicro.com>
+Date: Wed, 7 Nov 2012 10:21:24 +0100
+Message-ID: <20121107092124.GE12323@opensource.wolfsonmicro.com>
 References: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
- <20121107082419.GB12323@opensource.wolfsonmicro.com>
- <20121107084733.GD20063@game.jcrosoft.org>
+ <20121107084932.GE20063@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2iBwrppp/7QCDedR"
+	protocol="application/pgp-signature"; boundary="lteA1dqeVaWQ9QQl"
 Return-path: <linux-sound-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121107084733.GD20063@game.jcrosoft.org>
+In-Reply-To: <20121107084932.GE20063@game.jcrosoft.org>
 Sender: linux-sound-owner@vger.kernel.org
 To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, fengguang.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
 
---2iBwrppp/7QCDedR
+--lteA1dqeVaWQ9QQl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Nov 07, 2012 at 09:47:33AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+On Wed, Nov 07, 2012 at 09:49:32AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
 
-> Mark I nack the patch series this patch series does not run on any DT kernel
+> yes the pinctrl is mainline in -next via pinctrl tree
 
-> as no picntrl is done
+> s code does not work on the DT kernel untill it's done
 
-> do not apply until this patfh handle the pinctrl
+> NACK stand I refuse this touch the at91 dtsi untiol it's done correctly
 
-Nicholas seemed to be disagreeing you on that one and his observation
-that it won't be an issue until v3.8 anyway seemed totally reasonable.
-In any case it doesn't seems like it'll be an issue to get it resolved
-before it actually gets merged down to become an issue.
+...and here's another mail (plus a further private mail on the same
+subject) by the time I managed to reply to the first one, the timestamps
+say in about ten minutes :/  What I'm seeing here is two of the Atmel
+maintainers disagreeing about a patch so I've got to pick one view and
+right now applying the patch looks like it moves us further forwards.
 
-Of course there's also some ongoing discussion on the question of having
-to add mindless pinctrl_get_set_default() to all the drivers at all, the
-fact that we're having to do that at all seems like a failure to me at
-least.
+Like I say it's not an issue right now and it seems like it should be
+trivial to fix.  Is anything needed here other than adding the
+pinctrl_get_set_default() call, in which case would it not be less
+effort all round to just send the patch?  If there is more involved then
+what is needed?
 
---2iBwrppp/7QCDedR
+Thinking about it a little more I'm actually wondering why whatever
+pinctrl change made this mandatory didn't go through and update all the
+drivers.
+
+--lteA1dqeVaWQ9QQl
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQmiQKAAoJELSic+t+oim9+p8P/j9oXunGHxezMTom2f+8+NVp
-W17kDEzi+gmML/TFKnXVlZMKXjGfGTf/0Ha1LSuxDRmWFk3bZy07lQc63RirSt/j
-ml9xRfYZcN8qzDbdCTLzgYFAYL46OzIBTSWtcLsFki1OfjMTjtSYVOv9A89PxM3V
-8PfVmfFmFv66unnXQcmWn85uS8Msad8Kf6oy4fj3IbAB831ozbatI+TQ5v/+3QKX
-beHenfwyThGj2uMAm2L6O4CqhVsmy4eEwgPDh8wdwG//KoN9KgoYYXfjfAo2bKcx
-E2ub3hHjs+Zl2GqoeIsqjNtwX3P8UNDHH9v1DLm/PpZZG9GktnH87PbUAOHwbXBp
-rgf5092uvF622QTdULHaNHyD7sHNN7EArVvyi2H3zbhXhqiKkegku26tFf/bFGd/
-8XaktNXSr1eQ9j4QYQ8UPuYd8ixtrhqfyh1qh6pNrz8HBMq3Enq91AxQAtR4P2lS
-LCSiWiJfmDfNSw9IJ2BJN6Ig/NrURB022ekntziYYvEuRK6+ecvuHcEbkfK5bBgV
-ahEAY36P02sXQjD/clOVb223NZ8cnQLnQLgFN15dduseFBrMfc5HI0UKOV5TNC6o
-xIwnJgBAF+4N2TGyCs92trLzki80yhT3Ej1D+d3J2jwbfR/ZUu7UHpL3DOwtB9l5
-revcZyNL3q/dP4r82yhB
-=Kxm8
+iQIcBAEBAgAGBQJQmigNAAoJELSic+t+oim9S2AP/3VEl9akQMaE+NOglmg9wKDf
+5IkGR9/vra0AYgzeTUHvH8uRstlwy7w8GjwyVfs8rhEwLCNw1qfgLXrhOB8fbD1/
+aXa+UawRZ26yFSrKR6MxAOXl5IOAivyOYKz38ebffb+OO5C0jCSnk9ahC8zlBdjE
+KmEf5gBp1xtQEs3ospTkZ7kiLEePlDQ/HTujtqZ2xcEBJIVFWCHTnXOK099aVqcs
+SRakAxUsQ8tqd7iuDkTe9I50upF2tibeRzntSuIS3RET5j9BZrQyeGbSmoGNg7Xn
+OzeLGDtC7P8ip2mcEiKi/rSO5HrO6s9urv/v5FKHXqDe7hakqogPth4nzQgV6O8m
+kg3bC2ACYQ/LdHRt+EeMuKmntkrU18pbuQUqjT2D8Pv7TEp3cdKOrh5xVWc1GrF0
+yh0VGM3SvGvMjqXsYUJriMu5I10n/MCv55E001rPIXLGmDWP8+HtzkyA1C5lhTk6
+ChuZpF+ZiT05EFrWeRLs0TBN4i1eEWHzI5v9eWDYiCkQCTV43uZ7lrXcnnyHR10L
+RxCcLrAK3Gt2w5+vbalxp03Ry9XGxij8gCNQFxYCX1bVGWPIxvIocizropCTVFyz
+wV4Iv5KNlqXltIMoQ9QjYI6jUB4TFtAiipFxMjYA+PmVXM9k6qCnhsnSpk/kK8Su
+t4q1AxcpRc8UQvbeKFog
+=5Z76
 -----END PGP SIGNATURE-----
 
---2iBwrppp/7QCDedR--
+--lteA1dqeVaWQ9QQl--
