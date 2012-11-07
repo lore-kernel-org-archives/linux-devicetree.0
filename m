@@ -1,40 +1,54 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
-Date: Wed, 7 Nov 2012 09:13:36 +0100
-Message-ID: <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com> <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com> <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com> <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree
+ support
+Date: Wed, 7 Nov 2012 09:24:20 +0100
+Message-ID: <20121107082419.GB12323@opensource.wolfsonmicro.com>
+References: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, fengguang.wu@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant
 
-On Nov 6, 2012, at 9:45 PM, Grant Likely wrote:
+--eAbsdosE1cNLO4uF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Tue, Nov 6, 2012 at 7:34 PM, Pantelis Antoniou
-> <panto@antoniou-consulting.com> wrote:
+On Wed, Nov 07, 2012 at 11:41:41AM +0800, Bo Shen wrote:
+> Add atmel-ssc for device tree support
+>=20
+> Match "atmel,at91rm9200-ssc" for using pdc for data transfer
+> Match "atmel,at91sam9g45-ssc" for using dma for data transfer
 
-[ snip ]
-> 
-> g.
+Applied, thanks.
 
-Since we've started talking about longer term goals, and the versioning
-provision seems to stand, I hope we address how much the fragment versioning
-thing is similar to the way board revisions progress.
+--eAbsdosE1cNLO4uF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-If a versioning syntax is available then one could create a single DT 
-file for a bunch of 'almost' similar board and board revisions.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Using a single DTB in the same manner you have a single uImage would
-make some people quite happy, since you won't have to do any bootloader
-magic to make sure you pass the correct DTB for the specific revision.
+iQIcBAEBAgAGBQJQmhqqAAoJELSic+t+oim9pfEP/Awe0fnA/zfcS+lVuzQ9EXWO
+5F4jp1yF+KXOv53VnvJ5lgkJzeiDvNk+oA8MDOXUgsrvhRa25/UEBjDESfSJol++
+iM9ubN42xU11Hn4kfmwZt63t5jTg+6aqI4UewnA1aZRoc6S4fYl2f8LvOH5DbPQ9
+o5n0wN5qrCq+jfX5j6DmVSw/4603ghC2ePdPLzluxwdbiMx7FbNrxBEnzgPMrMbq
+fQ9OCPLRuOP12W1ndlQZJu//nJ9gWWV00SmaPM5lNqh6yMgy4ys5zfKbGYUlSh/Q
+v4yqbSZGhR/tko/bwqyC9PW7y9JqR6aT1P3+CgCpXUSHMG9CsMHNK3B6A4kl0Mb+
+JyP0MpSca2VbsHDWwpROgpo76ozhONCfAH00uXdoVXHe71rBbgtOmZat3LkrJ5Hw
+kBFi1n1DoovgYqwxdmVpTCkbwMvEvevCx7EWJAxR8L6nfxUKMn9voNK6GGTGqaZN
+P2xQm6XqPNpsuWxBlDeedKJVDOqXQHgCPS+0h6DDPbc7Hj+P9QeY1fdwFLjE0M+T
+j0zuTVMz0bE0sm4y7qUIhm5r0zdmmbv2eXI+JZhytV/EIcA9Hyy3zBrSTEb9vhWI
+7hcO8BlzkNz17d4VhjdBM9f1lkjQ1onX+ZQr6sM07xxsrrE6HX1/GSA1g6LZnutg
+Sgl2Fkr5gii4BvPRO0oT
+=g2oQ
+-----END PGP SIGNATURE-----
 
-Regards
-
--- Pantelis
+--eAbsdosE1cNLO4uF--
