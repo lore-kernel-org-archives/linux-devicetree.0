@@ -1,134 +1,71 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v3] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Wed, 07 Nov 2012 12:15:36 +0100
-Message-ID: <509A42D8.6030009@grandegger.com>
-References: <5087EDBF.2040108@gaisler.com> <1351588017-14357-1-git-send-email-andreas@gaisler.com> <508FA6D3.9000809@grandegger.com> <508FFF50.8050900@gaisler.com> <50911EB6.1070105@grandegger.com> <509152D5.2050701@gaisler.com> <50918830.9040601@grandegger.com> <50929E7F.1090205@gaisler.com> <509786C0.9070703@grandegger.com> <509A0E94.1040103@gaisler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <509A0E94.1040103@gaisler.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
+Date: Wed, 7 Nov 2012 12:23:25 +0100
+Message-ID: <4F38B158-14F7-474E-8232-F455177E774C@antoniou-consulting.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com> <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com> <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com> <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com> <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com> <509A3595.7050600@ti.com> <A6697FB9-3614-4027-A71B-59C7556005BF@antoniou-consulting.com> <509A4232.9090709@ti.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <509A4232.9090709@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2012 08:32 AM, Andreas Larsson wrote:
-> On 11/05/2012 10:28 AM, Wolfgang Grandegger wrote:
->> On 11/01/2012 05:08 PM, Andreas Larsson wrote:
->>> On 2012-10-31 21:21, Wolfgang Grandegger wrote:
-> ...
->>> Yes, the hardware becomes error active after having monitored 11
->>> consecutive recessive bits on the bus 128 times (as allowed by the 2.0
->>> CAN spec). There is no way of turning this off, so to conform to the
->>> normal linux procedure of not doing this, I shut down the device on bus
->>> off interrupt.
->>
->> This should be handled in the following way:
->>
->> 1. If priv->can.restart_ms == 0: do *not* allow automatic restart
->>     That's what you alredy have implemented.
->>
->> 2. If priv->can.restart_ms  > 0 : do allow automatic restart.
->>     This requires to send CAN_ERR_RESTARTED when the system goes
->>     bus-on. See at91_can and mcp251x as example.
->>
->>> In addition I have thrown out the arbitration lost error frame
->>> generation as arbitration errors can not be singled out. The TXLOSS
->>> interrupt might be due to arbitration error, but is also triggered in
->>> great numbers when there is no one else on the can bus or when there is
->>> a problem with the hardware interface or the bus itself.
->>>
->>> This is how things look currently with no one else on the bus:
->>> ~ # cansend can0 123#45
->>>    can0  20000004  [8] 00 08 00 00 00 00 60 00   ERRORFRAME
->>>          controller-problem{tx-error-warning}
->>>          error-counter-tx-rx{{96}{0}}
->>>    can0  20000004  [8] 00 20 00 00 00 00 80 00   ERRORFRAME
->>>          controller-problem{tx-error-passive}
->>>          error-counter-tx-rx{{128}{0}}
->>> ~ #
->>>
->>> And this is how it looks with a short-circuited bus:
->>> ~ # cansend can0 123#45
->>>    can0  20000004  [8] 00 08 00 00 00 00 90 00   ERRORFRAME
->>>          controller-problem{tx-error-warning}
->>>          error-counter-tx-rx{{144}{0}}
->>>    can0  20000004  [8] 00 20 00 00 00 00 98 00   ERRORFRAME
->>>          controller-problem{tx-error-passive}
->>>          error-counter-tx-rx{{152}{0}}
->>>    can0  20000040  [8] 00 00 00 00 00 00 00 00   ERRORFRAME
->>>          bus-off
->>> ~ #
->>
->> This looks good now. Just the automatic restart is missing as described
->> above.
+Hi Benoit,
+
+On Nov 7, 2012, at 12:12 PM, Benoit Cousson wrote:
+
+> On 11/07/2012 12:02 PM, Pantelis Antoniou wrote:
+>> Hi Benoit,
+>> 
+
+[snip]
+
+>> I don't know if this breaks any conventions but seems to work fine for our case.
 > 
-> When doing the bus_off handling as in at91_can, on a short-circuited bus
-> with restart-ms != 0, the result of a cansend is an endless and frequent
-> stream of
+> Yeah, my main concern with that approach is that you change the
+> structure of the tree by adding an extra node/hierarchy that will not be
+> there in case of non-versioned tree.
+> That's why I think we should have something lighter that will not change
+> the structure.
+> Ideally we should be able to add extra versioned node to the original
+> dts without changing it at all.
 > 
->   can0  20000004  [8] 00 20 00 00 00 00 88 00   ERRORFRAME
->         controller-problem{tx-error-passive}
->         error-counter-tx-rx{{136}{0}}
->   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
->         bus-off
->         error-counter-tx-rx{{128}{0}}
->   can0  20000104  [8] 00 00 00 00 00 00 10 00   ERRORFRAME
->         controller-problem{}
->         restarted-after-bus-off
->         error-counter-tx-rx{{16}{0}}
->   can0  20000004  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
->         controller-problem{rx-error-passive}
->         error-counter-tx-rx{{87}{128}}
->   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
->         bus-off
->         error-counter-tx-rx{{128}{0}}
->   can0  20000104  [8] 00 00 00 00 00 00 08 00   ERRORFRAME
->         controller-problem{}
->         restarted-after-bus-off
->         error-counter-tx-rx{{8}{0}}
->   can0  20000004  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
->         controller-problem{rx-error-passive}
->         error-counter-tx-rx{{87}{128}}
->   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
->         bus-off
->         error-counter-tx-rx{{128}{0}}
->   can0  20000104  [8] 00 00 00 00 00 00 08 00   ERRORFRAME
->         controller-problem{}
->         restarted-after-bus-off
->         error-counter-tx-rx{{8}{0}}
->   [...]
+
+You will still need the versioned nodes to be injected to the non-versioned
+ones. FWIW the driver will use the standard of_property_read_* interface.
+
+You can patch of_property_read to hide the version node matching, and it will
+work.
+
+I'll leave Grant answer what approach is better, I don't claim to have the insight
+to handle all cases.
+
+>>> Maybe some extra version match table can just be passed during the board machine_init 
+>>> 
+>>> 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL, panda_version_match_table);
+>>> 
+>> 
+>> Would we need explicit of_platform_populate calls if we have node modification notifiers?
+>> In that case the notifier would pick it up automatically, and can do the per
+>> version matching internally.
 > 
-> as the grcan core continues to try to resend the frame when it comes
-> back again. To mimic the sja1000 behavior as closely as possible, I
-> guess that the driver also would need to make sure that the tx and rx
-> buffers are cleaned out so that this resending does not happen, right?
+> Yes indeed, but here I was thinking about an intermediate step, i.e.
+> now, without any dynamic node insertion mechanism.
+> Thanks to this simple approach, when can already fix the board
+> versionning problem.
+> 
 
-No, what you see is the normal behavior for automatic restart by the
-hardware. A bus-off recovery is *not* the same than a controller restart.
+As I pointed, with a kind of injection mechanism. the versioned node contents end up in
+the proper place in the device tree.
+Your method will work in a much more simpler way.
 
-> To do this, the hardware needs to be stopped anyway. Therefore, in my
-> opinion it is much simpler to handle it as it is in v5: always shut down
-> the hardware on bus off and, in the case of a non-zero restart_ms, let
-> restart timer trigger can_restart that will call grcan_set_mode which
-> will restart the hardware with empty buffers. Do you see any problems
-> with this approach?
+> Regards,
+> Benoit
+> 
 
-The application will start to send frames anyway and will again trigger
-a bus-off as long as the electronic problem persists. Flushing the
-buffers will not cure the problem.
+Regards
 
-> The added benefit of this approach is that then the actual millisecond
-> value of the non-zero restart_ms is used instead of having the hardware
-> quickly restart regardless of the value.
-
-See above.
-
-> In any case I have some other fixes for v6.
-
-OK.
-
-Wolfgang.
-
+-- Pantelis
