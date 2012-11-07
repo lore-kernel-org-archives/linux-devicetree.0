@@ -1,55 +1,36 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 2/4] gpio: samsung: Skip registration if pinctrl driver is
- present on Exynos4x12
-Date: Wed, 07 Nov 2012 13:41:44 +0900
-Message-ID: <0c5301cdbca2$30320240$909606c0$%kim@samsung.com>
-References: <1351089457-8205-1-git-send-email-t.figa@samsung.com>
- <1351089457-8205-3-git-send-email-t.figa@samsung.com>
- <CACRpkdYNDSp0K3wpvUem9ecsW-JQ9L6aKqaOmHNUR65DQTMNHA@mail.gmail.com>
+From: Shiraz Hashim <shiraz.linux.kernel@gmail.com>
+Subject: Re: possibility of parent clock selection through DT
+Date: Wed, 7 Nov 2012 12:06:10 +0530
+Message-ID: <CAPub148Bq=uwTuky25WzXn4yfCukJ+WacxkBvuyV5yTzGasGOQ@mail.gmail.com>
+References: <CAPub14-CPS48gQ1h8vvAYBpO_=egjheG_rMoZ894Y4XZ2CinUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdYNDSp0K3wpvUem9ecsW-JQ9L6aKqaOmHNUR65DQTMNHA@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Linus Walleij' <linus.walleij@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, swarren@wwwdotorg.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPub14-CPS48gQ1h8vvAYBpO_=egjheG_rMoZ894Y4XZ2CinUQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@ti.com>, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Linus Walleij wrote:
-> 
-> On Wed, Oct 24, 2012 at 4:37 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-> 
-> > This patch modifies the Samsung GPIO driver to check for pinctrl driver
-> > presence earlier and use generic matching instead of a single compatible
-> > value.
-> >
-> > This allows us to fix warning about unrecognized SoC in case of
-> > Exynos4x12, which is not supported by this driver.
-> >
-> > Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Tell me if there is something you want merged through
-> the GPIO or pinctrl tree. I have this Samsung branch on the
-> pinctrl tree...
-> 
-Hi Linus, 
+On Wed, Nov 7, 2012 at 11:42 AM, Shiraz Hashim
+<shiraz.linux.kernel@gmail.com> wrote:
+> Hi Mike, Rob,
+>
+> Devices in a SoC can have multiple possible clock sources which is
+> perfectly captured through clk framework.
+>
+> But the device itself may not be aware of the complex hierarchy above it.
+> In this case how do you suggest a board (through DT) should select its
+> preference.
+>
+> Is there some work already going on in this direction ?
 
-A commit 1b6056d6 ("pinctrl: samsung: Include bank-specific eint offset in
-bank struct") which is in your pinctrl tree (samsung branch) changed
-macro(EXYNOS_PIN_BANK_EINTG) to add offset. Eventually, this series(due to
-3rd patch, pinctrl: samsung: Add support for Exynos4x12) breaks compilation
-without the commit. So if you don't have a plan to rebase samsung branch of
-your pinctrl tree, I'd like to merge it in my tree. Is it ok to you?
+Just to make it clear, I already have referred the clock DT bindings and
+Shawn Guo patch on removing clk look up registration from kernel code.
 
-Thanks.
+Here I am talking about possibility of selecting desired clock hierarchy
+by the boards about which device nodes are not aware.
 
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+-- 
+regards
+Shiraz Hashim
