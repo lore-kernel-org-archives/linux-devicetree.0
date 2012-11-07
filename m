@@ -1,373 +1,141 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree support
-Date: Wed,  7 Nov 2012 11:41:41 +0800
-Message-ID: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-sound-owner@vger.kernel.org>
-Sender: linux-sound-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, nicolas.ferre@atmel.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, fengguang.wu@intel.com, Bo Shen <voice.shen@atmel.com>
+From: viresh kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
+ variables & arrays
+Date: Wed, 7 Nov 2012 09:52:05 +0530
+Message-ID: <CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
+References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
+	<50991C41.50705@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50991C41.50705@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: rob.herring@calxeda.com, grant.likely@secretlab.ca, linaro-dev@lists.linaro.org, andriy.shevchenko@intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add atmel-ssc for device tree support
+On Tue, Nov 6, 2012 at 7:48 PM, Rob Herring <robherring2@gmail.com> wro=
+te:
+>> +#define of_property_read_array(_np, _pname, _out, _sz)             =
+          \
 
-Match "atmel,at91rm9200-ssc" for using pdc for data transfer
-Match "atmel,at91sam9g45-ssc" for using dma for data transfer
+>> +     while (_sz--)                                                 =
+  \
+>> +             *_out++ =3D (typeof(*_out))be32_to_cpup(_val++);      =
+    \
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
-Resend
-  Fix a error find by Fengguang Yu
+> This will not work. You are incrementing _out by 1, 2, or 4 bytes, bu=
+t
+> _val is always incremented by 4 bytes.
+>
+> According to the dtc commit adding this feature, the values are packe=
+d:
+>
+> With this patch the following property assignment:
+>
+>     property =3D /bits/ 16 <0x1234 0x5678 0x0 0xffff>;
+>
+> is equivalent to:
+>
+>     property =3D <0x12345678 0x0000ffff>;
 
-  Although there is a NACK from Jean-Christophe PLAGNIOL-VILLARD,
-  however the pinctrl for at91 is not in mainline. So, plan to add
-  pinctrl support after the pinctrl driver for at91 is merged.
+I thought of it a bit more and wasn't actually aligned with your explan=
+ation :(
 
-Change since v2
-  No change
-Change since v1
-  change the underscore to dash in atmel-ssc binding document
----
- .../devicetree/bindings/misc/atmel-ssc.txt         |   15 ++++++
- arch/arm/boot/dts/at91sam9260.dtsi                 |    8 ++++
- arch/arm/boot/dts/at91sam9263.dtsi                 |   16 +++++++
- arch/arm/boot/dts/at91sam9g45.dtsi                 |   16 +++++++
- arch/arm/boot/dts/at91sam9x5.dtsi                  |    8 ++++
- arch/arm/mach-at91/at91rm9200.c                    |    3 ++
- arch/arm/mach-at91/at91sam9260.c                   |    1 +
- arch/arm/mach-at91/at91sam9261.c                   |    3 ++
- arch/arm/mach-at91/at91sam9263.c                   |    2 +
- arch/arm/mach-at91/at91sam9g45.c                   |    2 +
- arch/arm/mach-at91/at91sam9rl.c                    |    2 +
- arch/arm/mach-at91/at91sam9x5.c                    |    1 +
- drivers/misc/atmel-ssc.c                           |   49 ++++++++++++++++++--
- 13 files changed, 123 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/atmel-ssc.txt
+If that is the case, how will current implementation of u32 array will =
+work
+if we pass something like: 0x88 0x84000000 0x5890 from DT?
 
-diff --git a/Documentation/devicetree/bindings/misc/atmel-ssc.txt b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-new file mode 100644
-index 0000000..38e51ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/atmel-ssc.txt
-@@ -0,0 +1,15 @@
-+* Atmel SSC driver.
-+
-+Required properties:
-+- compatible: "atmel,at91rm9200-ssc" or "atmel,at91sam9g45-ssc"
-+	- atmel,at91rm9200-ssc: support pdc transfer
-+	- atmel,at91sam9g45-ssc: support dma transfer
-+- reg: Should contain SSC registers location and length
-+- interrupts: Should contain SSC interrupt
-+
-+Example:
-+ssc0: ssc@fffbc000 {
-+	compatible = "atmel,at91rm9200-ssc";
-+	reg = <0xfffbc000 0x4000>;
-+	interrupts = <14 4 5>;
-+};
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index d410581..aaa42d8 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -29,6 +29,7 @@
- 		tcb0 = &tcb0;
- 		tcb1 = &tcb1;
- 		i2c0 = &i2c0;
-+		ssc0 = &ssc0;
- 	};
- 	cpus {
- 		cpu@0 {
-@@ -212,6 +213,13 @@
- 				status = "disabled";
- 			};
- 
-+			ssc0: ssc@fffbc000 {
-+				compatible = "atmel,at91rm9200-ssc";
-+				reg = <0xfffbc000 0x4000>;
-+				interrupts = <14 4 5>;
-+				status = "disable";
-+			};
-+
- 			adc0: adc@fffe0000 {
- 				compatible = "atmel,at91sam9260-adc";
- 				reg = <0xfffe0000 0x100>;
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 3e6e5c1..3b721ee 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -25,6 +25,8 @@
- 		gpio4 = &pioE;
- 		tcb0 = &tcb0;
- 		i2c0 = &i2c0;
-+		ssc0 = &ssc0;
-+		ssc1 = &ssc1;
- 	};
- 	cpus {
- 		cpu@0 {
-@@ -173,6 +175,20 @@
- 				status = "disabled";
- 			};
- 
-+			ssc0: ssc@fff98000 {
-+				compatible = "atmel,at91rm9200-ssc";
-+				reg = <0xfff98000 0x4000>;
-+				interrupts = <16 4 5>;
-+				status = "disable";
-+			};
-+
-+			ssc1: ssc@fff9c000 {
-+				compatible = "atmel,at91rm9200-ssc";
-+				reg = <0xfff9c000 0x4000>;
-+				interrupts = <17 4 5>;
-+				status = "disable";
-+			};
-+
- 			macb0: ethernet@fffbc000 {
- 				compatible = "cdns,at32ap7000-macb", "cdns,macb";
- 				reg = <0xfffbc000 0x100>;
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 3add030..acfa207 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -31,6 +31,8 @@
- 		tcb1 = &tcb1;
- 		i2c0 = &i2c0;
- 		i2c1 = &i2c1;
-+		ssc0 = &ssc0;
-+		ssc1 = &ssc1;
- 	};
- 	cpus {
- 		cpu@0 {
-@@ -226,6 +228,20 @@
- 				status = "disabled";
- 			};
- 
-+			ssc0: ssc@fff9c000 {
-+				compatible = "atmel,at91sam9g45-ssc";
-+				reg = <0xfff9c000 0x4000>;
-+				interrupts = <16 4 5>;
-+				status = "disable";
-+			};
-+
-+			ssc1: ssc@fffa0000 {
-+				compatible = "atmel,at91sam9g45-ssc";
-+				reg = <0xfffa0000 0x4000>;
-+				interrupts = <17 4 5>;
-+				status = "disable";
-+			};
-+
- 			adc0: adc@fffb0000 {
- 				compatible = "atmel,at91sam9260-adc";
- 				reg = <0xfffb0000 0x100>;
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 03fc136..69667d0 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -30,6 +30,7 @@
- 		i2c0 = &i2c0;
- 		i2c1 = &i2c1;
- 		i2c2 = &i2c2;
-+		ssc0 = &ssc0;
- 	};
- 	cpus {
- 		cpu@0 {
-@@ -87,6 +88,13 @@
- 				interrupts = <1 4 7>;
- 			};
- 
-+			ssc0: ssc@f0010000 {
-+				compatible = "atmel,at91sam9g45-ssc";
-+				reg = <0xf0010000 0x4000>;
-+				interrupts = <28 4 5>;
-+				status = "disable";
-+			};
-+
- 			tcb0: timer@f8008000 {
- 				compatible = "atmel,at91sam9x5-tcb";
- 				reg = <0xf8008000 0x100>;
-diff --git a/arch/arm/mach-at91/at91rm9200.c b/arch/arm/mach-at91/at91rm9200.c
-index 400d1a3..af47c75 100644
---- a/arch/arm/mach-at91/at91rm9200.c
-+++ b/arch/arm/mach-at91/at91rm9200.c
-@@ -187,6 +187,9 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.2", &ssc2_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffd0000.ssc", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffd4000.ssc", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffd8000.ssc", &ssc2_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91rm9200.0", &twi_clk),
- 	/* fake hclk clock */
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
-diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
-index d14ab6a..a41eb3d 100644
---- a/arch/arm/mach-at91/at91sam9260.c
-+++ b/arch/arm/mach-at91/at91sam9260.c
-@@ -211,6 +211,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t1_clk", "atmel_tcb.1", &tc4_clk),
- 	CLKDEV_CON_DEV_ID("t2_clk", "atmel_tcb.1", &tc5_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffbc000.ssc", &ssc_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260.0", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.0", &twi_clk),
- 	/* more usart lookup table for DT entries */
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index c7b6057..7fcbe05 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -177,6 +177,9 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.2", &ssc2_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffbc000.ssc", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffc0000.ssc", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffc4000.ssc", &ssc2_clk),
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &hck0),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9261.0", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g10.0", &twi_clk),
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index b87be18..c0f4c8c 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -188,6 +188,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_ID("hclk", &macb_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fff98000.ssc", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fff9c000.ssc", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID("mci_clk", "atmel_mci.0", &mmc0_clk),
- 	CLKDEV_CON_DEV_ID("mci_clk", "atmel_mci.1", &mmc1_clk),
- 	CLKDEV_CON_DEV_ID("spi_clk", "atmel_spi.0", &spi0_clk),
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index f4f96a6..a4282d3 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -241,6 +241,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g10.1", &twi1_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91sam9g45_ssc.0", &ssc0_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91sam9g45_ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fff9c000.ssc", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffa0000.ssc", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel-trng", &trng_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_sha", &aestdessha_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_tdes", &aestdessha_clk),
-diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
-index 4110b54..b683fdc 100644
---- a/arch/arm/mach-at91/at91sam9rl.c
-+++ b/arch/arm/mach-at91/at91sam9rl.c
-@@ -186,6 +186,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t2_clk", "atmel_tcb.0", &tc2_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.0", &ssc0_clk),
- 	CLKDEV_CON_DEV_ID("pclk", "at91rm9200_ssc.1", &ssc1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffc0000.ssc", &ssc0_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "fffc4000.ssc", &ssc1_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.0", &twi0_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.1", &twi1_clk),
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
-diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
-index e503538..18fbbb2 100644
---- a/arch/arm/mach-at91/at91sam9x5.c
-+++ b/arch/arm/mach-at91/at91sam9x5.c
-@@ -231,6 +231,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "f800c000.timer", &tcb0_clk),
- 	CLKDEV_CON_DEV_ID("dma_clk", "ffffec00.dma-controller", &dma0_clk),
- 	CLKDEV_CON_DEV_ID("dma_clk", "ffffee00.dma-controller", &dma1_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "f0010000.ssc", &ssc_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "f8010000.i2c", &twi0_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "f8014000.i2c", &twi1_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "f8018000.i2c", &twi2_clk),
-diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
-index f40abd8..a769719 100644
---- a/drivers/misc/atmel-ssc.c
-+++ b/drivers/misc/atmel-ssc.c
-@@ -18,6 +18,8 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- 
-+#include <linux/of.h>
-+
- /* Serialize access to ssc_list and user count */
- static DEFINE_SPINLOCK(user_lock);
- static LIST_HEAD(ssc_list);
-@@ -29,7 +31,13 @@ struct ssc_device *ssc_request(unsigned int ssc_num)
- 
- 	spin_lock(&user_lock);
- 	list_for_each_entry(ssc, &ssc_list, list) {
--		if (ssc->pdev->id == ssc_num) {
-+		if (ssc->pdev->dev.of_node) {
-+			if (of_alias_get_id(ssc->pdev->dev.of_node, "ssc")
-+				== ssc_num) {
-+				ssc_valid = 1;
-+				break;
-+			}
-+		} else if (ssc->pdev->id == ssc_num) {
- 			ssc_valid = 1;
- 			break;
- 		}
-@@ -88,10 +96,41 @@ static const struct platform_device_id atmel_ssc_devtypes[] = {
- 	}
- };
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id atmel_ssc_dt_ids[] = {
-+	{
-+		.compatible = "atmel,at91rm9200-ssc",
-+		.data = &at91rm9200_config,
-+	}, {
-+		.compatible = "atmel,at91sam9g45-ssc",
-+		.data = &at91sam9g45_config,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, atmel_ssc_dt_ids);
-+#endif
-+
-+static inline const struct atmel_ssc_platform_data * __init
-+	atmel_ssc_get_driver_data(struct platform_device *pdev)
+So, i did a dummy test of my current implementation, with following cha=
+nges
+in one of my drivers:
+
+dts changes:
+
+                cluster0: cluster@0 {
++                       data1 =3D <0x50 0x60 0x70>;
++                       data2 =3D <0x5000 0x6000 0x7000>;
++                       data3 =3D <0x50000000 0x60000000 0x70000000>;
+               }
+
+driver changes:
+
++void test(struct device_node *cluster)
 +{
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(atmel_ssc_dt_ids, pdev->dev.of_node);
-+		if (match == NULL)
-+			return NULL;
-+		return match->data;
-+	}
++       u8 data1[3];
++       u16 data2[3];
++       u32 data3[3], i;
 +
-+	return (struct atmel_ssc_platform_data *)
-+		platform_get_device_id(pdev)->driver_data;
++       of_property_read_u8_array(cluster, "data1", data1, 3);
++       of_property_read_u16_array(cluster, "data2", data2, 3);
++       of_property_read_u32_array(cluster, "data3", data3, 3);
++
++       for (i =3D 0; i < 3; i++) {
++               printk(KERN_INFO "u8 %d: %x\n", i, data1[i]);
++               printk(KERN_INFO "u16 %d: %x\n", i, data2[i]);
++               printk(KERN_INFO "u32 %d: %x\n", i, data3[i]);
++       }
 +}
-+
- static int ssc_probe(struct platform_device *pdev)
- {
- 	struct resource *regs;
- 	struct ssc_device *ssc;
-+	const struct atmel_ssc_platform_data *plat_dat;
- 
- 	ssc = devm_kzalloc(&pdev->dev, sizeof(struct ssc_device), GFP_KERNEL);
- 	if (!ssc) {
-@@ -100,8 +139,11 @@ static int ssc_probe(struct platform_device *pdev)
- 	}
- 
- 	ssc->pdev = pdev;
--	ssc->pdata = (struct atmel_ssc_platform_data *)
--			platform_get_device_id(pdev)->driver_data;
-+
-+	plat_dat = atmel_ssc_get_driver_data(pdev);
-+	if (!plat_dat)
-+		return -ENODEV;
-+	ssc->pdata = (struct atmel_ssc_platform_data *)plat_dat;
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!regs) {
-@@ -160,6 +202,7 @@ static struct platform_driver ssc_driver = {
- 	.driver		= {
- 		.name		= "ssc",
- 		.owner		= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(atmel_ssc_dt_ids),
- 	},
- 	.id_table	= atmel_ssc_devtypes,
- 	.probe		= ssc_probe,
--- 
-1.7.9.5
 
+And following is the output
+
+[=A0=A0=A0 4.087205] u8 0: 50
+[=A0=A0=A0 4.093746] u16 0: 5000
+[=A0=A0=A0 4.101067] u32 0: 50000000
+[=A0=A0=A0 4.109512] u8 1: 60
+[=A0=A0=A0 4.116036] u16 1: 6000
+[=A0=A0=A0 4.123357] u32 1: 60000000
+[=A0=A0=A0 4.131718] u8 2: 70
+[=A0=A0=A0 4.138241] u16 2: 7000
+[=A0=A0=A0 4.145573] u32 2: 70000000
+
+which looks to be what we were looking for, isn't it?
+
+=46ollowing is fixup for the doc comment missing:
+
+commit 00803aed0781de451048df0d15a3e8c814a343c8
+Author: Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Wed Nov 7 09:48:46 2012 +0530
+
+    fixup! dt: add helper function to read u8 & u16 variables & arrays
+---
+ drivers/of/base.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index fbb634b..4a6632e 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -669,6 +669,7 @@ EXPORT_SYMBOL(of_find_node_by_phandle);
+  * @np:                device node from which the property value is to=
+ be read.
+  * @propname:  name of the property to be searched.
+  * @out_value: pointer to return value, modified only if return value =
+is 0.
++ * @sz:                number of array elements to read
+  *
+  * Search for a property in a device node and read 8-bit value(s) from
+  * it. Returns 0 on success, -EINVAL if the property does not exist,
+@@ -690,6 +691,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u8_array);
+  * @np:                device node from which the property value is to=
+ be read.
+  * @propname:  name of the property to be searched.
+  * @out_value: pointer to return value, modified only if return value =
+is 0.
++ * @sz:                number of array elements to read
+  *
+  * Search for a property in a device node and read 16-bit value(s) fro=
+m
+  * it. Returns 0 on success, -EINVAL if the property does not exist,
+@@ -712,6 +714,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u16_array);
+  * @np:                device node from which the property value is to=
+ be read.
+  * @propname:  name of the property to be searched.
+  * @out_value: pointer to return value, modified only if return value =
+is 0.
++ * @sz:                number of array elements to read
+  *
+  * Search for a property in a device node and read 32-bit value(s) fro=
+m
+  * it. Returns 0 on success, -EINVAL if the property does not exist,
