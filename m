@@ -1,73 +1,114 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 4/4] ARM: gic: use a private mapping for CPU target
- interfaces
-Date: Wed, 7 Nov 2012 10:23:57 +0000
-Message-ID: <20121107102357.GD23305@mudshark.cambridge.arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH 1/4] ARM: kernel: add device tree init map function
+Date: Wed, 7 Nov 2012 10:23:49 +0000
+Message-ID: <20121107102349.GC17831@e102568-lin.cambridge.arm.com>
 References: <1350393709-23546-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1350393709-23546-5-git-send-email-lorenzo.pieralisi@arm.com>
- <20121106221651.GE21764@mudshark.cambridge.arm.com>
- <alpine.LFD.2.02.1211061755260.21033@xanadu.home>
+ <1350393709-23546-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20121106215044.GB21764@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121106215044.GB21764@mudshark.cambridge.arm.com>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.02.1211061755260.21033-QuJgVwGFrdf/9pzu0YdTqQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2012 at 10:59:35PM +0000, Nicolas Pitre wrote:
-> On Tue, 6 Nov 2012, Will Deacon wrote:
-> > >  arch/arm/common/gic.c | 42 ++++++++++++++++++++++++++++++++++--------
-> > >  1 file changed, 34 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/common/gic.c b/arch/arm/common/gic.c
-> > > index aa52699..1338a55 100644
-> > > --- a/arch/arm/common/gic.c
-> > > +++ b/arch/arm/common/gic.c
-> > > @@ -70,6 +70,13 @@ struct gic_chip_data {
-> > >  static DEFINE_RAW_SPINLOCK(irq_controller_lock);
-> > >  
-> > >  /*
-> > > + * The GIC mapping of CPU interfaces does not necessarily match
-> > > + * the logical CPU numbering.  Let's use a mapping as returned
-> > > + * by the GIC itself.
-> > > + */
-> > > +static u8 gic_cpu_map[8] __read_mostly;
+Hi Will,
+
+thanks for the review on the series.
+
+On Tue, Nov 06, 2012 at 09:50:44PM +0000, Will Deacon wrote:
+> On Tue, Oct 16, 2012 at 02:21:45PM +0100, Lorenzo Pieralisi wrote:
+> > When booting through a device tree, the kernel cpu logical id map can be
+> > initialized using device tree data passed by FW or through an embedded blob.
 > > 
-> > Can we have a #define for the number CPUs supported by the GIC? It gets
-> > used a fair amount in this patch for loop bounds etc.
-> 
-> Sure.  I'll respin the patch.
-
-Cheers Nicolas.
-
-> > >  	/*
-> > > +	 * Get what the GIC says our CPU mask is.
-> > > +	 */
-> > > +	BUG_ON(cpu >= 8);
-> > > +	cpu_mask = readl_relaxed(dist_base + GIC_DIST_TARGET + 0);
+> > This patch adds a function that parses device tree "cpu" nodes and
+> > retrieves the corresponding CPUs hardware identifiers (MPIDR).
+> > It sets the possible cpus and the cpu logical map values according to
+> > the number of CPUs defined in the device tree and respective properties.
 > > 
-> > Making the mask a u8 and using readb_relaxed here makes this bit of code
-> > clearer to me (and the GIC apparently allows such an access to this
-> > register).
+> > The primary CPU is assigned cpu logical number 0 to keep the current
+> > convention valid.
+> > 
+> > Current bindings documentation is included in the patch:
+> > 
+> > Documentation/devicetree/bindings/arm/cpus.txt
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 > 
-> Not always.  At least RTSM throws an exception if you do so.
-> Been there.
+> [...]
+> 
+> > +void __init arm_dt_init_cpu_maps(void)
+> > +{
+> > +	struct device_node *dn = NULL;
+> > +	int i, cpu = 1;
+> > +
+> > +	while ((dn = of_find_node_by_type(dn, "cpu")) && cpu <= nr_cpu_ids) {
+> > +		const u32 *hwid;
+> > +		int len;
+> > +
+> > +		pr_debug("  * %s...\n", dn->full_name);
+> > +
+> > +		hwid = of_get_property(dn, "reg", &len);
+> > +
+> > +		if (!hwid || len != 4) {
+> > +			pr_err("  * %s missing reg property\n", dn->full_name);
+> > +			continue;
+> > +		}
+> > +		/*
+> > +		 * We want to assign the boot CPU logical id 0.
+> > +		 * Boot CPU checks its own MPIDR and if matches the current
+> > +		 * cpu node "reg" value it sets the logical cpu index to 0
+> > +		 * and stores the physical id accordingly.
+> > +		 * If MPIDR does not match, assign sequential cpu logical
+> > +		 * id (starting from 1) and increments it.
+> > +		 */
+> > +		i = (be32_to_cpup(hwid) == (read_cpuid_mpidr() & 0xffffff))
+> > +							? 0 : cpu++;
+> > +
+> > +		if (!i)
+> > +			printk(KERN_INFO "Booting Linux on CPU HWID 0x%x\n",
+> > +					be32_to_cpup(hwid));
+> 
+> I don't think we should bother with this print -- we already print something
+> in smp_setup_processor_id, which cannot differ for the boot CPU, If you want
+> the full mpidr, we could change that code to include it as well.
 
-That would be a bug in the RTSM then. Have you reported it to support? (if
-not, I can chase this one up). I'd rather we just fix the model than work
-around it in Linux.
+Yes, it is duplicate code, I will remove it. Extending the printk in
+smp_setup_processor_id() to include the entire MPIDR should be done
+though, otherwise we might have printk aliases on system with multiple
+clusters.
 
-Will
+> 
+> We might also want some sanity checking that we do indeed end up with
+> logical id 0 for the boot CPU. If not, I think we should scream and fall
+> back on the simple mapping created earlier.
+
+Well, this basically means that we have to make sure this function is
+executed on the boot CPU (and it is as the code stands now), right ?
+
+Since we are reading the MPIDR of the CPU parsing the tree and assign logical
+cpu 0 accordingly I think we have this check carried out automatically,
+unless for any given reason someone calls this function on a CPU that is
+not the boot one (Why ?).
+
+Basically I could add a check like:
+
+if (WARN_ON(smp_processor_id())
+	return;
+
+to fall back to the previous mapping, but that's overkill IMHO.
+
+Thanks,
+Lorenzo
