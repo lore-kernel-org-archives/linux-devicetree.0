@@ -1,62 +1,142 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] ARM: kernel: add device tree init map function
-Date: Wed, 7 Nov 2012 15:35:30 +0000
-Message-ID: <20121107153529.GT23305@mudshark.cambridge.arm.com>
-References: <1350393709-23546-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1350393709-23546-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20121106215044.GB21764@mudshark.cambridge.arm.com>
- <20121107102349.GC17831@e102568-lin.cambridge.arm.com>
- <20121107110542.GH23305@mudshark.cambridge.arm.com>
- <20121107120052.GD17831@e102568-lin.cambridge.arm.com>
+From: Alan Tull <atull@altera.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Wed, 7 Nov 2012 09:33:21 -0600
+Message-ID: <1352302401.4067.11.camel@atull-linux1>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+	 <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+	 <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
+	 <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com>
+	 <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
+	 <B1277EA3-9284-4856-A7E8-1B1CA9D30327@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121107120052.GD17831-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <B1277EA3-9284-4856-A7E8-1B1CA9D30327@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 07, 2012 at 12:00:52PM +0000, Lorenzo Pieralisi wrote:
-> On Wed, Nov 07, 2012 at 11:05:42AM +0000, Will Deacon wrote:
-> > No, I was thinking about what happens if the devicetree doesn't contain an
-> > mpidr property that matches the boot cpu. In this case, we will fail to
-> > assign logical ID 0, right? If this happens, we should complain about an
-> > invalid devicetree and try to fall back on the logical_map that was
-> > generated earlier on.
+On Wed, 2012-11-07 at 09:06 +0100, Pantelis Antoniou wrote:
+> Hi Grant,
 > 
-> Good point. What I could do, I can assign the MPIDR of the boot CPU to
-> the logical index 0 before even starting to parse the DT (that's what it
-> is done in smp_setup_processor_id(), with a couple of twists). Then, if I
-> find a node that matches the boot CPU mpidr I just skip over it. This
-> way the boot CPU MPIDR will always be correct the only difference with
-> the current approach will be that instead of generating the secondaries
-> MPIDRs we will read them from DT.
+> On Nov 6, 2012, at 9:45 PM, Grant Likely wrote:
+> 
+> > On Tue, Nov 6, 2012 at 7:34 PM, Pantelis Antoniou
+> > <panto@antoniou-consulting.com> wrote:
+> >> On Nov 6, 2012, at 12:14 PM, Grant Likely wrote:
+> >>> On Tue, Nov 6, 2012 at 10:30 AM, Pantelis Antoniou
+> >>> <panto@antoniou-consulting.com> wrote:
+> >>>> For hot-plugging, you need it. Whether kernel code can deal with
+> >>>> large parts of the DT going away... How about we use the dead
+> >>>> properties method and move/tag the removed modes as such, and not
+> >>>> really remove them.
+> >>> 
+> >>> Nodes already use krefs, and I'm thinking about making them kobjects
+> >>> so that they appear in sysfs and we'll have some tools to figure out
+> >>> when reference counts don't get decremented properly.
+> >>> 
+> >> 
+> >> From the little I've looked in the of code, and the drivers, it's going
+> >> to be pretty bad. I don't think all users take references properly, and
+> >> we have a big global lock for accessing the DT.
+> > 
+> > I'm a lot more optimistic on this front... I wrote a patch today to
+> > make the change and took some measurements:
+> > 
+> > On the versatile express qemu model I measured the free memory with
+> > /proc/device-tree, with /sys/device-tree, and with both. Here's what I
+> > found:
+> > 
+> > /proc/device-tree only: 114776kB free
+> > /sys/device-tree only: 114792kB free
+> > both enabled: 114716kB free
+> > 
+> > The back of a napkin calculation indicates that on this platform
+> > /proc/devicetree costs 76kB and /sys/device-tree costs 60kb. I'm happy
+> > to see that using /sys instead of /proc appears to be slightly cheaper
+> > which makes it easier to justify the change. The diffstat makes me
+> > even happier:
+> > 
+> > arch/arm/plat-omap/Kconfig                |    1 -
+> > arch/powerpc/platforms/pseries/dlpar.c    |   23 -----------
+> > arch/powerpc/platforms/pseries/reconfig.c |   40 ------------------
+> > drivers/of/Kconfig                        |    8 ----
+> > drivers/of/base.c                         |  116
+> > ++++++++++++++++++++++++++++------------------------
+> > drivers/of/fdt.c                          |    5 ++-
+> > fs/proc/Makefile                          |    1 -
+> > fs/proc/proc_devtree.c                    |   13 +-----
+> > fs/proc/root.c                            |    4 +-
+> > include/linux/of.h                        |   35 ++++++++++++----
+> > include/linux/proc_fs.h                   |   16 --------
+> > include/linux/string.h                    |   11 +++++
+> > 12 files changed, 107 insertions(+), 166 deletions(-)
+> > 
+> 
+> Interesting. Not so bad then.
+> 
+> > There are still a few odds and ends that need to be tidied up, but
+> > I'll get it out for review shortly. I've not touched the sparc code
+> > yet, and I need to take another look over the existing OF_DYNAMIC
+> > code. I think that CONFIG_OF_DYNAMIC will probably go away and the add
+> > node/property functions will get used by fdt.c and pdt.c for initial
+> > construction of the device tree.
+> 
+> CONFIG_OF_DYNAMIC never made sense to me. Glad to see the config option
+> gone. I'm not totally up to date with the -next dt stuff, but if we're
+> there can we rename all the prom_ functions to something saner?
+> 
+I'd be glad to see the dynamic stuff be integrated better than it
+currently is.  Currently unflatten_dt_node assumes that the flattened
+tree will stay around and not be freed.  So using it to unflatten dynamic
+nodes after boot is problematic if the nodes may be later removed.
 
-That should work, although I'm not sure why you can't just give up
-altogether and use the initial mapping from smp_setup_processor_id?
+> > 
+> >> Adding and removing nodes at runtime as part of the normal operation of
+> >> the system (and not as something that happens once in a blue moon under
+> >> controlled conditions) will uncover lots of bugs.
+> > 
+> > I'm hoping so! Its time to clean that mess up. :-) Fortunately adding
+> > nodes is not where we're going to have problems. The problems will be
+> > on node removal. Addition-only at least means we can have something
+> > useful before hunting down and squashing all the bugs.
+> 
+> I'll admit that removing nodes is going to be quite rare at least for
+> me use cases. I did come across a couple of people that do hot-plugging
+> (using something completely different) that could use it for sure.
+>
 
-> The problem with this approach is that if we need a pointer (phandle) to the
-> boot CPU DT node through the MPIDR and the boot CPU node is botched or missing
-> we still behave as if the DT CPU nodes were ok.
+We have been looking at an approach that would allow adding/deleting
+whole nodes under userspace direction.  Such as a variation of the real-time
+video processing system example where the FPGA has some IP blocks that are
+dsp filters.  The user could rearrange them from
+some userspace GUI without having to reboot.  For that to work, device nodes that
+are removed really have to be freed or there's a memory leak.
 
-Does any code do this? Wouldn't it be much better to lookup logical CPU 0 if
-you want to find anything out about the boot CPU?
 
-> I think I'd better stick a warning condition in there if the boot CPU
-> node is not present or botched (from a MPIDR perspective at least).
-
-Definitely!
-
-Will
+> > 
+> >> So let's think about locking too
+> > 
+> > Yes, the locking does need to be sorted out.
+> > 
+> 
+> Perhaps come up with a dt-stress test tool/boot time validator?
+> 
+> > g.
+> 
+> Regards
+> 
+> -- Pantelis
+> 
+> P.S. Lots of teeth grinding in the ELCE about the lack of a DT preprocessor.
+> The pinctrl arguments have been mentioned more than once.
+> 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
