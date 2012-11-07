@@ -1,78 +1,110 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] ARM: Exynos5250: Enabling dwc3-exynos driver
-Date: Wed, 07 Nov 2012 18:18:15 +0100
-Message-ID: <1719536.A7tLiC5qER@flatron>
-References: <1352215729-11703-1-git-send-email-gautam.vivek@samsung.com> <CAFp+6iGFwTAvhamhoQszBL8QUau64XtDWGR1yX0azbuw1iWgVA@mail.gmail.com> <20121107164322.GC12714@arwen.pp.htv.fi>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
+ to mach-omap2)
+Date: Wed, 07 Nov 2012 10:25:24 -0700
+Message-ID: <509A9984.3000709@wwwdotorg.org>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com> <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com> <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com> <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com> <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com> <509A3595.7050600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20121107164322.GC12714@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Vivek Gautam <gautamvivek1987@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, av.tikhomirov@samsung.com, yulgon.kim@samsung.com, Thomas Abraham <thomas.abraham@linaro.org>, Praveen Paneri <p.paneri@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <509A3595.7050600@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek, Felipe,
-
-On Wednesday 07 of November 2012 18:43:22 Felipe Balbi wrote:
-> Hi,
+On 11/07/2012 03:19 AM, Benoit Cousson wrote:
+> Hi Panto,
 > 
-> On Wed, Nov 07, 2012 at 06:55:03PM +0530, Vivek Gautam wrote:
-> > Hi,
-> > 
-> > On Tue, Nov 6, 2012 at 10:13 PM, Felipe Balbi <balbi@ti.com> wrote:
-> > > On Tue, Nov 06, 2012 at 08:58:49PM +0530, Vivek Gautam wrote:
-> > >> Adding DWC3 device tree node for Exynos5250 along with the
-> > >> device address and clock support needed for the controller.
-> > >> 
-> > >> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> > >> ---
-> > >> 
-> > >>  arch/arm/boot/dts/exynos5250.dtsi       |    6 ++++++
-> > >>  arch/arm/mach-exynos/clock-exynos5.c    |   24
-> > >>  ++++++++++++++++++++++++
-> > >>  arch/arm/mach-exynos/include/mach/map.h |    1 +
-> > >>  arch/arm/mach-exynos/mach-exynos5-dt.c  |    2 ++
-> > >>  drivers/usb/Kconfig                     |    1 +
-> > >>  5 files changed, 34 insertions(+), 0 deletions(-)
-> > >> 
-> > >> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
-> > >> b/arch/arm/boot/dts/exynos5250.dtsi index cf6a02d..52bca54 100644
-> > >> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> > >> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> > >> @@ -68,6 +68,12 @@
-> > >> 
-> > >>               interrupts = <0 96 0>;
-> > >>       
-> > >>       };
-> > >> 
-> > >> +     dwc3 {
-> > > 
-> > > shouldn't this be usb@12000000 ??
-> > 
-> > Kept this in accordance with controller's name, similar to the change
-> > in following:
-> > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg12800.
-> > html
-> > 
-> > Needs to be changed ?
+> On 11/07/2012 09:13 AM, Pantelis Antoniou wrote:
+>> Hi Grant
+>>
+>> On Nov 6, 2012, at 9:45 PM, Grant Likely wrote:
+>>
+>>> On Tue, Nov 6, 2012 at 7:34 PM, Pantelis Antoniou
+>>> <panto@antoniou-consulting.com> wrote:
+>>
+>> [ snip ]
+>>>
+>>> g.
+>>
+>> Since we've started talking about longer term goals, and the versioning
+>> provision seems to stand, I hope we address how much the fragment versioning
+>> thing is similar to the way board revisions progress.
+>>
+>> If a versioning syntax is available then one could create a single DT 
+>> file for a bunch of 'almost' similar board and board revisions.
 > 
-> I'll leave it to DT experts, but I was under the impression that we
-> should be using generic functionality names (usb, i2c, spi, uart, gpio,
-> etc) instead of the IP name. IP name is something more for compatible
-> flag.
+> I even think that the version issue is probably much more important for the short term than the overlay aspect. Well at least as important. We start having as well a bunch a panda board version with different HW setup.
 > 
-> Don't take my word for it though :-) DT experts are the ones with final
-> saying
+> Having a single board-XXX.dts that will support all these versions is probably the best approach to avoid choosing that from the bootloader.
+> 
+> We need to figure out a format + mechanism compatible with the current non-versioned format to allow filtering the nodes at runtime to keep only the relevant one.
+> 
+> Something that can find the driver that will provide the proper board version or subsystem version or whatever like that:
+> 
+> 	compatible-version = "ti,panda-version", "panda";
+> 
+> Then at runtime we should create only the node with the correct match between the driver version and the string version.
+> 
+> 
+> /* regular panda audio routing */
+> sound: sound {
+> 	compatible = "ti,abe-twl6040";
+> 	ti,model = "PandaBoard";
+> 	compatible-version = "ti,panda-version", "panda";
+> 
+> 	/* Audio routing */
+> 	ti,audio-routing =
+> 		"Headset Stereophone", "HSOL",
+> 		"Headset Stereophone", "HSOR",
+> 		"Ext Spk", "HFL",
+> 		"Ext Spk", "HFR",
+> 		"Line Out", "AUXL",
+> 		"Line Out", "AUXR",
+> 		"HSMIC", "Headset Mic",
+> 		"Headset Mic", "Headset Mic Bias",
+> 		"AFML", "Line In",
+> 		"AFMR", "Line In";
+> };
+> 
+> 
+> /* Audio routing is different between PandaBoard4430 and PandaBoardES */
+> &sound {
+> 	ti,model = "PandaBoardES";
+> 	compatible-version = "ti,panda-version", "panda-es";
+> 
+> 	/* Audio routing */
+> 	ti,audio-routing =
+> 		"Headset Stereophone", "HSOL",
+> 		"Headset Stereophone", "HSOR",
+> 		"Ext Spk", "HFL",
+> 		"Ext Spk", "HFR",
+> 		"Line Out", "AUXL",
+> 		"Line Out", "AUXR",
+> 		"AFML", "Line In",
+> 		"AFMR", "Line In";
+> };
+> 
+> 
+> Maybe some extra version match table can just be passed during the board machine_init 
+> 
+> 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL, panda_version_match_table);
 
-Wrt node name, as far as I am aware of, there is no strict convention of 
-naming nodes, but the way you suggested is better in terms of readability - 
-you don't have to know this particular IP to find out what it is used for.
+Is the only difference here the content of the ti,audio-routing
+property? If so, then I don't think there's any need for infra-structure
+for this; the driver code already reads that property and adjusts its
+behaviour based upon it.
 
-Similar thing is with @addr in node names. I've been always adding @addr to 
-the name whenever the node had reg property inside (with the same address 
-of course), but I'm not sure if there is a strict convention here.
+I do see that "Headset Mic" exists only in one of the tables above.
+Perhaps the driver could scan the routing table, and only create the
+ASoC object for the headset if it's mentioned in the routing table?
 
-Best regards,
-Tomasz Figa
+If there are additional differences, then you can always use the .data
+field in of_device_id to automatically associate some configuration data
+with different compatible values.
+
+Even better might be to extend the binding so that all HW differences
+are represented explicitly as properties; that way you wouldn't even
+need different compatible values.
