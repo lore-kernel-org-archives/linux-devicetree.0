@@ -1,70 +1,170 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree
- support
-Date: Wed, 7 Nov 2012 10:21:24 +0100
-Message-ID: <20121107092124.GE12323@opensource.wolfsonmicro.com>
-References: <1352259701-19847-1-git-send-email-voice.shen@atmel.com>
- <20121107084932.GE20063@game.jcrosoft.org>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 1/2] leds/tca6507: Add support for devicetree.
+Date: Wed, 07 Nov 2012 18:30:06 +0900
+Message-ID: <000b01cdbcca$7925d2b0$6b717810$%han@samsung.com>
+References: <1351633534-20817-1-git-send-email-marek.belisko@open-nandra.com>
+ <CAK5ve-+fE7T3U9KZ-C5-sZN9PUPq6RybCu+nv9UDb2x0bnarzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lteA1dqeVaWQ9QQl"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121107084932.GE20063@game.jcrosoft.org>
-Sender: linux-sound-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Bo Shen <voice.shen@atmel.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, fengguang.wu@intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAK5ve-+fE7T3U9KZ-C5-sZN9PUPq6RybCu+nv9UDb2x0bnarzw@mail.gmail.com>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Marek Belisko' <marek.belisko@open-nandra.com>
+Cc: 'Bryan Wu' <cooloney@gmail.com>, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday, November 07, 2012 3:25 AM Bryan Wu wrote
+> 
+> On Tue, Oct 30, 2012 at 2:45 PM, Marek Belisko
+> <marek.belisko@open-nandra.com> wrote:
+> > Support added only for leds (not for gpio's).
+> >
+> > Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+> > ---
+> >  drivers/leds/leds-tca6507.c |   73 +++++++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 70 insertions(+), 3 deletions(-)
+> >
+> 
+> Overall, this looks good to me. Maybe some question as below,
+> 
+> -Bryan
+> 
+> > diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
+> > index dabcf7a..496dd98 100644
+> > --- a/drivers/leds/leds-tca6507.c
+> > +++ b/drivers/leds/leds-tca6507.c
+> > @@ -667,6 +667,69 @@ static void tca6507_remove_gpio(struct tca6507_chip *tca)
+> >  }
+> >  #endif /* CONFIG_GPIOLIB */
+> >
+> > +#ifdef CONFIG_OF
+> > +static struct tca6507_platform_data * __devinit tca6507_led_dt_init(struct i2c_client *client)
+> > +{
+> > +       struct device_node *np = client->dev.of_node, *child;
+> > +       struct tca6507_platform_data *pdata;
+> > +       struct led_info *tca_leds;
+> > +       int count = 0;
+> > +
+> > +       for_each_child_of_node(np, child)
+> > +               count++;
+> > +       if (!count)
+> > +               return NULL;
+> > +
+> 
+> I saw many 'return NULL' here, why not return some error code in ERR_PTR?
+> 
+> > +       if (count > NUM_LEDS)
+> > +               return NULL;
+> > +
+> > +       tca_leds = devm_kzalloc(&client->dev, sizeof(struct led_info) * NUM_LEDS, GFP_KERNEL);
+> > +
+> 
+> useless empty line.
+> 
+> > +       if (!tca_leds)
+> > +               return NULL;
+> > +
+> > +
+> 
+> useless empty line.
+> 
+> > +       for_each_child_of_node(np, child) {
+> > +               struct led_info led;
+> > +               u32 reg;
+> > +               int ret;
+> > +
+> > +               led.name = of_get_property(child, "label", NULL) ? : child->name;
+> > +               led.default_trigger =
+> > +                       of_get_property(child, "linux,default-trigger", NULL);
+> > +
+> > +               ret = of_property_read_u32(child, "reg", &reg);
+> > +
+> > +               if (ret != 0)
+> > +                       continue;
+> > +               tca_leds[reg] = led;
+> > +       }
+> > +       pdata = devm_kzalloc(&client->dev, sizeof(struct tca6507_platform_data), GFP_KERNEL);
+> > +       if (!pdata) {
+> > +               kfree(tca_leds);
+> 
+> Do we need to kfree here? I think devm_zalloc() will take care of this
+> if the driver failed to register.
 
---lteA1dqeVaWQ9QQl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If devm_kzalloc() fails, tca6507_probe() will return '-ENODEV'.
+In this case, kfree() is unnecessary in this case, when devm_kzalloc()
+is used.
 
-On Wed, Nov 07, 2012 at 09:49:32AM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+Moreover, even if kfree() is necessary, devm_kfree() should be used
+instead of kfree().
 
-> yes the pinctrl is mainline in -next via pinctrl tree
+Marek Belisko, please refer to this document.
+: http://www.kernel.org/doc/htmldocs/device-drivers/API-devm-kzalloc.html
 
-> s code does not work on the DT kernel untill it's done
+Thank you.
 
-> NACK stand I refuse this touch the at91 dtsi untiol it's done correctly
 
-...and here's another mail (plus a further private mail on the same
-subject) by the time I managed to reply to the first one, the timestamps
-say in about ten minutes :/  What I'm seeing here is two of the Atmel
-maintainers disagreeing about a patch so I've got to pick one view and
-right now applying the patch looks like it moves us further forwards.
+Best regards,
+Jingoo Han
 
-Like I say it's not an issue right now and it seems like it should be
-trivial to fix.  Is anything needed here other than adding the
-pinctrl_get_set_default() call, in which case would it not be less
-effort all round to just send the patch?  If there is more involved then
-what is needed?
 
-Thinking about it a little more I'm actually wondering why whatever
-pinctrl change made this mandatory didn't go through and update all the
-drivers.
-
---lteA1dqeVaWQ9QQl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQmigNAAoJELSic+t+oim9S2AP/3VEl9akQMaE+NOglmg9wKDf
-5IkGR9/vra0AYgzeTUHvH8uRstlwy7w8GjwyVfs8rhEwLCNw1qfgLXrhOB8fbD1/
-aXa+UawRZ26yFSrKR6MxAOXl5IOAivyOYKz38ebffb+OO5C0jCSnk9ahC8zlBdjE
-KmEf5gBp1xtQEs3ospTkZ7kiLEePlDQ/HTujtqZ2xcEBJIVFWCHTnXOK099aVqcs
-SRakAxUsQ8tqd7iuDkTe9I50upF2tibeRzntSuIS3RET5j9BZrQyeGbSmoGNg7Xn
-OzeLGDtC7P8ip2mcEiKi/rSO5HrO6s9urv/v5FKHXqDe7hakqogPth4nzQgV6O8m
-kg3bC2ACYQ/LdHRt+EeMuKmntkrU18pbuQUqjT2D8Pv7TEp3cdKOrh5xVWc1GrF0
-yh0VGM3SvGvMjqXsYUJriMu5I10n/MCv55E001rPIXLGmDWP8+HtzkyA1C5lhTk6
-ChuZpF+ZiT05EFrWeRLs0TBN4i1eEWHzI5v9eWDYiCkQCTV43uZ7lrXcnnyHR10L
-RxCcLrAK3Gt2w5+vbalxp03Ry9XGxij8gCNQFxYCX1bVGWPIxvIocizropCTVFyz
-wV4Iv5KNlqXltIMoQ9QjYI6jUB4TFtAiipFxMjYA+PmVXM9k6qCnhsnSpk/kK8Su
-t4q1AxcpRc8UQvbeKFog
-=5Z76
------END PGP SIGNATURE-----
-
---lteA1dqeVaWQ9QQl--
+> 
+> > +               return NULL;
+> > +       }
+> > +
+> > +       pdata->leds.leds = tca_leds;
+> > +       pdata->leds.num_leds = NUM_LEDS;
+> > +
+> > +       return pdata;
+> > +}
+> > +
+> > +static const struct of_device_id of_tca6507_leds_match[] = {
+> > +       { .compatible = "leds-tca6507", },
+> > +       {},
+> > +};
+> > +
+> > +#else
+> > +static int __devinit tca6507_led_dt_init(struct i2c_client *client, struct tca6507_platform_data
+> *data)
+> > +{
+> > +       return -1;
+> > +}
+> > +
+> > +#define of_tca6507_leds_match NULL
+> > +#endif
+> > +
+> >  static int __devinit tca6507_probe(struct i2c_client *client,
+> >                                    const struct i2c_device_id *id)
+> >  {
+> > @@ -683,9 +746,12 @@ static int __devinit tca6507_probe(struct i2c_client *client,
+> >                 return -EIO;
+> >
+> >         if (!pdata || pdata->leds.num_leds != NUM_LEDS) {
+> > -               dev_err(&client->dev, "Need %d entries in platform-data list\n",
+> > -                       NUM_LEDS);
+> > -               return -ENODEV;
+> > +               pdata = tca6507_led_dt_init(client);
+> > +               if (!pdata) {
+> > +                       dev_err(&client->dev, "Need %d entries in platform-data list\n",
+> > +                               NUM_LEDS);
+> > +                       return -ENODEV;
+> > +               }
+> >         }
+> >         tca = devm_kzalloc(&client->dev, sizeof(*tca), GFP_KERNEL);
+> >         if (!tca)
+> > @@ -750,6 +816,7 @@ static struct i2c_driver tca6507_driver = {
+> >         .driver   = {
+> >                 .name    = "leds-tca6507",
+> >                 .owner   = THIS_MODULE,
+> > +               .of_match_table = of_tca6507_leds_match,
+> >         },
+> >         .probe    = tca6507_probe,
+> >         .remove   = __devexit_p(tca6507_remove),
+> > --
+> > 1.7.9.5
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-leds" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
