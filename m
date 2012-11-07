@@ -1,178 +1,134 @@
-From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Wed, 7 Nov 2012 12:12:50 +0100
-Message-ID: <509A4232.9090709@ti.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
- <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
- <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com>
- <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
- <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com>
- <509A3595.7050600@ti.com>
- <A6697FB9-3614-4027-A71B-59C7556005BF@antoniou-consulting.com>
+From: Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v3] can: grcan: Add device driver for GRCAN and GRHCAN
+ cores
+Date: Wed, 07 Nov 2012 12:15:36 +0100
+Message-ID: <509A42D8.6030009@grandegger.com>
+References: <5087EDBF.2040108@gaisler.com> <1351588017-14357-1-git-send-email-andreas@gaisler.com> <508FA6D3.9000809@grandegger.com> <508FFF50.8050900@gaisler.com> <50911EB6.1070105@grandegger.com> <509152D5.2050701@gaisler.com> <50918830.9040601@grandegger.com> <50929E7F.1090205@gaisler.com> <509786C0.9070703@grandegger.com> <509A0E94.1040103@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <A6697FB9-3614-4027-A71B-59C7556005BF-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <509A0E94.1040103@gaisler.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2012 12:02 PM, Pantelis Antoniou wrote:
-> Hi Benoit,
-> 
-> On Nov 7, 2012, at 11:19 AM, Benoit Cousson wrote:
-> 
->> Hi Panto,
+On 11/07/2012 08:32 AM, Andreas Larsson wrote:
+> On 11/05/2012 10:28 AM, Wolfgang Grandegger wrote:
+>> On 11/01/2012 05:08 PM, Andreas Larsson wrote:
+>>> On 2012-10-31 21:21, Wolfgang Grandegger wrote:
+> ...
+>>> Yes, the hardware becomes error active after having monitored 11
+>>> consecutive recessive bits on the bus 128 times (as allowed by the 2.0
+>>> CAN spec). There is no way of turning this off, so to conform to the
+>>> normal linux procedure of not doing this, I shut down the device on bus
+>>> off interrupt.
 >>
->> On 11/07/2012 09:13 AM, Pantelis Antoniou wrote:
->>> Hi Grant
+>> This should be handled in the following way:
+>>
+>> 1. If priv->can.restart_ms == 0: do *not* allow automatic restart
+>>     That's what you alredy have implemented.
+>>
+>> 2. If priv->can.restart_ms  > 0 : do allow automatic restart.
+>>     This requires to send CAN_ERR_RESTARTED when the system goes
+>>     bus-on. See at91_can and mcp251x as example.
+>>
+>>> In addition I have thrown out the arbitration lost error frame
+>>> generation as arbitration errors can not be singled out. The TXLOSS
+>>> interrupt might be due to arbitration error, but is also triggered in
+>>> great numbers when there is no one else on the can bus or when there is
+>>> a problem with the hardware interface or the bus itself.
 >>>
->>> On Nov 6, 2012, at 9:45 PM, Grant Likely wrote:
+>>> This is how things look currently with no one else on the bus:
+>>> ~ # cansend can0 123#45
+>>>    can0  20000004  [8] 00 08 00 00 00 00 60 00   ERRORFRAME
+>>>          controller-problem{tx-error-warning}
+>>>          error-counter-tx-rx{{96}{0}}
+>>>    can0  20000004  [8] 00 20 00 00 00 00 80 00   ERRORFRAME
+>>>          controller-problem{tx-error-passive}
+>>>          error-counter-tx-rx{{128}{0}}
+>>> ~ #
 >>>
->>>> On Tue, Nov 6, 2012 at 7:34 PM, Pantelis Antoniou
->>>> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->>>
->>> [ snip ]
->>>>
->>>> g.
->>>
->>> Since we've started talking about longer term goals, and the versioning
->>> provision seems to stand, I hope we address how much the fragment versioning
->>> thing is similar to the way board revisions progress.
->>>
->>> If a versioning syntax is available then one could create a single DT 
->>> file for a bunch of 'almost' similar board and board revisions.
+>>> And this is how it looks with a short-circuited bus:
+>>> ~ # cansend can0 123#45
+>>>    can0  20000004  [8] 00 08 00 00 00 00 90 00   ERRORFRAME
+>>>          controller-problem{tx-error-warning}
+>>>          error-counter-tx-rx{{144}{0}}
+>>>    can0  20000004  [8] 00 20 00 00 00 00 98 00   ERRORFRAME
+>>>          controller-problem{tx-error-passive}
+>>>          error-counter-tx-rx{{152}{0}}
+>>>    can0  20000040  [8] 00 00 00 00 00 00 00 00   ERRORFRAME
+>>>          bus-off
+>>> ~ #
 >>
->> I even think that the version issue is probably much more important for the short term than the overlay aspect. Well at least as important. We start having as well a bunch a panda board version with different HW setup.
->>
->> Having a single board-XXX.dts that will support all these versions is probably the best approach to avoid choosing that from the bootloader.
->>
->> We need to figure out a format + mechanism compatible with the current non-versioned format to allow filtering the nodes at runtime to keep only the relevant one.
->>
->> Something that can find the driver that will provide the proper board version or subsystem version or whatever like that:
->>
->> 	compatible-version = "ti,panda-version", "panda";
->>
->> Then at runtime we should create only the node with the correct match between the driver version and the string version.
->>
->>
+>> This looks good now. Just the automatic restart is missing as described
+>> above.
 > 
-> This is exactly what we need. FWIW the capebus syntax is a little bit different.
+> When doing the bus_off handling as in at91_can, on a short-circuited bus
+> with restart-ms != 0, the result of a cansend is an endless and frequent
+> stream of
 > 
->> /* regular panda audio routing */
->> sound: sound {
->> 	compatible = "ti,abe-twl6040";
->> 	ti,model = "PandaBoard";
->> 	compatible-version = "ti,panda-version", "panda";
->>
->> 	/* Audio routing */
->> 	ti,audio-routing =
->> 		"Headset Stereophone", "HSOL",
->> 		"Headset Stereophone", "HSOR",
->> 		"Ext Spk", "HFL",
->> 		"Ext Spk", "HFR",
->> 		"Line Out", "AUXL",
->> 		"Line Out", "AUXR",
->> 		"HSMIC", "Headset Mic",
->> 		"Headset Mic", "Headset Mic Bias",
->> 		"AFML", "Line In",
->> 		"AFMR", "Line In";
->> };
->>
->>
->> /* Audio routing is different between PandaBoard4430 and PandaBoardES */
->> &sound {
->> 	ti,model = "PandaBoardES";
->> 	compatible-version = "ti,panda-version", "panda-es";
->>
->> 	/* Audio routing */
->> 	ti,audio-routing =
->> 		"Headset Stereophone", "HSOL",
->> 		"Headset Stereophone", "HSOR",
->> 		"Ext Spk", "HFL",
->> 		"Ext Spk", "HFR",
->> 		"Line Out", "AUXL",
->> 		"Line Out", "AUXR",
->> 		"AFML", "Line In",
->> 		"AFMR", "Line In";
->> };
->>
+>   can0  20000004  [8] 00 20 00 00 00 00 88 00   ERRORFRAME
+>         controller-problem{tx-error-passive}
+>         error-counter-tx-rx{{136}{0}}
+>   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
+>         bus-off
+>         error-counter-tx-rx{{128}{0}}
+>   can0  20000104  [8] 00 00 00 00 00 00 10 00   ERRORFRAME
+>         controller-problem{}
+>         restarted-after-bus-off
+>         error-counter-tx-rx{{16}{0}}
+>   can0  20000004  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
+>         controller-problem{rx-error-passive}
+>         error-counter-tx-rx{{87}{128}}
+>   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
+>         bus-off
+>         error-counter-tx-rx{{128}{0}}
+>   can0  20000104  [8] 00 00 00 00 00 00 08 00   ERRORFRAME
+>         controller-problem{}
+>         restarted-after-bus-off
+>         error-counter-tx-rx{{8}{0}}
+>   can0  20000004  [8] 00 10 00 00 00 00 57 80   ERRORFRAME
+>         controller-problem{rx-error-passive}
+>         error-counter-tx-rx{{87}{128}}
+>   can0  20000040  [8] 00 00 00 00 00 00 80 00   ERRORFRAME
+>         bus-off
+>         error-counter-tx-rx{{128}{0}}
+>   can0  20000104  [8] 00 00 00 00 00 00 08 00   ERRORFRAME
+>         controller-problem{}
+>         restarted-after-bus-off
+>         error-counter-tx-rx{{8}{0}}
+>   [...]
 > 
-> We use this syntax for capebus (totally non-standard of-course),
-> 
-> sound: sound {
-> 	compatible = "ti,abe-twl6040";
-> 	
-> 
-> 	model@0 {
-> 		ti,model = "PandaBoard";
-> 		ti,audio-routing =
-> 			"Headset Stereophone", "HSOL",
-> 			"Headset Stereophone", "HSOR",
-> 			"Ext Spk", "HFL",
-> 			"Ext Spk", "HFR",
-> 			"Line Out", "AUXL",
-> 			"Line Out", "AUXR",
-> 			"HSMIC", "Headset Mic",
-> 			"Headset Mic", "Headset Mic Bias",
-> 			"AFML", "Line In",
-> 			"AFMR", "Line In";
-> 	};
-> 
-> 	model@1 {
-> 		ti,model = "PandaBoardES";
-> 		ti,audio-routing =
-> 			"Headset Stereophone", "HSOL",
-> 			"Headset Stereophone", "HSOR",
-> 			"Ext Spk", "HFL",
-> 			"Ext Spk", "HFR",
-> 			"Line Out", "AUXL",
-> 			"Line Out", "AUXR",
-> 			"AFML", "Line In",
-> 			"AFMR", "Line In";
-> 	};
-> 
-> 	/* common properties for either model */
-> };
-> 
-> The difference is that you don't get to repeat the common properties.
-> 
-> I don't know if this breaks any conventions but seems to work fine for our case.
+> as the grcan core continues to try to resend the frame when it comes
+> back again. To mimic the sja1000 behavior as closely as possible, I
+> guess that the driver also would need to make sure that the tx and rx
+> buffers are cleaned out so that this resending does not happen, right?
 
-Yeah, my main concern with that approach is that you change the
-structure of the tree by adding an extra node/hierarchy that will not be
-there in case of non-versioned tree.
-That's why I think we should have something lighter that will not change
-the structure.
-Ideally we should be able to add extra versioned node to the original
-dts without changing it at all.
+No, what you see is the normal behavior for automatic restart by the
+hardware. A bus-off recovery is *not* the same than a controller restart.
 
->> Maybe some extra version match table can just be passed during the board machine_init 
->>
->> 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL, panda_version_match_table);
->>
-> 
-> Would we need explicit of_platform_populate calls if we have node modification notifiers?
-> In that case the notifier would pick it up automatically, and can do the per
-> version matching internally.
+> To do this, the hardware needs to be stopped anyway. Therefore, in my
+> opinion it is much simpler to handle it as it is in v5: always shut down
+> the hardware on bus off and, in the case of a non-zero restart_ms, let
+> restart timer trigger can_restart that will call grcan_set_mode which
+> will restart the hardware with empty buffers. Do you see any problems
+> with this approach?
 
-Yes indeed, but here I was thinking about an intermediate step, i.e.
-now, without any dynamic node insertion mechanism.
-Thanks to this simple approach, when can already fix the board
-versionning problem.
+The application will start to send frames anyway and will again trigger
+a bus-off as long as the electronic problem persists. Flushing the
+buffers will not cure the problem.
 
-Regards,
-Benoit
+> The added benefit of this approach is that then the actual millisecond
+> value of the non-zero restart_ms is used instead of having the hardware
+> quickly restart regardless of the value.
+
+See above.
+
+> In any case I have some other fixes for v6.
+
+OK.
+
+Wolfgang.
+
