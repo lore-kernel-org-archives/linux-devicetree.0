@@ -1,78 +1,78 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
- to mach-omap2)
-Date: Wed, 07 Nov 2012 10:18:08 -0700
-Message-ID: <509A97D0.5010006@wwwdotorg.org>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org> <5A5C45CB-CDF8-4D93-8698-46A27143ABFA@antoniou-consulting.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH] ARM: Exynos5250: Enabling dwc3-exynos driver
+Date: Wed, 07 Nov 2012 18:18:15 +0100
+Message-ID: <1719536.A7tLiC5qER@flatron>
+References: <1352215729-11703-1-git-send-email-gautam.vivek@samsung.com> <CAFp+6iGFwTAvhamhoQszBL8QUau64XtDWGR1yX0azbuw1iWgVA@mail.gmail.com> <20121107164322.GC12714@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5A5C45CB-CDF8-4D93-8698-46A27143ABFA@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20121107164322.GC12714@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Vivek Gautam <gautamvivek1987@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, av.tikhomirov@samsung.com, yulgon.kim@samsung.com, Thomas Abraham <thomas.abraham@linaro.org>, Praveen Paneri <p.paneri@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2012 01:47 AM, Pantelis Antoniou wrote:
-> Hi Stephen,
-> 
-> On Nov 6, 2012, at 11:37 PM, Stephen Warren wrote:
-> 
->> On 11/05/2012 01:40 PM, Grant Likely wrote:
->>> Hey folks,
->>>
->>> As promised, here is my early draft to try and capture what device
->>> tree overlays need to do and how to get there. Comments and
->>> suggestions greatly appreciated.
->>
->> Interesting. This just came up internally at NVIDIA within the last
->> couple weeks, and was discussed on the U-Boot mailing list very recently
->> too:
->>
->> http://lists.denx.de/pipermail/u-boot/2012-October/thread.html#138227
->> (it spills into the November archive too)
-> 
-> I am aware of this discussion. For our use case u-boot DT manipulation was
-> tried, but then abandoned. Asking our user base to modify anything in u-boot
-> was ruled out.
->  
->>
->>> For these cases it is proposed to implement an overlay feature for the
->>> so that the initial device tree data can be modified by userspace at
->>
->> I don't know if you're maintaining this as a document and taking patches
->> to it, but if so:
->>
->> "for the so" split across those two lines.
->>
->>> Jane solves this problem by storing an FDT overlay for each cape in the
->>> root filesystem. When the kernel detects that a cape is installed it
->>> reads the cape's eeprom to identify it and uses request_firmware() to
->>> obtain the appropriate overlay. Userspace passes the overlay to the
->>> kernel in the normal way. If the cape doesn't have an eeprom, then the
->>> kernel will still use firmware_request(), but userspace needs to already
->>> know which cape is installed.
->>
->> As mentioned by Pantelis, multiple versions of a board is also very
->> common. We already have the following .dts files in the kernel where
->> this applies, for the main board even:
->>
->> arch/arm/boot/dts/tegra30-cardhu.dtsi
->> arch/arm/boot/dts/tegra30-cardhu-a02.dts
->> arch/arm/boot/dts/tegra30-cardhu-a04.dts
-> 
-> Exactly. I've made this point in another email, but IMHO board-revision
-> management is exactly the same with cape revision management.
-> 
-> Ideally you'd like to get rid of those three, and replace it with only
-> one that's properly versioned.
+Hi Vivek, Felipe,
 
-I don't expect we would ever get rid of some of those .dts files; there
-is after all a common subset that applies to all boards, and an
-incremental difference that applies to only A02/3, and another for
-A04/5/... Representing those as separate source files seems appropriate
-to me. If we try and dump all the multiple versions into a single file
-with some markup indicating which version of the board some sub-sections
-of the .dts apply to, I think we'll end up with rather complex .dts
-files. In this case, the simple overlay model works extremely well.
+On Wednesday 07 of November 2012 18:43:22 Felipe Balbi wrote:
+> Hi,
+> 
+> On Wed, Nov 07, 2012 at 06:55:03PM +0530, Vivek Gautam wrote:
+> > Hi,
+> > 
+> > On Tue, Nov 6, 2012 at 10:13 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > > On Tue, Nov 06, 2012 at 08:58:49PM +0530, Vivek Gautam wrote:
+> > >> Adding DWC3 device tree node for Exynos5250 along with the
+> > >> device address and clock support needed for the controller.
+> > >> 
+> > >> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> > >> ---
+> > >> 
+> > >>  arch/arm/boot/dts/exynos5250.dtsi       |    6 ++++++
+> > >>  arch/arm/mach-exynos/clock-exynos5.c    |   24
+> > >>  ++++++++++++++++++++++++
+> > >>  arch/arm/mach-exynos/include/mach/map.h |    1 +
+> > >>  arch/arm/mach-exynos/mach-exynos5-dt.c  |    2 ++
+> > >>  drivers/usb/Kconfig                     |    1 +
+> > >>  5 files changed, 34 insertions(+), 0 deletions(-)
+> > >> 
+> > >> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> > >> b/arch/arm/boot/dts/exynos5250.dtsi index cf6a02d..52bca54 100644
+> > >> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> > >> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> > >> @@ -68,6 +68,12 @@
+> > >> 
+> > >>               interrupts = <0 96 0>;
+> > >>       
+> > >>       };
+> > >> 
+> > >> +     dwc3 {
+> > > 
+> > > shouldn't this be usb@12000000 ??
+> > 
+> > Kept this in accordance with controller's name, similar to the change
+> > in following:
+> > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg12800.
+> > html
+> > 
+> > Needs to be changed ?
+> 
+> I'll leave it to DT experts, but I was under the impression that we
+> should be using generic functionality names (usb, i2c, spi, uart, gpio,
+> etc) instead of the IP name. IP name is something more for compatible
+> flag.
+> 
+> Don't take my word for it though :-) DT experts are the ones with final
+> saying
+
+Wrt node name, as far as I am aware of, there is no strict convention of 
+naming nodes, but the way you suggested is better in terms of readability - 
+you don't have to know this particular IP to find out what it is used for.
+
+Similar thing is with @addr in node names. I've been always adding @addr to 
+the name whenever the node had reg property inside (with the same address 
+of course), but I'm not sure if there is a strict convention here.
+
+Best regards,
+Tomasz Figa
