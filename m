@@ -1,36 +1,100 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH] ARM: dts: exynos4: Add support for Exynos4x12 SoCs
-Date: Thu, 08 Nov 2012 13:52:40 +0900
-Message-ID: <0cee01cdbd6c$e1852750$a48f75f0$%kim@samsung.com>
-References: <1351089359-7318-1-git-send-email-t.figa@samsung.com>
- <0c4501cdbc8f$5336add0$f9a40970$%kim@samsung.com> <3301517.VQVR99BHPc@amdc1227>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH] ARM: Exynos5250: Enabling dwc3-exynos driver
+Date: Thu, 8 Nov 2012 10:36:17 +0530
+Message-ID: <CAFp+6iGs6Fz78gmFMiWgUzCQ919gphOWDL4Wz7xvAXe=aqKGXg@mail.gmail.com>
+References: <1352215729-11703-1-git-send-email-gautam.vivek@samsung.com>
+	<CAFp+6iGFwTAvhamhoQszBL8QUau64XtDWGR1yX0azbuw1iWgVA@mail.gmail.com>
+	<20121107164322.GC12714@arwen.pp.htv.fi>
+	<1719536.A7tLiC5qER@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <3301517.VQVR99BHPc@amdc1227>
-Content-language: ko
+In-Reply-To: <1719536.A7tLiC5qER@flatron>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tomasz Figa' <t.figa@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: balbi@ti.com, Vivek Gautam <gautam.vivek@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, av.tikhomirov@samsung.com, yulgon.kim@samsung.com, Thomas Abraham <thomas.abraham@linaro.org>, Praveen Paneri <p.paneri@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
-> >
-> > [...]
-> >
-> > > +/include/ "exynos4x12-pinctrl.dtsi"
-> >
-> > BTW, I think, above line should be added when exynos4x12-pinctrl patches
-> > applied.
-> 
-> Yes, you are right. Seems like a rebase error on my side. Can you fix it
-> or should I send a fixed version?
-> 
-I did, thanks ;-)
+Hi,
 
-Best regards,
-Kgene.
+
+On Wed, Nov 7, 2012 at 10:48 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Vivek, Felipe,
+>
+> On Wednesday 07 of November 2012 18:43:22 Felipe Balbi wrote:
+>> Hi,
+>>
+>> On Wed, Nov 07, 2012 at 06:55:03PM +0530, Vivek Gautam wrote:
+>> > Hi,
+>> >
+>> > On Tue, Nov 6, 2012 at 10:13 PM, Felipe Balbi <balbi@ti.com> wrote:
+>> > > On Tue, Nov 06, 2012 at 08:58:49PM +0530, Vivek Gautam wrote:
+>> > >> Adding DWC3 device tree node for Exynos5250 along with the
+>> > >> device address and clock support needed for the controller.
+>> > >>
+>> > >> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> > >> ---
+>> > >>
+>> > >>  arch/arm/boot/dts/exynos5250.dtsi       |    6 ++++++
+>> > >>  arch/arm/mach-exynos/clock-exynos5.c    |   24
+>> > >>  ++++++++++++++++++++++++
+>> > >>  arch/arm/mach-exynos/include/mach/map.h |    1 +
+>> > >>  arch/arm/mach-exynos/mach-exynos5-dt.c  |    2 ++
+>> > >>  drivers/usb/Kconfig                     |    1 +
+>> > >>  5 files changed, 34 insertions(+), 0 deletions(-)
+>> > >>
+>> > >> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+>> > >> b/arch/arm/boot/dts/exynos5250.dtsi index cf6a02d..52bca54 100644
+>> > >> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> > >> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> > >> @@ -68,6 +68,12 @@
+>> > >>
+>> > >>               interrupts = <0 96 0>;
+>> > >>
+>> > >>       };
+>> > >>
+>> > >> +     dwc3 {
+>> > >
+>> > > shouldn't this be usb@12000000 ??
+>> >
+>> > Kept this in accordance with controller's name, similar to the change
+>> > in following:
+>> > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg12800.
+>> > html
+>> >
+>> > Needs to be changed ?
+>>
+>> I'll leave it to DT experts, but I was under the impression that we
+>> should be using generic functionality names (usb, i2c, spi, uart, gpio,
+>> etc) instead of the IP name. IP name is something more for compatible
+>> flag.
+>>
+>> Don't take my word for it though :-) DT experts are the ones with final
+>> saying
+>
+> Wrt node name, as far as I am aware of, there is no strict convention of
+> naming nodes, but the way you suggested is better in terms of readability -
+> you don't have to know this particular IP to find out what it is used for.
+>
+> Similar thing is with @addr in node names. I've been always adding @addr to
+> the name whenever the node had reg property inside (with the same address
+> of course), but I'm not sure if there is a strict convention here.
+>
+
+Better to make things more readable ;-)
+It will be nice that i change this to dwc3 as well as ehci and ohci in
+the change:
+http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg12800.
+Thanks for suggestions.
+I shall also update the Documentation/devicetree/bindings. I missed
+that here :-(
+
+> Best regards,
+> Tomasz Figa
+>
+
+
+
 --
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+Thanks & Regards
+Vivek
