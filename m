@@ -1,60 +1,82 @@
-From: Mitch Bradley <wmb@firmworks.com>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
- to mach-omap2)
-Date: Thu, 08 Nov 2012 07:00:47 -1000
-Message-ID: <509BE53F.4040609@firmworks.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net> <509AE247.3000404@gmail.com> <356155A1-776B-4AA5-A912-14CE7D9AE42C@dominion.thruhere.net>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC v2 PATCH 2/2] mtd: davinci - remove DaVinci architecture
+ depedency
+Date: Thu, 08 Nov 2012 10:19:22 -0700
+Message-ID: <509BE99A.8060705@wwwdotorg.org>
+References: <1352238427-26085-1-git-send-email-m-karicheri2@ti.com> <1352238427-26085-3-git-send-email-m-karicheri2@ti.com> <509ABFD9.8090704@wwwdotorg.org> <509BD67E.2090200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <356155A1-776B-4AA5-A912-14CE7D9AE42C@dominion.thruhere.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: Ryan Mallon <rmallon@gmail.com>, Kevin Hilman <khilman@ti.com>, Wood Scott-B07421 <B07421@freescale.com>, Matt Porter <mporter@ti.com>, Tabi Timur-B04825 <B04825@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Russ Dill <Russ.Dill@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <509BD67E.2090200@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, gregkh@linuxfoundation.org, hdoyu@nvidia.com, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/8/2012 3:28 AM, Koen Kooi wrote:
-> 
-> Op 7 nov. 2012, om 23:35 heeft Ryan Mallon <rmallon@gmail.com> het volgende geschreven:
-> 
->> On 06/11/12 08:40, Tabi Timur-B04825 wrote:
->>> On Mon, Nov 5, 2012 at 2:40 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+On 11/08/2012 08:57 AM, Murali Karicheri wrote:
+> On 11/07/2012 03:08 PM, Stephen Warren wrote:
+>> On 11/06/2012 02:47 PM, Murali Karicheri wrote:
+>>> DaVinci NAND driver is a controller driver based on the AEMIF hardware
+>>> IP found on TI SoCs. It is also used on SoCs that are not DaVinci
+>>> based. This
+>>> patch removes the driver dependency on DaVinci architecture so that it
+>>> can be used on other architectures such as c6x, keystone etc.
 >>>
->>>> Jane is building custom BeagleBone expansion boards called 'capes'. She
->>>> can boot the system with a stock BeagleBoard device tree, but additional
->>>> data is needed before a cape can be used. She could replace the FDT file
->>>> used by U-Boot with one that contains the extra data, but she uses the
->>>> same Linux system image regardless of the cape, and it is inconvenient
->>>> to have to select a different device tree at boot time depending on the
->>>> cape.
->>>
->>> What's wrong with having the boot loader detect the presence of the
->>> Cape and update the device tree accordingly?  We do this all the time
->>> in U-Boot.  Doing stuff like reading EEPROMs and testing for the
->>> presence of hardware is easier in U-Boot than in Linux.
+>>> Also migrate the driver to use the new AEMIF platform driver API and
+>>> moving Documentation to
+>>> Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>>> as this is expected to be used outside of arm/davinci.
+>>>   delete mode 100644
+>>> Documentation/devicetree/bindings/arm/davinci/nand.txt
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>>>   create mode 100644 include/linux/platform_data/davinci-nand.h
+>> Using "git format-patch -M" might show this as a file move/rename rather
+>> than a delete/add, which would be useful to highlight any changes you
+>> made at the same time.
 >>
->> This is probably okay for some hardware, but doesn't work in the general
->> case. Not all hardware is detectable, for example a cape which just adds
->> a set of LEDs for GPIO pins. Also, some hardware might not easily be
->> detectable without adding additional complexity to the boot loader.
-> 
-> And as Pantelis mentioned before, I really don't want my users to change the bootloader whenever they add a new LED. Touching the bootloader is just too accident prone, we had a ton of RMA requests for older versions of the beagleboard from people trying to upgrade u-boot.
+>>> diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>>> b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>>> +Example (enbw_cmc board):
+>>> +aemif@60000000 {
+>>> +    compatible = "ti,davinci-aemif";
+>>> +    #address-cells = <2>;
+>>> +    #size-cells = <1>;
+>>> +    reg = <0x68000000 0x80000>;
+>>> +    ranges = <2 0 0x60000000 0x02000000
+>>> +          3 0 0x62000000 0x02000000
+>>> +          4 0 0x64000000 0x02000000
+>>> +          5 0 0x66000000 0x02000000
+>>> +          6 0 0x68000000 0x02000000>;
+>>> +    nand@3,0 {
+>> Here, isn't 3,0 the aemif chip-select ID that is decoding the NAND
+>> accesses?
+>>
+> Yes.
+>>> +        compatible = "ti,davinci-nand";
+>>> +        reg = <3 0x0 0x807ff
+>>> +            6 0x0 0x8000>;
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <1>;
+>>> +        ti,davinci-chipselect = <1>;
+>> So I don't understand why that chipselect property is needed, or has a
+>> different value. Is this muxing the AEMIF output chip-selects onto
+>> different SoC package pins or something? Seems like a job for pinctrl
+>> perhaps?
+>
+> Actually this was added by somebody else. Do you know what 0 in 3,0
+> stands for? Is there a way I can retrieve the chip-select id so that I
+> can remove the davinci-chipselect property. The driver uses a cs index
+> of 0-3 and the hardware documentation refers CS2-5. Actually cs2 is CE0
+> signal. So internally driver
+> translates to 2-5 to 0-3. pinmux is currently done in platform specific
+> init code and probably need to migrate to use pictrl later.
 
-One possibility for dynamic device tree mods would be to run Open
-Firmware from u-boot and have it generate the device tree and possibly
-modify it either interactively or from a script loaded from a file or
-the network.  OFW could then either load Linux directly or return to
-u-boot, which would proceed with loading.
-
-> 
-> Apart from the above I'd like to have fewer points of failure. Right now I need to keep uImage and foo.dtb in sync and I hate to add u-boot to that equasion as well.
-> 
-> regards,
-> 
-> Koen
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+for a node named "nand@3,0", the "3,0" is the address value from the
+first entry in the reg property "reg = <3 0x0 0x807ff ...". Given your
+previous email, that means chip-select 3 offset 0, I believe. Presumably
+you can read the reg property directly to find these numbers, or perhaps
+there are already some helper functions for this. I have no idea why
+there's a "3" in the node name and reg property, but
+"ti,davinci-chipselect = <1>" not "= <3>".
