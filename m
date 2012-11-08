@@ -1,54 +1,30 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Thu, 8 Nov 2012 15:23:22 +0900
-Message-ID: <1503934.I4tc7K6I6s@percival>
-References: <38620644.IyR5R8rjKP@percival> <1801189.6J3flQFRCq@percival>
- <CACRpkdYqCQc0Er1JR_eVzZPCycvKjd0Pph8Dcay0FbU3Q64D8A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdYqCQc0Er1JR_eVzZPCycvKjd0Pph8Dcay0FbU3Q64D8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v2 0/2] Enable ehci and ohci devices for exynos5250
+Date: Thu, 08 Nov 2012 12:24:23 +0530
+Message-ID: <1352357665-7435-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-usb@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, jg1.han@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 November 2012 05:24:19 Linus Walleij wrote:
-> On Tue, Nov 6, 2012 at 2:33 AM, Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> > How about, in a first time (and because I'd also like to get the power
-> > seqs
-> > moving on), a typedef from int to gpio_handle_t and a first implementation
-> > of the gpio_handle_*() API that would just call the existing
-> > integer-based API (apart from gpio_handle_get())? That way things will
-> > not break when we switch to a real handle.
-> 
-> I'm afraid of typedef:ing gpio_handle_t to int because it sort of
-> encourages non-handlers to be used mixed with the old integers.
-> 
-> I would prefer to create, e.g. in <linux/gpio/consumer.h>
-> something like:
-> 
-> struct gpio;
-> 
-> struct gpio *gpio_get(struct device *dev, const char *name);
-> 
-> int gpio_get_value(struct gpio *g);
-> 
-> Nothing more! I.e. struct gpio is an opaque cookie, nothing to be known
-> about it.
+Changes from v1:
+ - Changed the device node names from 'ehci' and 'ohci' to
+   'usb@12110000' and 'usb@12120000' as per discussion for the
+   change 'http://www.spinics.net/lists/linux-usb/msg73993.html'
+ - Rebased on for-next branch of linux-samsung.
 
-However these is already a struct gpio declared in linux/gpio.h. Shall the 
-opaque handler be renamed something like "struct gpioh", or is your idea to 
-make both APIs mutually exclusive?
+Vivek Gautam (2):
+  ARM: Exynos5250: Enabling ehci-s5p driver
+  ARM: Exynos5250: Enabling ohci-exynos driver
 
-Alex.
+ .../devicetree/bindings/usb/exynos-usb.txt         |   40 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 ++
+ arch/arm/boot/dts/exynos5250.dtsi                  |   12 ++++++
+ arch/arm/mach-exynos/include/mach/map.h            |    2 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    4 ++
+ 5 files changed, 62 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
+
+-- 
+1.7.6.5
