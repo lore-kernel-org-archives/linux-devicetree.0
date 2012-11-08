@@ -1,60 +1,86 @@
-From: Bo Shen <bard.shen@gmail.com>
-Subject: Re: [Resend PATCH v3 2/4] ARM: at91: atmel-ssc: add device tree support
-Date: Thu, 08 Nov 2012 09:50:41 +0800
-Message-ID: <509B0FF1.4080504@gmail.com>
-References: <1352259701-19847-1-git-send-email-voice.shen@atmel.com> <20121107084932.GE20063@game.jcrosoft.org> <20121107092124.GE12323@opensource.wolfsonmicro.com> <20121107104121.GG20063@game.jcrosoft.org> <20121107140535.GA28954@opensource.wolfsonmicro.com> <20121107143046.GA4576@game.jcrosoft.org> <20121107144450.GF20844@opensource.wolfsonmicro.com> <20121107151607.GC4576@game.jcrosoft.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <20121107151607.GC4576@game.jcrosoft.org>
-Sender: linux-sound-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, Bo Shen <voice.shen@atmel.com>, fengguang.wu@intel.com, linux-arm-kernel@lists.infradead.org
+From: Qing Xu <qingx@marvell.com>
+Subject: [PATCH] mfd: max8925: update dt regulator binding doc
+Date: Thu,  8 Nov 2012 10:31:32 +0800
+Message-ID: <1352341892-27654-1-git-send-email-qingx@marvell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: qingx@marvell.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi J,
+From: Qing Xu <qingx@marvell.com>
 
-On 11/7/2012 23:16, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 15:44 Wed 07 Nov     , Mark Brown wrote:
->> On Wed, Nov 07, 2012 at 03:30:46PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
->>
->>> the one via ASoC for the driver with the pinctrl for now but MUST add it later
->>
->>> the arch/arm related via AT91 tree where the pinctrl is mandatory in the dtsi
->>
->>> I'm no going to spend hours to do the pinctrl to test Bo patch that he is
->>> supposed to have deon to test this code
->>
->>> As basically today on DT none of the board will work if BO does no provide the
->>> pinctrl so for me he MUST put in the dtsi
->>
->>> is it ok with you?
->>
->> Or add the pinmux bindings for other IPs over in the pinmux branch and
->> the pinmux binding for SSC here (which will help with bisection as the
->> DT bindings for the audio will then always exist in conjunction with the
->> .dtsi changes for them).  Either way is fine with me; I'll leave things
->> as they are until I see some new patches.
-> for where it's merge honestly I do not care much but the pinctrl must be
-> handled correctly
+remove linux specific references, enumerates all supported
+regulators
 
-I will send patches to add pinctrl support.
-For atmel ssc driver, it is simple, however for dtsi, which point should 
-I based on? which git and which branch? Because, I am not sure which 
-branch on git://github.com/at91linux/linux-at91.git is the right point.
+Signed-off-by: Qing Xu <qingx@marvell.com>
+---
+ .../bindings/regulator/max8925-regulator.txt       |   51 ++++++++++++--------
+ 1 files changed, 31 insertions(+), 20 deletions(-)
 
-Thanks.
-
-Best Regards,
-Bo Shen
-
-> Best Regards,
-> J.
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-
+diff --git a/Documentation/devicetree/bindings/regulator/max8925-regulator.txt b/Documentation/devicetree/bindings/regulator/max8925-regulator.txt
+index 073b41d..0057695 100644
+--- a/Documentation/devicetree/bindings/regulator/max8925-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/max8925-regulator.txt
+@@ -1,29 +1,40 @@
+ Max8925 Voltage regulators
+ 
+-max8925 regulator device register is still handled by mfd_add_devices, not by
+-of_xxx, so, it is not necessary to add compatible name. Also, those reg
+-offset and id info is stored in mfd_cell(see max8925-core.c), as a result
+-there is not private properties in dts.
+-
+-node's name should match with the definition in max8925_regulator_matches
+-(see max8925-regulator.c)
+-
++Required nodes:
++-nodes:
++  - SDV1 for SDV SDV1
++  - SDV2 for SDV SDV2
++  - SDV3 for SDV SDV3
++  - LDO1 for LDO LDO1
++  - LDO2 for LDO LDO2
++  - LDO3 for LDO LDO3
++  - LDO4 for LDO LDO4
++  - LDO5 for LDO LDO5
++  - LDO6 for LDO LDO6
++  - LDO7 for LDO LDO7
++  - LDO8 for LDO LDO8
++  - LDO9 for LDO LDO9
++  - LDO10 for LDO LDO10
++  - LDO11 for LDO LDO11
++  - LDO12 for LDO LDO12
++  - LDO13 for LDO LDO13
++  - LDO14 for LDO LDO14
++  - LDO15 for LDO LDO15
++  - LDO16 for LDO LDO16
++  - LDO17 for LDO LDO17
++  - LDO18 for LDO LDO18
++  - LDO19 for LDO LDO19
++  - LDO20 for LDO LDO20
+ 
+ Optional properties:
+ - Any optional property defined in bindings/regulator/regulator.txt
+ 
+-
+ Example:
+ 
++	SDV1 {
++		regulator-min-microvolt = <637500>;
++		regulator-max-microvolt = <1425000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ 
+-	regulators {
+-		SDV1 {
+-			regulator-min-microvolt = <637500>;
+-			regulator-max-microvolt = <1425000>;
+-			regulator-boot-on;
+-			regulator-always-on;
+-		};
+-
+-		...
+-		...
+-	}
+-- 
+1.7.0.4
