@@ -1,35 +1,35 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] usb: host: tegra: remove pointless NULL check in tegra_ehci_remove()
-Date: Thu, 8 Nov 2012 16:27:33 +0800
-Message-ID: <CAPgLHd9cJmoJWUAXr-Hpjfar=WH3FKcyDMK_ar3EXeUgi9aTEA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v2] ARM: EXYNOS5250: Add support for USB 3.0 dwc3 controller
+Date: Thu, 08 Nov 2012 14:02:12 +0530
+Message-ID: <1352363533-14970-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-usb@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, tomasz.figa@gmail.com, av.tikhomirov@samsung.com, yulgon.kim@samsung.com, thomas.abraham@linaro.org, p.paneri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+Changes from v1:
+ - Changed the device node name from 'dwc3' to 'usb@12000000'.
+ - Added the documentation for device tree bindings for dwc3 controller.
 
-Test for tegra and hcd in tegra_ehci_remove() look like potential
-NULL pointer dereference, but in fact those tests are not needed,
-so remove these pointless tests entirely.
+Based on changes for USB 2.0:
+'https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-November/022046.html'
 
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
-v1 -> v2: remove those tests entirely
----
- drivers/usb/host/ehci-tegra.c | 3 ---
- 1 file changed, 3 deletions(-)
+Tested with required driver DT patches for dwc3-exynos:
+http://www.spinics.net/lists/linux-usb/msg73857.html
+and USB 3.0 phy support patches:
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-November/021926.html
 
-diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
-index 6223d175..40daeaa 100644
---- a/drivers/usb/host/ehci-tegra.c
-+++ b/drivers/usb/host/ehci-tegra.c
-@@ -778,9 +778,6 @@ static int tegra_ehci_remove(struct platform_device *pdev)
- 	struct tegra_ehci_hcd *tegra = platform_get_drvdata(pdev);
- 	struct usb_hcd *hcd = ehci_to_hcd(tegra->ehci);
- 
--	if (tegra == NULL || hcd == NULL)
--		return -EINVAL;
+Vivek Gautam (1):
+  ARM: Exynos5250: Enabling dwc3-exynos driver
+
+ .../devicetree/bindings/usb/exynos-usb.txt         |   14 +++++++++++
+ arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++++
+ arch/arm/mach-exynos/Kconfig                       |    1 +
+ arch/arm/mach-exynos/clock-exynos5.c               |   24 ++++++++++++++++++++
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
+ 6 files changed, 48 insertions(+), 0 deletions(-)
+
+-- 
+1.7.6.5
