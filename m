@@ -1,25 +1,200 @@
-From: Timur Tabi <timur@freescale.com>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
- to mach-omap2)
-Date: Thu, 8 Nov 2012 08:09:19 -0600
-Message-ID: <509BBD0F.3030702@freescale.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net> <509AE247.3000404@gmail.com> <356155A1-776B-4AA5-A912-14CE7D9AE42C@dominion.thruhere.net>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH v4 2/2] ASoC: sam9g20-wm8731: convert to dt support
+Date: Thu, 8 Nov 2012 16:24:31 +0100
+Message-ID: <20121108152431.GJ4576@game.jcrosoft.org>
+References: <1352361422-13265-1-git-send-email-voice.shen@atmel.com>
+ <1352361422-13265-2-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <356155A1-776B-4AA5-A912-14CE7D9AE42C@dominion.thruhere.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: Ryan Mallon <rmallon@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Wood Scott-B07421 <B07421@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1352361422-13265-2-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jm.lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Koen Kooi wrote:
-> And as Pantelis mentioned before, I really don't want my users to change the bootloader whenever they add a new LED.
+On 15:57 Thu 08 Nov     , Bo Shen wrote:
+> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+> Change since v3 RFC:
+>   Remove dai node, remap ssc in place
+>   without pinctrl added, so don't modify the dtsi file, will be added
+>   soon
+until I see the pinctrl to test this no
+This code is untested
+> Change since v2:
+>   No change
+> Change since v1:
+>   Add sam9g20-wm8731 binding document
+> ---
+>  .../bindings/sound/atmel-sam9g20-wm8731-audio.txt  |   21 ++++++
+>  sound/soc/atmel/Kconfig                            |    3 +-
+>  sound/soc/atmel/sam9g20_wm8731.c                   |   71 ++++++++++++++++++--
+>  3 files changed, 88 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt b/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
+> new file mode 100644
+> index 0000000..adf7e7c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
+> @@ -0,0 +1,21 @@
+> +* Atmel sam9g20ek audio complex
+this is board file or soc?
 
-Well, U-Boot does allow you to manipulate the device tree from the
-command-line, but I understand that this feature doesn't work that well.
 
--- 
-Timur Tabi
-Linux kernel developer at Freescale
+and use the full soc sor board ame in the documentation
+
+Best Regards,
+J.
+> +
+> +Required properties:
+> +  - compatible: "atmel,at91sam9g20-audio"
+> +  - atmel,model: The user-visible name of this sound complex.
+> +  - atmel,audio-routing: A list of the connections between audio components.
+> +  - atmel,ssc-controller: The phandle of the SSC controller
+> +  - atmel,audio-codec: The phandle of the WM8731 audio codec
+> +
+> +Example:
+> +sound {
+> +	compatible = "atmel,at91sam9g20-audio";
+> +	atmel,model = "wm8731 @ AT91SAMG20EK";
+> +
+> +	atmel,audio-routing =
+> +		"Ext Spk", "LHPOUT",
+> +		"Int MIC", "MICIN";
+> +
+> +	atmel,ssc-controller = <&ssc0>;
+> +	atmel,audio-codec = <&wm8731>;
+> +};
+> diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+> index 72b09cf..397ec75 100644
+> --- a/sound/soc/atmel/Kconfig
+> +++ b/sound/soc/atmel/Kconfig
+> @@ -16,8 +16,7 @@ config SND_ATMEL_SOC_SSC
+>  
+>  config SND_AT91_SOC_SAM9G20_WM8731
+>  	tristate "SoC Audio support for WM8731-based At91sam9g20 evaluation board"
+> -	depends on ATMEL_SSC && ARCH_AT91SAM9G20 && SND_ATMEL_SOC && \
+> -                   AT91_PROGRAMMABLE_CLOCKS
+> +	depends on ATMEL_SSC && SND_ATMEL_SOC && AT91_PROGRAMMABLE_CLOCKS
+>  	select SND_ATMEL_SOC_SSC
+>  	select SND_SOC_WM8731
+>  	help
+> diff --git a/sound/soc/atmel/sam9g20_wm8731.c b/sound/soc/atmel/sam9g20_wm8731.c
+> index eef6eed..62c3a3d 100644
+> --- a/sound/soc/atmel/sam9g20_wm8731.c
+> +++ b/sound/soc/atmel/sam9g20_wm8731.c
+> @@ -197,14 +197,30 @@ static struct snd_soc_card snd_soc_at91sam9g20ek = {
+>  
+>  static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
+>  {
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *codec_np, *cpu_np;
+>  	struct clk *pllb;
+>  	struct snd_soc_card *card = &snd_soc_at91sam9g20ek;
+> -	int ret;
+> -
+> -	if (!(machine_is_at91sam9g20ek() || machine_is_at91sam9g20ek_2mmc()))
+> -		return -ENODEV;
+> +	int ret, id;
+> +
+> +	if (np) {
+> +		cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
+> +		if (!cpu_np) {
+> +			dev_err(&pdev->dev, "codec info missing\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		id = of_alias_get_id(cpu_np, "ssc");
+> +		of_node_put(cpu_np);
+> +	} else {
+> +		if (!(machine_is_at91sam9g20ek() ||
+> +			machine_is_at91sam9g20ek_2mmc()))
+> +			return -ENODEV;
+> +
+> +		id = pdev->id;
+> +	}
+>  
+> -	ret = atmel_ssc_set_audio(pdev->id);
+> +	ret = atmel_ssc_set_audio(id);
+>  	if (ret)
+>  		goto err;
+>  
+> @@ -234,6 +250,42 @@ static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
+>  	clk_set_rate(mclk, MCLK_RATE);
+>  
+>  	card->dev = &pdev->dev;
+> +
+> +	/* Parse device node info */
+> +	if (np) {
+> +		ret = snd_soc_of_parse_card_name(card, "atmel,model");
+> +		if (ret)
+> +			goto err;
+> +
+> +		ret = snd_soc_of_parse_audio_routing(card,
+> +			"atmel,audio-routing");
+> +		if (ret)
+> +			goto err;
+> +
+> +		/* Parse codec info */
+> +		at91sam9g20ek_dai.codec_name = NULL;
+> +		codec_np = of_parse_phandle(np, "atmel,audio-codec", 0);
+> +		if (!codec_np) {
+> +			dev_err(&pdev->dev, "codec info missing\n");
+> +			return -EINVAL;
+> +		}
+> +		at91sam9g20ek_dai.codec_of_node = codec_np;
+> +
+> +		/* Parse dai and platform info */
+> +		at91sam9g20ek_dai.cpu_dai_name = NULL;
+> +		at91sam9g20ek_dai.platform_name = NULL;
+> +		cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
+> +		if (!cpu_np) {
+> +			dev_err(&pdev->dev, "dai and pcm info missing\n");
+> +			return -EINVAL;
+> +		}
+> +		at91sam9g20ek_dai.cpu_of_node = cpu_np;
+> +		at91sam9g20ek_dai.platform_of_node = cpu_np;
+> +
+> +		of_node_put(codec_np);
+> +		of_node_put(cpu_np);
+> +	}
+> +
+>  	ret = snd_soc_register_card(card);
+>  	if (ret) {
+>  		printk(KERN_ERR "ASoC: snd_soc_register_card() failed\n");
+> @@ -262,10 +314,19 @@ static int __devexit at91sam9g20ek_audio_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id sam9g20ek_wm8731_dt_ids[] = {
+> +	{ .compatible = "atmel,at91sam9g20-audio", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sam9g20ek_wm8731_dt_ids);
+> +#endif
+> +
+>  static struct platform_driver at91sam9g20ek_audio_driver = {
+>  	.driver = {
+>  		.name	= "at91sam9g20ek-audio",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(sam9g20ek_wm8731_dt_ids),
+>  	},
+>  	.probe	= at91sam9g20ek_audio_probe,
+>  	.remove	= __devexit_p(at91sam9g20ek_audio_remove),
+> -- 
+> 1.7.9.5
+> 
