@@ -1,39 +1,60 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH -next] iio: isl29018: fix to return error or 0 in isl29018_write_raw()
-Date: Thu, 8 Nov 2012 17:05:23 +0800
-Message-ID: <CAPgLHd873xAvToL7reBbxmS-iEoJ9OqvjEoXf8RsG2esbTyo1A@mail.gmail.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v6] can: grcan: Add device driver for GRCAN and GRHCAN
+ cores
+Date: Thu, 08 Nov 2012 10:27:58 +0100
+Message-ID: <509B7B1E.5040509@pengutronix.de>
+References: <509A5A3E.4090505@gaisler.com> <1352301634-12668-1-git-send-email-andreas@gaisler.com> <509B6D77.3090707@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enigE2F3498444E1627E8CD71742"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <509B6D77.3090707@grandegger.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>
+Cc: Andreas Larsson <andreas@gaisler.com>, linux-can@vger.kernel.org, software@gaisler.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enigE2F3498444E1627E8CD71742
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-We had assigned the return value to 'ret' but ignored it when
-return from isl29018_write_raw(), it's better to return 'ret'
-instead of 0.
+On 11/08/2012 09:29 AM, Wolfgang Grandegger wrote:
+> On 11/07/2012 04:20 PM, Andreas Larsson wrote:
+>> This driver supports GRCAN and CRHCAN CAN controllers available in the=
+ GRLIB
+>> VHDL IP core library.
+>>
+>> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+>=20
+> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
+>=20
+> Looks good now. Thanks for your patience.
 
-dpatch engine is used to auto generate this patch.
-(https://github.com/weiyj/dpatch)
+I'm still fighting against the flexcan, I'll have a look at the driver
+this afternoon.
 
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
- drivers/staging/iio/light/isl29018.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+regards, Marc
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-diff --git a/drivers/staging/iio/light/isl29018.c b/drivers/staging/iio/light/isl29018.c
-index 3b03f6f..1d5b294 100644
---- a/drivers/staging/iio/light/isl29018.c
-+++ b/drivers/staging/iio/light/isl29018.c
-@@ -356,7 +356,7 @@ static int isl29018_write_raw(struct iio_dev *indio_dev,
- 	}
- 	mutex_unlock(&chip->lock);
- 
--	return 0;
-+	return ret;
- }
- 
- static int isl29018_read_raw(struct iio_dev *indio_dev,
+
+--------------enigE2F3498444E1627E8CD71742
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iEYEARECAAYFAlCbeyIACgkQjTAFq1RaXHO3OwCglUqk4Fp3bCQQAozGlgbya4Dc
+IzYAn3Brk+Inox0SImHtI/eKd8qzh9jB
+=Z7wM
+-----END PGP SIGNATURE-----
+
+--------------enigE2F3498444E1627E8CD71742--
