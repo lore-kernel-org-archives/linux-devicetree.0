@@ -1,72 +1,74 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v7 5/8] fbmon: add videomode helpers
-Date: Thu, 8 Nov 2012 22:25:45 +0100
-Message-ID: <20121108212545.GA32605@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v7 0/8] of: add display helper
+Date: Thu, 08 Nov 2012 15:35:47 -0600
+Message-ID: <509C25B3.5060509@gmail.com>
 References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
- <1351675689-26814-6-git-send-email-s.trumtrar@pengutronix.de>
- <A73F36158E33644199EB82C5EC81C7BC3E9E1B39@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3E9E1B39@DBDE01.ent.ti.com>
+In-Reply-To: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <robherring2@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On Wed, Oct 31, 2012 at 03:30:03PM +0000, Manjunathappa, Prakash wrote:
-> Hi Steffen,
+On 10/31/2012 04:28 AM, Steffen Trumtrar wrote:
+> Hi!
 > 
-> On Wed, Oct 31, 2012 at 14:58:05, Steffen Trumtrar wrote:
-> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> > +int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
-> > +{
-> > +	fbmode->xres = vm->hactive;
-> > +	fbmode->left_margin = vm->hback_porch;
-> > +	fbmode->right_margin = vm->hfront_porch;
-> > +	fbmode->hsync_len = vm->hsync_len;
-> > +
-> > +	fbmode->yres = vm->vactive;
-> > +	fbmode->upper_margin = vm->vback_porch;
-> > +	fbmode->lower_margin = vm->vfront_porch;
-> > +	fbmode->vsync_len = vm->vsync_len;
-> > +
-> > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
-> > +
-> > +	fbmode->sync = 0;
-> > +	fbmode->vmode = 0;
-> > +	if (vm->hah)
-> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
-> > +	if (vm->vah)
-> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
-> > +	if (vm->interlaced)
-> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
-> > +	if (vm->doublescan)
-> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
-> > +
+> Finally, v7 of the series.
 > 
-> "pixelclk-inverted" property of the panel is not percolated fb_videomode.
-> Please let me know if I am missing something.
+> Changes since v6:
+> 	- get rid of some empty lines etc.
+> 	- move functions to their subsystems
+> 	- split of_ from non-of_ functions
+> 	- add at least some kerneldoc to some functions
 > 
+> Regards,
+> Steffen
+> 
+> 
+> Steffen Trumtrar (8):
+>   video: add display_timing struct and helpers
+>   of: add helper to parse display timings
+>   of: add generic videomode description
+>   video: add videomode helpers
+>   fbmon: add videomode helpers
+>   fbmon: add of_videomode helpers
+>   drm_modes: add videomode helpers
+>   drm_modes: add of_videomode helpers
+> 
+>  .../devicetree/bindings/video/display-timings.txt  |  139 +++++++++++++++
+>  drivers/gpu/drm/drm_modes.c                        |   78 +++++++++
+>  drivers/of/Kconfig                                 |   12 ++
+>  drivers/of/Makefile                                |    2 +
+>  drivers/of/of_display_timings.c                    |  185 ++++++++++++++++++++
+>  drivers/of/of_videomode.c                          |   47 +++++
 
-The next version is almost finished. Only thing I'm missing is this.
-And I actually do not know which flag would represent an inverted pixelclock
-in fb_videomode. Does anybody have any idea what I have to do here?
+Not sure why you moved this, but please move this back to drivers/video.
+We're trying to move subsystem specific pieces out of drivers/of.
 
-	if (vm->pixelclk_pol)
-		fbmode->sync = ???
+Rob
 
-That's as far as I have come and I don't see a flag that seems right.
-Is this even a valid property of fb_videomode?
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>  drivers/video/Kconfig                              |   11 ++
+>  drivers/video/Makefile                             |    2 +
+>  drivers/video/display_timing.c                     |   24 +++
+>  drivers/video/fbmon.c                              |   76 ++++++++
+>  drivers/video/videomode.c                          |   44 +++++
+>  include/drm/drmP.h                                 |    8 +
+>  include/linux/display_timing.h                     |   69 ++++++++
+>  include/linux/fb.h                                 |    5 +
+>  include/linux/of_display_timings.h                 |   20 +++
+>  include/linux/of_videomode.h                       |   15 ++
+>  include/linux/videomode.h                          |   36 ++++
+>  17 files changed, 773 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
+>  create mode 100644 drivers/of/of_display_timings.c
+>  create mode 100644 drivers/of/of_videomode.c
+>  create mode 100644 drivers/video/display_timing.c
+>  create mode 100644 drivers/video/videomode.c
+>  create mode 100644 include/linux/display_timing.h
+>  create mode 100644 include/linux/of_display_timings.h
+>  create mode 100644 include/linux/of_videomode.h
+>  create mode 100644 include/linux/videomode.h
+> 
