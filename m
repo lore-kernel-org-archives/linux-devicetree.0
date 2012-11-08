@@ -1,82 +1,104 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC v2 PATCH 2/2] mtd: davinci - remove DaVinci architecture
- depedency
-Date: Thu, 08 Nov 2012 10:19:22 -0700
-Message-ID: <509BE99A.8060705@wwwdotorg.org>
-References: <1352238427-26085-1-git-send-email-m-karicheri2@ti.com> <1352238427-26085-3-git-send-email-m-karicheri2@ti.com> <509ABFD9.8090704@wwwdotorg.org> <509BD67E.2090200@ti.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [GIT PULL] ARM: OMAP: Timer and Counter DT Updates for v3.8
+Date: Thu, 8 Nov 2012 11:19:44 -0600
+Message-ID: <509BE9B0.5040608@ti.com>
+References: <50941812.2070501@ti.com> <20121107004703.GS6801@atomide.com> <20121107234403.GS6801@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <509BD67E.2090200@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, gregkh@linuxfoundation.org, hdoyu@nvidia.com, santosh.shilimkar@ti.com
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20121107234403.GS6801@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2012 08:57 AM, Murali Karicheri wrote:
-> On 11/07/2012 03:08 PM, Stephen Warren wrote:
->> On 11/06/2012 02:47 PM, Murali Karicheri wrote:
->>> DaVinci NAND driver is a controller driver based on the AEMIF hardware
->>> IP found on TI SoCs. It is also used on SoCs that are not DaVinci
->>> based. This
->>> patch removes the driver dependency on DaVinci architecture so that it
->>> can be used on other architectures such as c6x, keystone etc.
->>>
->>> Also migrate the driver to use the new AEMIF platform driver API and
->>> moving Documentation to
->>> Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>> as this is expected to be used outside of arm/davinci.
->>>   delete mode 100644
->>> Documentation/devicetree/bindings/arm/davinci/nand.txt
->>>   create mode 100644
->>> Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>>   create mode 100644 include/linux/platform_data/davinci-nand.h
->> Using "git format-patch -M" might show this as a file move/rename rather
->> than a delete/add, which would be useful to highlight any changes you
->> made at the same time.
->>
->>> diff --git a/Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>> b/Documentation/devicetree/bindings/mtd/davinci-nand.txt
->>> +Example (enbw_cmc board):
->>> +aemif@60000000 {
->>> +    compatible = "ti,davinci-aemif";
->>> +    #address-cells = <2>;
->>> +    #size-cells = <1>;
->>> +    reg = <0x68000000 0x80000>;
->>> +    ranges = <2 0 0x60000000 0x02000000
->>> +          3 0 0x62000000 0x02000000
->>> +          4 0 0x64000000 0x02000000
->>> +          5 0 0x66000000 0x02000000
->>> +          6 0 0x68000000 0x02000000>;
->>> +    nand@3,0 {
->> Here, isn't 3,0 the aemif chip-select ID that is decoding the NAND
->> accesses?
->>
-> Yes.
->>> +        compatible = "ti,davinci-nand";
->>> +        reg = <3 0x0 0x807ff
->>> +            6 0x0 0x8000>;
->>> +        #address-cells = <1>;
->>> +        #size-cells = <1>;
->>> +        ti,davinci-chipselect = <1>;
->> So I don't understand why that chipselect property is needed, or has a
->> different value. Is this muxing the AEMIF output chip-selects onto
->> different SoC package pins or something? Seems like a job for pinctrl
->> perhaps?
->
-> Actually this was added by somebody else. Do you know what 0 in 3,0
-> stands for? Is there a way I can retrieve the chip-select id so that I
-> can remove the davinci-chipselect property. The driver uses a cs index
-> of 0-3 and the hardware documentation refers CS2-5. Actually cs2 is CE0
-> signal. So internally driver
-> translates to 2-5 to 0-3. pinmux is currently done in platform specific
-> init code and probably need to migrate to use pictrl later.
 
-for a node named "nand@3,0", the "3,0" is the address value from the
-first entry in the reg property "reg = <3 0x0 0x807ff ...". Given your
-previous email, that means chip-select 3 offset 0, I believe. Presumably
-you can read the reg property directly to find these numbers, or perhaps
-there are already some helper functions for this. I have no idea why
-there's a "3" in the node name and reg property, but
-"ti,davinci-chipselect = <1>" not "= <3>".
+On 11/07/2012 05:44 PM, Tony Lindgren wrote:
+> Hi Jon,
+> 
+> * Tony Lindgren <tony@atomide.com> [121106 16:48]:
+>> * Jon Hunter <jon-hunter@ti.com> [121102 12:01]:
+>>>
+>>>   git@github.com:jonhunter/linux.git dev-dt-timer
+>>
+>> Thanks pulling into omap-for-v3.8/dt branch.
+> 
+> Looks like omap-for-v3.8/dt boots OK on blaze when booted
+> with device tree, but then current omap-for-v3.8/tmp-merge
+> oopses.
+
+That's a bugger. I completely missed your patch last week sorry (I will blame the Danish
+beer) and had clearly not folded in to my testing!
+
+> I guess we should apply the following fix somewhere or
+> do we need to check other places too?
+
+I will re-test your master branch today and put it through my dmtimer tests to double check.
+However, in general I did ensure that we checked pdata was not NULL before accessing when 
+I introduced the dt stuff. In my changelog [1] I had ...
+
+"5. When device-tree is present the platform_data structure will be NULL and so check for
+this."
+
+I just need to make sure that get_context_loss_count() is not called before checking it is
+populated.  
+ 
+> Regards,
+> 
+> Tony
+> 
+> [<c04e3d30>] (omap_dm_timer_probe+0x110/0x310) from [<c0334a18>] (platform_drv_probe+0x1c/0x24)
+> [<c0334a18>] (platform_drv_probe+0x1c/0x24) from [<c03335d4>] (really_probe+0x60/0x1f4)
+> [<c03335d4>] (really_probe+0x60/0x1f4) from [<c033379c>] (driver_probe_device+0x34/0x50)
+> [<c033379c>] (driver_probe_device+0x34/0x50) from [<c033384c>] (__driver_attach+0x94/0x98)
+> [<c033384c>] (__driver_attach+0x94/0x98) from [<c0331df8>] (bus_for_each_dev+0x60/0x8c)
+> [<c0331df8>] (bus_for_each_dev+0x60/0x8c) from [<c03326c4>] (bus_add_driver+0x18c/0x254)
+> [<c03326c4>] (bus_add_driver+0x18c/0x254) from [<c0333e44>] (driver_register+0x5c/0x150)
+> [<c0333e44>] (driver_register+0x5c/0x150) from [<c0008868>] (do_one_initcall+0x2c/0x178)
+> [<c0008868>] (do_one_initcall+0x2c/0x178) from [<c06df2a0>] (do_basic_setup+0x94/0xd0)
+> [<c06df2a0>] (do_basic_setup+0x94/0xd0) from [<c06df358>] (kernel_init_freeable+0x7c/0x124)
+> [<c06df358>] (kernel_init_freeable+0x7c/0x124) from [<c04e1810>] (kernel_init+0x8/0x1a8)
+> [<c04e1810>] (kernel_init+0x8/0x1a8) from [<c0014410>] (ret_from_fork+0x14/0x24)
+> 
+> --- a/arch/arm/plat-omap/dmtimer.c
+> +++ b/arch/arm/plat-omap/dmtimer.c
+> @@ -803,8 +803,11 @@ static int __devinit omap_dm_timer_probe(struct platform_device *pdev)
+>  
+>  	timer->irq = irq->start;
+>  	timer->pdev = pdev;
+> -	timer->capability = pdata->timer_capability;
+> -	timer->get_context_loss_count = pdata->get_context_loss_count;
+> +
+> +	if (pdata) {
+> +		timer->capability = pdata->timer_capability;
+
+You don't need this it is already handled a few lines before.
+
+> +		timer->get_context_loss_count = pdata->get_context_loss_count;
+
+We could probably move this too. For example ...
+
+diff --git a/arch/arm/plat-omap/dmtimer.c b/arch/arm/plat-omap/dmtimer.c
+index 38c12ef..9dca23e 100644
+--- a/arch/arm/plat-omap/dmtimer.c
++++ b/arch/arm/plat-omap/dmtimer.c
+@@ -799,12 +799,11 @@ static int __devinit omap_dm_timer_probe(struct platform_device *pdev)
+                timer->id = pdev->id;
+                timer->capability = pdata->timer_capability;
+                timer->reserved = omap_dm_timer_reserved_systimer(timer->id);
++               timer->get_context_loss_count = pdata->get_context_loss_count;
+        }
+ 
+        timer->irq = irq->start;
+        timer->pdev = pdev;
+-       timer->capability = pdata->timer_capability;
+-       timer->get_context_loss_count = pdata->get_context_loss_count;
+ 
+        /* Skip pm_runtime_enable for OMAP1 */
+        if (!(timer->capability & OMAP_TIMER_NEEDS_RESET)) {
+
+Cheers
+Jon
+
+[1] http://marc.info/?l=linux-omap&m=135065877008624&w=2
