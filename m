@@ -1,15 +1,16 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC PATCH v4 2/2] ASoC: sam9g20-wm8731: convert to dt support
-Date: Thu, 8 Nov 2012 16:24:31 +0100
-Message-ID: <20121108152431.GJ4576@game.jcrosoft.org>
-References: <1352361422-13265-1-git-send-email-voice.shen@atmel.com>
- <1352361422-13265-2-git-send-email-voice.shen@atmel.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC v2 PATCH 1/2] memory: davinci - add aemif controller platform
+ driver
+Date: Thu, 8 Nov 2012 10:46:56 -0500
+Message-ID: <509BD3F0.9030409@ti.com>
+References: <1352238427-26085-1-git-send-email-m-karicheri2@ti.com>
+ <1352238427-26085-2-git-send-email-m-karicheri2@ti.com>
+ <509ABF12.5080804@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1352361422-13265-2-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <509ABF12.5080804-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,181 +21,212 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jm.lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15:57 Thu 08 Nov     , Bo Shen wrote:
-> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> ---
-> Change since v3 RFC:
->   Remove dai node, remap ssc in place
->   without pinctrl added, so don't modify the dtsi file, will be added
->   soon
-until I see the pinctrl to test this no
-This code is untested
-> Change since v2:
->   No change
-> Change since v1:
->   Add sam9g20-wm8731 binding document
-> ---
->  .../bindings/sound/atmel-sam9g20-wm8731-audio.txt  |   21 ++++++
->  sound/soc/atmel/Kconfig                            |    3 +-
->  sound/soc/atmel/sam9g20_wm8731.c                   |   71 ++++++++++++++++++--
->  3 files changed, 88 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt b/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
-> new file mode 100644
-> index 0000000..adf7e7c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
-> @@ -0,0 +1,21 @@
-> +* Atmel sam9g20ek audio complex
-this is board file or soc?
+Stephen,
+
+Thanks for reviewing this. See my responses below
+On 11/07/2012 03:05 PM, Stephen Warren wrote:
+> On 11/06/2012 02:47 PM, Murali Karicheri wrote:
+>> This is a platform driver for asynchronous external memory interface
+>> available on TI SoCs. This driver was previously located inside the
+>> mach-davinci folder. As this DaVinci IP is re-used across multiple
+>> family of devices such as c6x, keystone etc, the driver is moved to drivers.
+>> The driver configures async bus parameters associated with a particular
+>> chip select. For DaVinci NAND controller driver and driver for other async
+>> devices such as NOR flash, ASRAM etc, the bus confuguration is
+>> done by this driver at probe. A set of APIs (set/get) are provided to
+>> update the values based on specific driver usage.
+>> diff --git a/Documentation/devicetree/bindings/memory/davinci-aemif.txt b/Documentation/devicetree/bindings/memory/davinci-aemif.txt
+>> +* Texas Instruments Davinci AEMIF bus interface
+>> +
+>> +This file provides information for the davinci-emif device and
+>> +async bus bindings.
+>> +
+>> +Required properties:=
+>> +- compatible: "ti,davinci-aemif";
+>> +- #address-cells : Should be either two or three.  The first cell is the
+>> +                   chipselect number, and the remaining cells are the
+>> +                   offset into the chipselect.
+>> +- #size-cells : Either one or two, depending on how large each chipselect
+>> +                can be.
+> What about "how large each chipselect can be" determines 2-vs-3
+> (address) or 1-vs-2 (size) cells? I assume it's 32-vs-64-bit bus? It
+> might be best to make that explicit.
+I have re-used the bindings from another patch and don't know why the 
+above description is used.
+I am using a value of 2 for address cells and 1 for size-cells which I 
+believe is how these will be used as shown below.
+
+                         ranges = <2 0 0x70000000 0x08000000
+                                 3 0 0x74000000 0x04000000
+                                 4 0 0x78000000 0x04000000
+                                 5 0 0x7C000000 0x04000000
+                                 6 0 0x20c00000 0x100>;
+
+So I will change the description as below.
+
+- compatible: must be "ti,davinci-aemif"
+- reg: AEMIF control registers base and size
+- #address-cells: must be 2 (chip-select + offset)
+- #size-cells: must be 1
+- ranges: mapping from EMIF space to parent space. Each range 
+corresponds to a single chip select, and covers the entire access window 
+as configured.
+>> +- reg : contains offset/length value for AEMIF control registers space
+>> +- ranges : Each range corresponds to a single chipselect, and cover
+> add "s" at the end of that line.
+Ok
+>> +           the entire access window as configured.
+>> +
+>> +Child device nodes describe the devices connected to IFC such as NOR (e.g.
+>> +cfi-flash) and NAND (ti,davinci-nand, see Documentation/devicetree/bindings/
+>> +mtd/davinci-nand.txt). There might be board specific devices like FPGAs.
+>> +
+>> +In addition, optional child sub nodes contains bindings for the async bus
+>> +interface for a given chip select.
+> Hmmm. That's two different kinds of children, which appear to use
+> different addressing schemes given the examples below; more on that below.
+>
+>> +Optional cs node properties:-
+>> +- compatible: "ti,davinci-cs"
+>> +
+>> +  All of the params below in nanoseconds and are optional
+>> +
+>> +- ti,davinci-cs-asize - asynchronous data bus width (0 - 8bit, 1 - 16 bit)
+> Perhaps s/asize/bus-width/? Also, directly using values 8 and 16 would
+> be a lot more obvious to read than 0 and 1.
+Ok. Will fix,
+>
+>> +- ti,davinci-cs-ta - Minimum turn around time
+>> +- ti,davinci-cs-rhold - read hold width
+>> +- ti,davinci-cs-rstobe - read strobe width
+>> +- ti,davinci-cs-rsetup - read setup width
+>> +- ti,davinci-cs-whold - write hold width
+>> +- ti,davinci-cs-wstrobe - write strobe width
+>> +- ti,davinci-cs-wsetup - write setup width
+> The comments in the examples indicate these are in nS. This should be
+> mentioned here instead I think.
+Ok.
+>
+> Does there need to be a specification of bus clock rate? How does the
+> driver convert nS into number-of-clock-cycles, which I assume is what
+> the HW would be programmed with?
+aemif driver clk is either specified as a clk device node or as a device 
+bindings. Aemif driver gets the clk rate and do the conversion of ns to 
+emif clk cycles internally in the driver.
+>> +- ti,davinci-cs-ss - enable/disable select strobe (0 - disable, 1 - enable)
+>> +- ti,davinci-cs-ew - enable/disable extended wait cycles (0 - disable, 1 - enable)
+> Boolean properties are usually represented as present (on/enabled/1) or
+> missing (off/disabled/0). Shouldn't these two properties work that way?
+> I see the comment below:
+>> +if any of the above parameters are absent, hardware register default or that
+>> +set by a boot loader are used.
+> implied they're really tri-state (explicitly off or on, or just not
+> programmed). However, I think it'd be better if the DT always
+> represented the complete configuration, since the DT and binding should
+> be a full description of the HW rather than just the data you expect a
+> particular Linux driver to need after a particular boot loader has
+> executed first.
+Actually this driver has to work on various platforms some of them set 
+values in boot loader, others explicitly specify it in bindings or 
+platform data. If set in boot loader, these bindings are not required 
+(so that it is compatible with old implementation) to be configured in 
+Linux kernel. So I believe I should be using something like
+
+ti,davinci-cs-enable-ss - "on", "off"
+
+As cs node is optional, If not present, hw values will be used. I don't 
+think it make sense to make it tri-state based on my explanation above.
+>> +Example for aemif, davinci nand and nor flash chip select shown below.
+>> +
+>> +aemif@60000000 {
+>> +	compatible = "ti,davinci-aemif";
+>> +	#address-cells = <2>;
+>> +	#size-cells = <1>;
+>> +	reg = <0x68000000 0x80000>;
+>> +	ranges = <2 0 0x60000000 0x02000000
+>> +		  3 0 0x62000000 0x02000000
+>> +		  4 0 0x64000000 0x02000000
+>> +		  5 0 0x66000000 0x02000000
+>> +		  6 0 0x68000000 0x02000000>;
+>> +
+>> +	nand_cs:cs2@60000000 {
+> This node has no reg property, but it needs one if you use a unit
+> address ("@60000000") in the node name.
+So let  me drop the unit address as it is not needed for the cs node. 
+The AEMIF control register address is specified by the parent reg 
+property and is common to all chip selects.
+> The numbering scheme unit address above doesn't seem to match the
+> addresses provided to child nodes by the ranges property. Perhaps the
+> node layout you want is:
+>
+>
+> aemif {
+>      chip-selects {
+>          nand_cs:cs2@60000000 {
+>          };
+>      };
+>      devices {
+>          nand@3,0 {
+>          }
+>      };
+> };
+>
+> so that the chip-selects and devices nodes can both set appropriate and
+> different #address-cells and #size-cells?
+>
+> That does feel a bit wierd though, and I imagine writing the ranges
+> property in the aemif node would be hard.
+>
+> Perhaps the chip-select timings should just be written as properties in
+> the aemif controller, rather than child nodes?
+>
+> ti,cs-timings =
+>      < ... > /* 0 */
+>      < ... > /* 1 */
+>      < ... > /* 2 */
+>      ;
+>
+> with each <...> being a list of n cells in a specific order?
+>
+  To make this simple, I will drop the unit address from cs node and 
+represent it as
+
+nand_cs:cs2 {
+
+};
+
+nor_cs:cs3 {
+
+};
 
 
-and use the full soc sor board ame in the documentation
++		compatible = "ti,davinci-cs";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		/* all timings in nanoseconds */
++		ti,davinci-cs-ta = <0>;
++		ti,davinci-cs-rhold = <7>;
++		ti,davinci-cs-rstrobe = <42>;
++		ti,davinci-cs-rsetup = <14>;
++		ti,davinci-cs-whold = <7>;
++		ti,davinci-cs-wstrobe = <42>;
++		ti,davinci-cs-wsetup = <14>;
++	};
 
-Best Regards,
-J.
-> +
-> +Required properties:
-> +  - compatible: "atmel,at91sam9g20-audio"
-> +  - atmel,model: The user-visible name of this sound complex.
-> +  - atmel,audio-routing: A list of the connections between audio components.
-> +  - atmel,ssc-controller: The phandle of the SSC controller
-> +  - atmel,audio-codec: The phandle of the WM8731 audio codec
-> +
-> +Example:
-> +sound {
-> +	compatible = "atmel,at91sam9g20-audio";
-> +	atmel,model = "wm8731 @ AT91SAMG20EK";
-> +
-> +	atmel,audio-routing =
-> +		"Ext Spk", "LHPOUT",
-> +		"Int MIC", "MICIN";
-> +
-> +	atmel,ssc-controller = <&ssc0>;
-> +	atmel,audio-codec = <&wm8731>;
-> +};
-> diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-> index 72b09cf..397ec75 100644
-> --- a/sound/soc/atmel/Kconfig
-> +++ b/sound/soc/atmel/Kconfig
-> @@ -16,8 +16,7 @@ config SND_ATMEL_SOC_SSC
->  
->  config SND_AT91_SOC_SAM9G20_WM8731
->  	tristate "SoC Audio support for WM8731-based At91sam9g20 evaluation board"
-> -	depends on ATMEL_SSC && ARCH_AT91SAM9G20 && SND_ATMEL_SOC && \
-> -                   AT91_PROGRAMMABLE_CLOCKS
-> +	depends on ATMEL_SSC && SND_ATMEL_SOC && AT91_PROGRAMMABLE_CLOCKS
->  	select SND_ATMEL_SOC_SSC
->  	select SND_SOC_WM8731
->  	help
-> diff --git a/sound/soc/atmel/sam9g20_wm8731.c b/sound/soc/atmel/sam9g20_wm8731.c
-> index eef6eed..62c3a3d 100644
-> --- a/sound/soc/atmel/sam9g20_wm8731.c
-> +++ b/sound/soc/atmel/sam9g20_wm8731.c
-> @@ -197,14 +197,30 @@ static struct snd_soc_card snd_soc_at91sam9g20ek = {
->  
->  static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
->  {
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *codec_np, *cpu_np;
->  	struct clk *pllb;
->  	struct snd_soc_card *card = &snd_soc_at91sam9g20ek;
-> -	int ret;
-> -
-> -	if (!(machine_is_at91sam9g20ek() || machine_is_at91sam9g20ek_2mmc()))
-> -		return -ENODEV;
-> +	int ret, id;
-> +
-> +	if (np) {
-> +		cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
-> +		if (!cpu_np) {
-> +			dev_err(&pdev->dev, "codec info missing\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		id = of_alias_get_id(cpu_np, "ssc");
-> +		of_node_put(cpu_np);
-> +	} else {
-> +		if (!(machine_is_at91sam9g20ek() ||
-> +			machine_is_at91sam9g20ek_2mmc()))
-> +			return -ENODEV;
-> +
-> +		id = pdev->id;
-> +	}
->  
-> -	ret = atmel_ssc_set_audio(pdev->id);
-> +	ret = atmel_ssc_set_audio(id);
->  	if (ret)
->  		goto err;
->  
-> @@ -234,6 +250,42 @@ static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
->  	clk_set_rate(mclk, MCLK_RATE);
->  
->  	card->dev = &pdev->dev;
-> +
-> +	/* Parse device node info */
-> +	if (np) {
-> +		ret = snd_soc_of_parse_card_name(card, "atmel,model");
-> +		if (ret)
-> +			goto err;
-> +
-> +		ret = snd_soc_of_parse_audio_routing(card,
-> +			"atmel,audio-routing");
-> +		if (ret)
-> +			goto err;
-> +
-> +		/* Parse codec info */
-> +		at91sam9g20ek_dai.codec_name = NULL;
-> +		codec_np = of_parse_phandle(np, "atmel,audio-codec", 0);
-> +		if (!codec_np) {
-> +			dev_err(&pdev->dev, "codec info missing\n");
-> +			return -EINVAL;
-> +		}
-> +		at91sam9g20ek_dai.codec_of_node = codec_np;
-> +
-> +		/* Parse dai and platform info */
-> +		at91sam9g20ek_dai.cpu_dai_name = NULL;
-> +		at91sam9g20ek_dai.platform_name = NULL;
-> +		cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
-> +		if (!cpu_np) {
-> +			dev_err(&pdev->dev, "dai and pcm info missing\n");
-> +			return -EINVAL;
-> +		}
-> +		at91sam9g20ek_dai.cpu_of_node = cpu_np;
-> +		at91sam9g20ek_dai.platform_of_node = cpu_np;
-> +
-> +		of_node_put(codec_np);
-> +		of_node_put(cpu_np);
-> +	}
-> +
->  	ret = snd_soc_register_card(card);
->  	if (ret) {
->  		printk(KERN_ERR "ASoC: snd_soc_register_card() failed\n");
-> @@ -262,10 +314,19 @@ static int __devexit at91sam9g20ek_audio_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id sam9g20ek_wm8731_dt_ids[] = {
-> +	{ .compatible = "atmel,at91sam9g20-audio", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sam9g20ek_wm8731_dt_ids);
-> +#endif
-> +
->  static struct platform_driver at91sam9g20ek_audio_driver = {
->  	.driver = {
->  		.name	= "at91sam9g20ek-audio",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(sam9g20ek_wm8731_dt_ids),
->  	},
->  	.probe	= at91sam9g20ek_audio_probe,
->  	.remove	= __devexit_p(at91sam9g20ek_audio_remove),
-> -- 
-> 1.7.9.5
-> 
+> ...
+>> +	nand@3,0 {
+>> +		compatible = "ti,davinci-nand";
+>> +		reg = <3 0x0 0x807ff
+>> +			6 0x0 0x8000>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +
+>> +		.. See Documentation/devicetree/bindings/mtd/davinci-nand.txt
+>> +	};
+>
+>
+>
