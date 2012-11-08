@@ -1,176 +1,133 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [RFC PATCH v4 2/2] ASoC: sam9g20-wm8731: convert to dt support
-Date: Thu,  8 Nov 2012 15:57:02 +0800
-Message-ID: <1352361422-13265-2-git-send-email-voice.shen@atmel.com>
-References: <1352361422-13265-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <1352361422-13265-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, nicolas.ferre@atmel.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, plagnioj@jcrosoft.com, jm.lin@atmel.com, Bo Shen <voice.shen@atmel.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v2 1/2] ARM: Exynos5250: Enabling ehci-s5p driver
+Date: Thu, 8 Nov 2012 13:37:10 +0530
+Message-ID: <CAFp+6iEwbw5jw_JiUosfZYykFNdbnh+OW6-RrJ7NnYN8csUJmw@mail.gmail.com>
+References: <1352357665-7435-1-git-send-email-gautam.vivek@samsung.com>
+	<1352357665-7435-2-git-send-email-gautam.vivek@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1352357665-7435-2-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, Jingoo Han <jg1.han@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
-Change since v3 RFC:
-  Remove dai node, remap ssc in place
-  without pinctrl added, so don't modify the dtsi file, will be added
-  soon
-Change since v2:
-  No change
-Change since v1:
-  Add sam9g20-wm8731 binding document
----
- .../bindings/sound/atmel-sam9g20-wm8731-audio.txt  |   21 ++++++
- sound/soc/atmel/Kconfig                            |    3 +-
- sound/soc/atmel/sam9g20_wm8731.c                   |   71 ++++++++++++++++++--
- 3 files changed, 88 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
+Hi all,
 
-diff --git a/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt b/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
-new file mode 100644
-index 0000000..adf7e7c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/atmel-sam9g20-wm8731-audio.txt
-@@ -0,0 +1,21 @@
-+* Atmel sam9g20ek audio complex
-+
-+Required properties:
-+  - compatible: "atmel,at91sam9g20-audio"
-+  - atmel,model: The user-visible name of this sound complex.
-+  - atmel,audio-routing: A list of the connections between audio components.
-+  - atmel,ssc-controller: The phandle of the SSC controller
-+  - atmel,audio-codec: The phandle of the WM8731 audio codec
-+
-+Example:
-+sound {
-+	compatible = "atmel,at91sam9g20-audio";
-+	atmel,model = "wm8731 @ AT91SAMG20EK";
-+
-+	atmel,audio-routing =
-+		"Ext Spk", "LHPOUT",
-+		"Int MIC", "MICIN";
-+
-+	atmel,ssc-controller = <&ssc0>;
-+	atmel,audio-codec = <&wm8731>;
-+};
-diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
-index 72b09cf..397ec75 100644
---- a/sound/soc/atmel/Kconfig
-+++ b/sound/soc/atmel/Kconfig
-@@ -16,8 +16,7 @@ config SND_ATMEL_SOC_SSC
- 
- config SND_AT91_SOC_SAM9G20_WM8731
- 	tristate "SoC Audio support for WM8731-based At91sam9g20 evaluation board"
--	depends on ATMEL_SSC && ARCH_AT91SAM9G20 && SND_ATMEL_SOC && \
--                   AT91_PROGRAMMABLE_CLOCKS
-+	depends on ATMEL_SSC && SND_ATMEL_SOC && AT91_PROGRAMMABLE_CLOCKS
- 	select SND_ATMEL_SOC_SSC
- 	select SND_SOC_WM8731
- 	help
-diff --git a/sound/soc/atmel/sam9g20_wm8731.c b/sound/soc/atmel/sam9g20_wm8731.c
-index eef6eed..62c3a3d 100644
---- a/sound/soc/atmel/sam9g20_wm8731.c
-+++ b/sound/soc/atmel/sam9g20_wm8731.c
-@@ -197,14 +197,30 @@ static struct snd_soc_card snd_soc_at91sam9g20ek = {
- 
- static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *codec_np, *cpu_np;
- 	struct clk *pllb;
- 	struct snd_soc_card *card = &snd_soc_at91sam9g20ek;
--	int ret;
--
--	if (!(machine_is_at91sam9g20ek() || machine_is_at91sam9g20ek_2mmc()))
--		return -ENODEV;
-+	int ret, id;
-+
-+	if (np) {
-+		cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
-+		if (!cpu_np) {
-+			dev_err(&pdev->dev, "codec info missing\n");
-+			return -EINVAL;
-+		}
-+
-+		id = of_alias_get_id(cpu_np, "ssc");
-+		of_node_put(cpu_np);
-+	} else {
-+		if (!(machine_is_at91sam9g20ek() ||
-+			machine_is_at91sam9g20ek_2mmc()))
-+			return -ENODEV;
-+
-+		id = pdev->id;
-+	}
- 
--	ret = atmel_ssc_set_audio(pdev->id);
-+	ret = atmel_ssc_set_audio(id);
- 	if (ret)
- 		goto err;
- 
-@@ -234,6 +250,42 @@ static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
- 	clk_set_rate(mclk, MCLK_RATE);
- 
- 	card->dev = &pdev->dev;
-+
-+	/* Parse device node info */
-+	if (np) {
-+		ret = snd_soc_of_parse_card_name(card, "atmel,model");
-+		if (ret)
-+			goto err;
-+
-+		ret = snd_soc_of_parse_audio_routing(card,
-+			"atmel,audio-routing");
-+		if (ret)
-+			goto err;
-+
-+		/* Parse codec info */
-+		at91sam9g20ek_dai.codec_name = NULL;
-+		codec_np = of_parse_phandle(np, "atmel,audio-codec", 0);
-+		if (!codec_np) {
-+			dev_err(&pdev->dev, "codec info missing\n");
-+			return -EINVAL;
-+		}
-+		at91sam9g20ek_dai.codec_of_node = codec_np;
-+
-+		/* Parse dai and platform info */
-+		at91sam9g20ek_dai.cpu_dai_name = NULL;
-+		at91sam9g20ek_dai.platform_name = NULL;
-+		cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
-+		if (!cpu_np) {
-+			dev_err(&pdev->dev, "dai and pcm info missing\n");
-+			return -EINVAL;
-+		}
-+		at91sam9g20ek_dai.cpu_of_node = cpu_np;
-+		at91sam9g20ek_dai.platform_of_node = cpu_np;
-+
-+		of_node_put(codec_np);
-+		of_node_put(cpu_np);
-+	}
-+
- 	ret = snd_soc_register_card(card);
- 	if (ret) {
- 		printk(KERN_ERR "ASoC: snd_soc_register_card() failed\n");
-@@ -262,10 +314,19 @@ static int __devexit at91sam9g20ek_audio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id sam9g20ek_wm8731_dt_ids[] = {
-+	{ .compatible = "atmel,at91sam9g20-audio", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sam9g20ek_wm8731_dt_ids);
-+#endif
-+
- static struct platform_driver at91sam9g20ek_audio_driver = {
- 	.driver = {
- 		.name	= "at91sam9g20ek-audio",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(sam9g20ek_wm8731_dt_ids),
- 	},
- 	.probe	= at91sam9g20ek_audio_probe,
- 	.remove	= __devexit_p(at91sam9g20ek_audio_remove),
--- 
-1.7.9.5
+On Thu, Nov 8, 2012 at 12:24 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+> Adding EHCI device tree node for Exynos5250 along with
+> the device base adress and gpio line for vbus.
+>
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Acked-by: Jingoo Han <jg1.han@samsung.com>
+> ---
+>  .../devicetree/bindings/usb/exynos-usb.txt         |   25 ++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++
+>  arch/arm/mach-exynos/include/mach/map.h            |    1 +
+>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
+>  5 files changed, 38 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> new file mode 100644
+> index 0000000..833f5cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> @@ -0,0 +1,25 @@
+> +Samsung Exynos SoC USB controller
+> +
+> +The USB devices interface with USB controllers on Exynos SOCs.
+> +The device node has following properties.
+> +
+> +EHCI
+> +Required properties:
+> + - compatible: should be "samsung,exynos-ehci" for USB 2.0
+> +   EHCI controller in host mode.
+> + - reg: physical base address of the controller and length of memory mapped
+> +   region.
+> + - interrupts: interrupt number to the cpu.
+> +
+> +Optional properties:
+> + - samsung,vbus-gpio:  if present, specifies the GPIO that
+> +   needs to be pulled up for the bus to be powered.
+> +
+> +Example:
+> +
+> +       usb@12110000 {
+> +               compatible = "samsung,exynos-ehci";
+> +               reg = <0x12110000 0x100>;
+> +               interrupts = <0 71 0>;
+> +               samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+> +       };
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> index 405009c..7c8064f 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -193,4 +193,8 @@
+>         hdmi {
+>                 hpd-gpio = <&gpx3 7 0xf 1 3>;
+>         };
+> +
+> +       usb@12110000 {
+> +               samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+> +       };
+>  };
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index cf6a02d..2995445 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -238,6 +238,12 @@
+>                 #size-cells = <0>;
+>         };
+>
+> +       usb@12110000 {
+> +               compatible = "samsung,exynos-ehci";
+> +               reg = <0x12110000 0x100>;
+> +               interrupts = <0 71 0>;
+> +       };
+> +
+>         amba {
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+> index ef4958b..9a86b99 100644
+> --- a/arch/arm/mach-exynos/include/mach/map.h
+> +++ b/arch/arm/mach-exynos/include/mach/map.h
+> @@ -197,6 +197,7 @@
+>  #define EXYNOS4_PA_EHCI                        0x12580000
+>  #define EXYNOS4_PA_OHCI                        0x12590000
+>  #define EXYNOS4_PA_HSPHY               0x125B0000
+> +#define EXYNOS5_PA_EHCI                        0x12110000
+>  #define EXYNOS4_PA_MFC                 0x13400000
+>
+>  #define EXYNOS4_PA_UART                        0x13800000
+> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> index ed37273..f60994e 100644
+> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> @@ -86,6 +86,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
+>                                 "exynos5-hdmi", NULL),
+>         OF_DEV_AUXDATA("samsung,exynos5-mixer", 0x14450000,
+>                                 "exynos5-mixer", NULL),
+> +       OF_DEV_AUXDATA("samsung,exynos-ehci", EXYNOS5_PA_EHCI,
+> +                                       "s5p-ehci", NULL),
+missed the alignment here :-(
 
+>         {},
+>  };
+>
+> --
+> 1.7.6.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+--
+Thanks & Regards
+Vivek
