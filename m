@@ -1,224 +1,60 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Input: tca8418 - convert to dt
-Date: Thu, 8 Nov 2012 08:57:29 -0800
-Message-ID: <20121108165729.GC8877@core.coreip.homeip.net>
-References: <1352131829-19449-1-git-send-email-alban.bedel@avionic-design.de>
+From: Mitch Bradley <wmb@firmworks.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
+ to mach-omap2)
+Date: Thu, 08 Nov 2012 07:00:47 -1000
+Message-ID: <509BE53F.4040609@firmworks.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net> <509AE247.3000404@gmail.com> <356155A1-776B-4AA5-A912-14CE7D9AE42C@dominion.thruhere.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352131829-19449-1-git-send-email-alban.bedel@avionic-design.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Alban Bedel <alban.bedel@avionic-design.de>
-Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <356155A1-776B-4AA5-A912-14CE7D9AE42C@dominion.thruhere.net>
+Sender: linux-omap-owner@vger.kernel.org
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: Ryan Mallon <rmallon@gmail.com>, Kevin Hilman <khilman@ti.com>, Wood Scott-B07421 <B07421@freescale.com>, Matt Porter <mporter@ti.com>, Tabi Timur-B04825 <B04825@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Russ Dill <Russ.Dill@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alban,
+On 11/8/2012 3:28 AM, Koen Kooi wrote:
+> 
+> Op 7 nov. 2012, om 23:35 heeft Ryan Mallon <rmallon@gmail.com> het volgende geschreven:
+> 
+>> On 06/11/12 08:40, Tabi Timur-B04825 wrote:
+>>> On Mon, Nov 5, 2012 at 2:40 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+>>>
+>>>> Jane is building custom BeagleBone expansion boards called 'capes'. She
+>>>> can boot the system with a stock BeagleBoard device tree, but additional
+>>>> data is needed before a cape can be used. She could replace the FDT file
+>>>> used by U-Boot with one that contains the extra data, but she uses the
+>>>> same Linux system image regardless of the cape, and it is inconvenient
+>>>> to have to select a different device tree at boot time depending on the
+>>>> cape.
+>>>
+>>> What's wrong with having the boot loader detect the presence of the
+>>> Cape and update the device tree accordingly?  We do this all the time
+>>> in U-Boot.  Doing stuff like reading EEPROMs and testing for the
+>>> presence of hardware is easier in U-Boot than in Linux.
+>>
+>> This is probably okay for some hardware, but doesn't work in the general
+>> case. Not all hardware is detectable, for example a cape which just adds
+>> a set of LEDs for GPIO pins. Also, some hardware might not easily be
+>> detectable without adding additional complexity to the boot loader.
+> 
+> And as Pantelis mentioned before, I really don't want my users to change the bootloader whenever they add a new LED. Touching the bootloader is just too accident prone, we had a ton of RMA requests for older versions of the beagleboard from people trying to upgrade u-boot.
 
-On Mon, Nov 05, 2012 at 05:10:29PM +0100, Alban Bedel wrote:
-> Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
-> ---
->  .../devicetree/bindings/input/tca8418_keypad.txt   |    8 +++
->  drivers/input/keyboard/tca8418_keypad.c            |   54 +++++++++++++-------
->  2 files changed, 44 insertions(+), 18 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/input/tca8418_keypad.txt
+One possibility for dynamic device tree mods would be to run Open
+Firmware from u-boot and have it generate the device tree and possibly
+modify it either interactively or from a script loaded from a file or
+the network.  OFW could then either load Linux directly or return to
+u-boot, which would proceed with loading.
 
-How about version below instead? It needs the patch to matrix-keymap I
-posted a few minutes ago.
-
-Thanks.
-
--- 
-Dmitry
-
-
-Input: tca8418 - convert to dt
-
-From: Alban Bedel <alban.bedel@avionic-design.de>
-
-Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- .../devicetree/bindings/input/tca8418_keypad.txt   |    8 ++
- drivers/input/keyboard/tca8418_keypad.c            |   68 ++++++++++++--------
- 2 files changed, 49 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/tca8418_keypad.txt
-
-diff --git a/Documentation/devicetree/bindings/input/tca8418_keypad.txt b/Documentation/devicetree/bindings/input/tca8418_keypad.txt
-new file mode 100644
-index 0000000..2a1538f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/tca8418_keypad.txt
-@@ -0,0 +1,8 @@
-+
-+Required properties:
-+- compatible: "ti,tca8418"
-+- reg: the I2C address
-+- interrupts: IRQ line number, should trigger on falling edge
-+- keypad,num-rows: The number of rows
-+- keypad,num-columns: The number of columns
-+- linux,keymap: Keys definitions, see keypad-matrix.
-diff --git a/drivers/input/keyboard/tca8418_keypad.c b/drivers/input/keyboard/tca8418_keypad.c
-index 893869b..095187f 100644
---- a/drivers/input/keyboard/tca8418_keypad.c
-+++ b/drivers/input/keyboard/tca8418_keypad.c
-@@ -35,6 +35,7 @@
- #include <linux/i2c.h>
- #include <linux/input.h>
- #include <linux/input/tca8418_keypad.h>
-+#include <linux/of.h>
- 
- /* TCA8418 hardware limits */
- #define TCA8418_MAX_ROWS	8
-@@ -116,10 +117,15 @@ static const struct i2c_device_id tca8418_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, tca8418_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id tca8418_dt_ids[] __devinitconst = {
-+	{ .compatible = "ti,tca8418", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, tca8418_dt_ids);
-+#endif
-+
- struct tca8418_keypad {
--	unsigned int rows;
--	unsigned int cols;
--	unsigned int keypad_mask; /* Mask for keypad col/rol regs */
- 	unsigned int irq;
- 	unsigned int row_shift;
- 
-@@ -241,7 +247,8 @@ exit:
- /*
-  * Configure the TCA8418 for keypad operation
-  */
--static int __devinit tca8418_configure(struct tca8418_keypad *keypad_data)
-+static int __devinit tca8418_configure(struct tca8418_keypad *keypad_data,
-+					u32 rows, u32 cols)
- {
- 	int reg, error;
- 
-@@ -253,9 +260,8 @@ static int __devinit tca8418_configure(struct tca8418_keypad *keypad_data)
- 
- 
- 	/* Assemble a mask for row and column registers */
--	reg  =  ~(~0 << keypad_data->rows);
--	reg += (~(~0 << keypad_data->cols)) << 8;
--	keypad_data->keypad_mask = reg;
-+	reg  =  ~(~0 << rows);
-+	reg += (~(~0 << cols)) << 8;
- 
- 	/* Set registers to keypad mode */
- 	error |= tca8418_write_byte(keypad_data, REG_KP_GPIO1, reg);
-@@ -277,25 +283,36 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
- 						client->dev.platform_data;
- 	struct tca8418_keypad *keypad_data;
- 	struct input_dev *input;
-+	const struct matrix_keymap_data *keymap_data = NULL;
-+	u32 rows = 0, cols = 0;
-+	bool rep = false;
-+	bool irq_is_gpio = false;
- 	int error, row_shift, max_keys;
- 
- 	/* Copy the platform data */
--	if (!pdata) {
--		dev_dbg(&client->dev, "no platform data\n");
--		return -EINVAL;
-+	if (pdata) {
-+		if (!pdata->keymap_data) {
-+			dev_err(&client->dev, "no keymap data defined\n");
-+			return -EINVAL;
-+		}
-+		keymap_data = pdata->keymap_data;
-+		rows = pdata->rows;
-+		cols = pdata->cols;
-+		rep  = pdata->rep;
-+		irq_is_gpio = pdata->irq_is_gpio;
-+	} else {
-+		struct device_node *np = client->dev.of_node;
-+		of_property_read_u32(np, "keypad,num-rows", &rows);
-+		of_property_read_u32(np, "keypad,num-columns", &cols);
-+		rep = of_property_read_bool(np, "keypad,autorepeat");
- 	}
- 
--	if (!pdata->keymap_data) {
--		dev_err(&client->dev, "no keymap data defined\n");
--		return -EINVAL;
--	}
--
--	if (!pdata->rows || pdata->rows > TCA8418_MAX_ROWS) {
-+	if (!rows || rows > TCA8418_MAX_ROWS) {
- 		dev_err(&client->dev, "invalid rows\n");
- 		return -EINVAL;
- 	}
- 
--	if (!pdata->cols || pdata->cols > TCA8418_MAX_COLS) {
-+	if (!cols || cols > TCA8418_MAX_COLS) {
- 		dev_err(&client->dev, "invalid columns\n");
- 		return -EINVAL;
- 	}
-@@ -307,8 +324,8 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
- 		return -ENODEV;
- 	}
- 
--	row_shift = get_count_order(pdata->cols);
--	max_keys = pdata->rows << row_shift;
-+	row_shift = get_count_order(cols);
-+	max_keys = rows << row_shift;
- 
- 	/* Allocate memory for keypad_data, keymap and input device */
- 	keypad_data = kzalloc(sizeof(*keypad_data) +
-@@ -316,13 +333,11 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
- 	if (!keypad_data)
- 		return -ENOMEM;
- 
--	keypad_data->rows = pdata->rows;
--	keypad_data->cols = pdata->cols;
- 	keypad_data->client = client;
- 	keypad_data->row_shift = row_shift;
- 
- 	/* Initialize the chip or fail if chip isn't present */
--	error = tca8418_configure(keypad_data);
-+	error = tca8418_configure(keypad_data, rows, cols);
- 	if (error < 0)
- 		goto fail1;
- 
-@@ -342,21 +357,20 @@ static int __devinit tca8418_keypad_probe(struct i2c_client *client,
- 	input->id.product = 0x001;
- 	input->id.version = 0x0001;
- 
--	error = matrix_keypad_build_keymap(pdata->keymap_data, NULL,
--					   pdata->rows, pdata->cols,
-+	error = matrix_keypad_build_keymap(keymap_data, NULL, rows, cols,
- 					   keypad_data->keymap, input);
- 	if (error) {
- 		dev_dbg(&client->dev, "Failed to build keymap\n");
- 		goto fail2;
- 	}
- 
--	if (pdata->rep)
-+	if (rep)
- 		__set_bit(EV_REP, input->evbit);
- 	input_set_capability(input, EV_MSC, MSC_SCAN);
- 
- 	input_set_drvdata(input, keypad_data);
- 
--	if (pdata->irq_is_gpio)
-+	if (irq_is_gpio)
- 		client->irq = gpio_to_irq(client->irq);
- 
- 	error = request_threaded_irq(client->irq, NULL, tca8418_irq_handler,
-@@ -401,11 +415,11 @@ static int __devexit tca8418_keypad_remove(struct i2c_client *client)
- 	return 0;
- }
- 
--
- static struct i2c_driver tca8418_keypad_driver = {
- 	.driver = {
- 		.name	= TCA8418_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(tca8418_dt_ids),
- 	},
- 	.probe		= tca8418_keypad_probe,
- 	.remove		= __devexit_p(tca8418_keypad_remove),
+> 
+> Apart from the above I'd like to have fewer points of failure. Right now I need to keep uImage and foo.dtb in sync and I hate to add u-boot to that equasion as well.
+> 
+> regards,
+> 
+> Koen
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
