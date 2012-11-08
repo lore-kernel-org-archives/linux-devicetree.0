@@ -1,33 +1,36 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH v4 5/7] mfd: max8925: support dt for regulator
-Date: Thu, 08 Nov 2012 10:32:44 +0800
-Message-ID: <509B19CC.9000707@marvell.com>
-References: <1352282993-26449-1-git-send-email-qingx@marvell.com> <20121107142007.GB20844@opensource.wolfsonmicro.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH] ARM: dts: exynos4: Add support for Exynos4x12 SoCs
+Date: Thu, 08 Nov 2012 13:52:40 +0900
+Message-ID: <0cee01cdbd6c$e1852750$a48f75f0$%kim@samsung.com>
+References: <1351089359-7318-1-git-send-email-t.figa@samsung.com>
+ <0c4501cdbc8f$5336add0$f9a40970$%kim@samsung.com> <3301517.VQVR99BHPc@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121107142007.GB20844@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "lrg@ti.com" <lrg@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <3301517.VQVR99BHPc@amdc1227>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <t.figa@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2012 10:20 PM, Mark Brown wrote:
-> On Wed, Nov 07, 2012 at 06:09:53PM +0800, Qing Xu wrote:
->> From: Qing Xu <qingx@marvell.com>
->>
->> Signed-off-by: Qing Xu <qingx@marvell.com>
-> Applied, thanks.
->
->> +max8925 regulator device register is still handled by mfd_add_devices, not by
->> +of_xxx, so, it is not necessary to add compatible name. Also, those reg
->> +offset and id info is stored in mfd_cell(see max8925-core.c), as a result
->> +there is not private properties in dts.
->> +node's name should match with the definition in max8925_regulator_matches
->> +(see max8925-regulator.c)
-> Please submit a followup which removes all the Linux-specific references
-> and just enumerates the supported regulators.  Please do also use a
-> subject line appropriate for the subsystem - this is for the regulator
-> driver so it should be regulator:
-updated in another patch, please help me review it, thanks.
+Tomasz Figa wrote:
+> >
+> > [...]
+> >
+> > > +/include/ "exynos4x12-pinctrl.dtsi"
+> >
+> > BTW, I think, above line should be added when exynos4x12-pinctrl patches
+> > applied.
+> 
+> Yes, you are right. Seems like a rebase error on my side. Can you fix it
+> or should I send a fixed version?
+> 
+I did, thanks ;-)
+
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
