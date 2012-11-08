@@ -1,28 +1,39 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v6] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Thu, 08 Nov 2012 09:29:43 +0100
-Message-ID: <509B6D77.3090707@grandegger.com>
-References: <509A5A3E.4090505@gaisler.com> <1352301634-12668-1-git-send-email-andreas@gaisler.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] iio: isl29018: fix to return error or 0 in isl29018_write_raw()
+Date: Thu, 8 Nov 2012 17:05:23 +0800
+Message-ID: <CAPgLHd873xAvToL7reBbxmS-iEoJ9OqvjEoXf8RsG2esbTyo1A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1352301634-12668-1-git-send-email-andreas@gaisler.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-can@vger.kernel.org, software@gaisler.com, Marc Kleine-Budde <mkl@pengutronix.de>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2012 04:20 PM, Andreas Larsson wrote:
-> This driver supports GRCAN and CRHCAN CAN controllers available in the GRLIB
-> VHDL IP core library.
-> 
-> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-Acked-by: Wolfgang Grandegger <wg@grandegger.com>
+We had assigned the return value to 'ret' but ignored it when
+return from isl29018_write_raw(), it's better to return 'ret'
+instead of 0.
 
-Looks good now. Thanks for your patience.
+dpatch engine is used to auto generate this patch.
+(https://github.com/weiyj/dpatch)
 
-Wolfgang.
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ drivers/staging/iio/light/isl29018.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/staging/iio/light/isl29018.c b/drivers/staging/iio/light/isl29018.c
+index 3b03f6f..1d5b294 100644
+--- a/drivers/staging/iio/light/isl29018.c
++++ b/drivers/staging/iio/light/isl29018.c
+@@ -356,7 +356,7 @@ static int isl29018_write_raw(struct iio_dev *indio_dev,
+ 	}
+ 	mutex_unlock(&chip->lock);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int isl29018_read_raw(struct iio_dev *indio_dev,
