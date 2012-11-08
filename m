@@ -1,32 +1,72 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/4] gpio: samsung: Skip registration if pinctrl driver is
- present on Exynos4x12
-Date: Thu, 8 Nov 2012 22:12:52 +0100
-Message-ID: <CACRpkdaOpzFvs_wqy9sdrmx1=wEs5uxqfh_rOrKxLTXV-q1K2Q@mail.gmail.com>
-References: <1351089457-8205-1-git-send-email-t.figa@samsung.com>
-	<1351089457-8205-3-git-send-email-t.figa@samsung.com>
-	<CACRpkdYNDSp0K3wpvUem9ecsW-JQ9L6aKqaOmHNUR65DQTMNHA@mail.gmail.com>
-	<0c5301cdbca2$30320240$909606c0$%kim@samsung.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v7 5/8] fbmon: add videomode helpers
+Date: Thu, 8 Nov 2012 22:25:45 +0100
+Message-ID: <20121108212545.GA32605@pengutronix.de>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1351675689-26814-6-git-send-email-s.trumtrar@pengutronix.de>
+ <A73F36158E33644199EB82C5EC81C7BC3E9E1B39@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <0c5301cdbca2$30320240$909606c0$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kyungmin.park@samsung.com, m.szyprowski@samsung.com, tomasz.figa@gmail.com, thomas.abraham@linaro.org, swarren@wwwdotorg.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3E9E1B39@DBDE01.ent.ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <robherring2@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 7, 2012 at 5:41 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
+Hi!
 
-> A commit 1b6056d6 ("pinctrl: samsung: Include bank-specific eint offset in
-> bank struct") which is in your pinctrl tree (samsung branch) changed
-> macro(EXYNOS_PIN_BANK_EINTG) to add offset. Eventually, this series(due to
-> 3rd patch, pinctrl: samsung: Add support for Exynos4x12) breaks compilation
-> without the commit. So if you don't have a plan to rebase samsung branch of
-> your pinctrl tree, I'd like to merge it in my tree. Is it ok to you?
+On Wed, Oct 31, 2012 at 03:30:03PM +0000, Manjunathappa, Prakash wrote:
+> Hi Steffen,
+> 
+> On Wed, Oct 31, 2012 at 14:58:05, Steffen Trumtrar wrote:
+> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > +int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
+> > +{
+> > +	fbmode->xres = vm->hactive;
+> > +	fbmode->left_margin = vm->hback_porch;
+> > +	fbmode->right_margin = vm->hfront_porch;
+> > +	fbmode->hsync_len = vm->hsync_len;
+> > +
+> > +	fbmode->yres = vm->vactive;
+> > +	fbmode->upper_margin = vm->vback_porch;
+> > +	fbmode->lower_margin = vm->vfront_porch;
+> > +	fbmode->vsync_len = vm->vsync_len;
+> > +
+> > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> > +
+> > +	fbmode->sync = 0;
+> > +	fbmode->vmode = 0;
+> > +	if (vm->hah)
+> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> > +	if (vm->vah)
+> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> > +	if (vm->interlaced)
+> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> > +	if (vm->doublescan)
+> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> > +
+> 
+> "pixelclk-inverted" property of the panel is not percolated fb_videomode.
+> Please let me know if I am missing something.
+> 
 
-Sure tell me when you've merged it and I'll drop commit 1b6056d6
-from my tree.
+The next version is almost finished. Only thing I'm missing is this.
+And I actually do not know which flag would represent an inverted pixelclock
+in fb_videomode. Does anybody have any idea what I have to do here?
 
-Yours,
-Linus Walleij
+	if (vm->pixelclk_pol)
+		fbmode->sync = ???
+
+That's as far as I have come and I don't see a flag that seems right.
+Is this even a valid property of fb_videomode?
+
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
