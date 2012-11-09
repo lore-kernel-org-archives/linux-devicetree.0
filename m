@@ -1,52 +1,106 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] mfd: max8925: update dt regulator binding doc
-Date: Fri, 9 Nov 2012 11:41:33 +0000
-Message-ID: <20121109114133.GB23807@opensource.wolfsonmicro.com>
-References: <1352341892-27654-1-git-send-email-qingx@marvell.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v7 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Fri, 9 Nov 2012 13:54:40 +0200
+Message-ID: <20121109115440.GC8078@arwen.pp.htv.fi>
+References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="Qbvjkv9qwOGw/5Fx"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1352341892-27654-1-git-send-email-qingx@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: lrg@ti.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Praveen Paneri <p.paneri@samsung.com>
+Cc: linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, t.figa@samsung.com, gautam.vivek@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-
---neYutvxvOLaeuPCA
+--Qbvjkv9qwOGw/5Fx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 08, 2012 at 10:31:32AM +0800, Qing Xu wrote:
+Hi,
 
-> remove linux specific references, enumerates all supported
-> regulators
+On Tue, Oct 30, 2012 at 10:27:32AM +0530, Praveen Paneri wrote:
+> Changes from v6:
+> Modified register definitions according to the existing ones.
+> Changed default PHY clk selection for SoCs.
+> Improved binding text and rebased to the latest usb-next.
+>=20
+> Changes from v5:
+> Moved clk_get() to driver's probe function. Now reference clock frequency
+> selection value is stored in samsung_usbphy structure for later use. Used
+> IS_ENABLED() instead of #ifdef in samsung_usbphy_get_driver_data().
+>=20
+> Changes from v4:
+> Moved header file contents to driver's source file
+> Removed unnecessary print message from driver's probe function
+> Dropped the Free Software Foundation address from the header
+> Changed the platform data code to use __initdata
+>=20
+> Changes from v3:
+> Replaced susbsys_initcall()/module_exit() by module_platform_driver().
+> Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
+> is registered
+> Removed unnecessary devm_usb_put_phy() call from the hsotg driver remove.
+>=20
+> Changes from v2:
+> Changed the driver filenames to samsung-usbphy
+> Changed 's3c' to 'samsung' for platform device as well as platform data
+> Moved platform data structure to a separate file
+> Rectified coding style related errors
+>=20
+> Changes from v1:
+> Rebased patches to latest usb-next branch
+> Changed the name 'sec_usbphy' to 'samsung_usbphy'
+>=20
+> This patch set introduces a phy driver for samsung SoCs. It uses the exis=
+ting
+> transceiver infrastructure to provide phy control functions. Use of this =
+driver
+> can be extended for usb host phy as well. Over the period of time all the=
+ phy
+> related code for most of the samsung SoCs can be integrated here.
+> Removing the existing phy code from mach-s3c64xx. Same can be done for ot=
+her SoCs
+> when they start supporting this phy driver.=20
+> This driver is tested with smdk6410 and Exynos4210(with DT).
+>=20
+> Praveen Paneri (5):
+>   usb: phy: samsung: Introducing usb phy driver for hsotg
+>   usb: s3c-hsotg: Adding phy driver support
+>   ARM: S3C64XX: Removing old phy setup code
+>   ARM: S3C64XX: Enabling samsung-usbphy driver
+>   ARM: Exynos4210: Enabling samsung-usbphy driver
 
-Applied.  As I said the other day please do use subject lines
-appropriate for the subsystem.
+guys I can't wait any longer. If I don't get proper Acks today, I will
+go ahead without all the PHY changes from Samsung :-s
 
---neYutvxvOLaeuPCA
+--=20
+balbi
+
+--Qbvjkv9qwOGw/5Fx
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQnOveAAoJELSic+t+oim9WlQP/iio1WhroMDqIflLFAvwZgOr
-Lpb0MSYYPV56Fx6x+mO0cyxcx9R4bbdYJGcSHd4GXAU3cl/9FY04efXDvgUf6HNe
-ih/78J59r5378kC6bv3m0FFa6w0D6RqtcfpZbwGbS/aGvbFd4+JZJVtco50Zo7Sf
-PUsORC6y++g+oM8yFlbpErn8fPQTIJDt61szTAKoL0/68uMfFjIG5JrboUnW4RA+
-L7wFjELi1g26zUP+xpxpSKwbtNf9uoHN/ejz7foaxHHhlx1FKLSKmYfMu6snPe0J
-x73Q8JdNXQbqrCzGZDScwfz7XF1UEovQrn3dfd+uv+fmi8JD7cPQtlOX3eqqld1o
-pSD/ubpzN0x5VPFdVToJ80U/SsRow1vVSdu2li/xLO27Xj7ctLOD+9EhzgRSOGWA
-MJHmLj7xZliWqBbDxsBlllW4m362Pa352uyPuIJZBSblLQXfUoUcZWMUkU7klUoq
-tWCIlVoYw/u9iR9WTFkwlarorK/px479YijovOupN6FcO3Gdxfau2O5Izzs3HKo5
-q7qP4A96+arYU6Egn2St8ePm81+fIV1SqqqnVRTaq6wc0dFxMd4BeQ91/IWTkjGj
-CyCZBayikkXuFEY44Xi4Ri1itC/aVRFw64pD5GKK+VKxjAW0g+8+ldb6ZzblonsY
-mRnmXPF4npGguDJY0BZH
-=4Ehb
+iQIcBAEBAgAGBQJQnO8AAAoJEIaOsuA1yqREWpEP/0xJoFVVB8jYEUgavYWr8ZSh
+X7y725aoNLPMpEhKAuhDRLVFebZJmXmQenEMWT+D2kDeEeirH1GJJ7M8ggB5RF2x
+G4hYkxP0tUj3mqkeJUpchtpOVq2bFW4qrk1XNegGUk6foh7CulF/X+Jl2OXQr2ec
+2GLxGQWr3rgpRp+ZkovMmpJ2KEl6SDwtaQixLCW50A4/BusMKOqa9RLPYhRBfOo8
+lpcRdDcUfyliIxGxR8Sy7tFz6sVcABzr+91KPz1rNArSfMOZ8s37mqihLt9ZSqex
+iPOjtXNHj54QRNhCtyatlWqtHN0Btwhv/Dk2+j6Aq5NhOV4o7KgggMyqn9ljNMdQ
+b2dGTjyyxPeFGd8Ur64CcC93UYxHuZtl7fFWZeGE5/FsJiZ2OgLy/BdGUziQTGzu
+UvIgoMNvP/MGr8C+v/e8JfVUFcqifbRGxlx6bQXtumnn791zC2/pQv7VnKI93yO4
+UhpL4b6SILkocdOWU4d+MAsxpnWDbRG6sjZdWQ2qWlzJerZSbNI0PmnM/eTU6yRh
+gOeKwZFmSRQfoe0mK17YiFW3Vi8xntrnNQgMF4wkv81bCEYOpheok9rU6iAeGR6g
+bhfGQEE2wc9S+LATh9h8/U7ZPL+82F9urFN3/q03PHfUxT332H/Moyt/nSXqLiMY
+q30IXeg5gRIq88WJ7lgd
+=CczU
 -----END PGP SIGNATURE-----
 
---neYutvxvOLaeuPCA--
+--Qbvjkv9qwOGw/5Fx--
