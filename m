@@ -1,90 +1,32 @@
-From: Kyungmin Park <kmpark@infradead.org>
-Subject: Re: [PATCH v7 0/5] usb: phy: samsung: Introducing usb phy driver for
- samsung SoCs
-Date: Fri, 9 Nov 2012 21:36:33 +0900
-Message-ID: <CAH9JG2X1a8MqBpnk8uHRjsGnaD7uob5GBhUh_aS5iCprEvi2XQ@mail.gmail.com>
-References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
-	<20121109115440.GC8078@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20121109115440.GC8078@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Praveen Paneri <p.paneri@samsung.com>, l.majewski@samsung.com, linux-samsung-soc@vger.kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, grant.likely@secretlab.ca, kgene.kim@samsung.com, thomas.abraham@linaro.org, gautam.vivek@samsung.com, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: [PATCH] of: Add vendor prefix for ON Semiconductor Corp.
+Date: Fri,  9 Nov 2012 14:07:01 +0100
+Message-ID: <1352466421-27480-1-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 9, 2012 at 8:54 PM, Felipe Balbi <balbi@ti.com> wrote:
-> Hi,
->
-> On Tue, Oct 30, 2012 at 10:27:32AM +0530, Praveen Paneri wrote:
->> Changes from v6:
->> Modified register definitions according to the existing ones.
->> Changed default PHY clk selection for SoCs.
->> Improved binding text and rebased to the latest usb-next.
->>
->> Changes from v5:
->> Moved clk_get() to driver's probe function. Now reference clock frequency
->> selection value is stored in samsung_usbphy structure for later use. Used
->> IS_ENABLED() instead of #ifdef in samsung_usbphy_get_driver_data().
->>
->> Changes from v4:
->> Moved header file contents to driver's source file
->> Removed unnecessary print message from driver's probe function
->> Dropped the Free Software Foundation address from the header
->> Changed the platform data code to use __initdata
->>
->> Changes from v3:
->> Replaced susbsys_initcall()/module_exit() by module_platform_driver().
->> Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
->> is registered
->> Removed unnecessary devm_usb_put_phy() call from the hsotg driver remove.
->>
->> Changes from v2:
->> Changed the driver filenames to samsung-usbphy
->> Changed 's3c' to 'samsung' for platform device as well as platform data
->> Moved platform data structure to a separate file
->> Rectified coding style related errors
->>
->> Changes from v1:
->> Rebased patches to latest usb-next branch
->> Changed the name 'sec_usbphy' to 'samsung_usbphy'
->>
->> This patch set introduces a phy driver for samsung SoCs. It uses the existing
->> transceiver infrastructure to provide phy control functions. Use of this driver
->> can be extended for usb host phy as well. Over the period of time all the phy
->> related code for most of the samsung SoCs can be integrated here.
->> Removing the existing phy code from mach-s3c64xx. Same can be done for other SoCs
->> when they start supporting this phy driver.
->> This driver is tested with smdk6410 and Exynos4210(with DT).
->>
->> Praveen Paneri (5):
->>   usb: phy: samsung: Introducing usb phy driver for hsotg
->>   usb: s3c-hsotg: Adding phy driver support
-For usb parts:
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+The used vendor prefix corresponds to the stock symbol (ONNN) for ON
+Semiconductor Corp.
 
->>   ARM: S3C64XX: Removing old phy setup code
->>   ARM: S3C64XX: Enabling samsung-usbphy driver
->>   ARM: Exynos4210: Enabling samsung-usbphy driver
->
-> guys I can't wait any longer. If I don't get proper Acks today, I will
-> go ahead without all the PHY changes from Samsung :-s
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-To Praveen,
-
-To remove these dependency and merge issue, please send patches for
-each subsystem. In this case, usb patches for usb tree and others are
-for arm arch.
-
-Thank you,
-Kyungmin Park
->
-> --
-> balbi
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac2c2c4..deba8d0 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -34,6 +34,7 @@ national	National Semiconductor
+ nintendo	Nintendo
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
++onnn	ON Semiconductor Corp.
+ picochip	Picochip Ltd
+ powervr	Imagination Technologies
+ qcom	Qualcomm, Inc.
+-- 
+1.8.0
