@@ -1,94 +1,59 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Sat, 10 Nov 2012 01:29:08 +1100
-Message-ID: <20121109142908.GB4696@truffula.fritz.box>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
- <CAD=GYpbeKtW37Cj9cXr8F7F83d9Fgs-moqu9p6cOaPE1VxwbSg@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v2 1/5] ARM: kernel: smp_setup_processor_id() updates
+Date: Fri,  9 Nov 2012 14:34:10 +0000
+Message-ID: <1352471654-20207-2-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=GYpbeKtW37Cj9cXr8F7F83d9Fgs-moqu9p6cOaPE1VxwbSg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Joel A Fernandes <agnel.joel@gmail.com>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2012 at 12:32:09AM -0500, Joel A Fernandes wrote:
-> Hi Pantelis,
-> 
-> I hope I'm not too late to reply as I'm traveling.
-> 
-> On Nov 6, 2012, at 5:30 AM, Pantelis Antoniou
-> <panto@antoniou-consulting.com> wrote:
-> 
-> >> Joanne has purchased one of Jane's capes and packaged it into a rugged
-> >> case for data logging. As far as Joanne is concerned, the BeagleBone and
-> >> cape together are a single unit and she'd prefer a single monolithic FDT
-> >> instead of using an FDT overlay.
-> >> Option A: Using dtc, she uses the BeagleBone and cape .dts source files
-> >>        to generate a single .dtb for the entire system which is
-> >>        loaded by U-Boot. -or-
-> >
-> > Unlikely.
-> >> Option B: Joanne uses a tool to merge the BeagleBone and cape .dtb files
-> >>        (instead of .dts files), -or-
-> > Possible but low probability.
-> >
-> >> Option C: U-Boot loads both the base and overlay FDT files, merges them,
-> >>        and passes the resolved tree to the kernel.
-> >>
-> >
-> > Could be made to work. Only really required if Joanne wants the
-> > cape interface to work for u-boot too. For example if the cape has some
-> > kind of network interface that u-boot will use to boot from.
-> >
-> 
-> I love Grant's hashing idea a lot keeping the phandle problem for
-> compile time and not requiring fixups.
+This patch applies some basic changes to the smp_setup_processor_id()
+ARM implementation to make the code that builds cpu_logical_map more
+uniform across the kernel.
 
-Well, using a hash only moves the problem of fixed phandles to a
-problem of fixed node paths.  The details of node paths are, if
-anything, more mutable than phandles.
+The function now prints the full extent of the boot CPU MPIDR[23:0] and
+initializes the cpu_logical_map for CPUs up to nr_cpu_ids.
 
-[snip]
-> Alternatively to hashing, reading David Gibson's paper I followed,
-> phandle is supposed to 'uniquely' identity node. I wonder why the node
-> name itself is not sufficient to uniquely identify.
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+---
+ arch/arm/kernel/setup.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Node names are not unique, not even close.  If you have two similar
-NICs in slot 0 of two different PCI domains, they'll almost certainly
-both be called 'ethernet@0,0'.  Similar examples abound on other
-buses.  Node paths are unique, but they are long.
-
-The other big reason for phandles in OF history is that they would be
-more stable than paths.  The device tree could be manipulated during
-OF runtime, but phandles would generally be internal pointers in OF
-and so remain a consistent handle even if the node moved in the tree.
-That's not really relevant for flat trees, but we need to work with
-the same structures.
-
-> The code that does
-> the tree walking can then just strcmp the node name while it walks the
-> tree instead of having to find a node with a phandle number. I guess
-> the reason is phandles are small to store as data values. Another
-> approach can be to arrange the string block in alphabetical order
-> (unless it already is),
-
-They're not, and doing so would be a painful change to maintain
-compatibility across.  And in any case only property names use the
-strings block, not node names.
-
-> and store phandle as index of the node name
-> referenced relative to the starting of the strong block. This will not
-> affect nodes in dtb being moved around since they will still have the
-> same index value. the problem being adding or removing nodes Changes
-> the index of all other nodes in the string block as well.. Hmm.
-
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index da1d1aa..ede7c84 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -426,13 +426,14 @@ int __cpu_logical_map[NR_CPUS];
+ void __init smp_setup_processor_id(void)
+ {
+ 	int i;
+-	u32 cpu = is_smp() ? read_cpuid_mpidr() & 0xff : 0;
++	u32 mpidr = read_cpuid_mpidr() & 0xffffff;
++	u32 cpu = is_smp() ? mpidr & 0xff : 0;
+ 
+ 	cpu_logical_map(0) = cpu;
+-	for (i = 1; i < NR_CPUS; ++i)
++	for (i = 1; i < nr_cpu_ids; ++i)
+ 		cpu_logical_map(i) = i == cpu ? 0 : i;
+ 
+-	printk(KERN_INFO "Booting Linux on physical CPU %d\n", cpu);
++	printk(KERN_INFO "Booting Linux on physical CPU 0x%x\n", mpidr);
+ }
+ 
+ static void __init setup_processor(void)
 -- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+1.7.12
