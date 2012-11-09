@@ -1,81 +1,94 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: [PATCH] backlight: Add of_find_backlight_by_node() function
-Date: Fri,  9 Nov 2012 15:04:38 +0100
-Message-ID: <1352469878-4532-1-git-send-email-thierry.reding@avionic-design.de>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Sat, 10 Nov 2012 01:29:08 +1100
+Message-ID: <20121109142908.GB4696@truffula.fritz.box>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+ <CAD=GYpbeKtW37Cj9cXr8F7F83d9Fgs-moqu9p6cOaPE1VxwbSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=GYpbeKtW37Cj9cXr8F7F83d9Fgs-moqu9p6cOaPE1VxwbSg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Joel A Fernandes <agnel.joel@gmail.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This function finds the struct backlight_device for a given device tree
-node. A dummy function is provided so that it safely compiles out if OF
-support is disabled.
+On Fri, Nov 09, 2012 at 12:32:09AM -0500, Joel A Fernandes wrote:
+> Hi Pantelis,
+> 
+> I hope I'm not too late to reply as I'm traveling.
+> 
+> On Nov 6, 2012, at 5:30 AM, Pantelis Antoniou
+> <panto@antoniou-consulting.com> wrote:
+> 
+> >> Joanne has purchased one of Jane's capes and packaged it into a rugged
+> >> case for data logging. As far as Joanne is concerned, the BeagleBone and
+> >> cape together are a single unit and she'd prefer a single monolithic FDT
+> >> instead of using an FDT overlay.
+> >> Option A: Using dtc, she uses the BeagleBone and cape .dts source files
+> >>        to generate a single .dtb for the entire system which is
+> >>        loaded by U-Boot. -or-
+> >
+> > Unlikely.
+> >> Option B: Joanne uses a tool to merge the BeagleBone and cape .dtb files
+> >>        (instead of .dts files), -or-
+> > Possible but low probability.
+> >
+> >> Option C: U-Boot loads both the base and overlay FDT files, merges them,
+> >>        and passes the resolved tree to the kernel.
+> >>
+> >
+> > Could be made to work. Only really required if Joanne wants the
+> > cape interface to work for u-boot too. For example if the cape has some
+> > kind of network interface that u-boot will use to boot from.
+> >
+> 
+> I love Grant's hashing idea a lot keeping the phandle problem for
+> compile time and not requiring fixups.
 
-Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
----
- drivers/video/backlight/backlight.c | 17 +++++++++++++++++
- include/linux/backlight.h           | 10 ++++++++++
- 2 files changed, 27 insertions(+)
+Well, using a hash only moves the problem of fixed phandles to a
+problem of fixed node paths.  The details of node paths are, if
+anything, more mutable than phandles.
 
-diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-index 297db2f..0d1ed4f 100644
---- a/drivers/video/backlight/backlight.c
-+++ b/drivers/video/backlight/backlight.c
-@@ -370,6 +370,23 @@ void backlight_device_unregister(struct backlight_device *bd)
- }
- EXPORT_SYMBOL(backlight_device_unregister);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static int of_parent_match(struct device *dev, void *data)
-+{
-+	return dev->parent && dev->parent->of_node == data;
-+}
-+
-+struct backlight_device *of_find_backlight_by_node(struct device_node *node)
-+{
-+	struct device *dev;
-+
-+	dev = class_find_device(backlight_class, NULL, node, of_parent_match);
-+
-+	return dev ? to_backlight_device(dev) : NULL;
-+}
-+EXPORT_SYMBOL(of_find_backlight_by_node);
-+#endif
-+
- static void __exit backlight_class_exit(void)
- {
- 	class_destroy(backlight_class);
-diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-index 5ffc6dd..11840e9 100644
---- a/include/linux/backlight.h
-+++ b/include/linux/backlight.h
-@@ -134,4 +134,14 @@ struct generic_bl_info {
- 	void (*kick_battery)(void);
- };
- 
-+#if IS_ENABLED(CONFIG_OF)
-+struct backlight_device *of_find_backlight_by_node(struct device_node *node);
-+#else
-+static inline struct backlight_device *
-+of_find_backlight_by_node(struct device_node *node)
-+{
-+	return NULL;
-+}
-+#endif
-+
- #endif
+[snip]
+> Alternatively to hashing, reading David Gibson's paper I followed,
+> phandle is supposed to 'uniquely' identity node. I wonder why the node
+> name itself is not sufficient to uniquely identify.
+
+Node names are not unique, not even close.  If you have two similar
+NICs in slot 0 of two different PCI domains, they'll almost certainly
+both be called 'ethernet@0,0'.  Similar examples abound on other
+buses.  Node paths are unique, but they are long.
+
+The other big reason for phandles in OF history is that they would be
+more stable than paths.  The device tree could be manipulated during
+OF runtime, but phandles would generally be internal pointers in OF
+and so remain a consistent handle even if the node moved in the tree.
+That's not really relevant for flat trees, but we need to work with
+the same structures.
+
+> The code that does
+> the tree walking can then just strcmp the node name while it walks the
+> tree instead of having to find a node with a phandle number. I guess
+> the reason is phandles are small to store as data values. Another
+> approach can be to arrange the string block in alphabetical order
+> (unless it already is),
+
+They're not, and doing so would be a painful change to maintain
+compatibility across.  And in any case only property names use the
+strings block, not node names.
+
+> and store phandle as index of the node name
+> referenced relative to the starting of the strong block. This will not
+> affect nodes in dtb being moved around since they will still have the
+> same index value. the problem being adding or removing nodes Changes
+> the index of all other nodes in the string block as well.. Hmm.
+
 -- 
-1.8.0
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
