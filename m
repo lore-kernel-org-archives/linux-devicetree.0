@@ -1,98 +1,84 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 4/6] ASoC: wm8974: add SPI as a possible bus master
-Date: Fri, 9 Nov 2012 14:38:42 +0000
-Message-ID: <20121109143841.GG23807@opensource.wolfsonmicro.com>
-References: <1352469625-32024-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352469625-32024-5-git-send-email-s.trumtrar@pengutronix.de>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 2/5] ARM: kernel: add device tree init map function
+Date: Fri, 9 Nov 2012 14:42:59 +0000
+Message-ID: <20121109144259.GB17405@mudshark.cambridge.arm.com>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6419780030256719707=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352469625-32024-5-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 09, 2012 at 02:34:11PM +0000, Lorenzo Pieralisi wrote:
+> When booting through a device tree, the kernel cpu logical id map can be
+> initialized using device tree data passed by FW or through an embedded blob.
+> 
+> This patch adds a function that parses device tree "cpu" nodes and
+> retrieves the corresponding CPUs hardware identifiers (MPIDR).
+> It sets the possible cpus and the cpu logical map values according to
+> the number of CPUs defined in the device tree and respective properties.
+> 
+> The device tree HW identifiers are considered valid if all CPU nodes contain
+> a "reg" property and the DT defines a CPU node that matches the MPIDR[23:0]
+> of the boot CPU.
+> 
+> The primary CPU is assigned cpu logical number 0 to keep the current convention
+> valid.
+> 
+> Current bindings documentation is included in the patch:
+> 
+> Documentation/devicetree/bindings/arm/cpus.txt
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
---===============6419780030256719707==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
-Content-Disposition: inline
+[...]
 
+> +List of possible "compatible" string ids:
+> +
+> +<arm, arm1020>
+> +<arm, arm1020e>
+> +<arm, arm1022>
+> +<arm, arm1026>
+> +<arm, arm720>
+> +<arm, arm740>
+> +<arm, arm7tdmi>
+> +<arm, arm920>
+> +<arm, arm922>
+> +<arm, arm925>
+> +<arm, arm926>
+> +<arm, arm940>
+> +<arm, arm946>
+> +<arm, arm9tdmi>
+> +<arm, fa526>
+> +<arm, feroceon>
+> +<arm, mohawk>
+> +<arm, sa110>
+> +<arm, sa1100>
+> +<arm, xsc3>
+> +<arm, xscale>
+> +<arm, cortex-a5>
+> +<arm, cortex-a7>
+> +<arm, cortex-a8>
+> +<arm, cortex-a9>
+> +<arm, cortex-a15>
+> +<arm, arm1136>
+> +<arm, arm11-mpcore>
 
---RMedoP2+Pr6Rq0N2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is this supposed to be an exhaustive list? What about 1156 and 1176? Also,
+"arm11mpcore" should probably be used instead of "arm11-mpcore".
 
-On Fri, Nov 09, 2012 at 03:00:23PM +0100, Steffen Trumtrar wrote:
-
-> The wm8974 can be controlled via i2c or spi. The current driver only supp=
-orts
-> i2c. Add SPI as possible bus.
->=20
-> As the driver has to distinguish the bus type, pass this info via the wm8=
-974_priv.
-> This reverts c2562a8e3b5f871ad0b73caf98bb7541e8724efc, because the driver=
- now
-> needs it back.
-
-Don't just quote raw commit IDs, *especially* not full ones, as they're
-completely illegible to humans.  Someone reading the changelog needs to
-be able to understand what this commit is and why the driver needs it
-back.
-
-> -	ret =3D snd_soc_codec_set_cache_io(codec, 7, 9, SND_SOC_I2C);
-> +	ret =3D snd_soc_codec_set_cache_io(codec, 7, 9, wm8974->control_type);
-
-We should be converting things to regmap if we're going to do this -
-we're trying to phase out the ASoC-specific I/O and this makes the code
-simpler anyway as the core will just be able to get the regmap from the
-struct device without bouncing information around through the private
-data and so on.
-
---RMedoP2+Pr6Rq0N2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQnRT6AAoJELSic+t+oim9VnwP/0Rm4as9QoXb3GOYVwLWpWQp
-E46DtazWxy5GtG53aUv9ty4UXVvpTi8/meVaIiuC+6ATO3jZY7XRA5KIl0CQZ1DM
-fxLukmMLFbsJolBrr0Q69ifp5/zkKt9cOx/tIHxOXUgjWel66TylOCORKUtcdNUI
-VZWGnriCcEZtrSF35BACydaUpxbPCv+euCPHYEOgFJ8vWDTIW9P8xPx7+YpIsU9E
-NYulXihdDNuo+E/u0j4pqx4gYkyuREeWqBsiLv3jHk6eO+cmhLGjQ0Qjj0aQdLUB
-ckv8koiMAjzNCO+lMTM0PwemLjR3AON90xEZzxME+yeJVZFhpFJKQQoPjhgD3nU8
-1RmWCtsNdtpApPs4nPfebigHDTrfxoz9kVBg98kE1bGb7wYco5lTaq8GPXaSjVwv
-xPjaWZgJUt9ePKgoF4MgS4I1nrTkwnXRm28S/G+fp8pMgbGzUfNTURciAUtjBBv/
-NZ0qwztz8SgutBEyG7sDLlL/XNzAMKI8EgnUfLynBA9Z+WKcqlqSnG4zDTv3k5Vr
-9RlC5PDwBLsmoFJdBe4RNXnHDN0X+dRU+rR31s+uBePR81XDwBwo67Trs8OwR2Pi
-aHlRwDBMbTfb3+YHjN2h/Ss3nIxvNdp7kosCr00epoDYnfVZPxmgBnNsTw5BHZPF
-Jt/EwFyqqrPL9/YK9YL7
-=ZHCS
------END PGP SIGNATURE-----
-
---RMedoP2+Pr6Rq0N2--
-
---===============6419780030256719707==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6419780030256719707==--
+Will
