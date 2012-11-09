@@ -1,84 +1,55 @@
-From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v7 5/8] fbmon: add videomode helpers
-Date: Fri, 9 Nov 2012 16:54:16 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3E9E614A@DBDE01.ent.ti.com>
-References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
- <1351675689-26814-6-git-send-email-s.trumtrar@pengutronix.de>
- <A73F36158E33644199EB82C5EC81C7BC3E9E1B39@DBDE01.ent.ti.com>
- <20121108212545.GA32605@pengutronix.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Fri, 9 Nov 2012 17:02:05 +0000
+Message-ID: <CACxGe6vTJHvZwZ383DE5-k+ksv1nGeuLynADuQC+D2eySj7gWQ@mail.gmail.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <50999145.2070306@wwwdotorg.org> <5099B150.7070808@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121108212545.GA32605-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Valkeinen, Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5099B150.7070808@firmworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+On Wed, Nov 7, 2012 at 12:54 AM, Mitch Bradley <wmb@firmworks.com> wrote:
+> On 11/6/2012 12:37 PM, Stephen Warren wrote:
+>> This proposal is very oriented at an overlay-based approach. I'm not
+>> totally convinced that a pure overlay approach (as in how dtc does
+>> overlayed DT nodes) will be flexible enough, but would love to be
+>> persuaded. Again see below.
+>
+>
+> An overlay approach will not be powerful enough to solve the sorts of
+> problems that occur when a product goes into full production, becomes a
+> family, and starts to evolve.  Issues like second-source parts that
+> aren't quite compatible and need to be detected and reported,
+> board-stuff options for different customer profiles, speed grades of
+> parts that aren't properly probeable but instead need to be identified
+> by some subterfuge, the list of tedious issues goes on and on.
+>
+> It's nice to pretend that the world fits into a few coherent simple
+> use cases, but 30 years of experience shipping computer product families
+> proves otherwise.  You need a programming language to solve the full
+> set of problems - which I why the device tree is designed so it can
+> be generated and modified by a program.
 
-On Fri, Nov 09, 2012 at 02:55:45, Steffen Trumtrar wrote:
-> Hi!
-> 
-> On Wed, Oct 31, 2012 at 03:30:03PM +0000, Manjunathappa, Prakash wrote:
-> > Hi Steffen,
-> > 
-> > On Wed, Oct 31, 2012 at 14:58:05, Steffen Trumtrar wrote:
-> > > +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> > > +int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
-> > > +{
-> > > +	fbmode->xres = vm->hactive;
-> > > +	fbmode->left_margin = vm->hback_porch;
-> > > +	fbmode->right_margin = vm->hfront_porch;
-> > > +	fbmode->hsync_len = vm->hsync_len;
-> > > +
-> > > +	fbmode->yres = vm->vactive;
-> > > +	fbmode->upper_margin = vm->vback_porch;
-> > > +	fbmode->lower_margin = vm->vfront_porch;
-> > > +	fbmode->vsync_len = vm->vsync_len;
-> > > +
-> > > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
-> > > +
-> > > +	fbmode->sync = 0;
-> > > +	fbmode->vmode = 0;
-> > > +	if (vm->hah)
-> > > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
-> > > +	if (vm->vah)
-> > > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
-> > > +	if (vm->interlaced)
-> > > +		fbmode->vmode |= FB_VMODE_INTERLACED;
-> > > +	if (vm->doublescan)
-> > > +		fbmode->vmode |= FB_VMODE_DOUBLE;
-> > > +
-> > 
-> > "pixelclk-inverted" property of the panel is not percolated fb_videomode.
-> > Please let me know if I am missing something.
-> > 
-> 
-> The next version is almost finished. Only thing I'm missing is this.
-> And I actually do not know which flag would represent an inverted pixelclock
-> in fb_videomode. Does anybody have any idea what I have to do here?
-> 
-> 	if (vm->pixelclk_pol)
-> 		fbmode->sync = ???
-> 
-> That's as far as I have come and I don't see a flag that seems right.
-> Is this even a valid property of fb_videomode?
-> 
+I'm not going to argue with that. There is nothing saying that the
+overlay wouldn't be generated or applied by a script. However, I do
+strongly think that the data model needs to be independent of any tool
+or execution environment used to manipulate it. I certainly am not
+interested in encoding scripts or bytecode into the tree - the
+opposite of the approach used by ACPI which must execute AML to even
+retrieve the device tree. I like the overlay approach because it is
+conceptually straightforward and provides a working model of how
+changes could be made from userspace while still being usable by
+firmware.
 
-Thanks for considering it, I see IMX addresses it as proprietary FB_SYNC_ flag.
-FB_SYNC_CLK_INVERT: arch/arm/plat-mxc/include/mach/mx3fb.h
+An alternate approach from userspace would be to use a live virtual
+filesystem to manipulate the device tree, though that approach only
+applies to Linux userspace. Firmware would still need its own
+approach.
 
-Thanks,
-Prakash
+g.
