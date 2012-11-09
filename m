@@ -1,68 +1,65 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2 04/10] pwm: pwm-tiecap: Add device-tree binding
- support for APWM driver
-Date: Fri, 9 Nov 2012 09:12:55 +0100
-Message-ID: <20121109081255.GC26007@avionic-0098.mockup.avionic-design.de>
-References: <1352361197-27442-1-git-send-email-avinashphilip@ti.com>
- <1352361197-27442-5-git-send-email-avinashphilip@ti.com>
- <20121109075219.GA22224@avionic-0098.mockup.avionic-design.de>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v7 0/8] of: add display helper
+Date: Fri, 9 Nov 2012 09:22:51 +0100
+Message-ID: <20121109082251.GA8598@pengutronix.de>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
+ <509C25B3.5060509@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="32u276st3Jlj2kUU"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121109075219.GA22224@avionic-0098.mockup.avionic-design.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, b-cousson@ti.com, hvaibhav@ti.com, anilkumar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, vaibhav.bedia@ti.com, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+In-Reply-To: <509C25B3.5060509@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 08, 2012 at 03:35:47PM -0600, Rob Herring wrote:
+> On 10/31/2012 04:28 AM, Steffen Trumtrar wrote:
+> > Hi!
+> > 
+> > Finally, v7 of the series.
+> > 
+> > Changes since v6:
+> > 	- get rid of some empty lines etc.
+> > 	- move functions to their subsystems
+> > 	- split of_ from non-of_ functions
+> > 	- add at least some kerneldoc to some functions
+> > 
+> > Regards,
+> > Steffen
+> > 
+> > 
+> > Steffen Trumtrar (8):
+> >   video: add display_timing struct and helpers
+> >   of: add helper to parse display timings
+> >   of: add generic videomode description
+> >   video: add videomode helpers
+> >   fbmon: add videomode helpers
+> >   fbmon: add of_videomode helpers
+> >   drm_modes: add videomode helpers
+> >   drm_modes: add of_videomode helpers
+> > 
+> >  .../devicetree/bindings/video/display-timings.txt  |  139 +++++++++++++++
+> >  drivers/gpu/drm/drm_modes.c                        |   78 +++++++++
+> >  drivers/of/Kconfig                                 |   12 ++
+> >  drivers/of/Makefile                                |    2 +
+> >  drivers/of/of_display_timings.c                    |  185 ++++++++++++++++++++
+> >  drivers/of/of_videomode.c                          |   47 +++++
+> 
+> Not sure why you moved this, but please move this back to drivers/video.
+> We're trying to move subsystem specific pieces out of drivers/of.
+> 
+> Rob
+> 
 
---32u276st3Jlj2kUU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hm, the of_xxx part always was in drivers/of, but I can move that. No problem.
 
-On Fri, Nov 09, 2012 at 08:52:19AM +0100, Thierry Reding wrote:
-> On Thu, Nov 08, 2012 at 01:23:11PM +0530, Philip, Avinash wrote:
-[...]
-> >  static int __devinit ecap_pwm_probe(struct platform_device *pdev)
->=20
-> __devinit can go away.
-[...]
-> >  static int __devexit ecap_pwm_remove(struct platform_device *pdev)
->=20
-> No __devexit please.
-[...]
-> >  	.remove =3D __devexit_p(ecap_pwm_remove),
->=20
-> No __devexit_p() please.
+Regards,
+Steffen
 
-Okay, ignore these comments. The annotation were not added in this patch
-so they can be removed in a separate patch. Or when Greg finally removes
-all traces of them.
-
-Thierry
-
---32u276st3Jlj2kUU
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQnLsHAAoJEN0jrNd/PrOhaDoP/1IecPaBxybYw3CLpAogOm+3
-XG5BlgNxwDRIH9ToLIs91szu21uikmD/d5YMforrCBhMHWXSCKwOgUfFFqoP9/lI
-tx8xXvczymB9tTjjU7j8zumDWxQOMbSxP3aZ0qysJSd2kqKEunocZJ8MfDGi6f+k
-Krf3RcdFTjLUSvHFcwWQLG8yw59jfYFDy8hk3srUJdFwFX32fCfliBBhiq8Qg1ux
-oHOSvbtAlFzHmsE5OfanTJt+L30Dq2gv95TLhC1KVw+9w5hC9qSicJ4/9BJ7ATN5
-CYYz1KC5Xi1nC48fHLKdYyJLbnopSVhlNCwcshygvpdw/n/tdePl3c1hi9oMj/5V
-sLPdTDnhUQlzjnev4lKFXBX5QMeGmwirzuC91LgfH37IG5Lbasv/3xvcmf9HLNpI
-/+clGz5Xxg7ECQzzIH8qg4X85/csICxIfOD87cyMlSsBxlVazRsX1I75AhEFzlhn
-KgfQJiw9r5sjJsFsxzkydPEMIqOxJZLxSxplF9khTnvQ8nQAOKhnmzNJ6J9VqDQP
-jtDjnH5DzbcnILS1S7kNqdxtufyOvKxo+qj75ewtb+w+Y7wUYH5K1OfoPCyq8wcF
-DxzjxksBBwGJqwoKOjkScgtfWJw1SFhfUun7pPorc1fdVXfXlKg9XuF5tOBVlnR3
-MTfB6BrPsyVSqscdb6yV
-=x33E
------END PGP SIGNATURE-----
-
---32u276st3Jlj2kUU--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
