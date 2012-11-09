@@ -1,106 +1,57 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v7 0/5] usb: phy: samsung: Introducing usb phy driver for
- samsung SoCs
-Date: Fri, 9 Nov 2012 13:54:40 +0200
-Message-ID: <20121109115440.GC8078@arwen.pp.htv.fi>
-References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
-Reply-To: <balbi@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Fri, 9 Nov 2012 12:06:02 +0000
+Message-ID: <CACxGe6s1ksem-6=fxVMeCoGw=vLN8n_j1CmfNJMdPS0e3fUxWw@mail.gmail.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <6AE080B68D46FC4BA2D2769E68D765B708174B7D@039-SN2MPN1-023.039d.mgd.msft.net>
+ <20121105232218.GA8284@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Qbvjkv9qwOGw/5Fx"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Praveen Paneri <p.paneri@samsung.com>
-Cc: linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, t.figa@samsung.com, gautam.vivek@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121105232218.GA8284-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Wood Scott-B07421 <B07421-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Qbvjkv9qwOGw/5Fx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 5, 2012 at 11:22 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi,
+>
+> * Tabi Timur-B04825 <B04825-KZfg59tc24xl57MIdRCFDg@public.gmane.org> [121105 13:42]:
+>> On Mon, Nov 5, 2012 at 2:40 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>>
+>> > Jane is building custom BeagleBone expansion boards called 'capes'. She
+>> > can boot the system with a stock BeagleBoard device tree, but additional
+>> > data is needed before a cape can be used. She could replace the FDT file
+>> > used by U-Boot with one that contains the extra data, but she uses the
+>> > same Linux system image regardless of the cape, and it is inconvenient
+>> > to have to select a different device tree at boot time depending on the
+>> > cape.
+>>
+>> What's wrong with having the boot loader detect the presence of the
+>> Cape and update the device tree accordingly?  We do this all the time
+>> in U-Boot.  Doing stuff like reading EEPROMs and testing for the
+>> presence of hardware is easier in U-Boot than in Linux.
+>>
+>> For configurations that can be determined by the boot loader, I'm not
+>> sure overlays are practical.
+>
+> I guess the beaglebone capes could be stackable and hotpluggable if
+> handled carefully enough.
 
-Hi,
+And even if it can't on the beaglebone, it will happen somewhere else.
+I don't want to exclude that use-case just because nobody thought
+about it.
 
-On Tue, Oct 30, 2012 at 10:27:32AM +0530, Praveen Paneri wrote:
-> Changes from v6:
-> Modified register definitions according to the existing ones.
-> Changed default PHY clk selection for SoCs.
-> Improved binding text and rebased to the latest usb-next.
->=20
-> Changes from v5:
-> Moved clk_get() to driver's probe function. Now reference clock frequency
-> selection value is stored in samsung_usbphy structure for later use. Used
-> IS_ENABLED() instead of #ifdef in samsung_usbphy_get_driver_data().
->=20
-> Changes from v4:
-> Moved header file contents to driver's source file
-> Removed unnecessary print message from driver's probe function
-> Dropped the Free Software Foundation address from the header
-> Changed the platform data code to use __initdata
->=20
-> Changes from v3:
-> Replaced susbsys_initcall()/module_exit() by module_platform_driver().
-> Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
-> is registered
-> Removed unnecessary devm_usb_put_phy() call from the hsotg driver remove.
->=20
-> Changes from v2:
-> Changed the driver filenames to samsung-usbphy
-> Changed 's3c' to 'samsung' for platform device as well as platform data
-> Moved platform data structure to a separate file
-> Rectified coding style related errors
->=20
-> Changes from v1:
-> Rebased patches to latest usb-next branch
-> Changed the name 'sec_usbphy' to 'samsung_usbphy'
->=20
-> This patch set introduces a phy driver for samsung SoCs. It uses the exis=
-ting
-> transceiver infrastructure to provide phy control functions. Use of this =
-driver
-> can be extended for usb host phy as well. Over the period of time all the=
- phy
-> related code for most of the samsung SoCs can be integrated here.
-> Removing the existing phy code from mach-s3c64xx. Same can be done for ot=
-her SoCs
-> when they start supporting this phy driver.=20
-> This driver is tested with smdk6410 and Exynos4210(with DT).
->=20
-> Praveen Paneri (5):
->   usb: phy: samsung: Introducing usb phy driver for hsotg
->   usb: s3c-hsotg: Adding phy driver support
->   ARM: S3C64XX: Removing old phy setup code
->   ARM: S3C64XX: Enabling samsung-usbphy driver
->   ARM: Exynos4210: Enabling samsung-usbphy driver
-
-guys I can't wait any longer. If I don't get proper Acks today, I will
-go ahead without all the PHY changes from Samsung :-s
-
---=20
-balbi
-
---Qbvjkv9qwOGw/5Fx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQnO8AAAoJEIaOsuA1yqREWpEP/0xJoFVVB8jYEUgavYWr8ZSh
-X7y725aoNLPMpEhKAuhDRLVFebZJmXmQenEMWT+D2kDeEeirH1GJJ7M8ggB5RF2x
-G4hYkxP0tUj3mqkeJUpchtpOVq2bFW4qrk1XNegGUk6foh7CulF/X+Jl2OXQr2ec
-2GLxGQWr3rgpRp+ZkovMmpJ2KEl6SDwtaQixLCW50A4/BusMKOqa9RLPYhRBfOo8
-lpcRdDcUfyliIxGxR8Sy7tFz6sVcABzr+91KPz1rNArSfMOZ8s37mqihLt9ZSqex
-iPOjtXNHj54QRNhCtyatlWqtHN0Btwhv/Dk2+j6Aq5NhOV4o7KgggMyqn9ljNMdQ
-b2dGTjyyxPeFGd8Ur64CcC93UYxHuZtl7fFWZeGE5/FsJiZ2OgLy/BdGUziQTGzu
-UvIgoMNvP/MGr8C+v/e8JfVUFcqifbRGxlx6bQXtumnn791zC2/pQv7VnKI93yO4
-UhpL4b6SILkocdOWU4d+MAsxpnWDbRG6sjZdWQ2qWlzJerZSbNI0PmnM/eTU6yRh
-gOeKwZFmSRQfoe0mK17YiFW3Vi8xntrnNQgMF4wkv81bCEYOpheok9rU6iAeGR6g
-bhfGQEE2wc9S+LATh9h8/U7ZPL+82F9urFN3/q03PHfUxT332H/Moyt/nSXqLiMY
-q30IXeg5gRIq88WJ7lgd
-=CczU
------END PGP SIGNATURE-----
-
---Qbvjkv9qwOGw/5Fx--
+g.
