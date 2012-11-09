@@ -1,337 +1,60 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: Querry on IIO/ADC DT based consumer device probe
-Date: Fri, 09 Nov 2012 15:48:05 +0100
-Message-ID: <509D17A5.3060704@metafoo.de>
-References: <CAHfPSqCnBw1ed97greGdMz-qexWbB2b5_NrbT6FFUeawvygWWg@mail.gmail.com> <20121108175318.1b79884f@avionic-0020.adnet.avionic-design.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 1/5] ARM: kernel: smp_setup_processor_id() updates
+Date: Fri, 9 Nov 2012 14:53:16 +0000
+Message-ID: <20121109145316.GA20298@e102568-lin.cambridge.arm.com>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20121109144446.GC17405@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121108175318.1b79884f-RM9K5IK7kjIzwNxdN0M6hqcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121109144446.GC17405@mudshark.cambridge.arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <Will.Deacon@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2012 05:53 PM, Alban Bedel wrote:
-> On Fri, 5 Oct 2012 14:37:01 +0530
-> Naveen Krishna Ch
-> <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Fri, Nov 09, 2012 at 02:44:46PM +0000, Will Deacon wrote:
+> On Fri, Nov 09, 2012 at 02:34:10PM +0000, Lorenzo Pieralisi wrote:
+> > This patch applies some basic changes to the smp_setup_processor_id()
+> > ARM implementation to make the code that builds cpu_logical_map more
+> > uniform across the kernel.
+> > 
+> > The function now prints the full extent of the boot CPU MPIDR[23:0] and
+> > initializes the cpu_logical_map for CPUs up to nr_cpu_ids.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > ---
+> >  arch/arm/kernel/setup.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> > index da1d1aa..ede7c84 100644
+> > --- a/arch/arm/kernel/setup.c
+> > +++ b/arch/arm/kernel/setup.c
+> > @@ -426,13 +426,14 @@ int __cpu_logical_map[NR_CPUS];
+> >  void __init smp_setup_processor_id(void)
+> >  {
+> >  	int i;
+> > -	u32 cpu = is_smp() ? read_cpuid_mpidr() & 0xff : 0;
+> > +	u32 mpidr = read_cpuid_mpidr() & 0xffffff;
 > 
->> Hello All,
->>
->> I'm trying to add an ADC driver under IIO/ADC.
->> Machine is DT based so, passing the ADC device as tree node and
->> consumer devices (thermistors) as child nodes via DT.
->>
->> I don't find a frame work to parse the child nodes and probe them like
->> I2C does using of/of_i2c.c
-> 
-> Here is my take at DT support in IIO, I wanted to submit that later on
-> after some more test and cleanup but you can see if it help you.
-> 
-> Alban
-> 
-> From 15decde13239f09101673b08aa0bd7e67e970b3c Mon Sep 17 00:00:00 2001
-> From: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Date: Thu, 18 Oct 2012 17:07:29 +0200
-> Subject: [PATCH] IIO: Add basic DT/devm support for in kernel users
-> 
-> Signed-off-by: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/iio-channel.txt        |   27 ++++
->  drivers/iio/inkern.c                               |  154 ++++++++++++++++++++
->  include/linux/iio/consumer.h                       |   63 ++++++++
->  3 files changed, 244 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/iio-channel.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/iio-channel.txt b/Documentation/devicetree/bindings/iio/iio-channel.txt
-> new file mode 100644
-> index 0000000..dc894f4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/iio-channel.txt
-> @@ -0,0 +1,27 @@
-> +Specifying IIO channels for devices
-> +===================================
-> +
-> +1) iio-channels property
-> +------------------------
-> +
-> +Nodes that makes use of IIO channels should specify them using one or more
-> +properties, each containing a iio-channels-list':
-> +
-> +	iio-channel-list ::= <single-iio-channel> [iio-channel-list]
-> +	single-iio-channel ::= <iio-channel-phandle> <iio-channel-specifier>
-> +	iio-channel-phandle : phandle to iio-channel controller node
-> +	iio-channel-specifier : Array of #iio-channel-cells specifying
-> +	                        specific IIO channel (controller specific)
+> We need that is_smp() check, otherwise we'll go and do a funky CP15
+> operation on CPU's that might not be too happy about it.
 
-I'd prefer something that is more in sync with what we have for other
-subsystems which have a provider-consumer relationship, like for example the
-clk and dma frameworks. Something like:
+It is there :-) I just added a local variable for mpidr to avoid reading
+it again later on when printing. The change moved the is_smp() check
+one line down.
 
-iio-channels = <&phandle1 &phandle2>;
-iio-channel-names = "voltage", "current";
-
-Also there is another major issue here. Devicetree is supposed to be
-operating system independent, IIO on the other hand is a Linux specific
-term. I'm not sure though yet what could be used instead. Maybe just
-'io-...'. I've put the devicetree list on Cc.
-
-> +
-> +GPIO properties should be named "[<name>-]iio-channels".  Exact
-
-IIO ;)
-
-> +meaning of each gpios property must be documented in the device tree
-> +binding for each device.
-> +
-> +2) iio device nodes
-> +------------------------
-> +
-> +Every IIO device must have #iio-channel-cells contain the size of the
-> +iio-channel-specifier.
-> +
-> +Currently #iio-channel-cells will always be 1 but this will most
-> +propably change in the future.
-> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> index 6d5194f..5986ef5 100644
-> --- a/drivers/iio/inkern.c
-> +++ b/drivers/iio/inkern.c
-> @@ -10,6 +10,7 @@
->  #include <linux/export.h>
->  #include <linux/slab.h>
->  #include <linux/mutex.h>
-> +#include <linux/of.h>
->  
->  #include <linux/iio/iio.h>
->  #include "iio_core.h"
-> @@ -404,3 +405,156 @@ err_unlock:
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(iio_get_channel_type);
-> +
-> +#ifdef CONFIG_OF
-> +static int of_dev_node_match(struct device *dev, void *data)
-> +{
-> +        return dev->parent ? dev->parent->of_node == data : 0;
-> +}
-> +
-> +int __of_get_named_iio_channel(struct iio_channel* channel,
-> +			       struct device_node *np,
-> +			       const char *propname,
-> +			       int index)
-> +{
-> +	struct device *dev;
-> +	struct of_phandle_args ph;
-> +	struct iio_dev *indio_dev;
-> +	int ret, channel_id = -1;
-> +
-> +	ret = of_parse_phandle_with_args(np, propname, "#iio-channel-cells",
-> +					 index, &ph);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev = bus_find_device(&iio_bus_type, NULL, ph.np,
-> +			      of_dev_node_match);
-> +	if (!dev)
-> +		return -EPROBE_DEFER;
-> +
-> +	if (ph.args_count > 0)
-> +		channel_id = ph.args[0];
-> +
-> +	indio_dev = dev_to_iio_dev(dev);
-> +	if (channel_id < 0 || channel_id >= indio_dev->num_channels)
-> +		return -EINVAL;
-> +
-> +	iio_device_get(indio_dev);
-> +	channel->indio_dev = indio_dev;
-> +	channel->channel = &indio_dev->channels[channel_id];
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * of_get_iio_channel() - get a iio channel from a device tree property
-> + * @np:           Device node to get the channel from
-> + * @propname:     The property to read
-> + * @index:        Index of the channel
-> + */
-> +struct iio_channel* of_get_named_iio_channel(struct device_node *np,
-> +                                             const char *propname,
-> +                                             int index)
-> +{
-> +	struct iio_channel* channel;
-> +	int ret;
-> +
-> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
-> +	if (!channel)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret = __of_get_named_iio_channel(channel, np, propname, index);
-> +	if (ret) {
-> +		kfree(channel);
-> +		return ERR_PTR(ret);
-> +	}
-> +	return channel;
-> +}
-> +
-> +EXPORT_SYMBOL_GPL(of_get_named_iio_channel);
-> +
-> +struct iio_channel* of_get_named_all_iio_channels(struct device_node *np,
-> +						  const char *propname)
-> +{
-> +	int ret, i, cnt;
-> +	struct iio_channel* channels;
-> +
-> +	cnt = of_iio_channel_named_count(np, propname);
-> +	if (cnt == 0)
-> +		return NULL;
-> +
-> +	channels = kzalloc((cnt+1) * sizeof(*channels), GFP_KERNEL);
-> +	if (!channels)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	for (i = 0 ; i < cnt ; i += 1) {
-> +		ret = __of_get_named_iio_channel(&channels[i],
-> +						 np, propname, i);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	if (ret) {
-> +		for ( ; i >= 0 ; i -= 1)
-> +			iio_device_put(channels[i].indio_dev);
-> +		kfree(channels);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	return channels;
-> +
-> +}
-> +EXPORT_SYMBOL_GPL(of_get_named_all_iio_channels);
-> +
-> +unsigned int of_iio_channel_named_count(struct device_node *np,
-> +					const char *propname)
-> +{
-> +        unsigned int cnt = 0;
-> +
-> +        do {
-> +                int ret;
-> +
-> +                ret = of_parse_phandle_with_args(np, propname, "#iio-channel-cells",
-> +                                                 cnt, NULL);
-> +                /* A hole in the gpios = <> counts anyway. */
-> +                if (ret < 0 && ret != -EEXIST)
-> +                        break;
-> +        } while (++cnt);
-> +
-> +        return cnt;
-> +
-> +}
-> +EXPORT_SYMBOL_GPL(of_iio_channel_named_count);
-> +
-> +struct iio_channel_devres {
-> +	struct iio_channel*	channel;
-> +};
-> +
-> +static void devm_iio_channel_release(struct device *dev, void *res)
-> +{
-> +	struct iio_channel_devres *dr = res;
-> +	iio_channel_release(dr->channel);
-> +}
-> +
-> +struct iio_channel* devm_iio_channel_get(struct device* dev, int index)
-> +{
-> +	struct iio_channel_devres *dr;
-> +	struct iio_channel *channel;
-> +
-> +	channel = of_get_iio_channel(dev->of_node, index);
-> +	if (IS_ERR(channel))
-> +		return channel;
-> +
-> +	dr = devres_alloc(devm_iio_channel_release, sizeof(*dr), GFP_KERNEL);
-> +	if (!dr) {
-> +		iio_channel_release(channel);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	dr->channel = channel;
-> +	devres_add(dev, dr);
-> +	return dr->channel;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_iio_channel_get);
-> +
-> +#endif
-> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-> index e4ff665..e2f958a 100644
-> --- a/include/linux/iio/consumer.h
-> +++ b/include/linux/iio/consumer.h
-> @@ -131,4 +131,67 @@ int iio_read_channel_scale(struct iio_channel *chan, int *val,
->  int iio_convert_raw_to_processed(struct iio_channel *chan, int raw,
->  	int *processed, unsigned int scale);
->  
-> +#ifdef CONFIG_OF
-> +struct iio_channel* of_get_named_iio_channel(struct device_node *np,
-> +                                             const char *propname,
-> +                                             int index);
-> +
-> +struct iio_channel* of_get_named_all_iio_channels(struct device_node *np,
-> +						  const char *propname);
-> +
-> +unsigned int of_iio_channel_named_count(struct device_node *np,
-> +					const char *propname);
-> +
-> +#else
-> +struct iio_channel* of_get_named_iio_channel(struct device_node *np,
-> +                                             const char *propname,
-> +                                             int index)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +struct iio_channel* of_get_named_all_iio_channels(struct device_node *np,
-> +						  const char *propname)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +unsigned int of_iio_channel_named_count(struct device_node *np,
-> +					const char *propname)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +/**
-> + * of_get_iio_channel() - get a iio channel from the device tree
-> + * @np:           Device node to get the channel from
-> + * @index:        Index of the channel
-> + */
-> +static inline struct iio_channel* of_get_iio_channel(struct device_node *np,
-> +						     int index)
-> +{
-> +	return of_get_named_iio_channel(np, "iio-channels", index);
-> +}
-> +
-> +/**
-> + * of_get_all_iio_channels() - get a iio channel from the device tree
-> + * @np:           Device node to get the channel from
-> + */
-> +static inline struct iio_channel* of_get_all_iio_channels(struct device_node *np)
-> +{
-> +	return of_get_named_all_iio_channels(np, "iio-channels");
-> +}
-> +
-> +/**
-> + * of_get_iio_channel() - get the number of iio channel from the device tree
-> + * @np:           Device node to get the number of channel from
-> + */
-> +static inline unsigned int of_iio_channel_count(struct device_node *np)
-> +{
-> +	return of_iio_channel_named_count(np, "iio-channels");
-> +}
-> +
-> +struct iio_channel* devm_iio_channel_get(struct device* dev, int index);
-> +
->  #endif
+Thanks,
+Lorenzo
