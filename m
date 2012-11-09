@@ -1,103 +1,180 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 6/6] ASoC: fsl: add imx-wm8974 machine driver
-Date: Fri, 9 Nov 2012 15:36:30 +0000
-Message-ID: <20121109153629.GK23807@opensource.wolfsonmicro.com>
-References: <1352469625-32024-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352469625-32024-7-git-send-email-s.trumtrar@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0255094436439317653=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352469625-32024-7-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
+Date: Fri, 9 Nov 2012 16:40:15 +0100
+Message-ID: <A97699E9-6C57-4A56-BC45-86A57CF2496F@antoniou-consulting.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <20121109022624.GI23553@truffula.fritz.box>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20121109022624.GI23553@truffula.fritz.box>
+Sender: linux-omap-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Hi David,
 
---===============0255094436439317653==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HTLCc13+3hfAZ6SL"
-Content-Disposition: inline
+On Nov 9, 2012, at 3:26 AM, David Gibson wrote:
 
+> On Mon, Nov 05, 2012 at 08:40:30PM +0000, Grant Likely wrote:
+>> Hey folks,
+>> 
+>> As promised, here is my early draft to try and capture what device
+>> tree overlays need to do and how to get there. Comments and
+>> suggestions greatly appreciated.
+>> 
+>> Device Tree Overlay Feature
+> 
+> Hrm.  So, you may yet convince me otherwise, but I'm really getting a
+> feeling of overengineering from this proposal so far.
+> 
+>> Purpose
+>> =======
+>> Sometimes it is not convenient to describe an entire system with a
+>> single FDT. For example, processor modules that are plugged into one or
+>> more modules (a la the BeagleBone), or systems with an FPGA peripheral
+>> that is programmed after the system is booted.
+>> 
+>> For these cases it is proposed to implement an overlay feature for the
+>> so that the initial device tree data can be modified by userspace at
+>> runtime by loading additional overlay FDTs that amend the original data.
+>> 
+>> User Stories
+>> ============
+> 
+> [snip]
+> 
+> The user stories mostly sound reasonable to me, but I don't know
+> enough about the hardware in question to know what they'll mean in
+> terms of what needs to be added to the base device tree.
+> 
+>> Summary points:
+>> - Create an FDT overlay data format and usage model
+>>  - SHALL reliable resolve or validate of phandles between base and
+>>    overlay trees
+> 
+> So, I'm not at all clear on what this proposed phandle validation
+> would involve.  I'm also not convinced it's as necessary as you
+> think, more on that below.
+> 
+> [snip - lots of technical stuff]
+> 
+> So, let me take a stab at this from a more bottom-up approach, and see
+> if we meet in the middle somewhere.  As I discussed in the other
+> thread with Daniel Mack, I can see two different operationso on the
+> fdt that might be useful in this context.  I think of them as "graft"
+> - which takes one fdt and adds it as a new subtree to an existing fdt
+> - and "overlay" where a new fdt adds or overrides arbitrary properties
+> in an existing tree.  Overlay is more or less what we do at the source
+> level in dtc already.
+> 
+> Overlay is obviously more general - you can add, change and possibly
+> delete any existing node or property.
+> 
+> Graft can only add new nodes and properties, not modify existing ones.
+> But that restriction comes with some advantages: reversing the
+> operation is just a matter of deleting the subtree with no extra
+> tracking info required.  It's simple to see how to have rules or
+> permissions about where subtrees can be grafted, and if the graft
+> point is identified by a label or id, rather than full path, it
+> automatically adapts to at least some changes in the base tree
+> structure.
+> 
+> I think graft is basically a safer operation, particular if we're
+> doing this at runtime with userspace passing in these fdt fragments.
+> In fact I'd go so far as to say if you really need the full overlay
+> functionality, then you really ought to be working at the bootloader
+> or early kernel load level to assemble the correct full device tree.
+> And as Mitch says, an existing programming language (C, OFW Forth or
+> whatever as you please) will serve you better for this sort of general
+> manipulation than a limited template system.
+> 
+> I also think graft will handle most of your use cases, although as I
+> said I don't fully understand the implications of some of them, so I
+> could be wrong.  So, the actual insertion of the subtree is pretty
+> trivial to implement.  phandles are the obvious other matter to be
+> dealt with.  I haven't found the right thread where what you've
+> envisaged so far is discussed, so here are things I can see:
+> 
 
---HTLCc13+3hfAZ6SL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+An overlay is more generic and can handle more complex cases.
+For our use case, a graft should work - with a few caveats.
 
-On Fri, Nov 09, 2012 at 03:00:25PM +0100, Steffen Trumtrar wrote:
+Due to the insertion/removal of the DT fragments other node's state
+change from 'disabled' <-> 'okay' and platform devices created or
+removed. This can be handled either via overlays, or via special
+casing it.
+ 
+> 1) Avoiding phandle collisions between main tree and subtree (or
+>   between subtrees).
+> 
+> I'm hopeful that this can be resolved just by establishing some
+> conventions about the ranges of phandles to be used for various
+> components.  I'd certainly be happy to add a directive to dtc which
+> enforces allocation of phandles within a specified range.
+> 
 
-> +static int imx_wm8974_dai_init(struct snd_soc_pcm_runtime *rtd)
-> +{
-> +	struct imx_wm8974_data *data = container_of(rtd->card,
-> +					struct imx_wm8974_data, card);
-> +	struct device *dev = rtd->card->dev;
-> +	int ret;
-> +
-> +	/* the pll stability peaks at N=8 and around 90MHz.
-> +	 * This values are best reached with a 12.288MHz or
-> +	 * 11.289MHz clock. As the first is closer to N=8 in
-> +	 * more situations, chose 12.288MHz as the target clock
-> +	 * (ref: datasheet section "Master Clock and Phase Locked Loop")*/
-> +	ret = snd_soc_dai_set_pll(rtd->codec_dai, 0, 0, data->clk_frequency,
-> +		12288000);
+Really doubtful IMHO. That will impose yet more structure on the DT
+syntax, and it will make it even more difficult for users.
 
-This seems far from ideal - it's starting the PLL at system boot and
-just leaving it running.  This will be power inefficient when the system
-is not playing audio as the PLL will be consuming power but not used for
-anything.  You could also do the same thing with the MCLK.
+We're talking about users that do understand the hardware, but can't
+really grok linux kernel development.
 
-Note also that a 12.288MHz clock is only suitable for 8kHz based sample
-rates, for CD audio 44.1kHz based rates like most media files 11.2896MHz
-should be chosen.  The driver may want to switch dynamically at runtime
-to support the widest possible range of rates.
+DT is used a structured h/w definition and seems to work just
+fine for these kind of users.
 
-> +	data->codec_clk = clk_get(&codec_pdev->dev, NULL);
-> +	if (IS_ERR(data->codec_clk)) {
+> 2) Resolving phandle references within a subtree
+> 
+> If we can handle (1) by convention, we don't need anything here, the
+> references are fine as is.
+> 
+> (3) Resolving phandle references from the subtree to the main tree.
+> 
+> So, I think this can actually be avoided, at least in cases where what
+> physical connections are available to the expansion module is well
+> defined.  The main causes to have external references are interrupts
+> and gpios.  Interrupts we handle by defining an interrupt specifier
+> space for the interrupts available on the expansion
+> socket/connector/bus/whatever.  In the master tree we then have
+> something like:
+> 
+> ...
+> 	expansion-socket@XXXX {
+> 		expansion-id = "SlotA";
+> 		interrupt-map = < /* map expansion irq specs to
+> 				     board interrupt controllers */ >;
+> 		interrupt-map-mask = < ... >;
+> 		ranges = < /* map expansion local addresses to global
+> 		              mmio */ >;
+> 	};
+> 
+> The subtree for the expansion module gets attached as a subnode of
+> this one.  It doesn't use explicit interrupt-parents but instead just
+> uses the expansion local irq specifiers, letting the parent be the
+> default which will bubble up to this socket node where the
+> interrupt-map will send them to the right places.
+> 
+> I don't recall the gpio bindings off hand, but as I recall we based
+> them off the irq tree bindings so we ought to be able to do the same
+> thing for them.
+> 
 
-devm_clk_get() - this'd free the clock that's leaked on removal.
+Please, don't try to do it this way. It is very debatable that we'll 
+identify all the types that will need special handling.
+For example for our cape use, we already have references that do not
+follow this example.
 
---HTLCc13+3hfAZ6SL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+A generic way to resolve references is what we need.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+> Likewise, if there are several interchangeable expansion sockets that
+> have some address bits hard wired to distinguish them, we can just use
+> socket local mmio addresses within the subtree and the ranges property
+> here will sort that out.
+> 
+> -- 
+> David Gibson			| I'll have my music baroque, and my code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
 
-iQIcBAEBAgAGBQJQnSKxAAoJELSic+t+oim9FlkP/3QBWznByoBL7pT4QOTkNzBl
-PAcA+6LGPTkLgFsJwOeC+jPfmQ/AFU1k7UW+jxQZm/KfTlxtkmIOJRcS32M6bCkA
-PyLoOFKea2KQYjrxaWrgGmYhNA1B1Dl6Ecos1rk4rmRytphGvNbeJ4tPPKAvpw8S
-W59yYRDPje/wcXVzywT9bbLWQhW5dbQmQa0yNwbYVEvzC+IYL4z7MMijdlMn86Dt
-m20jszZtnoVA16yxz18Be4aesILo8axjDMVNVTc3EjEZvjlEyUw+udged5KZsNwj
-ozTt2g3OFPQnFbCuBD4uDGuAVAB4o33QdqBdIxEOmt6xeYWhb/A8feUiMO03eOvv
-1qE80r3ywDZFuHl9zSGxerdqc9fndeykwXdCd7E6HmFeBthGBlnNi4UtftZtHdbL
-656VpVlwgVSmqOkd2qtE/UvHjhteC6z6Hjw8nwfpHORlm3cqOrtE1DFHcQXIyee4
-EnzmGW2t11IQ3dJ6Mcaoc8X1fISIYhlAq2sgbAB+x8+3YB+AOMWi1fcDhtaIyjCQ
-EKf3MXzW0kNGPgJwe1FYgZ4O8o09B0JgJ/vqvXVVJ0H0K6srChVpvTIRlN+DdrL1
-TgCp1igBUhXR6FWIS6zDp/sqj29J5ePuM1uzM0Us+0Mb8sOrZG3kLOcmmB5uwjr/
-H51jAHu31xAma5yFQYNN
-=VBF8
------END PGP SIGNATURE-----
-
---HTLCc13+3hfAZ6SL--
-
---===============0255094436439317653==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0255094436439317653==--
