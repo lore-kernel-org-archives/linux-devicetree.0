@@ -1,546 +1,103 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 2/2] mfd: stmpe: Add DT support in stmpe driver
-Date: Fri,  9 Nov 2012 21:01:55 +0530
-Message-ID: <52354a3da05aca599f47ad06c1b291ebc4f87c84.1352475033.git.viresh.kumar@linaro.org>
-References: <07672d0597e23fbc580843193415b89e81dba326.1352475033.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <07672d0597e23fbc580843193415b89e81dba326.1352475033.git.viresh.kumar@linaro.org>
-In-Reply-To: <07672d0597e23fbc580843193415b89e81dba326.1352475033.git.viresh.kumar@linaro.org>
-References: <07672d0597e23fbc580843193415b89e81dba326.1352475033.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>, Viresh Kumar <viresh.kumar@linaro.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 6/6] ASoC: fsl: add imx-wm8974 machine driver
+Date: Fri, 9 Nov 2012 15:36:30 +0000
+Message-ID: <20121109153629.GK23807@opensource.wolfsonmicro.com>
+References: <1352469625-32024-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352469625-32024-7-git-send-email-s.trumtrar@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0255094436439317653=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352469625-32024-7-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vipul Kumar Samar <vipulkumar.samar@st.com>
 
-This patch adds support to probe stmpe devices via DT. Bindings are mentioned in
-binding document.
+--===============0255094436439317653==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HTLCc13+3hfAZ6SL"
+Content-Disposition: inline
 
-Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- Documentation/devicetree/bindings/mfd/stmpe.txt | 121 +++++++++++
- drivers/mfd/stmpe-i2c.c                         |  23 ++-
- drivers/mfd/stmpe-spi.c                         |  15 ++
- drivers/mfd/stmpe.c                             | 264 +++++++++++++++++++++++-
- 4 files changed, 418 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/stmpe.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-new file mode 100644
-index 0000000..2986129
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-@@ -0,0 +1,121 @@
-+ST Microelectronics STMPE family
-+--------------------------------
-+
-+STMPE is an MFD device which may expose following inbuilt devices: gpio, keypad,
-+touchscreen, adc, pwm, rotator.
-+
-+stmpe:
-+-----
-+Required properties:
-+- compatible: Must be one of: "st,stmpe610", "st,stmpe801", "st,stmpe811",
-+  "st,stmpe1601", "st,stmpe2401", "st,stmpe2403",
-+- id: device id to distinguish between multiple STMPEs on the same board
-+
-+Optional properties:
-+- irq-trigger: IRQ trigger to use for the interrupt to the host
-+- irq-invert-polarity: bool, IRQ line is connected with reversed polarity
-+- autosleep: bool, bool to enable/disable stmpe autosleep
-+- autosleep-timeout: inactivity timeout in milliseconds for autosleep
-+- interrupts: interrupt number of the device, if interrupt is not via gpio
-+- irq-over-gpio: bool, true if gpio is used to get irq
-+- irq-gpios: gpio number over which irq will be requested (significant only if
-+  irq-over-gpio is true)
-+
-+stmpe-keypad:
-+--------------
-+Required properties in addition to those specified by the shared matrix-keyboard
-+bindings:
-+- compatible: Must be "stmpe,keypad"
-+
-+Optional properties:
-+- keypad,scan-count: number of key scanning cycles to confirm key data. Maximum
-+  is STMPE_KEYPAD_MAX_SCAN_COUNT.
-+- keypad,debounce-ms: debounce interval, in ms. Maximum is
-+  STMPE_KEYPAD_MAX_DEBOUNCE.
-+- keypad,no-autorepeat: bool, disable key autorepeat
-+
-+stmpe-gpio:
-+-----------
-+Required properties:
-+- compatible: Must be "stmpe,gpio"
-+
-+Optional properties:
-+- norequest-mask: bitmask specifying which GPIOs should _not_ be requestable due
-+  to different usage (e.g. touch, keypad) STMPE_GPIO_NOREQ_* macros can be used
-+  here.
-+
-+stmpe-ts:
-+-----------
-+Required properties:
-+- compatible: Must be "stmpe,ts"
-+
-+Optional properties:
-+- sample-time: ADC converstion time in number of clock.  (0 -> 36 clocks, 1 ->
-+  44 clocks, 2 -> 56 clocks, 3 -> 64 clocks, 4 -> 80 clocks, 5 -> 96 clocks, 6
-+  -> 144 clocks), recommended is 4.
-+- mod-12b: ADC Bit mode (0 -> 10bit ADC, 1 -> 12bit ADC)
-+- ref-sel: ADC reference source (0 -> internal reference, 1 -> external
-+  reference)
-+- adc-freq: ADC Clock speed (0 -> 1.625 MHz, 1 -> 3.25 MHz, 2 || 3 -> 6.5 MHz)
-+- ave-ctrl: Sample average control (0 -> 1 sample, 1 -> 2 samples, 2 -> 4
-+  samples, 3 -> 8 samples)
-+- touch-det-delay: Touch detect interrupt delay (0 -> 10 us, 1 -> 50 us, 2 ->
-+  100 us, 3 -> 500 us, 4-> 1 ms, 5 -> 5 ms, 6 -> 10 ms, 7 -> 50 ms) recommended
-+  is 3
-+- settling: Panel driver settling time (0 -> 10 us, 1 -> 100 us, 2 -> 500 us, 3
-+  -> 1 ms, 4 -> 5 ms, 5 -> 10 ms, 6 for 50 ms, 7 -> 100 ms) recommended is 2
-+- fraction-z: Length of the fractional part in z (fraction-z ([0..7]) = Count of
-+  the fractional part) recommended is 7
-+- i-drive: current limit value of the touchscreen drivers (0 -> 20 mA typical 35
-+  mA max, 1 -> 50 mA typical 80 mA max)
-+
-+stmpe-adc:
-+-----------
-+Required properties:
-+- compatible: Must be "stmpe,adc"
-+
-+stmpe-pwm:
-+-----------
-+Required properties:
-+- compatible: Must be "stmpe,pwm"
-+
-+stmpe-rotator:
-+-----------
-+Required properties:
-+- compatible: Must be "stmpe,rotator"
-+
-+Example:
-+-------
-+stmpe can be present over i2c or spi bus, so its node would be added as child
-+node of either of spi or i2c device.
-+
-+stmpe-devices should be added as child nodes of parent stmpe node.
-+
-+spi@e0100000 {
-+	<...>
-+	stmpe610@0 {
-+		status = "okay";
-+		compatible = "st,stmpe610";
-+		reg = <0>;
-+
-+		<.. spi controller specific data ..>
-+
-+		id = <0>;
-+		irq-over-gpio;
-+		irq-gpios = <&gpio1 6 0x4>;
-+		irq-trigger = <0x2>;
-+
-+		stmpe610-ts {
-+			compatible = "stmpe,ts";
-+			ts,sample-time = <4>;
-+			ts,mod-12b = <1>;
-+			ts,ref-sel = <0>;
-+			ts,adc-freq = <1>;
-+			ts,ave-ctrl = <1>;
-+			ts,touch-det-delay = <2>;
-+			ts,settling = <2>;
-+			ts,fraction-z = <7>;
-+			ts,i-drive = <1>;
-+		};
-+	};
-+};
-diff --git a/drivers/mfd/stmpe-i2c.c b/drivers/mfd/stmpe-i2c.c
-index 947a06a..aaa2da7 100644
---- a/drivers/mfd/stmpe-i2c.c
-+++ b/drivers/mfd/stmpe-i2c.c
-@@ -13,6 +13,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/types.h>
- #include "stmpe.h"
- 
-@@ -81,12 +82,28 @@ static const struct i2c_device_id stmpe_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, stmpe_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_dt_ids[] = {
-+	{ .compatible = "st,stmpe610", .data = &stmpe_i2c_id[0], },
-+	{ .compatible = "st,stmpe801", .data = &stmpe_i2c_id[1], },
-+	{ .compatible = "st,stmpe811", .data = &stmpe_i2c_id[2], },
-+	{ .compatible = "st,stmpe1601", .data = &stmpe_i2c_id[3], },
-+	{ .compatible = "st,stmpe2401", .data = &stmpe_i2c_id[4], },
-+	{ .compatible = "st,stmpe2403", .data = &stmpe_i2c_id[5], },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
-+#endif
-+
- static struct i2c_driver stmpe_i2c_driver = {
--	.driver.name	= "stmpe-i2c",
--	.driver.owner	= THIS_MODULE,
-+	.driver = {
-+		.name	= "stmpe-i2c",
-+		.owner	= THIS_MODULE,
- #ifdef CONFIG_PM
--	.driver.pm	= &stmpe_dev_pm_ops,
-+		.pm	= &stmpe_dev_pm_ops,
- #endif
-+		.of_match_table = of_match_ptr(stmpe_dt_ids),
-+	},
- 	.probe		= stmpe_i2c_probe,
- 	.remove		= __devexit_p(stmpe_i2c_remove),
- 	.id_table	= stmpe_i2c_id,
-diff --git a/drivers/mfd/stmpe-spi.c b/drivers/mfd/stmpe-spi.c
-index 9edfe86..1e2bff0 100644
---- a/drivers/mfd/stmpe-spi.c
-+++ b/drivers/mfd/stmpe-spi.c
-@@ -11,6 +11,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/types.h>
- #include "stmpe.h"
- 
-@@ -119,6 +120,19 @@ static const struct spi_device_id stmpe_spi_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, stmpe_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_dt_ids[] = {
-+	{ .compatible = "st,stmpe610", .data = (void *)STMPE610, },
-+	{ .compatible = "st,stmpe801", .data = (void *)STMPE801, },
-+	{ .compatible = "st,stmpe811", .data = (void *)STMPE811, },
-+	{ .compatible = "st,stmpe1601", .data = (void *)STMPE1601, },
-+	{ .compatible = "st,stmpe2401", .data = (void *)STMPE2401, },
-+	{ .compatible = "st,stmpe2403", .data = (void *)STMPE2403, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
-+#endif
-+
- static struct spi_driver stmpe_spi_driver = {
- 	.driver = {
- 		.name	= "stmpe-spi",
-@@ -126,6 +140,7 @@ static struct spi_driver stmpe_spi_driver = {
- #ifdef CONFIG_PM
- 		.pm	= &stmpe_dev_pm_ops,
- #endif
-+		.of_match_table = of_match_ptr(stmpe_dt_ids),
- 	},
- 	.probe		= stmpe_spi_probe,
- 	.remove		= __devexit_p(stmpe_spi_remove),
-diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
-index 761348c..aa5f0094 100644
---- a/drivers/mfd/stmpe.c
-+++ b/drivers/mfd/stmpe.c
-@@ -8,10 +8,14 @@
-  */
- 
- #include <linux/gpio.h>
-+#include <linux/err.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm.h>
- #include <linux/slab.h>
- #include <linux/mfd/core.h>
-@@ -965,6 +969,245 @@ static int __devinit stmpe_add_device(struct stmpe *stmpe,
- 			       NULL, stmpe->irq_base + irq, NULL);
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_keypad_ids[] = {
-+	{ .compatible = "stmpe,keypad" },
-+	{},
-+};
-+
-+static const struct of_device_id stmpe_gpio_ids[] = {
-+	{ .compatible = "stmpe,gpio" },
-+	{},
-+};
-+
-+static const struct of_device_id stmpe_ts_ids[] = {
-+	{ .compatible = "stmpe,ts" },
-+	{},
-+};
-+
-+static const struct of_device_id stmpe_adc_ids[] = {
-+	{ .compatible = "stmpe,adc" },
-+	{},
-+};
-+
-+static const struct of_device_id stmpe_pwm_ids[] = {
-+	{ .compatible = "stmpe,pwm" },
-+	{},
-+};
-+
-+static const struct of_device_id stmpe_rotator_ids[] = {
-+	{ .compatible = "stmpe,rotator" },
-+	{},
-+};
-+
-+static struct stmpe_keypad_platform_data *
-+get_keyboard_pdata_dt(struct device *dev, struct device_node *np)
-+{
-+	struct stmpe_keypad_platform_data *pdata;
-+	u32 val;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_warn(dev, "stmpe keypad kzalloc fail\n");
-+		return NULL;
-+	}
-+
-+	if (!of_property_read_u32(np, "keypad,scan-count", &val))
-+		pdata->scan_count = val;
-+	if (!of_property_read_u32(np, "keypad,debounce-ms", &val))
-+		pdata->debounce_ms = val;
-+	if (of_property_read_bool(np, "keypad,no-autorepeat"))
-+		pdata->no_autorepeat = true;
-+
-+	return pdata;
-+}
-+
-+static struct stmpe_gpio_platform_data *get_gpio_pdata_dt(struct device *dev,
-+		struct device_node *np)
-+{
-+	struct stmpe_gpio_platform_data *pdata;
-+	u32 val;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_warn(dev, "stmpe gpio kzalloc fail\n");
-+		return NULL;
-+	}
-+
-+	if (!of_property_read_u32(np, "gpio,norequest-mask", &val))
-+		pdata->norequest_mask = val;
-+
-+	/* assign gpio numbers dynamically */
-+	pdata->gpio_base = -1;
-+
-+	return pdata;
-+}
-+
-+static struct stmpe_ts_platform_data *get_ts_pdata_dt(struct device *dev,
-+		struct device_node *np)
-+{
-+	struct stmpe_ts_platform_data *pdata;
-+	u32 val;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_warn(dev, "stmpe ts kzalloc fail\n");
-+		return NULL;
-+	}
-+
-+	if (!of_property_read_u32(np, "ts,sample-time", &val))
-+		pdata->sample_time = val;
-+	if (!of_property_read_u32(np, "ts,mod-12b", &val))
-+		pdata->mod_12b = val;
-+	if (!of_property_read_u32(np, "ts,ref-sel", &val))
-+		pdata->ref_sel = val;
-+	if (!of_property_read_u32(np, "ts,adc-freq", &val))
-+		pdata->adc_freq = val;
-+	if (!of_property_read_u32(np, "ts,ave-ctrl", &val))
-+		pdata->ave_ctrl = val;
-+	if (!of_property_read_u32(np, "ts,touch-det-delay", &val))
-+		pdata->touch_det_delay = val;
-+	if (!of_property_read_u32(np, "ts,settling", &val))
-+		pdata->settling = val;
-+	if (!of_property_read_u32(np, "ts,fraction-z", &val))
-+		pdata->fraction_z = val;
-+	if (!of_property_read_u32(np, "ts,i-drive", &val))
-+		pdata->i_drive = val;
-+
-+	return pdata;
-+}
-+
-+static struct stmpe_variant_block *
-+match_variant_block(struct stmpe_variant_info *variant,
-+		enum stmpe_block blocks)
-+{
-+	int i;
-+
-+	for (i = 0; i < variant->num_blocks; i++) {
-+		struct stmpe_variant_block *block = &variant->blocks[i];
-+
-+		if (blocks & block->block)
-+			return block;
-+	}
-+	return NULL;
-+}
-+
-+static int stmpe_probe_config_dt(struct device *dev,
-+		struct stmpe_platform_data *pdata, struct device_node *np)
-+{
-+	static struct irq_domain *stmpe_irq_domain;
-+	enum of_gpio_flags flags;
-+	int irq_base;
-+
-+	irq_base = irq_alloc_descs(-1, 0, STMPE_NR_IRQS, 0);
-+	if (IS_ERR_VALUE(irq_base)) {
-+		dev_err(dev, "%s: irq desc alloc failed\n", __func__);
-+		return -ENXIO;
-+	}
-+
-+	stmpe_irq_domain = irq_domain_add_legacy(np, STMPE_NR_IRQS, irq_base,
-+			0, &irq_domain_simple_ops, NULL);
-+	if (!stmpe_irq_domain) {
-+		dev_warn(dev, "%s: irq domain init failed\n", __func__);
-+		irq_free_descs(irq_base, 32);
-+		return -ENXIO;
-+	}
-+
-+	pdata->irq_base = irq_find_mapping(stmpe_irq_domain, 0);
-+
-+	if (of_property_read_bool(np, "irq_over_gpio")) {
-+		pdata->irq_over_gpio = true;
-+
-+		pdata->irq_gpio = of_get_named_gpio_flags(np, "irq-gpios", 0,
-+				&flags);
-+		if (!pdata->irq_gpio)
-+			dev_dbg(dev, "unable to get irq_gpio from %s.",
-+					__func__);
-+	}
-+
-+	if (of_property_read_u32(np, "irq-trigger", &pdata->irq_trigger))
-+		dev_dbg(dev, "unable to get irq_trigger\n");
-+
-+	if (of_property_read_bool(np, "irq-invert-polarity"))
-+		pdata->irq_invert_polarity = true;
-+
-+	if (of_property_read_bool(np, "autosleep")) {
-+		pdata->autosleep = true;
-+
-+		of_property_read_u32(np, "autosleep-timeout",
-+				&pdata->autosleep_timeout);
-+	}
-+
-+	if (of_property_read_u32(np, "id", &pdata->id))
-+		dev_dbg(dev, "unable to get id\n");
-+
-+	return 0;
-+}
-+
-+static int stmpe_of_devices_init(struct stmpe *stmpe)
-+{
-+	struct stmpe_variant_info *variant = stmpe->variant;
-+	struct device_node *nc, *np = stmpe->dev->of_node;
-+	struct stmpe_variant_block *block;
-+	enum stmpe_block blockid;
-+	int ret = -EINVAL;
-+
-+	for_each_child_of_node(np, nc) {
-+		if (of_match_node(stmpe_keypad_ids, nc)) {
-+			blockid = STMPE_BLOCK_KEYPAD;
-+			stmpe->pdata->keypad = get_keyboard_pdata_dt(stmpe->dev,
-+					nc);
-+			if (!stmpe->pdata->keypad)
-+				return -ENOMEM;
-+		} else if (of_match_node(stmpe_gpio_ids, nc)) {
-+			blockid = STMPE_BLOCK_GPIO;
-+			stmpe->pdata->gpio = get_gpio_pdata_dt(stmpe->dev, nc);
-+			if (!stmpe->pdata->gpio)
-+				return -ENOMEM;
-+		} else if (of_match_node(stmpe_ts_ids, nc)) {
-+			blockid = STMPE_BLOCK_TOUCHSCREEN;
-+			stmpe->pdata->ts = get_ts_pdata_dt(stmpe->dev, nc);
-+			if (!stmpe->pdata->ts)
-+				return -ENOMEM;
-+		} else if (of_match_node(stmpe_adc_ids, nc)) {
-+			blockid = STMPE_BLOCK_ADC;
-+		} else if (of_match_node(stmpe_pwm_ids, nc)) {
-+			blockid = STMPE_BLOCK_PWM;
-+		} else if (of_match_node(stmpe_rotator_ids, nc)) {
-+			blockid = STMPE_BLOCK_ROTATOR;
-+		} else {
-+			dev_warn(stmpe->dev, "no matching device node found\n");
-+			return -EINVAL;
-+		}
-+
-+		block = match_variant_block(variant, blockid);
-+		if (!block) {
-+			dev_err(stmpe->dev, "variant doesn't support blockid: %d\n",
-+					blockid);
-+			continue;
-+		}
-+
-+		ret = stmpe_add_device(stmpe, block->cell, block->irq);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+#else
-+static inline int stmpe_probe_config_dt(struct stmpe_platform_data *pdata,
-+		struct device_node *np)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int stmpe_of_devices_init(struct stmpe *stmpe)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int __devinit stmpe_devices_init(struct stmpe *stmpe)
- {
- 	struct stmpe_variant_info *variant = stmpe->variant;
-@@ -996,11 +1239,25 @@ static int __devinit stmpe_devices_init(struct stmpe *stmpe)
- int __devinit stmpe_probe(struct stmpe_client_info *ci, int partnum)
- {
- 	struct stmpe_platform_data *pdata = dev_get_platdata(ci->dev);
-+	struct device_node *np = ci->dev->of_node;
- 	struct stmpe *stmpe;
- 	int ret;
- 
--	if (!pdata)
-+	if (np) {
-+		pdata = devm_kzalloc(ci->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (pdata) {
-+			ret = stmpe_probe_config_dt(ci->dev, pdata, np);
-+			if (ret) {
-+				dev_err(ci->dev, "probe_config_dt failed\n");
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	if (!pdata) {
-+		dev_err(ci->dev, "no platform data\n");
- 		return -EINVAL;
-+	}
- 
- 	stmpe = devm_kzalloc(ci->dev, sizeof(struct stmpe), GFP_KERNEL);
- 	if (!stmpe)
-@@ -1070,7 +1327,10 @@ int __devinit stmpe_probe(struct stmpe_client_info *ci, int partnum)
- 		}
- 	}
- 
--	ret = stmpe_devices_init(stmpe);
-+	if (np)
-+		ret = stmpe_of_devices_init(stmpe);
-+	else
-+		ret = stmpe_devices_init(stmpe);
- 	if (!ret)
- 		return 0;
- 
--- 
-1.7.12.rc2.18.g61b472e
+--HTLCc13+3hfAZ6SL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Nov 09, 2012 at 03:00:25PM +0100, Steffen Trumtrar wrote:
+
+> +static int imx_wm8974_dai_init(struct snd_soc_pcm_runtime *rtd)
+> +{
+> +	struct imx_wm8974_data *data = container_of(rtd->card,
+> +					struct imx_wm8974_data, card);
+> +	struct device *dev = rtd->card->dev;
+> +	int ret;
+> +
+> +	/* the pll stability peaks at N=8 and around 90MHz.
+> +	 * This values are best reached with a 12.288MHz or
+> +	 * 11.289MHz clock. As the first is closer to N=8 in
+> +	 * more situations, chose 12.288MHz as the target clock
+> +	 * (ref: datasheet section "Master Clock and Phase Locked Loop")*/
+> +	ret = snd_soc_dai_set_pll(rtd->codec_dai, 0, 0, data->clk_frequency,
+> +		12288000);
+
+This seems far from ideal - it's starting the PLL at system boot and
+just leaving it running.  This will be power inefficient when the system
+is not playing audio as the PLL will be consuming power but not used for
+anything.  You could also do the same thing with the MCLK.
+
+Note also that a 12.288MHz clock is only suitable for 8kHz based sample
+rates, for CD audio 44.1kHz based rates like most media files 11.2896MHz
+should be chosen.  The driver may want to switch dynamically at runtime
+to support the widest possible range of rates.
+
+> +	data->codec_clk = clk_get(&codec_pdev->dev, NULL);
+> +	if (IS_ERR(data->codec_clk)) {
+
+devm_clk_get() - this'd free the clock that's leaked on removal.
+
+--HTLCc13+3hfAZ6SL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQnSKxAAoJELSic+t+oim9FlkP/3QBWznByoBL7pT4QOTkNzBl
+PAcA+6LGPTkLgFsJwOeC+jPfmQ/AFU1k7UW+jxQZm/KfTlxtkmIOJRcS32M6bCkA
+PyLoOFKea2KQYjrxaWrgGmYhNA1B1Dl6Ecos1rk4rmRytphGvNbeJ4tPPKAvpw8S
+W59yYRDPje/wcXVzywT9bbLWQhW5dbQmQa0yNwbYVEvzC+IYL4z7MMijdlMn86Dt
+m20jszZtnoVA16yxz18Be4aesILo8axjDMVNVTc3EjEZvjlEyUw+udged5KZsNwj
+ozTt2g3OFPQnFbCuBD4uDGuAVAB4o33QdqBdIxEOmt6xeYWhb/A8feUiMO03eOvv
+1qE80r3ywDZFuHl9zSGxerdqc9fndeykwXdCd7E6HmFeBthGBlnNi4UtftZtHdbL
+656VpVlwgVSmqOkd2qtE/UvHjhteC6z6Hjw8nwfpHORlm3cqOrtE1DFHcQXIyee4
+EnzmGW2t11IQ3dJ6Mcaoc8X1fISIYhlAq2sgbAB+x8+3YB+AOMWi1fcDhtaIyjCQ
+EKf3MXzW0kNGPgJwe1FYgZ4O8o09B0JgJ/vqvXVVJ0H0K6srChVpvTIRlN+DdrL1
+TgCp1igBUhXR6FWIS6zDp/sqj29J5ePuM1uzM0Us+0Mb8sOrZG3kLOcmmB5uwjr/
+H51jAHu31xAma5yFQYNN
+=VBF8
+-----END PGP SIGNATURE-----
+
+--HTLCc13+3hfAZ6SL--
+
+--===============0255094436439317653==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0255094436439317653==--
