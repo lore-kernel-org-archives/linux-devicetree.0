@@ -1,149 +1,81 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Fri, 9 Nov 2012 16:28:59 +0000
-Message-ID: <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <50999145.2070306@wwwdotorg.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/6] spi: imx: specify spi base for device
+	tree probe
+Date: Fri, 9 Nov 2012 16:38:30 +0000
+Message-ID: <20121109163830.GP23807@opensource.wolfsonmicro.com>
+References: <1352469625-32024-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352469625-32024-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50999145.2070306@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============8329117520095674208=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1352469625-32024-2-git-send-email-s.trumtrar@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: alsa-devel@alsa-project.org, Sascha Hauer <kernel@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, patches@opensource.wolfsonmicro.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Rob Landley <rob@landley.net>, spi-devel-general@lists.sourceforge.net, Liam Girdwood <lrg@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2012 at 10:37 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 11/05/2012 01:40 PM, Grant Likely wrote:
->> Hey folks,
->>
->> As promised, here is my early draft to try and capture what device
->> tree overlays need to do and how to get there. Comments and
->> suggestions greatly appreciated.
->
-> Interesting. This just came up internally at NVIDIA within the last
-> couple weeks, and was discussed on the U-Boot mailing list very recently
-> too:
->
-> http://lists.denx.de/pipermail/u-boot/2012-October/thread.html#138227
-> (it spills into the November archive too)
->
->> For these cases it is proposed to implement an overlay feature for the
->> so that the initial device tree data can be modified by userspace at
->
-> I don't know if you're maintaining this as a document and taking patches
-> to it, but if so:
 
-Sure, why not...
+--===============8329117520095674208==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="h9WqFG8zn/Mwlkpe"
+Content-Disposition: inline
 
-http://git.secretlab.ca/?p=devicetree-overlays.git;a=summary
 
->
-> "for the so" split across those two lines.
+--h9WqFG8zn/Mwlkpe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-fixed
+On Fri, Nov 09, 2012 at 03:00:20PM +0100, Steffen Trumtrar wrote:
 
->>   - SHOULD reliably handle changes between different underlying overlays
->>     (ie. what happens to existing .dtb overly files if the structure of
->>     the dtb it is layered over changes. If not possible, then SHALL
->>     detect when the base tree doesn't match and refuse to apply the
->>     overlay.
->
-> Perhaps use (versioned) DT bindings to represent the interface between
-> the two .dts files? See the links to the U-Boot mailing list discussions
-> below?
+> * This breaks compatibility with user space applications between non-DT and DT.
 
-Implementing versioning is conceptually a lot more complex than plain
-overlays since it means either the kernel or u-boot needs to start
-filtering the data that it's given. This can get really complex in a
-hurry. Mitch makes a valid point later in this thread that when it
-comes to manipulating the data depending on the board then the data
-overlay model alone doesn't handle it well.
+> * On platforms that are in between DT and non-DT, it breaks registration of
+>   devices via spi_board_info.
 
-I'm not actually opposed to it, but it needs to be done in an elegant
-way. The DT data model already imposes more of a conceptual learning
-curve than I wish it did and I don't want to make that worse with a
-versioning model that is difficult to get ones head around.
+> Use the same method as 7e6086d9e54a159a6257c02bb7fc5805c614aad2 does for gpios:
+> Use alias to identify the spi port, and then specify the base via the port id.
+> If alias is not defined in DT, allocate the base dynamically.
 
-Suggestions and proposals are definitely welcome here.
+This sounds like a fix userspace and/or complete your DT conversion
+problem...
 
->
->> - What is the model for overlays?
->>   - Can an overlay modify existing properties?
->>   - Can an overlay add new properties to existing nodes?
->>   - Can an overlay delete existing nodes/properties?
->
-> This proposal is very oriented at an overlay-based approach. I'm not
-> totally convinced that a pure overlay approach (as in how dtc does
-> overlayed DT nodes) will be flexible enough, but would love to be
-> persuaded. Again see below.
+--h9WqFG8zn/Mwlkpe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The way I'm currently thinking about the overlay approach is as a
-discrete set of changes that all can be applied at once.* That
-certainly doesn't preclude the change being generated with a script or
-other tool in either firmware or userspace. For most changes it works
-really well. Of the scenarios that don't work well, I can think of
-two. The first is it moving or renaming existing nodes, and the second
-is if the structure of the base tree changes (say due to a firmware
-update). Although the second limitation is specifically with binary
-.dtb overlays. Recompiling the dts overlay against the new tree would
-work fine.**
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-*with the caveat that not all types of changes are a good idea and we
-may disallow. For example, is changing properties in existing nodes a
-good idea?
-** all this is based on my current ideas about the .dtb overlay format
-which would be trivial to implement, but I'm not committed to that
-approach just yet. The above problems could be solved.
+iQIcBAEBAgAGBQJQnTGAAAoJELSic+t+oim9hl4P/11g0Vg66oKTEMRSMxQ0O80Y
+a34oXWqks6huwmiRiu4vLU6CzDHiwSaJoj7uPS+RVOPlMtDpb9nzXDXvTkfCfIHo
+bBsQQlLuVNMJLXDt0l3HTdngEUkTdMoM9K7LsItQZnuJrm2O61m8bH2pt/80JAZZ
+Sv/2uQdF+Ww8sY9D7yyPhAe2QF4cR877W2oI48aep4pVxl+eSYNOEf6VOMXv4DBk
+BkDXNXsOxy5CQ4dZuk6MsOsyGPw5YQR++SQBdJdk+PsOWcytq2bOW6kWC8gSbql3
+Oauco9h2o3EdTIvTNm5h86gfdql+byMQpRxy4dvzFTZ/qHDY6NICq/nt1fZDVmWT
+XheNyPW3gM5ddDQLYFG8KI5tq0G1DuHOqXo99dLsiQ/1UzlJUnOw0om3Eb6DEiln
+6fph4UyPdprELK7bvGMwQlgfvsTOx2Ka2zeXiJ6RQGI9XdKmAMUhul3kM4WxYDz+
+xGYdASQhXImTVLBpn1TqQS9bQg0J8S2DPIXrSOQ9c0uhSL10rSZnw4fzHoa2Mz3H
+Ghwn9QHBZ2gMN4/ZmVgMZ+xrTCOCoR4AA3ckN4dB7122XnkNCjPpvqZF+M9NN9bi
+hrIoSfsBOEvEcnXHSqIwQUOSRro3wNtD54M5OAX8uZYfHD9Pdp3cZEwXnWqpJeyL
+NEmab4NkbvTDbjD2jX6M
+=5+vC
+-----END PGP SIGNATURE-----
 
->> It may be sufficient to solve it by making the phandle values less
->> volatile. Right now dtc generates phandles linearly. Generated phandles
->> could be overridden with explicit phandle properties, but it isn't a
->> fantastic solution. Perhaps generating the phandle from a hash of the
->> node name would be sufficient.
->
-> Node names don't have to be unique though right; perhaps hash the
-> path-name instead of the node-name? But then, why not just reference by
-> path name; similar to <{&/path/to/node}> rather than <&label>?
+--h9WqFG8zn/Mwlkpe--
 
-I was thinking about using the full_name for generating phandles. On
-the odd chance there is a collision, one of the nodes will get
-something like the hash value +1. Or in that condition we can require
-one of the nodes to have the phandle value explicitly set in the
-source file.
+--===============8329117520095674208==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Note; this doesn't actually affect anything outside of dtc. Right now
-dtc starts at 1 and assigns phandles incrementally. I'm suggesting
-using a hash of the full_name to assign the phandle for a node so that
-it will not change unless the full_path changes.
 
->> This handles many of the use cases, but it assumes that an overlay is
->> board specific. If it ever is required to support multiple base boards
->> with a single overlay file then there is a problem. The .dtb overlays
->> generated in this manor cannot handle different phandles or nodes that
->> are in a different place. On the other hand, the overlay source files
->> should have no problem being compiled for multiple targets.
->
-> s/manor/manner/
-
-Fixed
-
->
-> I do rather suspect this use-case is quite common. NVIDIA certainly has
-> a bunch of development boards with pluggable
-> PMIC/audio/WiFi/display/..., and I believe there's some ability to
-> re-use the pluggable components with a variety of base-boards.
->
-> Given people within NVIDIA started talking about this recently, I asked
-> them to enumerate all the boards we have that support pluggable
-> components, and how common it is that some boards support being plugged
-> into different main boards. I don't know when that enumeration will
-> complete (or even start) but hopefully I can provide some feedback on
-> how common the use-case is for us once it's done.
-
->From your perspective, is it important to use the exact same .dtb
-overlays for those add-on boards, or is it okay to have a separate
-build of the overlay for each base tree?
-
-g.
+--===============8329117520095674208==--
