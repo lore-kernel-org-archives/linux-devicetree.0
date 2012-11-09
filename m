@@ -1,65 +1,197 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v7 0/8] of: add display helper
-Date: Fri, 9 Nov 2012 09:22:51 +0100
-Message-ID: <20121109082251.GA8598@pengutronix.de>
-References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
- <509C25B3.5060509@gmail.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH] pwm: Device tree support for PWM polarity.
+Date: Fri, 9 Nov 2012 09:30:28 +0100
+Message-ID: <20121109083028.GD26007@avionic-0098.mockup.avionic-design.de>
+References: <1351532427-19881-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2Z2K0IlrPCVsbNpk"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <509C25B3.5060509@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+In-Reply-To: <1351532427-19881-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 08, 2012 at 03:35:47PM -0600, Rob Herring wrote:
-> On 10/31/2012 04:28 AM, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > Finally, v7 of the series.
-> > 
-> > Changes since v6:
-> > 	- get rid of some empty lines etc.
-> > 	- move functions to their subsystems
-> > 	- split of_ from non-of_ functions
-> > 	- add at least some kerneldoc to some functions
-> > 
-> > Regards,
-> > Steffen
-> > 
-> > 
-> > Steffen Trumtrar (8):
-> >   video: add display_timing struct and helpers
-> >   of: add helper to parse display timings
-> >   of: add generic videomode description
-> >   video: add videomode helpers
-> >   fbmon: add videomode helpers
-> >   fbmon: add of_videomode helpers
-> >   drm_modes: add videomode helpers
-> >   drm_modes: add of_videomode helpers
-> > 
-> >  .../devicetree/bindings/video/display-timings.txt  |  139 +++++++++++++++
-> >  drivers/gpu/drm/drm_modes.c                        |   78 +++++++++
-> >  drivers/of/Kconfig                                 |   12 ++
-> >  drivers/of/Makefile                                |    2 +
-> >  drivers/of/of_display_timings.c                    |  185 ++++++++++++++++++++
-> >  drivers/of/of_videomode.c                          |   47 +++++
-> 
-> Not sure why you moved this, but please move this back to drivers/video.
-> We're trying to move subsystem specific pieces out of drivers/of.
-> 
-> Rob
-> 
 
-Hm, the of_xxx part always was in drivers/of, but I can move that. No problem.
+--2Z2K0IlrPCVsbNpk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Steffen
+On Mon, Oct 29, 2012 at 11:10:27PM +0530, Philip, Avinash wrote:
+> From: "Philip, Avinash" <avinashphilip@ti.com>
+>=20
+> Adds support for 3rd cell in pwm-specifier. PWM polarity is encoded in
+> device tree support in bit encoded form. Platforms require polarity of
+> PWM device initialized during PWM device initialization has to encode
+> polarity in 3rd cell of pwm-specifier.
+>=20
+> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+> ---
+> :100644 100644 73ec962... e522c59... M	Documentation/devicetree/bindings/=
+pwm/pwm.txt
+> :100644 100644 f5acdaa... 1c6d50b... M	drivers/pwm/core.c
+> :100644 100644 112b314... d77c5b3... M	include/linux/pwm.h
+>  Documentation/devicetree/bindings/pwm/pwm.txt |   22 +++++++++++++++++++=
+---
+>  drivers/pwm/core.c                            |   13 ++++++++++++-
+>  include/linux/pwm.h                           |    7 +++++++
+>  3 files changed, 38 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentatio=
+n/devicetree/bindings/pwm/pwm.txt
+> index 73ec962..e522c59 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> @@ -37,10 +37,26 @@ device:
+>  		pwm-names =3D "backlight";
+>  	};
+> =20
+> +Note that in the example above, specifying the "pwm-names" is redundant
+> +because the name "backlight" would be used as fallback anyway.
+> +
+>  pwm-specifier typically encodes the chip-relative PWM number and the PWM
+> -period in nanoseconds. Note that in the example above, specifying the
+> -"pwm-names" is redundant because the name "backlight" would be used as
+> -fallback anyway.
+> +period in nanoseconds.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Can you separate this by a blank line, please?
+
+> +Optional pwm-specifier can be encoded in 3rd cell in bit encoded form.
+> + -------------------------------------------------------------
+> +|     Property   |  BIT position | Encoding                   |
+> +|-------------------------------------------------------------|
+> +| Polarity       |   0           | Set   -> Polarity inversed |
+> +|                |               | Clear -> Polarity Normal   |
+> + -------------------------------------------------------------
+> +
+
+Using this kind of table isn't very common in device tree documentation
+and the description above the table is a little vague. Maybe something
+like this would be more explicit:
+
+---[snip]---
+
+Optionally, the pwm-specifier can encode a number of flags in a third
+cell:
+  - bit 0: PWM signal polarity (0: normal polarity, 1: inverse polarity)
+
+---[snip]---
+
+> +Exapmple with optional PWM specifier for inversed polarity
+
+"Example"
+
+> +
+> +	bl: backlight {
+> +		pwms =3D <&pwm 0 5000000 1>;
+> +		pwm-names =3D "backlight";
+> +	};
+> +
+> =20
+>  2) PWM controller nodes
+>  -----------------------
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index f5acdaa..1c6d50b 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -146,6 +146,15 @@ of_pwm_simple_xlate(struct pwm_chip *pc, const struc=
+t of_phandle_args *args)
+> =20
+>  	pwm_set_period(pwm, args->args[1]);
+> =20
+> +	if (pc->of_pwm_n_cells > 2) {
+> +		enum pwm_polarity polarity;
+> +
+> +		/* Initialize polarity of PWM device */
+> +		polarity =3D args->args[2] & POLARITY_BIT ?
+> +			PWM_POLARITY_INVERSED : PWM_POLARITY_NORMAL;
+
+Can we rewrite this as:
+
+	if (args->args[2] & POLARITY_BIT)
+		pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
+	else
+		pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
+
+?
+
+> +		pwm_set_polarity(pwm, polarity);
+> +	}
+> +
+>  	return pwm;
+>  }
+> =20
+> @@ -156,7 +165,9 @@ static void of_pwmchip_add(struct pwm_chip *chip)
+> =20
+>  	if (!chip->of_xlate) {
+>  		chip->of_xlate =3D of_pwm_simple_xlate;
+> -		chip->of_pwm_n_cells =3D 2;
+> +
+> +		if (chip->of_pwm_n_cells !=3D 3)
+> +			chip->of_pwm_n_cells =3D 2;
+>  	}
+
+I don't like the implicitness in this code. I think we should make this
+more explicit for driver writers, so that if .of_xlate is set to NULL,
+the default of_pwm_simple_xlate() is used. For all other cases we should
+export of_pwm_xlate_with_flags(), so that the driver can explicitly set
+the .of_xlate field to that function.
+
+That will of course imply that the extra code that you added to
+of_pwm_simple_xlate() is moved into a separate function.
+
+> =20
+>  	of_node_get(chip->dev->of_node);
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index 112b314..d77c5b3 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -78,6 +78,13 @@ enum {
+>  	PWMF_ENABLED =3D 1 << 1,
+>  };
+> =20
+> +/*
+> + * DT Platform property support.
+> + * POLARITY - set bit 0 in DT platform property
+> + */
+> +
+> +#define POLARITY_BIT	BIT(0)
+> +
+
+This doesn't belong in a public header. It should be defined in the
+core.c source file. Maybe rename it to something like PWM_SPEC_POLARITY
+to make it more obvious that it defines a bit in the PWM specifier. You
+can reduce the comment to a single line, because the second doesn't add
+any additional information. Something like this:
+
+/* flags in the third cell of the DT PWM specifier */
+#define PWM_SPEC_POLARITY (1 << 0)
+
+Thierry
+
+--2Z2K0IlrPCVsbNpk
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQnL8kAAoJEN0jrNd/PrOhx+MQAJwW6aUkmtchc4hiSDv+T/Qi
+W65vbyBf+QknHNL9Rnn6qSVN+i6X4EUhOHH24yZ7btTGrdLbp/F6VVhU0Ij9i6mW
+lB/u8oxalsdNOafwL1lzJ4hlN7aVDyK4R5HWGKFpKFdolW6cI3C9R+6hVJWzIRYX
+rpSsSza+oD5SUaqn/0e6NiCZ6Mqp7ujn+xoVGKNjf8vm/GkKOVr+eLCr2crSvkDD
+/Lp1iHqGNJXtCOcsLBjjE1du4rXBHgB+6cBJVGFn4rAqigJfxFdL4MYSx8uapIzy
+4i57C7XlsgyERy3J9w2KTZ3PneoHVHUvbmwVVNBVngcK0/5bAovzrOkCTmAEGqkL
+AK0PqUNCwoYrTAFA1P+RTof99EqjtcQ9J68Qv5wBEJMYWeP/9P+4nbIDtCJkbE11
+SjNx5PCixUUX6cap8JBts7g7jLyUO4Cs5ux8W9ulLiX1Z6a/5FaY9nHGfbk19Bmz
+eVJKSEZP2VskWQcqQy88yKz/YBh+9HGG0JMYJys7Yh0NKuIKwRVYot9WDa7E8Vfm
+M8PrfipPBZIE4cPq6XFV7rHCL2J4wQ3nFSsty0UBinnPbcxN+9yTmZDr9BNkawG7
+V2AETYDEF9FLtiNO4DpGkaDH2TOfBu4J1nSNUHeyTIGLc1qyR2ID7r8QfyKrLsNI
+jwCQKN/SRMD6VGpRbvVl
+=o+t1
+-----END PGP SIGNATURE-----
+
+--2Z2K0IlrPCVsbNpk--
