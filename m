@@ -1,47 +1,87 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/6] spi: imx: specify spi base for device tree probe
-Date: Fri, 9 Nov 2012 20:00:15 +0100
-Message-ID: <20121109190015.GB3660@pengutronix.de>
-References: <1352469625-32024-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352469625-32024-2-git-send-email-s.trumtrar@pengutronix.de>
- <20121109163830.GP23807@opensource.wolfsonmicro.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v7 5/8] fbmon: add videomode helpers
+Date: Fri, 9 Nov 2012 20:31:33 +0100
+Message-ID: <20121109193133.GD3660@pengutronix.de>
+References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1351675689-26814-6-git-send-email-s.trumtrar@pengutronix.de>
+ <A73F36158E33644199EB82C5EC81C7BC3E9E1B39@DBDE01.ent.ti.com>
+ <20121108212545.GA32605@pengutronix.de>
+ <A73F36158E33644199EB82C5EC81C7BC3E9E614A@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121109163830.GP23807-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3E9E614A@DBDE01.ent.ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2012 at 04:38:30PM +0000, Mark Brown wrote:
-> On Fri, Nov 09, 2012 at 03:00:20PM +0100, Steffen Trumtrar wrote:
-> 
-> > * This breaks compatibility with user space applications between non-DT and DT.
-> 
-> > * On platforms that are in between DT and non-DT, it breaks registration of
-> >   devices via spi_board_info.
-> 
-> > Use the same method as 7e6086d9e54a159a6257c02bb7fc5805c614aad2 does for gpios:
-> > Use alias to identify the spi port, and then specify the base via the port id.
-> > If alias is not defined in DT, allocate the base dynamically.
-> 
-> This sounds like a fix userspace and/or complete your DT conversion
-> problem...
+Hi!
 
-Well, it may lead to problems in userspace and does lead to problems with an
-incomplete DT support, but there are only so many hours in a day...
+On Fri, Nov 09, 2012 at 04:54:16PM +0000, Manjunathappa, Prakash wrote:
+> Hi Steffen,
+> 
+> On Fri, Nov 09, 2012 at 02:55:45, Steffen Trumtrar wrote:
+> > Hi!
+> > 
+> > On Wed, Oct 31, 2012 at 03:30:03PM +0000, Manjunathappa, Prakash wrote:
+> > > Hi Steffen,
+> > > 
+> > > On Wed, Oct 31, 2012 at 14:58:05, Steffen Trumtrar wrote:
+> > > > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > > > +int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
+> > > > +{
+> > > > +	fbmode->xres = vm->hactive;
+> > > > +	fbmode->left_margin = vm->hback_porch;
+> > > > +	fbmode->right_margin = vm->hfront_porch;
+> > > > +	fbmode->hsync_len = vm->hsync_len;
+> > > > +
+> > > > +	fbmode->yres = vm->vactive;
+> > > > +	fbmode->upper_margin = vm->vback_porch;
+> > > > +	fbmode->lower_margin = vm->vfront_porch;
+> > > > +	fbmode->vsync_len = vm->vsync_len;
+> > > > +
+> > > > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> > > > +
+> > > > +	fbmode->sync = 0;
+> > > > +	fbmode->vmode = 0;
+> > > > +	if (vm->hah)
+> > > > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> > > > +	if (vm->vah)
+> > > > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> > > > +	if (vm->interlaced)
+> > > > +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> > > > +	if (vm->doublescan)
+> > > > +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> > > > +
+> > > 
+> > > "pixelclk-inverted" property of the panel is not percolated fb_videomode.
+> > > Please let me know if I am missing something.
+> > > 
+> > 
+> > The next version is almost finished. Only thing I'm missing is this.
+> > And I actually do not know which flag would represent an inverted pixelclock
+> > in fb_videomode. Does anybody have any idea what I have to do here?
+> > 
+> > 	if (vm->pixelclk_pol)
+> > 		fbmode->sync = ???
+> > 
+> > That's as far as I have come and I don't see a flag that seems right.
+> > Is this even a valid property of fb_videomode?
+> > 
+> 
+> Thanks for considering it, I see IMX addresses it as proprietary FB_SYNC_ flag.
+> FB_SYNC_CLK_INVERT: arch/arm/plat-mxc/include/mach/mx3fb.h
+> 
+
+No problem. So, it seems this flag has to be set in some imx-specific
+videomode_to_fb_videomode function. It is included in the
+struct videomode, so that should be no problem. But it will not be
+part of this series.
+
+Regards,
+Steffen
 
 -- 
 Pengutronix e.K.                           |                             |
