@@ -1,33 +1,47 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PULL] ARM: OMAP: Timer and Counter DT Updates for v3.8
-Date: Fri, 9 Nov 2012 14:00:40 -0800
-Message-ID: <20121109220040.GV6801@atomide.com>
-References: <50941812.2070501@ti.com>
- <20121107004703.GS6801@atomide.com>
- <20121107234403.GS6801@atomide.com>
- <509BE9B0.5040608@ti.com>
- <20121108173824.GE6801@atomide.com>
- <509C0C3E.6070204@ti.com>
- <509C4BF1.20505@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] drm: Add NVIDIA Tegra20 support
+Date: Fri, 09 Nov 2012 15:27:53 -0700
+Message-ID: <509D8369.5000101@wwwdotorg.org>
+References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
+ <1352469579-3337-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <509C4BF1.20505@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352469579-3337-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [121108 16:20]:
-> 
-> On 11/08/2012 01:47 PM, Jon Hunter wrote:
-> > Do you want to generate the patch or me?
-> 
-> Patch posted here ...
-> 
-> http://marc.info/?l=linux-omap&m=135242025202171&w=2
+On 11/09/2012 06:59 AM, Thierry Reding wrote:
+> This commit adds a KMS driver for the Tegra20 SoC. This includes basic
+> support for host1x and the two display controllers found on the Tegra20
+> SoC. Each display controller can drive a separate RGB/LVDS output.
 
-OK thanks!
+> diff --git a/Documentation/devicetree/bindings/gpu/drm/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/drm/nvidia,tegra20-host1x.txt
+> new file mode 100644
+> index 0000000..b4fa934
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/drm/nvidia,tegra20-host1x.txt
 
-Tony
+"drm" is a Linux-specific term, so shouldn't really be used as the
+directory name for a binding. bindings/gpu/nvidia,tegra20-host1x.txt
+would probably be just fine.
+
+Aside from that, the bindings,
+Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+I don't really know anything about DRM or our display HW, so I haven't
+reviewed the code at all. I certainly ack the concept of adding the
+driver though! I have asked various other people at NVIDIA to give a
+quick review of the code.
