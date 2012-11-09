@@ -1,90 +1,56 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v7 5/8] fbmon: add videomode helpers
-Date: Fri, 9 Nov 2012 20:31:33 +0100
-Message-ID: <20121109193133.GD3660@pengutronix.de>
-References: <1351675689-26814-1-git-send-email-s.trumtrar@pengutronix.de>
- <1351675689-26814-6-git-send-email-s.trumtrar@pengutronix.de>
- <A73F36158E33644199EB82C5EC81C7BC3E9E1B39@DBDE01.ent.ti.com>
- <20121108212545.GA32605@pengutronix.de>
- <A73F36158E33644199EB82C5EC81C7BC3E9E614A@DBDE01.ent.ti.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
+ DMA channel
+Date: Fri, 9 Nov 2012 14:01:12 -0600
+Message-ID: <509D6108.1060304@ti.com>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>  <1347662517-4210-3-git-send-email-jon-hunter@ti.com>  <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>  <20120917223619.GC12445@n2100.arm.linux.org.uk>  <1347938035.1943.162.camel@vkoul-udesk3> <5060DDEB.4000600@ti.com>  <1348547701.1943.190.camel@vkoul-udesk3>  <20121016024318.GF24393@S2101-09.ap.freescale.net> <1350355144.1648.5259.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3E9E614A@DBDE01.ent.ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1350355144.1648.5259.camel@vkoul-udesk3>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-On Fri, Nov 09, 2012 at 04:54:16PM +0000, Manjunathappa, Prakash wrote:
-> Hi Steffen,
-> 
-> On Fri, Nov 09, 2012 at 02:55:45, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > On Wed, Oct 31, 2012 at 03:30:03PM +0000, Manjunathappa, Prakash wrote:
-> > > Hi Steffen,
-> > > 
-> > > On Wed, Oct 31, 2012 at 14:58:05, Steffen Trumtrar wrote:
-> > > > +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> > > > +int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
-> > > > +{
-> > > > +	fbmode->xres = vm->hactive;
-> > > > +	fbmode->left_margin = vm->hback_porch;
-> > > > +	fbmode->right_margin = vm->hfront_porch;
-> > > > +	fbmode->hsync_len = vm->hsync_len;
-> > > > +
-> > > > +	fbmode->yres = vm->vactive;
-> > > > +	fbmode->upper_margin = vm->vback_porch;
-> > > > +	fbmode->lower_margin = vm->vfront_porch;
-> > > > +	fbmode->vsync_len = vm->vsync_len;
-> > > > +
-> > > > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
-> > > > +
-> > > > +	fbmode->sync = 0;
-> > > > +	fbmode->vmode = 0;
-> > > > +	if (vm->hah)
-> > > > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
-> > > > +	if (vm->vah)
-> > > > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
-> > > > +	if (vm->interlaced)
-> > > > +		fbmode->vmode |= FB_VMODE_INTERLACED;
-> > > > +	if (vm->doublescan)
-> > > > +		fbmode->vmode |= FB_VMODE_DOUBLE;
-> > > > +
-> > > 
-> > > "pixelclk-inverted" property of the panel is not percolated fb_videomode.
-> > > Please let me know if I am missing something.
-> > > 
-> > 
-> > The next version is almost finished. Only thing I'm missing is this.
-> > And I actually do not know which flag would represent an inverted pixelclock
-> > in fb_videomode. Does anybody have any idea what I have to do here?
-> > 
-> > 	if (vm->pixelclk_pol)
-> > 		fbmode->sync = ???
-> > 
-> > That's as far as I have come and I don't see a flag that seems right.
-> > Is this even a valid property of fb_videomode?
-> > 
-> 
-> Thanks for considering it, I see IMX addresses it as proprietary FB_SYNC_ flag.
-> FB_SYNC_CLK_INVERT: arch/arm/plat-mxc/include/mach/mx3fb.h
-> 
+On 10/15/2012 09:39 PM, Vinod Koul wrote:
+> On Tue, 2012-10-16 at 10:43 +0800, Shawn Guo wrote:
+>> On Tue, Sep 25, 2012 at 10:05:01AM +0530, Vinod Koul wrote:
+>>> On Mon, 2012-09-24 at 17:25 -0500, Jon Hunter wrote:
+>>>>> For DT bindings, I think the binding itself shouldn't change based on my
+>>>>> work but I would like these same bindings to help build the DMA engine
+>>>>> code mappings.
+>>>>>
+>>>>> Now would it make sense to NOT merge these changes for 3.7 and postpone
+>>>>> to 3.8. I can host these patches on a topic branch and merge them when
+>>>>> we are ready. I plan to spend some good amount of time on my work this
+>>>>> week so we should be ready pretty soon.
+>>>>> One these changes are merged, users can start moving to this scheme.
+>>>>
+>>>> I just wanted to see how things are progressing your side. Did you
+>>>> create a topic branch for this? If so let me know where I can find it, I
+>>>> did not find a branch on your infradead git tree.
+>>>>
+>>>> I wanted to pull in the latest patches for some testing. 
+>>> Sorry for delay, I had everything ready, but couldn't manage to commit
+>>> and push. I have pushed to topic/dmaengine_dt, it is pushing out now...
+>>>
+>> Vinod,
+>>
+>> Looks it seemed 3.7-rc1.  Does that mean we have to wait for 3.8, or
+>> will it show on later -rc for 3.7?
+> Yes this will be merged once we work out the common interface, otherwise
+> we will end up redoing interfaces for all drivers.
 
-No problem. So, it seems this flag has to be set in some imx-specific
-videomode_to_fb_videomode function. It is included in the
-struct videomode, so that should be no problem. But it will not be
-part of this series.
+Hi Vinod,
 
-Regards,
-Steffen
+A few people have been asking me if getting device-tree support for DMA
+engine is plan for record for v3.8. I know that you were working through
+implementing a common interface and so I wanted to check how that is
+going. Do you have any insight to when device-tree support may get added?
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Cheers
+Jon
+
