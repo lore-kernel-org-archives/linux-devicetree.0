@@ -1,87 +1,59 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 4/6] ASoC: wm8974: add SPI as a possible bus master
-Date: Fri, 9 Nov 2012 14:59:22 +0000
-Message-ID: <20121109145921.GJ23807@opensource.wolfsonmicro.com>
-References: <1352469625-32024-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352469625-32024-5-git-send-email-s.trumtrar@pengutronix.de>
- <20121109143841.GG23807@opensource.wolfsonmicro.com>
- <20121109145504.GC8598@pengutronix.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 1/5] ARM: kernel: smp_setup_processor_id() updates
+Date: Fri, 9 Nov 2012 15:05:12 +0000
+Message-ID: <20121109150512.GC20298@e102568-lin.cambridge.arm.com>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20121109144446.GC17405@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6097520093800692132=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121109145504.GC8598-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121109144446.GC17405@mudshark.cambridge.arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <Will.Deacon@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 09, 2012 at 02:44:46PM +0000, Will Deacon wrote:
+> On Fri, Nov 09, 2012 at 02:34:10PM +0000, Lorenzo Pieralisi wrote:
+> > This patch applies some basic changes to the smp_setup_processor_id()
+> > ARM implementation to make the code that builds cpu_logical_map more
+> > uniform across the kernel.
+> > 
+> > The function now prints the full extent of the boot CPU MPIDR[23:0] and
+> > initializes the cpu_logical_map for CPUs up to nr_cpu_ids.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > ---
+> >  arch/arm/kernel/setup.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> > index da1d1aa..ede7c84 100644
+> > --- a/arch/arm/kernel/setup.c
+> > +++ b/arch/arm/kernel/setup.c
+> > @@ -426,13 +426,14 @@ int __cpu_logical_map[NR_CPUS];
+> >  void __init smp_setup_processor_id(void)
+> >  {
+> >  	int i;
+> > -	u32 cpu = is_smp() ? read_cpuid_mpidr() & 0xff : 0;
+> > +	u32 mpidr = read_cpuid_mpidr() & 0xffffff;
+> 
+> We need that is_smp() check, otherwise we'll go and do a funky CP15
+> operation on CPU's that might not be too happy about it.
 
---===============6097520093800692132==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="451BZW+OUuJBCAYj"
-Content-Disposition: inline
+You are right, sorry my apologies.
 
+I will have to check it even when parsing the DT then.
 
---451BZW+OUuJBCAYj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Nov 09, 2012 at 03:55:04PM +0100, Steffen Trumtrar wrote:
-> On Fri, Nov 09, 2012 at 02:38:42PM +0000, Mark Brown wrote:
-
-> > We should be converting things to regmap if we're going to do this -
-> > we're trying to phase out the ASoC-specific I/O and this makes the code
-> > simpler anyway as the core will just be able to get the regmap from the
-> > struct device without bouncing information around through the private
-> > data and so on.
-
-> I wasn't aware of that driver. That sounds way better than the private data stuff.
-
-If you look in mainline there's a bunch of conversions been done
-recently, it's fairly mechanical so hopefully they'll show you what
-needs doing.
-
---451BZW+OUuJBCAYj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQnRpDAAoJELSic+t+oim9q34QAInSqgrdzlwX9NvNvo1jAXxT
-9Gy/nBq9AYJz27PcuBRF72u2lmy5TEdbbG/vfEzzrVndExVVxYfwvp/bXPgYEYFb
-OwichlvXKj5acammff9L0RYh9cRQR/+aw8xL4qdEQVaxgRLOa0fIzgGHIaYsN3q+
-3axqzarXksBMphwrpWiCrUSUMYrKEaLoq+y6yDvlkTkKLtv8stH2gv3QJyX1UC04
-Y3nvBQcFwUeUGdVOZL1S3Tqj/dbEMW2Ms+pqwyHYlXMvnepQmAdsg0wF1IARxs7X
-g6aB8tdJtA2j/5dY8RHgNbB4gWMdnZ88LzHhvp7eXlYpU8lMqQ8ycWZho0qE6jjt
-uW5pnqLHTurDUCt5VNeyu5vg1dTOoK0kL4bh8mETDKTB3+Nwv5Fgf1Sp6bUVCX7d
-IGLcnmoCaX30xNIA/LRKSc+D1me/6W40w2wHsA5OBNwp1gDiBJjfAm4oJnOS1ao6
-15TZ1MDE2CfCH3gdwH6kShQmdYnonLcaQYkZcBokCLm7tUnGRB27ywby4iHrb48T
-D5ByWOueyGziEYh3VHwHAkaHlfVlUAOpRKuBKY0wUwnBB1r8fWkSmWCMNHikGhYW
-8g2eR2f3AxY2lEkcNSuINOVZsL7wgFxZ4uG/Tp+m3weaQeJ0D/B8V3pDej7btitR
-SApaXGEt81c9Y2vE/3Jg
-=no2K
------END PGP SIGNATURE-----
-
---451BZW+OUuJBCAYj--
-
---===============6097520093800692132==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6097520093800692132==--
+Lorenzo
