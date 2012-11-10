@@ -1,82 +1,47 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Fri, 9 Nov 2012 23:40:06 +0000
-Message-ID: <CACxGe6vBYOoK9JdMV-ppUMuugmXcSfXYnh=-jCZP99BTkqKswg@mail.gmail.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
- <509D9089.7020407@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] drm: Add NVIDIA Tegra20 support
+Date: Fri, 09 Nov 2012 17:09:51 -0700
+Message-ID: <509D9B4F.6060003@wwwdotorg.org>
+References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
+ <1352469579-3337-2-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <509D9089.7020407@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352469579-3337-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 9, 2012 at 11:23 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 11/09/2012 09:28 AM, Grant Likely wrote:
->> On Tue, Nov 6, 2012 at 10:37 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> ...
->>> I do rather suspect this use-case is quite common. NVIDIA certainly has
->>> a bunch of development boards with pluggable
->>> PMIC/audio/WiFi/display/..., and I believe there's some ability to
->>> re-use the pluggable components with a variety of base-boards.
->>>
->>> Given people within NVIDIA started talking about this recently, I asked
->>> them to enumerate all the boards we have that support pluggable
->>> components, and how common it is that some boards support being plugged
->>> into different main boards. I don't know when that enumeration will
->>> complete (or even start) but hopefully I can provide some feedback on
->>> how common the use-case is for us once it's done.
->>
->> From your perspective, is it important to use the exact same .dtb
->> overlays for those add-on boards, or is it okay to have a separate
->> build of the overlay for each base tree?
->
-> I certainly think it'd be extremely beneficial to use the exact same
-> child board .dtb with arbitrary base boards.
->
-> Consider something like the Arduino shield connector format, which I
-> /believe/ has been re-used across a wide variety of Arduino boards and
-> other compatible or imitation boards. Now consider a vendor of an
-> Arduino shield. The shield vendor probably wants to publish a single
-> .dtb file that works for users irrespective of which board they're using
-> it with.
->
-> (Well, I'm not sure that Arduino can run Linux; perhaps that's why you
-> picked BeagleBone capes for your document!)
+On 11/09/2012 06:59 AM, Thierry Reding wrote:
+> This commit adds a KMS driver for the Tegra20 SoC. This includes basic
+> support for host1x and the two display controllers found on the Tegra20
+> SoC. Each display controller can drive a separate RGB/LVDS output.
 
-Correct, the Arduino is only an AVR with a tiny amount of ram. No Linux there.
+I applied these two patches and the two arch/arm/mach-tegra patches you
+posted, directly on top of next-20121109, and I see the following build
+failure:
 
-However, Arduino shields are a good example of a use case. I think
-there are even some Arduino shield compatible Linux boards out there.
+> drivers/gpu/drm/tegra/output.c: In function 'tegra_output_init':
+> drivers/gpu/drm/tegra/output.c:166:9: error: 'struct tegra_output' has no member named 'display'
+> drivers/gpu/drm/tegra/output.c:166:3: error: implicit declaration of function 'of_get_display'
+> drivers/gpu/drm/tegra/output.c:167:20: error: 'struct tegra_output' has no member named 'display'
+> drivers/gpu/drm/tegra/output.c:168:25: error: 'struct tegra_output' has no member named 'display'
+> drivers/gpu/drm/tegra/output.c:179:13: error: 'struct tegra_output' has no member named 'display'
+> drivers/gpu/drm/tegra/output.c:180:3: error: implicit declaration of function 'display_put'
+> drivers/gpu/drm/tegra/output.c:180:21: error: 'struct tegra_output' has no member named 'display'
+> drivers/gpu/drm/tegra/output.c:257:20: error: 'struct tegra_output' has no member named 'display'
+> drivers/gpu/drm/tegra/output.c: In function 'tegra_output_exit':
+> drivers/gpu/drm/tegra/output.c:272:20: error: 'struct tegra_output' has no member named 'display'
 
-> I suppose it would be acceptable for the shield vendor to ship the .dts
-> file rather than the .dtb, and hence need to build the shield .dtb for a
-> specific base board.
-
-That would be better I think than relying on a binary. However, some
-though needs to go into how to handle base boards that /aren't/ mostly
-equivalent. Such as if they have a different GPIO controller. It may
-be that for gpios and irqs, the solution really is to use
-interrupt-map and create a gpio-map. i2c, spi and others still would
-need to become children of the correct bus.
-
-> However, I think the process for an end-user needs to be as simple as
-> "drop this .dts/.dtb file into some standard directory", and I imagine
-> it'll be much easier for distros/... to make that process work if
-> they're dealing with a .dtb that they can just blast into the kernel's
-> firmware loader interface, rather than having to also locate the
-> base-board .dts/.dtb file, and run dtc and/or other tools on both .dts
-> files together.
-
-The base-board .dts is unnecessary. dtc is fully capable of using
-/proc/device-tree as the source material.  :-)
-
-g.
-
--- 
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Does this depend on something not in linux-next?
