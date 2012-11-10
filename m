@@ -1,47 +1,81 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm: Add NVIDIA Tegra20 support
-Date: Fri, 09 Nov 2012 17:09:51 -0700
-Message-ID: <509D9B4F.6060003@wwwdotorg.org>
-References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
- <1352469579-3337-2-git-send-email-thierry.reding@avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352469579-3337-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+From: Stepan Moskovchenko <stepanm@codeaurora.org>
+Subject: [RFC] dt/platform: Use cell-index for device naming if available
+Date: Fri,  9 Nov 2012 16:48:52 -0800
+Message-ID: <1352508532-19241-1-git-send-email-stepanm@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Cc: David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stepan Moskovchenko <stepanm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2012 06:59 AM, Thierry Reding wrote:
-> This commit adds a KMS driver for the Tegra20 SoC. This includes basic
-> support for host1x and the two display controllers found on the Tegra20
-> SoC. Each display controller can drive a separate RGB/LVDS output.
+Use the cell-index property to construct names for platform
+devices, falling back on the existing scheme of using the
+device register address if cell-index is not specified.
 
-I applied these two patches and the two arch/arm/mach-tegra patches you
-posted, directly on top of next-20121109, and I see the following build
-failure:
+The cell-index property is a more useful device identifier,
+especially in systems containing several numbered instances
+of a particular hardware block, since it more easily
+illustrates how devices relate to each other.
 
-> drivers/gpu/drm/tegra/output.c: In function 'tegra_output_init':
-> drivers/gpu/drm/tegra/output.c:166:9: error: 'struct tegra_output' has no member named 'display'
-> drivers/gpu/drm/tegra/output.c:166:3: error: implicit declaration of function 'of_get_display'
-> drivers/gpu/drm/tegra/output.c:167:20: error: 'struct tegra_output' has no member named 'display'
-> drivers/gpu/drm/tegra/output.c:168:25: error: 'struct tegra_output' has no member named 'display'
-> drivers/gpu/drm/tegra/output.c:179:13: error: 'struct tegra_output' has no member named 'display'
-> drivers/gpu/drm/tegra/output.c:180:3: error: implicit declaration of function 'display_put'
-> drivers/gpu/drm/tegra/output.c:180:21: error: 'struct tegra_output' has no member named 'display'
-> drivers/gpu/drm/tegra/output.c:257:20: error: 'struct tegra_output' has no member named 'display'
-> drivers/gpu/drm/tegra/output.c: In function 'tegra_output_exit':
-> drivers/gpu/drm/tegra/output.c:272:20: error: 'struct tegra_output' has no member named 'display'
+Additionally, userspace software may rely on the classic
+<name>.<id> naming scheme to access device attributes in
+sysfs, without having to know the physical addresses of
+that device on every platform the userspace software may
+support. Using cell-index for device naming allows the
+device addresses to be hidden from userspace and to be
+exposed by logical device number without having to rely on
+auxdata to perform name overrides. This allows userspace to
+make assumptions about which sysfs nodes map to which
+logical instance of a specific hardware block.
 
-Does this depend on something not in linux-next?
+Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
+---
+I had also considered using something like the linux,label property to allow
+custom names for platform devices without resorting to auxdata, but the
+cell-index approach seems more in line with what cell-index was intended for
+and with what the pre-DT platform device naming scheme used to be. Please let
+me know if you think there is a better way to accomplish this.
+
+This is just being sent out as an RFC for now. If there are no objections, I
+will send this out as an official patch, along with (or combined with) a patch
+to fix up the device names in things like clock tables of any affected
+platforms.
+
+ drivers/of/platform.c |   13 ++++++++++++-
+ 1 files changed, 12 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 343ad29..472e374 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -77,8 +77,9 @@ void of_device_make_bus_id(struct device *dev)
+ 	static atomic_t bus_no_reg_magic;
+ 	struct device_node *node = dev->of_node;
+ 	const u32 *reg;
++	u32 cell_index;
+ 	u64 addr;
+-	int magic;
++	int magic, ret;
+
+ #ifdef CONFIG_PPC_DCR
+ 	/*
+@@ -101,6 +102,16 @@ void of_device_make_bus_id(struct device *dev)
+ #endif /* CONFIG_PPC_DCR */
+
+ 	/*
++	 * For devices with a specified cell-index, use the traditional
++	 * naming scheme of <name>.<id>
++	 */
++	ret = of_property_read_u32(node, "cell-index", &cell_index);
++	if (ret == 0) {
++		dev_set_name(dev, "%s.%d", node->name, cell_index);
++		return;
++	}
++
++	/*
+ 	 * For MMIO, get the physical address
+ 	 */
+ 	reg = of_get_property(node, "reg", NULL);
+--
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
