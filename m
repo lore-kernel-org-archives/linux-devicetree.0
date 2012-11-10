@@ -1,81 +1,78 @@
-From: Stepan Moskovchenko <stepanm@codeaurora.org>
-Subject: [RFC] dt/platform: Use cell-index for device naming if available
-Date: Fri,  9 Nov 2012 16:48:52 -0800
-Message-ID: <1352508532-19241-1-git-send-email-stepanm@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
-Cc: David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stepan Moskovchenko <stepanm@codeaurora.org>
+From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] fdtget-runtest.sh: use printf instead of /bin/echo -e
+Date: Fri, 9 Nov 2012 19:53:13 -0500
+Message-ID: <201211091953.14386.vapier@gentoo.org>
+References: <1352224831-1355-1-git-send-email-swarren@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2302795836187046164=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352224831-1355-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use the cell-index property to construct names for platform
-devices, falling back on the existing scheme of using the
-device register address if cell-index is not specified.
+--===============2302795836187046164==
+Content-Type: multipart/signed;
+  boundary="nextPart2157728.XkcnQi8AjR";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 
-The cell-index property is a more useful device identifier,
-especially in systems containing several numbered instances
-of a particular hardware block, since it more easily
-illustrates how devices relate to each other.
+--nextPart2157728.XkcnQi8AjR
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Additionally, userspace software may rely on the classic
-<name>.<id> naming scheme to access device attributes in
-sysfs, without having to know the physical addresses of
-that device on every platform the userspace software may
-support. Using cell-index for device naming allows the
-device addresses to be hidden from userspace and to be
-exposed by logical device number without having to rely on
-auxdata to perform name overrides. This allows userspace to
-make assumptions about which sysfs nodes map to which
-logical instance of a specific hardware block.
+On Tuesday 06 November 2012 13:00:31 Stephen Warren wrote:
+> Mike, should I re-write this with you as the git author?
 
-Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
----
-I had also considered using something like the linux,label property to allow
-custom names for platform devices without resorting to auxdata, but the
-cell-index approach seems more in line with what cell-index was intended for
-and with what the pre-DT platform device naming scheme used to be. Please let
-me know if you think there is a better way to accomplish this.
 
-This is just being sent out as an RFC for now. If there are no objections, I
-will send this out as an official patch, along with (or combined with) a patch
-to fix up the device names in things like clock tables of any affected
-platforms.
+nah, you did the work
+-mike
 
- drivers/of/platform.c |   13 ++++++++++++-
- 1 files changed, 12 insertions(+), 1 deletions(-)
+--nextPart2157728.XkcnQi8AjR
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 343ad29..472e374 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -77,8 +77,9 @@ void of_device_make_bus_id(struct device *dev)
- 	static atomic_t bus_no_reg_magic;
- 	struct device_node *node = dev->of_node;
- 	const u32 *reg;
-+	u32 cell_index;
- 	u64 addr;
--	int magic;
-+	int magic, ret;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (GNU/Linux)
 
- #ifdef CONFIG_PPC_DCR
- 	/*
-@@ -101,6 +102,16 @@ void of_device_make_bus_id(struct device *dev)
- #endif /* CONFIG_PPC_DCR */
+iQIcBAABAgAGBQJQnaV6AAoJEEFjO5/oN/WB1T8P/0d5UjJKMXSxVohXd9sgDayl
+4gzVgITPZVArS24F9LpbCxl14pdr633PoCU+19y9F9r5iT556FGEm/ZJL4bJ7qIY
+THBJ+i0l+Z2gIBjDNWVc0/S1cuyu3P8K+Y591CPwOzv5zbD6In1DqbpZqTgMEqSg
+giRgAgTVD8+ApHeCYOPHi7CxwFidkzscU0ACSYOLsOywaCyRYMP/N6MKlJLc7rC8
+LDYC3BhC9Bh/Y4CkuLlD2sZEZpsrEnhQwUCLmyKhtrW+tIHnYRPAhvG6k6UcHSO5
+ptiGB9Yt8RouN1yYr7OidFk7El8X7aeJDmyzs6VI7qQoWiy9mxF0/eZR7tmBnHc1
+/FwP+jX0m3sqJxyaI0+TOKY7bWBPU5Pho6Vf625Lh66WHbnV8QMEgb49auCb/Cjr
+BGGAfNsVzPCMd5Grx1BcVWtbqgTIJ2HsSz1SQoqMs41LjNLY6y1rYz8l+shnvrdc
+5lcOeOwMdvlOw5ffb6rDZZM/kyG4Q4KuHXsgvlBWbXk3RH5L7s5FfU/JQ9yf2Pq6
+raPi0mD5BtqJl1NFfZ17GivHPQAPZhT3F6iAhHwSUmRuDXha9GOmw13SkZ9/TTR6
++BSTW2K4YLlBsuOBsni8upBCS8ezfbBm2C7RRjtd724cqpXYhttczZbNvm/0z3PC
+qvdY2ERePuJ8aopy/893
+=jvdI
+-----END PGP SIGNATURE-----
 
- 	/*
-+	 * For devices with a specified cell-index, use the traditional
-+	 * naming scheme of <name>.<id>
-+	 */
-+	ret = of_property_read_u32(node, "cell-index", &cell_index);
-+	if (ret == 0) {
-+		dev_set_name(dev, "%s.%d", node->name, cell_index);
-+		return;
-+	}
-+
-+	/*
- 	 * For MMIO, get the physical address
- 	 */
- 	reg = of_get_property(node, "reg", NULL);
---
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+--nextPart2157728.XkcnQi8AjR--
+
+--===============2302795836187046164==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2302795836187046164==--
