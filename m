@@ -1,116 +1,98 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH V4 0/3] Add clock framework for armada 370/XP
-Date: Fri, 09 Nov 2012 17:42:40 -0800
-Message-ID: <20121110014240.16569.66429@nucleus>
-References: <1351621413-3637-1-git-send-email-gregory.clement@free-electrons.com>
+From: Joel A Fernandes <agnel.joel@gmail.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Fri, 9 Nov 2012 21:15:25 -0600
+Message-ID: <CAD=GYpaQfNKdKWBA+JYPaZXs2X7sRMVsnM_fsH1-Q6CUECC3eQ@mail.gmail.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+	<02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+	<CAD=GYpbeKtW37Cj9cXr8F7F83d9Fgs-moqu9p6cOaPE1VxwbSg@mail.gmail.com>
+	<20121109142908.GB4696@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351621413-3637-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Ben Dooks <ben-linux@fluff.org>, Ian Molton <ian.molton@codethink.co.uk>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>, David Marlin <dmarlin@redhat.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree-discuss@lists.ozlabs.orglinux
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20121109142908.GB4696@truffula.fritz.box>
+Sender: linux-omap-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Gregory CLEMENT (2012-10-30 11:23:30)
-> Hello Mike,
-> 
-> I hope this 4th version will meet your expectations. Beside the
-> corrections you have asked I also changed the way I get resources for
-> the clocks. Instead of referring to a node name, now I refer to a
-> compatible name which should be a better use of the device tree.
-> 
-> Rather than taking this series in your git tree, would it possible to
-> give your ack to the patches and let Jason Cooper take the patch set
-> in his git tree. We have other series for mvebu which depend on this
-> one (SMP, HWIOCC and SATA for now and more to come), and it will be
-> easier for us to have everything in the same place.
-> 
+On Fri, Nov 9, 2012 at 8:29 AM, David Gibson
+<david@gibson.dropbear.id.au> wrote:
+> On Fri, Nov 09, 2012 at 12:32:09AM -0500, Joel A Fernandes wrote:
+>> Hi Pantelis,
+>>
+>> I hope I'm not too late to reply as I'm traveling.
+>>
+>> On Nov 6, 2012, at 5:30 AM, Pantelis Antoniou
+>> <panto@antoniou-consulting.com> wrote:
+>>
+>> >> Joanne has purchased one of Jane's capes and packaged it into a rugged
+>> >> case for data logging. As far as Joanne is concerned, the BeagleBone and
+>> >> cape together are a single unit and she'd prefer a single monolithic FDT
+>> >> instead of using an FDT overlay.
+>> >> Option A: Using dtc, she uses the BeagleBone and cape .dts source files
+>> >>        to generate a single .dtb for the entire system which is
+>> >>        loaded by U-Boot. -or-
+>> >
+>> > Unlikely.
+>> >> Option B: Joanne uses a tool to merge the BeagleBone and cape .dtb files
+>> >>        (instead of .dts files), -or-
+>> > Possible but low probability.
+>> >
+>> >> Option C: U-Boot loads both the base and overlay FDT files, merges them,
+>> >>        and passes the resolved tree to the kernel.
+>> >>
+>> >
+>> > Could be made to work. Only really required if Joanne wants the
+>> > cape interface to work for u-boot too. For example if the cape has some
+>> > kind of network interface that u-boot will use to boot from.
+>> >
+>>
+>> I love Grant's hashing idea a lot keeping the phandle problem for
+>> compile time and not requiring fixups.
+>
+> Well, using a hash only moves the problem of fixed phandles to a
+> problem of fixed node paths.  The details of node paths are, if
+> anything, more mutable than phandles.
 
-Hi Gregory,
+So what you're saying is there's no way to make a phandle a signature
+of a (property of a node) since no one property is unique. If I
+follow, even node path can't be used because hash value changes if
+node is moved around in the tree. This shoots down the hashing idea
+then, which I guess is looked down upon anyway due to dynamic changes
+to the base DT as discussed in the usecases.
 
-After much delay:
+> [snip]
+>> Alternatively to hashing, reading David Gibson's paper I followed,
+>> phandle is supposed to 'uniquely' identity node. I wonder why the node
+>> name itself is not sufficient to uniquely identify.
+>
+> Node names are not unique, not even close.  If you have two similar
+> NICs in slot 0 of two different PCI domains, they'll almost certainly
+> both be called 'ethernet@0,0'.  Similar examples abound on other
+> buses.  Node paths are unique, but they are long.
+>
+> The other big reason for phandles in OF history is that they would be
+> more stable than paths.  The device tree could be manipulated during
+> OF runtime, but phandles would generally be internal pointers in OF
+> and so remain a consistent handle even if the node moved in the tree.
+> That's not really relevant for flat trees, but we need to work with
+> the same structures.
 
-Acked-by: Mike Turquette <mturquette@linaro.org>
+Thanks.
+
+>> The code that does
+>> the tree walking can then just strcmp the node name while it walks the
+>> tree instead of having to find a node with a phandle number. I guess
+>> the reason is phandles are small to store as data values. Another
+>> approach can be to arrange the string block in alphabetical order
+>> (unless it already is),
+>
+> They're not, and doing so would be a painful change to maintain
+> compatibility across.  And in any case only property names use the
+> strings block, not node names.
+
+Understood, thanks.
 
 Regards,
-Mike
-
-> The purpose of this patch set is to add support for clock framework
-> for Armada 370 and Armada XP SoCs. All the support is done under the
-> directory drivers/clk/mvebu/ as the support for other mvebu SoCs was
-> in mind during the writing of the code.
-> 
-> Two kinds of clocks are added:
-> 
-> - The CPU clocks are only for Armada XP (which is multi-core)
-> 
-> - The core clocks are clocks which have their rate fixed during
->   reset.
-> 
-> Many thanks to Thomas Petazzoni and Sebastian Hesselbarth for their
-> review and feedback. The device tree bindings were really improved
-> with the advices of Sebastian.
-> 
-> Changelog:
-> V3 -> V4
-> - Rebased on top of 3.7-rc3
-> - Replaced the whitespace by tab in the Documentation files
-> - Fixed the comment style according to the CodingStyle documentation
-> - Fixed incorrect indentation
-> - Removed redundant header in clk-cpu.c
-> - Replaced improper whitespace by tabs in armada-xp.dtsi
-> - In the device tree, the resources for the clocks do not rely anymore
->   on the node name mvebu-sar but now only depend on the compatible
->   name. (Issue reported by Sebastian Hesselbarth)
-> 
-> V2 -> V3:
-> - Rebased on top of v3.7-rc1
-> - Fixed a typo in device trees
-> - Fixed warning from checkpatch
-> 
-> V1 -> V2:
-> - Improved the spelling and the wording of the documentation and the
->   1st commit log
-> - Removed the "end_of_list" name which are unused here.
-> - Fix the cpu clock by using of_clk_src_onecell_get in the same way it
->   was used for the core clocks
-> 
-> Regards,
-> 
-> 
-> Gregory CLEMENT (3):
->   clk: mvebu: add armada-370-xp specific clocks
->   clk: armada-370-xp: add support for clock framework
->   clocksource: time-armada-370-xp converted to clk framework
-> 
->  .../devicetree/bindings/clock/mvebu-core-clock.txt |   40 +++
->  .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   21 ++
->  arch/arm/boot/dts/armada-370-db.dts                |    4 -
->  arch/arm/boot/dts/armada-370-xp.dtsi               |    1 +
->  arch/arm/boot/dts/armada-370.dtsi                  |   12 +
->  arch/arm/boot/dts/armada-xp.dtsi                   |   48 +++
->  arch/arm/mach-mvebu/Kconfig                        |    5 +
->  arch/arm/mach-mvebu/armada-370-xp.c                |    8 +-
->  arch/arm/mach-mvebu/common.h                       |    1 +
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/mvebu/Makefile                         |    2 +
->  drivers/clk/mvebu/clk-core.c                       |  318 ++++++++++++++++++++
->  drivers/clk/mvebu/clk-core.h                       |   19 ++
->  drivers/clk/mvebu/clk-cpu.c                        |  154 ++++++++++
->  drivers/clk/mvebu/clk-cpu.h                        |   19 ++
->  drivers/clk/mvebu/clk.c                            |   36 +++
->  drivers/clocksource/time-armada-370-xp.c           |   11 +-
->  17 files changed, 690 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
->  create mode 100644 drivers/clk/mvebu/Makefile
->  create mode 100644 drivers/clk/mvebu/clk-core.c
->  create mode 100644 drivers/clk/mvebu/clk-core.h
->  create mode 100644 drivers/clk/mvebu/clk-cpu.c
->  create mode 100644 drivers/clk/mvebu/clk-cpu.h
->  create mode 100644 drivers/clk/mvebu/clk.c
-> 
-> -- 
-> 1.7.9.5
+Joel
