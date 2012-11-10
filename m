@@ -1,138 +1,244 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm: tegra: Add HDMI support
-Date: Sat, 10 Nov 2012 22:11:28 +0100
-Message-ID: <20121110211127.GA26998@avionic-0098.mockup.avionic-design.de>
-References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
- <1352469579-3337-3-git-send-email-thierry.reding@avionic-design.de>
- <CACna6rycZ=TGHP7KpVa_r0JSpc6c=PB89pijR9E_4A=bQ=74Bw@mail.gmail.com>
- <509D28B6.3060207@vodafone.de>
- <20121110210118.GA26809@avionic-0098.mockup.avionic-design.de>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH v5] Input: matrix-keypad - Add device tree support
+Date: Sun, 11 Nov 2012 03:10:32 +0530
+Message-ID: <1352583632-30550-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121110210118.GA26809-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian =?utf-8?B?S8O2bmln?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, grant.likely@secretlab.ca
+Cc: rob.herring@calxeda.com, dgdunix@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Add device tree support to matrix keypad driver and usage details
+are added to device tree documentation. Driver was tested on AM335x
+EVM.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+---
+This patch was tested on AM335x-EVM and based on linux-next, cleanly
+applies on top of "input/next"
 
-On Sat, Nov 10, 2012 at 10:01:18PM +0100, Thierry Reding wrote:
-> On Fri, Nov 09, 2012 at 05:00:54PM +0100, Christian K=C3=B6nig wrote:
-> > On 09.11.2012 16:45, Rafa=C5=82 Mi=C5=82ecki wrote:
-> > >2012/11/9 Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>:
-> > >>+/* all fields little endian */
-> > >>+struct hdmi_audio_infoframe {
-> > >>+       /* PB0 */
-> > >>+       u8 csum;
-> > >>+
-> > >>+       /* PB1 */
-> > >>+       unsigned cc:3; /* channel count */
-> > >>+       unsigned res1:1;
-> > >>+       unsigned ct:4; /* coding type */
-> > >>+
-> > >>+       /* PB2 */
-> > >>+       unsigned ss:2; /* sample size */
-> > >>+       unsigned sf:3; /* sample frequency */
-> > >>+       unsigned res2:3;
-> > >>+
-> > >>+       /* PB3 */
-> > >>+       unsigned cxt:5; /* coding extention type */
-> > >>+       unsigned res3:3;
-> > >>+
-> > >>+       /* PB4 */
-> > >>+       u8 ca; /* channel/speaker allocation */
-> > >>+
-> > >>+       /* PB5 */
-> > >>+       unsigned res5:3;
-> > >>+       unsigned lsv:4; /* level shift value */
-> > >>+       unsigned dm_inh:1; /* downmix inhibit */
-> > >>+
-> > >>+       /* PB6-10 reserved */
-> > >>+       u8 res6;
-> > >>+       u8 res7;
-> > >>+       u8 res8;
-> > >>+       u8 res9;
-> > >>+       u8 res10;
-> > >>+} __packed;
-> > >I was told it won't work on different endian devices. See
-> > >[RFC][PATCH] drm/radeon/hdmi: define struct for AVI infoframe
-> > >http://lists.freedesktop.org/archives/dri-devel/2012-May/022544.html
-> >=20
-> > Yeah, that's indeed true. And honestly adding just another
-> > implementation of the HDMI info frames sounds like somebody should
-> > finally sit down and implement it in a common drm_hdmi.c
->=20
-> So I've been looking at what most other implementations do and it seems
-> a lot just fill the AVI infoframe with zeroes while only a few actually
-> try to put useful information in them. Still in order to plan for a
-> generic solution, I thought maybe something like the below set of
-> structures and functions could work:
->=20
-> /*
->  * Structure that contains the infoframe fields in a form that allows the=
-m to
->  * be easily accessed from C code.
->  */
-> struct hdmi_avi_infoframe;
->=20
-> /*
->  * DRM helper to fill a struct hdmi_avi_infoframe with information taken =
-=66rom
->  * a struct drm_display_mode. Fields that cannot automatically be derived=
- by
->  * looking at a struct drm_display_mode are set to the default values.
->  */
-> int drm_hdmi_avi_infoframe_from_display_mode(struct hdmi_avi_infoframe *f=
-rame,
-> 					     struct drm_display_mode *mode);
->=20
-> /*
->  * Packs the struct hdmi_avi_infoframe into a binary buffer that can be
->  * programmed to the hardware-specific registers.
->  */
-> ssize_t hdmi_avi_infoframe_pack(struct hdmi_avi_infoframe *frame,
-> 				void *buffer, size_t size);
->=20
-> Such a scheme would allow DRM drivers to call the helper and tweak the
-> fields in the structure if the want or need to and call the packing
-> function to obtain a buffer that they can write to the controller.
->=20
-> Does that sound at all reasonable?
+Changes from v4:
+	- Removed clustered-irq support through DT. This should be
+	  added if any platform requires in the future.
 
-And I forgot, maybe this shouldn't be included in the drivers/gpu/drm
-subdirectory, but rather in a more generic location such as
-drivers/video since other subsystems (V4L2) may want to use the same
-code.
+Changes from v3:
+	- Incorporated Stephen Warren's review comments on v3
+	  * Added description to clustered-irq-flags binding
 
-Thierry
+Changes from v2:
+	- Incorporated Stephen Warren's review comments on v2
+	  * Renamed the bindings file to gpio-matrix-keypad.txt
+	  * Added description to clustered-irq binding
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature
+Changes from v1:
+	- Incorporated Rob's review comments on v1
+	  * Changed matix-keypad compatible to gpio-matrix-keypad
+	  * Removed unnecessary props (num of gpios)
+	  * Used of_match_ptr()
+	- Removed first patch based on Dmitry's comments on v1
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+ .../bindings/input/gpio-matrix-keypad.txt          |   46 +++++++++
+ drivers/input/keyboard/matrix_keypad.c             |  104 +++++++++++++++++++-
+ 2 files changed, 149 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
 
-iQIcBAEBAgAGBQJQnsL/AAoJEN0jrNd/PrOhz74P/RxJss8acQpkW/cLubKKtX2q
-htzaUgliKAtMPLH5v8vSa9wDbA9D1c6VdKEKNt0EBqMl5sv15KfnJNGd5gL+CXyf
-e0lHM80QkobietjDBbm6vk3vIhjbCpl1v+lLT1tJ5JjRYMzx1WIVzhhAsRGBX6eC
-6HE/+dYEtM30fgk3nAziSJBvMPaHp+2j1m39SRVwhfpvy86s6aGr32rD6MNhwCIL
-f4xGoFQm1VXvCFXpbZDp8hxO13zXqaxNXc1AXqN/mhXMTjhVWuNhKaGWa6B6z4TJ
-sMtY2baK09/yPMqDvyZjXXcOc5CIkmfQ4/732N1BY54+lPDaSIFjxAOwKq9Oj7Wm
-lunuh/S5ScruFkjsUZqyuwKJuVbOQmQ2o9EY7Oc3vbQZvlhfT59zmymKR95W6pxW
-d5Bialc6OkNpOjUe13v7tLIvnmmK4Iq2XFQXMW0pMTbxdmB7v0HnXVt/3SxxQpMg
-6aj48qaWY5jb2BjSdY0jDvb90fH+rltO1Rc7HLOYnE2SX2RpfiWU5QlO6JTCVAnE
-jvAhsl6Xb9vcUcgZSy3+Je8CJM+fziJ7hO8PRM++m4+sCb0LunQN61xlYvk4rfo3
-u8iwWuZ9fwosQ5cejKNfBNBk54U01ppos6jQTnSteLeKKwbcm6zwH0IdFJ43CpEi
-mhnxGvbU33+IEDwU/3K7
-=eRBT
------END PGP SIGNATURE-----
+diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+new file mode 100644
+index 0000000..ead641c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+@@ -0,0 +1,46 @@
++* GPIO driven matrix keypad device tree bindings
++
++GPIO driven matrix keypad is used to interface a SoC with a matrix keypad.
++The matrix keypad supports multiple row and column lines, a key can be
++placed at each intersection of a unique row and a unique column. The matrix
++keypad can sense a key-press and key-release by means of GPIO lines and
++report the event using GPIO interrupts to the cpu.
++
++Required Properties:
++- compatible:		Should be "gpio-matrix-keypad"
++- row-gpios:		List of gpios used as row lines. The gpio specifier
++			for this property depends on the gpio controller to
++			which these row lines are connected.
++- col-gpios:		List of gpios used as column lines. The gpio specifier
++			for this property depends on the gpio controller to
++			which these column lines are connected.
++- linux,keymap:		The definition can be found at
++			bindings/input/matrix-keymap.txt
++
++Optional Properties:
++- linux,no-autorepeat:	do no enable autorepeat feature.
++- linux,wakeup:		use any event on keypad as wakeup event.
++- debounce-delay-ms:	debounce interval in milliseconds
++- col-scan-delay-us:	delay, measured in microseconds, that is needed
++			before we can scan keypad after activating column gpio
++
++Example:
++	matrix-keypad {
++		compatible = "gpio-matrix-keypad";
++		debounce-delay-ms = <5>;
++		col-scan-delay-us = <2>;
++
++		row-gpios = <&gpio2 25 0
++			     &gpio2 26 0
++			     &gpio2 27 0>;
++
++		col-gpios = <&gpio2 21 0
++			     &gpio2 22 0>;
++
++		linux,keymap = <0x0000008B
++				0x0100009E
++				0x02000069
++				0x0001006A
++				0x0101001C
++				0x0201006C>;
++	};
+diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
+index 18b7237..3ba8cfb 100644
+--- a/drivers/input/keyboard/matrix_keypad.c
++++ b/drivers/input/keyboard/matrix_keypad.c
+@@ -23,6 +23,9 @@
+ #include <linux/gpio.h>
+ #include <linux/input/matrix_keypad.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_platform.h>
+ 
+ struct matrix_keypad {
+ 	const struct matrix_keypad_platform_data *pdata;
+@@ -394,6 +397,93 @@ static void matrix_keypad_free_gpio(struct matrix_keypad *keypad)
+ 		gpio_free(pdata->col_gpios[i]);
+ }
+ 
++#ifdef CONFIG_OF
++static
++struct matrix_keypad_platform_data *matrix_keypad_parse_dt(struct device *dev)
++{
++	struct matrix_keypad_platform_data *pdata;
++	struct matrix_keymap_data *keymap_data;
++	struct device_node *np = dev->of_node;
++	unsigned int *row_gpios;
++	unsigned int *col_gpios;
++	struct property *prop;
++	int key_count = 0, length, row, col;
++	uint32_t *keymap;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata) {
++		dev_err(dev, "could not allocate memory for platform data\n");
++		return NULL;
++	}
++
++	pdata->num_row_gpios = of_gpio_named_count(np, "row-gpios");
++	pdata->num_col_gpios = of_gpio_named_count(np, "col-gpios");
++	if (!pdata->num_row_gpios || !pdata->num_col_gpios) {
++		dev_err(dev, "number of keypad rows/columns not specified\n");
++		return NULL;
++	}
++
++	keymap_data = devm_kzalloc(dev, sizeof(*keymap_data), GFP_KERNEL);
++	if (!keymap_data) {
++		dev_err(dev, "could not allocate memory for keymap data\n");
++		return NULL;
++	}
++	pdata->keymap_data = keymap_data;
++
++	prop = of_find_property(np, "linux,keymap", &length);
++	if (!prop)
++		return NULL;
++
++	key_count = length / sizeof(u32);
++	keymap_data->keymap_size = key_count;
++	keymap = devm_kzalloc(dev, sizeof(uint32_t) * key_count, GFP_KERNEL);
++	if (!keymap) {
++		dev_err(dev, "could not allocate memory for keymap\n");
++		return NULL;
++	}
++	keymap_data->keymap = keymap;
++
++	of_property_read_u32_array(np, "linux,keymap", keymap, key_count);
++
++	if (of_get_property(np, "linux,no-autorepeat", NULL))
++		pdata->no_autorepeat = true;
++	if (of_get_property(np, "linux,wakeup", NULL))
++		pdata->wakeup = true;
++	if (of_get_property(np, "gpio-activelow", NULL))
++		pdata->active_low = true;
++
++	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
++	of_property_read_u32(np, "col-scan-delay-us",
++						&pdata->col_scan_delay_us);
++
++	row_gpios = devm_kzalloc(dev, sizeof(unsigned int) *
++					pdata->num_row_gpios, GFP_KERNEL);
++	col_gpios = devm_kzalloc(dev, sizeof(unsigned int) *
++					pdata->num_col_gpios, GFP_KERNEL);
++	if (!row_gpios || !col_gpios) {
++		dev_err(dev, "could not allocate memory for gpios\n");
++		return NULL;
++	}
++
++	for (row = 0; row < pdata->num_row_gpios; row++)
++		row_gpios[row] = of_get_named_gpio(np, "row-gpios", row);
++
++	for (col = 0; col < pdata->num_col_gpios; col++)
++		col_gpios[col] = of_get_named_gpio(np, "col-gpios", col);
++
++	pdata->row_gpios = row_gpios;
++	pdata->col_gpios = col_gpios;
++
++	return pdata;
++}
++#else
++static
++struct matrix_keypad_platform_data *matrix_keypad_parse_dt(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+ {
+ 	const struct matrix_keypad_platform_data *pdata;
+@@ -404,7 +494,10 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+ 	size_t keymap_size;
+ 	int err;
+ 
+-	pdata = pdev->dev.platform_data;
++	if (pdev->dev.of_node)
++		pdata = matrix_keypad_parse_dt(&pdev->dev);
++	else
++		pdata = pdev->dev.platform_data;
+ 	if (!pdata) {
+ 		dev_err(&pdev->dev, "no platform data defined\n");
+ 		return -EINVAL;
+@@ -488,6 +581,14 @@ static int __devexit matrix_keypad_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id matrix_keypad_dt_match[] = {
++	{ .compatible = "gpio-matrix-keypad" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, matrix_keypad_dt_match);
++#endif
++
+ static struct platform_driver matrix_keypad_driver = {
+ 	.probe		= matrix_keypad_probe,
+ 	.remove		= __devexit_p(matrix_keypad_remove),
+@@ -495,6 +596,7 @@ static struct platform_driver matrix_keypad_driver = {
+ 		.name	= "matrix-keypad",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &matrix_keypad_pm_ops,
++		.of_match_table = of_match_ptr(matrix_keypad_dt_match),
+ 	},
+ };
+ module_platform_driver(matrix_keypad_driver);
+-- 
+1.7.9.5
 
---r5Pyd7+fXNt84Ff3--
