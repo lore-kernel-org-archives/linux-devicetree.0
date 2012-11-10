@@ -1,12 +1,13 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] fdtget-runtest.sh: use printf instead of /bin/echo -e
-Date: Fri, 9 Nov 2012 19:53:13 -0500
-Message-ID: <201211091953.14386.vapier@gentoo.org>
+Date: Fri, 9 Nov 2012 19:54:03 -0500
+Message-ID: <201211091954.05107.vapier@gentoo.org>
 References: <1352224831-1355-1-git-send-email-swarren@wwwdotorg.org>
+ <5099C70F.5040801@wwwdotorg.org> <20121107024206.GP23553@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2302795836187046164=="
+Content-Type: multipart/mixed; boundary="===============2127375045291326365=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352224831-1355-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20121107024206.GP23553-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,54 +18,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============2302795836187046164==
+--===============2127375045291326365==
 Content-Type: multipart/signed;
-  boundary="nextPart2157728.XkcnQi8AjR";
+  boundary="nextPart1947947.BbuaY61Mbk";
   protocol="application/pgp-signature";
   micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
 
---nextPart2157728.XkcnQi8AjR
+--nextPart1947947.BbuaY61Mbk
 Content-Type: Text/Plain;
-  charset="utf-8"
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 
-On Tuesday 06 November 2012 13:00:31 Stephen Warren wrote:
-> Mike, should I re-write this with you as the git author?
+On Tuesday 06 November 2012 21:42:06 David Gibson wrote:
+> Ah, so it was.  I didn't realise there had been such a long delay
+> between the initial patch and this discussion.
 
-
-nah, you did the work
+yes, i was perusing my backlog on the list when i came across it ;)
 -mike
 
---nextPart2157728.XkcnQi8AjR
+--nextPart1947947.BbuaY61Mbk
 Content-Type: application/pgp-signature; name=signature.asc 
 Content-Description: This is a digitally signed message part.
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.17 (GNU/Linux)
 
-iQIcBAABAgAGBQJQnaV6AAoJEEFjO5/oN/WB1T8P/0d5UjJKMXSxVohXd9sgDayl
-4gzVgITPZVArS24F9LpbCxl14pdr633PoCU+19y9F9r5iT556FGEm/ZJL4bJ7qIY
-THBJ+i0l+Z2gIBjDNWVc0/S1cuyu3P8K+Y591CPwOzv5zbD6In1DqbpZqTgMEqSg
-giRgAgTVD8+ApHeCYOPHi7CxwFidkzscU0ACSYOLsOywaCyRYMP/N6MKlJLc7rC8
-LDYC3BhC9Bh/Y4CkuLlD2sZEZpsrEnhQwUCLmyKhtrW+tIHnYRPAhvG6k6UcHSO5
-ptiGB9Yt8RouN1yYr7OidFk7El8X7aeJDmyzs6VI7qQoWiy9mxF0/eZR7tmBnHc1
-/FwP+jX0m3sqJxyaI0+TOKY7bWBPU5Pho6Vf625Lh66WHbnV8QMEgb49auCb/Cjr
-BGGAfNsVzPCMd5Grx1BcVWtbqgTIJ2HsSz1SQoqMs41LjNLY6y1rYz8l+shnvrdc
-5lcOeOwMdvlOw5ffb6rDZZM/kyG4Q4KuHXsgvlBWbXk3RH5L7s5FfU/JQ9yf2Pq6
-raPi0mD5BtqJl1NFfZ17GivHPQAPZhT3F6iAhHwSUmRuDXha9GOmw13SkZ9/TTR6
-+BSTW2K4YLlBsuOBsni8upBCS8ezfbBm2C7RRjtd724cqpXYhttczZbNvm/0z3PC
-qvdY2ERePuJ8aopy/893
-=jvdI
+iQIcBAABAgAGBQJQnaWtAAoJEEFjO5/oN/WB5CoQAKnF7ewRzrLm42T2/KyVrSTN
+VIHiDdl31Yi5+rNWPlzzcfeTOibegZDAA6/PUrbe5zvanmGuDZWeJ4eXlJJHtELL
+45W8qX83e+GmqNzlboa5KxSu7nA2lr8YSjKyZFIoSHtSO1OxNpragtwnopX6jQ+9
+ZlwQB++Z8hj5IUOXaKgOYNTn8BfNSCvq+ChpPJDLGwngo++hr/R4PYZ8O+b71Ec+
+8L0elOy6z+uricwRVFM3mQCOAH0VEWyU9j4xephHEXRffERbPMEgbjgH7w5fv3iv
+URIMghNyO6UEq6QdPBUrM4rmpKtv9Dsg0y5y60fHkeH682PedBFzqMA92HzUsMfS
+pgLnam4wb0UbpjJppBkFGwSjeKl8CRXCM4Gho7LVciVS0Pvun/johrnlrkrEq2Mt
+0vPE7/Ttc41LOAlG+q8LoS8G8QNkWPQQ83h0W7276NX0vm/u9BFD3+EF2SULh8rP
+31QtkDlHQWpD2cwjJAlfzZNN+xVFe2PItTsTZaX07jUWiAVHf231jRFBMsgyXzvb
+p+RJn+GV2A4CRitWR3qfO3861niLpnArgKsV1OKIzfA+fHBlKoXqg9kbMLA9eHcg
+sP+3Cl93WRHbaSjiZE72Zrm0VcEb56Zftvz1E+bA3wrmluPugorReB9qmPMuK/21
+fm+5oiVOKVeC61oHSRg5
+=H0WC
 -----END PGP SIGNATURE-----
 
---nextPart2157728.XkcnQi8AjR--
+--nextPart1947947.BbuaY61Mbk--
 
---===============2302795836187046164==
+--===============2127375045291326365==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -75,4 +76,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============2302795836187046164==--
+--===============2127375045291326365==--
