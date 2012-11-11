@@ -1,65 +1,153 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC] SPI: spi-bcm63xx: use clk_{prepare_enable,disable_unprepare}
-Date: Sun, 11 Nov 2012 13:50:39 +0100
-Message-ID: <1352638249-29298-6-git-send-email-jonas.gorski@gmail.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: [RFC] MIPS: BCM63XX: add serial blocks to Device Tree includes
+Date: Sun, 11 Nov 2012 13:50:47 +0100
+Message-ID: <1352638249-29298-14-git-send-email-jonas.gorski@gmail.com>
 References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Maxime Bizon <mbizon@freebox.fr>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use proper clk_prepare/unprepare calls in preparation for switching
-to the generic clock framework.
+Add the serial block to the Device Tree includes for all SoCs.
 
-Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 ---
- drivers/spi/spi-bcm63xx.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+ arch/mips/bcm63xx/dts/bcm6328.dtsi |   14 ++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6338.dtsi |    7 +++++++
+ arch/mips/bcm63xx/dts/bcm6345.dtsi |    8 ++++++++
+ arch/mips/bcm63xx/dts/bcm6348.dtsi |    7 +++++++
+ arch/mips/bcm63xx/dts/bcm6358.dtsi |   14 ++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6368.dtsi |   14 ++++++++++++++
+ 6 files changed, 64 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm63xx.c b/drivers/spi/spi-bcm63xx.c
-index a9f4049..69cb96a 100644
---- a/drivers/spi/spi-bcm63xx.c
-+++ b/drivers/spi/spi-bcm63xx.c
-@@ -431,7 +431,7 @@ static int __devinit bcm63xx_spi_probe(struct platform_device *pdev)
- 	}
+diff --git a/arch/mips/bcm63xx/dts/bcm6328.dtsi b/arch/mips/bcm63xx/dts/bcm6328.dtsi
+index e2e92c3..d29d43c 100644
+--- a/arch/mips/bcm63xx/dts/bcm6328.dtsi
++++ b/arch/mips/bcm63xx/dts/bcm6328.dtsi
+@@ -140,5 +140,19 @@
+ 			#gpio-cells = <2>;
+ 			ngpio = <32>;
+ 		};
++
++		uart0: serial@100 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x100 0x18>;
++			interrupts = <28>;
++			status = "disabled";
++		};
++
++		uart1: serial@120 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x120 0x18>;
++			interrupts = <39>;
++			status = "disabled";
++		};
+ 	};
+ };
+diff --git a/arch/mips/bcm63xx/dts/bcm6338.dtsi b/arch/mips/bcm63xx/dts/bcm6338.dtsi
+index 28e7cb6..c7b45c1 100644
+--- a/arch/mips/bcm63xx/dts/bcm6338.dtsi
++++ b/arch/mips/bcm63xx/dts/bcm6338.dtsi
+@@ -90,6 +90,13 @@
+ 			};
+ 		};
  
- 	/* Initialize hardware */
--	clk_enable(bs->clk);
-+	clk_prepare_enable(bs->clk);
- 	bcm_spi_writeb(bs, SPI_INTR_CLEAR_ALL, SPI_INT_STATUS);
++		uart0: serial@300 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x300 0x18>;
++			interrupts = <2>;
++			status = "disabled";
++		};
++
+ 		gpio0: gpio@400 {
+ 			compatible = "brcm,bcm63xx-gpio";
+ 			reg = <0x400 0x80>;
+diff --git a/arch/mips/bcm63xx/dts/bcm6345.dtsi b/arch/mips/bcm63xx/dts/bcm6345.dtsi
+index 1ebc024..055f66c 100644
+--- a/arch/mips/bcm63xx/dts/bcm6345.dtsi
++++ b/arch/mips/bcm63xx/dts/bcm6345.dtsi
+@@ -75,6 +75,14 @@
+ 				};
+ 			};
+ 		};
++
++		uart0: serial@300 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x300 0x18>;
++			interrupts = <2>;
++			status = "disabled";
++		};
++
+ 		gpio0: gpio@400 {
+ 			compatible = "brcm,bcm63xx-gpio";
+ 			reg = <0x400 0x80>;
+diff --git a/arch/mips/bcm63xx/dts/bcm6348.dtsi b/arch/mips/bcm63xx/dts/bcm6348.dtsi
+index 89acec7..5d1d10a 100644
+--- a/arch/mips/bcm63xx/dts/bcm6348.dtsi
++++ b/arch/mips/bcm63xx/dts/bcm6348.dtsi
+@@ -97,6 +97,13 @@
+ 			};
+ 		};
  
- 	/* register and we are done */
-@@ -447,7 +447,7 @@ static int __devinit bcm63xx_spi_probe(struct platform_device *pdev)
- 	return 0;
- 
- out_clk_disable:
--	clk_disable(clk);
-+	clk_disable_unprepare(clk);
- out_err:
- 	platform_set_drvdata(pdev, NULL);
- 	spi_master_put(master);
-@@ -468,7 +468,7 @@ static int __devexit bcm63xx_spi_remove(struct platform_device *pdev)
- 	bcm_spi_writeb(bs, 0, SPI_INT_MASK);
- 
- 	/* HW shutdown */
--	clk_disable(bs->clk);
-+	clk_disable_unprepare(bs->clk);
- 	clk_put(bs->clk);
- 
- 	platform_set_drvdata(pdev, 0);
++		uart0: serial@300 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x300 0x18>;
++			interrupts = <2>;
++			status = "disabled";
++		};
++
+ 		gpio0: gpio@400 {
+ 			compatible = "brcm,bcm63xx-gpio";
+ 			regs = <0x400 0x80>;
+diff --git a/arch/mips/bcm63xx/dts/bcm6358.dtsi b/arch/mips/bcm63xx/dts/bcm6358.dtsi
+index 52170d6..702882d 100644
+--- a/arch/mips/bcm63xx/dts/bcm6358.dtsi
++++ b/arch/mips/bcm63xx/dts/bcm6358.dtsi
+@@ -138,5 +138,19 @@
+ 			#gpio-cells = <2>;
+ 			ngpio = <40>;
+ 		};
++
++		uart0: serial@100 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x100 0x18>;
++			interrupts = <2>;
++			status = "disabled";
++		};
++
++		uart1: serial@120 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x120 0x18>;
++			interrupts = <3>;
++			status = "disabled";
++		};
+ 	};
+ };
+diff --git a/arch/mips/bcm63xx/dts/bcm6368.dtsi b/arch/mips/bcm63xx/dts/bcm6368.dtsi
+index 068231b..82cd030 100644
+--- a/arch/mips/bcm63xx/dts/bcm6368.dtsi
++++ b/arch/mips/bcm63xx/dts/bcm6368.dtsi
+@@ -178,5 +178,19 @@
+ 			#gpio-cells = <2>;
+ 			ngpio = <38>;
+ 		};
++
++		uart0: serial@100 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x100 0x18>;
++			interrupts = <2>;
++			status = "disabled";
++		};
++
++		uart1: serial@120 {
++			compatible = "brcm,bcm63xx-uart";
++			reg = <0x120 0x18>;
++			interrupts = <3>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 1.7.2.5
