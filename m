@@ -1,119 +1,94 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 2/2] drm: tegra: Add HDMI support
-Date: Sun, 11 Nov 2012 15:46:44 +0100
-Message-ID: <20121111144644.GK5854@phenom.ffwll.local>
-References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
- <1352469579-3337-3-git-send-email-thierry.reding@avionic-design.de>
- <CACna6rycZ=TGHP7KpVa_r0JSpc6c=PB89pijR9E_4A=bQ=74Bw@mail.gmail.com>
- <509D28B6.3060207@vodafone.de>
- <20121110210118.GA26809@avionic-0098.mockup.avionic-design.de>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [PATCH 2/3] ARM: Kirkwood: Convert DNSKW to use gpio-poweroff.
+Date: Sun, 11 Nov 2012 17:21:30 +0100
+Message-ID: <1352650891-18356-3-git-send-email-andrew@lunn.ch>
+References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121110210118.GA26809@avionic-0098.mockup.avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Christian =?iso-8859-1?Q?K=F6nig?= <deathsimple@vodafone.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, Dave Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352650891-18356-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Nov 10, 2012 at 10:01:18PM +0100, Thierry Reding wrote:
-> On Fri, Nov 09, 2012 at 05:00:54PM +0100, Christian K=C3=B6nig wrote:
-> > On 09.11.2012 16:45, Rafa=C5=82 Mi=C5=82ecki wrote:
-> > >2012/11/9 Thierry Reding <thierry.reding@avionic-design.de>:
-> > >>+/* all fields little endian */
-> > >>+struct hdmi_audio_infoframe {
-> > >>+       /* PB0 */
-> > >>+       u8 csum;
-> > >>+
-> > >>+       /* PB1 */
-> > >>+       unsigned cc:3; /* channel count */
-> > >>+       unsigned res1:1;
-> > >>+       unsigned ct:4; /* coding type */
-> > >>+
-> > >>+       /* PB2 */
-> > >>+       unsigned ss:2; /* sample size */
-> > >>+       unsigned sf:3; /* sample frequency */
-> > >>+       unsigned res2:3;
-> > >>+
-> > >>+       /* PB3 */
-> > >>+       unsigned cxt:5; /* coding extention type */
-> > >>+       unsigned res3:3;
-> > >>+
-> > >>+       /* PB4 */
-> > >>+       u8 ca; /* channel/speaker allocation */
-> > >>+
-> > >>+       /* PB5 */
-> > >>+       unsigned res5:3;
-> > >>+       unsigned lsv:4; /* level shift value */
-> > >>+       unsigned dm_inh:1; /* downmix inhibit */
-> > >>+
-> > >>+       /* PB6-10 reserved */
-> > >>+       u8 res6;
-> > >>+       u8 res7;
-> > >>+       u8 res8;
-> > >>+       u8 res9;
-> > >>+       u8 res10;
-> > >>+} __packed;
-> > >I was told it won't work on different endian devices. See
-> > >[RFC][PATCH] drm/radeon/hdmi: define struct for AVI infoframe
-> > >http://lists.freedesktop.org/archives/dri-devel/2012-May/022544.ht=
-ml
-> >=20
-> > Yeah, that's indeed true. And honestly adding just another
-> > implementation of the HDMI info frames sounds like somebody should
-> > finally sit down and implement it in a common drm_hdmi.c
->=20
-> So I've been looking at what most other implementations do and it see=
-ms
-> a lot just fill the AVI infoframe with zeroes while only a few actual=
-ly
-> try to put useful information in them. Still in order to plan for a
-> generic solution, I thought maybe something like the below set of
-> structures and functions could work:
->=20
-> /*
->  * Structure that contains the infoframe fields in a form that allows=
- them to
->  * be easily accessed from C code.
->  */
-> struct hdmi_avi_infoframe;
->=20
-> /*
->  * DRM helper to fill a struct hdmi_avi_infoframe with information ta=
-ken from
->  * a struct drm_display_mode. Fields that cannot automatically be der=
-ived by
->  * looking at a struct drm_display_mode are set to the default values=
-=2E
->  */
-> int drm_hdmi_avi_infoframe_from_display_mode(struct hdmi_avi_infofram=
-e *frame,
-> 					     struct drm_display_mode *mode);
->=20
-> /*
->  * Packs the struct hdmi_avi_infoframe into a binary buffer that can =
-be
->  * programmed to the hardware-specific registers.
->  */
-> ssize_t hdmi_avi_infoframe_pack(struct hdmi_avi_infoframe *frame,
-> 				void *buffer, size_t size);
->=20
-> Such a scheme would allow DRM drivers to call the helper and tweak th=
-e
-> fields in the structure if the want or need to and call the packing
-> function to obtain a buffer that they can write to the controller.
->=20
-> Does that sound at all reasonable?
+Also enable the gpio-poweroff driver when DT is used.
 
-Sounds good, especially the disdinction between the infoframe creation =
-and
-packing. E.g. on intel sdvo outputs we may not put in one of the ECC by=
-tes
-(since the hw creates it), so we need our own packing code there.
--Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Tested-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+---
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi |    5 +++++
+ arch/arm/mach-kirkwood/Kconfig        |    1 +
+ arch/arm/mach-kirkwood/board-dnskw.c  |   12 ------------
+ 3 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
+index 9b32d02..22aa07a 100644
+--- a/arch/arm/boot/dts/kirkwood-dnskw.dtsi
++++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
+@@ -35,6 +35,11 @@
+ 				      6000 2>;
+ 	};
+ 
++	gpio_poweroff {
++		compatible = "gpio-poweroff";
++		gpios = <&gpio1 4 0>;
++	};
++
+ 	ocp@f1000000 {
+ 		sata@80000 {
+ 			status = "okay";
+diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
+index 50bca50..a0f4f47 100644
+--- a/arch/arm/mach-kirkwood/Kconfig
++++ b/arch/arm/mach-kirkwood/Kconfig
+@@ -47,6 +47,7 @@ config MACH_GURUPLUG
+ config ARCH_KIRKWOOD_DT
+ 	bool "Marvell Kirkwood Flattened Device Tree"
+ 	select USE_OF
++	select GPIO_POWEROFF
+ 	help
+ 	  Say 'Y' here if you want your kernel to support the
+ 	  Marvell Kirkwood using flattened device tree.
+diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
+index 43d16d6..549369e 100644
+--- a/arch/arm/mach-kirkwood/board-dnskw.c
++++ b/arch/arm/mach-kirkwood/board-dnskw.c
+@@ -57,11 +57,6 @@ static unsigned int dnskw_mpp_config[] __initdata = {
+ 	0
+ };
+ 
+-static void dnskw_power_off(void)
+-{
+-	gpio_set_value(36, 1);
+-}
+-
+ /* Register any GPIO for output and set the value */
+ static void __init dnskw_gpio_register(unsigned gpio, char *name, int def)
+ {
+@@ -81,13 +76,6 @@ void __init dnskw_init(void)
+ 	kirkwood_ehci_init();
+ 	kirkwood_ge00_init(&dnskw_ge00_data);
+ 
+-	/* Register power-off GPIO. */
+-	if (gpio_request(36, "dnskw:power:off") == 0
+-	    && gpio_direction_output(36, 0) == 0)
+-		pm_power_off = dnskw_power_off;
+-	else
+-		pr_err("dnskw: failed to configure power-off GPIO\n");
+-
+ 	/* Ensure power is supplied to both HDDs */
+ 	dnskw_gpio_register(39, "dnskw:power:sata0", 1);
+ 	dnskw_gpio_register(40, "dnskw:power:sata1", 1);
+-- 
+1.7.10.4
