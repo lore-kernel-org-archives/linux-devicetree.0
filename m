@@ -1,153 +1,65 @@
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: [RFC] MIPS: BCM63XX: add serial blocks to Device Tree includes
-Date: Sun, 11 Nov 2012 13:50:47 +0100
-Message-ID: <1352638249-29298-14-git-send-email-jonas.gorski@gmail.com>
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC] bcm63xx-rng: use clk_{prepare_enable,disable_unprepare}
+Date: Sun, 11 Nov 2012 13:50:40 +0100
+Message-ID: <1352638249-29298-7-git-send-email-jonas.gorski@gmail.com>
 References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Maxime Bizon <mbizon@freebox.fr>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the serial block to the Device Tree includes for all SoCs.
+Use proper clk_prepare/unprepare calls in preparation for switching to
+the generic clock framework.
 
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/bcm63xx/dts/bcm6328.dtsi |   14 ++++++++++++++
- arch/mips/bcm63xx/dts/bcm6338.dtsi |    7 +++++++
- arch/mips/bcm63xx/dts/bcm6345.dtsi |    8 ++++++++
- arch/mips/bcm63xx/dts/bcm6348.dtsi |    7 +++++++
- arch/mips/bcm63xx/dts/bcm6358.dtsi |   14 ++++++++++++++
- arch/mips/bcm63xx/dts/bcm6368.dtsi |   14 ++++++++++++++
- 6 files changed, 64 insertions(+), 0 deletions(-)
+ drivers/char/hw_random/bcm63xx-rng.c |    6 +++---
+ 1 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/bcm63xx/dts/bcm6328.dtsi b/arch/mips/bcm63xx/dts/bcm6328.dtsi
-index e2e92c3..d29d43c 100644
---- a/arch/mips/bcm63xx/dts/bcm6328.dtsi
-+++ b/arch/mips/bcm63xx/dts/bcm6328.dtsi
-@@ -140,5 +140,19 @@
- 			#gpio-cells = <2>;
- 			ngpio = <32>;
- 		};
-+
-+		uart0: serial@100 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x100 0x18>;
-+			interrupts = <28>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@120 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x120 0x18>;
-+			interrupts = <39>;
-+			status = "disabled";
-+		};
- 	};
- };
-diff --git a/arch/mips/bcm63xx/dts/bcm6338.dtsi b/arch/mips/bcm63xx/dts/bcm6338.dtsi
-index 28e7cb6..c7b45c1 100644
---- a/arch/mips/bcm63xx/dts/bcm6338.dtsi
-+++ b/arch/mips/bcm63xx/dts/bcm6338.dtsi
-@@ -90,6 +90,13 @@
- 			};
- 		};
+diff --git a/drivers/char/hw_random/bcm63xx-rng.c b/drivers/char/hw_random/bcm63xx-rng.c
+index aec6a42..3693f56 100644
+--- a/drivers/char/hw_random/bcm63xx-rng.c
++++ b/drivers/char/hw_random/bcm63xx-rng.c
+@@ -122,7 +122,7 @@ static int __devinit bcm63xx_rng_probe(struct platform_device *pdev)
+ 		goto out_free_rng;
+ 	}
  
-+		uart0: serial@300 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x300 0x18>;
-+			interrupts = <2>;
-+			status = "disabled";
-+		};
-+
- 		gpio0: gpio@400 {
- 			compatible = "brcm,bcm63xx-gpio";
- 			reg = <0x400 0x80>;
-diff --git a/arch/mips/bcm63xx/dts/bcm6345.dtsi b/arch/mips/bcm63xx/dts/bcm6345.dtsi
-index 1ebc024..055f66c 100644
---- a/arch/mips/bcm63xx/dts/bcm6345.dtsi
-+++ b/arch/mips/bcm63xx/dts/bcm6345.dtsi
-@@ -75,6 +75,14 @@
- 				};
- 			};
- 		};
-+
-+		uart0: serial@300 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x300 0x18>;
-+			interrupts = <2>;
-+			status = "disabled";
-+		};
-+
- 		gpio0: gpio@400 {
- 			compatible = "brcm,bcm63xx-gpio";
- 			reg = <0x400 0x80>;
-diff --git a/arch/mips/bcm63xx/dts/bcm6348.dtsi b/arch/mips/bcm63xx/dts/bcm6348.dtsi
-index 89acec7..5d1d10a 100644
---- a/arch/mips/bcm63xx/dts/bcm6348.dtsi
-+++ b/arch/mips/bcm63xx/dts/bcm6348.dtsi
-@@ -97,6 +97,13 @@
- 			};
- 		};
+-	clk_enable(clk);
++	clk_prepare_enable(clk);
  
-+		uart0: serial@300 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x300 0x18>;
-+			interrupts = <2>;
-+			status = "disabled";
-+		};
-+
- 		gpio0: gpio@400 {
- 			compatible = "brcm,bcm63xx-gpio";
- 			regs = <0x400 0x80>;
-diff --git a/arch/mips/bcm63xx/dts/bcm6358.dtsi b/arch/mips/bcm63xx/dts/bcm6358.dtsi
-index 52170d6..702882d 100644
---- a/arch/mips/bcm63xx/dts/bcm6358.dtsi
-+++ b/arch/mips/bcm63xx/dts/bcm6358.dtsi
-@@ -138,5 +138,19 @@
- 			#gpio-cells = <2>;
- 			ngpio = <40>;
- 		};
-+
-+		uart0: serial@100 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x100 0x18>;
-+			interrupts = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@120 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x120 0x18>;
-+			interrupts = <3>;
-+			status = "disabled";
-+		};
- 	};
- };
-diff --git a/arch/mips/bcm63xx/dts/bcm6368.dtsi b/arch/mips/bcm63xx/dts/bcm6368.dtsi
-index 068231b..82cd030 100644
---- a/arch/mips/bcm63xx/dts/bcm6368.dtsi
-+++ b/arch/mips/bcm63xx/dts/bcm6368.dtsi
-@@ -178,5 +178,19 @@
- 			#gpio-cells = <2>;
- 			ngpio = <38>;
- 		};
-+
-+		uart0: serial@100 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x100 0x18>;
-+			interrupts = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@120 {
-+			compatible = "brcm,bcm63xx-uart";
-+			reg = <0x120 0x18>;
-+			interrupts = <3>;
-+			status = "disabled";
-+		};
- 	};
- };
+ 	ret = hwrng_register(rng);
+ 	if (ret) {
+@@ -135,7 +135,7 @@ static int __devinit bcm63xx_rng_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ out_clk_disable:
+-	clk_disable(clk);
++	clk_disable_unprepare(clk);
+ out_free_rng:
+ 	platform_set_drvdata(pdev, NULL);
+ 	kfree(rng);
+@@ -151,7 +151,7 @@ static int __devexit bcm63xx_rng_remove(struct platform_device *pdev)
+ 	struct bcm63xx_rng_priv *priv = to_rng_priv(rng);
+ 
+ 	hwrng_unregister(rng);
+-	clk_disable(priv->clk);
++	clk_disable_unprepare(priv->clk);
+ 	kfree(priv);
+ 	kfree(rng);
+ 	platform_set_drvdata(pdev, NULL);
 -- 
 1.7.2.5
