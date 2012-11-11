@@ -1,11 +1,15 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 00/14] ARM: SPEAr: DT updates
-Date: Sun, 11 Nov 2012 10:09:22 +0530
-Message-ID: <cover.1352608333.git.viresh.kumar@linaro.org>
+Subject: [PATCH 02/14] ARM: SPEAr13xx: DT: Add spics gpio controller nodes
+Date: Sun, 11 Nov 2012 10:09:24 +0530
+Message-ID: <58a7d91cab20b924784fb5a09e16ca08e6f13318.1352608333.git.viresh.kumar@linaro.org>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1352608333.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1352608333.git.viresh.kumar@linaro.org>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,79 +20,74 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: arm@kernel.org, olof@lixom.net, arnd@arndb.de
-Cc: sr@denx.de, Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-arm-kernel@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, sr@denx.de, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd/Olof,
+From: Shiraz Hashim <shiraz.hashim@st.com>
 
-These are DT updates for SPEAr SoCs. There aren't any fixes that we want to get
-into 3.7-rc* and we are happy with 3.8.
+SPEAr platform provides a provision to control chipselects of ARM PL022 Prime
+Cell spi controller through its system registers, which otherwise remains under
+PL022 control which some protocols do not want.
 
-Please apply them from mail, as i wouldn't be hosting them in my repo.
+This patch adds spics controller nodes in device tree for various SPEAr13xx
+SoCs.
 
-Some of the dtbs which use gpiopinctrl have dependency on Linus's pinctrl tree,
-where an earlier update for adding gpiopinctrl node is present.
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Shiraz Hashim <shiraz.hashim@st.com>
+Reviewed-by: Vipin Kumar <vipin.kumar@st.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ arch/arm/boot/dts/spear1310.dtsi | 12 ++++++++++++
+ arch/arm/boot/dts/spear1340.dtsi | 14 ++++++++++++++
+ 2 files changed, 26 insertions(+)
 
-Deepak Sikri (1):
-  ARM: SPEAr: DT: Modify DT bindings for STMMAC
-
-Shiraz Hashim (7):
-  pinctrl: SPEAr: add spi chipselect control driver
-  ARM: SPEAr13xx: DT: Add spics gpio controller nodes
-  ARM: SPEAr: DT: Update device nodes
-  ARM: SPEAr13xx: Remove fields not required for ssp controller
-  ARM: SPEAr3xx: shirq: simplify and move the shared irq multiplexor to
-    DT
-  ARM: SPEAr3xx: DT: add shirq node for interrupt multiplexor
-  ARM: SPEAr320: DT: Add SPEAr 320 HMI board support
-
-Vipin Kumar (1):
-  ARM: SPEAr: DT: Update partition info for MTD devices
-
-Vipul Kumar Samar (5):
-  ARM: SPEAr: DT: Update pinctrl list
-  ARM: SPEAr: DT: Fix existing DT support
-  ARM: SPEAr: DT: add uart state to fix warning
-  ARM: SPEAr1310: Move 1310 specific misc register into machine
-    specific files
-  ARM: SPEAr1310: Fix AUXDATA for compact flash controller
-
- .../devicetree/bindings/arm/spear/shirq.txt        |  48 ++++
- .../bindings/pinctrl/pinctrl_spear_spics.txt       |  50 ++++
- arch/arm/boot/dts/Makefile                         |   3 +-
- arch/arm/boot/dts/spear1310-evb.dts                | 171 ++++++++++--
- arch/arm/boot/dts/spear1310.dtsi                   |  32 ++-
- arch/arm/boot/dts/spear1340-evb.dts                | 262 ++++++++++++++++--
- arch/arm/boot/dts/spear1340.dtsi                   |  61 +++++
- arch/arm/boot/dts/spear13xx.dtsi                   |  72 ++++-
- arch/arm/boot/dts/spear300-evb.dts                 |  20 +-
- arch/arm/boot/dts/spear300.dtsi                    |  14 +-
- arch/arm/boot/dts/spear310-evb.dts                 |  30 +-
- arch/arm/boot/dts/spear310.dtsi                    |  18 ++
- arch/arm/boot/dts/spear320-evb.dts                 |  35 ++-
- arch/arm/boot/dts/spear320-hmi.dts                 | 305 +++++++++++++++++++++
- arch/arm/boot/dts/spear320.dtsi                    |  39 ++-
- arch/arm/boot/dts/spear3xx.dtsi                    |   5 +-
- arch/arm/boot/dts/spear600-evb.dts                 |  46 +++-
- arch/arm/boot/dts/spear600.dtsi                    |  16 ++
- arch/arm/mach-spear13xx/include/mach/spear.h       |   8 -
- arch/arm/mach-spear13xx/spear1310.c                |  16 +-
- arch/arm/mach-spear13xx/spear13xx.c                |   2 -
- arch/arm/mach-spear3xx/include/mach/irqs.h         |  10 +-
- arch/arm/mach-spear3xx/spear300.c                  | 103 -------
- arch/arm/mach-spear3xx/spear310.c                  | 202 --------------
- arch/arm/mach-spear3xx/spear320.c                  | 205 +-------------
- arch/arm/mach-spear3xx/spear3xx.c                  |   4 +
- arch/arm/plat-spear/include/plat/shirq.h           |  35 +--
- arch/arm/plat-spear/shirq.c                        | 305 +++++++++++++++++----
- drivers/clk/spear/spear1310_clock.c                |   1 +
- drivers/pinctrl/spear/Makefile                     |   4 +-
- drivers/pinctrl/spear/pinctrl-spics.c              | 217 +++++++++++++++
- 31 files changed, 1638 insertions(+), 701 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/spear/shirq.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl_spear_spics.txt
- create mode 100644 arch/arm/boot/dts/spear320-hmi.dts
- create mode 100644 drivers/pinctrl/spear/pinctrl-spics.c
-
+diff --git a/arch/arm/boot/dts/spear1310.dtsi b/arch/arm/boot/dts/spear1310.dtsi
+index 419ea74..d5661ee 100644
+--- a/arch/arm/boot/dts/spear1310.dtsi
++++ b/arch/arm/boot/dts/spear1310.dtsi
+@@ -17,6 +17,18 @@
+ 	compatible = "st,spear1310";
+ 
+ 	ahb {
++		spics: spics@e0700000{
++			compatible = "st,spear-spics-gpio";
++			reg = <0xe0700000 0x1000>;
++			st-spics,peripcfg-reg = <0x3b0>;
++			st-spics,sw-enable-bit = <12>;
++			st-spics,cs-value-bit = <11>;
++			st-spics,cs-enable-mask = <3>;
++			st-spics,cs-enable-shift = <8>;
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
+ 		ahci@b1000000 {
+ 			compatible = "snps,spear-ahci";
+ 			reg = <0xb1000000 0x10000>;
+diff --git a/arch/arm/boot/dts/spear1340.dtsi b/arch/arm/boot/dts/spear1340.dtsi
+index d71fe2a..1604425 100644
+--- a/arch/arm/boot/dts/spear1340.dtsi
++++ b/arch/arm/boot/dts/spear1340.dtsi
+@@ -17,6 +17,20 @@
+ 	compatible = "st,spear1340";
+ 
+ 	ahb {
++
++		spics: spics@e0700000{
++			compatible = "st,spear-spics-gpio";
++			reg = <0xe0700000 0x1000>;
++			st-spics,peripcfg-reg = <0x42c>;
++			st-spics,sw-enable-bit = <21>;
++			st-spics,cs-value-bit = <20>;
++			st-spics,cs-enable-mask = <3>;
++			st-spics,cs-enable-shift = <18>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			status = "disabled";
++		};
++
+ 		ahci@b1000000 {
+ 			compatible = "snps,spear-ahci";
+ 			reg = <0xb1000000 0x10000>;
 -- 
 1.7.12.rc2.18.g61b472e
