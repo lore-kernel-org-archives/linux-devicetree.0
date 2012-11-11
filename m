@@ -1,55 +1,48 @@
-From: Rob Landley <rob@landley.net>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Sun, 11 Nov 2012 14:47:13 -0600
-Message-ID: <1352666833.20434.5@driftwood>
-References: <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
+Date: Sun, 11 Nov 2012 15:03:49 -0700
+Message-ID: <50A020C5.4070506@wwwdotorg.org>
+References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
+ <1352650891-18356-2-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
-	(from grant.likely@secretlab.ca on Fri Nov  9 10:28:59 2012)
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352650891-18356-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-               On 11/09/2012 10:28:59 AM, Grant Likely wrote:
-> On Tue, Nov 6, 2012 at 10:37 PM, Stephen Warren  
-> <swarren@wwwdotorg.org> wrote:
-> > On 11/05/2012 01:40 PM, Grant Likely wrote:
-> I'm not actually opposed to it, but it needs to be done in an elegant
-> way. The DT data model already imposes more of a conceptual learning
-> curve than I wish it did and I don't want to make that worse with a
-> versioning model that is difficult to get ones head around.
+On 11/11/2012 09:21 AM, Andrew Lunn wrote:
+> From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> 
+> Given appropriate devicetree bindings, this driver registers a
+> pm_power_off function to set a GPIO line high/low to power down
+> your board.
 
-Speaking of which...
+This feature will be useful for the Tegra TrimSlice board too.
 
-I want to poke at board emulation in qemu, from scratch. Specifically,  
-I want to start with an unpopulated board (just the processor), add a  
-block of physical memory and a serial device, and boot an initramfs in  
-there with stdin/stdout. Then I want to incrementally add an RTC,  
-network card, and three block devices.
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
 
-I'd like to define this board by giving qemu and the kernel the same  
-device tree they can parse, and I'd like to _build_ this device tree so  
-I understand what's in it. I'd like to repeat this exercize for arm,  
-mips, ppc, x86, x86-64, sparc, sh4, and maybe other boards.
+> +Required properties:
+> +- compatible : should be "gpio-poweroff".
+> +- gpios : The GPIO to set high/low, see "gpios property" in
+> +  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
+> +  low to power down the board set it to "Active Low", otherwise set
+> +  gpio to "Active High".
 
-And I'd like to write up an article on doing it as a learning exercise.
-
-Last time I checked, doing this wasn't possible. (qemu couldn't define  
-a board by parsing a device tree, the kernel used the device tree as a  
-guideline but it only really read data the drivers you linked in were  
-expecting, the only documentation about what any of the nodes were was  
-was read the other device trees as examples or read the source code of  
-the drivers looking for data in the tree...)
-
-Is it a more realistic project now? If so, where would I start? (Once  
-upon a time I read the booting-without-of document, back when it lived  
-in the ppc directory. It didn't really say what should go in any of the  
-nodes.)
-
-Rob
+Unfortunately, not all GPIO bindings support active high/low flags in
+the GPIO specifier. As such, the flags there are basically useless.
+Other bindings (e.g. IIRC the fixed-regulator binding) have added a
+separate active-high property to indicate the GPIO polarity. This
+binding should probably follow suite.
