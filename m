@@ -1,377 +1,141 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 14/14] ARM: SPEAr320: DT: Add SPEAr 320 HMI board support
-Date: Sun, 11 Nov 2012 10:09:36 +0530
-Message-ID: <772a8c2f5edc2a342219c8cc0d6bec8daa70eb90.1352608333.git.viresh.kumar@linaro.org>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
+	variables & arrays
+Date: Sun, 11 Nov 2012 10:34:58 +0530
+Message-ID: <CAKohpokamGMg4zg4CzUZxPepPHCHE=yxS5sUMPouEu9xU32z+A@mail.gmail.com>
+References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
+	<50991C41.50705@gmail.com>
+	<CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1352608333.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1352608333.git.viresh.kumar@linaro.org>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org, olof@lixom.net, arnd@arndb.de
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, sr@denx.de, linux-arm-kernel@lists.infradead.org
+Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+In-Reply-To: <CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
+List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
+List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
+	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
+Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Shiraz Hashim <shiraz.hashim@st.com>
+Ping!!
 
-This adds support for SPEAr320-HMI board.
-
-Signed-off-by: Shiraz Hashim <shiraz.hashim@st.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- arch/arm/boot/dts/Makefile         |   3 +-
- arch/arm/boot/dts/spear320-hmi.dts | 305 +++++++++++++++++++++++++++++++++++++
- arch/arm/mach-spear3xx/spear320.c  |   1 +
- 3 files changed, 308 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/spear320-hmi.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b994045..c3295b2 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -84,7 +84,8 @@ dtb-$(CONFIG_ARCH_SPEAR13XX) += spear1310-evb.dtb \
- 	spear1340-evb.dtb
- dtb-$(CONFIG_ARCH_SPEAR3XX)+= spear300-evb.dtb \
- 	spear310-evb.dtb \
--	spear320-evb.dtb
-+	spear320-evb.dtb \
-+	spear320-hmi.dtb
- dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
- dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
- 	tegra20-medcom-wide.dtb \
-diff --git a/arch/arm/boot/dts/spear320-hmi.dts b/arch/arm/boot/dts/spear320-hmi.dts
-new file mode 100644
-index 0000000..3075d2d
---- /dev/null
-+++ b/arch/arm/boot/dts/spear320-hmi.dts
-@@ -0,0 +1,305 @@
-+/*
-+ * DTS file for SPEAr320 Evaluation Baord
-+ *
-+ * Copyright 2012 Shiraz Hashim <shiraz.hashim@st.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "spear320.dtsi"
-+
-+/ {
-+	model = "ST SPEAr320 HMI Board";
-+	compatible = "st,spear320-hmi", "st,spear320";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	memory {
-+		reg = <0 0x40000000>;
-+	};
-+
-+	ahb {
-+		pinmux@b3000000 {
-+			st,pinmux-mode = <4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&state_default>;
-+
-+			state_default: pinmux {
-+				i2c0 {
-+					st,pins = "i2c0_grp";
-+					st,function = "i2c0";
-+				};
-+				ssp0 {
-+					st,pins = "ssp0_grp";
-+					st,function = "ssp0";
-+				};
-+				uart0 {
-+					st,pins = "uart0_grp";
-+					st,function = "uart0";
-+				};
-+				clcd {
-+					st,pins = "clcd_grp";
-+					st,function = "clcd";
-+				};
-+				fsmc {
-+					st,pins = "fsmc_8bit_grp";
-+					st,function = "fsmc";
-+				};
-+				sdhci {
-+					st,pins = "sdhci_cd_12_grp";
-+					st,function = "sdhci";
-+				};
-+				i2s {
-+					st,pins = "i2s_grp";
-+					st,function = "i2s";
-+				};
-+				uart1 {
-+					st,pins = "uart1_grp";
-+					st,function = "uart1";
-+				};
-+				uart2 {
-+					st,pins = "uart2_grp";
-+					st,function = "uart2";
-+				};
-+				can0 {
-+					st,pins = "can0_grp";
-+					st,function = "can0";
-+				};
-+				can1 {
-+					st,pins = "can1_grp";
-+					st,function = "can1";
-+				};
-+				mii0_1 {
-+					st,pins = "rmii0_1_grp";
-+					st,function = "mii0_1";
-+				};
-+				pwm0_1 {
-+					st,pins = "pwm0_1_pin_37_38_grp";
-+					st,function = "pwm0_1";
-+				};
-+				pwm2 {
-+					st,pins = "pwm2_pin_34_grp";
-+					st,function = "pwm2";
-+				};
-+			};
-+		};
-+
-+		clcd@90000000 {
-+			status = "okay";
-+		};
-+
-+		dma@fc400000 {
-+			status = "okay";
-+		};
-+
-+		ehci@e1800000 {
-+			status = "okay";
-+		};
-+
-+		fsmc: flash@4c000000 {
-+			status = "okay";
-+
-+			partition@0 {
-+				label = "xloader";
-+				reg = <0x0 0x80000>;
-+			};
-+			partition@80000 {
-+				label = "u-boot";
-+				reg = <0x80000 0x140000>;
-+			};
-+			partition@1C0000 {
-+				label = "environment";
-+				reg = <0x1C0000 0x40000>;
-+			};
-+			partition@200000 {
-+				label = "dtb";
-+				reg = <0x200000 0x40000>;
-+			};
-+			partition@240000 {
-+				label = "linux";
-+				reg = <0x240000 0xC00000>;
-+			};
-+			partition@E40000 {
-+				label = "rootfs";
-+				reg = <0xE40000 0x0>;
-+			};
-+		};
-+
-+		gpio_keys {
-+			compatible = "gpio-keys";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			button@1 {
-+				label = "user button 1";
-+				linux,code = <0x100>;
-+				gpios = <&stmpegpio 3 0x4>;
-+				debounce-interval = <20>;
-+				gpio-key,wakeup = <1>;
-+			};
-+
-+			button@2 {
-+				label = "user button 2";
-+				linux,code = <0x200>;
-+				gpios = <&stmpegpio 2 0x4>;
-+				debounce-interval = <20>;
-+				gpio-key,wakeup = <1>;
-+			};
-+		};
-+
-+		ohci@e1900000 {
-+			status = "okay";
-+		};
-+
-+		ohci@e2100000 {
-+			status = "okay";
-+		};
-+
-+		pwm: pwm@a8000000 {
-+			status = "okay";
-+		};
-+
-+		sdhci@70000000 {
-+			power-gpio = <&gpiopinctrl 50 1>;
-+			power_always_enb;
-+			status = "okay";
-+		};
-+
-+		smi: flash@fc000000 {
-+			status = "okay";
-+			clock-rate=<50000000>;
-+
-+			flash@f8000000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				reg = <0xf8000000 0x800000>;
-+				st,smi-fast-mode;
-+
-+				partition@0 {
-+					label = "xloader";
-+					reg = <0x0 0x10000>;
-+				};
-+				partition@10000 {
-+					label = "u-boot";
-+					reg = <0x10000 0x50000>;
-+				};
-+				partition@60000 {
-+					label = "environment";
-+					reg = <0x60000 0x10000>;
-+				};
-+				partition@70000 {
-+					label = "dtb";
-+					reg = <0x70000 0x10000>;
-+				};
-+				partition@80000 {
-+					label = "linux";
-+					reg = <0x80000 0x310000>;
-+				};
-+				partition@390000 {
-+					label = "rootfs";
-+					reg = <0x390000 0x0>;
-+				};
-+			};
-+		};
-+
-+		spi0: spi@d0100000 {
-+			status = "okay";
-+		};
-+
-+		spi1: spi@a5000000 {
-+			status = "okay";
-+		};
-+
-+		spi2: spi@a6000000 {
-+			status = "okay";
-+		};
-+
-+		usbd@e1100000 {
-+			status = "okay";
-+		};
-+
-+		apb {
-+			gpio0: gpio@fc980000 {
-+			       status = "okay";
-+			};
-+
-+			gpio@b3000000 {
-+				status = "okay";
-+			};
-+
-+			i2c0: i2c@d0180000 {
-+				status = "okay";
-+
-+				stmpe811@41 {
-+					compatible = "st,stmpe811";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0x41>;
-+					irq-over-gpio;
-+					irq-gpios = <&gpiopinctrl 29 0x4>;
-+					id = <0>;
-+					blocks = <0x5>;
-+					irq-trigger = <0x1>;
-+
-+					stmpegpio: stmpe-gpio {
-+						compatible = "stmpe,gpio";
-+						reg = <0>;
-+						gpio-controller;
-+						#gpio-cells = <2>;
-+						gpio,norequest-mask = <0xF3>;
-+					};
-+
-+					stmpe610-ts {
-+						compatible = "stmpe,ts";
-+						reg = <0>;
-+						ts,sample-time = <4>;
-+						ts,mod-12b = <1>;
-+						ts,ref-sel = <0>;
-+						ts,adc-freq = <1>;
-+						ts,ave-ctrl = <1>;
-+						ts,touch-det-delay = <3>;
-+						ts,settling = <4>;
-+						ts,fraction-z = <7>;
-+						ts,i-drive = <1>;
-+					};
-+				};
-+			};
-+
-+			i2c1: i2c@a7000000 {
-+			       status = "okay";
-+			};
-+
-+			rtc@fc900000 {
-+			       status = "okay";
-+			};
-+
-+			serial@d0000000 {
-+			       status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <>;
-+			};
-+
-+			serial@a3000000 {
-+			       status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <>;
-+			};
-+
-+			serial@a4000000 {
-+			       status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <>;
-+			};
-+
-+			wdt@fc880000 {
-+			       status = "okay";
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-spear3xx/spear320.c b/arch/arm/mach-spear3xx/spear320.c
-index 707504b..66e3a0c 100644
---- a/arch/arm/mach-spear3xx/spear320.c
-+++ b/arch/arm/mach-spear3xx/spear320.c
-@@ -247,6 +247,7 @@ static void __init spear320_dt_init(void)
- static const char * const spear320_dt_board_compat[] = {
- 	"st,spear320",
- 	"st,spear320-evb",
-+	"st,spear320-hmi",
- 	NULL,
- };
- 
--- 
-1.7.12.rc2.18.g61b472e
+On 7 November 2012 09:52, viresh kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Nov 6, 2012 at 7:48 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> +#define of_property_read_array(_np, _pname, _out, _sz)                       \
+>
+>>> +     while (_sz--)                                                   \
+>>> +             *_out++ = (typeof(*_out))be32_to_cpup(_val++);          \
+>
+>> This will not work. You are incrementing _out by 1, 2, or 4 bytes, but
+>> _val is always incremented by 4 bytes.
+>>
+>> According to the dtc commit adding this feature, the values are packed:
+>>
+>> With this patch the following property assignment:
+>>
+>>     property = /bits/ 16 <0x1234 0x5678 0x0 0xffff>;
+>>
+>> is equivalent to:
+>>
+>>     property = <0x12345678 0x0000ffff>;
+>
+> I thought of it a bit more and wasn't actually aligned with your explanation :(
+>
+> If that is the case, how will current implementation of u32 array will work
+> if we pass something like: 0x88 0x84000000 0x5890 from DT?
+>
+> So, i did a dummy test of my current implementation, with following changes
+> in one of my drivers:
+>
+> dts changes:
+>
+>                 cluster0: cluster@0 {
+> +                       data1 = <0x50 0x60 0x70>;
+> +                       data2 = <0x5000 0x6000 0x7000>;
+> +                       data3 = <0x50000000 0x60000000 0x70000000>;
+>                }
+>
+> driver changes:
+>
+> +void test(struct device_node *cluster)
+> +{
+> +       u8 data1[3];
+> +       u16 data2[3];
+> +       u32 data3[3], i;
+> +
+> +       of_property_read_u8_array(cluster, "data1", data1, 3);
+> +       of_property_read_u16_array(cluster, "data2", data2, 3);
+> +       of_property_read_u32_array(cluster, "data3", data3, 3);
+> +
+> +       for (i = 0; i < 3; i++) {
+> +               printk(KERN_INFO "u8 %d: %x\n", i, data1[i]);
+> +               printk(KERN_INFO "u16 %d: %x\n", i, data2[i]);
+> +               printk(KERN_INFO "u32 %d: %x\n", i, data3[i]);
+> +       }
+> +}
+>
+> And following is the output
+>
+> [    4.087205] u8 0: 50
+> [    4.093746] u16 0: 5000
+> [    4.101067] u32 0: 50000000
+> [    4.109512] u8 1: 60
+> [    4.116036] u16 1: 6000
+> [    4.123357] u32 1: 60000000
+> [    4.131718] u8 2: 70
+> [    4.138241] u16 2: 7000
+> [    4.145573] u32 2: 70000000
+>
+> which looks to be what we were looking for, isn't it?
+>
+> Following is fixup for the doc comment missing:
+>
+> commit 00803aed0781de451048df0d15a3e8c814a343c8
+> Author: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Date:   Wed Nov 7 09:48:46 2012 +0530
+>
+>     fixup! dt: add helper function to read u8 & u16 variables & arrays
+> ---
+>  drivers/of/base.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index fbb634b..4a6632e 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -669,6 +669,7 @@ EXPORT_SYMBOL(of_find_node_by_phandle);
+>   * @np:                device node from which the property value is to be read.
+>   * @propname:  name of the property to be searched.
+>   * @out_value: pointer to return value, modified only if return value is 0.
+> + * @sz:                number of array elements to read
+>   *
+>   * Search for a property in a device node and read 8-bit value(s) from
+>   * it. Returns 0 on success, -EINVAL if the property does not exist,
+> @@ -690,6 +691,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u8_array);
+>   * @np:                device node from which the property value is to be read.
+>   * @propname:  name of the property to be searched.
+>   * @out_value: pointer to return value, modified only if return value is 0.
+> + * @sz:                number of array elements to read
+>   *
+>   * Search for a property in a device node and read 16-bit value(s) from
+>   * it. Returns 0 on success, -EINVAL if the property does not exist,
+> @@ -712,6 +714,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u16_array);
+>   * @np:                device node from which the property value is to be read.
+>   * @propname:  name of the property to be searched.
+>   * @out_value: pointer to return value, modified only if return value is 0.
+> + * @sz:                number of array elements to read
+>   *
+>   * Search for a property in a device node and read 32-bit value(s) from
+>   * it. Returns 0 on success, -EINVAL if the property does not exist,
+>
+> _______________________________________________
+> linaro-dev mailing list
+> linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
+> http://lists.linaro.org/mailman/listinfo/linaro-dev
