@@ -1,302 +1,526 @@
 From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: [RFC] MIPS: BCM63XX: add Device Tree glue code for IRQ handling
-Date: Sun, 11 Nov 2012 13:50:38 +0100
-Message-ID: <1352638249-29298-5-git-send-email-jonas.gorski@gmail.com>
+Subject: [RFC] MIPS: BCM63XX: add Device Tree clock definitions
+Date: Sun, 11 Nov 2012 13:50:43 +0100
+Message-ID: <1352638249-29298-10-git-send-email-jonas.gorski@gmail.com>
 References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mips@linux-mips.org
 Cc: Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Maxime Bizon <mbizon@freebox.fr>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Register IRQ domains through Device Tree for the internal and external
-interrupt controllers. Register the same IRQ ranges as previously to
-provide backward compatibility for non-DT drivers.
+Add definitions for the clocks found and used in all supported SoCs.
 
 Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 ---
- .../devicetree/bindings/mips/bcm63xx/epic.txt      |   20 ++++++++++++
- .../devicetree/bindings/mips/bcm63xx/ipic.txt      |   18 +++++++++++
- arch/mips/bcm63xx/dts/bcm6328.dtsi                 |   16 ++++++++++
- arch/mips/bcm63xx/dts/bcm6338.dtsi                 |   16 ++++++++++
- arch/mips/bcm63xx/dts/bcm6345.dtsi                 |   16 ++++++++++
- arch/mips/bcm63xx/dts/bcm6348.dtsi                 |   16 ++++++++++
- arch/mips/bcm63xx/dts/bcm6358.dtsi                 |   16 ++++++++++
- arch/mips/bcm63xx/dts/bcm6368.dtsi                 |   16 ++++++++++
- arch/mips/bcm63xx/irq.c                            |   32 ++++++++++++++++++++
- 9 files changed, 166 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mips/bcm63xx/epic.txt
- create mode 100644 Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt
+ arch/mips/bcm63xx/dts/bcm6328.dtsi |   90 ++++++++++++++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6338.dtsi |   47 +++++++++++++
+ arch/mips/bcm63xx/dts/bcm6345.dtsi |   33 ++++++++++
+ arch/mips/bcm63xx/dts/bcm6348.dtsi |   54 +++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6358.dtsi |   85 ++++++++++++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6368.dtsi |  125 ++++++++++++++++++++++++++++++++++++
+ 6 files changed, 434 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt b/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt
-new file mode 100644
-index 0000000..4fc74e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt
-@@ -0,0 +1,20 @@
-+* Broadcom BCM63XX External Interrupt Controller
-+
-+Properties:
-+- compatible: "brcm,bcm63xx-epic"
-+  Compatible with all bcm63xx SoCs.
-+
-+- interrupt-controller: This is an interrupt controller.
-+
-+- #interrupt-cells: <2>
-+  This controller supports level and edge triggered interrupts. The
-+  first cell is the interrupt number, the second is a 1:1 mapping to
-+  the linux interrupt flags.
-+
-+Example:
-+
-+	epic: interrupt-controller@18 {
-+		compatible = "brcm,bcm63xx-epic";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	}
-diff --git a/Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt b/Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt
-new file mode 100644
-index 0000000..1cbabf90
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt
-@@ -0,0 +1,18 @@
-+* BCM63XX Internal Interrupt Controller
-+
-+Properties:
-+- compatible: "brcm,bcm63xx-ipic"
-+  Compatible with all bcm63xx SoCs.
-+
-+- interrupt-controller: This is an interrupt controller.
-+
-+- #interrupt-cells: <1>
-+  This controller supports only level interrupts.
-+
-+Example:
-+
-+	ipic: interrupt-controller@20 {
-+		compatible = "brcm,bcm63xx-ipic";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	}
 diff --git a/arch/mips/bcm63xx/dts/bcm6328.dtsi b/arch/mips/bcm63xx/dts/bcm6328.dtsi
-index a0e1835..a41033a 100644
+index a41033a..9055187 100644
 --- a/arch/mips/bcm63xx/dts/bcm6328.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6328.dtsi
-@@ -26,5 +26,21 @@
- 		#size-cells = <1>;
- 		ranges = <0 0x10000000 0x20000>;
- 		compatible = "simple-bus";
+@@ -41,6 +41,96 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <1>;
+ 			};
 +
-+		interrupt-parent = <&ipic>;
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+		perf@0 {
-+			epic: interrupt-controller@18 {
-+				compatible = "brcm,bcm63xx-epic";
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
++				periph: pll {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-frequency = <50000000>;
++					clock-output-names = "periph";
++				};
++
++				phymips: clock@0 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "phymips";
++					brcm,gate-bit = <0>;
++				};
++
++				adsl_qproc: clock@1 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "adsl-qproc";
++					brcm,gate-bit = <1>;
++				};
++
++				adsl_afe: clock@2 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "adsl-afe";
++					brcm,gate-bit = <2>;
++				};
++
++				adsl: clock@3 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "adsl";
++					brcm,gate-bit = <3>;
++				};
++
++				sar: clock@5 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "sar", "xtm";
++					brcm,gate-bit = <5>;
++				};
++
++				pcm: clock@6 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "pcm";
++					brcm,gate-bit = <6>;
++				};
++
++				usbd: clock@7 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbd";
++					brcm,gate-bit = <7>;
++				};
++
++				usbh: clock@8 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbh";
++					brcm,gate-bit = <8>;
++				};
++
++				hsspi: clock@9 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "hsspi";
++					clock-frequency = <133333333>;
++					brcm,gate-bit = <9>;
++				};
++
++				pcie: clock@10 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "pcie";
++					brcm,gate-bit = <10>;
++				};
++
++				enetsw: clock@11 {
++					compatible = "brcm,bcm63xx-enetsw-clock";
++					#clock-cells = <0>;
++					clock-output-names = "enetsw";
++					brcm,gate-bit = <11>;
++				};
 +			};
-+
-+			ipic: interrupt-controller@20 {
-+				compatible = "brcm,bcm63xx-ipic";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+		};
+ 		};
  	};
  };
 diff --git a/arch/mips/bcm63xx/dts/bcm6338.dtsi b/arch/mips/bcm63xx/dts/bcm6338.dtsi
-index 21772d9..8ecbc4f 100644
+index 8ecbc4f..6346a7e 100644
 --- a/arch/mips/bcm63xx/dts/bcm6338.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6338.dtsi
-@@ -26,5 +26,21 @@
- 		#size-cells = <1>;
- 		ranges = <0 0xfffe0000 0x20000>;
- 		compatible = "simple-bus";
+@@ -41,6 +41,53 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 			};
 +
-+		interrupt-parent = <&ipic>;
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+		perf@0 {
-+			ipic: interrupt-controller@c {
-+				compatible = "brcm,bcm63xx-ipic";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
++				periph: pll {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-frequency = <50000000>;
++					clock-output-names = "periph";
++				};
++
++				adsl: clock@0 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "adsl";
++					brcm,gate-bit = <0>;
++				};
++
++				mpi: clock@1 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "mpi";
++					brcm,gate-bit = <1>;
++				};
++
++				enet_usbd: clock@5 {
++					#clock-cells = <0>;
++					compatible = "brcm,bcm63xx-clock";
++					clock-output-names = "enet", "enet0", "usbd";
++					brcm,gate-bit = <5>;
++				};
++
++				sar: clock@6 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "sar", "atm";
++					brcm,gate-bit = <6>;
++				};
++
++				spi: clock@7 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "spi";
++					brcm,gate-bit = <9>;
++				};
 +			};
-+
-+			epic: interrupt-controller@14 {
-+				compatible = "brcm,bcm63xx-epic";
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+		};
+ 		};
  	};
  };
 diff --git a/arch/mips/bcm63xx/dts/bcm6345.dtsi b/arch/mips/bcm63xx/dts/bcm6345.dtsi
-index f1e7153..ed17c12 100644
+index ed17c12..1771775 100644
 --- a/arch/mips/bcm63xx/dts/bcm6345.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6345.dtsi
-@@ -26,5 +26,21 @@
- 		#size-cells = <1>;
- 		ranges = <0 0xfffe0000 0x20000>;
- 		compatible = "simple-bus";
+@@ -41,6 +41,39 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 			};
 +
-+		interrupt-parent = <&ipic>;
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+		perf@0 {
-+			ipic: interrupt-controller@c {
-+				compatible = "brcm,bcm63xx-ipic";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
++				periph: pll {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-frequency = <50000000>;
++					clock-output-names = "periph";
++				};
++
++				adsl: clock@4 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "adsl";
++					brcm,gate-bit = <4>;
++				};
++
++				enet: clock@5 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "enet", "enet0";
++					brcm,gate-bit = <5>;
++				};
++
++				usbd: clock@6 {
++					#clock-cells = <0>;
++					compatible = "brcm,bcm63xx-clock";
++					clock-output-names = "usbd";
++					brcm,gate-bit = <6>;
++				};
 +			};
-+
-+			epic: interrupt-controller@14 {
-+				compatible = "brcm,bcm63xx-epic";
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+		};
+ 		};
  	};
  };
 diff --git a/arch/mips/bcm63xx/dts/bcm6348.dtsi b/arch/mips/bcm63xx/dts/bcm6348.dtsi
-index 8a5a2dc..d54cf20 100644
+index d54cf20..14f1996 100644
 --- a/arch/mips/bcm63xx/dts/bcm6348.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6348.dtsi
-@@ -26,5 +26,21 @@
- 		#size-cells = <1>;
- 		ranges = <0 0xfffe0000 0x20000>;
- 		compatible = "simple-bus";
+@@ -41,6 +41,60 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <2>;
+ 			};
 +
-+		interrupt-parent = <&ipic>;
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+		perf@0 {
-+			ipic: interrupt-controller@c {
-+				compatible = "brcm,bcm63xx-ipic";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
++				periph: pll {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-frequency = <50000000>;
++					clock-output-names = "periph";
++				};
++
++				adsl: clock@0 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "adsl";
++					brcm,gate-bit = <0>;
++				};
++
++				enet: clock@4 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "enet", "enet0", "enet1";
++					brcm,gate-bit = <4>;
++				};
++
++				sar: clock@5 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "sar", "atm";
++					brcm,gate-bit = <5>;
++				};
++
++				usbd: clock@6 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbd";
++					brcm,gate-bit = <6>;
++				};
++
++				usbh: clock@7 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbh";
++					brcm,gate-bit = <7>;
++				};
++
++				spi: clock@8 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "spi";
++					brcm,gate-bit = <8>;
++				};
 +			};
-+
-+			epic: interrupt-controller@14 {
-+				compatible = "brcm,bcm63xx-epic";
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+			};
-+		};
+ 		};
  	};
  };
 diff --git a/arch/mips/bcm63xx/dts/bcm6358.dtsi b/arch/mips/bcm63xx/dts/bcm6358.dtsi
-index 1d3f20f..6ef283f 100644
+index 6ef283f..943b480 100644
 --- a/arch/mips/bcm63xx/dts/bcm6358.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6358.dtsi
-@@ -29,5 +29,21 @@
- 		#size-cells = <1>;
- 		ranges = <0 0xfffe0000 0x20000>;
- 		compatible = "simple-bus";
+@@ -44,6 +44,91 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <1>;
+ 			};
 +
-+		interrupt-parent = <&ipic>;
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+		perf@0 {
-+			epic: interrupt-controller@18 {
-+				compatible = "brcm,bcm63xx-epic";
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
++				periph: pll {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-frequency = <50000000>;
++					clock-output-names = "periph";
++				};
++
++				adslphy: clock@5 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "adslphy";
++					brcm,gate-bit = <5>;
++				};
++
++				pcm: clock@8 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "pcm";
++					brcm,gate-bit = <8>;
++				};
++
++				spi: clock@9 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "spi";
++					brcm,gate-bit = <9>;
++				};
++
++				usbd: clock@10 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbd";
++					brcm,gate-bit = <10>;
++				};
++
++				sar: clock@11 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "sar", "atm";
++					brcm,gate-bit = <11>;
++				};
++
++
++				enet_misc: clock@17 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "enet-misc";
++					brcm,gate-bit = <17>;
++				};
++
++				enet0: clock@18 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <1>;
++					clocks = <&enet_misc>;
++					clock-output-names = "enet0";
++					brcm,gate-bit = <18>;
++				};
++
++				enet1: clock@19 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <1>;
++					clocks = <&enet_misc>;
++					clock-output-names = "enet1";
++					brcm,gate-bit = <19>;
++				};
++
++				usbsu: clock@20 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbsu";
++					brcm,gate-bit = <20>;
++				};
++
++				ephy: clock@21 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "ephy";
++					brcm,gate-bit = <21>;
++				};
 +			};
-+
-+			ipic: interrupt-controller@20 {
-+				compatible = "brcm,bcm63xx-ipic";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+		};
+ 		};
  	};
  };
 diff --git a/arch/mips/bcm63xx/dts/bcm6368.dtsi b/arch/mips/bcm63xx/dts/bcm6368.dtsi
-index a7624b9..ae1b584 100644
+index ae1b584..2156be0 100644
 --- a/arch/mips/bcm63xx/dts/bcm6368.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6368.dtsi
-@@ -29,5 +29,21 @@
- 		#size-cells = <1>;
- 		ranges = <0 0x10000000 0x20000>;
- 		compatible = "simple-bus";
+@@ -44,6 +44,131 @@
+ 				interrupt-controller;
+ 				#interrupt-cells = <1>;
+ 			};
 +
-+		interrupt-parent = <&ipic>;
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+		perf@0 {
-+			epic: interrupt-controller@18 {
-+				compatible = "brcm,bcm63xx-epic";
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
++				periph: pll {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-frequency = <50000000>;
++					clock-output-names = "periph";
++				};
++
++				vdsl_qproc: clock@2 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "vdsl-qproc";
++					brcm,gate-bit = <2>;
++				};
++
++				vdsl_afe: clock@3 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "vdsl-afe";
++					brcm,gate-bit = <3>;
++				};
++
++				vdsl_bonding: clock@4 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "vdsl-bonding";
++					brcm,gate-bit = <4>;
++				};
++
++				vdsl: clock@5 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "vdsl";
++					brcm,gate-bit = <5>;
++				};
++
++				phymips: clock@6 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "phymips";
++					brcm,gate-bit = <6>;
++				};
++
++				enetsw_usb: clock@7 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "enetsw-usb";
++					brcm,gate-bit = <7>;
++				};
++
++				enetsw_sar: clock@8 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "enetsw-sar";
++					brcm,gate-bit = <8>;
++				};
++
++				spi: clock@9 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "spi";
++					brcm,gate-bit = <9>;
++				};
++
++				usbd: clock@10 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbd";
++					brcm,gate-bit = <10>;
++				};
++
++				sar: clock@11 {
++					compatible = "brcm,bcm63xx-sar-clock";
++					#clock-cells = <1>;
++					clocks = <&enetsw_sar>;
++					clock-output-names = "sar";
++					brcm,gate-bit = <11>;
++				};
++
++				enetsw: clock@12 {
++					compatible = "brcm,bcm6368-enetsw-clock";
++					#clock-cells = <0>;
++					clock-output-names = "enetsw";
++					brcm,gate-bit = <12>;
++				};
++
++				utopia: clock@13 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "utopia";
++					brcm,gate-bit = <13>;
++				};
++
++				pcm: clock@14 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "pcm";
++					brcm,gate-bit = <14>;
++				};
++
++				usbh: clock@15 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "usbh";
++					brcm,gate-bit = <15>;
++				};
++
++				nand: clock@17 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "nand";
++					brcm,gate-bit = <17>;
++				};
++
++				ipsec: clock@18 {
++					compatible = "brcm,bcm63xx-clock";
++					#clock-cells = <0>;
++					clock-output-names = "ipsec";
++					brcm,gate-bit = <18>;
++				};
 +			};
-+
-+			ipic: interrupt-controller@20 {
-+				compatible = "brcm,bcm63xx-ipic";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
-+		};
+ 		};
  	};
  };
-diff --git a/arch/mips/bcm63xx/irq.c b/arch/mips/bcm63xx/irq.c
-index da24c2b..3b64066 100644
---- a/arch/mips/bcm63xx/irq.c
-+++ b/arch/mips/bcm63xx/irq.c
-@@ -12,6 +12,8 @@
- #include <linux/interrupt.h>
- #include <linux/module.h>
- #include <linux/irq.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <asm/irq_cpu.h>
- #include <asm/mipsregs.h>
- #include <bcm63xx_cpu.h>
-@@ -515,6 +517,34 @@ static struct irqaction cpu_ext_cascade_action = {
- 	.flags		= IRQF_NO_THREAD,
- };
- 
-+static int __init bcm63xx_ipic_of_init(struct device_node *node,
-+				       struct device_node *parent)
-+{
-+	if (!irq_domain_add_simple(node,
-+				   IRQ_EXTERNAL_BASE - IRQ_INTERNAL_BASE,
-+				   IRQ_INTERNAL_BASE, &irq_domain_simple_ops,
-+				   NULL))
-+		panic("unable to add ipic domain!\n");
-+
-+	return 0;
-+}
-+
-+static int __init bcm63xx_epic_of_init(struct device_node *node,
-+				       struct device_node *parent)
-+{
-+	if (!irq_domain_add_simple(node, ext_irq_count, IRQ_EXTERNAL_BASE,
-+				   &irq_domain_simple_ops, NULL))
-+		panic("unable to add epic domain!\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm63xx_pic_of_match[] __initconst = {
-+	{ .compatible = "brcm,bcm63xx-ipic", .data = bcm63xx_ipic_of_init },
-+	{ .compatible = "brcm,bcm63xx-epic", .data = bcm63xx_epic_of_init },
-+	{ },
-+};
-+
- void __init arch_init_irq(void)
- {
- 	int i;
-@@ -535,4 +565,6 @@ void __init arch_init_irq(void)
- 	}
- 
- 	setup_irq(MIPS_CPU_IRQ_BASE + 2, &cpu_ip2_cascade_action);
-+
-+	of_irq_init(bcm63xx_pic_of_match);
- }
 -- 
 1.7.2.5
