@@ -1,7 +1,7 @@
 From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC] MIPS: BCM63XX: add support for loading DTB
-Date: Sun, 11 Nov 2012 13:50:35 +0100
-Message-ID: <1352638249-29298-2-git-send-email-jonas.gorski@gmail.com>
+Subject: [RFC] MIPS: BCM63XX: add simple Device Tree includes for all SoCs
+Date: Sun, 11 Nov 2012 13:50:36 +0100
+Message-ID: <1352638249-29298-3-git-send-email-jonas.gorski@gmail.com>
 References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,183 +22,247 @@ To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for loading DTBs embedded into the kernel. Iterate through
-all embedded ones until a match is found and use that.
-
-Use the NVRAM provided board name for constructing the compatible
-property for selecting the appropriate in-kernel DTB.
+Add simple Device Tree include files for all currently supported SoCs.
+These will be populated with device definitions as driver support
+gets added.
 
 Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/Kconfig              |    1 +
- arch/mips/bcm63xx/Kconfig      |    2 +
- arch/mips/bcm63xx/Makefile     |    1 +
- arch/mips/bcm63xx/dts/Kconfig  |    3 +
- arch/mips/bcm63xx/dts/Makefile |    2 +
- arch/mips/bcm63xx/setup.c      |   80 ++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 89 insertions(+), 0 deletions(-)
- create mode 100644 arch/mips/bcm63xx/dts/Kconfig
- create mode 100644 arch/mips/bcm63xx/dts/Makefile
+ arch/mips/bcm63xx/dts/bcm6328.dtsi |   30 ++++++++++++++++++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6338.dtsi |   30 ++++++++++++++++++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6345.dtsi |   30 ++++++++++++++++++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6348.dtsi |   30 ++++++++++++++++++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6358.dtsi |   33 +++++++++++++++++++++++++++++++++
+ arch/mips/bcm63xx/dts/bcm6368.dtsi |   33 +++++++++++++++++++++++++++++++++
+ 6 files changed, 186 insertions(+), 0 deletions(-)
+ create mode 100644 arch/mips/bcm63xx/dts/bcm6328.dtsi
+ create mode 100644 arch/mips/bcm63xx/dts/bcm6338.dtsi
+ create mode 100644 arch/mips/bcm63xx/dts/bcm6345.dtsi
+ create mode 100644 arch/mips/bcm63xx/dts/bcm6348.dtsi
+ create mode 100644 arch/mips/bcm63xx/dts/bcm6358.dtsi
+ create mode 100644 arch/mips/bcm63xx/dts/bcm6368.dtsi
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 9934a46..168b0fc 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -132,6 +132,7 @@ config BCM63XX
- 	select SWAP_IO_SPACE
- 	select ARCH_REQUIRE_GPIOLIB
- 	select HAVE_CLK
-+	select USE_OF
- 	help
- 	 Support for BCM63XX based boards
- 
-diff --git a/arch/mips/bcm63xx/Kconfig b/arch/mips/bcm63xx/Kconfig
-index d03e879..03d693b 100644
---- a/arch/mips/bcm63xx/Kconfig
-+++ b/arch/mips/bcm63xx/Kconfig
-@@ -31,3 +31,5 @@ config BCM63XX_CPU_6368
- endmenu
- 
- source "arch/mips/bcm63xx/boards/Kconfig"
-+
-+source "arch/mips/bcm63xx/dts/Kconfig"
-diff --git a/arch/mips/bcm63xx/Makefile b/arch/mips/bcm63xx/Makefile
-index ac28073..30971a7 100644
---- a/arch/mips/bcm63xx/Makefile
-+++ b/arch/mips/bcm63xx/Makefile
-@@ -5,3 +5,4 @@ obj-y		+= clk.o cpu.o cs.o gpio.o irq.o nvram.o prom.o reset.o \
- obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
- 
- obj-y		+= boards/
-+obj-y		+= dts/
-diff --git a/arch/mips/bcm63xx/dts/Kconfig b/arch/mips/bcm63xx/dts/Kconfig
+diff --git a/arch/mips/bcm63xx/dts/bcm6328.dtsi b/arch/mips/bcm63xx/dts/bcm6328.dtsi
 new file mode 100644
-index 0000000..919f3f6
+index 0000000..a0e1835
 --- /dev/null
-+++ b/arch/mips/bcm63xx/dts/Kconfig
-@@ -0,0 +1,3 @@
-+menu "Built-in Device Tree support"
-+
-+endmenu
-diff --git a/arch/mips/bcm63xx/dts/Makefile b/arch/mips/bcm63xx/dts/Makefile
-new file mode 100644
-index 0000000..69c374b
---- /dev/null
-+++ b/arch/mips/bcm63xx/dts/Makefile
-@@ -0,0 +1,2 @@
-+$(obj)/%.dtb: $(obj)/%.dts
-+	$(call if_changed,dtc)
-diff --git a/arch/mips/bcm63xx/setup.c b/arch/mips/bcm63xx/setup.c
-index 314231b..8712354 100644
---- a/arch/mips/bcm63xx/setup.c
-+++ b/arch/mips/bcm63xx/setup.c
-@@ -4,6 +4,7 @@
-  * for more details.
-  *
-  * Copyright (C) 2008 Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
++++ b/arch/mips/bcm63xx/dts/bcm6328.dtsi
+@@ -0,0 +1,30 @@
++/*
++ * Device Tree Include file for Broadcom BCM6328 SoC
++ *
 + * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-  */
- 
- #include <linux/init.h>
-@@ -12,6 +13,8 @@
- #include <linux/bootmem.h>
- #include <linux/ioport.h>
- #include <linux/pm.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
- #include <asm/bootinfo.h>
- #include <asm/time.h>
- #include <asm/reboot.h>
-@@ -20,6 +23,7 @@
- #include <bcm63xx_cpu.h>
- #include <bcm63xx_regs.h>
- #include <bcm63xx_io.h>
-+#include <bcm963xx_tag.h>
- 
- void bcm63xx_machine_halt(void)
- {
-@@ -152,6 +156,82 @@ void __init plat_mem_setup(void)
- 	board_setup();
- }
- 
-+extern struct boot_param_header __dtb_start;
-+extern struct boot_param_header __dtb_end;
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
-+int __init bcm63xx_is_compatible(struct boot_param_header *devtree,
-+				   const char *compat)
-+{
-+	unsigned long dt_root;
-+	struct boot_param_header *old_ibp = initial_boot_params;
-+	int ret;
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "brcm,bcm6328";
 +
-+	initial_boot_params = devtree;
++	cpus {
++		cpu@0 {
++			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		};
++	};
 +
-+	dt_root = of_get_flat_dt_root();
-+	ret = of_flat_dt_is_compatible(dt_root, compat);
++	memory { device_type = "memory"; reg = <0 0>; };
 +
-+	initial_boot_params = old_ibp;
-+
-+	return ret;
-+}
-+
-+static struct of_device_id of_ids[] = {
-+	{ /* will be filled at runtime */ },
-+	{ .compatible = "simple-bus" },
-+	{ },
++	ubus@10000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x10000000 0x20000>;
++		compatible = "simple-bus";
++	};
 +};
+diff --git a/arch/mips/bcm63xx/dts/bcm6338.dtsi b/arch/mips/bcm63xx/dts/bcm6338.dtsi
+new file mode 100644
+index 0000000..21772d9
+--- /dev/null
++++ b/arch/mips/bcm63xx/dts/bcm6338.dtsi
+@@ -0,0 +1,30 @@
++/*
++ * Device Tree Include file for Broadcom BCM6338 SoC
++ *
++ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
-+static struct boot_param_header *find_compatible_tree(const char *compat)
-+{
-+	struct boot_param_header *curr = &__dtb_start;
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "brcm,bcm6338";
 +
-+	while (curr < &__dtb_end) {
-+		if (be32_to_cpu(curr->magic) != OF_DT_HEADER)
-+			continue;
++	cpus {
++		cpu@0 {
++			compatible = "brcm,bmips3300", "mips,mips4Kc";
++		};
++	};
 +
-+		if (bcm63xx_is_compatible(curr, compat))
-+			return curr;
++	memory { device_type = "memory"; reg = <0 0>; };
 +
-+		/* in-kernel dtbs are aligned to 32 bytes */
-+		curr = (void *)curr + roundup(be32_to_cpu(curr->totalsize), 32);
-+	}
++	ubus@fffe0000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xfffe0000 0x20000>;
++		compatible = "simple-bus";
++	};
++};
+diff --git a/arch/mips/bcm63xx/dts/bcm6345.dtsi b/arch/mips/bcm63xx/dts/bcm6345.dtsi
+new file mode 100644
+index 0000000..f1e7153
+--- /dev/null
++++ b/arch/mips/bcm63xx/dts/bcm6345.dtsi
+@@ -0,0 +1,30 @@
++/*
++ * Device Tree Include file for Broadcom BCM6345 SoC
++ *
++ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
-+	return NULL;
-+}
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "brcm,bcm6345";
 +
-+void __init device_tree_init(void)
-+{
-+	struct boot_param_header *devtree = NULL;
-+	const char *name = board_get_name();
++	cpus {
++		cpu@0 {
++			compatible = "brcm,bmips3300", "mips,mips4Kc";
++		};
++	};
 +
-+	strncpy(of_ids[0].compatible, name, BOARDID_LEN);
++	memory { device_type = "memory"; reg = <0 0>; };
 +
-+	devtree = find_compatible_tree(of_ids[0].compatible);
-+	if (!devtree) {
-+		pr_warn("no compatible device tree found for board %s\n"
-+			of_ids[0].compatible);
-+		return;
-+	}
++	ubus@fffe0000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xfffe0000 0x20000>;
++		compatible = "simple-bus";
++	};
++};
+diff --git a/arch/mips/bcm63xx/dts/bcm6348.dtsi b/arch/mips/bcm63xx/dts/bcm6348.dtsi
+new file mode 100644
+index 0000000..8a5a2dc
+--- /dev/null
++++ b/arch/mips/bcm63xx/dts/bcm6348.dtsi
+@@ -0,0 +1,30 @@
++/*
++ * Device Tree Include file for Broadcom BCM6348 SoC
++ *
++ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
-+	__dt_setup_arch(devtree);
-+	reserve_bootmem(virt_to_phys(devtree), be32_to_cpu(devtree->totalsize),
-+			BOOTMEM_DEFAULT);
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "brcm,bcm6348";
 +
-+	unflatten_device_tree();
-+}
++	cpus {
++		cpu@0 {
++			compatible = "brcm,bmips3300", "mips,mips4Kc";
++		};
++	};
 +
-+int __init bcm63xx_populate_device_tree(void)
-+{
-+	if (!of_have_populated_dt()) {
-+		pr_warn("device tree not available\n");
-+		return -ENODEV;
-+	}
++	memory { device_type = "memory"; reg = <0 0>; };
 +
-+	return of_platform_populate(NULL, of_ids, NULL, NULL);
-+}
-+arch_initcall(bcm63xx_populate_device_tree);
++	ubus@fffe0000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xfffe0000 0x20000>;
++		compatible = "simple-bus";
++	};
++};
+diff --git a/arch/mips/bcm63xx/dts/bcm6358.dtsi b/arch/mips/bcm63xx/dts/bcm6358.dtsi
+new file mode 100644
+index 0000000..1d3f20f
+--- /dev/null
++++ b/arch/mips/bcm63xx/dts/bcm6358.dtsi
+@@ -0,0 +1,33 @@
++/*
++ * Device Tree Include file for Broadcom BCM6358 SoC
++ *
++ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
 +
- int __init bcm63xx_register_devices(void)
- {
- 	return board_register_devices();
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "brcm,bcm6358";
++
++	cpus {
++		cpu@0 {
++			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		};
++		cpu@1 {
++			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		};
++	};
++
++	memory { device_type = "memory"; reg = <0 0>; };
++
++	ubus@fffe0000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xfffe0000 0x20000>;
++		compatible = "simple-bus";
++	};
++};
+diff --git a/arch/mips/bcm63xx/dts/bcm6368.dtsi b/arch/mips/bcm63xx/dts/bcm6368.dtsi
+new file mode 100644
+index 0000000..a7624b9
+--- /dev/null
++++ b/arch/mips/bcm63xx/dts/bcm6368.dtsi
+@@ -0,0 +1,33 @@
++/*
++ * Device Tree Include file for Broadcom BCM6368 SoC
++ *
++ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "brcm,bcm6368";
++
++	cpus {
++		cpu@0 {
++			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		};
++		cpu@1 {
++			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		};
++	};
++
++	memory { device_type = "memory"; reg = <0 0>; };
++
++	ubus@10000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x10000000 0x20000>;
++		compatible = "simple-bus";
++	};
++};
 -- 
 1.7.2.5
