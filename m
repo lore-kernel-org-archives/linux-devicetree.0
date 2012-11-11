@@ -1,134 +1,119 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16 variables
- & arrays
-Date: Sun, 11 Nov 2012 08:12:47 -0600
-Message-ID: <509FB25F.3030307@gmail.com>
-References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org> <50991C41.50705@gmail.com> <CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 2/2] drm: tegra: Add HDMI support
+Date: Sun, 11 Nov 2012 15:46:44 +0100
+Message-ID: <20121111144644.GK5854@phenom.ffwll.local>
+References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
+ <1352469579-3337-3-git-send-email-thierry.reding@avionic-design.de>
+ <CACna6rycZ=TGHP7KpVa_r0JSpc6c=PB89pijR9E_4A=bQ=74Bw@mail.gmail.com>
+ <509D28B6.3060207@vodafone.de>
+ <20121110210118.GA26809@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20121110210118.GA26809@avionic-0098.mockup.avionic-design.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: viresh kumar <viresh.kumar@linaro.org>
-Cc: rob.herring@calxeda.com, grant.likely@secretlab.ca, linaro-dev@lists.linaro.org, andriy.shevchenko@intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Christian =?iso-8859-1?Q?K=F6nig?= <deathsimple@vodafone.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org, Dave Airlie <airlied@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2012 10:22 PM, viresh kumar wrote:
-> On Tue, Nov 6, 2012 at 7:48 PM, Rob Herring <robherring2@gmail.com> wrote:
->>> +#define of_property_read_array(_np, _pname, _out, _sz)                       \
-> 
->>> +     while (_sz--)                                                   \
->>> +             *_out++ = (typeof(*_out))be32_to_cpup(_val++);          \
-> 
->> This will not work. You are incrementing _out by 1, 2, or 4 bytes, but
->> _val is always incremented by 4 bytes.
->>
->> According to the dtc commit adding this feature, the values are packed:
->>
->> With this patch the following property assignment:
->>
->>     property = /bits/ 16 <0x1234 0x5678 0x0 0xffff>;
->>
->> is equivalent to:
->>
->>     property = <0x12345678 0x0000ffff>;
-> 
-> I thought of it a bit more and wasn't actually aligned with your explanation :(
-> 
-> If that is the case, how will current implementation of u32 array will work
-> if we pass something like: 0x88 0x84000000 0x5890 from DT?
-> 
-> So, i did a dummy test of my current implementation, with following changes
-> in one of my drivers:
-> 
-> dts changes:
-> 
->                 cluster0: cluster@0 {
-> +                       data1 = <0x50 0x60 0x70>;
-> +                       data2 = <0x5000 0x6000 0x7000>;
-> +                       data3 = <0x50000000 0x60000000 0x70000000>;
+On Sat, Nov 10, 2012 at 10:01:18PM +0100, Thierry Reding wrote:
+> On Fri, Nov 09, 2012 at 05:00:54PM +0100, Christian K=C3=B6nig wrote:
+> > On 09.11.2012 16:45, Rafa=C5=82 Mi=C5=82ecki wrote:
+> > >2012/11/9 Thierry Reding <thierry.reding@avionic-design.de>:
+> > >>+/* all fields little endian */
+> > >>+struct hdmi_audio_infoframe {
+> > >>+       /* PB0 */
+> > >>+       u8 csum;
+> > >>+
+> > >>+       /* PB1 */
+> > >>+       unsigned cc:3; /* channel count */
+> > >>+       unsigned res1:1;
+> > >>+       unsigned ct:4; /* coding type */
+> > >>+
+> > >>+       /* PB2 */
+> > >>+       unsigned ss:2; /* sample size */
+> > >>+       unsigned sf:3; /* sample frequency */
+> > >>+       unsigned res2:3;
+> > >>+
+> > >>+       /* PB3 */
+> > >>+       unsigned cxt:5; /* coding extention type */
+> > >>+       unsigned res3:3;
+> > >>+
+> > >>+       /* PB4 */
+> > >>+       u8 ca; /* channel/speaker allocation */
+> > >>+
+> > >>+       /* PB5 */
+> > >>+       unsigned res5:3;
+> > >>+       unsigned lsv:4; /* level shift value */
+> > >>+       unsigned dm_inh:1; /* downmix inhibit */
+> > >>+
+> > >>+       /* PB6-10 reserved */
+> > >>+       u8 res6;
+> > >>+       u8 res7;
+> > >>+       u8 res8;
+> > >>+       u8 res9;
+> > >>+       u8 res10;
+> > >>+} __packed;
+> > >I was told it won't work on different endian devices. See
+> > >[RFC][PATCH] drm/radeon/hdmi: define struct for AVI infoframe
+> > >http://lists.freedesktop.org/archives/dri-devel/2012-May/022544.ht=
+ml
+> >=20
+> > Yeah, that's indeed true. And honestly adding just another
+> > implementation of the HDMI info frames sounds like somebody should
+> > finally sit down and implement it in a common drm_hdmi.c
+>=20
+> So I've been looking at what most other implementations do and it see=
+ms
+> a lot just fill the AVI infoframe with zeroes while only a few actual=
+ly
+> try to put useful information in them. Still in order to plan for a
+> generic solution, I thought maybe something like the below set of
+> structures and functions could work:
+>=20
+> /*
+>  * Structure that contains the infoframe fields in a form that allows=
+ them to
+>  * be easily accessed from C code.
+>  */
+> struct hdmi_avi_infoframe;
+>=20
+> /*
+>  * DRM helper to fill a struct hdmi_avi_infoframe with information ta=
+ken from
+>  * a struct drm_display_mode. Fields that cannot automatically be der=
+ived by
+>  * looking at a struct drm_display_mode are set to the default values=
+=2E
+>  */
+> int drm_hdmi_avi_infoframe_from_display_mode(struct hdmi_avi_infofram=
+e *frame,
+> 					     struct drm_display_mode *mode);
+>=20
+> /*
+>  * Packs the struct hdmi_avi_infoframe into a binary buffer that can =
+be
+>  * programmed to the hardware-specific registers.
+>  */
+> ssize_t hdmi_avi_infoframe_pack(struct hdmi_avi_infoframe *frame,
+> 				void *buffer, size_t size);
+>=20
+> Such a scheme would allow DRM drivers to call the helper and tweak th=
+e
+> fields in the structure if the want or need to and call the packing
+> function to obtain a buffer that they can write to the controller.
+>=20
+> Does that sound at all reasonable?
 
-So there is a mismatch in our assumptions. You are just truncating
-32-bit values. I assumed you were using the 8 and 16 bit sizes that are
-now supported in dts. I don't think we should just truncate values
-blindly. We have support for specifying 8 and 16 values now so you
-should use that and define that as part of a binding.
-
-Rob
-
->                }
-> 
-> driver changes:
-> 
-> +void test(struct device_node *cluster)
-> +{
-> +       u8 data1[3];
-> +       u16 data2[3];
-> +       u32 data3[3], i;
-> +
-> +       of_property_read_u8_array(cluster, "data1", data1, 3);
-> +       of_property_read_u16_array(cluster, "data2", data2, 3);
-> +       of_property_read_u32_array(cluster, "data3", data3, 3);
-> +
-> +       for (i = 0; i < 3; i++) {
-> +               printk(KERN_INFO "u8 %d: %x\n", i, data1[i]);
-> +               printk(KERN_INFO "u16 %d: %x\n", i, data2[i]);
-> +               printk(KERN_INFO "u32 %d: %x\n", i, data3[i]);
-> +       }
-> +}
-> 
-> And following is the output
-> 
-> [    4.087205] u8 0: 50
-> [    4.093746] u16 0: 5000
-> [    4.101067] u32 0: 50000000
-> [    4.109512] u8 1: 60
-> [    4.116036] u16 1: 6000
-> [    4.123357] u32 1: 60000000
-> [    4.131718] u8 2: 70
-> [    4.138241] u16 2: 7000
-> [    4.145573] u32 2: 70000000
-> 
-> which looks to be what we were looking for, isn't it?
-> 
-> Following is fixup for the doc comment missing:
-> 
-> commit 00803aed0781de451048df0d15a3e8c814a343c8
-> Author: Viresh Kumar <viresh.kumar@linaro.org>
-> Date:   Wed Nov 7 09:48:46 2012 +0530
-> 
->     fixup! dt: add helper function to read u8 & u16 variables & arrays
-> ---
->  drivers/of/base.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index fbb634b..4a6632e 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -669,6 +669,7 @@ EXPORT_SYMBOL(of_find_node_by_phandle);
->   * @np:                device node from which the property value is to be read.
->   * @propname:  name of the property to be searched.
->   * @out_value: pointer to return value, modified only if return value is 0.
-> + * @sz:                number of array elements to read
->   *
->   * Search for a property in a device node and read 8-bit value(s) from
->   * it. Returns 0 on success, -EINVAL if the property does not exist,
-> @@ -690,6 +691,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u8_array);
->   * @np:                device node from which the property value is to be read.
->   * @propname:  name of the property to be searched.
->   * @out_value: pointer to return value, modified only if return value is 0.
-> + * @sz:                number of array elements to read
->   *
->   * Search for a property in a device node and read 16-bit value(s) from
->   * it. Returns 0 on success, -EINVAL if the property does not exist,
-> @@ -712,6 +714,7 @@ EXPORT_SYMBOL_GPL(of_property_read_u16_array);
->   * @np:                device node from which the property value is to be read.
->   * @propname:  name of the property to be searched.
->   * @out_value: pointer to return value, modified only if return value is 0.
-> + * @sz:                number of array elements to read
->   *
->   * Search for a property in a device node and read 32-bit value(s) from
->   * it. Returns 0 on success, -EINVAL if the property does not exist,
-> 
+Sounds good, especially the disdinction between the infoframe creation =
+and
+packing. E.g. on intel sdvo outputs we may not put in one of the ECC by=
+tes
+(since the hw creates it), so we need our own packing code there.
+-Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
