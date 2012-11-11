@@ -1,7 +1,7 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 02/14] ARM: SPEAr13xx: DT: Add spics gpio controller nodes
-Date: Sun, 11 Nov 2012 10:09:24 +0530
-Message-ID: <58a7d91cab20b924784fb5a09e16ca08e6f13318.1352608333.git.viresh.kumar@linaro.org>
+Subject: [PATCH 04/14] ARM: SPEAr: DT: Update partition info for MTD devices
+Date: Sun, 11 Nov 2012 10:09:26 +0530
+Message-ID: <5530adca95f45d44153f9c905cbbd7c97b0c4c75.1352608333.git.viresh.kumar@linaro.org>
 References: <cover.1352608333.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,74 +20,288 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: arm@kernel.org, olof@lixom.net, arnd@arndb.de
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, sr@denx.de, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: Vipul Kumar Samar <vipulkumar.samar@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, Vipin Kumar <vipin.kumar@st.com>, sr@denx.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Shiraz Hashim <shiraz.hashim@st.com>
+From: Vipin Kumar <vipin.kumar@st.com>
 
-SPEAr platform provides a provision to control chipselects of ARM PL022 Prime
-Cell spi controller through its system registers, which otherwise remains under
-PL022 control which some protocols do not want.
+This patch enhances partition information of MTD devices like fsmc-nand and
+spear-smi.
 
-This patch adds spics controller nodes in device tree for various SPEAr13xx
-SoCs.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Shiraz Hashim <shiraz.hashim@st.com>
-Reviewed-by: Vipin Kumar <vipin.kumar@st.com>
+Signed-off-by: Vipin Kumar <vipin.kumar@st.com>
+Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- arch/arm/boot/dts/spear1310.dtsi | 12 ++++++++++++
- arch/arm/boot/dts/spear1340.dtsi | 14 ++++++++++++++
- 2 files changed, 26 insertions(+)
+ arch/arm/boot/dts/spear1310-evb.dts | 43 ++++++++++++++++++++++++++++++++-----
+ arch/arm/boot/dts/spear1340-evb.dts | 43 ++++++++++++++++++++++++++++++++-----
+ arch/arm/boot/dts/spear300-evb.dts  | 18 +++++++++++-----
+ arch/arm/boot/dts/spear310-evb.dts  | 18 +++++++++++-----
+ arch/arm/boot/dts/spear320-evb.dts  | 18 +++++++++++-----
+ arch/arm/boot/dts/spear600-evb.dts  | 18 +++++++++++-----
+ 6 files changed, 128 insertions(+), 30 deletions(-)
 
-diff --git a/arch/arm/boot/dts/spear1310.dtsi b/arch/arm/boot/dts/spear1310.dtsi
-index 419ea74..d5661ee 100644
---- a/arch/arm/boot/dts/spear1310.dtsi
-+++ b/arch/arm/boot/dts/spear1310.dtsi
-@@ -17,6 +17,18 @@
- 	compatible = "st,spear1310";
+diff --git a/arch/arm/boot/dts/spear1310-evb.dts b/arch/arm/boot/dts/spear1310-evb.dts
+index 08697ac..2e2887b 100644
+--- a/arch/arm/boot/dts/spear1310-evb.dts
++++ b/arch/arm/boot/dts/spear1310-evb.dts
+@@ -120,6 +120,31 @@
  
- 	ahb {
-+		spics: spics@e0700000{
-+			compatible = "st,spear-spics-gpio";
-+			reg = <0xe0700000 0x1000>;
-+			st-spics,peripcfg-reg = <0x3b0>;
-+			st-spics,sw-enable-bit = <12>;
-+			st-spics,cs-value-bit = <11>;
-+			st-spics,cs-enable-mask = <3>;
-+			st-spics,cs-enable-shift = <8>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
+ 		fsmc: flash@b0000000 {
+ 			status = "okay";
 +
- 		ahci@b1000000 {
- 			compatible = "snps,spear-ahci";
- 			reg = <0xb1000000 0x10000>;
-diff --git a/arch/arm/boot/dts/spear1340.dtsi b/arch/arm/boot/dts/spear1340.dtsi
-index d71fe2a..1604425 100644
---- a/arch/arm/boot/dts/spear1340.dtsi
-+++ b/arch/arm/boot/dts/spear1340.dtsi
-@@ -17,6 +17,20 @@
- 	compatible = "st,spear1340";
++			partition@0 {
++				label = "xloader";
++				reg = <0x0 0x80000>;
++			};
++			partition@80000 {
++				label = "u-boot";
++				reg = <0x80000 0x140000>;
++			};
++			partition@1C0000 {
++				label = "environment";
++				reg = <0x1C0000 0x40000>;
++			};
++			partition@200000 {
++				label = "dtb";
++				reg = <0x200000 0x40000>;
++			};
++			partition@240000 {
++				label = "linux";
++				reg = <0x240000 0xC00000>;
++			};
++			partition@E40000 {
++				label = "rootfs";
++				reg = <0xE40000 0x0>;
++			};
+ 		};
  
- 	ahb {
+ 		gmac0: eth@e2000000 {
+@@ -146,15 +171,23 @@
+ 				};
+ 				partition@10000 {
+ 					label = "u-boot";
+-					reg = <0x10000 0x40000>;
++					reg = <0x10000 0x50000>;
++				};
++				partition@60000 {
++					label = "environment";
++					reg = <0x60000 0x10000>;
++				};
++				partition@70000 {
++					label = "dtb";
++					reg = <0x70000 0x10000>;
+ 				};
+-				partition@50000 {
++				partition@80000 {
+ 					label = "linux";
+-					reg = <0x50000 0x2c0000>;
++					reg = <0x80000 0x310000>;
+ 				};
+-				partition@310000 {
++				partition@390000 {
+ 					label = "rootfs";
+-					reg = <0x310000 0x4f0000>;
++					reg = <0x390000 0x0>;
+ 				};
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/spear1340-evb.dts b/arch/arm/boot/dts/spear1340-evb.dts
+index 8e35c14..8d6339d 100644
+--- a/arch/arm/boot/dts/spear1340-evb.dts
++++ b/arch/arm/boot/dts/spear1340-evb.dts
+@@ -128,6 +128,31 @@
+ 
+ 		fsmc: flash@b0000000 {
+ 			status = "okay";
 +
-+		spics: spics@e0700000{
-+			compatible = "st,spear-spics-gpio";
-+			reg = <0xe0700000 0x1000>;
-+			st-spics,peripcfg-reg = <0x42c>;
-+			st-spics,sw-enable-bit = <21>;
-+			st-spics,cs-value-bit = <20>;
-+			st-spics,cs-enable-mask = <3>;
-+			st-spics,cs-enable-shift = <18>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			status = "disabled";
-+		};
-+
- 		ahci@b1000000 {
- 			compatible = "snps,spear-ahci";
- 			reg = <0xb1000000 0x10000>;
++			partition@0 {
++				label = "xloader";
++				reg = <0x0 0x200000>;
++			};
++			partition@200000 {
++				label = "u-boot";
++				reg = <0x200000 0x200000>;
++			};
++			partition@400000 {
++				label = "environment";
++				reg = <0x400000 0x100000>;
++			};
++			partition@500000 {
++				label = "dtb";
++				reg = <0x500000 0x100000>;
++			};
++			partition@600000 {
++				label = "linux";
++				reg = <0x600000 0xC00000>;
++			};
++			partition@1200000 {
++				label = "rootfs";
++				reg = <0x1200000 0x0>;
++			};
+ 		};
+ 
+ 		gmac0: eth@e2000000 {
+@@ -154,15 +179,23 @@
+ 				};
+ 				partition@10000 {
+ 					label = "u-boot";
+-					reg = <0x10000 0x40000>;
++					reg = <0x10000 0x50000>;
++				};
++				partition@60000 {
++					label = "environment";
++					reg = <0x60000 0x10000>;
++				};
++				partition@70000 {
++					label = "dtb";
++					reg = <0x70000 0x10000>;
+ 				};
+-				partition@50000 {
++				partition@80000 {
+ 					label = "linux";
+-					reg = <0x50000 0x2c0000>;
++					reg = <0x80000 0x310000>;
+ 				};
+-				partition@310000 {
++				partition@390000 {
+ 					label = "rootfs";
+-					reg = <0x310000 0x4f0000>;
++					reg = <0x390000 0x0>;
+ 				};
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/spear300-evb.dts b/arch/arm/boot/dts/spear300-evb.dts
+index 1e7c7a8..b3265f6 100644
+--- a/arch/arm/boot/dts/spear300-evb.dts
++++ b/arch/arm/boot/dts/spear300-evb.dts
+@@ -100,15 +100,23 @@
+ 				};
+ 				partition@10000 {
+ 					label = "u-boot";
+-					reg = <0x10000 0x40000>;
++					reg = <0x10000 0x50000>;
+ 				};
+-				partition@50000 {
++				partition@60000 {
++					label = "environment";
++					reg = <0x60000 0x10000>;
++				};
++				partition@70000 {
++					label = "dtb";
++					reg = <0x70000 0x10000>;
++				};
++				partition@80000 {
+ 					label = "linux";
+-					reg = <0x50000 0x2c0000>;
++					reg = <0x80000 0x310000>;
+ 				};
+-				partition@310000 {
++				partition@390000 {
+ 					label = "rootfs";
+-					reg = <0x310000 0x4f0000>;
++					reg = <0x390000 0x0>;
+ 				};
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/spear310-evb.dts b/arch/arm/boot/dts/spear310-evb.dts
+index b00544e..b30fa0e 100644
+--- a/arch/arm/boot/dts/spear310-evb.dts
++++ b/arch/arm/boot/dts/spear310-evb.dts
+@@ -114,15 +114,23 @@
+ 				};
+ 				partition@10000 {
+ 					label = "u-boot";
+-					reg = <0x10000 0x40000>;
++					reg = <0x10000 0x50000>;
+ 				};
+-				partition@50000 {
++				partition@60000 {
++					label = "environment";
++					reg = <0x60000 0x10000>;
++				};
++				partition@70000 {
++					label = "dtb";
++					reg = <0x70000 0x10000>;
++				};
++				partition@80000 {
+ 					label = "linux";
+-					reg = <0x50000 0x2c0000>;
++					reg = <0x80000 0x310000>;
+ 				};
+-				partition@310000 {
++				partition@390000 {
+ 					label = "rootfs";
+-					reg = <0x310000 0x4f0000>;
++					reg = <0x390000 0x0>;
+ 				};
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/spear320-evb.dts b/arch/arm/boot/dts/spear320-evb.dts
+index 3f87cd0..a3061ad 100644
+--- a/arch/arm/boot/dts/spear320-evb.dts
++++ b/arch/arm/boot/dts/spear320-evb.dts
+@@ -118,15 +118,23 @@
+ 				};
+ 				partition@10000 {
+ 					label = "u-boot";
+-					reg = <0x10000 0x40000>;
++					reg = <0x10000 0x50000>;
+ 				};
+-				partition@50000 {
++				partition@60000 {
++					label = "environment";
++					reg = <0x60000 0x10000>;
++				};
++				partition@70000 {
++					label = "dtb";
++					reg = <0x70000 0x10000>;
++				};
++				partition@80000 {
+ 					label = "linux";
+-					reg = <0x50000 0x2c0000>;
++					reg = <0x80000 0x310000>;
+ 				};
+-				partition@310000 {
++				partition@390000 {
+ 					label = "rootfs";
+-					reg = <0x310000 0x4f0000>;
++					reg = <0x390000 0x0>;
+ 				};
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/spear600-evb.dts b/arch/arm/boot/dts/spear600-evb.dts
+index 1119c22..16e4de4 100644
+--- a/arch/arm/boot/dts/spear600-evb.dts
++++ b/arch/arm/boot/dts/spear600-evb.dts
+@@ -49,15 +49,23 @@
+ 				};
+ 				partition@10000 {
+ 					label = "u-boot";
+-					reg = <0x10000 0x40000>;
++					reg = <0x10000 0x50000>;
+ 				};
+-				partition@50000 {
++				partition@60000 {
++					label = "environment";
++					reg = <0x60000 0x10000>;
++				};
++				partition@70000 {
++					label = "dtb";
++					reg = <0x70000 0x10000>;
++				};
++				partition@80000 {
+ 					label = "linux";
+-					reg = <0x50000 0x2c0000>;
++					reg = <0x80000 0x310000>;
+ 				};
+-				partition@310000 {
++				partition@390000 {
+ 					label = "rootfs";
+-					reg = <0x310000 0x4f0000>;
++					reg = <0x390000 0x0>;
+ 				};
+ 			};
+ 		};
 -- 
 1.7.12.rc2.18.g61b472e
