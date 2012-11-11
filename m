@@ -1,89 +1,38 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH 3/3] ARM: Kirkwood: Convert IB62x0 to use gpio-poweroff.
-Date: Sun, 11 Nov 2012 17:21:31 +0100
-Message-ID: <1352650891-18356-4-git-send-email-andrew@lunn.ch>
-References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
+ variables & arrays
+Date: Sun, 11 Nov 2012 22:57:08 +0530
+Message-ID: <CAKohpoksQ4ShO_QFAQORO2_oEgNtOeENFnX1C3gN_5POQSGexg@mail.gmail.com>
+References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
+	<50991C41.50705@gmail.com>
+	<CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
+	<509FB25F.3030307@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linus.walleij@linaro.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, gmbnomis@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <509FB25F.3030307@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: rob.herring@calxeda.com, grant.likely@secretlab.ca, linaro-dev@lists.linaro.org, andriy.shevchenko@intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
----
- arch/arm/boot/dts/kirkwood-ib62x0.dts |    6 ++++++
- arch/arm/mach-kirkwood/board-ib62x0.c |   13 -------------
- 2 files changed, 6 insertions(+), 13 deletions(-)
+On 11 November 2012 19:42, Rob Herring <robherring2@gmail.com> wrote:
+> On 11/06/2012 10:22 PM, viresh kumar wrote:
 
-diff --git a/arch/arm/boot/dts/kirkwood-ib62x0.dts b/arch/arm/boot/dts/kirkwood-ib62x0.dts
-index 66794ed..9b0e2e3 100644
---- a/arch/arm/boot/dts/kirkwood-ib62x0.dts
-+++ b/arch/arm/boot/dts/kirkwood-ib62x0.dts
-@@ -79,4 +79,10 @@
- 			gpios = <&gpio0 27 0>;
- 		};
- 	};
-+	gpio_poweroff {
-+		compatible = "gpio-poweroff";
-+		gpios = <&gpio0 24 1>;
-+	};
-+
-+
- };
-diff --git a/arch/arm/mach-kirkwood/board-ib62x0.c b/arch/arm/mach-kirkwood/board-ib62x0.c
-index cfc47f8..7b8adf5 100644
---- a/arch/arm/mach-kirkwood/board-ib62x0.c
-+++ b/arch/arm/mach-kirkwood/board-ib62x0.c
-@@ -17,7 +17,6 @@
- #include <linux/mtd/partitions.h>
- #include <linux/ata_platform.h>
- #include <linux/mv643xx_eth.h>
--#include <linux/gpio.h>
- #include <linux/input.h>
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
-@@ -25,8 +24,6 @@
- #include "common.h"
- #include "mpp.h"
- 
--#define IB62X0_GPIO_POWER_OFF	24
--
- static struct mv643xx_eth_platform_data ib62x0_ge00_data = {
- 	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
- };
-@@ -49,11 +46,6 @@ static unsigned int ib62x0_mpp_config[] __initdata = {
- 	0
- };
- 
--static void ib62x0_power_off(void)
--{
--	gpio_set_value(IB62X0_GPIO_POWER_OFF, 1);
--}
--
- void __init ib62x0_init(void)
- {
- 	/*
-@@ -63,9 +55,4 @@ void __init ib62x0_init(void)
- 
- 	kirkwood_ehci_init();
- 	kirkwood_ge00_init(&ib62x0_ge00_data);
--	if (gpio_request(IB62X0_GPIO_POWER_OFF, "ib62x0:power:off") == 0 &&
--	    gpio_direction_output(IB62X0_GPIO_POWER_OFF, 0) == 0)
--		pm_power_off = ib62x0_power_off;
--	else
--		pr_err("board-ib62x0: failed to configure power-off GPIO\n");
- }
--- 
-1.7.10.4
+>>                 cluster0: cluster@0 {
+>> +                       data1 = <0x50 0x60 0x70>;
+>> +                       data2 = <0x5000 0x6000 0x7000>;
+>> +                       data3 = <0x50000000 0x60000000 0x70000000>;
+>
+> So there is a mismatch in our assumptions. You are just truncating
+> 32-bit values. I assumed you were using the 8 and 16 bit sizes that are
+> now supported in dts. I don't think we should just truncate values
+> blindly. We have support for specifying 8 and 16 values now so you
+> should use that and define that as part of a binding.
+
+Sorry couldn't get your point at all :(
+What did you mean by "truncating 32 bit values" and how should we
+tell via DT, that the value passed is 8 bit, 16 bit or 32 bit?
+
+--
+viresh
