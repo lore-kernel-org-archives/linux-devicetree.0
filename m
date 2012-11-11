@@ -1,249 +1,204 @@
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: [RFC] MIPS: BCM63XX: add generic fallback device trees
-Date: Sun, 11 Nov 2012 13:50:37 +0100
-Message-ID: <1352638249-29298-4-git-send-email-jonas.gorski@gmail.com>
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC] MIPS: BCM63XX: add support for loading DTB
+Date: Sun, 11 Nov 2012 13:50:35 +0100
+Message-ID: <1352638249-29298-2-git-send-email-jonas.gorski@gmail.com>
 References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Maxime Bizon <mbizon@freebox.fr>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add generic fallback device trees to load if there is no specific
-device tree for the board available. This ensures that always present
-devices like interrupt controllers are always available.
+Add support for loading DTBs embedded into the kernel. Iterate through
+all embedded ones until a match is found and use that.
 
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Use the NVRAM provided board name for constructing the compatible
+property for selecting the appropriate in-kernel DTB.
+
+Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/mips/bcm63xx/dts/Makefile             |    8 ++++++++
- arch/mips/bcm63xx/dts/bcm96328_generic.dts |   21 +++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm96338_generic.dts |   21 +++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm96345_generic.dts |   21 +++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm96348_generic.dts |   21 +++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm96358_generic.dts |   21 +++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm96368_generic.dts |   21 +++++++++++++++++++++
- arch/mips/bcm63xx/setup.c                  |   17 +++++++++++------
- 8 files changed, 145 insertions(+), 6 deletions(-)
- create mode 100644 arch/mips/bcm63xx/dts/bcm96328_generic.dts
- create mode 100644 arch/mips/bcm63xx/dts/bcm96338_generic.dts
- create mode 100644 arch/mips/bcm63xx/dts/bcm96345_generic.dts
- create mode 100644 arch/mips/bcm63xx/dts/bcm96348_generic.dts
- create mode 100644 arch/mips/bcm63xx/dts/bcm96358_generic.dts
- create mode 100644 arch/mips/bcm63xx/dts/bcm96368_generic.dts
+ arch/mips/Kconfig              |    1 +
+ arch/mips/bcm63xx/Kconfig      |    2 +
+ arch/mips/bcm63xx/Makefile     |    1 +
+ arch/mips/bcm63xx/dts/Kconfig  |    3 +
+ arch/mips/bcm63xx/dts/Makefile |    2 +
+ arch/mips/bcm63xx/setup.c      |   80 ++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 89 insertions(+), 0 deletions(-)
+ create mode 100644 arch/mips/bcm63xx/dts/Kconfig
+ create mode 100644 arch/mips/bcm63xx/dts/Makefile
 
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 9934a46..168b0fc 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -132,6 +132,7 @@ config BCM63XX
+ 	select SWAP_IO_SPACE
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select HAVE_CLK
++	select USE_OF
+ 	help
+ 	 Support for BCM63XX based boards
+ 
+diff --git a/arch/mips/bcm63xx/Kconfig b/arch/mips/bcm63xx/Kconfig
+index d03e879..03d693b 100644
+--- a/arch/mips/bcm63xx/Kconfig
++++ b/arch/mips/bcm63xx/Kconfig
+@@ -31,3 +31,5 @@ config BCM63XX_CPU_6368
+ endmenu
+ 
+ source "arch/mips/bcm63xx/boards/Kconfig"
++
++source "arch/mips/bcm63xx/dts/Kconfig"
+diff --git a/arch/mips/bcm63xx/Makefile b/arch/mips/bcm63xx/Makefile
+index ac28073..30971a7 100644
+--- a/arch/mips/bcm63xx/Makefile
++++ b/arch/mips/bcm63xx/Makefile
+@@ -5,3 +5,4 @@ obj-y		+= clk.o cpu.o cs.o gpio.o irq.o nvram.o prom.o reset.o \
+ obj-$(CONFIG_EARLY_PRINTK)	+= early_printk.o
+ 
+ obj-y		+= boards/
++obj-y		+= dts/
+diff --git a/arch/mips/bcm63xx/dts/Kconfig b/arch/mips/bcm63xx/dts/Kconfig
+new file mode 100644
+index 0000000..919f3f6
+--- /dev/null
++++ b/arch/mips/bcm63xx/dts/Kconfig
+@@ -0,0 +1,3 @@
++menu "Built-in Device Tree support"
++
++endmenu
 diff --git a/arch/mips/bcm63xx/dts/Makefile b/arch/mips/bcm63xx/dts/Makefile
-index 69c374b..94d1057 100644
---- a/arch/mips/bcm63xx/dts/Makefile
+new file mode 100644
+index 0000000..69c374b
+--- /dev/null
 +++ b/arch/mips/bcm63xx/dts/Makefile
-@@ -1,2 +1,10 @@
-+# generic fallback boards
-+obj-$(CONFIG_BCM63XX_CPU_6328)		+= bcm96328_generic.dtb.o
-+obj-$(CONFIG_BCM63XX_CPU_6338)		+= bcm96338_generic.dtb.o
-+obj-$(CONFIG_BCM63XX_CPU_6345)		+= bcm96345_generic.dtb.o
-+obj-$(CONFIG_BCM63XX_CPU_6348)		+= bcm96348_generic.dtb.o
-+obj-$(CONFIG_BCM63XX_CPU_6358)		+= bcm96358_generic.dtb.o
-+obj-$(CONFIG_BCM63XX_CPU_6368)		+= bcm96368_generic.dtb.o
-+
- $(obj)/%.dtb: $(obj)/%.dts
- 	$(call if_changed,dtc)
-diff --git a/arch/mips/bcm63xx/dts/bcm96328_generic.dts b/arch/mips/bcm63xx/dts/bcm96328_generic.dts
-new file mode 100644
-index 0000000..13cdc48
---- /dev/null
-+++ b/arch/mips/bcm63xx/dts/bcm96328_generic.dts
-@@ -0,0 +1,21 @@
-+/dts-v1/;
-+
-+/*
-+ * Fallback Device Tree Source for Broadcom BCM6328 based boards
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "bcm6328.dtsi"
-+
-+/ {
-+	model = "Generic BCM6328 board";
-+	compatible = "bcm96328-generic";
-+
-+	ubus@10000000 {
-+	};
-+};
-diff --git a/arch/mips/bcm63xx/dts/bcm96338_generic.dts b/arch/mips/bcm63xx/dts/bcm96338_generic.dts
-new file mode 100644
-index 0000000..3b4e7b0
---- /dev/null
-+++ b/arch/mips/bcm63xx/dts/bcm96338_generic.dts
-@@ -0,0 +1,21 @@
-+/dts-v1/;
-+
-+/*
-+ * Fallback Device Tree Source for Broadcom BCM6338 based boards
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "bcm6338.dtsi"
-+
-+/ {
-+	model = "Generic BCM6338 board";
-+	compatible = "bcm96338-generic";
-+
-+	ubus@fffe0000 {
-+	};
-+};
-diff --git a/arch/mips/bcm63xx/dts/bcm96345_generic.dts b/arch/mips/bcm63xx/dts/bcm96345_generic.dts
-new file mode 100644
-index 0000000..2bbf69e
---- /dev/null
-+++ b/arch/mips/bcm63xx/dts/bcm96345_generic.dts
-@@ -0,0 +1,21 @@
-+/dts-v1/;
-+
-+/*
-+ * Fallback Device Tree Source for Broadcom BCM6345 based boards
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "bcm6345.dtsi"
-+
-+/ {
-+	model = "Generic BCM6345 board";
-+	compatible = "bcm96345-generic";
-+
-+	ubus@fffe0000 {
-+	};
-+};
-diff --git a/arch/mips/bcm63xx/dts/bcm96348_generic.dts b/arch/mips/bcm63xx/dts/bcm96348_generic.dts
-new file mode 100644
-index 0000000..d3c21a9
---- /dev/null
-+++ b/arch/mips/bcm63xx/dts/bcm96348_generic.dts
-@@ -0,0 +1,21 @@
-+/dts-v1/;
-+
-+/*
-+ * Fallback Device Tree Source for Broadcom BCM6348 based boards
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "bcm6348.dtsi"
-+
-+/ {
-+	model = "Generic BCM6348 board";
-+	compatible = "bcm96348-generic";
-+
-+	ubus@fffe0000 {
-+	};
-+};
-diff --git a/arch/mips/bcm63xx/dts/bcm96358_generic.dts b/arch/mips/bcm63xx/dts/bcm96358_generic.dts
-new file mode 100644
-index 0000000..7db5b8f
---- /dev/null
-+++ b/arch/mips/bcm63xx/dts/bcm96358_generic.dts
-@@ -0,0 +1,21 @@
-+/dts-v1/;
-+
-+/*
-+ * Fallback Device Tree Source for Broadcom BCM6358 based boards
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "bcm6358.dtsi"
-+
-+/ {
-+	model = "Generic BCM6358 board";
-+	compatible = "bcm96358-generic";
-+
-+	ubus@fffe0000 {
-+	};
-+};
-diff --git a/arch/mips/bcm63xx/dts/bcm96368_generic.dts b/arch/mips/bcm63xx/dts/bcm96368_generic.dts
-new file mode 100644
-index 0000000..a5c79a6
---- /dev/null
-+++ b/arch/mips/bcm63xx/dts/bcm96368_generic.dts
-@@ -0,0 +1,21 @@
-+/dts-v1/;
-+
-+/*
-+ * Fallback Device Tree Source for Broadcom BCM6368 based boards
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski@gmail.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "bcm6368.dtsi"
-+
-+/ {
-+	model = "Generic BCM6368 board";
-+	compatible = "bcm96368-generic";
-+
-+	ubus@10000000 {
-+	};
-+};
+@@ -0,0 +1,2 @@
++$(obj)/%.dtb: $(obj)/%.dts
++	$(call if_changed,dtc)
 diff --git a/arch/mips/bcm63xx/setup.c b/arch/mips/bcm63xx/setup.c
-index 8712354..b1fa63d 100644
+index 314231b..8712354 100644
 --- a/arch/mips/bcm63xx/setup.c
 +++ b/arch/mips/bcm63xx/setup.c
-@@ -209,9 +209,16 @@ void __init device_tree_init(void)
+@@ -4,6 +4,7 @@
+  * for more details.
+  *
+  * Copyright (C) 2008 Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>
++ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+  */
  
- 	devtree = find_compatible_tree(of_ids[0].compatible);
- 	if (!devtree) {
--		pr_warn("no compatible device tree found for board %s\n"
-+		pr_warn("no compatible device tree found for board %s, using fallback tree\n",
- 			of_ids[0].compatible);
--		return;
-+
-+		snprintf(of_ids[0].compatible, sizeof(of_ids[0].compatible),
-+			 "bcm9%x-generic", bcm63xx_get_cpu_id());
-+		devtree = find_compatible_tree(of_ids[0].compatible);
-+
-+		if (!devtree)
-+			panic("no fallback tree available for BCM%x!\n",
-+			      bcm63xx_get_cpu_id());
- 	}
+ #include <linux/init.h>
+@@ -12,6 +13,8 @@
+ #include <linux/bootmem.h>
+ #include <linux/ioport.h>
+ #include <linux/pm.h>
++#include <linux/of_fdt.h>
++#include <linux/of_platform.h>
+ #include <asm/bootinfo.h>
+ #include <asm/time.h>
+ #include <asm/reboot.h>
+@@ -20,6 +23,7 @@
+ #include <bcm63xx_cpu.h>
+ #include <bcm63xx_regs.h>
+ #include <bcm63xx_io.h>
++#include <bcm963xx_tag.h>
  
- 	__dt_setup_arch(devtree);
-@@ -223,10 +230,8 @@ void __init device_tree_init(void)
- 
- int __init bcm63xx_populate_device_tree(void)
+ void bcm63xx_machine_halt(void)
  {
--	if (!of_have_populated_dt()) {
--		pr_warn("device tree not available\n");
--		return -ENODEV;
--	}
-+	if (!of_have_populated_dt())
-+		panic("device tree not available\n");
- 
- 	return of_platform_populate(NULL, of_ids, NULL, NULL);
+@@ -152,6 +156,82 @@ void __init plat_mem_setup(void)
+ 	board_setup();
  }
+ 
++extern struct boot_param_header __dtb_start;
++extern struct boot_param_header __dtb_end;
++
++int __init bcm63xx_is_compatible(struct boot_param_header *devtree,
++				   const char *compat)
++{
++	unsigned long dt_root;
++	struct boot_param_header *old_ibp = initial_boot_params;
++	int ret;
++
++	initial_boot_params = devtree;
++
++	dt_root = of_get_flat_dt_root();
++	ret = of_flat_dt_is_compatible(dt_root, compat);
++
++	initial_boot_params = old_ibp;
++
++	return ret;
++}
++
++static struct of_device_id of_ids[] = {
++	{ /* will be filled at runtime */ },
++	{ .compatible = "simple-bus" },
++	{ },
++};
++
++static struct boot_param_header *find_compatible_tree(const char *compat)
++{
++	struct boot_param_header *curr = &__dtb_start;
++
++	while (curr < &__dtb_end) {
++		if (be32_to_cpu(curr->magic) != OF_DT_HEADER)
++			continue;
++
++		if (bcm63xx_is_compatible(curr, compat))
++			return curr;
++
++		/* in-kernel dtbs are aligned to 32 bytes */
++		curr = (void *)curr + roundup(be32_to_cpu(curr->totalsize), 32);
++	}
++
++	return NULL;
++}
++
++void __init device_tree_init(void)
++{
++	struct boot_param_header *devtree = NULL;
++	const char *name = board_get_name();
++
++	strncpy(of_ids[0].compatible, name, BOARDID_LEN);
++
++	devtree = find_compatible_tree(of_ids[0].compatible);
++	if (!devtree) {
++		pr_warn("no compatible device tree found for board %s\n"
++			of_ids[0].compatible);
++		return;
++	}
++
++	__dt_setup_arch(devtree);
++	reserve_bootmem(virt_to_phys(devtree), be32_to_cpu(devtree->totalsize),
++			BOOTMEM_DEFAULT);
++
++	unflatten_device_tree();
++}
++
++int __init bcm63xx_populate_device_tree(void)
++{
++	if (!of_have_populated_dt()) {
++		pr_warn("device tree not available\n");
++		return -ENODEV;
++	}
++
++	return of_platform_populate(NULL, of_ids, NULL, NULL);
++}
++arch_initcall(bcm63xx_populate_device_tree);
++
+ int __init bcm63xx_register_devices(void)
+ {
+ 	return board_register_devices();
 -- 
 1.7.2.5
