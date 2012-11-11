@@ -1,268 +1,302 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC] MIPS: BCM63XX: add simple Device Tree includes for all SoCs
-Date: Sun, 11 Nov 2012 13:50:36 +0100
-Message-ID: <1352638249-29298-3-git-send-email-jonas.gorski@gmail.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: [RFC] MIPS: BCM63XX: add Device Tree glue code for IRQ handling
+Date: Sun, 11 Nov 2012 13:50:38 +0100
+Message-ID: <1352638249-29298-5-git-send-email-jonas.gorski@gmail.com>
 References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mips@linux-mips.org
+Cc: Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Maxime Bizon <mbizon@freebox.fr>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add simple Device Tree include files for all currently supported SoCs.
-These will be populated with device definitions as driver support
-gets added.
+Register IRQ domains through Device Tree for the internal and external
+interrupt controllers. Register the same IRQ ranges as previously to
+provide backward compatibility for non-DT drivers.
 
-Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
 ---
- arch/mips/bcm63xx/dts/bcm6328.dtsi |   30 ++++++++++++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm6338.dtsi |   30 ++++++++++++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm6345.dtsi |   30 ++++++++++++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm6348.dtsi |   30 ++++++++++++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm6358.dtsi |   33 +++++++++++++++++++++++++++++++++
- arch/mips/bcm63xx/dts/bcm6368.dtsi |   33 +++++++++++++++++++++++++++++++++
- 6 files changed, 186 insertions(+), 0 deletions(-)
- create mode 100644 arch/mips/bcm63xx/dts/bcm6328.dtsi
- create mode 100644 arch/mips/bcm63xx/dts/bcm6338.dtsi
- create mode 100644 arch/mips/bcm63xx/dts/bcm6345.dtsi
- create mode 100644 arch/mips/bcm63xx/dts/bcm6348.dtsi
- create mode 100644 arch/mips/bcm63xx/dts/bcm6358.dtsi
- create mode 100644 arch/mips/bcm63xx/dts/bcm6368.dtsi
+ .../devicetree/bindings/mips/bcm63xx/epic.txt      |   20 ++++++++++++
+ .../devicetree/bindings/mips/bcm63xx/ipic.txt      |   18 +++++++++++
+ arch/mips/bcm63xx/dts/bcm6328.dtsi                 |   16 ++++++++++
+ arch/mips/bcm63xx/dts/bcm6338.dtsi                 |   16 ++++++++++
+ arch/mips/bcm63xx/dts/bcm6345.dtsi                 |   16 ++++++++++
+ arch/mips/bcm63xx/dts/bcm6348.dtsi                 |   16 ++++++++++
+ arch/mips/bcm63xx/dts/bcm6358.dtsi                 |   16 ++++++++++
+ arch/mips/bcm63xx/dts/bcm6368.dtsi                 |   16 ++++++++++
+ arch/mips/bcm63xx/irq.c                            |   32 ++++++++++++++++++++
+ 9 files changed, 166 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/bcm63xx/epic.txt
+ create mode 100644 Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt
 
+diff --git a/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt b/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt
+new file mode 100644
+index 0000000..4fc74e8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt
+@@ -0,0 +1,20 @@
++* Broadcom BCM63XX External Interrupt Controller
++
++Properties:
++- compatible: "brcm,bcm63xx-epic"
++  Compatible with all bcm63xx SoCs.
++
++- interrupt-controller: This is an interrupt controller.
++
++- #interrupt-cells: <2>
++  This controller supports level and edge triggered interrupts. The
++  first cell is the interrupt number, the second is a 1:1 mapping to
++  the linux interrupt flags.
++
++Example:
++
++	epic: interrupt-controller@18 {
++		compatible = "brcm,bcm63xx-epic";
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	}
+diff --git a/Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt b/Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt
+new file mode 100644
+index 0000000..1cbabf90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/bcm63xx/ipic.txt
+@@ -0,0 +1,18 @@
++* BCM63XX Internal Interrupt Controller
++
++Properties:
++- compatible: "brcm,bcm63xx-ipic"
++  Compatible with all bcm63xx SoCs.
++
++- interrupt-controller: This is an interrupt controller.
++
++- #interrupt-cells: <1>
++  This controller supports only level interrupts.
++
++Example:
++
++	ipic: interrupt-controller@20 {
++		compatible = "brcm,bcm63xx-ipic";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	}
 diff --git a/arch/mips/bcm63xx/dts/bcm6328.dtsi b/arch/mips/bcm63xx/dts/bcm6328.dtsi
-new file mode 100644
-index 0000000..a0e1835
---- /dev/null
+index a0e1835..a41033a 100644
+--- a/arch/mips/bcm63xx/dts/bcm6328.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6328.dtsi
-@@ -0,0 +1,30 @@
-+/*
-+ * Device Tree Include file for Broadcom BCM6328 SoC
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+@@ -26,5 +26,21 @@
+ 		#size-cells = <1>;
+ 		ranges = <0 0x10000000 0x20000>;
+ 		compatible = "simple-bus";
 +
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "brcm,bcm6328";
++		interrupt-parent = <&ipic>;
 +
-+	cpus {
-+		cpu@0 {
-+			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		perf@0 {
++			epic: interrupt-controller@18 {
++				compatible = "brcm,bcm63xx-epic";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			ipic: interrupt-controller@20 {
++				compatible = "brcm,bcm63xx-ipic";
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
 +		};
-+	};
-+
-+	memory { device_type = "memory"; reg = <0 0>; };
-+
-+	ubus@10000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x10000000 0x20000>;
-+		compatible = "simple-bus";
-+	};
-+};
+ 	};
+ };
 diff --git a/arch/mips/bcm63xx/dts/bcm6338.dtsi b/arch/mips/bcm63xx/dts/bcm6338.dtsi
-new file mode 100644
-index 0000000..21772d9
---- /dev/null
+index 21772d9..8ecbc4f 100644
+--- a/arch/mips/bcm63xx/dts/bcm6338.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6338.dtsi
-@@ -0,0 +1,30 @@
-+/*
-+ * Device Tree Include file for Broadcom BCM6338 SoC
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+@@ -26,5 +26,21 @@
+ 		#size-cells = <1>;
+ 		ranges = <0 0xfffe0000 0x20000>;
+ 		compatible = "simple-bus";
 +
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "brcm,bcm6338";
++		interrupt-parent = <&ipic>;
 +
-+	cpus {
-+		cpu@0 {
-+			compatible = "brcm,bmips3300", "mips,mips4Kc";
++		perf@0 {
++			ipic: interrupt-controller@c {
++				compatible = "brcm,bcm63xx-ipic";
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++
++			epic: interrupt-controller@14 {
++				compatible = "brcm,bcm63xx-epic";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
 +		};
-+	};
-+
-+	memory { device_type = "memory"; reg = <0 0>; };
-+
-+	ubus@fffe0000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xfffe0000 0x20000>;
-+		compatible = "simple-bus";
-+	};
-+};
+ 	};
+ };
 diff --git a/arch/mips/bcm63xx/dts/bcm6345.dtsi b/arch/mips/bcm63xx/dts/bcm6345.dtsi
-new file mode 100644
-index 0000000..f1e7153
---- /dev/null
+index f1e7153..ed17c12 100644
+--- a/arch/mips/bcm63xx/dts/bcm6345.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6345.dtsi
-@@ -0,0 +1,30 @@
-+/*
-+ * Device Tree Include file for Broadcom BCM6345 SoC
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+@@ -26,5 +26,21 @@
+ 		#size-cells = <1>;
+ 		ranges = <0 0xfffe0000 0x20000>;
+ 		compatible = "simple-bus";
 +
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "brcm,bcm6345";
++		interrupt-parent = <&ipic>;
 +
-+	cpus {
-+		cpu@0 {
-+			compatible = "brcm,bmips3300", "mips,mips4Kc";
++		perf@0 {
++			ipic: interrupt-controller@c {
++				compatible = "brcm,bcm63xx-ipic";
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++
++			epic: interrupt-controller@14 {
++				compatible = "brcm,bcm63xx-epic";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
 +		};
-+	};
-+
-+	memory { device_type = "memory"; reg = <0 0>; };
-+
-+	ubus@fffe0000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xfffe0000 0x20000>;
-+		compatible = "simple-bus";
-+	};
-+};
+ 	};
+ };
 diff --git a/arch/mips/bcm63xx/dts/bcm6348.dtsi b/arch/mips/bcm63xx/dts/bcm6348.dtsi
-new file mode 100644
-index 0000000..8a5a2dc
---- /dev/null
+index 8a5a2dc..d54cf20 100644
+--- a/arch/mips/bcm63xx/dts/bcm6348.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6348.dtsi
-@@ -0,0 +1,30 @@
-+/*
-+ * Device Tree Include file for Broadcom BCM6348 SoC
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+@@ -26,5 +26,21 @@
+ 		#size-cells = <1>;
+ 		ranges = <0 0xfffe0000 0x20000>;
+ 		compatible = "simple-bus";
 +
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "brcm,bcm6348";
++		interrupt-parent = <&ipic>;
 +
-+	cpus {
-+		cpu@0 {
-+			compatible = "brcm,bmips3300", "mips,mips4Kc";
++		perf@0 {
++			ipic: interrupt-controller@c {
++				compatible = "brcm,bcm63xx-ipic";
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++
++			epic: interrupt-controller@14 {
++				compatible = "brcm,bcm63xx-epic";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
 +		};
-+	};
-+
-+	memory { device_type = "memory"; reg = <0 0>; };
-+
-+	ubus@fffe0000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xfffe0000 0x20000>;
-+		compatible = "simple-bus";
-+	};
-+};
+ 	};
+ };
 diff --git a/arch/mips/bcm63xx/dts/bcm6358.dtsi b/arch/mips/bcm63xx/dts/bcm6358.dtsi
-new file mode 100644
-index 0000000..1d3f20f
---- /dev/null
+index 1d3f20f..6ef283f 100644
+--- a/arch/mips/bcm63xx/dts/bcm6358.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6358.dtsi
-@@ -0,0 +1,33 @@
-+/*
-+ * Device Tree Include file for Broadcom BCM6358 SoC
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+@@ -29,5 +29,21 @@
+ 		#size-cells = <1>;
+ 		ranges = <0 0xfffe0000 0x20000>;
+ 		compatible = "simple-bus";
 +
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "brcm,bcm6358";
++		interrupt-parent = <&ipic>;
 +
-+	cpus {
-+		cpu@0 {
-+			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		perf@0 {
++			epic: interrupt-controller@18 {
++				compatible = "brcm,bcm63xx-epic";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			ipic: interrupt-controller@20 {
++				compatible = "brcm,bcm63xx-ipic";
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
 +		};
-+		cpu@1 {
-+			compatible = "brcm,bmips4350", "mips,mips4Kc";
-+		};
-+	};
-+
-+	memory { device_type = "memory"; reg = <0 0>; };
-+
-+	ubus@fffe0000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0xfffe0000 0x20000>;
-+		compatible = "simple-bus";
-+	};
-+};
+ 	};
+ };
 diff --git a/arch/mips/bcm63xx/dts/bcm6368.dtsi b/arch/mips/bcm63xx/dts/bcm6368.dtsi
-new file mode 100644
-index 0000000..a7624b9
---- /dev/null
+index a7624b9..ae1b584 100644
+--- a/arch/mips/bcm63xx/dts/bcm6368.dtsi
 +++ b/arch/mips/bcm63xx/dts/bcm6368.dtsi
-@@ -0,0 +1,33 @@
-+/*
-+ * Device Tree Include file for Broadcom BCM6368 SoC
-+ *
-+ * Copyright (C) 2012 Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
+@@ -29,5 +29,21 @@
+ 		#size-cells = <1>;
+ 		ranges = <0 0x10000000 0x20000>;
+ 		compatible = "simple-bus";
 +
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "brcm,bcm6368";
++		interrupt-parent = <&ipic>;
 +
-+	cpus {
-+		cpu@0 {
-+			compatible = "brcm,bmips4350", "mips,mips4Kc";
++		perf@0 {
++			epic: interrupt-controller@18 {
++				compatible = "brcm,bcm63xx-epic";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++			};
++
++			ipic: interrupt-controller@20 {
++				compatible = "brcm,bcm63xx-ipic";
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
 +		};
-+		cpu@1 {
-+			compatible = "brcm,bmips4350", "mips,mips4Kc";
-+		};
-+	};
+ 	};
+ };
+diff --git a/arch/mips/bcm63xx/irq.c b/arch/mips/bcm63xx/irq.c
+index da24c2b..3b64066 100644
+--- a/arch/mips/bcm63xx/irq.c
++++ b/arch/mips/bcm63xx/irq.c
+@@ -12,6 +12,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/irq.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <asm/irq_cpu.h>
+ #include <asm/mipsregs.h>
+ #include <bcm63xx_cpu.h>
+@@ -515,6 +517,34 @@ static struct irqaction cpu_ext_cascade_action = {
+ 	.flags		= IRQF_NO_THREAD,
+ };
+ 
++static int __init bcm63xx_ipic_of_init(struct device_node *node,
++				       struct device_node *parent)
++{
++	if (!irq_domain_add_simple(node,
++				   IRQ_EXTERNAL_BASE - IRQ_INTERNAL_BASE,
++				   IRQ_INTERNAL_BASE, &irq_domain_simple_ops,
++				   NULL))
++		panic("unable to add ipic domain!\n");
 +
-+	memory { device_type = "memory"; reg = <0 0>; };
++	return 0;
++}
 +
-+	ubus@10000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x10000000 0x20000>;
-+		compatible = "simple-bus";
-+	};
++static int __init bcm63xx_epic_of_init(struct device_node *node,
++				       struct device_node *parent)
++{
++	if (!irq_domain_add_simple(node, ext_irq_count, IRQ_EXTERNAL_BASE,
++				   &irq_domain_simple_ops, NULL))
++		panic("unable to add epic domain!\n");
++
++	return 0;
++}
++
++static const struct of_device_id bcm63xx_pic_of_match[] __initconst = {
++	{ .compatible = "brcm,bcm63xx-ipic", .data = bcm63xx_ipic_of_init },
++	{ .compatible = "brcm,bcm63xx-epic", .data = bcm63xx_epic_of_init },
++	{ },
 +};
++
+ void __init arch_init_irq(void)
+ {
+ 	int i;
+@@ -535,4 +565,6 @@ void __init arch_init_irq(void)
+ 	}
+ 
+ 	setup_irq(MIPS_CPU_IRQ_BASE + 2, &cpu_ip2_cascade_action);
++
++	of_irq_init(bcm63xx_pic_of_match);
+ }
 -- 
 1.7.2.5
