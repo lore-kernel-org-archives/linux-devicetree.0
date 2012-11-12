@@ -1,35 +1,81 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 0/5]  SMP support for Armada XP
-Date: Mon, 12 Nov 2012 22:32:12 +0000
-Message-ID: <201211122232.12901.arnd@arndb.de>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <50A160DF.7030305@free-electrons.com>
+From: =?ISO-8859-1?Q?Per_F=F6rlin?= <per.forlin@stericsson.com>
+Subject: Re: [PATCH] dt: platform: Extract device name from device tree blob
+Date: Mon, 12 Nov 2012 23:54:40 +0100
+Message-ID: <50A17E30.7030807@stericsson.com>
+References: <1352732343-1199-1-git-send-email-per.forlin@stericsson.com> <CACxGe6vjLA3j-bc_048UrdB5Q=8pV8=LPSVUnU_k3anX23vwyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50A160DF.7030305@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vjLA3j-bc_048UrdB5Q=8pV8=LPSVUnU_k3anX23vwyw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Fredrik SODERSTEDT <fredrik.soderstedt@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 November 2012, Gregory CLEMENT wrote:
-> Before sending a new series with the fixes related to Will comments, I
-> would like to know if I need to split the patches in order to send some
-> parts to Russell or if you (Arnd and Olof) will be able to take the whole
-> series (through Jason Cooper's git tree of course).
+On 11/12/2012 04:20 PM, Grant Likely wrote:
+> On Mon, Nov 12, 2012 at 2:59 PM, Per Forlin <per.forlin@stericsson.com> wrote:
+>> Add support to extract device name from device tree blob.
+>> If the property "dev-name" is set in the DTS this name will
+>> be used when creating the device.
+>> The auxdata_lookup has precedence and will override
+>> the "dev-name" property.
 > 
+> Using a 'dev-name' property has the same problem that the 'cell-index'
+> properties have in that it is encoding part of the global namespace
+> local to the node and it becomes easy to create collisions. Instead of
+> this check to see if one of the properties in /aliases points to the
+> node and use that for the name.
+> 
+> g.
+> 
+Thanks Grant for your feedback,
 
-We can take the whole series through arm-soc, but it would be good to
-get an Ack from Russell for patch 4.
+Extract from exynos5250.dtsi:
+-----------
+	aliases {
+		spi0 = &spi_0;
+		spi1 = &spi_1;
+		spi2 = &spi_2;
+	};
 
-	Arnd
+	spi_0: spi@12d20000 {
+...
+	};
+
+	spi_1: spi@12d30000 {
+...
+	};
+
+	spi_2: spi@12d40000 {
+...
+	};
+---------------
+
+Alias refers to the device node. The device node is not aware of the alias.
+
+How to get a device name from the aliases.
+1. Traverse all aliases for each device node (time consuming if there are many aliases)
+2. Make a new function of_alias_get_name(), today there is only of_alias_get_id()
+3. The functionality of setting device_name based on alias name needs to be optional because one may want to use aliases without changing the name of the device.
+All this is feasible but perhaps not optimal.
+
+I don't really see how come name space is a big issue in this case. The name space of "dev-name" is local to the device node. A child device node can use the same dev-name as the parent (unless I'm mistaken which happens quite often). Introducing yet another property name pollutes the name space of the device node. Still I think the pros are stronger than the cons.
+
+Do you still prefer to use the name of the Alias? Could you please elaborate a bit more how this can be done in practice?
+I would agree with you if there was a reference from the device node to the alias.
+
+My dev-name patch can be made smaller by moving read_string to:
+static int of_platform_bus_create(struct device_node *bus,
+                platform_data = auxdata->platform_data;
+        }
+ 
++       if (!bus_id)
++               of_property_read_string(bus, "dev-name", &bus_id);
++
+
+It would be nice to add something in the DTS to explicitly enable this feature to avoid collisions. Default this feature is disabled.
+Any suggestions?
+
+BR
+Per
