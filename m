@@ -1,64 +1,108 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
-	variables & arrays
-Date: Mon, 12 Nov 2012 09:03:39 +0530
-Message-ID: <CAKohponUFABC397w=dq7j+1f5QeiOX4BCOXv=OZSNOaOTmt9oQ@mail.gmail.com>
-References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
-	<50991C41.50705@gmail.com>
-	<CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
-	<509FB25F.3030307@gmail.com>
-	<CAKohpoksQ4ShO_QFAQORO2_oEgNtOeENFnX1C3gN_5POQSGexg@mail.gmail.com>
-	<509FFF8B.3010707@gmail.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v7 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Mon, 12 Nov 2012 13:41:24 +0900
+Message-ID: <004201cdc08f$fa0fd3d0$ee2f7b70$%kim@samsung.com>
+References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
+ <20121109115440.GC8078@arwen.pp.htv.fi>
+ <CAH9JG2X1a8MqBpnk8uHRjsGnaD7uob5GBhUh_aS5iCprEvi2XQ@mail.gmail.com>
+ <CAD6zSYN6xpHt54d-w=6veb6AErTq6ERQcneo7ewC-qsBoMuThQ@mail.gmail.com>
+ <20121109135441.GC8567@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-In-Reply-To: <509FFF8B.3010707-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.linaro.org/mailman/options/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linaro.org/pipermail/linaro-dev>
-List-Post: <mailto:linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>
-List-Help: <mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.linaro.org/mailman/listinfo/linaro-dev>,
-	<mailto:linaro-dev-request-cunTk1MwBs8s++Sfvej+rw@public.gmane.org?subject=subscribe>
-Sender: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-Errors-To: linaro-dev-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linaro-dev-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20121109135441.GC8567@arwen.pp.htv.fi>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com, 'Praveen Paneri' <p.paneri@samsung.com>
+Cc: 'Kyungmin Park' <kmpark@infradead.org>, 'Lukasz Majewski' <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Vivek Gautam' <gautam.vivek@samsung.com>, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 November 2012 01:12, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 11/11/2012 11:27 AM, Viresh Kumar wrote:
->> On 11 November 2012 19:42, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On 11/06/2012 10:22 PM, viresh kumar wrote:
->>
->>>>                 cluster0: cluster@0 {
->>>> +                       data1 = <0x50 0x60 0x70>;
->>>> +                       data2 = <0x5000 0x6000 0x7000>;
->>>> +                       data3 = <0x50000000 0x60000000 0x70000000>;
->>>
->>> So there is a mismatch in our assumptions. You are just truncating
->>> 32-bit values. I assumed you were using the 8 and 16 bit sizes that are
->>> now supported in dts. I don't think we should just truncate values
->>> blindly. We have support for specifying 8 and 16 values now so you
->>> should use that and define that as part of a binding.
->>
->> Sorry couldn't get your point at all :(
->> What did you mean by "truncating 32 bit values" and how should we
->> tell via DT, that the value passed is 8 bit, 16 bit or 32 bit?
->>
->
-> You are trying to retrieve an array of 8 or 16-bit values which are
-> stored as 32-bit values in dtb. Why not define them in the binding as 8
-> or 16 bit to begin with. Then there is never any ambiguity about their size.
->
-> I don't think the size is stored in the dtb. It is only in the dts. You
-> need to define the size in the binding definitions and use '/bits/'
-> annotation. With this the data is packed. Then the array function used
-> should match what the binding defines.
+Felipe Balbi wrote:
+> 
+> Hi,
+> 
+Hi :-)
 
-Aha, and in that case incrementing address by 4 in my patch will fail. Right?
-Will fix it. Thanks for increasing my knowledge on this :)
+[...]
 
+> Sure, but I still need Kukjin's 'say-so' for the arch/arm/plat-samsung
+> and arch/arm/mach-exynos part.
+> 
+Basically, this approach looks OK to me.
+
+BTW, I have some comments and need to update...
+
+>From 4th patch...
+
+> diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-
+> s3c64xx/mach-smdk6410.c
+
+[...]
+
+> @@ -72,6 +73,8 @@
+>  #include <linux/platform_data/touchscreen-s3c2410.h>
+>  #include <plat/keypad.h>
+>  #include <plat/backlight.h>
+> +#include <plat/regs-fb-v4.h>
+
+Why? In addition, this causes build error with s3c6400_defconfig.
+
+[...]
+
+> diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
+> index 03f654d..9cdb666 100644
+
+[...]
+
+> @@ -1370,6 +1371,30 @@ struct platform_device s5p_device_mixer = {
+> 
+>  /* USB */
+> 
+> +#ifdef CONFIG_S3C_DEV_USB_HSOTG
+> +/* USB PHY*/
+> +static struct resource samsung_usbphy_resource[] = {
+> +	[0] = {
+> +		.start = S3C_PA_USB_PHY,
+> +		.end   = S3C_PA_USB_PHY + SZ_16 - 1,
+> +		.flags = IORESOURCE_MEM,
+> +	},
+> +};
+
++static struct resource samsung_usbphy_resource[] = {
++	[0] = DEFINED_RES_MEM(S3C_PA_USB_PHY, SZ_16),
++};
+
+[...]
+
+Happens build error with s5pv210_defconfig
+
+arch/arm/plat-samsung/devs.c:1375: error: 'S3C_PA_USB_PHY' undeclared here
+(not in a function)
+make[2]: *** [arch/arm/plat-samsung/devs.o] Error 1
+make[1]: *** [arch/arm/plat-samsung] Error 2
+make[1]: *** Waiting for unfinished jobs....
+
+And another build error with exynos_defconfig...
+
+arch/arm/mach-exynos/built-in.o: In function `.LANCHOR1':
+setup-i2c0.c:(.data+0x8080): undefined reference to
+`s5p_usb_phy_pmu_isolation'
+
+>From 5th patch....
+
+If possible, please to use 'ARM: [sub-arch dir name]: [subject]' format.
+So I preferred to use 'ARM: EXYNOS: Enabling samsung-usbphy driver for
+EXYNOS4210' on that.
+
+Please make sure your patch has no problem for kernel compilation before
+submitting...
+
+Thanks.
+
+Best regards,
+Kgene.
 --
-viresh
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
