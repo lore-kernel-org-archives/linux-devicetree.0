@@ -1,114 +1,46 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 13/17] spi/atmel_spi: add function to read the spi data from
-	the dts
-Date: Mon, 12 Nov 2012 16:52:33 +0800
-Message-ID: <1352710357-3265-14-git-send-email-wenyou.yang@atmel.com>
-References: <1352710357-3265-1-git-send-email-wenyou.yang@atmel.com>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH 2/2] drm: tegra: Add HDMI support
+Date: Mon, 12 Nov 2012 10:43:54 +0100
+Message-ID: <CAKMK7uHLrdJPX-Lq32mBpB2S5SmGw7N57N-Hk+a3aexUE87=wg@mail.gmail.com>
+References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
+	<1352469579-3337-3-git-send-email-thierry.reding@avionic-design.de>
+	<CACna6rycZ=TGHP7KpVa_r0JSpc6c=PB89pijR9E_4A=bQ=74Bw@mail.gmail.com>
+	<509D28B6.3060207@vodafone.de>
+	<20121110210118.GA26809@avionic-0098.mockup.avionic-design.de>
+	<20121111144644.GK5854@phenom.ffwll.local>
+	<20121112072410.GA925@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1352710357-3265-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121112072410.GA925-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: =?ISO-8859-1?Q?Christian_K=F6nig?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The spi data include: dma_type and version.
-dma_type to decide the SPI xfer mode: = 1(pdc), = 2(dmaengine), 0(no dma, using PIO)
-version to give the SPI ip version.
+On Mon, Nov 12, 2012 at 8:24 AM, Thierry Reding
+<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+> Actually what I had in mind was a packed binary representation of
+> infoframes as specified by HDMI 1.3a (I don't have access to 1.4, but I
+> would think it doesn't differ in this respect) in section 5.3 and 5.3.5
+> more specifically. According to the specification, the ECC bytes only
+> come into play at a later stage, when data is actually transmitted on
+> the TMDS link (Section 5.2.3). Tegra, nouveau and radeon also seem to be
+> doing the checksumming in hardware, so I guess we don't need to compute
+> the ECC bytes in software at all (for now).
+>
+> Once we have this for the AVI infoframes I guess the same concept can be
+> used for audio infoframes and for vendor-specific infoframes (for HDMI
+> 1.4 3D).
 
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
----
- .../devicetree/bindings/spi/spi_atmel.txt          |    4 +++
- drivers/spi/spi-atmel.c                            |   28 ++++++++++++++++++++
- 2 files changed, 32 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-index 20cdc91..a1ceeb5 100644
---- a/Documentation/devicetree/bindings/spi/spi_atmel.txt
-+++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-@@ -6,6 +6,8 @@ Required properties:
- - interrupts: Should contain macb interrupt
- - cs-gpio: Should contain the GPIOs used for chipselect.
- - dma-mask: device coherent dma mask.
-+- dma_type: The dma type supported by the spi of SoC: = 0 (no used), = 1 (pdc), = 2 (dma)
-+- version: The version of the spi IP.
- 
- spi0: spi@f0000000 {
- 	#address-cells = <1>;
-@@ -19,5 +21,7 @@ spi0: spi@f0000000 {
- 		    &pioB 3 0 /* conflicts with ERXDV */
- 		   >;
- 	dma-mask = <0xffffffff>;
-+	dma_type = <1>;
-+	version = <2>;
- 	status = "disabled";
- };
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 568df5b..791800e 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -1467,6 +1467,30 @@ static void atmel_spi_cleanup(struct spi_device *spi)
- 	kfree(asd);
- }
- 
-+static int of_get_atmel_spi_data(struct device_node *np, struct atmel_spi *as)
-+{
-+	const __be32	*val;
-+
-+	val = of_get_property(np, "dma_type", NULL);
-+	if (!val) {
-+		pr_err("%s: have no 'dma_type' property\n",
-+						np->full_name);
-+		return -EINVAL;
-+	}
-+
-+	as->data.dma_type = be32_to_cpup(val);
-+
-+	val = of_get_property(np, "version", NULL);
-+	if (!val) {
-+		pr_err("%s: have no 'version' property\n", np->full_name);
-+		return -EINVAL;
-+	}
-+
-+	as->data.version = be32_to_cpup(val);
-+
-+	return 0;
-+}
-+
- /*-------------------------------------------------------------------------*/
- 
- static int __devinit atmel_spi_probe(struct platform_device *pdev)
-@@ -1535,6 +1559,10 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto out_unmap_regs;
- 
-+	ret = of_get_atmel_spi_data(pdev->dev.of_node, as);
-+	if (ret)
-+		goto out_unmap_regs;
-+
- 	/* Initialize the hardware */
- 	clk_enable(clk);
- 	spi_writel(as, CR, SPI_BIT(SWRST));
+Iirc there's more than one checksum: The ECC field at byte 3 and the
+checksum field at byte 4. All intel hw computes the ECC itself, but
+some want us to store the infoframe with an empty ECC byte as
+placeholder, whereas others (sdvo encoders) insert that byte
+themselves, i.e. the infoframe is actually one byte shorter. In any
+case, that kind of mangling can be done in the driver with easy.
+-Daniel
 -- 
-1.7.9.5
-
-
-------------------------------------------------------------------------------
-Everyone hates slow websites. So do we.
-Make your web apps faster with AppDynamics
-Download AppDynamics Lite for free today:
-http://p.sf.net/sfu/appdyn_d2d_nov
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
