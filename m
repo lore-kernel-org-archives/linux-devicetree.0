@@ -1,48 +1,28 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: fdt: Constify 'pathp'
-Date: Mon, 12 Nov 2012 18:30:49 -0200
-Message-ID: <1352752249-28878-1-git-send-email-festevam@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
+Date: Mon, 12 Nov 2012 13:40:12 -0700
+Message-ID: <50A15EAC.9030608@wwwdotorg.org>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de> <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 11/12/2012 08:37 AM, Steffen Trumtrar wrote:
+> This adds support for reading display timings from DT or/and convert one of those
+> timings to a videomode.
+> The of_display_timing implementation supports multiple children where each
+> property can have up to 3 values. All children are read into an array, that
+> can be queried.
+> of_get_videomode converts exactly one of that timings to a struct videomode.
 
-Constify 'pathp' in order to get rid of the following warning:
+> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt b/Documentation/devicetree/bindings/video/display-timings.txt
 
-drivers/of/fdt.c:491:10: warning: assignment discards 'const' qualifier from pointer target type [enabled by default]
+The device tree bindings look reasonable to me, so,
 
-Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/of/fdt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 793b823..73fb8c0 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -460,7 +460,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
- 
- 	do {
- 		u32 tag = be32_to_cpup((__be32 *)p);
--		char *pathp;
-+		const char *pathp;
- 
- 		p += 4;
- 		if (tag == OF_DT_END_NODE) {
--- 
-1.7.9.5
+Acked-by: Stephen Warren <swarren@nvidia.com>
