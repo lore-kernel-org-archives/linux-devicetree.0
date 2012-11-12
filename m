@@ -1,99 +1,45 @@
-From: Per Forlin <per.forlin@stericsson.com>
-Subject: [PATCH] dt: platform: Extract device name from device tree blob
-Date: Mon, 12 Nov 2012 15:59:03 +0100
-Message-ID: <1352732343-1199-1-git-send-email-per.forlin@stericsson.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 01/14] pinctrl: SPEAr: add spi chipselect control driver
+Date: Mon, 12 Nov 2012 15:03:28 +0000
+Message-ID: <201211121503.28392.arnd@arndb.de>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
+ <4a92290e8a3b1a19c3a5e864edfa7badfc2af5d0.1352608333.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, Linus Walleij <linus.walleij@linaro.org>, lee.jones@linaro.org, fredrik.soderstedt@stericsson.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Per Forlin <per.forlin@stericsson.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4a92290e8a3b1a19c3a5e864edfa7badfc2af5d0.1352608333.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support to extract device name from device tree blob.
-If the property "dev-name" is set in the DTS this name will
-be used when creating the device.
-The auxdata_lookup has precedence and will override
-the "dev-name" property.
+On Sunday 11 November 2012, Viresh Kumar wrote:
+> From: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
+> 
+> SPEAr platform provides a provision to control chipselects of ARM PL022
+> Prime Cell spi controller through its system registers, which otherwise
+> remains under PL022 control which some protocols do not want.
+> 
+> This commit intends to provide the spi chipselect control in software
+> over gpiolib interface. Since it is tied to pinctrl, we place it under
+> 'drivers/pinctrl/spear/' directory.
+> 
+> spi chip drivers can use the exported gpiolib interface to define their
+> chipselect through DT or platform data.
+> 
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Adding support to parse DTS "dev-name" will make it possible to
-replace these kind of structures with a dev-name in the DTS.
-OF_DEV_AUXDATA("compatible", BASE_ADDRESS, "dev-name", NULL)
+The driver looks ok to me, but I'll wait for Linus to take a look first
+and give his ack.
 
-Examples
-OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
-OF_DEV_AUXDATA("marvell,mv64xxx-i2c", 0xf1011000, "mv64xxx_i2c.0",
-OF_DEV_AUXDATA("marvell,orion-sata", 0xf10a0000, "sata_mv.0", NULL),
-OF_DEV_AUXDATA("marvell,dove-sdhci", 0xf1092000, "sdhci-dove.0", NULL),
-OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_PDMA0, "dma-pl330.0", NULL),
-OF_DEV_AUXDATA("arm,pl330", EXYNOS5_PA_PDMA0, "dma-pl330.0", NULL),
-OF_DEV_AUXDATA("fsl,imx27-uart", MX27_UART1_BASE_ADDR, "imx21-uart.0", NULL),
-OF_DEV_AUXDATA("fsl,imx27-fec", MX27_FEC_BASE_ADDR, "imx27-fec.0", NULL),
-OF_DEV_AUXDATA("fsl,imx27-i2c", MX27_I2C1_BASE_ADDR, "imx-i2c.0", NULL),
-OF_DEV_AUXDATA("fsl,imx27-cspi", MX27_CSPI1_BASE_ADDR, "imx27-cspi.0", NULL),
-OF_DEV_AUXDATA("fsl,imx27-wdt", MX27_WDOG_BASE_ADDR, "imx2-wdt.0", NULL),
-OF_DEV_AUXDATA("fsl,imx27-nand", MX27_NFC_BASE_ADDR, "mxc_nand.0", NULL),
-OF_DEV_AUXDATA("fsl,imx51-uart", MX51_UART1_BASE_ADDR, "imx21-uart.0", NULL),
-OF_DEV_AUXDATA("fsl,imx51-fec", MX51_FEC_BASE_ADDR, "imx27-fec.0", NULL),
-OF_DEV_AUXDATA("fsl,imx51-esdhc", MX51_ESDHC1_BASE_ADDR, "sdhci-esdhc-imx51.0", NULL),
-OF_DEV_AUXDATA("fsl,imx51-ecspi", MX51_ECSPI1_BASE_ADDR, "imx51-ecspi.0", NULL),
-OF_DEV_AUXDATA("fsl,imx51-cspi", MX51_CSPI_BASE_ADDR, "imx35-cspi.0", NULL),
-OF_DEV_AUXDATA("fsl,imx51-i2c", MX51_I2C1_BASE_ADDR, "imx-i2c.0", NULL),
-OF_DEV_AUXDATA("fsl,imx51-wdt", MX51_WDOG1_BASE_ADDR, "imx2-wdt.0", NULL),
-OF_DEV_AUXDATA("fsl,imx53-uart", MX53_UART1_BASE_ADDR, "imx21-uart.0", NULL),
-OF_DEV_AUXDATA("fsl,imx53-fec", MX53_FEC_BASE_ADDR, "imx25-fec.0", NULL),
-OF_DEV_AUXDATA("fsl,imx53-esdhc", MX53_ESDHC1_BASE_ADDR, "sdhci-esdhc-imx53.0", NULL),
-OF_DEV_AUXDATA("fsl,imx53-ecspi", MX53_ECSPI1_BASE_ADDR, "imx51-ecspi.0", NULL),
-OF_DEV_AUXDATA("fsl,imx53-cspi", MX53_CSPI_BASE_ADDR, "imx35-cspi.0", NULL),
-OF_DEV_AUXDATA("fsl,imx53-i2c", MX53_I2C1_BASE_ADDR, "imx-i2c.0", NULL),
-OF_DEV_AUXDATA("fsl,imx53-wdt", MX53_WDOG1_BASE_ADDR, "imx2-wdt.0", NULL),
-OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
-OF_DEV_AUXDATA("marvell,mv64xxx-i2c", 0xf1011000, "mv64xxx_i2c.0",
-OF_DEV_AUXDATA("marvell,orion-sata", 0xf1080000, "sata_mv.0", NULL),
-OF_DEV_AUXDATA("mrvl,mmp-uart", 0xd4017000, "pxa2xx-uart.0", NULL),
-OF_DEV_AUXDATA("mrvl,mmp-twsi", 0xd4011000, "pxa2xx-i2c.0", NULL),
-OF_DEV_AUXDATA("mrvl,mmp-uart", 0xd4017000, "pxa2xx-uart.0", NULL),
-OF_DEV_AUXDATA("mrvl,mmp-twsi", 0xd4011000, "pxa2xx-i2c.0", NULL),
-OF_DEV_AUXDATA("mrvl,mmp-uart", 0xd4030000, "pxa2xx-uart.0", NULL),
-OF_DEV_AUXDATA("mrvl,mmp-twsi", 0xd4011000, "pxa2xx-i2c.0", NULL),
-OF_DEV_AUXDATA("mrvl,pxa-uart",		0x40100000, "pxa2xx-uart.0", NULL),
-OF_DEV_AUXDATA("marvell,pxa-mmc",	0x41100000, "pxa2xx-mci.0", NULL),
-OF_DEV_AUXDATA("mrvl,pxa-i2c",		0x40301680, "pxa2xx-i2c.0", NULL),
-OF_DEV_AUXDATA("nvidia,tegra20-sdhci", TEGRA_SDMMC1_BASE, "sdhci-tegra.0", NULL),
-OF_DEV_AUXDATA("nvidia,tegra20-i2c", TEGRA_I2C_BASE, "tegra-i2c.0", NULL),
-OF_DEV_AUXDATA("nvidia,tegra20-i2s", TEGRA_I2S1_BASE, "tegra20-i2s.0", NULL),
-OF_DEV_AUXDATA("nvidia,tegra20-ehci", TEGRA_USB_BASE, "tegra-ehci.0",
-OF_DEV_AUXDATA("nvidia,tegra20-sdhci", 0x78000000, "sdhci-tegra.0", NULL),
-OF_DEV_AUXDATA("nvidia,tegra20-i2c", 0x7000C000, "tegra-i2c.0", NULL),
-OF_DEV_AUXDATA("st,nomadik-gpio", 0x8012e000, "gpio.0", NULL),
-OF_DEV_AUXDATA("st,nomadik-i2c", 0x80004000, "nmk-i2c.0", NULL),
-
-Signed-off-by: Per Forlin <per.forlin@stericsson.com>
----
- drivers/of/platform.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 9600480..999ee95 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -169,6 +169,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 
- 	if (bus_id)
- 		dev_set_name(&dev->dev, "%s", bus_id);
-+	else if (of_property_read_string(np, "dev-name", &bus_id) == 0)
-+		dev_set_name(&dev->dev, "%s", bus_id);
- 	else
- 		of_device_make_bus_id(&dev->dev);
- 
-@@ -264,6 +266,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- 	dev->dev.platform_data = platform_data;
- 	if (bus_id)
- 		dev_set_name(&dev->dev, "%s", bus_id);
-+	else if (of_property_read_string(node, "dev-name", &bus_id) == 0)
-+		dev_set_name(&dev->dev, "%s", bus_id);
- 	else
- 		of_device_make_bus_id(&dev->dev);
- 
--- 
-1.7.11.3
+	Arnd
