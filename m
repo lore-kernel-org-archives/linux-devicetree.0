@@ -1,151 +1,333 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm: tegra: Add HDMI support
-Date: Mon, 12 Nov 2012 08:24:10 +0100
-Message-ID: <20121112072410.GA925@avionic-0098.mockup.avionic-design.de>
-References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de>
- <1352469579-3337-3-git-send-email-thierry.reding@avionic-design.de>
- <CACna6rycZ=TGHP7KpVa_r0JSpc6c=PB89pijR9E_4A=bQ=74Bw@mail.gmail.com>
- <509D28B6.3060207@vodafone.de>
- <20121110210118.GA26809@avionic-0098.mockup.avionic-design.de>
- <20121111144644.GK5854@phenom.ffwll.local>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH v5 1/3] ARM: at91: atmel-ssc: add pinctrl
+	support
+Date: Mon, 12 Nov 2012 15:40:25 +0800
+Message-ID: <1352706028-750-2-git-send-email-voice.shen@atmel.com>
+References: <1352706028-750-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121111144644.GK5854-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian =?utf-8?B?S8O2bmln?= <deathsimple-ANTagKRnAhcb1SvskN2V4Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1352706028-750-1-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@opensource.wolfsonmicro.com, plagnioj@jcrosoft.com, nicolas.ferre@atmel.com
+Cc: Bo Shen <voice.shen@atmel.com>, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add pinctrl support for atmel ssc peripheral
 
---WIyZ46R2i8wDzkSu
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
+---
+Change since v4
+  - This is initial version
+---
+ arch/arm/boot/dts/at91sam9260.dtsi |   18 ++++++++++++++++++
+ arch/arm/boot/dts/at91sam9263.dtsi |   36 ++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi |   36 ++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91sam9n12.dtsi |   26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91sam9x5.dtsi  |   32 +++++++++++++++++++++++++-------
+ drivers/misc/atmel-ssc.c           |    8 ++++++++
+ 6 files changed, 149 insertions(+), 7 deletions(-)
 
-On Sun, Nov 11, 2012 at 03:46:44PM +0100, Daniel Vetter wrote:
-> On Sat, Nov 10, 2012 at 10:01:18PM +0100, Thierry Reding wrote:
-> > On Fri, Nov 09, 2012 at 05:00:54PM +0100, Christian K=C3=B6nig wrote:
-> > > On 09.11.2012 16:45, Rafa=C5=82 Mi=C5=82ecki wrote:
-> > > >2012/11/9 Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>:
-> > > >>+/* all fields little endian */
-> > > >>+struct hdmi_audio_infoframe {
-> > > >>+       /* PB0 */
-> > > >>+       u8 csum;
-> > > >>+
-> > > >>+       /* PB1 */
-> > > >>+       unsigned cc:3; /* channel count */
-> > > >>+       unsigned res1:1;
-> > > >>+       unsigned ct:4; /* coding type */
-> > > >>+
-> > > >>+       /* PB2 */
-> > > >>+       unsigned ss:2; /* sample size */
-> > > >>+       unsigned sf:3; /* sample frequency */
-> > > >>+       unsigned res2:3;
-> > > >>+
-> > > >>+       /* PB3 */
-> > > >>+       unsigned cxt:5; /* coding extention type */
-> > > >>+       unsigned res3:3;
-> > > >>+
-> > > >>+       /* PB4 */
-> > > >>+       u8 ca; /* channel/speaker allocation */
-> > > >>+
-> > > >>+       /* PB5 */
-> > > >>+       unsigned res5:3;
-> > > >>+       unsigned lsv:4; /* level shift value */
-> > > >>+       unsigned dm_inh:1; /* downmix inhibit */
-> > > >>+
-> > > >>+       /* PB6-10 reserved */
-> > > >>+       u8 res6;
-> > > >>+       u8 res7;
-> > > >>+       u8 res8;
-> > > >>+       u8 res9;
-> > > >>+       u8 res10;
-> > > >>+} __packed;
-> > > >I was told it won't work on different endian devices. See
-> > > >[RFC][PATCH] drm/radeon/hdmi: define struct for AVI infoframe
-> > > >http://lists.freedesktop.org/archives/dri-devel/2012-May/022544.html
-> > >=20
-> > > Yeah, that's indeed true. And honestly adding just another
-> > > implementation of the HDMI info frames sounds like somebody should
-> > > finally sit down and implement it in a common drm_hdmi.c
-> >=20
-> > So I've been looking at what most other implementations do and it seems
-> > a lot just fill the AVI infoframe with zeroes while only a few actually
-> > try to put useful information in them. Still in order to plan for a
-> > generic solution, I thought maybe something like the below set of
-> > structures and functions could work:
-> >=20
-> > /*
-> >  * Structure that contains the infoframe fields in a form that allows t=
-hem to
-> >  * be easily accessed from C code.
-> >  */
-> > struct hdmi_avi_infoframe;
-> >=20
-> > /*
-> >  * DRM helper to fill a struct hdmi_avi_infoframe with information take=
-n from
-> >  * a struct drm_display_mode. Fields that cannot automatically be deriv=
-ed by
-> >  * looking at a struct drm_display_mode are set to the default values.
-> >  */
-> > int drm_hdmi_avi_infoframe_from_display_mode(struct hdmi_avi_infoframe =
-*frame,
-> > 					     struct drm_display_mode *mode);
-> >=20
-> > /*
-> >  * Packs the struct hdmi_avi_infoframe into a binary buffer that can be
-> >  * programmed to the hardware-specific registers.
-> >  */
-> > ssize_t hdmi_avi_infoframe_pack(struct hdmi_avi_infoframe *frame,
-> > 				void *buffer, size_t size);
-> >=20
-> > Such a scheme would allow DRM drivers to call the helper and tweak the
-> > fields in the structure if the want or need to and call the packing
-> > function to obtain a buffer that they can write to the controller.
-> >=20
-> > Does that sound at all reasonable?
->=20
-> Sounds good, especially the disdinction between the infoframe creation and
-> packing. E.g. on intel sdvo outputs we may not put in one of the ECC bytes
-> (since the hw creates it), so we need our own packing code there.
-
-Actually what I had in mind was a packed binary representation of
-infoframes as specified by HDMI 1.3a (I don't have access to 1.4, but I
-would think it doesn't differ in this respect) in section 5.3 and 5.3.5
-more specifically. According to the specification, the ECC bytes only
-come into play at a later stage, when data is actually transmitted on
-the TMDS link (Section 5.2.3). Tegra, nouveau and radeon also seem to be
-doing the checksumming in hardware, so I guess we don't need to compute
-the ECC bytes in software at all (for now).
-
-Once we have this for the AVI infoframes I guess the same concept can be
-used for audio infoframes and for vendor-specific infoframes (for HDMI
-1.4 3D).
-
-Thierry
-
---WIyZ46R2i8wDzkSu
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQoKQaAAoJEN0jrNd/PrOhvWUP/1PaUFUAaXUBC4pa221xson6
-nQGg4XHJgKZ2HhhMj5SmpcfFPcPaCaZM7Qe/AZ8vISNhB2DQUsqsevlHuUaNe53I
-ESbIOsm8w7HQ9ricqJp4Rv4vdk5GQBQsNVqWlogNUPoAV/XOkiFWZJwm2Mx7N/O3
-nDx3GI0dULYaeG42/r8qR3eB80TzQR8+d3oQDJ3xCWAzjEV6wmapoxva0hnOS8hQ
-ngjgbG8yXPP/F+bxCdjs5wSR4UehoWIslB0SQE8dVUeHZPoa0A1odopcWlqBp0mU
-dBIBp8jJ+zl9h+RONDtHNk0QT6+/C30CyaJA4HfSN0g458UqXTAObQt2OYtVNoMZ
-X611GCVQRGD6lPN96pINqEkTxZ8MWWwMdEhtcOEtwsPvwKBO/VjCB3D95G5//A/F
-ZHqX7WxVmdM/zXjm9JK9li7V2x78MPiH9FvgWulXjcGRTNf6FGfkQHKqa7jGsnw+
-auOECCqApfhlCvA7PTK9o2bcg1iI2FePOfTbtQFFF+EbKKSrb15VRhOJoclr5RS3
-b/7A2YqYA0bKgHEipOGQUs8/xx2KI3VMtez+MsEStXUk0eIWrJJWsQYiNdFJwXWo
-hZ4y2VEAb3R4ndRMCwNAiKH6NKGCBkpuPlOqkr84+JErHxfmD5sqvdCX7rKeKJRO
-j8cyCc+ddGxIWKVfu3n8
-=yx68
------END PGP SIGNATURE-----
-
---WIyZ46R2i8wDzkSu--
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index 3164dcd..8e3fe92 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -217,6 +217,22 @@
+ 					};
+ 				};
+ 
++				ssc0 {
++					pinctrl_ssc0_tx: ssc0_tx-0 {
++						atmel,pins =
++							<1 16 0x1 0x1	/* PB16 periph A with pull up */
++							 1 17 0x1 0x1	/* PB17 periph A with pull up */
++							 1 18 0x1 0x1>;	/* PB18 periph A with pull up */
++					};
++
++					pinctrl_ssc0_rx: ssc0_rx-0 {
++						atmel,pins =
++							<1 19 0x1 0x1	/* PB19 periph A with pull up */
++							 1 20 0x1 0x1	/* PB20 periph A with pull up */
++							 1 21 0x1 0x1>;	/* PB21 periph A with pull up */
++					};
++				};
++
+ 				pioA: gpio@fffff400 {
+ 					compatible = "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff400 0x200>;
+@@ -350,6 +366,8 @@
+ 				compatible = "atmel,at91rm9200-ssc";
+ 				reg = <0xfffbc000 0x4000>;
+ 				interrupts = <14 4 5>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+ 				status = "disable";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 96e0bc9..80e0811 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -165,6 +165,38 @@
+ 					};
+ 				};
+ 
++				ssc0 {
++					pinctrl_ssc0_tx: ssc0_tx-0 {
++						atmel,pins =
++							<1 0 0x2 0x1	/* PB0 periph B with pull up */
++							 1 1 0x2 0x1	/* PB1 periph B with pull up */
++							 1 2 0x2 0x1>;	/* PB2 periph B with pull up */
++					};
++
++					pinctrl_ssc0_rx: ssc0_rx-0 {
++						atmel,pins =
++							<1 3 0x2 0x1	/* PB3 periph B with pull up */
++							 1 4 0x2 0x1	/* PB4 periph B with pull up */
++							 1 5 0x2 0x1>;	/* PB5 periph B with pull up */
++					};
++				};
++
++				ssc1 {
++					pinctrl_ssc1_tx: ssc1_tx-0 {
++						atmel,pins =
++							<1 6 0x1 0x1	/* PB6 periph A with pull up */
++							 1 7 0x1 0x1	/* PB7 periph A with pull up */
++							 1 8 0x1 0x1>;	/* PB8 periph A with pull up */
++					};
++
++					pinctrl_ssc1_rx: ssc1_rx-0 {
++						atmel,pins =
++							<1 9 0x1 0x1	/* PB9 periph A with pull up */
++							 1 10 0x1 0x1	/* PB10 periph A with pull up */
++							 1 11 0x1 0x1>;	/* PB11 periph A with pull up */
++					};
++				};
++
+ 				pioA: gpio@fffff200 {
+ 					compatible = "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff200 0x200>;
+@@ -262,6 +294,8 @@
+ 				compatible = "atmel,at91rm9200-ssc";
+ 				reg = <0xfff98000 0x4000>;
+ 				interrupts = <16 4 5>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+ 				status = "disable";
+ 			};
+ 
+@@ -269,6 +303,8 @@
+ 				compatible = "atmel,at91rm9200-ssc";
+ 				reg = <0xfff9c000 0x4000>;
+ 				interrupts = <17 4 5>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_ssc1_tx &pinctrl_ssc1_rx>;
+ 				status = "disable";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index c40c3eb..b969247 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -198,6 +198,38 @@
+ 					};
+ 				};
+ 
++				ssc0 {
++					pinctrl_ssc0_tx: ssc0_tx-0 {
++						atmel,pins =
++							<3 0 0x1 0x1	/* PD0 periph A with pull up */
++							 3 1 0x1 0x1	/* PD1 periph A with pull up */
++							 3 2 0x1 0x1>;	/* PD2 periph A with pull up */
++					};
++
++					pinctrl_ssc0_rx: ssc0_rx-0 {
++						atmel,pins =
++							<3 3 0x1 0x1	/* PD3 periph A with pull up */
++							 3 4 0x1 0x1	/* PD4 periph A with pull up */
++							 3 5 0x1 0x1>;	/* PD5 periph A with pull up */
++					};
++				};
++
++				ssc1 {
++					pinctrl_ssc1_tx: ssc1_tx-0 {
++						atmel,pins =
++							<3 10 0x1 0x1	/* PD10 periph A with pull up */
++							 3 11 0x1 0x1	/* PD11 periph A with pull up */
++							 3 12 0x1 0x1>;	/* PD12 periph A with pull up */
++					};
++
++					pinctrl_ssc1_rx: ssc1_rx-0 {
++						atmel,pins =
++							<3 13 0x1 0x1	/* PD13 periph A with pull up */
++							 3 14 0x1 0x1	/* PD14 periph A with pull up */
++							 3 15 0x1 0x1>;	/* PD15 periph A with pull up */
++					};
++				};
++
+ 				pioA: gpio@fffff200 {
+ 					compatible = "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff200 0x200>;
+@@ -331,6 +363,8 @@
+ 				compatible = "atmel,at91sam9g45-ssc";
+ 				reg = <0xfff9c000 0x4000>;
+ 				interrupts = <16 4 5>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+ 				status = "disable";
+ 			};
+ 
+@@ -338,6 +372,8 @@
+ 				compatible = "atmel,at91sam9g45-ssc";
+ 				reg = <0xfffa0000 0x4000>;
+ 				interrupts = <17 4 5>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_ssc1_tx &pinctrl_ssc1_rx>;
+ 				status = "disable";
+ 			};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+index 7b644c5..f39ffa3 100644
+--- a/arch/arm/boot/dts/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+@@ -28,6 +28,7 @@
+ 		tcb1 = &tcb1;
+ 		i2c0 = &i2c0;
+ 		i2c1 = &i2c1;
++		ssc0 = &ssc0;
+ 	};
+ 	cpus {
+ 		cpu@0 {
+@@ -199,6 +200,22 @@
+ 					};
+ 				};
+ 
++				ssc0 {
++					pinctrl_ssc0_tx: ssc0_tx-0 {
++						atmel,pins =
++							<0 24 0x1 0x1	/* PA24 periph A with pull up */
++							 0 25 0x1 0x1	/* PA25 periph A with pull up */
++							 0 26 0x1 0x1>;	/* PA26 periph A with pull up */
++					};
++
++					pinctrl_ssc0_rx: ssc0_rx-0 {
++						atmel,pins =
++							<0 27 0x1 0x1	/* PA27 periph A with pull up */
++							 0 28 0x1 0x1	/* PA28 periph A with pull up */
++							 0 29 0x1 0x1>;	/* PA29 periph A with pull up */
++					};
++				};
++
+ 				pioA: gpio@fffff400 {
+ 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff400 0x200>;
+@@ -249,6 +266,15 @@
+ 				status = "disabled";
+ 			};
+ 
++			ssc0: ssc@f0010000 {
++				compatible = "atmel,at91sam9g45-ssc";
++				reg = <0xf0010000 0x4000>;
++				interrupts = <28 4 5>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
++				status = "disable";
++			};
++
+ 			usart0: serial@f801c000 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xf801c000 0x4000>;
+diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+index 1cb26c28..b60e15e 100644
+--- a/arch/arm/boot/dts/at91sam9x5.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+@@ -88,13 +88,6 @@
+ 				interrupts = <1 4 7>;
+ 			};
+ 
+-			ssc0: ssc@f0010000 {
+-				compatible = "atmel,at91sam9g45-ssc";
+-				reg = <0xf0010000 0x4000>;
+-				interrupts = <28 4 5>;
+-				status = "disable";
+-			};
+-
+ 			tcb0: timer@f8008000 {
+ 				compatible = "atmel,at91sam9x5-tcb";
+ 				reg = <0xf8008000 0x100>;
+@@ -214,6 +207,22 @@
+ 					};
+ 				};
+ 
++				ssc0 {
++					pinctrl_ssc0_tx: ssc0_tx-0 {
++						atmel,pins =
++							<0 24 0x1 0x1	/* PA24 periph A with pull up */
++							 0 25 0x1 0x1	/* PA25 periph A with pull up */
++							 0 26 0x1 0x1>;	/* PA26 periph A with pull up */
++					};
++
++					pinctrl_ssc0_rx: ssc0_rx-0 {
++						atmel,pins =
++							<0 27 0x1 0x1	/* PA27 periph A with pull up */
++							 0 28 0x1 0x1	/* PA28 periph A with pull up */
++							 0 29 0x1 0x1>;	/* PA29 periph A with pull up */
++					};
++				};
++
+ 				pioA: gpio@fffff400 {
+ 					compatible = "atmel,at91sam9x5-gpio", "atmel,at91rm9200-gpio";
+ 					reg = <0xfffff400 0x200>;
+@@ -266,6 +275,15 @@
+ 				status = "disabled";
+ 			};
+ 
++			ssc0: ssc@f0010000 {
++				compatible = "atmel,at91sam9g45-ssc";
++				reg = <0xf0010000 0x4000>;
++				interrupts = <28 4 5>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
++				status = "disable";
++			};
++
+ 			usart0: serial@f801c000 {
+ 				compatible = "atmel,at91sam9260-usart";
+ 				reg = <0xf801c000 0x200>;
+diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
+index a769719..3b3d0e0 100644
+--- a/drivers/misc/atmel-ssc.c
++++ b/drivers/misc/atmel-ssc.c
+@@ -19,6 +19,7 @@
+ #include <linux/module.h>
+ 
+ #include <linux/of.h>
++#include <linux/pinctrl/consumer.h>
+ 
+ /* Serialize access to ssc_list and user count */
+ static DEFINE_SPINLOCK(user_lock);
+@@ -131,6 +132,13 @@ static int ssc_probe(struct platform_device *pdev)
+ 	struct resource *regs;
+ 	struct ssc_device *ssc;
+ 	const struct atmel_ssc_platform_data *plat_dat;
++	struct pinctrl *pinctrl;
++
++	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
++	if (IS_ERR(pinctrl)) {
++		dev_err(&pdev->dev, "Failed to request pinctrl\n");
++		return PTR_ERR(pinctrl);
++	}
+ 
+ 	ssc = devm_kzalloc(&pdev->dev, sizeof(struct ssc_device), GFP_KERNEL);
+ 	if (!ssc) {
+-- 
+1.7.9.5
