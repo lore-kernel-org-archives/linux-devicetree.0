@@ -1,110 +1,106 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] ARM: dts: add board dts file for Exynos4412 based SMDK
- board
-Date: Mon, 12 Nov 2012 15:07:08 +0100
-Message-ID: <1629120.eNASZVgxGi@amdc1227>
-References: <1351954172-13645-1-git-send-email-thomas.abraham@linaro.org>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
+Date: Mon, 12 Nov 2012 15:41:08 +0100
+Message-ID: <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1351954172-13645-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, chaos.youn@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352731270-27534-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+Update the driver to use the new API for requesting pwm so we can take
+advantage of the pwm_lookup table to find the correct pwm to be used for the
+LED functionality.
+If the devm_get_pwm fails we fall back to legacy mode to try to get the pwm.
 
-On Saturday 03 of November 2012 20:19:32 Thomas Abraham wrote:
-> Add a minimal board dts file for Samsung Exynos4412 based SMDK board.
-> 
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
-> This patch depends the on the following patch posted by Tomasz Figa.
-> "ARM: dts: exynos4: Add support for Exynos4x12 SoCs"
-> 
->  arch/arm/boot/dts/Makefile                |    1 +
->  arch/arm/boot/dts/exynos4412-smdk4412.dts |   45
-> +++++++++++++++++++++++++++++ 2 files changed, 46 insertions(+), 0
-> deletions(-)
->  create mode 100644 arch/arm/boot/dts/exynos4412-smdk4412.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index f37cf9f..36488a5 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -23,6 +23,7 @@ dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
->  dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->  	exynos4210-smdkv310.dtb \
->  	exynos4210-trats.dtb \
-> +	exynos4412-smdk4412.dtb \
->  	exynos5250-smdk5250.dtb
->  dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb
->  dtb-$(CONFIG_ARCH_INTEGRATOR) += integratorap.dtb \
-> diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts
-> b/arch/arm/boot/dts/exynos4412-smdk4412.dts new file mode 100644
-> index 0000000..f05bf57
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-> @@ -0,0 +1,45 @@
-> +/*
-> + * Samsung's Exynos4412 based SMDK board device tree source
-> + *
-> + * Copyright (c) 2012-2013 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * Device tree source file for Samsung's SMDK4412 board which is based
-> on + * Samsung's Exynos4412 SoC.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as +
-> * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +/include/ "exynos4412.dtsi"
-> +
-> +/ {
-> +	model = "Samsung SMDK evaluation board based on Exynos4412";
-> +	compatible = "samsung,smdk4412", "samsung,exynos4412";
-> +
-> +	memory {
-> +		reg = <0x40000000 0x40000000>;
-> +	};
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+---
+ drivers/leds/leds-pwm.c  | 19 ++++++-------------
+ include/linux/leds_pwm.h |  2 +-
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
-This will not boot, because section size limit is set to 256 MiB.
-
-It might work with CONFIG_ARM_ATAG_DTB_COMPAT enabled, because the memory 
-configuration from DT is ignored and values from ATAGs are taken instead.
-
-I suggest you to change it to 4 banks of 256 MiB.
-
-> +	chosen {
-> +		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M
-> console=ttySAC1,115200 init=/linuxrc"; +	};
-> +
-> +	serial@13800000 {
-> +		status = "okay";
-> +	};
-> +
-> +	serial@13810000 {
-> +		status = "okay";
-> +	};
-> +
-> +	serial@13820000 {
-> +		status = "okay";
-> +	};
-> +
-> +	serial@13830000 {
-> +		status = "okay";
-> +	};
-> +};
-
-Otherwise looks fine.
-
-Best regards,
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index f2e44c7..c953c75 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -67,12 +67,11 @@ static int led_pwm_probe(struct platform_device *pdev)
+ 		cur_led = &pdata->leds[i];
+ 		led_dat = &leds_data[i];
+ 
+-		led_dat->pwm = pwm_request(cur_led->pwm_id,
+-				cur_led->name);
++		led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
+ 		if (IS_ERR(led_dat->pwm)) {
+ 			ret = PTR_ERR(led_dat->pwm);
+-			dev_err(&pdev->dev, "unable to request PWM %d\n",
+-					cur_led->pwm_id);
++			dev_err(&pdev->dev, "unable to request PWM for %s\n",
++				cur_led->name);
+ 			goto err;
+ 		}
+ 
+@@ -86,10 +85,8 @@ static int led_pwm_probe(struct platform_device *pdev)
+ 		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
+ 
+ 		ret = led_classdev_register(&pdev->dev, &led_dat->cdev);
+-		if (ret < 0) {
+-			pwm_free(led_dat->pwm);
++		if (ret < 0)
+ 			goto err;
+-		}
+ 	}
+ 
+ 	platform_set_drvdata(pdev, leds_data);
+@@ -98,10 +95,8 @@ static int led_pwm_probe(struct platform_device *pdev)
+ 
+ err:
+ 	if (i > 0) {
+-		for (i = i - 1; i >= 0; i--) {
++		for (i = i - 1; i >= 0; i--)
+ 			led_classdev_unregister(&leds_data[i].cdev);
+-			pwm_free(leds_data[i].pwm);
+-		}
+ 	}
+ 
+ 	return ret;
+@@ -115,10 +110,8 @@ static int __devexit led_pwm_remove(struct platform_device *pdev)
+ 
+ 	leds_data = platform_get_drvdata(pdev);
+ 
+-	for (i = 0; i < pdata->num_leds; i++) {
++	for (i = 0; i < pdata->num_leds; i++)
+ 		led_classdev_unregister(&leds_data[i].cdev);
+-		pwm_free(leds_data[i].pwm);
+-	}
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+index 33a0711..a65e964 100644
+--- a/include/linux/leds_pwm.h
++++ b/include/linux/leds_pwm.h
+@@ -7,7 +7,7 @@
+ struct led_pwm {
+ 	const char	*name;
+ 	const char	*default_trigger;
+-	unsigned	pwm_id;
++	unsigned	pwm_id __deprecated;
+ 	u8 		active_low;
+ 	unsigned 	max_brightness;
+ 	unsigned	pwm_period_ns;
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+1.8.0
