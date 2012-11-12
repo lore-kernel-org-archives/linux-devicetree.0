@@ -1,93 +1,122 @@
-From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 2/4] rtc: OMAP: Add system pm_power_off to rtc driver
-Date: Mon, 12 Nov 2012 09:47:48 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA69B27@DBDE01.ent.ti.com>
-References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
- <1352108549-9341-3-git-send-email-anilkumar@ti.com>
- <B5906170F1614E41A8A28DE3B8D121433EC04226@DBDE01.ent.ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/5] ARM: kernel: add device tree init map function
+Date: Mon, 12 Nov 2012 10:38:09 +0000
+Message-ID: <20121112103713.GA7982@e106331-lin.cambridge.arm.com>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <B5906170F1614E41A8A28DE3B8D121433EC04226-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Bedia, Vaibhav" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2012 at 11:15:34, Bedia, Vaibhav wrote:
-> On Mon, Nov 05, 2012 at 15:12:27, AnilKumar, Chimata wrote:
-> [...]
-> >  
-> > +#define SHUTDOWN_TIME_SEC		2
-> > +#define SECS_IN_MIN			60
-> > +#define WAIT_AFTER			(SECS_IN_MIN - SHUTDOWN_TIME_SEC)
-> > +#define WAIT_TIME_MS			(SHUTDOWN_TIME_SEC * 1000)
-> > +
-> >  static void __iomem	*rtc_base;
-> >  
-> [...]
-> > +
-> > +	/* Wait few seconds instead of rollover */
-> > +	do {
-> > +		omap_rtc_read_time(NULL, &tm);
-> > +		if (WAIT_AFTER <= tm.tm_sec)
-> > +			mdelay(WAIT_TIME_MS);
-> > +	} while (WAIT_AFTER <= tm.tm_sec);
+On Fri, Nov 09, 2012 at 02:34:11PM +0000, Lorenzo Pieralisi wrote:
+> When booting through a device tree, the kernel cpu logical id map can be
+> initialized using device tree data passed by FW or through an embedded blob.
 > 
-> This hardcoded wait for rollover doesn't look good. I see some
-> helper functions in rtc-lib.c which probably could be used for
-> converting the current time to elapsed seconds, add the delay and
-> then convert it back to the time to be programmed in RTC without
-> worrying about rollover. Why not use that?
-
-I am not aware of those APIs, can you point some?
-
+> This patch adds a function that parses device tree "cpu" nodes and
+> retrieves the corresponding CPUs hardware identifiers (MPIDR).
+> It sets the possible cpus and the cpu logical map values according to
+> the number of CPUs defined in the device tree and respective properties.
 > 
-> > +
-> > +	/* Add shutdown time to the current value */
-> > +	tm.tm_sec += SHUTDOWN_TIME_SEC;
-> > +
-> > +	if (tm2bcd(&tm) < 0)
-> > +		return;
-> > +
-> > +	pr_info("System will go to power_off state in approx. %d secs\n",
-> > +			SHUTDOWN_TIME_SEC);
-> > +
-> > +	/* Set the ALARM2 time */
-> > +	rtc_write(tm.tm_sec, OMAP_RTC_ALARM2_SECONDS_REG);
-> > +	rtc_write(tm.tm_min, OMAP_RTC_ALARM2_MINUTES_REG);
-> > +	rtc_write(tm.tm_hour, OMAP_RTC_ALARM2_HOURS_REG);
-> > +	rtc_write(tm.tm_mday, OMAP_RTC_ALARM2_DAYS_REG);
-> > +	rtc_write(tm.tm_mon, OMAP_RTC_ALARM2_MONTHS_REG);
-> > +	rtc_write(tm.tm_year, OMAP_RTC_ALARM2_YEARS_REG);
-> > +
-> > +	/* Enable alarm2 interrupt */
-> > +	val = readl(rtc_base + OMAP_RTC_INTERRUPTS_REG);
-> > +	writel(val | OMAP_RTC_INTERRUPTS_IT_ALARM2,
-> > +				rtc_base + OMAP_RTC_INTERRUPTS_REG);
-> > +
+> The device tree HW identifiers are considered valid if all CPU nodes contain
+> a "reg" property and the DT defines a CPU node that matches the MPIDR[23:0]
+> of the boot CPU.
 > 
-> These registers are not present in older versions of the IP so how
-> does that get handled?
-
-I think, earlier this feature is not supported/not used.
-
+> The primary CPU is assigned cpu logical number 0 to keep the current convention
+> valid.
 > 
-> You also need to describe the connection between the ALARM2 and the
-> power off logic in detail.
+> Current bindings documentation is included in the patch:
+> 
+> Documentation/devicetree/bindings/arm/cpus.txt
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 84 ++++++++++++++++++++++++++
+>  arch/arm/include/asm/prom.h                    |  2 +
+>  arch/arm/kernel/devtree.c                      | 76 +++++++++++++++++++++++
+>  3 files changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> new file mode 100644
+> index 0000000..83cd98a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -0,0 +1,84 @@
+> +* ARM CPUs binding description
+> +
+> +The device tree allows to describe the layout of CPUs in a system through
+> +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+> +defining properties for every cpu.
+> +
+> +Bindings for CPU nodes follow the ePAPR standard, available from:
+> +
+> +http://devicetree.org
+> +
+> +For the ARM architecture every CPU node must contain the following properties:
+> +
+> +- reg : property matching the CPU MPIDR[23:0] register bits
+> +- compatible: must be set to "arm, <cpu-model>"
+> +              where <cpu-model> is the full processor name as used in the
+> +              processor Technical Reference Manual, eg:
+> +              - for a Cortex A9 processor
+> +                compatible = <arm, cortex-a9>;
+> +              - for a Cortex A15 processor
+> +                compatible = <arm, cortex-a15>;
+> +
+> +List of possible "compatible" string ids:
+> +
+> +<arm, arm1020>
+> +<arm, arm1020e>
+> +<arm, arm1022>
+> +<arm, arm1026>
+> +<arm, arm720>
+> +<arm, arm740>
+> +<arm, arm7tdmi>
+> +<arm, arm920>
+> +<arm, arm922>
+> +<arm, arm925>
+> +<arm, arm926>
+> +<arm, arm940>
+> +<arm, arm946>
+> +<arm, arm9tdmi>
+> +<arm, fa526>
+> +<arm, feroceon>
+> +<arm, mohawk>
+> +<arm, sa110>
+> +<arm, sa1100>
+> +<arm, xsc3>
+> +<arm, xscale>
+> +<arm, cortex-a5>
+> +<arm, cortex-a7>
+> +<arm, cortex-a8>
+> +<arm, cortex-a9>
+> +<arm, cortex-a15>
+> +<arm, arm1136>
+> +<arm, arm11-mpcore>
+> +
 
-Sure, I will add.
+Is there any reason for the spaces in the compatible string? No other binding
+seems to do this.
 
-Thanks
-AnilKumar
+Is <STRING> a valid dts format? Should these not be "STRING" instead?
+
+For consistency, it would be nice to have the compatible strings tab-indented
+as in Documentation/devicetree/bindings/arm/pmu.txt.
+
+Thanks,
+Mark
