@@ -1,109 +1,213 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
-Date: Mon, 12 Nov 2012 19:19:08 +0200
-Message-ID: <F7FF2B16-6880-4D64-A630-6D22DCC695BD@antoniou-consulting.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com> <C3971D11-2BAC-4B58-AF8D-987FF8FFF678@antoniou-consulting.com> <50A128AF.1010803@wwwdotorg.org> <7C181180-2FE7-4EE4-BB5A-D7A1ACEC4244@antoniou-consulting.com> <50A12D9D.5030300@wwwdotorg.org>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50A12D9D.5030300@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] ARM: kernel: add device tree init map function
+Date: Mon, 12 Nov 2012 17:27:53 +0000
+Message-ID: <20121112172753.GB2111@linaro.org>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1352471654-20207-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Nov 12, 2012, at 7:10 PM, Stephen Warren wrote:
-
-> On 11/12/2012 10:00 AM, Pantelis Antoniou wrote:
->> Hi Stephen,
->> 
->> On Nov 12, 2012, at 6:49 PM, Stephen Warren wrote:
->> 
->>> On 11/12/2012 04:23 AM, Pantelis Antoniou wrote:
->>>> Hi Grant,
->>>> 
->>>> Sorry for the late comments, travelling...
->>>> 
->>>> On Nov 9, 2012, at 6:28 PM, Grant Likely wrote:
->>> ...
->>>>> *with the caveat that not all types of changes are a good idea and we
->>>>> may disallow. For example, is changing properties in existing nodes a
->>>>> good idea?
->>>> 
->>>> Yes, changing properties is something that we need. One such change is
->>>> the change of the bus controller 'status' properties to enabled upon
->>>> insertion of a child device node, and change back to 'on-demand' when
->>>> all the child device nodes are gone.
->>> 
->>> Do we actually need to do that?
->>> 
->>> From the base-board perspective, consider an SoC's I2C channel that is
->>> routed to the child board connector. The routing to the connector is
->>> always present on the base board. Only the presence (or lack thereof) of
->>> devices on that I2C bus is influenced by whether a child board is
->>> connected or not, and the design of the child board. Therefore, wouldn't
->>> it make sense for the base board to always enable the I2C controller?
->>> 
->>> That would make it easier for someone to hook up a couple wires to the
->>> I2C pins and use utilities such as i2cget/set to communicate with it,
->>> without going through the whole process of creating a DT to represent
->>> the device. This could speed up simple hacking/prototyping and allow it
->>> to proceed in a less structured way.
->> 
->> Unfortunately that doesn't work for the beaglebone (am355x) and a large
->> number of general purpose SoCs.
->> 
->> What is different between general purpose SoCs and vertical market SoCs
->> (i.e. OMAP) is that the design of the the latter is for devices where
->> pretty much all the interfaces are expected to be active at the same time.
->> 
->> General purpose SoCs put more peripherals in the SoC, but due to packaging
->> considerations (and price), the peripheral pins are highly muxed.
->> 
->> So the i2c bus pins are shared with the LCD controller are shared with the
->> analog input and so on.
->> 
->> It is impossible (and on top of that really dangerous) to enable peripheral
->> blocks without knowing what's connected on the other side.
->> 
->> In a nutshell, for the bone and similar devices, probing with the devices
->> enabled doesn't work.
+On Fri, Nov 09, 2012 at 02:34:11PM +0000, Lorenzo Pieralisi wrote:
+> When booting through a device tree, the kernel cpu logical id map can be
+> initialized using device tree data passed by FW or through an embedded blob.
 > 
-> I think this can be solved by deferring the pinmux to the .dts for the
-> child board. Presumably the I2C controller node can be enabled just
-> fine, but the I2C signals not actually routed out to any pins on the SoC
-> until the specific pinmux configuration is loaded.
+> This patch adds a function that parses device tree "cpu" nodes and
+> retrieves the corresponding CPUs hardware identifiers (MPIDR).
+> It sets the possible cpus and the cpu logical map values according to
+> the number of CPUs defined in the device tree and respective properties.
 > 
+> The device tree HW identifiers are considered valid if all CPU nodes contain
+> a "reg" property and the DT defines a CPU node that matches the MPIDR[23:0]
+> of the boot CPU.
+> 
+> The primary CPU is assigned cpu logical number 0 to keep the current convention
+> valid.
+> 
+> Current bindings documentation is included in the patch:
+> 
+> Documentation/devicetree/bindings/arm/cpus.txt
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 84 ++++++++++++++++++++++++++
+>  arch/arm/include/asm/prom.h                    |  2 +
+>  arch/arm/kernel/devtree.c                      | 76 +++++++++++++++++++++++
+>  3 files changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> new file mode 100644
+> index 0000000..83cd98a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -0,0 +1,84 @@
+> +* ARM CPUs binding description
+> +
+> +The device tree allows to describe the layout of CPUs in a system through
+> +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+> +defining properties for every cpu.
+> +
+> +Bindings for CPU nodes follow the ePAPR standard, available from:
+> +
+> +http://devicetree.org
+> +
+> +For the ARM architecture every CPU node must contain the following properties:
+> +
+> +- reg : property matching the CPU MPIDR[23:0] register bits
+> +- compatible: must be set to "arm, <cpu-model>"
+> +              where <cpu-model> is the full processor name as used in the
+> +              processor Technical Reference Manual, eg:
+> +              - for a Cortex A9 processor
+> +                compatible = <arm, cortex-a9>;
+> +              - for a Cortex A15 processor
+> +                compatible = <arm, cortex-a15>;
+> +
+> +List of possible "compatible" string ids:
+> +
+> +<arm, arm1020>
+> +<arm, arm1020e>
+> +<arm, arm1022>
+> +<arm, arm1026>
+> +<arm, arm720>
+> +<arm, arm740>
+> +<arm, arm7tdmi>
+> +<arm, arm920>
+> +<arm, arm922>
+> +<arm, arm925>
+> +<arm, arm926>
+> +<arm, arm940>
+> +<arm, arm946>
+> +<arm, arm9tdmi>
+> +<arm, fa526>
+> +<arm, feroceon>
+> +<arm, mohawk>
+> +<arm, sa110>
+> +<arm, sa1100>
+> +<arm, xsc3>
+> +<arm, xscale>
+> +<arm, cortex-a5>
+> +<arm, cortex-a7>
+> +<arm, cortex-a8>
+> +<arm, cortex-a9>
+> +<arm, cortex-a15>
+> +<arm, arm1136>
+> +<arm, arm11-mpcore>
+> +
+> +Every cpu node is required to set its device_type to "cpu".
+> +
+> +Example:
+> +
+> +	cpus {
+> +		#size-cells = <0>;
+> +		#address-cells = <1>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a15>;
+> +			reg = <0x0>;
+> +		};
+> +
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a15>;
+> +			reg = <0x1>;
+> +		};
+> +
+> +		CPU2: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a7>;
+> +			reg = <0x100>;
+> +		};
+> +
+> +		CPU3: cpu@101 {
 
-Well, I2C is just an example; same thing happens with SPI, LCD, audio, etc.
+Should we document the unit address convention as part of the binding
+documentation?
 
-So you'll end up hacking the device drivers to handle a weird state that
-basically means 'don't activate until I tell you to go'. It is simpler
-just not to create the device.
+Using the MPIDR value here is a bit cumbersome, but I'm not sure if
+there's a better alternative, unless we make a multi-element vector
+out of the MPIDR to use as the address -- sounds like overkill.
 
-> But your explanation still feels a little odd; is it really true on the
-> BeagleBone, you can either use LCD for graphics /or/ you can use the I2C
-> controller to communicate with a cape? I certainly fully understand that
-> from a SoC's perspective (and soc.dtsi perspective) you can't just
-> enable everything due to pinmux constraints, but it seems that once you
-> get to the level of a particular board design, the designer has made
-> those trade-offs and so you know which specific combination is to be
-> selected.
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a7>;
+> +			reg = <0x101>;
+> +		};
+> +	};
+> diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
+> index aeae9c6..8dd51dc 100644
+> --- a/arch/arm/include/asm/prom.h
+> +++ b/arch/arm/include/asm/prom.h
+> @@ -15,6 +15,7 @@
+>  
+>  extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
+>  extern void arm_dt_memblock_reserve(void);
+> +extern void __init arm_dt_init_cpu_maps(void);
+>  
+>  #else /* CONFIG_OF */
+>  
+> @@ -24,6 +25,7 @@ static inline struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
+>  }
+>  
+>  static inline void arm_dt_memblock_reserve(void) { }
+> +static inline void arm_dt_init_cpu_maps(void) { }
+>  
+>  #endif /* CONFIG_OF */
+>  #endif /* ASMARM_PROM_H */
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index bee7f9d..d64d222 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -19,8 +19,10 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  
+> +#include <asm/cputype.h>
+>  #include <asm/setup.h>
+>  #include <asm/page.h>
+> +#include <asm/smp_plat.h>
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach-types.h>
+>  
+> @@ -61,6 +63,80 @@ void __init arm_dt_memblock_reserve(void)
+>  	}
+>  }
+>  
+> +/*
+> + * arm_dt_init_cpu_maps - Function retrieves cpu nodes from the device tree
+> + * and builds the cpu logical map array containing MPIDR values related to
+> + * logical cpus
+> + *
+> + * Updates the cpu possible mask with the number of parsed cpu nodes
+> + */
 
-There are multiple I2C busses, multiple SPI buses, multiple options to
-connect something that produces audio, and so on. It is not odd at the least
-for the kind of market these chips are for.
+Can this function sanity-check that we do not assign the same MPIDR
+value for multiple logical CPUs?
 
-Even TI doesn't know exactly the kind of applications these devices will be 
-used for. The chip is there to provide connection option at a (cheap) price
-point.
+It turns out to be surprisingly easy to write a DT with duplicate reg
+properties in the CPUs node due to careless cut-and-paste.  (i.e., I
+did it, but have been getting away with it up to now).
 
-Think of a swiss-army knife with some tools that can be used at the
-same time, and some that can't.
+> +void __init arm_dt_init_cpu_maps(void)
+> +{
 
-Regards
+[...]
 
--- Pantelis
+Cheers
+---Dave
