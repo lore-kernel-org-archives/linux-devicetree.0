@@ -1,17 +1,17 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
-Date: Mon, 12 Nov 2012 19:19:47 +0100
-Message-ID: <20121112181947.GS24583@lunn.ch>
+Date: Mon, 12 Nov 2012 10:43:40 -0800
+Message-ID: <20121112184340.GA15643@lizard>
 References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
  <1352650891-18356-2-git-send-email-andrew@lunn.ch>
  <50A020C5.4070506@wwwdotorg.org> <20121112082546.GU22029@lunn.ch>
- <50A1212C.2080601@wwwdotorg.org>
+ <50A1212C.2080601@wwwdotorg.org> <20121112181947.GS24583@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <50A1212C.2080601-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20121112181947.GS24583-g2DYL2Zd6BY@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,47 +22,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2012 at 09:17:48AM -0700, Stephen Warren wrote:
-> On 11/12/2012 01:25 AM, Andrew Lunn wrote:
-> > On Sun, Nov 11, 2012 at 03:03:49PM -0700, Stephen Warren wrote:
-> >> On 11/11/2012 09:21 AM, Andrew Lunn wrote:
-> >>> From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-> >>>
-> >>> Given appropriate devicetree bindings, this driver registers a
-> >>> pm_power_off function to set a GPIO line high/low to power down
-> >>> your board.
-> 
-> >>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-> >>
-> >>> +Required properties:
-> >>> +- compatible : should be "gpio-poweroff".
-> >>> +- gpios : The GPIO to set high/low, see "gpios property" in
-> >>> +  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
-> >>> +  low to power down the board set it to "Active Low", otherwise set
-> >>> +  gpio to "Active High".
-> >>
-> >> Unfortunately, not all GPIO bindings support active high/low flags in
-> >> the GPIO specifier. As such, the flags there are basically useless.
-> >> Other bindings (e.g. IIRC the fixed-regulator binding) have added a
-> >> separate active-high property to indicate the GPIO polarity. This
-> >> binding should probably follow suite.
+On Mon, Nov 12, 2012 at 07:19:47PM +0100, Andrew Lunn wrote:
+[..]
+> > >>> Given appropriate devicetree bindings, this driver registers a
+> > >>> pm_power_off function to set a GPIO line high/low to power down
+> > >>> your board.
 > > 
-> > Humm, so are you saying of_get_named_gpio_flags() is deprecated?
+> > >>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+> > >>
+> > >>> +Required properties:
+> > >>> +- compatible : should be "gpio-poweroff".
+> > >>> +- gpios : The GPIO to set high/low, see "gpios property" in
+> > >>> +  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
+> > >>> +  low to power down the board set it to "Active Low", otherwise set
+> > >>> +  gpio to "Active High".
+> > >>
+> > >> Unfortunately, not all GPIO bindings support active high/low flags in
+> > >> the GPIO specifier. As such, the flags there are basically useless.
+> > >> Other bindings (e.g. IIRC the fixed-regulator binding) have added a
+> > >> separate active-high property to indicate the GPIO polarity. This
+> > >> binding should probably follow suite.
+
+Should the gpio driver fix its bindings then?.. Polarity is a quite
+generic concept of a GPIO, and flags are there for a reason. I'd rather
+prefer having
+
+	stuff-gpios = <0 0
+		       1 0
+		       2 1
+		       3 0>;
+
+Rather than
+
+	stuff-gpios = <0 1 2 3>;
+	stuff-polarity-gpio-map = <0 0 1 0>;
+
+The first scheme existed like for years already. Has it been discussed
+that it is no longer preferred?
+
+> > > Humm, so are you saying of_get_named_gpio_flags() is deprecated?
+> > 
+> > I don't know if it's deprecated, but it's certainly not useful in
+> > generic code.
 > 
-> I don't know if it's deprecated, but it's certainly not useful in
-> generic code.
+> Hi Linus, Anton
+> 
+> How do you see this? 
+> 
+> I'm happy to implement an enable-active-high property, but it seems to
+> go against the purpose of of_get_named_gpio_flags(). Is that function
+> deprecated?
 
-Hi Linus, Anton
+Never heard of any deprecation, and I disagree that it is "not useful in
+generic code". :)
 
-How do you see this? 
-
-I'm happy to implement an enable-active-high property, but it seems to
-go against the purpose of of_get_named_gpio_flags(). Is that function
-deprecated?
-
-	Thanks
-		Andrew
+Thanks,
+Anton.
