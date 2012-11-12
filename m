@@ -1,7 +1,7 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
-Date: Sun, 11 Nov 2012 15:03:49 -0700
-Message-ID: <50A020C5.4070506@wwwdotorg.org>
+Date: Mon, 12 Nov 2012 02:00:31 +0100
+Message-ID: <CACRpkdZvHBjFQTrQnxvc3WCOb2CqGbjYJxyQ5qQkSbU+UWHYZA@mail.gmail.com>
 References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
  <1352650891-18356-2-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
@@ -19,30 +19,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/11/2012 09:21 AM, Andrew Lunn wrote:
+On Sun, Nov 11, 2012 at 5:21 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+
 > From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-> 
+>
 > Given appropriate devicetree bindings, this driver registers a
 > pm_power_off function to set a GPIO line high/low to power down
 > your board.
+>
+> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-This feature will be useful for the Tegra TrimSlice board too.
+So this is just a GPIO client like any such thing right?
 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+I mean this thing has nothing more to do with the GPIO subsystem
+than say, drivers/input/keyboard/gpio_keys.c?
 
-> +Required properties:
-> +- compatible : should be "gpio-poweroff".
-> +- gpios : The GPIO to set high/low, see "gpios property" in
-> +  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
-> +  low to power down the board set it to "Active Low", otherwise set
-> +  gpio to "Active High".
+So from the GPIO subsystem point of view controlling power is
+an alien concept.
 
-Unfortunately, not all GPIO bindings support active high/low flags in
-the GPIO specifier. As such, the flags there are basically useless.
-Other bindings (e.g. IIRC the fixed-regulator binding) have added a
-separate active-high property to indicate the GPIO polarity. This
-binding should probably follow suite.
+But I suspect Anton may be ready to welcome a driver like this
+under drivers/power/* which I think is where it belongs.
+
+Yours,
+Linus Walleij
