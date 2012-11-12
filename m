@@ -1,91 +1,83 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Add devicetree support to m25p80 driver
-Date: Mon, 12 Nov 2012 17:32:20 +0200
-Message-ID: <1352734340.2262.4.camel@sauron.fi.intel.com>
-References: <5084241A.5050801@vanka.net>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1523519979274549718=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5084241A.5050801-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mike-UTnDXsALFwNjMdQLN6DIHgC/G2K4zDHf@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCH v8 3/6] fbmon: add videomode helpers
+Date: Mon, 12 Nov 2012 16:37:03 +0100
+Message-ID: <1352734626-27412-4-git-send-email-s.trumtrar@pengutronix.de>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Add a function to convert from the generic videomode to a fb_videomode.
 
---===============1523519979274549718==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-AjjQkTjF1PIwWqKbFxQ4"
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+---
+ drivers/video/fbmon.c |   37 +++++++++++++++++++++++++++++++++++++
+ include/linux/fb.h    |    2 ++
+ 2 files changed, 39 insertions(+)
 
-
---=-AjjQkTjF1PIwWqKbFxQ4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, 2012-10-21 at 18:34 +0200, Michal Vanka wrote:
-> The following patch adds support for devicetree to m25p80 driver.
-> Note that for jedec chips the chip identification was simplified.
-> The particular chip is identified by jedec_id only.
-> Tested on custom Altera Nios2 system.
->=20
-> Signed-off-by: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-
-This patch is wrapped and does not apply. I tried to fix the wrapping,
-but it does not apply to the l2-mtd.git tree anyway. The l2 tree is
-based on v3.7-rc4. Please, send a cleanly applicable version against the
-l2-mtd.git tree:
-
-http://git.infradead.org/users/dedekind/l2-mtd.git
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-AjjQkTjF1PIwWqKbFxQ4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJQoRaEAAoJECmIfjd9wqK0rFgP/RUF1NHo6YfL8+eP2NoagUd+
-QrTf8GlO8DLAuCPedj26b3XRV8q9wKHaKc7R9mVS3im68fxpr18EU04yNA6DHIAN
-UDrU6AR0IoZzccFiSOfYmGCXastj3jDQ/X5zrdVk7kN+bI+6j/EF1pF3PXJpwoDB
-mabFDZLNzgXkNxsRrJz4Wd0n++GS0u+IEE68JG98cpdKmo4wAKyaxncd76+IEB9o
-DfVo0eAOSxQQdl6HPVk6WA4Uwoxow/Ls5YZx0fiSs1AQmfRIQecIQ+y51Yv6zZRY
-L5tFW6yAFkoWl0Ub3V54hkrQYmUOcHgYTq4PoNOBnXKLJ2+u6nRmp+0JN6591Ds+
-8kABewp20uBaR4i3Mb2siq/WK/0FBZo+UCDu764xX1TpHjDWuMw0bhcjmRqUrAaj
-zr+VsGuSoODWyiGKohTUW+zgiWh/qdDVESEVWeCBLUKqPYtWtNGocb8vc3qNiTez
-+6rcSRmdRWxfVzvtv76a8lnnHtOxz2yMfoBUnnrNeSD4nWeC4VEygGLO6hVpAaX9
-wN5f4kdVtKrXeWyYqvty0U6RDkaHxNVJTthaibKfS8oFZ93CdOoUhputPE+sO7iM
-b0mblLUdyYpZnsAM3lnveqPqOKxo23OmsVtA9dXrfFKNXmCfWoU36vU4D8SPPwgr
-lpRGgi15wYT39wxsFPFM
-=l3SC
------END PGP SIGNATURE-----
-
---=-AjjQkTjF1PIwWqKbFxQ4--
-
-
---===============1523519979274549718==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1523519979274549718==--
+diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+index cef6557..d46ecef 100644
+--- a/drivers/video/fbmon.c
++++ b/drivers/video/fbmon.c
+@@ -1373,6 +1373,43 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
+ 	kfree(timings);
+ 	return err;
+ }
++
++#if IS_ENABLED(CONFIG_VIDEOMODE)
++int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
++{
++	fbmode->xres = vm->hactive;
++	fbmode->left_margin = vm->hback_porch;
++	fbmode->right_margin = vm->hfront_porch;
++	fbmode->hsync_len = vm->hsync_len;
++
++	fbmode->yres = vm->vactive;
++	fbmode->upper_margin = vm->vback_porch;
++	fbmode->lower_margin = vm->vfront_porch;
++	fbmode->vsync_len = vm->vsync_len;
++
++	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
++
++	fbmode->sync = 0;
++	fbmode->vmode = 0;
++	if (vm->hah)
++		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
++	if (vm->vah)
++		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
++	if (vm->interlaced)
++		fbmode->vmode |= FB_VMODE_INTERLACED;
++	if (vm->doublescan)
++		fbmode->vmode |= FB_VMODE_DOUBLE;
++	if (vm->de)
++		fbmode->sync |= FB_SYNC_DATA_ENABLE_HIGH_ACT;
++	fbmode->refresh = 60;
++	fbmode->flag = 0;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(videomode_to_fb_videomode);
++#endif
++
++
+ #else
+ int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+ {
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index c7a9571..46c665b 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -714,6 +714,8 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+ extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+ extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+ 
++extern int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode);
++
+ /* drivers/video/modedb.c */
+ #define VESA_MODEDB_SIZE 34
+ extern void fb_var_to_videomode(struct fb_videomode *mode,
+-- 
+1.7.10.4
