@@ -1,108 +1,63 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v7 0/5] usb: phy: samsung: Introducing usb phy driver for
- samsung SoCs
-Date: Mon, 12 Nov 2012 13:41:24 +0900
-Message-ID: <004201cdc08f$fa0fd3d0$ee2f7b70$%kim@samsung.com>
-References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
- <20121109115440.GC8078@arwen.pp.htv.fi>
- <CAH9JG2X1a8MqBpnk8uHRjsGnaD7uob5GBhUh_aS5iCprEvi2XQ@mail.gmail.com>
- <CAD6zSYN6xpHt54d-w=6veb6AErTq6ERQcneo7ewC-qsBoMuThQ@mail.gmail.com>
- <20121109135441.GC8567@arwen.pp.htv.fi>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
+Date: Mon, 12 Nov 2012 07:07:40 +0100
+Message-ID: <20121112060740.GR24583@lunn.ch>
+References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
+ <1352650891-18356-2-git-send-email-andrew@lunn.ch>
+ <CACRpkdZvHBjFQTrQnxvc3WCOb2CqGbjYJxyQ5qQkSbU+UWHYZA@mail.gmail.com>
+ <20121112011258.GA23724@lizard>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20121109135441.GC8567@arwen.pp.htv.fi>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com, 'Praveen Paneri' <p.paneri@samsung.com>
-Cc: 'Kyungmin Park' <kmpark@infradead.org>, 'Lukasz Majewski' <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Vivek Gautam' <gautam.vivek@samsung.com>, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, t.figa@samsung.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121112011258.GA23724@lizard>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Felipe Balbi wrote:
+On Sun, Nov 11, 2012 at 05:12:58PM -0800, Anton Vorontsov wrote:
+> On Mon, Nov 12, 2012 at 02:00:31AM +0100, Linus Walleij wrote:
+> > On Sun, Nov 11, 2012 at 5:21 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> > 
+> > > From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> > >
+> > > Given appropriate devicetree bindings, this driver registers a
+> > > pm_power_off function to set a GPIO line high/low to power down
+> > > your board.
+> > >
+> > > Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> > > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> > 
+> > So this is just a GPIO client like any such thing right?
+> > 
+> > I mean this thing has nothing more to do with the GPIO subsystem
+> > than say, drivers/input/keyboard/gpio_keys.c?
+> > 
+> > So from the GPIO subsystem point of view controlling power is
+> > an alien concept.
+> > 
+> > But I suspect Anton may be ready to welcome a driver like this
+> > under drivers/power/* which I think is where it belongs.
 > 
-> Hi,
-> 
-Hi :-)
+> Yup. driver/power/reset/ seems appropriate.
 
-[...]
+Hi Anton
 
-> Sure, but I still need Kukjin's 'say-so' for the arch/arm/plat-samsung
-> and arch/arm/mach-exynos part.
-> 
-Basically, this approach looks OK to me.
+I was unsure where to put it. I will submit new patches with the move.
 
-BTW, I have some comments and need to update...
+I'm not too sure about 'reset' though. Its not a reset operation, the
+power goes off and stays off. Would 'shutdown' or 'power_off' be
+better?
 
->From 4th patch...
-
-> diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-
-> s3c64xx/mach-smdk6410.c
-
-[...]
-
-> @@ -72,6 +73,8 @@
->  #include <linux/platform_data/touchscreen-s3c2410.h>
->  #include <plat/keypad.h>
->  #include <plat/backlight.h>
-> +#include <plat/regs-fb-v4.h>
-
-Why? In addition, this causes build error with s3c6400_defconfig.
-
-[...]
-
-> diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-> index 03f654d..9cdb666 100644
-
-[...]
-
-> @@ -1370,6 +1371,30 @@ struct platform_device s5p_device_mixer = {
-> 
->  /* USB */
-> 
-> +#ifdef CONFIG_S3C_DEV_USB_HSOTG
-> +/* USB PHY*/
-> +static struct resource samsung_usbphy_resource[] = {
-> +	[0] = {
-> +		.start = S3C_PA_USB_PHY,
-> +		.end   = S3C_PA_USB_PHY + SZ_16 - 1,
-> +		.flags = IORESOURCE_MEM,
-> +	},
-> +};
-
-+static struct resource samsung_usbphy_resource[] = {
-+	[0] = DEFINED_RES_MEM(S3C_PA_USB_PHY, SZ_16),
-+};
-
-[...]
-
-Happens build error with s5pv210_defconfig
-
-arch/arm/plat-samsung/devs.c:1375: error: 'S3C_PA_USB_PHY' undeclared here
-(not in a function)
-make[2]: *** [arch/arm/plat-samsung/devs.o] Error 1
-make[1]: *** [arch/arm/plat-samsung] Error 2
-make[1]: *** Waiting for unfinished jobs....
-
-And another build error with exynos_defconfig...
-
-arch/arm/mach-exynos/built-in.o: In function `.LANCHOR1':
-setup-i2c0.c:(.data+0x8080): undefined reference to
-`s5p_usb_phy_pmu_isolation'
-
->From 5th patch....
-
-If possible, please to use 'ARM: [sub-arch dir name]: [subject]' format.
-So I preferred to use 'ARM: EXYNOS: Enabling samsung-usbphy driver for
-EXYNOS4210' on that.
-
-Please make sure your patch has no problem for kernel compilation before
-submitting...
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+  Andrew
