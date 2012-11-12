@@ -1,151 +1,91 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
-Date: Mon, 12 Nov 2012 19:58:40 +0100
-Message-ID: <20121112185840.GX10369@pengutronix.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
+Date: Mon, 12 Nov 2012 11:58:47 -0700
+Message-ID: <50A146E7.2040608@wwwdotorg.org>
+References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
+ <1352650891-18356-2-git-send-email-andrew@lunn.ch>
+ <50A020C5.4070506@wwwdotorg.org> <20121112082546.GU22029@lunn.ch>
+ <50A1212C.2080601@wwwdotorg.org> <20121112181947.GS24583@lunn.ch>
+ <20121112184340.GA15643@lizard>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121112184340.GA15643@lizard>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+On 11/12/2012 11:43 AM, Anton Vorontsov wrote:
+> On Mon, Nov 12, 2012 at 07:19:47PM +0100, Andrew Lunn wrote:
+> [..]
+>>>>>> Given appropriate devicetree bindings, this driver registers a
+>>>>>> pm_power_off function to set a GPIO line high/low to power down
+>>>>>> your board.
+>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+>>>>>
+>>>>>> +Required properties:
+>>>>>> +- compatible : should be "gpio-poweroff".
+>>>>>> +- gpios : The GPIO to set high/low, see "gpios property" in
+>>>>>> +  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
+>>>>>> +  low to power down the board set it to "Active Low", otherwise set
+>>>>>> +  gpio to "Active High".
+>>>>>
+>>>>> Unfortunately, not all GPIO bindings support active high/low flags in
+>>>>> the GPIO specifier. As such, the flags there are basically useless.
+>>>>> Other bindings (e.g. IIRC the fixed-regulator binding) have added a
+>>>>> separate active-high property to indicate the GPIO polarity. This
+>>>>> binding should probably follow suite.
+> 
+> Should the gpio driver fix its bindings then?.. Polarity is a quite
+> generic concept of a GPIO, and flags are there for a reason. I'd rather
+> prefer having
 
-You lose memory in several places:
+There is no "GPIO driver" to fix; each GPIO driver has its own bindings,
+and unfortunately, some of the GPIO binding authors chose not to include
+any flags cell in the GPIO specifier (e.g. Samsung ARM SoCs IIRC, but
+there are probably more).
 
-On Mon, Nov 12, 2012 at 04:37:02PM +0100, Steffen Trumtrar wrote:
-> +static struct display_timing *of_get_display_timing(struct device_node *np)
-> +{
-> +	struct display_timing *dt;
-> +	int ret = 0;
-> +
-> +	dt = kzalloc(sizeof(*dt), GFP_KERNEL);
-> +	if (!dt) {
-> +		pr_err("%s: could not allocate display_timing struct\n", __func__);
-> +		return NULL;
-> +	}
-> +
-> +	ret |= parse_property(np, "hback-porch", &dt->hback_porch);
-> +	ret |= parse_property(np, "hfront-porch", &dt->hfront_porch);
-> +	ret |= parse_property(np, "hactive", &dt->hactive);
-> +	ret |= parse_property(np, "hsync-len", &dt->hsync_len);
-> +	ret |= parse_property(np, "vback-porch", &dt->vback_porch);
-> +	ret |= parse_property(np, "vfront-porch", &dt->vfront_porch);
-> +	ret |= parse_property(np, "vactive", &dt->vactive);
-> +	ret |= parse_property(np, "vsync-len", &dt->vsync_len);
-> +	ret |= parse_property(np, "clock-frequency", &dt->pixelclock);
-> +
-> +	of_property_read_u32(np, "vsync-active", &dt->vsync_pol_active);
-> +	of_property_read_u32(np, "hsync-active", &dt->hsync_pol_active);
-> +	of_property_read_u32(np, "de-active", &dt->de_pol_active);
-> +	of_property_read_u32(np, "pixelclk-inverted", &dt->pixelclk_pol);
-> +	dt->interlaced = of_property_read_bool(np, "interlaced");
-> +	dt->doublescan = of_property_read_bool(np, "doublescan");
-> +
-> +	if (ret) {
-> +		pr_err("%s: error reading timing properties\n", __func__);
-> +		return NULL;
+> 	stuff-gpios = <0 0
+> 		       1 0
+> 		       2 1
+> 		       3 0>;
+> 
+> Rather than
+> 
+> 	stuff-gpios = <0 1 2 3>;
+> 	stuff-polarity-gpio-map = <0 0 1 0>;
+> 
+> The first scheme existed like for years already. Has it been discussed
+> that it is no longer preferred?
+> 
+>>>> Humm, so are you saying of_get_named_gpio_flags() is deprecated?
+>>>
+>>> I don't know if it's deprecated, but it's certainly not useful in
+>>> generic code.
+>>
+>> Hi Linus, Anton
+>>
+>> How do you see this? 
+>>
+>> I'm happy to implement an enable-active-high property, but it seems to
+>> go against the purpose of of_get_named_gpio_flags(). Is that function
+>> deprecated?
+> 
+> Never heard of any deprecation, and I disagree that it is "not useful in
+> generic code". :)
 
-Here
-
-> +	}
-> +
-> +	return dt;
-> +}
-> +
-> +/**
-> + * of_get_display_timings - parse all display_timing entries from a device_node
-> + * @np: device_node with the subnodes
-> + **/
-> +struct display_timings *of_get_display_timings(struct device_node *np)
-> +{
-> +	struct device_node *timings_np;
-> +	struct device_node *entry;
-> +	struct device_node *native_mode;
-> +	struct display_timings *disp;
-> +
-> +	if (!np) {
-> +		pr_err("%s: no devicenode given\n", __func__);
-> +		return NULL;
-> +	}
-> +
-> +	timings_np = of_find_node_by_name(np, "display-timings");
-> +	if (!timings_np) {
-> +		pr_err("%s: could not find display-timings node\n", __func__);
-> +		return NULL;
-> +	}
-> +
-> +	disp = kzalloc(sizeof(*disp), GFP_KERNEL);
-> +	if (!disp)
-> +		return -ENOMEM;
-> +
-> +	entry = of_parse_phandle(timings_np, "native-mode", 0);
-> +	/* assume first child as native mode if none provided */
-> +	if (!entry)
-> +		entry = of_get_next_child(np, NULL);
-> +	if (!entry) {
-> +		pr_err("%s: no timing specifications given\n", __func__);
-> +		return NULL;
-
-Here
-
-> +	}
-> +
-> +	pr_info("%s: using %s as default timing\n", __func__, entry->name);
-> +
-> +	native_mode = entry;
-> +
-> +	disp->num_timings = of_get_child_count(timings_np);
-> +	disp->timings = kzalloc(sizeof(struct display_timing *)*disp->num_timings,
-> +				GFP_KERNEL);
-> +	if (!disp->timings)
-> +		return -ENOMEM;
-
-Here
-
-> +
-> +	disp->num_timings = 0;
-> +	disp->native_mode = 0;
-> +
-> +	for_each_child_of_node(timings_np, entry) {
-> +		struct display_timing *dt;
-> +
-> +		dt = of_get_display_timing(entry);
-> +		if (!dt) {
-> +			/* to not encourage wrong devicetrees, fail in case of an error */
-> +			pr_err("%s: error in timing %d\n", __func__, disp->num_timings+1);
-> +			return NULL;
-
-Here
-
-> +		}
-> +
-> +		if (native_mode == entry)
-> +			disp->native_mode = disp->num_timings;
-> +
-> +		disp->timings[disp->num_timings] = dt;
-> +		disp->num_timings++;
-> +	}
-> +	of_node_put(timings_np);
-> +
-> +	if (disp->num_timings > 0)
-> +		pr_info("%s: got %d timings. Using timing #%d as default\n", __func__,
-> +			disp->num_timings , disp->native_mode + 1);
-> +	else {
-> +		pr_err("%s: no valid timings specified\n", __func__);
-> +		return NULL;
-
-and here
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Put more specifically, I meant: It would be useful to have such a
+feature. However, since such a feature doesn't exist in all cases, it's
+not possible to rely on the feature, and hence trying to isn't useful.
