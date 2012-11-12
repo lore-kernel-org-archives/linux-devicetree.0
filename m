@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v8 6/6] drm_modes: add of_videomode helpers
-Date: Mon, 12 Nov 2012 16:37:06 +0100
-Message-ID: <1352734626-27412-7-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v8 4/6] fbmon: add of_videomode helpers
+Date: Mon, 12 Nov 2012 16:37:04 +0100
+Message-ID: <1352734626-27412-5-git-send-email-s.trumtrar@pengutronix.de>
 References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
@@ -10,50 +10,43 @@ To: devicetree-discuss@lists.ozlabs.org
 Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add helper to get drm_display_mode from devicetree.
+Add helper to get fb_videomode from devicetree.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 ---
- drivers/gpu/drm/drm_modes.c |   41 +++++++++++++++++++++++++++++++++++++++++
- include/drm/drmP.h          |    5 +++++
- 2 files changed, 46 insertions(+)
+ drivers/video/fbmon.c |   40 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/fb.h    |    3 +++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index 049624d..c77da59 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -35,6 +35,7 @@
- #include <linux/export.h>
- #include <drm/drmP.h>
- #include <drm/drm_crtc.h>
-+#include <linux/of.h>
- #include <linux/videomode.h>
- 
- /**
-@@ -540,6 +541,46 @@ int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmo
- EXPORT_SYMBOL_GPL(videomode_to_display_mode);
+diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+index d46ecef..c95be79 100644
+--- a/drivers/video/fbmon.c
++++ b/drivers/video/fbmon.c
+@@ -1409,6 +1409,46 @@ int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
+ EXPORT_SYMBOL_GPL(videomode_to_fb_videomode);
  #endif
  
 +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+static void dump_drm_displaymode(struct drm_display_mode *m)
++static void dump_fb_videomode(struct fb_videomode *m)
 +{
-+	pr_debug("drm_displaymode = %d %d %d %d %d %d %d %d %d\n",
-+		 m->hdisplay, m->hsync_start, m->hsync_end, m->htotal,
-+		 m->vdisplay, m->vsync_start, m->vsync_end, m->vtotal,
-+		 m->clock);
++	pr_debug("fb_videomode = %ux%u@%uHz (%ukHz) %u %u %u %u %u %u %u %u %u\n",
++		 m->xres, m->yres, m->refresh, m->pixclock, m->left_margin,
++		 m->right_margin, m->upper_margin, m->lower_margin,
++		 m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
 +}
 +
 +/**
-+ * of_get_drm_display_mode - get a drm_display_mode from devicetree
++ * of_get_fb_videomode - get a fb_videomode from devicetree
 + * @np: device_node with the timing specification
-+ * @dmode: will be set to the return value
++ * @fb: will be set to the return value
 + * @index: index into the list of display timings in devicetree
-+ * 
++ *
++ * DESCRIPTION:
 + * This function is expensive and should only be used, if only one mode is to be
-+ * read from DT. To get multiple modes start with of_get_display_timings and
++ * read from DT. To get multiple modes start with of_get_display_timings ond
 + * work with that instead.
 + */
-+int of_get_drm_display_mode(struct device_node *np, struct drm_display_mode *dmode,
++int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
 +			int index)
 +{
 +	struct videomode vm;
@@ -63,42 +56,39 @@ index 049624d..c77da59 100644
 +	if (ret)
 +		return ret;
 +
-+	videomode_to_display_mode(&vm, dmode);
++	videomode_to_fb_videomode(&vm, fb);
 +
 +	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
 +		vm.vactive, np->name);
-+	dump_drm_displaymode(dmode);
++	dump_fb_videomode(fb);
 +
 +	return 0;
-+
 +}
-+EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
++EXPORT_SYMBOL_GPL(of_get_fb_videomode);
 +#endif
- /**
-  * drm_mode_set_name - set the name on a mode
-  * @mode: name will be set in this mode
-diff --git a/include/drm/drmP.h b/include/drm/drmP.h
-index e9fa1e3..4f9c44e 100644
---- a/include/drm/drmP.h
-+++ b/include/drm/drmP.h
-@@ -56,6 +56,7 @@
- #include <linux/cdev.h>
- #include <linux/mutex.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- #include <linux/videomode.h>
- #if defined(__alpha__) || defined(__powerpc__)
- #include <asm/pgtable.h>	/* For pte_wrprotect */
-@@ -1457,6 +1458,10 @@ drm_mode_create_from_cmdline_mode(struct drm_device *dev,
  
- extern int videomode_to_display_mode(struct videomode *vm,
- 				     struct drm_display_mode *dmode);
-+extern int of_get_drm_display_mode(struct device_node *np,
-+				   struct drm_display_mode *dmode,
-+				   int index);
-+
- /* Modesetting support */
- extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
- extern void drm_vblank_post_modeset(struct drm_device *dev, int crtc);
+ #else
+ int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 46c665b..9892fd6 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -14,6 +14,8 @@
+ #include <linux/backlight.h>
+ #include <linux/slab.h>
+ #include <asm/io.h>
++#include <linux/of.h>
++#include <linux/of_videomode.h>
+ 
+ struct vm_area_struct;
+ struct fb_info;
+@@ -714,6 +716,7 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+ extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+ extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+ 
++extern int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb, int index);
+ extern int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode);
+ 
+ /* drivers/video/modedb.c */
 -- 
 1.7.10.4
