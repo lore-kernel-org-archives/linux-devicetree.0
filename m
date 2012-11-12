@@ -1,104 +1,55 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V2 0/5]  SMP support for Armada XP
-Date: Mon, 12 Nov 2012 21:49:35 +0100
-Message-ID: <50A160DF.7030305@free-electrons.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: fdt: Constify 'pathp'
+Date: Mon, 12 Nov 2012 14:58:07 -0600
+Message-ID: <50A162DF.4050100@gmail.com>
+References: <1352752249-28878-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352752249-28878-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On 10/29/2012 10:11 PM, Gregory CLEMENT wrote:
-[...]
-
-> Arnd, Olof, as this code is SoC specific will you be able to pull it
-> through Jason tree? Or should I push the part added in
-> arch/arm/mm/proc-v7.S to support PJ4B CPU through Russell tree?
-
-Before sending a new series with the fixes related to Will comments, I
-would like to know if I need to split the patches in order to send some
-parts to Russell or if you (Arnd and Olof) will be able to take the whole
-series (through Jason Cooper's git tree of course).
-
+On 11/12/2012 02:30 PM, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
-> Changelog:
-> V1 -> V2:
-> - Rebased on to v3.7-rc3
-> - Fixed typos found by Alexandre Belloni
-> - Added clk_prepare_enable() before getting rate clk in
->   set_secondary_cpus_clock()
-> - Add explanation in the binding documentation about the per-CPU
->   interrupt registers: the address of the virtual register must be
->   used.
-> - Removed the armada_xp prefix in the coherency.c file to be more
->   compliant with the name convention of the other files.
-> - Coherency_init is now called from armada_370_xp_dt_init() and is no
->   more an early_init() call. As the device tree is not available from
->   an early_init(), it was useless to call coherency_init() so
->   early. The need to be able to call some function very early during
->   the boot were already resolved by using the hard code address of the
->   register.
+> Constify 'pathp' in order to get rid of the following warning:
 > 
-> Regards,
+> drivers/of/fdt.c:491:10: warning: assignment discards 'const' qualifier from pointer target type [enabled by default]
 > 
-> Yehuda Yitschak (5):
->   arm: mvebu: Added support for coherency fabric in mach-mvebu
->   arm: mvebu: Added initial support for power managmement service unit
->   arm: mvebu: Added IPI support via doorbells
->   arm: mm: Added support for PJ4B cpu and init routines
->   arm: mvebu: Added SMP support for Armada XP
-> 
->  .../devicetree/bindings/arm/armada-370-xp-mpic.txt |   12 +-
->  .../devicetree/bindings/arm/armada-370-xp-pmsu.txt |   20 ++++
->  .../devicetree/bindings/arm/coherency-fabric.txt   |   16 +++
->  arch/arm/boot/dts/armada-370-xp.dtsi               |    5 +
->  arch/arm/boot/dts/armada-xp.dtsi                   |   12 +-
->  arch/arm/configs/mvebu_defconfig                   |    3 +
->  arch/arm/mach-mvebu/Kconfig                        |    3 +-
->  arch/arm/mach-mvebu/Makefile                       |    4 +-
->  arch/arm/mach-mvebu/armada-370-xp.c                |    3 +
->  arch/arm/mach-mvebu/armada-370-xp.h                |   10 ++
->  arch/arm/mach-mvebu/coherency.c                    |   89 ++++++++++++++
->  arch/arm/mach-mvebu/coherency.h                    |   21 ++++
->  arch/arm/mach-mvebu/common.h                       |    6 +
->  arch/arm/mach-mvebu/headsmp.S                      |   66 +++++++++++
->  arch/arm/mach-mvebu/hotplug.c                      |   30 +++++
->  arch/arm/mach-mvebu/irq-armada-370-xp.c            |   92 ++++++++++++++-
->  arch/arm/mach-mvebu/platsmp.c                      |  124 ++++++++++++++++++++
->  arch/arm/mach-mvebu/pmsu.c                         |   78 ++++++++++++
->  arch/arm/mach-mvebu/pmsu.h                         |   16 +++
->  arch/arm/mm/Kconfig                                |    4 +
->  arch/arm/mm/proc-v7.S                              |   46 ++++++++
->  21 files changed, 648 insertions(+), 12 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/coherency-fabric.txt
->  create mode 100644 arch/arm/mach-mvebu/coherency.c
->  create mode 100644 arch/arm/mach-mvebu/coherency.h
->  create mode 100644 arch/arm/mach-mvebu/headsmp.S
->  create mode 100644 arch/arm/mach-mvebu/hotplug.c
->  create mode 100644 arch/arm/mach-mvebu/platsmp.c
->  create mode 100644 arch/arm/mach-mvebu/pmsu.c
->  create mode 100644 arch/arm/mach-mvebu/pmsu.h
-> 
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
+Applied for 3.8.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Rob
+
+> ---
+>  drivers/of/fdt.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 793b823..73fb8c0 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -460,7 +460,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+>  
+>  	do {
+>  		u32 tag = be32_to_cpup((__be32 *)p);
+> -		char *pathp;
+> +		const char *pathp;
+>  
+>  		p += 4;
+>  		if (tag == OF_DT_END_NODE) {
+> 
