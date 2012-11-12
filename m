@@ -1,57 +1,110 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Mon, 12 Nov 2012 13:01:27 +0000
-Message-ID: <CACxGe6sXnhFpGWG3Ak431=dnu0p-kFPLVDMfWLeyWE-ETeykKQ@mail.gmail.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
- <CACxGe6vDzmPWsOZ53HTwkYmDEivg9TpnRrvudY2FK95V06O24w@mail.gmail.com>
- <A5170602-2AE7-4EC4-BE0F-0DF015A287D7@antoniou-consulting.com>
- <CACxGe6sJXubOSGGg5AmDK6DQMjv60H44nax9wUnnCGsqXGbfxw@mail.gmail.com>
- <5ED17D42-07B8-4D4F-B54F-82B4CC60584C@antoniou-consulting.com>
- <509A3595.7050600@ti.com> <A6697FB9-3614-4027-A71B-59C7556005BF@antoniou-consulting.com>
- <CACxGe6uXyTt_kr4=0ob+-ubgV9he+SfobLwux6X0m6y7yQU7EA@mail.gmail.com> <AEFB103E-C71E-4A3C-B946-19ABD9025A17@antoniou-consulting.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH] ARM: dts: add board dts file for Exynos4412 based SMDK
+ board
+Date: Mon, 12 Nov 2012 15:07:08 +0100
+Message-ID: <1629120.eNASZVgxGi@amdc1227>
+References: <1351954172-13645-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AEFB103E-C71E-4A3C-B946-19ABD9025A17@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1351954172-13645-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, chaos.youn@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2012 at 11:34 AM, Pantelis Antoniou
-<panto@antoniou-consulting.com> wrote:
-> Hi Grant,
->
-> On Nov 9, 2012, at 10:33 PM, Grant Likely wrote:
->
->> On Wed, Nov 7, 2012 at 11:02 AM, Pantelis Antoniou
->> <panto@antoniou-consulting.com> wrote:
->>> On Nov 7, 2012, at 11:19 AM, Benoit Cousson wrote:
->>>> Maybe some extra version match table can just be passed during the board machine_init
->>>>
->>>>      of_platform_populate(NULL, omap_dt_match_table, NULL, NULL, panda_version_match_table);
->>>>
->>>
->>> Would we need explicit of_platform_populate calls if we have node modification notifiers?
->>> In that case the notifier would pick it up automatically, and can do the per
->>> version matching internally.
->>
->> There still needs to be something to register "everything below this
->> node is interesting" which is exactly what of_platform_populate() does
->> now. I see the notifiers being used by the of_platform_populate
->> backend to know when nodes have been created (or destroyed).
->>
->> g.
->
-> I see. So of_platform_populate could just register the notifier and
-> not do the tree walk itself. Perhaps the name is a bit misleading then?
+Hi Thomas,
 
-Kind of, yes. of_platform_populate() would still have the same effect
-that it does now except that it would also pay attention to additions
-and removals from the DT nodes it is interested in. This would work
-cleanly enough for node additions/removals, but it wouldn't process
-changes to properties on existing nodes.
+On Saturday 03 of November 2012 20:19:32 Thomas Abraham wrote:
+> Add a minimal board dts file for Samsung Exynos4412 based SMDK board.
+> 
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+> This patch depends the on the following patch posted by Tomasz Figa.
+> "ARM: dts: exynos4: Add support for Exynos4x12 SoCs"
+> 
+>  arch/arm/boot/dts/Makefile                |    1 +
+>  arch/arm/boot/dts/exynos4412-smdk4412.dts |   45
+> +++++++++++++++++++++++++++++ 2 files changed, 46 insertions(+), 0
+> deletions(-)
+>  create mode 100644 arch/arm/boot/dts/exynos4412-smdk4412.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f37cf9f..36488a5 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -23,6 +23,7 @@ dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
+>  dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>  	exynos4210-smdkv310.dtb \
+>  	exynos4210-trats.dtb \
+> +	exynos4412-smdk4412.dtb \
+>  	exynos5250-smdk5250.dtb
+>  dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb
+>  dtb-$(CONFIG_ARCH_INTEGRATOR) += integratorap.dtb \
+> diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts
+> b/arch/arm/boot/dts/exynos4412-smdk4412.dts new file mode 100644
+> index 0000000..f05bf57
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+> @@ -0,0 +1,45 @@
+> +/*
+> + * Samsung's Exynos4412 based SMDK board device tree source
+> + *
+> + * Copyright (c) 2012-2013 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * Device tree source file for Samsung's SMDK4412 board which is based
+> on + * Samsung's Exynos4412 SoC.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as +
+> * published by the Free Software Foundation.
+> +*/
+> +
+> +/dts-v1/;
+> +/include/ "exynos4412.dtsi"
+> +
+> +/ {
+> +	model = "Samsung SMDK evaluation board based on Exynos4412";
+> +	compatible = "samsung,smdk4412", "samsung,exynos4412";
+> +
+> +	memory {
+> +		reg = <0x40000000 0x40000000>;
+> +	};
 
-g.
+This will not boot, because section size limit is set to 256 MiB.
+
+It might work with CONFIG_ARM_ATAG_DTB_COMPAT enabled, because the memory 
+configuration from DT is ignored and values from ATAGs are taken instead.
+
+I suggest you to change it to 4 banks of 256 MiB.
+
+> +	chosen {
+> +		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M
+> console=ttySAC1,115200 init=/linuxrc"; +	};
+> +
+> +	serial@13800000 {
+> +		status = "okay";
+> +	};
+> +
+> +	serial@13810000 {
+> +		status = "okay";
+> +	};
+> +
+> +	serial@13820000 {
+> +		status = "okay";
+> +	};
+> +
+> +	serial@13830000 {
+> +		status = "okay";
+> +	};
+> +};
+
+Otherwise looks fine.
+
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Linux Platform
