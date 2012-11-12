@@ -1,11 +1,14 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH V6 1/2] kbuild: centralize .dts->.dtb rule
-Date: Mon, 12 Nov 2012 13:58:26 -0700
-Message-ID: <1352753907-3316-1-git-send-email-swarren@wwwdotorg.org>
+From: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Subject: Re: possibility of parent clock selection through DT
+Date: Mon, 12 Nov 2012 13:22:12 -0800
+Message-ID: <20121112212212.20034.78522@nucleus>
+References: <CAPub14-CPS48gQ1h8vvAYBpO_=egjheG_rMoZ894Y4XZ2CinUQ@mail.gmail.com>
+ <CAPub148Bq=uwTuky25WzXn4yfCukJ+WacxkBvuyV5yTzGasGOQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPub148Bq=uwTuky25WzXn4yfCukJ+WacxkBvuyV5yTzGasGOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,205 +19,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
-Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Shiraz Hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Quoting Shiraz Hashim (2012-11-06 22:36:10)
+> On Wed, Nov 7, 2012 at 11:42 AM, Shiraz Hashim
+> <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > Hi Mike, Rob,
+> >
+> > Devices in a SoC can have multiple possible clock sources which is
+> > perfectly captured through clk framework.
+> >
+> > But the device itself may not be aware of the complex hierarchy above it.
+> > In this case how do you suggest a board (through DT) should select its
+> > preference.
+> >
+> > Is there some work already going on in this direction ?
+> 
+> Just to make it clear, I already have referred the clock DT bindings and
+> Shawn Guo patch on removing clk look up registration from kernel code.
+> 
+> Here I am talking about possibility of selecting desired clock hierarchy
+> by the boards about which device nodes are not aware.
+> 
 
-All architectures that use cmd_dtc do so in the same way. Move the build
-rule to a central location to avoid duplication.
+One way to achieve this is to use clk_set_rate as a way to switch
+parents at run-time.  The OMAP CCF code currently does this when
+relocking PLLs and makes use of __clk_reparent to update the clock
+framework's representation of the hierarchy dynamically.
 
-Update Documentation/kbuild to remove the explicit call to cmd_dtc from
-the example, now that the rule exists in a centralized location, and in
-fact replace the example with a couple that still exist.
+Maybe something like the following is helpful to you:
+http://git.linaro.org/gitweb?p=people/mturquette/linux.git;a=blob;f=arch/arm/mach-omap2/dpll3xxx.c;h=f72dedb4eee892ce4cd5bdf22cc8c22510f3d526;hb=clk-omap-3.8#l542
 
-arch/mips changes courtesy of Ralf Baechle.
+Regards,
+Mike
 
-Signed-off-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Acked-by: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
----
-v6: Added arch/{arm64,microblaze,mips} updates.
-v5: Updated Documentation/kbuild.
-v4: No change.
-v3: No change.
-v2: New patch.
----
- Documentation/kbuild/makefiles.txt |   21 +++++++++++++++------
- arch/arm/boot/Makefile             |    4 ----
- arch/arm64/boot/Makefile           |    3 ---
- arch/c6x/boot/Makefile             |    3 ---
- arch/microblaze/boot/Makefile      |    3 ---
- arch/mips/cavium-octeon/Makefile   |    3 ---
- arch/mips/lantiq/dts/Makefile      |    3 ---
- arch/mips/netlogic/dts/Makefile    |    3 ---
- arch/openrisc/boot/Makefile        |    3 ---
- arch/powerpc/boot/Makefile         |    4 ----
- scripts/Makefile.lib               |    3 +++
- 11 files changed, 18 insertions(+), 35 deletions(-)
-
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index ec9ae67..a0b0671 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -1175,15 +1175,24 @@ When kbuild executes, the following steps are followed (roughly):
- 	in an init section in the image. Platform code *must* copy the
- 	blob to non-init memory prior to calling unflatten_device_tree().
- 
-+	To use this command, simply add *.dtb into obj-y or targets, or make
-+	some other target depend on %.dtb
-+
-+	A central rule exists to create $(obj)/%.dtb from $(src)/dts/%.dts;
-+	architecture Makefiles do no need to explicitly write out that rule.
-+
- 	Example:
--		#arch/x86/platform/ce4100/Makefile
--		clean-files := *dtb.S
-+		#arch/arm/boot/Makefile
-+		targets += $(dtb-y)
-+		clean-files := *.dtb
-+
-+		#arch/powerpc/boot/Makefile
-+		DTC_FLAGS       ?= -p 1024
- 
--		DTC_FLAGS := -p 1024
--		obj-y += foo.dtb.o
-+		$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/%.dtb
-+			$(call if_changed,wrap,$*,,$(obj)/$*.dtb)
- 
--		$(obj)/%.dtb: $(src)/%.dts
--			$(call cmd,dtc)
-+		clean-files += ... *.dtb
- 
- --- 6.8 Custom kbuild commands
- 
-diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-index f2aa09e..208bb4c 100644
---- a/arch/arm/boot/Makefile
-+++ b/arch/arm/boot/Makefile
-@@ -61,10 +61,6 @@ endif
- 
- targets += $(dtb-y)
- 
--# Rule to build device tree blobs
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
- 
- clean-files := *.dtb
-diff --git a/arch/arm64/boot/Makefile b/arch/arm64/boot/Makefile
-index eca209b..20048be 100644
---- a/arch/arm64/boot/Makefile
-+++ b/arch/arm64/boot/Makefile
-@@ -22,9 +22,6 @@ $(obj)/Image: vmlinux FORCE
- $(obj)/Image.gz: $(obj)/Image FORCE
- 	$(call if_changed,gzip)
- 
--$(obj)/%.dtb: $(src)/dts/%.dts
--	$(call cmd,dtc)
--
- install: $(obj)/Image
- 	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
- 	$(obj)/Image System.map "$(INSTALL_PATH)"
-diff --git a/arch/c6x/boot/Makefile b/arch/c6x/boot/Makefile
-index 6891257..ad605fb 100644
---- a/arch/c6x/boot/Makefile
-+++ b/arch/c6x/boot/Makefile
-@@ -12,9 +12,6 @@ ifneq ($(DTB),)
- obj-y += linked_dtb.o
- endif
- 
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- quiet_cmd_cp = CP      $< $@$2
- 	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
- 
-diff --git a/arch/microblaze/boot/Makefile b/arch/microblaze/boot/Makefile
-index fa83ea4..226da18 100644
---- a/arch/microblaze/boot/Makefile
-+++ b/arch/microblaze/boot/Makefile
-@@ -48,7 +48,4 @@ $(obj)/simpleImage.%: vmlinux FORCE
- # Rule to build device tree blobs
- DTC_FLAGS := -p 1024
- 
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- clean-files += *.dtb simpleImage.*.unstrip linux.bin.ub
-diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
-index bc96e29..6e927cf 100644
---- a/arch/mips/cavium-octeon/Makefile
-+++ b/arch/mips/cavium-octeon/Makefile
-@@ -24,9 +24,6 @@ DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
- 
- obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
- 
--$(obj)/%.dtb: $(src)/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- # Let's keep the .dtb files around in case we want to look at them.
- .SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
- 
-diff --git a/arch/mips/lantiq/dts/Makefile b/arch/mips/lantiq/dts/Makefile
-index 674fca4..6fa72dd 100644
---- a/arch/mips/lantiq/dts/Makefile
-+++ b/arch/mips/lantiq/dts/Makefile
-@@ -1,4 +1 @@
- obj-$(CONFIG_DT_EASY50712) := easy50712.dtb.o
--
--$(obj)/%.dtb: $(obj)/%.dts
--	$(call if_changed,dtc)
-diff --git a/arch/mips/netlogic/dts/Makefile b/arch/mips/netlogic/dts/Makefile
-index 67ae3fe..d117d46 100644
---- a/arch/mips/netlogic/dts/Makefile
-+++ b/arch/mips/netlogic/dts/Makefile
-@@ -1,4 +1 @@
- obj-$(CONFIG_DT_XLP_EVP) := xlp_evp.dtb.o
--
--$(obj)/%.dtb: $(obj)/%.dts
--	$(call if_changed,dtc)
-diff --git a/arch/openrisc/boot/Makefile b/arch/openrisc/boot/Makefile
-index 0995835..fd329bd 100644
---- a/arch/openrisc/boot/Makefile
-+++ b/arch/openrisc/boot/Makefile
-@@ -10,6 +10,3 @@ obj-y += $(BUILTIN_DTB)
- clean-files := *.dtb.S
- 
- #DTC_FLAGS ?= -p 1024
--
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 6a15c96..90206f2 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -356,10 +356,6 @@ $(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- $(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits)
- 	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
- 
--# Rule to build device tree blobs
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
- # If there isn't a platform selected then just strip the vmlinux.
- ifeq (,$(image-y))
- image-y := vmlinux.strip
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 0be6f11..425578e 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -266,6 +266,9 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
- 
-+$(obj)/%.dtb: $(src)/dts/%.dts FORCE
-+	$(call if_changed_dep,dtc)
-+
- # Bzip2
- # ---------------------------------------------------------------------------
- 
--- 
-1.7.0.4
+> -- 
+> regards
+> Shiraz Hashim
