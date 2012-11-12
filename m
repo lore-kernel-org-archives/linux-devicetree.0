@@ -1,93 +1,48 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric
- in mach-mvebu
-Date: Mon, 12 Nov 2012 21:21:07 +0100
-Message-ID: <50A15A33.60405@free-electrons.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
- <20121105140258.GO3351@mudshark.cambridge.arm.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: fdt: Constify 'pathp'
+Date: Mon, 12 Nov 2012 18:30:49 -0200
+Message-ID: <1352752249-28878-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121105140258.GO3351@mudshark.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
+From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-On 11/05/2012 03:02 PM, Will Deacon wrote:
-> Hi Gregory,
-> 
-> On Mon, Oct 29, 2012 at 09:11:44PM +0000, Gregory CLEMENT wrote:
->> diff --git a/arch/arm/mach-mvebu/coherency.c b/arch/arm/mach-mvebu/coherency.c
->> new file mode 100644
->> index 0000000..69e130d
->> --- /dev/null
->> +++ b/arch/arm/mach-mvebu/coherency.c
->> @@ -0,0 +1,89 @@
->> +/*
->> + * Coherency fabric (Aurora) support for Armada 370 and XP platforms.
->> + *
->> + * Copyright (C) 2012 Marvell
->> + *
->> + * Yehuda Yitschak <yehuday@marvell.com>
->> + * Gregory Clement <gregory.clement@free-electrons.com>
->> + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + *
->> + * The Armada 370 and Armada XP SOCs have a coherency fabric which is
->> + * responsible for ensuring hardware coherency between all CPUs and between
->> + * CPUs and I/O masters. This file initializes the coherency fabric and
->> + * supplies basic routines for configuring and controlling hardware coherency
->> + */
-> 
-> [...]
-> 
->> +int set_cpu_coherent(unsigned int hw_cpu_id, int smp_group_id)
->> +{
->> +	int reg;
->> +
->> +	if (!coherency_base) {
->> +		pr_warn("Can't make CPU %d cache coherent.\n", hw_cpu_id);
->> +		pr_warn("Coherency fabric is not initialized\n");
->> +		return 1;
->> +	}
->> +
->> +	/* Enable the CPU in coherency fabric */
->> +	reg = readl(coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
->> +	reg |= 1 << (24 + hw_cpu_id);
->> +	writel(reg, coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
->> +
->> +	/* Add CPU to SMP group */
->> +	reg = readl(coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
->> +	reg |= 1 << (16 + hw_cpu_id + (smp_group_id == 0 ? 8 : 0));
->> +	writel(reg, coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
->> +
->> +	return 0;
->> +}
-> 
-> These writels may expand to code containing calls to outer_sync(), which
-> will attempt to take a spinlock for the aurora l2. Given that the CPU isn't
-> coherent, how does this play out with the exclusive store instruction in the
-> lock?
+Constify 'pathp' in order to get rid of the following warning:
 
-I dug a little this subject: and I am not sure there is problem. In SMP mode,
-only the system cache mode of Aurora is used. In this mode, outer_cache.sync
-is void then outer_sync() won't call any function, so there will be no
-access to any spinlock.
+drivers/of/fdt.c:491:10: warning: assignment discards 'const' qualifier from pointer target type [enabled by default]
 
-Gregory
+Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/of/fdt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 793b823..73fb8c0 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -460,7 +460,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ 
+ 	do {
+ 		u32 tag = be32_to_cpup((__be32 *)p);
+-		char *pathp;
++		const char *pathp;
+ 
+ 		p += 4;
+ 		if (tag == OF_DT_END_NODE) {
+-- 
+1.7.9.5
