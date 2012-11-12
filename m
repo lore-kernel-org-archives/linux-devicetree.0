@@ -1,76 +1,78 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
-Date: Mon, 12 Nov 2012 09:17:48 -0700
-Message-ID: <50A1212C.2080601@wwwdotorg.org>
-References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
- <1352650891-18356-2-git-send-email-andrew@lunn.ch>
- <50A020C5.4070506@wwwdotorg.org> <20121112082546.GU22029@lunn.ch>
+From: viresh kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 12/14] ARM: SPEAr3xx: shirq: simplify and move the shared
+ irq multiplexor to DT
+Date: Mon, 12 Nov 2012 22:07:16 +0530
+Message-ID: <CAOh2x=nJXVVjFmDFnTN_02PSG9hcDuXToRUzRMi5jwJqUFtgfw@mail.gmail.com>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
+ <71bbb1faf3cd048953dcf24ef9ce6d9dd37fe8e1.1352608333.git.viresh.kumar@linaro.org>
+ <201211121509.45176.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121112082546.GU22029-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201211121509.45176.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, arm@kernel.org, olof@lixom.net, sr@denx.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2012 01:25 AM, Andrew Lunn wrote:
-> On Sun, Nov 11, 2012 at 03:03:49PM -0700, Stephen Warren wrote:
->> On 11/11/2012 09:21 AM, Andrew Lunn wrote:
->>> From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
->>>
->>> Given appropriate devicetree bindings, this driver registers a
->>> pm_power_off function to set a GPIO line high/low to power down
->>> your board.
+On Mon, Nov 12, 2012 at 8:39 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Sunday 11 November 2012, Viresh Kumar wrote:
 
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+>>  .../devicetree/bindings/arm/spear/shirq.txt        |  48 ++++
+>>  arch/arm/mach-spear3xx/include/mach/irqs.h         |  10 +-
+>>  arch/arm/mach-spear3xx/spear300.c                  | 103 -------
+>>  arch/arm/mach-spear3xx/spear310.c                  | 202 --------------
+>>  arch/arm/mach-spear3xx/spear320.c                  | 204 --------------
+>>  arch/arm/mach-spear3xx/spear3xx.c                  |   4 +
+>>  arch/arm/plat-spear/include/plat/shirq.h           |  35 +--
+>>  arch/arm/plat-spear/shirq.c                        | 305 +++++++++++++++++----
+>
+> I guess it would be nice to move this to drivers/irqchip/st-shirq.c now
+> that we have introduced that directory.
+
+I was sure that i will get this one :)
+I wanted to, but was just trying the basic patch first :)
+
+I would add another patch in this series as the last patch to move stuff
+out of plat :)
+
+>>  static const char * const spear320_dt_board_compat[] = {
+>> diff --git a/arch/arm/mach-spear3xx/spear3xx.c b/arch/arm/mach-spear3xx/spear3xx.c
+>> index 98144ba..781aec9 100644
+>> --- a/arch/arm/mach-spear3xx/spear3xx.c
+>> +++ b/arch/arm/mach-spear3xx/spear3xx.c
+>> @@ -121,6 +122,9 @@ struct sys_timer spear3xx_timer = {
 >>
->>> +Required properties:
->>> +- compatible : should be "gpio-poweroff".
->>> +- gpios : The GPIO to set high/low, see "gpios property" in
->>> +  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
->>> +  low to power down the board set it to "Active Low", otherwise set
->>> +  gpio to "Active High".
->>
->> Unfortunately, not all GPIO bindings support active high/low flags in
->> the GPIO specifier. As such, the flags there are basically useless.
->> Other bindings (e.g. IIRC the fixed-regulator binding) have added a
->> separate active-high property to indicate the GPIO polarity. This
->> binding should probably follow suite.
-> 
-> Humm, so are you saying of_get_named_gpio_flags() is deprecated?
+>>  static const struct of_device_id vic_of_match[] __initconst = {
+>>       { .compatible = "arm,pl190-vic", .data = vic_of_init, },
+>> +     { .compatible = "st,spear300-shirq", .data = spear3xx_shirq_of_init, },
+>> +     { .compatible = "st,spear310-shirq", .data = spear3xx_shirq_of_init, },
+>> +     { .compatible = "st,spear320-shirq", .data = spear3xx_shirq_of_init, },
+>>       { /* Sentinel */ }
+>>  };
+>
+> You list three "compatible" values here with the same init function, and then
+>
+>> +int __init spear3xx_shirq_of_init(struct device_node *np,
+>> +             struct device_node *parent)
+>> +{
+>> +}
+>
+> In that multiplex between thre three again. I think it would be cleaner to have
+> three separate functions and move the call to of_iomap into shirq_init.
 
-I don't know if it's deprecated, but it's certainly not useful in
-generic code.
+I reworked a bit on this patch after picking the initial patch from
+Shiraz. And i
+am disappointed that i missed this basic thing.
 
-> There is a lot of code using this to get the flag
-> OF_GPIO_ACTIVE_LOW. Some of these users are very generic code:
-
-That's unfortunate...
-
-> 
-> drivers/leds/leds-gpio.c:
-> drivers/input/misc/rotary_encoder.c:
-> drivers/input/keyboard/gpio_keys.c:
-> drivers/input/keyboard/gpio_keys_polled.c:
-> drivers/hwmon/gpio-fan.c:
-> 
-> The only code using the "enable-active-high"
-> property is drivers/regulator/fixed.c although the binding
-> documentation twl6040.txt talks about it, but the code does not
-> implement it.
-> 
-> Could you point me towards some email discussion about this?
-
-I don't have any good links. I imagine the discussion happened when the
-patched for regulator/fixed.c were submitted.
+--
+viresh
