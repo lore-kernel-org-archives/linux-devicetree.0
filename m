@@ -1,52 +1,124 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 2/8] ARM: zynq: move ttc timer code to drivers/clocksource
-Date: Mon, 12 Nov 2012 12:53:47 +0100
-Message-ID: <CAHTX3dKYJ_rWy-bWdhz24R=0ksw9YDixtqpJfEwRGcffu6vwkA@mail.gmail.com>
-References: <cover.1351721190.git.josh.cartwright@ni.com>
-	<c0347788fbad559a249a25128a23f40c85d9cbda.1351721190.git.josh.cartwright@ni.com>
-	<CAHTX3d++0fGSw7GQHcc-S1X1Qh-rfekpr-E8Jkg2_vFqdCFFTg@mail.gmail.com>
-	<20121105214753.GB1254@beefymiracle.amer.corp.natinst.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20121105214753.GB1254@beefymiracle.amer.corp.natinst.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Josh Cartwright <josh.cartwright@ni.com>
-Cc: Russell King <linux@arm.linux.org.uk>, John Stultz <johnstul@us.ibm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Alan Cox <alan@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
+Date: Mon, 12 Nov 2012 14:05:47 +0200
+Message-ID: <D212FBB3-B434-4B9F-9237-95C4117834DB@antoniou-consulting.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <20121109022624.GI23553@truffula.fritz.box> <509D8A62.1080102@wwwdotorg.org>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <509D8A62.1080102@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-2012/11/5 Josh Cartwright <josh.cartwright@ni.com>:
-> On Mon, Nov 05, 2012 at 12:22:55PM +0100, Michal Simek wrote:
->> 2012/10/29 Josh Cartwright <josh.cartwright@ni.com>:
->> > Suggested cleanup by Arnd Bergmann.  Move the ttc timer.c code to
->> > drivers/clocksource, and out of the mach-zynq directory.
->> >
->> > The common.h (which only held the timer declaration) was renamed to
->> > xilinx_ttc.h and moved into include/linux.
->> >
->> > Signed-off-by: Josh Cartwright <josh.cartwright@ni.com>
->> > Cc: Arnd Bergmann <arnd@arndb.de>
->> > ---
->> >  arch/arm/mach-zynq/Makefile                                    | 2 +-
->> >  arch/arm/mach-zynq/common.c                                    | 2 +-
->> >  drivers/clocksource/Makefile                                   | 1 +
->> >  arch/arm/mach-zynq/timer.c => drivers/clocksource/xilinx_ttc.c | 1 -
->> >  arch/arm/mach-zynq/common.h => include/linux/xilinx_ttc.h      | 4 ++--
->> >  5 files changed, 5 insertions(+), 5 deletions(-)
->> >  rename arch/arm/mach-zynq/timer.c => drivers/clocksource/xilinx_ttc.c (99%)
->> >  rename arch/arm/mach-zynq/common.h => include/linux/xilinx_ttc.h (91%)
->>
->> Not going to apply this patch till there is clean way how to move all
->> drivers there.  Especially I don't like to add xilinx_ttc.h to
->> include/linux folder.
->
-> Okay;  I think it's best to defer the moving of the ttc driver from this
-> patchset.  It is not a dependency of the clk driver support stuff.
-> If you agree, I can spin up a v2 of the patchset w/o this change, and
-> without the serial CONFIG_OF stuff.  Should v2 contain the patches
-> you've already pulled into testing?
+Hi Stephen,
 
-Sure and I see you have done which is good.
+On Nov 10, 2012, at 12:57 AM, Stephen Warren wrote:
 
-Thanks,
-Michal
+> On 11/08/2012 07:26 PM, David Gibson wrote:
+> ...
+>> I also think graft will handle most of your use cases, although as I
+>> said I don't fully understand the implications of some of them, so I
+>> could be wrong.  So, the actual insertion of the subtree is pretty
+>> trivial to implement.  phandles are the obvious other matter to be
+>> dealt with.  I haven't found the right thread where what you've
+>> envisaged so far is discussed, so here are things I can see:
+>> 
+>> 1) Avoiding phandle collisions between main tree and subtree (or
+>>   between subtrees).
+>> 
+>> I'm hopeful that this can be resolved just by establishing some
+>> conventions about the ranges of phandles to be used for various
+>> components.  I'd certainly be happy to add a directive to dtc which
+>> enforces allocation of phandles within a specified range.
+> 
+> One case I wonder about is:
+> 
+> Base board A that's split into two .dts files e.g. due to there being
+> two versions of the base board which are 90% identical, yet there being
+> a few differences between them.
+> 
+> Base board B that's just a single .dts file.
+> 
+> We might allocate phandle range 0..999 for the base board.
+> 
+> Child board X plugs into either, so the two base boards need to "export"
+> the same set of phandle IDs to the child board to allow it to reference
+> them.
+> 
+> If base board A version 2 comes along after the phandle IDs that the
+> child board uses are defined, then how do we handle assigning a specific
+> phandle ID range to each of base board A's two version-specific
+> overlays, when the version-specific changes might affect arbitrary
+> phandle IDs within the range, and require some to be moved into the base
+> board version-specific overlays and some to stay in the common base
+> board .dts?
+> 
+
+Static phandle allocation, could work, but not without considerable trouble.
+
+Maybe we're over-engineering things. Perhaps having the kernel use the
+phandle values generated by dtc is not required.
+
+What about the following simple scheme:
+
+1) Have dtc create local phandle values the same way, as it is today.
+   Generate the flat tree normally, but keep in a table the locations
+   of all phandle references. Keep track of non resolvable phandle references
+   in a different table. One could use the fixup mechanism I described in
+   a previous email, if you don't care about keeping a big table.
+2) Upon loading the base DT or the overlay, the kernel makes sure the phandles
+   don't overlap; simply add a per DT fragment constant offset.
+3) Resolve phandle references that were unresolved at compile time.
+ 
+
+>> 2) Resolving phandle references within a subtree
+>> 
+>> If we can handle (1) by convention, we don't need anything here, the
+>> references are fine as is.
+>> 
+>> (3) Resolving phandle references from the subtree to the main tree.
+>> 
+>> So, I think this can actually be avoided, at least in cases where what
+>> physical connections are available to the expansion module is well
+>> defined.  The main causes to have external references are interrupts
+>> and gpios.  Interrupts we handle by defining an interrupt specifier
+>> space for the interrupts available on the expansion
+>> socket/connector/bus/whatever.  In the master tree we then have
+>> something like:
+>> 
+>> ...
+>> 	expansion-socket@XXXX {
+>> 		expansion-id = "SlotA";
+>> 		interrupt-map = < /* map expansion irq specs to
+>> 				     board interrupt controllers */ >;
+>> 		interrupt-map-mask = < ... >;
+>> 		ranges = < /* map expansion local addresses to global
+>> 		              mmio */ >;
+>> 	};
+> 
+> We would end up needing an interrupt-map or ranges type of property for
+> basically any resource type.
+> 
+> For example, what about an I2C bus that's routed to the daughter board,
+> and the daughter board contains an I2C bus mux, whose control path isn't
+> through I2C but rather GPIOs? In this case, the I2C bus mux isn't a
+> child of the I2C bus, but a separate entity that indicates its parent
+> I2C bus using a phandle. I presume a similar argument applies to almost
+> any kind of resource. This is probably do-able, but certainly something
+> to consider with the socket approach. I do like the socket approach though.
+
+Capebus has taken this approach.
+
+You see, perhaps from the standpoint of the standard platform devices that
+a cape provides, a bus is not a very fitting construct.
+
+But from a hardware engineer/user perspective, a cape is an expansion board,
+and virtual slots are used. This is similar to what you're saying
+with socket approach, right? 
+
+Regards
+
+-- Pantelis
