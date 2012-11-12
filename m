@@ -1,126 +1,284 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 12/14] ARM: SPEAr3xx: shirq: simplify and move the shared
- irq multiplexor to DT
-Date: Mon, 12 Nov 2012 15:09:44 +0000
-Message-ID: <201211121509.45176.arnd@arndb.de>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
- <71bbb1faf3cd048953dcf24ef9ce6d9dd37fe8e1.1352608333.git.viresh.kumar@linaro.org>
+From: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] ARM: kernel: add device tree init map function
+Date: Mon, 12 Nov 2012 15:14:01 +0000
+Message-ID: <20121112151401.GA2111@linaro.org>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <71bbb1faf3cd048953dcf24ef9ce6d9dd37fe8e1.1352608333.git.viresh.kumar@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, arm@kernel.org, olof@lixom.net, sr@denx.de, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1352471654-20207-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 11 November 2012, Viresh Kumar wrote:
-> From: Shiraz Hashim <shiraz.hashim@st.com>
+On Fri, Nov 09, 2012 at 02:34:11PM +0000, Lorenzo Pieralisi wrote:
+> When booting through a device tree, the kernel cpu logical id map can be
+> initialized using device tree data passed by FW or through an embedded blob.
 > 
-> SPEAr3xx architecture includes shared/multiplexed irqs for certain set
-> of devices. The multiplexor provides a single interrupt to parent
-> interrupt controller (VIC) on behalf of a group of devices.
+> This patch adds a function that parses device tree "cpu" nodes and
+> retrieves the corresponding CPUs hardware identifiers (MPIDR).
+> It sets the possible cpus and the cpu logical map values according to
+> the number of CPUs defined in the device tree and respective properties.
 > 
-> There can be multiple groups available on SPEAr3xx variants but not
-> exceeding 4. The number of devices in a group can differ, further they
-> may share same set of status/mask registers spanning across different
-> bit masks. Also in some cases the group may not have enable or other
-> registers. This makes software little complex.
+> The device tree HW identifiers are considered valid if all CPU nodes contain
+> a "reg" property and the DT defines a CPU node that matches the MPIDR[23:0]
+> of the boot CPU.
 > 
-> Present implementation was non-DT and had few complex data structures to
-> decipher banks, number of irqs supported, mask and registers involved.
+> The primary CPU is assigned cpu logical number 0 to keep the current convention
+> valid.
 > 
-> This patch simplifies the overall design and convert it in to DT.  It
-> also removes all registration from individual SoC files and bring them
-> in to common shirq.c.
+> Current bindings documentation is included in the patch:
 > 
-> Also updated the corresponding documentation for DT binding of shirq.
-
-Looks basically ok, but I have a few comments.
-
-> Signed-off-by: Shiraz Hashim <shiraz.hashim@st.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Documentation/devicetree/bindings/arm/cpus.txt
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/spear/shirq.txt        |  48 ++++
->  arch/arm/mach-spear3xx/include/mach/irqs.h         |  10 +-
->  arch/arm/mach-spear3xx/spear300.c                  | 103 -------
->  arch/arm/mach-spear3xx/spear310.c                  | 202 --------------
->  arch/arm/mach-spear3xx/spear320.c                  | 204 --------------
->  arch/arm/mach-spear3xx/spear3xx.c                  |   4 +
->  arch/arm/plat-spear/include/plat/shirq.h           |  35 +--
->  arch/arm/plat-spear/shirq.c                        | 305 +++++++++++++++++----
+>  Documentation/devicetree/bindings/arm/cpus.txt | 84 ++++++++++++++++++++++++++
+>  arch/arm/include/asm/prom.h                    |  2 +
+>  arch/arm/kernel/devtree.c                      | 76 +++++++++++++++++++++++
+>  3 files changed, 162 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> new file mode 100644
+> index 0000000..83cd98a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -0,0 +1,84 @@
+> +* ARM CPUs binding description
+> +
+> +The device tree allows to describe the layout of CPUs in a system through
+> +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+> +defining properties for every cpu.
+> +
+> +Bindings for CPU nodes follow the ePAPR standard, available from:
+> +
+> +http://devicetree.org
+> +
+> +For the ARM architecture every CPU node must contain the following properties:
+> +
+> +- reg : property matching the CPU MPIDR[23:0] register bits
+> +- compatible: must be set to "arm, <cpu-model>"
+> +              where <cpu-model> is the full processor name as used in the
+> +              processor Technical Reference Manual, eg:
+> +              - for a Cortex A9 processor
+> +                compatible = <arm, cortex-a9>;
+> +              - for a Cortex A15 processor
+> +                compatible = <arm, cortex-a15>;
+> +
+> +List of possible "compatible" string ids:
+> +
+> +<arm, arm1020>
+> +<arm, arm1020e>
+> +<arm, arm1022>
+> +<arm, arm1026>
+> +<arm, arm720>
+> +<arm, arm740>
+> +<arm, arm7tdmi>
+> +<arm, arm920>
+> +<arm, arm922>
+> +<arm, arm925>
+> +<arm, arm926>
+> +<arm, arm940>
+> +<arm, arm946>
+> +<arm, arm9tdmi>
+> +<arm, fa526>
+> +<arm, feroceon>
+> +<arm, mohawk>
+> +<arm, sa110>
+> +<arm, sa1100>
+> +<arm, xsc3>
+> +<arm, xscale>
+> +<arm, cortex-a5>
+> +<arm, cortex-a7>
+> +<arm, cortex-a8>
+> +<arm, cortex-a9>
+> +<arm, cortex-a15>
+> +<arm, arm1136>
+> +<arm, arm11-mpcore>
 
-I guess it would be nice to move this to drivers/irqchip/st-shirq.c now
-that we have introduced that directory.
+Any views on how we make sure that this list gets maintained?
 
->  static const char * const spear320_dt_board_compat[] = {
-> diff --git a/arch/arm/mach-spear3xx/spear3xx.c b/arch/arm/mach-spear3xx/spear3xx.c
-> index 98144ba..781aec9 100644
-> --- a/arch/arm/mach-spear3xx/spear3xx.c
-> +++ b/arch/arm/mach-spear3xx/spear3xx.c
-> @@ -121,6 +122,9 @@ struct sys_timer spear3xx_timer = {
+This binding feels like it probably is the right place to keep the
+exhaustive, "official" list of ARM CPU compatible strings, but I would
+not be surprised if it gets stale.
+
+Also, do we worry about the "arm," namespace for compatible strings
+becoming overcrowded?
+
+Currently we're shovelling a whole load of things in there, some of
+which are not ARM products.
+
+Thiry-party implementations like mohawk, sa11*, xsc*, fa526 and feroceon
+are not ARM products, and should be in a different, appropriate vendor
+namespace.
+
+Cheers
+---Dave
+
+> +
+> +Every cpu node is required to set its device_type to "cpu".
+> +
+> +Example:
+> +
+> +	cpus {
+> +		#size-cells = <0>;
+> +		#address-cells = <1>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a15>;
+> +			reg = <0x0>;
+> +		};
+> +
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a15>;
+> +			reg = <0x1>;
+> +		};
+> +
+> +		CPU2: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a7>;
+> +			reg = <0x100>;
+> +		};
+> +
+> +		CPU3: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a7>;
+> +			reg = <0x101>;
+> +		};
+> +	};
+> diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
+> index aeae9c6..8dd51dc 100644
+> --- a/arch/arm/include/asm/prom.h
+> +++ b/arch/arm/include/asm/prom.h
+> @@ -15,6 +15,7 @@
 >  
->  static const struct of_device_id vic_of_match[] __initconst = {
->  	{ .compatible = "arm,pl190-vic", .data = vic_of_init, },
-> +	{ .compatible = "st,spear300-shirq", .data = spear3xx_shirq_of_init, },
-> +	{ .compatible = "st,spear310-shirq", .data = spear3xx_shirq_of_init, },
-> +	{ .compatible = "st,spear320-shirq", .data = spear3xx_shirq_of_init, },
->  	{ /* Sentinel */ }
->  };
-
-You list three "compatible" values here with the same init function, and then
-
-> +int __init spear3xx_shirq_of_init(struct device_node *np,
-> +		struct device_node *parent)
+>  extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
+>  extern void arm_dt_memblock_reserve(void);
+> +extern void __init arm_dt_init_cpu_maps(void);
+>  
+>  #else /* CONFIG_OF */
+>  
+> @@ -24,6 +25,7 @@ static inline struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
+>  }
+>  
+>  static inline void arm_dt_memblock_reserve(void) { }
+> +static inline void arm_dt_init_cpu_maps(void) { }
+>  
+>  #endif /* CONFIG_OF */
+>  #endif /* ASMARM_PROM_H */
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index bee7f9d..d64d222 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -19,8 +19,10 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  
+> +#include <asm/cputype.h>
+>  #include <asm/setup.h>
+>  #include <asm/page.h>
+> +#include <asm/smp_plat.h>
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach-types.h>
+>  
+> @@ -61,6 +63,80 @@ void __init arm_dt_memblock_reserve(void)
+>  	}
+>  }
+>  
+> +/*
+> + * arm_dt_init_cpu_maps - Function retrieves cpu nodes from the device tree
+> + * and builds the cpu logical map array containing MPIDR values related to
+> + * logical cpus
+> + *
+> + * Updates the cpu possible mask with the number of parsed cpu nodes
+> + */
+> +void __init arm_dt_init_cpu_maps(void)
 > +{
-> +	struct spear_shirq **shirq_blocks;
-> +	void __iomem *base;
-> +	int block_nr, ret;
+> +	struct device_node *cpu, *cpus;
+> +	u32 i, cpuidx = 1, mpidr = read_cpuid_mpidr() & 0xffffff;
+> +	u32 tmp_map[NR_CPUS];
+> +	bool bootcpu_valid = false;
 > +
-> +	base = of_iomap(np, 0);
-> +	if (!base) {
-> +		pr_err("%s: failed to map shirq registers\n", __func__);
-> +		return -ENXIO;
+> +	cpus = of_find_node_by_path("/cpus");
+> +
+> +	if (!cpus)
+> +		return;
+> +
+> +	memset(tmp_map, 0, sizeof(tmp_map));
+> +
+> +	for_each_child_of_node(cpus, cpu) {
+> +		u32 hwid;
+> +
+> +		pr_debug(" * %s...\n", cpu->full_name);
+> +		/*
+> +		 * A device tree containing CPU nodes with missing "reg"
+> +		 * properties is considered invalid to build the
+> +		 * cpu_logical_map.
+> +		 */
+> +		if (of_property_read_u32(cpu, "reg", &hwid)) {
+> +			pr_debug(" * %s missing reg property\n",
+> +				     cpu->full_name);
+> +			return;
+> +		}
+> +
+> +		/*
+> +		 * Build a stashed array of MPIDR values. Numbering scheme
+> +		 * requires that if detected the boot CPU must be assigned
+> +		 * logical id 0. Other CPUs get sequential indexes starting
+> +		 * from 1. If a CPU node with a reg property matching the
+> +		 * boot CPU MPIDR is detected, this is recorded so that the
+> +		 * logical map built from DT is validated and can be used
+> +		 * to override the map created in smp_setup_processor_id().
+> +		 */
+> +		if (hwid == mpidr) {
+> +			i = 0;
+> +			bootcpu_valid = true;
+> +		} else {
+> +			i = cpuidx++;
+> +		}
+> +
+> +		tmp_map[i] = hwid;
+> +
+> +		if (cpuidx > nr_cpu_ids)
+> +			break;
 > +	}
 > +
-> +	if (of_device_is_compatible(np, "st,spear300-shirq")) {
-> +		shirq_blocks = spear300_shirq_blocks;
-> +		block_nr = ARRAY_SIZE(spear300_shirq_blocks);
-> +	} else if (of_device_is_compatible(np, "st,spear310-shirq")) {
-> +		shirq_blocks = spear310_shirq_blocks;
-> +		block_nr = ARRAY_SIZE(spear310_shirq_blocks);
-> +	} else if (of_device_is_compatible(np, "st,spear320-shirq")) {
-> +		shirq_blocks = spear320_shirq_blocks;
-> +		block_nr = ARRAY_SIZE(spear320_shirq_blocks);
-> +	} else {
-> +		pr_err("%s: unknown platform\n", __func__);
-> +		ret = -EINVAL;
-> +		goto unmap;
+> +	if (WARN(!bootcpu_valid, "DT CPU bindings are not valid,"
+> +				 "fall back to default cpu_logical_map\n"))
+> +		return;
+> +
+> +	/*
+> +	 * Since the boot CPU node contains proper data, and all nodes have
+> +	 * a reg property, the DT CPU list can be considered valid and the
+> +	 * logical map created in smp_setup_processor_id() can be overridden
+> +	 */
+> +	for (i = 0; i < cpuidx; i++) {
+> +		set_cpu_possible(i, true);
+> +		cpu_logical_map(i) = tmp_map[i];
+> +		pr_debug("cpu logical map 0x%x\n", cpu_logical_map(i));
 > +	}
-> +
-> +	ret = shirq_init(shirq_blocks, block_nr, base, np);
-> +	if (ret) {
-> +		pr_err("%s: shirq initialization failed\n", __func__);
-> +		goto unmap;
-> +	}
-> +
-> +	return ret;
-> +
-> +unmap:
-> +	iounmap(base);
-> +	return ret;
 > +}
-
-In that multiplex between thre three again. I think it would be cleaner to have
-three separate functions and move the call to of_iomap into shirq_init.
-
-	Arnd
+> +
+>  /**
+>   * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
+>   * @dt_phys: physical address of dt blob
+> -- 
+> 1.7.12
+> 
+> 
