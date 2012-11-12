@@ -1,186 +1,128 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Mon, 12 Nov 2012 13:47:59 +0200
-Message-ID: <14968148-872C-441A-B162-0FF93A70E489@antoniou-consulting.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
- <CAD=GYpbeKtW37Cj9cXr8F7F83d9Fgs-moqu9p6cOaPE1VxwbSg@mail.gmail.com>
- <CACxGe6vL9gbAKyDWcZWWAQ4WO=nTgdAioXS-h2e1jtJK9pmZUg@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 2/5] ARM: kernel: add device tree init map function
+Date: Mon, 12 Nov 2012 11:51:35 +0000
+Message-ID: <20121112115135.GA12287@e102568-lin.cambridge.arm.com>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <20121112103713.GA7982@e106331-lin.cambridge.arm.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6vL9gbAKyDWcZWWAQ4WO=nTgdAioXS-h2e1jtJK9pmZUg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121112103713.GA7982@e106331-lin.cambridge.arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <Mark.Rutland@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi Mark,
 
-On Nov 9, 2012, at 11:22 PM, Grant Likely wrote:
+On Mon, Nov 12, 2012 at 10:38:09AM +0000, Mark Rutland wrote:
+> On Fri, Nov 09, 2012 at 02:34:11PM +0000, Lorenzo Pieralisi wrote:
+> > When booting through a device tree, the kernel cpu logical id map can be
+> > initialized using device tree data passed by FW or through an embedded blob.
+> > 
+> > This patch adds a function that parses device tree "cpu" nodes and
+> > retrieves the corresponding CPUs hardware identifiers (MPIDR).
+> > It sets the possible cpus and the cpu logical map values according to
+> > the number of CPUs defined in the device tree and respective properties.
+> > 
+> > The device tree HW identifiers are considered valid if all CPU nodes contain
+> > a "reg" property and the DT defines a CPU node that matches the MPIDR[23:0]
+> > of the boot CPU.
+> > 
+> > The primary CPU is assigned cpu logical number 0 to keep the current convention
+> > valid.
+> > 
+> > Current bindings documentation is included in the patch:
+> > 
+> > Documentation/devicetree/bindings/arm/cpus.txt
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.txt | 84 ++++++++++++++++++++++++++
+> >  arch/arm/include/asm/prom.h                    |  2 +
+> >  arch/arm/kernel/devtree.c                      | 76 +++++++++++++++++++++++
+> >  3 files changed, 162 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> > new file mode 100644
+> > index 0000000..83cd98a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> > @@ -0,0 +1,84 @@
+> > +* ARM CPUs binding description
+> > +
+> > +The device tree allows to describe the layout of CPUs in a system through
+> > +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+> > +defining properties for every cpu.
+> > +
+> > +Bindings for CPU nodes follow the ePAPR standard, available from:
+> > +
+> > +http://devicetree.org
+> > +
+> > +For the ARM architecture every CPU node must contain the following properties:
+> > +
+> > +- reg : property matching the CPU MPIDR[23:0] register bits
+> > +- compatible: must be set to "arm, <cpu-model>"
+> > +              where <cpu-model> is the full processor name as used in the
+> > +              processor Technical Reference Manual, eg:
+> > +              - for a Cortex A9 processor
+> > +                compatible = <arm, cortex-a9>;
+> > +              - for a Cortex A15 processor
+> > +                compatible = <arm, cortex-a15>;
+> > +
+> > +List of possible "compatible" string ids:
+> > +
+> > +<arm, arm1020>
+> > +<arm, arm1020e>
+> > +<arm, arm1022>
+> > +<arm, arm1026>
+> > +<arm, arm720>
+> > +<arm, arm740>
+> > +<arm, arm7tdmi>
+> > +<arm, arm920>
+> > +<arm, arm922>
+> > +<arm, arm925>
+> > +<arm, arm926>
+> > +<arm, arm940>
+> > +<arm, arm946>
+> > +<arm, arm9tdmi>
+> > +<arm, fa526>
+> > +<arm, feroceon>
+> > +<arm, mohawk>
+> > +<arm, sa110>
+> > +<arm, sa1100>
+> > +<arm, xsc3>
+> > +<arm, xscale>
+> > +<arm, cortex-a5>
+> > +<arm, cortex-a7>
+> > +<arm, cortex-a8>
+> > +<arm, cortex-a9>
+> > +<arm, cortex-a15>
+> > +<arm, arm1136>
+> > +<arm, arm11-mpcore>
+> > +
+> 
+> Is there any reason for the spaces in the compatible string? No other binding
+> seems to do this.
+> 
+> Is <STRING> a valid dts format? Should these not be "STRING" instead?
+> 
+> For consistency, it would be nice to have the compatible strings tab-indented
+> as in Documentation/devicetree/bindings/arm/pmu.txt.
 
-> On Fri, Nov 9, 2012 at 5:32 AM, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Pantelis,
->> 
->> I hope I'm not too late to reply as I'm traveling.
->> 
->> On Nov 6, 2012, at 5:30 AM, Pantelis Antoniou
->> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
->> 
->>> 
->>>> 
->>>> Joanne has purchased one of Jane's capes and packaged it into a rugged
->>>> case for data logging. As far as Joanne is concerned, the BeagleBone and
->>>> cape together are a single unit and she'd prefer a single monolithic FDT
->>>> instead of using an FDT overlay.
->>>> Option A: Using dtc, she uses the BeagleBone and cape .dts source files
->>>>       to generate a single .dtb for the entire system which is
->>>>       loaded by U-Boot. -or-
->>> 
->>> Unlikely.
->>>> Option B: Joanne uses a tool to merge the BeagleBone and cape .dtb files
->>>>       (instead of .dts files), -or-
->>> Possible but low probability.
->>> 
->>>> Option C: U-Boot loads both the base and overlay FDT files, merges them,
->>>>       and passes the resolved tree to the kernel.
->>>> 
->>> 
->>> Could be made to work. Only really required if Joanne wants the
->>> cape interface to work for u-boot too. For example if the cape has some
->>> kind of network interface that u-boot will use to boot from.
->>> 
->> 
->> I love Grant's hashing idea a lot keeping the phandle problem for
->> compile time and not requiring fixups.
->> 
->> IMO it is still a cleaner approach if u-boot does the simple tree merging for
->> all cases, and not the kernel reasons mentioned below.
-> 
-> I'm more than sufficiently convinced that making changes at runtime
-> from userspace is pretty much required.
-> 
-> Also consider: it is order of magnitudes easier to modify the kernel
-> than it is to change the firmware for end users.
-> 
+You are absolutely right on all points, I will update the description.
 
-Complete agreement here.
-
->> (1)
->> From a development standpoint, very little or nothing will
->> have to be changed in kernel (except for scripts/dtc) considering we
->> are moving forward with hashing.
->> 
->> (2)
->> Also this discussed a while back but at some point is going to brought
->> up again-  loading of dt fragment directly from EEPROM and merging at
->> run time. If we were to implement this in kernel, we would have to add
->> cape specific EEPROM reading code, merge the tree before it is
->> unflattened and parse.
-> 
-> Unless it is required for boot to userspace I'm not considering
-> merging before userspace starts. That's well after the tree is
-> unflattened into the live form. If it is require to boot then I agree
-> that is should be done in firmware. I see zero problem with having a
-> beaglebone specific cape driver that knows to read the eeprom and
-> request a specific configuration file. Heck, the kernel doesn't even
-> need to parse the eeprom data. It can be read from userspace and
-> userspace decides which overlay to provide. There's nothing stopping
-> userspace from reading the eeprom, looking up the correct dts for the
-> board, downloading the file from the Internet, compiling it with dtc
-> and installing it.... and yes that is getting a little extreme.
-> 
-
-We're trying to come up with the method that will work best for us.
-
->From an ease of use perspective, having a kernel driver doing the 
-probing and performing the DT fragment insertion looks the best.
-It's especially nice for the manufacturer, since he can make sure
-that when he ships a board a single kernel image will contain everything
-with no possibility of RMAs. 
-
-For h/w prototyping, where the user is tinkering around with his
-own design, the user space approach would be best.
-
-The downloading over the internet DTS file, is a bit extreme for now :)
-
->> I think doing tree merging in kernel is messy
->> and we should do it in uboot considering we might have to read EEPROM for
->> this use case. Ideally reading the fragment from the EEPROM for all capes
->> and merging without worrying about version detection, Doing the merge and
->> passing the merged blob to the kernel which (kernel) works the same way
->> it does today.
->> 
->>>> It may be sufficient to solve it by making the phandle values less
->>>> volatile. Right now dtc generates phandles linearly. Generated phandles
->>>> could be overridden with explicit phandle properties, but it isn't a
->>>> fantastic solution. Perhaps generating the phandle from a hash of the
->>>> node name would be sufficient.
->>>> 
->>> 
->>> I doubt the hash method will work reliably. We only have 32 bits to work with,
->>> nothing like the SHA hashes of git.
->>> 
->> 
->> I was wondering I have worked with kernel's crypto code in the past to
->> generate 32 bit md5sums of 1000s of dataitems, from what I've seen,
->> collisions are rare and since we are talking about just a few nodes
->> that are being referenced in the base dt. I think the probability is
->> even less (ofcourse such an analysis strongly depends on dataset).
->> this method also takes away a lot of complexity with having it to do
->> runtime fixups and will help us get off the ground quickly.
-> 
-> It wouldn't be hard to put together a test and run it on all the .dts
-> files in the kernel; generating md5 sums for all the full_name paths
-> and seeing if we've got any collisions yet.
-> 
->> We can also put in a collision handling mechanism if needed.
->> I think it is worthy doing a sample hash of all nodes in all dts we
->> have in a script and see for once if we have collisions and what it
->> looks like.
-> 
-> Collision handling is a must, but again this is all internal to dtc. I
-> don't foresee any problems with it.
-> 
->> Alternatively to hashing, reading David Gibson's paper I followed,
->> phandle is supposed to 'uniquely' identity node. I wonder why the node
->> name itself is not sufficient to uniquely identify.
-> 
-> Simply because the FDT draws upon the existing OFW bindings which use
-> a 32bit value to reference other nodes.
-> 
->> The code that does
->> the tree walking can then just strcmp the node name while it walks the
->> tree instead of having to find a node with a phandle number. I guess
->> the reason is phandles are small to store as data values. Another
->> approach can be to arrange the string block in alphabetical order
->> (unless it already is), and store phandle as index of the node name
->> referenced relative to the starting of the strong block. This will not
->> affect nodes in dtb being moved around since they will still have the
->> same index value. the problem being adding or removing nodes Changes
->> the index of all other nodes in the string block as well.. Hmm.
-> 
-> And that still doesn't help find all the phandle locations in the tree
-> for doing fixups. It would need to be a table of
-> nodes+properties+offsets that contain phandles for fixup to work, but
-> I shy away from that approach because I think it will be fragile.
-> 
-> g.
-
-Maybe, but IMHO it will work. I don't know, we're at the point where
-we have to start coding and see what come out.
-
-Regards
-
--- Pantelis
+Thanks,
+Lorenzo
