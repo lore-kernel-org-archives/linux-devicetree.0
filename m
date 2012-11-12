@@ -1,124 +1,222 @@
-From: Marek Belisko <marek.belisko@open-nandra.com>
-Subject: [PATCH v3 1/2] leds/tca6507: Add support for devicetree.
-Date: Mon, 12 Nov 2012 22:25:10 +0100
-Message-ID: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] spi: davinci: add OF support for the spi controller
+Date: Mon, 12 Nov 2012 16:28:22 -0500
+Message-ID: <1352755702-21488-1-git-send-email-m-karicheri2@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-keystone-uAqBSO/uNfhBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Support added only for leds (not for gpio's).
+This adds OF support to DaVinci SPI controller to configure platform
+data through device bindings.
 
-Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 ---
+ .../devicetree/bindings/spi/spi-davinci.txt        |   50 ++++++++++++
+ drivers/spi/spi-davinci.c                          |   80 +++++++++++++++++++-
+ 2 files changed, 126 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
 
-Changes from v2:
-- change compatible property to "ti,tca6507"
-- add documentation for linux,default-trigger
-
-Changes from v1:
-- return proper error value not NULL from tca6507_led_dt_init()
-- remove empty lines
-- remove kfree()
-
- drivers/leds/leds-tca6507.c |   70 +++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
-index dabcf7a..fdc1ea6 100644
---- a/drivers/leds/leds-tca6507.c
-+++ b/drivers/leds/leds-tca6507.c
-@@ -667,6 +667,66 @@ static void tca6507_remove_gpio(struct tca6507_chip *tca)
- }
- #endif /* CONFIG_GPIOLIB */
- 
-+#ifdef CONFIG_OF
-+static struct tca6507_platform_data * __devinit tca6507_led_dt_init(struct i2c_client *client)
-+{
-+	struct device_node *np = client->dev.of_node, *child;
-+	struct tca6507_platform_data *pdata;
-+	struct led_info *tca_leds;
-+	int count = 0;
+diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+new file mode 100644
+index 0000000..0369369
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+@@ -0,0 +1,50 @@
++Davinci SPI controller device bindings
 +
-+	for_each_child_of_node(np, child)
-+		count++;
-+	if (!count)
-+		return ERR_PTR(-ENODEV);
++Required properties:
++- #address-cells: number of cells required to define a chip select
++	address on the SPI bus.
++- #size-cells: should be zero.
++- compatible:
++	- "ti,davinci-spi"
++- reg: Offset and length of SPI controller register space
++- ti,davinci-spi-version: SPI version :- "1.0" or "2.0"
++- ti,davinci-spi-num-cs: Number of chip selects
++- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
++	IP to the ARM interrupt controller withn the SoC. Possible values
++	are 0 and 1.
++- interrupts: interrupt number offset at the irq parent
++- clocks: spi clk phandle
 +
-+	if (count > NUM_LEDS)
-+		return ERR_PTR(-ENODEV);
++Example of a NOR flash slave device (n25q032) connected to DaVinci
++SPI controller device over the SPI bus.
 +
-+	tca_leds = devm_kzalloc(&client->dev, sizeof(struct led_info) * NUM_LEDS, GFP_KERNEL);
-+	if (!tca_leds)
-+		return ERR_PTR(-ENOMEM);
++spi:spi0@20BF0000 {
++	#address-cells			= <1>;
++	#size-cells			= <0>;
++	compatible			= "ti,davinci-spi";
++	reg				= <0x20BF0000 0x1000>;
++	ti,davinci-spi-version		= "1.0";
++	ti,davinci-spi-num-cs		= <4>;
++	ti,davinci-spi-intr-line	= <0>;
++	interrupts			= <338>;
++	clocks				= <&clkspi>;
 +
-+	for_each_child_of_node(np, child) {
-+		struct led_info led;
-+		u32 reg;
-+		int ret;
++	flash: n25q032@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "st,m25p32";
++		spi-max-frequency = <25000000>;
++		reg = <0>;
 +
-+		led.name = of_get_property(child, "label", NULL) ? : child->name;
-+		led.default_trigger =
-+			of_get_property(child, "linux,default-trigger", NULL);
++		partition@0 {
++			label = "u-boot-spl";
++			reg = <0x0 0x80000>;
++			read-only;
++		};
 +
-+		ret = of_property_read_u32(child, "reg", &reg);
-+
-+		if (ret != 0)
-+			continue;
-+		tca_leds[reg] = led;
-+	}
-+	pdata = devm_kzalloc(&client->dev, sizeof(struct tca6507_platform_data), GFP_KERNEL);
-+	if (!pdata) {
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	pdata->leds.leds = tca_leds;
-+	pdata->leds.num_leds = NUM_LEDS;
-+
-+	return pdata;
-+}
-+
-+static const struct of_device_id of_tca6507_leds_match[] = {
-+	{ .compatible = "ti,tca6507", },
-+	{},
++		partition@1 {
++			label = "test";
++			reg = <0x80000 0x380000>;
++		};
++	};
 +};
+diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
+index 71a6423..0f50319 100644
+--- a/drivers/spi/spi-davinci.c
++++ b/drivers/spi/spi-davinci.c
+@@ -26,6 +26,9 @@
+ #include <linux/err.h>
+ #include <linux/clk.h>
+ #include <linux/dma-mapping.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi_bitbang.h>
+ #include <linux/slab.h>
+@@ -788,6 +791,69 @@ rx_dma_failed:
+ 	return r;
+ }
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id davinci_spi_of_match[] = {
++	{
++		.compatible = "ti,davinci-spi",
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, davini_spi_of_match);
 +
-+#else
-+static int __devinit tca6507_led_dt_init(struct i2c_client *client, struct tca6507_platform_data *data)
++/**
++ * spi_davinci_get_pdata - Get platform_data from DTS binding
++ * @pdev: ptr to platform data
++ *
++ * Parses and populate platform_data from device tree bindings.
++ *
++ * NOTE: Not all platform_data params are supported currently.
++ */
++static struct davinci_spi_platform_data
++	*spi_davinci_get_pdata(struct platform_device *pdev)
 +{
-+	return -1;
-+}
++	struct device_node *node = pdev->dev.of_node;
++	struct davinci_spi_platform_data *pdata;
++	unsigned int num_cs, intr_line = 0;
++	const char *version;
 +
-+#define of_tca6507_leds_match NULL
++	if (pdev->dev.platform_data)
++		return pdev->dev.platform_data;
++
++	if (!pdev->dev.of_node)
++		return NULL;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	pdev->dev.platform_data = pdata;
++	if (!pdata)
++		return NULL;
++
++	/* default version is 1.0 */
++	pdata->version = SPI_VERSION_1;
++	of_property_read_string(node, "ti,davinci-spi-version", &version);
++	if (!strcmp(version, "2.0"))
++		pdata->version = SPI_VERSION_2;
++
++	/*
++	 * default num_cs is 1 and all chipsel are internal to the chip
++	 * indicated by chip_sel being NULL. GPIO based CS is not
++	 * supported yet in DT bindings.
++	 */
++	num_cs = 1;
++	of_property_read_u32(node, "ti,davinci-spi-num-cs", &num_cs);
++	pdata->num_chipselect = num_cs;
++	of_property_read_u32(node, "ti,davinci-spi-intr-line", &intr_line);
++	pdata->intr_line = intr_line;
++	return pdev->dev.platform_data;
++}
++#else
++#define davinci_spi_of_match NULL
++static struct davinci_spi_platform_data
++	*spi_davinci_get_pdata(struct platform_device *pdev)
++{
++	return pdev->dev.platform_data;
++}
 +#endif
 +
- static int __devinit tca6507_probe(struct i2c_client *client,
- 				   const struct i2c_device_id *id)
+ /**
+  * davinci_spi_probe - probe function for SPI Master Controller
+  * @pdev: platform_device structure which contains plateform specific data
+@@ -801,16 +867,16 @@ rx_dma_failed:
+  */
+ static int __devinit davinci_spi_probe(struct platform_device *pdev)
  {
-@@ -683,9 +743,12 @@ static int __devinit tca6507_probe(struct i2c_client *client,
- 		return -EIO;
++	resource_size_t dma_rx_chan = SPI_NO_RESOURCE;
++	resource_size_t	dma_tx_chan = SPI_NO_RESOURCE;
++	struct davinci_spi_platform_data *pdata;
+ 	struct spi_master *master;
+ 	struct davinci_spi *dspi;
+-	struct davinci_spi_platform_data *pdata;
+ 	struct resource *r, *mem;
+-	resource_size_t dma_rx_chan = SPI_NO_RESOURCE;
+-	resource_size_t	dma_tx_chan = SPI_NO_RESOURCE;
+ 	int i = 0, ret = 0;
+ 	u32 spipc0;
  
- 	if (!pdata || pdata->leds.num_leds != NUM_LEDS) {
--		dev_err(&client->dev, "Need %d entries in platform-data list\n",
--			NUM_LEDS);
--		return -ENODEV;
-+		pdata = tca6507_led_dt_init(client);
-+		if (IS_ERR(pdata)) {
-+			dev_err(&client->dev, "Need %d entries in platform-data list\n",
-+				NUM_LEDS);
-+			return PTR_ERR(pdata);
-+		}
+-	pdata = pdev->dev.platform_data;
++	pdata = spi_davinci_get_pdata(pdev);
+ 	if (pdata == NULL) {
+ 		ret = -ENODEV;
+ 		goto err;
+@@ -851,7 +917,11 @@ static int __devinit davinci_spi_probe(struct platform_device *pdev)
+ 		goto release_region;
  	}
- 	tca = devm_kzalloc(&client->dev, sizeof(*tca), GFP_KERNEL);
- 	if (!tca)
-@@ -750,6 +813,7 @@ static struct i2c_driver tca6507_driver = {
- 	.driver   = {
- 		.name    = "leds-tca6507",
- 		.owner   = THIS_MODULE,
-+		.of_match_table = of_tca6507_leds_match,
+ 
++	/* first get irq through resource table, else try of irq method */
+ 	dspi->irq = platform_get_irq(pdev, 0);
++	if (dspi->irq <= 0)
++		dspi->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
++
+ 	if (dspi->irq <= 0) {
+ 		ret = -EINVAL;
+ 		goto unmap_io;
+@@ -875,6 +945,7 @@ static int __devinit davinci_spi_probe(struct platform_device *pdev)
+ 	}
+ 	clk_prepare_enable(dspi->clk);
+ 
++	master->dev.of_node = pdev->dev.of_node;
+ 	master->bus_num = pdev->id;
+ 	master->num_chipselect = pdata->num_chipselect;
+ 	master->setup = davinci_spi_setup;
+@@ -1010,6 +1081,7 @@ static struct platform_driver davinci_spi_driver = {
+ 	.driver = {
+ 		.name = "spi_davinci",
+ 		.owner = THIS_MODULE,
++		.of_match_table = davinci_spi_of_match,
  	},
- 	.probe    = tca6507_probe,
- 	.remove   = __devexit_p(tca6507_remove),
+ 	.probe = davinci_spi_probe,
+ 	.remove = __devexit_p(davinci_spi_remove),
 -- 
 1.7.9.5
