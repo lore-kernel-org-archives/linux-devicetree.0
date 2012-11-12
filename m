@@ -1,60 +1,66 @@
-From: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
-Subject: Re: possibility of parent clock selection through DT
-Date: Mon, 12 Nov 2012 13:22:12 -0800
-Message-ID: <20121112212212.20034.78522@nucleus>
-References: <CAPub14-CPS48gQ1h8vvAYBpO_=egjheG_rMoZ894Y4XZ2CinUQ@mail.gmail.com>
- <CAPub148Bq=uwTuky25WzXn4yfCukJ+WacxkBvuyV5yTzGasGOQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPub148Bq=uwTuky25WzXn4yfCukJ+WacxkBvuyV5yTzGasGOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shiraz Hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Marek Belisko <marek.belisko@open-nandra.com>
+Subject: [PATCH v3 2/2] Add documentation for tca6507 devicetree bindings.
+Date: Mon, 12 Nov 2012 22:25:11 +0100
+Message-ID: <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com>
+References: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cooloney@gmail.com, rpurdie@rpsys.net
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Shiraz Hashim (2012-11-06 22:36:10)
-> On Wed, Nov 7, 2012 at 11:42 AM, Shiraz Hashim
-> <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Hi Mike, Rob,
-> >
-> > Devices in a SoC can have multiple possible clock sources which is
-> > perfectly captured through clk framework.
-> >
-> > But the device itself may not be aware of the complex hierarchy above it.
-> > In this case how do you suggest a board (through DT) should select its
-> > preference.
-> >
-> > Is there some work already going on in this direction ?
-> 
-> Just to make it clear, I already have referred the clock DT bindings and
-> Shawn Guo patch on removing clk look up registration from kernel code.
-> 
-> Here I am talking about possibility of selecting desired clock hierarchy
-> by the boards about which device nodes are not aware.
-> 
+Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+---
+ Documentation/devicetree/bindings/leds/tca6507.txt |   40 ++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/tca6507.txt
 
-One way to achieve this is to use clk_set_rate as a way to switch
-parents at run-time.  The OMAP CCF code currently does this when
-relocking PLLs and makes use of __clk_reparent to update the clock
-framework's representation of the hierarchy dynamically.
-
-Maybe something like the following is helpful to you:
-http://git.linaro.org/gitweb?p=people/mturquette/linux.git;a=blob;f=arch/arm/mach-omap2/dpll3xxx.c;h=f72dedb4eee892ce4cd5bdf22cc8c22510f3d526;hb=clk-omap-3.8#l542
-
-Regards,
-Mike
-
-> -- 
-> regards
-> Shiraz Hashim
+diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
+new file mode 100644
+index 0000000..a49eb0c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/tca6507.txt
+@@ -0,0 +1,40 @@
++LEDs conected to tca6507
++
++Required properties:
++- compatible : should be : "ti,tca6507".
++
++Each led is represented as a sub-node of the ti,tca6507 device.
++
++LED sub-node properties:
++- label : label for this LED
++- reg : number of LED line (could be from 0 to 6)
++- linux,default-trigger :  (optional) This parameter, if present, is a
++  string defining the trigger assigned to the LED.  Current triggers are:
++    "backlight" - LED will act as a back-light, controlled by the framebuffer
++		  system
++    "default-on" - LED will turn on
++    "heartbeat" - LED "double" flashes at a load average based rate
++    "ide-disk" - LED indicates disk activity
++    "timer" - LED flashes at a fixed, configurable rate
++
++Examples:
++
++tca6507@45 {
++	compatible = "ti,tca6507";
++	#address-cells = <1>;
++	#size-cells = <0>;
++	reg = <0x45>;
++
++	led0: red_aux@0 {
++		label = "red:aux";
++		reg = <0x0>;
++	};
++
++	led1: green_aux@1 {
++		label = "green:aux";
++		reg = <0x5>;
++		linux,default-trigger = "default-on";
++	};
++
++};
++
+-- 
+1.7.9.5
