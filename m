@@ -1,31 +1,52 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH v2 0/2] i2c: i2c-ocores: Add support for sparc, custom set and get functions, and the GRLIB port of the controller
-Date: Mon, 12 Nov 2012 17:59:49 +0100
-Message-ID: <1352739591-1317-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>, Ben Dooks <ben-linux@fluff.org>, Peter Korsgaard <jacmet@sunsite.dk>
-Cc: linux-i2c@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 12/14] ARM: SPEAr3xx: shirq: simplify and move the shared
+ irq multiplexor to DT
+Date: Mon, 12 Nov 2012 17:00:36 +0000
+Message-ID: <201211121700.36892.arnd@arndb.de>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
+ <201211121509.45176.arnd@arndb.de>
+ <CAOh2x=nJXVVjFmDFnTN_02PSG9hcDuXToRUzRMi5jwJqUFtgfw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOh2x=nJXVVjFmDFnTN_02PSG9hcDuXToRUzRMi5jwJqUFtgfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: viresh kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On sparc, irqs are not present as an IORESOURCE in the struct platform_device
-representation. By using platform_get_irq instead of platform_get_resource the
-driver works for sparc.
+On Monday 12 November 2012, viresh kumar wrote:
+> On Mon, Nov 12, 2012 at 8:39 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Sunday 11 November 2012, Viresh Kumar wrote:
+> 
+> >>  .../devicetree/bindings/arm/spear/shirq.txt        |  48 ++++
+> >>  arch/arm/mach-spear3xx/include/mach/irqs.h         |  10 +-
+> >>  arch/arm/mach-spear3xx/spear300.c                  | 103 -------
+> >>  arch/arm/mach-spear3xx/spear310.c                  | 202 --------------
+> >>  arch/arm/mach-spear3xx/spear320.c                  | 204 --------------
+> >>  arch/arm/mach-spear3xx/spear3xx.c                  |   4 +
+> >>  arch/arm/plat-spear/include/plat/shirq.h           |  35 +--
+> >>  arch/arm/plat-spear/shirq.c                        | 305 +++++++++++++++++----
+> >
+> > I guess it would be nice to move this to drivers/irqchip/st-shirq.c now
+> > that we have introduced that directory.
+> 
+> I was sure that i will get this one :)
+> I wanted to, but was just trying the basic patch first :)
+> 
+> I would add another patch in this series as the last patch to move stuff
+> out of plat :)
 
-The GRLIB port of the ocores i2c controller needs custom getreg and setreg
-functions to allow for big endian register access and to deal with the fact that
-the PRELOW and PREHIGH registers have been merged into one register.
+Ok, no problem. Do it later then.
 
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
-
-Changes since v1:
- - platform_get_irq now works for sparc, so that is used for all platforms
- - Acks by Peter Korsgaard <jacmet@sunsite.dk>
-
-Andreas Larsson (2):
-  i2c: i2c-ocores: Add irq support for sparc
-  i2c: i2c-ocores: Add support for the GRLIB port of the controller and
-    custom getreg and setreg functions
-
- drivers/i2c/busses/i2c-ocores.c |   66 +++++++++++++++++++++++++++++++++++---
- 1 files changed, 60 insertions(+), 6 deletions(-)
+	Arnd
