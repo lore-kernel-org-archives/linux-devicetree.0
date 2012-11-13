@@ -1,49 +1,85 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
-Date: Tue, 13 Nov 2012 21:11:38 +0200
-Message-ID: <4D5F9118-AD50-44F7-B672-2A70E5999CC1@antoniou-consulting.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com> <509D9089.7020407@wwwdotorg.org> <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com> <50A12950.6090808@wwwdotorg.org> <20121113072517.GE25915@truffula.fritz.box> <50A27BF1.4030502@wwwdotorg.org> <50A28D03.7050002@firmworks.com> <50A2919D.5030006@wwwdotorg.org> <50A29AD5.60303@firmworks.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50A29AD5.60303@firmworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
+Date: Tue, 13 Nov 2012 20:17:26 +0100
+Message-ID: <20121113191726.GA3093@avionic-0098.mockup.avionic-design.de>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
+ <20121113110837.GA30049@avionic-0098.mockup.avionic-design.de>
+ <50A2878D.8020707@wwwdotorg.org>
+ <20121113175147.GA2597@avionic-0098.mockup.avionic-design.de>
+ <50A28DCB.7050707@firmworks.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50A28DCB.7050707@firmworks.com>
+Sender: linux-media-owner@vger.kernel.org
 To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Russ Dill <Russ.Dill@ti.com>, Scott Wood <scottwood@freescale.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-fbdev@vger.kernel.org, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mitch,
 
-On Nov 13, 2012, at 9:09 PM, Mitch Bradley wrote:
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On 11/13/2012 8:29 AM, Stephen Warren wrote:
->> On 11/13/2012 11:10 AM, Mitch Bradley wrote:
->>> It seems to me that this capebus discussion is missing an important
->>> point.  The name capebus suggests that it is a bus, so there should be a
->>> parent node to represent that bus.  It should have a driver whose API
->>> implements all of the system-interface functions a cape needs.
->> 
->> It was discussed earlier that capebus isn't actually a bus. It's simply
->> a collection of a bunch of pins from the SoC hooked up to connectors.
->> I'd agree that it's mis-named.
->> 
-> 
-> Nevertheless, to the extent that the set of pins is finite and
-> well-defined, it should be possible to define a set of software
-> interfaces to support the functionality represented by those pins.
-> 
-> It might depend on the underlying SoC, but even so, it would still be
-> best to encapsulate the interface set.  I hear all these use cases that
-> presuppose a wide variety of user skill sets.  If one really wants to
-> support such users well, it's important to define a coherent single
-> point of interface.
-> 
-> 
+On Tue, Nov 13, 2012 at 08:13:31AM -1000, Mitch Bradley wrote:
+> On 11/13/2012 7:51 AM, Thierry Reding wrote:
+> > On Tue, Nov 13, 2012 at 10:46:53AM -0700, Stephen Warren wrote:
+> >> On 11/13/2012 04:08 AM, Thierry Reding wrote:
+> >>> On Mon, Nov 12, 2012 at 04:37:02PM +0100, Steffen Trumtrar wrote:
+> >>>> This adds support for reading display timings from DT or/and
+> >>>> convert one of those timings to a videomode. The
+> >>>> of_display_timing implementation supports multiple children where
+> >>>> each property can have up to 3 values. All children are read into
+> >>>> an array, that can be queried. of_get_videomode converts exactly
+> >>>> one of that timings to a struct videomode.
+> >>
+> >>>> diff --git
+> >>>> a/Documentation/devicetree/bindings/video/display-timings.txt
+> >>>> b/Documentation/devicetree/bindings/video/display-timings.txt
+> >>
+> >>>> + - clock-frequency: displayclock in Hz
+> >>>
+> >>> "display clock"?
+> >>
+> >> I /think/ I had suggested naming this clock-frequency before so that
+> >> the property name would be more standardized; other bindings use that
+> >> same name. But I'm not too attached to the name I guess.
+> >=20
+> > That's not what I meant. I think "displayclock" should be two words in
+> > the description of the property. The property name is fine.
+>=20
+> Given that modern display engines often have numerous clocks, perhaps it
+> would be better to use a more specific name, like for example "pixel-cloc=
+k".
 
-That's what capebus is. Too bad there's such a fuss about the name.
-Check out the thread from the start for the sordid details.
+This binding is only about defining display modes. Are any of the clocks
+that you're referring to relevant to the actual display modes?
 
-Regards
+Thierry
 
--- Pantelis
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQopzGAAoJEN0jrNd/PrOhhE4P/2TpIqIW9kYSa3x1ZFUNOqTa
+6uuMnjXQIs/yEKla5T0A/ggBx+dqIr7qR3HkrhT32Mbijv/LcNTyc8F66EJg/UEp
+QrgPkDdsuttcu0afLlVNhAvjm4vHGx3EHEjT+PChv4AkGPhJo5mW8lqPbsV+I+nU
+QyHbefwR8CSEnrerymqB6oUGsagGDDqS0yt9Soaa2A7JxOd6KFOwdjWH9ssntnHI
+sdspMrbh5xU2Yx26nbsJoEc6URCusWtQnYU7LKUxgTxP9R6dnE6X3AJrEpz5n2S3
+cQ3fEhnFkjMVE7BhVrNtkRAsxveYVn1k+dvsFd0rULfC+UPLrGkVhGyaJK6Q5po4
+oeC42BT2TvFcRZKYXdnlp3p4cRqhgv4T+tSMbKttsfp/GypHfUmzZJzwAoaR+pi1
+Z4rzjryni3wFaTkeT0LEVAyGJRikgYHnedCXsJy5dvZUObEjzyok2JULDvymjwrO
+ANEJaluI6irFqu1I82eOd7lMvSEx5nZlrvrpBh6T5HlHi1w77nZJ4FhT0tySJtm0
+Xl016z7jJoQk3FQ3dPjwPiz7W+5GZuf1banpuIXe0InE2ml3eNvO0rflra1Qu7Hy
+h5iN53mRx1Q9LBzsCx0m+DahmGG36vdu22N6ew62e5O29Glv3uBF9E78ARSF9SwB
+NxPdWVxCOBzpMRTTyKLc
+=ljl4
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
