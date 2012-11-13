@@ -1,137 +1,79 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v8 1/6] video: add display_timing and videomode
-Date: Tue, 13 Nov 2012 14:14:23 +0100
-Message-ID: <20121113131423.GE27797@pengutronix.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-2-git-send-email-s.trumtrar@pengutronix.de>
- <20121113104159.GA18645@avionic-0098.mockup.avionic-design.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] i2c: i2c-ocores: Add irq support for sparc
+Date: Tue, 13 Nov 2012 07:18:37 -0600
+Message-ID: <50A248AD.9000705@gmail.com>
+References: <1352739591-1317-1-git-send-email-andreas@gaisler.com> <1352739591-1317-2-git-send-email-andreas@gaisler.com> <20121113111055.GF23119@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121113104159.GA18645-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121113111055.GF23119-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2012 at 11:41:59AM +0100, Thierry Reding wrote:
-> On Mon, Nov 12, 2012 at 04:37:01PM +0100, Steffen Trumtrar wrote:
-> [...]
-> > diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> > index d08d799..2a23b18 100644
-> > --- a/drivers/video/Kconfig
-> > +++ b/drivers/video/Kconfig
-> > @@ -33,6 +33,12 @@ config VIDEO_OUTPUT_CONTROL
-> >  	  This framework adds support for low-level control of the video 
-> >  	  output switch.
-> >  
-> > +config DISPLAY_TIMING
-> 
-> DISPLAY_TIMINGS?
-> 
-> >  #video output switch sysfs driver
-> >  obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) += output.o
-> > +obj-$(CONFIG_DISPLAY_TIMING) += display_timing.o
-> 
-> display_timings.o?
-> 
-> > +obj-$(CONFIG_VIDEOMODE) += videomode.o
-> > diff --git a/drivers/video/display_timing.c b/drivers/video/display_timing.c
-> 
-> display_timings.c?
-> 
-
-I originally had that and changed it by request to the singular form.
-(Can't find the mail atm). And I think this fits better with all the other drivers.
-
-> > +int videomode_from_timing(struct display_timings *disp, struct videomode *vm,
-> > +			  unsigned int index)
-> 
-> I find the indexing API a bit confusing. But that's perhaps just a
-> matter of personal preference.
-> 
-> Also the ordering of arguments seems a little off. I find it more
-> natural to have the destination pointer in the first argument, similar
-> to the memcpy() function, so this would be:
-> 
-> int videomode_from_timing(struct videomode *vm, struct display_timings *disp,
-> 			  unsigned int index);
-> 
-> Actually, when reading videomode_from_timing() I'd expect the argument
-> list to be:
-> 
-> int videomode_from_timing(struct videomode *vm, struct display_timing *timing);
-> 
-> Am I the only one confused by this?
-> 
-
-I went with the of_xxx-functions that have fname(from_node, to_property)
-and personally prefer it this way. Therefore I'd like to keep it as is.
-
-> > diff --git a/include/linux/display_timing.h b/include/linux/display_timing.h
-> 
-> display_timings.h?
-> 
-> > +/* placeholder function until ranges are really needed 
-> 
-> The above line has trailing whitespace. Also the block comment should
-> have the opening /* on a separate line.
-> 
-
-Okay.
-
-> > + * the index parameter should then be used to select one of [min typ max]
-> 
-> If index is supposed to select min, typ or max, then maybe an enum would
-> be a better candidate? Or alternatively provide separate accessors, like
-> display_timing_get_{minimum,typical,maximum}().
-> 
-
-Hm, I'm not so sure about this one. I'd prefer the enum.
-
-> > + */
-> > +static inline u32 display_timing_get_value(struct timing_entry *te,
-> > +					   unsigned int index)
-> > +{
-> > +	return te->typ;
-> > +}
-> > +
-> > +static inline struct display_timing *display_timings_get(struct display_timings *disp,
-> > +							 unsigned int index)
-> > +{
-> > +	if (disp->num_timings > index)
-> > +		return disp->timings[index];
-> > +	else
-> > +		return NULL;
-> > +}
-> > +
-> > +void timings_release(struct display_timings *disp);
-> 
-> This function no longer exists.
-> 
-Right.
-
-Steffen
-
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+On 11/13/2012 05:10 AM, Wolfram Sang wrote:
+> Hi,
+> 
+> On Mon, Nov 12, 2012 at 05:59:50PM +0100, Andreas Larsson wrote:
+>> Add sparc support by using platform_get_irq instead of platform_get_resource.
+>> There are no platform resources of type IORESOURCE_IRQ for sparc, but
+>> platform_get_irq works for sparc. In the non-sparc case platform_get_irq
+>> internally uses platform_get_resource.
+>>
+>> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+>> ---
+>> Changes since v1:
+>>  - platform_get_irq now works for sparc, so that is used for all platforms
+>>  - Acked by Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+>>
+>>  drivers/i2c/busses/i2c-ocores.c |    9 +++++----
+>>  1 files changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+>> index bffd550..0b71dc6 100644
+>> --- a/drivers/i2c/busses/i2c-ocores.c
+>> +++ b/drivers/i2c/busses/i2c-ocores.c
+>> @@ -267,7 +267,8 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>>  {
+>>  	struct ocores_i2c *i2c;
+>>  	struct ocores_i2c_platform_data *pdata;
+>> -	struct resource *res, *res2;
+>> +	struct resource *res;
+>> +	int irq;
+>>  	int ret;
+>>  	int i;
+>>  
+>> @@ -275,8 +276,8 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>>  	if (!res)
+>>  		return -ENODEV;
+>>  
+>> -	res2 = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+>> -	if (!res2)
+>> +	irq = platform_get_irq(pdev, 0);
+>> +	if (irq < 0)
+>>  		return -ENODEV;
+> 
+> Why not pass the error code you got?
+
+I believe that should actually be a check for 'irq <= 0' as it returns
+NO_IRQ on error.
+
+>>  
+>>  	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
+>> @@ -313,7 +314,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+>>  	ocores_init(i2c);
+>>  
+>>  	init_waitqueue_head(&i2c->wait);
+>> -	ret = devm_request_irq(&pdev->dev, res2->start, ocores_isr, 0,
+>> +	ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+>>  			       pdev->name, i2c);
+>>  	if (ret) {
+>>  		dev_err(&pdev->dev, "Cannot claim IRQ\n");
+> 
+> Rest looks good.
+> 
