@@ -1,56 +1,88 @@
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v8 4/6] fbmon: add of_videomode helpers
-Date: Tue, 13 Nov 2012 12:28:06 +0100
-Message-ID: <20121113112806.GC30049@avionic-0098.mockup.avionic-design.de>
+Subject: Re: [PATCH v8 5/6] drm_modes: add videomode helpers
+Date: Tue, 13 Nov 2012 12:31:14 +0100
+Message-ID: <20121113113114.GD30049@avionic-0098.mockup.avionic-design.de>
 References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-5-git-send-email-s.trumtrar@pengutronix.de>
+	<1352734626-27412-6-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="iFRdW5/EC4oqxDHL"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352734626-27412-5-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1272678877=="
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <1352734626-27412-6-git-send-email-s.trumtrar@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
 To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+Cc: linux-fbdev@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robherring2@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---iFRdW5/EC4oqxDHL
+--===============1272678877==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hoZxPH4CaxYzWscb"
+Content-Disposition: inline
+
+
+--hoZxPH4CaxYzWscb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Nov 12, 2012 at 04:37:04PM +0100, Steffen Trumtrar wrote:
+On Mon, Nov 12, 2012 at 04:37:05PM +0100, Steffen Trumtrar wrote:
 [...]
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
 [...]
-> +extern int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb, int index);
+> +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> +int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmode)
 
-Similarily this should get a dummy for the !CONFIG_OF_VIDEOMODE case,
-right? Either that or the prototype should be protected by
-CONFIG_OF_VIDEOMODE as well.
+This one as well may be more consistently named
+drm_display_mode_from_videomode().
+
+> diff --git a/include/drm/drmP.h b/include/drm/drmP.h
+[...]
+> +extern int videomode_to_display_mode(struct videomode *vm,
+> +				     struct drm_display_mode *dmode);
+
+And this also needs protection or a dummy.
 
 Thierry
 
---iFRdW5/EC4oqxDHL
+--hoZxPH4CaxYzWscb
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQoi7GAAoJEN0jrNd/PrOhVjIP/36eOoKUDRNb6eN9INfsjTEx
-Jgjo1dTXSOJ3MS/oLaqyCyEHFsJ7/Ykd7AQECwGNhZGMpk5rqlP6qbEFq6EHBSOl
-lB4K5boKPsQskjEoycghzhS+cHmmGMNRyxRPoCOsw15+bRuuCZYokMZpTo2l6o5g
-DxcMwRkggweQ9jCxkjasrzTheC5n3ORJGooxruJJRa53FtCY5YsdudejKJWbY42m
-Rz09e4l44mAI1rTtSXSRpwtZs1all3Zl/whlDtdZLE78az48SobMVj4TQSwLrmay
-NEOfgBLvKVfiKIZCGEKGFJcMpeZ+xbSnP1VyJ6NH0LQrI2KuSeFL6Ueljqi6+6Xe
-BwVUk1cf7Qv38mkdlOtSOj0F0sLGW80VZ3sA3B87Z2ziY/TyDODs0KVat9T4LRPn
-MNUbEFdwVZCXeAC9r62Jg5lv0nhxbZ+4+QZGXThnvjS21vzWm+gh8FTVWHGiMxg2
-unjU1pEU/7k7alAZnXABOMNzzO0lALfZC277Rn87A9KROJ5Cc+51mo5ice2MJBaE
-sgAlULYPCbXZYBkBkpPaHQ+CB3AhYuC63QJUoeYHuLrki6fIYp16T0trgHZAGasK
-6ja7u6KndZIDhsrhyK/cxooBxZpaZNRxnpsmqoUhRP1/CafXYkamtkEMTc6mpT2N
-EbuqVNtAeNkrjcYSuUe3
-=pyCu
+iQIcBAEBAgAGBQJQoi+CAAoJEN0jrNd/PrOh7eEP/1UMe4mFQ4hylZL84gOC+gFV
+urjbU7pSMMfg1z+pTabAq6g/fTlcCmzAW0tfdOjo78MCuyifOw/N9iTxOuWaCkUJ
+VfMCyk5WIhRQWWjd66/FTuLjFRzMbb3bkKwIXxk9xLPDalWKBeBX3Cn79xxnWgEh
+Zx9U4h+J6omaNhCgXyJEsZu8vdBSuXjTGzrnsVsCKYeHP7OUUDCH2YY7s8pWj7Sq
+BuF6EN/Mhrk5vw+tJjXVuLVD57EvXnZyuRikvL3gF43Nvj0xKcPilRL1z1fWniyM
+P3I7sQPB5W7gdxVQZM+KwLSiyX3D8y7apZJxlSaGD9/dXVC9YYiI+3qHbeDQnC/T
+YkqSsiDvwFbg+PA4xN6eYOGNFjtDHmQhJ6cJUUAo7braP+CxYYO3tkrb4in89Dl/
+CaPKtMUwFO3z8et0QkR7g7cAoSwN6EoeOLsFtVqaTWTNgz0VsvKm0pJSUdPRVQO1
+IvdkH4XWke8gRGK6cHYru7g6NQMfl3Jnpf+VEAB96zYQaBELAZvwUFq15n2y4AMe
+8CTsfEkbrpKHd547HhkWffijhX5ohPBgolMFUO7NKk9Sc1I+g1fdFYl25qiPba5w
+I5BrSKfc4qwbPW6WC8ZbeBNzNGtp+nuyFn0hD9b2eLbo3qEavSwL+nfOdGUGSqSC
+Qk5m+qY/BEv3W8VThjwO
+=ul4+
 -----END PGP SIGNATURE-----
 
---iFRdW5/EC4oqxDHL--
+--hoZxPH4CaxYzWscb--
+
+--===============1272678877==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1272678877==--
