@@ -1,69 +1,424 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric in
- mach-mvebu
-Date: Tue, 13 Nov 2012 10:43:40 +0000
-Message-ID: <20121113104340.GD3940@mudshark.cambridge.arm.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
- <20121105140258.GO3351@mudshark.cambridge.arm.com>
- <50A15A33.60405@free-electrons.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
+Date: Tue, 13 Nov 2012 11:53:27 +0100
+Message-ID: <20121113105327.GC27797@pengutronix.de>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
+ <CALW4P+JmyEnnxpC8AuJ1-mPG-Rw0XEyZFogeVaNuw5omdH5-CA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50A15A33.60405@free-electrons.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CALW4P+JmyEnnxpC8AuJ1-mPG-Rw0XEyZFogeVaNuw5omdH5-CA@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Alexey Klimov <klimov.linux@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2012 at 08:21:07PM +0000, Gregory CLEMENT wrote:
-> On 11/05/2012 03:02 PM, Will Deacon wrote:
-> > On Mon, Oct 29, 2012 at 09:11:44PM +0000, Gregory CLEMENT wrote:
-> >> +int set_cpu_coherent(unsigned int hw_cpu_id, int smp_group_id)
-> >> +{
-> >> +	int reg;
-> >> +
-> >> +	if (!coherency_base) {
-> >> +		pr_warn("Can't make CPU %d cache coherent.\n", hw_cpu_id);
-> >> +		pr_warn("Coherency fabric is not initialized\n");
-> >> +		return 1;
-> >> +	}
-> >> +
-> >> +	/* Enable the CPU in coherency fabric */
-> >> +	reg = readl(coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
-> >> +	reg |= 1 << (24 + hw_cpu_id);
-> >> +	writel(reg, coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
-> >> +
-> >> +	/* Add CPU to SMP group */
-> >> +	reg = readl(coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
-> >> +	reg |= 1 << (16 + hw_cpu_id + (smp_group_id == 0 ? 8 : 0));
-> >> +	writel(reg, coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
-> >> +
-> >> +	return 0;
-> >> +}
-> > 
-> > These writels may expand to code containing calls to outer_sync(), which
-> > will attempt to take a spinlock for the aurora l2. Given that the CPU isn't
-> > coherent, how does this play out with the exclusive store instruction in the
-> > lock?
-> 
-> I dug a little this subject: and I am not sure there is problem. In SMP mode,
-> only the system cache mode of Aurora is used. In this mode, outer_cache.sync
-> is void then outer_sync() won't call any function, so there will be no
-> access to any spinlock.
+On Mon, Nov 12, 2012 at 11:00:37PM +0400, Alexey Klimov wrote:
+> Hello Steffen,
+>=20
+> On Mon, Nov 12, 2012 at 7:37 PM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+> > This adds support for reading display timings from DT or/and conver=
+t one of those
+> > timings to a videomode.
+> > The of_display_timing implementation supports multiple children whe=
+re each
+> > property can have up to 3 values. All children are read into an arr=
+ay, that
+> > can be queried.
+> > of_get_videomode converts exactly one of that timings to a struct v=
+ideomode.
+> >
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++=
++++
+> >  drivers/video/Kconfig                              |   13 ++
+> >  drivers/video/Makefile                             |    2 +
+> >  drivers/video/of_display_timing.c                  |  186 ++++++++=
+++++++++++++
+> >  drivers/video/of_videomode.c                       |   47 +++++
+> >  include/linux/of_display_timings.h                 |   19 ++
+> >  include/linux/of_videomode.h                       |   15 ++
+> >  7 files changed, 389 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/video/display=
+-timings.txt
+> >  create mode 100644 drivers/video/of_display_timing.c
+> >  create mode 100644 drivers/video/of_videomode.c
+> >  create mode 100644 include/linux/of_display_timings.h
+> >  create mode 100644 include/linux/of_videomode.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/video/display-timing=
+s.txt b/Documentation/devicetree/bindings/video/display-timings.txt
+> > new file mode 100644
+> > index 0000000..e22e2fd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/video/display-timings.txt
+> > @@ -0,0 +1,107 @@
+> > +display-timings bindings
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> > +
+> > +display-timings-node
+> > +--------------------
+> > +
+> > +required properties:
+> > + - none
+> > +
+> > +optional properties:
+> > + - native-mode: the native mode for the display, in case multiple =
+modes are
+> > +               provided. When omitted, assume the first node is th=
+e native.
+> > +
+> > +timings-subnode
+> > +---------------
+> > +
+> > +required properties:
+> > + - hactive, vactive: Display resolution
+> > + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing=
+ parameters
+> > +   in pixels
+> > +   vfront-porch, vback-porch, vsync-len: Vertical display timing p=
+arameters in
+> > +   lines
+> > + - clock-frequency: displayclock in Hz
+> > +
+> > +optional properties:
+> > + - hsync-active : Hsync pulse is active low/high/ignored
+> > + - vsync-active : Vsync pulse is active low/high/ignored
+> > + - de-active : Data-Enable pulse is active low/high/ignored
+> > + - pixelclk-inverted : pixelclock is inverted/non-inverted/ignored
+> > + - interlaced (bool)
+> > + - doublescan (bool)
+> > +
+> > +All the optional properties that are not bool follow the following=
+ logic:
+> > +    <1> : high active
+> > +    <0> : low active
+> > +    omitted : not used on hardware
+> > +
+> > +There are different ways of describing the capabilities of a displ=
+ay. The devicetree
+> > +representation corresponds to the one commonly found in datasheets=
+ for displays.
+> > +If a display supports multiple signal timings, the native-mode can=
+ be specified.
+> > +
+> > +The parameters are defined as
+> > +
+> > +struct display_timing
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +  +----------+---------------------------------------------+------=
+----+-------+
+> > +  |          |                =E2=86=91                           =
+ |          |       |
+> > +  |          |                |vback_porch                 |      =
+    |       |
+> > +  |          |                =E2=86=93                           =
+ |          |       |
+> > +  +----------###############################################------=
+----+-------+
+> > +  |          #                =E2=86=91                           =
+ #          |       |
+> > +  |          #                |                            #      =
+    |       |
+> > +  |  hback   #                |                            #  hfro=
+nt  | hsync |
+> > +  |   porch  #                |       hactive              #  porc=
+h   |  len  |
+> > +  |<-------->#<---------------+--------------------------->#<-----=
+--->|<----->|
+> > +  |          #                |                            #      =
+    |       |
+> > +  |          #                |vactive                     #      =
+    |       |
+> > +  |          #                |                            #      =
+    |       |
+> > +  |          #                =E2=86=93                           =
+ #          |       |
+> > +  +----------###############################################------=
+----+-------+
+> > +  |          |                =E2=86=91                           =
+ |          |       |
+> > +  |          |                |vfront_porch                |      =
+    |       |
+> > +  |          |                =E2=86=93                           =
+ |          |       |
+> > +  +----------+---------------------------------------------+------=
+----+-------+
+> > +  |          |                =E2=86=91                           =
+ |          |       |
+> > +  |          |                |vsync_len                   |      =
+    |       |
+> > +  |          |                =E2=86=93                           =
+ |          |       |
+> > +  +----------+---------------------------------------------+------=
+----+-------+
+> > +
+> > +
+> > +Example:
+> > +
+> > +       display-timings {
+> > +               native-mode =3D <&timing0>;
+> > +               timing0: 1920p24 {
+> > +                       /* 1920x1080p24 */
+> > +                       clock-frequency =3D <52000000>;
+> > +                       hactive =3D <1920>;
+> > +                       vactive =3D <1080>;
+> > +                       hfront-porch =3D <25>;
+> > +                       hback-porch =3D <25>;
+> > +                       hsync-len =3D <25>;
+> > +                       vback-porch =3D <2>;
+> > +                       vfront-porch =3D <2>;
+> > +                       vsync-len =3D <2>;
+> > +                       hsync-active =3D <1>;
+> > +               };
+> > +       };
+> > +
+> > +Every required property also supports the use of ranges, so the co=
+mmonly used
+> > +datasheet description with <min typ max>-tuples can be used.
+> > +
+> > +Example:
+> > +
+> > +       timing1: timing {
+> > +               /* 1920x1080p24 */
+> > +               clock-frequency =3D <148500000>;
+> > +               hactive =3D <1920>;
+> > +               vactive =3D <1080>;
+> > +               hsync-len =3D <0 44 60>;
+> > +               hfront-porch =3D <80 88 95>;
+> > +               hback-porch =3D <100 148 160>;
+> > +               vfront-porch =3D <0 4 6>;
+> > +               vback-porch =3D <0 36 50>;
+> > +               vsync-len =3D <0 5 6>;
+> > +       };
+> > diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+> > index 2a23b18..a324457 100644
+> > --- a/drivers/video/Kconfig
+> > +++ b/drivers/video/Kconfig
+> > @@ -39,6 +39,19 @@ config DISPLAY_TIMING
+> >  config VIDEOMODE
+> >         bool
+> >
+> > +config OF_DISPLAY_TIMING
+> > +       def_bool y
+> > +       select DISPLAY_TIMING
+> > +       help
+> > +         helper to parse display timings from the devicetree
+> > +
+> > +config OF_VIDEOMODE
+> > +       def_bool y
+> > +       select VIDEOMODE
+> > +       select OF_DISPLAY_TIMING
+> > +       help
+> > +         helper to get videomodes from the devicetree
+> > +
+> >  menuconfig FB
+> >         tristate "Support for frame buffer devices"
+> >         ---help---
+> > diff --git a/drivers/video/Makefile b/drivers/video/Makefile
+> > index fc30439..b936b00 100644
+> > --- a/drivers/video/Makefile
+> > +++ b/drivers/video/Makefile
+> > @@ -168,4 +168,6 @@ obj-$(CONFIG_FB_VIRTUAL)          +=3D vfb.o
+> >  #video output switch sysfs driver
+> >  obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) +=3D output.o
+> >  obj-$(CONFIG_DISPLAY_TIMING) +=3D display_timing.o
+> > +obj-$(CONFIG_OF_DISPLAY_TIMING) +=3D of_display_timing.o
+> >  obj-$(CONFIG_VIDEOMODE) +=3D videomode.o
+> > +obj-$(CONFIG_OF_VIDEOMODE) +=3D of_videomode.o
+> > diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_d=
+isplay_timing.c
+> > new file mode 100644
+> > index 0000000..0bd30cc
+> > --- /dev/null
+> > +++ b/drivers/video/of_display_timing.c
+> > @@ -0,0 +1,186 @@
+> > +/*
+> > + * OF helpers for parsing display timings
+> > + *
+> > + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>=
+, Pengutronix
+> > + *
+> > + * based on of_videomode.c by Sascha Hauer <s.hauer@pengutronix.de=
+>
+> > + *
+> > + * This file is released under the GPLv2
+> > + */
+> > +#include <linux/of.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/export.h>
+> > +#include <linux/of_display_timings.h>
+> > +
+> > +/**
+> > + * parse_property - parse timing_entry from device_node
+> > + * @np: device_node with the property
+> > + * @name: name of the property
+> > + * @result: will be set to the return value
+> > + *
+> > + * DESCRIPTION:
+> > + * Every display_timing can be specified with either just the typi=
+cal value or
+> > + * a range consisting of min/typ/max. This function helps handling=
+ this
+> > + **/
+> > +static int parse_property(struct device_node *np, char *name,
+> > +                               struct timing_entry *result)
+> > +{
+> > +       struct property *prop;
+> > +       int length, cells, ret;
+> > +
+> > +       prop =3D of_find_property(np, name, &length);
+> > +       if (!prop) {
+> > +               pr_err("%s: could not find property %s\n", __func__=
+, name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       cells =3D length / sizeof(u32);
+> > +       if (cells =3D=3D 1) {
+> > +               ret =3D of_property_read_u32(np, name, &result->typ=
+);
+> > +               result->min =3D result->typ;
+> > +               result->max =3D result->typ;
+> > +       } else if (cells =3D=3D 3) {
+> > +               ret =3D of_property_read_u32_array(np, name, &resul=
+t->min, cells);
+> > +       } else {
+> > +               pr_err("%s: illegal timing specification in %s\n", =
+__func__, name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       return ret;
+> > +}
+> > +
+> > +/**
+> > + * of_get_display_timing - parse display_timing entry from device_=
+node
+> > + * @np: device_node with the properties
+> > + **/
+> > +static struct display_timing *of_get_display_timing(struct device_=
+node *np)
+> > +{
+> > +       struct display_timing *dt;
+> > +       int ret =3D 0;
+> > +
+> > +       dt =3D kzalloc(sizeof(*dt), GFP_KERNEL);
+> > +       if (!dt) {
+> > +               pr_err("%s: could not allocate display_timing struc=
+t\n", __func__);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       ret |=3D parse_property(np, "hback-porch", &dt->hback_porch=
+);
+> > +       ret |=3D parse_property(np, "hfront-porch", &dt->hfront_por=
+ch);
+> > +       ret |=3D parse_property(np, "hactive", &dt->hactive);
+> > +       ret |=3D parse_property(np, "hsync-len", &dt->hsync_len);
+> > +       ret |=3D parse_property(np, "vback-porch", &dt->vback_porch=
+);
+> > +       ret |=3D parse_property(np, "vfront-porch", &dt->vfront_por=
+ch);
+> > +       ret |=3D parse_property(np, "vactive", &dt->vactive);
+> > +       ret |=3D parse_property(np, "vsync-len", &dt->vsync_len);
+> > +       ret |=3D parse_property(np, "clock-frequency", &dt->pixelcl=
+ock);
+> > +
+> > +       of_property_read_u32(np, "vsync-active", &dt->vsync_pol_act=
+ive);
+> > +       of_property_read_u32(np, "hsync-active", &dt->hsync_pol_act=
+ive);
+> > +       of_property_read_u32(np, "de-active", &dt->de_pol_active);
+> > +       of_property_read_u32(np, "pixelclk-inverted", &dt->pixelclk=
+_pol);
+> > +       dt->interlaced =3D of_property_read_bool(np, "interlaced");
+> > +       dt->doublescan =3D of_property_read_bool(np, "doublescan");
+> > +
+> > +       if (ret) {
+> > +               pr_err("%s: error reading timing properties\n", __f=
+unc__);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       return dt;
+> > +}
+> > +
+> > +/**
+> > + * of_get_display_timings - parse all display_timing entries from =
+a device_node
+> > + * @np: device_node with the subnodes
+> > + **/
+> > +struct display_timings *of_get_display_timings(struct device_node =
+*np)
+> > +{
+> > +       struct device_node *timings_np;
+> > +       struct device_node *entry;
+> > +       struct device_node *native_mode;
+> > +       struct display_timings *disp;
+> > +
+> > +       if (!np) {
+> > +               pr_err("%s: no devicenode given\n", __func__);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       timings_np =3D of_find_node_by_name(np, "display-timings");
+> > +       if (!timings_np) {
+> > +               pr_err("%s: could not find display-timings node\n",=
+ __func__);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       disp =3D kzalloc(sizeof(*disp), GFP_KERNEL);
+> > +       if (!disp)
+> > +               return -ENOMEM;
+> > +
+> > +       entry =3D of_parse_phandle(timings_np, "native-mode", 0);
+> > +       /* assume first child as native mode if none provided */
+> > +       if (!entry)
+> > +               entry =3D of_get_next_child(np, NULL);
+> > +       if (!entry) {
+> > +               pr_err("%s: no timing specifications given\n", __fu=
+nc__);
+> > +               return NULL;
+> > +       }
+> > +
+> > +       pr_info("%s: using %s as default timing\n", __func__, entry=
+->name);
+> > +
+> > +       native_mode =3D entry;
+> > +
+> > +       disp->num_timings =3D of_get_child_count(timings_np);
+> > +       disp->timings =3D kzalloc(sizeof(struct display_timing *)*d=
+isp->num_timings,
+> > +                               GFP_KERNEL);
+> > +       if (!disp->timings)
+> > +               return -ENOMEM;
+>=20
+> Could you please check return values here ^^^ and above "disp =3D
+> kzalloc(sizeof(*disp), GFP_KERNEL);" ?
+> May be it's better to return NULL instead of -ENOMEM and put error me=
+ssage?
+>=20
+I will do that along with the memory leak fixes.
 
-Hmm, that is pretty subtle and it doesn't really solve the bigger picture.
-printk takes logbuf_lock, for example, and I'm sure that by the time you get
-to this code you will have relied on exclusives behaving correctly.
+Regards,
+Steffen
 
-Will
+--=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
