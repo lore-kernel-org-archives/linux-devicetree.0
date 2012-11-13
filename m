@@ -1,145 +1,165 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v8] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Wed, 14 Nov 2012 12:22:50 +0100
-Message-ID: <50A37F0A.7050204@pengutronix.de>
-References: <509C47CB.8060701@pengutronix.de> <1352732256-12712-1-git-send-email-andreas@gaisler.com> <50A2B88A.3040609@pengutronix.de> <50A34D49.2070908@gaisler.com> <50A359A1.30700@pengutronix.de> <50A37A5B.8060808@gaisler.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 02/14] ARM: SPEAr13xx: DT: Add spics gpio controller nodes
+Date: Tue, 13 Nov 2012 20:04:37 +0530
+Message-ID: <CAKohpon=AVGZmR_cwUZ4=buw0kr3JVtXh51BtXteWkJ7E-f_bQ@mail.gmail.com>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
+ <58a7d91cab20b924784fb5a09e16ca08e6f13318.1352608333.git.viresh.kumar@linaro.org>
+ <CACRpkdZkgmLF8TxFCZSubP+g+6_ofZugArKtE9=dYTZfemstrw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enigFA7BA2113CB58CD278045ACB"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <50A37A5B.8060808@gaisler.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-can@vger.kernel.org, software@gaisler.com, Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============1522225714898991474=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZkgmLF8TxFCZSubP+g+6_ofZugArKtE9=dYTZfemstrw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, arm@kernel.org, olof@lixom.net, sr@denx.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enigFA7BA2113CB58CD278045ACB
+--===============1522225714898991474==
+Content-Type: multipart/alternative; boundary=f46d04426cd04f208e04ce615173
+
+--f46d04426cd04f208e04ce615173
 Content-Type: text/plain; charset=ISO-8859-1
+
+On Nov 13, 2012 7:38 PM, "Linus Walleij" <linus.walleij@linaro.org> wrote:
+>
+> On Sun, Nov 11, 2012 at 5:39 AM, Viresh Kumar <viresh.kumar@linaro.org>
+wrote:
+>
+> > From: Shiraz Hashim <shiraz.hashim@st.com>
+> >
+> > SPEAr platform provides a provision to control chipselects of ARM PL022
+Prime
+> > Cell spi controller through its system registers, which otherwise
+remains under
+> > PL022 control which some protocols do not want.
+>
+> So I guess this platform us utilizing the cs_control field of the
+> PL022 platform data to do the actual magic, right?
+
+Correct.
+
+> > This patch adds spics controller nodes in device tree for various
+SPEAr13xx
+> > SoCs.
+> >
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Shiraz Hashim <shiraz.hashim@st.com>
+> > Reviewed-by: Vipin Kumar <vipin.kumar@st.com>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> (...)
+> >         ahb {
+> > +               spics: spics@e0700000{
+> > +                       compatible = "st,spear-spics-gpio";
+> > +                       reg = <0xe0700000 0x1000>;
+> > +                       st-spics,peripcfg-reg = <0x3b0>;
+> > +                       st-spics,sw-enable-bit = <12>;
+> > +                       st-spics,cs-value-bit = <11>;
+> > +                       st-spics,cs-enable-mask = <3>;
+> > +                       st-spics,cs-enable-shift = <8>;
+> > +                       gpio-controller;
+> > +                       #gpio-cells = <2>;
+> > +               };
+> > +
+>
+> Are these bindings documented?
+
+The main patch waiting for ur comments is 1/14.
+
+> Apart from that remark:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Yours,
+> Linus Walleij
+
+--f46d04426cd04f208e04ce615173
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 11/14/2012 12:02 PM, Andreas Larsson wrote:
-> On 2012-11-14 09:43, Marc Kleine-Budde wrote:
->> Handle incoming events (rx or tx-complete) until:
->> a) number of handled events =3D=3D budget
->> or
->> b) no more events pending.
->>
->>     while (work_done < budget && interrupts_pending()) {
->>         work_done +=3D handle_rx(budget - work_done);
->>         work_done +=3D handle_tx(budget - work_done);
->>     }
->=20
-> That could starve handle_tx completely though under high rx pressure,
-> but I can prevent that by making sure that half of the budget is held
-> back in the first call to handle_rx.
+<p><br>
+On Nov 13, 2012 7:38 PM, &quot;Linus Walleij&quot; &lt;<a href=3D"mailto:li=
+nus.walleij@linaro.org">linus.walleij@linaro.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; On Sun, Nov 11, 2012 at 5:39 AM, Viresh Kumar &lt;<a href=3D"mailto:vi=
+resh.kumar@linaro.org">viresh.kumar@linaro.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; &gt; From: Shiraz Hashim &lt;<a href=3D"mailto:shiraz.hashim@st.com">s=
+hiraz.hashim@st.com</a>&gt;<br>
+&gt; &gt;<br>
+&gt; &gt; SPEAr platform provides a provision to control chipselects of ARM=
+ PL022 Prime<br>
+&gt; &gt; Cell spi controller through its system registers, which otherwise=
+ remains under<br>
+&gt; &gt; PL022 control which some protocols do not want.<br>
+&gt;<br>
+&gt; So I guess this platform us utilizing the cs_control field of the<br>
+&gt; PL022 platform data to do the actual magic, right?</p>
+<p>Correct.</p>
+<p>&gt; &gt; This patch adds spics controller nodes in device tree for vari=
+ous SPEAr13xx<br>
+&gt; &gt; SoCs.<br>
+&gt; &gt;<br>
+&gt; &gt; Cc: Linus Walleij &lt;<a href=3D"mailto:linus.walleij@linaro.org"=
+>linus.walleij@linaro.org</a>&gt;<br>
+&gt; &gt; Signed-off-by: Shiraz Hashim &lt;<a href=3D"mailto:shiraz.hashim@=
+st.com">shiraz.hashim@st.com</a>&gt;<br>
+&gt; &gt; Reviewed-by: Vipin Kumar &lt;<a href=3D"mailto:vipin.kumar@st.com=
+">vipin.kumar@st.com</a>&gt;<br>
+&gt; &gt; Signed-off-by: Viresh Kumar &lt;<a href=3D"mailto:viresh.kumar@li=
+naro.org">viresh.kumar@linaro.org</a>&gt;<br>
+&gt; (...)<br>
+&gt; &gt; =A0 =A0 =A0 =A0 ahb {<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 spics: spics@e0700000{<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D &quo=
+t;st,spear-spics-gpio&quot;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D &lt;0xe0700=
+000 0x1000&gt;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 st-spics,peripcfg-r=
+eg =3D &lt;0x3b0&gt;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 st-spics,sw-enable-=
+bit =3D &lt;12&gt;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 st-spics,cs-value-b=
+it =3D &lt;11&gt;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 st-spics,cs-enable-=
+mask =3D &lt;3&gt;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 st-spics,cs-enable-=
+shift =3D &lt;8&gt;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 gpio-controller;<br=
+>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 #gpio-cells =3D &lt=
+;2&gt;;<br>
+&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 };<br>
+&gt; &gt; +<br>
+&gt;<br>
+&gt; Are these bindings documented?</p>
+<p>The main patch waiting for ur comments is 1/14.</p>
+<p>&gt; Apart from that remark:<br>
+&gt; Acked-by: Linus Walleij &lt;<a href=3D"mailto:linus.walleij@linaro.org=
+">linus.walleij@linaro.org</a>&gt;<br>
+&gt;<br>
+&gt; Yours,<br>
+&gt; Linus Walleij<br>
+</p>
 
-What about making the budget big enough to handle both rx and tx in one
-napi call. Have a look at the marvell driver [1] for inspiration.
-
-[1]
-http://lxr.free-electrons.com/source/drivers/net/ethernet/marvell/mv643xx=
-_eth.c#L2140
-
->=20
->> Then, if you have handled less events then budget:
->> 1) call napi_complete()
->> then
->> 2) enable interrupts.
->>
->>     if (work_done < budget) {
->>         napi_complete();
->>         enable_interrupts();
->>     }
->>
->> Then, return number of handled events:
->>
->>     return work_done;
->=20
-> Any additional remarks on the following implementation of the poll
-> function?
->=20
-> static int grcan_poll(struct napi_struct *napi, int budget)
-> {
->     struct grcan_priv *priv =3D container_of(napi, struct grcan_priv, n=
-api);
->     struct net_device *dev =3D priv->dev;
->     struct grcan_registers __iomem *regs =3D priv->regs;
->     unsigned long flags;
->     int work_done =3D 0;
->     int reserved =3D budget / 2;
->=20
->     while (work_done < budget) {
->         int old_work_done =3D work_done;
->=20
->         /* Prevent grcan_transmit_catch_up from starving by reserving
->          * part of the budget in the first iteration when calling
->          * grcan_receive.
->          */
->         work_done +=3D grcan_receive(dev, budget - reserved - work_done=
-);
->         reserved =3D 0;
->=20
->         /* Catch up echo skb according to same budget, as
->          * grcan_transmit_catch_up can trigger echo frames being
->          * received.
->          */
->         work_done +=3D grcan_transmit_catch_up(dev, budget - work_done)=
-;
->=20
->         /* Break out if nothing was done */
->         if (work_done =3D=3D old_work_done)
->             break;
->     }
->=20
->     if (work_done < budget) {
->         napi_complete(napi);
->=20
->         /* Guarantee no interference with a running reset that otherwis=
-e
->          * could turn off interrupts.
->          */
->         spin_lock_irqsave(&priv->lock, flags);
->=20
->         /* Enable tx and rx interrupts again. No need to check
->          * priv->closing as napi_disable in grcan_close is waiting for
->          * scheduled napi calls to finish.
->          */
->         grcan_set_bits(&regs->imr, GRCAN_IRQ_TX | GRCAN_IRQ_RX);
->=20
->         spin_unlock_irqrestore(&priv->lock, flags);
->     }
->=20
->     return work_done;
-> }
->=20
->=20
-> Cheers,
-> Andreas
->=20
+--f46d04426cd04f208e04ce615173--
 
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+--===============1522225714898991474==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---------------enigFA7BA2113CB58CD278045ACB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
-
-iEYEARECAAYFAlCjfw0ACgkQjTAFq1RaXHNKtwCdEv8Qc8ai5m+lOR9ORusxCZCb
-1zIAoJmVztQ0zmSRjoNbq0dYFzn0HhlB
-=kpvE
------END PGP SIGNATURE-----
-
---------------enigFA7BA2113CB58CD278045ACB--
+--===============1522225714898991474==--
