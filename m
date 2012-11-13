@@ -1,15 +1,15 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
-Date: Tue, 13 Nov 2012 18:51:47 +0100
-Message-ID: <20121113175147.GA2597@avionic-0098.mockup.avionic-design.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
- <20121113110837.GA30049@avionic-0098.mockup.avionic-design.de>
- <50A2878D.8020707@wwwdotorg.org>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] MIPS: BCM63XX: add simple Device Tree includes for all SoCs
+Date: Tue, 13 Nov 2012 09:56:56 -0800
+Message-ID: <50A289E8.4030407@gmail.com>
+References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
+ <1352638249-29298-3-git-send-email-jonas.gorski@gmail.com>
+ <50A1D290.3050409@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7701240861905151722=="
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50A2878D.8020707-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <50A1D290.3050409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,80 +21,31 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/12/2012 08:54 PM, Stephen Warren wrote:
+> On 11/11/2012 05:50 AM, Jonas Gorski wrote:
+>> Add simple Device Tree include files for all currently supported SoCs.
+>> These will be populated with device definitions as driver support
+>> gets added.
+>
+>>   arch/mips/bcm63xx/dts/bcm6328.dtsi |   30 ++++++++++++++++++++++++++++++
+>>   arch/mips/bcm63xx/dts/bcm6338.dtsi |   30 ++++++++++++++++++++++++++++++
+>>   arch/mips/bcm63xx/dts/bcm6345.dtsi |   30 ++++++++++++++++++++++++++++++
+>>   arch/mips/bcm63xx/dts/bcm6348.dtsi |   30 ++++++++++++++++++++++++++++++
+>>   arch/mips/bcm63xx/dts/bcm6358.dtsi |   33 +++++++++++++++++++++++++++++++++
+>>   arch/mips/bcm63xx/dts/bcm6368.dtsi |   33 +++++++++++++++++++++++++++++++++
+>
+> All of ARM, c6x, microblaze, openrisc, powerpc put device tree files
+> into arch/${arch}/boot/dts/ - should MIPS follow the same layout?
 
---===============7701240861905151722==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
-Content-Disposition: inline
+At this point, I don't see what the benefit of centralizing all of these 
+would be.  Currently there is no concept of a single kernel image that 
+would work across multiple MIPS system implementations.  So keeping the 
+DTS files with their users makes some organizational sense.
 
+Similar arguments could be made for moving all the files in `find . 
+-name \*.dts\*` to a top level dts/ directory.
 
---DocE+STaALJfprDB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Nov 13, 2012 at 10:46:53AM -0700, Stephen Warren wrote:
-> On 11/13/2012 04:08 AM, Thierry Reding wrote:
-> > On Mon, Nov 12, 2012 at 04:37:02PM +0100, Steffen Trumtrar wrote:
-> >> This adds support for reading display timings from DT or/and
-> >> convert one of those timings to a videomode. The
-> >> of_display_timing implementation supports multiple children where
-> >> each property can have up to 3 values. All children are read into
-> >> an array, that can be queried. of_get_videomode converts exactly
-> >> one of that timings to a struct videomode.
->=20
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/video/display-timings.txt
-> >> b/Documentation/devicetree/bindings/video/display-timings.txt
->=20
-> >> + - clock-frequency: displayclock in Hz
-> >=20
-> > "display clock"?
->=20
-> I /think/ I had suggested naming this clock-frequency before so that
-> the property name would be more standardized; other bindings use that
-> same name. But I'm not too attached to the name I guess.
-
-That's not what I meant. I think "displayclock" should be two words in
-the description of the property. The property name is fine.
-
-Thierry
-
---DocE+STaALJfprDB
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQooizAAoJEN0jrNd/PrOhNKcP/1C+UHx+FDdiMbn1jonWqRmZ
-Dk0byTBdCR4iGN3OAAwcPppuRnODYTD4chMbePdiLw2KaSWOi4OZU0Z5xiqluY7Q
-S5oU1rKAe4CzfhW2+vknPsJMO33aEXERjhMrHoUnU2sLi5X5vjcgG+NsKX4vbA0x
-Rj6wvraVo6B3h0jNU3mcLQBVj5wCeR/Vjg5924eQXFQTPkM0OeZ+0aLce79wg6pj
-Gkv69BxYPEB1NWcXS7PS8gkJMwXDk5tyQqMmjLSpFBjaPgNJP4ts4XRNZR57MCl2
-LCzbxFhGpv8AkQGd77RCUg2ZMT5qTa5ttif/2jyCQYqdh6S2B/Gxw2341dbUo1tl
-K6FzbKQlCbrY0hCnRu7tp7PaUXBGKBcZb244ObxpVAlXScRBWgbJ+yl6soS2QE7J
-JfNG90cTsANht1C3zYXteCQEH72tnqFZn/pFwOHTV+h438RnNzVlcBjZf/cJe5yL
-e3zBuyTYDrq93Dpot57W53159L1Axyh32pocUpiQZ1AxxaJYob/ot2lHLTDTwBIB
-6K8Pkl9YVBr+062P6p5aNOF0nedbkSZlg36U8C15QWFtqyN+Jt1mf5m8vMcTssh1
-CHbiBx4sYs9wdN20OVoUi4WnzEfm4crFur6ocvbs2m8uyseG1ltVYj1B3GrZJefG
-mm8vCkhKUqioeCgtpF3i
-=LoKL
------END PGP SIGNATURE-----
-
---DocE+STaALJfprDB--
-
---===============7701240861905151722==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7701240861905151722==--
+David Daney
