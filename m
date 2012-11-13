@@ -1,41 +1,37 @@
-From: John Stultz <johnstul@us.ibm.com>
-Subject: Re: [PATCH V4 3/3] clocksource: time-armada-370-xp converted to clk
- framework
-Date: Tue, 13 Nov 2012 10:58:54 -0800
-Message-ID: <50A2986E.9020202@us.ibm.com>
-References: <1351621413-3637-1-git-send-email-gregory.clement@free-electrons.com>
- <1351621413-3637-4-git-send-email-gregory.clement@free-electrons.com>
+From: Mitch Bradley <wmb@firmworks.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
+ to mach-omap2)
+Date: Tue, 13 Nov 2012 09:09:09 -1000
+Message-ID: <50A29AD5.60303@firmworks.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com> <509D9089.7020407@wwwdotorg.org> <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com> <50A12950.6090808@wwwdotorg.org> <20121113072517.GE25915@truffula.fritz.box> <50A27BF1.4030502@wwwdotorg.org> <50A28D03.7050002@firmworks.com> <50A2919D.5030006@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1351621413-3637-4-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-k
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50A2919D.5030006@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Russ Dill <Russ.Dill@ti.com>, Scott Wood <scottwood@freescale.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/30/2012 11:23 AM, Gregory CLEMENT wrote:
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> cc: John Stultz <johnstul@us.ibm.com>
-> ---
->   arch/arm/boot/dts/armada-370-db.dts      |    4 ----
->   arch/arm/boot/dts/armada-370-xp.dtsi     |    1 +
->   drivers/clocksource/time-armada-370-xp.c |   11 ++++++-----
->   3 files changed, 7 insertions(+), 9 deletions(-)
+On 11/13/2012 8:29 AM, Stephen Warren wrote:
+> On 11/13/2012 11:10 AM, Mitch Bradley wrote:
+>> It seems to me that this capebus discussion is missing an important
+>> point.  The name capebus suggests that it is a bus, so there should be a
+>> parent node to represent that bus.  It should have a driver whose API
+>> implements all of the system-interface functions a cape needs.
+> 
+> It was discussed earlier that capebus isn't actually a bus. It's simply
+> a collection of a bunch of pins from the SoC hooked up to connectors.
+> I'd agree that it's mis-named.
+> 
 
-This is missing the patch description.  Since none of it is 
-code/hardware I'm familiar with, I can't really closely review whats 
-being done. So its much more critical that the patch have a clear 
-description of what its doing.
+Nevertheless, to the extent that the set of pins is finite and
+well-defined, it should be possible to define a set of software
+interfaces to support the functionality represented by those pins.
 
-thanks
--john
+It might depend on the underlying SoC, but even so, it would still be
+best to encapsulate the interface set.  I hear all these use cases that
+presuppose a wide variety of user skill sets.  If one really wants to
+support such users well, it's important to define a coherent single
+point of interface.
