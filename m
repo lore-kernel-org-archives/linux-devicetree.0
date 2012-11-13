@@ -1,193 +1,60 @@
-From: Mark Zhang <markz@nvidia.com>
-Subject: Re: [PATCH v2 1/2] drm: Add NVIDIA Tegra20 support
-Date: Tue, 13 Nov 2012 16:49:24 +0800
-Message-ID: <50A20994.9000305@nvidia.com>
-References: <1352757358-14001-1-git-send-email-thierry.reding@avionic-design.de> <1352757358-14001-2-git-send-email-thierry.reding@avionic-design.de> <50A1F3A3.40905@nvidia.com> <20121113074822.GA8409@avionic-0098.mockup.avionic-design.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v5 1/3] ARM: at91: atmel-ssc: add pinctrl support
+Date: Tue, 13 Nov 2012 17:50:54 +0900
+Message-ID: <20121113085052.GR18224@opensource.wolfsonmicro.com>
+References: <1352706028-750-1-git-send-email-voice.shen@atmel.com>
+ <1352706028-750-2-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121113074822.GA8409@avionic-0098.mockup.avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Dave Airlie <airlied@redhat.com>, Rob Clark <robdclark@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GTGEtWEe6jD60dxL"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1352706028-750-2-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2012 03:48 PM, Thierry Reding wrote:
-> * PGP Signed by an unknown key
-> 
-> On Tue, Nov 13, 2012 at 03:15:47PM +0800, Mark Zhang wrote:
->> On 11/13/2012 05:55 AM, Thierry Reding wrote:
->>> This commit adds a KMS driver for the Tegra20 SoC. This includes basic
->>> support for host1x and the two display controllers found on the Tegra20
->>> SoC. Each display controller can drive a separate RGB/LVDS output.
->>>
->>> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
->>> ---
->>> Changes in v2:
->>> - drop Linux-specific drm subdirectory for DT bindings documentation
->>> - remove display helper leftovers that belong in a later patch
->>> - reuse debugfs infrastructure provided by the DRM core
->>> - move vblank syncpoint defines to dc.h
->>> - use drm_compat_ioctl()
->>>
->> [...]
->>> diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kconfig
->>> new file mode 100644
->>> index 0000000..be1daf7
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/tegra/Kconfig
->>> @@ -0,0 +1,23 @@
->>> +config DRM_TEGRA
->>> +       tristate "NVIDIA Tegra DRM"
->>> +       depends on DRM && OF && ARCH_TEGRA
->>> +       select DRM_KMS_HELPER
->>> +       select DRM_GEM_CMA_HELPER
->>> +       select DRM_KMS_CMA_HELPER
->>
->> Just for curious, according to my testing, why the "CONFIG_CMA" is not
->> enabled while DRM_GEM_CMA_HELPER & DRM_KMS_CMA_HELPER are enabled here?
-> 
-> The reason is that CMA doesn't actually provide any API for drivers to
-> use and in fact unless you use very large buffers you could indeed run
-> this code on top of a non-CMA kernel and it will likely even work.
-> 
 
-Okay. But I think it's better to turn on CMA defaultly. During my
-testing, it's hard to allocate more 2MB without CMA...
+--GTGEtWEe6jD60dxL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>> +static struct of_device_id tegra_dc_of_match[] = {
->>> +       { .compatible = "nvidia,tegra20-dc", },
->>> +       { .compatible = "nvidia,tegra30-dc", },
->>
->> If you don't want add Tegra 3 support in this patch set, remove
->> { .compatible = "nvidia,tegra30-dc", } here.
-> 
-> Good catch! I'll move that into the Tegra30 support patch.
-> 
->>> +static int host1x_activate_drm_client(struct host1x *host1x,
->>> +                                     struct host1x_drm_client *drm,
->>> +                                     struct host1x_client *client)
->>> +{
->>> +       mutex_lock(&host1x->drm_clients_lock);
->>> +       list_del_init(&drm->list);
->>> +       list_add_tail(&drm->list, &host1x->drm_active);
->>
->> Why we need this "drm_active" list? We can combine this function and
->> function "host1x_remove_drm_client" and free the drm client just here.
->> It's useless after host1x clients registered themselves.
-> 
-> The list is used to properly remove all clients and resources when the
-> module is unloaded. Granted, this code isn't executed if you don't build
-> the driver as a loadable module, but it should still be a supported use-
-> case.
-> 
+On Mon, Nov 12, 2012 at 03:40:25PM +0800, Bo Shen wrote:
 
-My opinion is, after registration is completed, host1x_drm_client is
-useless, host1x_client is enough for follow-up operations.
-I still don't get how this is related with building the driver into the
-kernel or as a kernel module, so if something I misunderstood, please
-let me know it. Thanks.
+> +				ssc0 {
+> +					pinctrl_ssc0_tx: ssc0_tx-0 {
+> +						atmel,pins =
+> +							<1 16 0x1 0x1	/* PB16 periph A with pull up */
+> +							 1 17 0x1 0x1	/* PB17 periph A with pull up */
+> +							 1 18 0x1 0x1>;	/* PB18 periph A with pull up */
+> +					};
 
->>> +int host1x_unregister_client(struct host1x *host1x,
->>> +                            struct host1x_client *client)
->>> +{
->>> +       struct host1x_drm_client *drm, *tmp;
->>> +       int err;
->>> +
->>> +       list_for_each_entry_safe(drm, tmp, &host1x->drm_active, list) {
->>> +               if (drm->client == client) {
->>> +                       err = host1x_drm_exit(host1x);
->>
->> Although this code works but I think it looks confusing.
->> "host1x_drm_exit" calls every client's "drm_exit" callback then free all
->> the host1x clients, but this function is placed inside a loop.
->>
->> I think the better way is, free this host1x_client first, then remove it
->> from host1x's "clients" list, finally free the host1x(call
->> host1x_drm_exit) when the "clients" list get empty.
-> 
-> But that would be the same thing, only slightly more explicit. I find
-> that the above reads quite well as: look through the list of active
-> clients and if the client to be removed is in that list, teardown the
-> DRM part.
-> 
+Do we really want the pull ups here?  Normally CMOS devices don't have
+pulls, or the pulls are disabled during normal operation, as otherwise
+when the logic level is different to whatever the pull is doing power is
+wasted driving against the resistor.
 
-All right, this is just coding style problem and I think your words make
-sense as well.
+--GTGEtWEe6jD60dxL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> I suppose I could add a comment to explain this and avoid confusion.
-> 
->>> +int tegra_output_init(struct drm_device *drm, struct tegra_output *output)
->>> +{
->>> +       int connector, encoder, err;
->>> +       enum of_gpio_flags flags;
->>> +       struct device_node *ddc;
->>> +       size_t size;
->>> +
->>> +       if (!output->of_node)
->>> +               output->of_node = output->dev->of_node;
->>> +
->>> +       output->edid = of_get_property(output->of_node, "nvidia,edid", &size);
->>> +
->>> +       ddc = of_parse_phandle(output->of_node, "nvidia,ddc-i2c-bus", 0);
->>> +       if (ddc) {
->>> +               output->ddc = of_find_i2c_adapter_by_node(ddc);
->>
->> The i2c adapter may not be ready at this time. For Tegra 2, the I2C bus
->> for HDMI is not dedicated and we need the i2cmux driver loaded before
->> this i2c can be used. It proved that sometimes i2cmux driver loads after
->> drm driver.
->>
->> So we need to add some logics to support driver probe deferral here.
->> Anyway, I'm just want you know about this and we can improve this later.
-> 
-> Good point. Unfortunately tegra_output_init() isn't always used from
-> within .probe(), so it isn't quite easy to handle deferred probe here.
-> I'll have to take a look at how to solve this properly.
-> 
->>> +int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
->>> +{
->>> +       struct device_node *np;
->>> +       struct tegra_rgb *rgb;
->>> +       int err;
->>> +
->>> +       np = of_get_child_by_name(dc->dev->of_node, "rgb");
->>> +       if (!np || !of_device_is_available(np))
->>> +               return -ENODEV;
->>> +
->>> +       rgb = devm_kzalloc(dc->dev, sizeof(*rgb), GFP_KERNEL);
->>> +       if (!rgb)
->>> +               return -ENOMEM;
->>> +
->>> +       rgb->clk = devm_clk_get(dc->dev, NULL);
->>> +       if (IS_ERR_OR_NULL(rgb->clk))
->>> +               return PTR_ERR(rgb->clk);
->>> +
->>> +       rgb->clk_parent = devm_clk_get(dc->dev, "parent");
->>> +       if (IS_ERR_OR_NULL(rgb->clk_parent))
->>> +               return PTR_ERR(rgb->clk_parent);
->>> +
->>> +       err = clk_set_parent(rgb->clk, rgb->clk_parent);
->>> +       if (err < 0) {
->>> +               dev_err(dc->dev, "failed to set parent clock: %d\n", err);
->>> +               return err;
->>> +       }
->>
->> Okay, seems this works with the "CLK_DUPLICATE" in tegra20_clocks_data.c.
->> I think the purpose of all these is to make sure the dc has a correct
->> parent clock. Hm... But I feel this may bring confusing to do dc clock
->> settings in a drm output component.
-> 
-> How do you think this would be confusing?
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-I just feel that all dc related works should be handled in crtc while
-not in output. Anyway, this is not a big deal and I think the current
-implementation also makes sense.
+iQIcBAEBAgAGBQJQognLAAoJELSic+t+oim9AaIP/1vML3ZA6L6eQ2F8+W6iMh1R
+B10qq3SKb7Ye4NI67K9ouCD9N6fhrXobEM9vDvKTUi1aKkNE9wIbBMWgF6aNeG9g
+qJJXPa17bCSl9ZzLAc+cTWI5+4hfydCk4Adsk0Q/5pw7CCV6wMPOXtnUDo7u+Tys
+BuG0aGu7zfsogpIn1RxpsdIHI354wsvLbrkUIsQWnxO1A4a0UzuUYOtn1I6OS8EE
+r0Q+iYRhhRT0cTXynux5ivU5g3AobQGe8v2NVOWfXZUx2JPxRH8wQrTlrc6Wdn2C
+PcYRR3WBJMkLTOKfdyPmupC5wf9hF8LfcEpQnBVi2x3n+zGcj0kYXTE8odDTRKVh
+z9flhmHOSNwPhyCNy9qfAvSLXtZSxqw+z/UQzV46ulay6L9zj0Q35EVsjMeRpMGm
+aUk+t8BCWog8esvQRCmSnljn8I8ACXsYamZ3mn3lsI0kjMSX5Bx9byA7vKBN29YC
+gstFcVYNDsR4q/AqYFhvLaaLVAmrAiI05Bd/t6AAF7bV4mfJruj1cQjir89Ci1A8
++Exg/HO0gC3nDvBaoH5fJrOvl05Dub5QJjcrLv4+sveMjcv3G+4pNNnO/AzncezL
+VDoOrNTMjpy5kzubdehv5vzlIzt7VfwBc9VOyY49HoSpZY3T8R1pSa8arqS06o+U
+QDK/e/hU6SEw0Sr6LcVi
+=DiO7
+-----END PGP SIGNATURE-----
 
-> Thierry
-> 
-> * Unknown Key
-> * 0x7F3EB3A1
-> 
+--GTGEtWEe6jD60dxL--
