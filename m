@@ -1,85 +1,64 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
-Date: Tue, 13 Nov 2012 20:17:26 +0100
-Message-ID: <20121113191726.GA3093@avionic-0098.mockup.avionic-design.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
- <20121113110837.GA30049@avionic-0098.mockup.avionic-design.de>
- <50A2878D.8020707@wwwdotorg.org>
- <20121113175147.GA2597@avionic-0098.mockup.avionic-design.de>
- <50A28DCB.7050707@firmworks.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50A28DCB.7050707@firmworks.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-fbdev@vger.kernel.org, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 1/2] i2c: i2c-ocores: Add irq support for sparc
+Date: Tue, 13 Nov 2012 20:25:26 +0100
+Message-ID: <1352834727-16368-2-git-send-email-andreas@gaisler.com>
+References: <1352834727-16368-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352834727-16368-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add sparc support by using platform_get_irq instead of platform_get_resource.
+There are no platform resources of type IORESOURCE_IRQ for sparc, but
+platform_get_irq works for sparc. In the non-sparc case platform_get_irq
+internally uses platform_get_resource.
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+---
+ Changes since v2:
+ - Return error from platform_get_irq on error
 
-On Tue, Nov 13, 2012 at 08:13:31AM -1000, Mitch Bradley wrote:
-> On 11/13/2012 7:51 AM, Thierry Reding wrote:
-> > On Tue, Nov 13, 2012 at 10:46:53AM -0700, Stephen Warren wrote:
-> >> On 11/13/2012 04:08 AM, Thierry Reding wrote:
-> >>> On Mon, Nov 12, 2012 at 04:37:02PM +0100, Steffen Trumtrar wrote:
-> >>>> This adds support for reading display timings from DT or/and
-> >>>> convert one of those timings to a videomode. The
-> >>>> of_display_timing implementation supports multiple children where
-> >>>> each property can have up to 3 values. All children are read into
-> >>>> an array, that can be queried. of_get_videomode converts exactly
-> >>>> one of that timings to a struct videomode.
-> >>
-> >>>> diff --git
-> >>>> a/Documentation/devicetree/bindings/video/display-timings.txt
-> >>>> b/Documentation/devicetree/bindings/video/display-timings.txt
-> >>
-> >>>> + - clock-frequency: displayclock in Hz
-> >>>
-> >>> "display clock"?
-> >>
-> >> I /think/ I had suggested naming this clock-frequency before so that
-> >> the property name would be more standardized; other bindings use that
-> >> same name. But I'm not too attached to the name I guess.
-> >=20
-> > That's not what I meant. I think "displayclock" should be two words in
-> > the description of the property. The property name is fine.
->=20
-> Given that modern display engines often have numerous clocks, perhaps it
-> would be better to use a more specific name, like for example "pixel-cloc=
-k".
+ drivers/i2c/busses/i2c-ocores.c |   11 ++++++-----
+ 1 files changed, 6 insertions(+), 5 deletions(-)
 
-This binding is only about defining display modes. Are any of the clocks
-that you're referring to relevant to the actual display modes?
-
-Thierry
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQopzGAAoJEN0jrNd/PrOhhE4P/2TpIqIW9kYSa3x1ZFUNOqTa
-6uuMnjXQIs/yEKla5T0A/ggBx+dqIr7qR3HkrhT32Mbijv/LcNTyc8F66EJg/UEp
-QrgPkDdsuttcu0afLlVNhAvjm4vHGx3EHEjT+PChv4AkGPhJo5mW8lqPbsV+I+nU
-QyHbefwR8CSEnrerymqB6oUGsagGDDqS0yt9Soaa2A7JxOd6KFOwdjWH9ssntnHI
-sdspMrbh5xU2Yx26nbsJoEc6URCusWtQnYU7LKUxgTxP9R6dnE6X3AJrEpz5n2S3
-cQ3fEhnFkjMVE7BhVrNtkRAsxveYVn1k+dvsFd0rULfC+UPLrGkVhGyaJK6Q5po4
-oeC42BT2TvFcRZKYXdnlp3p4cRqhgv4T+tSMbKttsfp/GypHfUmzZJzwAoaR+pi1
-Z4rzjryni3wFaTkeT0LEVAyGJRikgYHnedCXsJy5dvZUObEjzyok2JULDvymjwrO
-ANEJaluI6irFqu1I82eOd7lMvSEx5nZlrvrpBh6T5HlHi1w77nZJ4FhT0tySJtm0
-Xl016z7jJoQk3FQ3dPjwPiz7W+5GZuf1banpuIXe0InE2ml3eNvO0rflra1Qu7Hy
-h5iN53mRx1Q9LBzsCx0m+DahmGG36vdu22N6ew62e5O29Glv3uBF9E78ARSF9SwB
-NxPdWVxCOBzpMRTTyKLc
-=ljl4
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index bffd550..1d204cb 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -267,7 +267,8 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct ocores_i2c *i2c;
+ 	struct ocores_i2c_platform_data *pdata;
+-	struct resource *res, *res2;
++	struct resource *res;
++	int irq;
+ 	int ret;
+ 	int i;
+ 
+@@ -275,9 +276,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+ 	if (!res)
+ 		return -ENODEV;
+ 
+-	res2 = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+-	if (!res2)
+-		return -ENODEV;
++	irq = platform_get_irq(pdev, 0);
++	if (irq < 0)
++		return irq;
+ 
+ 	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
+ 	if (!i2c)
+@@ -313,7 +314,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+ 	ocores_init(i2c);
+ 
+ 	init_waitqueue_head(&i2c->wait);
+-	ret = devm_request_irq(&pdev->dev, res2->start, ocores_isr, 0,
++	ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+ 			       pdev->name, i2c);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Cannot claim IRQ\n");
+-- 
+1.7.0.4
