@@ -1,15 +1,20 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] MIPS: BCM63XX: add simple Device Tree includes for all SoCs
-Date: Tue, 13 Nov 2012 09:56:56 -0800
-Message-ID: <50A289E8.4030407@gmail.com>
-References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
- <1352638249-29298-3-git-send-email-jonas.gorski@gmail.com>
- <50A1D290.3050409@wwwdotorg.org>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Tue, 13 Nov 2012 08:10:11 -1000
+Message-ID: <50A28D03.7050002@firmworks.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <50999145.2070306@wwwdotorg.org>
+ <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
+ <509D9089.7020407@wwwdotorg.org>
+ <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com>
+ <50A12950.6090808@wwwdotorg.org> <20121113072517.GE25915@truffula.fritz.box>
+ <50A27BF1.4030502@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50A1D290.3050409-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <50A27BF1.4030502-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,31 +26,32 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2012 08:54 PM, Stephen Warren wrote:
-> On 11/11/2012 05:50 AM, Jonas Gorski wrote:
->> Add simple Device Tree include files for all currently supported SoCs.
->> These will be populated with device definitions as driver support
->> gets added.
->
->>   arch/mips/bcm63xx/dts/bcm6328.dtsi |   30 ++++++++++++++++++++++++++++++
->>   arch/mips/bcm63xx/dts/bcm6338.dtsi |   30 ++++++++++++++++++++++++++++++
->>   arch/mips/bcm63xx/dts/bcm6345.dtsi |   30 ++++++++++++++++++++++++++++++
->>   arch/mips/bcm63xx/dts/bcm6348.dtsi |   30 ++++++++++++++++++++++++++++++
->>   arch/mips/bcm63xx/dts/bcm6358.dtsi |   33 +++++++++++++++++++++++++++++++++
->>   arch/mips/bcm63xx/dts/bcm6368.dtsi |   33 +++++++++++++++++++++++++++++++++
->
-> All of ARM, c6x, microblaze, openrisc, powerpc put device tree files
-> into arch/${arch}/boot/dts/ - should MIPS follow the same layout?
+It seems to me that this capebus discussion is missing an important
+point.  The name capebus suggests that it is a bus, so there should be a
+parent node to represent that bus.  It should have a driver whose API
+implements all of the system-interface functions a cape needs.
 
-At this point, I don't see what the benefit of centralizing all of these 
-would be.  Currently there is no concept of a single kernel image that 
-would work across multiple MIPS system implementations.  So keeping the 
-DTS files with their users makes some organizational sense.
+If you look at the way that interrupt specifiers work, the default case
+is that a child device implicitly delegates the mapping to its parent.
+The use of phandles to break out of the tree structure was intended for
+use within the "hardwired motherboard domain", not for plug-in devices.
 
-Similar arguments could be made for moving all the files in `find . 
--name \*.dts\*` to a top level dts/ directory.
+The "new" phandle-based GPIO and clock mechanisms don't have that
+parent-delegation feature, but they should, because hierarchical
+hardware is a good thing when it exists.  One fix would be to designate
+a reserved phandle value - for example 0 or -1 - to mean "my parent". t
+The parent node would contain some translator to resolve the actual
+target node, similarly to interrupts and addresses.
 
-David Daney
+If done correctly, capebus "overlays" would then just be proper child
+nodes of the capebus bus node and there would no need to refer to
+"global" information like non-parent phandles.
+
+If something about the design of capebus makes that impossible, I
+respectfully suggest that its design should be reviewed, taking into
+account the many years of industry experience about modularity.
+
+Mitch
