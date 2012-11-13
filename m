@@ -1,88 +1,74 @@
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v8 5/6] drm_modes: add videomode helpers
-Date: Tue, 13 Nov 2012 12:31:14 +0100
-Message-ID: <20121113113114.GD30049@avionic-0098.mockup.avionic-design.de>
+Subject: Re: [PATCH v8 6/6] drm_modes: add of_videomode helpers
+Date: Tue, 13 Nov 2012 12:35:18 +0100
+Message-ID: <20121113113518.GE30049@avionic-0098.mockup.avionic-design.de>
 References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
-	<1352734626-27412-6-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-7-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1272678877=="
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <1352734626-27412-6-git-send-email-s.trumtrar@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wTWi5aaYRw9ix9vO"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1352734626-27412-7-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
 To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: linux-fbdev@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robherring2@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
 
---===============1272678877==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hoZxPH4CaxYzWscb"
-Content-Disposition: inline
-
-
---hoZxPH4CaxYzWscb
+--wTWi5aaYRw9ix9vO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 12, 2012 at 04:37:05PM +0100, Steffen Trumtrar wrote:
+On Mon, Nov 12, 2012 at 04:37:06PM +0100, Steffen Trumtrar wrote:
 [...]
-> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-[...]
-> +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> +int videomode_to_display_mode(struct videomode *vm, struct drm_display_mode *dmode)
+> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+> +static void dump_drm_displaymode(struct drm_display_mode *m)
+> +{
+> +	pr_debug("drm_displaymode =3D %d %d %d %d %d %d %d %d %d\n",
+> +		 m->hdisplay, m->hsync_start, m->hsync_end, m->htotal,
+> +		 m->vdisplay, m->vsync_start, m->vsync_end, m->vtotal,
+> +		 m->clock);
 
-This one as well may be more consistently named
-drm_display_mode_from_videomode().
+I seem to remember a comment to an earlier version of this patch
+requesting better formatting of this string. Alternatively you might
+want to consider replacing it using drm_mode_debug_printmodeline().
 
 > diff --git a/include/drm/drmP.h b/include/drm/drmP.h
 [...]
-> +extern int videomode_to_display_mode(struct videomode *vm,
-> +				     struct drm_display_mode *dmode);
+> @@ -1457,6 +1458,10 @@ drm_mode_create_from_cmdline_mode(struct drm_devic=
+e *dev,
+> =20
+>  extern int videomode_to_display_mode(struct videomode *vm,
+>  				     struct drm_display_mode *dmode);
+> +extern int of_get_drm_display_mode(struct device_node *np,
+> +				   struct drm_display_mode *dmode,
+> +				   int index);
 
-And this also needs protection or a dummy.
+Also requires either a dummy or protection.
 
 Thierry
 
---hoZxPH4CaxYzWscb
+--wTWi5aaYRw9ix9vO
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQoi+CAAoJEN0jrNd/PrOh7eEP/1UMe4mFQ4hylZL84gOC+gFV
-urjbU7pSMMfg1z+pTabAq6g/fTlcCmzAW0tfdOjo78MCuyifOw/N9iTxOuWaCkUJ
-VfMCyk5WIhRQWWjd66/FTuLjFRzMbb3bkKwIXxk9xLPDalWKBeBX3Cn79xxnWgEh
-Zx9U4h+J6omaNhCgXyJEsZu8vdBSuXjTGzrnsVsCKYeHP7OUUDCH2YY7s8pWj7Sq
-BuF6EN/Mhrk5vw+tJjXVuLVD57EvXnZyuRikvL3gF43Nvj0xKcPilRL1z1fWniyM
-P3I7sQPB5W7gdxVQZM+KwLSiyX3D8y7apZJxlSaGD9/dXVC9YYiI+3qHbeDQnC/T
-YkqSsiDvwFbg+PA4xN6eYOGNFjtDHmQhJ6cJUUAo7braP+CxYYO3tkrb4in89Dl/
-CaPKtMUwFO3z8et0QkR7g7cAoSwN6EoeOLsFtVqaTWTNgz0VsvKm0pJSUdPRVQO1
-IvdkH4XWke8gRGK6cHYru7g6NQMfl3Jnpf+VEAB96zYQaBELAZvwUFq15n2y4AMe
-8CTsfEkbrpKHd547HhkWffijhX5ohPBgolMFUO7NKk9Sc1I+g1fdFYl25qiPba5w
-I5BrSKfc4qwbPW6WC8ZbeBNzNGtp+nuyFn0hD9b2eLbo3qEavSwL+nfOdGUGSqSC
-Qk5m+qY/BEv3W8VThjwO
-=ul4+
+iQIcBAEBAgAGBQJQojB2AAoJEN0jrNd/PrOhgKEP/ApMZ4QWYnDY0Un0LZJl7xB1
+AIBq5vHGG3JehdPpWnhPv00ygJ/3EUW5QfAulbXghP+/p6FXwBhPSEkyp68ALtUI
+NgKib56DoWg1L0htQB7zbb/rzfypPHKKMWNRu50CiRt+aQ1FvGCvJJg3JrvPtmaQ
+hPy26pPr36dbBNB2YZo2iEN+jMHqKfoXKd6H+5AN0fsn8fvUsOLyycUyH6fpX7TP
+bzjh9hLTJrvrenII/IukfAwY1UPkq5v3RHfXD632kwTNKz3gVx3s5uPiAZqwIpSW
+s/HIgXJxuJbgoWrs8ghPbTh5O2IwwC4mCUeUwWYzL9S4tDI2oZdEBIgi4HVXux0H
+gpt5e3iip1f5vx3PYdw5qiWI0tnnemSiwTIJoNGuiM2L5BRkMUI/h5ni+CSKUprE
+KkhDJ3qkfHjdcRri4NGHRM/Er7oOaRyz5Kl4Urxg5MN2xp53IvfjPDuJntIYpw8u
+wO0nRvTjcASXJ4UjbKtZA6q1XsGDfiFHZa/lOokE1DMEDzDGOErITjEc92wIPGEs
+/6w5iK8VZtEFC/sY2c8bNZE9tGfM530u+iUTrMLhYPmOAJfYpDOvfFlX+Bx40co2
+HQbCa9zpl3iap/1ecmqm0A+nxSyRFzVdGgZBjeIyL80/J07qX0T9OqiotQRb+htY
+z18U/Vqw8IoOeqn9WFuz
+=FyzF
 -----END PGP SIGNATURE-----
 
---hoZxPH4CaxYzWscb--
-
---===============1272678877==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1272678877==--
+--wTWi5aaYRw9ix9vO--
