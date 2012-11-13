@@ -1,84 +1,81 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] i2c: i2c-ocores: Add irq support for sparc
-Date: Tue, 13 Nov 2012 17:31:12 +0100
-Message-ID: <20121113163112.GA20739@pengutronix.de>
-References: <1352739591-1317-1-git-send-email-andreas@gaisler.com>
- <1352739591-1317-2-git-send-email-andreas@gaisler.com>
- <20121113111055.GF23119@pengutronix.de>
- <50A248AD.9000705@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
+ to mach-omap2)
+Date: Tue, 13 Nov 2012 09:57:21 -0700
+Message-ID: <50A27BF1.4030502@wwwdotorg.org>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com> <509D9089.7020407@wwwdotorg.org> <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com> <50A12950.6090808@wwwdotorg.org> <20121113072517.GE25915@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50A248AD.9000705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121113072517.GE25915@truffula.fritz.box>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On 11/13/2012 12:25 AM, David Gibson wrote:
+> On Mon, Nov 12, 2012 at 09:52:32AM -0700, Stephen Warren wrote:
+>> On 11/12/2012 05:10 AM, Pantelis Antoniou wrote:
+> [snip]
+>>> Oh yes. In fact if one was to use a single kernel image for beagleboard
+>>> and beaglebone, for the cape to work for both, it is required for it's
+>>> dtb to be compatible. 
+>>
+>> Well, as Grant pointed out, it's not actually strictly necessary for the
+>> .dtb to be compatible; only the .dts /need/ be compatible, and the .dtb
+>> can be generated at run-time using dtc for example.
+> 
+> So, actually, I think a whole bunch of problems with phandle
+> resolution disappear if we don't try to define an overlay .dtb format,
+> or at least treat it only as a very shortlived object.  A more precise
+> proposal below.  Note that this works more or less equally well with
+> either the original overlay approach or the graft/graft-bundle
+> proposal I made elsewhere.
+> 
+> 1) We annotate the base tree with some extra label information for
+> nodes which overlays are likely to want to reference by phandle.  e.g.
+> 
+> 	beaglebone_pic: interrupt-controller@XXXXX {
+> 		...
+> 		phandle,symbolic-name = "beaglebone_pic";
+> 	};
+> 
+> We could extend dtc to (optionally?) auto-generate those properties
+> from its existing label syntax.  Not sure if that's a good idea or
+> not yet.  In any case, we compile this augmented base tree to .dtb as
+> normal and boot our kernel with it.
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I think a name-based approach is preferable over using
+opaque/arbitrary phandle IDs/ranges/...
 
-Hi,
+> 2) The information for the capes/modules/whatever is
+> distributed/packaged as .dts, never .dtb.  When userspace detects the
+> new module (or the user explicitly tells it, if it's not probeable) it
+> picks up the correct dts and runs it through dtc in a special mode.
+> In this mode dtc takes the existing base tree (from /proc/device-tree,
+> say) as well as the new dts.  In this mode, dtc allocates phandles for
+> the new tree fragment so as not to collide with anything from the
+> supplied base tree (as well as avoiding internal conflicts,
+> obviously).  It also allows node references to the base tree by using
+> those label annotations from (1) to match symbolic names to the
+> phandle values in the base tree.
+> 
+> 3) The resulting partial .dtb for the module is highly specific to the
+> base tree (which if the base tree was generated at runtime by firmware
+> could even be specific to a particular boot).  But that's ok, because
+> we just spit it into the kernel, absolute phandle values and all, then
+> throw it away.  Next time we need the module info, we recompile it
+> again.
 
-> >> @@ -275,8 +276,8 @@ static int __devinit ocores_i2c_probe(struct platf=
-orm_device *pdev)
-> >>  	if (!res)
-> >>  		return -ENODEV;
-> >> =20
-> >> -	res2 =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> >> -	if (!res2)
-> >> +	irq =3D platform_get_irq(pdev, 0);
-> >> +	if (irq < 0)
-> >>  		return -ENODEV;
-> >=20
-> > Why not pass the error code you got?
->=20
-> I believe that should actually be a check for 'irq <=3D 0' as it returns
-> NO_IRQ on error.
+Once you've booted with a base tree, and loaded a partial .dtb for one
+child board, and are then loading a .dtb for another child board (or you
+unloaded the original child board and are loading a replacement), then
+presumably the current in-kernel device tree also depends on all the
+runtime history too.
 
-I wish it did, but (from 3.7-rc5):
-
-  79 /**
-  80  * platform_get_irq - get an IRQ for a device
-  81  * @dev: platform device
-  82  * @num: IRQ number index
-  83  */
-  84 int platform_get_irq(struct platform_device *dev, unsigned int num)
-  85 {
-  86 #ifdef CONFIG_SPARC
-  87         /* sparc does not have irqs represented as IORESOURCE_IRQ reso=
-urces */
-  88         if (!dev || num >=3D dev->archdata.num_irqs)
-  89                 return -ENXIO;
-  90         return dev->archdata.irqs[num];
-  91 #else
-  92         struct resource *r =3D platform_get_resource(dev, IORESOURCE_I=
-RQ, num);
-  93=20
-  94         return r ? r->start : -ENXIO;
-  95 #endif
-  96 }
-  97 EXPORT_SYMBOL_GPL(platform_get_irq);
-
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlCiddAACgkQD27XaX1/VRsBggCgyKZB2dNjQfv4RV3m51I/6IKj
-+WIAoKDeClzav47jB9V2xYMwfLWZh+om
-=Ar2x
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
+So then going back to your point (2), that means we need to have
+user-space serialize the dtc execution so that we don't compile two new
+partial .dtbs in parallel, and end up with each not conflicting with the
+current in-kernel device tree, but still conflicting with each-other. I
+imagine that's easily solvable though.
