@@ -1,139 +1,107 @@
-From: Stepan Moskovchenko <stepanm@codeaurora.org>
-Subject: Re: [RFC] dt/platform: Use cell-index for device naming if available
-Date: Mon, 12 Nov 2012 18:48:43 -0800
-Message-ID: <50A1B50B.4020509@codeaurora.org>
-References: <1352508532-19241-1-git-send-email-stepanm@codeaurora.org>    <509F0E56.6080806@gmail.com>    <CACxGe6s3gJ4fmhn9VBd1Fq8bH5S0_ejmE=KqVjYn20bT42wQ_Q@mail.gmail.com> <554191d69bc21a4b133fb876df84ff89.squirrel@www.codeaurora.org>
+From: Joel A Fernandes <agnel.joel@gmail.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Mon, 12 Nov 2012 21:59:13 -0600
+Message-ID: <CAD=GYpYHwXvcCzANOA90S0_PyAufnuF5MR-Wdk-9uygYbWDBYA@mail.gmail.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+	<02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+	<CAD=GYpbeKtW37Cj9cXr8F7F83d9Fgs-moqu9p6cOaPE1VxwbSg@mail.gmail.com>
+	<CACxGe6vL9gbAKyDWcZWWAQ4WO=nTgdAioXS-h2e1jtJK9pmZUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <554191d69bc21a4b133fb876df84ff89.squirrel@www.codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stepan Moskovchenko <stepanm@codeaurora.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vL9gbAKyDWcZWWAQ4WO=nTgdAioXS-h2e1jtJK9pmZUg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Rob Herring <robherring2@gmail.com>, Deepak Saxena <dsaxena@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Scott Wood <scottwood@freescale.com>, Tony Lindgren <tony@atomide.com>, Russ Dill <Russ.Dill@ti.com>, Felipe Balbi <balbi@ti.com>, Benoit Cousson <b-cousson@ti.com>, linux-kernel <linux-kernel@vger.kernel.org>, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Kevin Hilman <khilman@ti.com>, Paul Walmsley <paul@pwsan.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
-
-On 11/11/2012 5:45 PM, Stepan Moskovchenko wrote:
->
->> On Sun, Nov 11, 2012 at 2:32 AM, Rob Herring <robherring2@gmail.com>
->> wrote:
->>> On 11/09/2012 06:48 PM, Stepan Moskovchenko wrote:
->>>> Use the cell-index property to construct names for platform
->>>> devices, falling back on the existing scheme of using the
->>>> device register address if cell-index is not specified.
->>>>
->>>> The cell-index property is a more useful device identifier,
->>>> especially in systems containing several numbered instances
->>>> of a particular hardware block, since it more easily
->>>> illustrates how devices relate to each other.
->>>>
->>>> Additionally, userspace software may rely on the classic
->>>> <name>.<id> naming scheme to access device attributes in
->>>> sysfs, without having to know the physical addresses of
->>>> that device on every platform the userspace software may
->>>> support. Using cell-index for device naming allows the
->>>> device addresses to be hidden from userspace and to be
->>>> exposed by logical device number without having to rely on
->>>> auxdata to perform name overrides. This allows userspace to
->>>> make assumptions about which sysfs nodes map to which
->>>> logical instance of a specific hardware block.
->>>>
->>>> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
->>>> ---
->>>> I had also considered using something like the linux,label property to
->>>> allow
->>>> custom names for platform devices without resorting to auxdata, but the
->>>> cell-index approach seems more in line with what cell-index was
->>>> intended for
->>>> and with what the pre-DT platform device naming scheme used to be.
->>>> Please let
->>>> me know if you think there is a better way to accomplish this.
->>>>
->>>> This is just being sent out as an RFC for now. If there are no
->>>> objections, I
->>>> will send this out as an official patch, along with (or combined with)
->>>> a patch
->>>> to fix up the device names in things like clock tables of any affected
->>>> platforms.
->>>
->>> cell-index is basically deprecated. This has been discussed multiple
->>> times in the past. You can use auxdata if you really need to have the
->>> old name.
->>
->> Actually, I think it would be fine to use an /aliases entry to set the
->> device name. That's the place to put global namespace information.
->>
->> g.
->>
->
-> Ah, thank you. I would prefer to stay away from auxdata, since it involves
-> placing more platform-specific data into the kernel, and it is my
-> understanding that auxdata is intended as a temporary measure. The
-> /aliases approach looks interesting, and I'll see what I can do with it -
-> hopefully I can have an RFC / patch soon. It looks like we would want an
-> "inverse" alias lookup- that is, we would need to know which alias
-> corresponds to a given node. Is it possible for a node to have multiple
-> aliases? If so, which shall we use to create the device name? Anyway, I
-> will further look into how these aliases work.
->
-> Steve
 
 Hi Grant,
 
-Looking through the alias code, I see that the stem and the alias ID are 
-stored and parsed separately. For the current way of using aliases, this 
-makes sense. However, can you please clarify what you meant by using an 
-/aliases entry to set the device name?
+On Fri, Nov 9, 2012 at 3:22 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+>> (2)
+>> Also this discussed a while back but at some point is going to brought
+>> up again-  loading of dt fragment directly from EEPROM and merging at
+>> run time. If we were to implement this in kernel, we would have to add
+>> cape specific EEPROM reading code, merge the tree before it is
+>> unflattened and parse.
+>
+> Unless it is required for boot to userspace I'm not considering
+> merging before userspace starts. That's well after the tree is
+> unflattened into the live form. If it is require to boot then I agree
+> that is should be done in firmware. I see zero problem with having a
+> beaglebone specific cape driver that knows to read the eeprom and
+> request a specific configuration file. Heck, the kernel doesn't even
+> need to parse the eeprom data. It can be read from userspace and
+> userspace decides which overlay to provide. There's nothing stopping
+> userspace from reading the eeprom, looking up the correct dts for the
+> board, downloading the file from the Internet, compiling it with dtc
+> and installing it.... and yes that is getting a little extreme.
 
-The first and most straightforward approach would be to use the entire 
-alias name as the device name, making no distinction between the alias 
-stem and ID. However, since it is possible to have multiple aliases to 
-the same device, which of the aliases shall we use to construct the 
-device name? Additionally, this may cause possible problems for legacy 
-software that expects names in the format of <name>.<ID>, since '.' is 
-not a valid character for alias names as defined by the DT spec, 
-although strictly speaking this approach would successfully solve the 
-problem of giving devices predictable and controllable names.
+Actually, I was speaking of the case where today we read EEPROM anyway
+for capes before userspace, so it would convenient do the overlay this
+way. Further, userspace doesn't have to do any parsing as
+kernel/u-boot could blindly load the dtb overlay directly from EEPROM
+regardless of which cape. So we don't have do any revision detection
+and dtb search, the dtb itself being in the EEPROM.
+That way no matter what the userspace is, the cape hardware is already
+configured and ready to use by userspace. This might be a corner-case
+just for beaglebone though, and if requesting overlay from userspace
+is a more general solution for all usecases, then probably we should
+go with that approach. OTOH, I guess there's no harm in doing some
+overlays from kernel for some cases, and userspace for others.
 
-Another way an /aliases entry could be used to set the device name is to 
-have a <name>.<ID> naming scheme, where the name comes from node->name 
-(as is done in of_device_make_bus_id) and the ID gets queried using 
-of_alias_get_id(). We would need to create a new alias stem for this 
-purpose, and suppose that something like "platform" would work. The 
-name-setting code would then roughly look as follows:
+>> The code that does
+>> the tree walking can then just strcmp the node name while it walks the
+>> tree instead of having to find a node with a phandle number. I guess
+>> the reason is phandles are small to store as data values. Another
+>> approach can be to arrange the string block in alphabetical order
+>> (unless it already is), and store phandle as index of the node name
+>> referenced relative to the starting of the strong block. This will not
+>> affect nodes in dtb being moved around since they will still have the
+>> same index value. the problem being adding or removing nodes Changes
+>> the index of all other nodes in the string block as well.. Hmm.
+>
+> And that still doesn't help find all the phandle locations in the tree
+> for doing fixups. It would need to be a table of
+> nodes+properties+offsets that contain phandles for fixup to work, but
+> I shy away from that approach because I think it will be fragile.
 
-+	alias_id = of_alias_get_id(node, "platform");
-+	if (alias_id != -ENODEV) {
-+		dev_set_name(dev, "%s.%d", node->name, alias_id);
-+		return;
-+	}
+I guess this approach (which wouldn't work for other reasons) was
+intended to serve the same purpose as Hashing, having a phandle that
+doesn't easily change hence not requiring overlay fixups.
 
-The downside to this approach is that it imposes the restriction that 
-device ID numbers now have to be unique throughout the system, whereas 
-before only the <name>.<ID> combinations had to be unique. This is the 
-result of only the ID number being present in the alias table, with each 
-such ID number having the "platform" stem, and the restriction that node 
-properties shall have unique names.
+Actually I'm a bit confused if how maintaining a list of
+name/node-paths for fix up will even work, because node names are not
+unique as we discussed. Also node paths can change, so what will the
+overlay dtb store in its fixup table (say there is one)? A table of
+node,properties etc as you mentioned might not be unique as there can
+be 2 nodes with same name and properties. Also if we use node path,
+instead of node name, in this table, then moving nodes around wont be
+possible as the fixup table will be pointing to node path references
+that have now changed- how will the kernel now what's the node's new
+actual path, say, if there are 2 nodes with the same name? Only thing
+possible is, to do a _mandatory_ recompile of overlay dtb if a node's
+path changes.
 
-A third possible solution is to use an alias stem prefix for defining 
-the device name. That is, the alias to set the device name would have 
-some prefix (such as "platform-" for example) and the aliases would look 
-something like platform-<name><ID>. The code to assign device names 
-would find the matching alias containing the "platform-" prefix, strip 
-the prefix, and use the resulting name and ID to construct the device 
-name. This approach would make it more obvious as to which of several 
-aliases is used to set the device name, but it imposes additional 
-structure on the stem names and causes any aliases starting with 
-"platform-" to become magical, which bothers me slightly.
+Would be you be in agreement that- When a node's path changes in base
+dtb, Overlays have to be recompiled and a new fixup table has to be
+created, or a new hash has to be generated out of the new node path
+regardless. So moving nodes around in base dtb can't be dynamically
+accommodated without recompiling overlay.
 
-Do any of these describe what you intended when you suggested using the 
-/aliases node to set device names, or is there another approach that I 
-have missed? Can you please elaborate further?
+Considering the above is ok, the only 2 approaches I can see for
+phandle resolutions are:
+(1) hashing of the full node path and avoiding runtime fixups.
+(2) Using today's linear phandle increment approach, maintaining a
+table in the overlay with the key as 'node path' and value as 'phandle
+fixup offset', and then doing runtime fixups.
 
-Thank you
-Steve
+I believe (2) is considered fragile and it does the same thing as (1)
+except that (2) can even handle collisions but at the cost of storing
+the full node path in the overlay's fixup table. So (1) looks like our
+only possible and meaningful approach. Do you agree with this
+analysis? Or, maybe I am missing something.
 
-
--- 
-  The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-  hosted by The Linux Foundation
+Regards,
+Joel
