@@ -1,61 +1,41 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] MIPS: BCM63XX: add empty Device Trees for all supported
- boards
-Date: Mon, 12 Nov 2012 22:12:35 -0700
-Message-ID: <50A1D6C3.2010108@wwwdotorg.org>
-References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com> <1352638249-29298-15-git-send-email-jonas.gorski@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] MIPS: BCM63XX: enable serial through Device Tree
+Date: Mon, 12 Nov 2012 22:13:17 -0700
+Message-ID: <50A1D6ED.50001@wwwdotorg.org>
+References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
+ <1352638249-29298-16-git-send-email-jonas.gorski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1352638249-29298-15-git-send-email-jonas.gorski@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Maxime Bizon <mbizon@freebox.fr>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352638249-29298-16-git-send-email-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 11/11/2012 05:50 AM, Jonas Gorski wrote:
-> Add empty board files for all boards supported by the legacy board
-> support.
+> Enable serial through Device Tree board files instead of legacy
+> board files.
 
 > diff --git a/arch/mips/bcm63xx/dts/96328avng.dts b/arch/mips/bcm63xx/dts/96328avng.dts
 
-> +/ {
-> +	model = "96328avng";
-> +	compatible = "96328avng";
+>  	ubus@10000000 {
+>  
+> +		serial@100 {
 
-The board should be compatible with both the board name and the SoC on
-the board. I know that right now the MIPS code is choosing the DT to use
-based on the board name, but I think it's more typical to pass an
-explicit DT to the kernel, and then choose the kernel support to execute
-based on the compatible value (certainly this is the case on ARM and I
-assume other architectures too). That would require the DT content to
-include the SoC name in the compatible property, so that the kernel
-support didn't then need to contain a table of all supported board names.
+Very minor nit: Why the blank line there?
 
-> +	ubus@10000000 {
-> +
-> +	};
-
-Do you need to include this empty node in each file? I guess it gets
-added to in the next patch so it's not a big deal though.
-
-> diff --git a/arch/mips/bcm63xx/dts/Kconfig b/arch/mips/bcm63xx/dts/Kconfig
-
-> +config BOARD_96328AVNG
-> +	bool "96328avng reference board"
-> +	select BCM63XX_CPU_6328
-
-Why not simply compile all DTs whenever the SoC support is enabled? I
-suppose you're trying to avoid packing all the DTs into the kernel
-image. Does it make more sense to amend the MIPS kernel boot process so
-that a single user-/firmware-selected DT is passed to the kernel, rather
-than packing the DTs into the kernel and selecting one?
+> +			status = "ok";
+> +		};
+>  	};
+>  };
