@@ -1,98 +1,84 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM: Kirkwood: Convert DNSKW to use gpio-poweroff.
-Date: Tue, 13 Nov 2012 16:44:44 +0100
-Message-ID: <1352821485-10032-3-git-send-email-andrew@lunn.ch>
-References: <1352821485-10032-1-git-send-email-andrew@lunn.ch>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] i2c: i2c-ocores: Add irq support for sparc
+Date: Tue, 13 Nov 2012 17:31:12 +0100
+Message-ID: <20121113163112.GA20739@pengutronix.de>
+References: <1352739591-1317-1-git-send-email-andreas@gaisler.com>
+ <1352739591-1317-2-git-send-email-andreas@gaisler.com>
+ <20121113111055.GF23119@pengutronix.de>
+ <50A248AD.9000705@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352821485-10032-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50A248AD.9000705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Also enable the gpio-poweroff driver when DT is used.
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Tested-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
----
- arch/arm/boot/dts/kirkwood-dnskw.dtsi |    5 +++++
- arch/arm/mach-kirkwood/Kconfig        |    4 ++++
- arch/arm/mach-kirkwood/board-dnskw.c  |   12 ------------
- 3 files changed, 9 insertions(+), 12 deletions(-)
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/kirkwood-dnskw.dtsi b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-index 9b32d02..22aa07a 100644
---- a/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-dnskw.dtsi
-@@ -35,6 +35,11 @@
- 				      6000 2>;
- 	};
- 
-+	gpio_poweroff {
-+		compatible = "gpio-poweroff";
-+		gpios = <&gpio1 4 0>;
-+	};
-+
- 	ocp@f1000000 {
- 		sata@80000 {
- 			status = "okay";
-diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
-index 50bca50..e0d26fe 100644
---- a/arch/arm/mach-kirkwood/Kconfig
-+++ b/arch/arm/mach-kirkwood/Kconfig
-@@ -46,7 +46,11 @@ config MACH_GURUPLUG
- 
- config ARCH_KIRKWOOD_DT
- 	bool "Marvell Kirkwood Flattened Device Tree"
-+	select POWER_SUPPLY
-+	select POWER_RESET
-+	select POWER_RESET_GPIO
- 	select USE_OF
-+
- 	help
- 	  Say 'Y' here if you want your kernel to support the
- 	  Marvell Kirkwood using flattened device tree.
-diff --git a/arch/arm/mach-kirkwood/board-dnskw.c b/arch/arm/mach-kirkwood/board-dnskw.c
-index 43d16d6..549369e 100644
---- a/arch/arm/mach-kirkwood/board-dnskw.c
-+++ b/arch/arm/mach-kirkwood/board-dnskw.c
-@@ -57,11 +57,6 @@ static unsigned int dnskw_mpp_config[] __initdata = {
- 	0
- };
- 
--static void dnskw_power_off(void)
--{
--	gpio_set_value(36, 1);
--}
--
- /* Register any GPIO for output and set the value */
- static void __init dnskw_gpio_register(unsigned gpio, char *name, int def)
- {
-@@ -81,13 +76,6 @@ void __init dnskw_init(void)
- 	kirkwood_ehci_init();
- 	kirkwood_ge00_init(&dnskw_ge00_data);
- 
--	/* Register power-off GPIO. */
--	if (gpio_request(36, "dnskw:power:off") == 0
--	    && gpio_direction_output(36, 0) == 0)
--		pm_power_off = dnskw_power_off;
--	else
--		pr_err("dnskw: failed to configure power-off GPIO\n");
--
- 	/* Ensure power is supplied to both HDDs */
- 	dnskw_gpio_register(39, "dnskw:power:sata0", 1);
- 	dnskw_gpio_register(40, "dnskw:power:sata1", 1);
--- 
-1.7.10.4
+Hi,
+
+> >> @@ -275,8 +276,8 @@ static int __devinit ocores_i2c_probe(struct platf=
+orm_device *pdev)
+> >>  	if (!res)
+> >>  		return -ENODEV;
+> >> =20
+> >> -	res2 =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> >> -	if (!res2)
+> >> +	irq =3D platform_get_irq(pdev, 0);
+> >> +	if (irq < 0)
+> >>  		return -ENODEV;
+> >=20
+> > Why not pass the error code you got?
+>=20
+> I believe that should actually be a check for 'irq <=3D 0' as it returns
+> NO_IRQ on error.
+
+I wish it did, but (from 3.7-rc5):
+
+  79 /**
+  80  * platform_get_irq - get an IRQ for a device
+  81  * @dev: platform device
+  82  * @num: IRQ number index
+  83  */
+  84 int platform_get_irq(struct platform_device *dev, unsigned int num)
+  85 {
+  86 #ifdef CONFIG_SPARC
+  87         /* sparc does not have irqs represented as IORESOURCE_IRQ reso=
+urces */
+  88         if (!dev || num >=3D dev->archdata.num_irqs)
+  89                 return -ENXIO;
+  90         return dev->archdata.irqs[num];
+  91 #else
+  92         struct resource *r =3D platform_get_resource(dev, IORESOURCE_I=
+RQ, num);
+  93=20
+  94         return r ? r->start : -ENXIO;
+  95 #endif
+  96 }
+  97 EXPORT_SYMBOL_GPL(platform_get_irq);
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlCiddAACgkQD27XaX1/VRsBggCgyKZB2dNjQfv4RV3m51I/6IKj
++WIAoKDeClzav47jB9V2xYMwfLWZh+om
+=Ar2x
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
