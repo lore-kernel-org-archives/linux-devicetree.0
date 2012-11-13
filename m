@@ -1,228 +1,103 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
-Date: Tue, 13 Nov 2012 12:08:37 +0100
-Message-ID: <20121113110837.GA30049@avionic-0098.mockup.avionic-design.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] i2c: i2c-ocores: Add irq support for sparc
+Date: Tue, 13 Nov 2012 12:10:55 +0100
+Message-ID: <20121113111055.GF23119@pengutronix.de>
+References: <1352739591-1317-1-git-send-email-andreas@gaisler.com>
+ <1352739591-1317-2-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Return-path: <linux-media-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="OFj+1YLvsEfSXdCH"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+In-Reply-To: <1352739591-1317-2-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---UlVJffcvxoiEqYs2
+--OFj+1YLvsEfSXdCH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 12, 2012 at 04:37:02PM +0100, Steffen Trumtrar wrote:
-> This adds support for reading display timings from DT or/and convert one =
-of those
-> timings to a videomode.
-> The of_display_timing implementation supports multiple children where each
-> property can have up to 3 values. All children are read into an array, th=
-at
-> can be queried.
-> of_get_videomode converts exactly one of that timings to a struct videomo=
-de.
+Hi,
+
+On Mon, Nov 12, 2012 at 05:59:50PM +0100, Andreas Larsson wrote:
+> Add sparc support by using platform_get_irq instead of platform_get_resou=
+rce.
+> There are no platform resources of type IORESOURCE_IRQ for sparc, but
+> platform_get_irq works for sparc. In the non-sparc case platform_get_irq
+> internally uses platform_get_resource.
 >=20
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
 > ---
->  .../devicetree/bindings/video/display-timings.txt  |  107 +++++++++++
->  drivers/video/Kconfig                              |   13 ++
->  drivers/video/Makefile                             |    2 +
->  drivers/video/of_display_timing.c                  |  186 ++++++++++++++=
-++++++
->  drivers/video/of_videomode.c                       |   47 +++++
->  include/linux/of_display_timings.h                 |   19 ++
->  include/linux/of_videomode.h                       |   15 ++
->  7 files changed, 389 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/display-timin=
-gs.txt
->  create mode 100644 drivers/video/of_display_timing.c
->  create mode 100644 drivers/video/of_videomode.c
->  create mode 100644 include/linux/of_display_timings.h
->  create mode 100644 include/linux/of_videomode.h
+> Changes since v1:
+>  - platform_get_irq now works for sparc, so that is used for all platforms
+>  - Acked by Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
 >=20
-> diff --git a/Documentation/devicetree/bindings/video/display-timings.txt =
-b/Documentation/devicetree/bindings/video/display-timings.txt
-> new file mode 100644
-> index 0000000..e22e2fd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/display-timings.txt
-> @@ -0,0 +1,107 @@
-> +display-timings bindings
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +display-timings-node
-> +--------------------
-
-Maybe leave away the last -, so that it reads "display-timings node"? I
-think that makes it more obvious that the node is supposed to be called
-"display-timings".
-
-> +
-> +required properties:
-> + - none
-> +
-> +optional properties:
-> + - native-mode: the native mode for the display, in case multiple modes =
-are
-> +		provided. When omitted, assume the first node is the native.
-> +
-> +timings-subnode
-> +---------------
-
-Same here: "timing subnodes"?
-
-> +
-> +required properties:
-> + - hactive, vactive: Display resolution
-> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing param=
-eters
-
-"display"?
-
-> +   in pixels
-> +   vfront-porch, vback-porch, vsync-len: Vertical display timing paramet=
-ers in
-> +   lines
-> + - clock-frequency: displayclock in Hz
-
-"display clock"?
-
-> +
-> +optional properties:
-> + - hsync-active : Hsync pulse is active low/high/ignored
-> + - vsync-active : Vsync pulse is active low/high/ignored
-> + - de-active : Data-Enable pulse is active low/high/ignored
-> + - pixelclk-inverted : pixelclock is inverted/non-inverted/ignored
-> + - interlaced (bool)
-> + - doublescan (bool)
-> +
-> +All the optional properties that are not bool follow the following logic:
-> +    <1> : high active
-> +    <0> : low active
-> +    omitted : not used on hardware
-
-Nitpick: You use space before : in the optional properties, but not in
-the required properties above.
-
-> +
-> +There are different ways of describing the capabilities of a display. Th=
-e devicetree
-> +representation corresponds to the one commonly found in datasheets for d=
-isplays.
-> +If a display supports multiple signal timings, the native-mode can be sp=
-ecified.
-> +
-> +The parameters are defined as
-> +
-> +struct display_timing
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-struct display_timing has no meaning in device tree documentation. Maybe
-this line can just go away?
-
-> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> index 2a23b18..a324457 100644
-> --- a/drivers/video/Kconfig
-> +++ b/drivers/video/Kconfig
-> @@ -39,6 +39,19 @@ config DISPLAY_TIMING
->  config VIDEOMODE
->         bool
+>  drivers/i2c/busses/i2c-ocores.c |    9 +++++----
+>  1 files changed, 5 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-oco=
+res.c
+> index bffd550..0b71dc6 100644
+> --- a/drivers/i2c/busses/i2c-ocores.c
+> +++ b/drivers/i2c/busses/i2c-ocores.c
+> @@ -267,7 +267,8 @@ static int __devinit ocores_i2c_probe(struct platform=
+_device *pdev)
+>  {
+>  	struct ocores_i2c *i2c;
+>  	struct ocores_i2c_platform_data *pdata;
+> -	struct resource *res, *res2;
+> +	struct resource *res;
+> +	int irq;
+>  	int ret;
+>  	int i;
 > =20
-> +config OF_DISPLAY_TIMING
+> @@ -275,8 +276,8 @@ static int __devinit ocores_i2c_probe(struct platform=
+_device *pdev)
+>  	if (!res)
+>  		return -ENODEV;
+> =20
+> -	res2 =3D platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> -	if (!res2)
+> +	irq =3D platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+>  		return -ENODEV;
 
-OF_DISPLAY_TIMINGS?
+Why not pass the error code you got?
 
-> diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_display=
-_timing.c
+> =20
+>  	i2c =3D devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
+> @@ -313,7 +314,7 @@ static int __devinit ocores_i2c_probe(struct platform=
+_device *pdev)
+>  	ocores_init(i2c);
+> =20
+>  	init_waitqueue_head(&i2c->wait);
+> -	ret =3D devm_request_irq(&pdev->dev, res2->start, ocores_isr, 0,
+> +	ret =3D devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
+>  			       pdev->name, i2c);
+>  	if (ret) {
+>  		dev_err(&pdev->dev, "Cannot claim IRQ\n");
 
-of_display_timings.c?
+Rest looks good.
 
-> +/**
-> + * of_get_display_timings - parse all display_timing entries from a devi=
-ce_node
-> + * @np: device_node with the subnodes
-> + **/
-> +struct display_timings *of_get_display_timings(struct device_node *np)
-[...]
-> +	for_each_child_of_node(timings_np, entry) {
-> +		struct display_timing *dt;
-> +
-> +		dt =3D of_get_display_timing(entry);
-> +		if (!dt) {
-> +			/* to not encourage wrong devicetrees, fail in case of an error */
-> +			pr_err("%s: error in timing %d\n", __func__, disp->num_timings+1);
-> +			return NULL;
-> +		}
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 
-In case of a parsing error, of_get_display_timing() already shows an
-error message, so I don't think we need another one here.
-
-> +/**
-> + * of_display_timings_exists - check if a display-timings node is provid=
-ed
-> + * @np: device_node with the timing
-> + **/
-> +int of_display_timings_exists(struct device_node *np)
-> +{
-> +	struct device_node *timings_np;
-> +
-> +	if (!np)
-> +		return -EINVAL;
-> +
-> +	timings_np =3D of_parse_phandle(np, "display-timings", 0);
-> +	if (!timings_np)
-> +		return -EINVAL;
-> +
-> +	return 1;
-
-I think this is missing of_node_put(timings_np) in both failure and
-success cases. Also, maybe this should really return a bool instead?
-
-Also, why do you use of_parse_phandle() for this? Aren't the
-display-timings nodes expected to be children of some other node like an
-output/display device?
-
-> diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
-[...]
-> +
-> +int of_get_videomode(struct device_node *np, struct videomode *vm, int i=
-ndex);
-> +#endif /* __LINUX_OF_VIDEOMODE_H */
-
-There should be a blank line between the last two lines I think.
-
-Thierry
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature
+--OFj+1YLvsEfSXdCH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQoio1AAoJEN0jrNd/PrOhBXIQAKv+R2gftKy4N5jh0pgRPrGm
-PqVn7rorCefHW4InCF1yvq44uVtjmeNbmjfBP2CEEOrJcbq5XUdiqs+ZuVPobTsM
-RYfto9LaM2VUj7qCkJsg9YTHwLQ1FTAkbwpf3FAOmklhAalIMBGGy86QeTuNQoSK
-CYdZr+ZXas2Svm5136hHXCr0Oel/IOD74GhLzy8DD8tT4oT7v/syhZ3v74P+pxcD
-uNWstALYlsD222R67SPGv52HXTCzYVBeDVk1kbHMpalVaOIMwnAkI802i/fF/Iip
-d3uyyAJ28HoAgP9+zoFsHbgyZ3GhiuS5NyPwIzzgXtPwt4Gg9ta2DsieY67Ol60q
-yn0SW5wmwI3MDn5rxhqunl//+RU+An5pDLcQUvzAekuOGwxRtFHTYh64lVw4uMD6
-Ht0rsi3ehhh2fjRsYGqq0iS4x1b3eGeiH6ZwxE0kMejBaGf7KceJCmDjfsElV5w5
-n5+pvcvMdr1g6/ApVSDk3ftaNTM9CPwbJ8AkCwtxOVayFqdXoa6jxy9KEts/Id+/
-KDICAcNdttmUA8YrJVQZ/EQXt2ol4kpSPToXBk5lN/Gdeh2e2Sv800v1veZto4S5
-1AT7kdTjZB12TiSEx00tFwu/vL1RgYKxSMY2TQ7YJN4ISWXK53bERU5oX2xylwPR
-F7wbtKydAageCg1jUBgk
-=RCqb
+iEYEARECAAYFAlCiKr8ACgkQD27XaX1/VRuCjQCgugJ6/nVu4gaduZKIOQFVnpDg
+uZgAoJoMOg/cPcvTacY+B5ULQKeLqNVp
+=7JKs
 -----END PGP SIGNATURE-----
 
---UlVJffcvxoiEqYs2--
+--OFj+1YLvsEfSXdCH--
