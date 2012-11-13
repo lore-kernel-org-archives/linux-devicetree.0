@@ -1,20 +1,17 @@
 From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
- omap_devices to mach-omap2)
-Date: Tue, 13 Nov 2012 08:10:11 -1000
-Message-ID: <50A28D03.7050002@firmworks.com>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <50999145.2070306@wwwdotorg.org>
- <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
- <509D9089.7020407@wwwdotorg.org>
- <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com>
- <50A12950.6090808@wwwdotorg.org> <20121113072517.GE25915@truffula.fritz.box>
- <50A27BF1.4030502@wwwdotorg.org>
+Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
+Date: Tue, 13 Nov 2012 08:13:31 -1000
+Message-ID: <50A28DCB.7050707@firmworks.com>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
+ <20121113110837.GA30049@avionic-0098.mockup.avionic-design.de>
+ <50A2878D.8020707@wwwdotorg.org>
+ <20121113175147.GA2597@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50A27BF1.4030502-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20121113175147.GA2597-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,33 +22,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It seems to me that this capebus discussion is missing an important
-point.  The name capebus suggests that it is a bus, so there should be a
-parent node to represent that bus.  It should have a driver whose API
-implements all of the system-interface functions a cape needs.
+On 11/13/2012 7:51 AM, Thierry Reding wrote:
+> On Tue, Nov 13, 2012 at 10:46:53AM -0700, Stephen Warren wrote:
+>> On 11/13/2012 04:08 AM, Thierry Reding wrote:
+>>> On Mon, Nov 12, 2012 at 04:37:02PM +0100, Steffen Trumtrar wrote:
+>>>> This adds support for reading display timings from DT or/and
+>>>> convert one of those timings to a videomode. The
+>>>> of_display_timing implementation supports multiple children where
+>>>> each property can have up to 3 values. All children are read into
+>>>> an array, that can be queried. of_get_videomode converts exactly
+>>>> one of that timings to a struct videomode.
+>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/video/display-timings.txt
+>>>> b/Documentation/devicetree/bindings/video/display-timings.txt
+>>
+>>>> + - clock-frequency: displayclock in Hz
+>>>
+>>> "display clock"?
+>>
+>> I /think/ I had suggested naming this clock-frequency before so that
+>> the property name would be more standardized; other bindings use that
+>> same name. But I'm not too attached to the name I guess.
+> 
+> That's not what I meant. I think "displayclock" should be two words in
+> the description of the property. The property name is fine.
 
-If you look at the way that interrupt specifiers work, the default case
-is that a child device implicitly delegates the mapping to its parent.
-The use of phandles to break out of the tree structure was intended for
-use within the "hardwired motherboard domain", not for plug-in devices.
+Given that modern display engines often have numerous clocks, perhaps it
+would be better to use a more specific name, like for example "pixel-clock".
 
-The "new" phandle-based GPIO and clock mechanisms don't have that
-parent-delegation feature, but they should, because hierarchical
-hardware is a good thing when it exists.  One fix would be to designate
-a reserved phandle value - for example 0 or -1 - to mean "my parent". t
-The parent node would contain some translator to resolve the actual
-target node, similarly to interrupts and addresses.
-
-If done correctly, capebus "overlays" would then just be proper child
-nodes of the capebus bus node and there would no need to refer to
-"global" information like non-parent phandles.
-
-If something about the design of capebus makes that impossible, I
-respectfully suggest that its design should be reviewed, taking into
-account the many years of industry experience about modularity.
-
-Mitch
+> 
+> Thierry
+> 
+> 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
