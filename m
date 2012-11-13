@@ -1,143 +1,90 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V2 4/5] arm: mm: Added support for PJ4B cpu and init
- routines
-Date: Tue, 13 Nov 2012 16:15:16 +0100
-Message-ID: <50A26404.9010202@free-electrons.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-5-git-send-email-gregory.clement@free-electrons.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: [PATCH v2 3/3] ARM: Kirkwood: Convert IB62x0 to use gpio-poweroff.
+Date: Tue, 13 Nov 2012 16:44:45 +0100
+Message-ID: <1352821485-10032-4-git-send-email-andrew@lunn.ch>
+References: <1352821485-10032-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1351545108-18954-5-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352821485-10032-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Russell,
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+---
+ arch/arm/boot/dts/kirkwood-ib62x0.dts |    6 ++++++
+ arch/arm/mach-kirkwood/board-ib62x0.c |   13 -------------
+ 2 files changed, 6 insertions(+), 13 deletions(-)
 
-Do you have any comments on this patch?
-Else do you agree to give your acked-by?
-
-Thanks,
-
-Gregory
-
-
-On 10/29/2012 10:11 PM, Gregory CLEMENT wrote:
-> From: Yehuda Yitschak <yehuday@marvell.com>
-> 
-> Signed-off-by: Yehuda Yitschak <yehuday@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  arch/arm/mach-mvebu/Kconfig |    2 +-
->  arch/arm/mm/Kconfig         |    4 ++++
->  arch/arm/mm/proc-v7.S       |   43 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 48 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-> index 17d246b..9bfaa0c 100644
-> --- a/arch/arm/mach-mvebu/Kconfig
-> +++ b/arch/arm/mach-mvebu/Kconfig
-> @@ -22,7 +22,7 @@ config MVEBU_CLK_CPU
->  config MACH_ARMADA_370_XP
->  	bool
->  	select ARMADA_370_XP_TIMER
-> -	select CPU_V7
-> +	select CPU_PJ4B
->  
->  config MACH_ARMADA_370
->  	bool "Marvell Armada 370 boards"
-> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-> index 94186b6..3fd629d 100644
-> --- a/arch/arm/mm/Kconfig
-> +++ b/arch/arm/mm/Kconfig
-> @@ -352,6 +352,10 @@ config CPU_PJ4
->  	select ARM_THUMBEE
->  	select CPU_V7
->  
-> +config CPU_PJ4B
-> +	bool
-> +	select CPU_V7
-> +
->  # ARMv6
->  config CPU_V6
->  	bool "Support ARM V6 processor" if ARCH_INTEGRATOR || MACH_REALVIEW_EB || MACH_REALVIEW_PBX
-> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-> index 846d279..1a373c2 100644
-> --- a/arch/arm/mm/proc-v7.S
-> +++ b/arch/arm/mm/proc-v7.S
-> @@ -169,6 +169,39 @@ __v7_ca15mp_setup:
->  	orreq	r0, r0, r10			@ Enable CPU-specific SMP bits
->  	mcreq	p15, 0, r0, c1, c0, 1
->  #endif
-> +
-> +__v7_pj4b_setup:
-> +#ifdef CONFIG_CPU_PJ4B
-> +	/* Auxiliary Debug Modes Control 1 Register */
-> +	mrc	p15, 1,	r0, c15, c1, 1
-> +	orr	r0, r0, #(1 << 16)     @ Disable data transfer for clean line.
-> +	orr	r0, r0, #(1 << 5)      @ Enable the back off of STREX instr
-> +	orr	r0, r0, #(1 << 8)      @ Disable Internal Parity Handling
-> +	bic	r0, r0, #(1 << 2)      @ Disable Static BP
-> +	mcr	p15, 1,	r0, c15, c1, 1
-> +
-> +	/* Auxiliary Debug Modes Control 2 Register */
-> +	mrc	p15, 1,	r0, c15, c1, 2
-> +	bic	r0, r0, #(1 << 23)   @ Enable fast LDR.
-> +	orr	r0, r0, #(1 << 25)   @ Dont interleave write and snoop data.
-> +	orr	r0, r0, #(1 << 27)   @ Disable Critical Word First feature.
-> +	orr	r0, r0, #(1 << 29)   @ Disable outstanding non cacheable request
-> +	orr	r0, r0, #(1 << 30)   @ L1 replacement - Strict round robin
-> +	mcr	p15, 1,	r0, c15, c1, 2
-> +
-> +	/* Auxiliary Functional Modes Control Register 0 */
-> +	mrc	p15, 1,	r0, c15, c2, 0
-> +	orr	r0, r0, #(1 << 2)     @ Support L1 parity checking
-> +	orr	r0, r0, #(1 << 8)     @ Broadcast Cache and TLB maintenance
-> +	mcr	p15, 1,	r0, c15, c2, 0
-> +
-> +	/* Auxiliary Debug Modes Control 0 Register */
-> +	mrc	p15, 1,	r0, c15, c1, 0
-> +	orr	r0, r0, #(1 << 22)   @ WFI/WFE - serve the DVM and back to idle
-> +	mcr	p15, 1,	r0, c15, c1, 0
-> +
-> +#endif /* CONFIG_CPU_PJ4B */
-> +
->  __v7_setup:
->  	adr	r12, __v7_setup_stack		@ the local stack
->  	stmia	r12, {r0-r5, r7, r9, r11, lr}
-> @@ -342,6 +375,16 @@ __v7_ca9mp_proc_info:
->  	.long	0xff0ffff0
->  	__v7_proc __v7_ca9mp_setup
->  	.size	__v7_ca9mp_proc_info, . - __v7_ca9mp_proc_info
-> +
-> +	/*
-> +	 * Marvell PJ4B processor.
-> +	 */
-> +	.type   __v7_pj4b_proc_info, #object
-> +__v7_pj4b_proc_info:
-> +	.long	0x562f5842
-> +	.long	0xffffffff
-> +	__v7_proc __v7_pj4b_setup
-> +	.size	__v7_pj4b_proc_info, . - __v7_pj4b_proc_info
->  #endif	/* CONFIG_ARM_LPAE */
->  
->  	/*
-> 
-
-
+diff --git a/arch/arm/boot/dts/kirkwood-ib62x0.dts b/arch/arm/boot/dts/kirkwood-ib62x0.dts
+index 66794ed..9b0e2e3 100644
+--- a/arch/arm/boot/dts/kirkwood-ib62x0.dts
++++ b/arch/arm/boot/dts/kirkwood-ib62x0.dts
+@@ -79,4 +79,10 @@
+ 			gpios = <&gpio0 27 0>;
+ 		};
+ 	};
++	gpio_poweroff {
++		compatible = "gpio-poweroff";
++		gpios = <&gpio0 24 1>;
++	};
++
++
+ };
+diff --git a/arch/arm/mach-kirkwood/board-ib62x0.c b/arch/arm/mach-kirkwood/board-ib62x0.c
+index cfc47f8..7b8adf5 100644
+--- a/arch/arm/mach-kirkwood/board-ib62x0.c
++++ b/arch/arm/mach-kirkwood/board-ib62x0.c
+@@ -17,7 +17,6 @@
+ #include <linux/mtd/partitions.h>
+ #include <linux/ata_platform.h>
+ #include <linux/mv643xx_eth.h>
+-#include <linux/gpio.h>
+ #include <linux/input.h>
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -25,8 +24,6 @@
+ #include "common.h"
+ #include "mpp.h"
+ 
+-#define IB62X0_GPIO_POWER_OFF	24
+-
+ static struct mv643xx_eth_platform_data ib62x0_ge00_data = {
+ 	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
+ };
+@@ -49,11 +46,6 @@ static unsigned int ib62x0_mpp_config[] __initdata = {
+ 	0
+ };
+ 
+-static void ib62x0_power_off(void)
+-{
+-	gpio_set_value(IB62X0_GPIO_POWER_OFF, 1);
+-}
+-
+ void __init ib62x0_init(void)
+ {
+ 	/*
+@@ -63,9 +55,4 @@ void __init ib62x0_init(void)
+ 
+ 	kirkwood_ehci_init();
+ 	kirkwood_ge00_init(&ib62x0_ge00_data);
+-	if (gpio_request(IB62X0_GPIO_POWER_OFF, "ib62x0:power:off") == 0 &&
+-	    gpio_direction_output(IB62X0_GPIO_POWER_OFF, 0) == 0)
+-		pm_power_off = ib62x0_power_off;
+-	else
+-		pr_err("board-ib62x0: failed to configure power-off GPIO\n");
+ }
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.7.10.4
