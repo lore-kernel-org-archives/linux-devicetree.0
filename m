@@ -1,44 +1,67 @@
-From: =?UTF-8?B?VGVyamUgQmVyZ3N0csO2bQ==?= <tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm: Add NVIDIA Tegra20 support
-Date: Tue, 13 Nov 2012 10:16:30 +0200
-Message-ID: <50A201DE.9090409@nvidia.com>
-References: <1352469579-3337-1-git-send-email-thierry.reding@avionic-design.de> <1352469579-3337-2-git-send-email-thierry.reding@avionic-design.de> <50A1FE01.5090808@nvidia.com> <20121113080323.GA15983@avionic-0098.mockup.avionic-design.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v5 2/3] ASoC: atmel-ssc-dai: register dai and pcm directly
+Date: Tue, 13 Nov 2012 17:30:33 +0900
+Message-ID: <20121113083031.GP18224@opensource.wolfsonmicro.com>
+References: <1352706028-750-1-git-send-email-voice.shen@atmel.com>
+ <1352706028-750-3-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121113080323.GA15983-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="s9kDAZ2EyO0AcRYa"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1352706028-750-3-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On 13.11.2012 10:03, Thierry Reding wrote:
-> That should be fixed with v2 I posted a few hours ago.
 
-That's true.
+--s9kDAZ2EyO0AcRYa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Yes, Tegra30 support will follow in a separate patch. As for IOMMU
-> support it should eventually be made completely transparent, but I'm not
-> opposed to adding a patch with explicit IOMMU support back in if it
-> turns out that it can't be done transparently.
+On Mon, Nov 12, 2012 at 03:40:26PM +0800, Bo Shen wrote:
 
-The trouble with this is that the generic case demands that we support
-each device having a separate address space. But, on Tegra30 SMMU has
-only four address spaces, so in Tegra30 case we actually end up using
-the same address space for multiple devices.
+>  static struct platform_device sam9g20ek_audio_device = {
+>  	.name   = "at91sam9g20ek-audio",
+> -	.id     = -1,
+> +	.id     = 0,
+>  };
 
-Second problem is trying to avoid double mapping. With 2D acceleration,
-we need support for allocating buffers, and mapping them to DC, host1x
-and 2D. DMA Mapping API has a problem in that it doesn't allow just
-allocating - it forces mapping the buffer to a device at the same time.
-So, when 2D submit contains a reference to a dma-buf, the buffer has
-already been mapped to some device, but we don't have a good way of
-detecting that. We end up mapping it again, which is a performance
-killer and possibly a coherence problem.
+Why are you changing this?  Single devices are supposed to specify -1 as
+their id.
 
-Fortunately this is all related to 2D acceleration, so we can defer both
-of these problems for now.
+>  static int atmel_ssc_startup(struct snd_pcm_substream *substream,
+>  			     struct snd_soc_dai *dai)
+>  {
+> -	struct atmel_ssc_info *ssc_p = &ssc_info[dai->id];
+> +	struct atmel_ssc_info *ssc_p = &ssc_info;
 
-Best regards,
-Terje
+This seems like a very big step backwards, there's now a single global
+variable for the ssc_info which presumably means there can be only one
+SSC active in the system at once.  That's changing a lot more than just
+the registration...
+
+--s9kDAZ2EyO0AcRYa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQogTyAAoJELSic+t+oim9umQP/RIuxfm6bmfHp+Ovx6Rq+6La
+BV+jcDuhnGa0Z1AMAmvPfBqdKbZeDtmrGQqqvcAh5GhPcBeZlDVGhHKRsvQ6KoHo
+zeNk+VY95tdrSfNgNBh8HAWBuY31fUPx7IUqD2/CwpnfzVDj5PzCbt5Y+XUxGsML
+fgjDzyoDl46p3Onzomme+7/cUGAOWeleYmoOa/AiAjDS409YEyZsHHPDnHPucwOn
+UFBVkzDuO8ZLA4m/ggWM4wMjWjmS6t58XLRQm9p6edWStho3R+3KDFqjo0DZMaEA
+Cfl13mYHGtCF3GXzjyWJdfti7E6AitjA3s9J71Rx2frxVq3+V+iKQxTqOMSmr5Ha
+cuRWJ21IM6cBnsUrAAo00a5kVw8Y8lCveHMkZ5p+rV93jBXYgHoWg+Jkz688YqeV
+L9zZgFQY237IBWsUQvkw0G7+2Ypq3AZtCkKuWHFrdMcjsTm3hco4axO+P4KgOi/c
+QKRJqVMQvMuE8RTs7r9xegwh3hCZg19+v+bo6nOLGJ2YVIYxmnGxv+Duh6MV1jeL
+5C0Z42kTRimb+dcnorGiw078T5b+B5OAlITTLJoNy9i5JiICfDMEtOpQ8wBYVUxs
+/74F1er+JIiaDqEqjdpZllJLrFvilAQ20UGqkXN3wgdB9uWj/Vmaa614SggGmteY
+13vyPGuTqyrXrkDLvHcn
+=mzEK
+-----END PGP SIGNATURE-----
+
+--s9kDAZ2EyO0AcRYa--
