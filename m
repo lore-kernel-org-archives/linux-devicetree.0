@@ -1,90 +1,135 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] drm: Add NVIDIA Tegra20 support
-Date: Tue, 13 Nov 2012 11:05:27 +0100
-Message-ID: <20121113100527.GB982@avionic-0098.mockup.avionic-design.de>
-References: <1352757358-14001-1-git-send-email-thierry.reding@avionic-design.de>
- <1352757358-14001-2-git-send-email-thierry.reding@avionic-design.de>
- <50A1F3A3.40905@nvidia.com>
- <20121113074822.GA8409@avionic-0098.mockup.avionic-design.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 2/5] ARM: kernel: add device tree init map function
+Date: Tue, 13 Nov 2012 10:06:59 +0000
+Message-ID: <20121113100659.GF12287@e102568-lin.cambridge.arm.com>
+References: <1352471654-20207-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352471654-20207-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <20121112172753.GB2111@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eAbsdosE1cNLO4uF"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121112172753.GB2111@linaro.org>
 Content-Disposition: inline
-In-Reply-To: <20121113074822.GA8409-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 12, 2012 at 05:27:53PM +0000, Dave Martin wrote:
+> On Fri, Nov 09, 2012 at 02:34:11PM +0000, Lorenzo Pieralisi wrote:
 
---eAbsdosE1cNLO4uF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Nov 13, 2012 at 08:48:22AM +0100, Thierry Reding wrote:
-> On Tue, Nov 13, 2012 at 03:15:47PM +0800, Mark Zhang wrote:
-> > On 11/13/2012 05:55 AM, Thierry Reding wrote:
 [...]
-> > > +int tegra_output_init(struct drm_device *drm, struct tegra_output *o=
-utput)
-> > > +{
-> > > +       int connector, encoder, err;
-> > > +       enum of_gpio_flags flags;
-> > > +       struct device_node *ddc;
-> > > +       size_t size;
-> > > +
-> > > +       if (!output->of_node)
-> > > +               output->of_node =3D output->dev->of_node;
-> > > +
-> > > +       output->edid =3D of_get_property(output->of_node, "nvidia,edi=
-d", &size);
-> > > +
-> > > +       ddc =3D of_parse_phandle(output->of_node, "nvidia,ddc-i2c-bus=
-", 0);
-> > > +       if (ddc) {
-> > > +               output->ddc =3D of_find_i2c_adapter_by_node(ddc);
-> >=20
-> > The i2c adapter may not be ready at this time. For Tegra 2, the I2C bus
-> > for HDMI is not dedicated and we need the i2cmux driver loaded before
-> > this i2c can be used. It proved that sometimes i2cmux driver loads after
-> > drm driver.
-> >=20
-> > So we need to add some logics to support driver probe deferral here.
-> > Anyway, I'm just want you know about this and we can improve this later.
->=20
-> Good point. Unfortunately tegra_output_init() isn't always used from
-> within .probe(), so it isn't quite easy to handle deferred probe here.
-> I'll have to take a look at how to solve this properly.
 
-After a closer look at this I think what should be done here is split up
-tegra_output_init() into a tegra_output_parse() that does the DT parsing
-and tegra_output_init() that actually initializes the output.
+> > +Every cpu node is required to set its device_type to "cpu".
+> > +
+> > +Example:
+> > +
+> > +	cpus {
+> > +		#size-cells = <0>;
+> > +		#address-cells = <1>;
+> > +
+> > +		CPU0: cpu@0 {
+> > +			device_type = "cpu";
+> > +			compatible = <arm, cortex-a15>;
+> > +			reg = <0x0>;
+> > +		};
+> > +
+> > +		CPU1: cpu@1 {
+> > +			device_type = "cpu";
+> > +			compatible = <arm, cortex-a15>;
+> > +			reg = <0x1>;
+> > +		};
+> > +
+> > +		CPU2: cpu@100 {
+> > +			device_type = "cpu";
+> > +			compatible = <arm, cortex-a7>;
+> > +			reg = <0x100>;
+> > +		};
+> > +
+> > +		CPU3: cpu@101 {
+> 
+> Should we document the unit address convention as part of the binding
+> documentation?
+> 
+> Using the MPIDR value here is a bit cumbersome, but I'm not sure if
+> there's a better alternative, unless we make a multi-element vector
+> out of the MPIDR to use as the address -- sounds like overkill.
 
-I'll try to implement something like that for the next version.
+I just followed the booting-without-of.txt convention for /cpu nodes,
+where the unit-address is just the reg property stripped of its leading
+zeros. I think it is the default way of defining the unit-address I do not
+know if I need to add to this, I certainly can.
 
-Thierry
+> > +			device_type = "cpu";
+> > +			compatible = <arm, cortex-a7>;
+> > +			reg = <0x101>;
+> > +		};
+> > +	};
+> > diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
+> > index aeae9c6..8dd51dc 100644
+> > --- a/arch/arm/include/asm/prom.h
+> > +++ b/arch/arm/include/asm/prom.h
+> > @@ -15,6 +15,7 @@
+> >  
+> >  extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
+> >  extern void arm_dt_memblock_reserve(void);
+> > +extern void __init arm_dt_init_cpu_maps(void);
+> >  
+> >  #else /* CONFIG_OF */
+> >  
+> > @@ -24,6 +25,7 @@ static inline struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
+> >  }
+> >  
+> >  static inline void arm_dt_memblock_reserve(void) { }
+> > +static inline void arm_dt_init_cpu_maps(void) { }
+> >  
+> >  #endif /* CONFIG_OF */
+> >  #endif /* ASMARM_PROM_H */
+> > diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> > index bee7f9d..d64d222 100644
+> > --- a/arch/arm/kernel/devtree.c
+> > +++ b/arch/arm/kernel/devtree.c
+> > @@ -19,8 +19,10 @@
+> >  #include <linux/of_irq.h>
+> >  #include <linux/of_platform.h>
+> >  
+> > +#include <asm/cputype.h>
+> >  #include <asm/setup.h>
+> >  #include <asm/page.h>
+> > +#include <asm/smp_plat.h>
+> >  #include <asm/mach/arch.h>
+> >  #include <asm/mach-types.h>
+> >  
+> > @@ -61,6 +63,80 @@ void __init arm_dt_memblock_reserve(void)
+> >  	}
+> >  }
+> >  
+> > +/*
+> > + * arm_dt_init_cpu_maps - Function retrieves cpu nodes from the device tree
+> > + * and builds the cpu logical map array containing MPIDR values related to
+> > + * logical cpus
+> > + *
+> > + * Updates the cpu possible mask with the number of parsed cpu nodes
+> > + */
+> 
+> Can this function sanity-check that we do not assign the same MPIDR
+> value for multiple logical CPUs?
+> 
+> It turns out to be surprisingly easy to write a DT with duplicate reg
+> properties in the CPUs node due to careless cut-and-paste.  (i.e., I
+> did it, but have been getting away with it up to now).
 
---eAbsdosE1cNLO4uF
-Content-Type: application/pgp-signature
+Check added. Waiting for some comments on the compatible list of ids to
+post v3.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQohtnAAoJEN0jrNd/PrOhHVIP/2FY1h7O30G9SvHRHDvFXKKm
-ZPfCeoSPxyHu+cE4qVNn084NHttrYVuAcn1GUa4WeULVXP6RxGowKX2tAk1Ty/TQ
-PHZ9A4i2cQeG8NwP0c14AC1cEfJ0Td5ry0RFdjBWdjXgRS+qXWo1n+Xk+Rpljve9
-2Xi650YzOzdie8QIFaR7TkaiHAlkckhdts74oZBdsHAv4D+u1nvdb9UVd8Bx2K8C
-kL47mfzHjpFB3s7G17LbBZC8kssxzCpkOGhhGu8t7zHSLHqOcCtGKbxsTcCwiK7L
-Usxjb/+B/I59GexjkZ7wsiMiiQyWgjFtxVYfU9mrnQFhGNDo/SLStU8E5xQ8iHGd
-u6uYHxCz8OGwjPlwDsb7HIvmCozA/gpBjE69tzV4RDUNyQGReqL/bPIAXxLv1Ti3
-4FHhxwaZYPFix42EnQCLMkcaHn20RHwdwvUVPXIrGdWmIbo8SFF0Z+YN3Np8M1St
-8OFRr+sSv4AHry/TLXD6AZBWXpJCgaxRiTSpbCPi/ZWoTSbXSlg2AjqgECvXg5XN
-m8ZtdBJZ0edlo1fWcWSOXisnLXAnjhqzlSlEirE5s7JNvGDFqJAQSuNrDlEtuGz7
-SIeYNmCHwmh2u0oiecf7muH4yKcxE0Gr5P1Av+XzIUlzhnppGWlueYOmrmzBCXXH
-l4sgPAqi7NUwr0w+NXZe
-=5RWK
------END PGP SIGNATURE-----
-
---eAbsdosE1cNLO4uF--
+Thanks a lot,
+Lorenzo
