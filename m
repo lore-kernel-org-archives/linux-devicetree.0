@@ -1,182 +1,87 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+From: David Gibson <david@gibson.dropbear.id.au>
 Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
  omap_devices to mach-omap2)
-Date: Tue, 13 Nov 2012 12:05:05 +1100
-Message-ID: <20121113010505.GR4696@truffula.fritz.box>
+Date: Tue, 13 Nov 2012 13:28:08 +1100
+Message-ID: <20121113022808.GS4696@truffula.fritz.box>
 References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
- <20121109022624.GI23553@truffula.fritz.box>
- <CACxGe6vQ50aS0Fe7QvTHKfV=EDpsZoLC7SOxXLGc0pkMvyk5DQ@mail.gmail.com>
+ <02FF5400-9F97-4B8A-AEF0-267B01C8099F@antoniou-consulting.com>
+ <-4237940489086529028@unknownmsgid>
+ <559B8433-67C3-4A1A-A5D6-859907655176@antoniou-consulting.com>
+ <CAD=GYpZwpRRUD=Qy529KkiL-5e2zHaCWMZM9+CTQEnMqSR3yEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6vQ50aS0Fe7QvTHKfV=EDpsZoLC7SOxXLGc0pkMvyk5DQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Kevin Hilman <khilman-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Deepak Saxena <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <CAD=GYpZwpRRUD=Qy529KkiL-5e2zHaCWMZM9+CTQEnMqSR3yEw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel A Fernandes <agnel.joel@gmail.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 09, 2012 at 09:42:37PM +0000, Grant Likely wrote:
-> On Fri, Nov 9, 2012 at 2:26 AM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > (3) Resolving phandle references from the subtree to the main tree.
-> >
-> > So, I think this can actually be avoided, at least in cases where what
-> > physical connections are available to the expansion module is well
-> > defined.  The main causes to have external references are interrupts
-> > and gpios.  Interrupts we handle by defining an interrupt specifier
-> > space for the interrupts available on the expansion
-> > socket/connector/bus/whatever.  In the master tree we then have
-> > something like:
-> >
-> > ...
-> >         expansion-socket@XXXX {
-> >                 expansion-id = "SlotA";
-> >                 interrupt-map = < /* map expansion irq specs to
-> >                                      board interrupt controllers */ >;
-> >                 interrupt-map-mask = < ... >;
-> >                 ranges = < /* map expansion local addresses to global
-> >                               mmio */ >;
-> >         };
-> >
-> > The subtree for the expansion module gets attached as a subnode of
-> > this one.  It doesn't use explicit interrupt-parents but instead just
-> > uses the expansion local irq specifiers, letting the parent be the
-> > default which will bubble up to this socket node where the
-> > interrupt-map will send them to the right places.
-> >
-> > I don't recall the gpio bindings off hand, but as I recall we based
-> > them off the irq tree bindings so we ought to be able to do the same
-> > thing for them.
-> >
-> > Likewise, if there are several interchangeable expansion sockets that
-> > have some address bits hard wired to distinguish them, we can just use
-> > socket local mmio addresses within the subtree and the ranges property
-> > here will sort that out.
+On Fri, Nov 09, 2012 at 09:36:26PM -0600, Joel A Fernandes wrote:
+> Hi Pantelis,
 > 
-> If I'm reading correctly, the suggestion is that everything be grafted
-> below a single node and all connections route through that node using
-> mapping. Correct?
+> On Fri, Nov 9, 2012 at 2:13 AM, Pantelis Antoniou
+> <panto@antoniou-consulting.com> wrote:
 > 
-> For interrupts that works today
-> For gpios, it isn't currently supported, but we could do it.
-> For SPI it would mean that the new spi devices would not appear below
-> the actual spi bus they are attached to
-> For I2C, MDIO, and one wire, same problem.
-> For memory mapped devices, the expansion node would need to a ranges
-> for all the windows that map through it, and it assumes only one
-> memory mapped bus (or at least it prefers only one memory mapped bus.
-> If there were more than one then the expansion node placement wouldn't
-> have a natural place to sit)
+> >>>> Option C: U-Boot loads both the base and overlay FDT files, merges them,
+> >>>>       and passes the resolved tree to the kernel.
+> >>>>
+> >>>
+> >>> Could be made to work. Only really required if Joanne wants the
+> >>> cape interface to work for u-boot too. For example if the cape has some
+> >>> kind of network interface that u-boot will use to boot from.
+> >>>
+> >>
+> >> I love Grant's hashing idea a lot keeping the phandle problem for
+> >> compile time and not requiring fixups.
+> >>
+> >> IMO it is still a cleaner approach if u-boot does the tree merging for
+> >> all cases, and not the kernel.
+> >>
+> >> That way from a development standpoint, very little or nothing will
+> >> have to be changed in kernel (except for scripts/dtc) considering we
+> >> are moving forward with hashing.
+> >>
+> >> Also this discussed a while back but at some point is going to brought
+> >> up again-  loading of dt fragment directly from EEPROM and merging at
+> >> run time. If we were to implement this in kernel, we would have to add
+> >> cape specific EEPROM reading code, merge the tree before it is
+> >> unflattened and parse. I think doing tree merging in kernel is messy
+> >> and we should do it in uboot. Ideally reading the fragment from the
+> >> EEPROM for all capes and merging without worrying about version
+> >> detection, Doing the merge and passing the merged blob to the kernel
+> >> which (kernel) works the same way it does today.
+> >
+> > Not going to work, for a lot of cases. Doing it in the kernel seems to be
+> > the cleaner option. There are valid use cases for doing in u-boot too.
 > 
-> The problem is that this is not like a PCI bus where there is only one
-> kind of interface. It is a whole bunch of interfaces that happen to be
-> grouped together loosely (as an expansion connector in the beaglebone
-> case, but expansion isn't the only problem that I'm hearing about).
+> True, if dynamic runtime stuff from userspace is what we're talking
+> about, then yeah I see the important need for kernel to do the merge.
 > 
-> So, with a group of i2c, spi, memory mapped and other devices than are
-> all plugged in together, how does that look? They really should not
-> sit on the same level. An spi device cannot be a peer of an i2c device
-> for instance, the address mapping is entirely different. The kernel
-> really wants i2c devices to be a child of the actual i2c bus which may
-> already have an i2c device or too on the main board. Does the
-> expansion node need to have some kind of redirect node for each of the
-> busses where the children of it need to create devices as children of
-> the master bus?
+> >> Alternatively to hashing, reading david gibsons paper I followed,
+> >> phandle is supposed to 'uniquely' identity node. I wonder why the node
+> >> name itself is not sufficient to unquiely identify. The code that does
+> >> the tree walking can then just strcmp the node name while it walks the
+> >> tree instead of having to find a node with a phandle number. I guess
+> >> the reason is phandles are small to store as data values. Another
+> >> approach can be to arrange the string block in alphabetical order
+> >> (unless it already is), and store phandle as index of the node name
+> >> referenced relative to the starting of the strong block. This will not
+> >> affect nodes in dtb being moved around since they will still have the
+> >> same index value. the problem being adding or removing nodes Changes
+> >> the offsets of all other nodes in the string block as well.. Hmm.
+> >>
+> >
+> > This is pretty radical change to the DT format, no?
 > 
-> To me that seems to get really complex in a hurry. More complex than
-> the overlay approach.
+> Yes, true and the only way hypothetically to replace the phandle
+> tree-walking mechanism is to store node paths instead of phandle which
+> David pointed is too long to store, so I guess this wont work after
+> all. Anyway this was an interesting exercise, thanks.
 
-Ah, yes, I see.  Yeah, that's a genuine showstopper for my original
-proposal.  Ok, let me offer a couple of counter-proposals:
-
-1) bus-ranges
-
-The notion of bus-reg and bus-ranges properties is something I've
-toyed with before for other reasons, as a way of augmenting the
-"normal" DT tree structure with interrupt-tree like DAG sections.
-bus-reg and bus-ranges would act like the normal reg and ranges
-properties except that each entry includes a phandle explicitly giving
-the parent bus.  In that case a suitable 'bus-ranges' in the socket
-node would resurrect my graft proposal.
-
-I'm not particularly sold on this idea, but I mention it because it
-has applications other than this one.  In particular it would mean we
-could avoid having two different nodes for a device which is mostly
-accessed via MMIO but also has a few sideband registers controlled by
-i2c (or whatever).
-
-2) graft bundle
-
-The base tree has something like this:
-
-	...
-	i2c@XXX {
-		...
-		cape-socket {
-			compatible = "vendor,cape-socket";
-			id = "Socket-A";
-			piece-id = "i2c";
-			ranges = < ... >;
-		};
-	};
-	...
-	spi@YYY {
-		...
-		cape-socket {
-			compatible = "vendor,cape-socket";
-			id = "Socket-A";
-			piece-id = "spi";
-			ranges = < ... >;
-		};
-	};
-	...
-	cape-socket {
-		compatible = "vendor,cape-socket";
-		id = "Socket-A";
-		piece-id = "misc";
-		interrupt-map = < ... >;
-		interrupt-map-mask = < ... >;
-		gpio-map = < ... >;
-		gpio-map-mask = < ... >;
-	};
-
-Then instead of grafting a single subtree for the socket, we install a
-"bundle" of subtrees, one each for each of the pieces within the
-socket.  That bundle could either be an actual set of multiple fdts,
-or they could be placed into one fdt with a dummy root node, something like:
-	/ {
-		plugin-bundle;
-		compatible = "vendor,cape-plugin";
-		version = ...;
-		i2c-piece = {
-			piece-id = "i2c";
-			...
-		};
-		misc-piece = {
-			piece-id = "misc";
-			...
-		};
-	};
-That does have the additional advantage of letting us easily expand
-the metadata in the future by adding more properties to the dummy root
-node.
-
-It's a bit more complex than the overlay proposal, but I think it's
-safer - because the base tree clearly defines where it can be
-extended.  Plus it has the big advantage that it's no longer dependent
-on the exact node paths in the base tree, the matching for each
-component is done by the piece-id or other metadata.
+They're not too long to store, but changing to paths would break years
+of existing OF practice.
 
 -- 
 David Gibson			| I'll have my music baroque, and my code
