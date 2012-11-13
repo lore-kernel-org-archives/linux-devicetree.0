@@ -1,74 +1,93 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v8 6/6] drm_modes: add of_videomode helpers
-Date: Tue, 13 Nov 2012 12:35:18 +0100
-Message-ID: <20121113113518.GE30049@avionic-0098.mockup.avionic-design.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-7-git-send-email-s.trumtrar@pengutronix.de>
+From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH resend] Add devicetree support to m25p80 driver
+Date: Tue, 13 Nov 2012 13:44:26 +0200
+Message-ID: <1352807066.2262.53.camel@sauron.fi.intel.com>
+References: <5084241A.5050801@vanka.net> <50A2193A.2040100@vanka.net>
+Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wTWi5aaYRw9ix9vO"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352734626-27412-7-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+Content-Type: multipart/mixed; boundary="===============6290416495140069621=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50A2193A.2040100-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---wTWi5aaYRw9ix9vO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--===============6290416495140069621==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-KRDDoswjtskCwRgsbIk8"
+
+
+--=-KRDDoswjtskCwRgsbIk8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 12, 2012 at 04:37:06PM +0100, Steffen Trumtrar wrote:
-[...]
-> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-> +static void dump_drm_displaymode(struct drm_display_mode *m)
-> +{
-> +	pr_debug("drm_displaymode =3D %d %d %d %d %d %d %d %d %d\n",
-> +		 m->hdisplay, m->hsync_start, m->hsync_end, m->htotal,
-> +		 m->vdisplay, m->vsync_start, m->vsync_end, m->vtotal,
-> +		 m->clock);
+On Tue, 2012-11-13 at 10:56 +0100, Michal Vanka wrote:
+>                 return -ENODEV;
+>   #endif
+> @@ -825,27 +848,39 @@ static int __devinit m25p_probe(struct
+> spi_device
+> *spi)
+>                         dev_warn(&spi->dev, "unrecognized id %s\n",
+> data->type);=20
 
-I seem to remember a comment to an earlier version of this patch
-requesting better formatting of this string. Alternatively you might
-want to consider replacing it using drm_mode_debug_printmodeline().
+Still line-wrapped:
 
-> diff --git a/include/drm/drmP.h b/include/drm/drmP.h
-[...]
-> @@ -1457,6 +1458,10 @@ drm_mode_create_from_cmdline_mode(struct drm_devic=
-e *dev,
-> =20
->  extern int videomode_to_display_mode(struct videomode *vm,
->  				     struct drm_display_mode *dmode);
-> +extern int of_get_drm_display_mode(struct device_node *np,
-> +				   struct drm_display_mode *dmode,
-> +				   int index);
+$ git apply --check ~/tmp/mvanka.mbox
+fatal: corrupt patch at line 122
 
-Also requires either a dummy or protection.
+Please, make sure it applies to the l2-mtd.git tree. Send it to
+yourself, save your own e-mail, and verify with 'git apply --check'.
 
-Thierry
+--=20
+Best Regards,
+Artem Bityutskiy
 
---wTWi5aaYRw9ix9vO
-Content-Type: application/pgp-signature
+--=-KRDDoswjtskCwRgsbIk8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQojB2AAoJEN0jrNd/PrOhgKEP/ApMZ4QWYnDY0Un0LZJl7xB1
-AIBq5vHGG3JehdPpWnhPv00ygJ/3EUW5QfAulbXghP+/p6FXwBhPSEkyp68ALtUI
-NgKib56DoWg1L0htQB7zbb/rzfypPHKKMWNRu50CiRt+aQ1FvGCvJJg3JrvPtmaQ
-hPy26pPr36dbBNB2YZo2iEN+jMHqKfoXKd6H+5AN0fsn8fvUsOLyycUyH6fpX7TP
-bzjh9hLTJrvrenII/IukfAwY1UPkq5v3RHfXD632kwTNKz3gVx3s5uPiAZqwIpSW
-s/HIgXJxuJbgoWrs8ghPbTh5O2IwwC4mCUeUwWYzL9S4tDI2oZdEBIgi4HVXux0H
-gpt5e3iip1f5vx3PYdw5qiWI0tnnemSiwTIJoNGuiM2L5BRkMUI/h5ni+CSKUprE
-KkhDJ3qkfHjdcRri4NGHRM/Er7oOaRyz5Kl4Urxg5MN2xp53IvfjPDuJntIYpw8u
-wO0nRvTjcASXJ4UjbKtZA6q1XsGDfiFHZa/lOokE1DMEDzDGOErITjEc92wIPGEs
-/6w5iK8VZtEFC/sY2c8bNZE9tGfM530u+iUTrMLhYPmOAJfYpDOvfFlX+Bx40co2
-HQbCa9zpl3iap/1ecmqm0A+nxSyRFzVdGgZBjeIyL80/J07qX0T9OqiotQRb+htY
-z18U/Vqw8IoOeqn9WFuz
-=FyzF
+iQIcBAABAgAGBQJQojKaAAoJECmIfjd9wqK0NagP/Rj5fwmqDFdM54y4WHZUEmKh
+HE2wfW55001d5T0N4Z+aQS0QJVJ5VRYFPl6Mho3nmZkJDwJqRDksspZh293KujKg
+sTubYIZszzT5jZayOI4bu2mto565zdYlZ3BqkPnsmOjkow0rWwKvRW7mZyw35PPA
+4sTKRqJWrG2CImzvp2R70hXCwzGzZfbjInn3NvtdhXuLACXW4FDmOU4SFw0+P8+y
+hQ+b6e4uQbYXt3Hi+qecDXAL9o2cQlk1r9tvgbXnG6MMRFQij7G2eLAlKHWlYKPq
+lFXUs9oazX4jMg5qrvkj3xiz9eyHkMA9t3YuRWWzdP83lGy0OgVvWKL8rWOwmHT0
+OgBZXca1wratZncJOxVLidWv1rgF2DQxlBWdyMJzBsQz9LN/X5WLljUhnqnFHfBZ
+knHMkN1IryK4438qMmIGVJDyqrJkoSDJJBooyplMJh6ruQ/Eyb7Whs45xP0wZUf/
+CDW57hM2XHLqEmkQOsWFsNqEs2kfx2OBKD+KKmafyx8usMvrXUC4CQ1R2kjDLWJj
+lyuq3yRHcD+R/pdeWn5KVjB1TKJF9P/yusocFY7Acq77q58vGmSAFbBbdoyaLuMN
+LyAatjv7uKpbAZwVS9A48cFcPLgx8W1Gukg9aslHWm/ZptcQ/YLxDmyJWZuZ1KZa
+udhc2UTbxkHPwOaaTh9Z
+=UzK+
 -----END PGP SIGNATURE-----
 
---wTWi5aaYRw9ix9vO--
+--=-KRDDoswjtskCwRgsbIk8--
+
+
+--===============6290416495140069621==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6290416495140069621==--
