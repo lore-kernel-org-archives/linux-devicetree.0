@@ -1,114 +1,199 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
- to mach-omap2)
-Date: Tue, 13 Nov 2012 10:10:13 -0700
-Message-ID: <50A27EF5.7080806@wwwdotorg.org>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com> <509D9089.7020407@wwwdotorg.org> <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com> <50A12950.6090808@wwwdotorg.org> <20121113072517.GE25915@truffula.fritz.box> <BD20AE03-C138-4BC6-AE02-F162AF6840B2@antoniou-consulting.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Wolfram Sang <wolfram@the-dreams.de>
+Subject: [PATCH] bindings: i2c: use consistent naming for i2c binding descriptions
+Date: Tue, 13 Nov 2012 18:16:43 +0100
+Message-ID: <1352827003-24287-1-git-send-email-wolfram@the-dreams.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BD20AE03-C138-4BC6-AE02-F162AF6840B2@antoniou-consulting.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: linux-i2c@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@ozlabs.org, Wolfram Sang <wolfram@the-dreams.de>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2012 01:09 AM, Pantelis Antoniou wrote:
-> On Nov 13, 2012, at 9:25 AM, David Gibson wrote:
-...
->> 1) We annotate the base tree with some extra label information for
->> nodes which overlays are likely to want to reference by phandle.  e.g.
->>
->> 	beaglebone_pic: interrupt-controller@XXXXX {
->> 		...
->> 		phandle,symbolic-name = "beaglebone_pic";
->> 	};
->>
->> We could extend dtc to (optionally?) auto-generate those properties
->> from its existing label syntax.  Not sure if that's a good idea or
->> not yet.  In any case, we compile this augmented base tree to .dtb as
->> normal and boot our kernel with it.
-> 
-> I'm fine with that. You can auto-generate when there's a label to a node.
-> The cape dt fragment will use the label name to reference a node.
-> More details below...
-> 
->> 2) The information for the capes/modules/whatever is
->> distributed/packaged as .dts, never .dtb.  When userspace detects the
->> new module (or the user explicitly tells it, if it's not probeable) it
->> picks up the correct dts and runs it through dtc in a special mode.
->> In this mode dtc takes the existing base tree (from /proc/device-tree,
->> say) as well as the new dts.  In this mode, dtc allocates phandles for
->> the new tree fragment so as not to collide with anything from the
->> supplied base tree (as well as avoiding internal conflicts,
->> obviously).  It also allows node references to the base tree by using
->> those label annotations from (1) to match symbolic names to the
->> phandle values in the base tree.
-> 
-> Not good to rely on userspace kicking off dtc and compiling from source.
-> Some capes/expansion boards might have your root fs device, for example
-> there is an eMMC cape coming up, while networking capes are common too.
-> 
-> However I have a compromise. 
-> 
-> I agree that compiling from source can be an option for a runtime definable 
-> cape, but for built-in capes we could do a bit better.
-> 
-> In particular, I don't see any particular need to have a DT fragment
-> reference anything that dependent of the runtime device tree. It should
-> be possible to compile the DT fragment in kernel, against the generated
-> flattened device tree, producing a flattened DT fragment with the phandles
-> already resolved.
-> 
-> So the sequence could be something like this:
-> 
-> $ dtc -O dtb -o am335x-bone.dtb -b 0 am335x-bone.dts -@ ${LAST_PHANDLE_FILE}
-> $ dtc -O dtbf -R am335x-bone.dtb -o weather-cape.dtb -b 0 weather-cape.dts -@ ${LAST_PHANDLE_FILE}
-> $ dtc -O dtbf -R am335x-bone.dtb -o geiger-cape.dtb -b 0 geiger-cape.dts -@ ${LAST_PHANDLE_FILE}
-> 
-> The ${LAST_PHANDLE_FILE} can be updated with the last phandle value generated.
+Filenames of devictree binding documentation seems to be arbitrary and
+for me it is unneeded hazzle to find the corresponding documentation for
+a specific driver.
 
-I'm not sure that will avoid phandle collisions though.
+Naming the description the same as the driver is a lot easier and makes
+sense to me since the driver defines the binding it understands.
 
-If you build everything at runtime, you'll always be compiling each new
-partial .dtb based on the phandles actually in-use in the kernel's
-current complete device tree. You can always easily avoid collisions
-that way.
+Also, remove a reference in one source to the binding documentation, since path
+information easily gets stale.
 
-If you instead pre-compile both the based .dtb /and/ some partial .dtbs,
-then you're essentially statically defining some phandle values, but
-splitting those static assignments across 3 (in your example) different
-.dtbs. However, what guarantees that those 3 .dtbs are already loaded
-into the system when some fourth partial .dtb is loaded, such that the
-static phandle assignments influence that fourth partial .dtb's runtime
-compilation?
+Signed-off-by: Wolfram Sang <wolfram@the-dreams.de>
+Cc: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+---
 
-Put another way, what happens when you:
+I think it would be helpful if other subsystems would follow if we can agree on
+this pattern.
 
-1) Boot the kernel using am335x-bone.dtb.
-2) Incrementally load weather-cape.dtb. Don't incrementally load
-geiger-cape.dtb for whatever reason.
-3) Load runtime-compiled-cape.dtb. This avoids conflicts with the
-already-loaded am335x-bone.dtb and weather-cape.dtb since
-runtime-compiled-cape.dtb is compiled at runtime based on the currently
-loaded .dtbs. However, it may well end up conflicting with
-geiger-cape.dtb since that isn't loaded.
-4) Now attempt to load geiger-cape.dtb - possible conflict.
+Thanks,
 
-Given all of that, I'd assert that if you want to statically assign any
-phandles, all static assignments need to be done in the base .dtb that
-the kernel is loaded with, and not in any pre-compiled partial .dtbs.
+   Wolfram
 
-So, if your root filesystem is on an eMMC cape, then you need to create
-a board .dts file that /include/s the base board .dts and the cape .dts
-files and boot the kernel with that.
+ .../bindings/i2c/{atmel-i2c.txt => i2c-at91.txt}     |    0
+ .../bindings/i2c/{davinci.txt => i2c-davinci.txt}    |    0
+ .../bindings/i2c/{gpio-i2c.txt => i2c-gpio.txt}      |    0
+ .../bindings/i2c/{fsl-imx-i2c.txt => i2c-imx.txt}    |    0
+ .../bindings/i2c/{fsl-i2c.txt => i2c-mpc.txt}        |    0
+ .../devicetree/bindings/i2c/{mux.txt => i2c-mux.txt} |    0
+ .../devicetree/bindings/i2c/i2c-mv64xxx.txt          |   18 ++++++++++++++++++
+ .../bindings/i2c/{nomadik.txt => i2c-nomadik.txt}    |    0
+ .../bindings/i2c/{cavium-i2c.txt => i2c-octeon.txt}  |    0
+ .../bindings/i2c/{omap-i2c.txt => i2c-omap.txt}      |    0
+ .../devicetree/bindings/i2c/{pnx.txt => i2c-pnx.txt} |    0
+ .../i2c/{ce4100-i2c.txt => i2c-pxa-pci-ce4100.txt}   |    0
+ .../bindings/i2c/{mrvl-i2c.txt => i2c-pxa.txt}       |   18 ------------------
+ .../i2c/{samsung-i2c.txt => i2c-s3c2410.txt}         |    0
+ .../bindings/i2c/{sirf-i2c.txt => i2c-sirf.txt}      |    0
+ .../i2c/{arm-versatile.txt => i2c-versatile.txt}     |    0
+ .../bindings/i2c/{xiic.txt => i2c-xiic.txt}          |    0
+ drivers/i2c/busses/i2c-ocores.c                      |    4 ----
+ 18 files changed, 18 insertions(+), 22 deletions(-)
+ rename Documentation/devicetree/bindings/i2c/{atmel-i2c.txt => i2c-at91.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{davinci.txt => i2c-davinci.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{gpio-i2c.txt => i2c-gpio.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{fsl-imx-i2c.txt => i2c-imx.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{fsl-i2c.txt => i2c-mpc.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{mux.txt => i2c-mux.txt} (100%)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+ rename Documentation/devicetree/bindings/i2c/{nomadik.txt => i2c-nomadik.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{cavium-i2c.txt => i2c-octeon.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{omap-i2c.txt => i2c-omap.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{pnx.txt => i2c-pnx.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{ce4100-i2c.txt => i2c-pxa-pci-ce4100.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{mrvl-i2c.txt => i2c-pxa.txt} (70%)
+ rename Documentation/devicetree/bindings/i2c/{samsung-i2c.txt => i2c-s3c2410.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{sirf-i2c.txt => i2c-sirf.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{arm-versatile.txt => i2c-versatile.txt} (100%)
+ rename Documentation/devicetree/bindings/i2c/{xiic.txt => i2c-xiic.txt} (100%)
 
-Or, you get U-Boot/... to merge the relevant pre-compiled .dtbs and boot
-the kernel with that.
-
-Or I suppose you could have a well-known range of phandles for
-pre-compiled .dtbs that the runtime dtc mode always avoided, preferably
-without the need for explicit phandle-range statements in the .dts
-files, e.g. driven by a dtc static-assignment-vs-dynamic-assignment
-command-line option?
+diff --git a/Documentation/devicetree/bindings/i2c/atmel-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-at91.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/atmel-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-at91.txt
+diff --git a/Documentation/devicetree/bindings/i2c/davinci.txt b/Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/davinci.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-davinci.txt
+diff --git a/Documentation/devicetree/bindings/i2c/gpio-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/gpio-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-gpio.txt
+diff --git a/Documentation/devicetree/bindings/i2c/fsl-imx-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-imx.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/fsl-imx-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-imx.txt
+diff --git a/Documentation/devicetree/bindings/i2c/fsl-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-mpc.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/fsl-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-mpc.txt
+diff --git a/Documentation/devicetree/bindings/i2c/mux.txt b/Documentation/devicetree/bindings/i2c/i2c-mux.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/mux.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-mux.txt
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+new file mode 100644
+index 0000000..f46d928
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
+@@ -0,0 +1,18 @@
++
++* Marvell MV64XXX I2C controller
++
++Required properties :
++
++ - reg             : Offset and length of the register set for the device
++ - compatible      : Should be "marvell,mv64xxx-i2c"
++ - interrupts      : The interrupt number
++ - clock-frequency : Desired I2C bus clock frequency in Hz.
++
++Examples:
++
++	i2c@11000 {
++		compatible = "marvell,mv64xxx-i2c";
++		reg = <0x11000 0x20>;
++		interrupts = <29>;
++		clock-frequency = <100000>;
++	};
+diff --git a/Documentation/devicetree/bindings/i2c/nomadik.txt b/Documentation/devicetree/bindings/i2c/i2c-nomadik.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/nomadik.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-nomadik.txt
+diff --git a/Documentation/devicetree/bindings/i2c/cavium-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-octeon.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/cavium-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-octeon.txt
+diff --git a/Documentation/devicetree/bindings/i2c/omap-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-omap.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/omap-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-omap.txt
+diff --git a/Documentation/devicetree/bindings/i2c/pnx.txt b/Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/pnx.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-pnx.txt
+diff --git a/Documentation/devicetree/bindings/i2c/ce4100-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/ce4100-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt
+diff --git a/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+similarity index 70%
+rename from Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+index 0f79450..12b78ac 100644
+--- a/Documentation/devicetree/bindings/i2c/mrvl-i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.txt
+@@ -31,21 +31,3 @@ Examples:
+ 		reg = <0xd4025000 0x1000>;
+ 		interrupts = <58>;
+ 	};
+-
+-* Marvell MV64XXX I2C controller
+-
+-Required properties :
+-
+- - reg             : Offset and length of the register set for the device
+- - compatible      : Should be "marvell,mv64xxx-i2c"
+- - interrupts      : The interrupt number
+- - clock-frequency : Desired I2C bus clock frequency in Hz.
+-
+-Examples:
+-
+-	i2c@11000 {
+-		compatible = "marvell,mv64xxx-i2c";
+-		reg = <0x11000 0x20>;
+-		interrupts = <29>;
+-		clock-frequency = <100000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/i2c/samsung-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/samsung-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-s3c2410.txt
+diff --git a/Documentation/devicetree/bindings/i2c/sirf-i2c.txt b/Documentation/devicetree/bindings/i2c/i2c-sirf.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/sirf-i2c.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-sirf.txt
+diff --git a/Documentation/devicetree/bindings/i2c/arm-versatile.txt b/Documentation/devicetree/bindings/i2c/i2c-versatile.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/arm-versatile.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-versatile.txt
+diff --git a/Documentation/devicetree/bindings/i2c/xiic.txt b/Documentation/devicetree/bindings/i2c/i2c-xiic.txt
+similarity index 100%
+rename from Documentation/devicetree/bindings/i2c/xiic.txt
+rename to Documentation/devicetree/bindings/i2c/i2c-xiic.txt
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index bffd550..15da1ac 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -9,10 +9,6 @@
+  * kind, whether express or implied.
+  */
+ 
+-/*
+- * This driver can be used from the device tree, see
+- *     Documentation/devicetree/bindings/i2c/ocore-i2c.txt
+- */
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+-- 
+1.7.10.4
