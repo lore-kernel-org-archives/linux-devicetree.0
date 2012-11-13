@@ -1,65 +1,60 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/14] ARM: SPEAr13xx: DT: Add spics gpio controller nodes
-Date: Tue, 13 Nov 2012 15:08:12 +0100
-Message-ID: <CACRpkdZkgmLF8TxFCZSubP+g+6_ofZugArKtE9=dYTZfemstrw@mail.gmail.com>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
- <58a7d91cab20b924784fb5a09e16ca08e6f13318.1352608333.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <58a7d91cab20b924784fb5a09e16ca08e6f13318.1352608333.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [PATCH 3.7.0-rc4] of/net/mdio-gpio: Fix pdev->id issue when using devicetrees.
+Date: Tue, 13 Nov 2012 14:26:13 +0000
+Message-ID: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, srinivas.kandagatla@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 11, 2012 at 5:39 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-> From: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
->
-> SPEAr platform provides a provision to control chipselects of ARM PL022 Prime
-> Cell spi controller through its system registers, which otherwise remains under
-> PL022 control which some protocols do not want.
+When the mdio-gpio driver is probed via device trees, the platform
+device id is set as -1, However the id is re-used in the code while
+creating an mdio bus.
+So, setting up the id via aliases from device tree is a sensible
+solution to fix this issue.
 
-So I guess this platform us utilizing the cs_control field of the
-PL022 platform data to do the actual magic, right?
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+---
+ .../devicetree/bindings/net/mdio-gpio.txt          |    9 ++++++++-
+ drivers/net/phy/mdio-gpio.c                        |    1 +
+ 2 files changed, 9 insertions(+), 1 deletions(-)
 
-> This patch adds spics controller nodes in device tree for various SPEAr13xx
-> SoCs.
->
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
-> Reviewed-by: Vipin Kumar <vipin.kumar-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-(...)
->         ahb {
-> +               spics: spics@e0700000{
-> +                       compatible = "st,spear-spics-gpio";
-> +                       reg = <0xe0700000 0x1000>;
-> +                       st-spics,peripcfg-reg = <0x3b0>;
-> +                       st-spics,sw-enable-bit = <12>;
-> +                       st-spics,cs-value-bit = <11>;
-> +                       st-spics,cs-enable-mask = <3>;
-> +                       st-spics,cs-enable-shift = <8>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +               };
-> +
-
-Are these bindings documented?
-
-Apart from that remark:
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/net/mdio-gpio.txt b/Documentation/devicetree/bindings/net/mdio-gpio.txt
+index bc95495..c79bab0 100644
+--- a/Documentation/devicetree/bindings/net/mdio-gpio.txt
++++ b/Documentation/devicetree/bindings/net/mdio-gpio.txt
+@@ -8,9 +8,16 @@ gpios property as described in section VIII.1 in the following order:
+ 
+ MDC, MDIO.
+ 
++Note: Each gpio-mdio bus should have an alias correctly numbered in "aliases"
++node.
++
+ Example:
+ 
+-mdio {
++aliases {
++	mdio-gpio0 = <&mdio0>;
++};
++
++mdio0: mdio {
+ 	compatible = "virtual,mdio-gpio";
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+diff --git a/drivers/net/phy/mdio-gpio.c b/drivers/net/phy/mdio-gpio.c
+index 899274f..e3f3115 100644
+--- a/drivers/net/phy/mdio-gpio.c
++++ b/drivers/net/phy/mdio-gpio.c
+@@ -56,6 +56,7 @@ static void *mdio_gpio_of_get_data(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return NULL;
+ 	pdata->mdio = ret;
++	pdev->id = of_alias_get_id(np, "mdio-gpio");
+ 
+ 	return pdata;
+ }
+-- 
+1.7.0.4
