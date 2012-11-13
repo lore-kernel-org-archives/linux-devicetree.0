@@ -1,82 +1,76 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices
- to mach-omap2)
-Date: Mon, 12 Nov 2012 22:22:07 -0700
-Message-ID: <50A1D8FF.7060104@wwwdotorg.org>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <20121109022624.GI23553@truffula.fritz.box> <CACxGe6vQ50aS0Fe7QvTHKfV=EDpsZoLC7SOxXLGc0pkMvyk5DQ@mail.gmail.com> <20121113010505.GR4696@truffula.fritz.box>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] NVIDIA Tegra DRM driver
+Date: Tue, 13 Nov 2012 07:47:48 +0100
+Message-ID: <20121113064748.GB31443@avionic-0098.mockup.avionic-design.de>
+References: <1352757358-14001-1-git-send-email-thierry.reding@avionic-design.de>
+ <50A1918E.1000809@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20121113010505.GR4696@truffula.fritz.box>
-Sender: linux-omap-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50A1918E.1000809-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2012 06:05 PM, David Gibson wrote:
-> On Fri, Nov 09, 2012 at 09:42:37PM +0000, Grant Likely wrote:
-...
-> 2) graft bundle
-> 
-> The base tree has something like this:
-> 
-> 	...
-> 	i2c@XXX {
-> 		...
-> 		cape-socket {
-> 			compatible = "vendor,cape-socket";
-> 			id = "Socket-A";
-> 			piece-id = "i2c";
-> 			ranges = < ... >;
-> 		};
-> 	};
-> 	...
-> 	spi@YYY {
-> 		...
-> 		cape-socket {
-> 			compatible = "vendor,cape-socket";
-> 			id = "Socket-A";
-> 			piece-id = "spi";
-> 			ranges = < ... >;
-> 		};
-> 	};
-> 	...
-> 	cape-socket {
-> 		compatible = "vendor,cape-socket";
-> 		id = "Socket-A";
-> 		piece-id = "misc";
-> 		interrupt-map = < ... >;
-> 		interrupt-map-mask = < ... >;
-> 		gpio-map = < ... >;
-> 		gpio-map-mask = < ... >;
-> 	};
-> 
-> Then instead of grafting a single subtree for the socket, we install a
-> "bundle" of subtrees, one each for each of the pieces within the
-> socket.  That bundle could either be an actual set of multiple fdts,
-> or they could be placed into one fdt with a dummy root node, something like:
->
-> 	/ {
-> 		plugin-bundle;
-> 		compatible = "vendor,cape-plugin";
-> 		version = ...;
-> 		i2c-piece = {
-> 			piece-id = "i2c";
-> 			...
-> 		};
-> 		misc-piece = {
-> 			piece-id = "misc";
-> 			...
-> 		};
-> 	};
 
-I do like this approach; it's the kind of thing I proposed at:
+--WYTEVAkct0FjGQmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg20414.html
+On Mon, Nov 12, 2012 at 05:17:18PM -0700, Stephen Warren wrote:
+> On 11/12/2012 02:55 PM, Thierry Reding wrote:
+> > This second version of this patch series addresses all the comments
+> > received so far. Most notably it takes advantage of the debugfs helpers
+> > provided by the DRM core. Oddly enough this actually increases the line
+> > count, but that's because the helpers don't fit with the subdevices
+> > approach as implemented by this driver. However some quick discussions
+> > with Rob Clark showed that Tegra DRM is not special in this respect but
+> > other drivers may need the same functionality. Eventually the debugfs
+> > code could be reworked on top of helpers that are better suited at the
+> > design of embedded, multi-device DRM drivers.
+> >=20
+> > Other than that there is some removal of code that was actually supposed
+> > to go into a later patch because it has dependencies that haven't been
+> > merged yet and some moving around of #defines and the device tree
+> > bindings documentation. Finally the driver now uses the DRM core's
+> > drm_compat_ioctl() instead of a custom and unimplemented (!) version.
+>=20
+> The series,
+>=20
+> Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> (on the Harmony board's HDMI output; I'll test other boards/outputs later=
+).
 
-One question though: Perhaps the base board has two instances of the
-same type of connector vendor,cape-socket, allowing 2 independent capes
-to be plugged in. When overlaying/grafting the child board's .dts, we'd
-need some way to specify the socket ID that was being plugged into. Is
-that the intent of the "id" property in your base board example above?
+You also gave an Acked-by for the DT binding documentation in the first
+version of this patchset, does it apply to the rest of the patch as
+well? That is, can I add it to patch 1?
+
+Thierry
+
+--WYTEVAkct0FjGQmd
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQoe0UAAoJEN0jrNd/PrOhkO4P/j1fH+7cGSILND7bxqP+bpAe
+G8P1m9GsvVYHMiDGE2vzvBzRrQpy4AlPEBU9NxEpEenJSM5wxMIXJdyo6DM3wAJE
+pTqsX7QMlgDu5etvGkLGDtPo6JELd+9MeH1gKVFHD5ju/Pmsx7nhNxIku1XA3NTU
+UKPtNRCwfaHl50ATaxiv9WJhPv7wTeHj39EE5/OqhDCEtG4t2hCUKsyYPdpoRGsJ
+9JLKG+KHbgIqqpRrq7bYEa3OBHOxy/cZ4MFCmL9bVd30a6rIcAStnGRJGNB5J7BH
+kakTBv1cauNJCJfMw4BK/8MhlyPyaEZdpeb6Kb1S92NRCbXGODlpfJOUpDudD0b7
+k9KVsIK6fPvm72xrofa+trR1yJ7vJzorJvAdUWZ3lvDjCevQIALG87FWb5uPxif4
+3l3LXO9+6N/nNAki8QZNJ+eDDKTVKDJ3sYlZHiJnrL/9Se3U5km56b7CNwZcy207
+kXuvtAxYI3vJPO4cP3sgDltBrm8/6157azjp4VuJNoWKL5NXXpB6Kjoxnb1GaUka
+AvTJr+WrGsMqoyxey3SrOx8XpsCCRYR6GjNeWDUv9oMgCyrQs3YQrH7fQ2nbMnWL
+Rlotxsi7p/yVr5qXFTezHEWxfkQ1hfpswvxfv2bRn4Od3jRE40z0Twcgc6juxOlr
+OljfR8dx17fuGwUiPRV1
+=FOwG
+-----END PGP SIGNATURE-----
+
+--WYTEVAkct0FjGQmd--
