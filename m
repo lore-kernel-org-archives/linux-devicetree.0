@@ -1,81 +1,37 @@
-From: =?ISO-8859-1?Q?Per_F=F6rlin?= <per.forlin@stericsson.com>
-Subject: Re: [PATCH] dt: platform: Extract device name from device tree blob
-Date: Mon, 12 Nov 2012 23:54:40 +0100
-Message-ID: <50A17E30.7030807@stericsson.com>
-References: <1352732343-1199-1-git-send-email-per.forlin@stericsson.com> <CACxGe6vjLA3j-bc_048UrdB5Q=8pV8=LPSVUnU_k3anX23vwyw@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] NVIDIA Tegra DRM driver
+Date: Mon, 12 Nov 2012 17:17:18 -0700
+Message-ID: <50A1918E.1000809@wwwdotorg.org>
+References: <1352757358-14001-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6vjLA3j-bc_048UrdB5Q=8pV8=LPSVUnU_k3anX23vwyw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Fredrik SODERSTEDT <fredrik.soderstedt@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352757358-14001-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2012 04:20 PM, Grant Likely wrote:
-> On Mon, Nov 12, 2012 at 2:59 PM, Per Forlin <per.forlin@stericsson.com> wrote:
->> Add support to extract device name from device tree blob.
->> If the property "dev-name" is set in the DTS this name will
->> be used when creating the device.
->> The auxdata_lookup has precedence and will override
->> the "dev-name" property.
+On 11/12/2012 02:55 PM, Thierry Reding wrote:
+> This second version of this patch series addresses all the comments
+> received so far. Most notably it takes advantage of the debugfs helpers
+> provided by the DRM core. Oddly enough this actually increases the line
+> count, but that's because the helpers don't fit with the subdevices
+> approach as implemented by this driver. However some quick discussions
+> with Rob Clark showed that Tegra DRM is not special in this respect but
+> other drivers may need the same functionality. Eventually the debugfs
+> code could be reworked on top of helpers that are better suited at the
+> design of embedded, multi-device DRM drivers.
 > 
-> Using a 'dev-name' property has the same problem that the 'cell-index'
-> properties have in that it is encoding part of the global namespace
-> local to the node and it becomes easy to create collisions. Instead of
-> this check to see if one of the properties in /aliases points to the
-> node and use that for the name.
-> 
-> g.
-> 
-Thanks Grant for your feedback,
+> Other than that there is some removal of code that was actually supposed
+> to go into a later patch because it has dependencies that haven't been
+> merged yet and some moving around of #defines and the device tree
+> bindings documentation. Finally the driver now uses the DRM core's
+> drm_compat_ioctl() instead of a custom and unimplemented (!) version.
 
-Extract from exynos5250.dtsi:
------------
-	aliases {
-		spi0 = &spi_0;
-		spi1 = &spi_1;
-		spi2 = &spi_2;
-	};
+The series,
 
-	spi_0: spi@12d20000 {
-...
-	};
+Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-	spi_1: spi@12d30000 {
-...
-	};
-
-	spi_2: spi@12d40000 {
-...
-	};
----------------
-
-Alias refers to the device node. The device node is not aware of the alias.
-
-How to get a device name from the aliases.
-1. Traverse all aliases for each device node (time consuming if there are many aliases)
-2. Make a new function of_alias_get_name(), today there is only of_alias_get_id()
-3. The functionality of setting device_name based on alias name needs to be optional because one may want to use aliases without changing the name of the device.
-All this is feasible but perhaps not optimal.
-
-I don't really see how come name space is a big issue in this case. The name space of "dev-name" is local to the device node. A child device node can use the same dev-name as the parent (unless I'm mistaken which happens quite often). Introducing yet another property name pollutes the name space of the device node. Still I think the pros are stronger than the cons.
-
-Do you still prefer to use the name of the Alias? Could you please elaborate a bit more how this can be done in practice?
-I would agree with you if there was a reference from the device node to the alias.
-
-My dev-name patch can be made smaller by moving read_string to:
-static int of_platform_bus_create(struct device_node *bus,
-                platform_data = auxdata->platform_data;
-        }
- 
-+       if (!bus_id)
-+               of_property_read_string(bus, "dev-name", &bus_id);
-+
-
-It would be nice to add something in the DTS to explicitly enable this feature to avoid collisions. Default this feature is disabled.
-Any suggestions?
-
-BR
-Per
+(on the Harmony board's HDMI output; I'll test other boards/outputs later).
