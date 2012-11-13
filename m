@@ -1,93 +1,133 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH resend] Add devicetree support to m25p80 driver
-Date: Tue, 13 Nov 2012 13:44:26 +0200
-Message-ID: <1352807066.2262.53.camel@sauron.fi.intel.com>
-References: <5084241A.5050801@vanka.net> <50A2193A.2040100@vanka.net>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Tue, 13 Nov 2012 12:24:40 +0000
+Message-ID: <CACxGe6vQxmAk_joUYbaXw4r8J3_RbQt22zFg84ANvcw+ycCMHg@mail.gmail.com>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
+ <509D9089.7020407@wwwdotorg.org> <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com>
+ <50A12950.6090808@wwwdotorg.org> <20121113072517.GE25915@truffula.fritz.box> <BD20AE03-C138-4BC6-AE02-F162AF6840B2@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6290416495140069621=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50A2193A.2040100-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Vanka <mv-Swe8ldf8qsBeoWH0uzbU5w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <BD20AE03-C138-4BC6-AE02-F162AF6840B2@antoniou-consulting.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Stephen Warren <swarren@wwwdotorg.org>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 13, 2012 at 8:09 AM, Pantelis Antoniou
+<panto@antoniou-consulting.com> wrote:
+> On Nov 13, 2012, at 9:25 AM, David Gibson wrote:
+> Not good to rely on userspace kicking off dtc and compiling from source.
+> Some capes/expansion boards might have your root fs device, for example
+> there is an eMMC cape coming up, while networking capes are common too.
+>
+> However I have a compromise.
+>
+> I agree that compiling from source can be an option for a runtime definable
+> cape, but for built-in capes we could do a bit better.
+>
+> In particular, I don't see any particular need to have a DT fragment
+> reference anything that dependent of the runtime device tree. It should
+> be possible to compile the DT fragment in kernel, against the generated
+> flattened device tree, producing a flattened DT fragment with the phandles
+> already resolved.
 
---===============6290416495140069621==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-KRDDoswjtskCwRgsbIk8"
+Do you mean linking dtc into the kernel?
 
+> So the sequence could be something like this:
+>
+> $ dtc -O dtb -o am335x-bone.dtb -b 0 am335x-bone.dts -@ ${LAST_PHANDLE_FILE}
+> $ dtc -O dtbf -R am335x-bone.dtb -o weather-cape.dtb -b 0 weather-cape.dts -@ ${LAST_PHANDLE_FILE}
+> $ dtc -O dtbf -R am335x-bone.dtb -o geiger-cape.dtb -b 0 geiger-cape.dts -@ ${LAST_PHANDLE_FILE}
+>
+> The ${LAST_PHANDLE_FILE} can be updated with the last phandle value generated.
+>
+> Alternatively we could have a way to statically assign a phandle range
+> for well known capes. All the others will have to use the runtime compile
+> mechanism.
+> $ dtc -O dtb -o am335x-bone.dtb -b 0 am335x-bone.dts
+> $ dtc -O dtbf -R am335x-bone.dtb -o weather-cape.dtb -b 0 weather-cape.dts
+> $ dtc -O dtbf -R am335x-bone.dtb -o geiger-cape.dtb -b 0 geiger-cape.dts
+>
+> With the cape dtses having a /phandle-range/ statement at the top.
 
---=-KRDDoswjtskCwRgsbIk8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I really think the whole phandle allocation thing is a non problem.
+Generating phandles is the easy part, and using a good hash function
+pretty much solves it entirely. I know people are worried about
+collisions, but there are only two scenarios where collisions may
+happen:
 
-On Tue, 2012-11-13 at 10:56 +0100, Michal Vanka wrote:
->                 return -ENODEV;
->   #endif
-> @@ -825,27 +848,39 @@ static int __devinit m25p_probe(struct
-> spi_device
-> *spi)
->                         dev_warn(&spi->dev, "unrecognized id %s\n",
-> data->type);=20
+1) base and overlay try to define same phandle
+  - Easy to detect - kernel can complain and refuse to load if it happens
+  - Will never happen when overlay is compiled against the base used
+to boot (dtc can resolve the conflict)
+  - Hash phandle generation makes this exceptionally rare
+2) two overlays try to define same phandle
+  - Also easy to detect on loading the second overlay - kernel will
+  - Hash phandle generation still makes this exceptionally rare
 
-Still line-wrapped:
+In both cases a collision is extremely rare and if it does happen it
+will not fail silently. Besides, in the odd scenario where it does
+happen, a node can be manually assigned a phandle. It is far better to
+do the manual override maybe once or twice (actually, I'd be surprised
+if it is ever needed) than to get into any kind of numberspace
+management for phandles. That's just a maintenance nightmare.
 
-$ git apply --check ~/tmp/mvanka.mbox
-fatal: corrupt patch at line 122
+The hard bit to solve has always been when the overlay expects
+different phandles than the base is using, and that problem only
+occurs if the overlay is compiled against a different base dtb than
+was used to boot the system. Hashed phandle generation even makes
+phandles very stable when the base dtb is recompiled, and if they do
+change, then the kernel can detect it and report an error. Again, no
+silent failures. Phandle fixup does make the problem disappears
+entirely but I'm concerned that it is still incomplete (see below) and
+would be conceptually expensive.
 
-Please, make sure it applies to the l2-mtd.git tree. Send it to
-yourself, save your own e-mail, and verify with 'git apply --check'.
+Once of the requests is to support one overlay .dtb with many
+different baseboards, but now that I've thought about it more I
+realize that it just won't work for anything beyond the most trivial
+case. Phandle fixup isn's sufficient. The format of GPIO, Interrupt,
+clock, etc specifiers may change if the base board nodes change. The
+specifiers are not portable.
 
---=20
-Best Regards,
-Artem Bityutskiy
+So, I no longer think that plain dtb overlays alone will work against
+any base board. Something more is needed. It may be the mechanism for
+loading new data into the kernel, but something really generic does
+require either being compiled at runtime (as David suggests) or each
+expansion interface (ie. the BeagleBone expansion or the RPi
+expansion) to really specify what kinds of references are allowed and
+run all specifiers through translation nodes. Similar to how
+interrupt-map works.
 
---=-KRDDoswjtskCwRgsbIk8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> i2c2: i2c@4819c000 {
+>         compatible = "ti,omap4-i2c";
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         ti,hwmods = "i2c3";
+>         reg = <0x4819c000 0x1000>;
+>         interrupt-parent = <&intc>;
+>         interrupts = <30>;
+>         status = "disabled";
+> };
+>
+> And in the cape definition (when compiled with the special mode I describe
+> below)
+>
+> / {
+>         plugin-bundle;
+>         compatible = "cco,weather-cape";
+>         version = <00A0>;
+>
+>         i2c2-graft = {
+>                 compatible = <dt,graft>;
+>                 graft-point = <&i2c2>;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Since overlays are different, we can interpret them slightly
+differently. The node name itself could be the graft point, and the
+name could be either a full path "/foo/bar/i2c@10002000" or an alias
+reference "i2c2". I think that is a bit better than a new graft-point
+property.
 
-iQIcBAABAgAGBQJQojKaAAoJECmIfjd9wqK0NagP/Rj5fwmqDFdM54y4WHZUEmKh
-HE2wfW55001d5T0N4Z+aQS0QJVJ5VRYFPl6Mho3nmZkJDwJqRDksspZh293KujKg
-sTubYIZszzT5jZayOI4bu2mto565zdYlZ3BqkPnsmOjkow0rWwKvRW7mZyw35PPA
-4sTKRqJWrG2CImzvp2R70hXCwzGzZfbjInn3NvtdhXuLACXW4FDmOU4SFw0+P8+y
-hQ+b6e4uQbYXt3Hi+qecDXAL9o2cQlk1r9tvgbXnG6MMRFQij7G2eLAlKHWlYKPq
-lFXUs9oazX4jMg5qrvkj3xiz9eyHkMA9t3YuRWWzdP83lGy0OgVvWKL8rWOwmHT0
-OgBZXca1wratZncJOxVLidWv1rgF2DQxlBWdyMJzBsQz9LN/X5WLljUhnqnFHfBZ
-knHMkN1IryK4438qMmIGVJDyqrJkoSDJJBooyplMJh6ruQ/Eyb7Whs45xP0wZUf/
-CDW57hM2XHLqEmkQOsWFsNqEs2kfx2OBKD+KKmafyx8usMvrXUC4CQ1R2kjDLWJj
-lyuq3yRHcD+R/pdeWn5KVjB1TKJF9P/yusocFY7Acq77q58vGmSAFbBbdoyaLuMN
-LyAatjv7uKpbAZwVS9A48cFcPLgx8W1Gukg9aslHWm/ZptcQ/YLxDmyJWZuZ1KZa
-udhc2UTbxkHPwOaaTh9Z
-=UzK+
------END PGP SIGNATURE-----
-
---=-KRDDoswjtskCwRgsbIk8--
-
-
---===============6290416495140069621==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6290416495140069621==--
+g.
