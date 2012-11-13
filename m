@@ -1,79 +1,100 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] i2c: i2c-ocores: Add irq support for sparc
-Date: Tue, 13 Nov 2012 07:18:37 -0600
-Message-ID: <50A248AD.9000705@gmail.com>
-References: <1352739591-1317-1-git-send-email-andreas@gaisler.com> <1352739591-1317-2-git-send-email-andreas@gaisler.com> <20121113111055.GF23119@pengutronix.de>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v8 3/6] fbmon: add videomode helpers
+Date: Tue, 13 Nov 2012 14:28:46 +0100
+Message-ID: <20121113132846.GF27797@pengutronix.de>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-4-git-send-email-s.trumtrar@pengutronix.de>
+ <20121113112257.GB30049@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121113111055.GF23119-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121113112257.GB30049@avionic-0098.mockup.avionic-design.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Nov 13, 2012 at 12:22:58PM +0100, Thierry Reding wrote:
+> On Mon, Nov 12, 2012 at 04:37:03PM +0100, Steffen Trumtrar wrote:
+> [...]
+> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > +int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode)
+> 
+> The other helpers are named <destination-type>_from_<source-type>(),
+> maybe this should follow that example for consistency?
+> 
+
+Hm, not a bad idea.
+
+> > +{
+> > +	fbmode->xres = vm->hactive;
+> > +	fbmode->left_margin = vm->hback_porch;
+> > +	fbmode->right_margin = vm->hfront_porch;
+> > +	fbmode->hsync_len = vm->hsync_len;
+> > +
+> > +	fbmode->yres = vm->vactive;
+> > +	fbmode->upper_margin = vm->vback_porch;
+> > +	fbmode->lower_margin = vm->vfront_porch;
+> > +	fbmode->vsync_len = vm->vsync_len;
+> > +
+> > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> > +
+> > +	fbmode->sync = 0;
+> > +	fbmode->vmode = 0;
+> > +	if (vm->hah)
+> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> > +	if (vm->vah)
+> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> > +	if (vm->interlaced)
+> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> > +	if (vm->doublescan)
+> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> > +	if (vm->de)
+> > +		fbmode->sync |= FB_SYNC_DATA_ENABLE_HIGH_ACT;
+> > +	fbmode->refresh = 60;
+> 
+> Can the refresh rate not be computed from the pixel clock and the
+> horizontal and vertical timings?
+> 
+
+Yes. That totally got lost on the way.
+
+> > +	fbmode->flag = 0;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(videomode_to_fb_videomode);
+> > +#endif
+> > +
+> > +
+> 
+> There's a gratuitous blank line here.
+> 
+> >  #else
+> >  int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+> >  {
+> > diff --git a/include/linux/fb.h b/include/linux/fb.h
+> > index c7a9571..46c665b 100644
+> > --- a/include/linux/fb.h
+> > +++ b/include/linux/fb.h
+> > @@ -714,6 +714,8 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+> >  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+> >  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+> >  
+> > +extern int videomode_to_fb_videomode(struct videomode *vm, struct fb_videomode *fbmode);
+> > +
+> 
+> Should you provide a dummy in the !CONFIG_VIDEOMODE case?
+> 
+
+Okay
+
+Steffen
 
 
-On 11/13/2012 05:10 AM, Wolfram Sang wrote:
-> Hi,
-> 
-> On Mon, Nov 12, 2012 at 05:59:50PM +0100, Andreas Larsson wrote:
->> Add sparc support by using platform_get_irq instead of platform_get_resource.
->> There are no platform resources of type IORESOURCE_IRQ for sparc, but
->> platform_get_irq works for sparc. In the non-sparc case platform_get_irq
->> internally uses platform_get_resource.
->>
->> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
->> ---
->> Changes since v1:
->>  - platform_get_irq now works for sparc, so that is used for all platforms
->>  - Acked by Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
->>
->>  drivers/i2c/busses/i2c-ocores.c |    9 +++++----
->>  1 files changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
->> index bffd550..0b71dc6 100644
->> --- a/drivers/i2c/busses/i2c-ocores.c
->> +++ b/drivers/i2c/busses/i2c-ocores.c
->> @@ -267,7 +267,8 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->>  {
->>  	struct ocores_i2c *i2c;
->>  	struct ocores_i2c_platform_data *pdata;
->> -	struct resource *res, *res2;
->> +	struct resource *res;
->> +	int irq;
->>  	int ret;
->>  	int i;
->>  
->> @@ -275,8 +276,8 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->>  	if (!res)
->>  		return -ENODEV;
->>  
->> -	res2 = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->> -	if (!res2)
->> +	irq = platform_get_irq(pdev, 0);
->> +	if (irq < 0)
->>  		return -ENODEV;
-> 
-> Why not pass the error code you got?
-
-I believe that should actually be a check for 'irq <= 0' as it returns
-NO_IRQ on error.
-
->>  
->>  	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
->> @@ -313,7 +314,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
->>  	ocores_init(i2c);
->>  
->>  	init_waitqueue_head(&i2c->wait);
->> -	ret = devm_request_irq(&pdev->dev, res2->start, ocores_isr, 0,
->> +	ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
->>  			       pdev->name, i2c);
->>  	if (ret) {
->>  		dev_err(&pdev->dev, "Cannot claim IRQ\n");
-> 
-> Rest looks good.
-> 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
