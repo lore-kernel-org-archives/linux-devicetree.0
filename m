@@ -1,67 +1,159 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v5 2/3] ASoC: atmel-ssc-dai: register dai and pcm directly
-Date: Tue, 13 Nov 2012 17:30:33 +0900
-Message-ID: <20121113083031.GP18224@opensource.wolfsonmicro.com>
-References: <1352706028-750-1-git-send-email-voice.shen@atmel.com>
- <1352706028-750-3-git-send-email-voice.shen@atmel.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v8 2/6] video: add of helper for videomode
+Date: Tue, 13 Nov 2012 09:32:30 +0100
+Message-ID: <20121113083230.GA27797@pengutronix.de>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-3-git-send-email-s.trumtrar@pengutronix.de>
+ <20121112185840.GX10369@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s9kDAZ2EyO0AcRYa"
-Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1352706028-750-3-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <20121112185840.GX10369@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Hi!
 
---s9kDAZ2EyO0AcRYa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Nov 12, 2012 at 07:58:40PM +0100, Sascha Hauer wrote:
+> Hi Steffen,
+> 
+> You lose memory in several places:
+> 
+> On Mon, Nov 12, 2012 at 04:37:02PM +0100, Steffen Trumtrar wrote:
+> > +static struct display_timing *of_get_display_timing(struct device_node *np)
+> > +{
+> > +	struct display_timing *dt;
+> > +	int ret = 0;
+> > +
+> > +	dt = kzalloc(sizeof(*dt), GFP_KERNEL);
+> > +	if (!dt) {
+> > +		pr_err("%s: could not allocate display_timing struct\n", __func__);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	ret |= parse_property(np, "hback-porch", &dt->hback_porch);
+> > +	ret |= parse_property(np, "hfront-porch", &dt->hfront_porch);
+> > +	ret |= parse_property(np, "hactive", &dt->hactive);
+> > +	ret |= parse_property(np, "hsync-len", &dt->hsync_len);
+> > +	ret |= parse_property(np, "vback-porch", &dt->vback_porch);
+> > +	ret |= parse_property(np, "vfront-porch", &dt->vfront_porch);
+> > +	ret |= parse_property(np, "vactive", &dt->vactive);
+> > +	ret |= parse_property(np, "vsync-len", &dt->vsync_len);
+> > +	ret |= parse_property(np, "clock-frequency", &dt->pixelclock);
+> > +
+> > +	of_property_read_u32(np, "vsync-active", &dt->vsync_pol_active);
+> > +	of_property_read_u32(np, "hsync-active", &dt->hsync_pol_active);
+> > +	of_property_read_u32(np, "de-active", &dt->de_pol_active);
+> > +	of_property_read_u32(np, "pixelclk-inverted", &dt->pixelclk_pol);
+> > +	dt->interlaced = of_property_read_bool(np, "interlaced");
+> > +	dt->doublescan = of_property_read_bool(np, "doublescan");
+> > +
+> > +	if (ret) {
+> > +		pr_err("%s: error reading timing properties\n", __func__);
+> > +		return NULL;
+> 
+> Here
+> 
+> > +	}
+> > +
+> > +	return dt;
+> > +}
+> > +
+> > +/**
+> > + * of_get_display_timings - parse all display_timing entries from a device_node
+> > + * @np: device_node with the subnodes
+> > + **/
+> > +struct display_timings *of_get_display_timings(struct device_node *np)
+> > +{
+> > +	struct device_node *timings_np;
+> > +	struct device_node *entry;
+> > +	struct device_node *native_mode;
+> > +	struct display_timings *disp;
+> > +
+> > +	if (!np) {
+> > +		pr_err("%s: no devicenode given\n", __func__);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	timings_np = of_find_node_by_name(np, "display-timings");
+> > +	if (!timings_np) {
+> > +		pr_err("%s: could not find display-timings node\n", __func__);
+> > +		return NULL;
+> > +	}
+> > +
+> > +	disp = kzalloc(sizeof(*disp), GFP_KERNEL);
+> > +	if (!disp)
+> > +		return -ENOMEM;
+> > +
+> > +	entry = of_parse_phandle(timings_np, "native-mode", 0);
+> > +	/* assume first child as native mode if none provided */
+> > +	if (!entry)
+> > +		entry = of_get_next_child(np, NULL);
+> > +	if (!entry) {
+> > +		pr_err("%s: no timing specifications given\n", __func__);
+> > +		return NULL;
+> 
+> Here
+> 
+> > +	}
+> > +
+> > +	pr_info("%s: using %s as default timing\n", __func__, entry->name);
+> > +
+> > +	native_mode = entry;
+> > +
+> > +	disp->num_timings = of_get_child_count(timings_np);
+> > +	disp->timings = kzalloc(sizeof(struct display_timing *)*disp->num_timings,
+> > +				GFP_KERNEL);
+> > +	if (!disp->timings)
+> > +		return -ENOMEM;
+> 
+> Here
+> 
+> > +
+> > +	disp->num_timings = 0;
+> > +	disp->native_mode = 0;
+> > +
+> > +	for_each_child_of_node(timings_np, entry) {
+> > +		struct display_timing *dt;
+> > +
+> > +		dt = of_get_display_timing(entry);
+> > +		if (!dt) {
+> > +			/* to not encourage wrong devicetrees, fail in case of an error */
+> > +			pr_err("%s: error in timing %d\n", __func__, disp->num_timings+1);
+> > +			return NULL;
+> 
+> Here
+> 
+> > +		}
+> > +
+> > +		if (native_mode == entry)
+> > +			disp->native_mode = disp->num_timings;
+> > +
+> > +		disp->timings[disp->num_timings] = dt;
+> > +		disp->num_timings++;
+> > +	}
+> > +	of_node_put(timings_np);
+> > +
+> > +	if (disp->num_timings > 0)
+> > +		pr_info("%s: got %d timings. Using timing #%d as default\n", __func__,
+> > +			disp->num_timings , disp->native_mode + 1);
+> > +	else {
+> > +		pr_err("%s: no valid timings specified\n", __func__);
+> > +		return NULL;
+> 
+> and here
+> 
 
-On Mon, Nov 12, 2012 at 03:40:26PM +0800, Bo Shen wrote:
+Well,... you are right. :-(
 
->  static struct platform_device sam9g20ek_audio_device = {
->  	.name   = "at91sam9g20ek-audio",
-> -	.id     = -1,
-> +	.id     = 0,
->  };
+Regards,
+Steffen
 
-Why are you changing this?  Single devices are supposed to specify -1 as
-their id.
-
->  static int atmel_ssc_startup(struct snd_pcm_substream *substream,
->  			     struct snd_soc_dai *dai)
->  {
-> -	struct atmel_ssc_info *ssc_p = &ssc_info[dai->id];
-> +	struct atmel_ssc_info *ssc_p = &ssc_info;
-
-This seems like a very big step backwards, there's now a single global
-variable for the ssc_info which presumably means there can be only one
-SSC active in the system at once.  That's changing a lot more than just
-the registration...
-
---s9kDAZ2EyO0AcRYa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQogTyAAoJELSic+t+oim9umQP/RIuxfm6bmfHp+Ovx6Rq+6La
-BV+jcDuhnGa0Z1AMAmvPfBqdKbZeDtmrGQqqvcAh5GhPcBeZlDVGhHKRsvQ6KoHo
-zeNk+VY95tdrSfNgNBh8HAWBuY31fUPx7IUqD2/CwpnfzVDj5PzCbt5Y+XUxGsML
-fgjDzyoDl46p3Onzomme+7/cUGAOWeleYmoOa/AiAjDS409YEyZsHHPDnHPucwOn
-UFBVkzDuO8ZLA4m/ggWM4wMjWjmS6t58XLRQm9p6edWStho3R+3KDFqjo0DZMaEA
-Cfl13mYHGtCF3GXzjyWJdfti7E6AitjA3s9J71Rx2frxVq3+V+iKQxTqOMSmr5Ha
-cuRWJ21IM6cBnsUrAAo00a5kVw8Y8lCveHMkZ5p+rV93jBXYgHoWg+Jkz688YqeV
-L9zZgFQY237IBWsUQvkw0G7+2Ypq3AZtCkKuWHFrdMcjsTm3hco4axO+P4KgOi/c
-QKRJqVMQvMuE8RTs7r9xegwh3hCZg19+v+bo6nOLGJ2YVIYxmnGxv+Duh6MV1jeL
-5C0Z42kTRimb+dcnorGiw078T5b+B5OAlITTLJoNy9i5JiICfDMEtOpQ8wBYVUxs
-/74F1er+JIiaDqEqjdpZllJLrFvilAQ20UGqkXN3wgdB9uWj/Vmaa614SggGmteY
-13vyPGuTqyrXrkDLvHcn
-=mzEK
------END PGP SIGNATURE-----
-
---s9kDAZ2EyO0AcRYa--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
