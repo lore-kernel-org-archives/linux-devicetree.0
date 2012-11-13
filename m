@@ -1,54 +1,49 @@
-From: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and custom getreg and setreg functions
-Date: Tue, 13 Nov 2012 23:45:39 +0100
-Message-ID: <87sj8d86lo.fsf@dell.be.48ers.dk>
-References: <1352834727-16368-1-git-send-email-andreas@gaisler.com>
-	<1352834727-16368-3-git-send-email-andreas@gaisler.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH V2 4/5] arm: mm: Added support for PJ4B cpu and init
+ routines
+Date: Tue, 13 Nov 2012 22:53:07 +0000
+Message-ID: <20121113225307.GA9094@mudshark.cambridge.arm.com>
+References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
+ <1351545108-18954-5-git-send-email-gregory.clement@free-electrons.com>
+ <50A26404.9010202@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352834727-16368-3-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> (Andreas
-	Larsson's message of "Tue, 13 Nov 2012 20:25:27 +0100")
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <50A26404.9010202@free-electrons.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Andreas" == Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> writes:
+On Tue, Nov 13, 2012 at 03:15:16PM +0000, Gregory CLEMENT wrote:
+> >  __v7_setup:
+> >  	adr	r12, __v7_setup_stack		@ the local stack
+> >  	stmia	r12, {r0-r5, r7, r9, r11, lr}
+> > @@ -342,6 +375,16 @@ __v7_ca9mp_proc_info:
+> >  	.long	0xff0ffff0
+> >  	__v7_proc __v7_ca9mp_setup
+> >  	.size	__v7_ca9mp_proc_info, . - __v7_ca9mp_proc_info
+> > +
+> > +	/*
+> > +	 * Marvell PJ4B processor.
+> > +	 */
+> > +	.type   __v7_pj4b_proc_info, #object
+> > +__v7_pj4b_proc_info:
+> > +	.long	0x562f5842
+> > +	.long	0xffffffff
 
-Hi,
+This mask seems a little excessive -- does your cpuid not contain revision
+information? If so, I'm not sure we want to update the code every time there
+is a new spin of the same CPU.
 
- Andreas> The registers in the GRLIB port of the controller are 32-bit
- Andreas> and in big endian byte order. The PRELOW and PREHIGH registers
- Andreas> are merged into one register. The subsequent registers have
- Andreas> their offset decreased accordingly. Hence the register access
- Andreas> needs to be handled in a non-standard manner using custom
- Andreas> getreg and setreg functions.
-
- Andreas> @@ -257,6 +300,14 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
- 
- Andreas>  	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
- Andreas>  				&i2c->reg_io_width);
- Andreas> +
- Andreas> +	if (of_device_is_compatible(pdev->dev.of_node,
- Andreas> +				    "aeroflexgaisler,i2cmst")) {
- Andreas> +		dev_dbg(&pdev->dev, "GRLIB variant of i2c-ocores\n");
- Andreas> +		i2c->setreg = oc_setreg_grlib;
- Andreas> +		i2c->getreg = oc_getreg_grlib;
- Andreas> +	}
- Andreas> +
-
-Please also update the bindings documentation under
-Documentation/devicetree/bindings/i2c.
-
-With this core you need to add both aeroflexgaisler,i2cmst and
-opencores,i2c-ocores to the compatible property, but the grlib variant
-is NOT compatible with i2c-ocores, so that's not really nice.
-
-Adding a type define (TYPE_OCORES / TYPE_GRLIB) and a 2nd of_device_id
-entry with .data = TYPE_GRLIB, and then using that in the probe routine
-would be nicer. Have a look at i2c-at91.c for an example of a driver
-doing something like that.
-
--- 
-Bye, Peter Korsgaard
+Will
