@@ -1,60 +1,58 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v5 1/3] ARM: at91: atmel-ssc: add pinctrl support
-Date: Tue, 13 Nov 2012 17:50:54 +0900
-Message-ID: <20121113085052.GR18224@opensource.wolfsonmicro.com>
-References: <1352706028-750-1-git-send-email-voice.shen@atmel.com>
- <1352706028-750-2-git-send-email-voice.shen@atmel.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH v5 2/3] ASoC: atmel-ssc-dai: register dai and pcm directly
+Date: Tue, 13 Nov 2012 17:10:26 +0800
+Message-ID: <50A20E82.9020704@atmel.com>
+References: <1352706028-750-1-git-send-email-voice.shen@atmel.com> <1352706028-750-3-git-send-email-voice.shen@atmel.com> <20121113083031.GP18224@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GTGEtWEe6jD60dxL"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352706028-750-2-git-send-email-voice.shen@atmel.com>
+In-Reply-To: <20121113083031.GP18224@opensource.wolfsonmicro.com>
 Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
---GTGEtWEe6jD60dxL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 11/13/2012 16:30, Mark Brown wrote:
+> On Mon, Nov 12, 2012 at 03:40:26PM +0800, Bo Shen wrote:
+>
+>>   static struct platform_device sam9g20ek_audio_device = {
+>>   	.name   = "at91sam9g20ek-audio",
+>> -	.id     = -1,
+>> +	.id     = 0,
+>>   };
+>
+> Why are you changing this?  Single devices are supposed to specify -1 as
+> their id.
 
-On Mon, Nov 12, 2012 at 03:40:25PM +0800, Bo Shen wrote:
+This is for non-dt support, using the id to tell which ssc will be used 
+to remap into audio subsystem. Maybe this is a mixed up usage, however I 
+can not find good solution, any suggestions?
 
-> +				ssc0 {
-> +					pinctrl_ssc0_tx: ssc0_tx-0 {
-> +						atmel,pins =
-> +							<1 16 0x1 0x1	/* PB16 periph A with pull up */
-> +							 1 17 0x1 0x1	/* PB17 periph A with pull up */
-> +							 1 18 0x1 0x1>;	/* PB18 periph A with pull up */
-> +					};
+This is a similar implement as 7840487cd6298f9f931103b558290d8d98d41c49
 
-Do we really want the pull ups here?  Normally CMOS devices don't have
-pulls, or the pulls are disabled during normal operation, as otherwise
-when the logic level is different to whatever the pull is doing power is
-wasted driving against the resistor.
+>>   static int atmel_ssc_startup(struct snd_pcm_substream *substream,
+>>   			     struct snd_soc_dai *dai)
+>>   {
+>> -	struct atmel_ssc_info *ssc_p = &ssc_info[dai->id];
+>> +	struct atmel_ssc_info *ssc_p = &ssc_info;
+>
+> This seems like a very big step backwards, there's now a single global
+> variable for the ssc_info which presumably means there can be only one
+> SSC active in the system at once.  That's changing a lot more than just
+> the registration...
 
---GTGEtWEe6jD60dxL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This change won't broke other subsystem using ssc, only broke the audio 
+subsystem if there are two codecs co-exist in a system.
+I will fix this in next version.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Yes, this patch is a little more than registration, however when change 
+the registration method, the related code will be affected, so also 
+clean up them in this patch, do I need to split this patch?
 
-iQIcBAEBAgAGBQJQognLAAoJELSic+t+oim9AaIP/1vML3ZA6L6eQ2F8+W6iMh1R
-B10qq3SKb7Ye4NI67K9ouCD9N6fhrXobEM9vDvKTUi1aKkNE9wIbBMWgF6aNeG9g
-qJJXPa17bCSl9ZzLAc+cTWI5+4hfydCk4Adsk0Q/5pw7CCV6wMPOXtnUDo7u+Tys
-BuG0aGu7zfsogpIn1RxpsdIHI354wsvLbrkUIsQWnxO1A4a0UzuUYOtn1I6OS8EE
-r0Q+iYRhhRT0cTXynux5ivU5g3AobQGe8v2NVOWfXZUx2JPxRH8wQrTlrc6Wdn2C
-PcYRR3WBJMkLTOKfdyPmupC5wf9hF8LfcEpQnBVi2x3n+zGcj0kYXTE8odDTRKVh
-z9flhmHOSNwPhyCNy9qfAvSLXtZSxqw+z/UQzV46ulay6L9zj0Q35EVsjMeRpMGm
-aUk+t8BCWog8esvQRCmSnljn8I8ACXsYamZ3mn3lsI0kjMSX5Bx9byA7vKBN29YC
-gstFcVYNDsR4q/AqYFhvLaaLVAmrAiI05Bd/t6AAF7bV4mfJruj1cQjir89Ci1A8
-+Exg/HO0gC3nDvBaoH5fJrOvl05Dub5QJjcrLv4+sveMjcv3G+4pNNnO/AzncezL
-VDoOrNTMjpy5kzubdehv5vzlIzt7VfwBc9VOyY49HoSpZY3T8R1pSa8arqS06o+U
-QDK/e/hU6SEw0Sr6LcVi
-=DiO7
------END PGP SIGNATURE-----
+Thanks.
 
---GTGEtWEe6jD60dxL--
+Best Regards,
+Bo Shen
