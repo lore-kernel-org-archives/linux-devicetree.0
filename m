@@ -1,76 +1,137 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Tue, 13 Nov 2012 14:13:45 +0100
-Message-ID: <CACRpkdZqAbRsvKEqTHNsZGsZO0KEMS1RyLtxujjdo8Xw59xnDA@mail.gmail.com>
-References: <38620644.IyR5R8rjKP@percival>
-	<1801189.6J3flQFRCq@percival>
-	<CACRpkdYqCQc0Er1JR_eVzZPCycvKjd0Pph8Dcay0FbU3Q64D8A@mail.gmail.com>
-	<1503934.I4tc7K6I6s@percival>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 1/6] video: add display_timing and videomode
+Date: Tue, 13 Nov 2012 14:14:23 +0100
+Message-ID: <20121113131423.GE27797@pengutronix.de>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-2-git-send-email-s.trumtrar@pengutronix.de>
+ <20121113104159.GA18645@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1503934.I4tc7K6I6s@percival>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121113104159.GA18645-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 8, 2012 at 7:23 AM, Alex Courbot <acourbot@nvidia.com> wrote:
-> On Thursday 08 November 2012 05:24:19 Linus Walleij wrote:
->> On Tue, Nov 6, 2012 at 2:33 AM, Alex Courbot <acourbot@nvidia.com> wrote:
->> > How about, in a first time (and because I'd also like to get the power
->> > seqs
->> > moving on), a typedef from int to gpio_handle_t and a first implementation
->> > of the gpio_handle_*() API that would just call the existing
->> > integer-based API (apart from gpio_handle_get())? That way things will
->> > not break when we switch to a real handle.
->>
->> I'm afraid of typedef:ing gpio_handle_t to int because it sort of
->> encourages non-handlers to be used mixed with the old integers.
->>
->> I would prefer to create, e.g. in <linux/gpio/consumer.h>
->> something like:
->>
->> struct gpio;
->>
->> struct gpio *gpio_get(struct device *dev, const char *name);
->>
->> int gpio_get_value(struct gpio *g);
->>
->> Nothing more! I.e. struct gpio is an opaque cookie, nothing to be known
->> about it.
->
-> However these is already a struct gpio declared in linux/gpio.h. Shall the
-> opaque handler be renamed something like "struct gpioh", or is your idea to
-> make both APIs mutually exclusive?
+On Tue, Nov 13, 2012 at 11:41:59AM +0100, Thierry Reding wrote:
+> On Mon, Nov 12, 2012 at 04:37:01PM +0100, Steffen Trumtrar wrote:
+> [...]
+> > diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
+> > index d08d799..2a23b18 100644
+> > --- a/drivers/video/Kconfig
+> > +++ b/drivers/video/Kconfig
+> > @@ -33,6 +33,12 @@ config VIDEO_OUTPUT_CONTROL
+> >  	  This framework adds support for low-level control of the video 
+> >  	  output switch.
+> >  
+> > +config DISPLAY_TIMING
+> 
+> DISPLAY_TIMINGS?
+> 
+> >  #video output switch sysfs driver
+> >  obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) += output.o
+> > +obj-$(CONFIG_DISPLAY_TIMING) += display_timing.o
+> 
+> display_timings.o?
+> 
+> > +obj-$(CONFIG_VIDEOMODE) += videomode.o
+> > diff --git a/drivers/video/display_timing.c b/drivers/video/display_timing.c
+> 
+> display_timings.c?
+> 
 
-Basically I'd like the API's to be mutually execlusive.
+I originally had that and changed it by request to the singular form.
+(Can't find the mail atm). And I think this fits better with all the other drivers.
 
-But maybe there is a namespace clash anyway, since the
-handler code will have to #linclude <linux/gpio.h>
+> > +int videomode_from_timing(struct display_timings *disp, struct videomode *vm,
+> > +			  unsigned int index)
+> 
+> I find the indexing API a bit confusing. But that's perhaps just a
+> matter of personal preference.
+> 
+> Also the ordering of arguments seems a little off. I find it more
+> natural to have the destination pointer in the first argument, similar
+> to the memcpy() function, so this would be:
+> 
+> int videomode_from_timing(struct videomode *vm, struct display_timings *disp,
+> 			  unsigned int index);
+> 
+> Actually, when reading videomode_from_timing() I'd expect the argument
+> list to be:
+> 
+> int videomode_from_timing(struct videomode *vm, struct display_timing *timing);
+> 
+> Am I the only one confused by this?
+> 
 
-This is one of the rare cases where I'd maybe like to
-even #undef gpio in the core code just to be able to
-mask that defintion of "gpio" with the "gpio" from the
-new API.
+I went with the of_xxx-functions that have fname(from_node, to_property)
+and personally prefer it this way. Therefore I'd like to keep it as is.
 
-I really like the fact that it will bite your hand if you try
-to use both APIs at once, you could even introduce some
+> > diff --git a/include/linux/display_timing.h b/include/linux/display_timing.h
+> 
+> display_timings.h?
+> 
+> > +/* placeholder function until ranges are really needed 
+> 
+> The above line has trailing whitespace. Also the block comment should
+> have the opening /* on a separate line.
+> 
 
-#define DO_NOT_INCLUDE_LINUX_GPIO_H
-in <linux/gpio/consumer.h>
+Okay.
 
-And
-#define DO_NOT_INCLUDE_GPIO_CONSUMER_H
-in <linux/gpio.h>
+> > + * the index parameter should then be used to select one of [min typ max]
+> 
+> If index is supposed to select min, typ or max, then maybe an enum would
+> be a better candidate? Or alternatively provide separate accessors, like
+> display_timing_get_{minimum,typical,maximum}().
+> 
 
-and then put things like:
+Hm, I'm not so sure about this one. I'd prefer the enum.
 
-#ifdef DO_NOT_INCLUDE_LINUX_GPIO_H
-#error "Trying to use mutually exclusive interfaces"
-#endif
+> > + */
+> > +static inline u32 display_timing_get_value(struct timing_entry *te,
+> > +					   unsigned int index)
+> > +{
+> > +	return te->typ;
+> > +}
+> > +
+> > +static inline struct display_timing *display_timings_get(struct display_timings *disp,
+> > +							 unsigned int index)
+> > +{
+> > +	if (disp->num_timings > index)
+> > +		return disp->timings[index];
+> > +	else
+> > +		return NULL;
+> > +}
+> > +
+> > +void timings_release(struct display_timings *disp);
+> 
+> This function no longer exists.
+> 
+Right.
 
-into <linux/gpio.h>...
+Steffen
 
-Yours,
-Linus Walleij
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
