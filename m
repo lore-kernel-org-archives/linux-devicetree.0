@@ -1,41 +1,75 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3 2/2] Add documentation for tca6507 devicetree bindings.
-Date: Wed, 14 Nov 2012 12:26:39 -0700
-Message-ID: <50A3F06F.20809@wwwdotorg.org>
-References: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com> <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com> <CAK5ve-L=SBFEfoY8oKYYb-dFCWf=-Eb-qMFdWdiBO3wfaR3tDA@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric
+ in mach-mvebu
+Date: Wed, 14 Nov 2012 21:00:32 +0100
+Message-ID: <50A3F860.5010601@free-electrons.com>
+References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
+ <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
+ <20121105140258.GO3351@mudshark.cambridge.arm.com>
+ <50A15A33.60405@free-electrons.com>
+ <20121113104340.GD3940@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK5ve-L=SBFEfoY8oKYYb-dFCWf=-Eb-qMFdWdiBO3wfaR3tDA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: Marek Belisko <marek.belisko@open-nandra.com>, Stephen Warren <swarren@nvidia.com>, rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121113104340.GD3940@mudshark.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/13/2012 06:05 PM, Bryan Wu wrote:
-> It looks fine to me, but I need a DT maintainer's ack. Stephen, could
-> you help on this. I will merge this patch via my tree.
+On 11/13/2012 11:43 AM, Will Deacon wrote:
+> On Mon, Nov 12, 2012 at 08:21:07PM +0000, Gregory CLEMENT wrote:
+>> On 11/05/2012 03:02 PM, Will Deacon wrote:
+>>> On Mon, Oct 29, 2012 at 09:11:44PM +0000, Gregory CLEMENT wrote:
+>>>> +int set_cpu_coherent(unsigned int hw_cpu_id, int smp_group_id)
+>>>> +{
+>>>> +	int reg;
+>>>> +
+>>>> +	if (!coherency_base) {
+>>>> +		pr_warn("Can't make CPU %d cache coherent.\n", hw_cpu_id);
+>>>> +		pr_warn("Coherency fabric is not initialized\n");
+>>>> +		return 1;
+>>>> +	}
+>>>> +
+>>>> +	/* Enable the CPU in coherency fabric */
+>>>> +	reg = readl(coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
+>>>> +	reg |= 1 << (24 + hw_cpu_id);
+>>>> +	writel(reg, coherency_base + COHERENCY_FABRIC_CTL_OFFSET);
+>>>> +
+>>>> +	/* Add CPU to SMP group */
+>>>> +	reg = readl(coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
+>>>> +	reg |= 1 << (16 + hw_cpu_id + (smp_group_id == 0 ? 8 : 0));
+>>>> +	writel(reg, coherency_base + COHERENCY_FABRIC_CFG_OFFSET);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>
+>>> These writels may expand to code containing calls to outer_sync(), which
+>>> will attempt to take a spinlock for the aurora l2. Given that the CPU isn't
+>>> coherent, how does this play out with the exclusive store instruction in the
+>>> lock?
+>>
+>> I dug a little this subject: and I am not sure there is problem. In SMP mode,
+>> only the system cache mode of Aurora is used. In this mode, outer_cache.sync
+>> is void then outer_sync() won't call any function, so there will be no
+>> access to any spinlock.
+> 
+> Hmm, that is pretty subtle and it doesn't really solve the bigger picture.
+> printk takes logbuf_lock, for example, and I'm sure that by the time you get
+> to this code you will have relied on exclusives behaving correctly.
+> 
 
-I'm not actually a DT maintainer; I CC'd Grant and Rob. Marek probably
-wants to repost the whole patch to them. Comments below.
+Hi Will,
+I get an answer from Marvell engineers:
+"STREX on non-shareable and/or non-cacheable memory regions is supported."
 
->> diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
-...
->> +LED sub-node properties:
-...
->> +  string defining the trigger assigned to the LED.  Current triggers are:
->> +    "backlight" - LED will act as a back-light, controlled by the framebuffer
->> +                 system
->> +    "default-on" - LED will turn on
->> +    "heartbeat" - LED "double" flashes at a load average based rate
->> +    "ide-disk" - LED indicates disk activity
->> +    "timer" - LED flashes at a fixed, configurable rate
-
-It would be useful to point at a single canonical document that
-describes the triggers, rather than duplicating the list into every binding.
-
-Aside from that, I think this looks reasonable.
-
-Oh, looking at Documentation/devicetree/bindings/gpio/led.txt, should a
-default-state property be supported?
+Gregory
