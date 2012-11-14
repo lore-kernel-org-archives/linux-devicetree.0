@@ -1,106 +1,61 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
-Date: Tue, 13 Nov 2012 17:14:20 -0800
-Message-ID: <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com>
-References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com> <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/4] mfd: tps65217: Set PMIC to shutdowm on PWR_EN toggle
+Date: Wed, 14 Nov 2012 11:23:42 +0900
+Message-ID: <20121114022341.GM4415@opensource.wolfsonmicro.com>
+References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
+ <1352108549-9341-2-git-send-email-anilkumar@ti.com>
+ <5097F078.50701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MsEL38XAg4rx1uDx"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5097F078.50701@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: AnilKumar Ch <anilkumar@ti.com>, a.zummo@towertech.it, sameo@linux.intel.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Colin Foe-Parker <colin.foeparker@logicpd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 12, 2012 at 6:41 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> Update the driver to use the new API for requesting pwm so we can take
-> advantage of the pwm_lookup table to find the correct pwm to be used for the
-> LED functionality.
-> If the devm_get_pwm fails we fall back to legacy mode to try to get the pwm.
->
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  drivers/leds/leds-pwm.c  | 19 ++++++-------------
->  include/linux/leds_pwm.h |  2 +-
->  2 files changed, 7 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-> index f2e44c7..c953c75 100644
-> --- a/drivers/leds/leds-pwm.c
-> +++ b/drivers/leds/leds-pwm.c
-> @@ -67,12 +67,11 @@ static int led_pwm_probe(struct platform_device *pdev)
->                 cur_led = &pdata->leds[i];
->                 led_dat = &leds_data[i];
->
-> -               led_dat->pwm = pwm_request(cur_led->pwm_id,
-> -                               cur_led->name);
-> +               led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
->                 if (IS_ERR(led_dat->pwm)) {
->                         ret = PTR_ERR(led_dat->pwm);
-> -                       dev_err(&pdev->dev, "unable to request PWM %d\n",
-> -                                       cur_led->pwm_id);
-> +                       dev_err(&pdev->dev, "unable to request PWM for %s\n",
-> +                               cur_led->name);
->                         goto err;
->                 }
->
-> @@ -86,10 +85,8 @@ static int led_pwm_probe(struct platform_device *pdev)
->                 led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
->
->                 ret = led_classdev_register(&pdev->dev, &led_dat->cdev);
-> -               if (ret < 0) {
-> -                       pwm_free(led_dat->pwm);
-> +               if (ret < 0)
->                         goto err;
-> -               }
->         }
->
->         platform_set_drvdata(pdev, leds_data);
-> @@ -98,10 +95,8 @@ static int led_pwm_probe(struct platform_device *pdev)
->
->  err:
->         if (i > 0) {
-> -               for (i = i - 1; i >= 0; i--) {
-> +               for (i = i - 1; i >= 0; i--)
->                         led_classdev_unregister(&leds_data[i].cdev);
-> -                       pwm_free(leds_data[i].pwm);
-> -               }
->         }
->
->         return ret;
-> @@ -115,10 +110,8 @@ static int __devexit led_pwm_remove(struct platform_device *pdev)
->
->         leds_data = platform_get_drvdata(pdev);
->
-> -       for (i = 0; i < pdata->num_leds; i++) {
-> +       for (i = 0; i < pdata->num_leds; i++)
->                 led_classdev_unregister(&leds_data[i].cdev);
-> -               pwm_free(leds_data[i].pwm);
-> -       }
->
->         return 0;
->  }
-> diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
-> index 33a0711..a65e964 100644
-> --- a/include/linux/leds_pwm.h
-> +++ b/include/linux/leds_pwm.h
-> @@ -7,7 +7,7 @@
->  struct led_pwm {
->         const char      *name;
->         const char      *default_trigger;
-> -       unsigned        pwm_id;
-> +       unsigned        pwm_id __deprecated;
 
-I suggest we remove this later, we can provide patches from this from
-platform data of board file. And I think this patch is good for me to
-merge, will do it soon.
+--MsEL38XAg4rx1uDx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
--Bryan
+On Mon, Nov 05, 2012 at 05:59:36PM +0100, Benoit Cousson wrote:
+> On 11/05/2012 10:42 AM, AnilKumar Ch wrote:
 
->         u8              active_low;
->         unsigned        max_brightness;
->         unsigned        pwm_period_ns;
-> --
-> 1.8.0
->
+> > +Optional properties:
+> > +- ti,pmic-shutdown-controller: Telling the PMIC to shutdown on PWR_EN toggle.
+
+> That sounds like a generic functionality to me. Don't we have some more
+> generic way to handle that?
+
+> If not, that should probably not be a TI only attribute.
+
+It's pretty unusual to have this configurable as a single thing rather
+than as part of flexible power sequencing or something that's just fixed
+in silicon.
+
+--MsEL38XAg4rx1uDx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQowCmAAoJELSic+t+oim9O/MP/2qhStMOV6TkNPI+3FVa8ea/
+0BA82kInQBbRoWgPCWhFxVtChhRtss5UF7GjVSVAop4C92ywSWpiCR58hN14icpB
+MEtr3Lbpyf1Ru4P0SZ81JnwJOloNVvrgXuSarQniIbXQeRypnzx/6Ccr2dezBOiz
+6GeodKtDQxzGZfOB1R/nCghDciGeY/x2cG7Bkhs11C84sCmcQhdRRN1sAaqL3e1t
+bo5wZqXe78WGIoNBVeTmxbJB+FlNL9w8XnAF2nMQ1UsY1PJ2bFDC7g3rgIZmyWQo
+Sj2mt6HlBIJVRe5YJKZRUsav6Srf9HKAeUCD7Bbe0EIRW1ei/AiwyzcTOiAwDb0L
+MMbvA88p3HSLp2cb6KNZ5bCLENPSR8MWzKTGrsaYfCvr6nljXe6+HH/8pZto9hYV
+pbP7DWKPg+Xdzs43CNxVP1b+kdS+TATszCsWW0DEwQWIB7hlz0gfSSACjfQMWkcx
+c4ndq9ssknkSatsvDP+r47+H8lhDjkKcZPXFhh7mhaabVipF0gWRG8pd5VNBMGhP
+4VXBgvSYF0av9YjItdOpVLUE8cpd5VzrBhiSGWwjjeUt1pisLIBjwIgERGMJtH/O
+I4pjhnAqwTeJI6hRHBw+ezQQsb1W3ePCktcFZ1XwpZ9HxtkdwfZyC+bqMylE9vkg
+fEqXs+qBxhVp53Uq8z14
+=Ygrz
+-----END PGP SIGNATURE-----
+
+--MsEL38XAg4rx1uDx--
