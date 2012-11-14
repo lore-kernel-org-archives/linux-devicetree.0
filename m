@@ -1,44 +1,723 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH V2 4/5] arm: mm: Added support for PJ4B cpu and init
- routines
-Date: Wed, 14 Nov 2012 00:14:38 +0000
-Message-ID: <20121114001438.GF3290@n2100.arm.linux.org.uk>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-5-git-send-email-gregory.clement@free-electrons.com>
+From: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/4] dtc/tests: don't include fdt.h prior to libfdt.h
+Date: Tue, 13 Nov 2012 18:34:01 -0600
+Message-ID: <20121113183401.b05c181e66cf214608b6048d@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1351545108-18954-5-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2012 at 10:11:47PM +0100, Gregory CLEMENT wrote:
-> +	/* Auxiliary Debug Modes Control 2 Register */
-> +	mrc	p15, 1,	r0, c15, c1, 2
-> +	bic	r0, r0, #(1 << 23)   @ Enable fast LDR.
-> +	orr	r0, r0, #(1 << 25)   @ Dont interleave write and snoop data.
-> +	orr	r0, r0, #(1 << 27)   @ Disable Critical Word First feature.
-> +	orr	r0, r0, #(1 << 29)   @ Disable outstanding non cacheable request
-> +	orr	r0, r0, #(1 << 30)   @ L1 replacement - Strict round robin
+tests will need fdt type definitions provided in a subsequent patch
+to libfdt_env.h.  Since libfdt.h includes libfdt_env.h in the right
+order anyway, just remove the fdt.h include.
 
-This just looks silly to me - setting five bits with five instructions
-when they can all be done in one instruction.  Yes, I know you want
-to comment it, but there's other ways to achieve that.
+Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ tests/add_subnode_with_nops.c     | 1 -
+ tests/appendprop1.c               | 1 -
+ tests/appendprop2.c               | 1 -
+ tests/asm_tree_dump.c             | 1 -
+ tests/boot-cpuid.c                | 1 -
+ tests/char_literal.c              | 1 -
+ tests/del_node.c                  | 1 -
+ tests/del_property.c              | 1 -
+ tests/dtb_reverse.c               | 1 -
+ tests/dtbs_equal_ordered.c        | 1 -
+ tests/dtbs_equal_unordered.c      | 1 -
+ tests/dumptrees.c                 | 2 --
+ tests/extra-terminating-null.c    | 1 -
+ tests/find_property.c             | 1 -
+ tests/get_alias.c                 | 1 -
+ tests/get_mem_rsv.c               | 1 -
+ tests/get_name.c                  | 1 -
+ tests/get_path.c                  | 1 -
+ tests/get_phandle.c               | 1 -
+ tests/getprop.c                   | 1 -
+ tests/incbin.c                    | 1 -
+ tests/integer-expressions.c       | 1 -
+ tests/mangle-layout.c             | 1 -
+ tests/move_and_save.c             | 1 -
+ tests/node_check_compatible.c     | 1 -
+ tests/node_offset_by_compatible.c | 1 -
+ tests/node_offset_by_phandle.c    | 1 -
+ tests/node_offset_by_prop_value.c | 1 -
+ tests/nop_node.c                  | 1 -
+ tests/nop_property.c              | 1 -
+ tests/nopulate.c                  | 1 -
+ tests/notfound.c                  | 1 -
+ tests/open_pack.c                 | 1 -
+ tests/parent_offset.c             | 1 -
+ tests/path-references.c           | 1 -
+ tests/path_offset.c               | 1 -
+ tests/path_offset_aliases.c       | 1 -
+ tests/phandle_format.c            | 1 -
+ tests/propname_escapes.c          | 1 -
+ tests/references.c                | 1 -
+ tests/root_node.c                 | 1 -
+ tests/rw_tree1.c                  | 1 -
+ tests/set_name.c                  | 1 -
+ tests/setprop.c                   | 1 -
+ tests/setprop_inplace.c           | 1 -
+ tests/sized_cells.c               | 1 -
+ tests/string_escapes.c            | 1 -
+ tests/subnode_offset.c            | 1 -
+ tests/supernode_atdepth_offset.c  | 1 -
+ tests/sw_tree1.c                  | 1 -
+ tests/truncated_property.c        | 1 -
+ tests/utilfdt_test.c              | 1 -
+ tests/value-labels.c              | 1 -
+ 53 files changed, 54 deletions(-)
 
-> +__v7_pj4b_proc_info:
-> +	.long	0x562f5842
-> +	.long	0xffffffff
-
-Same comment here as Will :)
+diff --git a/tests/add_subnode_with_nops.c b/tests/add_subnode_with_nops.c
+index 4fb8f02..95ddf6a 100644
+--- a/tests/add_subnode_with_nops.c
++++ b/tests/add_subnode_with_nops.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/appendprop1.c b/tests/appendprop1.c
+index d716f7a..9d6b3ad 100644
+--- a/tests/appendprop1.c
++++ b/tests/appendprop1.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/appendprop2.c b/tests/appendprop2.c
+index 7eb243d..ca1446c 100644
+--- a/tests/appendprop2.c
++++ b/tests/appendprop2.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/asm_tree_dump.c b/tests/asm_tree_dump.c
+index 5ff5087..bd12eda 100644
+--- a/tests/asm_tree_dump.c
++++ b/tests/asm_tree_dump.c
+@@ -26,7 +26,6 @@
+ 
+ #include <dlfcn.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/boot-cpuid.c b/tests/boot-cpuid.c
+index 7b5433d..ca39f4b 100644
+--- a/tests/boot-cpuid.c
++++ b/tests/boot-cpuid.c
+@@ -21,7 +21,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/char_literal.c b/tests/char_literal.c
+index 150f2a0..d7a4773 100644
+--- a/tests/char_literal.c
++++ b/tests/char_literal.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/del_node.c b/tests/del_node.c
+index afad502..45cb060 100644
+--- a/tests/del_node.c
++++ b/tests/del_node.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/del_property.c b/tests/del_property.c
+index 449eca6..42fd7cb 100644
+--- a/tests/del_property.c
++++ b/tests/del_property.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/dtb_reverse.c b/tests/dtb_reverse.c
+index 25e1eef..527fd71 100644
+--- a/tests/dtb_reverse.c
++++ b/tests/dtb_reverse.c
+@@ -24,7 +24,6 @@
+ #include <stdint.h>
+ #include <limits.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/dtbs_equal_ordered.c b/tests/dtbs_equal_ordered.c
+index 1db25f4..12495de 100644
+--- a/tests/dtbs_equal_ordered.c
++++ b/tests/dtbs_equal_ordered.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/dtbs_equal_unordered.c b/tests/dtbs_equal_unordered.c
+index df53318..20b4356 100644
+--- a/tests/dtbs_equal_unordered.c
++++ b/tests/dtbs_equal_unordered.c
+@@ -24,7 +24,6 @@
+ #include <stdint.h>
+ #include <limits.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/dumptrees.c b/tests/dumptrees.c
+index fa1f563..bebf553 100644
+--- a/tests/dumptrees.c
++++ b/tests/dumptrees.c
+@@ -25,9 +25,7 @@
+ #include <fcntl.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+-#include <libfdt_env.h>
+ 
+ #include "testdata.h"
+ 
+diff --git a/tests/extra-terminating-null.c b/tests/extra-terminating-null.c
+index 8a2043f..dc1fe89 100644
+--- a/tests/extra-terminating-null.c
++++ b/tests/extra-terminating-null.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/find_property.c b/tests/find_property.c
+index 74a6965..4dc3030 100644
+--- a/tests/find_property.c
++++ b/tests/find_property.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/get_alias.c b/tests/get_alias.c
+index 1e0faf4..5060795 100644
+--- a/tests/get_alias.c
++++ b/tests/get_alias.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/get_mem_rsv.c b/tests/get_mem_rsv.c
+index 554c788..1812639 100644
+--- a/tests/get_mem_rsv.c
++++ b/tests/get_mem_rsv.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/get_name.c b/tests/get_name.c
+index 0262a12..c6ca9f9 100644
+--- a/tests/get_name.c
++++ b/tests/get_name.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/get_path.c b/tests/get_path.c
+index 1e05f7c..7352976 100644
+--- a/tests/get_path.c
++++ b/tests/get_path.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/get_phandle.c b/tests/get_phandle.c
+index 5735733..2079591 100644
+--- a/tests/get_phandle.c
++++ b/tests/get_phandle.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/getprop.c b/tests/getprop.c
+index 239856e..6255bad 100644
+--- a/tests/getprop.c
++++ b/tests/getprop.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/incbin.c b/tests/incbin.c
+index 76d8626..4100ba0 100644
+--- a/tests/incbin.c
++++ b/tests/incbin.c
+@@ -23,7 +23,6 @@
+ #include <stdint.h>
+ #include <errno.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/integer-expressions.c b/tests/integer-expressions.c
+index 5ba1566..57e2ff6 100644
+--- a/tests/integer-expressions.c
++++ b/tests/integer-expressions.c
+@@ -25,7 +25,6 @@
+ #include <errno.h>
+ 
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/mangle-layout.c b/tests/mangle-layout.c
+index 3b19788..a76e51e 100644
+--- a/tests/mangle-layout.c
++++ b/tests/mangle-layout.c
+@@ -24,7 +24,6 @@
+ #include <limits.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/move_and_save.c b/tests/move_and_save.c
+index 410ccb3..393b60a 100644
+--- a/tests/move_and_save.c
++++ b/tests/move_and_save.c
+@@ -24,7 +24,6 @@
+ #include <limits.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/node_check_compatible.c b/tests/node_check_compatible.c
+index 23abbf5..4bdf091 100644
+--- a/tests/node_check_compatible.c
++++ b/tests/node_check_compatible.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/node_offset_by_compatible.c b/tests/node_offset_by_compatible.c
+index 2317930..f62b591 100644
+--- a/tests/node_offset_by_compatible.c
++++ b/tests/node_offset_by_compatible.c
+@@ -23,7 +23,6 @@
+ #include <stdint.h>
+ #include <stdarg.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/node_offset_by_phandle.c b/tests/node_offset_by_phandle.c
+index a8442f1..becff0f 100644
+--- a/tests/node_offset_by_phandle.c
++++ b/tests/node_offset_by_phandle.c
+@@ -23,7 +23,6 @@
+ #include <stdint.h>
+ #include <stdarg.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/node_offset_by_prop_value.c b/tests/node_offset_by_prop_value.c
+index 0f2a345..9212a4e 100644
+--- a/tests/node_offset_by_prop_value.c
++++ b/tests/node_offset_by_prop_value.c
+@@ -23,7 +23,6 @@
+ #include <stdint.h>
+ #include <stdarg.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/nop_node.c b/tests/nop_node.c
+index ea3a18f..c316444 100644
+--- a/tests/nop_node.c
++++ b/tests/nop_node.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/nop_property.c b/tests/nop_property.c
+index e6ef4d9..644b0a6 100644
+--- a/tests/nop_property.c
++++ b/tests/nop_property.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/nopulate.c b/tests/nopulate.c
+index 3cbbe21..cd79872 100644
+--- a/tests/nopulate.c
++++ b/tests/nopulate.c
+@@ -24,7 +24,6 @@
+ #include <limits.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/notfound.c b/tests/notfound.c
+index 4d55b88..dc623d6 100644
+--- a/tests/notfound.c
++++ b/tests/notfound.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/open_pack.c b/tests/open_pack.c
+index 0a5a3fc..407ef6c 100644
+--- a/tests/open_pack.c
++++ b/tests/open_pack.c
+@@ -24,7 +24,6 @@
+ #include <limits.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/parent_offset.c b/tests/parent_offset.c
+index e7affcc..d4ab3cf 100644
+--- a/tests/parent_offset.c
++++ b/tests/parent_offset.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/path-references.c b/tests/path-references.c
+index 9f363b3..0746b3f 100644
+--- a/tests/path-references.c
++++ b/tests/path-references.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/path_offset.c b/tests/path_offset.c
+index d3e1f8e..4e5b7a1 100644
+--- a/tests/path_offset.c
++++ b/tests/path_offset.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/path_offset_aliases.c b/tests/path_offset_aliases.c
+index 3682da4..78d5a46 100644
+--- a/tests/path_offset_aliases.c
++++ b/tests/path_offset_aliases.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/phandle_format.c b/tests/phandle_format.c
+index 7e4d816..5874ae7 100644
+--- a/tests/phandle_format.c
++++ b/tests/phandle_format.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/propname_escapes.c b/tests/propname_escapes.c
+index 3aec28f..e91bd99 100644
+--- a/tests/propname_escapes.c
++++ b/tests/propname_escapes.c
+@@ -24,7 +24,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/references.c b/tests/references.c
+index b20f21f..c9d05a2 100644
+--- a/tests/references.c
++++ b/tests/references.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/root_node.c b/tests/root_node.c
+index 3f47829..58aebf6 100644
+--- a/tests/root_node.c
++++ b/tests/root_node.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/rw_tree1.c b/tests/rw_tree1.c
+index 103a24d..efd4718 100644
+--- a/tests/rw_tree1.c
++++ b/tests/rw_tree1.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/set_name.c b/tests/set_name.c
+index 5d1149e..9861587 100644
+--- a/tests/set_name.c
++++ b/tests/set_name.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/setprop.c b/tests/setprop.c
+index 9f2bc88..d089f8d 100644
+--- a/tests/setprop.c
++++ b/tests/setprop.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/setprop_inplace.c b/tests/setprop_inplace.c
+index 82d8951..daef182 100644
+--- a/tests/setprop_inplace.c
++++ b/tests/setprop_inplace.c
+@@ -25,7 +25,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/sized_cells.c b/tests/sized_cells.c
+index 847ec96..94da03b 100644
+--- a/tests/sized_cells.c
++++ b/tests/sized_cells.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/string_escapes.c b/tests/string_escapes.c
+index 30eb6a8..8cdee4b 100644
+--- a/tests/string_escapes.c
++++ b/tests/string_escapes.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/subnode_offset.c b/tests/subnode_offset.c
+index e58c192..231fcb5 100644
+--- a/tests/subnode_offset.c
++++ b/tests/subnode_offset.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/supernode_atdepth_offset.c b/tests/supernode_atdepth_offset.c
+index 73f41ae..43e120d 100644
+--- a/tests/supernode_atdepth_offset.c
++++ b/tests/supernode_atdepth_offset.c
+@@ -22,7 +22,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/sw_tree1.c b/tests/sw_tree1.c
+index 5c71414..8eb6e5f 100644
+--- a/tests/sw_tree1.c
++++ b/tests/sw_tree1.c
+@@ -24,7 +24,6 @@
+ #include <ctype.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/truncated_property.c b/tests/truncated_property.c
+index 56daa22..f820d99 100644
+--- a/tests/truncated_property.c
++++ b/tests/truncated_property.c
+@@ -23,7 +23,6 @@
+ #include <string.h>
+ #include <stdint.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+diff --git a/tests/utilfdt_test.c b/tests/utilfdt_test.c
+index 36b4aa5..274c3d6 100644
+--- a/tests/utilfdt_test.c
++++ b/tests/utilfdt_test.c
+@@ -24,7 +24,6 @@
+ #include <stdint.h>
+ #include <stdarg.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ #include <util.h>
+ 
+diff --git a/tests/value-labels.c b/tests/value-labels.c
+index abe2721..dcf2059 100644
+--- a/tests/value-labels.c
++++ b/tests/value-labels.c
+@@ -26,7 +26,6 @@
+ 
+ #include <dlfcn.h>
+ 
+-#include <fdt.h>
+ #include <libfdt.h>
+ 
+ #include "tests.h"
+-- 
+1.8.0
