@@ -1,79 +1,76 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH V5 0/7] ARM: AM33XX: net: Add DT support to CPSW and MDIO
- driver
-Date: Thu, 15 Nov 2012 00:37:53 +0530
-Message-ID: <1352920080-6179-1-git-send-email-mugunthanvnm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v5 4/4] misc: sram: add support for configurable allocation order
+Date: Wed, 14 Nov 2012 19:15:51 +0000
+Message-ID: <20121114191551.5E8673E0B7C@localhost>
+References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de> <1350570453-24546-5-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1350570453-24546-5-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch-series adds support for,
+On Thu, 18 Oct 2012 16:27:33 +0200, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> From: Matt Porter <mporter@ti.com>
+> 
+> Adds support for setting the genalloc pool's minimum allocation
+> order via DT or platform data. The allocation order is optional
+> for both the DT property and platform data case. If it is not
+> present then the order defaults to PAGE_SHIFT to preserve the
+> current behavior.
+> 
+> Signed-off-by: Matt Porter <mporter@ti.com>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/misc/sram.txt |   12 ++++++++++-
+>  drivers/misc/sram.c                             |   14 ++++++++++++-
+>  include/linux/platform_data/sram.h              |   25 +++++++++++++++++++++++
+>  3 files changed, 49 insertions(+), 2 deletions(-)
+>  create mode 100644 include/linux/platform_data/sram.h
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
+> index b64136c..b1705ec 100644
+> --- a/Documentation/devicetree/bindings/misc/sram.txt
+> +++ b/Documentation/devicetree/bindings/misc/sram.txt
+> @@ -8,10 +8,20 @@ Required properties:
+>  
+>  - reg : SRAM iomem address range
+>  
+> -Example:
+> +Optional properties:
+> +
+> +- alloc-order : Minimum allocation order for the SRAM pool
 
-[1/7]: Typo mistake in CPSW driver while invoking runtime_pm api's
+Looks okay, but I think the property name is confusing. I for one had
+no idea what 'order' would be and why it was important. I had to read
+the code to figure it out.
 
-[2/7]: Adds parent<->child relation between CPSW & MDIO module inside cpsw
-       driver, as in case of AM33XX, the resources are shared and common
-       register bit-field is provided to control module/clock enable/disable,
-       makes it difficult to handle common resource.
+It does raise the question though of what is this binding actually
+for? Does it reflect a limitation of the SRAM? or of the hardware using
+the SRAM? Or is it an optimization? How do you expect to use it?
 
-       So the solution here is, to create parent<->child relation between them.
+Assuming it is appropriate to put into the device tree, I'd suggest a
+different name. Instead of 'order', how about 'sram-alloc-align' (in
+address bits) or 'sram-alloc-min-size' (in bytes).
 
-[3/7]: cpsw: simplify the setup of the register pointers
+> @@ -60,7 +62,17 @@ static int __devinit sram_probe(struct platform_device *pdev)
+>  	if (!IS_ERR(sram->clk))
+>  		clk_prepare_enable(sram->clk);
+>  
+> -	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
+> +	if (pdev->dev.of_node)
+> +		of_property_read_u32(pdev->dev.of_node,
+> +				     "alloc-order", &alloc_order);
+> +	else
+> +		if (pdev->dev.platform_data) {
+> +			struct sram_pdata *pdata = pdev->dev.platform_data;
+> +			if (pdata->alloc_order)
+> +				alloc_order = pdata->alloc_order;
+> +		}
+> +
+> +	sram->pool = gen_pool_create(alloc_order, -1);
 
-[4/7]: cpsw: Kernel warn fix during suspend
+Do you already have a user for the platform_data use case? If not then
+I'd drop it entirely and skip adding the new header file.
 
-[5/7]: Add hwmod entry for MDIO module, required for MDIO driver.
-
-[6/7]: Enable CPSW support to omap2plus_defconfig
-
-[7/7]: Add DT device nodes for both CPSW and MDIO modules in am33xx.dtsi,
-       am335x-evm.dts and am335x-bone.dts file
-
-This patch series has been created on top of net-next/master and tested
-on BeagleBone platform for NFS boot and basic ping test cases.
-
-Changes from V3:
-* Removed unnecessary flags in Davinci MDIO Hwmod entry.
-
-Changes from V4:
-* Changed CPSW phy ID in DT to make it generic.
-* Applied cosmetic changed in AM33XX dts file from Benoit Cousson
-
-Mugunthan V N (4):
-  net: cpsw: halt network stack before halting the device during
-    suspend
-  ARM: OMAP3+: hwmod: Add AM33XX HWMOD data for davinci_mdio module
-  ARM: OMAP2+: omap2plus_defconfig: Enable CPSW support
-  arm/dts: am33xx: Add CPSW and MDIO module nodes for AM33XX
-
-Richard Cochran (1):
-  cpsw: simplify the setup of the register pointers
-
-Vaibhav Hiremath (2):
-  net: davinci_mdio: Fix typo mistake in calling runtime-pm api
-  net: cpsw: Add parent<->child relation support between cpsw and mdio
-
- Documentation/devicetree/bindings/net/cpsw.txt |   42 +----
- arch/arm/boot/dts/am335x-bone.dts              |    8 +
- arch/arm/boot/dts/am335x-evm.dts               |    8 +
- arch/arm/boot/dts/am33xx.dtsi                  |   48 +++++
- arch/arm/configs/omap2plus_defconfig           |    3 +
- arch/arm/mach-omap2/omap_hwmod_33xx_data.c     |   31 +++
- drivers/net/ethernet/ti/cpsw.c                 |  248 +++++++++++-------------
- drivers/net/ethernet/ti/davinci_mdio.c         |    2 +-
- include/linux/platform_data/cpsw.h             |   21 +--
- 9 files changed, 216 insertions(+), 195 deletions(-)
+g.
