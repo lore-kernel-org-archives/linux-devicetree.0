@@ -1,80 +1,115 @@
-From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 9/9] usb: chipidea: udc: configure iso endpoints
-Date: Wed, 14 Nov 2012 21:04:29 +0300
-Message-ID: <50A3DD2D.7050500@mvista.com>
-References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-10-git-send-email-m.grzeschik@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of/mdio: fix build errors when CONFIG_OF isn't set
+Date: Wed, 14 Nov 2012 11:10:54 -0600
+Message-ID: <50A3D09E.4030609@gmail.com>
+References: <1349886683-26351-1-git-send-email-sasha.levin@oracle.com> <20121114161135.71E153E0B1E@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352909950-32555-10-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121114161135.71E153E0B1E@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Sasha Levin <sasha.levin@oracle.com>, rob.herring@calxeda.com, srinivas.kandagatla@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 11/14/2012 07:19 PM, Michael Grzeschik wrote:
-
-> The implementation is derived from the fsl_udc_core code in
-> fsl_ep_enable and makes basic iso handling possible.
-
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/usb/chipidea/udc.c |   12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index 2999b0d..0bc4308 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -1058,6 +1058,9 @@ static int ep_enable(struct usb_ep *ep,
->  	int retval = 0;
->  	unsigned long flags;
->  
-> +	unsigned short max = 0;
-
-   It doesn't look like this initialization is necessary.
-
-> +	unsigned char mult = 0;
-> +
->  	if (ep == NULL || desc == NULL)
->  		return -EINVAL;
->  
-> @@ -1075,6 +1078,7 @@ static int ep_enable(struct usb_ep *ep,
->  	mEp->type = usb_endpoint_type(desc);
->  
->  	mEp->ep.maxpacket = usb_endpoint_maxp(desc);
-> +	max = usb_endpoint_maxp(desc);
->  
->  	dbg_event(_usb_addr(mEp), "ENABLE", 0);
->  
-> @@ -1082,8 +1086,12 @@ static int ep_enable(struct usb_ep *ep,
->  
->  	if (mEp->type == USB_ENDPOINT_XFER_CONTROL)
->  		mEp->qh.ptr->cap |=  QH_IOS;
-> -	else if (mEp->type == USB_ENDPOINT_XFER_ISOC)
-> -		mEp->qh.ptr->cap &= ~QH_MULT;
-> +	else if (mEp->type == USB_ENDPOINT_XFER_ISOC) {
-> +		/* Calculate transactions needed for high bandwidth iso */
-> +		mult = (unsigned char)(1 + ((max >> 11) & 0x03));
-> +		max = max & 0x7ff;	/* bit 0~10 */
-
-	max &= 0x7ff;
-
-> +		mEp->qh.ptr->cap |= (mult << 30);
-
-   Parens not needed.
-
-> +	}
->  	else
->  		mEp->qh.ptr->cap &= ~QH_ZLT;
->  
+On 11/14/2012 10:11 AM, Grant Likely wrote:
+> On Wed, 10 Oct 2012 12:31:23 -0400, Sasha Levin <sasha.levin@oracle.com> wrote:
+>> Commit f9dc9ac5 ("of/mdio: Add dummy functions in of_mdio.h.") has added
+>> empty stubs into of_mdio.h which were not static, this causes build errors
+>> when these symbols were defined across several objects.
+>>
+>> Fix it by marking those stubs as 'static inline'.
+>>
+>> Signed-off-by: Sasha Levin <sasha.levin@oracle.com>
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> 
+> Rob, can you please pick up into your merge branch for device tree?
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is already fixed:
+
+commit 2a5cf8016c745191605f312a7cd7bd22e9be94a5
+Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Date:   Tue Oct 9 18:33:38 2012 +0000
+
+    of/mdio: Staticise !CONFIG_OF stubs
+
+    The !CONFIG_OF stubs aren't static so if multiple files include the
+    header with this configuration then the linker will see multiple
+    definitions of the stubs.
+
+    Reported-by: Fengguang Wu <fengguang.wu@intel.com>
+    Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+    Acked-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+    Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+commit f9dc9ac51610a35629c8211b6b8c9b0c65cf0e1d
+Author: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Date:   Fri Aug 24 01:58:59 2012 +0000
+
+    of/mdio: Add dummy functions in of_mdio.h.
+
+    This patch adds dummy functions in of_mdio.h, so that driver need not
+    ifdef there code with CONFIG_OF.
+
+    Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+Rob
+
+> Thanks,
+> g.
+> 
+>> ---
+>>  include/linux/of_mdio.h | 10 +++++-----
+>>  1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+>> index 6ef49b8..7f17b9c 100644
+>> --- a/include/linux/of_mdio.h
+>> +++ b/include/linux/of_mdio.h
+>> @@ -26,17 +26,17 @@ extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+>>  extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+>>  
+>>  #else /* CONFIG_OF */
+>> -int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>> +static inline int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>>  {
+>>  	return -ENOSYS;
+>>  }
+>>  
+>> -struct phy_device *of_phy_find_device(struct device_node *phy_np)
+>> +static inline struct phy_device *of_phy_find_device(struct device_node *phy_np)
+>>  {
+>>  	return NULL;
+>>  }
+>>  
+>> -struct phy_device *of_phy_connect(struct net_device *dev,
+>> +static inline struct phy_device *of_phy_connect(struct net_device *dev,
+>>  					 struct device_node *phy_np,
+>>  					 void (*hndlr)(struct net_device *),
+>>  					 u32 flags, phy_interface_t iface)
+>> @@ -44,14 +44,14 @@ struct phy_device *of_phy_connect(struct net_device *dev,
+>>  	return NULL;
+>>  }
+>>  
+>> -struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+>> +static inline struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+>>  					 void (*hndlr)(struct net_device *),
+>>  					 phy_interface_t iface)
+>>  {
+>>  	return NULL;
+>>  }
+>>  
+>> -struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
+>> +static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
+>>  {
+>>  	return NULL;
+>>  }
+>> -- 
+>> 1.7.12
+>>
+> 
