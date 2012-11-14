@@ -1,309 +1,55 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2 2/5] clk: exynos4: register clocks using common clock
- framework
-Date: Wed, 14 Nov 2012 14:14:09 +0900
-Message-ID: <03a301cdc226$e0a41d50$a1ec57f0$%kim@samsung.com>
-References: <1349629855-4962-1-git-send-email-thomas.abraham@linaro.org>
- <1349629855-4962-3-git-send-email-thomas.abraham@linaro.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/4] rtc: OMAP: Add system pm_power_off to rtc driver
+Date: Wed, 14 Nov 2012 14:21:40 +0900
+Message-ID: <20121114052138.GS4415@opensource.wolfsonmicro.com>
+References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
+ <1352108549-9341-3-git-send-email-anilkumar@ti.com>
+ <5097ECAD.9010101@ti.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA64F14@DBDE01.ent.ti.com>
+ <50994156.4080305@ti.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA6AE51@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1349629855-4962-3-git-send-email-thomas.abraham@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com, mturquette@ti.com, mturquette@linaro.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MT9SxUWSsctiw0kG"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA6AE51@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "AnilKumar, Chimata" <anilkumar@ti.com>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, Colin Foe-Parker <colin.foeparker@logicpd.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Thomas Abraham wrote:
-> 
-> For legacy Exynos4 platforms, the available clocks are statically
-> listed and then registered using the common clock framework. On device
-> tree enabled exynos platfotms, the device tree is searched and all
-> clock nodes found are registered. Support for Exynos4210 and
-> Exynos4x12 platforms is included.
-> 
-> Cc: Mike Turquette <mturquette@ti.com>
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
->  drivers/clk/samsung/Makefile      |    1 +
->  drivers/clk/samsung/clk-exynos4.c |  647
-> +++++++++++++++++++++++++++++++++++++
->  2 files changed, 648 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/clk/samsung/clk-exynos4.c
 
-[...]
-
-> +
-> +/* base address of io remapped clock controller register space */
-> +static	void __iomem *clk_base;
-> +
-
-I didn't look at the full details. BTW, you know, clock naming is very
-important and there are some comments about that below...
-
-> +static const char *pll_parent_names[] __initdata = { "fin_pll" };
-
-Why is this only 'xxx_parent_names'? not just 'xxx_parents' like others?
-
-> +static const char *fin_pll_parents[] __initdata = { "xxti", "xusbxti" };
-> +static const char *mout_apll_parents[] __initdata = { "fin_pll",
-> "fout_apll", };
-
-According to original naming, how about clk_src_apll here?
-
-+static const char *clk_src_apll[] __initdata = { "fin_pll", "fout_apll", };
-
-> +static const char *mout_mpll_parents[] __initdata = { "fin_pll",
-
-clk_src_mpll?
-
-> "fout_mpll", };
-> +static const char *mout_epll_parents[] __initdata = { "fin_pll",
-
-clk_src_epll?
-
-> "fout_epll", };
-> +
-> +static const char *sclk_ampll_parents[] __initdata = {
-
-clk_src_aclk?
-
-> +		"mout_mpll", "sclk_apll", };
-> +
-> +static const char *sclk_evpll_parents[] __initdata = {
-
-
-
-> +		"mout_epll", "mout_vpll", };
-> +
-> +static const char *mout_core_parents[] __initdata = {
-
-clk_src_core?
-
-Hmm... most of the 'sources' is from out of MUX so mout is not required?...
-
-> +		"mout_apll", "mout_mpll", };
-> +
-> +static const char *mout_mfc_parents[] __initdata = {
-> +		"mout_mfc0", "mout_mfc1", };
-
-Should be following?
-
-+static const char *clk_src_mfc0[] __initdata = {"mout_mpll", "sclk_apll",
-};
-+static const char *clk_src_mfc1[] __initdata = {"mout_epll", "sclk_vpll",
-};
-
-> +
-> +static const char *mout_dac_parents[] __initdata = {
-> +		"mout_vpll", "sclk_hdmiphy", };
-
-sclk_vpll?
-
-+static const char *clk_src_sclk_dac[] __initdata = {"sclk_vpll",
-"sclk_hdmiphy", };
-
-
-> +
-> +static const char *mout_hdmi_parents[] __initdata = {
-
-clk_src_sclk_hdmi?
-
-> +		"sclk_pixel", "sclk_hdmiphy", };
-> +
-> +static const char *mout_mixer_parents[] __initdata = {
-
-clk_src_sclk_mixer?
-
-> +		"sclk_dac", "sclk_hdmi", };
-> +
-> +static const char *group1_parents[] __initdata = {
-
-According to original clock-exynos4.c, just 'group_parents' not
-'group1_parents'?
-
-> +		"xxti", "xusbxti", "sclk_hdmi24m", "sclk_usbphy0",
-
-Should be 'sclk_hdmi27m' instead of 'sclk_hdmi24m'
-+		"xxti", "xusbxti", "sclk_hdmi24m", "sclk_usbphy0",
-
-> +		"none", "sclk_hdmiphy", "mout_mpll", "mout_epll",
-
-Missed 'sclk_usbphy1'?
-+		"sclk_usbphy1", "sclk_hdmiphy", "mout_mpll", "mout_epll",
-
-> +		"mout_vpll" };
-> +
-> +static struct samsung_fixed_rate_clock exynos4_fixed_rate_clks[] = {
-> +	FRATE_CLK(NULL, "xxti", NULL, CLK_IS_ROOT, 24000000),
-> +	FRATE_CLK(NULL, "xusbxti", NULL, CLK_IS_ROOT, 24000000),
-
-Well, above clock rate depends on board and it means it is not a fixed
-value.
-
-> +	FRATE_CLK(NULL, "sclk_hdmi24m", NULL, CLK_IS_ROOT, 24000000),
-> +	FRATE_CLK(NULL, "sclk_hdmiphy", NULL, CLK_IS_ROOT, 27000000),
-> +	FRATE_CLK(NULL, "sclk_usbphy0", NULL, CLK_IS_ROOT, 48000000),
-
-Missed sclk_hdmi27m?
-+	FRATE_CLK(NULL, "sclk_hdmi27m", NULL, CLK_IS_ROOT, 27000000),
-
-> +};
-> +
-> +static struct samsung_mux_clock exynos4_mux_clks[] = {
-
-[...]
-
-> +};
-> +
-> +static struct samsung_div_clock exynos4_div_clks[] = {
-
-[...]
-
-> +};
-> +
-> +struct samsung_gate_clock exynos4_gate_clks[] = {
-
-[...]
-
-> +	clk = clk_get(NULL, "fout_apll");
-> +	samsung_pll_clk_set_cb(clk, NULL, exynos4210_get_rate_apll);
-
-+	samsung_pll_clk_set_cb(clk, NULL, exynos4210_apll_get_rate);
-
-> +	clk = clk_get(NULL, "fout_mpll");
-+	samsung_pll_clk_set_cb(clk, NULL, exynos4210_mpll_get_rate);
-
-> +	samsung_pll_clk_set_cb(clk, NULL, exynos4210_get_rate_mpll);
-
-
-> +	clk = clk_get(NULL, "fout_epll");
-> +	samsung_pll_clk_set_cb(clk, NULL, exynos4210_get_rate_epll);
-
-+	samsung_pll_clk_set_cb(clk, NULL, exynos4210_epll_get_rate);
-
-> +	clk = clk_get(NULL, "fout_vpll");
-> +	samsung_pll_clk_set_cb(clk, exynos4210_vpll_set_rate,
-> +				exynos4210_get_rate_mpll);
-
-mpll? Should be vpll?
-
-+				exynos4210_vpll_get_rate); ???
-
-[...]
-
-> +	samsung_clk_register_pll("fout_apll", pll_parent_names, NULL,
-> +		NULL, exynos4210_get_rate_apll);
-
-+		NULL, exynos4210_apll_get_rate);
-
-> +	samsung_clk_register_pll("fout_mpll", pll_parent_names, NULL,
-> +		NULL, exynos4210_get_rate_mpll);
-
-+		NULL, exynos4210_mpll_get_rate);
-
-> +	samsung_clk_register_pll("fout_epll", pll_parent_names, NULL,
-> +		NULL, exynos4210_get_rate_epll);
-
-+		NULL, exynos4210_epll_get_rate);
-
-> +	samsung_clk_register_pll("fout_vpll", exynos4210_vpll_parent_names,
-> +		NULL, exynos4210_vpll_set_rate, exynos4210_get_rate_vpll);
-
-
-+		NULL, exynos4210_vpll_set_rate, exynos4210_vpll_get_rate);
-
-[...]
-
-> +static unsigned long exynos4x12_get_rate_apll(unsigned long xtal_rate)
-
-exynos4x12_apll_get_rate()
-
-> +{
-> +	return s5p_get_pll35xx(xtal_rate, __raw_readl(EXYNOS4_APLL_CON0));
-> +}
-> +
-> +static unsigned long exynos4x12_get_rate_mpll(unsigned long xtal_rate)
-
-exynos4x12_mpll_get_rate()
-
-> +{
-> +	return s5p_get_pll35xx(xtal_rate, __raw_readl(EXYNOS4_MPLL_CON0));
-> +}
-> +
-> +static unsigned long exynos4x12_get_rate_epll(unsigned long xtal_rate)
-
-exynos4x12_epll_get_rate()
-
-> +{
-> +	return s5p_get_pll36xx(xtal_rate, __raw_readl(EXYNOS4_EPLL_CON0),
-> +		__raw_readl(EXYNOS4_EPLL_CON1));
-> +}
-> +
-> +static unsigned long exynos4x12_get_rate_vpll(unsigned long vpllsrc_rate)
-
-exynos4x12_vpll_get_rate()
-
-> +{
-> +	return s5p_get_pll36xx(vpllsrc_rate, __raw_readl(EXYNOS4_VPLL_CON0),
-> +		__raw_readl(EXYNOS4_VPLL_CON1));
-> +}
-> +
-> +/* Exynos4x12 specific clock registeration */
-> +void __init exynos4x12_clk_init(void)
-> +{
-> +	exynos4_clk_init();
-> +
-> +	samsung_clk_register_pll("fout_apll", pll_parent_names, NULL,
-> +		NULL, exynos4x12_get_rate_apll);
-
-+		NULL, exynos4x12_apll_get_rate);
-
-> +	samsung_clk_register_pll("fout_mpll", pll_parent_names, NULL,
-> +		NULL, exynos4x12_get_rate_mpll);
-
-+		NULL, exynos4x12_mpll_get_rate);
-
-> +	samsung_clk_register_pll("fout_epll", pll_parent_names, NULL,
-> +		NULL, exynos4x12_get_rate_epll);
-
-+		NULL, exynos4x12_epll_get_rate);
-
-> +	samsung_clk_register_pll("fout_vpll", pll_parent_names, NULL,
-> +		NULL, exynos4x12_get_rate_vpll);
-
-+		NULL, exynos4x12_vpll_get_rate);
-
-> +
-> +	samsung_clk_register_mux(exynos4x12_mux_clks,
-> +			ARRAY_SIZE(exynos4x12_mux_clks));
-> +
-> +	pr_info("EXYNOS4210: PLL settings: A=%ld, M=%ld, E=%ld, V=%ld\n",
-
-pr_info("EXYNOS4X12:...
-
-> +		_get_rate("fout_apll"), _get_rate("fout_mpll"),
-> +		_get_rate("fout_epll"), _get_rate("fout_vpll"));
-> +
-> +	pr_info("EXYNOS4210: ARMCLK=%ld, ACLK200=%ld, ACLK100=%ld\n"
-
-pr_info("EXYNOS4X12:...
-
-> +		"         ACLK160=%ld, ACLK133=%ld\n", _get_rate("armclk"),
-> +		_get_rate("aclk_200"), _get_rate("aclk_100"),
-> +		_get_rate("aclk_160"), _get_rate("aclk_133"));
-> +}
-> --
-> 1.7.5.4
-
-
-Thanks.
-
-Best regards,
-Kgene.
---
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
+--MT9SxUWSsctiw0kG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Nov 14, 2012 at 05:01:45AM +0000, AnilKumar, Chimata wrote:
+> +Mark
+
+...without any words as to why I'm being added or what the content in
+the message is?
+
+--MT9SxUWSsctiw0kG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQoypWAAoJELSic+t+oim9EP4P/iwR9uXogcb42aTcvcFNhdtg
+EPoyIJ7pJQRckZ0HJOXdQ+h/mAwc7/qOrXPxBUmT65wjvGCAeuScAPwYeZ77njAY
+ZEKm0DZvlwQNSK+mdHRYlIwIQIwnXsXeClnAG7x2Kmbb7MBp7lWjJhO00DHxTeU3
+/9OhvU6b5Heh8nF9vgxwFvG+Lh3ajdaBI0WmbfHV7iFHqOL1uB3KHmaFhMV0IERJ
+teLpR+dobfQZf/SM6B7/FGd/6FvobUDVo/t100tHBpLkhAuiCjiLOoHVAmPrXgIR
+dCtEBzVpGh8Tqfeg9LIdTOY0v49yr3dSbizUvjKsDcKQ/RdIOhVO7IYynkxn2SSJ
+L2KWWEkPhI/LZvYQGyvJC07p76crc/iBPXJkI1DxpBxIJXI9jjBsREFF1IiZNXab
+pTxNgROnlFdqDuYCZBaNqT+sHplhd3DeNNwGFaBeWLQNUMbiSUSHhE4FGX236a2z
+JVt4vh663M6fk/K/B0a0iTfhQEhezgS4b7JY4iOu0HaA6G8m0R2/vhmII1bFzJPW
+WCRAXXNRe0+IQPHuEXTHQPktykuwKCF44DK5Kk+PB/vNiRYzaQITgaMYPneOVBv3
+4Cb8hElQZlT+YdHRvAP7+c9IXKryl1JNHESh2USFoga55idEdX05crFQCDCBE08W
+o2nGNyYWa1mlbBPtm2Tn
+=Nl75
+-----END PGP SIGNATURE-----
+
+--MT9SxUWSsctiw0kG--
