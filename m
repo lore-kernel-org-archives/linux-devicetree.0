@@ -1,66 +1,142 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 4/6] usb: chipidea: usbmisc: add support for ahb, ipg and per clock
-Date: Wed, 14 Nov 2012 15:39:11 +0200
-Message-ID: <87mwyk718g.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de> <1352894137-2050-5-git-send-email-m.grzeschik@pengutronix.de>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v9 3/6] fbmon: add videomode helpers
+Date: Wed, 14 Nov 2012 15:06:47 +0100
+Message-ID: <20121114140647.GD18579@pengutronix.de>
+References: <1352893403-21168-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352893403-21168-4-git-send-email-s.trumtrar@pengutronix.de>
+ <20121114121207.GD2803@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352894137-2050-5-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121114121207.GD2803@avionic-0098.mockup.avionic-design.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+On Wed, Nov 14, 2012 at 01:12:07PM +0100, Thierry Reding wrote:
+> On Wed, Nov 14, 2012 at 12:43:20PM +0100, Steffen Trumtrar wrote:
+> > Add a function to convert from the generic videomode to a fb_videomode.
+> > 
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > ---
+> >  drivers/video/fbmon.c |   38 ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/fb.h    |    5 +++++
+> >  2 files changed, 43 insertions(+)
+> > 
+> > diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> > index cef6557..cccef17 100644
+> > --- a/drivers/video/fbmon.c
+> > +++ b/drivers/video/fbmon.c
+> > @@ -31,6 +31,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/slab.h>
+> >  #include <video/edid.h>
+> > +#include <linux/videomode.h>
+> >  #ifdef CONFIG_PPC_OF
+> >  #include <asm/prom.h>
+> >  #include <asm/pci-bridge.h>
+> > @@ -1373,6 +1374,43 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
+> >  	kfree(timings);
+> >  	return err;
+> >  }
+> > +
+> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > +int fb_videomode_from_videomode(struct videomode *vm, struct fb_videomode *fbmode)
+> > +{
+> > +	fbmode->xres = vm->hactive;
+> > +	fbmode->left_margin = vm->hback_porch;
+> > +	fbmode->right_margin = vm->hfront_porch;
+> > +	fbmode->hsync_len = vm->hsync_len;
+> > +
+> > +	fbmode->yres = vm->vactive;
+> > +	fbmode->upper_margin = vm->vback_porch;
+> > +	fbmode->lower_margin = vm->vfront_porch;
+> > +	fbmode->vsync_len = vm->vsync_len;
+> > +
+> > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> > +
+> > +	fbmode->sync = 0;
+> > +	fbmode->vmode = 0;
+> > +	if (vm->hah)
+> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> > +	if (vm->vah)
+> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> > +	if (vm->interlaced)
+> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> > +	if (vm->doublescan)
+> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> > +	if (vm->de)
+> > +		fbmode->sync |= FB_SYNC_DATA_ENABLE_HIGH_ACT;
+> > +	fbmode->refresh = (vm->pixelclock*1000) / (vm->hactive * vm->vactive);
+> 
+> CodingStyle that you should have spaces around '*'. Also I'm not sure if
+> that formula is correct. Shouldn't the blanking intervals be counted as
+> well? So:
+> 
+> 	unsigned int htotal = vm->hactive + vm->hfront_porch +
+> 			      vm->hback_porch + vm->hsync_len;
+> 	unsigned int vtotal = vm->vactive + vm->vfront_porch +
+> 			      vm->vback_porch + vm->vsync_len;
+> 
+> 	fbmode->refresh = (vm->pixelclock * 1000) / (htotal * vtotal);
+> 
+> ?
+> 
 
-> From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->
-> This patch adds support for ahb, ipg and per clock, which is needed to support
-> imx53.
+Sounds correct. Done.
 
-I would also suggest using a more elaborate wording here, some people
-might also be interested what are the different clocks for (like,
-interface, peripheral, etc etc).
+> > +	fbmode->flag = 0;
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+> > +#endif
+> > +
+> > +
+> 
+> Gratuitous blank line.
+> 
+> >  #else
+> >  int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+> >  {
+> > diff --git a/include/linux/fb.h b/include/linux/fb.h
+> > index c7a9571..6a3a675 100644
+> > --- a/include/linux/fb.h
+> > +++ b/include/linux/fb.h
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/backlight.h>
+> >  #include <linux/slab.h>
+> >  #include <asm/io.h>
+> > +#include <linux/videomode.h>
+> >  
+> >  struct vm_area_struct;
+> >  struct fb_info;
+> > @@ -714,6 +715,10 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+> >  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+> >  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+> >  
+> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > +extern int fb_videomode_from_videomode(struct videomode *vm,
+> > +				       struct fb_videomode *fbmode);
+> > +#endif
+> >  /* drivers/video/modedb.c */
+> 
+> These in turn could use an extra blank line.
+> 
+> Thierry
 
->
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/usb/chipidea/usbmisc_imx.c |   60 +++++++++++++++++++++++++++---------
->  1 file changed, 45 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-> index 72445f7..239b752 100644
-> --- a/drivers/usb/chipidea/usbmisc_imx.c
-> +++ b/drivers/usb/chipidea/usbmisc_imx.c
-> @@ -24,7 +24,9 @@
->  struct imx_usbmisc {
->  	void __iomem *base;
->  	spinlock_t lock;
-> -	struct clk *clk;
-> +	struct clk *clk_ahb;
-> +	struct clk *clk_ipg;
-> +	struct clk *clk_per;
->  	struct usbmisc_usb_device usbdev[USB_DEV_MAX];
->  	const struct usbmisc_ops *ops;
->  };
-> @@ -104,38 +106,66 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
->  	if (!data->base)
->  		return -EADDRNOTAVAIL;
->  
-> -	data->clk = devm_clk_get(&pdev->dev, NULL);
-> -	if (IS_ERR(data->clk)) {
-> +	data->clk_ahb = devm_clk_get(&pdev->dev, "ahb");
 
-I suppose the clock names are also being added/changed in the platform
-code in another patchset that's also being queued? What's the target
-merge window (if there's a dependency)?
 
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
