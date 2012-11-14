@@ -1,215 +1,130 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH 11/11] ARM: dts: add the watchdog nodes for atmel SoC
-Date: Wed, 14 Nov 2012 15:16:09 +0800
-Message-ID: <1352877369-19740-12-git-send-email-wenyou.yang@atmel.com>
-References: <1352877369-19740-1-git-send-email-wenyou.yang@atmel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352877369-19740-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: wim@iguana.be, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, wenyou.yang@atmel.com, JM.Lin@atmel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH v8] can: grcan: Add device driver for GRCAN and GRHCAN
+ cores
+Date: Wed, 14 Nov 2012 08:50:33 +0100
+Message-ID: <50A34D49.2070908@gaisler.com>
+References: <509C47CB.8060701@pengutronix.de> <1352732256-12712-1-git-send-email-andreas@gaisler.com> <50A2B88A.3040609@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <50A2B88A.3040609@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, software@gaisler.com, Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: grant.likely@secretlab.ca
-Cc: rob.herring@calxeda.com
-Cc: rob@landley.net
-Cc: linux@arm.linux.org.uk
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
----
- .../devicetree/bindings/watchdog/atmel-wdt.txt     |   14 ++++++++++++++
- arch/arm/boot/dts/at91sam9260.dtsi                 |    6 ++++++
- arch/arm/boot/dts/at91sam9263.dtsi                 |    6 ++++++
- arch/arm/boot/dts/at91sam9263ek.dts                |    4 ++++
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi        |    4 ++++
- arch/arm/boot/dts/at91sam9g25ek.dts                |    4 ++++
- arch/arm/boot/dts/at91sam9g45.dtsi                 |    5 +++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts             |    4 ++++
- arch/arm/boot/dts/at91sam9n12.dtsi                 |    6 ++++++
- arch/arm/boot/dts/at91sam9n12ek.dts                |    4 ++++
- arch/arm/boot/dts/at91sam9x5.dtsi                  |    6 ++++++
- 11 files changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+On 11/13/2012 10:15 PM, Marc Kleine-Budde wrote:
 
-diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-new file mode 100644
-index 0000000..5d09b87
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-@@ -0,0 +1,14 @@
-+* Atmel's Watchdog Timer Controller
-+
-+Required properties:
-+- compatible : should be "atmel,at91sam-wdt"
-+- reg : base physical address of the controller and length of memory mapped
-+	region.
-+
-+Example:
-+
-+	watchdog@fffffd40 {
-+		compatible = "atmel,at91sam-wdt";
-+		reg = <0xfffffd40 0x10>;
-+		status = "okay";
-+	};
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index d410581..81687a3 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -86,6 +86,12 @@
- 				interrupts = <1 4 7>;
- 			};
- 
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
-+
- 			tcb0: timer@fffa0000 {
- 				compatible = "atmel,at91rm9200-tcb";
- 				reg = <0xfffa0000 0x100>;
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 3e6e5c1..a25826b 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -73,6 +73,12 @@
- 				interrupts = <1 4 7>;
- 			};
- 
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
-+
- 			tcb0: timer@fff7c000 {
- 				compatible = "atmel,at91rm9200-tcb";
- 				reg = <0xfff7c000 0x100>;
-diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-index f86ac4b..bc947ea 100644
---- a/arch/arm/boot/dts/at91sam9263ek.dts
-+++ b/arch/arm/boot/dts/at91sam9263ek.dts
-@@ -50,6 +50,10 @@
- 				atmel,vbus-gpio = <&pioA 25 0>;
- 				status = "okay";
- 			};
-+
-+			watchdog@fffffd40 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-index e6391a4..e5797b7 100644
---- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-@@ -51,6 +51,10 @@
- 				atmel,vbus-gpio = <&pioC 5 0>;
- 				status = "okay";
- 			};
-+
-+			watchdog@fffffd40 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9g25ek.dts b/arch/arm/boot/dts/at91sam9g25ek.dts
-index 877c08f..2f03edc 100644
---- a/arch/arm/boot/dts/at91sam9g25ek.dts
-+++ b/arch/arm/boot/dts/at91sam9g25ek.dts
-@@ -44,6 +44,10 @@
- 			i2c2: i2c@f8018000 {
- 				status = "okay";
- 			};
-+
-+			watchdog@fffffe40 {
-+				status = "okay";
-+			};
- 		};
- 
- 		usb0: ohci@00600000 {
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 3add030..c6c2c09 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -84,6 +84,11 @@
- 				interrupts = <1 4 7>;
- 			};
- 
-+			watchdog@fffffd40 {
-+				compatible = "atmel,at91sam-wdt";
-+				reg = <0xfffffd40 0x10>;
-+				status = "disabled";
-+			};
- 
- 			shdwc@fffffd10 {
- 				compatible = "atmel,at91sam9rl-shdwc";
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 15e1dd4..371ab40 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -54,6 +54,10 @@
- 			i2c1: i2c@fff88000 {
- 				status = "okay";
- 			};
-+
-+			watchdog@fffffd40 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 82508d6..e5e6363 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -79,6 +79,12 @@
- 				interrupts = <1 4 7>;
- 			};
- 
-+			watchdog@fffffe40 {
-+				compatible = "atmel,at91sam-wdt";
-+				reg = <0xfffffe40 0x10>;
-+				status = "disabled";
-+			};
-+
- 			shdwc@fffffe10 {
- 				compatible = "atmel,at91sam9x5-shdwc";
- 				reg = <0xfffffe10 0x10>;
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index 912b2c2..abeda7a 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -45,6 +45,10 @@
- 			i2c1: i2c@f8014000 {
- 				status = "okay";
- 			};
-+
-+			watchdog@fffffe40 {
-+				status = "okay";
-+			};
- 		};
- 
- 		nand0: nand@40000000 {
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 03fc136..485f171 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -87,6 +87,12 @@
- 				interrupts = <1 4 7>;
- 			};
- 
-+			watchdog@fffffe40 {
-+				compatible = "atmel,at91sam-wdt";
-+				reg = <0xfffffe40 0x10>;
-+				status = "disabled";
-+			};
-+
- 			tcb0: timer@f8008000 {
- 				compatible = "atmel,at91sam9x5-tcb";
- 				reg = <0xf8008000 0x100>;
--- 
-1.7.9.5
+[...]
+
+> On 11/12/2012 03:57 PM, Andreas Larsson wrote:
+>> >+	bpr = 0; /* Note bpr and brp are different concepts */
+>> >+	rsj = bt->sjw;
+>> >+	ps1 = (bt->prop_seg + bt->phase_seg1) - 1; /* tseg1 - 1 */
+>> >+	ps2 = bt->phase_seg2;
+>> >+	scaler = (bt->brp - 1);
+>> >+	timing |= (bpr << GRCAN_CONF_BPR_BIT) & GRCAN_CONF_BPR;
+>> >+	timing |= (rsj << GRCAN_CONF_RSJ_BIT) & GRCAN_CONF_RSJ;
+>> >+	timing |= (ps1 << GRCAN_CONF_PS1_BIT) & GRCAN_CONF_PS1;
+>> >+	timing |= (ps2 << GRCAN_CONF_PS2_BIT) & GRCAN_CONF_PS2;
+>> >+	timing |= (scaler << GRCAN_CONF_SCALER_BIT) & GRCAN_CONF_SCALER;
+>> >+
+>> >+	netdev_info(dev, "setting timing=0x%x\n", timing);
+> what about moving the sanity check before putting together the "timing"
+> variable and doing the netdev_info()?
+
+The idea was for the user to have the full context of the problem when getting 
+the error (e.g., when using the bitrate method to set the timing parameters, the 
+calculated parameters are not otherwise known to the user). But I can do that 
+with a separate netdev_dbg and move the sanity check as suggested.
+
+>> >+	if (!(ps1 > ps2)) {
+>> >+		netdev_err(dev, "PS1 > PS2 must hold: PS1=%d, PS2=%d\n",
+>> >+			   ps1, ps2);
+>> >+		return -EINVAL;
+>> >+	}
+>> >+	if (!(ps2 >= rsj)) {
+>> >+		netdev_err(dev, "PS2 >= RSJ must hold: PS2=%d, RSJ=%d\n",
+>> >+			   ps2, rsj);
+>> >+		return -EINVAL;
+>> >+	}
+>> >+
+>> >+	grcan_write_bits(&regs->conf, timing, GRCAN_CONF_TIMING);
+>> >+	return 0;
+>> >+}
+
+[...]
+
+>> >+static int grcan_poll(struct napi_struct *napi, int rx_budget)
+>> >+{
+>> >+	struct grcan_priv *priv = container_of(napi, struct grcan_priv, napi);
+>> >+	struct net_device *dev = priv->dev;
+>> >+	struct grcan_registers __iomem *regs = priv->regs;
+>> >+	int rx_work_done;
+>> >+	unsigned long flags;
+>> >+
+>> >+	/* Receive according to given budget */
+>> >+	rx_work_done = grcan_receive(dev, rx_budget);
+>> >+
+>> >+	/* Catch up echo skb according to separate budget to get the benefits of
+>> >+	 * napi for tx as well. The given rx_budget might not be appropriate for
+>> >+	 * the tx side.
+>> >+	 */
+>> >+	grcan_transmit_catch_up(dev, GRCAN_TX_BUDGET);
+>> >+
+>> >+	spin_lock_irqsave(&priv->lock, flags);
+>> >+
+>> >+	if (grcan_poll_all_done(dev)) {
+> Just make it:
+> 	if (work_done < budget) {
+> 		napi_complete();
+> 		enable_interrupts();
+> 	}
+>
+> If there are CAN frames pending, an interrupt will kick in and
+> reschedule the NAPI.
+
+Sure, I can do that for the first check (and add back checking tx_work_done as 
+well). That misses to call napi_complete and start interrupts in the case in 
+which handling of frames are complete work_done == budget though. But on the 
+other hand, then grcan_poll will be triggered once again and then detect that 
+nothing is to be done if that is still the case.
+
+However, the problem with skipping the check after turning on interrupts is that 
+more frames can have arrived and/or have been sent after calculating work_done 
+and before turning on interrupts. For those frames, unless I have misunderstood 
+something, interrupts will not be raised and they can get stuck until (if ever) 
+later frames once again trigger rescheduling of napi.
+
+>> >+		bool complete = true;
+>> >+
+>> >+		if (!priv->closing) {
+>> >+			/* Enable tx and rx interrupts again */
+>> >+			grcan_set_bits(&regs->imr, GRCAN_IRQ_TX | GRCAN_IRQ_RX);
+>> >+
+>> >+			/* If more work arrived between detecting completion and
+>> >+			 * turning on interrupts, we need to keep napi running
+>> >+			 */
+>> >+			if (!grcan_poll_all_done(dev)) {
+>> >+				complete = false;
+>> >+				grcan_clear_bits(&regs->imr,
+>> >+						 GRCAN_IRQ_TX | GRCAN_IRQ_RX);
+>> >+			}
+>> >+		}
+>> >+		if (complete)
+>> >+			napi_complete(napi);
+>> >+	}
+>> >+
+>> >+	spin_unlock_irqrestore(&priv->lock, flags);
+>> >+
+>> >+	return rx_work_done;
+>> >+}
+
+
+Thanks for the feedback!
+
+Cheers,
+Andreas
+
+
