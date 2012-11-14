@@ -1,72 +1,43 @@
 From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/6] usb: chipidea: usbmisc: add support for ahb, ipg
- and per clock
-Date: Wed, 14 Nov 2012 16:27:40 +0100
-Message-ID: <20121114152740.GA13387@pengutronix.de>
+Subject: Re: [PATCH 2/6] usb: chipidea: usbmisc: rename file, struct and
+ functions to usbmisc_imx
+Date: Wed, 14 Nov 2012 16:32:03 +0100
+Message-ID: <20121114153203.GB13387@pengutronix.de>
 References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
- <1352894137-2050-5-git-send-email-m.grzeschik@pengutronix.de>
- <87mwyk718g.fsf@ashishki-desk.ger.corp.intel.com>
+ <1352894137-2050-3-git-send-email-m.grzeschik@pengutronix.de>
+ <CAOMZO5Ajdp3DT1b+Mx6ufjhuCoOmZ6CEwk+TgWEj-mjd1Hub1Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87mwyk718g.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+In-Reply-To: <CAOMZO5Ajdp3DT1b+Mx6ufjhuCoOmZ6CEwk+TgWEj-mjd1Hub1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 03:39:11PM +0200, Alexander Shishkin wrote:
-> Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+On Wed, Nov 14, 2012 at 09:57:50AM -0200, Fabio Estevam wrote:
+> Hi Michael,
 > 
-> > From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> On Wed, Nov 14, 2012 at 9:55 AM, Michael Grzeschik
+> <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > This driver will be used for every Freescale SoC which has this misc
+> > memory layout to control the basic usb handling. So better name this
+> > driver, function and struct names in a more generic way.
 > >
-> > This patch adds support for ahb, ipg and per clock, which is needed to support
-> > imx53.
-> 
-> I would also suggest using a more elaborate wording here, some people
-> might also be interested what are the different clocks for (like,
-> interface, peripheral, etc etc).
-> 
-
-Will do in V2.
-
-> >
-> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Reported-by: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > > ---
-> >  drivers/usb/chipidea/usbmisc_imx.c |   60 +++++++++++++++++++++++++++---------
-> >  1 file changed, 45 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-> > index 72445f7..239b752 100644
-> > --- a/drivers/usb/chipidea/usbmisc_imx.c
-> > +++ b/drivers/usb/chipidea/usbmisc_imx.c
-> > @@ -24,7 +24,9 @@
-> >  struct imx_usbmisc {
-> >  	void __iomem *base;
-> >  	spinlock_t lock;
-> > -	struct clk *clk;
-> > +	struct clk *clk_ahb;
-> > +	struct clk *clk_ipg;
-> > +	struct clk *clk_per;
-> >  	struct usbmisc_usb_device usbdev[USB_DEV_MAX];
-> >  	const struct usbmisc_ops *ops;
-> >  };
-> > @@ -104,38 +106,66 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
-> >  	if (!data->base)
-> >  		return -EADDRNOTAVAIL;
-> >  
-> > -	data->clk = devm_clk_get(&pdev->dev, NULL);
-> > -	if (IS_ERR(data->clk)) {
-> > +	data->clk_ahb = devm_clk_get(&pdev->dev, "ahb");
+> >  drivers/usb/chipidea/usbmisc_imx.c   |  163 ++++++++++++++++++++++++++++++++++
+> >  drivers/usb/chipidea/usbmisc_imx6q.c |  163 ----------------------------------
 > 
-> I suppose the clock names are also being added/changed in the platform
-> code in another patchset that's also being queued? What's the target
-> merge window (if there's a dependency)?
+> Please use git mv / git format -M so that git can detect the file rename.
 
-Yes we have more branches to be published next. One of them is
-adding the usb device tree nodes and clock entries for mx53.
+I have created this patch with git mv. Until now, i did not know
+that git send-email needs -M to stick with the git format.
+
+Will change that in V2.
 
 Thanks,
 Michael
