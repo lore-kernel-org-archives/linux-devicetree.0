@@ -1,64 +1,54 @@
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v9 5/6] drm_modes: add videomode helpers
-Date: Wed, 14 Nov 2012 13:49:44 +0100
-Message-ID: <20121114124944.GF2803@avionic-0098.mockup.avionic-design.de>
+Subject: Re: [PATCH v9 6/6] drm_modes: add of_videomode helpers
+Date: Wed, 14 Nov 2012 13:51:19 +0100
+Message-ID: <20121114125119.GG2803@avionic-0098.mockup.avionic-design.de>
 References: <1352893403-21168-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352893403-21168-6-git-send-email-s.trumtrar@pengutronix.de>
+ <1352893403-21168-7-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oPmsXEqKQNHCSXW7"
+	protocol="application/pgp-signature"; boundary="I3tAPq1Rm2pUxvsp"
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1352893403-21168-6-git-send-email-s.trumtrar@pengutronix.de>
+In-Reply-To: <1352893403-21168-7-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
 To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
 
---oPmsXEqKQNHCSXW7
+--I3tAPq1Rm2pUxvsp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 14, 2012 at 12:43:22PM +0100, Steffen Trumtrar wrote:
+On Wed, Nov 14, 2012 at 12:43:23PM +0100, Steffen Trumtrar wrote:
 [...]
-> diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-[...]
-> @@ -504,6 +505,41 @@ drm_gtf_mode(struct drm_device *dev, int hdisplay, i=
-nt vdisplay, int vrefresh,
->  }
->  EXPORT_SYMBOL(drm_gtf_mode);
-> =20
-> +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> +int display_mode_from_videomode(struct videomode *vm, struct drm_display=
-_mode *dmode)
+> +EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
+> +#endif
+>  /**
 
-Given that this is still a DRM core function, maybe it should get a drm_
-prefix? Also the line is too long, so you may want to wrap the argument
-list.
+Nit: there should be a blank line between the last two.
 
 Thierry
 
---oPmsXEqKQNHCSXW7
+--I3tAPq1Rm2pUxvsp
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQo5NoAAoJEN0jrNd/PrOhFRoQAKF/j89+6e4C2SmBB94S4u2p
-d1UUxQK/eHjdYa295uNCDce3HKiq7jbY8WBTMpgo0Jubt4Y1R5swCxBTMHerVhzv
-RvNa6bz3iUUu6vMf3xPXpib2QdE61vdrNSKS9jBHX1f8V0XdClCH51dNMQCWWz2X
-AC34kr0y/4/iQKfMAq3q5E0MGAjglKCTF8VduudisKhiPMavC0ghykV0QYwsycYB
-q+h9BDFZaYGWEjYNy7CoinR0fKHJwvWuLlppNiBDFcAqg5hEbvK2UnDdPD7fftgm
-4Uumn09/i7HlSF+JsGk6JPx96QmXQVQXB0/2F6MdR72As3yzbsyBj30vDBo/DL+q
-L0RdBu0JoNptivgXCcnx3q0a6eevYMDzA//d8Yqmqd9kQZrArAU/0FD4q+B+nwyO
-xu/sAYl2xBvs8T5l8hP/8Jf+sgNAJ9d82CiH8n8e1GjHwMeG3uEMEu1mU4ENux/b
-4B4RRco/3S/Cn83sy3RPccULFcZlBj5rauyHwl77/o04aOHVgzdZNziuYX5Zkg9b
-LZOf0jzPI997/NIZdhJVVzIODkjOZyJ3xbj9NqFT2BQXv5+nOPXt4qcCjGschr2W
-3nQpc+cVDEB99hAIcmm7skxkyAYBnLlunGtzxVXPXLpthGXBE1g0rs+yXOI6ZKXD
-LawwaUis11jI1M6cutI+
-=LI1y
+iQIcBAEBAgAGBQJQo5PHAAoJEN0jrNd/PrOh2bAQAKJ/n47kxLl7/OHDAeN6Znay
+shpIyjZQSOV0ncb7J6JGlyJkQnDhYxB7zrcWFSePgNpltztfuxhTcw21ViHf2CpP
+TOYcXCwugbaKN7i4V+25gI6GqwCbX4eqUpGEsMW7uLn5Qk+Nv1q7/m/m1GI72ozs
+IKNhInB4VzyUgEoFnb575MH9Za9kHw00sN1JEHq0ymjkFJnJ/ft5j3LE1bAsw29H
+xwSHQKdDoNFwQ9f/cDybt9jPDCDt75ZZh775qbTpIxKH8wJMqMTmlfpgq9K0Kucv
+XTNbF17GyX4Li4D02PrBfdi++pNONtQJXrMGcl/IzP83ZPUrfDmo/CEeJ+T89xqy
+uY2smevUS3zKkA4RpJ2ZaNTYe2Ys8+sdzDYwiCwxgCbXIy/2JfM46onRDX4eXbaW
+ncrIH1Xcb3o5e5d6pvis/MRUJUR9m5a0aPHwbMh+6dITHPjBOnkai+imRIYE2dxL
+YmtnT1u61CUi4quRNy6NyOPHTQLT7Dki7tnWccXi/hWFBP0m5FnLnWVdeE+ligTC
+cB+qM2b+H7zzHaru5z4vN89pn2SRCi8ozMsF07YPZH0lpi3KXBKc9E7s+5pyZJmE
+py9lDzIeGk3UV1bm+Rk/22uq7L2mCzxoZP0hGey5tk63EUoB81Yumd9VHccVqT5M
+dLIMUdvkkiXMI5s4njUc
+=XRNf
 -----END PGP SIGNATURE-----
 
---oPmsXEqKQNHCSXW7--
+--I3tAPq1Rm2pUxvsp--
