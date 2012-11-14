@@ -1,226 +1,251 @@
-From: Kim Phillips <kim.phillips@freescale.com>
-Subject: [PATCH 3/4 v2] dtc/libfdt: introduce fdt types for
- annotation by endian checkers
-Date: Tue, 13 Nov 2012 18:34:17 -0600
-Message-ID: <20121113183417.7706e5c6044eb273309ef46e@freescale.com>
-References: <1350433728-24120-1-git-send-email-kim.phillips@freescale.com>
-	<507F4B0B.1020401@gmail.com>
-	<20121018121112.GI23523@truffula.fritz.box>
-	<20121018173022.32f1745249d162d1aa453694@freescale.com>
-	<20121019004324.GN23523@truffula.fritz.box>
-	<20121030165754.65b34c78cd0d3a0d6ab7d34e@freescale.com>
-	<20121106074819.GG23553@truffula.fritz.box>
+From: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 4/4] dtc/libfdt: sparse fixes
+Date: Tue, 13 Nov 2012 18:34:30 -0600
+Message-ID: <20121113183430.472a0d989815fbd73ee9b437@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <20121106074819.GG23553@truffula.fritz.box>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>
-Cc: u-boot@lists.denx.de, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Projects such as linux and u-boot run sparse on libfdt.  libfdt
-contains the notion of endianness via usage of endian conversion
-functions such as fdt32_to_cpu.  As such, in order to pass endian
-checks, libfdt has to annotate its fdt variables such that sparse
-can warn when mixing bitwise and regular integers.  This patch adds
-these new fdtXX_t types and, ifdef __CHECKER__ (a symbol sparse
-defines), includes the bitwise annotation.
+libfdt/fdt.c:104:28: warning: incorrect type in argument 1 (different base types)
+libfdt/fdt.c:104:28:    expected restricted fdt32_t [usertype] x
+libfdt/fdt.c:104:28:    got unsigned int const [unsigned] [usertype] <noident>
+libfdt/fdt.c:124:40: warning: incorrect type in argument 1 (different base types)
+libfdt/fdt.c:124:40:    expected restricted fdt32_t [usertype] x
+libfdt/fdt.c:124:40:    got unsigned int const [unsigned] [usertype] <noident>
+libfdt/fdt_ro.c:337:29: warning: incorrect type in argument 1 (different base types)
+libfdt/fdt_ro.c:337:29:    expected restricted fdt32_t [usertype] x
+libfdt/fdt_ro.c:337:29:    got unsigned int const [unsigned] [usertype] <noident>
+libfdt/fdt_rw.c:370:17: warning: incorrect type in assignment (different base types)
+libfdt/fdt_rw.c:370:17:    expected unsigned int [unsigned] [usertype] <noident>
+libfdt/fdt_rw.c:370:17:    got restricted fdt32_t
+libfdt/fdt_sw.c:164:13: warning: incorrect type in assignment (different base types)
+libfdt/fdt_sw.c:164:13:    expected unsigned int [unsigned] [usertype] <noident>
+libfdt/fdt_sw.c:164:13:    got restricted fdt32_t
+libfdt/fdt_sw.c:227:14: warning: incorrect type in assignment (different base types)
+libfdt/fdt_sw.c:227:14:    expected unsigned int [unsigned] [usertype] <noident>
+libfdt/fdt_sw.c:227:14:    got restricted fdt32_t
+libfdt/fdt_wip.c:80:20: warning: incorrect type in assignment (different base types)
+libfdt/fdt_wip.c:80:20:    expected unsigned int [unsigned] [usertype] <noident>
+libfdt/fdt_wip.c:80:20:    got restricted fdt32_t
+libfdt/libfdt.h:1001:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:1001:13:    expected unsigned long [unsigned] [usertype] val
+libfdt/libfdt.h:1001:13:    got restricted fdt64_t
+libfdt/libfdt.h:1157:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:1157:13:    expected unsigned int [unsigned] [usertype] val
+libfdt/libfdt.h:1157:13:    got restricted fdt32_t
+libfdt/libfdt.h:1192:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:1192:13:    expected unsigned long [unsigned] [usertype] val
+libfdt/libfdt.h:1192:13:    got restricted fdt64_t
+libfdt/libfdt.h:1299:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:1299:13:    expected unsigned int [unsigned] [usertype] val
+libfdt/libfdt.h:1299:13:    got restricted fdt32_t
+libfdt/libfdt.h:1334:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:1334:13:    expected unsigned long [unsigned] [usertype] val
+libfdt/libfdt.h:1334:13:    got restricted fdt64_t
+libfdt/libfdt.h:885:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:885:13:    expected unsigned int [unsigned] [usertype] val
+libfdt/libfdt.h:885:13:    got restricted fdt32_t
+libfdt/libfdt.h:920:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:920:13:    expected unsigned long [unsigned] [usertype] val
+libfdt/libfdt.h:920:13:    got restricted fdt64_t
+libfdt/libfdt.h:996:13: warning: incorrect type in assignment (different base types)
+libfdt/libfdt.h:996:13:    expected unsigned int [unsigned] [usertype] val
+libfdt/libfdt.h:996:13:    got restricted fdt32_t
 
-Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
+Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-v2:
-adds bitwise awareness: determine host endianness manually, and
-annotate swabs with __force in fdtXX_to_cpu and cpu_to_fdtXX
-conversion functions (the inline endian condition checks are
-optimized out at compile time).  This allows us to be able to check
-libfdt bitwise conversions with sparse by building dtc with make
-CC=cgcc. v2 also moves fdt32 definitions from fdt.h to libfdt_env.h
-and changes fdt32 definitions to use __bitwise instead of __be32. No
-separate _FDT_SPARSE was introduced because there's no need: using
-__CHECKER__ directly is valid because it only occurs once, and in
-libfdt_env.h.
-In addition, the libfdt sparse fixes have been moved to a subsequent
-patch.
+ libfdt/fdt.c     |  2 +-
+ libfdt/fdt_ro.c  |  2 +-
+ libfdt/fdt_rw.c  |  4 ++--
+ libfdt/fdt_sw.c  |  4 ++--
+ libfdt/fdt_wip.c |  2 +-
+ libfdt/libfdt.h  | 32 ++++++++++++++++----------------
+ 6 files changed, 23 insertions(+), 23 deletions(-)
 
-I hope this addresses all your comments, David.
-
- libfdt/fdt.h        | 42 +++++++++++++++++-----------------
- libfdt/libfdt_env.h | 66 +++++++++++++++++++++++++++++++++++++++++------------
- 2 files changed, 73 insertions(+), 35 deletions(-)
-
-diff --git a/libfdt/fdt.h b/libfdt/fdt.h
-index 48ccfd9..45dd134 100644
---- a/libfdt/fdt.h
-+++ b/libfdt/fdt.h
-@@ -4,45 +4,45 @@
- #ifndef __ASSEMBLY__
+diff --git a/libfdt/fdt.c b/libfdt/fdt.c
+index e56833a..57faba3 100644
+--- a/libfdt/fdt.c
++++ b/libfdt/fdt.c
+@@ -92,7 +92,7 @@ const void *fdt_offset_ptr(const void *fdt, int offset, unsigned int len)
  
- struct fdt_header {
--	uint32_t magic;			 /* magic word FDT_MAGIC */
--	uint32_t totalsize;		 /* total size of DT block */
--	uint32_t off_dt_struct;		 /* offset to structure */
--	uint32_t off_dt_strings;	 /* offset to strings */
--	uint32_t off_mem_rsvmap;	 /* offset to memory reserve map */
--	uint32_t version;		 /* format version */
--	uint32_t last_comp_version;	 /* last compatible version */
-+	fdt32_t magic;			 /* magic word FDT_MAGIC */
-+	fdt32_t totalsize;		 /* total size of DT block */
-+	fdt32_t off_dt_struct;		 /* offset to structure */
-+	fdt32_t off_dt_strings;		 /* offset to strings */
-+	fdt32_t off_mem_rsvmap;		 /* offset to memory reserve map */
-+	fdt32_t version;		 /* format version */
-+	fdt32_t last_comp_version;	 /* last compatible version */
+ uint32_t fdt_next_tag(const void *fdt, int startoffset, int *nextoffset)
+ {
+-	const uint32_t *tagp, *lenp;
++	const fdt32_t *tagp, *lenp;
+ 	uint32_t tag;
+ 	int offset = startoffset;
+ 	const char *p;
+diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
+index 02b6d68..42da2bd 100644
+--- a/libfdt/fdt_ro.c
++++ b/libfdt/fdt_ro.c
+@@ -322,7 +322,7 @@ const void *fdt_getprop(const void *fdt, int nodeoffset,
  
- 	/* version 2 fields below */
--	uint32_t boot_cpuid_phys;	 /* Which physical CPU id we're
-+	fdt32_t boot_cpuid_phys;	 /* Which physical CPU id we're
- 					    booting on */
- 	/* version 3 fields below */
--	uint32_t size_dt_strings;	 /* size of the strings block */
-+	fdt32_t size_dt_strings;	 /* size of the strings block */
+ uint32_t fdt_get_phandle(const void *fdt, int nodeoffset)
+ {
+-	const uint32_t *php;
++	const fdt32_t *php;
+ 	int len;
  
- 	/* version 17 fields below */
--	uint32_t size_dt_struct;	 /* size of the structure block */
-+	fdt32_t size_dt_struct;		 /* size of the structure block */
- };
+ 	/* FIXME: This is a bit sub-optimal, since we potentially scan
+diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
+index 24437df..fdba618 100644
+--- a/libfdt/fdt_rw.c
++++ b/libfdt/fdt_rw.c
+@@ -339,7 +339,7 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffset,
+ 	int nodelen;
+ 	int err;
+ 	uint32_t tag;
+-	uint32_t *endtag;
++	fdt32_t *endtag;
  
- struct fdt_reserve_entry {
--	uint64_t address;
--	uint64_t size;
-+	fdt64_t address;
-+	fdt64_t size;
- };
+ 	FDT_RW_CHECK_HEADER(fdt);
  
- struct fdt_node_header {
--	uint32_t tag;
-+	fdt32_t tag;
- 	char name[0];
- };
+@@ -366,7 +366,7 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffset,
+ 	nh->tag = cpu_to_fdt32(FDT_BEGIN_NODE);
+ 	memset(nh->name, 0, FDT_TAGALIGN(namelen+1));
+ 	memcpy(nh->name, name, namelen);
+-	endtag = (uint32_t *)((char *)nh + nodelen - FDT_TAGSIZE);
++	endtag = (fdt32_t *)((char *)nh + nodelen - FDT_TAGSIZE);
+ 	*endtag = cpu_to_fdt32(FDT_END_NODE);
  
- struct fdt_property {
--	uint32_t tag;
--	uint32_t len;
--	uint32_t nameoff;
-+	fdt32_t tag;
-+	fdt32_t len;
-+	fdt32_t nameoff;
- 	char data[0];
- };
+ 	return offset;
+diff --git a/libfdt/fdt_sw.c b/libfdt/fdt_sw.c
+index 55ebebf..f422754 100644
+--- a/libfdt/fdt_sw.c
++++ b/libfdt/fdt_sw.c
+@@ -153,7 +153,7 @@ int fdt_begin_node(void *fdt, const char *name)
  
- #endif /* !__ASSEMBLY */
+ int fdt_end_node(void *fdt)
+ {
+-	uint32_t *en;
++	fdt32_t *en;
  
- #define FDT_MAGIC	0xd00dfeed	/* 4: version, 4: total size */
--#define FDT_TAGSIZE	sizeof(uint32_t)
-+#define FDT_TAGSIZE	sizeof(fdt32_t)
+ 	FDT_SW_CHECK_HEADER(fdt);
  
- #define FDT_BEGIN_NODE	0x1		/* Start node: full name */
- #define FDT_END_NODE	0x2		/* End node */
-@@ -51,10 +51,10 @@ struct fdt_property {
- #define FDT_NOP		0x4		/* nop */
- #define FDT_END		0x9
+@@ -213,7 +213,7 @@ int fdt_property(void *fdt, const char *name, const void *val, int len)
+ int fdt_finish(void *fdt)
+ {
+ 	char *p = (char *)fdt;
+-	uint32_t *end;
++	fdt32_t *end;
+ 	int oldstroffset, newstroffset;
+ 	uint32_t tag;
+ 	int offset, nextoffset;
+diff --git a/libfdt/fdt_wip.c b/libfdt/fdt_wip.c
+index 6025fa1..c5bbb68 100644
+--- a/libfdt/fdt_wip.c
++++ b/libfdt/fdt_wip.c
+@@ -74,7 +74,7 @@ int fdt_setprop_inplace(void *fdt, int nodeoffset, const char *name,
  
--#define FDT_V1_SIZE	(7*sizeof(uint32_t))
--#define FDT_V2_SIZE	(FDT_V1_SIZE + sizeof(uint32_t))
--#define FDT_V3_SIZE	(FDT_V2_SIZE + sizeof(uint32_t))
-+#define FDT_V1_SIZE	(7*sizeof(fdt32_t))
-+#define FDT_V2_SIZE	(FDT_V1_SIZE + sizeof(fdt32_t))
-+#define FDT_V3_SIZE	(FDT_V2_SIZE + sizeof(fdt32_t))
- #define FDT_V16_SIZE	FDT_V3_SIZE
--#define FDT_V17_SIZE	(FDT_V16_SIZE + sizeof(uint32_t))
-+#define FDT_V17_SIZE	(FDT_V16_SIZE + sizeof(fdt32_t))
+ static void _fdt_nop_region(void *start, int len)
+ {
+-	uint32_t *p;
++	fdt32_t *p;
  
- #endif /* _FDT_H */
-diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
-index 213d7fb..302d5cb 100644
---- a/libfdt/libfdt_env.h
-+++ b/libfdt/libfdt_env.h
-@@ -5,25 +5,63 @@
- #include <stdint.h>
- #include <string.h>
- 
-+#ifdef __CHECKER__
-+#define __force __attribute__((force))
-+#define __bitwise __attribute__((bitwise))
-+typedef uint16_t __bitwise fdt16_t;
-+typedef uint32_t __bitwise fdt32_t;
-+typedef uint64_t __bitwise fdt64_t;
-+#else
-+#define __force
-+#define __bitwise
-+typedef uint16_t fdt16_t;
-+typedef uint32_t fdt32_t;
-+typedef uint64_t fdt64_t;
-+#endif
-+
- #define EXTRACT_BYTE(n)	((unsigned long long)((uint8_t *)&x)[n])
--static inline uint16_t fdt16_to_cpu(uint16_t x)
--{
--	return (EXTRACT_BYTE(0) << 8) | EXTRACT_BYTE(1);
--}
--#define cpu_to_fdt16(x) fdt16_to_cpu(x)
-+#define __SWAB16X ((EXTRACT_BYTE(0) << 8) | EXTRACT_BYTE(1))
-+#define __SWAB32X ((EXTRACT_BYTE(0) << 24) | (EXTRACT_BYTE(1) << 16) | (EXTRACT_BYTE(2) << 8) | EXTRACT_BYTE(3))
-+#define __SWAB64X ((EXTRACT_BYTE(0) << 56) | (EXTRACT_BYTE(1) << 48) | (EXTRACT_BYTE(2) << 40) | (EXTRACT_BYTE(3) << 32) \
-+		  | (EXTRACT_BYTE(4) << 24) | (EXTRACT_BYTE(5) << 16) | (EXTRACT_BYTE(6) << 8) | EXTRACT_BYTE(7))
- 
--static inline uint32_t fdt32_to_cpu(uint32_t x)
--{
--	return (EXTRACT_BYTE(0) << 24) | (EXTRACT_BYTE(1) << 16) | (EXTRACT_BYTE(2) << 8) | EXTRACT_BYTE(3);
-+/*
-+ * determine host endianness:
-+ * *__first_byte is 0x11 on big endian systems
-+ * *__first_byte is 0x44 on little endian systems
-+ */
-+static const uint32_t __native = 0x11223344u;
-+static const uint8_t *__first_byte = (const uint8_t *)&__native;
-+
-+#define DEF_FDT_TO_CPU(bits) \
-+static inline uint##bits##_t fdt##bits##_to_cpu(fdt##bits##_t x) \
-+{ \
-+	if (*__first_byte == 0x11) \
-+		return (__force uint##bits##_t)x; \
-+	else \
-+		return (__force uint##bits##_t)__SWAB##bits##X; \
+ 	for (p = start; (char *)p < ((char *)start + len); p++)
+ 		*p = cpu_to_fdt32(FDT_NOP);
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 73f4975..8e57a06 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -882,8 +882,8 @@ int fdt_setprop_inplace(void *fdt, int nodeoffset, const char *name,
+ static inline int fdt_setprop_inplace_u32(void *fdt, int nodeoffset,
+ 					  const char *name, uint32_t val)
+ {
+-	val = cpu_to_fdt32(val);
+-	return fdt_setprop_inplace(fdt, nodeoffset, name, &val, sizeof(val));
++	fdt32_t tmp = cpu_to_fdt32(val);
++	return fdt_setprop_inplace(fdt, nodeoffset, name, &tmp, sizeof(tmp));
  }
--#define cpu_to_fdt32(x) fdt32_to_cpu(x)
-+DEF_FDT_TO_CPU(16)
-+DEF_FDT_TO_CPU(32)
-+DEF_FDT_TO_CPU(64)
  
--static inline uint64_t fdt64_to_cpu(uint64_t x)
--{
--	return (EXTRACT_BYTE(0) << 56) | (EXTRACT_BYTE(1) << 48) | (EXTRACT_BYTE(2) << 40) | (EXTRACT_BYTE(3) << 32)
--		| (EXTRACT_BYTE(4) << 24) | (EXTRACT_BYTE(5) << 16) | (EXTRACT_BYTE(6) << 8) | EXTRACT_BYTE(7);
-+#define DEF_CPU_TO_FDT(bits) \
-+static inline fdt##bits##_t cpu_to_fdt##bits(uint##bits##_t x) \
-+{ \
-+	if (*__first_byte == 0x11) \
-+		return (__force fdt##bits##_t)x; \
-+	else \
-+		return (__force fdt##bits##_t)__SWAB##bits##X; \
+ /**
+@@ -917,8 +917,8 @@ static inline int fdt_setprop_inplace_u32(void *fdt, int nodeoffset,
+ static inline int fdt_setprop_inplace_u64(void *fdt, int nodeoffset,
+ 					  const char *name, uint64_t val)
+ {
+-	val = cpu_to_fdt64(val);
+-	return fdt_setprop_inplace(fdt, nodeoffset, name, &val, sizeof(val));
++	fdt64_t tmp = cpu_to_fdt64(val);
++	return fdt_setprop_inplace(fdt, nodeoffset, name, &tmp, sizeof(tmp));
  }
--#define cpu_to_fdt64(x) fdt64_to_cpu(x)
-+DEF_CPU_TO_FDT(16)
-+DEF_CPU_TO_FDT(32)
-+DEF_CPU_TO_FDT(64)
-+
-+#undef DEF_FDT_TO_CPU
-+#undef DEF_CPU_TO_FDT
-+#undef __SWAB64X
-+#undef __SWAB32X
-+#undef __SWAB16X
- #undef EXTRACT_BYTE
  
- #endif /* _LIBFDT_ENV_H */
+ /**
+@@ -993,13 +993,13 @@ int fdt_begin_node(void *fdt, const char *name);
+ int fdt_property(void *fdt, const char *name, const void *val, int len);
+ static inline int fdt_property_u32(void *fdt, const char *name, uint32_t val)
+ {
+-	val = cpu_to_fdt32(val);
+-	return fdt_property(fdt, name, &val, sizeof(val));
++	fdt32_t tmp = cpu_to_fdt32(val);
++	return fdt_property(fdt, name, &tmp, sizeof(tmp));
+ }
+ static inline int fdt_property_u64(void *fdt, const char *name, uint64_t val)
+ {
+-	val = cpu_to_fdt64(val);
+-	return fdt_property(fdt, name, &val, sizeof(val));
++	fdt64_t tmp = cpu_to_fdt64(val);
++	return fdt_property(fdt, name, &tmp, sizeof(tmp));
+ }
+ static inline int fdt_property_cell(void *fdt, const char *name, uint32_t val)
+ {
+@@ -1154,8 +1154,8 @@ int fdt_setprop(void *fdt, int nodeoffset, const char *name,
+ static inline int fdt_setprop_u32(void *fdt, int nodeoffset, const char *name,
+ 				  uint32_t val)
+ {
+-	val = cpu_to_fdt32(val);
+-	return fdt_setprop(fdt, nodeoffset, name, &val, sizeof(val));
++	fdt32_t tmp = cpu_to_fdt32(val);
++	return fdt_setprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
+ }
+ 
+ /**
+@@ -1189,8 +1189,8 @@ static inline int fdt_setprop_u32(void *fdt, int nodeoffset, const char *name,
+ static inline int fdt_setprop_u64(void *fdt, int nodeoffset, const char *name,
+ 				  uint64_t val)
+ {
+-	val = cpu_to_fdt64(val);
+-	return fdt_setprop(fdt, nodeoffset, name, &val, sizeof(val));
++	fdt64_t tmp = cpu_to_fdt64(val);
++	return fdt_setprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
+ }
+ 
+ /**
+@@ -1296,8 +1296,8 @@ int fdt_appendprop(void *fdt, int nodeoffset, const char *name,
+ static inline int fdt_appendprop_u32(void *fdt, int nodeoffset,
+ 				     const char *name, uint32_t val)
+ {
+-	val = cpu_to_fdt32(val);
+-	return fdt_appendprop(fdt, nodeoffset, name, &val, sizeof(val));
++	fdt32_t tmp = cpu_to_fdt32(val);
++	return fdt_appendprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
+ }
+ 
+ /**
+@@ -1331,8 +1331,8 @@ static inline int fdt_appendprop_u32(void *fdt, int nodeoffset,
+ static inline int fdt_appendprop_u64(void *fdt, int nodeoffset,
+ 				     const char *name, uint64_t val)
+ {
+-	val = cpu_to_fdt64(val);
+-	return fdt_appendprop(fdt, nodeoffset, name, &val, sizeof(val));
++	fdt64_t tmp = cpu_to_fdt64(val);
++	return fdt_appendprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
+ }
+ 
+ /**
 -- 
 1.8.0
