@@ -1,56 +1,250 @@
-From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] mfd: tps65217: Set PMIC to shutdowm on PWR_EN toggle
-Date: Wed, 14 Nov 2012 11:08:49 +0100
-Message-ID: <50A36DB1.3010706@ti.com>
-References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
- <1352108549-9341-2-git-send-email-anilkumar@ti.com> <5097F078.50701@ti.com>
- <20121114022341.GM4415@opensource.wolfsonmicro.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA6B043@DBDE01.ent.ti.com>
- <20121114062117.GC7407@opensource.wolfsonmicro.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA6B0AF@DBDE01.ent.ti.com>
- <20121114070046.GE7407@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121114070046.GE7407-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [Patch v6 4/4] ASoC: at91sam9g20ek-wm8731: convert to dt support
+Date: Wed, 14 Nov 2012 18:09:11 +0800
+Message-ID: <1352887751-21848-5-git-send-email-voice.shen@atmel.com>
+References: <1352887751-21848-1-git-send-email-voice.shen@atmel.com>
+Return-path: <linux-sound-owner@vger.kernel.org>
+In-Reply-To: <1352887751-21848-1-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com, plagnioj@jcrosoft.com, nicolas.ferre@atmel.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, Bo Shen <voice.shen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+convert at91sam9g20ek with wm8731 to device tree support
 
-On 11/14/2012 08:00 AM, Mark Brown wrote:
-> On Wed, Nov 14, 2012 at 06:49:58AM +0000, AnilKumar, Chimata wrote:
-> 
->> Earlier you have a comment on this thread, I am adding my comments
->> on top of it. Sorry if I am in wrong direction.
-> 
-> Ah, I see.  I was just commenting because Benoit was asking if this
-> should be supported with a standard framework feature - I'm not
-> convinced that it should right now as there's not any clear patterns in
-> hardware behaviour.  I've no specific interest in this system.
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
+---
+Change since v5:
+  No change
+Change since v4 RFC:
+  Using the full name of the EK which make it more clear
+Change since v3 RFC:
+  Remove dai node, remap ssc in place
+  without pinctrl added, so don't modify the dtsi file, will be added
+  soon
+Change since v2:
+  No change
+Change since v1:
+  Add sam9g20-wm8731 binding document
+---
+ .../sound/atmel-at91sam9g20ek-wm8731-audio.txt     |   26 ++++++++
+ arch/arm/boot/dts/at91sam9g20ek_common.dtsi        |   32 +++++++++-
+ sound/soc/atmel/Kconfig                            |    3 +-
+ sound/soc/atmel/sam9g20_wm8731.c                   |   63 +++++++++++++++++++-
+ 4 files changed, 119 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/atmel-at91sam9g20ek-wm8731-audio.txt
 
-I was wondering that, because exposing a pin to control the whole PMIC
-low power mode seems to be something that should be generic enough to be
-handled by the regulator framework.
+diff --git a/Documentation/devicetree/bindings/sound/atmel-at91sam9g20ek-wm8731-audio.txt b/Documentation/devicetree/bindings/sound/atmel-at91sam9g20ek-wm8731-audio.txt
+new file mode 100644
+index 0000000..9c5a994
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/atmel-at91sam9g20ek-wm8731-audio.txt
+@@ -0,0 +1,26 @@
++* Atmel at91sam9g20ek wm8731 audio complex
++
++Required properties:
++  - compatible: "atmel,at91sam9g20ek-wm8731-audio"
++  - atmel,model: The user-visible name of this sound complex.
++  - atmel,audio-routing: A list of the connections between audio components.
++  - atmel,ssc-controller: The phandle of the SSC controller
++  - atmel,audio-codec: The phandle of the WM8731 audio codec
++Optional properties:
++  - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
++
++Example:
++sound {
++	compatible = "atmel,at91sam9g20ek-wm8731-audio";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pck0_as_mck>;
++
++	atmel,model = "wm8731 @ AT91SAMG20EK";
++
++	atmel,audio-routing =
++		"Ext Spk", "LHPOUT",
++		"Int MIC", "MICIN";
++
++	atmel,ssc-controller = <&ssc0>;
++	atmel,audio-codec = <&wm8731>;
++};
+diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
+index 689323d..679f783 100644
+--- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
++++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
+@@ -30,6 +30,16 @@
+ 
+ 	ahb {
+ 		apb {
++			pinctrl@fffff400 {
++				board {
++					pinctrl_pck0_as_mck: pck0_as_mck {
++						atmel,pins =
++							<2 1 0x2 0x0>;	/* PC1 periph B */
++					};
++
++				};
++			};
++
+ 			dbgu: serial@fffff200 {
+ 				status = "okay";
+ 			};
+@@ -57,6 +67,11 @@
+ 				atmel,vbus-gpio = <&pioC 5 0>;
+ 				status = "okay";
+ 			};
++
++			ssc0: ssc@fffbc000 {
++				status = "okay";
++				pinctrl-0 = <&pinctrl_ssc0_tx>;
++			};
+ 		};
+ 
+ 		nand0: nand@40000000 {
+@@ -120,7 +135,7 @@
+ 			reg = <0x50>;
+ 		};
+ 
+-		wm8731@1b {
++		wm8731: wm8731@1b {
+ 			compatible = "wm8731";
+ 			reg = <0x1b>;
+ 		};
+@@ -145,4 +160,19 @@
+ 			gpio-key,wakeup;
+ 		};
+ 	};
++
++	sound {
++		compatible = "atmel,at91sam9g20ek-wm8731-audio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pck0_as_mck>;
++
++		atmel,model = "wm8731 @ AT91SAMG20EK";
++
++		atmel,audio-routing =
++			"Ext Spk", "LHPOUT",
++			"Int Mic", "MICIN";
++
++		atmel,ssc-controller = <&ssc0>;
++		atmel,audio-codec = <&wm8731>;
++	};
+ };
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index 72b09cf..397ec75 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -16,8 +16,7 @@ config SND_ATMEL_SOC_SSC
+ 
+ config SND_AT91_SOC_SAM9G20_WM8731
+ 	tristate "SoC Audio support for WM8731-based At91sam9g20 evaluation board"
+-	depends on ATMEL_SSC && ARCH_AT91SAM9G20 && SND_ATMEL_SOC && \
+-                   AT91_PROGRAMMABLE_CLOCKS
++	depends on ATMEL_SSC && SND_ATMEL_SOC && AT91_PROGRAMMABLE_CLOCKS
+ 	select SND_ATMEL_SOC_SSC
+ 	select SND_SOC_WM8731
+ 	help
+diff --git a/sound/soc/atmel/sam9g20_wm8731.c b/sound/soc/atmel/sam9g20_wm8731.c
+index 4deba18..0744610 100644
+--- a/sound/soc/atmel/sam9g20_wm8731.c
++++ b/sound/soc/atmel/sam9g20_wm8731.c
+@@ -38,6 +38,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/i2c.h>
+ 
++#include <linux/pinctrl/consumer.h>
++
+ #include <linux/atmel-ssc.h>
+ 
+ #include <sound/core.h>
+@@ -197,12 +199,24 @@ static struct snd_soc_card snd_soc_at91sam9g20ek = {
+ 
+ static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *codec_np, *cpu_np;
+ 	struct clk *pllb;
+ 	struct snd_soc_card *card = &snd_soc_at91sam9g20ek;
++	struct pinctrl *pinctrl;
+ 	int ret;
+ 
+-	if (!(machine_is_at91sam9g20ek() || machine_is_at91sam9g20ek_2mmc()))
+-		return -ENODEV;
++	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
++	if (IS_ERR(pinctrl)) {
++		dev_err(&pdev->dev, "Failed to request pinctrl for mck\n");
++		return PTR_ERR(pinctrl);
++	}
++
++	if (!np) {
++		if (!(machine_is_at91sam9g20ek() ||
++			machine_is_at91sam9g20ek_2mmc()))
++			return -ENODEV;
++	}
+ 
+ 	ret = atmel_ssc_set_audio(0);
+ 	if (ret) {
+@@ -236,6 +250,42 @@ static int __devinit at91sam9g20ek_audio_probe(struct platform_device *pdev)
+ 	clk_set_rate(mclk, MCLK_RATE);
+ 
+ 	card->dev = &pdev->dev;
++
++	/* Parse device node info */
++	if (np) {
++		ret = snd_soc_of_parse_card_name(card, "atmel,model");
++		if (ret)
++			goto err;
++
++		ret = snd_soc_of_parse_audio_routing(card,
++			"atmel,audio-routing");
++		if (ret)
++			goto err;
++
++		/* Parse codec info */
++		at91sam9g20ek_dai.codec_name = NULL;
++		codec_np = of_parse_phandle(np, "atmel,audio-codec", 0);
++		if (!codec_np) {
++			dev_err(&pdev->dev, "codec info missing\n");
++			return -EINVAL;
++		}
++		at91sam9g20ek_dai.codec_of_node = codec_np;
++
++		/* Parse dai and platform info */
++		at91sam9g20ek_dai.cpu_dai_name = NULL;
++		at91sam9g20ek_dai.platform_name = NULL;
++		cpu_np = of_parse_phandle(np, "atmel,ssc-controller", 0);
++		if (!cpu_np) {
++			dev_err(&pdev->dev, "dai and pcm info missing\n");
++			return -EINVAL;
++		}
++		at91sam9g20ek_dai.cpu_of_node = cpu_np;
++		at91sam9g20ek_dai.platform_of_node = cpu_np;
++
++		of_node_put(codec_np);
++		of_node_put(cpu_np);
++	}
++
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+ 		printk(KERN_ERR "ASoC: snd_soc_register_card() failed\n");
+@@ -263,10 +313,19 @@ static int __devexit at91sam9g20ek_audio_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id at91sam9g20ek_wm8731_dt_ids[] = {
++	{ .compatible = "atmel,at91sam9g20ek-wm8731-audio", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, at91sam9g20ek_wm8731_dt_ids);
++#endif
++
+ static struct platform_driver at91sam9g20ek_audio_driver = {
+ 	.driver = {
+ 		.name	= "at91sam9g20ek-audio",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(at91sam9g20ek_wm8731_dt_ids),
+ 	},
+ 	.probe	= at91sam9g20ek_audio_probe,
+ 	.remove	= __devexit_p(at91sam9g20ek_audio_remove),
+-- 
+1.7.9.5
 
-In the current situation we do have a pwr_en pin that can be controlled
-by a GPIO or whatever signal from the SoC.
-That's very similar, at PMIC level, to the fixedregulator that allow a
-GPIO binding to enable it.
-
-Don't you think that should deserve a support in the fmwk?
-
-Regards,
-Benoit
