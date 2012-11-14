@@ -1,53 +1,51 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/6] usb: chipidea: usbmisc: rename file, struct and
- functions to usbmisc_imx
-Date: Wed, 14 Nov 2012 16:32:03 +0100
-Message-ID: <20121114153203.GB13387@pengutronix.de>
-References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
- <1352894137-2050-3-git-send-email-m.grzeschik@pengutronix.de>
- <CAOMZO5Ajdp3DT1b+Mx6ufjhuCoOmZ6CEwk+TgWEj-mjd1Hub1Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5Ajdp3DT1b+Mx6ufjhuCoOmZ6CEwk+TgWEj-mjd1Hub1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] spi: omap2-mcspi: remove duplicated include from spi-omap2-mcspi.c
+Date: Wed, 14 Nov 2012 15:54:27 +0000
+Message-ID: <20121114155427.957923E0B1A@localhost>
+References: <CAPgLHd_rNn_bJ8BJOwcq8EmEi-BQcoakHmQpHG+NdOdDgPSMpQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd_rNn_bJ8BJOwcq8EmEi-BQcoakHmQpHG+NdOdDgPSMpQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 09:57:50AM -0200, Fabio Estevam wrote:
-> Hi Michael,
+On Sun, 7 Oct 2012 21:29:21 +0800, Wei Yongjun <weiyj.lk@gmail.com> wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 > 
-> On Wed, Nov 14, 2012 at 9:55 AM, Michael Grzeschik
-> <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > This driver will be used for every Freescale SoC which has this misc
-> > memory layout to control the basic usb handling. So better name this
-> > driver, function and struct names in a more generic way.
-> >
-> > Reported-by: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  drivers/usb/chipidea/usbmisc_imx.c   |  163 ++++++++++++++++++++++++++++++++++
-> >  drivers/usb/chipidea/usbmisc_imx6q.c |  163 ----------------------------------
-> 
-> Please use git mv / git format -M so that git can detect the file rename.
+> Remove duplicated include.
 
-I have created this patch with git mv. Until now, i did not know
-that git send-email needs -M to stick with the git format.
+Applied, thanks.
 
-Will change that in V2.
+> dpatch engine is used to auto generate this patch.
+> (https://github.com/weiyj/dpatch)
+
+Since I have to manually remove the above cruft from commit logs, can
+you please omit it from the commit text when posting patches?
 
 Thanks,
-Michael
+g.
+
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> ---
+>  drivers/spi/spi-omap2-mcspi.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+> index 474e217..b8b2f03 100644
+> --- a/drivers/spi/spi-omap2-mcspi.c
+> +++ b/drivers/spi/spi-omap2-mcspi.c
+> @@ -39,7 +39,6 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/pinctrl/consumer.h>
+> -#include <linux/err.h>
+>  
+>  #include <linux/spi/spi.h>
+>  
+> 
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
