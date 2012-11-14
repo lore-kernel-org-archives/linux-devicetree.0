@@ -1,55 +1,64 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/4] rtc: OMAP: Add system pm_power_off to rtc driver
-Date: Wed, 14 Nov 2012 14:21:40 +0900
-Message-ID: <20121114052138.GS4415@opensource.wolfsonmicro.com>
-References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
- <1352108549-9341-3-git-send-email-anilkumar@ti.com>
- <5097ECAD.9010101@ti.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA64F14@DBDE01.ent.ti.com>
- <50994156.4080305@ti.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA6AE51@DBDE01.ent.ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2 5/5] ARM: Exynos4: Migrate clock support to common clock
+ framework
+Date: Wed, 14 Nov 2012 14:25:09 +0900
+Message-ID: <03a401cdc228$69f5a8c0$3de0fa40$%kim@samsung.com>
+References: <1349629855-4962-1-git-send-email-thomas.abraham@linaro.org>
+ <1349629855-4962-6-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MT9SxUWSsctiw0kG"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA6AE51@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, Colin Foe-Parker <colin.foeparker@logicpd.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1349629855-4962-6-git-send-email-thomas.abraham@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com, mturquette@ti.com, mturquette@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+Thomas Abraham wrote:
+> 
+> Remove Samsung specific clock support in Exynos4 and migrate to using
+> common clock framework.
+> 
+> Cc: Kukjin Kim <kgene.kim@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  arch/arm/mach-exynos/Kconfig               |    1 +
+>  arch/arm/mach-exynos/Makefile              |    3 -
+>  arch/arm/mach-exynos/clock-exynos4.c       | 1603
+-------------------------
+> ---
+>  arch/arm/mach-exynos/clock-exynos4.h       |   35 -
+>  arch/arm/mach-exynos/clock-exynos4210.c    |  188 ----
+>  arch/arm/mach-exynos/clock-exynos4212.c    |  192 ----
+>  arch/arm/mach-exynos/common.c              |   22 +-
+>  arch/arm/mach-exynos/common.h              |    3 +
+>  arch/arm/mach-exynos/mach-armlex4210.c     |    1 -
+>  arch/arm/mach-exynos/mach-exynos4-dt.c     |    1 -
+>  arch/arm/mach-exynos/mach-nuri.c           |    1 -
+>  arch/arm/mach-exynos/mach-origen.c         |    1 -
+>  arch/arm/mach-exynos/mach-smdk4x12.c       |    1 -
+>  arch/arm/mach-exynos/mach-smdkv310.c       |    1 -
+>  arch/arm/mach-exynos/mach-universal_c210.c |    1 -
+>  arch/arm/mach-exynos/mct.c                 |   11 +-
+>  arch/arm/plat-samsung/Kconfig              |    4 +-
+>  17 files changed, 18 insertions(+), 2051 deletions(-)
+>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.c
+>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.h
+>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
+>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
 
---MT9SxUWSsctiw0kG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think, would be better to us if we could keep this clock stuff with common
+clock for a moment, e.g. 3.8. In addition, the clock stuff is still updating
+at this moment so we need some time to move on common clock framework
+entirely. Of course, I have no objection to support common clock on new SoC
+such as exynos5440 :-)
 
-On Wed, Nov 14, 2012 at 05:01:45AM +0000, AnilKumar, Chimata wrote:
-> +Mark
+Thanks.
 
-...without any words as to why I'm being added or what the content in
-the message is?
-
---MT9SxUWSsctiw0kG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQoypWAAoJELSic+t+oim9EP4P/iwR9uXogcb42aTcvcFNhdtg
-EPoyIJ7pJQRckZ0HJOXdQ+h/mAwc7/qOrXPxBUmT65wjvGCAeuScAPwYeZ77njAY
-ZEKm0DZvlwQNSK+mdHRYlIwIQIwnXsXeClnAG7x2Kmbb7MBp7lWjJhO00DHxTeU3
-/9OhvU6b5Heh8nF9vgxwFvG+Lh3ajdaBI0WmbfHV7iFHqOL1uB3KHmaFhMV0IERJ
-teLpR+dobfQZf/SM6B7/FGd/6FvobUDVo/t100tHBpLkhAuiCjiLOoHVAmPrXgIR
-dCtEBzVpGh8Tqfeg9LIdTOY0v49yr3dSbizUvjKsDcKQ/RdIOhVO7IYynkxn2SSJ
-L2KWWEkPhI/LZvYQGyvJC07p76crc/iBPXJkI1DxpBxIJXI9jjBsREFF1IiZNXab
-pTxNgROnlFdqDuYCZBaNqT+sHplhd3DeNNwGFaBeWLQNUMbiSUSHhE4FGX236a2z
-JVt4vh663M6fk/K/B0a0iTfhQEhezgS4b7JY4iOu0HaA6G8m0R2/vhmII1bFzJPW
-WCRAXXNRe0+IQPHuEXTHQPktykuwKCF44DK5Kk+PB/vNiRYzaQITgaMYPneOVBv3
-4Cb8hElQZlT+YdHRvAP7+c9IXKryl1JNHESh2USFoga55idEdX05crFQCDCBE08W
-o2nGNyYWa1mlbBPtm2Tn
-=Nl75
------END PGP SIGNATURE-----
-
---MT9SxUWSsctiw0kG--
+Best regards,
+Kgene.
+--
+Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
+SW Solution Development Team, Samsung Electronics Co., Ltd.
