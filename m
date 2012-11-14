@@ -1,148 +1,19 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V3 4/5] arm: mm: Added support for PJ4B cpu and init
- routines
-Date: Wed, 14 Nov 2012 23:31:47 +0100
-Message-ID: <50A41BD3.9040509@free-electrons.com>
-References: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
- <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] drivers/of: Constify device_node->name and
+ ->path_component_name
+Date: Wed, 14 Nov 2012 17:33:04 -0500 (EST)
+Message-ID: <20121114.173304.405703188822325414.davem@davemloft.net>
+References: <1352932107-14782-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Russell King <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <1352932107-14782-1-git-send-email-grant.likely@secretlab.ca>
+Sender: sparclinux-owner@vger.kernel.org
+To: grant.likely@secretlab.ca
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Russell,
 
-With the 2 changes I have done on according your comments
-do you think you can give your acked-by for this patch?
-
-Thanks
-
-On 11/14/2012 11:20 PM, Gregory CLEMENT wrote:
-> From: Yehuda Yitschak <yehuday@marvell.com>
-> 
-> Signed-off-by: Yehuda Yitschak <yehuday@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  arch/arm/mach-mvebu/Kconfig |    2 +-
->  arch/arm/mm/Kconfig         |    4 ++++
->  arch/arm/mm/proc-v7.S       |   51 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 56 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-> index 17d246b..9bfaa0c 100644
-> --- a/arch/arm/mach-mvebu/Kconfig
-> +++ b/arch/arm/mach-mvebu/Kconfig
-> @@ -22,7 +22,7 @@ config MVEBU_CLK_CPU
->  config MACH_ARMADA_370_XP
->  	bool
->  	select ARMADA_370_XP_TIMER
-> -	select CPU_V7
-> +	select CPU_PJ4B
->  
->  config MACH_ARMADA_370
->  	bool "Marvell Armada 370 boards"
-> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-> index 94186b6..3fd629d 100644
-> --- a/arch/arm/mm/Kconfig
-> +++ b/arch/arm/mm/Kconfig
-> @@ -352,6 +352,10 @@ config CPU_PJ4
->  	select ARM_THUMBEE
->  	select CPU_V7
->  
-> +config CPU_PJ4B
-> +	bool
-> +	select CPU_V7
-> +
->  # ARMv6
->  config CPU_V6
->  	bool "Support ARM V6 processor" if ARCH_INTEGRATOR || MACH_REALVIEW_EB || MACH_REALVIEW_PBX
-> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-> index 846d279..a4c0ccf 100644
-> --- a/arch/arm/mm/proc-v7.S
-> +++ b/arch/arm/mm/proc-v7.S
-> @@ -169,6 +169,47 @@ __v7_ca15mp_setup:
->  	orreq	r0, r0, r10			@ Enable CPU-specific SMP bits
->  	mcreq	p15, 0, r0, c1, c0, 1
->  #endif
-> +
-> +__v7_pj4b_setup:
-> +#ifdef CONFIG_CPU_PJ4B
-> +
-> +#define SNOOP_DATA    (1 << 25) /* Dont interleave write and snoop data */
-> +#define CWF           (1 << 27) /* Disable Critical Word First feature */
-> +#define OUTSANDING_NC (1 << 29) /* Disable outstanding non cacheable request */
-> +#define L1_REP_RR     (1 << 30) /* L1 replacement - Strict round robin */
-> +
-> +#define AUX_DBG_CTRL2 (SNOOP_DATA | CWF | OUTSANDING_NC | L1_REP_RR)
-> +
-> +	/* Auxiliary Debug Modes Control 1 Register */
-> +	mrc	p15, 1,	r0, c15, c1, 1
-> +	orr     r0, r0, #(1 << 16)     @ Disable data transfer for clean line.
-> +	orr     r0, r0, #(1 << 5)      @ Enable the back off of STREX instr
-> +	orr     r0, r0, #(1 << 8)      @ Disable Internal Parity Handling
-> +	bic	r0, r0, #(1 << 2)      @ Disable Static BP
-> +	mcr	p15, 1,	r0, c15, c1, 1
-> +
-> +	/* Auxiliary Debug Modes Control 2 Register */
-> +	mrc	p15, 1,	r0, c15, c1, 2
-> +	bic	r0, r0, #(1 << 23)   @ Enable fast LDR.
-> +	orr	r0, r0, #AUX_DBG_CTRL2
-> +	mcr	p15, 1,	r0, c15, c1, 2
-> +
-> +	/* Auxiliary Functional Modes Control Register 0 */
-> +	mrc	p15, 1,	r0, c15, c2, 0
-> +#ifdef CONFIG_SMP
-> +	orr	r0, r0, #(1 << 1)     @ Set SMP mode. Join the coherency fabric
-> +#endif
-> +	orr	r0, r0, #(1 << 2)     @ Support L1 parity checking
-> +	orr	r0, r0, #(1 << 8)     @ Broadcast Cache and TLB maintenance
-> +	mcr	p15, 1,	r0, c15, c2, 0
-> +
-> +	/* Auxiliary Debug Modes Control 0 Register */
-> +	mrc	p15, 1,	r0, c15, c1, 0
-> +	orr	r0, r0, #(1 << 22)   @ WFI/WFE - serve the DVM and back to idle
-> +	mcr	p15, 1,	r0, c15, c1, 0
-> +
-> +#endif /* CONFIG_CPU_PJ4B */
-> +
->  __v7_setup:
->  	adr	r12, __v7_setup_stack		@ the local stack
->  	stmia	r12, {r0-r5, r7, r9, r11, lr}
-> @@ -342,6 +383,16 @@ __v7_ca9mp_proc_info:
->  	.long	0xff0ffff0
->  	__v7_proc __v7_ca9mp_setup
->  	.size	__v7_ca9mp_proc_info, . - __v7_ca9mp_proc_info
-> +
-> +	/*
-> +	 * Marvell PJ4B processor.
-> +	 */
-> +	.type   __v7_pj4b_proc_info, #object
-> +__v7_pj4b_proc_info:
-> +	.long	0x562f5840
-> +	.long	0xfffffff0
-> +	__v7_proc __v7_pj4b_setup
-> +	.size	__v7_pj4b_proc_info, . - __v7_pj4b_proc_info
->  #endif	/* CONFIG_ARM_LPAE */
->  
->  	/*
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+You're making other changes here, such as the kstrdup() stuff,
+seperate that into another patch.
