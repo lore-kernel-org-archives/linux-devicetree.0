@@ -1,89 +1,145 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v8 1/6] video: add display_timing and videomode
-Date: Wed, 14 Nov 2012 12:17:14 +0100
-Message-ID: <20121114111714.GA32071@avionic-0098.mockup.avionic-design.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-2-git-send-email-s.trumtrar@pengutronix.de>
- <20121114105634.GA31801@avionic-0098.mockup.avionic-design.de>
- <20121114105925.GA18579@pengutronix.de>
- <20121114110215.GA31999@avionic-0098.mockup.avionic-design.de>
- <20121114111015.GB18579@pengutronix.de>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v8] can: grcan: Add device driver for GRCAN and GRHCAN
+ cores
+Date: Wed, 14 Nov 2012 12:22:50 +0100
+Message-ID: <50A37F0A.7050204@pengutronix.de>
+References: <509C47CB.8060701@pengutronix.de> <1352732256-12712-1-git-send-email-andreas@gaisler.com> <50A2B88A.3040609@pengutronix.de> <50A34D49.2070908@gaisler.com> <50A359A1.30700@pengutronix.de> <50A37A5B.8060808@gaisler.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121114111015.GB18579@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+ protocol="application/pgp-signature";
+ boundary="------------enigFA7BA2113CB58CD278045ACB"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <50A37A5B.8060808@gaisler.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: linux-can@vger.kernel.org, software@gaisler.com, Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enigFA7BA2113CB58CD278045ACB
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 14, 2012 at 12:10:15PM +0100, Steffen Trumtrar wrote:
-> On Wed, Nov 14, 2012 at 12:02:15PM +0100, Thierry Reding wrote:
-> > On Wed, Nov 14, 2012 at 11:59:25AM +0100, Steffen Trumtrar wrote:
-> > > On Wed, Nov 14, 2012 at 11:56:34AM +0100, Thierry Reding wrote:
-> > > > On Mon, Nov 12, 2012 at 04:37:01PM +0100, Steffen Trumtrar wrote:
-> > > > [...]
-> > > > > diff --git a/drivers/video/display_timing.c b/drivers/video/displ=
-ay_timing.c
-> > > > [...]
-> > > > > +void display_timings_release(struct display_timings *disp)
-> > > > > +{
-> > > > > +	if (disp->timings) {
-> > > > > +		unsigned int i;
-> > > > > +
-> > > > > +		for (i =3D 0; i < disp->num_timings; i++)
-> > > > > +			kfree(disp->timings[i]);
-> > > > > +		kfree(disp->timings);
-> > > > > +	}
-> > > > > +	kfree(disp);
-> > > > > +}
-> > > >=20
-> > > > I think this is still missing an EXPORT_SYMBOL_GPL. Otherwise it ca=
-n't
-> > > > be used from modules.
-> > > >=20
-> > > > Thierry
-> > >=20
-> > > Yes. Just in time. I was just starting to type the send-email command=
- ;-)
-> >=20
-> > Great! In that case don't forget to also look at my other email before
-> > sending. =3D)
-> >=20
-> Sure.
+On 11/14/2012 12:02 PM, Andreas Larsson wrote:
+> On 2012-11-14 09:43, Marc Kleine-Budde wrote:
+>> Handle incoming events (rx or tx-complete) until:
+>> a) number of handled events =3D=3D budget
+>> or
+>> b) no more events pending.
+>>
+>>     while (work_done < budget && interrupts_pending()) {
+>>         work_done +=3D handle_rx(budget - work_done);
+>>         work_done +=3D handle_tx(budget - work_done);
+>>     }
+>=20
+> That could starve handle_tx completely though under high rx pressure,
+> but I can prevent that by making sure that half of the budget is held
+> back in the first call to handle_rx.
 
-Besides those comments (and those from other people) I think your
-patchset is in pretty good shape. Have you thought about how and when
-you want to get things merged?
+What about making the budget big enough to handle both rx and tx in one
+napi call. Have a look at the marvell driver [1] for inspiration.
 
-Thierry
+[1]
+http://lxr.free-electrons.com/source/drivers/net/ethernet/marvell/mv643xx=
+_eth.c#L2140
 
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature
+>=20
+>> Then, if you have handled less events then budget:
+>> 1) call napi_complete()
+>> then
+>> 2) enable interrupts.
+>>
+>>     if (work_done < budget) {
+>>         napi_complete();
+>>         enable_interrupts();
+>>     }
+>>
+>> Then, return number of handled events:
+>>
+>>     return work_done;
+>=20
+> Any additional remarks on the following implementation of the poll
+> function?
+>=20
+> static int grcan_poll(struct napi_struct *napi, int budget)
+> {
+>     struct grcan_priv *priv =3D container_of(napi, struct grcan_priv, n=
+api);
+>     struct net_device *dev =3D priv->dev;
+>     struct grcan_registers __iomem *regs =3D priv->regs;
+>     unsigned long flags;
+>     int work_done =3D 0;
+>     int reserved =3D budget / 2;
+>=20
+>     while (work_done < budget) {
+>         int old_work_done =3D work_done;
+>=20
+>         /* Prevent grcan_transmit_catch_up from starving by reserving
+>          * part of the budget in the first iteration when calling
+>          * grcan_receive.
+>          */
+>         work_done +=3D grcan_receive(dev, budget - reserved - work_done=
+);
+>         reserved =3D 0;
+>=20
+>         /* Catch up echo skb according to same budget, as
+>          * grcan_transmit_catch_up can trigger echo frames being
+>          * received.
+>          */
+>         work_done +=3D grcan_transmit_catch_up(dev, budget - work_done)=
+;
+>=20
+>         /* Break out if nothing was done */
+>         if (work_done =3D=3D old_work_done)
+>             break;
+>     }
+>=20
+>     if (work_done < budget) {
+>         napi_complete(napi);
+>=20
+>         /* Guarantee no interference with a running reset that otherwis=
+e
+>          * could turn off interrupts.
+>          */
+>         spin_lock_irqsave(&priv->lock, flags);
+>=20
+>         /* Enable tx and rx interrupts again. No need to check
+>          * priv->closing as napi_disable in grcan_close is waiting for
+>          * scheduled napi calls to finish.
+>          */
+>         grcan_set_bits(&regs->imr, GRCAN_IRQ_TX | GRCAN_IRQ_RX);
+>=20
+>         spin_unlock_irqrestore(&priv->lock, flags);
+>     }
+>=20
+>     return work_done;
+> }
+>=20
+>=20
+> Cheers,
+> Andreas
+>=20
+
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--------------enigFA7BA2113CB58CD278045ACB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJQo326AAoJEN0jrNd/PrOhVuYQAJ5oXxec2kv86D51EhloMKtD
-W92GNKD7K9aaAzsnnKz0JjzJHN625pRNd1tnsIaQJkzsHLddDcJ3oGJJpL2Im7eV
-A2eXC76e5V9RmZU0NxPCP4f1ei8mdWTyL/GoLh/qiWhVop3T0201HGx2gGZfb/rw
-+EYCJkFnYCpE3zVPKPne85jS9jPWSNViB4MmHL26VSFENiIYl2uQaqFIpb2e8oIQ
-k5X6KAVPyt3Kg9P3+tZC+Eh9asRfevw5Ai7UJIg6GucM55zyYMCZnYTRWWxyZrNz
-jJ0KSmWAZfIuzY3umeDSeTl6cVVkWblX4fvPcZKiz2nyUOL5W46vx79bWG6H2tU7
-TVQCDQIlRbsUhwPy8FLMCl/Es8sxMz2Y1irVh+ak+jwgbTrVm3btZRDgW5c5P5f9
-OCdlJHZq8PaNekCkv7dZVTRv7EblkHPvrT9CUhD0ZfHRxW20xsJshQR1IIKNbPPi
-XW4a5GUhoMSY+mcD9Okr0VTve0mBxyxwGwOH3m9gQhi0QXY7ms0V1FyALSF/XB8C
-g/VvWvljcjApqdEbn3swT2NJNd1se+J/r831QtCLryszdqiv5QTJlwN+9V/lxsvz
-1gUe4FEPNnwMKdpNWS7S6Af98ynZeLDrUsc76/8U5fp7fGca+9YU82vbA2Sxgbse
-mTJRhcox2ehstI+ENBSX
-=s/5w
+iEYEARECAAYFAlCjfw0ACgkQjTAFq1RaXHNKtwCdEv8Qc8ai5m+lOR9ORusxCZCb
+1zIAoJmVztQ0zmSRjoNbq0dYFzn0HhlB
+=kpvE
 -----END PGP SIGNATURE-----
 
---Dxnq1zWXvFF0Q93v--
+--------------enigFA7BA2113CB58CD278045ACB--
