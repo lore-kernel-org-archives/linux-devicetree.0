@@ -1,61 +1,31 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/4] mfd: tps65217: Set PMIC to shutdowm on PWR_EN toggle
-Date: Wed, 14 Nov 2012 11:23:42 +0900
-Message-ID: <20121114022341.GM4415@opensource.wolfsonmicro.com>
-References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
- <1352108549-9341-2-git-send-email-anilkumar@ti.com>
- <5097F078.50701@ti.com>
+From: Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] drm: Add NVIDIA Tegra20 support
+Date: Wed, 14 Nov 2012 10:24:01 +0800
+Message-ID: <50A300C1.1000501@nvidia.com>
+References: <1352757358-14001-1-git-send-email-thierry.reding@avionic-design.de> <1352757358-14001-2-git-send-email-thierry.reding@avionic-design.de> <50A1F3A3.40905@nvidia.com> <50A28542.8020406@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MsEL38XAg4rx1uDx"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5097F078.50701@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: AnilKumar Ch <anilkumar@ti.com>, a.zummo@towertech.it, sameo@linux.intel.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Colin Foe-Parker <colin.foeparker@logicpd.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50A28542.8020406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/14/2012 01:37 AM, Stephen Warren wrote:
+> On 11/13/2012 12:15 AM, Mark Zhang wrote:
+>> On 11/13/2012 05:55 AM, Thierry Reding wrote:
+>>> This commit adds a KMS driver for the Tegra20 SoC. This includes basic
+>>> support for host1x and the two display controllers found on the Tegra20
+>>> SoC. Each display controller can drive a separate RGB/LVDS output.
+> 
+> Mark, when you're replying to a long patch, it's useful to quote only
+> the code you're directly responding to; slowly scrolling through your
+> email to find your comments is rather error-prone and time-consuming.
+>
 
---MsEL38XAg4rx1uDx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sure. Sorry for the inconvenience. Thanks.
 
-On Mon, Nov 05, 2012 at 05:59:36PM +0100, Benoit Cousson wrote:
-> On 11/05/2012 10:42 AM, AnilKumar Ch wrote:
-
-> > +Optional properties:
-> > +- ti,pmic-shutdown-controller: Telling the PMIC to shutdown on PWR_EN toggle.
-
-> That sounds like a generic functionality to me. Don't we have some more
-> generic way to handle that?
-
-> If not, that should probably not be a TI only attribute.
-
-It's pretty unusual to have this configurable as a single thing rather
-than as part of flexible power sequencing or something that's just fixed
-in silicon.
-
---MsEL38XAg4rx1uDx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQowCmAAoJELSic+t+oim9O/MP/2qhStMOV6TkNPI+3FVa8ea/
-0BA82kInQBbRoWgPCWhFxVtChhRtss5UF7GjVSVAop4C92ywSWpiCR58hN14icpB
-MEtr3Lbpyf1Ru4P0SZ81JnwJOloNVvrgXuSarQniIbXQeRypnzx/6Ccr2dezBOiz
-6GeodKtDQxzGZfOB1R/nCghDciGeY/x2cG7Bkhs11C84sCmcQhdRRN1sAaqL3e1t
-bo5wZqXe78WGIoNBVeTmxbJB+FlNL9w8XnAF2nMQ1UsY1PJ2bFDC7g3rgIZmyWQo
-Sj2mt6HlBIJVRe5YJKZRUsav6Srf9HKAeUCD7Bbe0EIRW1ei/AiwyzcTOiAwDb0L
-MMbvA88p3HSLp2cb6KNZ5bCLENPSR8MWzKTGrsaYfCvr6nljXe6+HH/8pZto9hYV
-pbP7DWKPg+Xdzs43CNxVP1b+kdS+TATszCsWW0DEwQWIB7hlz0gfSSACjfQMWkcx
-c4ndq9ssknkSatsvDP+r47+H8lhDjkKcZPXFhh7mhaabVipF0gWRG8pd5VNBMGhP
-4VXBgvSYF0av9YjItdOpVLUE8cpd5VzrBhiSGWwjjeUt1pisLIBjwIgERGMJtH/O
-I4pjhnAqwTeJI6hRHBw+ezQQsb1W3ePCktcFZ1XwpZ9HxtkdwfZyC+bqMylE9vkg
-fEqXs+qBxhVp53Uq8z14
-=Ygrz
------END PGP SIGNATURE-----
-
---MsEL38XAg4rx1uDx--
+> Thanks for the feedback though.
+> 
