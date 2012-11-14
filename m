@@ -1,99 +1,123 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3] OF: Add helper for matching against linux,stdout-path
-Date: Wed, 14 Nov 2012 20:49:54 +0000
-Message-ID: <CACxGe6uW+XN6RDnP+8QFXaCYqqPZO4dZM_aynR6AVMYZT=KuMg@mail.gmail.com>
-References: <1351849734-9836-1-git-send-email-s.hauer@pengutronix.de> <1351849734-9836-2-git-send-email-s.hauer@pengutronix.de>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 01/17] of: add dma-mask binding
+Date: Wed, 14 Nov 2012 14:56:14 -0600
+Message-ID: <50A4056E.9090700@gmail.com>
+References: <1352710357-3265-1-git-send-email-wenyou.yang@atmel.com>
+ <1352710357-3265-2-git-send-email-wenyou.yang@atmel.com>
+ <50A3164C.3070301@gmail.com> <20121114060058.GM4576@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1351849734-9836-2-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-serial-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-serial@vger.kernel.org, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121114060058.GM4576-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 2, 2012 at 9:48 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> devicetrees may have a linux,stdout-path property in the chosen
-> node describing the console device. This adds a helper function
-> to match a device against this property so a driver can call
-> add_preferred_console for a matching device.
->
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
->  drivers/of/Kconfig        |    3 +++
->  drivers/of/Makefile       |    1 +
->  drivers/of/of_stdout.c    |   27 +++++++++++++++++++++++++++
->  include/linux/of_stdout.h |   24 ++++++++++++++++++++++++
->  4 files changed, 55 insertions(+)
->  create mode 100644 drivers/of/of_stdout.c
->  create mode 100644 include/linux/of_stdout.h
->
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index dfba3e6..8574ebb 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -67,6 +67,9 @@ config OF_MDIO
->         help
->           OpenFirmware MDIO bus (Ethernet PHY) accessors
->
-> +config OF_STDOUT
-> +       def_bool y
-> +
->  config OF_PCI
->         def_tristate PCI
->         depends on PCI
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index e027f44..c9f3f2f 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_OF_I2C)    += of_i2c.o
->  obj-$(CONFIG_OF_NET)   += of_net.o
->  obj-$(CONFIG_OF_SELFTEST) += selftest.o
->  obj-$(CONFIG_OF_MDIO)  += of_mdio.o
-> +obj-$(CONFIG_OF_STDOUT) += of_stdout.o
->  obj-$(CONFIG_OF_PCI)   += of_pci.o
->  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
->  obj-$(CONFIG_OF_MTD)   += of_mtd.o
-> diff --git a/drivers/of/of_stdout.c b/drivers/of/of_stdout.c
-> new file mode 100644
-> index 0000000..c9e370e
-> --- /dev/null
-> +++ b/drivers/of/of_stdout.c
-> @@ -0,0 +1,27 @@
-> +/*
-> + * OF helper for linux,stdoutpath property.
-> + *
-> + * This file is released under the GPLv2
-> + */
-> +#include <linux/of_stdout.h>
-> +
-> +/**
-> + * of_device_is_stdout_path - check if a device node matches the
-> + *                            linux,stdout-path property
-> + *
-> + * Check if this device node matches the linux,stdout-path property
-> + * in the chosen node. return true if yes, false otherwise.
-> + */
-> +int of_device_is_stdout_path(struct device_node *dn)
-> +{
-> +       const char *name;
-> +
-> +       name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-> +       if (name == NULL)
-> +               return 0;
-> +
-> +       if (dn == of_find_node_by_path(name))
+On 11/14/2012 12:00 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 21:55 Tue 13 Nov     , Rob Herring wrote:
+>> On 11/12/2012 02:52 AM, Wenyou Yang wrote:
+>>> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>>>
+>>> This will allow each device to specify its dma-mask for this we use the
+>>> coherent_dma_mask as pointer. By default the dma-mask will be set to
+>>> DMA_BIT_MASK(32).
+>>
+>> Do you really have a use case this is not DMA_BIT_MASK(32)?
+> yes as exmample on 64bit platfrom it will be 64 on x86 it's also 24, on power
+> pc 40
+>>
+>>> The microblaze architecture hook is drop
+>>>
+>>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>>> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+>>> Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> ---
+>>>  drivers/of/platform.c |   23 ++++++++++++++++-------
+>>>  1 file changed, 16 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>>> index b80891b..31ed405 100644
+>>> --- a/drivers/of/platform.c
+>>> +++ b/drivers/of/platform.c
+>>> @@ -130,6 +130,21 @@ void of_device_make_bus_id(struct device *dev)
+>>>  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+>>>  }
+>>>  
+>>> +static void of_get_dma_mask(struct device *dev, struct device_node *np)
+>>> +{
+>>> +	const __be32 *prop;
+>>> +	int len;
+>>> +
+>>> +	prop = of_get_property(np, "dma-mask", &len);
+>>
+>> dma-ranges may work for this purpose.
+>>
+>>> +
+>>> +	dev->dma_mask = &dev->coherent_dma_mask;
+>>
+>> I don't really know, but I suspect this is wrong.
+> no this is correct was suggest by Russell
+> we already do so on other ARM or SH as example
+> 
+> the dma expect a pointer for dma_mask but the value is the same as coherent
 
-need to of_node_put() the return value of of_find_node_by_path()
+Okay. Then perhaps this part should be a separate patch as that is
+useful on its own for 32-bit machines with no DMA address restrictions
+(most modern ARM h/w).
 
-> +               return 1;
-> +
-> +       return 0;
-> +}
+My comment on using dma-ranges still stands though. The form is
+<parent-address child-address size>. Normally, parent and child would be
+the same. I think the mask would be "parent address + size - 1". The
+simple case is <0 0 0> for all of 32-bit memory. I'm using 0 for full
+32-bit size here as #size-cells is typically 1 and I can't imagine that
+0 size would be useful.
 
-Hi Sascha,
+Rob
 
-I'm fine with the helper, but there really is no need for a completely
-separate .c file. Just put it in drivers/of/base.c.
-
-g.
+>>
+>>> +
+>>> +	if (!prop)
+>>> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+>>> +	else
+>>> +		dev->coherent_dma_mask = of_read_number(prop, len / 4);
+>>> +}
+>>> +
+>>>  /**
+>>>   * of_device_alloc - Allocate and initialize an of_device
+>>>   * @np: device node to assign to device
+>>> @@ -171,10 +186,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>>>  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+>>>  	}
+>>>  
+>>> +	of_get_dma_mask(&dev->dev, np);
+>>>  	dev->dev.of_node = of_node_get(np);
+>>> -#if defined(CONFIG_MICROBLAZE)
+>>> -	dev->dev.dma_mask = &dev->archdata.dma_mask;
+>>> -#endif
+>>>  	dev->dev.parent = parent;
+>>>  
+>>>  	if (bus_id)
+>>> @@ -211,10 +224,6 @@ struct platform_device *of_platform_device_create_pdata(
+>>>  	if (!dev)
+>>>  		return NULL;
+>>>  
+>>> -#if defined(CONFIG_MICROBLAZE)
+>>> -	dev->archdata.dma_mask = 0xffffffffUL;
+>>> -#endif
+>>> -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>>>  	dev->dev.bus = &platform_bus_type;
+>>>  	dev->dev.platform_data = platform_data;
+>>>  
+>>>
