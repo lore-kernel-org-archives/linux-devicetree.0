@@ -1,251 +1,147 @@
-From: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 4/4] dtc/libfdt: sparse fixes
-Date: Tue, 13 Nov 2012 18:34:30 -0600
-Message-ID: <20121113183430.472a0d989815fbd73ee9b437@freescale.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v3 1/2] leds/tca6507: Add support for devicetree.
+Date: Tue, 13 Nov 2012 17:01:37 -0800
+Message-ID: <CAK5ve-KJXDeYnwawzbYSds5joZ6kmJNmGNJ23ehRe8yrXiN3Cw@mail.gmail.com>
+References: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Belisko <marek.belisko@open-nandra.com>
+Cc: rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-libfdt/fdt.c:104:28: warning: incorrect type in argument 1 (different base types)
-libfdt/fdt.c:104:28:    expected restricted fdt32_t [usertype] x
-libfdt/fdt.c:104:28:    got unsigned int const [unsigned] [usertype] <noident>
-libfdt/fdt.c:124:40: warning: incorrect type in argument 1 (different base types)
-libfdt/fdt.c:124:40:    expected restricted fdt32_t [usertype] x
-libfdt/fdt.c:124:40:    got unsigned int const [unsigned] [usertype] <noident>
-libfdt/fdt_ro.c:337:29: warning: incorrect type in argument 1 (different base types)
-libfdt/fdt_ro.c:337:29:    expected restricted fdt32_t [usertype] x
-libfdt/fdt_ro.c:337:29:    got unsigned int const [unsigned] [usertype] <noident>
-libfdt/fdt_rw.c:370:17: warning: incorrect type in assignment (different base types)
-libfdt/fdt_rw.c:370:17:    expected unsigned int [unsigned] [usertype] <noident>
-libfdt/fdt_rw.c:370:17:    got restricted fdt32_t
-libfdt/fdt_sw.c:164:13: warning: incorrect type in assignment (different base types)
-libfdt/fdt_sw.c:164:13:    expected unsigned int [unsigned] [usertype] <noident>
-libfdt/fdt_sw.c:164:13:    got restricted fdt32_t
-libfdt/fdt_sw.c:227:14: warning: incorrect type in assignment (different base types)
-libfdt/fdt_sw.c:227:14:    expected unsigned int [unsigned] [usertype] <noident>
-libfdt/fdt_sw.c:227:14:    got restricted fdt32_t
-libfdt/fdt_wip.c:80:20: warning: incorrect type in assignment (different base types)
-libfdt/fdt_wip.c:80:20:    expected unsigned int [unsigned] [usertype] <noident>
-libfdt/fdt_wip.c:80:20:    got restricted fdt32_t
-libfdt/libfdt.h:1001:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:1001:13:    expected unsigned long [unsigned] [usertype] val
-libfdt/libfdt.h:1001:13:    got restricted fdt64_t
-libfdt/libfdt.h:1157:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:1157:13:    expected unsigned int [unsigned] [usertype] val
-libfdt/libfdt.h:1157:13:    got restricted fdt32_t
-libfdt/libfdt.h:1192:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:1192:13:    expected unsigned long [unsigned] [usertype] val
-libfdt/libfdt.h:1192:13:    got restricted fdt64_t
-libfdt/libfdt.h:1299:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:1299:13:    expected unsigned int [unsigned] [usertype] val
-libfdt/libfdt.h:1299:13:    got restricted fdt32_t
-libfdt/libfdt.h:1334:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:1334:13:    expected unsigned long [unsigned] [usertype] val
-libfdt/libfdt.h:1334:13:    got restricted fdt64_t
-libfdt/libfdt.h:885:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:885:13:    expected unsigned int [unsigned] [usertype] val
-libfdt/libfdt.h:885:13:    got restricted fdt32_t
-libfdt/libfdt.h:920:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:920:13:    expected unsigned long [unsigned] [usertype] val
-libfdt/libfdt.h:920:13:    got restricted fdt64_t
-libfdt/libfdt.h:996:13: warning: incorrect type in assignment (different base types)
-libfdt/libfdt.h:996:13:    expected unsigned int [unsigned] [usertype] val
-libfdt/libfdt.h:996:13:    got restricted fdt32_t
+On Mon, Nov 12, 2012 at 1:25 PM, Marek Belisko
+<marek.belisko@open-nandra.com> wrote:
+> Support added only for leds (not for gpio's).
+>
+> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+> ---
+>
+> Changes from v2:
+> - change compatible property to "ti,tca6507"
+> - add documentation for linux,default-trigger
+>
+> Changes from v1:
+> - return proper error value not NULL from tca6507_led_dt_init()
+> - remove empty lines
+> - remove kfree()
+>
+>  drivers/leds/leds-tca6507.c |   70 +++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 67 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
+> index dabcf7a..fdc1ea6 100644
+> --- a/drivers/leds/leds-tca6507.c
+> +++ b/drivers/leds/leds-tca6507.c
+> @@ -667,6 +667,66 @@ static void tca6507_remove_gpio(struct tca6507_chip *tca)
+>  }
+>  #endif /* CONFIG_GPIOLIB */
+>
+> +#ifdef CONFIG_OF
+> +static struct tca6507_platform_data * __devinit tca6507_led_dt_init(struct i2c_client *client)
+> +{
+> +       struct device_node *np = client->dev.of_node, *child;
+> +       struct tca6507_platform_data *pdata;
+> +       struct led_info *tca_leds;
+> +       int count = 0;
+> +
+> +       for_each_child_of_node(np, child)
+> +               count++;
+> +       if (!count)
+> +               return ERR_PTR(-ENODEV);
+> +
+> +       if (count > NUM_LEDS)
+> +               return ERR_PTR(-ENODEV);
+> +
+> +       tca_leds = devm_kzalloc(&client->dev, sizeof(struct led_info) * NUM_LEDS, GFP_KERNEL);
 
-Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- libfdt/fdt.c     |  2 +-
- libfdt/fdt_ro.c  |  2 +-
- libfdt/fdt_rw.c  |  4 ++--
- libfdt/fdt_sw.c  |  4 ++--
- libfdt/fdt_wip.c |  2 +-
- libfdt/libfdt.h  | 32 ++++++++++++++++----------------
- 6 files changed, 23 insertions(+), 23 deletions(-)
+I guess it should be 'sizeof(struct led_info) * count' instead of
+'sizeof(struct led_info) * NUM_LEDS'
 
-diff --git a/libfdt/fdt.c b/libfdt/fdt.c
-index e56833a..57faba3 100644
---- a/libfdt/fdt.c
-+++ b/libfdt/fdt.c
-@@ -92,7 +92,7 @@ const void *fdt_offset_ptr(const void *fdt, int offset, unsigned int len)
- 
- uint32_t fdt_next_tag(const void *fdt, int startoffset, int *nextoffset)
- {
--	const uint32_t *tagp, *lenp;
-+	const fdt32_t *tagp, *lenp;
- 	uint32_t tag;
- 	int offset = startoffset;
- 	const char *p;
-diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
-index 02b6d68..42da2bd 100644
---- a/libfdt/fdt_ro.c
-+++ b/libfdt/fdt_ro.c
-@@ -322,7 +322,7 @@ const void *fdt_getprop(const void *fdt, int nodeoffset,
- 
- uint32_t fdt_get_phandle(const void *fdt, int nodeoffset)
- {
--	const uint32_t *php;
-+	const fdt32_t *php;
- 	int len;
- 
- 	/* FIXME: This is a bit sub-optimal, since we potentially scan
-diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
-index 24437df..fdba618 100644
---- a/libfdt/fdt_rw.c
-+++ b/libfdt/fdt_rw.c
-@@ -339,7 +339,7 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffset,
- 	int nodelen;
- 	int err;
- 	uint32_t tag;
--	uint32_t *endtag;
-+	fdt32_t *endtag;
- 
- 	FDT_RW_CHECK_HEADER(fdt);
- 
-@@ -366,7 +366,7 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffset,
- 	nh->tag = cpu_to_fdt32(FDT_BEGIN_NODE);
- 	memset(nh->name, 0, FDT_TAGALIGN(namelen+1));
- 	memcpy(nh->name, name, namelen);
--	endtag = (uint32_t *)((char *)nh + nodelen - FDT_TAGSIZE);
-+	endtag = (fdt32_t *)((char *)nh + nodelen - FDT_TAGSIZE);
- 	*endtag = cpu_to_fdt32(FDT_END_NODE);
- 
- 	return offset;
-diff --git a/libfdt/fdt_sw.c b/libfdt/fdt_sw.c
-index 55ebebf..f422754 100644
---- a/libfdt/fdt_sw.c
-+++ b/libfdt/fdt_sw.c
-@@ -153,7 +153,7 @@ int fdt_begin_node(void *fdt, const char *name)
- 
- int fdt_end_node(void *fdt)
- {
--	uint32_t *en;
-+	fdt32_t *en;
- 
- 	FDT_SW_CHECK_HEADER(fdt);
- 
-@@ -213,7 +213,7 @@ int fdt_property(void *fdt, const char *name, const void *val, int len)
- int fdt_finish(void *fdt)
- {
- 	char *p = (char *)fdt;
--	uint32_t *end;
-+	fdt32_t *end;
- 	int oldstroffset, newstroffset;
- 	uint32_t tag;
- 	int offset, nextoffset;
-diff --git a/libfdt/fdt_wip.c b/libfdt/fdt_wip.c
-index 6025fa1..c5bbb68 100644
---- a/libfdt/fdt_wip.c
-+++ b/libfdt/fdt_wip.c
-@@ -74,7 +74,7 @@ int fdt_setprop_inplace(void *fdt, int nodeoffset, const char *name,
- 
- static void _fdt_nop_region(void *start, int len)
- {
--	uint32_t *p;
-+	fdt32_t *p;
- 
- 	for (p = start; (char *)p < ((char *)start + len); p++)
- 		*p = cpu_to_fdt32(FDT_NOP);
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 73f4975..8e57a06 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -882,8 +882,8 @@ int fdt_setprop_inplace(void *fdt, int nodeoffset, const char *name,
- static inline int fdt_setprop_inplace_u32(void *fdt, int nodeoffset,
- 					  const char *name, uint32_t val)
- {
--	val = cpu_to_fdt32(val);
--	return fdt_setprop_inplace(fdt, nodeoffset, name, &val, sizeof(val));
-+	fdt32_t tmp = cpu_to_fdt32(val);
-+	return fdt_setprop_inplace(fdt, nodeoffset, name, &tmp, sizeof(tmp));
- }
- 
- /**
-@@ -917,8 +917,8 @@ static inline int fdt_setprop_inplace_u32(void *fdt, int nodeoffset,
- static inline int fdt_setprop_inplace_u64(void *fdt, int nodeoffset,
- 					  const char *name, uint64_t val)
- {
--	val = cpu_to_fdt64(val);
--	return fdt_setprop_inplace(fdt, nodeoffset, name, &val, sizeof(val));
-+	fdt64_t tmp = cpu_to_fdt64(val);
-+	return fdt_setprop_inplace(fdt, nodeoffset, name, &tmp, sizeof(tmp));
- }
- 
- /**
-@@ -993,13 +993,13 @@ int fdt_begin_node(void *fdt, const char *name);
- int fdt_property(void *fdt, const char *name, const void *val, int len);
- static inline int fdt_property_u32(void *fdt, const char *name, uint32_t val)
- {
--	val = cpu_to_fdt32(val);
--	return fdt_property(fdt, name, &val, sizeof(val));
-+	fdt32_t tmp = cpu_to_fdt32(val);
-+	return fdt_property(fdt, name, &tmp, sizeof(tmp));
- }
- static inline int fdt_property_u64(void *fdt, const char *name, uint64_t val)
- {
--	val = cpu_to_fdt64(val);
--	return fdt_property(fdt, name, &val, sizeof(val));
-+	fdt64_t tmp = cpu_to_fdt64(val);
-+	return fdt_property(fdt, name, &tmp, sizeof(tmp));
- }
- static inline int fdt_property_cell(void *fdt, const char *name, uint32_t val)
- {
-@@ -1154,8 +1154,8 @@ int fdt_setprop(void *fdt, int nodeoffset, const char *name,
- static inline int fdt_setprop_u32(void *fdt, int nodeoffset, const char *name,
- 				  uint32_t val)
- {
--	val = cpu_to_fdt32(val);
--	return fdt_setprop(fdt, nodeoffset, name, &val, sizeof(val));
-+	fdt32_t tmp = cpu_to_fdt32(val);
-+	return fdt_setprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
- }
- 
- /**
-@@ -1189,8 +1189,8 @@ static inline int fdt_setprop_u32(void *fdt, int nodeoffset, const char *name,
- static inline int fdt_setprop_u64(void *fdt, int nodeoffset, const char *name,
- 				  uint64_t val)
- {
--	val = cpu_to_fdt64(val);
--	return fdt_setprop(fdt, nodeoffset, name, &val, sizeof(val));
-+	fdt64_t tmp = cpu_to_fdt64(val);
-+	return fdt_setprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
- }
- 
- /**
-@@ -1296,8 +1296,8 @@ int fdt_appendprop(void *fdt, int nodeoffset, const char *name,
- static inline int fdt_appendprop_u32(void *fdt, int nodeoffset,
- 				     const char *name, uint32_t val)
- {
--	val = cpu_to_fdt32(val);
--	return fdt_appendprop(fdt, nodeoffset, name, &val, sizeof(val));
-+	fdt32_t tmp = cpu_to_fdt32(val);
-+	return fdt_appendprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
- }
- 
- /**
-@@ -1331,8 +1331,8 @@ static inline int fdt_appendprop_u32(void *fdt, int nodeoffset,
- static inline int fdt_appendprop_u64(void *fdt, int nodeoffset,
- 				     const char *name, uint64_t val)
- {
--	val = cpu_to_fdt64(val);
--	return fdt_appendprop(fdt, nodeoffset, name, &val, sizeof(val));
-+	fdt64_t tmp = cpu_to_fdt64(val);
-+	return fdt_appendprop(fdt, nodeoffset, name, &tmp, sizeof(tmp));
- }
- 
- /**
--- 
-1.8.0
+> +       if (!tca_leds)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       for_each_child_of_node(np, child) {
+> +               struct led_info led;
+> +               u32 reg;
+> +               int ret;
+> +
+> +               led.name = of_get_property(child, "label", NULL) ? : child->name;
+> +               led.default_trigger =
+> +                       of_get_property(child, "linux,default-trigger", NULL);
+> +
+> +               ret = of_property_read_u32(child, "reg", &reg);
+> +
+one more empty line
+
+> +               if (ret != 0)
+> +                       continue;
+
+you can put one empty line here,
+> +               tca_leds[reg] = led;
+> +       }
+> +       pdata = devm_kzalloc(&client->dev, sizeof(struct tca6507_platform_data), GFP_KERNEL);
+> +       if (!pdata) {
+
+no need {} here for just one line of this scope.
+
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+remove this.
+
+> +
+> +       pdata->leds.leds = tca_leds;
+> +       pdata->leds.num_leds = NUM_LEDS;
+
+I think it should '= count' instead of '= NUM_LEDS'.
+
+> +
+> +       return pdata;
+> +}
+> +
+> +static const struct of_device_id of_tca6507_leds_match[] = {
+> +       { .compatible = "ti,tca6507", },
+> +       {},
+> +};
+> +
+> +#else
+> +static int __devinit tca6507_led_dt_init(struct i2c_client *client, struct tca6507_platform_data *data)
+> +{
+> +       return -1;
+> +}
+> +
+> +#define of_tca6507_leds_match NULL
+> +#endif
+> +
+>  static int __devinit tca6507_probe(struct i2c_client *client,
+>                                    const struct i2c_device_id *id)
+>  {
+> @@ -683,9 +743,12 @@ static int __devinit tca6507_probe(struct i2c_client *client,
+>                 return -EIO;
+>
+>         if (!pdata || pdata->leds.num_leds != NUM_LEDS) {
+> -               dev_err(&client->dev, "Need %d entries in platform-data list\n",
+> -                       NUM_LEDS);
+> -               return -ENODEV;
+> +               pdata = tca6507_led_dt_init(client);
+> +               if (IS_ERR(pdata)) {
+> +                       dev_err(&client->dev, "Need %d entries in platform-data list\n",
+> +                               NUM_LEDS);
+> +                       return PTR_ERR(pdata);
+> +               }
+>         }
+>         tca = devm_kzalloc(&client->dev, sizeof(*tca), GFP_KERNEL);
+>         if (!tca)
+> @@ -750,6 +813,7 @@ static struct i2c_driver tca6507_driver = {
+>         .driver   = {
+>                 .name    = "leds-tca6507",
+>                 .owner   = THIS_MODULE,
+> +               .of_match_table = of_tca6507_leds_match,
+>         },
+>         .probe    = tca6507_probe,
+>         .remove   = __devexit_p(tca6507_remove),
+> --
+> 1.7.9.5
+>
