@@ -1,64 +1,80 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 01/17] of: add dma-mask binding
-Date: Wed, 14 Nov 2012 21:05:39 +0000
-Message-ID: <20121114210539.GL3290@n2100.arm.linux.org.uk>
-References: <1352710357-3265-1-git-send-email-wenyou.yang@atmel.com>
- <1352710357-3265-2-git-send-email-wenyou.yang@atmel.com>
- <50A3164C.3070301@gmail.com> <20121114060058.GM4576@game.jcrosoft.org>
- <50A4056E.9090700@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50A4056E.9090700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v3 00/11] clk: exynos4: migrate to common clock framework
+Date: Thu, 15 Nov 2012 03:37:22 +0530
+Message-ID: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 02:56:14PM -0600, Rob Herring wrote:
-> On 11/14/2012 12:00 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 21:55 Tue 13 Nov     , Rob Herring wrote:
-> >> On 11/12/2012 02:52 AM, Wenyou Yang wrote:
-> >>> +
-> >>> +	dev->dma_mask = &dev->coherent_dma_mask;
-> >>
-> >> I don't really know, but I suspect this is wrong.
-> > no this is correct was suggest by Russell
-> > we already do so on other ARM or SH as example
-> > 
-> > the dma expect a pointer for dma_mask but the value is the same as coherent
-> 
-> Okay. Then perhaps this part should be a separate patch as that is
-> useful on its own for 32-bit machines with no DMA address restrictions
-> (most modern ARM h/w).
+This patch series migrates the Samsung Exynos4 SoC clock code to adopt the
+common clock framework. The use of Samsung specific clock structures has
+been removed and all board support code has been updated. imx-style of
+clock registration and lookup has been adopted for device tree based
+exynos4 platforms.
 
-I'm not sure that I did make the exact suggestion being alluded to above
-(I think I may have made the suggestion that dev->dma_mask should be
-pointed at a dma_mask, and it might be a good idea that it should be
-part of struct device.)
+This patch series is based on the for-next branch of Samsung maintainer's
+tree with all patches merged from clk-next branch of Mike's tree. This
+series has been tested on Exynos4210 based Origen board and Exynos4412
+based smdk board.
 
-I've always shy'd away from making it the same thing as the coherent
-DMA mask, because there are drivers around which modify the value
-pointed to by dev->dma_mask via standard DMA API calls.  (Eg, when they
-know that the device is only N-bit capable.)
+Thomas Abraham (11):
+  clk: samsung: add common clock framework helper functions for Samsung platforms
+  clk: samsung: add pll clock registration helper functions
+  clk: exynos4: register clocks using common clock framework
+  ARM: Exynos4: Migrate clock support to common clock framework
+  ARM: dts: add exynos4 clock controller nodes
+  ARM: dts: add xxti and xusbxti fixed rate clock nodes for exynos4 based platforms
+  ARM: Exynos4: allow legacy board support to specify xxti and xusbxti clock speed
+  ARM: dts: add clock provider information for all controllers in Exynos4 SoC
+  ARM: Exynos4: remove auxdata table from machine file
+  ARM: Exynos: use fin_pll clock as the tick clock source for mct
+  ARM: Exynos: add support for mct clock setup
 
-With that set to the same as dev->coherent_dma_mask, it ends up
-modifying the coherent DMA mask too which may or may not be entirely
-a good thing; I suspect ultimately that depends on the driver.
+.../devicetree/bindings/clock/exynos4-clock.txt    |  215 +++
+ arch/arm/boot/dts/exynos4.dtsi                     |   48 +
+ arch/arm/boot/dts/exynos4210-origen.dts            |   12 +
+ arch/arm/boot/dts/exynos4210-smdkv310.dts          |   12 +
+ arch/arm/boot/dts/exynos4210.dtsi                  |    6 +
+ arch/arm/boot/dts/exynos4412-smdk4412.dts          |   12 +
+ arch/arm/boot/dts/exynos4x12.dtsi                  |    6 +
+ arch/arm/mach-exynos/Kconfig                       |    1 +
+ arch/arm/mach-exynos/Makefile                      |    3 -
+ arch/arm/mach-exynos/clock-exynos4.c               | 1602 --------------------
+ arch/arm/mach-exynos/clock-exynos4.h               |   35 -
+ arch/arm/mach-exynos/clock-exynos4210.c            |  188 ---
+ arch/arm/mach-exynos/clock-exynos4212.c            |  192 ---
+ arch/arm/mach-exynos/common.c                      |   24 +-
+ arch/arm/mach-exynos/common.h                      |    4 +
+ arch/arm/mach-exynos/mach-armlex4210.c             |    1 -
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |   69 +-
+ arch/arm/mach-exynos/mach-nuri.c                   |    3 +-
+ arch/arm/mach-exynos/mach-origen.c                 |    3 +-
+ arch/arm/mach-exynos/mach-smdk4x12.c               |    1 -
+ arch/arm/mach-exynos/mach-smdkv310.c               |    3 +-
+ arch/arm/mach-exynos/mach-universal_c210.c         |    3 +-
+ arch/arm/mach-exynos/mct.c                         |   33 +-
+ arch/arm/plat-samsung/Kconfig                      |    4 +-
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/samsung/Makefile                       |    6 +
+ drivers/clk/samsung/clk-exynos4.c                  |  641 ++++++++
+ drivers/clk/samsung/clk-pll.c                      |  400 +++++
+ drivers/clk/samsung/clk-pll.h                      |   38 +
+ drivers/clk/samsung/clk.c                          |  176 +++
+ drivers/clk/samsung/clk.h                          |  218 +++
+ 31 files changed, 1842 insertions(+), 2118 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos4-clock.txt
+ delete mode 100644 arch/arm/mach-exynos/clock-exynos4.c
+ delete mode 100644 arch/arm/mach-exynos/clock-exynos4.h
+ delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
+ delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
+ create mode 100644 drivers/clk/samsung/Makefile
+ create mode 100644 drivers/clk/samsung/clk-exynos4.c
+ create mode 100644 drivers/clk/samsung/clk-pll.c
+ create mode 100644 drivers/clk/samsung/clk-pll.h
+ create mode 100644 drivers/clk/samsung/clk.c
+ create mode 100644 drivers/clk/samsung/clk.h
 
-My thoughts on this though is that the whole thing is a mess.  I'm
-not sure why we ended up with a separate coherent_dma_mask from the
-main dma_mask, and why we ended up with dma_mask being a pointer to
-something allocated elsewhere... it all seems like it's unnecessarily
-complicated and was designed to cause confusion...
+-- 
+1.7.4.4
