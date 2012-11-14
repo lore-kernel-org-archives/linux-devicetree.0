@@ -1,78 +1,72 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [RFC PATCH] ASoC: Samsung: Register the audio platform device
-Date: Wed, 14 Nov 2012 17:39:20 +0530
-Message-ID: <1352894960-17434-2-git-send-email-padma.v@samsung.com>
-References: <1352894960-17434-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1352894960-17434-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: padma.v@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
-Cc: sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: Re: [RFC] MIPS: BCM63XX: add Device Tree glue code for IRQ handling
+Date: Wed, 14 Nov 2012 13:09:59 +0100
+Message-ID: <CAOiHx==Ufghuf8Oans2VV4eZ1LusdJH4rwq=oos_pM3_y0-omg@mail.gmail.com>
+References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
+ <1352638249-29298-5-git-send-email-jonas.gorski@gmail.com> <50A1D3FC.9010207@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50A1D3FC.9010207@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Kevin Cernekee <cernekee@gmail.com>, linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Maxime Bizon <mbizon@freebox.fr>, Florian Fainelli <florian@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
-Audio platform device is not a hardware peripherial.
-So this device can't be added in the dt devices list.
-So expanded the module_platform_driver and registered
-this device using "platform_device_register_simple".
+On 13 November 2012 06:00, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 11/11/2012 05:50 AM, Jonas Gorski wrote:
+>> Register IRQ domains through Device Tree for the internal and external
+>> interrupt controllers. Register the same IRQ ranges as previously to
+>> provide backward compatibility for non-DT drivers.
+>
+>> diff --git a/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt b/Documentation/devicetree/bindings/mips/bcm63xx/epic.txt
+>
+> Rather than putting binding docs in an arch-specific directory, perhaps
+> put them into a device-type-specific directory, such as
+> bindings/interrupt-controller/brcm,bcm63xx-epic.txt?
 
-Also added the soc-core pm ops structure in the audio
-platform driver.
+Almost everyone has their interrupt-controller bindings in
+$arch/$platform, but if interrupt-controller is the preferred
+location, I can certainly move it there; I have no hard preference for
+any location.
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
- sound/soc/samsung/smdk_wm8994.c |   31 ++++++++++++++++++++++++++++++-
- 1 files changed, 30 insertions(+), 1 deletions(-)
+>
+>> +- #interrupt-cells: <2>
+>> +  This controller supports level and edge triggered interrupts. The
+>> +  first cell is the interrupt number, the second is a 1:1 mapping to
+>> +  the linux interrupt flags.
+>
+> The DT documentation should be self-contained, and not reference
+> anything OS-specific. In this case, you could reference
+> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> for the interrupt flags.
 
-diff --git a/sound/soc/samsung/smdk_wm8994.c b/sound/soc/samsung/smdk_wm8994.c
-index 48dd4dd..7f97969 100644
---- a/sound/soc/samsung/smdk_wm8994.c
-+++ b/sound/soc/samsung/smdk_wm8994.c
-@@ -173,16 +173,45 @@ static int __devexit smdk_audio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct platform_device *smdk_audio_device;
-+
- static struct platform_driver smdk_audio_driver = {
- 	.driver		= {
- 		.name	= "smdk-audio",
- 		.owner	= THIS_MODULE,
-+		.pm	= &snd_soc_pm_ops,
- 	},
- 	.probe		= smdk_audio_probe,
- 	.remove		= __devexit_p(smdk_audio_remove),
- };
- 
--module_platform_driver(smdk_audio_driver);
-+static int __init smdk_audio_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&smdk_audio_driver);
-+	if (ret) {
-+		pr_err("unable to register driver\n");
-+		return ret;
-+	}
-+
-+	smdk_audio_device = platform_device_register_simple("smdk-audio", -1, NULL, 0);
-+	if (IS_ERR(smdk_audio_device)) {
-+		platform_driver_unregister(&smdk_audio_driver);
-+		return PTR_ERR(smdk_audio_device);
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit smdk_audio_exit(void)
-+{
-+	platform_device_unregister(smdk_audio_device);
-+	platform_driver_unregister(&smdk_audio_driver);
-+}
-+
-+module_init(smdk_audio_init);
-+module_exit(smdk_audio_exit);
- 
- MODULE_DESCRIPTION("ALSA SoC SMDK WM8994");
- MODULE_LICENSE("GPL");
--- 
-1.7.4.4
+Good Idea, I'll do that for the next iteration.
+
+>> diff --git a/arch/mips/bcm63xx/dts/bcm6328.dtsi b/arch/mips/bcm63xx/dts/bcm6328.dtsi
+>
+>>               ranges = <0 0x10000000 0x20000>;
+>>               compatible = "simple-bus";
+>> +
+>> +             interrupt-parent = <&ipic>;
+>> +
+>> +             perf@0 {
+>> +                     epic: interrupt-controller@18 {
+>
+> Don't you need some reg properties in the perf and interrupt-controller
+> nodes so that the register address can be determined?
+
+Since there is no support code for that property yet I did not add it.
+I haven't quite finished yet how the final bindings will be (since
+there are/were a few things I haven't finished researching yet, e.g.
+how this controller works in SMP context, and how interrupt
+controllers are supposed to work).
+
+I can add all expected properties now and add support for them later,
+but I feel that this might add properties that will then never
+supported, and nobody updates the documentation for that, so I'd
+rather like to keep the documentation/dts(i) in sync with what the
+actual code expects/supports.
+
+
+Jonas
