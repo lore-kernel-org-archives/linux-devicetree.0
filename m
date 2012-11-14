@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Subject: Re: [PATCH] of_i2c: I2C child node 10-bit client addressing
-Date: Wed, 14 Nov 2012 16:27:16 +0000
-Message-ID: <20121114162716.157433E0B7C@localhost>
+Date: Wed, 14 Nov 2012 16:30:40 +0000
+Message-ID: <20121114163040.DA7FD3E0B7C@localhost>
 References: <BLU002-W134A2F0BA0EF1C3BF8E491EAC8C0@phx.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -27,6 +27,14 @@ On Fri, 12 Oct 2012 09:12:48 +0530, Bharat Reddy <bharat_404-PkbjNfxxIARBDgjK7y7
 > member "flags = I2C_CLIENT_TEN" is needed.
 > 
 > Signed-off-by: Bharat Kumar Reddy Gooty <bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+
+Also, the patch appears to have been corrupted because it wasn't posted
+as plain text. I can't easly apply things that are sent that way. What
+are you using to email patches? (Cut-and-paste into an email client
+generally doesn't work for submitting patches)
+
+g.
+
 > ---
 >  drivers/of/of_i2c.c |    4 ++++
 >  1 file changed, 4 insertions(+)
@@ -43,8 +51,19 @@ On Fri, 12 Oct 2012 09:12:48 +0530, Bharat Reddy <bharat_404-PkbjNfxxIARBDgjK7y7
 > +               if ((info.addr > (1 << 7) - 1) && (info.addr <= (1 << 10) - 1))
 > +                       info.flags = I2C_CLIENT_TEN;
 > +
+>                 info.irq = irq_of_parse_and_map(node, 0); 
+>                 info.of_node = of_node_get(node);
+>                 info.archdata = &dev_ad;
+> -- 
+> 1.7.9.5
+> 
+> 
+>  		 	   		  Non-text part: text/html
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-Is it possible for a device to have an address that fits in the first 7
-bits, but still requires 10 bit address transactions?
-
-g.
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
