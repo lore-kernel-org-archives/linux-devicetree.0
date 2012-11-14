@@ -1,361 +1,71 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [Patch v6 2/4] ASoC: atmel-ssc-dai: register dai and pcm directly
-Date: Wed, 14 Nov 2012 18:09:09 +0800
-Message-ID: <1352887751-21848-3-git-send-email-voice.shen@atmel.com>
-References: <1352887751-21848-1-git-send-email-voice.shen@atmel.com>
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <1352887751-21848-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com, plagnioj@jcrosoft.com, nicolas.ferre@atmel.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, Bo Shen <voice.shen@atmel.com>
+From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v8 0/2] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Wed, 14 Nov 2012 15:57:14 +0530
+Message-ID: <1352888836-17192-1-git-send-email-p.paneri@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-change the method for register dai and pcm
-  - let the atmel-ssc-dai no longer as a standalone platform device
-  - remap ssc and then register dai directly
-  - register pcm from dai directly
-  - modify the code which related with this change
+Changes from v7:
+Rebased to the latest usb-next branch.
+Separating arch patches from these driver patches.
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
----
-Change since v5
-  - split the patch, this only include register method change
-  - fix the backwards
-Change since v4 RFC
-  - no change
-Change since v3 RFC
-  - remap ssc and then register dai and pcm directly
-Change since v2
-  - Register dai and pcm directly according to Mark Brown's suggestion
-    - using name to distinguish ssc register for audio or library
-      if for audio, the name with dai subfix
-      if for library, the name without dai subfix
-  - fix the issue for sam9g20-wm8731
-    - when register dai and pcm cause the sam9g20-wm8731 doesn't work,
-      so fix it
-  - Add device tree support
-    - Detail information reference atmel-ssc-dai.txt binding document
-Change since v1
-  No change
----
- sound/soc/atmel/atmel-pcm.c     |   23 ++----
- sound/soc/atmel/atmel-pcm.h     |    3 +
- sound/soc/atmel/atmel_ssc_dai.c |  157 ++++++++++-----------------------------
- sound/soc/atmel/atmel_ssc_dai.h |    3 +-
- 4 files changed, 50 insertions(+), 136 deletions(-)
+Changes from v6:
+Modified register definitions according to the existing ones.
+Changed default PHY clk selection for SoCs.
+Improved binding text and rebased to the latest usb-next.
 
-diff --git a/sound/soc/atmel/atmel-pcm.c b/sound/soc/atmel/atmel-pcm.c
-index 9b84f98..40e17d1 100644
---- a/sound/soc/atmel/atmel-pcm.c
-+++ b/sound/soc/atmel/atmel-pcm.c
-@@ -473,28 +473,17 @@ static struct snd_soc_platform_driver atmel_soc_platform = {
- 	.resume		= atmel_pcm_resume,
- };
- 
--static int __devinit atmel_soc_platform_probe(struct platform_device *pdev)
-+int atmel_pcm_platform_register(struct device *dev)
- {
--	return snd_soc_register_platform(&pdev->dev, &atmel_soc_platform);
-+	return snd_soc_register_platform(dev, &atmel_soc_platform);
- }
-+EXPORT_SYMBOL(atmel_pcm_platform_register);
- 
--static int __devexit atmel_soc_platform_remove(struct platform_device *pdev)
-+void atmel_pcm_platform_unregister(struct device *dev)
- {
--	snd_soc_unregister_platform(&pdev->dev);
--	return 0;
-+	snd_soc_unregister_platform(dev);
- }
--
--static struct platform_driver atmel_pcm_driver = {
--	.driver = {
--			.name = "atmel-pcm-audio",
--			.owner = THIS_MODULE,
--	},
--
--	.probe = atmel_soc_platform_probe,
--	.remove = __devexit_p(atmel_soc_platform_remove),
--};
--
--module_platform_driver(atmel_pcm_driver);
-+EXPORT_SYMBOL(atmel_pcm_platform_unregister);
- 
- MODULE_AUTHOR("Sedji Gaouaou <sedji.gaouaou@atmel.com>");
- MODULE_DESCRIPTION("Atmel PCM module");
-diff --git a/sound/soc/atmel/atmel-pcm.h b/sound/soc/atmel/atmel-pcm.h
-index 5e0a95e..e6d67b3 100644
---- a/sound/soc/atmel/atmel-pcm.h
-+++ b/sound/soc/atmel/atmel-pcm.h
-@@ -80,4 +80,7 @@ struct atmel_pcm_dma_params {
- #define ssc_readx(base, reg)            (__raw_readl((base) + (reg)))
- #define ssc_writex(base, reg, value)    __raw_writel((value), (base) + (reg))
- 
-+int atmel_pcm_platform_register(struct device *dev);
-+void atmel_pcm_platform_unregister(struct device *dev);
-+
- #endif /* _ATMEL_PCM_H */
-diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
-index 354341e..7932c05 100644
---- a/sound/soc/atmel/atmel_ssc_dai.c
-+++ b/sound/soc/atmel/atmel_ssc_dai.c
-@@ -48,11 +48,7 @@
- #include "atmel_ssc_dai.h"
- 
- 
--#if defined(CONFIG_ARCH_AT91SAM9260) || defined(CONFIG_ARCH_AT91SAM9G20)
--#define NUM_SSC_DEVICES		1
--#else
- #define NUM_SSC_DEVICES		3
--#endif
- 
- /*
-  * SSC PDC registers required by the PCM DMA engine.
-@@ -107,7 +103,6 @@ static struct atmel_pcm_dma_params ssc_dma_params[NUM_SSC_DEVICES][2] = {
- 	.pdc		= &pdc_rx_reg,
- 	.mask		= &ssc_rx_mask,
- 	} },
--#if NUM_SSC_DEVICES == 3
- 	{{
- 	.name		= "SSC1 PCM out",
- 	.pdc		= &pdc_tx_reg,
-@@ -128,7 +123,6 @@ static struct atmel_pcm_dma_params ssc_dma_params[NUM_SSC_DEVICES][2] = {
- 	.pdc		= &pdc_rx_reg,
- 	.mask		= &ssc_rx_mask,
- 	} },
--#endif
- };
- 
- 
-@@ -139,7 +133,6 @@ static struct atmel_ssc_info ssc_info[NUM_SSC_DEVICES] = {
- 	.dir_mask	= SSC_DIR_MASK_UNUSED,
- 	.initialized	= 0,
- 	},
--#if NUM_SSC_DEVICES == 3
- 	{
- 	.name		= "ssc1",
- 	.lock		= __SPIN_LOCK_UNLOCKED(ssc_info[1].lock),
-@@ -152,7 +145,6 @@ static struct atmel_ssc_info ssc_info[NUM_SSC_DEVICES] = {
- 	.dir_mask	= SSC_DIR_MASK_UNUSED,
- 	.initialized	= 0,
- 	},
--#endif
- };
- 
- 
-@@ -690,27 +682,9 @@ static int atmel_ssc_resume(struct snd_soc_dai *cpu_dai)
- static int atmel_ssc_probe(struct snd_soc_dai *dai)
- {
- 	struct atmel_ssc_info *ssc_p = &ssc_info[dai->id];
--	int ret = 0;
- 
- 	snd_soc_dai_set_drvdata(dai, ssc_p);
- 
--	/*
--	 * Request SSC device
--	 */
--	ssc_p->ssc = ssc_request(dai->id);
--	if (IS_ERR(ssc_p->ssc)) {
--		printk(KERN_ERR "ASoC: Failed to request SSC %d\n", dai->id);
--		ret = PTR_ERR(ssc_p->ssc);
--	}
--
--	return ret;
--}
--
--static int atmel_ssc_remove(struct snd_soc_dai *dai)
--{
--	struct atmel_ssc_info *ssc_p = snd_soc_dai_get_drvdata(dai);
--
--	ssc_free(ssc_p->ssc);
- 	return 0;
- }
- 
-@@ -728,48 +702,8 @@ static const struct snd_soc_dai_ops atmel_ssc_dai_ops = {
- 	.set_clkdiv	= atmel_ssc_set_dai_clkdiv,
- };
- 
--static struct snd_soc_dai_driver atmel_ssc_dai[NUM_SSC_DEVICES] = {
--	{
--		.name = "atmel-ssc-dai.0",
--		.probe = atmel_ssc_probe,
--		.remove = atmel_ssc_remove,
--		.suspend = atmel_ssc_suspend,
--		.resume = atmel_ssc_resume,
--		.playback = {
--			.channels_min = 1,
--			.channels_max = 2,
--			.rates = ATMEL_SSC_RATES,
--			.formats = ATMEL_SSC_FORMATS,},
--		.capture = {
--			.channels_min = 1,
--			.channels_max = 2,
--			.rates = ATMEL_SSC_RATES,
--			.formats = ATMEL_SSC_FORMATS,},
--		.ops = &atmel_ssc_dai_ops,
--	},
--#if NUM_SSC_DEVICES == 3
--	{
--		.name = "atmel-ssc-dai.1",
--		.probe = atmel_ssc_probe,
--		.remove = atmel_ssc_remove,
--		.suspend = atmel_ssc_suspend,
--		.resume = atmel_ssc_resume,
--		.playback = {
--			.channels_min = 1,
--			.channels_max = 2,
--			.rates = ATMEL_SSC_RATES,
--			.formats = ATMEL_SSC_FORMATS,},
--		.capture = {
--			.channels_min = 1,
--			.channels_max = 2,
--			.rates = ATMEL_SSC_RATES,
--			.formats = ATMEL_SSC_FORMATS,},
--		.ops = &atmel_ssc_dai_ops,
--	},
--	{
--		.name = "atmel-ssc-dai.2",
-+static struct snd_soc_dai_driver atmel_ssc_dai = {
- 		.probe = atmel_ssc_probe,
--		.remove = atmel_ssc_remove,
- 		.suspend = atmel_ssc_suspend,
- 		.resume = atmel_ssc_resume,
- 		.playback = {
-@@ -783,32 +717,37 @@ static struct snd_soc_dai_driver atmel_ssc_dai[NUM_SSC_DEVICES] = {
- 			.rates = ATMEL_SSC_RATES,
- 			.formats = ATMEL_SSC_FORMATS,},
- 		.ops = &atmel_ssc_dai_ops,
--	},
--#endif
- };
- 
--static __devinit int asoc_ssc_probe(struct platform_device *pdev)
-+static int asoc_ssc_init(struct device *dev)
- {
--	BUG_ON(pdev->id < 0);
--	BUG_ON(pdev->id >= ARRAY_SIZE(atmel_ssc_dai));
--	return snd_soc_register_dai(&pdev->dev, &atmel_ssc_dai[pdev->id]);
--}
-+	int ret;
-+
-+	ret = snd_soc_register_dai(dev, &atmel_ssc_dai);
-+	if (ret) {
-+		dev_err(dev, "Could not register DAI: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = atmel_pcm_platform_register(dev);
-+	if (ret) {
-+		dev_err(dev, "Could not register PCM: %d\n", ret);
-+		goto err_unregister_dai;
-+	};
- 
--static int __devexit asoc_ssc_remove(struct platform_device *pdev)
--{
--	snd_soc_unregister_dai(&pdev->dev);
- 	return 0;
--}
- 
--static struct platform_driver asoc_ssc_driver = {
--	.driver = {
--			.name = "atmel-ssc-dai",
--			.owner = THIS_MODULE,
--	},
-+err_unregister_dai:
-+	snd_soc_unregister_dai(dev);
-+err:
-+	return ret;
-+}
- 
--	.probe = asoc_ssc_probe,
--	.remove = __devexit_p(asoc_ssc_remove),
--};
-+static void asoc_ssc_exit(struct device *dev)
-+{
-+	atmel_pcm_platform_unregister(dev);
-+	snd_soc_unregister_dai(dev);
-+}
- 
- /**
-  * atmel_ssc_set_audio - Allocate the specified SSC for audio use.
-@@ -816,50 +755,32 @@ static struct platform_driver asoc_ssc_driver = {
- int atmel_ssc_set_audio(int ssc_id)
- {
- 	struct ssc_device *ssc;
--	static struct platform_device *dma_pdev;
--	struct platform_device *ssc_pdev;
- 	int ret;
- 
--	if (ssc_id < 0 || ssc_id >= ARRAY_SIZE(atmel_ssc_dai))
--		return -EINVAL;
--
--	/* Allocate a dummy device for DMA if we don't have one already */
--	if (!dma_pdev) {
--		dma_pdev = platform_device_alloc("atmel-pcm-audio", -1);
--		if (!dma_pdev)
--			return -ENOMEM;
--
--		ret = platform_device_add(dma_pdev);
--		if (ret < 0) {
--			platform_device_put(dma_pdev);
--			dma_pdev = NULL;
--			return ret;
--		}
--	}
--
--	ssc_pdev = platform_device_alloc("atmel-ssc-dai", ssc_id);
--	if (!ssc_pdev)
--		return -ENOMEM;
--
- 	/* If we can grab the SSC briefly to parent the DAI device off it */
- 	ssc = ssc_request(ssc_id);
--	if (IS_ERR(ssc))
--		pr_warn("Unable to parent ASoC SSC DAI on SSC: %ld\n",
-+	if (IS_ERR(ssc)) {
-+		pr_err("Unable to parent ASoC SSC DAI on SSC: %ld\n",
- 			PTR_ERR(ssc));
--	else {
--		ssc_pdev->dev.parent = &(ssc->pdev->dev);
--		ssc_free(ssc);
-+		return PTR_ERR(ssc);
-+	} else {
-+		ssc_info[ssc_id].ssc = ssc;
- 	}
- 
--	ret = platform_device_add(ssc_pdev);
--	if (ret < 0)
--		platform_device_put(ssc_pdev);
-+	ret = asoc_ssc_init(&ssc->pdev->dev);
- 
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(atmel_ssc_set_audio);
- 
--module_platform_driver(asoc_ssc_driver);
-+void atmel_ssc_put_audio(int ssc_id)
-+{
-+	struct ssc_device *ssc = ssc_info[ssc_id].ssc;
-+
-+	ssc_free(ssc);
-+	asoc_ssc_exit(&ssc->pdev->dev);
-+}
-+EXPORT_SYMBOL_GPL(atmel_ssc_put_audio);
- 
- /* Module information */
- MODULE_AUTHOR("Sedji Gaouaou, sedji.gaouaou@atmel.com, www.atmel.com");
-diff --git a/sound/soc/atmel/atmel_ssc_dai.h b/sound/soc/atmel/atmel_ssc_dai.h
-index 5d4f0f9..b1f08d5 100644
---- a/sound/soc/atmel/atmel_ssc_dai.h
-+++ b/sound/soc/atmel/atmel_ssc_dai.h
-@@ -117,6 +117,7 @@ struct atmel_ssc_info {
- 	struct atmel_ssc_state ssc_state;
- };
- 
--int atmel_ssc_set_audio(int ssc);
-+int atmel_ssc_set_audio(int ssc_id);
-+void atmel_ssc_put_audio(int ssc_id);
- 
- #endif /* _AT91_SSC_DAI_H */
--- 
-1.7.9.5
+Changes from v5:
+Moved clk_get() to driver's probe function. Now reference clock frequency
+selection value is stored in samsung_usbphy structure for later use. Used
+IS_ENABLED() instead of #ifdef in samsung_usbphy_get_driver_data().
 
+Changes from v4:
+Moved header file contents to driver's source file
+Removed unnecessary print message from driver's probe function
+Dropped the Free Software Foundation address from the header
+
+Changes from v3:
+Replaced susbsys_initcall()/module_exit() by module_platform_driver().
+Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
+is registered
+Removed unnecessary devm_usb_put_phy() call from the hsotg driver remove.
+
+Changes from v2:
+Changed the driver filenames to samsung-usbphy
+Rectified coding style related errors
+
+Changes from v1:
+Rebased patches to latest usb-next branch
+Changed the name 'sec_usbphy' to 'samsung_usbphy'
+
+This patch set introduces a phy driver for samsung SoCs. It uses the existing
+transceiver infrastructure to provide phy control functions. Use of this driver
+can be extended for usb host phy as well. Over the period of time all the phy
+related code for most of the samsung SoCs can be integrated here.
+Removing the existing phy code from mach-s3c64xx. Same can be done for other SoCs
+when they start supporting this phy driver. 
+This driver is tested with smdk6410 and Exynos4210(with DT).
+
+Praveen Paneri (2):
+  usb: phy: samsung: Introducing usb phy driver for hsotg
+  usb: s3c-hsotg: Adding phy driver support
+
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   11 +
+ drivers/usb/gadget/s3c-hsotg.c                     |   37 ++-
+ drivers/usb/phy/Kconfig                            |    8 +
+ drivers/usb/phy/Makefile                           |    1 +
+ drivers/usb/phy/samsung-usbphy.c                   |  360 ++++++++++++++++++++
+ include/linux/platform_data/samsung-usbphy.h       |   27 ++
+ 6 files changed, 434 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+ create mode 100644 drivers/usb/phy/samsung-usbphy.c
+ create mode 100644 include/linux/platform_data/samsung-usbphy.h
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
