@@ -1,58 +1,109 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/4] rtc: OMAP: Add system pm_power_off to rtc driver
-Date: Wed, 14 Nov 2012 15:00:06 +0900
-Message-ID: <20121114060003.GA7407@opensource.wolfsonmicro.com>
-References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
- <1352108549-9341-3-git-send-email-anilkumar@ti.com>
- <5097ECAD.9010101@ti.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA64F14@DBDE01.ent.ti.com>
- <50994156.4080305@ti.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA6AFB4@DBDE01.ent.ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 01/17] of: add dma-mask binding
+Date: Wed, 14 Nov 2012 07:00:58 +0100
+Message-ID: <20121114060058.GM4576@game.jcrosoft.org>
+References: <1352710357-3265-1-git-send-email-wenyou.yang@atmel.com>
+ <1352710357-3265-2-git-send-email-wenyou.yang@atmel.com>
+ <50A3164C.3070301@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA6AFB4@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, Colin Foe-Parker <colin.foeparker@logicpd.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "tony@atomide.com" <tony@atomide.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+In-Reply-To: <50A3164C.3070301-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 21:55 Tue 13 Nov     , Rob Herring wrote:
+> On 11/12/2012 02:52 AM, Wenyou Yang wrote:
+> > From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > 
+> > This will allow each device to specify its dma-mask for this we use the
+> > coherent_dma_mask as pointer. By default the dma-mask will be set to
+> > DMA_BIT_MASK(32).
+> 
+> Do you really have a use case this is not DMA_BIT_MASK(32)?
+yes as exmample on 64bit platfrom it will be 64 on x86 it's also 24, on power
+pc 40
+> 
+> > The microblaze architecture hook is drop
+> > 
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+> > Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > ---
+> >  drivers/of/platform.c |   23 ++++++++++++++++-------
+> >  1 file changed, 16 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index b80891b..31ed405 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -130,6 +130,21 @@ void of_device_make_bus_id(struct device *dev)
+> >  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+> >  }
+> >  
+> > +static void of_get_dma_mask(struct device *dev, struct device_node *np)
+> > +{
+> > +	const __be32 *prop;
+> > +	int len;
+> > +
+> > +	prop = of_get_property(np, "dma-mask", &len);
+> 
+> dma-ranges may work for this purpose.
+> 
+> > +
+> > +	dev->dma_mask = &dev->coherent_dma_mask;
+> 
+> I don't really know, but I suspect this is wrong.
+no this is correct was suggest by Russell
+we already do so on other ARM or SH as example
 
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Nov 14, 2012 at 05:50:46AM +0000, AnilKumar, Chimata wrote:
-> On Wed, Nov 14, 2012 at 10:31:42, AnilKumar, Chimata wrote:
-
-*Please* cut out irrelevant context from your mails.
-
-> Details regarding how PMIC PWR_EN is connected to RTC module
-
-OK...  but what am I expected to do with this information?
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQozNGAAoJELSic+t+oim9tlUP/RGD6hFMs9XQ5zECDt84CB8m
-fIQJ7eU9Ojjr3fG/LHSldQEWV+yus85nXEtLir5Drly/T8unNXHDn5VqlHbkOfx5
-2nGD9sjarE71j8r9wBPN8Xr+w3wlrXQssyhE6jY/g/bPIKijyWehAVlSRrJ11rOS
-hhyQuAKTsRyvqon09pUEWlS6ROSZldMKJt22vlqMbQ8oB3u19Ow+27A6jX2P9DcZ
-wM+/MZw8dWuZKx3fs3H7LsUHMwetCj8u2xtbdSrO45sEtGdXMgvMqCyOW1CbCwTM
-lk8z0C6jqe2LnU+LMNnVrxUWOKxPBGTG4syZtqEAxN5ivK3zTy+ITTX/OH3eVK2r
-xVHP/l91IphVZrd4TRblFg6L+BsIynEq2eGm/g/Mp1OTGWF80iu8RkP4eW8Rslem
-1JYTYqpNLpsb3+FEIASmhcq6U7HSGmRiakl5ZGhpxgbWKkGbI8IeBg26QbwpvrQc
-NuINFVv2Ec9OhwkxS69bj/CYt4+VKXwHJeAHNyfoduKtK4wxSTWKEOqIMUMfXf0s
-YGkOlDPG8F8JqFu20GldOA0jyE0VwfaKlkPb6afWuIfAaIt4ktqYUVf+wVB1vJ+f
-+MetcSUjftP4iSORaCBJoxav9EDobtT9hnA6PHMsSbLJHDuZe95GAe2vL5E7J8wn
-q8iLRAOIj9bCYN7lXUZF
-=VmFG
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
+the dma expect a pointer for dma_mask but the value is the same as coherent
+> 
+> > +
+> > +	if (!prop)
+> > +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> > +	else
+> > +		dev->coherent_dma_mask = of_read_number(prop, len / 4);
+> > +}
+> > +
+> >  /**
+> >   * of_device_alloc - Allocate and initialize an of_device
+> >   * @np: device node to assign to device
+> > @@ -171,10 +186,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
+> >  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+> >  	}
+> >  
+> > +	of_get_dma_mask(&dev->dev, np);
+> >  	dev->dev.of_node = of_node_get(np);
+> > -#if defined(CONFIG_MICROBLAZE)
+> > -	dev->dev.dma_mask = &dev->archdata.dma_mask;
+> > -#endif
+> >  	dev->dev.parent = parent;
+> >  
+> >  	if (bus_id)
+> > @@ -211,10 +224,6 @@ struct platform_device *of_platform_device_create_pdata(
+> >  	if (!dev)
+> >  		return NULL;
+> >  
+> > -#if defined(CONFIG_MICROBLAZE)
+> > -	dev->archdata.dma_mask = 0xffffffffUL;
+> > -#endif
+> > -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> >  	dev->dev.bus = &platform_bus_type;
+> >  	dev->dev.platform_data = platform_data;
+> >  
+> > 
