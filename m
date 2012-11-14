@@ -1,87 +1,80 @@
-From: Maxime Bizon <mbizon@freebox.fr>
-Subject: Re: [RFC] MIPS: BCM63XX: add initial Device Tree support
-Date: Wed, 14 Nov 2012 15:47:52 +0100
-Message-ID: <1352904472.13818.66.camel@sakura.staff.proxad.net>
-References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
-	 <1352719094.10405.18.camel@sakura.staff.proxad.net>
-	 <CAOiHx==1UxrmxB5kyeDQPF4HBYxY9h4Ha8mWErwm6znX=y75OA@mail.gmail.com>
-Reply-To: mbizon@freebox.fr
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH v8] can: grcan: Add device driver for GRCAN and GRHCAN
+ cores
+Date: Wed, 14 Nov 2012 16:07:25 +0100
+Message-ID: <50A3B3AD.5080507@gaisler.com>
+References: <509C47CB.8060701@pengutronix.de> <1352732256-12712-1-git-send-email-andreas@gaisler.com> <50A2B88A.3040609@pengutronix.de> <50A34D49.2070908@gaisler.com> <50A359A1.30700@pengutronix.de> <50A37A5B.8060808@gaisler.com> <50A37F0A.7050204@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ANSI_X3.4-1968"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOiHx==1UxrmxB5kyeDQPF4HBYxY9h4Ha8mWErwm6znX=y75OA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <50A37F0A.7050204@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, software@gaisler.com, Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On 2012-11-14 12:22, Marc Kleine-Budde wrote:
+> On 11/14/2012 12:02 PM, Andreas Larsson wrote:
+>> On 2012-11-14 09:43, Marc Kleine-Budde wrote:
+>>> Handle incoming events (rx or tx-complete) until:
+>>> a) number of handled events == budget
+>>> or
+>>> b) no more events pending.
+>>>
+>>>      while (work_done < budget && interrupts_pending()) {
+>>>          work_done += handle_rx(budget - work_done);
+>>>          work_done += handle_tx(budget - work_done);
+>>>      }
+>>
+>> That could starve handle_tx completely though under high rx pressure,
+>> but I can prevent that by making sure that half of the budget is held
+>> back in the first call to handle_rx.
+>
+> What about making the budget big enough to handle both rx and tx in one
+> napi call. Have a look at the marvell driver [1] for inspiration.
 
-On Wed, 2012-11-14 at 13:07 +0100, Jonas Gorski wrote:
+Even if I set the budget to something large, unless I limit the rx side in some 
+way it could go on multiple rounds around the circular buffer until it have used 
+all the budget. So in some way or another, grcan_receive must be hindered from 
+using all the budget.
 
-Thanks for addressing my concerns
+Sorry, but I am not sure what aspect of the marvell driver poll handling you 
+want me to mimic. Without having analyzed exactly how the queueing works yet, it 
+seems to make sure that every function that is called from the poll function 
+gets ample opportunity to do work by not letting one function hogging all the 
+budget. If you want me to mimic it in the aspect of doing work in series of 16 
+or something like that, sure, no problem. If it is something else you want to 
+point to, please let me know what.
 
-> > We can even build a single kernel that support all SOCs/boards.
-> 
-> That's not going to change with Device Tree, and I'm trying my best to
-> keep this.
 
-DT is said to be the solution to achieve this goal on ARM. I was just
-pointing out that we already have this today.
+The simplest way to make sure that both tx and rx gets to run is to take 
+inspiration from the ethoc driver [1] and just let the tx side get just as much 
+budget as the rx side and be done with it. With the echo frames for can, the 
+budget should be halved for each I guess to make sure no more frames are 
+delivered than the budget, but apart from that I don't see the problem with such 
+a simple approach.
 
-> Not having to update board_bcm963xx.{c,h} because some vendor decided
-> to add e.g. a previously unused gpio-bitbanged device. Not having to
-> modify the kernel but just attach a (externally build) dtb to the
-> kernel to support a new board. Ideally in the far future even using a
-> CFE provided dtb. I'm sure there are more reasons.
+static int ethoc_poll(struct napi_struct *napi, int budget)
+{
+	struct ethoc *priv = container_of(napi, struct ethoc, napi);
+	int rx_work_done = 0;
+	int tx_work_done = 0;
 
-Put the board description in DT, but please leave the SOC out and don't
-try to describe them with DT, that's too preliminary.
+	rx_work_done = ethoc_rx(priv->netdev, budget);
+	tx_work_done = ethoc_tx(priv->netdev, budget);
 
-Let's support more SOCs first, we cannot generalize on what we don't
-know.
+	if (rx_work_done < budget && tx_work_done < budget) {
+		napi_complete(napi);
+		ethoc_enable_irq(priv, INT_MASK_TX | INT_MASK_RX);
+	}
 
-> And nobody wants to do that. But - as Kevin already mentioned - it
-> would be nice if we get similar SoCs we already know about supported
-> with the same code; or at least , like BCM33xx, BCM68xx or maybe even
-> BCM7xxx (never looked at them, so I can't tell how viable that is).
+	return rx_work_done;
+}
 
-DT is not the key here
+[1]
+http://lxr.free-electrons.com/source/drivers/net/ethernet/ethoc.c#L598
 
-code reuse/refactoring is
+Cheers,
+Andreas
 
-> These special clocks are so that the original behaviour of the clocks
-> is kept.  I'd rather argue that the reset code does not belong into
-> the clock code, and is actually the responsibility of the driver. It
-> would make the clock code much simpler.
-
-and IMO would make the driver code uglier. You don't read clock code
-everyday, it's boring, you do read/change driver code much more often.
-
-> What would you suggest? Please no "don't use Device Tree", as I don't
-> think we can avoid that. I'm struggling to find something you are fine
-
-As I said in my original email, I don't think bcm63xx codebase suffers
-from any problem similar to what caused Linus' rant about ARM few years
-ago.
-
-Did someone threaten to stop merging our patches if we don't use DT ?
-
-> I wouldn't treat this as stable until we got it into a satisfactory
-> state with everything supported. Heck, I wouldn't even treat this as
-> stable until Broadcom ships it in their SDKs to customers with CFEs
-> providing DTBs to the kernel.
-
-DT will succeed if chip designers start thinking the other way around:
-making new chip backward compatible with existing code or DT bindings.
-If that does not happen, we just moving C struct/arrays into another
-format with no added benefits.
-
-So we have to call it stable, otherwise there is no incentive to use
-them.
-
-And I just hate stable interfaces (which developer doesn't ?), they
-require more maintenance/testing if you're serious about your work.
-
--- 
-Maxime
