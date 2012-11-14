@@ -1,65 +1,47 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: i2c-gpio: fix name issue when i2c gpio node GT 1
-Date: Wed, 14 Nov 2012 09:59:44 +0100
-Message-ID: <20121114085944.GA5954@pengutronix.de>
-References: <1350287477-30936-1-git-send-email-voice.shen@atmel.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] dt: platform: Extract device name from device tree blob
+Date: Wed, 14 Nov 2012 09:21:58 +0000
+Message-ID: <20121114092158.GA12596@gmail.com>
+References: <1352732343-1199-1-git-send-email-per.forlin@stericsson.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1350287477-30936-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1352732343-1199-1-git-send-email-per.forlin@stericsson.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Per Forlin <per.forlin@stericsson.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, Linus Walleij <linus.walleij@linaro.org>, fredrik.soderstedt@stericsson.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 12 Nov 2012, Per Forlin wrote:
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Add support to extract device name from device tree blob.
+> If the property "dev-name" is set in the DTS this name will
+> be used when creating the device.
+> The auxdata_lookup has precedence and will override
+> the "dev-name" property.
+>=20
+> Adding support to parse DTS "dev-name" will make it possible to
+> replace these kind of structures with a dev-name in the DTS.
+> OF_DEV_AUXDATA("compatible", BASE_ADDRESS, "dev-name", NULL)
 
-On Mon, Oct 15, 2012 at 03:51:17PM +0800, Bo Shen wrote:
-> When i2c-gpio node number is greater than 1, the name for each is same
-> So add the patch to fix it.
->=20
-> The adap->name printing information is add by myself
->=20
-> without this patch the log information is as following
-> ---<8---
-> adap->name =3D i2c-gpio-1
-> i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
-> adap->name =3D i2c-gpio-1
-> i2c-gpio i2c.3: using pins 64 (SDA) and 65 (SCL)
-> --->8---
->=20
-> with this patch, the log information is as following
-> ---<8---
-> adap->name =3D i2c.2
-> i2c-gpio i2c.2: using pins 30 (SDA) and 31 (SCL)
-> adap->name =3D i2c.3
-> i2c-gpio i2c.3: using pins 64 (SDA) and 65 (SCL)
-> --->8---
->=20
-> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+This patch isn't required. The correct action is to make the driver
+DT aware. Also, is naming devices "devname.id" a Linux only thing,
+or do other OSes do the same? If the former is true, then we
+definitely do not want to add this binding.
 
-Applied to for-next, thanks.
+> OF_DEV_AUXDATA("st,nomadik-gpio", 0x8012e000, "gpio.0", NULL),
+> OF_DEV_AUXDATA("st,nomadik-i2c", 0x80004000, "nmk-i2c.0", NULL),
+
+In this case, once we have added common clk functionality to our
+Device Trees, these will vanish.
+
+Kind regards,
+Lee
 
 --=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlCjXYAACgkQD27XaX1/VRu7hgCcDYO2jO8wLUqkNTtlMxKjKlbp
-5cgAnjqjssmE7VB5MTtakljpY+LiCOAc
-=msUl
------END PGP SIGNATURE-----
-
---7JfCtLOvnd9MIVvH--
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
