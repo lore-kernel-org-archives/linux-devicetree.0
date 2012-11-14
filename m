@@ -1,127 +1,87 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH 3/4 v2] dtc/libfdt: introduce fdt types for annotation by
- endian checkers
-Date: Wed, 14 Nov 2012 08:42:55 -0600
-Message-ID: <E1TYeB5-0003oB-IS@jdl.com>
-References: <1350433728-24120-1-git-send-email-kim.phillips@freescale.com>
- <507F4B0B.1020401@gmail.com> <20121018121112.GI23523@truffula.fritz.box>
- <20121018173022.32f1745249d162d1aa453694@freescale.com>
- <20121019004324.GN23523@truffula.fritz.box>
- <20121030165754.65b34c78cd0d3a0d6ab7d34e@freescale.com>
- <20121106074819.GG23553@truffula.fritz.box>
- <20121113183417.7706e5c6044eb273309ef46e@freescale.com>
+From: Maxime Bizon <mbizon@freebox.fr>
+Subject: Re: [RFC] MIPS: BCM63XX: add initial Device Tree support
+Date: Wed, 14 Nov 2012 15:47:52 +0100
+Message-ID: <1352904472.13818.66.camel@sakura.staff.proxad.net>
+References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
+	 <1352719094.10405.18.camel@sakura.staff.proxad.net>
+	 <CAOiHx==1UxrmxB5kyeDQPF4HBYxY9h4Ha8mWErwm6znX=y75OA@mail.gmail.com>
+Reply-To: mbizon@freebox.fr
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ANSI_X3.4-1968"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20121113183417.7706e5c6044eb273309ef46e-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jerry Van Baren <gvb.uboot-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOiHx==1UxrmxB5kyeDQPF4HBYxY9h4Ha8mWErwm6znX=y75OA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, John Crispin <blogic@openwrt.org>, Florian Fainelli <florian@openwrt.org>, Kevin Cernekee <cernekee@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Kim,
+On Wed, 2012-11-14 at 13:07 +0100, Jonas Gorski wrote:
 
+Thanks for addressing my concerns
+
+> > We can even build a single kernel that support all SOCs/boards.
 > 
-> I hope this addresses all your comments, David.
+> That's not going to change with Device Tree, and I'm trying my best to
+> keep this.
 
-Which is why David didn't see this patch earlier. :-)
+DT is said to be the solution to achieve this goal on ARM. I was just
+pointing out that we already have this today.
 
+> Not having to update board_bcm963xx.{c,h} because some vendor decided
+> to add e.g. a previously unused gpio-bitbanged device. Not having to
+> modify the kernel but just attach a (externally build) dtb to the
+> kernel to support a new board. Ideally in the far future even using a
+> CFE provided dtb. I'm sure there are more reasons.
 
-> index 213d7fb..302d5cb 100644
-> --- a/libfdt/libfdt_env.h
-> +++ b/libfdt/libfdt_env.h
-> @@ -5,25 +5,63 @@
->  #include <stdint.h>
->  #include <string.h>
->  
-> +#ifdef __CHECKER__
-> +#define __force __attribute__((force))
-> +#define __bitwise __attribute__((bitwise))
-> +typedef uint16_t __bitwise fdt16_t;
-> +typedef uint32_t __bitwise fdt32_t;
-> +typedef uint64_t __bitwise fdt64_t;
-> +#else
-> +#define __force
-> +#define __bitwise
-> +typedef uint16_t fdt16_t;
-> +typedef uint32_t fdt32_t;
-> +typedef uint64_t fdt64_t;
-> +#endif
+Put the board description in DT, but please leave the SOC out and don't
+try to describe them with DT, that's too preliminary.
 
-Would this be simpler/better?
+Let's support more SOCs first, we cannot generalize on what we don't
+know.
 
-    #ifdef __CHECKER__
-    #define __force __attribute__((force))
-    #define __bitwise __attribute__((bitwise))
-    #else
-    #define __force
-    #define __bitwise
-    #endif
+> And nobody wants to do that. But - as Kevin already mentioned - it
+> would be nice if we get similar SoCs we already know about supported
+> with the same code; or at least , like BCM33xx, BCM68xx or maybe even
+> BCM7xxx (never looked at them, so I can't tell how viable that is).
 
-    typedef uint16_t __bitwise fdt16_t;
-    typedef uint32_t __bitwise fdt32_t;
-    typedef uint64_t __bitwise fdt64_t;
+DT is not the key here
 
+code reuse/refactoring is
 
+> These special clocks are so that the original behaviour of the clocks
+> is kept.  I'd rather argue that the reset code does not belong into
+> the clock code, and is actually the responsibility of the driver. It
+> would make the clock code much simpler.
 
->  #define EXTRACT_BYTE(n)	((unsigned long long)((uint8_t *)&x)[n])
-> -static inline uint16_t fdt16_to_cpu(uint16_t x)
-> -{
-> -	return (EXTRACT_BYTE(0) << 8) | EXTRACT_BYTE(1);
-> -}
-> -#define cpu_to_fdt16(x) fdt16_to_cpu(x)
-> +#define __SWAB16X ((EXTRACT_BYTE(0) << 8) | EXTRACT_BYTE(1))
-> +#define __SWAB32X ((EXTRACT_BYTE(0) << 24) | (EXTRACT_BYTE(1) << 16) | (EXTRACT_BYTE(2) <<
->  8) | EXTRACT_BYTE(3))
-> +#define __SWAB64X ((EXTRACT_BYTE(0) << 56) | (EXTRACT_BYTE(1) << 48) | (EXTRACT_BYTE(2) <<
->  40) | (EXTRACT_BYTE(3) << 32) \
-> +		  | (EXTRACT_BYTE(4) << 24) | (EXTRACT_BYTE(5) << 16) | (EXTRACT_BYTE(6) << 8
-> ) | EXTRACT_BYTE(7))
+and IMO would make the driver code uglier. You don't read clock code
+everyday, it's boring, you do read/change driver code much more often.
 
-I dislike function-like macros that grab global names.
-Instead, can we re-work 'x' in as a parameter:
+> What would you suggest? Please no "don't use Device Tree", as I don't
+> think we can avoid that. I'm struggling to find something you are fine
 
-    >  #define EXTRACT_BYTE(x, n)	((unsigned long long)((uint8_t *)&x)[n])
+As I said in my original email, I don't think bcm63xx codebase suffers
+from any problem similar to what caused Linus' rant about ARM few years
+ago.
 
+Did someone threaten to stop merging our patches if we don't use DT ?
 
-> +#define DEF_FDT_TO_CPU(bits) \
-> +static inline uint##bits##_t fdt##bits##_to_cpu(fdt##bits##_t x) \
-> +{ \
-> +	if (*__first_byte == 0x11) \
-> +		return (__force uint##bits##_t)x; \
-> +	else \
-> +		return (__force uint##bits##_t)__SWAB##bits##X; \
->  }
+> I wouldn't treat this as stable until we got it into a satisfactory
+> state with everything supported. Heck, I wouldn't even treat this as
+> stable until Broadcom ships it in their SDKs to customers with CFEs
+> providing DTBs to the kernel.
 
-Case check that last X...
+DT will succeed if chip designers start thinking the other way around:
+making new chip backward compatible with existing code or DT bindings.
+If that does not happen, we just moving C struct/arrays into another
+format with no added benefits.
 
-> -static inline uint64_t fdt64_to_cpu(uint64_t x)
-> -{
-> -	return (EXTRACT_BYTE(0) << 56) | (EXTRACT_BYTE(1) << 48) | (EXTRACT_BYTE(2) << 40) | 
-> (EXTRACT_BYTE(3) << 32)
-> -		| (EXTRACT_BYTE(4) << 24) | (EXTRACT_BYTE(5) << 16) | (EXTRACT_BYTE(6) << 8) 
-> | EXTRACT_BYTE(7);
-> +#define DEF_CPU_TO_FDT(bits) \
-> +static inline fdt##bits##_t cpu_to_fdt##bits(uint##bits##_t x) \
-> +{ \
-> +	if (*__first_byte == 0x11) \
-> +		return (__force fdt##bits##_t)x; \
-> +	else \
-> +		return (__force fdt##bits##_t)__SWAB##bits##X; \
->  }
+So we have to call it stable, otherwise there is no incentive to use
+them.
 
-...and that one.
+And I just hate stable interfaces (which developer doesn't ?), they
+require more maintenance/testing if you're serious about your work.
 
-Thanks,
-jdl
+-- 
+Maxime
