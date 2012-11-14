@@ -1,77 +1,106 @@
 From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH v3 2/2] Add documentation for tca6507 devicetree bindings.
-Date: Tue, 13 Nov 2012 17:05:12 -0800
-Message-ID: <CAK5ve-L=SBFEfoY8oKYYb-dFCWf=-Eb-qMFdWdiBO3wfaR3tDA@mail.gmail.com>
-References: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com> <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com>
+Subject: Re: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
+Date: Tue, 13 Nov 2012 17:14:20 -0800
+Message-ID: <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com>
+References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com> <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com>
+In-Reply-To: <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek.belisko@open-nandra.com>, Stephen Warren <swarren@nvidia.com>
-Cc: rpurdie@rpsys.net, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-It looks fine to me, but I need a DT maintainer's ack. Stephen, could
-you help on this. I will merge this patch via my tree.
+On Mon, Nov 12, 2012 at 6:41 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> Update the driver to use the new API for requesting pwm so we can take
+> advantage of the pwm_lookup table to find the correct pwm to be used for the
+> LED functionality.
+> If the devm_get_pwm fails we fall back to legacy mode to try to get the pwm.
+>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/leds/leds-pwm.c  | 19 ++++++-------------
+>  include/linux/leds_pwm.h |  2 +-
+>  2 files changed, 7 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+> index f2e44c7..c953c75 100644
+> --- a/drivers/leds/leds-pwm.c
+> +++ b/drivers/leds/leds-pwm.c
+> @@ -67,12 +67,11 @@ static int led_pwm_probe(struct platform_device *pdev)
+>                 cur_led = &pdata->leds[i];
+>                 led_dat = &leds_data[i];
+>
+> -               led_dat->pwm = pwm_request(cur_led->pwm_id,
+> -                               cur_led->name);
+> +               led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
+>                 if (IS_ERR(led_dat->pwm)) {
+>                         ret = PTR_ERR(led_dat->pwm);
+> -                       dev_err(&pdev->dev, "unable to request PWM %d\n",
+> -                                       cur_led->pwm_id);
+> +                       dev_err(&pdev->dev, "unable to request PWM for %s\n",
+> +                               cur_led->name);
+>                         goto err;
+>                 }
+>
+> @@ -86,10 +85,8 @@ static int led_pwm_probe(struct platform_device *pdev)
+>                 led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
+>
+>                 ret = led_classdev_register(&pdev->dev, &led_dat->cdev);
+> -               if (ret < 0) {
+> -                       pwm_free(led_dat->pwm);
+> +               if (ret < 0)
+>                         goto err;
+> -               }
+>         }
+>
+>         platform_set_drvdata(pdev, leds_data);
+> @@ -98,10 +95,8 @@ static int led_pwm_probe(struct platform_device *pdev)
+>
+>  err:
+>         if (i > 0) {
+> -               for (i = i - 1; i >= 0; i--) {
+> +               for (i = i - 1; i >= 0; i--)
+>                         led_classdev_unregister(&leds_data[i].cdev);
+> -                       pwm_free(leds_data[i].pwm);
+> -               }
+>         }
+>
+>         return ret;
+> @@ -115,10 +110,8 @@ static int __devexit led_pwm_remove(struct platform_device *pdev)
+>
+>         leds_data = platform_get_drvdata(pdev);
+>
+> -       for (i = 0; i < pdata->num_leds; i++) {
+> +       for (i = 0; i < pdata->num_leds; i++)
+>                 led_classdev_unregister(&leds_data[i].cdev);
+> -               pwm_free(leds_data[i].pwm);
+> -       }
+>
+>         return 0;
+>  }
+> diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+> index 33a0711..a65e964 100644
+> --- a/include/linux/leds_pwm.h
+> +++ b/include/linux/leds_pwm.h
+> @@ -7,7 +7,7 @@
+>  struct led_pwm {
+>         const char      *name;
+>         const char      *default_trigger;
+> -       unsigned        pwm_id;
+> +       unsigned        pwm_id __deprecated;
+
+I suggest we remove this later, we can provide patches from this from
+platform data of board file. And I think this patch is good for me to
+merge, will do it soon.
 
 Thanks,
 -Bryan
 
-On Mon, Nov 12, 2012 at 1:25 PM, Marek Belisko
-<marek.belisko@open-nandra.com> wrote:
-> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
-> ---
->  Documentation/devicetree/bindings/leds/tca6507.txt |   40 ++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/tca6507.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
-> new file mode 100644
-> index 0000000..a49eb0c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/tca6507.txt
-> @@ -0,0 +1,40 @@
-> +LEDs conected to tca6507
-> +
-> +Required properties:
-> +- compatible : should be : "ti,tca6507".
-> +
-> +Each led is represented as a sub-node of the ti,tca6507 device.
-> +
-> +LED sub-node properties:
-> +- label : label for this LED
-> +- reg : number of LED line (could be from 0 to 6)
-> +- linux,default-trigger :  (optional) This parameter, if present, is a
-> +  string defining the trigger assigned to the LED.  Current triggers are:
-> +    "backlight" - LED will act as a back-light, controlled by the framebuffer
-> +                 system
-> +    "default-on" - LED will turn on
-> +    "heartbeat" - LED "double" flashes at a load average based rate
-> +    "ide-disk" - LED indicates disk activity
-> +    "timer" - LED flashes at a fixed, configurable rate
-> +
-> +Examples:
-> +
-> +tca6507@45 {
-> +       compatible = "ti,tca6507";
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       reg = <0x45>;
-> +
-> +       led0: red_aux@0 {
-> +               label = "red:aux";
-> +               reg = <0x0>;
-> +       };
-> +
-> +       led1: green_aux@1 {
-> +               label = "green:aux";
-> +               reg = <0x5>;
-> +               linux,default-trigger = "default-on";
-> +       };
-> +
-> +};
-> +
+>         u8              active_low;
+>         unsigned        max_brightness;
+>         unsigned        pwm_period_ns;
 > --
-> 1.7.9.5
+> 1.8.0
 >
