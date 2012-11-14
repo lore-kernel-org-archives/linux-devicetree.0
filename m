@@ -1,15 +1,18 @@
-From: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] ARM: at91: atmel-ssc: add pinctrl support
-Date: Wed, 14 Nov 2012 14:30:08 +0800
-Message-ID: <50A33A70.1030705@atmel.com>
-References: <1352706028-750-1-git-send-email-voice.shen@atmel.com>
- <1352706028-750-2-git-send-email-voice.shen@atmel.com>
- <20121113085052.GR18224@opensource.wolfsonmicro.com>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 1/4] mfd: tps65217: Set PMIC to shutdowm on PWR_EN toggle
+Date: Wed, 14 Nov 2012 06:49:58 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA6B0AF@DBDE01.ent.ti.com>
+References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
+ <1352108549-9341-2-git-send-email-anilkumar@ti.com> <5097F078.50701@ti.com>
+ <20121114022341.GM4415@opensource.wolfsonmicro.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA6B043@DBDE01.ent.ti.com>
+ <20121114062117.GC7407@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121113085052.GR18224-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <20121114062117.GC7407-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,31 +24,25 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-sound-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Wed, Nov 14, 2012 at 11:51:19, Mark Brown wrote:
+> On Wed, Nov 14, 2012 at 06:11:45AM +0000, AnilKumar, Chimata wrote:
+> 
+> > From these two threads we can infer that this is handled in power_off
+> > sequence only. And this is feature of PMIC to go to shutdown mode nothing
+> > to be fixed in silicon. PWR_EN line can be connected to any of these like
+> > PRCM control or GPIO or some other instead of RTC(in this case).
+> 
+> OK, but why are you telling me this?  What are you looking for me to do
+> with this information?
+> 
 
-On 11/13/2012 16:50, Mark Brown wrote:
-> On Mon, Nov 12, 2012 at 03:40:25PM +0800, Bo Shen wrote:
->
->> +				ssc0 {
->> +					pinctrl_ssc0_tx: ssc0_tx-0 {
->> +						atmel,pins =
->> +							<1 16 0x1 0x1	/* PB16 periph A with pull up */
->> +							 1 17 0x1 0x1	/* PB17 periph A with pull up */
->> +							 1 18 0x1 0x1>;	/* PB18 periph A with pull up */
->> +					};
->
-> Do we really want the pull ups here?  Normally CMOS devices don't have
-> pulls, or the pulls are disabled during normal operation, as otherwise
-> when the logic level is different to whatever the pull is doing power is
-> wasted driving against the resistor.
+Mark,
 
-After checking with internal, it does not need pull up. I will correct 
-this in next version.
+Earlier you have a comment on this thread, I am adding my comments
+on top of it. Sorry if I am in wrong direction.
 
-Thanks.
-
-Best Regards,
-Bo Shen
+Thanks
+AnilKumar
