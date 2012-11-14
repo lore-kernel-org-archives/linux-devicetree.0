@@ -1,45 +1,22 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v9 5/6] drm_modes: add videomode helpers
-Date: Wed, 14 Nov 2012 15:18:06 +0100
-Message-ID: <20121114141806.GE18579@pengutronix.de>
-References: <1352893403-21168-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352893403-21168-6-git-send-email-s.trumtrar@pengutronix.de>
- <20121114124944.GF2803@avionic-0098.mockup.avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121114124944.GF2803@avionic-0098.mockup.avionic-design.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/5] Add /proc device tree updating to of node add/remove
+Date: Wed, 14 Nov 2012 14:38:27 +0000
+Message-ID: <20121114143827.19DB73E0AA8@localhost>
+References: <506B2E63.5090900@linux.vnet.ibm.com> <506BA905.4090000@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <506BA905.4090000@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nathan Fontenot <nfont@linux.vnet.ibm.com>, devicetree-discuss@lists.ozlabs.org, cbe-oss-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 01:49:44PM +0100, Thierry Reding wrote:
-> On Wed, Nov 14, 2012 at 12:43:22PM +0100, Steffen Trumtrar wrote:
-> [...]
-> > diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-> [...]
-> > @@ -504,6 +505,41 @@ drm_gtf_mode(struct drm_device *dev, int hdisplay, int vdisplay, int vrefresh,
-> >  }
-> >  EXPORT_SYMBOL(drm_gtf_mode);
-> >  
-> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> > +int display_mode_from_videomode(struct videomode *vm, struct drm_display_mode *dmode)
+On Tue, 02 Oct 2012 21:55:01 -0500, Nathan Fontenot <nfont@linux.vnet.ibm.com> wrote:
+> When adding or removing a device tree node we should also update
+> the device tree in /proc/device-tree. This action is already done in the
+> generic OF code for adding/removing properties of a node. This patch adds
+> this functionality for nodes.
 > 
-> Given that this is still a DRM core function, maybe it should get a drm_
-> prefix? Also the line is too long, so you may want to wrap the argument
-> list.
-> 
-> Thierry
+> Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com> 
 
-Yes, seems to fit better to the rest of the file.
+For the whole series:
 
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
