@@ -1,81 +1,49 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of/mdio: fix build errors when CONFIG_OF isn't set
-Date: Wed, 14 Nov 2012 16:11:35 +0000
-Message-ID: <20121114161135.71E153E0B1E@localhost>
-References: <1349886683-26351-1-git-send-email-sasha.levin@oracle.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1349886683-26351-1-git-send-email-sasha.levin@oracle.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com, srinivas.kandagatla@st.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sasha Levin <sasha.levin@oracle.com>
+From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 0/9] chipidea fixes and features
+Date: Wed, 14 Nov 2012 17:19:01 +0100
+Message-ID: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Oct 2012 12:31:23 -0400, Sasha Levin <sasha.levin@oracle.com> wrote:
-> Commit f9dc9ac5 ("of/mdio: Add dummy functions in of_mdio.h.") has added
-> empty stubs into of_mdio.h which were not static, this causes build errors
-> when these symbols were defined across several objects.
-> 
-> Fix it by marking those stubs as 'static inline'.
-> 
-> Signed-off-by: Sasha Levin <sasha.levin@oracle.com>
+Marc Kleine-Budde (2):
+  usb: chipidea: pci: mark platformdata as static and __devinitdata
+  usb: chipidea: ci13xxx-imx: add "dr_mode" property to device tree bindings
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Michael Grzeschik (7):
+  usb: chipidea: ci13xxx_imx: add 2nd and 3rd clock to support imx5x and newer
+  usb: chipidea: ci13xxx-imx: create dynamic platformdata
+  usb: add phy connection by phy-mode
+  usb: chipidea: add PTW and PTS handling
+  usb: chipidea: udc: add force-full-speed option
+  usb: chipidea: udc: remove unlocked ep_queue which can lead to an race
+  usb: chipidea: udc: configure iso endpoints
 
-Rob, can you please pick up into your merge branch for device tree?
-
-Thanks,
-g.
-
-> ---
->  include/linux/of_mdio.h | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-> index 6ef49b8..7f17b9c 100644
-> --- a/include/linux/of_mdio.h
-> +++ b/include/linux/of_mdio.h
-> @@ -26,17 +26,17 @@ extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->  extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
->  
->  #else /* CONFIG_OF */
-> -int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
-> +static inline int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
->  {
->  	return -ENOSYS;
->  }
->  
-> -struct phy_device *of_phy_find_device(struct device_node *phy_np)
-> +static inline struct phy_device *of_phy_find_device(struct device_node *phy_np)
->  {
->  	return NULL;
->  }
->  
-> -struct phy_device *of_phy_connect(struct net_device *dev,
-> +static inline struct phy_device *of_phy_connect(struct net_device *dev,
->  					 struct device_node *phy_np,
->  					 void (*hndlr)(struct net_device *),
->  					 u32 flags, phy_interface_t iface)
-> @@ -44,14 +44,14 @@ struct phy_device *of_phy_connect(struct net_device *dev,
->  	return NULL;
->  }
->  
-> -struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
-> +static inline struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
->  					 void (*hndlr)(struct net_device *),
->  					 phy_interface_t iface)
->  {
->  	return NULL;
->  }
->  
-> -struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
-> +static inline struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np)
->  {
->  	return NULL;
->  }
-> -- 
-> 1.7.12
-> 
+ .../devicetree/bindings/usb/ci13xxx-imx.txt        |    4 +
+ arch/arm/boot/dts/imx28.dtsi                       |    2 +
+ drivers/of/Kconfig                                 |    4 +
+ drivers/of/Makefile                                |    1 +
+ drivers/of/of_usbphy.c                             |   49 ++++++++
+ drivers/usb/chipidea/bits.h                        |    4 +
+ drivers/usb/chipidea/ci.h                          |    2 +
+ drivers/usb/chipidea/ci13xxx_imx.c                 |   84 ++++++++++---
+ drivers/usb/chipidea/ci13xxx_pci.c                 |    6 +-
+ drivers/usb/chipidea/core.c                        |   91 +++++++++++++-
+ drivers/usb/chipidea/host.c                        |    4 +
+ drivers/usb/chipidea/udc.c                         |  127 ++++++++++++--------
+ include/linux/of_usbphy.h                          |   15 +++
+ include/linux/usb/chipidea.h                       |   17 +++
+ include/linux/usb/phy.h                            |    8 ++
+ 15 files changed, 337 insertions(+), 81 deletions(-)
+ create mode 100644 drivers/of/of_usbphy.c
+ create mode 100644 include/linux/of_usbphy.h
 
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
