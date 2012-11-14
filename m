@@ -1,76 +1,37 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v5 4/4] misc: sram: add support for configurable allocation order
-Date: Wed, 14 Nov 2012 19:15:51 +0000
-Message-ID: <20121114191551.5E8673E0B7C@localhost>
-References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de> <1350570453-24546-5-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1350570453-24546-5-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH V6 1/2] kbuild: centralize .dts->.dtb rule
+Date: Wed, 14 Nov 2012 19:20:52 +0000
+Message-ID: <20121114192052.4A3EA3E0B7C@localhost>
+References: <1352753907-3316-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1352753907-3316-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Oct 2012 16:27:33 +0200, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> From: Matt Porter <mporter@ti.com>
+On Mon, 12 Nov 2012 13:58:26 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> From: Stephen Warren <swarren@nvidia.com>
 > 
-> Adds support for setting the genalloc pool's minimum allocation
-> order via DT or platform data. The allocation order is optional
-> for both the DT property and platform data case. If it is not
-> present then the order defaults to PAGE_SHIFT to preserve the
-> current behavior.
+> All architectures that use cmd_dtc do so in the same way. Move the build
+> rule to a central location to avoid duplication.
 > 
-> Signed-off-by: Matt Porter <mporter@ti.com>
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Update Documentation/kbuild to remove the explicit call to cmd_dtc from
+> the example, now that the rule exists in a centralized location, and in
+> fact replace the example with a couple that still exist.
+> 
+> arch/mips changes courtesy of Ralf Baechle.
+> 
+> Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  Documentation/devicetree/bindings/misc/sram.txt |   12 ++++++++++-
->  drivers/misc/sram.c                             |   14 ++++++++++++-
->  include/linux/platform_data/sram.h              |   25 +++++++++++++++++++++++
->  3 files changed, 49 insertions(+), 2 deletions(-)
->  create mode 100644 include/linux/platform_data/sram.h
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
-> index b64136c..b1705ec 100644
-> --- a/Documentation/devicetree/bindings/misc/sram.txt
-> +++ b/Documentation/devicetree/bindings/misc/sram.txt
-> @@ -8,10 +8,20 @@ Required properties:
->  
->  - reg : SRAM iomem address range
->  
-> -Example:
-> +Optional properties:
-> +
-> +- alloc-order : Minimum allocation order for the SRAM pool
+> v6: Added arch/{arm64,microblaze,mips} updates.
+> v5: Updated Documentation/kbuild.
+> v4: No change.
+> v3: No change.
+> v2: New patch.
 
-Looks okay, but I think the property name is confusing. I for one had
-no idea what 'order' would be and why it was important. I had to read
-the code to figure it out.
-
-It does raise the question though of what is this binding actually
-for? Does it reflect a limitation of the SRAM? or of the hardware using
-the SRAM? Or is it an optimization? How do you expect to use it?
-
-Assuming it is appropriate to put into the device tree, I'd suggest a
-different name. Instead of 'order', how about 'sram-alloc-align' (in
-address bits) or 'sram-alloc-min-size' (in bytes).
-
-> @@ -60,7 +62,17 @@ static int __devinit sram_probe(struct platform_device *pdev)
->  	if (!IS_ERR(sram->clk))
->  		clk_prepare_enable(sram->clk);
->  
-> -	sram->pool = gen_pool_create(PAGE_SHIFT, -1);
-> +	if (pdev->dev.of_node)
-> +		of_property_read_u32(pdev->dev.of_node,
-> +				     "alloc-order", &alloc_order);
-> +	else
-> +		if (pdev->dev.platform_data) {
-> +			struct sram_pdata *pdata = pdev->dev.platform_data;
-> +			if (pdata->alloc_order)
-> +				alloc_order = pdata->alloc_order;
-> +		}
-> +
-> +	sram->pool = gen_pool_create(alloc_order, -1);
-
-Do you already have a user for the platform_data use case? If not then
-I'd drop it entirely and skip adding the new header file.
+Merged, thanks.
 
 g.
