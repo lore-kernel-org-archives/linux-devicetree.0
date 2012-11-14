@@ -1,58 +1,113 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V6 2/2] kbuild: run the pre-processor on *.dts files
-Date: Wed, 14 Nov 2012 13:18:24 -0700
-Message-ID: <50A3FC90.7030105@wwwdotorg.org>
-References: <1352753907-3316-1-git-send-email-swarren@wwwdotorg.org> <1352753907-3316-2-git-send-email-swarren@wwwdotorg.org> <20121114192548.59F093E0B7C@localhost>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next
+ generation) board.
+Date: Wed, 14 Nov 2012 21:26:58 +0100
+Message-ID: <CAAfyv34D4bTO=k8niM42CDQFb0tP4uOnvX_KPT3+F6z59jPg3Q@mail.gmail.com>
+References: <1351633367-19082-1-git-send-email-marek.belisko@open-nandra.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20121114192548.59F093E0B7C@localhost>
-Sender: linux-arch-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1351633367-19082-1-git-send-email-marek.belisko@open-nandra.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/14/2012 12:25 PM, Grant Likely wrote:
-> On Mon, 12 Nov 2012 13:58:27 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> From: Stephen Warren <swarren@nvidia.com>
->>
->> Modify cmd_dtc to run the C pre-processor on the input .dts file before
->> passing it to dtc for final compilation. This allows the use of #define
->> and #include within the .dts file.
+CC' Grant & Rob
 
-> Ugh, I'm definitely nervous about turning this on because of the long
-> term implications so I'm going to punt on actually making a decision
-> about it for the momemnt. However, I do have a question...
+On Tue, Oct 30, 2012 at 10:42 PM, Marek Belisko
+<marek.belisko@open-nandra.com> wrote:
+> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+> ---
+>  arch/arm/boot/dts/omap3-gta04.dts |   65 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
+>
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
+> new file mode 100644
+> index 0000000..76efd13
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap3-gta04.dts
+> @@ -0,0 +1,65 @@
+> +/*
+> + * Copyright (C) 2012 Marek Belisko <marek.belisko@open-nandra.com>
+> + *
+> + * Based on omap3-beagle-xm.dts
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +/include/ "omap3.dtsi"
+> +
+> +/ {
+> +       model = "OMAP3 GTA04";
+> +       compatible = "ti,omap3-gta04", "ti,omap3";
+> +
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x80000000 0x20000000>; /* 512 MB */
+> +       };
+> +
+> +       gpio-keys {
+> +               compatible = "gpio-keys";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               aux-button {
+> +                       label = "AUX";
+> +                       linux,code = <169>;
+> +                       gpios = <&gpio1 7 1>;
+> +                       gpio-key,wakeup;
+> +               };
+> +       };
+> +};
+> +
+> +&i2c1 {
+> +       clock-frequency = <2600000>;
+> +
+> +       twl: twl@48 {
+> +               reg = <0x48>;
+> +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> +               interrupt-parent = <&intc>;
+> +       };
+> +};
+> +
+> +/include/ "twl4030.dtsi"
+> +
+> +&i2c2 {
+> +       clock-frequency = <400000>;
+> +       /* Pressure Sensor */
+> +       bmp085@77 {
+> +               compatible = "bosch,bmp085";
+> +               reg = <0x77>;
+> +       };
+> +};
+> +
+> +&i2c3 {
+> +       clock-frequency = <100000>;
+> +};
+> +
+> +&mmc1 {
+> +       vmmc-supply = <&vmmc1>;
+> +       bus-width = <4>;
+> +};
+> +
+> --
+> 1.7.9.5
+>
 
-Hmmm. So how do we get to a decision on this then?
 
->> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
->> index 425578e..33432f4 100644
->> --- a/scripts/Makefile.lib
->> +++ b/scripts/Makefile.lib
->> @@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
->>  $(obj)/%.dtb: $(src)/dts/%.dts FORCE
->>  	$(call if_changed_dep,dtc)
->>  
->> +dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
->> +
->> +quiet_cmd_dtc_cpp = DTC+CPP $@
->> +cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
->> +	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
->> +
->> +$(obj)/%.dtb: $(src)/dts/%.dtsp FORCE
->> +	$(call if_changed_dep,dtc_cpp)
-> 
-> Why this instead of a "%.dts: %.dtsp" rule? Then the exact same dtc rule
-> gets used in both cases.
-> 
-> The .dtb rule is probably already rather oddball in that it puts the
-> output one directory below the input. That probably should be cleaned
-> up.
 
-I was a little nervous about potentially having some *.dts be primary
-source files, and others be derived from *.dtsp (assuming that we
-convert platforms to this new feature as desired, rather than en-mass).
-It seems like it'd just cause confusion; people might just end up
-accidentally editing a *.dts that was generated without realizing it.
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
