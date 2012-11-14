@@ -1,77 +1,101 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v8 1/6] video: add display_timing and videomode
-Date: Wed, 14 Nov 2012 12:02:15 +0100
-Message-ID: <20121114110215.GA31999@avionic-0098.mockup.avionic-design.de>
-References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352734626-27412-2-git-send-email-s.trumtrar@pengutronix.de>
- <20121114105634.GA31801@avionic-0098.mockup.avionic-design.de>
- <20121114105925.GA18579@pengutronix.de>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH v8] can: grcan: Add device driver for GRCAN and GRHCAN
+ cores
+Date: Wed, 14 Nov 2012 12:02:51 +0100
+Message-ID: <50A37A5B.8060808@gaisler.com>
+References: <509C47CB.8060701@pengutronix.de> <1352732256-12712-1-git-send-email-andreas@gaisler.com> <50A2B88A.3040609@pengutronix.de> <50A34D49.2070908@gaisler.com> <50A359A1.30700@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121114105925.GA18579@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <50A359A1.30700@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-can@vger.kernel.org, software@gaisler.com, Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On 2012-11-14 09:43, Marc Kleine-Budde wrote:
+> Handle incoming events (rx or tx-complete) until:
+> a) number of handled events == budget
+> or
+> b) no more events pending.
+>
+> 	while (work_done < budget && interrupts_pending()) {
+> 		work_done += handle_rx(budget - work_done);
+> 		work_done += handle_tx(budget - work_done);
+> 	}
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That could starve handle_tx completely though under high rx pressure, but I can 
+prevent that by making sure that half of the budget is held back in the first 
+call to handle_rx.
 
-On Wed, Nov 14, 2012 at 11:59:25AM +0100, Steffen Trumtrar wrote:
-> On Wed, Nov 14, 2012 at 11:56:34AM +0100, Thierry Reding wrote:
-> > On Mon, Nov 12, 2012 at 04:37:01PM +0100, Steffen Trumtrar wrote:
-> > [...]
-> > > diff --git a/drivers/video/display_timing.c b/drivers/video/display_t=
-iming.c
-> > [...]
-> > > +void display_timings_release(struct display_timings *disp)
-> > > +{
-> > > +	if (disp->timings) {
-> > > +		unsigned int i;
-> > > +
-> > > +		for (i =3D 0; i < disp->num_timings; i++)
-> > > +			kfree(disp->timings[i]);
-> > > +		kfree(disp->timings);
-> > > +	}
-> > > +	kfree(disp);
-> > > +}
-> >=20
-> > I think this is still missing an EXPORT_SYMBOL_GPL. Otherwise it can't
-> > be used from modules.
-> >=20
-> > Thierry
->=20
-> Yes. Just in time. I was just starting to type the send-email command ;-)
+> Then, if you have handled less events then budget:
+> 1) call napi_complete()
+> then
+> 2) enable interrupts.
+>
+> 	if (work_done < budget) {
+> 		napi_complete();
+> 		enable_interrupts();
+> 	}
+>
+> Then, return number of handled events:
+>
+> 	return work_done;
 
-Great! In that case don't forget to also look at my other email before
-sending. =3D)
+Any additional remarks on the following implementation of the poll function?
 
-Thierry
+static int grcan_poll(struct napi_struct *napi, int budget)
+{
+	struct grcan_priv *priv = container_of(napi, struct grcan_priv, napi);
+	struct net_device *dev = priv->dev;
+	struct grcan_registers __iomem *regs = priv->regs;
+	unsigned long flags;
+	int work_done = 0;
+	int reserved = budget / 2;
 
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature
+	while (work_done < budget) {
+		int old_work_done = work_done;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+		/* Prevent grcan_transmit_catch_up from starving by reserving
+		 * part of the budget in the first iteration when calling
+		 * grcan_receive.
+		 */
+		work_done += grcan_receive(dev, budget - reserved - work_done);
+		reserved = 0;
 
-iQIcBAEBAgAGBQJQo3o3AAoJEN0jrNd/PrOhIJAP/R7ENnmVEzib3ttW7KSKEKpa
-B0T6hLtiIWmOMiZIAHpXbbG91DV2HyMtI0zk2E67dq3FBJfDRm7AuyD3DKZTg1Qu
-H8hL+c1f4z0MTKhfuVutnKSKU/J/SE1sbAqy+R6intPaatyEhhVjEunn8kYCgwrQ
-iw17Uaq6ibTeV4Uv8JkmMc6g6eqXj2VCRhKyRzcVO/bcGUKSGnVPZj2+HKSwBjbJ
-vPaigJlFohIhD9OtQdkKVAae5ZvTuXgHQeHSy5rLf3UG4q6a5cdPeRBEWRZwW7WW
-JZCA41PbzHg7lHEsfKQ5RrN+LOqmadRXll3RvUyiusdlzBur9duxrtmoDDGkbs2z
-rl5fHS95xAmgQNnpthpCKTkZXE2eoYM1HzBNkQo+7OAWon1mBII8XJ0wejSY7ACN
-/ikHmKd9SWDt5FWgISGJoE7yRofI/ZYei/PBd3yZ9++9tUrOpm4yptJ5DgqevE1m
-Rh3vSN/rGDM0BH3X2vPyPW11AJBjVI9s9nncIzgL2nbCQYF1YQJ1aBLvu2qjlxpZ
-z8nNjzxKGRv3yt1vDyG9fm14/H3hAeObnFGZsUd04ji/IqgUBy5O/iI6JCWOkagE
-wLeLd5Wup6pQ10e9oM/VVAag5pa57FHyfw7SAY/Qnvvy/cydClX1Qd45+oNnwxDV
-WvHW50R5FiVjhNVnub0t
-=GVco
------END PGP SIGNATURE-----
+		/* Catch up echo skb according to same budget, as
+		 * grcan_transmit_catch_up can trigger echo frames being
+		 * received.
+		 */
+		work_done += grcan_transmit_catch_up(dev, budget - work_done);
 
---ZPt4rx8FFjLCG7dd--
+		/* Break out if nothing was done */
+		if (work_done == old_work_done)
+			break;
+	}
+
+	if (work_done < budget) {
+		napi_complete(napi);
+
+		/* Guarantee no interference with a running reset that otherwise
+		 * could turn off interrupts.
+		 */
+		spin_lock_irqsave(&priv->lock, flags);
+
+		/* Enable tx and rx interrupts again. No need to check
+		 * priv->closing as napi_disable in grcan_close is waiting for
+		 * scheduled napi calls to finish.
+		 */
+		grcan_set_bits(&regs->imr, GRCAN_IRQ_TX | GRCAN_IRQ_RX);
+
+		spin_unlock_irqrestore(&priv->lock, flags);
+	}
+
+	return work_done;
+}
+
+
+Cheers,
+Andreas
+
