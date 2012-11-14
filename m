@@ -1,91 +1,55 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] MIPS: BCM63XX: enable serial through Device Tree
-Date: Wed, 14 Nov 2012 13:17:17 +0100
-Message-ID: <CAOiHx=kO2pY7N98mokYucFWU0E8VOns-CLgwyP+J9JgGO4=3LA@mail.gmail.com>
-References: <1352638249-29298-1-git-send-email-jonas.gorski@gmail.com>
- <1352638249-29298-16-git-send-email-jonas.gorski@gmail.com>
- <50A1D6ED.50001@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v9 4/6] fbmon: add of_videomode helpers
+Date: Wed, 14 Nov 2012 13:47:02 +0100
+Message-ID: <20121114124702.GE2803@avionic-0098.mockup.avionic-design.de>
+References: <1352893403-21168-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352893403-21168-5-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5693148214925239167=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50A1D6ED.50001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Maxime Bizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EXKGNeO8l0xGFBjy"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1352893403-21168-5-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
---===============5693148214925239167==
-Content-Type: multipart/alternative; boundary=e89a8fb1f7542998e804ce7385a7
 
---e89a8fb1f7542998e804ce7385a7
-Content-Type: text/plain; charset=UTF-8
-
-On Nov 13, 2012 6:13 AM, "Stephen Warren" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->
-> On 11/11/2012 05:50 AM, Jonas Gorski wrote:
-> > Enable serial through Device Tree board files instead of legacy
-> > board files.
->
-> > diff --git a/arch/mips/bcm63xx/dts/96328avng.dts
-b/arch/mips/bcm63xx/dts/96328avng.dts
->
-> >       ubus@10000000 {
-> >
-> > +             serial@100 {
->
-> Very minor nit: Why the blank line there?
-I can't remember why. I'll remove it if, I'm not particularly attached to
-it.
-
-
-Jonas
-
---e89a8fb1f7542998e804ce7385a7
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<p>On Nov 13, 2012 6:13 AM, &quot;Stephen Warren&quot; &lt;<a href=3D"mailt=
-o:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" target=3D"_blank">swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org</a>&gt; wr=
-ote:<br>
-&gt;<br>
-&gt; On 11/11/2012 05:50 AM, Jonas Gorski wrote:<br>
-&gt; &gt; Enable serial through Device Tree board files instead of legacy<b=
-r>
-&gt; &gt; board files.<br>
-&gt;<br>
-&gt; &gt; diff --git a/arch/mips/bcm63xx/dts/96328avng.dts b/arch/mips/bcm6=
-3xx/dts/96328avng.dts<br>
-&gt;<br>
-&gt; &gt; =C2=A0 =C2=A0 =C2=A0 ubus@10000000 {<br>
-&gt; &gt;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 serial@100 {<br>
-&gt;<br>
-&gt; Very minor nit: Why the blank line there?</p>
-<div>I can&#39;t remember why. I&#39;ll remove it if, I&#39;m not particula=
-rly attached to it.</div>
-<div><br></div><div><br></div><div>Jonas<br></div><p>
-</p>
-
---e89a8fb1f7542998e804ce7385a7--
-
---===============5693148214925239167==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+--EXKGNeO8l0xGFBjy
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+On Wed, Nov 14, 2012 at 12:43:21PM +0100, Steffen Trumtrar wrote:
+[...]
+> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+[...]
+> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+> +static void dump_fb_videomode(struct fb_videomode *m)
 
---===============5693148214925239167==--
+static inline?
+
+Thierry
+
+--EXKGNeO8l0xGFBjy
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQo5LGAAoJEN0jrNd/PrOhMQYQALg1ricKCtsjM8cTxoWnYhgc
+deYFU0F1Pq06jd+miWAezoKygHzzx311ITB14zDI4OFLyGmyRxxvvWWz4UANYyGg
+Ly/SsYxn8gOVmxaMPatLLffsaAy/K2vkRxqTTltCtIpI0wtV9UryHZ6Yl+G4UcKX
+U+m/Ofu+1+mQTPItyYAftDOaWjDR1fGXicaDdVviSxZ64SBZcpKvu89YsTuSkGOS
+YkfD4B8CsOgyKrp4lMOBBr0ccPyIJ4kOKaCDf+w0+VRqxN7tvZok+yjSMu0ogdS3
+rsoAyxmTYrZY0xsKe7t9A/l2zwpHnYF77mDApubXRo4DrPUYAbe3DsivtSGNLtVe
+OnOIWTbL2iu5xs4gPxtokjN4NRCse87rgcAT5IuhngymRvbmF1OsbAlx1Mqazsoy
+6Uq9tvPS1rPTe3m+bOoUBKXyv2P0eLdG86+6Vc0ZcVO+vFk9N1eiU6Zg8KBe8iya
+bp/DH4LXOfVw8fbBBcPXbdCGPe2IURF95Sot7RlZkjOROddfccz3oQitFFWqyzvb
+2UMJY2drPpDwwXr/TOpDI881TONFcioA27M7zbuX12bx4NsJnQlERSqd4VUmpgJ4
+MVcjzGikWAqPXGKF/G+MgBV8XXootmRUDUNXstrHs4xX+6KK4Pu58jrNx8HcVv3M
+XP1sJE4M2z2pPkSHErSS
+=z14w
+-----END PGP SIGNATURE-----
+
+--EXKGNeO8l0xGFBjy--
