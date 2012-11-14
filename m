@@ -1,123 +1,65 @@
-From: Praveen Paneri <p.paneri@samsung.com>
-Subject: [PATCH v8 3/3] ARM: EXYNOS: Enabling samsung-usbphy driver for
- EXYNOS4210
-Date: Wed, 14 Nov 2012 16:15:38 +0530
-Message-ID: <1352889938-17311-4-git-send-email-p.paneri@samsung.com>
-References: <1352889938-17311-1-git-send-email-p.paneri@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1352889938-17311-1-git-send-email-p.paneri@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, t.figa@samsung.com, gautam.vivek@samsung.com
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v8 1/6] video: add display_timing and videomode
+Date: Wed, 14 Nov 2012 11:56:34 +0100
+Message-ID: <20121114105634.GA31801@avionic-0098.mockup.avionic-design.de>
+References: <1352734626-27412-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352734626-27412-2-git-send-email-s.trumtrar@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1352734626-27412-2-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Adding usbphy node for Exynos4210 along with the platform data.
 
-Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
----
- arch/arm/boot/dts/exynos4210-smdkv310.dts |    5 +++++
- arch/arm/mach-exynos/Kconfig              |    1 +
- arch/arm/mach-exynos/include/mach/map.h   |    1 +
- arch/arm/mach-exynos/mach-exynos4-dt.c    |    8 ++++++++
- arch/arm/mach-exynos/setup-usb-phy.c      |   13 +++++++++++++
- 5 files changed, 28 insertions(+), 0 deletions(-)
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 9b23a82..550903a 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -59,6 +59,11 @@
- 		status = "okay";
- 	};
- 
-+	usbphy@125B0000 {
-+		compatible = "samsung,exynos4210-usbphy";
-+		reg = <0x125B0000 0x100>;
-+	};
-+
- 	keypad@100A0000 {
- 		samsung,keypad-num-rows = <2>;
- 		samsung,keypad-num-columns = <8>;
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index bb3b09a..315308c 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -410,6 +410,7 @@ config MACH_EXYNOS4_DT
- 	select PINCTRL
- 	select PINCTRL_EXYNOS4
- 	select USE_OF
-+	select EXYNOS4_SETUP_USB_PHY
- 	help
- 	  Machine support for Samsung Exynos4 machine with device tree enabled.
- 	  Select this if a fdt blob is available for the Exynos4 SoC based board.
-diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
-index ef4958b..e64fe1c 100644
---- a/arch/arm/mach-exynos/include/mach/map.h
-+++ b/arch/arm/mach-exynos/include/mach/map.h
-@@ -244,6 +244,7 @@
- #define S3C_PA_SPI1			EXYNOS4_PA_SPI1
- #define S3C_PA_SPI2			EXYNOS4_PA_SPI2
- #define S3C_PA_USB_HSOTG		EXYNOS4_PA_HSOTG
-+#define S3C_PA_USB_PHY			EXYNOS4_PA_HSPHY
- 
- #define S5P_PA_EHCI			EXYNOS4_PA_EHCI
- #define S5P_PA_FIMC0			EXYNOS4_PA_FIMC0
-diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
-index 8858068..f7887e5 100644
---- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-@@ -13,6 +13,7 @@
- 
- #include <linux/of_platform.h>
- #include <linux/serial_core.h>
-+#include <linux/platform_data/samsung-usbphy.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/hardware/gic.h>
-@@ -20,9 +21,14 @@
- 
- #include <plat/cpu.h>
- #include <plat/regs-serial.h>
-+#include <plat/usb-phy.h>
- 
- #include "common.h"
- 
-+static struct samsung_usbphy_data exynos4_usbphy_pdata = {
-+	.pmu_isolation = s5p_usb_phy_pmu_isolation,
-+};
-+
- /*
-  * The following lookup table is used to override device names when devices
-  * are registered from device tree. This is temporarily added to enable
-@@ -79,6 +85,8 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_PDMA1, "dma-pl330.1", NULL),
- 	OF_DEV_AUXDATA("samsung,exynos4210-tmu", EXYNOS4_PA_TMU,
- 				"exynos-tmu", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4210-usbphy", EXYNOS4_PA_HSPHY,
-+			"s3c-usbphy", &exynos4_usbphy_pdata),
- 	{},
- };
- 
-diff --git a/arch/arm/mach-exynos/setup-usb-phy.c b/arch/arm/mach-exynos/setup-usb-phy.c
-index b81cc56..1c62d20 100644
---- a/arch/arm/mach-exynos/setup-usb-phy.c
-+++ b/arch/arm/mach-exynos/setup-usb-phy.c
-@@ -221,3 +221,16 @@ int s5p_usb_phy_exit(struct platform_device *pdev, int type)
- 
- 	return -EINVAL;
- }
-+
-+void s5p_usb_phy_pmu_isolation(int on)
-+{
-+	if (on) {
-+		writel(readl(S5P_USBDEVICE_PHY_CONTROL)
-+			& ~S5P_USBDEVICE_PHY_ENABLE,
-+				S5P_USBDEVICE_PHY_CONTROL);
-+	} else {
-+		writel(readl(S5P_USBDEVICE_PHY_CONTROL)
-+			| S5P_USBDEVICE_PHY_ENABLE,
-+				S5P_USBDEVICE_PHY_CONTROL);
-+	}
-+}
--- 
-1.7.1
+On Mon, Nov 12, 2012 at 04:37:01PM +0100, Steffen Trumtrar wrote:
+[...]
+> diff --git a/drivers/video/display_timing.c b/drivers/video/display_timing.c
+[...]
+> +void display_timings_release(struct display_timings *disp)
+> +{
+> +	if (disp->timings) {
+> +		unsigned int i;
+> +
+> +		for (i = 0; i < disp->num_timings; i++)
+> +			kfree(disp->timings[i]);
+> +		kfree(disp->timings);
+> +	}
+> +	kfree(disp);
+> +}
+
+I think this is still missing an EXPORT_SYMBOL_GPL. Otherwise it can't
+be used from modules.
+
+Thierry
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQo3jiAAoJEN0jrNd/PrOh95kQAIn0EHH7Wu1eAXFCwc8RGpjw
+TW01XmpxWIPUTyWS4K/K+HsE+0SLe8lJlTuESo/QReCvvo1AtSysTkSINT3fQ4tR
+6Vq5cZ4KAKBMjCmi+rFcSZUdP/vfZDxQU4ZFzUzWzjSnU/ljbHzhkk7OnWKtezeL
+vP8y9ay45G4kPbyq/7RmfzAktVqZapW85s1HRaA47sB03HpQ71QWVdvPi6LJCQNy
+P+QhHlvyiw0qSeTMqwYciD74OY1yz3AlmG6oVC/Et3M225NyzL33YpAwzXL1xsXw
+ds8qbfBzoRgEWwD8Mb/9bd+A6RPLnriWCZ3OJACwXrSc1tCbxdxdHWYpsuSo/LNO
+Wvtmykn26yhhLO1g+pOTaFXBetiOq2iY3n4DCG0OvjYgIbrLs2e6lIDuLQO+56SV
+8WjZXz/yCspz/zHrqFZIibhZCt8k3ojeVo2x/a7v2kyFq4KLNLUSrl9zaXxHs2Xf
+od82kefModuc+BRjRlK8Dy9gO3xEOWtGKa/EE598fzkupEKPsVJcSOKb8yL+6vz6
+wlvnYv5mnip9rlhLzm68XpRTkfwM9Bi2hl/fpq0P6s1rQ5c5+Lb0xhX2lKO5Fw0R
+Gxz8RuJ0KvHgs0cUeeFOcMj2Zg1WVOeFvDnvYw8bK5nXydMI7dt4tqoL4RbP8f88
+EyamFvUFjnpgXmx2QlTV
+=GZec
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
