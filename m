@@ -1,36 +1,56 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of/mdio: fix build errors when CONFIG_OF isn't set
-Date: Wed, 14 Nov 2012 17:22:03 +0000
-Message-ID: <CACxGe6sHhE2aLgzrRdwhWvmpp0KXtjVQrHxBJwUJvLeje8cK9g@mail.gmail.com>
-References: <1349886683-26351-1-git-send-email-sasha.levin@oracle.com>
- <20121114161135.71E153E0B1E@localhost> <50A3D09E.4030609@gmail.com>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH 3/3] ARM: dts: AM33XX: Add memory resource to d_can node
+Date: Wed, 14 Nov 2012 23:38:25 +0530
+Message-ID: <1352916505-12343-4-git-send-email-anilkumar@ti.com>
+References: <1352916505-12343-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50A3D09E.4030609@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sasha Levin <sasha.levin@oracle.com>, rob.herring@calxeda.com, srinivas.kandagatla@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1352916505-12343-1-git-send-email-anilkumar@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: wg@grandegger.com, mkl@pengutronix.de
+Cc: swarren@wwwdotorg.org, linux-can@vger.kernel.org, tony@atomide.com, b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 5:10 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On 11/14/2012 10:11 AM, Grant Likely wrote:
->> On Wed, 10 Oct 2012 12:31:23 -0400, Sasha Levin <sasha.levin@oracle.com> wrote:
->>> Commit f9dc9ac5 ("of/mdio: Add dummy functions in of_mdio.h.") has added
->>> empty stubs into of_mdio.h which were not static, this causes build errors
->>> when these symbols were defined across several objects.
->>>
->>> Fix it by marking those stubs as 'static inline'.
->>>
->>> Signed-off-by: Sasha Levin <sasha.levin@oracle.com>
->>
->> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->>
->> Rob, can you please pick up into your merge branch for device tree?
->>
->
-> This is already fixed:
+Add a new address space/memory resource to d_can device tree node. D_CAN
+RAM initialization is achieved through RAMINIT register which is part of
+AM33XX control module address space. D_CAN RAM init or de-init should be
+done by writing instance corresponding value to control module register.
 
-Even better! :-)
+Till we have a separate control module driver to write to control module,
+d_can driver will handle the register writes to control module by itself.
+So a new address space to represent this control module register is added
+to d_can driver.
 
-g.
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+---
+ arch/arm/boot/dts/am33xx.dtsi |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index c92c35f..ea011d6 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -227,7 +227,8 @@
+ 		dcan0: d_can@481cc000 {
+ 			compatible = "bosch,d_can";
+ 			ti,hwmods = "d_can0";
+-			reg = <0x481cc000 0x2000>;
++			reg = <0x481cc000 0x2000
++				0x44e10644 0x4>;
+ 			interrupts = <52>;
+ 			status = "disabled";
+ 		};
+@@ -235,7 +236,8 @@
+ 		dcan1: d_can@481d0000 {
+ 			compatible = "bosch,d_can";
+ 			ti,hwmods = "d_can1";
+-			reg = <0x481d0000 0x2000>;
++			reg = <0x481d0000 0x2000
++				0x44e10644 0x4>;
+ 			interrupts = <55>;
+ 			status = "disabled";
+ 		};
+-- 
+1.7.9.5
+
