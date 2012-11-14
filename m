@@ -1,141 +1,116 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC PATCH 3.7.0-rc2] dt: match id-table before creating platform device
-Date: Wed, 14 Nov 2012 22:20:28 +0000
-Message-ID: <20121114222029.0DA643E0E2B@localhost>
-References: <1350988259-22767-1-git-send-email-srinivas.kandagatla@st.com> <5086988F.6090107@gmail.com> <508A37E6.8000401@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <508A37E6.8000401@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com, Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH V3 0/5] SMP support for Armada XP
+Date: Wed, 14 Nov 2012 23:20:32 +0100
+Message-ID: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.c>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Oct 2012 08:12:38 +0100, Srinivas KANDAGATLA <srinivas.kandagatla@st.com> wrote:
-> On 23/10/12 14:15, Rob Herring wrote:
-> re-sending my reply again, as it did not appear in my inbox from dt
-> mailing list.
-> > Adding lkml. DT patches should go to both lists.
-> >
-> > On 10/23/2012 05:30 AM, Srinivas KANDAGATLA wrote:
-> >> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> >>
-> >> As part of of_platform_populate call, the existing code iterates each
-> >> child node and then creates a platform device for each child, however
-> >> there is bug in the code which does not check the match table before
-> >> creating the platform device. This might result creating two platfrom
-> >> devices and also invoking driver probe twice, which is incorrect.
-> >>
-> >> This patch moves a existing of_match_node check to start of the function
-> >> to fix the bug, doing this way will return immediately without creating
-> >> any datastructures if the child does not match the supplied match-table.
-> >>
-> >> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> >> ---
-> >>  drivers/of/platform.c |    5 ++++-
-> >>  1 files changed, 4 insertions(+), 1 deletions(-)
-> >>
-> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >> index b80891b..1aaa560 100644
-> >> --- a/drivers/of/platform.c
-> >> +++ b/drivers/of/platform.c
-> >> @@ -367,6 +367,9 @@ static int of_platform_bus_create(struct device_node *bus,
-> >>  		return 0;
-> >>  	}
-> >>  
-> >> +	if (!of_match_node(matches, bus))
-> >> +		return 0;
-> >> +
-> > This is not right. This function is recursive and this change would
-> > break that.
-> 
-> You are correct, this change might break the functionality.
-> 
-> 
-> >  Perhaps we could only call of_platform_device_create_pdata
-> > if !of_match_node instead, but I'm not completely sure that would be the
-> > right thing to do.
-> 
-> I did try to do the same thing in the patch.
-> May be I should have moved check just before calling
-> of_platform_device_create_pdata?
+Hello,
 
-No, the current code is correct. The purpose of the match table passed
-to of_platform_populate is to figure out which nodes are bus nodes that
-need to be recursed into.
+The purpose of this patch set is to add the SMP support for the Armada
+XP SoCs. Beside the SMP support itself brought by the last 3 patches,
+this patch set also adds the support for the coherency fabric unit and
+the power management service unit.
 
-However, *every single* child node of the root when
-of_platform_populate() is called will be used to create a
-platform_device. This is by design.
+The coherency fabric is responsible for ensuring hardware coherency
+between all CPUs and between CPUs and I/O masters. This unit is also
+available for Armada 370 and will be used in an incoming patch set
+for hardware I/O cache coherency.
 
-So, if somewhere is calling of_platform_populate() with the expectation
-that it will only create devices for a subset of the nodes, then that
-code is working on an incorrect assumption.
+The power management service unit is responsible for powering down and
+waking up CPUs and other SOC units.
 
-> 
-> >  There's also some historical things we have to
-> > support which is why we have of_platform_populate and of_platform_bus_probe.
-> 
-> m just trying to understand the difference between of_platform_populate
-> and of_platform_bus_probe.
-> Looking at the function documentation, which states
-> of_platform_bus_probe will only create children of the root which are
-> selected by the @matches argument.
-> 
-> of_platform_populate walks the device tree and creates devices from
-> nodes.  It differs in that it follows the modern convention of requiring
-> all device nodes to have a 'compatible' property, and it is suitable for
-> creating devices which are children of the root node.
-> 
-> Lets say If we call of_platform_populate(NULL, match_table, NULL, NULL)
-> on a device trees like the below with
-> struct of_device_id match_table[] = {
->     { .compatible = "simple-bus", }
->     {}
-> };
-> 
-> parent@0{
->     compatible    = "xxx,parent1", "simple-bus";
->     ...
->     child@0 {
->         compatible    = "xxx,child0", "simple-bus";
->         ...
->     };
->     child@1 {
->         compatible    = "xxx,child1";
->         ...
->     };
->     child@2 {
->         compatible    = "xxx,child2", "simple-bus";
->         ...
->     };
-> };
-> 
-> of_platform_bus_probe would create platform-devices for parent@0,
-> child@0and child@2
-> where as
-> of_platform_populate would create platform-devices for parent@0,
-> child@0, child@1 and child@2 nodes.
-> 
-> So the question is
-> why do we need to have @matches argument to of_platform_populate in the
-> first place, if it creates all the devices by walking the dt nodes?
+The original code is from Yehuda Yitschak, it was reworked by myself
+and reviewed by Yehuda.
 
-of_platform_populate will create devices for all the children of
-child@0 and child@2 also. The intent is for generic board support to
-call of_platform_populate() on the root of the tree and have all the
-nodes with compatible properties *and all the children of simple memory
-mapped busses* created into devices. This is normally what we want;
-particularly for new board support.
+This patch set is based on 3.7-rc5 and depends one the framework clock
+support which should be being included in the marvell branch
+maintained by Jason Cooper. The git branch called
+ArmadaXP-SMP-for-3.8-V3 is also available at
+https://github.com/MISL-EBU-System-SW/mainline-public.git.
 
-> 
-> It is bit confusing, As some platforms use of_platform_populate(NULL,
-> of_default_bus_match_table, NULL, NULL) assuming that only matching
-> nodes will end up having platform device.
-> Also
-> some platforms use of_platform_bus_probe(NULL, match_table, NULL), 
-> where match table is of_default_bus_match_table.
+Changelog:
+V2 -> V3:
+- Rebased on to v3.7-rc5
+- removed the unnecessary used of __iomem flag for a pointer to a
+  function. the second parameter of armada_xp_boot_cpu is now just a
+  void *.
+- removed the dsb() call in armada_xp_boot_cpu(), as the following
+  writel calls dsb if needed.
+- Change the PJ4B mask for proc_info in arch/arm/mm/proc-v7.S to be
+  less restrictive, the last 4 bits contain revision information
+- Merge the multiple 'or' instruction in a single instruction in
+  __v7_pj4b_setup
 
-of_platform_bus_probe() is old code used by most of the powerpc
-platforms. Don't use it for new board support.
+V1 -> V2:
+- Rebased on to v3.7-rc3
+- Fixed typos found by Alexandre Belloni
+- Added clk_prepare_enable() before getting rate clk in
+  set_secondary_cpus_clock()
+- Add explanation in the binding documentation about the per-CPU
+  interrupt registers: the address of the virtual register must be
+  used.
+- Removed the armada_xp prefix in the coherency.c file to be more
+  compliant with the name convention of the other files.
+- Coherency_init is now called from armada_370_xp_dt_init() and is no
+  more an early_init() call. As the device tree is not available from
+  an early_init(), it was useless to call coherency_init() so
+  early. The need to be able to call some function very early during
+  the boot were already resolved by using the hard code address of the
+  register.
 
-g.
+Yehuda Yitschak (5):
+  arm: mvebu: Added support for coherency fabric in mach-mvebu
+  arm: mvebu: Added initial support for power managmement service unit
+  arm: mvebu: Added IPI support via doorbells
+  arm: mm: Added support for PJ4B cpu and init routines
+  arm: mvebu: Added SMP support for Armada XP
+
+ .../devicetree/bindings/arm/armada-370-xp-mpic.txt |   12 +-
+ .../devicetree/bindings/arm/armada-370-xp-pmsu.txt |   20 ++++
+ .../devicetree/bindings/arm/coherency-fabric.txt   |   16 +++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    5 +
+ arch/arm/boot/dts/armada-xp.dtsi                   |   12 +-
+ arch/arm/configs/mvebu_defconfig                   |    3 +
+ arch/arm/mach-mvebu/Kconfig                        |    3 +-
+ arch/arm/mach-mvebu/Makefile                       |    4 +-
+ arch/arm/mach-mvebu/armada-370-xp.c                |    3 +
+ arch/arm/mach-mvebu/armada-370-xp.h                |   10 ++
+ arch/arm/mach-mvebu/coherency.c                    |   89 ++++++++++++++
+ arch/arm/mach-mvebu/coherency.h                    |   24 ++++
+ arch/arm/mach-mvebu/common.h                       |    6 +
+ arch/arm/mach-mvebu/headsmp.S                      |   66 +++++++++++
+ arch/arm/mach-mvebu/hotplug.c                      |   30 +++++
+ arch/arm/mach-mvebu/irq-armada-370-xp.c            |   92 ++++++++++++++-
+ arch/arm/mach-mvebu/platsmp.c                      |  124 ++++++++++++++++++++
+ arch/arm/mach-mvebu/pmsu.c                         |   75 ++++++++++++
+ arch/arm/mach-mvebu/pmsu.h                         |   16 +++
+ arch/arm/mm/Kconfig                                |    4 +
+ arch/arm/mm/proc-v7.S                              |   51 ++++++++
+ 21 files changed, 653 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/coherency-fabric.txt
+ create mode 100644 arch/arm/mach-mvebu/coherency.c
+ create mode 100644 arch/arm/mach-mvebu/coherency.h
+ create mode 100644 arch/arm/mach-mvebu/headsmp.S
+ create mode 100644 arch/arm/mach-mvebu/hotplug.c
+ create mode 100644 arch/arm/mach-mvebu/platsmp.c
+ create mode 100644 arch/arm/mach-mvebu/pmsu.c
+ create mode 100644 arch/arm/mach-mvebu/pmsu.h
+
+-- 
+1.7.9.5
