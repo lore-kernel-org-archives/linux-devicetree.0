@@ -1,137 +1,66 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v9 2/6] video: add of helper for videomode
-Date: Wed, 14 Nov 2012 14:31:54 +0100
-Message-ID: <20121114133154.GC18579@pengutronix.de>
-References: <1352893403-21168-1-git-send-email-s.trumtrar@pengutronix.de>
- <1352893403-21168-3-git-send-email-s.trumtrar@pengutronix.de>
- <20121114120045.GA2803@avionic-0098.mockup.avionic-design.de>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 4/6] usb: chipidea: usbmisc: add support for ahb, ipg and per clock
+Date: Wed, 14 Nov 2012 15:39:11 +0200
+Message-ID: <87mwyk718g.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de> <1352894137-2050-5-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121114120045.GA2803@avionic-0098.mockup.avionic-design.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-fbdev@vger.kernel.org, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352894137-2050-5-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 01:00:45PM +0100, Thierry Reding wrote:
-> On Wed, Nov 14, 2012 at 12:43:19PM +0100, Steffen Trumtrar wrote:
-> [...]
-> > +display-timings bindings
-> > +========================
-> > +
-> > +display timings node
-> 
-> I didn't express myself very clearly here =). The way I think this
-> should be written is "display-timings node".
-> 
-> > +required properties:
-> > + - hactive, vactive: Display resolution
-> > + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing parameters
-> > +   in pixels
-> > +   vfront-porch, vback-porch, vsync-len: Vertical display timing parameters in
-> > +   lines
-> > + - clock-frequency: displayclock in Hz
-> 
-> I still think "displayclock" should be two words: "display clock".
-> 
-> > +/**
-> > + * of_get_display_timings - parse all display_timing entries from a device_node
-> > + * @np: device_node with the subnodes
-> > + **/
-> > +struct display_timings *of_get_display_timings(struct device_node *np)
-> > +{
-> [...]
-> > +	disp->num_timings = 0;
-> > +	disp->native_mode = 0;
-> > +
-> > +	for_each_child_of_node(timings_np, entry) {
-> > +		struct display_timing *dt;
-> > +
-> > +		dt = of_get_display_timing(entry);
-> > +		if (!dt) {
-> > +			/* to not encourage wrong devicetrees, fail in case of an error */
-> > +			pr_err("%s: error in timing %d\n", __func__, disp->num_timings+1);
-> > +			goto timingfail;
-> 
-> I believe you're still potentially leaking memory here. In case you have
-> 5 entries for instance, and the last one fails to parse, then this will
-> cause the memory allocated for the 4 correct entries to be lost.
-> 
-> Can't you just call display_timings_release() in this case and then jump
-> to dispfail? That would still leak the native_mode device node. Maybe it
-> would be better to keep timingfail but modify it to free the display
-> timings with display_timings_release() instead? See below.
-> 
-> > +		}
-> > +
-> > +		if (native_mode == entry)
-> > +			disp->native_mode = disp->num_timings;
-> > +
-> > +		disp->timings[disp->num_timings] = dt;
-> > +		disp->num_timings++;
-> > +	}
-> > +	of_node_put(timings_np);
-> > +	of_node_put(native_mode);
-> > +
-> > +	if (disp->num_timings > 0)
-> > +		pr_info("%s: got %d timings. Using timing #%d as default\n", __func__,
-> > +			disp->num_timings , disp->native_mode + 1);
-> > +	else {
-> > +		pr_err("%s: no valid timings specified\n", __func__);
-> > +		display_timings_release(disp);
-> > +		return NULL;
-> > +	}
-> > +	return disp;
-> > +
-> > +timingfail:
-> > +	if (native_mode)
-> > +		of_node_put(native_mode);
-> > +	kfree(disp->timings);
-> 
-> Call display_timings_release(disp) instead of kfree(disp->timings)?
-> 
+Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
 
-Yes. That would be the appropriate way to fail here. Done.
+> From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> This patch adds support for ahb, ipg and per clock, which is needed to support
+> imx53.
 
-> > diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
-> > new file mode 100644
-> > index 0000000..4138758
-> > --- /dev/null
-> > +++ b/include/linux/of_videomode.h
-> > @@ -0,0 +1,16 @@
-> > +/*
-> > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > + *
-> > + * videomode of-helpers
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +
-> > +#ifndef __LINUX_OF_VIDEOMODE_H
-> > +#define __LINUX_OF_VIDEOMODE_H
-> > +
-> > +#include <linux/videomode.h>
-> > +#include <linux/of.h>
-> > +
-> > +int of_get_videomode(struct device_node *np, struct videomode *vm, int index);
-> > +#endif /* __LINUX_OF_VIDEOMODE_H */
-> 
-> Nit: should have a blank line before #endif.
-> 
-> Thierry
+I would also suggest using a more elaborate wording here, some people
+might also be interested what are the different clocks for (like,
+interface, peripheral, etc etc).
 
+>
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/usbmisc_imx.c |   60 +++++++++++++++++++++++++++---------
+>  1 file changed, 45 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+> index 72445f7..239b752 100644
+> --- a/drivers/usb/chipidea/usbmisc_imx.c
+> +++ b/drivers/usb/chipidea/usbmisc_imx.c
+> @@ -24,7 +24,9 @@
+>  struct imx_usbmisc {
+>  	void __iomem *base;
+>  	spinlock_t lock;
+> -	struct clk *clk;
+> +	struct clk *clk_ahb;
+> +	struct clk *clk_ipg;
+> +	struct clk *clk_per;
+>  	struct usbmisc_usb_device usbdev[USB_DEV_MAX];
+>  	const struct usbmisc_ops *ops;
+>  };
+> @@ -104,38 +106,66 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
+>  	if (!data->base)
+>  		return -EADDRNOTAVAIL;
+>  
+> -	data->clk = devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(data->clk)) {
+> +	data->clk_ahb = devm_clk_get(&pdev->dev, "ahb");
 
+I suppose the clock names are also being added/changed in the platform
+code in another patchset that's also being queued? What's the target
+merge window (if there's a dependency)?
 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
