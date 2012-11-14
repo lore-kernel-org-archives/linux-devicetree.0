@@ -1,120 +1,41 @@
-From: Praveen Paneri <p.paneri@samsung.com>
-Subject: [PATCH v8 2/2] usb: s3c-hsotg: Adding phy driver support
-Date: Wed, 14 Nov 2012 15:57:16 +0530
-Message-ID: <1352888836-17192-3-git-send-email-p.paneri@samsung.com>
-References: <1352888836-17192-1-git-send-email-p.paneri@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1352888836-17192-1-git-send-email-p.paneri@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, t.figa@samsung.com, gautam.vivek@samsung.com
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/4] dtc/tests: don't include fdt.h prior to libfdt.h
+Date: Wed, 14 Nov 2012 21:21:20 +1100
+Message-ID: <20121114102120.GD32290@truffula.fritz.box>
+References: <20121113183401.b05c181e66cf214608b6048d@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121113183401.b05c181e66cf214608b6048d-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding the transceiver to hsotg driver. Keeping the platform data
-for continuing the smooth operation for boards which still uses it
+On Tue, Nov 13, 2012 at 06:34:01PM -0600, Kim Phillips wrote:
+> tests will need fdt type definitions provided in a subsequent patch
+> to libfdt_env.h.  Since libfdt.h includes libfdt_env.h in the right
+> order anyway, just remove the fdt.h include.
+> 
+> Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- drivers/usb/gadget/s3c-hsotg.c |   37 +++++++++++++++++++++++++++----------
- 1 files changed, 27 insertions(+), 10 deletions(-)
+Seems to make sense.
 
-diff --git a/drivers/usb/gadget/s3c-hsotg.c b/drivers/usb/gadget/s3c-hsotg.c
-index 6f696ee..bc30a2d 100644
---- a/drivers/usb/gadget/s3c-hsotg.c
-+++ b/drivers/usb/gadget/s3c-hsotg.c
-@@ -32,6 +32,7 @@
- 
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-+#include <linux/usb/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
- 
- #include <mach/map.h>
-@@ -133,7 +134,9 @@ struct s3c_hsotg_ep {
-  * struct s3c_hsotg - driver state.
-  * @dev: The parent device supplied to the probe function
-  * @driver: USB gadget driver
-- * @plat: The platform specific configuration data.
-+ * @phy: The otg phy transceiver structure for phy control.
-+ * @plat: The platform specific configuration data. This can be removed once
-+ * all SoCs support usb transceiver.
-  * @regs: The memory area mapped for accessing registers.
-  * @irq: The IRQ number we are using
-  * @supplies: Definition of USB power supplies
-@@ -153,6 +156,7 @@ struct s3c_hsotg_ep {
- struct s3c_hsotg {
- 	struct device		 *dev;
- 	struct usb_gadget_driver *driver;
-+	struct usb_phy		*phy;
- 	struct s3c_hsotg_plat	 *plat;
- 
- 	spinlock_t              lock;
-@@ -2854,7 +2858,10 @@ static void s3c_hsotg_phy_enable(struct s3c_hsotg *hsotg)
- 	struct platform_device *pdev = to_platform_device(hsotg->dev);
- 
- 	dev_dbg(hsotg->dev, "pdev 0x%p\n", pdev);
--	if (hsotg->plat->phy_init)
-+
-+	if (hsotg->phy)
-+		usb_phy_init(hsotg->phy);
-+	else if (hsotg->plat->phy_init)
- 		hsotg->plat->phy_init(pdev, hsotg->plat->phy_type);
- }
- 
-@@ -2869,7 +2876,9 @@ static void s3c_hsotg_phy_disable(struct s3c_hsotg *hsotg)
- {
- 	struct platform_device *pdev = to_platform_device(hsotg->dev);
- 
--	if (hsotg->plat->phy_exit)
-+	if (hsotg->phy)
-+		usb_phy_shutdown(hsotg->phy);
-+	else if (hsotg->plat->phy_exit)
- 		hsotg->plat->phy_exit(pdev, hsotg->plat->phy_type);
- }
- 
-@@ -3493,6 +3502,7 @@ static void s3c_hsotg_release(struct device *dev)
- static int __devinit s3c_hsotg_probe(struct platform_device *pdev)
- {
- 	struct s3c_hsotg_plat *plat = pdev->dev.platform_data;
-+	struct usb_phy *phy;
- 	struct device *dev = &pdev->dev;
- 	struct s3c_hsotg_ep *eps;
- 	struct s3c_hsotg *hsotg;
-@@ -3501,20 +3511,27 @@ static int __devinit s3c_hsotg_probe(struct platform_device *pdev)
- 	int ret;
- 	int i;
- 
--	plat = pdev->dev.platform_data;
--	if (!plat) {
--		dev_err(&pdev->dev, "no platform data defined\n");
--		return -EINVAL;
--	}
--
- 	hsotg = devm_kzalloc(&pdev->dev, sizeof(struct s3c_hsotg), GFP_KERNEL);
- 	if (!hsotg) {
- 		dev_err(dev, "cannot get memory\n");
- 		return -ENOMEM;
- 	}
- 
-+	phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-+	if (IS_ERR_OR_NULL(phy)) {
-+		/* Fallback for pdata */
-+		plat = pdev->dev.platform_data;
-+		if (!plat) {
-+			dev_err(&pdev->dev, "no platform data or transceiver defined\n");
-+			return -EPROBE_DEFER;
-+		} else {
-+			hsotg->plat = plat;
-+		}
-+	} else {
-+		hsotg->phy = phy;
-+	}
-+
- 	hsotg->dev = dev;
--	hsotg->plat = plat;
- 
- 	hsotg->clk = devm_clk_get(&pdev->dev, "otg");
- 	if (IS_ERR(hsotg->clk)) {
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+
 -- 
-1.7.1
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
