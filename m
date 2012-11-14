@@ -1,100 +1,127 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/17] of: add dma-mask binding
-Date: Tue, 13 Nov 2012 21:55:56 -0600
-Message-ID: <50A3164C.3070301@gmail.com>
-References: <1352710357-3265-1-git-send-email-wenyou.yang@atmel.com>
- <1352710357-3265-2-git-send-email-wenyou.yang@atmel.com>
+From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 0/5] usb: phy: samsung: Introducing usb phy driver for
+ samsung SoCs
+Date: Wed, 14 Nov 2012 09:38:52 +0530
+Message-ID: <CAD6zSYM5-GdGHYH=W-My34oXRfH0M+rfettFa0fiit3-_V1RDA@mail.gmail.com>
+References: <1351573057-22249-1-git-send-email-p.paneri@samsung.com>
+	<20121109115440.GC8078@arwen.pp.htv.fi>
+	<CAH9JG2X1a8MqBpnk8uHRjsGnaD7uob5GBhUh_aS5iCprEvi2XQ@mail.gmail.com>
+	<CAD6zSYN6xpHt54d-w=6veb6AErTq6ERQcneo7ewC-qsBoMuThQ@mail.gmail.com>
+	<20121109135441.GC8567@arwen.pp.htv.fi>
+	<004201cdc08f$fa0fd3d0$ee2f7b70$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352710357-3265-2-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <004201cdc08f$fa0fd3d0$ee2f7b70$%kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kyungmin Park <kmpark-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/12/2012 02:52 AM, Wenyou Yang wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> 
-> This will allow each device to specify its dma-mask for this we use the
-> coherent_dma_mask as pointer. By default the dma-mask will be set to
-> DMA_BIT_MASK(32).
+Hi,
 
-Do you really have a use case this is not DMA_BIT_MASK(32)?
+On Mon, Nov 12, 2012 at 10:11 AM, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Felipe Balbi wrote:
+>>
+>> Hi,
+>>
+> Hi :-)
+>
+> [...]
+>
+>> Sure, but I still need Kukjin's 'say-so' for the arch/arm/plat-samsung
+>> and arch/arm/mach-exynos part.
+>>
+> Basically, this approach looks OK to me.
+>
+> BTW, I have some comments and need to update...
+Thanks! I highly appreciate your comments. It would have been even
+better if I had got these before the closing bell.
+>
+> From 4th patch...
+>
+>> diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c b/arch/arm/mach-
+>> s3c64xx/mach-smdk6410.c
+>
+> [...]
+>
+>> @@ -72,6 +73,8 @@
+>>  #include <linux/platform_data/touchscreen-s3c2410.h>
+>>  #include <plat/keypad.h>
+>>  #include <plat/backlight.h>
+>> +#include <plat/regs-fb-v4.h>
+Well it comes from an older state where without this it was giving a
+build error. Although it shouldn't have been here. Will fix it.
+>
+> Why? In addition, this causes build error with s3c6400_defconfig.
+>
+> [...]
+>
+>> diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
+>> index 03f654d..9cdb666 100644
+>
+> [...]
+>
+>> @@ -1370,6 +1371,30 @@ struct platform_device s5p_device_mixer = {
+>>
+>>  /* USB */
+>>
+>> +#ifdef CONFIG_S3C_DEV_USB_HSOTG
+>> +/* USB PHY*/
+>> +static struct resource samsung_usbphy_resource[] = {
+>> +     [0] = {
+>> +             .start = S3C_PA_USB_PHY,
+>> +             .end   = S3C_PA_USB_PHY + SZ_16 - 1,
+>> +             .flags = IORESOURCE_MEM,
+>> +     },
+>> +};
+>
+> +static struct resource samsung_usbphy_resource[] = {
+> +       [0] = DEFINED_RES_MEM(S3C_PA_USB_PHY, SZ_16),
+> +};
+>
+> [...]
+>
+> Happens build error with s5pv210_defconfig
+>
+> arch/arm/plat-samsung/devs.c:1375: error: 'S3C_PA_USB_PHY' undeclared here
+> (not in a function)
+> make[2]: *** [arch/arm/plat-samsung/devs.o] Error 1
+> make[1]: *** [arch/arm/plat-samsung] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+>
+> And another build error with exynos_defconfig...
+Will check for both the configs and resolve it.
 
-> The microblaze architecture hook is drop
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-> Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
->  drivers/of/platform.c |   23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b80891b..31ed405 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -130,6 +130,21 @@ void of_device_make_bus_id(struct device *dev)
->  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
->  }
->  
-> +static void of_get_dma_mask(struct device *dev, struct device_node *np)
-> +{
-> +	const __be32 *prop;
-> +	int len;
-> +
-> +	prop = of_get_property(np, "dma-mask", &len);
-
-dma-ranges may work for this purpose.
-
-> +
-> +	dev->dma_mask = &dev->coherent_dma_mask;
-
-I don't really know, but I suspect this is wrong.
-
-> +
-> +	if (!prop)
-> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +	else
-> +		dev->coherent_dma_mask = of_read_number(prop, len / 4);
-> +}
-> +
->  /**
->   * of_device_alloc - Allocate and initialize an of_device
->   * @np: device node to assign to device
-> @@ -171,10 +186,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
->  	}
->  
-> +	of_get_dma_mask(&dev->dev, np);
->  	dev->dev.of_node = of_node_get(np);
-> -#if defined(CONFIG_MICROBLAZE)
-> -	dev->dev.dma_mask = &dev->archdata.dma_mask;
-> -#endif
->  	dev->dev.parent = parent;
->  
->  	if (bus_id)
-> @@ -211,10 +224,6 @@ struct platform_device *of_platform_device_create_pdata(
->  	if (!dev)
->  		return NULL;
->  
-> -#if defined(CONFIG_MICROBLAZE)
-> -	dev->archdata.dma_mask = 0xffffffffUL;
-> -#endif
-> -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->  	dev->dev.bus = &platform_bus_type;
->  	dev->dev.platform_data = platform_data;
->  
-> 
+Thanks,
+Praveen
+>
+> arch/arm/mach-exynos/built-in.o: In function `.LANCHOR1':
+> setup-i2c0.c:(.data+0x8080): undefined reference to
+> `s5p_usb_phy_pmu_isolation'
+>
+> From 5th patch....
+>
+> If possible, please to use 'ARM: [sub-arch dir name]: [subject]' format.
+> So I preferred to use 'ARM: EXYNOS: Enabling samsung-usbphy driver for
+> EXYNOS4210' on that.
+>
+> Please make sure your patch has no problem for kernel compilation before
+> submitting...
+>
+> Thanks.
+>
+> Best regards,
+> Kgene.
+> --
+> Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Senior Engineer,
+> SW Solution Development Team, Samsung Electronics Co., Ltd.
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
