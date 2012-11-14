@@ -1,93 +1,45 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3 07/11] ARM: Exynos4: allow legacy board support to specify xxti and xusbxti clock speed
-Date: Thu, 15 Nov 2012 00:36:16 +0100
-Message-ID: <7438966.1DHnOH3JLs@flatron>
-References: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org> <1352930853-12268-8-git-send-email-thomas.abraham@linaro.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 3.7.0-rc4] of/net/mdio-gpio: Fix pdev->id issue when
+ using devicetrees.
+Date: Wed, 14 Nov 2012 18:59:40 -0500 (EST)
+Message-ID: <20121114.185940.648295821386414260.davem@davemloft.net>
+References: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1352930853-12268-8-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 of November 2012 03:37:29 Thomas Abraham wrote:
-> The clock speed of xxti and xusbxti clocks depends on the oscillator
-> used on the board to generate these clocks. For non-dt platforms, allow
-> the board support for those platforms to set the clock frequency of
-> xxti and xusbxti clocks.
-> 
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
->  arch/arm/mach-exynos/common.c              |    2 ++
->  arch/arm/mach-exynos/common.h              |    1 +
->  arch/arm/mach-exynos/mach-nuri.c           |    2 ++
->  arch/arm/mach-exynos/mach-origen.c         |    2 ++
->  arch/arm/mach-exynos/mach-smdkv310.c       |    2 ++
->  arch/arm/mach-exynos/mach-universal_c210.c |    2 ++
->  arch/arm/mach-exynos/mct.c                 |    1 +
->  7 files changed, 12 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/mach-exynos/common.c
-> b/arch/arm/mach-exynos/common.c index 138a41d..64c0012 100644
-> --- a/arch/arm/mach-exynos/common.c
-> +++ b/arch/arm/mach-exynos/common.c
-> @@ -65,6 +65,8 @@ static void exynos5_init_clocks(int xtal);
->  static void exynos4_init_uarts(struct s3c2410_uartcfg *cfg, int no);
->  static int exynos_init(void);
-> 
-> +unsigned long xxti_f = 0, xusbxti_f = 0;
-> +
->  static struct cpu_table cpu_ids[] __initdata = {
->  	{
->  		.idcode		= EXYNOS4210_CPU_ID,
-> diff --git a/arch/arm/mach-exynos/common.h
-> b/arch/arm/mach-exynos/common.h index 2cacd48..f947789 100644
-> --- a/arch/arm/mach-exynos/common.h
-> +++ b/arch/arm/mach-exynos/common.h
-> @@ -22,6 +22,7 @@ void exynos4_restart(char mode, const char *cmd);
->  void exynos5_restart(char mode, const char *cmd);
->  void exynos_init_late(void);
-> 
-> +extern unsigned long xxti_f, xusbxti_f;
->  void exynos4_clk_init(void);
->  void exynos4_clk_register_fixed_ext(unsigned long, unsigned long);
-> 
-> diff --git a/arch/arm/mach-exynos/mach-nuri.c
-> b/arch/arm/mach-exynos/mach-nuri.c index 5b5c941..e14332c 100644
-> --- a/arch/arm/mach-exynos/mach-nuri.c
-> +++ b/arch/arm/mach-exynos/mach-nuri.c
-> @@ -1332,6 +1332,8 @@ static void __init nuri_map_io(void)
->  {
->  	exynos_init_io(NULL, 0);
->  	s3c24xx_init_uarts(nuri_uartcfgs, ARRAY_SIZE(nuri_uartcfgs));
-> +	xxti_f = 0;
-> +	xusbxti_f = 24000000;
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Date: Tue, 13 Nov 2012 14:26:13 +0000
 
-I don't like setting these variables directly from board code.
-
-If you didn't remove clock initialization call from board code, you could 
-extend that function to take these two frequencies as arguments?
-
->  }
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 > 
->  static void __init nuri_reserve(void)
-[snip]
-> diff --git a/arch/arm/mach-exynos/mct.c b/arch/arm/mach-exynos/mct.c
-> index c2e806c..cd061b2 100644
-> --- a/arch/arm/mach-exynos/mct.c
-> +++ b/arch/arm/mach-exynos/mct.c
-> @@ -532,6 +532,7 @@ static void __init exynos4_timer_init(void)
->  		if (soc_is_exynos4210() || soc_is_exynos4212() ||
->  				soc_is_exynos4412()) {
->  			exynos4_clk_init();
-> +			exynos4_clk_register_fixed_ext(xxti_f, xusbxti_f);
+> When the mdio-gpio driver is probed via device trees, the platform
+> device id is set as -1, However the id is re-used in the code while
+> creating an mdio bus.
+> So, setting up the id via aliases from device tree is a sensible
+> solution to fix this issue.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-I don't like registering clocks from unrelated code. IMHO any clock 
-registration should be done from code in drivers/clk/samsung.
+This seems rather pointless unless you also update every single device
+tree out there.
 
-Best regards,
-Tomasz Figa
+Also you need to describe what are the ramifications of this problem
+otherwise it is impossible to figure out how serious this change is.
+
+Does it prevent probing?  Does it cause a crash?
+
+Basically, what I'm saying is that this is a very poor submission and
+you need to substantially improve it and communicate better.
+
+If the problem is basically benign, then you should target this change
+to net-next instead of the net tree, along with the necessary dt file
+updates.
+
+Thanks.
