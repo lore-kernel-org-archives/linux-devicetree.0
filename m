@@ -1,41 +1,40 @@
 From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 0/6] support other fsl SoCs with usbmisc + small fixes
-Date: Wed, 14 Nov 2012 12:55:31 +0100
-Message-ID: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
+Subject: [PATCH 1/6] usb: chipidea: usbmisc: unset global varibale usbmisc on driver remove
+Date: Wed, 14 Nov 2012 12:55:32 +0100
+Message-ID: <1352894137-2050-2-git-send-email-m.grzeschik@pengutronix.de>
+References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352894137-2050-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Nearly every SoC from Freescale has this non-core usb registers. This series
-adds support for more users of this driver.
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Marc Kleine-Budde (3):
-  usb: chipidea: usbmisc: unset global varibale usbmisc on driver
-    remove
-  usb: chipidea: usbmisc: prepare driver to handle more than one soc
-  usb: chipidea: usbmisc: add support for ahb, ipg and per clock
+While there fix a potential race condition, first set usbmisc, then call
+usbmisc_set_ops().
 
-Michael Grzeschik (3):
-  usb: chipidea: usbmisc: rename file, struct and functions to
-    usbmisc_imx
-  usb: chipidea: usbmisc: add mx53 support
-  usb: chipidea: usbmisc: add post handling and errata fix for mx25
+Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/usb/chipidea/usbmisc_imx6q.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/usb/ci13xxx-imx.txt        |    2 +
- drivers/usb/chipidea/ci13xxx_imx.c                 |   12 +
- drivers/usb/chipidea/ci13xxx_imx.h                 |    3 +
- drivers/usb/chipidea/usbmisc_imx.c                 |  256 ++++++++++++++++++++
- drivers/usb/chipidea/usbmisc_imx6q.c               |  162 -------------
- 5 files changed, 273 insertions(+), 162 deletions(-)
- create mode 100644 drivers/usb/chipidea/usbmisc_imx.c
- delete mode 100644 drivers/usb/chipidea/usbmisc_imx6q.c
-
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/usb/chipidea/usbmisc_imx6q.c b/drivers/usb/chipidea/usbmisc_imx6q.c
+index 416e3fc..edc0edd 100644
+--- a/drivers/usb/chipidea/usbmisc_imx6q.c
++++ b/drivers/usb/chipidea/usbmisc_imx6q.c
+@@ -116,14 +116,14 @@ static int __devinit usbmisc_imx6q_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	usbmisc = data;
+ 	ret = usbmisc_set_ops(&imx6q_usbmisc_ops);
+ 	if (ret) {
++		usbmisc = NULL;
+ 		clk_disable_unprepare(data->clk);
+ 		return ret;
+ 	}
+ 
+-	usbmisc = data;
