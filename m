@@ -1,138 +1,148 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH] drivers/of: Constify device_node->name and ->path_component_name
-Date: Wed, 14 Nov 2012 22:28:27 +0000
-Message-ID: <1352932107-14782-1-git-send-email-grant.likely@secretlab.ca>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: sparclinux@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "David S. Miller" <davem@davemloft.net>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH V3 4/5] arm: mm: Added support for PJ4B cpu and init
+ routines
+Date: Wed, 14 Nov 2012 23:31:47 +0100
+Message-ID: <50A41BD3.9040509@free-electrons.com>
+References: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
+ <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Russell King <linux@arm.linux.org.uk>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris
 List-Id: devicetree@vger.kernel.org
 
-Neither of these should ever be changed once set. Make them const
+Hello Russell,
 
-Build tested with defconfigs on ARM, PowerPC, Sparc, MIPS, x86 among
-others.
+With the 2 changes I have done on according your comments
+do you think you can give your acked-by for this patch?
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "David S. Miller" <davem@davemloft.net>
----
- arch/powerpc/platforms/powermac/pfunc_core.c |    2 +-
- arch/powerpc/platforms/pseries/reconfig.c    |    3 +--
- arch/powerpc/sysdev/fsl_pci.c                |    2 +-
- arch/sparc/kernel/pci_impl.h                 |    2 +-
- drivers/of/fdt.c                             |   10 +++++-----
- include/linux/of.h                           |    4 ++--
- 6 files changed, 11 insertions(+), 12 deletions(-)
+Thanks
 
-diff --git a/arch/powerpc/platforms/powermac/pfunc_core.c b/arch/powerpc/platforms/powermac/pfunc_core.c
-index b0c3777..d588e48 100644
---- a/arch/powerpc/platforms/powermac/pfunc_core.c
-+++ b/arch/powerpc/platforms/powermac/pfunc_core.c
-@@ -686,7 +686,7 @@ static int pmf_add_functions(struct pmf_device *dev, void *driverdata)
- 	int count = 0;
- 
- 	for (pp = dev->node->properties; pp != 0; pp = pp->next) {
--		char *name;
-+		const char *name;
- 		if (strncmp(pp->name, PP_PREFIX, plen) != 0)
- 			continue;
- 		name = pp->name + plen;
-diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-index 39f71fb..2f46681 100644
---- a/arch/powerpc/platforms/pseries/reconfig.c
-+++ b/arch/powerpc/platforms/pseries/reconfig.c
-@@ -281,12 +281,11 @@ static struct property *new_property(const char *name, const int length,
- 	if (!new)
- 		return NULL;
- 
--	if (!(new->name = kmalloc(strlen(name) + 1, GFP_KERNEL)))
-+	if (!(new->name = kstrdup(name, GFP_KERNEL)))
- 		goto cleanup;
- 	if (!(new->value = kmalloc(length + 1, GFP_KERNEL)))
- 		goto cleanup;
- 
--	strcpy(new->name, name);
- 	memcpy(new->value, value, length);
- 	*(((char *)new->value) + length) = 0;
- 	new->length = length;
-diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
-index ffb93ae..01b62a6 100644
---- a/arch/powerpc/sysdev/fsl_pci.c
-+++ b/arch/powerpc/sysdev/fsl_pci.c
-@@ -136,7 +136,7 @@ static void __init setup_pci_atmu(struct pci_controller *hose,
- 	u32 pcicsrbar = 0, pcicsrbar_sz;
- 	u32 piwar = PIWAR_EN | PIWAR_PF | PIWAR_TGI_LOCAL |
- 			PIWAR_READ_SNOOP | PIWAR_WRITE_SNOOP;
--	char *name = hose->dn->full_name;
-+	const char *name = hose->dn->full_name;
- 	const u64 *reg;
- 	int len;
- 
-diff --git a/arch/sparc/kernel/pci_impl.h b/arch/sparc/kernel/pci_impl.h
-index 918a203..5f68853 100644
---- a/arch/sparc/kernel/pci_impl.h
-+++ b/arch/sparc/kernel/pci_impl.h
-@@ -88,7 +88,7 @@ struct pci_pbm_info {
- 	int				chip_revision;
- 
- 	/* Name used for top-level resources. */
--	char				*name;
-+	const char			*name;
- 
- 	/* OBP specific information. */
- 	struct platform_device		*op;
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 91a375f..4aded3b 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -198,10 +198,10 @@ static unsigned long unflatten_dt_node(struct boot_param_header *blob,
- 	np = unflatten_dt_alloc(&mem, sizeof(struct device_node) + allocl,
- 				__alignof__(struct device_node));
- 	if (allnextpp) {
-+		char *fn;
- 		memset(np, 0, sizeof(*np));
--		np->full_name = ((char *)np) + sizeof(struct device_node);
-+		np->full_name = fn = ((char *)np) + sizeof(*np);
- 		if (new_format) {
--			char *fn = np->full_name;
- 			/* rebuild full path for new format */
- 			if (dad && dad->parent) {
- 				strcpy(fn, dad->full_name);
-@@ -215,9 +215,9 @@ static unsigned long unflatten_dt_node(struct boot_param_header *blob,
- 				fn += strlen(fn);
- 			}
- 			*(fn++) = '/';
--			memcpy(fn, pathp, l);
--		} else
--			memcpy(np->full_name, pathp, l);
-+		}
-+		memcpy(fn, pathp, l);
-+
- 		prev_pp = &np->properties;
- 		**allnextpp = np;
- 		*allnextpp = &np->allnext;
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b4e50d5..857dde9 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -46,7 +46,7 @@ struct device_node {
- 	const char *name;
- 	const char *type;
- 	phandle phandle;
--	char	*full_name;
-+	const char *full_name;
- 
- 	struct	property *properties;
- 	struct	property *deadprops;	/* removed properties */
-@@ -60,7 +60,7 @@ struct device_node {
- 	unsigned long _flags;
- 	void	*data;
- #if defined(CONFIG_SPARC)
--	char	*path_component_name;
-+	const char *path_component_name;
- 	unsigned int unique_id;
- 	struct of_irq_controller *irq_trans;
- #endif
+On 11/14/2012 11:20 PM, Gregory CLEMENT wrote:
+> From: Yehuda Yitschak <yehuday@marvell.com>
+> 
+> Signed-off-by: Yehuda Yitschak <yehuday@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  arch/arm/mach-mvebu/Kconfig |    2 +-
+>  arch/arm/mm/Kconfig         |    4 ++++
+>  arch/arm/mm/proc-v7.S       |   51 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 56 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+> index 17d246b..9bfaa0c 100644
+> --- a/arch/arm/mach-mvebu/Kconfig
+> +++ b/arch/arm/mach-mvebu/Kconfig
+> @@ -22,7 +22,7 @@ config MVEBU_CLK_CPU
+>  config MACH_ARMADA_370_XP
+>  	bool
+>  	select ARMADA_370_XP_TIMER
+> -	select CPU_V7
+> +	select CPU_PJ4B
+>  
+>  config MACH_ARMADA_370
+>  	bool "Marvell Armada 370 boards"
+> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+> index 94186b6..3fd629d 100644
+> --- a/arch/arm/mm/Kconfig
+> +++ b/arch/arm/mm/Kconfig
+> @@ -352,6 +352,10 @@ config CPU_PJ4
+>  	select ARM_THUMBEE
+>  	select CPU_V7
+>  
+> +config CPU_PJ4B
+> +	bool
+> +	select CPU_V7
+> +
+>  # ARMv6
+>  config CPU_V6
+>  	bool "Support ARM V6 processor" if ARCH_INTEGRATOR || MACH_REALVIEW_EB || MACH_REALVIEW_PBX
+> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+> index 846d279..a4c0ccf 100644
+> --- a/arch/arm/mm/proc-v7.S
+> +++ b/arch/arm/mm/proc-v7.S
+> @@ -169,6 +169,47 @@ __v7_ca15mp_setup:
+>  	orreq	r0, r0, r10			@ Enable CPU-specific SMP bits
+>  	mcreq	p15, 0, r0, c1, c0, 1
+>  #endif
+> +
+> +__v7_pj4b_setup:
+> +#ifdef CONFIG_CPU_PJ4B
+> +
+> +#define SNOOP_DATA    (1 << 25) /* Dont interleave write and snoop data */
+> +#define CWF           (1 << 27) /* Disable Critical Word First feature */
+> +#define OUTSANDING_NC (1 << 29) /* Disable outstanding non cacheable request */
+> +#define L1_REP_RR     (1 << 30) /* L1 replacement - Strict round robin */
+> +
+> +#define AUX_DBG_CTRL2 (SNOOP_DATA | CWF | OUTSANDING_NC | L1_REP_RR)
+> +
+> +	/* Auxiliary Debug Modes Control 1 Register */
+> +	mrc	p15, 1,	r0, c15, c1, 1
+> +	orr     r0, r0, #(1 << 16)     @ Disable data transfer for clean line.
+> +	orr     r0, r0, #(1 << 5)      @ Enable the back off of STREX instr
+> +	orr     r0, r0, #(1 << 8)      @ Disable Internal Parity Handling
+> +	bic	r0, r0, #(1 << 2)      @ Disable Static BP
+> +	mcr	p15, 1,	r0, c15, c1, 1
+> +
+> +	/* Auxiliary Debug Modes Control 2 Register */
+> +	mrc	p15, 1,	r0, c15, c1, 2
+> +	bic	r0, r0, #(1 << 23)   @ Enable fast LDR.
+> +	orr	r0, r0, #AUX_DBG_CTRL2
+> +	mcr	p15, 1,	r0, c15, c1, 2
+> +
+> +	/* Auxiliary Functional Modes Control Register 0 */
+> +	mrc	p15, 1,	r0, c15, c2, 0
+> +#ifdef CONFIG_SMP
+> +	orr	r0, r0, #(1 << 1)     @ Set SMP mode. Join the coherency fabric
+> +#endif
+> +	orr	r0, r0, #(1 << 2)     @ Support L1 parity checking
+> +	orr	r0, r0, #(1 << 8)     @ Broadcast Cache and TLB maintenance
+> +	mcr	p15, 1,	r0, c15, c2, 0
+> +
+> +	/* Auxiliary Debug Modes Control 0 Register */
+> +	mrc	p15, 1,	r0, c15, c1, 0
+> +	orr	r0, r0, #(1 << 22)   @ WFI/WFE - serve the DVM and back to idle
+> +	mcr	p15, 1,	r0, c15, c1, 0
+> +
+> +#endif /* CONFIG_CPU_PJ4B */
+> +
+>  __v7_setup:
+>  	adr	r12, __v7_setup_stack		@ the local stack
+>  	stmia	r12, {r0-r5, r7, r9, r11, lr}
+> @@ -342,6 +383,16 @@ __v7_ca9mp_proc_info:
+>  	.long	0xff0ffff0
+>  	__v7_proc __v7_ca9mp_setup
+>  	.size	__v7_ca9mp_proc_info, . - __v7_ca9mp_proc_info
+> +
+> +	/*
+> +	 * Marvell PJ4B processor.
+> +	 */
+> +	.type   __v7_pj4b_proc_info, #object
+> +__v7_pj4b_proc_info:
+> +	.long	0x562f5840
+> +	.long	0xfffffff0
+> +	__v7_proc __v7_pj4b_setup
+> +	.size	__v7_pj4b_proc_info, . - __v7_pj4b_proc_info
+>  #endif	/* CONFIG_ARM_LPAE */
+>  
+>  	/*
+> 
+
+
 -- 
-1.7.10.4
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
