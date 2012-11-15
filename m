@@ -1,55 +1,58 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v3 1/5] ARM: kernel: smp_setup_processor_id() updates
-Date: Thu, 15 Nov 2012 13:49:51 +0000
-Message-ID: <20121115134951.GF5570@mudshark.cambridge.arm.com>
-References: <1352983614-22924-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1352983614-22924-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Subject: Re: [RESEND PATCH] mtd: davinci: add support for parition binding
+ nodes
+Date: Thu, 15 Nov 2012 15:50:49 +0200
+Message-ID: <1352987449.2221.51.camel@sauron.fi.intel.com>
+References: <1351866161-15516-1-git-send-email-m-karicheri2@ti.com>
+Reply-To: artem.bityutskiy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1352983614-22924-2-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-cIDqQXKT/hKZqRWFQxti"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1351866161-15516-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-keystone@list.ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2012 at 12:46:50PM +0000, Lorenzo Pieralisi wrote:
-> This patch applies some basic changes to the smp_setup_processor_id()
-> ARM implementation to make the code that builds cpu_logical_map more
-> uniform across the kernel.
-> 
-> The function now prints the full extent of the boot CPU MPIDR[23:0] and
-> initializes the cpu_logical_map for CPUs up to nr_cpu_ids.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  arch/arm/kernel/setup.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-> index da1d1aa..d0df6c8 100644
-> --- a/arch/arm/kernel/setup.c
-> +++ b/arch/arm/kernel/setup.c
-> @@ -426,13 +426,14 @@ int __cpu_logical_map[NR_CPUS];
->  void __init smp_setup_processor_id(void)
->  {
->  	int i;
-> -	u32 cpu = is_smp() ? read_cpuid_mpidr() & 0xff : 0;
-> +	u32 mpidr = is_smp() ? read_cpuid_mpidr() & 0xffffff : 0;
-> +	u32 cpu = mpidr & 0xff;
 
-Can we move the #defines out of topology.c and use those instead of magic
-masks please? You could use MPIDR_HWID_BITMASK, although the LEVEL mask
-definitions over there don't look right to me (MPIDR_LEVEL0_MASK is 0x3?)
+--=-cIDqQXKT/hKZqRWFQxti
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Will
+On Fri, 2012-11-02 at 10:22 -0400, Murali Karicheri wrote:
+> Enhance the driver to support partition subnodes inside the nand
+> device bindings to describe partions on the nand device.
+>=20
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+
+Pushed to l2-mtd.git, thanks!
+
+--=20
+Best Regards,
+Artem Bityutskiy
+
+--=-cIDqQXKT/hKZqRWFQxti
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAABAgAGBQJQpPM5AAoJECmIfjd9wqK0DzIQAMmgiCv4Y21upsshcR3vTlmh
+3FzvJeSwFASb0pedw9FrELADnT2RZSMpuVD9fpDNxDdjGNGxGcLNFyX3jsTRCCKu
+OquCi6m4U0If3abBsxsmOLXRB4vtzFGRvDx9A/krBUfEservNbT9l8ehQjaOLEru
+JtIG+dgsdh9+5htUfDhV22MbLB9jQStfDOsE+nHUYDziXtEl3kiXWj1JwNtNCMIo
+o69o39t2fRBew7A/d7e+iVKtoEfqgs2JvG2yiJfrYh0JKmKU+1gG9nxJV6YJMHh+
+zRSCmklyxHOptgA0tDNiqEp2IlUl4inwGoXSiGilW6oZcoB/dnXxXJ844GQzphEh
+D38xes9wAkiyBX8LPt2dbvJPjxbmAs68WJ6ioCRpfi8/KxRVpYXFg8TtYglSb/71
+Hn1wYPAkiHk97vgA+recwwvQO9s/0tBsXVBILOPgQ2Ym0BIahBFjyKBi+2e48Wf2
+I8Xpnb4ZFTCgc7WofFMneylAqm55ZHE2IM1X2smDh2yUVrRLvxSOH6VtOcO8aECE
+P7YuW8vcEG/nuLalb1iDNJTK9YlV4Ao8rWBAwtvKe3s8hFa5qgC0pt1pRtFEFhgc
+w/789s4ahhVr+ewqYXHkDLvV/MWE7u2rwgZ+Mc5uBNs61erbtl1B9upG9JtVaJX4
+r5cmFYB5xeuvHgq3W99x
+=bFi+
+-----END PGP SIGNATURE-----
+
+--=-cIDqQXKT/hKZqRWFQxti--
