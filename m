@@ -1,7 +1,7 @@
 From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 4/7] usb: chipidea: usbmisc: prepare driver to handle more than one soc
-Date: Thu, 15 Nov 2012 13:03:45 +0100
-Message-ID: <1352981028-14312-5-git-send-email-m.grzeschik@pengutronix.de>
+Subject: [PATCH v2 3/7] usb: chipidea: usbmisc: fix a potential race condition
+Date: Thu, 15 Nov 2012 13:03:44 +0100
+Message-ID: <1352981028-14312-4-git-send-email-m.grzeschik@pengutronix.de>
 References: <1352981028-14312-1-git-send-email-m.grzeschik@pengutronix.de>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1352981028-14312-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -12,70 +12,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-This attaches the usbmisc_ops to the of_device_id data and
-makes it possible to define special functions per soc.
+This fixes a potential race condition where the ci13xxx_imx glue code
+could be fast enough to call one of the usbmisc_ops before he got a
+valid value on the static usbmisc pointer. To fix that we first set
+usbmisc, then call usbmisc_set_ops().
 
 Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/usb/chipidea/usbmisc_imx.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Changes since v1:
+* split previous patch into two seperate.
+
+ drivers/usb/chipidea/usbmisc_imx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index 9145e04..4b1ed7c 100644
+index 552c63f..9145e04 100644
 --- a/drivers/usb/chipidea/usbmisc_imx.c
 +++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -26,6 +26,7 @@ struct imx_usbmisc {
- 	spinlock_t lock;
- 	struct clk *clk;
- 	struct usbmisc_usb_device usbdev[USB_DEV_MAX];
-+	const struct usbmisc_ops *ops;
- };
- 
- static struct imx_usbmisc *usbmisc;
-@@ -78,7 +79,7 @@ static const struct usbmisc_ops imx6q_usbmisc_ops = {
- };
- 
- static const struct of_device_id usbmisc_imx_dt_ids[] = {
--	{ .compatible = "fsl,imx6q-usbmisc"},
-+	{ .compatible = "fsl,imx6q-usbmisc", .data = (void *)&imx6q_usbmisc_ops },
- 	{ /* sentinel */ }
- };
- 
-@@ -87,6 +88,7 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
- 	struct resource	*res;
- 	struct imx_usbmisc *data;
- 	int ret;
-+	struct of_device_id *tmp_dev;
- 
- 	if (usbmisc)
- 		return -EBUSY;
-@@ -116,8 +118,11 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
+@@ -116,14 +116,14 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
  		return ret;
  	}
  
-+	tmp_dev = (struct of_device_id *)
-+		of_match_device(usbmisc_imx_dt_ids, &pdev->dev);
-+	data->ops = (const struct usbmisc_ops *)tmp_dev->data;
- 	usbmisc = data;
--	ret = usbmisc_set_ops(&imx6q_usbmisc_ops);
-+	ret = usbmisc_set_ops(data->ops);
++	usbmisc = data;
+ 	ret = usbmisc_set_ops(&imx6q_usbmisc_ops);
  	if (ret) {
- 		usbmisc = NULL;
++		usbmisc = NULL;
  		clk_disable_unprepare(data->clk);
-@@ -129,7 +134,7 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
- static int __devexit usbmisc_imx_remove(struct platform_device *pdev)
- {
--	usbmisc_unset_ops(&imx6q_usbmisc_ops);
-+	usbmisc_unset_ops(usbmisc->ops);
- 	clk_disable_unprepare(usbmisc->clk);
- 	usbmisc = NULL;
- 	return 0;
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-	usbmisc = data;
