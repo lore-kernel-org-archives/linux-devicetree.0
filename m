@@ -1,123 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next generation) board.
-Date: Thu, 15 Nov 2012 11:59:25 +0000
-Message-ID: <20121115115925.2FE453E09BB@localhost>
-References: <1351633367-19082-1-git-send-email-marek.belisko@open-nandra.com> <CAAfyv34D4bTO=k8niM42CDQFb0tP4uOnvX_KPT3+F6z59jPg3Q@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAfyv34D4bTO=k8niM42CDQFb0tP4uOnvX_KPT3+F6z59jPg3Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Belisko Marek <marek.belisko@gmail.com>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
+From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 2/7] usb: chipidea: usbmisc: unset global varibale usbmisc on driver remove
+Date: Thu, 15 Nov 2012 13:03:43 +0100
+Message-ID: <1352981028-14312-3-git-send-email-m.grzeschik@pengutronix.de>
+References: <1352981028-14312-1-git-send-email-m.grzeschik@pengutronix.de>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352981028-14312-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Nov 2012 21:26:58 +0100, Belisko Marek <marek.belisko@gmail.com> wrote:
-> CC' Grant & Rob
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Hi Marek
+The probe function checks usbmisc to be NULL in the beginning. Without
+this patch the can only be loaded once.
 
-Since this is an OMAP board, you should send the changes to Tony and
-they should be merged through the arm-soc tree.
+Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Changes since v1:
+* split previous patch into two seperate.
 
-g.
+ drivers/usb/chipidea/usbmisc_imx.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> On Tue, Oct 30, 2012 at 10:42 PM, Marek Belisko
-> <marek.belisko@open-nandra.com> wrote:
-> > Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
-> > ---
-> >  arch/arm/boot/dts/omap3-gta04.dts |   65 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
-> >
-> > diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
-> > new file mode 100644
-> > index 0000000..76efd13
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/omap3-gta04.dts
-> > @@ -0,0 +1,65 @@
-> > +/*
-> > + * Copyright (C) 2012 Marek Belisko <marek.belisko@open-nandra.com>
-> > + *
-> > + * Based on omap3-beagle-xm.dts
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + */
-> > +/dts-v1/;
-> > +
-> > +/include/ "omap3.dtsi"
-> > +
-> > +/ {
-> > +       model = "OMAP3 GTA04";
-> > +       compatible = "ti,omap3-gta04", "ti,omap3";
-> > +
-> > +       memory {
-> > +               device_type = "memory";
-> > +               reg = <0x80000000 0x20000000>; /* 512 MB */
-> > +       };
-> > +
-> > +       gpio-keys {
-> > +               compatible = "gpio-keys";
-> > +               #address-cells = <1>;
-> > +               #size-cells = <0>;
-> > +               aux-button {
-> > +                       label = "AUX";
-> > +                       linux,code = <169>;
-> > +                       gpios = <&gpio1 7 1>;
-> > +                       gpio-key,wakeup;
-> > +               };
-> > +       };
-> > +};
-> > +
-> > +&i2c1 {
-> > +       clock-frequency = <2600000>;
-> > +
-> > +       twl: twl@48 {
-> > +               reg = <0x48>;
-> > +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> > +               interrupt-parent = <&intc>;
-> > +       };
-> > +};
-> > +
-> > +/include/ "twl4030.dtsi"
-> > +
-> > +&i2c2 {
-> > +       clock-frequency = <400000>;
-> > +       /* Pressure Sensor */
-> > +       bmp085@77 {
-> > +               compatible = "bosch,bmp085";
-> > +               reg = <0x77>;
-> > +       };
-> > +};
-> > +
-> > +&i2c3 {
-> > +       clock-frequency = <100000>;
-> > +};
-> > +
-> > +&mmc1 {
-> > +       vmmc-supply = <&vmmc1>;
-> > +       bus-width = <4>;
-> > +};
-> > +
-> > --
-> > 1.7.9.5
-> >
-> 
-> 
-> 
-> -- 
-> as simple and primitive as possible
-> -------------------------------------------------
-> Marek Belisko - OPEN-NANDRA
-> Freelance Developer
-> 
-> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-> Tel: +421 915 052 184
-> skype: marekwhite
-> twitter: #opennandra
-> web: http://open-nandra.com
-
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+index 5da379a..552c63f 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -131,6 +131,7 @@ static int __devexit usbmisc_imx_remove(struct platform_device *pdev)
+ {
+ 	usbmisc_unset_ops(&imx6q_usbmisc_ops);
+ 	clk_disable_unprepare(usbmisc->clk);
++	usbmisc = NULL;
+ 	return 0;
+ }
+ 
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
