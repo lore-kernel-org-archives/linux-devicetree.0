@@ -1,88 +1,49 @@
-From: Kim Phillips <kim.phillips@freescale.com>
-Subject: Re: [PATCH v3 3/4] dtc/libfdt: introduce fdt types for
- annotation by endian checkers
-Date: Wed, 14 Nov 2012 23:12:04 -0600
-Message-ID: <20121114231204.8f19082c7acc1cea2a2d794f@freescale.com>
-References: <E1TYeB5-0003oB-IS@jdl.com>
-	<1352941199-19393-1-git-send-email-kim.phillips@freescale.com>
-	<1352941199-19393-3-git-send-email-kim.phillips@freescale.com>
-	<20121115044340.GI32290@truffula.fritz.box>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Thu, 15 Nov 2012 15:57:18 +1100
+Message-ID: <20121115045718.GJ32290@truffula.fritz.box>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <50999145.2070306@wwwdotorg.org>
+ <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
+ <509D9089.7020407@wwwdotorg.org>
+ <5B124797-6DFD-4C5E-90D7-665AFD4A7873@antoniou-consulting.com>
+ <50A12950.6090808@wwwdotorg.org>
+ <20121113072517.GE25915@truffula.fritz.box>
+ <BD20AE03-C138-4BC6-AE02-F162AF6840B2@antoniou-consulting.com>
+ <CACxGe6vQxmAk_joUYbaXw4r8J3_RbQt22zFg84ANvcw+ycCMHg@mail.gmail.com>
+ <7A051C2B-C4FB-41A0-8338-60B607EA3BC1@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <20121115044340.GI32290@truffula.fritz.box>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: u-boot@lists.denx.de, jdl@jdl.com, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7A051C2B-C4FB-41A0-8338-60B607EA3BC1@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@wwwdotorg.org>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2012 15:43:40 +1100
-David Gibson <david@gibson.dropbear.id.au> wrote:
-
-> On Wed, Nov 14, 2012 at 06:59:58PM -0600, Kim Phillips wrote:
-> > +#define EXTRACT_BYTE(x, n) ((unsigned long long)((uint8_t *)&x)[n])
-> > +#define __SWAB16(x) ((EXTRACT_BYTE(x, 0) << 8) | EXTRACT_BYTE(x, 1))
-> > +#define __SWAB32(x) ((EXTRACT_BYTE(x, 0) << 24) | (EXTRACT_BYTE(x, 1) << 16) | \
-> > +		     (EXTRACT_BYTE(x, 2) << 8) | EXTRACT_BYTE(x, 3))
-> > +#define __SWAB64(x) ((EXTRACT_BYTE(x, 0) << 56) | (EXTRACT_BYTE(x, 1) << 48) | \
-> > +		     (EXTRACT_BYTE(x, 2) << 40) | (EXTRACT_BYTE(x, 3) << 32) | \
-> > +		     (EXTRACT_BYTE(x, 4) << 24) | (EXTRACT_BYTE(x, 5) << 16) | \
-> > +		     (EXTRACT_BYTE(x, 6) << 8) | EXTRACT_BYTE(x, 7))
+On Tue, Nov 13, 2012 at 03:38:18PM +0200, Pantelis Antoniou wrote:
+> Hi Grant,
 > 
-> This is not right, or at least very misleading.  "swab" usually refers
-> to an unconditional byteswap.  But the macros above are nops on a
-> big-endian machine.
+> On Nov 13, 2012, at 2:24 PM, Grant Likely wrote:
 
-but they don't get called on a big endian system.  This is the name
-linux uses.  If you want them renamed, please suggest names - I
-can't read your mind.
-
-> > -static inline uint32_t fdt32_to_cpu(uint32_t x)
-> > -{
-> > -	return (EXTRACT_BYTE(0) << 24) | (EXTRACT_BYTE(1) << 16) | (EXTRACT_BYTE(2) << 8) | EXTRACT_BYTE(3);
-> > +/*
-> > + * determine host endianness:
-> > + * *__first_byte is 0x11 on big endian systems
-> > + * *__first_byte is 0x44 on little endian systems
-> > + */
-> > +static const uint32_t __native = 0x11223344u;
-> > +static const uint8_t *__first_byte = (const uint8_t *)&__native;
-> > +
-> > +#define DEF_FDT_TO_CPU(bits) \
-> > +static inline uint##bits##_t fdt##bits##_to_cpu(fdt##bits##_t x) \
-> > +{ \
-> > +	if (*__first_byte == 0x11) \
-> > +		return (__force uint##bits##_t)x; \
-> > +	else \
-> > +		return (__force uint##bits##_t)__SWAB##bits(x); \
-> >  }
-> > -#define cpu_to_fdt32(x) fdt32_to_cpu(x)
-> > +DEF_FDT_TO_CPU(16)
-> > +DEF_FDT_TO_CPU(32)
-> > +DEF_FDT_TO_CPU(64)
+> > On Tue, Nov 13, 2012 at 8:09 AM, Pantelis Antoniou
+[snip]
+> My intention wasn't never to make overlays overly portable. My intention
+> was to make them in a way that portability can be introduced if the boards
+> are 'close' enough, but not for arbitrary boards.
 > 
-> In fact, I really don't see why you're rewriting the byteswapper
-> functions as part of this patch.  The existing versions aren't very
-> nice, but if you want to rewrite those, please do it in a separate
-> patch.
+> There have to be compatible interfaces both on the base, and the overlay
+> dtbs.
 
-This patchseries is about silencing sparse warnings in linux,
-u-boot, and libfdt.  Sparse is intelligent in that if you mismatch a
-native type of value 0 to a bitwise restricted type, it won't call a
-warning.  The existing short-circuiting of the byteswapper
-functions, i.e., defining cpu_to_fdt32(x) to fdt32_to_cpu(x) and
-vice versa doesn't allow for correct attribution propagation.
-Therefore I chose to allow sparse to see the actual conversion.  If
-you have any other ideas on how to silence sparse in libfdt, let me
-know.
+Right.  And this is why I'm arguing that those interfaces should be
+described explicitly - using existing OF mechanisms like interrupt-map
+where possible, rather than having a very general, but very low-level
+interface to make arbitrary changes to the DT.
 
-Kim
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
