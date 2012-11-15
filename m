@@ -1,45 +1,60 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH V5 0/7] ARM: AM33XX: net: Add DT support to CPSW and
- MDIO driver
-Date: Wed, 14 Nov 2012 22:09:31 -0500 (EST)
-Message-ID: <20121114.220931.785168143706732441.davem@davemloft.net>
-References: <1352920080-6179-1-git-send-email-mugunthanvnm@ti.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 4/4] dtc/libfdt: sparse fixes
+Date: Thu, 15 Nov 2012 14:53:05 +1100
+Message-ID: <20121115035305.GH32290@truffula.fritz.box>
+References: <20121113183430.472a0d989815fbd73ee9b437@freescale.com>
+ <20121114102303.GF32290@truffula.fritz.box>
+ <20121114184630.64242a970b40c2b3b55f54a2@freescale.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1352920080-6179-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: mugunthanvnm@ti.com
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121114184630.64242a970b40c2b3b55f54a2-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Date: Thu, 15 Nov 2012 00:37:53 +0530
+On Wed, Nov 14, 2012 at 06:46:30PM -0600, Kim Phillips wrote:
+> On Wed, 14 Nov 2012 21:23:03 +1100
+> David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> 
+> > Hrm.  The patch comment shows a lot of sparse warnings, but the patch
+> > looks like the basic conversion of the code from uint32_t to
+> > annontated fdt32_t types.
+> 
+> not sure what you're getting at: isn't this to be expected?  Anyway,
+> I'm going to guess you mean to re-word the commit message.
 
-> This patch-series adds support for,
-> 
-> [1/7]: Typo mistake in CPSW driver while invoking runtime_pm api's
-> 
-> [2/7]: Adds parent<->child relation between CPSW & MDIO module inside cpsw
->        driver, as in case of AM33XX, the resources are shared and common
->        register bit-field is provided to control module/clock enable/disable,
->        makes it difficult to handle common resource.
-> 
->        So the solution here is, to create parent<->child relation between them.
-> 
-> [3/7]: cpsw: simplify the setup of the register pointers
-> 
-> [4/7]: cpsw: Kernel warn fix during suspend
-> 
-> [5/7]: Add hwmod entry for MDIO module, required for MDIO driver.
-> 
-> [6/7]: Enable CPSW support to omap2plus_defconfig
-> 
-> [7/7]: Add DT device nodes for both CPSW and MDIO modules in am33xx.dtsi,
->        am335x-evm.dts and am335x-bone.dts file
-> 
-> This patch series has been created on top of net-next/master and tested
-> on BeagleBone platform for NFS boot and basic ping test cases.
+Ah, I see what you're getting at, and yes.  The current message
+suggests this is fixing real endian problems found by sparse, rather
+than being almost a mechanical replacement of uint32_t with fdt32_t.
+If there are real bug fixes, I'd prefer to see that broken out into a
+different patch.
 
-All applied, thanks.
+> >  I also never saw a 3/4.  Has something gone
+> > wrong with the patch sending?
+> 
+> I sent 3/4 in reply-to your comments on v1 of the patch, and the
+> rest without the reply-to reference, so 3/4 might show up out of
+> order in your inbox, depending on how it's configured.  I'll send
+> the entire series with the same reference - jdl's comments to v2 -
+> instead next time.
+
+Ok.
+
+-- 
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
