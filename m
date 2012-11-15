@@ -1,13 +1,14 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH 7/7] ARM: Kirkwood: switch to DT clock providers
-Date: Thu, 15 Nov 2012 22:28:26 +0100
-Message-ID: <1353014906-31566-8-git-send-email-andrew@lunn.ch>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/7] clk: mvebu: add armada-370-xp CPU specific clocks
+Date: Thu, 15 Nov 2012 22:44:59 +0100
+Message-ID: <20121115224459.3ea69329@skate>
 References: <1353014906-31566-1-git-send-email-andrew@lunn.ch>
+ <1353014906-31566-3-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353014906-31566-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1353014906-31566-3-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,244 +19,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With true DT clock providers available switch Kirkwood clock setup in
-DT- enabled boards. While AUXDATA can be removed completely from bus
-probing, some devices still don't know about DT. Therefore, some clkdev
-aliases are created until these devices also move to DT.
+Dear Andrew Lunn,
 
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
----
- arch/arm/boot/dts/kirkwood.dtsi           |   22 +++++++++
- arch/arm/mach-kirkwood/Kconfig            |    2 +
- arch/arm/mach-kirkwood/board-dt.c         |   72 +++++++++++++++++++++++------
- arch/arm/plat-orion/include/plat/common.h |    1 +
- 4 files changed, 84 insertions(+), 13 deletions(-)
+On Thu, 15 Nov 2012 22:28:21 +0100, Andrew Lunn wrote:
+> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+> Add Armada 370/XP specific CPU clocks
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/mvebu-core-clock.txt |   18 +--
 
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index 4e5b815..5c85a57 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -19,6 +19,12 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-+		core_clk: core-clocks@10030 {
-+                	compatible = "marvell,kirkwood-core-clocks";
-+			reg = <0x10030 0x4>;
-+	        	#clock-cells = <1>;
-+		};
-+
- 		gpio0: gpio@10100 {
- 			compatible = "marvell,orion-gpio";
- 			#gpio-cells = <2>;
-@@ -42,6 +48,7 @@
- 			reg = <0x12000 0x100>;
- 			reg-shift = <2>;
- 			interrupts = <33>;
-+			clocks = <&clk_gate 7>;
- 			/* set clock-frequency in board dts */
- 			status = "disabled";
- 		};
-@@ -51,6 +58,7 @@
- 			reg = <0x12100 0x100>;
- 			reg-shift = <2>;
- 			interrupts = <34>;
-+			clocks = <&clk_gate 7>;
- 			/* set clock-frequency in board dts */
- 			status = "disabled";
- 		};
-@@ -68,12 +76,21 @@
- 			cell-index = <0>;
- 			interrupts = <23>;
- 			reg = <0x10600 0x28>;
-+			clocks = <&clk_gate 7>;
- 			status = "disabled";
- 		};
- 
-+		clk_gate: clock-gating-control@2011c {
-+			compatible = "marvell,kirkwood-clock-gating";
-+			reg = <0x2011c 0x4>;
-+			clocks = <&core_clk 0>;
-+			#clock-cells = <1>;
-+		};
-+
- 		wdt@20300 {
- 			compatible = "marvell,orion-wdt";
- 			reg = <0x20300 0x28>;
-+			clocks = <&clk_gate 7>;
- 			status = "okay";
- 		};
- 
-@@ -81,6 +98,8 @@
- 			compatible = "marvell,orion-sata";
- 			reg = <0x80000 0x5000>;
- 			interrupts = <21>;
-+			clocks = <&clk_gate 14>, <&clk_gate 15>;
-+			clock-names = "0", "1";
- 			status = "disabled";
- 		};
- 
-@@ -94,6 +113,7 @@
- 			reg = <0x3000000 0x400>;
- 			chip-delay = <25>;
- 			/* set partition map and/or chip-delay in board dts */
-+			clocks = <&clk_gate 7>;
- 			status = "disabled";
- 		};
- 
-@@ -104,6 +124,7 @@
- 			#size-cells = <0>;
- 			interrupts = <29>;
- 			clock-frequency = <100000>;
-+			clocks = <&clk_gate 7>;
- 			status = "disabled";
- 		};
- 
-@@ -113,6 +134,7 @@
- 			      <0xf5000000 0x800>;
- 			reg-names = "regs", "sram";
- 			interrupts = <22>;
-+			clocks = <&clk_gate 17>;
- 			status = "okay";
- 		};
- 	};
-diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
-index 50bca50..2833492 100644
---- a/arch/arm/mach-kirkwood/Kconfig
-+++ b/arch/arm/mach-kirkwood/Kconfig
-@@ -46,6 +46,8 @@ config MACH_GURUPLUG
- 
- config ARCH_KIRKWOOD_DT
- 	bool "Marvell Kirkwood Flattened Device Tree"
-+	select MVEBU_CLK_CORE
-+	select MVEBU_CLK_GATING
- 	select USE_OF
- 	help
- 	  Say 'Y' here if you want your kernel to support the
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index d94872f..0129cdc 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -14,11 +14,15 @@
- #include <linux/init.h>
- #include <linux/of.h>
- #include <linux/of_platform.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clk/mvebu.h>
- #include <linux/kexec.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
- #include <mach/bridge-regs.h>
-+#include <linux/platform_data/usb-ehci-orion.h>
- #include <plat/irq.h>
-+#include <plat/common.h>
- #include "common.h"
- 
- static struct of_device_id kirkwood_dt_match_table[] __initdata = {
-@@ -26,16 +30,59 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
- 	{ }
- };
- 
--struct of_dev_auxdata kirkwood_auxdata_lookup[] __initdata = {
--	OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
--	OF_DEV_AUXDATA("marvell,mv64xxx-i2c", 0xf1011000, "mv64xxx_i2c.0",
--		       NULL),
--	OF_DEV_AUXDATA("marvell,orion-wdt", 0xf1020300, "orion_wdt", NULL),
--	OF_DEV_AUXDATA("marvell,orion-sata", 0xf1080000, "sata_mv.0", NULL),
--	OF_DEV_AUXDATA("marvell,orion-nand", 0xf4000000, "orion_nand", NULL),
--	OF_DEV_AUXDATA("marvell,orion-crypto", 0xf1030000, "mv_crypto", NULL),
--	{},
--};
-+/*
-+ * There are still devices that doesn't know about DT yet.  Get clock
-+ * gates here and add a clock lookup alias, so that old platform
-+ * devices still work.
-+*/
-+
-+static void __init kirkwood_legacy_clk_init(void)
-+{
-+
-+	struct device_node *np = of_find_compatible_node(NULL, NULL,
-+							 "marvell,kirkwood-clock-gating");
-+
-+	struct of_phandle_args clkspec;
-+
-+	clkspec.np = np;
-+	clkspec.args_count = 1;
-+
-+	clkspec.args[0] = CGC_BIT_GE0;
-+	orion_clkdev_add(NULL, "mv643xx_eth_port.0",
-+			 of_clk_get_from_provider(&clkspec));
-+
-+	clkspec.args[0] = CGC_BIT_PEX0;
-+	orion_clkdev_add("0", "pcie",
-+			 of_clk_get_from_provider(&clkspec));
-+
-+	clkspec.args[0] = CGC_BIT_USB0;
-+	orion_clkdev_add(NULL, "orion-ehci.0",
-+			 of_clk_get_from_provider(&clkspec));
-+
-+	clkspec.args[0] = CGC_BIT_XOR0;
-+	orion_clkdev_add(NULL, "mv_xor_shared.0",
-+			 of_clk_get_from_provider(&clkspec));
-+
-+	clkspec.args[0] = CGC_BIT_XOR1;
-+	orion_clkdev_add(NULL, "mv_xor_shared.1",
-+			 of_clk_get_from_provider(&clkspec));
-+
-+	clkspec.args[0] = CGC_BIT_PEX1;
-+	orion_clkdev_add("1", "pcie",
-+			 of_clk_get_from_provider(&clkspec));
-+
-+	clkspec.args[0] = CGC_BIT_GE1;
-+	orion_clkdev_add(NULL, "mv643xx_eth_port.1",
-+			 of_clk_get_from_provider(&clkspec));
-+
-+}
-+
-+static void __init kirkwood_of_clk_init(void)
-+{
-+	mvebu_clocks_init();
-+	mvebu_clk_gating_init();
-+	kirkwood_legacy_clk_init();
-+}
- 
- static void __init kirkwood_dt_init(void)
- {
-@@ -54,7 +101,7 @@ static void __init kirkwood_dt_init(void)
- 	kirkwood_l2_init();
- 
- 	/* Setup root of clk tree */
--	kirkwood_clk_init();
-+	kirkwood_of_clk_init();
- 
- 	/* internal devices that every board has */
- 	kirkwood_xor0_init();
-@@ -94,8 +141,7 @@ static void __init kirkwood_dt_init(void)
- 	if (of_machine_is_compatible("keymile,km_kirkwood"))
- 		km_kirkwood_init();
- 
--	of_platform_populate(NULL, kirkwood_dt_match_table,
--			     kirkwood_auxdata_lookup, NULL);
-+	of_platform_populate(NULL, kirkwood_dt_match_table, NULL, NULL);
- }
- 
- static const char *kirkwood_dt_board_compat[] = {
-diff --git a/arch/arm/plat-orion/include/plat/common.h b/arch/arm/plat-orion/include/plat/common.h
-index 6bbc3fe..e06fc5f 100644
---- a/arch/arm/plat-orion/include/plat/common.h
-+++ b/arch/arm/plat-orion/include/plat/common.h
-@@ -12,6 +12,7 @@
- #include <linux/mv643xx_eth.h>
- 
- struct dsa_platform_data;
-+struct mv_sata_platform_data;
- 
- void __init orion_uart0_init(void __iomem *membase,
- 			     resource_size_t mapbase,
+The changes to this file.
+
+>  .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   21 +++
+>  drivers/clk/mvebu/Kconfig                          |    3 +
+>  drivers/clk/mvebu/Makefile                         |    1 +
+>  drivers/clk/mvebu/clk-core.c                       |    4 +-
+
+And this one don't appear to belong in this commit, do they?
+
+Thomas
 -- 
-1.7.10.4
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
