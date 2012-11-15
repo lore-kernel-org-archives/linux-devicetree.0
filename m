@@ -1,51 +1,79 @@
-From: Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/6] usb: chipidea: usbmisc: add post handling and errata
- fix for mx25
-Date: Thu, 15 Nov 2012 11:08:15 +0100
-Message-ID: <CALBypN6U=np93ZwnEZqbh=j0Vb_-x630GaktEiv+4K26eYp4Pg@mail.gmail.com>
-References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
-	<1352894137-2050-7-git-send-email-m.grzeschik@pengutronix.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
+Date: Thu, 15 Nov 2012 10:15:25 +0000
+Message-ID: <CACxGe6vUGaRG-c3Vr5Zuuohhct6hEM-AhrZ6fmFfd6nyNZdo=Q@mail.gmail.com>
+References: <1351721431-26220-1-git-send-email-swarren@wwwdotorg.org>
+ <20121102095801.GC17860@linux-mips.org> <20121102102335.GF2905@linux-mips.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352894137-2050-7-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121102102335.GF2905@linux-mips.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Nov 14, 2012 at 12:55 PM, Michael Grzeschik
-<m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> @@ -213,6 +216,15 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->                 goto put_np;
->         }
+On Fri, Nov 2, 2012 at 10:23 AM, Ralf Baechle <ralf@linux-mips.org> wrote:
+> On Fri, Nov 02, 2012 at 10:58:01AM +0100, Ralf Baechle wrote:
 >
-> +       if (usbmisc_ops && usbmisc_ops->post) {
-> +               ret = usbmisc_ops->post(&pdev->dev);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev,
-> +                               "usbmisc post failed, ret=%d\n", ret);
-> +                       goto err;
-> +               }
-> +       }
-> +
->         data->ci_pdev = plat_ci;
->         platform_set_drvdata(pdev, data);
+>> Can you fold these MIPS bits into your patch?
 >
-This hunk fails to apply for me on 3.7-rc5:
-error: while searching for:
-		goto put_np;
-	}
+> I missed Lantiq.
+>
+>   Ralf
+>
+> Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+>
+>  arch/mips/cavium-octeon/Makefile | 3 ---
+>  arch/mips/lantiq/dts/Makefile    | 3 ---
+>  arch/mips/netlogic/dts/Makefile  | 3 ---
+>  3 files changed, 9 deletions(-)
+>
+> diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+> index bc96e29..6e927cf 100644
+> --- a/arch/mips/cavium-octeon/Makefile
+> +++ b/arch/mips/cavium-octeon/Makefile
+> @@ -24,9 +24,6 @@ DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
+>
+>  obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
+>
+> -$(obj)/%.dtb: $(src)/%.dts FORCE
+> -       $(call if_changed_dep,dtc)
+> -
+>  # Let's keep the .dtb files around in case we want to look at them.
+>  .SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
+>
+> diff --git a/arch/mips/lantiq/dts/Makefile b/arch/mips/lantiq/dts/Makefile
+> index 674fca4..6fa72dd 100644
+> --- a/arch/mips/lantiq/dts/Makefile
+> +++ b/arch/mips/lantiq/dts/Makefile
+> @@ -1,4 +1 @@
+>  obj-$(CONFIG_DT_EASY50712) := easy50712.dtb.o
+> -
+> -$(obj)/%.dtb: $(obj)/%.dts
+> -       $(call if_changed,dtc)
+> diff --git a/arch/mips/netlogic/dts/Makefile b/arch/mips/netlogic/dts/Makefile
+> index 67ae3fe2..d117d46 100644
+> --- a/arch/mips/netlogic/dts/Makefile
+> +++ b/arch/mips/netlogic/dts/Makefile
+> @@ -1,4 +1 @@
+>  obj-$(CONFIG_DT_XLP_EVP) := xlp_evp.dtb.o
+> -
+> -$(obj)/%.dtb: $(obj)/%.dts
+> -       $(call if_changed,dtc)
 
-	data->ci_pdev = plat_ci;
-	platform_set_drvdata(pdev, data);
+This actually breaks MIPS builds. MIPS builds the .dtbs in the same
+directory as the .dts files. Everyone else has a dts/ subdirectory,
+which is admittedly a bit insane, but until things are resolved I've
+dropped the above MIPS hunks.
 
-Regards,
+MIPS /could/ be changed to also use a dts directory, but I'd actually
+rather if someone could make all the other platforms build the dtbs in
+the same directory. I've looked at it briefly, but I haven't figured
+out all the make magic needed to do it nicely.
 
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
+
+-- 
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
