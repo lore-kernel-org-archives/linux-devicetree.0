@@ -1,68 +1,53 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3 2/2] Add documentation for tca6507 devicetree bindings.
-Date: Thu, 15 Nov 2012 18:12:34 +0000
-Message-ID: <20121115181234.37B173E199F@localhost>
-References: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com> <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cooloney@gmail.com, rpurdie@rpsys.net
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
+Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
+Date: Thu, 15 Nov 2012 18:20:36 +0000
+Message-ID: <CACxGe6tZOjMXR6CNDzDTSUkcERLiX-2+Qoad0bcPum5Z-Jxaaw@mail.gmail.com>
+References: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com>
+ <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca> <50A52FEC.4080409@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <50A52FEC.4080409@wwwdotorg.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-arch@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Nov 2012 22:25:11 +0100, Marek Belisko <marek.belisko@open-nandra.com> wrote:
-> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
-> ---
->  Documentation/devicetree/bindings/leds/tca6507.txt |   40 ++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/tca6507.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
-> new file mode 100644
-> index 0000000..a49eb0c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/tca6507.txt
-> @@ -0,0 +1,40 @@
-> +LEDs conected to tca6507
-> +
-> +Required properties:
-> +- compatible : should be : "ti,tca6507".
-> +
-> +Each led is represented as a sub-node of the ti,tca6507 device.
-> +
-> +LED sub-node properties:
-> +- label : label for this LED
-> +- reg : number of LED line (could be from 0 to 6)
-> +- linux,default-trigger :  (optional) This parameter, if present, is a
-> +  string defining the trigger assigned to the LED.  Current triggers are:
-> +    "backlight" - LED will act as a back-light, controlled by the framebuffer
-> +		  system
-> +    "default-on" - LED will turn on
-> +    "heartbeat" - LED "double" flashes at a load average based rate
-> +    "ide-disk" - LED indicates disk activity
-> +    "timer" - LED flashes at a fixed, configurable rate
+On Thu, Nov 15, 2012 at 6:09 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 11/15/2012 04:51 AM, Grant Likely wrote:
+>> Grant Likely wrote:
+>>> Or how about: I could pick up the patch with only the MIPS hunk and
+>>> every other user can be fixed up independently to use the new rule.
+>>
+>> Here's a trial patch to fix up ARM. Does this look correct? This patch
+>> depends on the generic dtb build rule already being applied.
+>
+> I think the patch looks OK technically, except for one minor comment below.
+>
+> One issue with this patch is that it moves *.dts from arch/arm/boot to
+> arch/arm/boot/dts, which means everyone has to adjust their scripts/...
+> that package/install/... the kernel. I guess it's an easy change for
+> people to make, but could easily catch people unawares if they do
+> incremental builds so that arch/arm/boot/*.dtb still exists but is stale.
 
-This is cut-and-paste from bindings/gpio/led.txt. It should be split
-into a separate file and referenced by both bindings. Otherwise the
-binding looks fine.
+True. We could temporarily remove or rename if the same file exists in
+the directory below to help people catch that problem. I really would
+like to clean up that build rule to be consistent though.
 
-> +
-> +Examples:
-> +
-> +tca6507@45 {
-> +	compatible = "ti,tca6507";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x45>;
-> +
-> +	led0: red_aux@0 {
-> +		label = "red:aux";
-> +		reg = <0x0>;
-> +	};
-> +
-> +	led1: green_aux@1 {
+The other option is to move all the .dts files into the boot
+directory, but I don't think that is a good idea at all.
 
-Don't use underscores in node names. Use '-'. (There isn't a technical
-reason for this. It is just convention)
+>> +targets += dtbs
+>
+> Doesn't that make the "dtbs" target always run by default? Perhaps
+> that's reasonable though, and doesn't actually affect anything since the
+> make command for this directory always specifies an explicit target?
+>
+> Or, was that meant to be the following that got removed from ../Makefile?
+>
+> targets += $(dtb-y)
+
+Yes it is supposed to be the same thing. Doesn't it effectively do the
+same since dtbs depends on $(dtb-y)?
 
 g.
