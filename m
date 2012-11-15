@@ -1,97 +1,62 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v10 0/6] of: add display helper
-Date: Thu, 15 Nov 2012 11:24:11 +0100
-Message-ID: <20121115102411.GA17272@avionic-0098.mockup.avionic-design.de>
-References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] usb: chipidea: usbmisc: add post handling and
+ errata fix for mx25
+Date: Thu, 15 Nov 2012 11:25:25 +0100
+Message-ID: <20121115102525.GA16118@pengutronix.de>
+References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352894137-2050-7-git-send-email-m.grzeschik@pengutronix.de>
+ <CALBypN6U=np93ZwnEZqbh=j0Vb_-x630GaktEiv+4K26eYp4Pg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+In-Reply-To: <CALBypN6U=np93ZwnEZqbh=j0Vb_-x630GaktEiv+4K26eYp4Pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 15, 2012 at 11:08:15AM +0100, Martin Fuzzey wrote:
+> On Wed, Nov 14, 2012 at 12:55 PM, Michael Grzeschik
+> <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > @@ -213,6 +216,15 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
+> >                 goto put_np;
+> >         }
+> >
+> > +       if (usbmisc_ops && usbmisc_ops->post) {
+> > +               ret = usbmisc_ops->post(&pdev->dev);
+> > +               if (ret) {
+> > +                       dev_err(&pdev->dev,
+> > +                               "usbmisc post failed, ret=%d\n", ret);
+> > +                       goto err;
+> > +               }
+> > +       }
+> > +
+> >         data->ci_pdev = plat_ci;
+> >         platform_set_drvdata(pdev, data);
+> >
+> This hunk fails to apply for me on 3.7-rc5:
+> error: while searching for:
+> 		goto put_np;
+> 	}
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is because that series is based on Peter Chen's work. I should have
+mentioned this in the cover-letter mail. You can merge his master branch
+before adding my series:
+https://github.com/hzpeterchen/linux-usb.git
 
-On Thu, Nov 15, 2012 at 10:23:51AM +0100, Steffen Trumtrar wrote:
-> Hi!
->=20
-> Changes since v9:
-> 	- don't leak memory when previous timings were correct
-> 	- CodingStyle fixes
-> 	- move blank lines around
->=20
-> Regards,
-> Steffen
->=20
->=20
-> Steffen Trumtrar (6):
->   video: add display_timing and videomode
->   video: add of helper for videomode
->   fbmon: add videomode helpers
->   fbmon: add of_videomode helpers
->   drm_modes: add videomode helpers
->   drm_modes: add of_videomode helpers
->=20
->  .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
->  drivers/gpu/drm/drm_modes.c                        |   70 +++++++
->  drivers/video/Kconfig                              |   19 ++
->  drivers/video/Makefile                             |    4 +
->  drivers/video/display_timing.c                     |   24 +++
->  drivers/video/fbmon.c                              |   86 ++++++++
->  drivers/video/of_display_timing.c                  |  212 ++++++++++++++=
-++++++
->  drivers/video/of_videomode.c                       |   47 +++++
->  drivers/video/videomode.c                          |   45 +++++
->  include/drm/drmP.h                                 |   12 ++
->  include/linux/display_timing.h                     |   69 +++++++
->  include/linux/fb.h                                 |   12 ++
->  include/linux/of_display_timings.h                 |   20 ++
->  include/linux/of_videomode.h                       |   17 ++
->  include/linux/videomode.h                          |   40 ++++
->  15 files changed, 784 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/display-timin=
-gs.txt
->  create mode 100644 drivers/video/display_timing.c
->  create mode 100644 drivers/video/of_display_timing.c
->  create mode 100644 drivers/video/of_videomode.c
->  create mode 100644 drivers/video/videomode.c
->  create mode 100644 include/linux/display_timing.h
->  create mode 100644 include/linux/of_display_timings.h
->  create mode 100644 include/linux/of_videomode.h
->  create mode 100644 include/linux/videomode.h
+Apart from the latter patches, his work already got queued up by Greg:
+http://comments.gmane.org/gmane.linux.usb.general/74537
 
-With the one change that I pointed out, the whole series:
+Thanks,
+Michael
 
-Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQpMLLAAoJEN0jrNd/PrOhkDAP/RjTC5GwaxHO5Ry9OyHH1O39
-yoBYhab3iNYiUAtjw//bZBxpsQuQoWb22MHzouE0eXEBn042UuTj06UBT/oEk4kb
-Y+j45BWvXFmNsbBMSz4nJdi/ZzkU8bgBrhaSQ4U0j3mgKXuLkh7gzxJSYaksDzHk
-lAkLf378mVx8tC5Fch65tJOAVuocGKh5Vie3wmSDOMJ7nBFFyYZoq7F6JhebfMRa
-E24T5Pi7oOteqWrGFplAeVRLHmuMdqZC9s5BXBfffBenRzNjOuqAyw+dXQaSkY4l
-lGLex9G6QBy0A65AWw7WTjp0qa53z6SVZwr+3ufO/zhBwrmEzp6JnBRfkh7lYzMl
-XOmKFcgs5v0FsBNJCIbFtzcBainOCfxMgUTH5exbAH6l7xMTMtfoU+Oavpyc/H4k
-zZpzlEvHihPIC+aoZnTnFld/UBEKw6K7z/Tvqu4iQEntxhQ2Xl9htH7Mv45vEaNT
-1IAdJTZjs5HH/NxM4sHnru4T3pL4Prrorbx6ZaV+qI4exY803iWSunbRkngroZN2
-0lRcaNJTRyEd4QvRiZLYwBxZe+ZhihRyGvQYVu/SnUes7mMWXRHcwnLQwWhovg1v
-8tH2UnLUridwZsCH6NFA82z5MfHipmcVcYWcvF3LtCxw7KBSx7DqdV9oj9woz9Ou
-4vNrW018Kl3rNvmAiLZj
-=ayMQ
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
