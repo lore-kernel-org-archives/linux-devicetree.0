@@ -1,69 +1,59 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
-Date: Thu, 15 Nov 2012 11:00:06 -0700
-Message-ID: <50A52DA6.3070409@wwwdotorg.org>
-References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
- <1352650891-18356-2-git-send-email-andrew@lunn.ch>
- <50A020C5.4070506@wwwdotorg.org> <20121112082546.GU22029@lunn.ch>
- <50A1212C.2080601@wwwdotorg.org> <20121112181947.GS24583@lunn.ch>
- <20121112184340.GA15643@lizard> <50A146E7.2040608@wwwdotorg.org>
- <CACRpkdb=ra9NwqEneyMoM5YnOFTVQoBxPATjUN6anooXVLiCjw@mail.gmail.com>
- <20121115105954.GA17119@lizard>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121115105954.GA17119@lizard>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anton Vorontsov <anton.vorontsov@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, gmbnomis@gmail.com
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v10 1/6] video: add display_timing and videomode
+Date: Thu, 15 Nov 2012 18:03:59 +0000
+Message-ID: <20121115180359.1E6F33E197F@localhost>
+References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de> <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de> <20121115154753.C82223E194B@localhost> <2466982.zTBri0jEif@avalon>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <2466982.zTBri0jEif@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2012 03:59 AM, Anton Vorontsov wrote:
-> On Thu, Nov 15, 2012 at 11:35:36AM +0100, Linus Walleij wrote:
->> On Mon, Nov 12, 2012 at 7:58 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 11/12/2012 11:43 AM, Anton Vorontsov wrote:
->>
->>>> Should the gpio driver fix its bindings then?.. Polarity is a quite
->>>> generic concept of a GPIO, and flags are there for a reason. I'd rather
->>>> prefer having
->>>
->>> There is no "GPIO driver" to fix; each GPIO driver has its own bindings,
->>> and unfortunately, some of the GPIO binding authors chose not to include
->>> any flags cell in the GPIO specifier (e.g. Samsung ARM SoCs IIRC, but
->>> there are probably more).
->>
->> So can I read this something like we have been too liberal with the
->> GPIO DT bindings and they are now a bit messy and need to be shaped
->> up? I don't know how to achieve that :-(
+On Thu, 15 Nov 2012 17:00:57 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> Hi Grant,
 > 
-> I guess there's really no reason to panic. :)
+> On Thursday 15 November 2012 15:47:53 Grant Likely wrote:
+> > On Thu, 15 Nov 2012 10:23:52 +0100, Steffen Trumtrar wrote:
+> > > Add display_timing structure and the according helper functions. This
+> > > allows the description of a display via its supported timing parameters.
+> > > 
+> > > Every timing parameter can be specified as a single value or a range
+> > > <min typ max>.
+> > > 
+> > > Also, add helper functions to convert from display timings to a generic
+> > > videomode structure. This videomode can then be converted to the
+> > > corresponding subsystem mode representation (e.g. fb_videomode).
+> > > 
+> > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > 
+> > Hmmm... here's my thoughts as an outside reviewer. Correct me if I'm
+> > making an incorrect assumption.
+> > 
+> > It looks to me that the purpose of this entire series is to decode video
+> > timings from the device tree and (eventually) provide the data in the
+> > form 'struct videomode'. Correct?
+> > 
+> > If so, then it looks over engineered. Creating new infrastructure to
+> > allocate, maintain, and free a new 'struct display_timings' doesn't make
+> > any sense when it is an intermediary data format that will never be used
+> > by drivers.
+> > 
+> > Can the DT parsing code instead return a table of struct videomode?
+> > 
+> > But, wait... struct videomode is also a new structure. So it looks like
+> > this series creates two new intermediary data structures;
+> > display_timings and videomode. And at least as far as I can see in this
+> > series struct fb_videomode is the only user.
 > 
-> 'git grep gpio-cells Documentation/' shows just mrvl-gpio.txt and
-> twl6040.txt having the wrong gpio-cells (i.e. 1).
+> struct videomode is supposed to slowly replace the various video mode 
+> structures we currently have in the kernel (struct drm_mode_modeinfo, struct 
+> fb_videomode and struct v4l2_bt_timings), at least where possible (userspace 
+> APIs can't be broken). This will make it possible to reuse code across the 
+> DRM, FB and V4L2 subsystems, such as the EDID parser or HDMI encoder drivers. 
+> This rationale might not be clearly explained in the commit message, but 
+> having a shared video mode structure is pretty important.
 
-If there are too-few cells, the binding and driver can always be
-expanded to support more cells in a backwards-compatible way.
+Okay that make sense. What about struct display_timings?
 
-> But even these can use one cells for both flags and pin number (unless you
-> really have 4294967295 GPIOs per controller).
-> 
-> FWIW, current Samsung SOCs use 3 and even 4 cells for a GPIO specifier,
-> which is absolutely fine. Plus, the Samsung bindings do specify the
-> inversion flag. So, unless we have a lot of other [undocumented] bindings,
-> I don't see a big mess. And everything I currently see is fixable.
-
-Oh, I always thought that the Samsung bindings were one of the major
-issues here, but you're right - they do have the inversion flag already.
-
-So, perhaps there really isn't an issue, and we should revisit the
-GPIO-based regulator bindings and drivers, and allow them to
-(additionally) rely on the GPIO flags in the standard way.
+g.
