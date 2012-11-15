@@ -1,95 +1,45 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH] backlight: Add of_find_backlight_by_node() function
-Date: Thu, 15 Nov 2012 10:30:11 +0900
-Message-ID: <004201cdc2d0$c1920210$44b60630$%han@samsung.com>
-References: <1352469878-4532-1-git-send-email-thierry.reding@avionic-design.de>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH V5 0/7] ARM: AM33XX: net: Add DT support to CPSW and
+ MDIO driver
+Date: Wed, 14 Nov 2012 22:09:31 -0500 (EST)
+Message-ID: <20121114.220931.785168143706732441.davem@davemloft.net>
+References: <1352920080-6179-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1352469878-4532-1-git-send-email-thierry.reding@avionic-design.de>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Andrew Morton' <akpm@linux-foundation.org>
-Cc: 'Richard Purdie' <rpurdie@rpsys.net>, 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1352920080-6179-1-git-send-email-mugunthanvnm@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: mugunthanvnm@ti.com
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday, November 09, 2012 11:05 PM Thierry Reding wrote
-> 
-> This function finds the struct backlight_device for a given device tree
-> node. A dummy function is provided so that it safely compiles out if OF
-> support is disabled.
-> 
-> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Date: Thu, 15 Nov 2012 00:37:53 +0530
 
-CC'ed Andrew Morton
-
-Hi Thierry Reding,
-
-The patch itself looks good.
-Could you explain when this API is used?
-Thank you.
-
-
-Best regards,
-Jingoo Han
-
-> ---
->  drivers/video/backlight/backlight.c | 17 +++++++++++++++++
->  include/linux/backlight.h           | 10 ++++++++++
->  2 files changed, 27 insertions(+)
+> This patch-series adds support for,
 > 
-> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
-> index 297db2f..0d1ed4f 100644
-> --- a/drivers/video/backlight/backlight.c
-> +++ b/drivers/video/backlight/backlight.c
-> @@ -370,6 +370,23 @@ void backlight_device_unregister(struct backlight_device *bd)
->  }
->  EXPORT_SYMBOL(backlight_device_unregister);
+> [1/7]: Typo mistake in CPSW driver while invoking runtime_pm api's
 > 
-> +#if IS_ENABLED(CONFIG_OF)
-> +static int of_parent_match(struct device *dev, void *data)
-> +{
-> +	return dev->parent && dev->parent->of_node == data;
-> +}
-> +
-> +struct backlight_device *of_find_backlight_by_node(struct device_node *node)
-> +{
-> +	struct device *dev;
-> +
-> +	dev = class_find_device(backlight_class, NULL, node, of_parent_match);
-> +
-> +	return dev ? to_backlight_device(dev) : NULL;
-> +}
-> +EXPORT_SYMBOL(of_find_backlight_by_node);
-> +#endif
-> +
->  static void __exit backlight_class_exit(void)
->  {
->  	class_destroy(backlight_class);
-> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
-> index 5ffc6dd..11840e9 100644
-> --- a/include/linux/backlight.h
-> +++ b/include/linux/backlight.h
-> @@ -134,4 +134,14 @@ struct generic_bl_info {
->  	void (*kick_battery)(void);
->  };
+> [2/7]: Adds parent<->child relation between CPSW & MDIO module inside cpsw
+>        driver, as in case of AM33XX, the resources are shared and common
+>        register bit-field is provided to control module/clock enable/disable,
+>        makes it difficult to handle common resource.
 > 
-> +#if IS_ENABLED(CONFIG_OF)
-> +struct backlight_device *of_find_backlight_by_node(struct device_node *node);
-> +#else
-> +static inline struct backlight_device *
-> +of_find_backlight_by_node(struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-> +
->  #endif
-> --
-> 1.8.0
+>        So the solution here is, to create parent<->child relation between them.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [3/7]: cpsw: simplify the setup of the register pointers
+> 
+> [4/7]: cpsw: Kernel warn fix during suspend
+> 
+> [5/7]: Add hwmod entry for MDIO module, required for MDIO driver.
+> 
+> [6/7]: Enable CPSW support to omap2plus_defconfig
+> 
+> [7/7]: Add DT device nodes for both CPSW and MDIO modules in am33xx.dtsi,
+>        am335x-evm.dts and am335x-bone.dts file
+> 
+> This patch series has been created on top of net-next/master and tested
+> on BeagleBone platform for NFS boot and basic ping test cases.
+
+All applied, thanks.
