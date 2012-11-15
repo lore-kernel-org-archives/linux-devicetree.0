@@ -1,56 +1,57 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v9] can: grcan: Add device driver for GRCAN and GRHCAN
- cores
-Date: Thu, 15 Nov 2012 21:32:06 +0100
-Message-ID: <50A55146.5050008@pengutronix.de>
-References: <50A3B4DB.40502@pengutronix.de> <1352965634-26663-1-git-send-email-andreas@gaisler.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig68360BC90475DD30CE670F2D"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1352965634-26663-1-git-send-email-andreas@gaisler.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH v3 0/2] NVIDIA Tegra DRM driver
+Date: Thu, 15 Nov 2012 22:28:21 +0100
+Message-ID: <1353014903-17429-1-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Clark <rob-l0cyMroinI0@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig68360BC90475DD30CE670F2D
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This third version of the patch series cleans up some minor issues that
+were found in the previous versions, such as deferred probe not working
+properly and the display remaining enabled after the driver is removed.
 
-On 11/15/2012 08:47 AM, Andreas Larsson wrote:
-> This driver supports GRCAN and CRHCAN CAN controllers available in the =
-GRLIB
-> VHDL IP core library.
->=20
-> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
-> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
+I've also put the two patches in this series into the tegra/drm/for-3.8
+branch of my repository on gitorious[0].
 
-Applied to can-next/master - and included in the pull-reqeust I just
-sent to David.
+Thierry
 
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+[0]: git://gitorious.org/thierryreding/linux.git
 
+Thierry Reding (2):
+  drm: Add NVIDIA Tegra20 support
+  drm: tegra: Add HDMI support
 
---------------enig68360BC90475DD30CE670F2D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+ .../bindings/gpu/nvidia,tegra20-host1x.txt         |  191 +++
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/tegra/Kconfig                      |   23 +
+ drivers/gpu/drm/tegra/Makefile                     |    7 +
+ drivers/gpu/drm/tegra/dc.c                         |  833 ++++++++++++
+ drivers/gpu/drm/tegra/dc.h                         |  388 ++++++
+ drivers/gpu/drm/tegra/drm.c                        |  115 ++
+ drivers/gpu/drm/tegra/drm.h                        |  234 ++++
+ drivers/gpu/drm/tegra/fb.c                         |   56 +
+ drivers/gpu/drm/tegra/hdmi.c                       | 1334 ++++++++++++++++++++
+ drivers/gpu/drm/tegra/hdmi.h                       |  575 +++++++++
+ drivers/gpu/drm/tegra/host1x.c                     |  322 +++++
+ drivers/gpu/drm/tegra/output.c                     |  272 ++++
+ drivers/gpu/drm/tegra/rgb.c                        |  228 ++++
+ 15 files changed, 4581 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+ create mode 100644 drivers/gpu/drm/tegra/Kconfig
+ create mode 100644 drivers/gpu/drm/tegra/Makefile
+ create mode 100644 drivers/gpu/drm/tegra/dc.c
+ create mode 100644 drivers/gpu/drm/tegra/dc.h
+ create mode 100644 drivers/gpu/drm/tegra/drm.c
+ create mode 100644 drivers/gpu/drm/tegra/drm.h
+ create mode 100644 drivers/gpu/drm/tegra/fb.c
+ create mode 100644 drivers/gpu/drm/tegra/hdmi.c
+ create mode 100644 drivers/gpu/drm/tegra/hdmi.h
+ create mode 100644 drivers/gpu/drm/tegra/host1x.c
+ create mode 100644 drivers/gpu/drm/tegra/output.c
+ create mode 100644 drivers/gpu/drm/tegra/rgb.c
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
-
-iEYEARECAAYFAlClUUYACgkQjTAFq1RaXHOBWACglDxURLOkTxjiVa9ldAY6/S6R
-aocAnRlgk1s2n55ol07mo+2VYqdvPOH7
-=tBLH
------END PGP SIGNATURE-----
-
---------------enig68360BC90475DD30CE670F2D--
+-- 
+1.8.0
