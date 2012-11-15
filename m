@@ -1,75 +1,81 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH] backlight: Add of_find_backlight_by_node() function
-Date: Thu, 15 Nov 2012 17:58:35 +0900
-Message-ID: <001201cdc30f$65a17be0$30e473a0$%han@samsung.com>
-References: <1352469878-4532-1-git-send-email-thierry.reding@avionic-design.de>
- <004201cdc2d0$c1920210$44b60630$%han@samsung.com>
- <20121115065140.GA21208@avionic-0098.mockup.avionic-design.de>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 05/11] ARM: dts: add exynos4 clock controller nodes
+Date: Thu, 15 Nov 2012 14:28:40 +0530
+Message-ID: <CAJuYYwRHg=NLDe1TaOtE-vigjctYRrtkU6o1-w_52tszUth80Q@mail.gmail.com>
+References: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org>
+	<1352930853-12268-6-git-send-email-thomas.abraham@linaro.org>
+	<4979279.mb3rWrdaG3@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20121115065140.GA21208@avionic-0098.mockup.avionic-design.de>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Thierry Reding' <thierry.reding@avionic-design.de>
-Cc: 'Andrew Morton' <akpm@linux-foundation.org>, 'Richard Purdie' <rpurdie@rpsys.net>, 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <4979279.mb3rWrdaG3@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, November 15, 2012 3:52 PM Thierry Reding wrote
-> On Thu, Nov 15, 2012 at 10:30:11AM +0900, Jingoo Han wrote:
-> > On Friday, November 09, 2012 11:05 PM Thierry Reding wrote
-> > >
-> > > This function finds the struct backlight_device for a given device tree
-> > > node. A dummy function is provided so that it safely compiles out if OF
-> > > support is disabled.
-> > >
-> > > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
-> >
-> > CC'ed Andrew Morton
-> 
-> Yes, the backlight subsystem isn't very well maintained, so I should
-> have added Andrew in the first place. Thanks.
-> 
-> >
-> > Hi Thierry Reding,
-> >
-> > The patch itself looks good.
-> > Could you explain when this API is used?
-> > Thank you.
-> 
-> I use this for the upcoming Tegra DRM driver in order to hook up the
-> backlight with the DRM driver via DT to allow switching off the
-> backlight when the corresponding DRM output is switched of using DPMS.
-> Basically what you have is something like this in the device tree:
-> 
-> 	display {
-> 		...
-> 
-> 		backlight = <&backlight>;
-> 
-> 		...
-> 	}
-> 
-> Then you call something along these lines:
-> 
-> 	np = of_parse_phandle(display, "backlight", 0);
-> 	if (np) {
-> 		backlight = of_find_backlight_by_node(np);
-> 		of_node_put(np);
-> 	}
-> 
-> And then use the standard backlight API on the returned pointer.
+On 15 November 2012 04:57, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> On Thursday 15 of November 2012 03:37:27 Thomas Abraham wrote:
+>> Add clock controller nodes for Exynos4210 and Exynos4x12 SoC's.
+>>
+>> Cc: Kukjin Kim <kgene.kim@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>>  arch/arm/boot/dts/exynos4210.dtsi |    6 ++++++
+>>  arch/arm/boot/dts/exynos4x12.dtsi |    6 ++++++
+>>  2 files changed, 12 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4210.dtsi
+>> b/arch/arm/boot/dts/exynos4210.dtsi index d6fc306..f7daa09 100644
+>> --- a/arch/arm/boot/dts/exynos4210.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+>> @@ -50,6 +50,12 @@
+>>               samsung,mct-nr-local-irqs = <4>;
+>>       };
+>>
+>> +     clock: clock-controller@0x10030000 {
+>> +             compatible = "samsung,exynos4210-clock";
+>> +             reg = <0x10030000 0x20000>;
+>> +             #clock-cells = <1>;
+>> +     };
+>> +
+>>       pinctrl_0: pinctrl@11400000 {
+>>               compatible = "samsung,pinctrl-exynos4210";
+>>               reg = <0x11400000 0x1000>;
+>> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
+>> b/arch/arm/boot/dts/exynos4x12.dtsi index 7cbbd19..bcfdaac 100644
+>> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+>> @@ -35,6 +35,12 @@
+>>                            <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>;
+>>       };
+>>
+>> +     clock: clock-controller@0x10030000 {
+>> +             compatible = "samsung,exynos4412-clock";
+>
+> nitpick: I forgot to mention about it in my comments for patch 3, but
+> wouldn't it be better to call it "samsung,exynos4x12-clock"?
 
-OK, I see how this API can be called.
-AS you mentioned, it will allow Tegra DRM driver to use
-the backlight driver.
+I prefer to use a specific version for compatible strings. I remember
+that there have been discussion in the past on this, but I belong to
+the camp which favors using fixed compatible values over wildcards in
+compatible values. It is easier to track and less problematic in case
+a new Exynos4x12 SoC comes up with altogether a different clock
+architecture. We have used this method for wdt, rtc, i2c and many
+other drivers and it has proven to be suit well. For instance, for
+i2c, we have two variants - s3c2410 and s3c2440 and we can use this
+most of all the Samsung SoCs.
 
-Acked-by: Jingoo Han <jg1.han@samsung.com>
+>
+>> +             reg = <0x10030000 0x20000>;
+>> +             #clock-cells = <1>;
+>> +     };
+>> +
+>>       pinctrl_0: pinctrl@11400000 {
+>>               compatible = "samsung,pinctrl-exynos4x12";
+>>               reg = <0x11400000 0x1000>;
+>
+> Otherwise looks fine.
 
-
-Best regards,
-Jingoo Han
-
-> 
-> Thierry
+Thanks,
+Thomas.
