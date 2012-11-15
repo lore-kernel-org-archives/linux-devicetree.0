@@ -1,30 +1,62 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] bindings: i2c: use consistent naming for i2c binding descriptions
-Date: Thu, 15 Nov 2012 15:58:14 +0000
-Message-ID: <20121115155814.30AA83E194B@localhost>
-References: <1352827003-24287-1-git-send-email-wolfram@the-dreams.de>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352827003-24287-1-git-send-email-wolfram-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Wolfram Sang <wolfram-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v10 1/6] video: add display_timing and videomode
+Date: Thu, 15 Nov 2012 17:00:57 +0100
+Message-ID: <2466982.zTBri0jEif@avalon>
+References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de> <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de> <20121115154753.C82223E194B@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20121115154753.C82223E194B@localhost>
+Sender: linux-media-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Nov 2012 18:16:43 +0100, Wolfram Sang <wolfram-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> Filenames of devictree binding documentation seems to be arbitrary and
-> for me it is unneeded hazzle to find the corresponding documentation for
-> a specific driver.
-> 
-> Naming the description the same as the driver is a lot easier and makes
-> sense to me since the driver defines the binding it understands.
-> 
-> Also, remove a reference in one source to the binding documentation, since path
-> information easily gets stale.
-> 
-> Signed-off-by: Wolfram Sang <wolfram-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Hi Grant,
 
-Applied, thanks.
+On Thursday 15 November 2012 15:47:53 Grant Likely wrote:
+> On Thu, 15 Nov 2012 10:23:52 +0100, Steffen Trumtrar wrote:
+> > Add display_timing structure and the according helper functions. This
+> > allows the description of a display via its supported timing parameters.
+> > 
+> > Every timing parameter can be specified as a single value or a range
+> > <min typ max>.
+> > 
+> > Also, add helper functions to convert from display timings to a generic
+> > videomode structure. This videomode can then be converted to the
+> > corresponding subsystem mode representation (e.g. fb_videomode).
+> > 
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> 
+> Hmmm... here's my thoughts as an outside reviewer. Correct me if I'm
+> making an incorrect assumption.
+> 
+> It looks to me that the purpose of this entire series is to decode video
+> timings from the device tree and (eventually) provide the data in the
+> form 'struct videomode'. Correct?
+> 
+> If so, then it looks over engineered. Creating new infrastructure to
+> allocate, maintain, and free a new 'struct display_timings' doesn't make
+> any sense when it is an intermediary data format that will never be used
+> by drivers.
+> 
+> Can the DT parsing code instead return a table of struct videomode?
+> 
+> But, wait... struct videomode is also a new structure. So it looks like
+> this series creates two new intermediary data structures;
+> display_timings and videomode. And at least as far as I can see in this
+> series struct fb_videomode is the only user.
 
-g.
+struct videomode is supposed to slowly replace the various video mode 
+structures we currently have in the kernel (struct drm_mode_modeinfo, struct 
+fb_videomode and struct v4l2_bt_timings), at least where possible (userspace 
+APIs can't be broken). This will make it possible to reuse code across the 
+DRM, FB and V4L2 subsystems, such as the EDID parser or HDMI encoder drivers. 
+This rationale might not be clearly explained in the commit message, but 
+having a shared video mode structure is pretty important.
+
+-- 
+Regards,
+
+Laurent Pinchart
