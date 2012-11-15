@@ -1,86 +1,71 @@
-From: Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH 6/6] usb: chipidea: usbmisc: add post handling and errata
  fix for mx25
-Date: Thu, 15 Nov 2012 14:51:50 +0100
-Message-ID: <CALBypN7-NKFmoPXWA0utFhUjLOWjvzwJ7ZSuQBa+W5edNQA_OA@mail.gmail.com>
-References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
-	<1352894137-2050-7-git-send-email-m.grzeschik@pengutronix.de>
-	<CALBypN6U=np93ZwnEZqbh=j0Vb_-x630GaktEiv+4K26eYp4Pg@mail.gmail.com>
-	<20121115102525.GA16118@pengutronix.de>
+Date: Thu, 15 Nov 2012 14:54:42 +0100
+Message-ID: <50A4F422.4010606@pengutronix.de>
+References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de> <1352894137-2050-7-git-send-email-m.grzeschik@pengutronix.de> <CALBypN6U=np93ZwnEZqbh=j0Vb_-x630GaktEiv+4K26eYp4Pg@mail.gmail.com> <20121115102525.GA16118@pengutronix.de> <CALBypN7-NKFmoPXWA0utFhUjLOWjvzwJ7ZSuQBa+W5edNQA_OA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enig4DD4F978DB95689580954698"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121115102525.GA16118-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CALBypN7-NKFmoPXWA0utFhUjLOWjvzwJ7ZSuQBa+W5edNQA_OA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> This is because that series is based on Peter Chen's work. I should have
-> mentioned this in the cover-letter mail. You can merge his master branch
-> before adding my series:
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig4DD4F978DB95689580954698
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Ok thanks for the very rapid reply.
+On 11/15/2012 02:51 PM, Martin Fuzzey wrote:
+>> This is because that series is based on Peter Chen's work. I should ha=
+ve
+>> mentioned this in the cover-letter mail. You can merge his master bran=
+ch
+>> before adding my series:
+>=20
+> Ok thanks for the very rapid reply.
+>=20
+> I've now built this together with patch 2 "ci13xxx_imx: add 2nd and
+> 3rd clock to support imx5x and newer" from your other series.
+> But it hangs because the usb-phy clock is not being enabled.
+> If I add a clock enable for that clock too to usbmisc_imx.c it works
+> but that can't be the right way.
+>=20
+> Who is supposed to enable the phy clock?
+> [I'm using the OTG port in host only mode on i.MX53 with "nop-usbphy"]
+>=20
+> Here's what I did (illustration only, probably white space broken):
 
-I've now built this together with patch 2 "ci13xxx_imx: add 2nd and
-3rd clock to support imx5x and newer" from your other series.
-But it hangs because the usb-phy clock is not being enabled.
-If I add a clock enable for that clock too to usbmisc_imx.c it works
-but that can't be the right way.
+We've have a patch that the missing clock handling to the nop phy
+driver, which isn't much better. What are other possible options?
 
-Who is supposed to enable the phy clock?
-[I'm using the OTG port in host only mode on i.MX53 with "nop-usbphy"]
+Marc
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-Here's what I did (illustration only, probably white space broken):
 
-diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c
-b/arch/arm/mach-imx/clk-imx51-imx53.c
-index cd6d7a0..2f0687a 100644
---- a/arch/arm/mach-imx/clk-imx51-imx53.c
-+++ b/arch/arm/mach-imx/clk-imx51-imx53.c
-@@ -492,6 +492,7 @@ int __init mx53_clocks_init(unsigned long
-rate_ckil, unsigned long rate_osc,
-        clk_register_clkdev(clk[usboh3_per_gate], "per", "53f80800.usbmisc");
-        clk_register_clkdev(clk[usboh3_gate], "ipg", "53f80800.usbmisc");
-        clk_register_clkdev(clk[usboh3_gate], "ahb", "53f80800.usbmisc");
-+       clk_register_clkdev(clk[usb_phy1_gate], "phy1",
-"53f80800.usbmisc"); // MF
-        clk_register_clkdev(clk[esdhc1_ipg_gate], "ipg", "sdhci-esdhc-imx53.0");
-        clk_register_clkdev(clk[dummy], "ahb", "sdhci-esdhc-imx53.0");
-        clk_register_clkdev(clk[esdhc1_per_gate], "per", "sdhci-esdhc-imx53.0");
-diff --git a/drivers/usb/chipidea/usbmisc_imx.c
-b/drivers/usb/chipidea/usbmisc_imx.c
-index acca109..a59093a 100644
---- a/drivers/usb/chipidea/usbmisc_imx.c
-+++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -197,6 +197,24 @@ static int __devinit usbmisc_imx_probe(struct
-platform_device *pdev)
-        if (ret)
-                goto err_per_failed;
+--------------enig4DD4F978DB95689580954698
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-+
-+       { /* Temp Hack by MF awaiting reply on mailing list */
-+               struct clk *phy_clk;
-+
-+               dev_info(&pdev->dev, "@MF@ hacking phy clock enable\n");
-+               phy_clk = devm_clk_get(&pdev->dev, "phy1");
-+               if (IS_ERR(phy_clk)) {
-+                       dev_err(&pdev->dev, "failed to get PHY clock,
-err=%ld\n", PTR_ERR(phy_clk));
-+                       goto err_per_failed;
-+               }
-+
-+               ret = clk_prepare_enable(phy_clk);
-+               if (ret) {
-+                       dev_err(&pdev->dev, "failed to enable PHY
-clock, err=%d\n", ret);
-+                       goto err_per_failed;
-+               }
-+       }
-+
-        tmp_dev = (struct of_device_id *)
-                of_match_device(usbmisc_imx_dt_ids, &pdev->dev);
-        data->ops = (const struct usbmisc_ops *)tmp_dev->data;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iEYEARECAAYFAlCk9CIACgkQjTAFq1RaXHMavwCfafUy5AxP4ZJKin+RrxKkIk4O
+OUYAmwWGZTYm75bJenvHS3sqHKPCD3er
+=bWiA
+-----END PGP SIGNATURE-----
+
+--------------enig4DD4F978DB95689580954698--
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
