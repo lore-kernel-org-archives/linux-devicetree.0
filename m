@@ -1,66 +1,118 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/14] pinctrl: SPEAr: add spi chipselect control driver
-Date: Thu, 15 Nov 2012 19:49:30 +0530
-Message-ID: <CAKohpomLRYAKJ=dNLVsjj1xf=G6xj4EcTpPmhSDvgBYUMXc1mA@mail.gmail.com>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
- <4a92290e8a3b1a19c3a5e864edfa7badfc2af5d0.1352608333.git.viresh.kumar@linaro.org>
- <CACRpkdb9tSUUGQjWdHqRr5rUSyiPgWm2i3-QZq9VbWFY2EAQeQ@mail.gmail.com>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH v5 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and use function pointers for getreg and setreg functions
+Date: Thu, 15 Nov 2012 15:56:44 +0100
+Message-ID: <87pq3e52z7.fsf@dell.be.48ers.dk>
+References: <1352988548-10138-1-git-send-email-andreas@gaisler.com>
+	<1352988548-10138-3-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdb9tSUUGQjWdHqRr5rUSyiPgWm2i3-QZq9VbWFY2EAQeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1352988548-10138-3-git-send-email-andreas@gaisler.com> (Andreas
+	Larsson's message of "Thu, 15 Nov 2012 15:09:08 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: Wolfram Sang <w.sang@pengutronix.de>, Ben Dooks <ben-linux@fluff.org>, linux-i2c@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On 15 November 2012 19:47, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Sun, Nov 11, 2012 at 5:39 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->
->> From: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
->>
->> SPEAr platform provides a provision to control chipselects of ARM PL022
->> Prime Cell spi controller through its system registers, which otherwise
->> remains under PL022 control which some protocols do not want.
->>
->> This commit intends to provide the spi chipselect control in software
->> over gpiolib interface. Since it is tied to pinctrl, we place it under
->> 'drivers/pinctrl/spear/' directory.
->>
->> spi chip drivers can use the exported gpiolib interface to define their
->> chipselect through DT or platform data.
->>
->> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
->> Reviewed-by: Vipin Kumar <vipin.kumar-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> This sure looks good, sorry for the delay.
->
-> Just one question: since this driver is not using any
-> pinctrl interfaces, why is it under drivers/pinctrl/*?
->
-> Shouldn't it be under drivers/gpio from a technical
-> point of view?
->
-> I think I'd accept it under drivers/pinctrl/spear/*
-> if you just want this to keep everything SPEAr-related
-> in one place though, so enlighten me.
+>>>>> "Andreas" == Andreas Larsson <andreas@gaisler.com> writes:
 
-That's because they are controlling few pads. They are not
-actually gpio's but just pads that we are controlling.
+ Andreas> The registers in the GRLIB port of the controller are 32-bit
+ Andreas> and in big endian byte order. The PRELOW and PREHIGH registers
+ Andreas> are merged into one register. The subsequent registers have
+ Andreas> their offset decreased accordingly. Hence the register access
+ Andreas> needs to be handled in a non-standard manner using custom
+ Andreas> getreg and setreg functions.
 
-That's why we thought they are better in this place.
+ Andreas> The single oc_getreg and one oc_setreg functions, that
+ Andreas> branches and call different ioread and iowrite functions, are
+ Andreas> replaced by specific functions that uses the appropriate
+ Andreas> ioread and iowrite functions and function pointers are
+ Andreas> initiated and used to call the approproate functions.
 
---
-viresh
+ Andreas> A type is added as the data of the of match table entries. A
+ Andreas> new entry with a different compatible string is added to the
+ Andreas> table. The type of that entry triggers usage of the custom
+ Andreas> grlib functions by setting the new getreg and setreg function
+ Andreas> pointers to these functions.
+
+Sorry to keep on requesting changes, but see below for a bit more:
+
+ 
+ Andreas>  static void ocores_process(struct ocores_i2c *i2c)
+ Andreas>  {
+ Andreas>  	struct i2c_msg *msg = i2c->msg;
+ Andreas> -	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
+ Andreas> +	u8 stat = i2c->getreg(i2c, OCI2C_STATUS);
+
+The patch would have been quite a bit smaller/easier to read if you had
+kept oc_getreg / oc_setreg as wrappers.
+
+ 
+ Andreas>  #ifdef CONFIG_OF
+ Andreas>  static int ocores_i2c_of_probe(struct platform_device *pdev,
+ Andreas>  				struct ocores_i2c *i2c)
+ Andreas>  {
+ Andreas>  	struct device_node *np = pdev->dev.of_node;
+ Andreas> +	const struct of_device_id *match;
+ Andreas>  	u32 val;
+ 
+ Andreas>  	if (of_property_read_u32(np, "reg-shift", &i2c->reg_shift)) {
+ Andreas> @@ -257,6 +324,14 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
+ 
+ Andreas>  	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
+ Andreas>  				&i2c->reg_io_width);
+ Andreas> +
+ Andreas> +	match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+ Andreas> +	if (match && (int)match->data == TYPE_GRLIB) {
+ Andreas> +		dev_dbg(&pdev->dev, "GRLIB variant of i2c-ocores\n");
+ Andreas> +		i2c->setreg = oc_setreg_grlib;
+ Andreas> +		i2c->getreg = oc_getreg_grlib;
+ Andreas> +	}
+ Andreas> +      
+ Andreas>  	return 0;
+ Andreas>  }
+ Andreas>  #else
+ Andreas> @@ -311,6 +386,23 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
+ Andreas>  	if (i2c->reg_io_width == 0)
+ i2c-> reg_io_width = 1; /* Set to default value */
+ 
+ Andreas> +	if (!i2c->getreg) {
+ Andreas> +		if (i2c->reg_io_width == 4)
+ Andreas> +			i2c->getreg = oc_getreg_32;
+ Andreas> +		else if (i2c->reg_io_width == 2)
+ Andreas> +			i2c->getreg = oc_getreg_16;
+ Andreas> +		else
+ Andreas> +			i2c->getreg = oc_getreg_8;
+ Andreas> +	}
+ Andreas> +	if (!i2c->setreg) {
+ Andreas> +		if (i2c->reg_io_width == 4)
+ Andreas> +			i2c->setreg = oc_setreg_32;
+ Andreas> +		else if (i2c->reg_io_width == 2)
+ Andreas> +			i2c->setreg = oc_setreg_16;
+ Andreas> +		else
+ Andreas> +			i2c->setreg = oc_setreg_8;
+ Andreas> +	}
+ Andreas> +
+
+These are always set together (could even move to a single ops
+structure), so it would be shorter to assign them at the same time:
+
+if (!i2c->setreg || !i2c->getreg) {
+   switch (i2c->reg_io_width) {
+   case 1:
+        i2c->setreg = oc_setreg_8;
+        i2c->getreg = oc_getreg_8;
+        break;
+
+   case 2:
+        i2c->setreg = oc_setreg_16;
+        ...
+
+   default:
+        dev_err(&pdev->dev "Unsupported I/O width (%d)\n", i2c->reg_io_width);
+        return -EINVAL;
+   }
+}
+
+-- 
+Bye, Peter Korsgaard
