@@ -1,62 +1,78 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH -next] tty: of_serial: fix return value check in of_platform_serial_setup()
-Date: Thu, 15 Nov 2012 12:08:11 +0000
-Message-ID: <20121115120811.B9EB63E0B12@localhost>
-References: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>, alan@linux.intel.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, seth.heasley@intel.com, stable@kernel.org
-Cc: yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Subject: Re: Deprecating reserve-map in favor of properties
+Date: Thu, 15 Nov 2012 12:11:55 +0000
+Message-ID: <20121115121155.7B2353E0B12@localhost>
+References: <1348179051.1132.32.camel@pasglop>
+ <CACxGe6sAXBJ9KkA8Urioe-VsbaLUO+=C_tb1vU+i_VKuedi=eg@mail.gmail.com>
+ <1351798896.12271.241.camel@pasglop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1351798896.12271.241.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Cyril Chemparathy <cyril@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 1 Nov 2012 13:27:34 +0800, Wei Yongjun <weiyj.lk@gmail.com> wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Fri, 02 Nov 2012 06:41:36 +1100, Benjamin Herrenschmidt <benh@kernel.crashing.org> wrote:
+> On Thu, 2012-11-01 at 15:21 +0100, Grant Likely wrote:
 > 
-> In case of error, the function clk_get() returns ERR_PTR()
-> and never returns NULL. The NULL test in the return value
-> check should be replaced with IS_ERR().
+> > I think this makes sense. Cyril and I are just talking about what he
+> > needs. He wants to set aside per-device reserved regions and would
+> > like to have the ability to reference a particular reserved region
+> > from a device node, probably with a phandle. I like the look of the
+> > reserved-{ranges,names} properties in the root, but I see the argument
+> > that it isn't very flexible. What about something like this:
+> > 
+> > reserved-memory {
+> >         reserved@0x10000000 { reg = <0x10000000 0x08000000>; };
+> >         reserved@0x01000000 { reg = <0x01000000 0x00200000>; };
+> > }
+> > 
+> > The node name of the child nodes could be different of course.
 > 
-> dpatch engine is used to auto generate this patch.
-> (https://github.com/weiyj/dpatch)
+> I'm not that fan of different nodes, especially nodes with nodes in them
+> for that purpose. Seems overkill.
 > 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> Can't he reference reserved entries as <phandle>,<index> pairs ?
 
-Looks correct to me.
+That would work too.
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> I still think a single property would do fine. We could mandate those be
+> in the respective "memory" nodes but them you have potentially to break
+> up reserved regions if you have multiple memory nodes (NUMA) etc...
 
-Alan, which tree should this go through?
+It makes sense to me for the reserved ranges to be kept with the memory
+nodes themselves, even if it does mean that sometimes they need to be
+split up for multiple memory nodes.
 
-Wei, did you run into this causing a bug? Do you think it should go back
-into linux-stable? It looks like it should to me.
+> > Right, that would work also even though I prefer phandle references in
+> > general. Is it conceivable that additional data would want to be
+> > attached to a particular reserved region?
+> 
+> phandle references and names aren't exclusive from each other. The name
+> remains a useful diagnostic tool.
+> 
+> If you want additional data, make a node somewhere to represent that
+> region along with its additional data, that node can have a reference to
+> the reserved map entry.
+> 
+> I'd keep the reserve map itself simple. It's a "synthetic property" a
+> bit like the memory nodes. IE. The "memory" nodes don't have to
+> represent physical memory controllers & DIMMs. They represent the
+> overall view of memory by the CPUs. You can represent the MCs and the
+> DIMMs elsewhere in the SoC node.
+
+okay.
 
 g.
-
-> ---
->  drivers/tty/serial/of_serial.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-> index 533ccfe..b9fdccb 100644
-> --- a/drivers/tty/serial/of_serial.c
-> +++ b/drivers/tty/serial/of_serial.c
-> @@ -66,10 +66,10 @@ static int __devinit of_platform_serial_setup(struct platform_device *ofdev,
->  
->  		/* Get clk rate through clk driver if present */
->  		info->clk = clk_get(&ofdev->dev, NULL);
-> -		if (info->clk == NULL) {
-> +		if (IS_ERR(info->clk)) {
->  			dev_warn(&ofdev->dev,
->  				"clk or clock-frequency not defined\n");
-> -			return -ENODEV;
-> +			return PTR_ERR(info->clk);
->  		}
->  
->  		clk_prepare_enable(info->clk);
-> 
-> 
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
