@@ -1,100 +1,43 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
-Date: Thu, 15 Nov 2012 11:51:24 +0000
-Message-ID: <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca>
-References: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com>
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, linux-mips@linux-mips.org, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: WARNING: drivers/built-in.o(.devinit.text+0xa9b48): Section
+ mismatch in reference from the function bbc_i2c_probe() to the function
+ .init.text:attach_one_i2c.constprop.1()
+Date: Thu, 15 Nov 2012 11:57:32 +0000
+Message-ID: <20121115115732.8F2043E09BB@localhost>
+References: <20121030143911.GA20034@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121030143911.GA20034@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Grant Likely wrote:
-> Or how about: I could pick up the patch with only the MIPS hunk and
-> every other user can be fixed up independently to use the new rule.
+On Tue, 30 Oct 2012 22:39:11 +0800, Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Grant,
+> 
+> Here is an aged warning in sparc allyesconfig builds and it seems that
+> attach_one_i2c() is only called by bbc_envctrl_init().
+> 
+> WARNING: drivers/built-in.o(.devinit.text+0xa9b48): Section mismatch in reference from the function bbc_i2c_probe() to the function .init.text:attach_one_i2c.constprop.1()
+> The function __devinit bbc_i2c_probe() references
+> a function __init attach_one_i2c.constprop.1().
+> If attach_one_i2c.constprop.1 is only used by bbc_i2c_probe then
+> annotate attach_one_i2c.constprop.1 with a matching annotation.
 
-Here's a trial patch to fix up ARM. Does this look correct? This patch
-depends on the generic dtb build rule already being applied.
+Looks like attach_one_i2c needs to be switched to __devinit. I don't
+have any involvement with that code though. Craft a patch and send it to
+the sparc list.
 
 g.
-
----
-
-arm/of: Change .dtb build rules to build in dts directory
-
-The current rules have the .dtb files build in a different directory
-from the .dts files. The only reason for this is that it was what
-PowerPC has done historically. This patch changes ARM to use the generic
-dtb rule which builds .dtb files in the same directory as the source .dts.
-
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Stephen Warren <swarren@nvidia.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
----
- arch/arm/Makefile          |    4 ++--
- arch/arm/boot/Makefile     |   12 ------------
- arch/arm/boot/dts/Makefile |    4 ++++
- 3 files changed, 6 insertions(+), 14 deletions(-)
-
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 5f914fc..c35baf1 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -292,10 +292,10 @@ zinstall uinstall install: vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $@
- 
- %.dtb: scripts
--	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-+	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
- 
- dtbs: scripts
--	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-+	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
- 
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
-diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
-index f2aa09e..801b92c 100644
---- a/arch/arm/boot/Makefile
-+++ b/arch/arm/boot/Makefile
-@@ -15,8 +15,6 @@ ifneq ($(MACHINE),)
- include $(srctree)/$(MACHINE)/Makefile.boot
- endif
- 
--include $(srctree)/arch/arm/boot/dts/Makefile
--
- # Note: the following conditions must always be true:
- #   ZRELADDR == virt_to_phys(PAGE_OFFSET + TEXT_OFFSET)
- #   PARAMS_PHYS must be within 4MB of ZRELADDR
-@@ -59,16 +57,6 @@ $(obj)/zImage:	$(obj)/compressed/vmlinux FORCE
- 
- endif
- 
--targets += $(dtb-y)
--
--# Rule to build device tree blobs
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
--$(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
--
--clean-files := *.dtb
--
- ifneq ($(LOADADDR),)
-   UIMAGE_LOADADDR=$(LOADADDR)
- else
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f37cf9f..2aef042 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -104,4 +104,8 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
- 	wm8505-ref.dtb \
- 	wm8650-mid.dtb
- 
-+targets += dtbs
- endif
-+
-+dtbs: $(addprefix $(obj)/, $(dtb-y))
-+clean-files := *.dtb
--- 
-1.7.10.4
