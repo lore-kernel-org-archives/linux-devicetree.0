@@ -1,64 +1,67 @@
-From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 1/2] i2c: i2c-ocores: Add irq support for sparc
-Date: Thu, 15 Nov 2012 15:09:07 +0100
-Message-ID: <1352988548-10138-2-git-send-email-andreas@gaisler.com>
-References: <1352988548-10138-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352988548-10138-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH v6] Input: matrix-keypad - Add device tree support
+Date: Thu, 15 Nov 2012 14:11:59 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA6C98F@DBDE01.ent.ti.com>
+References: <1352976179-29790-1-git-send-email-anilkumar@ti.com>
+ <50A4F488.5000808@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <50A4F488.5000808@gmail.com>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "dgdunix@gmail.com" <dgdunix@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add sparc support by using platform_get_irq instead of platform_get_resource.
-There are no platform resources of type IORESOURCE_IRQ for sparc, but
-platform_get_irq works for sparc. In the non-sparc case platform_get_irq
-internally uses platform_get_resource.
+On Thu, Nov 15, 2012 at 19:26:24, Rob Herring wrote:
+> On 11/15/2012 04:42 AM, AnilKumar Ch wrote:
+> > Add device tree support to matrix keypad driver and usage details
+> > are added to device tree documentation. Also modified the driver
+> > according to recent update of matrix_keypad_build_keymap(), which
+> > automatically allocate memory for keymap.
+> > 
+> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> > This patch was tested on AM335x-EVM and based on linux-next, cleanly
+> > applies on top of "input/next"
+> > 
+> > Changes from v5:
+> > 	- Updated based on Dmitry's patch.
+> > 	  * Modified the driver acc. to matrix_keypad_build_keymap()
+> > 	    recent update.
+> > 	  * Combined row_gpios & col_gpios devm_kzalloc's to single
+> > 	    devm_kzalloc.
+> > 	  * Added proper return values for different failures in
+> > 	    matrix_keypad_parse_dt().
+> > 
+> > Changes from v4:
+> > 	- Removed clustered-irq support through DT. This should be
+> > 	  added if any platform requires in the future.
+> > 
+> > Changes from v3:
+> > 	- Incorporated Stephen Warren's review comments on v3
+> > 	  * Added description to clustered-irq-flags binding
+> > 
+> > Changes from v2:
+> > 	- Incorporated Stephen Warren's review comments on v2
+> > 	  * Renamed the bindings file to gpio-matrix-keypad.txt
+> > 	  * Added description to clustered-irq binding
+> > 
+> > Changes from v1:
+> > 	- Incorporated Rob's review comments on v1
+> > 	  * Changed matix-keypad compatible to gpio-matrix-keypad
+> > 	  * Removed unnecessary props (num of gpios)
+> > 	  * Used of_match_ptr()
+> > 	- Removed first patch based on Dmitry's comments on v1
+> > 
+> >  drivers/input/keyboard/matrix_keypad.c |  119 ++++++++++++++++++++++++++------
+> 
+> What happened to the binding doc?
 
-Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
----
- Changes since v4:
- - None
+Rebase mistake, right away I am resending the patch.
 
- drivers/i2c/busses/i2c-ocores.c |   11 ++++++-----
- 1 files changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index bffd550..1d204cb 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -267,7 +267,8 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- {
- 	struct ocores_i2c *i2c;
- 	struct ocores_i2c_platform_data *pdata;
--	struct resource *res, *res2;
-+	struct resource *res;
-+	int irq;
- 	int ret;
- 	int i;
- 
-@@ -275,9 +276,9 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- 	if (!res)
- 		return -ENODEV;
- 
--	res2 = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
--	if (!res2)
--		return -ENODEV;
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
- 
- 	i2c = devm_kzalloc(&pdev->dev, sizeof(*i2c), GFP_KERNEL);
- 	if (!i2c)
-@@ -313,7 +314,7 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- 	ocores_init(i2c);
- 
- 	init_waitqueue_head(&i2c->wait);
--	ret = devm_request_irq(&pdev->dev, res2->start, ocores_isr, 0,
-+	ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
- 			       pdev->name, i2c);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Cannot claim IRQ\n");
--- 
-1.7.0.4
+Thanks
+AnilKumar
