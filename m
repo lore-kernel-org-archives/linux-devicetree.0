@@ -1,59 +1,43 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v10 1/6] video: add display_timing and videomode
-Date: Thu, 15 Nov 2012 18:03:59 +0000
-Message-ID: <20121115180359.1E6F33E197F@localhost>
-References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de> <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de> <20121115154753.C82223E194B@localhost> <2466982.zTBri0jEif@avalon>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <2466982.zTBri0jEif@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
+Date: Thu, 15 Nov 2012 18:05:57 +0000
+Message-ID: <20121115180557.924713E197F@localhost>
+References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
+ <1352650891-18356-2-git-send-email-andrew@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352650891-18356-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2012 17:00:57 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> Hi Grant,
+On Sun, 11 Nov 2012 17:21:29 +0100, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
 > 
-> On Thursday 15 November 2012 15:47:53 Grant Likely wrote:
-> > On Thu, 15 Nov 2012 10:23:52 +0100, Steffen Trumtrar wrote:
-> > > Add display_timing structure and the according helper functions. This
-> > > allows the description of a display via its supported timing parameters.
-> > > 
-> > > Every timing parameter can be specified as a single value or a range
-> > > <min typ max>.
-> > > 
-> > > Also, add helper functions to convert from display timings to a generic
-> > > videomode structure. This videomode can then be converted to the
-> > > corresponding subsystem mode representation (e.g. fb_videomode).
-> > > 
-> > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > 
-> > Hmmm... here's my thoughts as an outside reviewer. Correct me if I'm
-> > making an incorrect assumption.
-> > 
-> > It looks to me that the purpose of this entire series is to decode video
-> > timings from the device tree and (eventually) provide the data in the
-> > form 'struct videomode'. Correct?
-> > 
-> > If so, then it looks over engineered. Creating new infrastructure to
-> > allocate, maintain, and free a new 'struct display_timings' doesn't make
-> > any sense when it is an intermediary data format that will never be used
-> > by drivers.
-> > 
-> > Can the DT parsing code instead return a table of struct videomode?
-> > 
-> > But, wait... struct videomode is also a new structure. So it looks like
-> > this series creates two new intermediary data structures;
-> > display_timings and videomode. And at least as far as I can see in this
-> > series struct fb_videomode is the only user.
+> Given appropriate devicetree bindings, this driver registers a
+> pm_power_off function to set a GPIO line high/low to power down
+> your board.
 > 
-> struct videomode is supposed to slowly replace the various video mode 
-> structures we currently have in the kernel (struct drm_mode_modeinfo, struct 
-> fb_videomode and struct v4l2_bt_timings), at least where possible (userspace 
-> APIs can't be broken). This will make it possible to reuse code across the 
-> DRM, FB and V4L2 subsystems, such as the EDID parser or HDMI encoder drivers. 
-> This rationale might not be clearly explained in the commit message, but 
-> having a shared video mode structure is pretty important.
+> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-poweroff.txt     |   22 ++++
+>  drivers/gpio/Kconfig                               |   10 ++
+>  drivers/gpio/Makefile                              |    2 +
+>  drivers/gpio/gpio-poweroff.c                       |  129 ++++++++++++++++++++
 
-Okay that make sense. What about struct display_timings?
+This isn't a gpio controller driver. Don't put it into drivers/gpio
 
 g.
