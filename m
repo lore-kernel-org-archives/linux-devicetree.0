@@ -1,74 +1,100 @@
-From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Subject: Re: [PATCH v2 0/3] mtd: nand: OMAP: ELM error correction support
- for BCH ecc
-Date: Thu, 15 Nov 2012 13:22:14 +0200
-Message-ID: <1352978534.2221.33.camel@sauron.fi.intel.com>
-References: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
-Reply-To: artem.bityutskiy@linux.intel.com
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-ghlmya5r6sFeCfmQZHLH"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: dwmw2@infradead.org, afzal@ti.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rmk+kernel@arm.linux.org.uk, gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, ivan.djelic@parrot.com
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
+Date: Thu, 15 Nov 2012 11:51:24 +0000
+Message-ID: <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca>
+References: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, linux-mips@linux-mips.org, Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
+Grant Likely wrote:
+> Or how about: I could pick up the patch with only the MIPS hunk and
+> every other user can be fixed up independently to use the new rule.
 
---=-ghlmya5r6sFeCfmQZHLH
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Here's a trial patch to fix up ARM. Does this look correct? This patch
+depends on the generic dtb build rule already being applied.
 
-On Wed, 2012-10-31 at 12:38 +0530, Philip, Avinash wrote:
-> Support to use ELM as BCH 4 & 8 bit error correction module. Also perform=
-ance
-> enhancement by adding single shot read_page and write_page functions for =
-the
-> nand flashes with page size less than 4 KB.
->=20
-> ELM module can be used to correct errors reported by BCH 4, 8 & 16 bit
-> ECC scheme. For now only 4 & 8 bit support is added.
->=20
-> BCH 4 & 8 bit error detection support is already available in mainline
-> kernel and works with software error correction.
->=20
-> This series is based on [1] and tested with RFC: OMAP GPMC bindings
-> patch series
->=20
-> 1. linux-next/20121030
+g.
 
-Would you please re-send a version which cleanly applies to the
-l2-mtd.git tree? This series has many conflicts. Thanks!
+---
 
-git://git.infradead.org/users/dedekind/l2-mtd.git
+arm/of: Change .dtb build rules to build in dts directory
 
---=20
-Best Regards,
-Artem Bityutskiy
+The current rules have the .dtb files build in a different directory
+from the .dts files. The only reason for this is that it was what
+PowerPC has done historically. This patch changes ARM to use the generic
+dtb rule which builds .dtb files in the same directory as the source .dts.
 
---=-ghlmya5r6sFeCfmQZHLH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: Stephen Warren <swarren@nvidia.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+---
+ arch/arm/Makefile          |    4 ++--
+ arch/arm/boot/Makefile     |   12 ------------
+ arch/arm/boot/dts/Makefile |    4 ++++
+ 3 files changed, 6 insertions(+), 14 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJQpNBmAAoJECmIfjd9wqK09xYQAJcz98/ltdADT809ReLBCqsu
-ZRxBPhKu6fXT3Q+CQi5NGnQZmyIjd38bmW4z2Q65XFfvnXyVcwWO97vHDvoYlbf9
-4S4mXli4G0HBQ6xti1spOLsn7cv0Be9nfzBm34XKy+TAOkySv0WJb0q7fflxXJDF
-PmKbibPXdRyFPyOttRiVA/HsJzHyIVWSD5D+5pIWjDWSRELRT19IQAraDhnZkbGC
-AqIjeWxgrEXO5TqfEHQm0qM9kQjFLF4fVFVcRe75CGwCGMaiTAbioPr/ktr8eNE+
-qiaKJ4FuSFM1V0Vq8Fmu+/nSXZpFQB0HGAhPl2ilf70wIh3+HET/h5hgcU11esbS
-ckynh/rpTBOVb5n7RSiSar7ty5TormC9iXjp3uaA77yUoswkw5akcsl8Nd7oPi66
-3chmga7RsUOEzDV5H3X54I+1PAiIlrrOAihMlRJg/4r9l3x6vrQBjNOap+qHofoQ
-gabSqrRS3ar+TCPJNV6XcSMvJHiMa5jcnD4Wawb7r4F3DeNOsqSjnq6CBy3/oURB
-HOWwu2K64LFx5hCpJVkzEA7C35+tMT7NqKiS1nvcn0n2c9Evkm+L0L3jmYra/2Oa
-e2zO90XP3tBQyv3YunqKg8pWXyxfJFfNOpsY3xBKPOWO7gFsP3Kl6zkAquFJNApn
-5PYSdfdcg0ObPzk3tEvN
-=Qezj
------END PGP SIGNATURE-----
-
---=-ghlmya5r6sFeCfmQZHLH--
-
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 5f914fc..c35baf1 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -292,10 +292,10 @@ zinstall uinstall install: vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $@
+ 
+ %.dtb: scripts
+-	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
++	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
+ 
+ dtbs: scripts
+-	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
++	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
+ 
+ # We use MRPROPER_FILES and CLEAN_FILES now
+ archclean:
+diff --git a/arch/arm/boot/Makefile b/arch/arm/boot/Makefile
+index f2aa09e..801b92c 100644
+--- a/arch/arm/boot/Makefile
++++ b/arch/arm/boot/Makefile
+@@ -15,8 +15,6 @@ ifneq ($(MACHINE),)
+ include $(srctree)/$(MACHINE)/Makefile.boot
+ endif
+ 
+-include $(srctree)/arch/arm/boot/dts/Makefile
+-
+ # Note: the following conditions must always be true:
+ #   ZRELADDR == virt_to_phys(PAGE_OFFSET + TEXT_OFFSET)
+ #   PARAMS_PHYS must be within 4MB of ZRELADDR
+@@ -59,16 +57,6 @@ $(obj)/zImage:	$(obj)/compressed/vmlinux FORCE
+ 
+ endif
+ 
+-targets += $(dtb-y)
+-
+-# Rule to build device tree blobs
+-$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+-	$(call if_changed_dep,dtc)
+-
+-$(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
+-
+-clean-files := *.dtb
+-
+ ifneq ($(LOADADDR),)
+   UIMAGE_LOADADDR=$(LOADADDR)
+ else
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f37cf9f..2aef042 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -104,4 +104,8 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
+ 	wm8505-ref.dtb \
+ 	wm8650-mid.dtb
+ 
++targets += dtbs
+ endif
++
++dtbs: $(addprefix $(obj)/, $(dtb-y))
++clean-files := *.dtb
+-- 
+1.7.10.4
