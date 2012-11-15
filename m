@@ -1,14 +1,14 @@
 From: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 4/4] dtc/libfdt: sparse fixes
-Date: Wed, 14 Nov 2012 18:46:30 -0600
-Message-ID: <20121114184630.64242a970b40c2b3b55f54a2@freescale.com>
-References: <20121113183430.472a0d989815fbd73ee9b437@freescale.com>
- <20121114102303.GF32290@truffula.fritz.box>
+Subject: [PATCH v2 2/4] dtc/fdtdump: include libfdt_env.h prior to fdt.h
+Date: Wed, 14 Nov 2012 18:59:57 -0600
+Message-ID: <1352941199-19393-2-git-send-email-kim.phillips@freescale.com>
+References: <E1TYeB5-0003oB-IS@jdl.com>
+ <1352941199-19393-1-git-send-email-kim.phillips@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121114102303.GF32290-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+In-Reply-To: <1352941199-19393-1-git-send-email-kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,27 +19,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jerry Van Baren <gvb.uboot-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 Nov 2012 21:23:03 +1100
-David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+in order to get the upcoming fdt type definitions.
 
-> Hrm.  The patch comment shows a lot of sparse warnings, but the patch
-> looks like the basic conversion of the code from uint32_t to
-> annontated fdt32_t types.
+Signed-off-by: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+---
+v2: added David's Acked-by.
 
-not sure what you're getting at: isn't this to be expected?  Anyway,
-I'm going to guess you mean to re-word the commit message.
+ fdtdump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  I also never saw a 3/4.  Has something gone
-> wrong with the patch sending?
-
-I sent 3/4 in reply-to your comments on v1 of the patch, and the
-rest without the reply-to reference, so 3/4 might show up out of
-order in your inbox, depending on how it's configured.  I'll send
-the entire series with the same reference - jdl's comments to v2 -
-instead next time.
-
-Kim
+diff --git a/fdtdump.c b/fdtdump.c
+index 207a46d..8a7ae72 100644
+--- a/fdtdump.c
++++ b/fdtdump.c
+@@ -8,8 +8,8 @@
+ #include <string.h>
+ #include <ctype.h>
+ 
+-#include <fdt.h>
+ #include <libfdt_env.h>
++#include <fdt.h>
+ 
+ #include "util.h"
+ 
+-- 
+1.8.0
