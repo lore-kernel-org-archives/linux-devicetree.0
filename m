@@ -1,91 +1,186 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric
- in mach-mvebu
-Date: Thu, 15 Nov 2012 17:49:17 +0100
-Message-ID: <50A51D0D.4090009@free-electrons.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
- <20121105140258.GO3351@mudshark.cambridge.arm.com>
- <50A15A33.60405@free-electrons.com>
- <20121113104340.GD3940@mudshark.cambridge.arm.com>
- <50A3F860.5010601@free-electrons.com>
- <20121115101752.GA26453@mudshark.cambridge.arm.com>
- <50A5103F.1040903@free-electrons.com>
- <20121115162123.GC5885@mudshark.cambridge.arm.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 02/16] of_spi: add generic binding support to specify cs
+ gpio
+Date: Thu, 15 Nov 2012 16:50:48 +0000
+Message-ID: <20121115165048.543FE3E194B@localhost>
+References: <1349850454-21127-1-git-send-email-wenyou.yang@atmel.com>
+ <1349850454-21127-3-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121115162123.GC5885@mudshark.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1349850454-21127-3-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2012 05:21 PM, Will Deacon wrote:
-> Hi Gregory,
+On Wed, 10 Oct 2012 14:27:20 +0800, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 > 
-> On Thu, Nov 15, 2012 at 03:54:39PM +0000, Gregory CLEMENT wrote:
->> On 11/15/2012 11:17 AM, Will Deacon wrote:
->>> Interesting, thanks for asking them about this. Does this mean that:
->>
->> Here come the answers to your new questions
+> This will allow to use gpio for chip select with no modification in the
+> driver binding
 > 
-> Great, thanks for the quick turn-around!
+> When use the cs-gpios, the gpio number will be passed via the cs_gpio field
+> and the number of chip select will automatically increased.
 > 
->>> 	1. When not running coherently (i.e. before initialising the
->>> 	   coherency fabric), memory is treated as non-shareable,
->>> 	   non-cacheable?
->>
->> It can be cacheable. The shared memory (as defined on the page table)
->> will NOT be coherent by HW.
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> This patch based on the original patch from Jean-Christophe, 
+>  	0002-of_spi-add-generic-binding-support-to-specify-cs-gpi.patch,
+> and merged the patch from Richard Genoud,
+> 	0016-BUG-SPI-array-out-of-bound-no-CS.patch.
+> which fix the BUG of spi array out of bound 
 > 
-> Ok, so we really are incoherent before enabling the fabric.
+>  Documentation/devicetree/bindings/spi/spi-bus.txt |    6 +++
+>  drivers/spi/spi.c                                 |   55 +++++++++++++++++++--
+>  include/linux/spi/spi.h                           |    3 ++
+>  3 files changed, 61 insertions(+), 3 deletions(-)
 > 
->>> 	2. If (1), then are exclusive accesses the only way to achieve
->>> 	   coherent memory accesses in this scenario?
->>
->> I quote: "I suspect there is terminology miss-use: exclusive accesses
->> are NOT used to achieve memory coherency - they are used to achieve
->> atomicity. To achieve memory coherency while fabric is configured to
->> be non-coherent, SW should use maintenance operations over the L1
->> caches."
-> 
-> Ok, so if I'm understanding correctly then I don't really see the usefulness
-> of having working exclusives that are incoherent. Surely it means that you
-> can guarantee mutual exclusion on a lock variable, but the value you actually
-> end up reading from the lock is junk unless you litter the accessors with cache
-> clean operations?
-> 
-> Anyway, that's by-the-by as this is all called early enough that we
-> shouldn't care. The thing I don't like now is that the fabric initialisation
-> is done entirely differently on the primary CPU than the secondaries. The
-> primary probes the device-tree (well, it's also now hard-coded for v2) and
-> accesses the registers from a C function(armada_370_xp_set_cpu_coherent) whilst
-> the secondaries have hardcoded addresses and access via asm
-> (armada_xp_secondary_startup).
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index e782add..c253379 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -12,6 +12,7 @@ The SPI master node requires the following properties:
+>  - #size-cells     - should be zero.
+>  - compatible      - name of SPI bus controller following generic names
+>      		recommended practice.
+> +- cs-gpios	  - (optional) gpios chip select.
+>  No other properties are required in the SPI bus node.  It is assumed
+>  that a driver for an SPI bus device will understand that it is an SPI bus.
+>  However, the binding does not attempt to define the specific method for
+> @@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
+>  chip selects.  Individual drivers can define additional properties to
+>  support describing the chip select layout.
+>  
+> +If cs-gpios is used the number of chip select will automatically increased.
+> +
+>  SPI slave nodes must be children of the SPI master node and can
+>  contain the following properties.
+>  - reg             - (required) chip select address of device.
+> @@ -34,6 +37,9 @@ contain the following properties.
+>  - spi-cs-high     - (optional) Empty property indicating device requires
+>      		chip select active high
+>  
+> +If a gpio chipselect is used for the SPI slave the gpio number will be passed
+> +via the controller_data
+> +
+>  SPI example for an MPC5200 SPI bus:
+>  	spi@f00 {
+>  		#address-cells = <1>;
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 84c2861..74e6577 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/spi/spi.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/export.h>
+>  #include <linux/sched.h>
+> @@ -327,6 +328,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
+>  	spi->dev.parent = &master->dev;
+>  	spi->dev.bus = &spi_bus_type;
+>  	spi->dev.release = spidev_release;
+> +	spi->cs_gpio = -EINVAL;
+>  	device_initialize(&spi->dev);
+>  	return spi;
+>  }
+> @@ -344,15 +346,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
+>  int spi_add_device(struct spi_device *spi)
+>  {
+>  	static DEFINE_MUTEX(spi_add_lock);
+> -	struct device *dev = spi->master->dev.parent;
+> +	struct spi_master *master = spi->master;
+> +	struct device *dev = master->dev.parent;
+>  	struct device *d;
+>  	int status;
+>  
+>  	/* Chipselects are numbered 0..max; validate. */
+> -	if (spi->chip_select >= spi->master->num_chipselect) {
+> +	if (spi->chip_select >= master->num_chipselect) {
+>  		dev_err(dev, "cs%d >= max %d\n",
+>  			spi->chip_select,
+> -			spi->master->num_chipselect);
+> +			master->num_chipselect);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -376,6 +379,9 @@ int spi_add_device(struct spi_device *spi)
+>  		goto done;
+>  	}
+>  
+> +	if (master->cs_gpios)
+> +		spi->cs_gpio = master->cs_gpios[spi->chip_select];
+> +
+>  	/* Drivers may modify this initial i/o setup, but will
+>  	 * normally rely on the device being setup.  Devices
+>  	 * using SPI_CS_HIGH can't coexist well otherwise...
+> @@ -946,6 +952,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+>  }
+>  EXPORT_SYMBOL_GPL(spi_alloc_master);
+>  
+> +#ifdef CONFIG_OF
+> +static int of_spi_register_master(struct spi_master *master)
+> +{
+> +	int nb, i;
+> +	int *cs;
+> +	struct device_node *np = master->dev.of_node;
+> +
+> +	if (!np)
+> +		return 0;
+> +
+> +	nb = of_gpio_named_count(np, "cs-gpios");
+> +
+> +	if (nb < 1)
+> +		return 0;
+> +
+> +	cs = devm_kzalloc(&master->dev,
+> +			  sizeof(int) * (master->num_chipselect + nb),
+> +			  GFP_KERNEL);
+> +	master->cs_gpios = cs;
+> +
+> +	if (!master->cs_gpios)
+> +		return -ENOMEM;
+> +
+> +	memset(cs, -EINVAL, master->num_chipselect);
+> +	cs += master->num_chipselect;
+> +	master->num_chipselect += nb;
 
+The problem with this approach is the gpio cs get appended to the
+'native' cs lines which gets really confusing. If cs-gpios is provided,
+then num_chipselect should become the *greater* of either the number of
+native chip selects or the number of gpios provided. Otherwise the user
+has no way to figure out how reg values will map to gpios. The first
+cs-gpio entry could end up getting mapped to something like cs4.
 
-Now it is hardcoded in both case as you pointed it. So the last
-difference is setup from a C function or via asm.
+So if for example the controller has 2 CS lines, and the cs-gpios
+property looks like this:
 
-The differences between primary and secondary CPU when they enable the
-coherency, is due to the fact that we really are in a different
-situation. For primary CPU, as it is the only CPU online it doesn't
-need to enable the coherency from the beginning, so we can wait to
-have MMU enable and convenient feature. Whereas for the secondary CPU
-they need the coherency from the very beginning are by definition they
-won't be alone. That's why this very first instruction are written in
-asm and they use physical address.
+	cs-gpios = <&gpio1 0 0> <0> <&gpio1 1 0> <&gpio1 2 0>;
 
-I don't see how to handle it in a different way.
+Then it should be configured so that num_chipselect = 4 with the
+following mapping:
 
-Gregory
+cs0 : &gpio1 0 0
+cs1 : native
+cs2 : &gpio1 1 0
+cs3 : &gpio1 2 0
+
+Otherwise the patch looks pretty good.
+
+g.
