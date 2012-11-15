@@ -1,157 +1,113 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] dt/platform: Use cell-index for device naming if available
-Date: Thu, 15 Nov 2012 16:10:20 +0000
-Message-ID: <20121115161020.3205E3E194B@localhost>
-References: <1352508532-19241-1-git-send-email-stepanm@codeaurora.org>    <509F0E56.6080806@gmail.com>    <CACxGe6s3gJ4fmhn9VBd1Fq8bH5S0_ejmE=KqVjYn20bT42wQ_Q@mail.gmail.com> <554191d69bc21a4b133fb876df84ff89.squirrel@www.codeaurora.org> <50A1B50B.4020509@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <50A1B50B.4020509@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stepan Moskovchenko <stepanm@codeaurora.org>Stepan Moskovchenko <stepanm@codeaurora.org>
-Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: =?ISO-8859-1?Q?Per_F=F6rlin?= <per.forlin@stericsson.com>
+Subject: Re: [PATCH] dt: platform: Extract device name from device tree blob
+Date: Thu, 15 Nov 2012 17:15:17 +0100
+Message-ID: <50A51515.3020206@stericsson.com>
+References: <1352732343-1199-1-git-send-email-per.forlin@stericsson.com> <CACxGe6vjLA3j-bc_048UrdB5Q=8pV8=LPSVUnU_k3anX23vwyw@mail.gmail.com> <50A17E30.7030807@stericsson.com> <20121115155246.C4EC83E194B@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121115155246.C4EC83E194B@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Fredrik SODERSTEDT <fredrik.soderstedt@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Nov 2012 18:48:43 -0800, Stepan Moskovchenko <stepanm@codeaurora.org> wrote:
-> On 11/11/2012 5:45 PM, Stepan Moskovchenko wrote:
-> >
-> >> On Sun, Nov 11, 2012 at 2:32 AM, Rob Herring <robherring2@gmail.com>
-> >> wrote:
-> >>> On 11/09/2012 06:48 PM, Stepan Moskovchenko wrote:
-> >>>> Use the cell-index property to construct names for platform
-> >>>> devices, falling back on the existing scheme of using the
-> >>>> device register address if cell-index is not specified.
-> >>>>
-> >>>> The cell-index property is a more useful device identifier,
-> >>>> especially in systems containing several numbered instances
-> >>>> of a particular hardware block, since it more easily
-> >>>> illustrates how devices relate to each other.
-> >>>>
-> >>>> Additionally, userspace software may rely on the classic
-> >>>> <name>.<id> naming scheme to access device attributes in
-> >>>> sysfs, without having to know the physical addresses of
-> >>>> that device on every platform the userspace software may
-> >>>> support. Using cell-index for device naming allows the
-> >>>> device addresses to be hidden from userspace and to be
-> >>>> exposed by logical device number without having to rely on
-> >>>> auxdata to perform name overrides. This allows userspace to
-> >>>> make assumptions about which sysfs nodes map to which
-> >>>> logical instance of a specific hardware block.
-> >>>>
-> >>>> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
-> >>>> ---
-> >>>> I had also considered using something like the linux,label property to
-> >>>> allow
-> >>>> custom names for platform devices without resorting to auxdata, but the
-> >>>> cell-index approach seems more in line with what cell-index was
-> >>>> intended for
-> >>>> and with what the pre-DT platform device naming scheme used to be.
-> >>>> Please let
-> >>>> me know if you think there is a better way to accomplish this.
-> >>>>
-> >>>> This is just being sent out as an RFC for now. If there are no
-> >>>> objections, I
-> >>>> will send this out as an official patch, along with (or combined with)
-> >>>> a patch
-> >>>> to fix up the device names in things like clock tables of any affected
-> >>>> platforms.
-> >>>
-> >>> cell-index is basically deprecated. This has been discussed multiple
-> >>> times in the past. You can use auxdata if you really need to have the
-> >>> old name.
-> >>
-> >> Actually, I think it would be fine to use an /aliases entry to set the
-> >> device name. That's the place to put global namespace information.
-> >>
-> >> g.
-> >>
-> >
-> > Ah, thank you. I would prefer to stay away from auxdata, since it involves
-> > placing more platform-specific data into the kernel, and it is my
-> > understanding that auxdata is intended as a temporary measure. The
-> > /aliases approach looks interesting, and I'll see what I can do with it -
-> > hopefully I can have an RFC / patch soon. It looks like we would want an
-> > "inverse" alias lookup- that is, we would need to know which alias
-> > corresponds to a given node. Is it possible for a node to have multiple
-> > aliases?
+On 11/15/2012 04:52 PM, Grant Likely wrote:
+> On Mon, 12 Nov 2012 23:54:40 +0100, Per F=C3=B6rlin <per.forlin@steri=
+csson.com> wrote:
+>> On 11/12/2012 04:20 PM, Grant Likely wrote:
+>>> On Mon, Nov 12, 2012 at 2:59 PM, Per Forlin <per.forlin@stericsson.=
+com> wrote:
+>>>> Add support to extract device name from device tree blob.
+>>>> If the property "dev-name" is set in the DTS this name will
+>>>> be used when creating the device.
+>>>> The auxdata_lookup has precedence and will override
+>>>> the "dev-name" property.
+>>>
+>>> Using a 'dev-name' property has the same problem that the 'cell-ind=
+ex'
+>>> properties have in that it is encoding part of the global namespace
+>>> local to the node and it becomes easy to create collisions. Instead=
+ of
+>>> this check to see if one of the properties in /aliases points to th=
+e
+>>> node and use that for the name.
+>>>
+>>> g.
+>>>
+>> Thanks Grant for your feedback,
+>>
+>> Extract from exynos5250.dtsi:
+>> -----------
+>> 	aliases {
+>> 		spi0 =3D &spi_0;
+>> 		spi1 =3D &spi_1;
+>> 		spi2 =3D &spi_2;
+>> 	};
+>>
+>> 	spi_0: spi@12d20000 {
+>> ...
+>> 	};
+>>
+>> 	spi_1: spi@12d30000 {
+>> ...
+>> 	};
+>>
+>> 	spi_2: spi@12d40000 {
+>> ...
+>> 	};
+>> ---------------
+>>
+>> Alias refers to the device node. The device node is not aware of the=
+ alias.
+>>
+>> How to get a device name from the aliases.
+>> 1. Traverse all aliases for each device node (time consuming if ther=
+e are many aliases)
+>> 2. Make a new function of_alias_get_name(), today there is only of_a=
+lias_get_id()
+>> 3. The functionality of setting device_name based on alias name need=
+s to be optional because one may want to use aliases without changing t=
+he name of the device.
+>> All this is feasible but perhaps not optimal.
+>>
+>> I don't really see how come name space is a big issue in this case. =
+The name space of "dev-name" is local to the device node. A child devic=
+e node can use the same dev-name as the parent (unless I'm mistaken whi=
+ch happens quite often). Introducing yet another property name pollutes=
+ the name space of the device node. Still I think the pros are stronger=
+ than the cons.
+>>
+>> Do you still prefer to use the name of the Alias? Could you please e=
+laborate a bit more how this can be done in practice?
+>> I would agree with you if there was a reference from the device node=
+ to the alias.
+>=20
+> Oh, I see what you're trying to do. As Lee pointed out you're trying =
+to
+> make the Linux internal way of matching up clocks and regulators happ=
+y.
+> That is very much a Linux-kernel internal thing and should be solved =
+in
+> the kernel. Trying to solve it with fixed names in the device tree wi=
+ll
+> cause problems down the road.
+>=20
+> I though you were wanting to have logical names for the devices that
+> make sense to the user which is how aliases is used now.
+>=20
+> So, no, don't do this.
+>=20
+> g.
+>=20
+Hi,
 
-yes
+I came to the same conclusion when I dag into it some more. I replied t=
+o my own comment and concluded (https://lkml.org/lkml/2012/11/13/309).
+The solution is to move clocks and regulators into the DTS. When this i=
+s done there will be no need for setting a specific device-name (all th=
+ose auxdata_lookup can be removed)
 
-> > If so, which shall we use to create the device name? Anyway, I
-> > will further look into how these aliases work.
-
-Well, why exactly do you want to control the names of devices? Is it so
-that devices match up with what they are, or is it to make things match
-up with things like clocks and regulators. If it is the latter, then no,
-don't do this. Use auxdata. When the kernel requires a specific name for
-a device it is very much a kernel *internal* detail. It does not make
-sense to encode that into the device tree when it isn't something part
-of the binding.
-
-
-> >
-> > Steve
-> 
-> Hi Grant,
-> 
-> Looking through the alias code, I see that the stem and the alias ID are 
-> stored and parsed separately. For the current way of using aliases, this 
-> makes sense. However, can you please clarify what you meant by using an 
-> /aliases entry to set the device name?
-> 
-> The first and most straightforward approach would be to use the entire 
-> alias name as the device name, making no distinction between the alias 
-> stem and ID. However, since it is possible to have multiple aliases to 
-> the same device, which of the aliases shall we use to construct the 
-> device name? Additionally, this may cause possible problems for legacy 
-> software that expects names in the format of <name>.<ID>, since '.' is 
-> not a valid character for alias names as defined by the DT spec, 
-> although strictly speaking this approach would successfully solve the 
-> problem of giving devices predictable and controllable names.
-> 
-> Another way an /aliases entry could be used to set the device name is to 
-> have a <name>.<ID> naming scheme, where the name comes from node->name 
-> (as is done in of_device_make_bus_id) and the ID gets queried using 
-> of_alias_get_id(). We would need to create a new alias stem for this 
-> purpose, and suppose that something like "platform" would work. The 
-> name-setting code would then roughly look as follows:
-> 
-> +	alias_id = of_alias_get_id(node, "platform");
-> +	if (alias_id != -ENODEV) {
-> +		dev_set_name(dev, "%s.%d", node->name, alias_id);
-> +		return;
-> +	}
-> 
-> The downside to this approach is that it imposes the restriction that 
-> device ID numbers now have to be unique throughout the system, whereas 
-> before only the <name>.<ID> combinations had to be unique. This is the 
-> result of only the ID number being present in the alias table, with each 
-> such ID number having the "platform" stem, and the restriction that node 
-> properties shall have unique names.
-
-Again, this all looks like trying to manipulate names to keep the kernel
-happy. Since the kernel has the restrictions on naming, that is where
-the fixups should be made. Either by devres or by changing the expected
-name in the clk/regulator tables.
-
-> A third possible solution is to use an alias stem prefix for defining 
-> the device name. That is, the alias to set the device name would have 
-> some prefix (such as "platform-" for example) and the aliases would look 
-> something like platform-<name><ID>. The code to assign device names 
-> would find the matching alias containing the "platform-" prefix, strip 
-> the prefix, and use the resulting name and ID to construct the device 
-> name. This approach would make it more obvious as to which of several 
-> aliases is used to set the device name, but it imposes additional 
-> structure on the stem names and causes any aliases starting with 
-> "platform-" to become magical, which bothers me slightly.
-
-And specific to the current Linux implementation details.
-
-> Do any of these describe what you intended when you suggested using the 
-> /aliases node to set device names, or is there another approach that I 
-> have missed? Can you please elaborate further?
-
-Really, all I was thinking about was allowing the device that has an
-alias "eth0" to be given a name with 'eth0' in it somewhere. Since names
-like that are a global namespace, /aliases is the place to get them
-because there is no chance of colision with that approach.
-
-g.
+BR
+Per
