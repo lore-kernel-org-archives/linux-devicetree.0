@@ -1,57 +1,107 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v10 0/6] of: add display helper
-Date: Thu, 15 Nov 2012 10:23:51 +0100
-Message-ID: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 07/11] ARM: Exynos4: allow legacy board support to
+ specify xxti and xusbxti clock speed
+Date: Thu, 15 Nov 2012 14:57:28 +0530
+Message-ID: <CAJuYYwQR5Rwvj4CV9G5J_GSbQfkgZu2stEx9fsL_G=A4qiBy=A@mail.gmail.com>
+References: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org>
+	<1352930853-12268-8-git-send-email-thomas.abraham@linaro.org>
+	<7438966.1DHnOH3JLs@flatron>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <7438966.1DHnOH3JLs@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On 15 November 2012 05:06, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> On Thursday 15 of November 2012 03:37:29 Thomas Abraham wrote:
+>> The clock speed of xxti and xusbxti clocks depends on the oscillator
+>> used on the board to generate these clocks. For non-dt platforms, allow
+>> the board support for those platforms to set the clock frequency of
+>> xxti and xusbxti clocks.
+>>
+>> Cc: Kukjin Kim <kgene.kim@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>>  arch/arm/mach-exynos/common.c              |    2 ++
+>>  arch/arm/mach-exynos/common.h              |    1 +
+>>  arch/arm/mach-exynos/mach-nuri.c           |    2 ++
+>>  arch/arm/mach-exynos/mach-origen.c         |    2 ++
+>>  arch/arm/mach-exynos/mach-smdkv310.c       |    2 ++
+>>  arch/arm/mach-exynos/mach-universal_c210.c |    2 ++
+>>  arch/arm/mach-exynos/mct.c                 |    1 +
+>>  7 files changed, 12 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-exynos/common.c
+>> b/arch/arm/mach-exynos/common.c index 138a41d..64c0012 100644
+>> --- a/arch/arm/mach-exynos/common.c
+>> +++ b/arch/arm/mach-exynos/common.c
+>> @@ -65,6 +65,8 @@ static void exynos5_init_clocks(int xtal);
+>>  static void exynos4_init_uarts(struct s3c2410_uartcfg *cfg, int no);
+>>  static int exynos_init(void);
+>>
+>> +unsigned long xxti_f = 0, xusbxti_f = 0;
+>> +
+>>  static struct cpu_table cpu_ids[] __initdata = {
+>>       {
+>>               .idcode         = EXYNOS4210_CPU_ID,
+>> diff --git a/arch/arm/mach-exynos/common.h
+>> b/arch/arm/mach-exynos/common.h index 2cacd48..f947789 100644
+>> --- a/arch/arm/mach-exynos/common.h
+>> +++ b/arch/arm/mach-exynos/common.h
+>> @@ -22,6 +22,7 @@ void exynos4_restart(char mode, const char *cmd);
+>>  void exynos5_restart(char mode, const char *cmd);
+>>  void exynos_init_late(void);
+>>
+>> +extern unsigned long xxti_f, xusbxti_f;
+>>  void exynos4_clk_init(void);
+>>  void exynos4_clk_register_fixed_ext(unsigned long, unsigned long);
+>>
+>> diff --git a/arch/arm/mach-exynos/mach-nuri.c
+>> b/arch/arm/mach-exynos/mach-nuri.c index 5b5c941..e14332c 100644
+>> --- a/arch/arm/mach-exynos/mach-nuri.c
+>> +++ b/arch/arm/mach-exynos/mach-nuri.c
+>> @@ -1332,6 +1332,8 @@ static void __init nuri_map_io(void)
+>>  {
+>>       exynos_init_io(NULL, 0);
+>>       s3c24xx_init_uarts(nuri_uartcfgs, ARRAY_SIZE(nuri_uartcfgs));
+>> +     xxti_f = 0;
+>> +     xusbxti_f = 24000000;
+>
+> I don't like setting these variables directly from board code.
+>
+> If you didn't remove clock initialization call from board code, you could
+> extend that function to take these two frequencies as arguments?
 
-Changes since v9:
-	- don't leak memory when previous timings were correct
-	- CodingStyle fixes
-	- move blank lines around
+Right, but I was not in favour of changing the s3c24xx_init_clocks()
+api since that would mean all board code calling this will require
+updates. So I was contemplating of adding a new exynos4 specific api.
+But then did not opt for it, knowing very well that it is just a
+matter of time before we add dt support to existing non-dt exynos4
+board files. So just to keep things functional for now, and not add to
+much of non-dt stuff, I did this.
 
-Regards,
-Steffen
+>
+>>  }
+>>
+>>  static void __init nuri_reserve(void)
+> [snip]
+>> diff --git a/arch/arm/mach-exynos/mct.c b/arch/arm/mach-exynos/mct.c
+>> index c2e806c..cd061b2 100644
+>> --- a/arch/arm/mach-exynos/mct.c
+>> +++ b/arch/arm/mach-exynos/mct.c
+>> @@ -532,6 +532,7 @@ static void __init exynos4_timer_init(void)
+>>               if (soc_is_exynos4210() || soc_is_exynos4212() ||
+>>                               soc_is_exynos4412()) {
+>>                       exynos4_clk_init();
+>> +                     exynos4_clk_register_fixed_ext(xxti_f, xusbxti_f);
+>
+> I don't like registering clocks from unrelated code. IMHO any clock
+> registration should be done from code in drivers/clk/samsung.
 
+Ok. I will check for other alternatives.
 
-Steffen Trumtrar (6):
-  video: add display_timing and videomode
-  video: add of helper for videomode
-  fbmon: add videomode helpers
-  fbmon: add of_videomode helpers
-  drm_modes: add videomode helpers
-  drm_modes: add of_videomode helpers
-
- .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
- drivers/gpu/drm/drm_modes.c                        |   70 +++++++
- drivers/video/Kconfig                              |   19 ++
- drivers/video/Makefile                             |    4 +
- drivers/video/display_timing.c                     |   24 +++
- drivers/video/fbmon.c                              |   86 ++++++++
- drivers/video/of_display_timing.c                  |  212 ++++++++++++++++++++
- drivers/video/of_videomode.c                       |   47 +++++
- drivers/video/videomode.c                          |   45 +++++
- include/drm/drmP.h                                 |   12 ++
- include/linux/display_timing.h                     |   69 +++++++
- include/linux/fb.h                                 |   12 ++
- include/linux/of_display_timings.h                 |   20 ++
- include/linux/of_videomode.h                       |   17 ++
- include/linux/videomode.h                          |   40 ++++
- 15 files changed, 784 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
- create mode 100644 drivers/video/display_timing.c
- create mode 100644 drivers/video/of_display_timing.c
- create mode 100644 drivers/video/of_videomode.c
- create mode 100644 drivers/video/videomode.c
- create mode 100644 include/linux/display_timing.h
- create mode 100644 include/linux/of_display_timings.h
- create mode 100644 include/linux/of_videomode.h
- create mode 100644 include/linux/videomode.h
-
--- 
-1.7.10.4
+Thanks,
+Thomas.
