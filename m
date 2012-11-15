@@ -1,118 +1,49 @@
-From: Peter Korsgaard <jacmet@sunsite.dk>
-Subject: Re: [PATCH v5 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and use function pointers for getreg and setreg functions
-Date: Thu, 15 Nov 2012 15:56:44 +0100
-Message-ID: <87pq3e52z7.fsf@dell.be.48ers.dk>
-References: <1352988548-10138-1-git-send-email-andreas@gaisler.com>
-	<1352988548-10138-3-git-send-email-andreas@gaisler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352988548-10138-3-git-send-email-andreas@gaisler.com> (Andreas
-	Larsson's message of "Thu, 15 Nov 2012 15:09:08 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Ben Dooks <ben-linux@fluff.org>, linux-i2c@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v10 1/6] video: add display_timing and videomode
+Date: Thu, 15 Nov 2012 15:47:53 +0000
+Message-ID: <20121115154753.C82223E194B@localhost>
+References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de> <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Andreas" == Andreas Larsson <andreas@gaisler.com> writes:
+On Thu, 15 Nov 2012 10:23:52 +0100, Steffen Trumtrar <s.trumtrar@pengutronix.de> wrote:
+> Add display_timing structure and the according helper functions. This allows
+> the description of a display via its supported timing parameters.
+> 
+> Every timing parameter can be specified as a single value or a range
+> <min typ max>.
+> 
+> Also, add helper functions to convert from display timings to a generic videomode
+> structure. This videomode can then be converted to the corresponding subsystem
+> mode representation (e.g. fb_videomode).
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 
- Andreas> The registers in the GRLIB port of the controller are 32-bit
- Andreas> and in big endian byte order. The PRELOW and PREHIGH registers
- Andreas> are merged into one register. The subsequent registers have
- Andreas> their offset decreased accordingly. Hence the register access
- Andreas> needs to be handled in a non-standard manner using custom
- Andreas> getreg and setreg functions.
+Hmmm... here's my thoughts as an outside reviewer. Correct me if I'm
+making an incorrect assumption.
 
- Andreas> The single oc_getreg and one oc_setreg functions, that
- Andreas> branches and call different ioread and iowrite functions, are
- Andreas> replaced by specific functions that uses the appropriate
- Andreas> ioread and iowrite functions and function pointers are
- Andreas> initiated and used to call the approproate functions.
+It looks to me that the purpose of this entire series is to decode video
+timings from the device tree and (eventually) provide the data in the
+form 'struct videomode'. Correct?
 
- Andreas> A type is added as the data of the of match table entries. A
- Andreas> new entry with a different compatible string is added to the
- Andreas> table. The type of that entry triggers usage of the custom
- Andreas> grlib functions by setting the new getreg and setreg function
- Andreas> pointers to these functions.
+If so, then it looks over engineered. Creating new infrastructure to
+allocate, maintain, and free a new 'struct display_timings' doesn't make
+any sense when it is an intermediary data format that will never be used
+by drivers.
 
-Sorry to keep on requesting changes, but see below for a bit more:
+Can the DT parsing code instead return a table of struct videomode?
 
- 
- Andreas>  static void ocores_process(struct ocores_i2c *i2c)
- Andreas>  {
- Andreas>  	struct i2c_msg *msg = i2c->msg;
- Andreas> -	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
- Andreas> +	u8 stat = i2c->getreg(i2c, OCI2C_STATUS);
+But, wait... struct videomode is also a new structure. So it looks like
+this series creates two new intermediary data structures;
+display_timings and videomode. And at least as far as I can see in this
+series struct fb_videomode is the only user.
 
-The patch would have been quite a bit smaller/easier to read if you had
-kept oc_getreg / oc_setreg as wrappers.
-
- 
- Andreas>  #ifdef CONFIG_OF
- Andreas>  static int ocores_i2c_of_probe(struct platform_device *pdev,
- Andreas>  				struct ocores_i2c *i2c)
- Andreas>  {
- Andreas>  	struct device_node *np = pdev->dev.of_node;
- Andreas> +	const struct of_device_id *match;
- Andreas>  	u32 val;
- 
- Andreas>  	if (of_property_read_u32(np, "reg-shift", &i2c->reg_shift)) {
- Andreas> @@ -257,6 +324,14 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
- 
- Andreas>  	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
- Andreas>  				&i2c->reg_io_width);
- Andreas> +
- Andreas> +	match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
- Andreas> +	if (match && (int)match->data == TYPE_GRLIB) {
- Andreas> +		dev_dbg(&pdev->dev, "GRLIB variant of i2c-ocores\n");
- Andreas> +		i2c->setreg = oc_setreg_grlib;
- Andreas> +		i2c->getreg = oc_getreg_grlib;
- Andreas> +	}
- Andreas> +      
- Andreas>  	return 0;
- Andreas>  }
- Andreas>  #else
- Andreas> @@ -311,6 +386,23 @@ static int __devinit ocores_i2c_probe(struct platform_device *pdev)
- Andreas>  	if (i2c->reg_io_width == 0)
- i2c-> reg_io_width = 1; /* Set to default value */
- 
- Andreas> +	if (!i2c->getreg) {
- Andreas> +		if (i2c->reg_io_width == 4)
- Andreas> +			i2c->getreg = oc_getreg_32;
- Andreas> +		else if (i2c->reg_io_width == 2)
- Andreas> +			i2c->getreg = oc_getreg_16;
- Andreas> +		else
- Andreas> +			i2c->getreg = oc_getreg_8;
- Andreas> +	}
- Andreas> +	if (!i2c->setreg) {
- Andreas> +		if (i2c->reg_io_width == 4)
- Andreas> +			i2c->setreg = oc_setreg_32;
- Andreas> +		else if (i2c->reg_io_width == 2)
- Andreas> +			i2c->setreg = oc_setreg_16;
- Andreas> +		else
- Andreas> +			i2c->setreg = oc_setreg_8;
- Andreas> +	}
- Andreas> +
-
-These are always set together (could even move to a single ops
-structure), so it would be shorter to assign them at the same time:
-
-if (!i2c->setreg || !i2c->getreg) {
-   switch (i2c->reg_io_width) {
-   case 1:
-        i2c->setreg = oc_setreg_8;
-        i2c->getreg = oc_getreg_8;
-        break;
-
-   case 2:
-        i2c->setreg = oc_setreg_16;
-        ...
-
-   default:
-        dev_err(&pdev->dev "Unsupported I/O width (%d)\n", i2c->reg_io_width);
-        return -EINVAL;
-   }
-}
+g.
 
 -- 
-Bye, Peter Korsgaard
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
