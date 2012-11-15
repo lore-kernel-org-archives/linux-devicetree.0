@@ -1,58 +1,87 @@
-From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Subject: Re: [RESEND PATCH] mtd: davinci: add support for parition binding
- nodes
-Date: Thu, 15 Nov 2012 15:50:49 +0200
-Message-ID: <1352987449.2221.51.camel@sauron.fi.intel.com>
-References: <1351866161-15516-1-git-send-email-m-karicheri2@ti.com>
-Reply-To: artem.bityutskiy@linux.intel.com
+From: Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/6] usb: chipidea: usbmisc: add post handling and errata
+ fix for mx25
+Date: Thu, 15 Nov 2012 14:51:50 +0100
+Message-ID: <CALBypN7-NKFmoPXWA0utFhUjLOWjvzwJ7ZSuQBa+W5edNQA_OA@mail.gmail.com>
+References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de>
+	<1352894137-2050-7-git-send-email-m.grzeschik@pengutronix.de>
+	<CALBypN6U=np93ZwnEZqbh=j0Vb_-x630GaktEiv+4K26eYp4Pg@mail.gmail.com>
+	<20121115102525.GA16118@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-cIDqQXKT/hKZqRWFQxti"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1351866161-15516-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, dwmw2@infradead.org, hs@denx.de, nsekhar@ti.com, mikedunn@newsguy.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-keystone@list.ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121115102525.GA16118-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+> This is because that series is based on Peter Chen's work. I should have
+> mentioned this in the cover-letter mail. You can merge his master branch
+> before adding my series:
 
---=-cIDqQXKT/hKZqRWFQxti
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Ok thanks for the very rapid reply.
 
-On Fri, 2012-11-02 at 10:22 -0400, Murali Karicheri wrote:
-> Enhance the driver to support partition subnodes inside the nand
-> device bindings to describe partions on the nand device.
->=20
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+I've now built this together with patch 2 "ci13xxx_imx: add 2nd and
+3rd clock to support imx5x and newer" from your other series.
+But it hangs because the usb-phy clock is not being enabled.
+If I add a clock enable for that clock too to usbmisc_imx.c it works
+but that can't be the right way.
 
-Pushed to l2-mtd.git, thanks!
+Who is supposed to enable the phy clock?
+[I'm using the OTG port in host only mode on i.MX53 with "nop-usbphy"]
 
---=20
-Best Regards,
-Artem Bityutskiy
+Here's what I did (illustration only, probably white space broken):
 
---=-cIDqQXKT/hKZqRWFQxti
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c
+b/arch/arm/mach-imx/clk-imx51-imx53.c
+index cd6d7a0..2f0687a 100644
+--- a/arch/arm/mach-imx/clk-imx51-imx53.c
++++ b/arch/arm/mach-imx/clk-imx51-imx53.c
+@@ -492,6 +492,7 @@ int __init mx53_clocks_init(unsigned long
+rate_ckil, unsigned long rate_osc,
+        clk_register_clkdev(clk[usboh3_per_gate], "per", "53f80800.usbmisc");
+        clk_register_clkdev(clk[usboh3_gate], "ipg", "53f80800.usbmisc");
+        clk_register_clkdev(clk[usboh3_gate], "ahb", "53f80800.usbmisc");
++       clk_register_clkdev(clk[usb_phy1_gate], "phy1",
+"53f80800.usbmisc"); // MF
+        clk_register_clkdev(clk[esdhc1_ipg_gate], "ipg", "sdhci-esdhc-imx53.0");
+        clk_register_clkdev(clk[dummy], "ahb", "sdhci-esdhc-imx53.0");
+        clk_register_clkdev(clk[esdhc1_per_gate], "per", "sdhci-esdhc-imx53.0");
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c
+b/drivers/usb/chipidea/usbmisc_imx.c
+index acca109..a59093a 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -197,6 +197,24 @@ static int __devinit usbmisc_imx_probe(struct
+platform_device *pdev)
+        if (ret)
+                goto err_per_failed;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJQpPM5AAoJECmIfjd9wqK0DzIQAMmgiCv4Y21upsshcR3vTlmh
-3FzvJeSwFASb0pedw9FrELADnT2RZSMpuVD9fpDNxDdjGNGxGcLNFyX3jsTRCCKu
-OquCi6m4U0If3abBsxsmOLXRB4vtzFGRvDx9A/krBUfEservNbT9l8ehQjaOLEru
-JtIG+dgsdh9+5htUfDhV22MbLB9jQStfDOsE+nHUYDziXtEl3kiXWj1JwNtNCMIo
-o69o39t2fRBew7A/d7e+iVKtoEfqgs2JvG2yiJfrYh0JKmKU+1gG9nxJV6YJMHh+
-zRSCmklyxHOptgA0tDNiqEp2IlUl4inwGoXSiGilW6oZcoB/dnXxXJ844GQzphEh
-D38xes9wAkiyBX8LPt2dbvJPjxbmAs68WJ6ioCRpfi8/KxRVpYXFg8TtYglSb/71
-Hn1wYPAkiHk97vgA+recwwvQO9s/0tBsXVBILOPgQ2Ym0BIahBFjyKBi+2e48Wf2
-I8Xpnb4ZFTCgc7WofFMneylAqm55ZHE2IM1X2smDh2yUVrRLvxSOH6VtOcO8aECE
-P7YuW8vcEG/nuLalb1iDNJTK9YlV4Ao8rWBAwtvKe3s8hFa5qgC0pt1pRtFEFhgc
-w/789s4ahhVr+ewqYXHkDLvV/MWE7u2rwgZ+Mc5uBNs61erbtl1B9upG9JtVaJX4
-r5cmFYB5xeuvHgq3W99x
-=bFi+
------END PGP SIGNATURE-----
-
---=-cIDqQXKT/hKZqRWFQxti--
++
++       { /* Temp Hack by MF awaiting reply on mailing list */
++               struct clk *phy_clk;
++
++               dev_info(&pdev->dev, "@MF@ hacking phy clock enable\n");
++               phy_clk = devm_clk_get(&pdev->dev, "phy1");
++               if (IS_ERR(phy_clk)) {
++                       dev_err(&pdev->dev, "failed to get PHY clock,
+err=%ld\n", PTR_ERR(phy_clk));
++                       goto err_per_failed;
++               }
++
++               ret = clk_prepare_enable(phy_clk);
++               if (ret) {
++                       dev_err(&pdev->dev, "failed to enable PHY
+clock, err=%d\n", ret);
++                       goto err_per_failed;
++               }
++       }
++
+        tmp_dev = (struct of_device_id *)
+                of_match_device(usbmisc_imx_dt_ids, &pdev->dev);
+        data->ops = (const struct usbmisc_ops *)tmp_dev->data;
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
