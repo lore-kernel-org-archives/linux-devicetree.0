@@ -1,314 +1,511 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5] Input: matrix-keypad - Add device tree support
-Date: Thu, 15 Nov 2012 00:22:30 -0800
-Message-ID: <20121115082230.GA1742@core.coreip.homeip.net>
-References: <1352583632-30550-1-git-send-email-anilkumar@ti.com>
- <509F0EE6.6050903@gmail.com>
- <331ABD5ECB02734CA317220B2BBEABC13EA6C19B@DBDE01.ent.ti.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v3 01/11] clk: samsung: add common clock framework helper
+ functions for Samsung platforms
+Date: Thu, 15 Nov 2012 14:03:12 +0530
+Message-ID: <CAJuYYwR=9Gx5kx-JwVNUaa8Tej-3NG03U4zbYBKr36rPAOtPvw@mail.gmail.com>
+References: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org>
+	<1352930853-12268-2-git-send-email-thomas.abraham@linaro.org>
+	<3129811.yIGKilgVGz@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA6C19B@DBDE01.ent.ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: Rob Herring <robherring2@gmail.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "dgdunix@gmail.com" <dgdunix@gmail.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3129811.yIGKilgVGz@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi AnilKumar,
+Hi Tomasz,
 
-On Thu, Nov 15, 2012 at 07:07:33AM +0000, AnilKumar, Chimata wrote:
-> On Sun, Nov 11, 2012 at 08:05:18, Rob Herring wrote:
-> > On 11/10/2012 03:40 PM, AnilKumar Ch wrote:
-> > > Add device tree support to matrix keypad driver and usage details
-> > > are added to device tree documentation. Driver was tested on AM335x
-> > > EVM.
-> > > 
-> > > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> > 
-> > Acked-by: Rob Herring <rob.herring@calxeda.com>
-> 
-> Hi Dmitry,
-> 
-> If there are no further comments on this patch, could you please
-> take this in?
+Thanks for reviewing these patches!
 
-Actually, could you please try the version below? Note that it needs
-changes to matrix_keypad_build_keymap() found in 'next' branch of my
-tree (to allocate keymap if caller did not supply it).
+On 15 November 2012 04:42, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Thomas,
+>
+> Looks mostly good, but I have some minor comments inline.
+>
+> On Thursday 15 of November 2012 03:37:23 Thomas Abraham wrote:
+>> All Samsung platforms include different types of clock including
+>> fixed-rate, mux, divider and gate clock types. There are typically
+>> hundreds of such clocks on each of the Samsung platforms. To enable
+>> Samsung platforms to register these clocks using the common clock
+>> framework, a bunch of utility functions are introduced here which
+>> simplify the clock registration process. The clocks are usually
+>> statically instantiated and registered with common clock framework.
+>>
+>> Cc: Mike Turquette <mturquette@linaro.org>
+>> Cc: Kukjin Kim <kgene.kim@samsung.com>
+>> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> ---
+>>  drivers/clk/Makefile         |    1 +
+>>  drivers/clk/samsung/Makefile |    5 +
+>>  drivers/clk/samsung/clk.c    |  176 ++++++++++++++++++++++++++++++++++
+>>  drivers/clk/samsung/clk.h    |  218
+>> ++++++++++++++++++++++++++++++++++++++++++ 4 files changed, 400
+>> insertions(+), 0 deletions(-)
+>>  create mode 100644 drivers/clk/samsung/Makefile
+>>  create mode 100644 drivers/clk/samsung/clk.c
+>>  create mode 100644 drivers/clk/samsung/clk.h
+>>
+>> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+>> index 2701235..808f8e1 100644
+>> --- a/drivers/clk/Makefile
+>> +++ b/drivers/clk/Makefile
+>> @@ -19,6 +19,7 @@ endif
+>>  obj-$(CONFIG_MACH_LOONGSON1) += clk-ls1x.o
+>>  obj-$(CONFIG_ARCH_U8500)     += ux500/
+>>  obj-$(CONFIG_ARCH_VT8500)    += clk-vt8500.o
+>> +obj-$(CONFIG_PLAT_SAMSUNG)   += samsung/
+>>
+>>  # Chip specific
+>>  obj-$(CONFIG_COMMON_CLK_WM831X) += clk-wm831x.o
+>> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+>> new file mode 100644
+>> index 0000000..3f926b0
+>> --- /dev/null
+>> +++ b/drivers/clk/samsung/Makefile
+>> @@ -0,0 +1,5 @@
+>> +#
+>> +# Samsung Clock specific Makefile
+>> +#
+>> +
+>> +obj-$(CONFIG_PLAT_SAMSUNG)   += clk.o
+>> diff --git a/drivers/clk/samsung/clk.c b/drivers/clk/samsung/clk.c
+>> new file mode 100644
+>> index 0000000..ebc6fb6
+>> --- /dev/null
+>> +++ b/drivers/clk/samsung/clk.c
+>> @@ -0,0 +1,176 @@
+>> +/*
+>> + * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+>> + * Copyright (c) 2012 Linaro Ltd.
+>> + * Author: Thomas Abraham <thomas.ab@samsung.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as +
+>> * published by the Free Software Foundation.
+>> + *
+>> + * This file includes utility functions to register clocks to common
+>> + * clock framework for Samsung platforms.
+>> +*/
+>> +
+>> +#include "clk.h"
+>> +
+>> +static DEFINE_SPINLOCK(lock);
+>> +static struct clk **clk_table;
+>> +static struct clk_onecell_data clk_data;
+>> +void __iomem *reg_base;
+>
+> Shouldn't it be static?
 
-Thanks!
+Yes, I missed that. Will fix.
 
--- 
-Dmitry
+>
+>> +
+>> +/* setup the essentials required to support clock lookup using ccf */
+>> +void __init samsung_clk_init(struct device_node *np, void __iomem
+>> *base, +                              unsigned long nr_clks)
+>> +{
+>> +     reg_base = base;
+>> +     if (!np)
+>> +             return;
+>> +
+>> +     clk_table = kzalloc(sizeof(struct clk *) * nr_clks, GFP_KERNEL);
+>> +     if (!clk_table)
+>> +             panic("could not allocate clock lookup table\n");
+>> +
+>> +     clk_data.clks = clk_table;
+>> +     clk_data.clk_num = nr_clks;
+>> +     of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
+>> +}
+>> +
+>> +/* add a clock instance to the clock lookup table used for dt based
+>> lookup */ +void samsung_clk_add_lookup(struct clk *clk, unsigned int
+>> id) +{
+>> +     if (clk_table && id)
+>
+> I'm not sure if we really need this kind of checks, but if we do, then
+> shouldn't we also check id against clk_data.clk_num to prevent out of
+> bound index?
 
+The entry into the lookup table is required only for device tree based
+platforms. And clk_table is a dynamically allocated table if booting
+with device tree support. Since the call to samsung_clk_add_lookup is
+made for non-dt platforms as well, the check for clk_table ensures
+that the entry to lookup table is done only for device tree enabled
+platforms. The check for 'id' ensures that the lookup entry index 0 is
+not used. There is no clock which has id as 0.
 
-Input: matrix-keypad - add device tree support
+>
+>> +             clk_table[id] = clk;
+>> +}
+>> +
+>> +/* register a list of fixed clocks */
+>> +void __init samsung_clk_register_fixed_rate(
+>> +             struct samsung_fixed_rate_clock *list, unsigned int nr_clk)
+>> +{
+>> +     struct clk *clk;
+>> +     unsigned int idx, ret;
+>> +
+>> +     for (idx = 0; idx < nr_clk; idx++, list++) {
+>> +             clk = clk_register_fixed_rate(NULL, list->name,
+>> +                     list->parent_name, list->flags, list->fixed_rate);
+>> +             if (IS_ERR(clk)) {
+>> +                     pr_err("%s: failed to register clock %s\n", __func__,
+>> +                             list->name);
+>> +                     continue;
+>> +             }
+>> +
+>> +             samsung_clk_add_lookup(clk, list->id);
+>> +
+>> +             /*
+>> +              * Unconditionally add a clock lookup for the fixed rate
+> clocks.
+>> +              * There are not many of these on any of Samsung platforms.
+>> +              */
+>> +             ret = clk_register_clkdev(clk, list->name, NULL);
+>> +             if (ret)
+>> +                     pr_err("%s: failed to register clock lookup for %s",
+>> +                             __func__, list->name);
+>> +     }
+>> +}
+>> +
+>> +/* register a list of mux clocks */
+>> +void __init samsung_clk_register_mux(struct samsung_mux_clock *list,
+>> +                                     unsigned int nr_clk)
+>> +{
+>> +     struct clk *clk;
+>> +     unsigned int idx, ret;
+>> +
+>> +     for (idx = 0; idx < nr_clk; idx++, list++) {
+>> +             clk = clk_register_mux(NULL, list->name, list->parent_names,
+>> +                     list->num_parents, list->flags, reg_base + list->offset,
+>> +                     list->shift, list->width, list->mux_flags, &lock);
+>> +             if (IS_ERR(clk)) {
+>> +                     pr_err("%s: failed to register clock %s\n", __func__,
+>> +                             list->name);
+>> +                     continue;
+>> +             }
+>> +
+>> +             samsung_clk_add_lookup(clk, list->id);
+>> +
+>> +             /* register a clock lookup only if a clock alias is specified
+> */
+>> +             if (list->alias) {
+>> +                     ret = clk_register_clkdev(clk, list->alias,
+>> +                                             list->dev_name);
+>> +                     if (ret)
+>> +                             pr_err("%s: failed to register lookup %s\n",
+>> +                                             __func__, list->alias);
+>> +             }
+>> +     }
+>> +}
+>> +
+>> +/* register a list of div clocks */
+>> +void __init samsung_clk_register_div(struct samsung_div_clock *list,
+>> +                                     unsigned int nr_clk)
+>> +{
+>> +     struct clk *clk;
+>> +     unsigned int idx, ret;
+>> +
+>> +     for (idx = 0; idx < nr_clk; idx++, list++) {
+>> +             clk = clk_register_divider(NULL, list->name, list-
+>>parent_name,
+>> +                     list->flags, reg_base + list->offset, list->shift,
+>> +                     list->width, list->div_flags, &lock);
+>> +             if (IS_ERR(clk)) {
+>> +                     pr_err("clock: failed to register clock %s\n",
+>> +                             list->name);
+>> +                     continue;
+>> +             }
+>> +
+>> +             samsung_clk_add_lookup(clk, list->id);
+>> +
+>> +             /* register a clock lookup only if a clock alias is specified
+> */
+>> +             if (list->alias) {
+>> +                     ret = clk_register_clkdev(clk, list->alias,
+>> +                                             list->dev_name);
+>> +                     if (ret)
+>> +                             pr_err("%s: failed to register lookup %s\n",
+>> +                                             __func__, list->alias);
+>> +             }
+>> +     }
+>> +}
+>> +
+>> +/* register a list of gate clocks */
+>> +void __init samsung_clk_register_gate(struct samsung_gate_clock *list,
+>> +                                             unsigned int nr_clk)
+>> +{
+>> +     struct clk *clk;
+>> +     unsigned int idx, ret;
+>> +
+>> +     for (idx = 0; idx < nr_clk; idx++, list++) {
+>> +             clk = clk_register_gate(NULL, list->name, list->parent_name,
+>> +                             list->flags, reg_base + list->offset,
+>> +                             list->bit_idx, list->gate_flags, &lock);
+>> +             if (IS_ERR(clk)) {
+>> +                     pr_err("clock: failed to register clock %s\n",
+>> +                             list->name);
+>> +                     continue;
+>> +             }
+>> +
+>> +             /* register a clock lookup only if a clock alias is specified
+> */
+>> +             if (list->alias) {
+>> +                     ret = clk_register_clkdev(clk, list->alias,
+>> +                                                     list->dev_name);
+>> +                     if (ret)
+>> +                             pr_err("%s: failed to register lookup %s\n",
+>> +                                     __func__, list->alias);
+>> +             }
+>> +
+>> +             samsung_clk_add_lookup(clk, list->id);
+>> +     }
+>> +}
+>> +
+>> +/* utility function to get the rate of a specified clock */
+>> +unsigned long _get_rate(const char *clk_name)
+>> +{
+>> +     struct clk *clk;
+>> +     unsigned long rate;
+>> +
+>> +     clk = clk_get(NULL, clk_name);
+>> +     if (IS_ERR(clk))
+>> +             return 0;
+>> +     rate = clk_get_rate(clk);
+>> +     clk_put(clk);
+>> +     return rate;
+>> +}
+>> diff --git a/drivers/clk/samsung/clk.h b/drivers/clk/samsung/clk.h
+>> new file mode 100644
+>> index 0000000..ab43498
+>> --- /dev/null
+>> +++ b/drivers/clk/samsung/clk.h
+>> @@ -0,0 +1,218 @@
+>> +/*
+>> + * Copyright (c) 2012 Samsung Electronics Co., Ltd.
+>> + * Copyright (c) 2012 Linaro Ltd.
+>> + * Author: Thomas Abraham <thomas.ab@samsung.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as +
+>> * published by the Free Software Foundation.
+>> + *
+>> + * Common Clock Framework support for all Samsung platforms
+>> +*/
+>> +
+>> +#ifndef __SAMSUNG_CLK_H
+>> +#define __SAMSUNG_CLK_H
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/clkdev.h>
+>> +#include <linux/io.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +
+>> +#include <mach/map.h>
+>> +
+>> +/**
+>> + * struct samsung_fixed_rate_clock: information about fixed-rate clock
+>> + * @id: platform specific id of the clock.
+>> + * @name: name of this fixed-rate clock.
+>> + * @parent_name: optional parent clock name.
+>> + * @flags: optional fixed-rate clock flags.
+>> + * @fixed-rate: fixed clock rate of this clock.
+>> + */
+>> +struct samsung_fixed_rate_clock {
+>> +     unsigned int            id;
+>> +     char                    *name;
+>
+> Shouldn't it be const char *name?
 
-From: AnilKumar Ch <anilkumar@ti.com>
+Yes, I will fix this.
 
-Add device tree support to matrix keypad driver and usage details
-are added to device tree documentation. Driver was tested on AM335x
-EVM.
+>
+>> +     const char              *parent_name;
+>> +     unsigned long           flags;
+>> +     unsigned long           fixed_rate;
+>> +};
+>> +
+>> +#define FRATE(_id, cname, pname, f, frate)   \
+>> +     {                                               \
+>> +             .id             = _id,                  \
+>> +             .name           = cname,                \
+>> +             .parent_name    = pname,                \
+>> +             .flags          = f,                    \
+>> +             .fixed_rate     = frate,                \
+>> +     }
+>> +
+>> +/**
+>> + * struct samsung_mux_clock: information about mux clock
+>> + * @id: platform specific id of the clock.
+>> + * @dev_name: name of the device to which this clock belongs.
+>> + * @name: name of this mux clock.
+>> + * @parent_names: array of pointer to parent clock names.
+>> + * @num_parents: number of parents listed in @parent_names.
+>> + * @flags: optional flags for basic clock.
+>> + * @offset: offset of the register for configuring the mux.
+>> + * @shift: starting bit location of the mux control bit-field in @reg.
+>> + * @width: width of the mux control bit-field in @reg.
+>> + * @mux_flags: flags for mux-type clock.
+>> + * @alias: optional clock alias name to be assigned to this clock.
+>> + */
+>> +struct samsung_mux_clock {
+>> +     const unsigned int      id;
+>
+> Is const unsigned int really correct?
 
-Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- .../bindings/input/gpio-matrix-keypad.txt          |   46 ++++++++
- drivers/input/keyboard/matrix_keypad.c             |  119 ++++++++++++++++----
- 2 files changed, 143 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+Sorry, I did not get the problem here.
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-new file mode 100644
-index 0000000..ead641c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-@@ -0,0 +1,46 @@
-+* GPIO driven matrix keypad device tree bindings
-+
-+GPIO driven matrix keypad is used to interface a SoC with a matrix keypad.
-+The matrix keypad supports multiple row and column lines, a key can be
-+placed at each intersection of a unique row and a unique column. The matrix
-+keypad can sense a key-press and key-release by means of GPIO lines and
-+report the event using GPIO interrupts to the cpu.
-+
-+Required Properties:
-+- compatible:		Should be "gpio-matrix-keypad"
-+- row-gpios:		List of gpios used as row lines. The gpio specifier
-+			for this property depends on the gpio controller to
-+			which these row lines are connected.
-+- col-gpios:		List of gpios used as column lines. The gpio specifier
-+			for this property depends on the gpio controller to
-+			which these column lines are connected.
-+- linux,keymap:		The definition can be found at
-+			bindings/input/matrix-keymap.txt
-+
-+Optional Properties:
-+- linux,no-autorepeat:	do no enable autorepeat feature.
-+- linux,wakeup:		use any event on keypad as wakeup event.
-+- debounce-delay-ms:	debounce interval in milliseconds
-+- col-scan-delay-us:	delay, measured in microseconds, that is needed
-+			before we can scan keypad after activating column gpio
-+
-+Example:
-+	matrix-keypad {
-+		compatible = "gpio-matrix-keypad";
-+		debounce-delay-ms = <5>;
-+		col-scan-delay-us = <2>;
-+
-+		row-gpios = <&gpio2 25 0
-+			     &gpio2 26 0
-+			     &gpio2 27 0>;
-+
-+		col-gpios = <&gpio2 21 0
-+			     &gpio2 22 0>;
-+
-+		linux,keymap = <0x0000008B
-+				0x0100009E
-+				0x02000069
-+				0x0001006A
-+				0x0101001C
-+				0x0201006C>;
-+	};
-diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-index 18b7237..ebf6e8f 100644
---- a/drivers/input/keyboard/matrix_keypad.c
-+++ b/drivers/input/keyboard/matrix_keypad.c
-@@ -23,6 +23,9 @@
- #include <linux/gpio.h>
- #include <linux/input/matrix_keypad.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
- 
- struct matrix_keypad {
- 	const struct matrix_keypad_platform_data *pdata;
-@@ -37,8 +40,6 @@ struct matrix_keypad {
- 	bool scan_pending;
- 	bool stopped;
- 	bool gpio_all_disabled;
--
--	unsigned short keycodes[];
- };
- 
- /*
-@@ -118,6 +119,7 @@ static void matrix_keypad_scan(struct work_struct *work)
- 	struct matrix_keypad *keypad =
- 		container_of(work, struct matrix_keypad, work.work);
- 	struct input_dev *input_dev = keypad->input_dev;
-+	const unsigned short *keycodes = input_dev->keycode;
- 	const struct matrix_keypad_platform_data *pdata = keypad->pdata;
- 	uint32_t new_state[MATRIX_MAX_COLS];
- 	int row, col, code;
-@@ -153,7 +155,7 @@ static void matrix_keypad_scan(struct work_struct *work)
- 			code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
- 			input_event(input_dev, EV_MSC, MSC_SCAN, code);
- 			input_report_key(input_dev,
--					 keypad->keycodes[code],
-+					 keycodes[code],
- 					 new_state[col] & (1 << row));
- 		}
- 	}
-@@ -394,33 +396,95 @@ static void matrix_keypad_free_gpio(struct matrix_keypad *keypad)
- 		gpio_free(pdata->col_gpios[i]);
- }
- 
-+#ifdef CONFIG_OF
-+static struct matrix_keypad_platform_data * __devinit
-+matrix_keypad_parse_dt(struct device *dev)
-+{
-+	struct matrix_keypad_platform_data *pdata;
-+	struct device_node *np = dev->of_node;
-+	unsigned int *gpios;
-+	int i;
-+
-+	if (!np) {
-+		dev_err(dev, "device lacks DT data\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "could not allocate memory for platform data\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	pdata->num_row_gpios = of_gpio_named_count(np, "row-gpios");
-+	pdata->num_col_gpios = of_gpio_named_count(np, "col-gpios");
-+	if (!pdata->num_row_gpios || !pdata->num_col_gpios) {
-+		dev_err(dev, "number of keypad rows/columns not specified\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (of_get_property(np, "linux,no-autorepeat", NULL))
-+		pdata->no_autorepeat = true;
-+	if (of_get_property(np, "linux,wakeup", NULL))
-+		pdata->wakeup = true;
-+	if (of_get_property(np, "gpio-activelow", NULL))
-+		pdata->active_low = true;
-+
-+	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
-+	of_property_read_u32(np, "col-scan-delay-us",
-+						&pdata->col_scan_delay_us);
-+
-+	gpios = devm_kzalloc(dev,
-+			     sizeof(unsigned int) *
-+				(pdata->num_row_gpios + pdata->num_col_gpios),
-+			     GFP_KERNEL);
-+	if (gpios) {
-+		dev_err(dev, "could not allocate memory for gpios\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	for (i = 0; i < pdata->num_row_gpios; i++)
-+		gpios[i] = of_get_named_gpio(np, "row-gpios", i);
-+
-+	for (i = 0; i < pdata->num_col_gpios; i++)
-+		gpios[pdata->num_row_gpios + i] =
-+			of_get_named_gpio(np, "col-gpios", i);
-+
-+	pdata->row_gpios = gpios;
-+	pdata->col_gpios = &gpios[pdata->num_row_gpios];
-+
-+	return pdata;
-+}
-+#else
-+static inline struct matrix_keypad_platform_data *
-+matrix_keypad_parse_dt(struct device *dev)
-+{
-+	dev_err(dev, "no platform data defined\n");
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+#endif
-+
- static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- {
- 	const struct matrix_keypad_platform_data *pdata;
--	const struct matrix_keymap_data *keymap_data;
- 	struct matrix_keypad *keypad;
- 	struct input_dev *input_dev;
--	unsigned int row_shift;
--	size_t keymap_size;
- 	int err;
- 
--	pdata = pdev->dev.platform_data;
-+	pdata = dev_get_platdata(&pdev->dev);
- 	if (!pdata) {
--		dev_err(&pdev->dev, "no platform data defined\n");
--		return -EINVAL;
--	}
--
--	keymap_data = pdata->keymap_data;
--	if (!keymap_data) {
-+		pdata = matrix_keypad_parse_dt(&pdev->dev);
-+		if (IS_ERR(pdata)) {
-+			dev_err(&pdev->dev, "no platform data defined\n");
-+			return PTR_ERR(pdata);
-+		}
-+	} else if (!pdata->keymap_data) {
- 		dev_err(&pdev->dev, "no keymap data defined\n");
- 		return -EINVAL;
- 	}
- 
--	row_shift = get_count_order(pdata->num_col_gpios);
--	keymap_size = (pdata->num_row_gpios << row_shift) *
--			sizeof(keypad->keycodes[0]);
--	keypad = kzalloc(sizeof(struct matrix_keypad) + keymap_size,
--			 GFP_KERNEL);
-+	keypad = kzalloc(sizeof(struct matrix_keypad), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!keypad || !input_dev) {
- 		err = -ENOMEM;
-@@ -429,7 +493,7 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- 
- 	keypad->input_dev = input_dev;
- 	keypad->pdata = pdata;
--	keypad->row_shift = row_shift;
-+	keypad->row_shift = get_count_order(pdata->num_col_gpios);
- 	keypad->stopped = true;
- 	INIT_DELAYED_WORK(&keypad->work, matrix_keypad_scan);
- 	spin_lock_init(&keypad->lock);
-@@ -440,12 +504,14 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- 	input_dev->open		= matrix_keypad_start;
- 	input_dev->close	= matrix_keypad_stop;
- 
--	err = matrix_keypad_build_keymap(keymap_data, NULL,
-+	err = matrix_keypad_build_keymap(pdata->keymap_data, NULL,
- 					 pdata->num_row_gpios,
- 					 pdata->num_col_gpios,
--					 keypad->keycodes, input_dev);
--	if (err)
-+					 NULL, input_dev);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to build keymap\n");
- 		goto err_free_mem;
-+	}
- 
- 	if (!pdata->no_autorepeat)
- 		__set_bit(EV_REP, input_dev->evbit);
-@@ -488,6 +554,14 @@ static int __devexit matrix_keypad_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id matrix_keypad_dt_match[] = {
-+	{ .compatible = "gpio-matrix-keypad" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, matrix_keypad_dt_match);
-+#endif
-+
- static struct platform_driver matrix_keypad_driver = {
- 	.probe		= matrix_keypad_probe,
- 	.remove		= __devexit_p(matrix_keypad_remove),
-@@ -495,6 +569,7 @@ static struct platform_driver matrix_keypad_driver = {
- 		.name	= "matrix-keypad",
- 		.owner	= THIS_MODULE,
- 		.pm	= &matrix_keypad_pm_ops,
-+		.of_match_table = of_match_ptr(matrix_keypad_dt_match),
- 	},
- };
- module_platform_driver(matrix_keypad_driver);
+>
+>> +     const char              *dev_name;
+>> +     const char              *name;
+>> +     const char              **parent_names;
+>> +     u8                      num_parents;
+>> +     unsigned long           flags;
+>> +     unsigned long           offset;
+>> +     u8                      shift;
+>> +     u8                      width;
+>> +     u8                      mux_flags;
+>> +     const char              *alias;
+>> +};
+>> +
+>> +#define __MUX(_id, dname, cname, pnames, o, s, w, f, mf, a)  \
+>> +     {                                                       \
+>> +             .id             = _id,                          \
+>> +             .dev_name       = dname,                        \
+>> +             .name           = cname,                        \
+>> +             .parent_names   = pnames,                       \
+>> +             .num_parents    = ARRAY_SIZE(pnames),           \
+>> +             .flags          = f,                            \
+>> +             .offset         = o,                            \
+>> +             .shift          = s,                            \
+>> +             .width          = w,                            \
+>> +             .mux_flags      = mf,                           \
+>> +             .alias          = a,                            \
+>> +     }
+>> +
+>> +#define MUX(_id, cname, pnames, o, s, w)                     \
+>> +     __MUX(_id, NULL, cname, pnames, o, s, w, 0, 0, NULL)
+>> +
+>> +#define MUX_A(_id, cname, pnames, o, s, w, a)                        \
+>> +     __MUX(_id, NULL, cname, pnames, o, s, w, 0, 0, a)
+>> +
+>> +#define MUX_F(_id, cname, pnames, o, s, w, f, mf)            \
+>> +     __MUX(_id, NULL, cname, pnames, o, s, w, f, mf, NULL)
+>> +
+>> +/**
+>> + * @id: platform specific id of the clock.
+>> + * struct samsung_div_clock: information about div clock
+>> + * @dev_name: name of the device to which this clock belongs.
+>> + * @name: name of this div clock.
+>> + * @parent_name: name of the parent clock.
+>> + * @flags: optional flags for basic clock.
+>> + * @offset: offset of the register for configuring the div.
+>> + * @shift: starting bit location of the div control bit-field in @reg.
+>> + * @div_flags: flags for div-type clock.
+>> + * @alias: optional clock alias name to be assigned to this clock.
+>> + */
+>> +struct samsung_div_clock {
+>> +     const unsigned int      id;
+>
+> ditto
+>
+>> +     const char              *dev_name;
+>> +     const char              *name;
+>> +     const char              *parent_name;
+>> +     unsigned long           flags;
+>> +     unsigned long           offset;
+>> +     u8                      shift;
+>> +     u8                      width;
+>> +     u8                      div_flags;
+>> +     const char              *alias;
+>> +};
+>> +
+>> +#define __DIV(_id, dname, cname, pname, o, s, w, f, df, a)   \
+>> +     {                                                       \
+>> +             .id             = _id,                          \
+>> +             .dev_name       = dname,                        \
+>> +             .name           = cname,                        \
+>> +             .parent_name    = pname,                        \
+>> +             .flags          = f,                            \
+>> +             .offset         = o,                            \
+>> +             .shift          = s,                            \
+>> +             .width          = w,                            \
+>> +             .div_flags      = df,                           \
+>> +             .alias          = a,                            \
+>> +     }
+>> +
+>> +#define DIV(_id, cname, pname, o, s, w)                              \
+>> +     __DIV(_id, NULL, cname, pname, o, s, w, 0, 0, NULL)
+>> +
+>> +#define DIV_A(_id, cname, pname, o, s, w, a)                 \
+>> +     __DIV(_id, NULL, cname, pname, o, s, w, 0, 0, a)
+>> +
+>> +#define DIV_F(_id, cname, pname, o, s, w, f, df)             \
+>> +     __DIV(_id, NULL, cname, pname, o, s, w, f, df, NULL)
+>> +
+>> +/**
+>> + * struct samsung_gate_clock: information about gate clock
+>> + * @id: platform specific id of the clock.
+>> + * @dev_name: name of the device to which this clock belongs.
+>> + * @name: name of this gate clock.
+>> + * @parent_name: name of the parent clock.
+>> + * @flags: optional flags for basic clock.
+>> + * @offset: offset of the register for configuring the gate.
+>> + * @bit_idx: bit index of the gate control bit-field in @reg.
+>> + * @gate_flags: flags for gate-type clock.
+>> + * @alias: optional clock alias name to be assigned to this clock.
+>> + */
+>> +struct samsung_gate_clock {
+>> +     const unsigned int      id;
+>
+> ditto
+>
+>> +     const char              *dev_name;
+>> +     const char              *name;
+>> +     const char              *parent_name;
+>> +     unsigned long           flags;
+>> +     unsigned long           offset;
+>> +     u8                      bit_idx;
+>> +     u8                      gate_flags;
+>> +     const char              *alias;
+>> +};
+>> +
+>> +#define __GATE(_id, dname, cname, pname, o, b, f, gf, a)     \
+>> +     {                                                       \
+>> +             .id             = _id,                          \
+>> +             .dev_name       = dname,                        \
+>> +             .name           = cname,                        \
+>> +             .parent_name    = pname,                        \
+>> +             .flags          = f,                            \
+>> +             .offset         = o,                            \
+>> +             .bit_idx        = b,                            \
+>> +             .gate_flags     = gf,                           \
+>> +             .alias          = a,                            \
+>> +     }
+>> +
+>> +#define GATE(_id, cname, pname, o, b, f, gf)                 \
+>> +     __GATE(_id, NULL, cname, pname, o, b, f, gf, NULL)
+>> +
+>> +#define GATE_A(_id, cname, pname, o, b, f, gf, a)            \
+>> +     __GATE(_id, NULL, cname, pname, o, b, f, gf, a)
+>> +
+>> +#define GATE_D(_id, dname, cname, pname, o, b, f, gf)                \
+>> +     __GATE(_id, dname, cname, pname, o, b, f, gf, NULL)
+>> +
+>> +#define GATE_DA(_id, dname, cname, pname, o, b, f, gf, a)    \
+>> +     __GATE(_id, dname, cname, pname, o, b, f, gf, a)
+>> +
+>> +#define PNAME(x) static const char *x[] __initdata
+>> +
+>> +extern void __iomem *reg_base;
+>
+> Where is it used? The name suggests that it should rather be static.
+
+Right, this should not have been there. I will remove this.
+
+Thanks,
+Thomas.
