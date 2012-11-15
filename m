@@ -1,146 +1,55 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next
- generation) board.
-Date: Thu, 15 Nov 2012 14:29:55 +0100
-Message-ID: <CAAfyv34ihnwL9JheLzY61zthTkBexTOe3cgkbU4Z+sFG2w1g6g@mail.gmail.com>
-References: <1351633367-19082-1-git-send-email-marek.belisko@open-nandra.com>
-	<CAAfyv34D4bTO=k8niM42CDQFb0tP4uOnvX_KPT3+F6z59jPg3Q@mail.gmail.com>
-	<20121115115925.2FE453E09BB@localhost>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v3 1/5] ARM: kernel: smp_setup_processor_id() updates
+Date: Thu, 15 Nov 2012 13:49:51 +0000
+Message-ID: <20121115134951.GF5570@mudshark.cambridge.arm.com>
+References: <1352983614-22924-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352983614-22924-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121115115925.2FE453E09BB@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1352983614-22924-2-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-CC'ing Tony
+On Thu, Nov 15, 2012 at 12:46:50PM +0000, Lorenzo Pieralisi wrote:
+> This patch applies some basic changes to the smp_setup_processor_id()
+> ARM implementation to make the code that builds cpu_logical_map more
+> uniform across the kernel.
+> 
+> The function now prints the full extent of the boot CPU MPIDR[23:0] and
+> initializes the cpu_logical_map for CPUs up to nr_cpu_ids.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
+>  arch/arm/kernel/setup.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> index da1d1aa..d0df6c8 100644
+> --- a/arch/arm/kernel/setup.c
+> +++ b/arch/arm/kernel/setup.c
+> @@ -426,13 +426,14 @@ int __cpu_logical_map[NR_CPUS];
+>  void __init smp_setup_processor_id(void)
+>  {
+>  	int i;
+> -	u32 cpu = is_smp() ? read_cpuid_mpidr() & 0xff : 0;
+> +	u32 mpidr = is_smp() ? read_cpuid_mpidr() & 0xffffff : 0;
+> +	u32 cpu = mpidr & 0xff;
 
-On Thu, Nov 15, 2012 at 12:59 PM, Grant Likely
-<grant.likely@secretlab.ca> wrote:
-> On Wed, 14 Nov 2012 21:26:58 +0100, Belisko Marek <marek.belisko@gmail.com> wrote:
->> CC' Grant & Rob
->
-> Hi Marek
->
-> Since this is an OMAP board, you should send the changes to Tony and
-> they should be merged through the arm-soc tree.
->
-> g.
->
->>
->> On Tue, Oct 30, 2012 at 10:42 PM, Marek Belisko
->> <marek.belisko@open-nandra.com> wrote:
->> > Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
->> > ---
->> >  arch/arm/boot/dts/omap3-gta04.dts |   65 +++++++++++++++++++++++++++++++++++++
->> >  1 file changed, 65 insertions(+)
->> >  create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
->> >
->> > diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
->> > new file mode 100644
->> > index 0000000..76efd13
->> > --- /dev/null
->> > +++ b/arch/arm/boot/dts/omap3-gta04.dts
->> > @@ -0,0 +1,65 @@
->> > +/*
->> > + * Copyright (C) 2012 Marek Belisko <marek.belisko@open-nandra.com>
->> > + *
->> > + * Based on omap3-beagle-xm.dts
->> > + *
->> > + * This program is free software; you can redistribute it and/or modify
->> > + * it under the terms of the GNU General Public License version 2 as
->> > + * published by the Free Software Foundation.
->> > + */
->> > +/dts-v1/;
->> > +
->> > +/include/ "omap3.dtsi"
->> > +
->> > +/ {
->> > +       model = "OMAP3 GTA04";
->> > +       compatible = "ti,omap3-gta04", "ti,omap3";
->> > +
->> > +       memory {
->> > +               device_type = "memory";
->> > +               reg = <0x80000000 0x20000000>; /* 512 MB */
->> > +       };
->> > +
->> > +       gpio-keys {
->> > +               compatible = "gpio-keys";
->> > +               #address-cells = <1>;
->> > +               #size-cells = <0>;
->> > +               aux-button {
->> > +                       label = "AUX";
->> > +                       linux,code = <169>;
->> > +                       gpios = <&gpio1 7 1>;
->> > +                       gpio-key,wakeup;
->> > +               };
->> > +       };
->> > +};
->> > +
->> > +&i2c1 {
->> > +       clock-frequency = <2600000>;
->> > +
->> > +       twl: twl@48 {
->> > +               reg = <0x48>;
->> > +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
->> > +               interrupt-parent = <&intc>;
->> > +       };
->> > +};
->> > +
->> > +/include/ "twl4030.dtsi"
->> > +
->> > +&i2c2 {
->> > +       clock-frequency = <400000>;
->> > +       /* Pressure Sensor */
->> > +       bmp085@77 {
->> > +               compatible = "bosch,bmp085";
->> > +               reg = <0x77>;
->> > +       };
->> > +};
->> > +
->> > +&i2c3 {
->> > +       clock-frequency = <100000>;
->> > +};
->> > +
->> > +&mmc1 {
->> > +       vmmc-supply = <&vmmc1>;
->> > +       bus-width = <4>;
->> > +};
->> > +
->> > --
->> > 1.7.9.5
->> >
->>
->>
->>
->> --
->> as simple and primitive as possible
->> -------------------------------------------------
->> Marek Belisko - OPEN-NANDRA
->> Freelance Developer
->>
->> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
->> Tel: +421 915 052 184
->> skype: marekwhite
->> twitter: #opennandra
->> web: http://open-nandra.com
->
-> --
-> Grant Likely, B.Sc, P.Eng.
-> Secret Lab Technologies, Ltd.
+Can we move the #defines out of topology.c and use those instead of magic
+masks please? You could use MPIDR_HWID_BITMASK, although the LEVEL mask
+definitions over there don't look right to me (MPIDR_LEVEL0_MASK is 0x3?)
 
-Marek
-
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+Will
