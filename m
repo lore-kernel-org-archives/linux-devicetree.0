@@ -1,75 +1,86 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric in
- mach-mvebu
-Date: Thu, 15 Nov 2012 16:21:23 +0000
-Message-ID: <20121115162123.GC5885@mudshark.cambridge.arm.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
- <20121105140258.GO3351@mudshark.cambridge.arm.com>
- <50A15A33.60405@free-electrons.com>
- <20121113104340.GD3940@mudshark.cambridge.arm.com>
- <50A3F860.5010601@free-electrons.com>
- <20121115101752.GA26453@mudshark.cambridge.arm.com>
- <50A5103F.1040903@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50A5103F.1040903@free-electrons.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] backlight: Add of_find_backlight_by_node() function
+Date: Thu, 15 Nov 2012 16:24:56 +0000
+Message-ID: <20121115162456.101A83E194B@localhost>
+References: <1352326119-7301-1-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1352326119-7301-1-git-send-email-thierry.reding@avionic-design.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
-
-On Thu, Nov 15, 2012 at 03:54:39PM +0000, Gregory CLEMENT wrote:
-> On 11/15/2012 11:17 AM, Will Deacon wrote:
-> > Interesting, thanks for asking them about this. Does this mean that:
+On Wed,  7 Nov 2012 23:08:39 +0100, Thierry Reding <thierry.reding@avionic-design.de> wrote:
+> This function finds the struct backlight_device for a given device tree
+> node. A dummy function is provided so that it safely compiles out if OF
+> support is disabled.
 > 
-> Here come the answers to your new questions
+> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 
-Great, thanks for the quick turn-around!
+Looks okay to me.
 
-> > 	1. When not running coherently (i.e. before initialising the
-> > 	   coherency fabric), memory is treated as non-shareable,
-> > 	   non-cacheable?
+Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  drivers/video/backlight/backlight.c | 17 +++++++++++++++++
+>  include/linux/backlight.h           | 10 ++++++++++
+>  2 files changed, 27 insertions(+)
 > 
-> It can be cacheable. The shared memory (as defined on the page table)
-> will NOT be coherent by HW.
-
-Ok, so we really are incoherent before enabling the fabric.
-
-> > 	2. If (1), then are exclusive accesses the only way to achieve
-> > 	   coherent memory accesses in this scenario?
+> diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backlight/backlight.c
+> index 297db2f..0d1ed4f 100644
+> --- a/drivers/video/backlight/backlight.c
+> +++ b/drivers/video/backlight/backlight.c
+> @@ -370,6 +370,23 @@ void backlight_device_unregister(struct backlight_device *bd)
+>  }
+>  EXPORT_SYMBOL(backlight_device_unregister);
+>  
+> +#if IS_ENABLED(CONFIG_OF)
+> +static int of_parent_match(struct device *dev, void *data)
+> +{
+> +	return dev->parent && dev->parent->of_node == data;
+> +}
+> +
+> +struct backlight_device *of_find_backlight_by_node(struct device_node *node)
+> +{
+> +	struct device *dev;
+> +
+> +	dev = class_find_device(backlight_class, NULL, node, of_parent_match);
+> +
+> +	return dev ? to_backlight_device(dev) : NULL;
+> +}
+> +EXPORT_SYMBOL(of_find_backlight_by_node);
+> +#endif
+> +
+>  static void __exit backlight_class_exit(void)
+>  {
+>  	class_destroy(backlight_class);
+> diff --git a/include/linux/backlight.h b/include/linux/backlight.h
+> index 5ffc6dd..11840e9 100644
+> --- a/include/linux/backlight.h
+> +++ b/include/linux/backlight.h
+> @@ -134,4 +134,14 @@ struct generic_bl_info {
+>  	void (*kick_battery)(void);
+>  };
+>  
+> +#if IS_ENABLED(CONFIG_OF)
+> +struct backlight_device *of_find_backlight_by_node(struct device_node *node);
+> +#else
+> +static inline struct backlight_device *
+> +of_find_backlight_by_node(struct device_node *node)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  #endif
+> -- 
+> 1.8.0
 > 
-> I quote: "I suspect there is terminology miss-use: exclusive accesses
-> are NOT used to achieve memory coherency - they are used to achieve
-> atomicity. To achieve memory coherency while fabric is configured to
-> be non-coherent, SW should use maintenance operations over the L1
-> caches."
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-Ok, so if I'm understanding correctly then I don't really see the usefulness
-of having working exclusives that are incoherent. Surely it means that you
-can guarantee mutual exclusion on a lock variable, but the value you actually
-end up reading from the lock is junk unless you litter the accessors with cache
-clean operations?
-
-Anyway, that's by-the-by as this is all called early enough that we
-shouldn't care. The thing I don't like now is that the fabric initialisation
-is done entirely differently on the primary CPU than the secondaries. The
-primary probes the device-tree (well, it's also now hard-coded for v2) and
-accesses the registers from a C function(armada_370_xp_set_cpu_coherent) whilst
-the secondaries have hardcoded addresses and access via asm
-(armada_xp_secondary_startup).
-
-Will
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
