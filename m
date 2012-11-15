@@ -1,53 +1,68 @@
-From: Jamie Lentin <jm@lentin.co.uk>
-Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
-Date: Thu, 15 Nov 2012 18:11:11 +0000 (GMT)
-Message-ID: <alpine.DEB.2.00.1211151810050.25381@marmot.wormnet.eu>
-References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
- <1352650891-18356-2-git-send-email-andrew@lunn.ch>
- <20121115180557.924713E197F@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121115180557.924713E197F@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, gmbnomis@gmail.com
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 2/2] Add documentation for tca6507 devicetree bindings.
+Date: Thu, 15 Nov 2012 18:12:34 +0000
+Message-ID: <20121115181234.37B173E199F@localhost>
+References: <1352755511-28436-1-git-send-email-marek.belisko@open-nandra.com> <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1352755511-28436-2-git-send-email-marek.belisko@open-nandra.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cooloney@gmail.com, rpurdie@rpsys.net
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2012, Grant Likely wrote:
+On Mon, 12 Nov 2012 22:25:11 +0100, Marek Belisko <marek.belisko@open-nandra.com> wrote:
+> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+> ---
+>  Documentation/devicetree/bindings/leds/tca6507.txt |   40 ++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/tca6507.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/tca6507.txt b/Documentation/devicetree/bindings/leds/tca6507.txt
+> new file mode 100644
+> index 0000000..a49eb0c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/tca6507.txt
+> @@ -0,0 +1,40 @@
+> +LEDs conected to tca6507
+> +
+> +Required properties:
+> +- compatible : should be : "ti,tca6507".
+> +
+> +Each led is represented as a sub-node of the ti,tca6507 device.
+> +
+> +LED sub-node properties:
+> +- label : label for this LED
+> +- reg : number of LED line (could be from 0 to 6)
+> +- linux,default-trigger :  (optional) This parameter, if present, is a
+> +  string defining the trigger assigned to the LED.  Current triggers are:
+> +    "backlight" - LED will act as a back-light, controlled by the framebuffer
+> +		  system
+> +    "default-on" - LED will turn on
+> +    "heartbeat" - LED "double" flashes at a load average based rate
+> +    "ide-disk" - LED indicates disk activity
+> +    "timer" - LED flashes at a fixed, configurable rate
 
-> On Sun, 11 Nov 2012 17:21:29 +0100, Andrew Lunn <andrew@lunn.ch> wrote:
->> From: Jamie Lentin <jm@lentin.co.uk>
->>
->> Given appropriate devicetree bindings, this driver registers a
->> pm_power_off function to set a GPIO line high/low to power down
->> your board.
->>
->> Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
->> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
->> ---
->>  .../devicetree/bindings/gpio/gpio-poweroff.txt     |   22 ++++
->>  drivers/gpio/Kconfig                               |   10 ++
->>  drivers/gpio/Makefile                              |    2 +
->>  drivers/gpio/gpio-poweroff.c                       |  129 ++++++++++++++++++++
->
-> This isn't a gpio controller driver. Don't put it into drivers/gpio
+This is cut-and-paste from bindings/gpio/led.txt. It should be split
+into a separate file and referenced by both bindings. Otherwise the
+binding looks fine.
 
-There's a v2 which puts it in drivers/power/reset/gpio-poweroff.c
+> +
+> +Examples:
+> +
+> +tca6507@45 {
+> +	compatible = "ti,tca6507";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0x45>;
+> +
+> +	led0: red_aux@0 {
+> +		label = "red:aux";
+> +		reg = <0x0>;
+> +	};
+> +
+> +	led1: green_aux@1 {
 
->
-> g.
->
->
+Don't use underscores in node names. Use '-'. (There isn't a technical
+reason for this. It is just convention)
 
--- 
-Jamie Lentin
+g.
