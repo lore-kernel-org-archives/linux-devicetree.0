@@ -1,121 +1,259 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v3 04/11] ARM: Exynos4: Migrate clock support to common
- clock framework
-Date: Thu, 15 Nov 2012 11:42:05 +0100
-Message-ID: <3127900.LhP4Lj0re4@amdc1227>
-References: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org>
- <1496911.LC6ynRgIgc@flatron>
- <CAJuYYwQaPXueu6aVoaNQE3BD1gVRRh2pC0LWfjVC71M7QHMYDQ@mail.gmail.com>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH v6] Input: matrix-keypad - Add device tree support
+Date: Thu, 15 Nov 2012 16:12:59 +0530
+Message-ID: <1352976179-29790-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJuYYwQaPXueu6aVoaNQE3BD1gVRRh2pC0LWfjVC71M7QHMYDQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com, grant.likely@secretlab.ca
+Cc: rob.herring@calxeda.com, dgdunix@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 of November 2012 14:43:21 Thomas Abraham wrote:
-> On 15 November 2012 05:01, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> > On Thursday 15 of November 2012 03:37:26 Thomas Abraham wrote:
-> >> Remove Samsung specific clock support in Exynos4 and migrate to use
-> >> common clock framework.
-> >> 
-> >> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> >> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> >> ---
-> >> 
-> >>  arch/arm/mach-exynos/Kconfig               |    1 +
-> >>  arch/arm/mach-exynos/Makefile              |    3 -
-> >>  arch/arm/mach-exynos/clock-exynos4.c       | 1602
-> >> 
-> >> ---------------------------- arch/arm/mach-exynos/clock-exynos4.h
-> >> 
-> >> |   35 -
-> >>  
-> >>  arch/arm/mach-exynos/clock-exynos4210.c    |  188 ----
-> >>  arch/arm/mach-exynos/clock-exynos4212.c    |  192 ----
-> >>  arch/arm/mach-exynos/common.c              |   22 +-
-> >>  arch/arm/mach-exynos/common.h              |    3 +
-> >>  arch/arm/mach-exynos/mach-armlex4210.c     |    1 -
-> >>  arch/arm/mach-exynos/mach-exynos4-dt.c     |    1 -
-> >>  arch/arm/mach-exynos/mach-nuri.c           |    1 -
-> >>  arch/arm/mach-exynos/mach-origen.c         |    1 -
-> >>  arch/arm/mach-exynos/mach-smdk4x12.c       |    1 -
-> >>  arch/arm/mach-exynos/mach-smdkv310.c       |    1 -
-> >>  arch/arm/mach-exynos/mach-universal_c210.c |    1 -
-> >>  arch/arm/mach-exynos/mct.c                 |   19 +
-> >>  arch/arm/plat-samsung/Kconfig              |    4 +-
-> >>  17 files changed, 27 insertions(+), 2049 deletions(-)
-> >>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.c
-> >>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.h
-> >>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
-> >>  delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
-> > 
-> > [snip]
-> > 
-> >> diff --git a/arch/arm/mach-exynos/mct.c b/arch/arm/mach-exynos/mct.c
-> >> index f7792b8..c2e806c 100644
-> >> --- a/arch/arm/mach-exynos/mct.c
-> >> +++ b/arch/arm/mach-exynos/mct.c
-> >> @@ -31,6 +31,7 @@
-> >> 
-> >>  #include <mach/map.h>
-> >>  #include <mach/irqs.h>
-> >>  #include <asm/mach/time.h>
-> >> 
-> >> +#include "common.h"
-> >> 
-> >>  #define EXYNOS4_MCTREG(x)            (x)
-> >>  #define EXYNOS4_MCT_G_CNT_L          EXYNOS4_MCTREG(0x100)
-> >> 
-> >> @@ -517,6 +518,24 @@ static void __init exynos4_timer_init(void)
-> >> 
-> >>       struct device_node *np;
-> >>       u32 nr_irqs, i;
-> >> 
-> >> +#ifdef CONFIG_COMMON_CLK
-> >> +     /*
-> >> +      * Clock lookup should be functional now since the MCT
-> >> controller
-> >> driver +       * looks up clocks. So the clock initialization is
-> >> initiated here. +        */
-> >> +     if (of_have_populated_dt()) {
-> >> +             if (of_machine_is_compatible("samsung,exynos4210") ||
-> >> +                      of_machine_is_compatible("samsung,exynos4212")
-> >> || +                     
-> >> of_machine_is_compatible("samsung,exynos4412")) +                   
-> >>  exynos4_clk_init();
-> >> +     } else {
-> >> +             if (soc_is_exynos4210() || soc_is_exynos4212() ||
-> >> +                             soc_is_exynos4412()) {
-> >> +                     exynos4_clk_init();
-> >> +             }
-> >> +     }
-> >> +#endif
-> >> +
-> > 
-> > I don't like the idea of initializing the clocks from timer
-> > initialization. What about some platforms where MCT isn't used? It is
-> > also far from being elegant.
-> 
-> Very true, I did also prefer not do this. But, clock lookup should be
-> functional atleast by the time mct initialization begins. So I tried
-> few options such as adding .early_init_call callback in MACHINE_DESC
-> which then can call exynos4_clk_init, but that did not help since
-> mem_init isn't complete by then and memory allocation failed during
-> clock registration. Other methods also did not help much. If you know
-> of a solution to get around this, could you please let me know.
+Add device tree support to matrix keypad driver and usage details
+are added to device tree documentation. Also modified the driver
+according to recent update of matrix_keypad_build_keymap(), which
+automatically allocate memory for keymap.
 
-This is somehow similar to the problem with mapping SYSRAM_NS for Exynos 
-secure firmware. Currently it must be mapped statically using io_table, 
-because ioremap does not work early enough. I guess this kind of approach 
-might be also enough for clocks, until io mem mapping becomes accessible 
-early enough, but someone else should also comment this.
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+This patch was tested on AM335x-EVM and based on linux-next, cleanly
+applies on top of "input/next"
 
-Best regards,
+Changes from v5:
+	- Updated based on Dmitry's patch.
+	  * Modified the driver acc. to matrix_keypad_build_keymap()
+	    recent update.
+	  * Combined row_gpios & col_gpios devm_kzalloc's to single
+	    devm_kzalloc.
+	  * Added proper return values for different failures in
+	    matrix_keypad_parse_dt().
+
+Changes from v4:
+	- Removed clustered-irq support through DT. This should be
+	  added if any platform requires in the future.
+
+Changes from v3:
+	- Incorporated Stephen Warren's review comments on v3
+	  * Added description to clustered-irq-flags binding
+
+Changes from v2:
+	- Incorporated Stephen Warren's review comments on v2
+	  * Renamed the bindings file to gpio-matrix-keypad.txt
+	  * Added description to clustered-irq binding
+
+Changes from v1:
+	- Incorporated Rob's review comments on v1
+	  * Changed matix-keypad compatible to gpio-matrix-keypad
+	  * Removed unnecessary props (num of gpios)
+	  * Used of_match_ptr()
+	- Removed first patch based on Dmitry's comments on v1
+
+ drivers/input/keyboard/matrix_keypad.c |  119 ++++++++++++++++++++++++++------
+ 1 file changed, 97 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
+index 18b7237..05d3a96 100644
+--- a/drivers/input/keyboard/matrix_keypad.c
++++ b/drivers/input/keyboard/matrix_keypad.c
+@@ -23,6 +23,9 @@
+ #include <linux/gpio.h>
+ #include <linux/input/matrix_keypad.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_platform.h>
+ 
+ struct matrix_keypad {
+ 	const struct matrix_keypad_platform_data *pdata;
+@@ -37,8 +40,6 @@ struct matrix_keypad {
+ 	bool scan_pending;
+ 	bool stopped;
+ 	bool gpio_all_disabled;
+-
+-	unsigned short keycodes[];
+ };
+ 
+ /*
+@@ -118,6 +119,7 @@ static void matrix_keypad_scan(struct work_struct *work)
+ 	struct matrix_keypad *keypad =
+ 		container_of(work, struct matrix_keypad, work.work);
+ 	struct input_dev *input_dev = keypad->input_dev;
++	const unsigned short *keycodes = input_dev->keycode;
+ 	const struct matrix_keypad_platform_data *pdata = keypad->pdata;
+ 	uint32_t new_state[MATRIX_MAX_COLS];
+ 	int row, col, code;
+@@ -153,7 +155,7 @@ static void matrix_keypad_scan(struct work_struct *work)
+ 			code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
+ 			input_event(input_dev, EV_MSC, MSC_SCAN, code);
+ 			input_report_key(input_dev,
+-					 keypad->keycodes[code],
++					 keycodes[code],
+ 					 new_state[col] & (1 << row));
+ 		}
+ 	}
+@@ -394,33 +396,95 @@ static void matrix_keypad_free_gpio(struct matrix_keypad *keypad)
+ 		gpio_free(pdata->col_gpios[i]);
+ }
+ 
++#ifdef CONFIG_OF
++static struct matrix_keypad_platform_data * __devinit
++matrix_keypad_parse_dt(struct device *dev)
++{
++	struct matrix_keypad_platform_data *pdata;
++	struct device_node *np = dev->of_node;
++	unsigned int *gpios;
++	int i;
++
++	if (!np) {
++		dev_err(dev, "device lacks DT data\n");
++		return ERR_PTR(-ENODEV);
++	}
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata) {
++		dev_err(dev, "could not allocate memory for platform data\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	pdata->num_row_gpios = of_gpio_named_count(np, "row-gpios");
++	pdata->num_col_gpios = of_gpio_named_count(np, "col-gpios");
++	if (!pdata->num_row_gpios || !pdata->num_col_gpios) {
++		dev_err(dev, "number of keypad rows/columns not specified\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (of_get_property(np, "linux,no-autorepeat", NULL))
++		pdata->no_autorepeat = true;
++	if (of_get_property(np, "linux,wakeup", NULL))
++		pdata->wakeup = true;
++	if (of_get_property(np, "gpio-activelow", NULL))
++		pdata->active_low = true;
++
++	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
++	of_property_read_u32(np, "col-scan-delay-us",
++						&pdata->col_scan_delay_us);
++
++	gpios = devm_kzalloc(dev,
++			     sizeof(unsigned int) *
++				(pdata->num_row_gpios + pdata->num_col_gpios),
++			     GFP_KERNEL);
++	if (!gpios) {
++		dev_err(dev, "could not allocate memory for gpios\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	for (i = 0; i < pdata->num_row_gpios; i++)
++		gpios[i] = of_get_named_gpio(np, "row-gpios", i);
++
++	for (i = 0; i < pdata->num_col_gpios; i++)
++		gpios[pdata->num_row_gpios + i] =
++			of_get_named_gpio(np, "col-gpios", i);
++
++	pdata->row_gpios = gpios;
++	pdata->col_gpios = &gpios[pdata->num_row_gpios];
++
++	return pdata;
++}
++#else
++static inline struct matrix_keypad_platform_data *
++matrix_keypad_parse_dt(struct device *dev)
++{
++	dev_err(dev, "no platform data defined\n");
++
++	return ERR_PTR(-EINVAL);
++}
++#endif
++
+ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+ {
+ 	const struct matrix_keypad_platform_data *pdata;
+-	const struct matrix_keymap_data *keymap_data;
+ 	struct matrix_keypad *keypad;
+ 	struct input_dev *input_dev;
+-	unsigned int row_shift;
+-	size_t keymap_size;
+ 	int err;
+ 
+-	pdata = pdev->dev.platform_data;
++	pdata = dev_get_platdata(&pdev->dev);
+ 	if (!pdata) {
+-		dev_err(&pdev->dev, "no platform data defined\n");
+-		return -EINVAL;
+-	}
+-
+-	keymap_data = pdata->keymap_data;
+-	if (!keymap_data) {
++		pdata = matrix_keypad_parse_dt(&pdev->dev);
++		if (IS_ERR(pdata)) {
++			dev_err(&pdev->dev, "no platform data defined\n");
++			return PTR_ERR(pdata);
++		}
++	} else if (!pdata->keymap_data) {
+ 		dev_err(&pdev->dev, "no keymap data defined\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	row_shift = get_count_order(pdata->num_col_gpios);
+-	keymap_size = (pdata->num_row_gpios << row_shift) *
+-			sizeof(keypad->keycodes[0]);
+-	keypad = kzalloc(sizeof(struct matrix_keypad) + keymap_size,
+-			 GFP_KERNEL);
++	keypad = kzalloc(sizeof(struct matrix_keypad), GFP_KERNEL);
+ 	input_dev = input_allocate_device();
+ 	if (!keypad || !input_dev) {
+ 		err = -ENOMEM;
+@@ -429,7 +493,7 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+ 
+ 	keypad->input_dev = input_dev;
+ 	keypad->pdata = pdata;
+-	keypad->row_shift = row_shift;
++	keypad->row_shift = get_count_order(pdata->num_col_gpios);
+ 	keypad->stopped = true;
+ 	INIT_DELAYED_WORK(&keypad->work, matrix_keypad_scan);
+ 	spin_lock_init(&keypad->lock);
+@@ -440,12 +504,14 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+ 	input_dev->open		= matrix_keypad_start;
+ 	input_dev->close	= matrix_keypad_stop;
+ 
+-	err = matrix_keypad_build_keymap(keymap_data, NULL,
++	err = matrix_keypad_build_keymap(pdata->keymap_data, NULL,
+ 					 pdata->num_row_gpios,
+ 					 pdata->num_col_gpios,
+-					 keypad->keycodes, input_dev);
+-	if (err)
++					 NULL, input_dev);
++	if (err) {
++		dev_err(&pdev->dev, "failed to build keymap\n");
+ 		goto err_free_mem;
++	}
+ 
+ 	if (!pdata->no_autorepeat)
+ 		__set_bit(EV_REP, input_dev->evbit);
+@@ -488,6 +554,14 @@ static int __devexit matrix_keypad_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id matrix_keypad_dt_match[] = {
++	{ .compatible = "gpio-matrix-keypad" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, matrix_keypad_dt_match);
++#endif
++
+ static struct platform_driver matrix_keypad_driver = {
+ 	.probe		= matrix_keypad_probe,
+ 	.remove		= __devexit_p(matrix_keypad_remove),
+@@ -495,6 +569,7 @@ static struct platform_driver matrix_keypad_driver = {
+ 		.name	= "matrix-keypad",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &matrix_keypad_pm_ops,
++		.of_match_table = of_match_ptr(matrix_keypad_dt_match),
+ 	},
+ };
+ module_platform_driver(matrix_keypad_driver);
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+1.7.9.5
+
