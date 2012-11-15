@@ -1,42 +1,173 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/14] ARM: SPEAr13xx: DT: Add spics gpio controller nodes
-Date: Thu, 15 Nov 2012 18:25:49 +0100
-Message-ID: <CACRpkdZmavE0+hoNd4H3PyfOTfB++uw5bSkDAbK4iRk8+cuhoQ@mail.gmail.com>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
- <58a7d91cab20b924784fb5a09e16ca08e6f13318.1352608333.git.viresh.kumar@linaro.org>
- <CACRpkdZkgmLF8TxFCZSubP+g+6_ofZugArKtE9=dYTZfemstrw@mail.gmail.com>
- <CAKohpon=AVGZmR_cwUZ4=buw0kr3JVtXh51BtXteWkJ7E-f_bQ@mail.gmail.com>
- <CACRpkdaJ2kCYfSP=xCRQAG2wDnkMKX9fey+ByhDDiOS==u+XwA@mail.gmail.com>
- <CAKohpok7-iBCoYk+aAXZPsOODyh6tp2nutC+6wYOot-bK3=wkg@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 28/29] mv_xor: add Device Tree binding
+Date: Thu, 15 Nov 2012 18:20:33 +0100
+Message-ID: <1353000034-30567-29-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1353000034-30567-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKohpok7-iBCoYk+aAXZPsOODyh6tp2nutC+6wYOot-bK3=wkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1353000034-30567-1-git-send-email-thomas.petazzoni@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, Saeed Bishara <saeed@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>
+Cc: Lior Amsalem <alior@marvell.com>, devicetree-discuss@lists.ozlabs.org, Maen Suleiman <maen@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2012 at 3:08 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 15 November 2012 19:36, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ Documentation/devicetree/bindings/dma/mv-xor.txt |   40 +++++++++++++++
+ drivers/dma/mv_xor.c                             |   57 ++++++++++++++++++++--
+ 2 files changed, 93 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mv-xor.txt
 
->> I seldom comment on individual DT bindings, I just want
->> to know that they're there :-)
->
-> Its not that simple. You are required to Ack it, as we have added it in
-> drivers/pinctrl/spear because we are controlling pins here :)
-
-Yeah I saw, I've commented on it now..
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/dma/mv-xor.txt b/Documentation/devicetree/bindings/dma/mv-xor.txt
+new file mode 100644
+index 0000000..7c6cb7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/mv-xor.txt
+@@ -0,0 +1,40 @@
++* Marvell XOR engines
++
++Required properties:
++- compatible: Should be "marvell,orion-xor"
++- reg: Should contain registers location and length (two sets)
++    the first set is the low registers, the second set the high
++    registers for the XOR engine.
++- clocks: pointer to the reference clock
++
++The DT node must also contains sub-nodes for each XOR channel that the
++XOR engine has. Those sub-nodes have the following required
++properties:
++- interrupts: interrupt of the XOR channel
++
++And the following optional properties:
++- dmacap,memcpy to indicate that the XOR channel is capable of memcpy operations
++- dmacap,memset to indicate that the XOR channel is capable of memset operations
++- dmacap,xor to indicate that the XOR channel is capable of xor operations
++
++Example:
++
++xor@d0060900 {
++	compatible = "marvell,orion-xor";
++	reg = <0xd0060900 0x100
++	       0xd0060b00 0x100>;
++	clocks = <&coreclk 0>;
++	status = "okay";
++
++	xor00 {
++	      interrupts = <51>;
++	      dmacap,memcpy;
++	      dmacap,xor;
++	};
++	xor01 {
++	      interrupts = <52>;
++	      dmacap,memcpy;
++	      dmacap,xor;
++	      dmacap,memset;
++	};
++};
+diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
+index 71cbb0e..d645d43 100644
+--- a/drivers/dma/mv_xor.c
++++ b/drivers/dma/mv_xor.c
+@@ -26,6 +26,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/memory.h>
+ #include <linux/clk.h>
++#include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <linux/platform_data/dma-mv_xor.h>
+ 
+ #include "dmaengine.h"
+@@ -1278,7 +1280,42 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 	if (!IS_ERR(xordev->clk))
+ 		clk_prepare_enable(xordev->clk);
+ 
+-	if (pdata && pdata->channels) {
++	if (pdev->dev.of_node) {
++		struct device_node *np;
++		int i = 0;
++
++		for_each_child_of_node(pdev->dev.of_node, np) {
++			dma_cap_mask_t cap_mask;
++			int irq;
++
++			dma_cap_zero(cap_mask);
++			if (of_property_read_bool(np, "dmacap,memcpy"))
++				dma_cap_set(DMA_MEMCPY, cap_mask);
++			if (of_property_read_bool(np, "dmacap,xor"))
++				dma_cap_set(DMA_XOR, cap_mask);
++			if (of_property_read_bool(np, "dmacap,memset"))
++				dma_cap_set(DMA_MEMSET, cap_mask);
++			if (of_property_read_bool(np, "dmacap,interrupt"))
++				dma_cap_set(DMA_INTERRUPT, cap_mask);
++
++			irq = irq_of_parse_and_map(np, 0);
++			if (irq < 0) {
++				ret = irq;
++				goto err_channel_add;
++			}
++
++			xordev->channels[i] =
++				mv_xor_channel_add(xordev, pdev, i,
++						   cap_mask, irq);
++			if (IS_ERR(xordev->channels[i])) {
++				ret = PTR_ERR(xordev->channels[i]);
++				irq_dispose_mapping(irq);
++				goto err_channel_add;
++			}
++
++			i++;
++		}
++	} else if (pdata && pdata->channels) {
+ 		for (i = 0; i < MV_XOR_MAX_CHANNELS; i++) {
+ 			struct mv_xor_channel_data *cd;
+ 			int irq;
+@@ -1309,8 +1346,11 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 
+ err_channel_add:
+ 	for (i = 0; i < MV_XOR_MAX_CHANNELS; i++)
+-		if (xordev->channels[i])
++		if (xordev->channels[i]) {
++			if (pdev->dev.of_node)
++				irq_dispose_mapping(xordev->channels[i]->irq);
+ 			mv_xor_channel_remove(xordev->channels[i]);
++		}
+ 
+ 	clk_disable_unprepare(xordev->clk);
+ 	clk_put(xordev->clk);
+@@ -1335,12 +1375,21 @@ static int mv_xor_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static struct of_device_id mv_xor_dt_ids[] __devinitdata = {
++       { .compatible = "marvell,orion-xor", },
++       {},
++};
++MODULE_DEVICE_TABLE(of, mv_xor_dt_ids);
++#endif
++
+ static struct platform_driver mv_xor_driver = {
+ 	.probe		= mv_xor_probe,
+ 	.remove		= mv_xor_remove,
+ 	.driver		= {
+-		.owner	= THIS_MODULE,
+-		.name	= MV_XOR_NAME,
++		.owner	        = THIS_MODULE,
++		.name	        = MV_XOR_NAME,
++		.of_match_table = of_match_ptr(mv_xor_dt_ids),
+ 	},
+ };
+ 
+-- 
+1.7.9.5
