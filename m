@@ -1,38 +1,114 @@
-From: Hui Wang <jason77.wang@gmail.com>
-Subject: Re: [PATCH V3 0/5] SMP support for Armada XP
-Date: Thu, 15 Nov 2012 16:46:09 +0800
-Message-ID: <50A4ABD1.3070902@gmail.com>
-References: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 1/3] OF: Add helper for matching against linux,stdout-path
+Date: Thu, 15 Nov 2012 09:49:45 +0100
+Message-ID: <20121115084945.GZ10369@pengutronix.de>
+References: <1351849734-9836-1-git-send-email-s.hauer@pengutronix.de>
+ <1351849734-9836-2-git-send-email-s.hauer@pengutronix.de>
+ <CACxGe6uW+XN6RDnP+8QFXaCYqqPZO4dZM_aynR6AVMYZT=KuMg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Will Deacon <will.deacon@arm.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACxGe6uW+XN6RDnP+8QFXaCYqqPZO4dZM_aynR6AVMYZT=KuMg@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-serial@vger.kernel.org, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Sorry for asking a question. Does it support CPU HOTPLUG? I am just 
-testing the marvell 2012_Q4.1, and found the CPU HOTPLUG (echo 0|1 > 
-/sys/devices/system/cpu/cpu1/online) doesn't work on the XP_GP board, 
-does your BSP have the same problem?
+On Wed, Nov 14, 2012 at 08:49:54PM +0000, Grant Likely wrote:
+> On Fri, Nov 2, 2012 at 9:48 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > devicetrees may have a linux,stdout-path property in the chosen
+> > node describing the console device. This adds a helper function
+> > to match a device against this property so a driver can call
+> > add_preferred_console for a matching device.
+> >
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > ---
+> >  drivers/of/Kconfig        |    3 +++
+> >  drivers/of/Makefile       |    1 +
+> >  drivers/of/of_stdout.c    |   27 +++++++++++++++++++++++++++
+> >  include/linux/of_stdout.h |   24 ++++++++++++++++++++++++
+> >  4 files changed, 55 insertions(+)
+> >  create mode 100644 drivers/of/of_stdout.c
+> >  create mode 100644 include/linux/of_stdout.h
+> >
+> > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> > index dfba3e6..8574ebb 100644
+> > --- a/drivers/of/Kconfig
+> > +++ b/drivers/of/Kconfig
+> > @@ -67,6 +67,9 @@ config OF_MDIO
+> >         help
+> >           OpenFirmware MDIO bus (Ethernet PHY) accessors
+> >
+> > +config OF_STDOUT
+> > +       def_bool y
+> > +
+> >  config OF_PCI
+> >         def_tristate PCI
+> >         depends on PCI
+> > diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> > index e027f44..c9f3f2f 100644
+> > --- a/drivers/of/Makefile
+> > +++ b/drivers/of/Makefile
+> > @@ -8,6 +8,7 @@ obj-$(CONFIG_OF_I2C)    += of_i2c.o
+> >  obj-$(CONFIG_OF_NET)   += of_net.o
+> >  obj-$(CONFIG_OF_SELFTEST) += selftest.o
+> >  obj-$(CONFIG_OF_MDIO)  += of_mdio.o
+> > +obj-$(CONFIG_OF_STDOUT) += of_stdout.o
+> >  obj-$(CONFIG_OF_PCI)   += of_pci.o
+> >  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+> >  obj-$(CONFIG_OF_MTD)   += of_mtd.o
+> > diff --git a/drivers/of/of_stdout.c b/drivers/of/of_stdout.c
+> > new file mode 100644
+> > index 0000000..c9e370e
+> > --- /dev/null
+> > +++ b/drivers/of/of_stdout.c
+> > @@ -0,0 +1,27 @@
+> > +/*
+> > + * OF helper for linux,stdoutpath property.
+> > + *
+> > + * This file is released under the GPLv2
+> > + */
+> > +#include <linux/of_stdout.h>
+> > +
+> > +/**
+> > + * of_device_is_stdout_path - check if a device node matches the
+> > + *                            linux,stdout-path property
+> > + *
+> > + * Check if this device node matches the linux,stdout-path property
+> > + * in the chosen node. return true if yes, false otherwise.
+> > + */
+> > +int of_device_is_stdout_path(struct device_node *dn)
+> > +{
+> > +       const char *name;
+> > +
+> > +       name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+> > +       if (name == NULL)
+> > +               return 0;
+> > +
+> > +       if (dn == of_find_node_by_path(name))
+> 
+> need to of_node_put() the return value of of_find_node_by_path()
+> 
+> > +               return 1;
+> > +
+> > +       return 0;
+> > +}
+> 
+> Hi Sascha,
+> 
+> I'm fine with the helper, but there really is no need for a completely
+> separate .c file. Just put it in drivers/of/base.c.
 
-Regards,
-Hui.
+I guess the same applies to include/linux/of_stdout.h.
 
-Gregory CLEMENT wrote:
-> Hello,
->
-> The purpose of this patch set is to add the SMP support for the Armada
-> XP SoCs. Beside the SMP support itself brought by the last 3 patches,
-> this patch set also adds the support for the coherency fabric unit and
->   
+Should I drop the CONFIG_OF_STDOUT aswell?
+
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
