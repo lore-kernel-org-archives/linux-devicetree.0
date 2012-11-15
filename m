@@ -1,49 +1,32 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v10 1/6] video: add display_timing and videomode
-Date: Thu, 15 Nov 2012 15:47:53 +0000
-Message-ID: <20121115154753.C82223E194B@localhost>
-References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de> <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 0/2]  i2c: i2c-ocores: Add support for sparc, custom set and get functions, and the GRLIB port of the controller
+Date: Thu, 15 Nov 2012 16:50:57 +0100
+Message-ID: <1352994659-22392-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2012 10:23:52 +0100, Steffen Trumtrar <s.trumtrar@pengutronix.de> wrote:
-> Add display_timing structure and the according helper functions. This allows
-> the description of a display via its supported timing parameters.
-> 
-> Every timing parameter can be specified as a single value or a range
-> <min typ max>.
-> 
-> Also, add helper functions to convert from display timings to a generic videomode
-> structure. This videomode can then be converted to the corresponding subsystem
-> mode representation (e.g. fb_videomode).
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+On sparc, irqs are not present as an IORESOURCE in the struct platform_device
+representation. By using platform_get_irq instead of platform_get_resource the
+driver works for sparc.
 
-Hmmm... here's my thoughts as an outside reviewer. Correct me if I'm
-making an incorrect assumption.
+The GRLIB port of the ocores i2c controller needs custom getreg and setreg
+functions to allow for big endian register access and to deal with the fact that
+the PRELOW and PREHIGH registers have been merged into one register.
 
-It looks to me that the purpose of this entire series is to decode video
-timings from the device tree and (eventually) provide the data in the
-form 'struct videomode'. Correct?
+Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 
-If so, then it looks over engineered. Creating new infrastructure to
-allocate, maintain, and free a new 'struct display_timings' doesn't make
-any sense when it is an intermediary data format that will never be used
-by drivers.
+Changes since v5:
+- Function pointers for different widths are set together
+- oc_setreg and oc_getreg are kept as wrappers
 
-Can the DT parsing code instead return a table of struct videomode?
+Andreas Larsson (2):
+  i2c: i2c-ocores: Add irq support for sparc
+  i2c: i2c-ocores: Add support for the GRLIB port of the controller and
+    use function pointers for getreg and setreg functions
 
-But, wait... struct videomode is also a new structure. So it looks like
-this series creates two new intermediary data structures;
-display_timings and videomode. And at least as far as I can see in this
-series struct fb_videomode is the only user.
-
-g.
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 +-
+ drivers/i2c/busses/i2c-ocores.c                    |  149 +++++++++++++++++---
+ 2 files changed, 127 insertions(+), 24 deletions(-)
