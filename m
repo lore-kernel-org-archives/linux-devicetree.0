@@ -1,13 +1,19 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH 28/29] mv_xor: add Device Tree binding
-Date: Thu, 15 Nov 2012 18:20:33 +0100
-Message-ID: <1353000034-30567-29-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1353000034-30567-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
+Date: Thu, 15 Nov 2012 11:00:06 -0700
+Message-ID: <50A52DA6.3070409@wwwdotorg.org>
+References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
+ <1352650891-18356-2-git-send-email-andrew@lunn.ch>
+ <50A020C5.4070506@wwwdotorg.org> <20121112082546.GU22029@lunn.ch>
+ <50A1212C.2080601@wwwdotorg.org> <20121112181947.GS24583@lunn.ch>
+ <20121112184340.GA15643@lizard> <50A146E7.2040608@wwwdotorg.org>
+ <CACRpkdb=ra9NwqEneyMoM5YnOFTVQoBxPATjUN6anooXVLiCjw@mail.gmail.com>
+ <20121115105954.GA17119@lizard>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1353000034-30567-1-git-send-email-thomas.petazzoni@free-electrons.com>
+In-Reply-To: <20121115105954.GA17119@lizard>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,157 +23,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: linux-arm-kernel-bounces@lists.infradead.org
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, Saeed Bishara <saeed@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>
-Cc: Lior Amsalem <alior@marvell.com>, devicetree-discuss@lists.ozlabs.org, Maen Suleiman <maen@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Anton Vorontsov <anton.vorontsov@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, gmbnomis@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: devicetree-discuss@lists.ozlabs.org
----
- Documentation/devicetree/bindings/dma/mv-xor.txt |   40 +++++++++++++++
- drivers/dma/mv_xor.c                             |   57 ++++++++++++++++++++--
- 2 files changed, 93 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/mv-xor.txt
+On 11/15/2012 03:59 AM, Anton Vorontsov wrote:
+> On Thu, Nov 15, 2012 at 11:35:36AM +0100, Linus Walleij wrote:
+>> On Mon, Nov 12, 2012 at 7:58 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> On 11/12/2012 11:43 AM, Anton Vorontsov wrote:
+>>
+>>>> Should the gpio driver fix its bindings then?.. Polarity is a quite
+>>>> generic concept of a GPIO, and flags are there for a reason. I'd rather
+>>>> prefer having
+>>>
+>>> There is no "GPIO driver" to fix; each GPIO driver has its own bindings,
+>>> and unfortunately, some of the GPIO binding authors chose not to include
+>>> any flags cell in the GPIO specifier (e.g. Samsung ARM SoCs IIRC, but
+>>> there are probably more).
+>>
+>> So can I read this something like we have been too liberal with the
+>> GPIO DT bindings and they are now a bit messy and need to be shaped
+>> up? I don't know how to achieve that :-(
+> 
+> I guess there's really no reason to panic. :)
+> 
+> 'git grep gpio-cells Documentation/' shows just mrvl-gpio.txt and
+> twl6040.txt having the wrong gpio-cells (i.e. 1).
 
-diff --git a/Documentation/devicetree/bindings/dma/mv-xor.txt b/Documentation/devicetree/bindings/dma/mv-xor.txt
-new file mode 100644
-index 0000000..7c6cb7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mv-xor.txt
-@@ -0,0 +1,40 @@
-+* Marvell XOR engines
-+
-+Required properties:
-+- compatible: Should be "marvell,orion-xor"
-+- reg: Should contain registers location and length (two sets)
-+    the first set is the low registers, the second set the high
-+    registers for the XOR engine.
-+- clocks: pointer to the reference clock
-+
-+The DT node must also contains sub-nodes for each XOR channel that the
-+XOR engine has. Those sub-nodes have the following required
-+properties:
-+- interrupts: interrupt of the XOR channel
-+
-+And the following optional properties:
-+- dmacap,memcpy to indicate that the XOR channel is capable of memcpy operations
-+- dmacap,memset to indicate that the XOR channel is capable of memset operations
-+- dmacap,xor to indicate that the XOR channel is capable of xor operations
-+
-+Example:
-+
-+xor@d0060900 {
-+	compatible = "marvell,orion-xor";
-+	reg = <0xd0060900 0x100
-+	       0xd0060b00 0x100>;
-+	clocks = <&coreclk 0>;
-+	status = "okay";
-+
-+	xor00 {
-+	      interrupts = <51>;
-+	      dmacap,memcpy;
-+	      dmacap,xor;
-+	};
-+	xor01 {
-+	      interrupts = <52>;
-+	      dmacap,memcpy;
-+	      dmacap,xor;
-+	      dmacap,memset;
-+	};
-+};
-diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
-index 71cbb0e..d645d43 100644
---- a/drivers/dma/mv_xor.c
-+++ b/drivers/dma/mv_xor.c
-@@ -26,6 +26,8 @@
- #include <linux/platform_device.h>
- #include <linux/memory.h>
- #include <linux/clk.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/platform_data/dma-mv_xor.h>
- 
- #include "dmaengine.h"
-@@ -1278,7 +1280,42 @@ static int mv_xor_probe(struct platform_device *pdev)
- 	if (!IS_ERR(xordev->clk))
- 		clk_prepare_enable(xordev->clk);
- 
--	if (pdata && pdata->channels) {
-+	if (pdev->dev.of_node) {
-+		struct device_node *np;
-+		int i = 0;
-+
-+		for_each_child_of_node(pdev->dev.of_node, np) {
-+			dma_cap_mask_t cap_mask;
-+			int irq;
-+
-+			dma_cap_zero(cap_mask);
-+			if (of_property_read_bool(np, "dmacap,memcpy"))
-+				dma_cap_set(DMA_MEMCPY, cap_mask);
-+			if (of_property_read_bool(np, "dmacap,xor"))
-+				dma_cap_set(DMA_XOR, cap_mask);
-+			if (of_property_read_bool(np, "dmacap,memset"))
-+				dma_cap_set(DMA_MEMSET, cap_mask);
-+			if (of_property_read_bool(np, "dmacap,interrupt"))
-+				dma_cap_set(DMA_INTERRUPT, cap_mask);
-+
-+			irq = irq_of_parse_and_map(np, 0);
-+			if (irq < 0) {
-+				ret = irq;
-+				goto err_channel_add;
-+			}
-+
-+			xordev->channels[i] =
-+				mv_xor_channel_add(xordev, pdev, i,
-+						   cap_mask, irq);
-+			if (IS_ERR(xordev->channels[i])) {
-+				ret = PTR_ERR(xordev->channels[i]);
-+				irq_dispose_mapping(irq);
-+				goto err_channel_add;
-+			}
-+
-+			i++;
-+		}
-+	} else if (pdata && pdata->channels) {
- 		for (i = 0; i < MV_XOR_MAX_CHANNELS; i++) {
- 			struct mv_xor_channel_data *cd;
- 			int irq;
-@@ -1309,8 +1346,11 @@ static int mv_xor_probe(struct platform_device *pdev)
- 
- err_channel_add:
- 	for (i = 0; i < MV_XOR_MAX_CHANNELS; i++)
--		if (xordev->channels[i])
-+		if (xordev->channels[i]) {
-+			if (pdev->dev.of_node)
-+				irq_dispose_mapping(xordev->channels[i]->irq);
- 			mv_xor_channel_remove(xordev->channels[i]);
-+		}
- 
- 	clk_disable_unprepare(xordev->clk);
- 	clk_put(xordev->clk);
-@@ -1335,12 +1375,21 @@ static int mv_xor_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id mv_xor_dt_ids[] __devinitdata = {
-+       { .compatible = "marvell,orion-xor", },
-+       {},
-+};
-+MODULE_DEVICE_TABLE(of, mv_xor_dt_ids);
-+#endif
-+
- static struct platform_driver mv_xor_driver = {
- 	.probe		= mv_xor_probe,
- 	.remove		= mv_xor_remove,
- 	.driver		= {
--		.owner	= THIS_MODULE,
--		.name	= MV_XOR_NAME,
-+		.owner	        = THIS_MODULE,
-+		.name	        = MV_XOR_NAME,
-+		.of_match_table = of_match_ptr(mv_xor_dt_ids),
- 	},
- };
- 
--- 
-1.7.9.5
+If there are too-few cells, the binding and driver can always be
+expanded to support more cells in a backwards-compatible way.
+
+> But even these can use one cells for both flags and pin number (unless you
+> really have 4294967295 GPIOs per controller).
+> 
+> FWIW, current Samsung SOCs use 3 and even 4 cells for a GPIO specifier,
+> which is absolutely fine. Plus, the Samsung bindings do specify the
+> inversion flag. So, unless we have a lot of other [undocumented] bindings,
+> I don't see a big mess. And everything I currently see is fixable.
+
+Oh, I always thought that the Samsung bindings were one of the major
+issues here, but you're right - they do have the inversion flag already.
+
+So, perhaps there really isn't an issue, and we should revisit the
+GPIO-based regulator bindings and drivers, and allow them to
+(additionally) rely on the GPIO flags in the standard way.
