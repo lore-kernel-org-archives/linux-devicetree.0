@@ -1,69 +1,74 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
-Date: Thu, 15 Nov 2012 12:10:59 +0100
-Message-ID: <CACRpkdZ_4C2XA1c2U_E8GnbfiXZk67MYR7JzgwXf1iVwHCde2Q@mail.gmail.com>
-References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
- <1352650891-18356-2-git-send-email-andrew@lunn.ch>
- <50A020C5.4070506@wwwdotorg.org> <20121112082546.GU22029@lunn.ch>
- <50A1212C.2080601@wwwdotorg.org> <20121112181947.GS24583@lunn.ch>
- <20121112184340.GA15643@lizard> <50A146E7.2040608@wwwdotorg.org>
- <CACRpkdb=ra9NwqEneyMoM5YnOFTVQoBxPATjUN6anooXVLiCjw@mail.gmail.com>
- <20121115105954.GA17119@lizard>
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Subject: Re: [PATCH v2 0/3] mtd: nand: OMAP: ELM error correction support
+ for BCH ecc
+Date: Thu, 15 Nov 2012 13:22:14 +0200
+Message-ID: <1352978534.2221.33.camel@sauron.fi.intel.com>
+References: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
+Reply-To: artem.bityutskiy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121115105954.GA17119@lizard>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-ghlmya5r6sFeCfmQZHLH"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: dwmw2@infradead.org, afzal@ti.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rmk+kernel@arm.linux.org.uk, gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, ivan.djelic@parrot.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2012 at 11:59 AM, Anton Vorontsov
-<anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Nov 15, 2012 at 11:35:36AM +0100, Linus Walleij wrote:
->> On Mon, Nov 12, 2012 at 7:58 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> > On 11/12/2012 11:43 AM, Anton Vorontsov wrote:
->>
->> >> Should the gpio driver fix its bindings then?.. Polarity is a quite
->> >> generic concept of a GPIO, and flags are there for a reason. I'd rather
->> >> prefer having
->> >
->> > There is no "GPIO driver" to fix; each GPIO driver has its own bindings,
->> > and unfortunately, some of the GPIO binding authors chose not to include
->> > any flags cell in the GPIO specifier (e.g. Samsung ARM SoCs IIRC, but
->> > there are probably more).
->>
->> So can I read this something like we have been too liberal with the
->> GPIO DT bindings and they are now a bit messy and need to be shaped
->> up? I don't know how to achieve that :-(
->
-> I guess there's really no reason to panic. :)
->
-> 'git grep gpio-cells Documentation/' shows just mrvl-gpio.txt and
-> twl6040.txt having the wrong gpio-cells (i.e. 1).
->
-> But even these can use one cells for both flags and pin number (unless you
-> really have 4294967295 GPIOs per controller).
->
-> FWIW, current Samsung SOCs use 3 and even 4 cells for a GPIO specifier,
-> which is absolutely fine. Plus, the Samsung bindings do specify the
-> inversion flag. So, unless we have a lot of other [undocumented] bindings,
-> I don't see a big mess. And everything I currently see is fixable.
 
-I agree it's not that big a mess...
+--=-ghlmya5r6sFeCfmQZHLH
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I was more thinking about how to convince the people who can
-test this to fix it up.
+On Wed, 2012-10-31 at 12:38 +0530, Philip, Avinash wrote:
+> Support to use ELM as BCH 4 & 8 bit error correction module. Also perform=
+ance
+> enhancement by adding single shot read_page and write_page functions for =
+the
+> nand flashes with page size less than 4 KB.
+>=20
+> ELM module can be used to correct errors reported by BCH 4, 8 & 16 bit
+> ECC scheme. For now only 4 & 8 bit support is added.
+>=20
+> BCH 4 & 8 bit error detection support is already available in mainline
+> kernel and works with software error correction.
+>=20
+> This series is based on [1] and tested with RFC: OMAP GPMC bindings
+> patch series
+>=20
+> 1. linux-next/20121030
 
-Yours,
-Linus Walleij
+Would you please re-send a version which cleanly applies to the
+l2-mtd.git tree? This series has many conflicts. Thanks!
+
+git://git.infradead.org/users/dedekind/l2-mtd.git
+
+--=20
+Best Regards,
+Artem Bityutskiy
+
+--=-ghlmya5r6sFeCfmQZHLH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAABAgAGBQJQpNBmAAoJECmIfjd9wqK09xYQAJcz98/ltdADT809ReLBCqsu
+ZRxBPhKu6fXT3Q+CQi5NGnQZmyIjd38bmW4z2Q65XFfvnXyVcwWO97vHDvoYlbf9
+4S4mXli4G0HBQ6xti1spOLsn7cv0Be9nfzBm34XKy+TAOkySv0WJb0q7fflxXJDF
+PmKbibPXdRyFPyOttRiVA/HsJzHyIVWSD5D+5pIWjDWSRELRT19IQAraDhnZkbGC
+AqIjeWxgrEXO5TqfEHQm0qM9kQjFLF4fVFVcRe75CGwCGMaiTAbioPr/ktr8eNE+
+qiaKJ4FuSFM1V0Vq8Fmu+/nSXZpFQB0HGAhPl2ilf70wIh3+HET/h5hgcU11esbS
+ckynh/rpTBOVb5n7RSiSar7ty5TormC9iXjp3uaA77yUoswkw5akcsl8Nd7oPi66
+3chmga7RsUOEzDV5H3X54I+1PAiIlrrOAihMlRJg/4r9l3x6vrQBjNOap+qHofoQ
+gabSqrRS3ar+TCPJNV6XcSMvJHiMa5jcnD4Wawb7r4F3DeNOsqSjnq6CBy3/oURB
+HOWwu2K64LFx5hCpJVkzEA7C35+tMT7NqKiS1nvcn0n2c9Evkm+L0L3jmYra/2Oa
+e2zO90XP3tBQyv3YunqKg8pWXyxfJFfNOpsY3xBKPOWO7gFsP3Kl6zkAquFJNApn
+5PYSdfdcg0ObPzk3tEvN
+=Qezj
+-----END PGP SIGNATURE-----
+
+--=-ghlmya5r6sFeCfmQZHLH--
+
