@@ -1,79 +1,87 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v10 0/6] of: add display helper
-Date: Thu, 15 Nov 2012 11:28:50 +0100
-Message-ID: <20121115102850.GB1963@pengutronix.de>
-References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de>
- <20121115102411.GA17272@avionic-0098.mockup.avionic-design.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
+Date: Thu, 15 Nov 2012 10:32:56 +0000
+Message-ID: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com>
+References: <1351721431-26220-1-git-send-email-swarren@wwwdotorg.org>
+ <20121102095801.GC17860@linux-mips.org> <20121102102335.GF2905@linux-mips.org>
+ <CACxGe6vUGaRG-c3Vr5Zuuohhct6hEM-AhrZ6fmFfd6nyNZdo=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121115102411.GA17272@avionic-0098.mockup.avionic-design.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vUGaRG-c3Vr5Zuuohhct6hEM-AhrZ6fmFfd6nyNZdo=Q@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arch@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2012 at 11:24:11AM +0100, Thierry Reding wrote:
-> On Thu, Nov 15, 2012 at 10:23:51AM +0100, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > Changes since v9:
-> > 	- don't leak memory when previous timings were correct
-> > 	- CodingStyle fixes
-> > 	- move blank lines around
-> > 
-> > Regards,
-> > Steffen
-> > 
-> > 
-> > Steffen Trumtrar (6):
-> >   video: add display_timing and videomode
-> >   video: add of helper for videomode
-> >   fbmon: add videomode helpers
-> >   fbmon: add of_videomode helpers
-> >   drm_modes: add videomode helpers
-> >   drm_modes: add of_videomode helpers
-> > 
-> >  .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
-> >  drivers/gpu/drm/drm_modes.c                        |   70 +++++++
-> >  drivers/video/Kconfig                              |   19 ++
-> >  drivers/video/Makefile                             |    4 +
-> >  drivers/video/display_timing.c                     |   24 +++
-> >  drivers/video/fbmon.c                              |   86 ++++++++
-> >  drivers/video/of_display_timing.c                  |  212 ++++++++++++++++++++
-> >  drivers/video/of_videomode.c                       |   47 +++++
-> >  drivers/video/videomode.c                          |   45 +++++
-> >  include/drm/drmP.h                                 |   12 ++
-> >  include/linux/display_timing.h                     |   69 +++++++
-> >  include/linux/fb.h                                 |   12 ++
-> >  include/linux/of_display_timings.h                 |   20 ++
-> >  include/linux/of_videomode.h                       |   17 ++
-> >  include/linux/videomode.h                          |   40 ++++
-> >  15 files changed, 784 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
-> >  create mode 100644 drivers/video/display_timing.c
-> >  create mode 100644 drivers/video/of_display_timing.c
-> >  create mode 100644 drivers/video/of_videomode.c
-> >  create mode 100644 drivers/video/videomode.c
-> >  create mode 100644 include/linux/display_timing.h
-> >  create mode 100644 include/linux/of_display_timings.h
-> >  create mode 100644 include/linux/of_videomode.h
-> >  create mode 100644 include/linux/videomode.h
-> 
-> With the one change that I pointed out, the whole series:
-> 
+On Thu, Nov 15, 2012 at 10:15 AM, Grant Likely
+<grant.likely@secretlab.ca> wrote:
+> On Fri, Nov 2, 2012 at 10:23 AM, Ralf Baechle <ralf@linux-mips.org> wrote:
+>> On Fri, Nov 02, 2012 at 10:58:01AM +0100, Ralf Baechle wrote:
+>>
+>>> Can you fold these MIPS bits into your patch?
+>>
+>> I missed Lantiq.
+>>
+>>   Ralf
+>>
+>> Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+>>
+>>  arch/mips/cavium-octeon/Makefile | 3 ---
+>>  arch/mips/lantiq/dts/Makefile    | 3 ---
+>>  arch/mips/netlogic/dts/Makefile  | 3 ---
+>>  3 files changed, 9 deletions(-)
+>>
+>> diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+>> index bc96e29..6e927cf 100644
+>> --- a/arch/mips/cavium-octeon/Makefile
+>> +++ b/arch/mips/cavium-octeon/Makefile
+>> @@ -24,9 +24,6 @@ DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
+>>
+>>  obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
+>>
+>> -$(obj)/%.dtb: $(src)/%.dts FORCE
+>> -       $(call if_changed_dep,dtc)
+>> -
+>>  # Let's keep the .dtb files around in case we want to look at them.
+>>  .SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
+>>
+>> diff --git a/arch/mips/lantiq/dts/Makefile b/arch/mips/lantiq/dts/Makefile
+>> index 674fca4..6fa72dd 100644
+>> --- a/arch/mips/lantiq/dts/Makefile
+>> +++ b/arch/mips/lantiq/dts/Makefile
+>> @@ -1,4 +1 @@
+>>  obj-$(CONFIG_DT_EASY50712) := easy50712.dtb.o
+>> -
+>> -$(obj)/%.dtb: $(obj)/%.dts
+>> -       $(call if_changed,dtc)
+>> diff --git a/arch/mips/netlogic/dts/Makefile b/arch/mips/netlogic/dts/Makefile
+>> index 67ae3fe2..d117d46 100644
+>> --- a/arch/mips/netlogic/dts/Makefile
+>> +++ b/arch/mips/netlogic/dts/Makefile
+>> @@ -1,4 +1 @@
+>>  obj-$(CONFIG_DT_XLP_EVP) := xlp_evp.dtb.o
+>> -
+>> -$(obj)/%.dtb: $(obj)/%.dts
+>> -       $(call if_changed,dtc)
+>
+> This actually breaks MIPS builds. MIPS builds the .dtbs in the same
+> directory as the .dts files. Everyone else has a dts/ subdirectory,
+> which is admittedly a bit insane, but until things are resolved I've
+> dropped the above MIPS hunks.
+>
+> MIPS /could/ be changed to also use a dts directory, but I'd actually
+> rather if someone could make all the other platforms build the dtbs in
+> the same directory. I've looked at it briefly, but I haven't figured
+> out all the make magic needed to do it nicely.
 
-Already fixed.
+On second thought. I'm dropping this patch entirely for now. I don't
+want to put in a generic rule that expects files in weird locations.
+If we can fix up all the architectures to build dtb in the dts
+directory, then it is better for each architecture to have a separate
+fixup patch instead of changing everyone at once.
 
-> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+Or how about: I could pick up the patch with only the MIPS hunk and
+every other user can be fixed up independently to use the new rule.
 
-\o/ Thanks
-
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+g.
