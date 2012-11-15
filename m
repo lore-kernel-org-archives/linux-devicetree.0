@@ -1,84 +1,75 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/7] clocksource: time-armada-370-xp converted to clk
- framework
-Date: Thu, 15 Nov 2012 22:49:06 +0100
-Message-ID: <20121115224906.5a5eb7cf@skate>
-References: <1353014906-31566-1-git-send-email-andrew@lunn.ch>
- <1353014906-31566-5-git-send-email-andrew@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353014906-31566-5-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Marek Belisko <marek.belisko@open-nandra.com>
+Subject: [PATCH] Documentation: Move common leds properties description to separate file.
+Date: Thu, 15 Nov 2012 22:51:56 +0100
+Message-ID: <1353016316-6966-1-git-send-email-marek.belisko@open-nandra.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek.belisko@open-nandra.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
+Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+---
+ Documentation/devicetree/bindings/gpio/led.txt    |   14 ++++--------
+ Documentation/devicetree/bindings/leds/common.txt |   24 +++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/common.txt
 
-Title should be "clocksource: convert time-armada-370-xp to the clk
-framework".
-
-On Thu, 15 Nov 2012 22:28:23 +0100, Andrew Lunn wrote:
-
-> diff --git a/drivers/clocksource/time-armada-370-xp.c b/drivers/clocksource/time-armada-370-xp.c
-> index 4674f94..a4605fd 100644
-> --- a/drivers/clocksource/time-armada-370-xp.c
-> +++ b/drivers/clocksource/time-armada-370-xp.c
-> @@ -18,6 +18,7 @@
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
->  #include <linux/kernel.h>
-> +#include <linux/clk.h>
->  #include <linux/timer.h>
->  #include <linux/clockchips.h>
->  #include <linux/interrupt.h>
-> @@ -167,7 +168,6 @@ void __init armada_370_xp_timer_init(void)
->  	u32 u;
->  	struct device_node *np;
->  	unsigned int timer_clk;
-> -	int ret;
->  	np = of_find_compatible_node(NULL, NULL, "marvell,armada-370-xp-timer");
->  	timer_base = of_iomap(np, 0);
->  	WARN_ON(!timer_base);
-> @@ -179,13 +179,14 @@ void __init armada_370_xp_timer_init(void)
->  		       timer_base + TIMER_CTRL_OFF);
->  		timer_clk = 25000000;
->  	} else {
-> -		u32 clk = 0;
-> -		ret = of_property_read_u32(np, "clock-frequency", &clk);
-> -		WARN_ON(!clk || ret < 0);
-> +		unsigned long rate = 0;
-> +		struct clk *clk = of_clk_get(np, 0);
-> +		WARN_ON(IS_ERR(clk));
-> +		rate =  clk_get_rate(clk);
->  		u = readl(timer_base + TIMER_CTRL_OFF);
->  		writel(u & ~(TIMER0_25MHZ | TIMER1_25MHZ),
->  		       timer_base + TIMER_CTRL_OFF);
-> -		timer_clk = clk / TIMER_DIVIDER;
-> +		timer_clk = rate / TIMER_DIVIDER;
->  	}
->  
->  	/* We use timer 0 as clocksource, and timer 1 for
-
-This change requires an update to
-Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt. The
-previous clock-frequency property was not documented, but maybe the new
-clocks property should.
-
-Thomas
+diff --git a/Documentation/devicetree/bindings/gpio/led.txt b/Documentation/devicetree/bindings/gpio/led.txt
+index edc83c1..df1b308 100644
+--- a/Documentation/devicetree/bindings/gpio/led.txt
++++ b/Documentation/devicetree/bindings/gpio/led.txt
+@@ -10,16 +10,10 @@ LED sub-node properties:
+ - gpios :  Should specify the LED's GPIO, see "gpios property" in
+   Documentation/devicetree/bindings/gpio/gpio.txt.  Active low LEDs should be
+   indicated using flags in the GPIO specifier.
+-- label :  (optional) The label for this LED.  If omitted, the label is
+-  taken from the node name (excluding the unit address).
+-- linux,default-trigger :  (optional) This parameter, if present, is a
+-  string defining the trigger assigned to the LED.  Current triggers are:
+-    "backlight" - LED will act as a back-light, controlled by the framebuffer
+-		  system
+-    "default-on" - LED will turn on, but see "default-state" below
+-    "heartbeat" - LED "double" flashes at a load average based rate
+-    "ide-disk" - LED indicates disk activity
+-    "timer" - LED flashes at a fixed, configurable rate
++- label :  (optional)
++  see Documentation/devicetree/bindings/leds/common.txt
++- linux,default-trigger :  (optional)
++  see Documentation/devicetree/bindings/leds/common.txt
+ - default-state:  (optional) The initial state of the LED.  Valid
+   values are "on", "off", and "keep".  If the LED is already on or off
+   and the default-state property is set the to same value, then no
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+new file mode 100644
+index 0000000..0654693
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -0,0 +1,24 @@
++Common leds properties.
++
++Optional properties for child nodes:
++- label : The label for this LED.  If omitted, the label is
++  taken from the node name (excluding the unit address).
++
++- linux,default-trigger :  This parameter, if present, is a
++    string defining the trigger assigned to the LED.  Current triggers are:
++     "backlight" - LED will act as a back-light, controlled by the framebuffer
++		   system
++     "default-on" - LED will turn on (but for leds-gpio see "default-state"
++		    property in Documentation/devicetree/bindings/gpio/led.txt)
++     "heartbeat" - LED "double" flashes at a load average based rate
++     "ide-disk" - LED indicates disk activity
++     "timer" - LED flashes at a fixed, configurable rate
++
++Examples:
++
++system-status {
++	label = "Status";
++	linux,default-trigger = "heartbeat";
++	...
++};
++
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.7.10.4
+
