@@ -1,107 +1,102 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v3 07/11] ARM: Exynos4: allow legacy board support to
- specify xxti and xusbxti clock speed
-Date: Thu, 15 Nov 2012 14:57:28 +0530
-Message-ID: <CAJuYYwQR5Rwvj4CV9G5J_GSbQfkgZu2stEx9fsL_G=A4qiBy=A@mail.gmail.com>
-References: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org>
-	<1352930853-12268-8-git-send-email-thomas.abraham@linaro.org>
-	<7438966.1DHnOH3JLs@flatron>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/3] serial: i.MX: Make console support non optional
+Date: Thu, 15 Nov 2012 10:31:05 +0100
+Message-ID: <1352971866-540-3-git-send-email-s.hauer@pengutronix.de>
+References: <1352971866-540-1-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <7438966.1DHnOH3JLs@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352971866-540-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15 November 2012 05:06, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On Thursday 15 of November 2012 03:37:29 Thomas Abraham wrote:
->> The clock speed of xxti and xusbxti clocks depends on the oscillator
->> used on the board to generate these clocks. For non-dt platforms, allow
->> the board support for those platforms to set the clock frequency of
->> xxti and xusbxti clocks.
->>
->> Cc: Kukjin Kim <kgene.kim@samsung.com>
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> ---
->>  arch/arm/mach-exynos/common.c              |    2 ++
->>  arch/arm/mach-exynos/common.h              |    1 +
->>  arch/arm/mach-exynos/mach-nuri.c           |    2 ++
->>  arch/arm/mach-exynos/mach-origen.c         |    2 ++
->>  arch/arm/mach-exynos/mach-smdkv310.c       |    2 ++
->>  arch/arm/mach-exynos/mach-universal_c210.c |    2 ++
->>  arch/arm/mach-exynos/mct.c                 |    1 +
->>  7 files changed, 12 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/mach-exynos/common.c
->> b/arch/arm/mach-exynos/common.c index 138a41d..64c0012 100644
->> --- a/arch/arm/mach-exynos/common.c
->> +++ b/arch/arm/mach-exynos/common.c
->> @@ -65,6 +65,8 @@ static void exynos5_init_clocks(int xtal);
->>  static void exynos4_init_uarts(struct s3c2410_uartcfg *cfg, int no);
->>  static int exynos_init(void);
->>
->> +unsigned long xxti_f = 0, xusbxti_f = 0;
->> +
->>  static struct cpu_table cpu_ids[] __initdata = {
->>       {
->>               .idcode         = EXYNOS4210_CPU_ID,
->> diff --git a/arch/arm/mach-exynos/common.h
->> b/arch/arm/mach-exynos/common.h index 2cacd48..f947789 100644
->> --- a/arch/arm/mach-exynos/common.h
->> +++ b/arch/arm/mach-exynos/common.h
->> @@ -22,6 +22,7 @@ void exynos4_restart(char mode, const char *cmd);
->>  void exynos5_restart(char mode, const char *cmd);
->>  void exynos_init_late(void);
->>
->> +extern unsigned long xxti_f, xusbxti_f;
->>  void exynos4_clk_init(void);
->>  void exynos4_clk_register_fixed_ext(unsigned long, unsigned long);
->>
->> diff --git a/arch/arm/mach-exynos/mach-nuri.c
->> b/arch/arm/mach-exynos/mach-nuri.c index 5b5c941..e14332c 100644
->> --- a/arch/arm/mach-exynos/mach-nuri.c
->> +++ b/arch/arm/mach-exynos/mach-nuri.c
->> @@ -1332,6 +1332,8 @@ static void __init nuri_map_io(void)
->>  {
->>       exynos_init_io(NULL, 0);
->>       s3c24xx_init_uarts(nuri_uartcfgs, ARRAY_SIZE(nuri_uartcfgs));
->> +     xxti_f = 0;
->> +     xusbxti_f = 24000000;
->
-> I don't like setting these variables directly from board code.
->
-> If you didn't remove clock initialization call from board code, you could
-> extend that function to take these two frequencies as arguments?
+Traditionally console support is optional for serial drivers. This
+makes it non optional for the i.MX driver since it's not worth
+asking questions for a feature virtually every user of this driver
+wants to have.
 
-Right, but I was not in favour of changing the s3c24xx_init_clocks()
-api since that would mean all board code calling this will require
-updates. So I was contemplating of adding a new exynos4 specific api.
-But then did not opt for it, knowing very well that it is just a
-matter of time before we add dt support to existing non-dt exynos4
-board files. So just to keep things functional for now, and not add to
-much of non-dt stuff, I did this.
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/tty/serial/Kconfig |   16 +---------------
+ drivers/tty/serial/imx.c   |    8 +-------
+ 2 files changed, 2 insertions(+), 22 deletions(-)
 
->
->>  }
->>
->>  static void __init nuri_reserve(void)
-> [snip]
->> diff --git a/arch/arm/mach-exynos/mct.c b/arch/arm/mach-exynos/mct.c
->> index c2e806c..cd061b2 100644
->> --- a/arch/arm/mach-exynos/mct.c
->> +++ b/arch/arm/mach-exynos/mct.c
->> @@ -532,6 +532,7 @@ static void __init exynos4_timer_init(void)
->>               if (soc_is_exynos4210() || soc_is_exynos4212() ||
->>                               soc_is_exynos4412()) {
->>                       exynos4_clk_init();
->> +                     exynos4_clk_register_fixed_ext(xxti_f, xusbxti_f);
->
-> I don't like registering clocks from unrelated code. IMHO any clock
-> registration should be done from code in drivers/clk/samsung.
-
-Ok. I will check for other alternatives.
-
-Thanks,
-Thomas.
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 2a53be5..919b243 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -541,26 +541,12 @@ config SERIAL_IMX
+ 	bool "IMX serial port support"
+ 	depends on ARCH_MXC
+ 	select SERIAL_CORE
++	select SERIAL_CORE_CONSOLE
+ 	select RATIONAL
+ 	help
+ 	  If you have a machine based on a Motorola IMX CPU you
+ 	  can enable its onboard serial port by enabling this option.
+ 
+-config SERIAL_IMX_CONSOLE
+-	bool "Console on IMX serial port"
+-	depends on SERIAL_IMX
+-	select SERIAL_CORE_CONSOLE
+-	help
+-	  If you have enabled the serial port on the Motorola IMX
+-	  CPU you can make it the console by answering Y to this option.
+-
+-	  Even if you say Y here, the currently visible virtual console
+-	  (/dev/tty0) will still be used as the system console by default, but
+-	  you can alter that using a kernel command line option such as
+-	  "console=ttySA0". (Try "man bootparam" or see the documentation of
+-	  your boot loader (lilo or loadlin) about how to pass options to the
+-	  kernel at boot time.)
+-
+ config SERIAL_UARTLITE
+ 	tristate "Xilinx uartlite serial port support"
+ 	depends on PPC32 || MICROBLAZE || MFD_TIMBERDALE
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 5981912..07a8ca1 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -1192,7 +1192,6 @@ static struct uart_ops imx_pops = {
+ 
+ static struct imx_port *imx_ports[UART_NR];
+ 
+-#ifdef CONFIG_SERIAL_IMX_CONSOLE
+ static void imx_console_putchar(struct uart_port *port, int ch)
+ {
+ 	struct imx_port *sport = (struct imx_port *)port;
+@@ -1348,11 +1347,6 @@ static struct console imx_console = {
+ 	.data		= &imx_reg,
+ };
+ 
+-#define IMX_CONSOLE	&imx_console
+-#else
+-#define IMX_CONSOLE	NULL
+-#endif
+-
+ static struct uart_driver imx_reg = {
+ 	.owner          = THIS_MODULE,
+ 	.driver_name    = DRIVER_NAME,
+@@ -1360,7 +1354,7 @@ static struct uart_driver imx_reg = {
+ 	.major          = SERIAL_IMX_MAJOR,
+ 	.minor          = MINOR_START,
+ 	.nr             = ARRAY_SIZE(imx_ports),
+-	.cons           = IMX_CONSOLE,
++	.cons           = &imx_console,
+ };
+ 
+ static int serial_imx_suspend(struct platform_device *dev, pm_message_t state)
+-- 
+1.7.10.4
