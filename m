@@ -1,259 +1,79 @@
-From: AnilKumar Ch <anilkumar@ti.com>
-Subject: [PATCH v6] Input: matrix-keypad - Add device tree support
-Date: Thu, 15 Nov 2012 16:12:59 +0530
-Message-ID: <1352976179-29790-1-git-send-email-anilkumar@ti.com>
+From: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and custom getreg and setreg functions
+Date: Thu, 15 Nov 2012 11:51:56 +0100
+Message-ID: <87390b6svn.fsf@dell.be.48ers.dk>
+References: <1352974979-22638-1-git-send-email-andreas@gaisler.com>
+	<1352974979-22638-3-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, grant.likely@secretlab.ca
-Cc: rob.herring@calxeda.com, dgdunix@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352974979-22638-3-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> (Andreas
+	Larsson's message of "Thu, 15 Nov 2012 11:22:59 +0100")
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to matrix keypad driver and usage details
-are added to device tree documentation. Also modified the driver
-according to recent update of matrix_keypad_build_keymap(), which
-automatically allocate memory for keymap.
+>>>>> "Andreas" == Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> writes:
 
-Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
-This patch was tested on AM335x-EVM and based on linux-next, cleanly
-applies on top of "input/next"
+Hi,
 
-Changes from v5:
-	- Updated based on Dmitry's patch.
-	  * Modified the driver acc. to matrix_keypad_build_keymap()
-	    recent update.
-	  * Combined row_gpios & col_gpios devm_kzalloc's to single
-	    devm_kzalloc.
-	  * Added proper return values for different failures in
-	    matrix_keypad_parse_dt().
+ Andreas> The registers in the GRLIB port of the controller are 32-bit
+ Andreas> and in big endian byte order. The PRELOW and PREHIGH registers
+ Andreas> are merged into one register. The subsequent registers have
+ Andreas> their offset decreased accordingly. Hence the register access
+ Andreas> needs to be handled in a non-standard manner using custom
+ Andreas> getreg and setreg functions.
 
-Changes from v4:
-	- Removed clustered-irq support through DT. This should be
-	  added if any platform requires in the future.
+ Andreas> A type is added as the data of the of match table entries. A
+ Andreas> new entry with a different compatible string is added to the
+ Andreas> table. The type of that entry triggers usage of the grlib
+ Andreas> functions.
 
-Changes from v3:
-	- Incorporated Stephen Warren's review comments on v3
-	  * Added description to clustered-irq-flags binding
+ Andreas> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+ Andreas> ---
+ Andreas>  Changes since v3:
+ Andreas>  - Use a separate entry in the of match table for the grlib
+ Andreas>  variant and trigger grlib function usage on type put in the
+ Andreas>  data field of that table entry
 
-Changes from v2:
-	- Incorporated Stephen Warren's review comments on v2
-	  * Renamed the bindings file to gpio-matrix-keypad.txt
-	  * Added description to clustered-irq binding
+Thanks. A few more comments:
 
-Changes from v1:
-	- Incorporated Rob's review comments on v1
-	  * Changed matix-keypad compatible to gpio-matrix-keypad
-	  * Removed unnecessary props (num of gpios)
-	  * Used of_match_ptr()
-	- Removed first patch based on Dmitry's comments on v1
 
- drivers/input/keyboard/matrix_keypad.c |  119 ++++++++++++++++++++++++++------
- 1 file changed, 97 insertions(+), 22 deletions(-)
+ Andreas>  static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
+ Andreas>  {
+ Andreas> -	if (i2c->reg_io_width == 4)
+ Andreas> +	if (i2c->setreg)
+ Andreas> +		i2c->setreg(i2c, reg, value);
+ Andreas> +	else if (i2c->reg_io_width == 4)
+ Andreas>  		iowrite32(value, i2c->base + (reg << i2c->reg_shift));
+ Andreas>  	else if (i2c->reg_io_width == 2)
+ Andreas>  		iowrite16(value, i2c->base + (reg << i2c->reg_shift));
 
-diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-index 18b7237..05d3a96 100644
---- a/drivers/input/keyboard/matrix_keypad.c
-+++ b/drivers/input/keyboard/matrix_keypad.c
-@@ -23,6 +23,9 @@
- #include <linux/gpio.h>
- #include <linux/input/matrix_keypad.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
+It would have been nice to add oc_getreg_8/16/32 functions and always
+use the function pointers - But ok, that can be done later.
+
  
- struct matrix_keypad {
- 	const struct matrix_keypad_platform_data *pdata;
-@@ -37,8 +40,6 @@ struct matrix_keypad {
- 	bool scan_pending;
- 	bool stopped;
- 	bool gpio_all_disabled;
--
--	unsigned short keycodes[];
- };
+ Andreas>  #ifdef CONFIG_OF
+ Andreas> +static int ocores_i2c_get_type(struct platform_device *pdev);
+ Andreas> +
+
+Why not just move the implementation up here instead of the forward
+declaration?
+
  
- /*
-@@ -118,6 +119,7 @@ static void matrix_keypad_scan(struct work_struct *work)
- 	struct matrix_keypad *keypad =
- 		container_of(work, struct matrix_keypad, work.work);
- 	struct input_dev *input_dev = keypad->input_dev;
-+	const unsigned short *keycodes = input_dev->keycode;
- 	const struct matrix_keypad_platform_data *pdata = keypad->pdata;
- 	uint32_t new_state[MATRIX_MAX_COLS];
- 	int row, col, code;
-@@ -153,7 +155,7 @@ static void matrix_keypad_scan(struct work_struct *work)
- 			code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
- 			input_event(input_dev, EV_MSC, MSC_SCAN, code);
- 			input_report_key(input_dev,
--					 keypad->keycodes[code],
-+					 keycodes[code],
- 					 new_state[col] & (1 << row));
- 		}
- 	}
-@@ -394,33 +396,95 @@ static void matrix_keypad_free_gpio(struct matrix_keypad *keypad)
- 		gpio_free(pdata->col_gpios[i]);
- }
- 
-+#ifdef CONFIG_OF
-+static struct matrix_keypad_platform_data * __devinit
-+matrix_keypad_parse_dt(struct device *dev)
-+{
-+	struct matrix_keypad_platform_data *pdata;
-+	struct device_node *np = dev->of_node;
-+	unsigned int *gpios;
-+	int i;
-+
-+	if (!np) {
-+		dev_err(dev, "device lacks DT data\n");
-+		return ERR_PTR(-ENODEV);
-+	}
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "could not allocate memory for platform data\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	pdata->num_row_gpios = of_gpio_named_count(np, "row-gpios");
-+	pdata->num_col_gpios = of_gpio_named_count(np, "col-gpios");
-+	if (!pdata->num_row_gpios || !pdata->num_col_gpios) {
-+		dev_err(dev, "number of keypad rows/columns not specified\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (of_get_property(np, "linux,no-autorepeat", NULL))
-+		pdata->no_autorepeat = true;
-+	if (of_get_property(np, "linux,wakeup", NULL))
-+		pdata->wakeup = true;
-+	if (of_get_property(np, "gpio-activelow", NULL))
-+		pdata->active_low = true;
-+
-+	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
-+	of_property_read_u32(np, "col-scan-delay-us",
-+						&pdata->col_scan_delay_us);
-+
-+	gpios = devm_kzalloc(dev,
-+			     sizeof(unsigned int) *
-+				(pdata->num_row_gpios + pdata->num_col_gpios),
-+			     GFP_KERNEL);
-+	if (!gpios) {
-+		dev_err(dev, "could not allocate memory for gpios\n");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	for (i = 0; i < pdata->num_row_gpios; i++)
-+		gpios[i] = of_get_named_gpio(np, "row-gpios", i);
-+
-+	for (i = 0; i < pdata->num_col_gpios; i++)
-+		gpios[pdata->num_row_gpios + i] =
-+			of_get_named_gpio(np, "col-gpios", i);
-+
-+	pdata->row_gpios = gpios;
-+	pdata->col_gpios = &gpios[pdata->num_row_gpios];
-+
-+	return pdata;
-+}
-+#else
-+static inline struct matrix_keypad_platform_data *
-+matrix_keypad_parse_dt(struct device *dev)
-+{
-+	dev_err(dev, "no platform data defined\n");
-+
-+	return ERR_PTR(-EINVAL);
-+}
-+#endif
-+
- static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- {
- 	const struct matrix_keypad_platform_data *pdata;
--	const struct matrix_keymap_data *keymap_data;
- 	struct matrix_keypad *keypad;
- 	struct input_dev *input_dev;
--	unsigned int row_shift;
--	size_t keymap_size;
- 	int err;
- 
--	pdata = pdev->dev.platform_data;
-+	pdata = dev_get_platdata(&pdev->dev);
- 	if (!pdata) {
--		dev_err(&pdev->dev, "no platform data defined\n");
--		return -EINVAL;
--	}
--
--	keymap_data = pdata->keymap_data;
--	if (!keymap_data) {
-+		pdata = matrix_keypad_parse_dt(&pdev->dev);
-+		if (IS_ERR(pdata)) {
-+			dev_err(&pdev->dev, "no platform data defined\n");
-+			return PTR_ERR(pdata);
-+		}
-+	} else if (!pdata->keymap_data) {
- 		dev_err(&pdev->dev, "no keymap data defined\n");
- 		return -EINVAL;
- 	}
- 
--	row_shift = get_count_order(pdata->num_col_gpios);
--	keymap_size = (pdata->num_row_gpios << row_shift) *
--			sizeof(keypad->keycodes[0]);
--	keypad = kzalloc(sizeof(struct matrix_keypad) + keymap_size,
--			 GFP_KERNEL);
-+	keypad = kzalloc(sizeof(struct matrix_keypad), GFP_KERNEL);
- 	input_dev = input_allocate_device();
- 	if (!keypad || !input_dev) {
- 		err = -ENOMEM;
-@@ -429,7 +493,7 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- 
- 	keypad->input_dev = input_dev;
- 	keypad->pdata = pdata;
--	keypad->row_shift = row_shift;
-+	keypad->row_shift = get_count_order(pdata->num_col_gpios);
- 	keypad->stopped = true;
- 	INIT_DELAYED_WORK(&keypad->work, matrix_keypad_scan);
- 	spin_lock_init(&keypad->lock);
-@@ -440,12 +504,14 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
- 	input_dev->open		= matrix_keypad_start;
- 	input_dev->close	= matrix_keypad_stop;
- 
--	err = matrix_keypad_build_keymap(keymap_data, NULL,
-+	err = matrix_keypad_build_keymap(pdata->keymap_data, NULL,
- 					 pdata->num_row_gpios,
- 					 pdata->num_col_gpios,
--					 keypad->keycodes, input_dev);
--	if (err)
-+					 NULL, input_dev);
-+	if (err) {
-+		dev_err(&pdev->dev, "failed to build keymap\n");
- 		goto err_free_mem;
-+	}
- 
- 	if (!pdata->no_autorepeat)
- 		__set_bit(EV_REP, input_dev->evbit);
-@@ -488,6 +554,14 @@ static int __devexit matrix_keypad_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id matrix_keypad_dt_match[] = {
-+	{ .compatible = "gpio-matrix-keypad" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, matrix_keypad_dt_match);
-+#endif
-+
- static struct platform_driver matrix_keypad_driver = {
- 	.probe		= matrix_keypad_probe,
- 	.remove		= __devexit_p(matrix_keypad_remove),
-@@ -495,6 +569,7 @@ static struct platform_driver matrix_keypad_driver = {
- 		.name	= "matrix-keypad",
- 		.owner	= THIS_MODULE,
- 		.pm	= &matrix_keypad_pm_ops,
-+		.of_match_table = of_match_ptr(matrix_keypad_dt_match),
- 	},
- };
- module_platform_driver(matrix_keypad_driver);
+ Andreas> +static int ocores_i2c_get_type(struct platform_device *pdev)
+ Andreas> +{
+ Andreas> +	const struct of_device_id *match;
+ Andreas> +
+ Andreas> +	match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+ Andreas> +	if (match)
+ Andreas> +		return (int)match->data;
+
+Can this ever fail? If not, you might as well do the of_match_node
+inline in the probe instead of this helper.
+
+Other than that it looks good.
+
 -- 
-1.7.9.5
-
+Bye, Peter Korsgaard
