@@ -1,72 +1,267 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] usb: chipidea: usbmisc: add post handling and errata
- fix for mx25
-Date: Thu, 15 Nov 2012 14:54:42 +0100
-Message-ID: <50A4F422.4010606@pengutronix.de>
-References: <1352894137-2050-1-git-send-email-m.grzeschik@pengutronix.de> <1352894137-2050-7-git-send-email-m.grzeschik@pengutronix.de> <CALBypN6U=np93ZwnEZqbh=j0Vb_-x630GaktEiv+4K26eYp4Pg@mail.gmail.com> <20121115102525.GA16118@pengutronix.de> <CALBypN7-NKFmoPXWA0utFhUjLOWjvzwJ7ZSuQBa+W5edNQA_OA@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v6] Input: matrix-keypad - Add device tree support
+Date: Thu, 15 Nov 2012 07:56:24 -0600
+Message-ID: <50A4F488.5000808@gmail.com>
+References: <1352976179-29790-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig4DD4F978DB95689580954698"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALBypN7-NKFmoPXWA0utFhUjLOWjvzwJ7ZSuQBa+W5edNQA_OA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1352976179-29790-1-git-send-email-anilkumar@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: AnilKumar Ch <anilkumar@ti.com>
+Cc: dmitry.torokhov@gmail.com, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, dgdunix@gmail.com, rob.herring@calxeda.com, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig4DD4F978DB95689580954698
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 11/15/2012 04:42 AM, AnilKumar Ch wrote:
+> Add device tree support to matrix keypad driver and usage details
+> are added to device tree documentation. Also modified the driver
+> according to recent update of matrix_keypad_build_keymap(), which
+> automatically allocate memory for keymap.
+> 
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+> This patch was tested on AM335x-EVM and based on linux-next, cleanly
+> applies on top of "input/next"
+> 
+> Changes from v5:
+> 	- Updated based on Dmitry's patch.
+> 	  * Modified the driver acc. to matrix_keypad_build_keymap()
+> 	    recent update.
+> 	  * Combined row_gpios & col_gpios devm_kzalloc's to single
+> 	    devm_kzalloc.
+> 	  * Added proper return values for different failures in
+> 	    matrix_keypad_parse_dt().
+> 
+> Changes from v4:
+> 	- Removed clustered-irq support through DT. This should be
+> 	  added if any platform requires in the future.
+> 
+> Changes from v3:
+> 	- Incorporated Stephen Warren's review comments on v3
+> 	  * Added description to clustered-irq-flags binding
+> 
+> Changes from v2:
+> 	- Incorporated Stephen Warren's review comments on v2
+> 	  * Renamed the bindings file to gpio-matrix-keypad.txt
+> 	  * Added description to clustered-irq binding
+> 
+> Changes from v1:
+> 	- Incorporated Rob's review comments on v1
+> 	  * Changed matix-keypad compatible to gpio-matrix-keypad
+> 	  * Removed unnecessary props (num of gpios)
+> 	  * Used of_match_ptr()
+> 	- Removed first patch based on Dmitry's comments on v1
+> 
+>  drivers/input/keyboard/matrix_keypad.c |  119 ++++++++++++++++++++++++++------
 
-On 11/15/2012 02:51 PM, Martin Fuzzey wrote:
->> This is because that series is based on Peter Chen's work. I should ha=
-ve
->> mentioned this in the cover-letter mail. You can merge his master bran=
-ch
->> before adding my series:
->=20
-> Ok thanks for the very rapid reply.
->=20
-> I've now built this together with patch 2 "ci13xxx_imx: add 2nd and
-> 3rd clock to support imx5x and newer" from your other series.
-> But it hangs because the usb-phy clock is not being enabled.
-> If I add a clock enable for that clock too to usbmisc_imx.c it works
-> but that can't be the right way.
->=20
-> Who is supposed to enable the phy clock?
-> [I'm using the OTG port in host only mode on i.MX53 with "nop-usbphy"]
->=20
-> Here's what I did (illustration only, probably white space broken):
+What happened to the binding doc?
 
-We've have a patch that the missing clock handling to the nop phy
-driver, which isn't much better. What are other possible options?
+Rob
 
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+>  1 file changed, 97 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
+> index 18b7237..05d3a96 100644
+> --- a/drivers/input/keyboard/matrix_keypad.c
+> +++ b/drivers/input/keyboard/matrix_keypad.c
+> @@ -23,6 +23,9 @@
+>  #include <linux/gpio.h>
+>  #include <linux/input/matrix_keypad.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_platform.h>
+>  
+>  struct matrix_keypad {
+>  	const struct matrix_keypad_platform_data *pdata;
+> @@ -37,8 +40,6 @@ struct matrix_keypad {
+>  	bool scan_pending;
+>  	bool stopped;
+>  	bool gpio_all_disabled;
+> -
+> -	unsigned short keycodes[];
+>  };
+>  
+>  /*
+> @@ -118,6 +119,7 @@ static void matrix_keypad_scan(struct work_struct *work)
+>  	struct matrix_keypad *keypad =
+>  		container_of(work, struct matrix_keypad, work.work);
+>  	struct input_dev *input_dev = keypad->input_dev;
+> +	const unsigned short *keycodes = input_dev->keycode;
+>  	const struct matrix_keypad_platform_data *pdata = keypad->pdata;
+>  	uint32_t new_state[MATRIX_MAX_COLS];
+>  	int row, col, code;
+> @@ -153,7 +155,7 @@ static void matrix_keypad_scan(struct work_struct *work)
+>  			code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
+>  			input_event(input_dev, EV_MSC, MSC_SCAN, code);
+>  			input_report_key(input_dev,
+> -					 keypad->keycodes[code],
+> +					 keycodes[code],
+>  					 new_state[col] & (1 << row));
+>  		}
+>  	}
+> @@ -394,33 +396,95 @@ static void matrix_keypad_free_gpio(struct matrix_keypad *keypad)
+>  		gpio_free(pdata->col_gpios[i]);
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static struct matrix_keypad_platform_data * __devinit
+> +matrix_keypad_parse_dt(struct device *dev)
+> +{
+> +	struct matrix_keypad_platform_data *pdata;
+> +	struct device_node *np = dev->of_node;
+> +	unsigned int *gpios;
+> +	int i;
+> +
+> +	if (!np) {
+> +		dev_err(dev, "device lacks DT data\n");
+> +		return ERR_PTR(-ENODEV);
+> +	}
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(dev, "could not allocate memory for platform data\n");
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	pdata->num_row_gpios = of_gpio_named_count(np, "row-gpios");
+> +	pdata->num_col_gpios = of_gpio_named_count(np, "col-gpios");
+> +	if (!pdata->num_row_gpios || !pdata->num_col_gpios) {
+> +		dev_err(dev, "number of keypad rows/columns not specified\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	if (of_get_property(np, "linux,no-autorepeat", NULL))
+> +		pdata->no_autorepeat = true;
+> +	if (of_get_property(np, "linux,wakeup", NULL))
+> +		pdata->wakeup = true;
+> +	if (of_get_property(np, "gpio-activelow", NULL))
+> +		pdata->active_low = true;
+> +
+> +	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
+> +	of_property_read_u32(np, "col-scan-delay-us",
+> +						&pdata->col_scan_delay_us);
+> +
+> +	gpios = devm_kzalloc(dev,
+> +			     sizeof(unsigned int) *
+> +				(pdata->num_row_gpios + pdata->num_col_gpios),
+> +			     GFP_KERNEL);
+> +	if (!gpios) {
+> +		dev_err(dev, "could not allocate memory for gpios\n");
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	for (i = 0; i < pdata->num_row_gpios; i++)
+> +		gpios[i] = of_get_named_gpio(np, "row-gpios", i);
+> +
+> +	for (i = 0; i < pdata->num_col_gpios; i++)
+> +		gpios[pdata->num_row_gpios + i] =
+> +			of_get_named_gpio(np, "col-gpios", i);
+> +
+> +	pdata->row_gpios = gpios;
+> +	pdata->col_gpios = &gpios[pdata->num_row_gpios];
+> +
+> +	return pdata;
+> +}
+> +#else
+> +static inline struct matrix_keypad_platform_data *
+> +matrix_keypad_parse_dt(struct device *dev)
+> +{
+> +	dev_err(dev, "no platform data defined\n");
+> +
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +#endif
+> +
+>  static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+>  {
+>  	const struct matrix_keypad_platform_data *pdata;
+> -	const struct matrix_keymap_data *keymap_data;
+>  	struct matrix_keypad *keypad;
+>  	struct input_dev *input_dev;
+> -	unsigned int row_shift;
+> -	size_t keymap_size;
+>  	int err;
+>  
+> -	pdata = pdev->dev.platform_data;
+> +	pdata = dev_get_platdata(&pdev->dev);
+>  	if (!pdata) {
+> -		dev_err(&pdev->dev, "no platform data defined\n");
+> -		return -EINVAL;
+> -	}
+> -
+> -	keymap_data = pdata->keymap_data;
+> -	if (!keymap_data) {
+> +		pdata = matrix_keypad_parse_dt(&pdev->dev);
+> +		if (IS_ERR(pdata)) {
+> +			dev_err(&pdev->dev, "no platform data defined\n");
+> +			return PTR_ERR(pdata);
+> +		}
+> +	} else if (!pdata->keymap_data) {
+>  		dev_err(&pdev->dev, "no keymap data defined\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	row_shift = get_count_order(pdata->num_col_gpios);
+> -	keymap_size = (pdata->num_row_gpios << row_shift) *
+> -			sizeof(keypad->keycodes[0]);
+> -	keypad = kzalloc(sizeof(struct matrix_keypad) + keymap_size,
+> -			 GFP_KERNEL);
+> +	keypad = kzalloc(sizeof(struct matrix_keypad), GFP_KERNEL);
+>  	input_dev = input_allocate_device();
+>  	if (!keypad || !input_dev) {
+>  		err = -ENOMEM;
+> @@ -429,7 +493,7 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+>  
+>  	keypad->input_dev = input_dev;
+>  	keypad->pdata = pdata;
+> -	keypad->row_shift = row_shift;
+> +	keypad->row_shift = get_count_order(pdata->num_col_gpios);
+>  	keypad->stopped = true;
+>  	INIT_DELAYED_WORK(&keypad->work, matrix_keypad_scan);
+>  	spin_lock_init(&keypad->lock);
+> @@ -440,12 +504,14 @@ static int __devinit matrix_keypad_probe(struct platform_device *pdev)
+>  	input_dev->open		= matrix_keypad_start;
+>  	input_dev->close	= matrix_keypad_stop;
+>  
+> -	err = matrix_keypad_build_keymap(keymap_data, NULL,
+> +	err = matrix_keypad_build_keymap(pdata->keymap_data, NULL,
+>  					 pdata->num_row_gpios,
+>  					 pdata->num_col_gpios,
+> -					 keypad->keycodes, input_dev);
+> -	if (err)
+> +					 NULL, input_dev);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "failed to build keymap\n");
+>  		goto err_free_mem;
+> +	}
+>  
+>  	if (!pdata->no_autorepeat)
+>  		__set_bit(EV_REP, input_dev->evbit);
+> @@ -488,6 +554,14 @@ static int __devexit matrix_keypad_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id matrix_keypad_dt_match[] = {
+> +	{ .compatible = "gpio-matrix-keypad" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, matrix_keypad_dt_match);
+> +#endif
+> +
+>  static struct platform_driver matrix_keypad_driver = {
+>  	.probe		= matrix_keypad_probe,
+>  	.remove		= __devexit_p(matrix_keypad_remove),
+> @@ -495,6 +569,7 @@ static struct platform_driver matrix_keypad_driver = {
+>  		.name	= "matrix-keypad",
+>  		.owner	= THIS_MODULE,
+>  		.pm	= &matrix_keypad_pm_ops,
+> +		.of_match_table = of_match_ptr(matrix_keypad_dt_match),
+>  	},
+>  };
+>  module_platform_driver(matrix_keypad_driver);
+> 
 
-
---------------enig4DD4F978DB95689580954698
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
-
-iEYEARECAAYFAlCk9CIACgkQjTAFq1RaXHMavwCfafUy5AxP4ZJKin+RrxKkIk4O
-OUYAmwWGZTYm75bJenvHS3sqHKPCD3er
-=bWiA
------END PGP SIGNATURE-----
-
---------------enig4DD4F978DB95689580954698--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
