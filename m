@@ -1,56 +1,68 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
-Date: Thu, 15 Nov 2012 18:21:20 +0000
-Message-ID: <CACxGe6tgNVH9zeafMRKXcRUZmQjQXrAy_QtvhxpTT74200Hnxg@mail.gmail.com>
-References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
- <1352650891-18356-2-git-send-email-andrew@lunn.ch>
- <20121115180557.924713E197F@localhost>
- <alpine.DEB.2.00.1211151810050.25381@marmot.wormnet.eu>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
+Date: Thu, 15 Nov 2012 11:31:38 -0700
+Message-ID: <50A5350A.3070109@wwwdotorg.org>
+References: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com> <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca> <50A52FEC.4080409@wwwdotorg.org> <CACxGe6tZOjMXR6CNDzDTSUkcERLiX-2+Qoad0bcPum5Z-Jxaaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.00.1211151810050.25381-5X291BYdrx55rAo4AelP/Ydd74u8MsAO@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6tZOjMXR6CNDzDTSUkcERLiX-2+Qoad0bcPum5Z-Jxaaw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-arch@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 15, 2012 at 6:11 PM, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org> wrote:
-> On Thu, 15 Nov 2012, Grant Likely wrote:
->
->> On Sun, 11 Nov 2012 17:21:29 +0100, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+On 11/15/2012 11:20 AM, Grant Likely wrote:
+> On Thu, Nov 15, 2012 at 6:09 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 11/15/2012 04:51 AM, Grant Likely wrote:
+>>> Grant Likely wrote:
+>>>> Or how about: I could pick up the patch with only the MIPS hunk and
+>>>> every other user can be fixed up independently to use the new rule.
 >>>
->>> From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
->>>
->>> Given appropriate devicetree bindings, this driver registers a
->>> pm_power_off function to set a GPIO line high/low to power down
->>> your board.
->>>
->>> Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
->>> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/gpio/gpio-poweroff.txt     |   22 ++++
->>>  drivers/gpio/Kconfig                               |   10 ++
->>>  drivers/gpio/Makefile                              |    2 +
->>>  drivers/gpio/gpio-poweroff.c                       |  129
->>> ++++++++++++++++++++
+>>> Here's a trial patch to fix up ARM. Does this look correct? This patch
+>>> depends on the generic dtb build rule already being applied.
 >>
+>> I think the patch looks OK technically, except for one minor comment below.
 >>
->> This isn't a gpio controller driver. Don't put it into drivers/gpio
->
->
-> There's a v2 which puts it in drivers/power/reset/gpio-poweroff.c
+>> One issue with this patch is that it moves *.dts from arch/arm/boot to
+>> arch/arm/boot/dts, which means everyone has to adjust their scripts/...
+>> that package/install/... the kernel. I guess it's an easy change for
+>> people to make, but could easily catch people unawares if they do
+>> incremental builds so that arch/arm/boot/*.dtb still exists but is stale.
+> 
+> True. We could temporarily remove or rename if the same file exists in
+> the directory below to help people catch that problem. I really would
+> like to clean up that build rule to be consistent though.
+> 
+> The other option is to move all the .dts files into the boot
+> directory, but I don't think that is a good idea at all.
 
-Okay, thanks.
+Maybe we can just add "rm *.dtb" to the following rules in
+boot/Makefile, before calling the child make?
 
-g.
+%.dtb: scripts
+-	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
++	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
+
+ dtbs: scripts
+-	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
++	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
+
+>>> +targets += dtbs
+>>
+>> Doesn't that make the "dtbs" target always run by default? Perhaps
+>> that's reasonable though, and doesn't actually affect anything since the
+>> make command for this directory always specifies an explicit target?
+>>
+>> Or, was that meant to be the following that got removed from ../Makefile?
+>>
+>> targets += $(dtb-y)
+> 
+> Yes it is supposed to be the same thing. Doesn't it effectively do the
+> same since dtbs depends on $(dtb-y)?
+
+Ah, I think so yes.
+
+I guess anyway that $(targets) is presumably ignored if an explicit
+build target is requested from make.
