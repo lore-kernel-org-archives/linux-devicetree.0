@@ -1,73 +1,192 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric in
- mach-mvebu
-Date: Thu, 15 Nov 2012 10:17:52 +0000
-Message-ID: <20121115101752.GA26453@mudshark.cambridge.arm.com>
-References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
- <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
- <20121105140258.GO3351@mudshark.cambridge.arm.com>
- <50A15A33.60405@free-electrons.com>
- <20121113104340.GD3940@mudshark.cambridge.arm.com>
- <50A3F860.5010601@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50A3F860.5010601@free-electrons.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and custom getreg and setreg functions
+Date: Thu, 15 Nov 2012 11:22:59 +0100
+Message-ID: <1352974979-22638-3-git-send-email-andreas@gaisler.com>
+References: <1352974979-22638-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352974979-22638-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 08:00:32PM +0000, Gregory CLEMENT wrote:
-> On 11/13/2012 11:43 AM, Will Deacon wrote:
-> > On Mon, Nov 12, 2012 at 08:21:07PM +0000, Gregory CLEMENT wrote:
-> >> On 11/05/2012 03:02 PM, Will Deacon wrote:
-> >>> These writels may expand to code containing calls to outer_sync(), which
-> >>> will attempt to take a spinlock for the aurora l2. Given that the CPU isn't
-> >>> coherent, how does this play out with the exclusive store instruction in the
-> >>> lock?
-> >>
-> >> I dug a little this subject: and I am not sure there is problem. In SMP mode,
-> >> only the system cache mode of Aurora is used. In this mode, outer_cache.sync
-> >> is void then outer_sync() won't call any function, so there will be no
-> >> access to any spinlock.
-> > 
-> > Hmm, that is pretty subtle and it doesn't really solve the bigger picture.
-> > printk takes logbuf_lock, for example, and I'm sure that by the time you get
-> > to this code you will have relied on exclusives behaving correctly.
-> > 
-> 
-> Hi Will,
-> I get an answer from Marvell engineers:
-> "STREX on non-shareable and/or non-cacheable memory regions is supported."
+The registers in the GRLIB port of the controller are 32-bit and in big endian
+byte order. The PRELOW and PREHIGH registers are merged into one register. The
+subsequent registers have their offset decreased accordingly. Hence the register
+access needs to be handled in a non-standard manner using custom getreg and
+setreg functions.
 
-Interesting, thanks for asking them about this. Does this mean that:
+A type is added as the data of the of match table entries. A new entry with a
+different compatible string is added to the table. The type of that entry
+triggers usage of the grlib functions.
 
-	1. When not running coherently (i.e. before initialising the
-	   coherency fabric), memory is treated as non-shareable,
-	   non-cacheable?
+Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+---
+ Changes since v3:
+ - Use a separate entry in the of match table for the grlib variant and trigger
+   grlib function usage on type put in the data field of that table entry
 
-	2. If (1), then are exclusive accesses the only way to achieve
-	   coherent memory accesses in this scenario?
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 +-
+ drivers/i2c/busses/i2c-ocores.c                    |   79 +++++++++++++++++++-
+ 2 files changed, 77 insertions(+), 4 deletions(-)
 
-If so, you still have a problem with write locks, where the unlock code does
-a regular str to clear the status. atomic_{read,set} also uses regular
-memory accesses, so I think you'll get some surprises there when you add
-explicit memory barriers and expect things to be visible between threads.
-
-Do memory barriers have different semantics depending on the state of your
-coherency fabric?
-
-Cheers,
-
-Will
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+index c15781f..1637c29 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+@@ -1,7 +1,7 @@
+ Device tree configuration for i2c-ocores
+ 
+ Required properties:
+-- compatible      : "opencores,i2c-ocores"
++- compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
+ - reg             : bus address start and address range size of device
+ - interrupts      : interrupt number
+ - clock-frequency : frequency of bus clock in Hz
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index 1d204cb..fc6e6e7 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -4,6 +4,9 @@
+  *
+  * Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+  *
++ * Support for the GRLIB port of the controller by
++ * Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
++ *
+  * This file is licensed under the terms of the GNU General Public License
+  * version 2.  This program is licensed "as is" without any warranty of any
+  * kind, whether express or implied.
+@@ -38,6 +41,8 @@ struct ocores_i2c {
+ 	int nmsgs;
+ 	int state; /* see STATE_ */
+ 	int clock_khz;
++	void (*setreg)(struct ocores_i2c *i2c, int reg, u8 value);
++	u8 (*getreg)(struct ocores_i2c *i2c, int reg);
+ };
+ 
+ /* registers */
+@@ -71,9 +76,14 @@ struct ocores_i2c {
+ #define STATE_READ		3
+ #define STATE_ERROR		4
+ 
++#define TYPE_OCORES		0
++#define TYPE_GRLIB		1
++
+ static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
+ {
+-	if (i2c->reg_io_width == 4)
++	if (i2c->setreg)
++		i2c->setreg(i2c, reg, value);
++	else if (i2c->reg_io_width == 4)
+ 		iowrite32(value, i2c->base + (reg << i2c->reg_shift));
+ 	else if (i2c->reg_io_width == 2)
+ 		iowrite16(value, i2c->base + (reg << i2c->reg_shift));
+@@ -83,7 +93,9 @@ static inline void oc_setreg(struct ocores_i2c *i2c, int reg, u8 value)
+ 
+ static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
+ {
+-	if (i2c->reg_io_width == 4)
++	if (i2c->getreg)
++		return i2c->getreg(i2c, reg);
++	else if (i2c->reg_io_width == 4)
+ 		return ioread32(i2c->base + (reg << i2c->reg_shift));
+ 	else if (i2c->reg_io_width == 2)
+ 		return ioread16(i2c->base + (reg << i2c->reg_shift));
+@@ -91,6 +103,40 @@ static inline u8 oc_getreg(struct ocores_i2c *i2c, int reg)
+ 		return ioread8(i2c->base + (reg << i2c->reg_shift));
+ }
+ 
++/* Read and write functions for the GRLIB port of the controller. Registers are
++ * 32-bit big endian and the PRELOW and PREHIGH registers are merged into one
++ * register. The subsequent registers has their offset decreased accordingly. */
++static u8 oc_getreg_grlib(struct ocores_i2c *i2c, int reg)
++{
++	u32 rd;
++	int rreg = reg;
++	if (reg != OCI2C_PRELOW)
++		rreg--;
++	rd = ioread32be(i2c->base + (rreg << i2c->reg_shift));
++	if (reg == OCI2C_PREHIGH)
++		return (u8)(rd >> 8);
++	else
++		return (u8)rd;
++}
++
++static void oc_setreg_grlib(struct ocores_i2c *i2c, int reg, u8 value)
++{
++	u32 curr, wr;
++	int rreg = reg;
++	if (reg != OCI2C_PRELOW)
++		rreg--;
++	if (reg == OCI2C_PRELOW || reg == OCI2C_PREHIGH) {
++		curr = ioread32be(i2c->base + (rreg << i2c->reg_shift));
++		if (reg == OCI2C_PRELOW)
++			wr = (curr & 0xff00) | value;
++		else
++			wr = (((u32)value) << 8) | (curr & 0xff);
++	} else {
++		wr = value;
++	}
++	iowrite32be(wr, i2c->base + (rreg << i2c->reg_shift));
++}
++
+ static void ocores_process(struct ocores_i2c *i2c)
+ {
+ 	struct i2c_msg *msg = i2c->msg;
+@@ -228,6 +274,8 @@ static struct i2c_adapter ocores_adapter = {
+ };
+ 
+ #ifdef CONFIG_OF
++static int ocores_i2c_get_type(struct platform_device *pdev);
++
+ static int ocores_i2c_of_probe(struct platform_device *pdev,
+ 				struct ocores_i2c *i2c)
+ {
+@@ -257,6 +305,13 @@ static int ocores_i2c_of_probe(struct platform_device *pdev,
+ 
+ 	of_property_read_u32(pdev->dev.of_node, "reg-io-width",
+ 				&i2c->reg_io_width);
++
++	if (ocores_i2c_get_type(pdev) == TYPE_GRLIB) {
++		dev_dbg(&pdev->dev, "GRLIB variant of i2c-ocores\n");
++		i2c->setreg = oc_setreg_grlib;
++		i2c->getreg = oc_getreg_grlib;
++	}
++
+ 	return 0;
+ }
+ #else
+@@ -389,11 +444,29 @@ static SIMPLE_DEV_PM_OPS(ocores_i2c_pm, ocores_i2c_suspend, ocores_i2c_resume);
+ #endif
+ 
+ static struct of_device_id ocores_i2c_match[] = {
+-	{ .compatible = "opencores,i2c-ocores", },
++	{
++		.compatible = "opencores,i2c-ocores",
++		.data = (void *)TYPE_OCORES,
++	},
++	{
++		.compatible = "aeroflexgaisler,i2cmst",
++		.data = (void *)TYPE_GRLIB,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ocores_i2c_match);
+ 
++static int ocores_i2c_get_type(struct platform_device *pdev)
++{
++	const struct of_device_id *match;
++
++	match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
++	if (match)
++		return (int)match->data;
++	else
++		return TYPE_OCORES;
++}
++
+ static struct platform_driver ocores_i2c_driver = {
+ 	.probe   = ocores_i2c_probe,
+ 	.remove  = __devexit_p(ocores_i2c_remove),
+-- 
+1.7.0.4
