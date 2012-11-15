@@ -1,81 +1,36 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v3 05/11] ARM: dts: add exynos4 clock controller nodes
-Date: Thu, 15 Nov 2012 14:28:40 +0530
-Message-ID: <CAJuYYwRHg=NLDe1TaOtE-vigjctYRrtkU6o1-w_52tszUth80Q@mail.gmail.com>
-References: <1352930853-12268-1-git-send-email-thomas.abraham@linaro.org>
-	<1352930853-12268-6-git-send-email-thomas.abraham@linaro.org>
-	<4979279.mb3rWrdaG3@flatron>
+From: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: i2c-ocores: Add support for the GRLIB port of the controller and custom getreg and setreg functions
+Date: Thu, 15 Nov 2012 10:02:35 +0100
+Message-ID: <877gpn6xxw.fsf@dell.be.48ers.dk>
+References: <1352834727-16368-1-git-send-email-andreas@gaisler.com>
+	<1352834727-16368-3-git-send-email-andreas@gaisler.com>
+	<87sj8d86lo.fsf@dell.be.48ers.dk> <50A4A9A9.5050903@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4979279.mb3rWrdaG3@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@ti.com, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50A4A9A9.5050903-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> (Andreas Larsson's message of
+	"Thu, 15 Nov 2012 09:36:57 +0100")
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 November 2012 04:57, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On Thursday 15 of November 2012 03:37:27 Thomas Abraham wrote:
->> Add clock controller nodes for Exynos4210 and Exynos4x12 SoC's.
->>
->> Cc: Kukjin Kim <kgene.kim@samsung.com>
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> ---
->>  arch/arm/boot/dts/exynos4210.dtsi |    6 ++++++
->>  arch/arm/boot/dts/exynos4x12.dtsi |    6 ++++++
->>  2 files changed, 12 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos4210.dtsi
->> b/arch/arm/boot/dts/exynos4210.dtsi index d6fc306..f7daa09 100644
->> --- a/arch/arm/boot/dts/exynos4210.dtsi
->> +++ b/arch/arm/boot/dts/exynos4210.dtsi
->> @@ -50,6 +50,12 @@
->>               samsung,mct-nr-local-irqs = <4>;
->>       };
->>
->> +     clock: clock-controller@0x10030000 {
->> +             compatible = "samsung,exynos4210-clock";
->> +             reg = <0x10030000 0x20000>;
->> +             #clock-cells = <1>;
->> +     };
->> +
->>       pinctrl_0: pinctrl@11400000 {
->>               compatible = "samsung,pinctrl-exynos4210";
->>               reg = <0x11400000 0x1000>;
->> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
->> b/arch/arm/boot/dts/exynos4x12.dtsi index 7cbbd19..bcfdaac 100644
->> --- a/arch/arm/boot/dts/exynos4x12.dtsi
->> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
->> @@ -35,6 +35,12 @@
->>                            <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>;
->>       };
->>
->> +     clock: clock-controller@0x10030000 {
->> +             compatible = "samsung,exynos4412-clock";
->
-> nitpick: I forgot to mention about it in my comments for patch 3, but
-> wouldn't it be better to call it "samsung,exynos4x12-clock"?
+>>>>> "Andreas" == Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> writes:
 
-I prefer to use a specific version for compatible strings. I remember
-that there have been discussion in the past on this, but I belong to
-the camp which favors using fixed compatible values over wildcards in
-compatible values. It is easier to track and less problematic in case
-a new Exynos4x12 SoC comes up with altogether a different clock
-architecture. We have used this method for wdt, rtc, i2c and many
-other drivers and it has proven to be suit well. For instance, for
-i2c, we have two variants - s3c2410 and s3c2440 and we can use this
-most of all the Samsung SoCs.
+Hi,
 
->
->> +             reg = <0x10030000 0x20000>;
->> +             #clock-cells = <1>;
->> +     };
->> +
->>       pinctrl_0: pinctrl@11400000 {
->>               compatible = "samsung,pinctrl-exynos4x12";
->>               reg = <0x11400000 0x1000>;
->
-> Otherwise looks fine.
+ >> Adding a type define (TYPE_OCORES / TYPE_GRLIB) and a 2nd
+ >> of_device_id entry with .data = TYPE_GRLIB, and then using that in
+ >> the probe routine would be nicer. Have a look at i2c-at91.c for an
+ >> example of a driver doing something like that.
 
-Thanks,
-Thomas.
+ Andreas> Yes, that is a good idea. Do you think casting to and from
+ Andreas> void * in the following solution is too ugly and rather have a
+ Andreas> struct pointed to, or do you think that would be unnecessary?
+
+I find the casting OK.
+
+Thanks.
+
+-- 
+Bye, Peter Korsgaard
