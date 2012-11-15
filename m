@@ -1,53 +1,53 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
-Date: Thu, 15 Nov 2012 11:09:48 -0700
-Message-ID: <50A52FEC.4080409@wwwdotorg.org>
-References: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com> <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca>
+From: Jamie Lentin <jm@lentin.co.uk>
+Subject: Re: [PATCH 1/3] gpio: Add simple poweroff-gpio driver
+Date: Thu, 15 Nov 2012 18:11:11 +0000 (GMT)
+Message-ID: <alpine.DEB.2.00.1211151810050.25381@marmot.wormnet.eu>
+References: <1352650891-18356-1-git-send-email-andrew@lunn.ch>
+ <1352650891-18356-2-git-send-email-andrew@lunn.ch>
+ <20121115180557.924713E197F@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-arch-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121115180557.924713E197F@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-arch@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, gmbnomis@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/15/2012 04:51 AM, Grant Likely wrote:
-> Grant Likely wrote:
->> Or how about: I could pick up the patch with only the MIPS hunk and
->> every other user can be fixed up independently to use the new rule.
-> 
-> Here's a trial patch to fix up ARM. Does this look correct? This patch
-> depends on the generic dtb build rule already being applied.
+On Thu, 15 Nov 2012, Grant Likely wrote:
 
-I think the patch looks OK technically, except for one minor comment below.
+> On Sun, 11 Nov 2012 17:21:29 +0100, Andrew Lunn <andrew@lunn.ch> wrote:
+>> From: Jamie Lentin <jm@lentin.co.uk>
+>>
+>> Given appropriate devicetree bindings, this driver registers a
+>> pm_power_off function to set a GPIO line high/low to power down
+>> your board.
+>>
+>> Signed-off-by: Jamie Lentin <jm@lentin.co.uk>
+>> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-poweroff.txt     |   22 ++++
+>>  drivers/gpio/Kconfig                               |   10 ++
+>>  drivers/gpio/Makefile                              |    2 +
+>>  drivers/gpio/gpio-poweroff.c                       |  129 ++++++++++++++++++++
+>
+> This isn't a gpio controller driver. Don't put it into drivers/gpio
 
-One issue with this patch is that it moves *.dts from arch/arm/boot to
-arch/arm/boot/dts, which means everyone has to adjust their scripts/...
-that package/install/... the kernel. I guess it's an easy change for
-people to make, but could easily catch people unawares if they do
-incremental builds so that arch/arm/boot/*.dtb still exists but is stale.
+There's a v2 which puts it in drivers/power/reset/gpio-poweroff.c
 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index f37cf9f..2aef042 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -104,4 +104,8 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
->  	wm8505-ref.dtb \
->  	wm8650-mid.dtb
->  
-> +targets += dtbs
+>
+> g.
+>
+>
 
-Doesn't that make the "dtbs" target always run by default? Perhaps
-that's reasonable though, and doesn't actually affect anything since the
-make command for this directory always specifies an explicit target?
-
-Or, was that meant to be the following that got removed from ../Makefile?
-
-targets += $(dtb-y)
-
->  endif
-> +
-> +dtbs: $(addprefix $(obj)/, $(dtb-y))
-> +clean-files := *.dtb
+-- 
+Jamie Lentin
