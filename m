@@ -1,55 +1,33 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 02/14] ARM: SPEAr13xx: DT: Add spics gpio controller nodes
-Date: Thu, 15 Nov 2012 19:38:59 +0530
-Message-ID: <CAKohpok7-iBCoYk+aAXZPsOODyh6tp2nutC+6wYOot-bK3=wkg@mail.gmail.com>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
- <58a7d91cab20b924784fb5a09e16ca08e6f13318.1352608333.git.viresh.kumar@linaro.org>
- <CACRpkdZkgmLF8TxFCZSubP+g+6_ofZugArKtE9=dYTZfemstrw@mail.gmail.com>
- <CAKohpon=AVGZmR_cwUZ4=buw0kr3JVtXh51BtXteWkJ7E-f_bQ@mail.gmail.com>
- <CACRpkdaJ2kCYfSP=xCRQAG2wDnkMKX9fey+ByhDDiOS==u+XwA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdaJ2kCYfSP=xCRQAG2wDnkMKX9fey+ByhDDiOS==u+XwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 0/2] i2c: i2c-ocores: Add support for sparc, custom set and get functions, and the GRLIB port of the controller
+Date: Thu, 15 Nov 2012 15:09:06 +0100
+Message-ID: <1352988548-10138-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 November 2012 19:36, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> >         ahb {
->>> > +               spics: spics@e0700000{
->>> > +                       compatible = "st,spear-spics-gpio";
->>> > +                       reg = <0xe0700000 0x1000>;
->>> > +                       st-spics,peripcfg-reg = <0x3b0>;
->>> > +                       st-spics,sw-enable-bit = <12>;
->>> > +                       st-spics,cs-value-bit = <11>;
->>> > +                       st-spics,cs-enable-mask = <3>;
->>> > +                       st-spics,cs-enable-shift = <8>;
->>> > +                       gpio-controller;
->>> > +                       #gpio-cells = <2>;
->>> > +               };
->>> > +
->>>
->>> Are these bindings documented?
->>
->> The main patch waiting for ur comments is 1/14.
->
-> I seldom comment on individual DT bindings, I just want
-> to know that they're there :-)
+On sparc, irqs are not present as an IORESOURCE in the struct platform_device
+representation. By using platform_get_irq instead of platform_get_resource the
+driver works for sparc.
 
-Its not that simple. You are required to Ack it, as we have added it in
-drivers/pinctrl/spear because we are controlling pins here :)
+The GRLIB port of the ocores i2c controller needs custom getreg and setreg
+functions to allow for big endian register access and to deal with the fact that
+the PRELOW and PREHIGH registers have been merged into one register.
 
---
-viresh
+Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+
+Changes since v4:
+- Replace the ocores_get_type function with inline code in the probe function
+- Replace the oc_(get|set)reg functions with oc_(get|set)reg_(8|16|32)
+  functions and always use the function pointers to call them.
+
+Andreas Larsson (2):
+  i2c: i2c-ocores: Add irq support for sparc
+  i2c: i2c-ocores: Add support for the GRLIB port of the controller and
+    use function pointers for getreg and setreg functions
+
+ .../devicetree/bindings/i2c/i2c-ocores.txt         |    2 +-
+ drivers/i2c/busses/i2c-ocores.c                    |  187 ++++++++++++++------
+ 2 files changed, 138 insertions(+), 51 deletions(-)
