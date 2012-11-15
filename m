@@ -1,568 +1,99 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: =?UTF-8?q?=5BPATCH=20v11=202/6=5D=20video=3A=20add=20of=20helper=20for=20videomode?=
-Date: Thu, 15 Nov 2012 14:15:08 +0100
-Message-ID: <1352985312-18178-3-git-send-email-s.trumtrar@pengutronix.de>
-References: <1352985312-18178-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/1] mtd: physmap_of: allow to specify the mtd name for
+ retro compatiblity
+Date: Thu, 15 Nov 2012 13:19:26 +0000
+Message-ID: <20121115131926.47F853E0B12@localhost>
+References: <1352062641-31850-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1352985312-18178-1-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352062641-31850-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for reading display timings from DT or/and convert on=
-e of those
-timings to a videomode.
-The of_display_timing implementation supports multiple children where e=
-ach
-property can have up to 3 values. All children are read into an array, =
-that
-can be queried.
-of_get_videomode converts exactly one of that timings to a struct video=
-mode.
+On Sun,  4 Nov 2012 21:57:21 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> linux,mtd-name allow to specify the mtd name for retro capability with
+> physmap-flash drivers as boot loader pass the mtd partition via the old
+> device name physmap-flash.
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Acked-by: Stephen Warren <swarren@nvidia.com>
-Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
- drivers/video/Kconfig                              |   13 ++
- drivers/video/Makefile                             |    2 +
- drivers/video/of_display_timing.c                  |  212 ++++++++++++=
-++++++++
- drivers/video/of_videomode.c                       |   47 +++++
- include/linux/of_display_timings.h                 |   20 ++
- include/linux/of_videomode.h                       |   17 ++
- 7 files changed, 418 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/display-tim=
-ings.txt
- create mode 100644 drivers/video/of_display_timing.c
- create mode 100644 drivers/video/of_videomode.c
- create mode 100644 include/linux/of_display_timings.h
- create mode 100644 include/linux/of_videomode.h
+Ummm. I don't follow. Could you explain more about how this change will
+be used?
 
-diff --git a/Documentation/devicetree/bindings/video/display-timings.tx=
-t b/Documentation/devicetree/bindings/video/display-timings.txt
-new file mode 100644
-index 0000000..a05cade
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/display-timings.txt
-@@ -0,0 +1,107 @@
-+display-timings bindings
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+display-timings node
-+--------------------
-+
-+required properties:
-+ - none
-+
-+optional properties:
-+ - native-mode: The native mode for the display, in case multiple mode=
-s are
-+		provided. When omitted, assume the first node is the native.
-+
-+timings subnode
-+---------------
-+
-+required properties:
-+ - hactive, vactive: Display resolution
-+ - hfront-porch, hback-porch, hsync-len: Horizontal Display timing par=
-ameters
-+   in pixels
-+   vfront-porch, vback-porch, vsync-len: Vertical display timing param=
-eters in
-+   lines
-+ - clock-frequency: display clock in Hz
-+
-+optional properties:
-+ - hsync-active: Hsync pulse is active low/high/ignored
-+ - vsync-active: Vsync pulse is active low/high/ignored
-+ - de-active: Data-Enable pulse is active low/high/ignored
-+ - pixelclk-inverted: pixelclock is inverted/non-inverted/ignored
-+ - interlaced (bool)
-+ - doublescan (bool)
-+
-+All the optional properties that are not bool follow the following log=
-ic:
-+    <1>: high active
-+    <0>: low active
-+    omitted: not used on hardware
-+
-+There are different ways of describing the capabilities of a display. =
-The devicetree
-+representation corresponds to the one commonly found in datasheets for=
- displays.
-+If a display supports multiple signal timings, the native-mode can be =
-specified.
-+
-+The parameters are defined as
-+
-+struct display_timing
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+  +----------+---------------------------------------------+----------=
-+-------+
-+  |          |                =E2=86=91                            |  =
-        |       |
-+  |          |                |vback_porch                 |          =
-|       |
-+  |          |                =E2=86=93                            |  =
-        |       |
-+  +----------###############################################----------=
-+-------+
-+  |          #                =E2=86=91                            #  =
-        |       |
-+  |          #                |                            #          =
-|       |
-+  |  hback   #                |                            #  hfront  =
-| hsync |
-+  |   porch  #                |       hactive              #  porch   =
-|  len  |
-+  |<-------->#<---------------+--------------------------->#<-------->=
-|<----->|
-+  |          #                |                            #          =
-|       |
-+  |          #                |vactive                     #          =
-|       |
-+  |          #                |                            #          =
-|       |
-+  |          #                =E2=86=93                            #  =
-        |       |
-+  +----------###############################################----------=
-+-------+
-+  |          |                =E2=86=91                            |  =
-        |       |
-+  |          |                |vfront_porch                |          =
-|       |
-+  |          |                =E2=86=93                            |  =
-        |       |
-+  +----------+---------------------------------------------+----------=
-+-------+
-+  |          |                =E2=86=91                            |  =
-        |       |
-+  |          |                |vsync_len                   |          =
-|       |
-+  |          |                =E2=86=93                            |  =
-        |       |
-+  +----------+---------------------------------------------+----------=
-+-------+
-+
-+
-+Example:
-+
-+	display-timings {
-+		native-mode =3D <&timing0>;
-+		timing0: 1920p24 {
-+			/* 1920x1080p24 */
-+			clock-frequency =3D <52000000>;
-+			hactive =3D <1920>;
-+			vactive =3D <1080>;
-+			hfront-porch =3D <25>;
-+			hback-porch =3D <25>;
-+			hsync-len =3D <25>;
-+			vback-porch =3D <2>;
-+			vfront-porch =3D <2>;
-+			vsync-len =3D <2>;
-+			hsync-active =3D <1>;
-+		};
-+	};
-+
-+Every required property also supports the use of ranges, so the common=
-ly used
-+datasheet description with <min typ max>-tuples can be used.
-+
-+Example:
-+
-+	timing1: timing {
-+		/* 1920x1080p24 */
-+		clock-frequency =3D <148500000>;
-+		hactive =3D <1920>;
-+		vactive =3D <1080>;
-+		hsync-len =3D <0 44 60>;
-+		hfront-porch =3D <80 88 95>;
-+		hback-porch =3D <100 148 160>;
-+		vfront-porch =3D <0 4 6>;
-+		vback-porch =3D <0 36 50>;
-+		vsync-len =3D <0 5 6>;
-+	};
-diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-index 2a23b18..a324457 100644
---- a/drivers/video/Kconfig
-+++ b/drivers/video/Kconfig
-@@ -39,6 +39,19 @@ config DISPLAY_TIMING
- config VIDEOMODE
-        bool
-=20
-+config OF_DISPLAY_TIMING
-+	def_bool y
-+	select DISPLAY_TIMING
-+	help
-+	  helper to parse display timings from the devicetree
-+
-+config OF_VIDEOMODE
-+	def_bool y
-+	select VIDEOMODE
-+	select OF_DISPLAY_TIMING
-+	help
-+	  helper to get videomodes from the devicetree
-+
- menuconfig FB
- 	tristate "Support for frame buffer devices"
- 	---help---
-diff --git a/drivers/video/Makefile b/drivers/video/Makefile
-index fc30439..b936b00 100644
---- a/drivers/video/Makefile
-+++ b/drivers/video/Makefile
-@@ -168,4 +168,6 @@ obj-$(CONFIG_FB_VIRTUAL)          +=3D vfb.o
- #video output switch sysfs driver
- obj-$(CONFIG_VIDEO_OUTPUT_CONTROL) +=3D output.o
- obj-$(CONFIG_DISPLAY_TIMING) +=3D display_timing.o
-+obj-$(CONFIG_OF_DISPLAY_TIMING) +=3D of_display_timing.o
- obj-$(CONFIG_VIDEOMODE) +=3D videomode.o
-+obj-$(CONFIG_OF_VIDEOMODE) +=3D of_videomode.o
-diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_displ=
-ay_timing.c
-new file mode 100644
-index 0000000..b187f31
---- /dev/null
-+++ b/drivers/video/of_display_timing.c
-@@ -0,0 +1,212 @@
-+/*
-+ * OF helpers for parsing display timings
-+ *
-+ * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pe=
-ngutronix
-+ *
-+ * based on of_videomode.c by Sascha Hauer <s.hauer@pengutronix.de>
-+ *
-+ * This file is released under the GPLv2
-+ */
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+#include <linux/export.h>
-+#include <linux/of_display_timings.h>
-+
-+/**
-+ * parse_property - parse timing_entry from device_node
-+ * @np: device_node with the property
-+ * @name: name of the property
-+ * @result: will be set to the return value
-+ *
-+ * DESCRIPTION:
-+ * Every display_timing can be specified with either just the typical =
-value or
-+ * a range consisting of min/typ/max. This function helps handling thi=
-s
-+ **/
-+static int parse_property(struct device_node *np, char *name,
-+				struct timing_entry *result)
-+{
-+	struct property *prop;
-+	int length, cells, ret;
-+
-+	prop =3D of_find_property(np, name, &length);
-+	if (!prop) {
-+		pr_err("%s: could not find property %s\n", __func__, name);
-+		return -EINVAL;
-+	}
-+
-+	cells =3D length / sizeof(u32);
-+	if (cells =3D=3D 1) {
-+		ret =3D of_property_read_u32(np, name, &result->typ);
-+		result->min =3D result->typ;
-+		result->max =3D result->typ;
-+	} else if (cells =3D=3D 3) {
-+		ret =3D of_property_read_u32_array(np, name, &result->min, cells);
-+	} else {
-+		pr_err("%s: illegal timing specification in %s\n", __func__, name);
-+		return -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+/**
-+ * of_get_display_timing - parse display_timing entry from device_node
-+ * @np: device_node with the properties
-+ **/
-+static struct display_timing *of_get_display_timing(struct device_node=
- *np)
-+{
-+	struct display_timing *dt;
-+	int ret =3D 0;
-+
-+	dt =3D kzalloc(sizeof(*dt), GFP_KERNEL);
-+	if (!dt) {
-+		pr_err("%s: could not allocate display_timing struct\n", __func__);
-+		return NULL;
-+	}
-+
-+	ret |=3D parse_property(np, "hback-porch", &dt->hback_porch);
-+	ret |=3D parse_property(np, "hfront-porch", &dt->hfront_porch);
-+	ret |=3D parse_property(np, "hactive", &dt->hactive);
-+	ret |=3D parse_property(np, "hsync-len", &dt->hsync_len);
-+	ret |=3D parse_property(np, "vback-porch", &dt->vback_porch);
-+	ret |=3D parse_property(np, "vfront-porch", &dt->vfront_porch);
-+	ret |=3D parse_property(np, "vactive", &dt->vactive);
-+	ret |=3D parse_property(np, "vsync-len", &dt->vsync_len);
-+	ret |=3D parse_property(np, "clock-frequency", &dt->pixelclock);
-+
-+	of_property_read_u32(np, "vsync-active", &dt->vsync_pol_active);
-+	of_property_read_u32(np, "hsync-active", &dt->hsync_pol_active);
-+	of_property_read_u32(np, "de-active", &dt->de_pol_active);
-+	of_property_read_u32(np, "pixelclk-inverted", &dt->pixelclk_pol);
-+	dt->interlaced =3D of_property_read_bool(np, "interlaced");
-+	dt->doublescan =3D of_property_read_bool(np, "doublescan");
-+
-+	if (ret) {
-+		pr_err("%s: error reading timing properties\n", __func__);
-+		kfree(dt);
-+		return NULL;
-+	}
-+
-+	return dt;
-+}
-+
-+/**
-+ * of_get_display_timings - parse all display_timing entries from a de=
-vice_node
-+ * @np: device_node with the subnodes
-+ **/
-+struct display_timings *of_get_display_timings(struct device_node *np)
-+{
-+	struct device_node *timings_np;
-+	struct device_node *entry;
-+	struct device_node *native_mode;
-+	struct display_timings *disp;
-+
-+	if (!np) {
-+		pr_err("%s: no devicenode given\n", __func__);
-+		return NULL;
-+	}
-+
-+	timings_np =3D of_find_node_by_name(np, "display-timings");
-+	if (!timings_np) {
-+		pr_err("%s: could not find display-timings node\n", __func__);
-+		return NULL;
-+	}
-+
-+	disp =3D kzalloc(sizeof(*disp), GFP_KERNEL);
-+	if (!disp) {
-+		pr_err("%s: could not allocate struct disp'\n", __func__);
-+		goto dispfail;
-+	}
-+
-+	entry =3D of_parse_phandle(timings_np, "native-mode", 0);
-+	/* assume first child as native mode if none provided */
-+	if (!entry)
-+		entry =3D of_get_next_child(np, NULL);
-+	/* if there is no child, it is useless to go on */
-+	if (!entry) {
-+		pr_err("%s: no timing specifications given\n", __func__);
-+		goto entryfail;
-+	}
-+
-+	pr_info("%s: using %s as default timing\n", __func__, entry->name);
-+
-+	native_mode =3D entry;
-+
-+	disp->num_timings =3D of_get_child_count(timings_np);
-+	if (disp->num_timings =3D=3D 0) {
-+		/* should never happen, as entry was already found above */
-+		pr_err("%s: no timings specified\n", __func__);
-+		goto entryfail;
-+	}
-+
-+	disp->timings =3D kzalloc(sizeof(struct display_timing *)*disp->num_t=
-imings,
-+				GFP_KERNEL);
-+	if (!disp->timings) {
-+		pr_err("%s: could not allocate timings array\n", __func__);
-+		goto entryfail;
-+	}
-+
-+	disp->num_timings =3D 0;
-+	disp->native_mode =3D 0;
-+
-+	for_each_child_of_node(timings_np, entry) {
-+		struct display_timing *dt;
-+
-+		dt =3D of_get_display_timing(entry);
-+		if (!dt) {
-+			/* to not encourage wrong devicetrees, fail in case of an error */
-+			pr_err("%s: error in timing %d\n", __func__, disp->num_timings+1);
-+			goto timingfail;
-+		}
-+
-+		if (native_mode =3D=3D entry)
-+			disp->native_mode =3D disp->num_timings;
-+
-+		disp->timings[disp->num_timings] =3D dt;
-+		disp->num_timings++;
-+	}
-+	of_node_put(timings_np);
-+	of_node_put(native_mode);
-+
-+	if (disp->num_timings > 0)
-+		pr_info("%s: got %d timings. Using timing #%d as default\n", __func_=
-_,
-+			disp->num_timings , disp->native_mode + 1);
-+	else {
-+		pr_err("%s: no valid timings specified\n", __func__);
-+		display_timings_release(disp);
-+		return NULL;
-+	}
-+	return disp;
-+
-+timingfail:
-+	if (native_mode)
-+		of_node_put(native_mode);
-+	display_timings_release(disp);
-+entryfail:
-+	if (disp)
-+		kfree(disp);
-+dispfail:
-+	of_node_put(timings_np);
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(of_get_display_timings);
-+
-+/**
-+ * of_display_timings_exists - check if a display-timings node is prov=
-ided
-+ * @np: device_node with the timing
-+ **/
-+int of_display_timings_exists(struct device_node *np)
-+{
-+	struct device_node *timings_np;
-+
-+	if (!np)
-+		return -EINVAL;
-+
-+	timings_np =3D of_parse_phandle(np, "display-timings", 0);
-+	if (!timings_np)
-+		return -EINVAL;
-+
-+	of_node_put(timings_np);
-+	return 1;
-+}
-+EXPORT_SYMBOL_GPL(of_display_timings_exists);
-diff --git a/drivers/video/of_videomode.c b/drivers/video/of_videomode.=
-c
-new file mode 100644
-index 0000000..7051701
---- /dev/null
-+++ b/drivers/video/of_videomode.c
-@@ -0,0 +1,47 @@
-+/*
-+ * generic videomode helper
-+ *
-+ * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pe=
-ngutronix
-+ *
-+ * This file is released under the GPLv2
-+ */
-+#include <linux/of.h>
-+#include <linux/of_display_timings.h>
-+#include <linux/of_videomode.h>
-+#include <linux/export.h>
-+
-+/**
-+ * of_get_videomode - get the videomode #<index> from devicetree
-+ * @np - devicenode with the display_timings
-+ * @vm - set to return value
-+ * @index - index into list of display_timings
-+ * DESCRIPTION:
-+ * Get a list of all display timings and put the one
-+ * specified by index into *vm. This function should only be used, if
-+ * only one videomode is to be retrieved. A driver that needs to work
-+ * with multiple/all videomodes should work with
-+ * of_get_display_timings instead.
-+ **/
-+int of_get_videomode(struct device_node *np, struct videomode *vm, int=
- index)
-+{
-+	struct display_timings *disp;
-+	int ret;
-+
-+	disp =3D of_get_display_timings(np);
-+	if (!disp) {
-+		pr_err("%s: no timings specified\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	if (index =3D=3D OF_USE_NATIVE_MODE)
-+		index =3D disp->native_mode;
-+
-+	ret =3D videomode_from_timing(disp, vm, index);
-+	if (ret)
-+		return ret;
-+
-+	display_timings_release(disp);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_get_videomode);
-diff --git a/include/linux/of_display_timings.h b/include/linux/of_disp=
-lay_timings.h
-new file mode 100644
-index 0000000..e18cf94
---- /dev/null
-+++ b/include/linux/of_display_timings.h
-@@ -0,0 +1,20 @@
-+/*
-+ * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-+ *
-+ * display timings of helpers
-+ *
-+ * This file is released under the GPLv2
-+ */
-+
-+#ifndef __LINUX_OF_DISPLAY_TIMINGS_H
-+#define __LINUX_OF_DISPLAY_TIMINGS_H
-+
-+#include <linux/display_timing.h>
-+#include <linux/of.h>
-+
-+#define OF_USE_NATIVE_MODE -1
-+
-+struct display_timings *of_get_display_timings(struct device_node *np)=
-;
-+int of_display_timings_exists(struct device_node *np);
-+
-+#endif
-diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.=
-h
-new file mode 100644
-index 0000000..5bb7198
---- /dev/null
-+++ b/include/linux/of_videomode.h
-@@ -0,0 +1,17 @@
-+/*
-+ * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-+ *
-+ * videomode of-helpers
-+ *
-+ * This file is released under the GPLv2
-+ */
-+
-+#ifndef __LINUX_OF_VIDEOMODE_H
-+#define __LINUX_OF_VIDEOMODE_H
-+
-+#include <linux/videomode.h>
-+#include <linux/of.h>
-+
-+int of_get_videomode(struct device_node *np, struct videomode *vm, int=
- index);
-+
-+#endif /* __LINUX_OF_VIDEOMODE_H */
---=20
-1.7.10.4
+Thanks,
+g.
+
+> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mtd/mtd-physmap.txt |    3 +++
+>  drivers/mtd/maps/physmap_of.c                         |    5 ++++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> index 94de19b..dab7847 100644
+> --- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> +++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+> @@ -23,6 +23,9 @@ file systems on embedded devices.
+>     unaligned accesses as implemented in the JFFS2 code via memcpy().
+>     By defining "no-unaligned-direct-access", the flash will not be
+>     exposed directly to the MTD users (e.g. JFFS2) any more.
+> + - linux,mtd-name: allow to specify the mtd name for retro capability with
+> +   physmap-flash drivers as boot loader pass the mtd partition via the old
+> +   device name physmap-flash.
+>  
+>  For JEDEC compatible devices, the following additional properties
+>  are defined:
+> diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+> index 6f19aca..9a8db0c 100644
+> --- a/drivers/mtd/maps/physmap_of.c
+> +++ b/drivers/mtd/maps/physmap_of.c
+> @@ -170,6 +170,7 @@ static int __devinit of_flash_probe(struct platform_device *dev)
+>  	resource_size_t res_size;
+>  	struct mtd_part_parser_data ppdata;
+>  	bool map_indirect;
+> +	const char *mtd_name;
+>  
+>  	match = of_match_device(of_flash_match, &dev->dev);
+>  	if (!match)
+> @@ -178,6 +179,8 @@ static int __devinit of_flash_probe(struct platform_device *dev)
+>  
+>  	reg_tuple_size = (of_n_addr_cells(dp) + of_n_size_cells(dp)) * sizeof(u32);
+>  
+> +	of_property_read_string(dp, "linux,mtd-name", &mtd_name);
+> +
+>  	/*
+>  	 * Get number of "reg" tuples. Scan for MTD devices on area's
+>  	 * described by each "reg" region. This makes it possible (including
+> @@ -234,7 +237,7 @@ static int __devinit of_flash_probe(struct platform_device *dev)
+>  			goto err_out;
+>  		}
+>  
+> -		info->list[i].map.name = dev_name(&dev->dev);
+> +		info->list[i].map.name = mtd_name ? mtd_name : dev_name(&dev->dev);
+>  		info->list[i].map.phys = res.start;
+>  		info->list[i].map.size = res_size;
+>  		info->list[i].map.bankwidth = be32_to_cpup(width);
+> -- 
+> 1.7.10.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
