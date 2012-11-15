@@ -1,72 +1,57 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v10 1/6] video: add display_timing and videomode
-Date: Thu, 15 Nov 2012 20:00:02 +0100
-Message-ID: <1668773.JuvWEH8bU2@avalon>
-References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de> <2466982.zTBri0jEif@avalon> <20121115180359.1E6F33E197F@localhost>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/14] pinctrl: SPEAr: add spi chipselect control driver
+Date: Thu, 15 Nov 2012 20:09:20 +0100
+Message-ID: <CACRpkdY+noKODLNUEV4dNM7cJVuRayEhJRjND75Ggm2kBoX1mw@mail.gmail.com>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
+ <4a92290e8a3b1a19c3a5e864edfa7badfc2af5d0.1352608333.git.viresh.kumar@linaro.org>
+ <CACRpkdb9tSUUGQjWdHqRr5rUSyiPgWm2i3-QZq9VbWFY2EAQeQ@mail.gmail.com>
+ <CAKohpomLRYAKJ=dNLVsjj1xf=G6xj4EcTpPmhSDvgBYUMXc1mA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20121115180359.1E6F33E197F@localhost>
-Sender: linux-media-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKohpomLRYAKJ=dNLVsjj1xf=G6xj4EcTpPmhSDvgBYUMXc1mA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 November 2012 18:03:59 Grant Likely wrote:
-> On Thu, 15 Nov 2012 17:00:57 +0100, Laurent Pinchart wrote:
-> > On Thursday 15 November 2012 15:47:53 Grant Likely wrote:
-> > > On Thu, 15 Nov 2012 10:23:52 +0100, Steffen Trumtrar wrote:
-> > > > Add display_timing structure and the according helper functions. This
-> > > > allows the description of a display via its supported timing
-> > > > parameters.
-> > > > 
-> > > > Every timing parameter can be specified as a single value or a range
-> > > > <min typ max>.
-> > > > 
-> > > > Also, add helper functions to convert from display timings to a
-> > > > generic videomode structure. This videomode can then be converted to
-> > > > the corresponding subsystem mode representation (e.g. fb_videomode).
-> > > > 
-> > > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > > 
-> > > Hmmm... here's my thoughts as an outside reviewer. Correct me if I'm
-> > > making an incorrect assumption.
-> > > 
-> > > It looks to me that the purpose of this entire series is to decode video
-> > > timings from the device tree and (eventually) provide the data in the
-> > > form 'struct videomode'. Correct?
-> > > 
-> > > If so, then it looks over engineered. Creating new infrastructure to
-> > > allocate, maintain, and free a new 'struct display_timings' doesn't make
-> > > any sense when it is an intermediary data format that will never be used
-> > > by drivers.
-> > > 
-> > > Can the DT parsing code instead return a table of struct videomode?
-> > > 
-> > > But, wait... struct videomode is also a new structure. So it looks like
-> > > this series creates two new intermediary data structures;
-> > > display_timings and videomode. And at least as far as I can see in this
-> > > series struct fb_videomode is the only user.
-> > 
-> > struct videomode is supposed to slowly replace the various video mode
-> > structures we currently have in the kernel (struct drm_mode_modeinfo,
-> > struct fb_videomode and struct v4l2_bt_timings), at least where possible
-> > (userspace APIs can't be broken). This will make it possible to reuse
-> > code across the DRM, FB and V4L2 subsystems, such as the EDID parser or
-> > HDMI encoder drivers. This rationale might not be clearly explained in
-> > the commit message, but having a shared video mode structure is pretty
-> > important.
-> 
-> Okay that make sense. What about struct display_timings?
+On Thu, Nov 15, 2012 at 3:19 PM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 15 November 2012 19:47, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-I'll let Steffen answer on that one as I (currently) have no strong feeling 
-about it. If we were to remove it we would need to carry the number of 
-timings, native timing and timings array around. That wouldn't be very 
-practical for drivers, but it probably all depends on the usage drivers will 
-make of that information.
+>> Just one question: since this driver is not using any
+>> pinctrl interfaces, why is it under drivers/pinctrl/*?
+>>
+>> Shouldn't it be under drivers/gpio from a technical
+>> point of view?
+>>
+>> I think I'd accept it under drivers/pinctrl/spear/*
+>> if you just want this to keep everything SPEAr-related
+>> in one place though, so enlighten me.
+>
+> That's because they are controlling few pads. They are not
+> actually gpio's but just pads that we are controlling.
+>
+> That's why we thought they are better in this place.
 
--- 
-Regards,
+The grouping of drivers in the kernel is about what in-kernel
+subsystem interface they're using, not how their electronics
+work...
 
-Laurent Pinchart
+Since this driver is only using the GPIO API it should be
+in drivers/gpio/gpio-*.c.
+
+Many, many drivers in drivers/gpio* are controlling pads
+too, so it will be in good company ;-)
+
+Yours,
+Linus Walleij
