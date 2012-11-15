@@ -1,45 +1,62 @@
-From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 3/7] usb: chipidea: usbmisc: fix a potential race condition
-Date: Thu, 15 Nov 2012 13:03:44 +0100
-Message-ID: <1352981028-14312-4-git-send-email-m.grzeschik@pengutronix.de>
-References: <1352981028-14312-1-git-send-email-m.grzeschik@pengutronix.de>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352981028-14312-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH -next] tty: of_serial: fix return value check in of_platform_serial_setup()
+Date: Thu, 15 Nov 2012 12:08:11 +0000
+Message-ID: <20121115120811.B9EB63E0B12@localhost>
+References: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>, alan@linux.intel.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, seth.heasley@intel.com, stable@kernel.org
+Cc: yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Thu, 1 Nov 2012 13:27:34 +0800, Wei Yongjun <weiyj.lk@gmail.com> wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> 
+> In case of error, the function clk_get() returns ERR_PTR()
+> and never returns NULL. The NULL test in the return value
+> check should be replaced with IS_ERR().
+> 
+> dpatch engine is used to auto generate this patch.
+> (https://github.com/weiyj/dpatch)
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-This fixes a potential race condition where the ci13xxx_imx glue code
-could be fast enough to call one of the usbmisc_ops before he got a
-valid value on the static usbmisc pointer. To fix that we first set
-usbmisc, then call usbmisc_set_ops().
+Looks correct to me.
 
-Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Changes since v1:
-* split previous patch into two seperate.
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
- drivers/usb/chipidea/usbmisc_imx.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Alan, which tree should this go through?
 
-diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index 552c63f..9145e04 100644
---- a/drivers/usb/chipidea/usbmisc_imx.c
-+++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -116,14 +116,14 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	usbmisc = data;
- 	ret = usbmisc_set_ops(&imx6q_usbmisc_ops);
- 	if (ret) {
-+		usbmisc = NULL;
- 		clk_disable_unprepare(data->clk);
- 		return ret;
- 	}
- 
--	usbmisc = data;
+Wei, did you run into this causing a bug? Do you think it should go back
+into linux-stable? It looks like it should to me.
+
+g.
+
+> ---
+>  drivers/tty/serial/of_serial.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+> index 533ccfe..b9fdccb 100644
+> --- a/drivers/tty/serial/of_serial.c
+> +++ b/drivers/tty/serial/of_serial.c
+> @@ -66,10 +66,10 @@ static int __devinit of_platform_serial_setup(struct platform_device *ofdev,
+>  
+>  		/* Get clk rate through clk driver if present */
+>  		info->clk = clk_get(&ofdev->dev, NULL);
+> -		if (info->clk == NULL) {
+> +		if (IS_ERR(info->clk)) {
+>  			dev_warn(&ofdev->dev,
+>  				"clk or clock-frequency not defined\n");
+> -			return -ENODEV;
+> +			return PTR_ERR(info->clk);
+>  		}
+>  
+>  		clk_prepare_enable(info->clk);
+> 
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
