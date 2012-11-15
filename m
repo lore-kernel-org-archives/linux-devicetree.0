@@ -1,75 +1,58 @@
-From: Marek Belisko <marek.belisko@open-nandra.com>
-Subject: [PATCH] Documentation: Move common leds properties description to separate file.
-Date: Thu, 15 Nov 2012 22:51:56 +0100
-Message-ID: <1353016316-6966-1-git-send-email-marek.belisko@open-nandra.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek.belisko@open-nandra.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: dove: switch to DT clock providers
+Date: Thu, 15 Nov 2012 22:52:23 +0100
+Message-ID: <20121115225223.1ceebfe5@skate>
+References: <1353014906-31566-1-git-send-email-andrew@lunn.ch>
+ <1353014906-31566-7-git-send-email-andrew@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353014906-31566-7-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
----
- Documentation/devicetree/bindings/gpio/led.txt    |   14 ++++--------
- Documentation/devicetree/bindings/leds/common.txt |   24 +++++++++++++++++++++
- 2 files changed, 28 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/common.txt
+Dear Andrew Lunn,
 
-diff --git a/Documentation/devicetree/bindings/gpio/led.txt b/Documentation/devicetree/bindings/gpio/led.txt
-index edc83c1..df1b308 100644
---- a/Documentation/devicetree/bindings/gpio/led.txt
-+++ b/Documentation/devicetree/bindings/gpio/led.txt
-@@ -10,16 +10,10 @@ LED sub-node properties:
- - gpios :  Should specify the LED's GPIO, see "gpios property" in
-   Documentation/devicetree/bindings/gpio/gpio.txt.  Active low LEDs should be
-   indicated using flags in the GPIO specifier.
--- label :  (optional) The label for this LED.  If omitted, the label is
--  taken from the node name (excluding the unit address).
--- linux,default-trigger :  (optional) This parameter, if present, is a
--  string defining the trigger assigned to the LED.  Current triggers are:
--    "backlight" - LED will act as a back-light, controlled by the framebuffer
--		  system
--    "default-on" - LED will turn on, but see "default-state" below
--    "heartbeat" - LED "double" flashes at a load average based rate
--    "ide-disk" - LED indicates disk activity
--    "timer" - LED flashes at a fixed, configurable rate
-+- label :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+- linux,default-trigger :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
- - default-state:  (optional) The initial state of the LED.  Valid
-   values are "on", "off", and "keep".  If the LED is already on or off
-   and the default-state property is set the to same value, then no
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-new file mode 100644
-index 0000000..0654693
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -0,0 +1,24 @@
-+Common leds properties.
-+
-+Optional properties for child nodes:
-+- label : The label for this LED.  If omitted, the label is
-+  taken from the node name (excluding the unit address).
-+
-+- linux,default-trigger :  This parameter, if present, is a
-+    string defining the trigger assigned to the LED.  Current triggers are:
-+     "backlight" - LED will act as a back-light, controlled by the framebuffer
-+		   system
-+     "default-on" - LED will turn on (but for leds-gpio see "default-state"
-+		    property in Documentation/devicetree/bindings/gpio/led.txt)
-+     "heartbeat" - LED "double" flashes at a load average based rate
-+     "ide-disk" - LED indicates disk activity
-+     "timer" - LED flashes at a fixed, configurable rate
-+
-+Examples:
-+
-+system-status {
-+	label = "Status";
-+	linux,default-trigger = "heartbeat";
-+	...
-+};
-+
+On Thu, 15 Nov 2012 22:28:25 +0100, Andrew Lunn wrote:
+
+> +		core_clk: core-clocks@d0214 {
+> +			compatible = "marvell,dove-core-clocks";
+> +			reg = <0xd0214 0x4>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		clk_gate: clock-gating-control@d0038 {
+> +			compatible = "marvell,dove-clock-gating";
+> +			reg = <0xd0038 0x4>;
+> +			clocks = <&core_clk 0>;
+> +			#clock-cells = <1>;
+> +		};
+
+I'm nitpicking maybe, but names lack a bit of coherency here:
+
+	core_clk vs. clk_gate
+	marvell,dove-core-clocks vs. marvell,dove-clock-gating
+
+Maybe:
+
+	core_clk / gate_clk
+	marvell,dove-core-clocks / marvell,dove-gating-clocks
+
+Thomas
 -- 
-1.7.10.4
-
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
