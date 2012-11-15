@@ -1,43 +1,106 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 1/1] mtd: physmap_of: allow to specify the mtd name for
- retro compatiblity
-Date: Thu, 15 Nov 2012 16:50:11 +0100
-Message-ID: <20121115155011.GD4398@game.jcrosoft.org>
-References: <1352062641-31850-1-git-send-email-plagnioj@jcrosoft.com>
- <20121115131926.47F853E0B12@localhost>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] dt: platform: Extract device name from device tree blob
+Date: Thu, 15 Nov 2012 15:52:46 +0000
+Message-ID: <20121115155246.C4EC83E194B@localhost>
+References: <1352732343-1199-1-git-send-email-per.forlin@stericsson.com>
+ <CACxGe6vjLA3j-bc_048UrdB5Q=8pV8=LPSVUnU_k3anX23vwyw@mail.gmail.com>
+ <50A17E30.7030807@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20121115131926.47F853E0B12@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============6816041666675836764=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50A17E30.7030807-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Fredrik SODERSTEDT <fredrik.soderstedt-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13:19 Thu 15 Nov     , Grant Likely wrote:
-> On Sun,  4 Nov 2012 21:57:21 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com> wrote:
-> > linux,mtd-name allow to specify the mtd name for retro capability with
-> > physmap-flash drivers as boot loader pass the mtd partition via the old
-> > device name physmap-flash.
+--===============6816041666675836764==
+Content-Type: text/plain
+
+On Mon, 12 Nov 2012 23:54:40 +0100, Per Förlin <per.forlin-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org> wrote:
+> On 11/12/2012 04:20 PM, Grant Likely wrote:
+> > On Mon, Nov 12, 2012 at 2:59 PM, Per Forlin <per.forlin-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org> wrote:
+> >> Add support to extract device name from device tree blob.
+> >> If the property "dev-name" is set in the DTS this name will
+> >> be used when creating the device.
+> >> The auxdata_lookup has precedence and will override
+> >> the "dev-name" property.
+> > 
+> > Using a 'dev-name' property has the same problem that the 'cell-index'
+> > properties have in that it is encoding part of the global namespace
+> > local to the node and it becomes easy to create collisions. Instead of
+> > this check to see if one of the properties in /aliases points to the
+> > node and use that for the name.
+> > 
+> > g.
+> > 
+> Thanks Grant for your feedback,
 > 
-> Ummm. I don't follow. Could you explain more about how this change will
-> be used?
-the bootloader pass the nor flash (aka physmap) partitions via cmdline
+> Extract from exynos5250.dtsi:
+> -----------
+> 	aliases {
+> 		spi0 = &spi_0;
+> 		spi1 = &spi_1;
+> 		spi2 = &spi_2;
+> 	};
+> 
+> 	spi_0: spi@12d20000 {
+> ...
+> 	};
+> 
+> 	spi_1: spi@12d30000 {
+> ...
+> 	};
+> 
+> 	spi_2: spi@12d40000 {
+> ...
+> 	};
+> ---------------
+> 
+> Alias refers to the device node. The device node is not aware of the alias.
+> 
+> How to get a device name from the aliases.
+> 1. Traverse all aliases for each device node (time consuming if there are many aliases)
+> 2. Make a new function of_alias_get_name(), today there is only of_alias_get_id()
+> 3. The functionality of setting device_name based on alias name needs to be optional because one may want to use aliases without changing the name of the device.
+> All this is feasible but perhaps not optimal.
+> 
+> I don't really see how come name space is a big issue in this case. The name space of "dev-name" is local to the device node. A child device node can use the same dev-name as the parent (unless I'm mistaken which happens quite often). Introducing yet another property name pollutes the name space of the device node. Still I think the pros are stronger than the cons.
+> 
+> Do you still prefer to use the name of the Alias? Could you please elaborate a bit more how this can be done in practice?
+> I would agree with you if there was a reference from the device node to the alias.
 
-when switching to DT the mtd name change so the kernel does not found the
-partition table anymore as the mtd name is now the node name
+Oh, I see what you're trying to do. As Lee pointed out you're trying to
+make the Linux internal way of matching up clocks and regulators happy.
+That is very much a Linux-kernel internal thing and should be solved in
+the kernel. Trying to solve it with fixed names in the device tree will
+cause problems down the road.
 
-and no I can not change the bootloader (product on the market)
+I though you were wanting to have logical names for the devices that
+make sense to the user which is how aliases is used now.
 
-Best Regards,
-J.
+So, no, don't do this.
+
+g.
+
+
+--===============6816041666675836764==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6816041666675836764==--
