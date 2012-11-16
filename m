@@ -1,95 +1,64 @@
-From: Kevin Hilman <khilman@deeprootsystems.com>
-Subject: Re: [PATCH v2 1/4] mfd: tps65217: Set PMIC to shutdowm on PWR_EN toggle
-Date: Fri, 16 Nov 2012 10:53:55 -0800
-Message-ID: <87y5i1crb0.fsf@deeprootsystems.com>
-References: <1353067706-29491-1-git-send-email-anilkumar@ti.com>
-	<1353067706-29491-2-git-send-email-anilkumar@ti.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH V2 1/5] arm: mvebu: Added support for coherency fabric in
+ mach-mvebu
+Date: Fri, 16 Nov 2012 18:56:10 +0000
+Message-ID: <20121116185610.GA1019@mudshark.cambridge.arm.com>
+References: <1351545108-18954-1-git-send-email-gregory.clement@free-electrons.com>
+ <1351545108-18954-2-git-send-email-gregory.clement@free-electrons.com>
+ <20121105140258.GO3351@mudshark.cambridge.arm.com>
+ <50A15A33.60405@free-electrons.com>
+ <20121113104340.GD3940@mudshark.cambridge.arm.com>
+ <50A3F860.5010601@free-electrons.com>
+ <20121115101752.GA26453@mudshark.cambridge.arm.com>
+ <50A5103F.1040903@free-electrons.com>
+ <20121115162123.GC5885@mudshark.cambridge.arm.com>
+ <50A51D0D.4090009@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1353067706-29491-2-git-send-email-anilkumar@ti.com> (AnilKumar
-	Ch's message of "Fri, 16 Nov 2012 17:38:23 +0530")
-Sender: linux-omap-owner@vger.kernel.org
-To: AnilKumar Ch <anilkumar@ti.com>
-Cc: a.zummo@towertech.it, sameo@linux.intel.com, tony@atomide.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Colin Foe-Parker <colin.foeparker@logicpd.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <50A51D0D.4090009@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Mike Turquette <mturquette@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-AnilKumar Ch <anilkumar@ti.com> writes:
+On Thu, Nov 15, 2012 at 04:49:17PM +0000, Gregory CLEMENT wrote:
+> On 11/15/2012 05:21 PM, Will Deacon wrote:
+> > Anyway, that's by-the-by as this is all called early enough that we
+> > shouldn't care. The thing I don't like now is that the fabric initialisation
+> > is done entirely differently on the primary CPU than the secondaries. The
+> > primary probes the device-tree (well, it's also now hard-coded for v2) and
+> > accesses the registers from a C function(armada_370_xp_set_cpu_coherent) whilst
+> > the secondaries have hardcoded addresses and access via asm
+> > (armada_xp_secondary_startup).
+> 
+> 
+> Now it is hardcoded in both case as you pointed it. So the last
+> difference is setup from a C function or via asm.
+> 
+> The differences between primary and secondary CPU when they enable the
+> coherency, is due to the fact that we really are in a different
+> situation. For primary CPU, as it is the only CPU online it doesn't
+> need to enable the coherency from the beginning, so we can wait to
+> have MMU enable and convenient feature. Whereas for the secondary CPU
+> they need the coherency from the very beginning are by definition they
+> won't be alone. That's why this very first instruction are written in
+> asm and they use physical address.
+> 
+> I don't see how to handle it in a different way.
 
-> From: Colin Foe-Parker <colin.foeparker@logicpd.com>
->
-> Set tps65217 PMIC status to OFF if power enable toggle is
-> supported. Also adds platform data flag, which should be
-> passed from board init data.
+The code paths are fine, I would just like to see less duplication. Can you
+make the asm function PCS compliant and call it from C for the primary
+(setting the link register to secondary_startup for the secondary cores)?
 
-nit: changelog mentions platform_data, but the code is using DT.
-
-Kevin
-
-> Signed-off-by: Colin Foe-Parker <colin.foeparker@logicpd.com>
-> [anilkumar@ti.com: move the additions to tps65217 MFD driver]
-> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
-> ---
->  .../devicetree/bindings/regulator/tps65217.txt     |    4 ++++
->  drivers/mfd/tps65217.c                             |   12 ++++++++++++
->  2 files changed, 16 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/regulator/tps65217.txt b/Documentation/devicetree/bindings/regulator/tps65217.txt
-> index d316fb8..4f05d20 100644
-> --- a/Documentation/devicetree/bindings/regulator/tps65217.txt
-> +++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
-> @@ -11,6 +11,9 @@ Required properties:
->    using the standard binding for regulators found at
->    Documentation/devicetree/bindings/regulator/regulator.txt.
->  
-> +Optional properties:
-> +- ti,pmic-shutdown-controller: Telling the PMIC to shutdown on PWR_EN toggle.
-> +
->    The valid names for regulators are:
->    tps65217: dcdc1, dcdc2, dcdc3, ldo1, ldo2, ldo3 and ldo4
->  
-> @@ -20,6 +23,7 @@ Example:
->  
->  	tps: tps@24 {
->  		compatible = "ti,tps65217";
-> +		ti,pmic-shutdown-controller;
->  
->  		regulators {
->  			dcdc1_reg: dcdc1 {
-> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
-> index 3fb32e6..c7f17d8 100644
-> --- a/drivers/mfd/tps65217.c
-> +++ b/drivers/mfd/tps65217.c
-> @@ -160,6 +160,7 @@ static int __devinit tps65217_probe(struct i2c_client *client,
->  	unsigned int version;
->  	unsigned int chip_id = ids->driver_data;
->  	const struct of_device_id *match;
-> +	bool status_off = false;
->  	int ret;
->  
->  	if (client->dev.of_node) {
-> @@ -170,6 +171,8 @@ static int __devinit tps65217_probe(struct i2c_client *client,
->  			return -EINVAL;
->  		}
->  		chip_id = (unsigned int)match->data;
-> +		status_off = of_property_read_bool(client->dev.of_node,
-> +					"ti,pmic-shutdown-controller");
->  	}
->  
->  	if (!chip_id) {
-> @@ -207,6 +210,15 @@ static int __devinit tps65217_probe(struct i2c_client *client,
->  		return ret;
->  	}
->  
-> +	/* Set the PMIC to shutdown on PWR_EN toggle */
-> +	if (status_off) {
-> +		ret = tps65217_set_bits(tps, TPS65217_REG_STATUS,
-> +				TPS65217_STATUS_OFF, TPS65217_STATUS_OFF,
-> +				TPS65217_PROTECT_NONE);
-> +		if (ret)
-> +			dev_warn(tps->dev, "unable to set the status OFF\n");
-> +	}
-> +
->  	dev_info(tps->dev, "TPS65217 ID %#x version 1.%d\n",
->  			(version & TPS65217_CHIPID_CHIP_MASK) >> 4,
->  			version & TPS65217_CHIPID_REV_MASK);
+Will
