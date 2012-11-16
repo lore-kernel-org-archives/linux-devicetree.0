@@ -1,41 +1,72 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v5 4/4] misc: sram: add support for configurable
- allocation order
-Date: Fri, 16 Nov 2012 14:11:25 +0000
-Message-ID: <CACxGe6tEeG6kVBMDbDi3h5hO4PcuO0EfA6q-_5tKB3ipCr+O3g@mail.gmail.com>
-References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
- <1350570453-24546-5-git-send-email-p.zabel@pengutronix.de>
- <20121114191551.5E8673E0B7C@localhost> <1352985095.2399.184.camel@pizza.hi.pengutronix.de>
- <20121116140912.GB20006@beef>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] GPIO driver to turn power off
+Date: Fri, 16 Nov 2012 09:19:47 -0500
+Message-ID: <20121116141947.GN22106@titan.lakedaemon.net>
+References: <1352821485-10032-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121116140912.GB20006@beef>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1352821485-10032-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2012 at 2:09 PM, Matt Porter <mporter@ti.com> wrote:
-> On Thu, Nov 15, 2012 at 02:11:35PM +0100, Philipp Zabel wrote:
->> Am Mittwoch, den 14.11.2012, 19:15 +0000 schrieb Grant Likely:
->> > Assuming it is appropriate to put into the device tree, I'd suggest a
->> > different name. Instead of 'order', how about 'sram-alloc-align' (in
->> > address bits) or 'sram-alloc-min-size' (in bytes).
->>
->> A size in bytes would be the most obvious to me, although that allows to
->> enter values that are not a power of two.
->
-> I think the implication is that this isn't even a h/w characteristic of
-> SRAM and, as such, does not belong in a DT binding (for that reason I
-> don't mind seeing that it's been dropped in v6). It's unfortunate since
-> it's otherwise a very clean solution. I sure wish I had a "Software
-> Tree" I could pass in too. ;)
+On Tue, Nov 13, 2012 at 04:44:42PM +0100, Andrew Lunn wrote:
+> A few of the Kirkwood systems use a GPIO line to turn the power off on
+> shutdown. They request the GPIO line in the board setup code,
+> optionally setting it as an output and driving it inactive. They then
+> register a function for pm_power_off. At the end of the shutdown, this
+> function is called. The GPIO line is configured as an output, if not
+> already so, and then driven active. In order to cover the use case of
+> edges rather then levels, triggering power off, the GPIO line is then
+> toggled active and later inactive. This should allow the driver to be
+> used by PXA which also has boards using the same scheme.
+> 
+> The driver code was initially developed by Jamie Lentin and extended
+> to cover the PXA case by Andrew Lunn.
+> 
+> v1 -> v2: Moved to drivers/power/reset
+> 
+> Andrew Lunn (2):
+>   ARM: Kirkwood: Convert DNSKW to use gpio-poweroff.
+>   ARM: Kirkwood: Convert IB62x0 to use gpio-poweroff.
+> 
+> Jamie Lentin (1):
+>   power: Add simple poweroff-gpio driver
+> 
+>  .../devicetree/bindings/gpio/gpio-poweroff.txt     |   22 ++++
+>  arch/arm/boot/dts/kirkwood-dnskw.dtsi              |    5 +
+>  arch/arm/boot/dts/kirkwood-ib62x0.dts              |    6 +
+>  arch/arm/mach-kirkwood/Kconfig                     |    4 +
+>  arch/arm/mach-kirkwood/board-dnskw.c               |   12 --
+>  arch/arm/mach-kirkwood/board-ib62x0.c              |   13 --
+>  drivers/power/Kconfig                              |    3 +
+>  drivers/power/Makefile                             |    1 +
+>  drivers/power/reset/Kconfig                        |   15 +++
+>  drivers/power/reset/Makefile                       |    1 +
+>  drivers/power/reset/gpio-poweroff.c                |  129 ++++++++++++++++++++
+>  11 files changed, 186 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
+>  create mode 100644 drivers/power/reset/Kconfig
+>  create mode 100644 drivers/power/reset/Makefile
+>  create mode 100644 drivers/power/reset/gpio-poweroff.c
 
-It is however in that grey area where which it isn't really a
-characteristic of the hardware it has a very strong implied usage. I
-do push back on things like this not because they shouldn't be done,
-but rather to make sure it is properly thought through before going
-ahead.
+Anton,
 
-g.
+Is it ok if we take this through the arm-soc tree with your Ack?
+
+thx,
+
+Jason.
