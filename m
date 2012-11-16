@@ -1,14 +1,11 @@
 From: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 3/4] ARM: dts: AM33XX: Set pmic-shutdown-controller for
- BeagleBone
-Date: Fri, 16 Nov 2012 17:38:25 +0530
-Message-ID: <1353067706-29491-4-git-send-email-anilkumar@ti.com>
-References: <1353067706-29491-1-git-send-email-anilkumar@ti.com>
+Subject: [PATCH v2 0/4] pm: Add power off control
+Date: Fri, 16 Nov 2012 17:38:22 +0530
+Message-ID: <1353067706-29491-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353067706-29491-1-git-send-email-anilkumar-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,27 +20,37 @@ To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/C
 Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Set ti,pmic-shutdown-controller for BeagleBone in am335x-bone.dts
-file, this flag is used by the driver to set tps65217 PMIC status
-to OFF when PWR_EN toggle.
+Add PM power_off control to rtc driver, along with this PMIC status
+is set to STATUS_OFF to shutdown PMIC if PWR_EN is toggled by RTC
+module.
 
-Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-bone.dts |    2 ++
- 1 file changed, 2 insertions(+)
+System power off sequence:-
+* Set PMIC STATUS_OFF when PMIC_POWER_EN is pulled low
+* Enable PMIC_POWER_EN in rtc module
+* Set rtc ALARM2 time
+* Enable ALARM2 interrupt
 
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index 2c33888..1d55190 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -88,6 +88,8 @@
- /include/ "tps65217.dtsi"
- 
- &tps {
-+	ti,pmic-shutdown-controller;
-+
- 	regulators {
- 		dcdc1_reg: regulator@0 {
- 			regulator-always-on;
+These patches were tested on AM335x-Bone.
+
+Changes from v1:
+	- Incorporated Vaibhav's comments on v1
+	  * Changed the time rollover logic with the help of
+	    rtc-lib APIs
+
+AnilKumar Ch (2):
+  ARM: dts: AM33XX: Set pmic-shutdown-controller for BeagleBone
+  ARM: dts: AM33XX: Enable system power off control in am335x-bone
+
+Colin Foe-Parker (2):
+  mfd: tps65217: Set PMIC to shutdowm on PWR_EN toggle
+  rtc: OMAP: Add system pm_power_off to rtc driver
+
+ .../devicetree/bindings/regulator/tps65217.txt     |    4 +
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |    5 ++
+ arch/arm/boot/dts/am335x-bone.dts                  |    6 ++
+ drivers/mfd/tps65217.c                             |   12 +++
+ drivers/rtc/rtc-omap.c                             |   81 +++++++++++++++++++-
+ 5 files changed, 107 insertions(+), 1 deletion(-)
+
 -- 
 1.7.9.5
