@@ -1,111 +1,257 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 4/4] misc: sram: add support for configurable
- allocation order
-Date: Fri, 16 Nov 2012 16:58:23 +0100
-Message-ID: <1353081503.2413.273.camel@pizza.hi.pengutronix.de>
-References: <1350570453-24546-1-git-send-email-p.zabel@pengutronix.de>
-	 <1350570453-24546-5-git-send-email-p.zabel@pengutronix.de>
-	 <20121114191551.5E8673E0B7C@localhost>
-	 <1352985095.2399.184.camel@pizza.hi.pengutronix.de>
-	 <20121116140912.GB20006@beef>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [linux-keystone] [PATCH] spi: davinci: add OF support for the
+ spi controller
+Date: Fri, 16 Nov 2012 11:32:46 -0500
+Message-ID: <50A66AAE.3070707@ti.com>
+References: <1352755702-21488-1-git-send-email-m-karicheri2@ti.com> <20121115162042.A24F13E194B@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121116140912.GB20006@beef>
+In-Reply-To: <20121115162042.A24F13E194B@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, davinci-linux-open-source@linux.davincidsp.com, linux-keystone@list.ti.com
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 16.11.2012, 09:09 -0500 schrieb Matt Porter:
-> On Thu, Nov 15, 2012 at 02:11:35PM +0100, Philipp Zabel wrote:
-> > Am Mittwoch, den 14.11.2012, 19:15 +0000 schrieb Grant Likely:
-> > > On Thu, 18 Oct 2012 16:27:33 +0200, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > > > From: Matt Porter <mporter@ti.com>
-> > > > 
-> > > > Adds support for setting the genalloc pool's minimum allocation
-> > > > order via DT or platform data. The allocation order is optional
-> > > > for both the DT property and platform data case. If it is not
-> > > > present then the order defaults to PAGE_SHIFT to preserve the
-> > > > current behavior.
-> > > > 
-> > > > Signed-off-by: Matt Porter <mporter@ti.com>
-> > > > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/misc/sram.txt |   12 ++++++++++-
-> > > >  drivers/misc/sram.c                             |   14 ++++++++++++-
-> > > >  include/linux/platform_data/sram.h              |   25 +++++++++++++++++++++++
-> > > >  3 files changed, 49 insertions(+), 2 deletions(-)
-> > > >  create mode 100644 include/linux/platform_data/sram.h
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
-> > > > index b64136c..b1705ec 100644
-> > > > --- a/Documentation/devicetree/bindings/misc/sram.txt
-> > > > +++ b/Documentation/devicetree/bindings/misc/sram.txt
-> > > > @@ -8,10 +8,20 @@ Required properties:
-> > > >  
-> > > >  - reg : SRAM iomem address range
-> > > >  
-> > > > -Example:
-> > > > +Optional properties:
-> > > > +
-> > > > +- alloc-order : Minimum allocation order for the SRAM pool
-> > > 
-> > > Looks okay, but I think the property name is confusing. I for one had
-> > > no idea what 'order' would be and why it was important. I had to read
-> > > the code to figure it out.
-> > > 
-> > > It does raise the question though of what is this binding actually
-> > > for? Does it reflect a limitation of the SRAM? or of the hardware using
-> > > the SRAM? Or is it an optimization? How do you expect to use it?
-> > 
-> > If I am not mistaken, it is about the expected use case. A driver
-> > allocating many small buffers would quickly fill small SRAMs if the
-> > allocations were of PAGE_SIZE granularity.
-> > 
-> > I wonder if a common allocation size (say, 512 bytes instead of
-> > PAGE_SIZE) can be found that every prospective user could be reasonably
-> > happy with?
-> 
-> Unfortunately, no, 512 bytes doesn't work either. Although it'll meet
-> the needs of converting davinci to this driver, I have a driver under
-> development (the 6502 remoteproc) which needs finer grained allocation
-> of SRAM yet.
-
-Of course, what was I thinking..
-
-> I suspect people will object if the default is 32 bytes as
-> that bloats the genalloc bitmap for all users...however that's a size
-> that would work for me. Another possibility is to not do the
-> gen_pool_create() at probe time but rather provide an interface for client
-> drivers where the pool is created with the appropriate client-specific
-> parameters. This may be a bit messy though when the point of the pool is
-> to share it amongst several client drivers.
-
-For a 256 KiB SRAM, 32 byte granularity would result in a 1 KiB bitmap.
-While not optimal, that doesn't really hurt on i.MX, especially as
-currently the only user is the coda driver.
-
-Shall we hardcode the granularity to 32 bytes to give us some time to
-ponder the device tree property?
-
-> > > Assuming it is appropriate to put into the device tree, I'd suggest a
-> > > different name. Instead of 'order', how about 'sram-alloc-align' (in
-> > > address bits) or 'sram-alloc-min-size' (in bytes).
-> > 
-> > A size in bytes would be the most obvious to me, although that allows to
-> > enter values that are not a power of two.
-> 
-> I think the implication is that this isn't even a h/w characteristic of
-> SRAM and, as such, does not belong in a DT binding (for that reason I
-> don't mind seeing that it's been dropped in v6). It's unfortunate since
-> it's otherwise a very clean solution. I sure wish I had a "Software
-> Tree" I could pass in too. ;)
-
-The implication is that we shouldn't be too quick to add this to the
-device tree without discussion. Therefore I'd like to split this issue
-from the basic SRAM driver.
-
-regards
-Philipp
+On 11/15/2012 11:20 AM, Grant Likely wrote:
+> On Mon, 12 Nov 2012 16:28:22 -0500, Murali Karicheri <m-karicheri2@ti.com> wrote:
+>> This adds OF support to DaVinci SPI controller to configure platform
+>> data through device bindings.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> Hi Murali,
+>
+> Comments below...
+>
+>> ---
+>>   .../devicetree/bindings/spi/spi-davinci.txt        |   50 ++++++++++++
+>>   drivers/spi/spi-davinci.c                          |   80 +++++++++++++++++++-
+>>   2 files changed, 126 insertions(+), 4 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+>> new file mode 100644
+>> index 0000000..0369369
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+>> @@ -0,0 +1,50 @@
+>> +Davinci SPI controller device bindings
+>> +
+>> +Required properties:
+>> +- #address-cells: number of cells required to define a chip select
+>> +	address on the SPI bus.
+> Will this *ever* be something other than '1'?
+Will add "should be set to 1" as only once cell is used for this.
+>> +- #size-cells: should be zero.
+>> +- compatible:
+>> +	- "ti,davinci-spi"
+> Please use the actual model of the chip here. Don't try to be generic
+> with the compatible string. A driver can bind against more than one
+> compatible value and new devices can claim compatiblity with old by
+> including the old compatible string in this list.
+>
+>> +- reg: Offset and length of SPI controller register space
+>> +- ti,davinci-spi-version: SPI version :- "1.0" or "2.0"
+> Usually this is determined from the compatible value directly (which is
+> why compatible strings shouldn't be generic). Don't use a separate
+> property for it.
+Ok. Based on the ablve two comments, I think I will remove 
+davinci-spi-version property. So driver will add two compatibility 
+strings "ti,davinci-spi1" and "ti,davinci-spi2" amd match data for 
+ti,davinci-spi2 will have the version set to 2 so that driver can use it 
+to behave differently. This way DTS file for a board can set the 
+compatibility string to use different version of the IP for the driver. 
+Do you think I got you right?
+>> +- ti,davinci-spi-num-cs: Number of chip selects
+>> +- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
+>> +	IP to the ARM interrupt controller withn the SoC. Possible values
+>> +	are 0 and 1.
+> ? Isn't that what the interrupts property is for? I don't understand why
+> this is needed from the description.
+Based on the IP manual, there are two interrupt lines coming from the IP 
+and only one of them is tied to the interrupt controller in a specific 
+SoC. There is a register to program which interrupt line is used based 
+on the SoC configuration. So this is different from interrupts.
+>> +- interrupts: interrupt number offset at the irq parent
+>> +- clocks: spi clk phandle
+>> +
+>> +Example of a NOR flash slave device (n25q032) connected to DaVinci
+>> +SPI controller device over the SPI bus.
+>> +
+>> +spi:spi0@20BF0000 {
+> spi@20BF0000  (use 'spi' not 'spi0')
+>
+Ok. Will change.
+>> +	#address-cells			= <1>;
+>> +	#size-cells			= <0>;
+>> +	compatible			= "ti,davinci-spi";
+>> +	reg				= <0x20BF0000 0x1000>;
+>> +	ti,davinci-spi-version		= "1.0";
+>> +	ti,davinci-spi-num-cs		= <4>;
+>> +	ti,davinci-spi-intr-line	= <0>;
+>> +	interrupts			= <338>;
+>> +	clocks				= <&clkspi>;
+>> +
+>> +	flash: n25q032@0 {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		compatible = "st,m25p32";
+>> +		spi-max-frequency = <25000000>;
+>> +		reg = <0>;
+>> +
+>> +		partition@0 {
+>> +			label = "u-boot-spl";
+>> +			reg = <0x0 0x80000>;
+>> +			read-only;
+>> +		};
+>> +
+>> +		partition@1 {
+>> +			label = "test";
+>> +			reg = <0x80000 0x380000>;
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
+>> index 71a6423..0f50319 100644
+>> --- a/drivers/spi/spi-davinci.c
+>> +++ b/drivers/spi/spi-davinci.c
+>> @@ -26,6 +26,9 @@
+>>   #include <linux/err.h>
+>>   #include <linux/clk.h>
+>>   #include <linux/dma-mapping.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_irq.h>
+>>   #include <linux/spi/spi.h>
+>>   #include <linux/spi/spi_bitbang.h>
+>>   #include <linux/slab.h>
+>> @@ -788,6 +791,69 @@ rx_dma_failed:
+>>   	return r;
+>>   }
+>>   
+>> +#if defined(CONFIG_OF)
+>> +static const struct of_device_id davinci_spi_of_match[] = {
+>> +	{
+>> +		.compatible = "ti,davinci-spi",
+>> +	},
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, davini_spi_of_match);
+>> +
+>> +/**
+>> + * spi_davinci_get_pdata - Get platform_data from DTS binding
+>> + * @pdev: ptr to platform data
+>> + *
+>> + * Parses and populate platform_data from device tree bindings.
+>> + *
+>> + * NOTE: Not all platform_data params are supported currently.
+>> + */
+>> +static struct davinci_spi_platform_data
+>> +	*spi_davinci_get_pdata(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *node = pdev->dev.of_node;
+>> +	struct davinci_spi_platform_data *pdata;
+>> +	unsigned int num_cs, intr_line = 0;
+>> +	const char *version;
+>> +
+>> +	if (pdev->dev.platform_data)
+>> +		return pdev->dev.platform_data;
+>> +
+>> +	if (!pdev->dev.of_node)
+>> +		return NULL;
+>> +
+>> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+>> +	pdev->dev.platform_data = pdata;
+>> +	if (!pdata)
+>> +		return NULL;
+> Since pdata must always be present, roll it directly into struct
+> spi_davinci and get rid of the kzmalloc here. It is less expensive and
+> is simpler code.
+>
+>> +
+>> +	/* default version is 1.0 */
+>> +	pdata->version = SPI_VERSION_1;
+>> +	of_property_read_string(node, "ti,davinci-spi-version", &version);
+>> +	if (!strcmp(version, "2.0"))
+>> +		pdata->version = SPI_VERSION_2;
+>> +
+>> +	/*
+>> +	 * default num_cs is 1 and all chipsel are internal to the chip
+>> +	 * indicated by chip_sel being NULL. GPIO based CS is not
+>> +	 * supported yet in DT bindings.
+>> +	 */
+>> +	num_cs = 1;
+>> +	of_property_read_u32(node, "ti,davinci-spi-num-cs", &num_cs);
+>> +	pdata->num_chipselect = num_cs;
+>> +	of_property_read_u32(node, "ti,davinci-spi-intr-line", &intr_line);
+>> +	pdata->intr_line = intr_line;
+>> +	return pdev->dev.platform_data;
+>> +}
+>> +#else
+>> +#define davinci_spi_of_match NULL
+>> +static struct davinci_spi_platform_data
+>> +	*spi_davinci_get_pdata(struct platform_device *pdev)
+>> +{
+>> +	return pdev->dev.platform_data;
+>> +}
+>> +#endif
+>> +
+>>   /**
+>>    * davinci_spi_probe - probe function for SPI Master Controller
+>>    * @pdev: platform_device structure which contains plateform specific data
+>> @@ -801,16 +867,16 @@ rx_dma_failed:
+>>    */
+>>   static int __devinit davinci_spi_probe(struct platform_device *pdev)
+>>   {
+>> +	resource_size_t dma_rx_chan = SPI_NO_RESOURCE;
+>> +	resource_size_t	dma_tx_chan = SPI_NO_RESOURCE;
+>> +	struct davinci_spi_platform_data *pdata;
+>>   	struct spi_master *master;
+>>   	struct davinci_spi *dspi;
+>> -	struct davinci_spi_platform_data *pdata;
+>>   	struct resource *r, *mem;
+>> -	resource_size_t dma_rx_chan = SPI_NO_RESOURCE;
+>> -	resource_size_t	dma_tx_chan = SPI_NO_RESOURCE;
+>>   	int i = 0, ret = 0;
+>>   	u32 spipc0;
+>>   
+>> -	pdata = pdev->dev.platform_data;
+>> +	pdata = spi_davinci_get_pdata(pdev);
+>>   	if (pdata == NULL) {
+>>   		ret = -ENODEV;
+>>   		goto err;
+>> @@ -851,7 +917,11 @@ static int __devinit davinci_spi_probe(struct platform_device *pdev)
+>>   		goto release_region;
+>>   	}
+>>   
+>> +	/* first get irq through resource table, else try of irq method */
+>>   	dspi->irq = platform_get_irq(pdev, 0);
+>> +	if (dspi->irq <= 0)
+>> +		dspi->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+>> +
+> This should never be needed. The irq should already be populated in the
+> platform_device.
+>
+>>   	if (dspi->irq <= 0) {
+>>   		ret = -EINVAL;
+>>   		goto unmap_io;
+>> @@ -875,6 +945,7 @@ static int __devinit davinci_spi_probe(struct platform_device *pdev)
+>>   	}
+>>   	clk_prepare_enable(dspi->clk);
+>>   
+>> +	master->dev.of_node = pdev->dev.of_node;
+>>   	master->bus_num = pdev->id;
+>>   	master->num_chipselect = pdata->num_chipselect;
+>>   	master->setup = davinci_spi_setup;
+>> @@ -1010,6 +1081,7 @@ static struct platform_driver davinci_spi_driver = {
+>>   	.driver = {
+>>   		.name = "spi_davinci",
+>>   		.owner = THIS_MODULE,
+>> +		.of_match_table = davinci_spi_of_match,
+>>   	},
+>>   	.probe = davinci_spi_probe,
+>>   	.remove = __devexit_p(davinci_spi_remove),
+>> -- 
+>> 1.7.9.5
+>>
