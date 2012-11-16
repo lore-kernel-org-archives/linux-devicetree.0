@@ -1,66 +1,72 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
-Date: Fri, 16 Nov 2012 18:44:22 +0900
-Message-ID: <50A60AF6.9080509@nvidia.com>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com> <1353047903-14363-2-git-send-email-acourbot@nvidia.com> <20121116072642.GA22291@lizard>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH 3.7.0-rc4] of/net/mdio-gpio: Fix pdev->id issue when using
+ devicetrees.
+Date: Fri, 16 Nov 2012 09:54:47 +0000
+Message-ID: <50A60D67.6000100@st.com>
+References: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com> <20121114.185940.648295821386414260.davem@davemloft.net>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20121116072642.GA22291@lizard>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20121114.185940.648295821386414260.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>, Grant Likely <grant.likely@secretlab.ca>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2012 04:26 PM, Anton Vorontsov wrote:
->> +#include "power_seq_delay.c"
->> +#include "power_seq_regulator.c"
->> +#include "power_seq_pwm.c"
->> +#include "power_seq_gpio.c"
+On 14/11/12 23:59, David Miller wrote:
+> From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+> Date: Tue, 13 Nov 2012 14:26:13 +0000
 >
-> This is odd, although I remember you already explained why you have to
-> include the .c files, instead of linking them separately. But I forgot the
-> reason. :) I think this deserves a comment in the code.
-
-This is because of the table right after these includes:
-
-static const struct power_seq_res_ops power_seq_ops[POWER_SEQ_NUM_TYPES] = {
-	[POWER_SEQ_DELAY] = POWER_SEQ_DELAY_TYPE,
-	[POWER_SEQ_REGULATOR] = POWER_SEQ_REGULATOR_TYPE,
-	[POWER_SEQ_PWM] = POWER_SEQ_PWM_TYPE,
-	[POWER_SEQ_GPIO] = POWER_SEQ_GPIO_TYPE,
-};
-
-The POWER_SEQ_*_TYPE macros are defined in the C files. It's the 
-simplest way to initialize this table, and the code inside these C files 
-is short and simple enough that I thought I would be forgiven. :)
-
-At first everything was in power_seq.c and it was fine, then I thought 
-it would be better to move resource support code into their own filesm 
-and now everybody is asking. :P
-
-But yeah, maybe it would be even better to not stop halfway and use 
-dynamic linking.
-
-Comment added for the time being. ;)
-
->> +static int of_power_seq_parse_step(struct device *dev,
->> +				   struct device_node *node,
->> +				   struct power_seq *seq,
->> +				   unsigned int step_nbr,
->> +				   struct list_head *resources)
->> +{
->> +	struct power_seq_step *step = &seq->steps[step_nbr];
->> +	struct power_seq_resource res, *res2;
->> +	const char *type;
->> +	int i, err;
+>> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>
+>> When the mdio-gpio driver is probed via device trees, the platform
+>> device id is set as -1, However the id is re-used in the code while
+>> creating an mdio bus.
+>> So, setting up the id via aliases from device tree is a sensible
+>> solution to fix this issue.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> This seems rather pointless unless you also update every single device
+> tree out there.
 >
-> nit: one variable declaration per line.
+> Also you need to describe what are the ramifications of this problem
+> otherwise it is impossible to figure out how serious this change is.
+>
+> Does it prevent probing?  Does it cause a crash?
+I apologies, I should have explained the full use-case.
 
-Fair enough - but is that a convention? checkpatch.pl was happy with these.
+use-case is if the mac driver want to connect via phy_connect() to
+mdio-gpio phy it would use bus name to do so.
+
+mdio-gpio phy bus name is formated as "gpio-<bus-number>:<phy-addr>.
+In the existing code the bus number for mdio-gpio if probed from device
+trees will be set to -1 which results in bus name set to
+"gpio-ffffffff:<phy-addr>" which is the problem here.
+fffffff is result of pdev->id set to -1 which should be set to a logical
+number, and this is only possible via aliases.
+
+Having fffffff as bus-id also means that we can't have two mdio-gpio
+buses via device trees as it will result in same bus-id.
+This patch attempts to fix this issue.
+So getting the id from alias would be a right choice.
+
+I also agree with Grant's comments about setting up pdev->id.
+
+Will send v2 patch with considering Grant's comments.
+
+>
+> Basically, what I'm saying is that this is a very poor submission and
+> you need to substantially improve it and communicate better.
+>
+> If the problem is basically benign, then you should target this change
+> to net-next instead of the net tree, along with the necessary dt file
+> updates.
+I have looked in net-next and there are no dt files which use this driver.
 
 Thanks,
-Alex.
-
-
+srini
+> Thanks.
+>
+>
