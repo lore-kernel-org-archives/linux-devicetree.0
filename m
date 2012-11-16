@@ -1,65 +1,378 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Patch v6 1/4] ARM: at91: atmel-ssc: add pinctrl support
-Date: Fri, 16 Nov 2012 13:48:01 +0900
-Message-ID: <20121116044758.GO4387@opensource.wolfsonmicro.com>
-References: <1352887751-21848-1-git-send-email-voice.shen@atmel.com>
- <1352887751-21848-2-git-send-email-voice.shen@atmel.com>
- <20121116010310.GG4387@opensource.wolfsonmicro.com>
- <50A5A843.2060902@atmel.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/16] gpio: SPEAr: add spi chipselect control driver
+Date: Fri, 16 Nov 2012 10:45:25 +0530
+Message-ID: <3702a1036f8e714e6d18e4726569bbb1eadd65bf.1353042873.git.viresh.kumar@linaro.org>
+References: <4a92290e8a3b1a19c3a5e864edfa7badfc2af5d0.1352608333.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+wSiqF7c0ySQ2tNi"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50A5A843.2060902@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <4a92290e8a3b1a19c3a5e864edfa7badfc2af5d0.1352608333.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
 
---+wSiqF7c0ySQ2tNi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+SPEAr platform provides a provision to control chipselects of ARM PL022
+Prime Cell spi controller through its system registers, which otherwise
+remains under PL022 control which some protocols do not want.
 
-On Fri, Nov 16, 2012 at 10:43:15AM +0800, Bo Shen wrote:
-> On 11/16/2012 9:03, Mark Brown wrote:
+This commit intends to provide the spi chipselect control in software over
+gpiolib interface. spi chip drivers can use the exported gpiolib interface to
+define their chipselect through DT or platform data.
 
-> >This generates lots of conflicts in the pinctrl stuff in the DTS - looks
-> >like it was generated against -next.  Can you please regenerate against
-> >my atmel branch with just the changes to add the pinmux information on
-> >the SSC nodes?  Or possbily this can just be applied direct to the
-> >pinctrl branch (we'll get an add/add conflict with the SSC nodes though
-> >that should be simple to resolve, a cross merge might be helpful).
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
+Reviewed-by: Vipin Kumar <vipin.kumar-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
 
-> As Mark suggested, would this patch be split into 2 patches? One is
-> for atmel ssc add pinmux information go into ASoC tree, and the
-> other add ssc node into dts file go into pinctrl tree. Would this be
-> ok?
+Hi Grant,
 
-It's more of an either/or thing but the two patches would be OK, then we
-can work out which to apply.
+This patch was earlier sent as part of drivers/pinctrl/spear directory and after
+some discussion over mainline it is moved to gpio now. It is already reviewed by
+Linus and Arnd, though they haven't given their Reviewed-by's.
 
---+wSiqF7c0ySQ2tNi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ .../devicetree/bindings/gpio/spear_spics.txt       |  50 +++++
+ arch/arm/plat-spear/Kconfig                        |   1 +
+ drivers/gpio/Kconfig                               |   7 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-spear-spics.c                    | 217 +++++++++++++++++++++
+ 5 files changed, 276 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/spear_spics.txt
+ create mode 100644 drivers/gpio/gpio-spear-spics.c
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQpcV3AAoJELSic+t+oim95KcP/1v8kLirgUE75EebQMvd5gMv
-mtb3L+Caa6AG7KCMHDwNCbuDlCYEVFGdoxrsjj6AgkSFh1WVgzZQEdc7cr1YDm1W
-HBGDF5SK6VSVlPAh96Xs9VIpPe6oe6wyVb7XHTbJNWrHQn5O/mfetBJRdvY457nK
-0FS4waF1zGD8VsSPut7cbaT2Rjg5ho4Vz5rjNuxp1S3qZBeX3i8h1igtA4gW5NlD
-b8wHNevBtCQyrckwUFkWplYvw3Ixfns2RyODTmRjrkbkgUxmEAOA5xGN3UHliq5T
-fg3CW1DC4EfJpQf6wOHg6I5AeDQWLr7rmS6vCecvJZ9rSahVjOCBP/To9nF7bWRw
-X/YVr5S+9VuYSUhGcCz65nP70s2Z+VRnnt/9cDnLlZtDmCDeFC07Q9xgX3Q55U4R
-OVOXKPvKLYb6og5eB43iXF/f4Hi6D7IF4Lm2zo8LE+9fSifUYIm52CmJrBlUs+JS
-uey9isTr8eMm4aagGG5Yny3MrPsqVOHj14vQUOhWPo6cUSsc/PQQzLU3yWEQO14N
-T7GTVT1t+Bt68uhesIP54lq20QmpoQRMmn3nsr3Kzkp4BZzKQt/GSKdPi9lLAsxO
-X+s8FqZEZxAu6VTBdGAti/Ne2mb0fkFZd2MILIQS/CSbPHkF2bvp87Sqou59Dwik
-xnbF2eQQiU+tkJD97nkw
-=YsJV
------END PGP SIGNATURE-----
-
---+wSiqF7c0ySQ2tNi--
+diff --git a/Documentation/devicetree/bindings/gpio/spear_spics.txt b/Documentation/devicetree/bindings/gpio/spear_spics.txt
+new file mode 100644
+index 0000000..96c37eb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/spear_spics.txt
+@@ -0,0 +1,50 @@
++=== ST Microelectronics SPEAr SPI CS Driver ===
++
++SPEAr platform provides a provision to control chipselects of ARM PL022 Prime
++Cell spi controller through its system registers, which otherwise remains under
++PL022 control. If chipselect remain under PL022 control then they would be
++released as soon as transfer is over and TxFIFO becomes empty. This is not
++desired by some of the device protocols above spi which expect (multiple)
++transfers without releasing their chipselects.
++
++Chipselects can be controlled by software by turning them as GPIOs. SPEAr
++provides another interface through system registers through which software can
++directly control each PL022 chipselect. Hence, it is natural for SPEAr to export
++the control of this interface as gpio.
++
++Required properties:
++
++  * compatible: should be defined as "st,spear-spics-gpio"
++  * reg: mentioning address range of spics controller
++  * st-spics,peripcfg-reg: peripheral configuration register offset
++  * st-spics,sw-enable-bit: bit offset to enable sw control
++  * st-spics,cs-value-bit: bit offset to drive chipselect low or high
++  * st-spics,cs-enable-mask: chip select number bit mask
++  * st-spics,cs-enable-shift: chip select number program offset
++  * gpio-controller: Marks the device node as gpio controller
++  * #gpio-cells: should be 1 and will mention chip select number
++
++All the above bit offsets are within peripcfg register.
++
++Example:
++-------
++spics: spics@e0700000{
++        compatible = "st,spear-spics-gpio";
++        reg = <0xe0700000 0x1000>;
++        st-spics,peripcfg-reg = <0x3b0>;
++        st-spics,sw-enable-bit = <12>;
++        st-spics,cs-value-bit = <11>;
++        st-spics,cs-enable-mask = <3>;
++        st-spics,cs-enable-shift = <8>;
++        gpio-controller;
++        #gpio-cells = <2>;
++};
++
++
++spi0: spi@e0100000 {
++        status = "okay";
++        num-cs = <3>;
++        cs-gpios = <&gpio1 7 0>, <&spics 0>,
++                   <&spics 1>;
++	...
++}
+diff --git a/arch/arm/plat-spear/Kconfig b/arch/arm/plat-spear/Kconfig
+index f8db7b2..87dbd81 100644
+--- a/arch/arm/plat-spear/Kconfig
++++ b/arch/arm/plat-spear/Kconfig
+@@ -12,6 +12,7 @@ config ARCH_SPEAR13XX
+ 	bool "ST SPEAr13xx with Device Tree"
+ 	select ARM_GIC
+ 	select CPU_V7
++	select GPIO_SPEAR_SPICS
+ 	select HAVE_SMP
+ 	select MIGHT_HAVE_CACHE_L2X0
+ 	select PINCTRL
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index d055cee..b846f60 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -181,6 +181,13 @@ config GPIO_PXA
+ 	help
+ 	  Say yes here to support the PXA GPIO device
+ 
++config GPIO_SPEAR_SPICS
++	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
++	depends on PLAT_SPEAR
++	select GENERIC_IRQ_CHIP
++	help
++	  Say yes here to support ST SPEAr SPI Chip Select as GPIO device
++
+ config GPIO_STA2X11
+ 	bool "STA2x11/ConneXt GPIO support"
+ 	depends on MFD_STA2X11
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 9aeed67..2699355 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -57,6 +57,7 @@ obj-$(CONFIG_PLAT_SAMSUNG)	+= gpio-samsung.o
+ obj-$(CONFIG_ARCH_SA1100)	+= gpio-sa1100.o
+ obj-$(CONFIG_GPIO_SCH)		+= gpio-sch.o
+ obj-$(CONFIG_GPIO_SODAVILLE)	+= gpio-sodaville.o
++obj-$(CONFIG_GPIO_SPEAR_SPICS)	+= gpio-spear-spics.o
+ obj-$(CONFIG_GPIO_STA2X11)	+= gpio-sta2x11.o
+ obj-$(CONFIG_GPIO_STMPE)	+= gpio-stmpe.o
+ obj-$(CONFIG_GPIO_STP_XWAY)	+= gpio-stp-xway.o
+diff --git a/drivers/gpio/gpio-spear-spics.c b/drivers/gpio/gpio-spear-spics.c
+new file mode 100644
+index 0000000..5f45fc4
+--- /dev/null
++++ b/drivers/gpio/gpio-spear-spics.c
+@@ -0,0 +1,217 @@
++/*
++ * SPEAr platform SPI chipselect abstraction over gpiolib
++ *
++ * Copyright (C) 2012 ST Microelectronics
++ * Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/err.h>
++#include <linux/gpio.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/types.h>
++
++/* maximum chipselects */
++#define NUM_OF_GPIO	4
++
++/*
++ * Provision is available on some SPEAr SoCs to control ARM PL022 spi cs
++ * through system registers. This register lies outside spi (pl022)
++ * address space into system registers.
++ *
++ * It provides control for spi chip select lines so that any chipselect
++ * (out of 4 possible chipselects in pl022) can be made low to select
++ * the particular slave.
++ */
++
++/**
++ * struct spear_spics - represents spi chip select control
++ * @base: base address
++ * @perip_cfg: configuration register
++ * @sw_enable_bit: bit to enable s/w control over chipselects
++ * @cs_value_bit: bit to program high or low chipselect
++ * @cs_enable_mask: mask to select bits required to select chipselect
++ * @cs_enable_shift: bit pos of cs_enable_mask
++ * @use_count: use count of a spi controller cs lines
++ * @last_off: stores last offset caller of set_value()
++ * @chip: gpio_chip abstraction
++ */
++struct spear_spics {
++	void __iomem		*base;
++	u32			perip_cfg;
++	u32			sw_enable_bit;
++	u32			cs_value_bit;
++	u32			cs_enable_mask;
++	u32			cs_enable_shift;
++	unsigned long		use_count;
++	int			last_off;
++	struct gpio_chip	chip;
++};
++
++/* gpio framework specific routines */
++static int spics_get_value(struct gpio_chip *chip, unsigned offset)
++{
++	return -ENXIO;
++}
++
++static void spics_set_value(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct spear_spics *spics = container_of(chip, struct spear_spics,
++			chip);
++	u32 tmp;
++
++	/* select chip select from register */
++	tmp = readl_relaxed(spics->base + spics->perip_cfg);
++	if (spics->last_off != offset) {
++		spics->last_off = offset;
++		tmp &= ~(spics->cs_enable_mask << spics->cs_enable_shift);
++		tmp |= offset << spics->cs_enable_shift;
++	}
++
++	/* toggle chip select line */
++	tmp &= ~(0x1 << spics->cs_value_bit);
++	tmp |= value << spics->cs_value_bit;
++	writel_relaxed(tmp, spics->base + spics->perip_cfg);
++}
++
++static int spics_direction_input(struct gpio_chip *chip, unsigned offset)
++{
++	return -ENXIO;
++}
++
++static int spics_direction_output(struct gpio_chip *chip, unsigned offset,
++		int value)
++{
++	spics_set_value(chip, offset, value);
++	return 0;
++}
++
++static int spics_request(struct gpio_chip *chip, unsigned offset)
++{
++	struct spear_spics *spics = container_of(chip, struct spear_spics,
++			chip);
++	u32 tmp;
++
++	if (!spics->use_count++) {
++		tmp = readl_relaxed(spics->base + spics->perip_cfg);
++		tmp |= 0x1 << spics->sw_enable_bit;
++		tmp |= 0x1 << spics->cs_value_bit;
++		writel_relaxed(tmp, spics->base + spics->perip_cfg);
++	}
++
++	return 0;
++}
++
++static void spics_free(struct gpio_chip *chip, unsigned offset)
++{
++	struct spear_spics *spics = container_of(chip, struct spear_spics,
++			chip);
++	u32 tmp;
++
++	if (!--spics->use_count) {
++		tmp = readl_relaxed(spics->base + spics->perip_cfg);
++		tmp &= ~(0x1 << spics->sw_enable_bit);
++		writel_relaxed(tmp, spics->base + spics->perip_cfg);
++	}
++}
++
++static int spics_gpio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct spear_spics *spics;
++	struct resource *res;
++	int ret;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "invalid IORESOURCE_MEM\n");
++		return -EBUSY;
++	}
++
++	spics = devm_kzalloc(&pdev->dev, sizeof(*spics), GFP_KERNEL);
++	if (!spics) {
++		dev_err(&pdev->dev, "memory allocation fail\n");
++		return -ENOMEM;
++	}
++
++	spics->base = devm_request_and_ioremap(&pdev->dev, res);
++	if (!spics->base) {
++		dev_err(&pdev->dev, "request and ioremap fail\n");
++		return -ENOMEM;
++	}
++
++	if (of_property_read_u32(np, "st-spics,peripcfg-reg",
++				&spics->perip_cfg))
++		goto err_dt_data;
++	if (of_property_read_u32(np, "st-spics,sw-enable-bit",
++				&spics->sw_enable_bit))
++		goto err_dt_data;
++	if (of_property_read_u32(np, "st-spics,cs-value-bit",
++				&spics->cs_value_bit))
++		goto err_dt_data;
++	if (of_property_read_u32(np, "st-spics,cs-enable-mask",
++				&spics->cs_enable_mask))
++		goto err_dt_data;
++	if (of_property_read_u32(np, "st-spics,cs-enable-shift",
++				&spics->cs_enable_shift))
++		goto err_dt_data;
++
++	platform_set_drvdata(pdev, spics);
++
++	spics->chip.ngpio = NUM_OF_GPIO;
++	spics->chip.base = -1;
++	spics->chip.request = spics_request;
++	spics->chip.free = spics_free;
++	spics->chip.direction_input = spics_direction_input;
++	spics->chip.direction_output = spics_direction_output;
++	spics->chip.get = spics_get_value;
++	spics->chip.set = spics_set_value;
++	spics->chip.label = dev_name(&pdev->dev);
++	spics->chip.dev = &pdev->dev;
++	spics->chip.owner = THIS_MODULE;
++	spics->last_off = -1;
++
++	ret = gpiochip_add(&spics->chip);
++	if (ret) {
++		dev_err(&pdev->dev, "unable to add gpio chip\n");
++		return ret;
++	}
++
++	dev_info(&pdev->dev, "spear spics registered\n");
++	return 0;
++
++err_dt_data:
++	dev_err(&pdev->dev, "DT probe failed\n");
++	return -EINVAL;
++}
++
++static const struct of_device_id spics_gpio_of_match[] = {
++	{ .compatible = "st,spear-spics-gpio" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, spics_gpio_of_match);
++
++static struct platform_driver spics_gpio_driver = {
++	.probe = spics_gpio_probe,
++	.driver = {
++		.owner = THIS_MODULE,
++		.name = "spear-spics-gpio",
++		.of_match_table = spics_gpio_of_match,
++	},
++};
++
++static int __init spics_gpio_init(void)
++{
++	return platform_driver_register(&spics_gpio_driver);
++}
++subsys_initcall(spics_gpio_init);
++
++MODULE_AUTHOR("Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>");
++MODULE_DESCRIPTION("ST Microlectronics SPEAr SPI Chip Select Abstraction");
++MODULE_LICENSE("GPL");
+-- 
+1.7.12.rc2.18.g61b472e
