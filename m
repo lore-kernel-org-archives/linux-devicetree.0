@@ -1,67 +1,107 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] pwm_backlight: use power sequences
-Date: Fri, 16 Nov 2012 09:49:58 +0100
-Message-ID: <20121116084958.GB20785@avionic-0098.mockup.avionic-design.de>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
- <1353047903-14363-3-git-send-email-acourbot@nvidia.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v10 1/6] video: add display_timing and videomode
+Date: Fri, 16 Nov 2012 09:53:04 +0100
+Message-ID: <20121116085304.GA7493@pengutronix.de>
+References: <1352971437-29877-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1352971437-29877-2-git-send-email-s.trumtrar@pengutronix.de>
+ <20121115154753.C82223E194B@localhost>
+ <2466982.zTBri0jEif@avalon>
+ <20121115180359.1E6F33E197F@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="U+BazGySraz5kW0T"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1353047903-14363-3-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20121115180359.1E6F33E197F@localhost>
+Sender: linux-media-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
 
---U+BazGySraz5kW0T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Nov 15, 2012 at 06:03:59PM +0000, Grant Likely wrote:
+> On Thu, 15 Nov 2012 17:00:57 +0100, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > Hi Grant,
+> > 
+> > On Thursday 15 November 2012 15:47:53 Grant Likely wrote:
+> > > On Thu, 15 Nov 2012 10:23:52 +0100, Steffen Trumtrar wrote:
+> > > > Add display_timing structure and the according helper functions. This
+> > > > allows the description of a display via its supported timing parameters.
+> > > > 
+> > > > Every timing parameter can be specified as a single value or a range
+> > > > <min typ max>.
+> > > > 
+> > > > Also, add helper functions to convert from display timings to a generic
+> > > > videomode structure. This videomode can then be converted to the
+> > > > corresponding subsystem mode representation (e.g. fb_videomode).
+> > > > 
+> > > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > > 
+> > > Hmmm... here's my thoughts as an outside reviewer. Correct me if I'm
+> > > making an incorrect assumption.
+> > > 
+> > > It looks to me that the purpose of this entire series is to decode video
+> > > timings from the device tree and (eventually) provide the data in the
+> > > form 'struct videomode'. Correct?
+> > > 
 
-On Fri, Nov 16, 2012 at 03:38:22PM +0900, Alexandre Courbot wrote:
-> Make use of the power sequences specified in the device tree or platform
-> data to control how the backlight is powered on and off.
->=20
-> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+For the time being it is straight from devicetree via struct videomode
+to struct drm_display_mode or fb_videomode. Correct.
 
-Anton,
+> > > If so, then it looks over engineered. Creating new infrastructure to
+> > > allocate, maintain, and free a new 'struct display_timings' doesn't make
+> > > any sense when it is an intermediary data format that will never be used
+> > > by drivers.
+> > > 
+> > > Can the DT parsing code instead return a table of struct videomode?
+> > > 
 
-I would normally take pwm-backlight patches through the PWM tree, but
-since this patch depends on the first in this series, I think it would
-be easier if you took it through your tree along with the rest of the
-series. If that's okay with you:
+See below.
 
-Acked-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> > > But, wait... struct videomode is also a new structure. So it looks like
+> > > this series creates two new intermediary data structures;
+> > > display_timings and videomode. And at least as far as I can see in this
+> > > series struct fb_videomode is the only user.
 
-Otherwise just let me know and I'm sure we can coordinate to take this
-in via the two trees separately.
+struct drm_display_mode is also a user in this series see 5/6 and 6/6.
 
-Thanks,
-Thierry
+> > 
+> > struct videomode is supposed to slowly replace the various video mode 
+> > structures we currently have in the kernel (struct drm_mode_modeinfo, struct 
+> > fb_videomode and struct v4l2_bt_timings), at least where possible (userspace 
+> > APIs can't be broken). This will make it possible to reuse code across the 
+> > DRM, FB and V4L2 subsystems, such as the EDID parser or HDMI encoder drivers. 
+> > This rationale might not be clearly explained in the commit message, but 
+> > having a shared video mode structure is pretty important.
+>
 
---U+BazGySraz5kW0T
-Content-Type: application/pgp-signature
+That.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+> Okay that make sense. What about struct display_timings?
+> 
 
-iQIcBAEBAgAGBQJQpf42AAoJEN0jrNd/PrOhIAQQAIpZRiO0Ir4ZgNr1p9P+MKLJ
-Czzca7/YmN4VbqeeNvCAEaN/g1yOb948KdynjRB5RjFqjd+pIGFWlOF+BaZCt0Xn
-18DWDar4eWOiy/ZGuOkwL5iKtLzTzSmCLK+rSUHvxGnIGZo/xqO6W96R15/zEJmw
-EKMnGmM/vOodjJdxSimbY82Kim+PdbUbecqCNKFSyi5bTXeOd/xYmHml4MysptyB
-YLRYeP3wEXflCXMAluPzz+Oo1Rz3BCTmh/VjlE/4879PvpIQjX9jiEmfGnyTaMqG
-ZRmS5xwqMaHoQGOkMqQi71P7Fq3P/kUfF05y9A/E9yni2c3230217v5ai7x2JJYd
-DalB9WYcPS/836g+JsecH7KMCa6mwjtZjfxoTMILhXG0rOA9QTHguHkFdBb8IGU4
-B2dgLACZCvwCLGoTc+AJJJyqWa3Pz7vAjTZ71xCi7e/lmFCAUC4GJv8L/fawSwGv
-SFmAXlpBgSgph6hyJolELdnom8R8CzEMQGTWO+chTp2UXEk5iFrWTCfcJ7I77C8D
-JevtTjQgiw/C+xot2+cDq/6ghWctupXxNERo2hepW3XRXGKWaAPccgh/YNbI4fGR
-I6IVKpVjFVm2+/42R3KknBmz9ghcA0i3hYF0GH5V1sHUVSAqfzfBBWGEHJvhKTC8
-O3fkU9G5MYokmDT+i8x0
-=ncjv
------END PGP SIGNATURE-----
+The reason for defining an intermediary step is because of the different things
+that are described:
+- struct display_timing describes the signal ranges a display supports
+- struct display_timings describes all timing settings of a display
+- struct videomode describes one single mode generated from that settings
 
---U+BazGySraz5kW0T--
+It is possible to generate multiple struct videomodes from one
+struct display_timing based on the circumstances. And that is a task for the
+driver using the display_timing infos. This means drivers are supposed to use
+struct display_timings if they need to generate a struct videomode from the
+timing ranges of one entry.
+This is just the first step in that direction.
+I hope this makes the need for struct display_timings a little clearer.
+The other solution would be the one Laurent suggested and pass multiple values
+around. Which in my opinion doesn't make it better, more practical or cleaner.
+
+
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
