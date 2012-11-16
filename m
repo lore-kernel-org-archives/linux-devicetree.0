@@ -1,38 +1,60 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
-Date: Fri, 16 Nov 2012 14:33:50 +0800
-Message-ID: <50A5DE4E.80206@atmel.com>
-References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com> <1353045837-19474-2-git-send-email-voice.shen@atmel.com> <20121116061250.GP4387@opensource.wolfsonmicro.com>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 0/3] Runtime Interpreted Power Sequences
+Date: Fri, 16 Nov 2012 15:38:20 +0900
+Message-ID: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <20121116061250.GP4387@opensource.wolfsonmicro.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hopefully the final series before the feature gets merged. Anton Vorontsov
+kindly accepted to take it into his tree, so this series is mostly a call for
+acks, tests and reviews notices before the merge window for 3.8 opens. If you
+are interested in seeing this feature, please add your name.
 
-On 11/16/2012 14:12, Mark Brown wrote:
-> On Fri, Nov 16, 2012 at 02:03:57PM +0800, Bo Shen wrote:
->> Add pinctrl consumer for atmel ssc peripheral
->>
->> Signed-off-by: Bo Shen <voice.shen@atmel.com>
->> ---
->> Resend:
->>    Split one patch into two.
->>      - one add pinctrl nodes
->>      - one add pinctrl consumer
->
-> No, this isn't what was meant - the idea is to send only the addition of
-> pinctrl data as one patch, based off the ASoC branch instead of -next.
+This series also adds an entry for the subsystem into MAINTAINERS, setting me as
+the person in charge.
 
-What is the pinctrl data? (This patch can be applied on 
-sound/topic/atmel branch without any conflicts)
-The other one add pinctrl nodes, must based on -next, or else I don't 
-know where should I add the pinctrl nodes.
+Changes from v7:
+- fix bug reported by Tony Prisk
+- add MAINTAINERS entry
 
-Best Regards,
-Bo Shen
+Alexandre Courbot (3):
+  Runtime Interpreted Power Sequences
+  pwm_backlight: use power sequences
+  Take maintainership of power sequences
+
+ .../devicetree/bindings/power/power_seq.txt        | 121 +++++++
+ .../bindings/video/backlight/pwm-backlight.txt     |  63 +++-
+ Documentation/power/power_seq.txt                  | 253 ++++++++++++++
+ MAINTAINERS                                        |  10 +
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/power_seq/Kconfig                    |   2 +
+ drivers/power/power_seq/Makefile                   |   1 +
+ drivers/power/power_seq/power_seq.c                | 376 +++++++++++++++++++++
+ drivers/power/power_seq/power_seq_delay.c          |  65 ++++
+ drivers/power/power_seq/power_seq_gpio.c           |  94 ++++++
+ drivers/power/power_seq/power_seq_pwm.c            |  82 +++++
+ drivers/power/power_seq/power_seq_regulator.c      |  83 +++++
+ drivers/video/backlight/Kconfig                    |   1 +
+ drivers/video/backlight/pwm_bl.c                   | 160 +++++++--
+ include/linux/power_seq.h                          | 203 +++++++++++
+ include/linux/pwm_backlight.h                      |  18 +-
+ 17 files changed, 1494 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power_seq.txt
+ create mode 100644 Documentation/power/power_seq.txt
+ create mode 100644 drivers/power/power_seq/Kconfig
+ create mode 100644 drivers/power/power_seq/Makefile
+ create mode 100644 drivers/power/power_seq/power_seq.c
+ create mode 100644 drivers/power/power_seq/power_seq_delay.c
+ create mode 100644 drivers/power/power_seq/power_seq_gpio.c
+ create mode 100644 drivers/power/power_seq/power_seq_pwm.c
+ create mode 100644 drivers/power/power_seq/power_seq_regulator.c
+ create mode 100644 include/linux/power_seq.h
+
+-- 
+1.8.0
