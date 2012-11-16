@@ -1,63 +1,39 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
-Date: Fri, 16 Nov 2012 17:31:04 +0900
-Message-ID: <4423025.WvVzNKlS3r@percival>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com> <1353047903-14363-2-git-send-email-acourbot@nvidia.com> <50A5F225.6000200@st.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a slave
+ DMA channel
+Date: Fri, 16 Nov 2012 09:39:31 +0100
+Message-ID: <50A5FBC3.4000302@atmel.com>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com> <1347662517-4210-3-git-send-email-jon-hunter@ti.com> <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de> <20120917223619.GC12445@n2100.arm.linux.org.uk> <1347938035.1943.162.camel@vkoul-udesk3> <5060DDEB.4000600@ti.com> <1348547701.1943.190.camel@vkoul-udesk3> <20121016024318.GF24393@S2101-09.ap.freescale.net> <1350355144.1648.5259.camel@vkoul-udesk3>  <509D6108.1060304@ti.com> <1353029876.7077.56.camel@vkoul-udesk3>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50A5F225.6000200-qxv4g6HH51o@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "srinivas.kandagatla-qxv4g6HH51o@public.gmane.org" <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1353029876.7077.56.camel@vkoul-udesk3>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, linux-omap <linux-omap@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Stephen Warren <swarren@nvidia.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srinivas,
+On 11/16/2012 02:37 AM, Vinod Koul :
+> On Fri, 2012-11-09 at 14:01 -0600, Jon Hunter wrote:
+>> Hi Vinod,
+>>
+>> A few people have been asking me if getting device-tree support for DMA
+>> engine is plan for record for v3.8. I know that you were working through
+>> implementing a common interface and so I wanted to check how that is
+>> going. Do you have any insight to when device-tree support may get added?
+>>
+> I have not been able to do much work on this for last couple of weeks. I
+> hope to do it in by this weekend. If not I will merge yours and then
+> uppdate.
+> 
+> Anyway, DT would be there in 3.8 with or without my changes.
 
-On Friday 16 November 2012 15:58:29 Srinivas KANDAGATLA wrote:
-> Hi Alex,
-> I am looking forward for this feature to be mainlined,
+Vinod,
 
-*cough* Ack *cough* :)
+So, can we imagine having this tree in linux-next rapidly (with or
+without your changes)?
 
-> but I have
-> comment on the way the types are tied up to power seq infrastructure.
-> I know your use case are limited to using type "delay", "pwm" and "gpio"
-> and "regulator", However there are instances where the devices can be
-> powered up or reset by writing to special registers or sysconfs or
-> something else.
-> So My suggestion would be to make these type register them selfs
-> dynamically with the power_seq infrastructure so that in future this can
-> be extended to other types as-well.
-> This trivial change can make a lot of difference for the future chips
-> which do thing bit differently.
-> ST Microelectronics chips fit it in these category and I guess other
-> Vendors have this similar chips.
-
-The current implementation is (purposedly) minimal and will certainly be 
-extended. There are other aspects of regulators for instance that should also 
-be controllable (voltage comes to mind). And I am totally open to supporting 
-new kinds of resources as usage broadens. For this first version I just wanted 
-to introduce the feature and minimize the impact should anything (DT 
-bindings?) need to change.
-
-I am a little bit skeptical about the purpose of directly accessing registers 
-(or any part of the address space) from power sequences. It should at least be 
-possible to involve some kind of abstraction. Not necessarily one of the 
-currently supported types - but at least something.
-
-The reason is that I'd like to try and avoid direct references to resources 
-within sequences as much as possible to make them reusable. If your system has 
-two identical devices, you should not need to duplicate their sequences just 
-to change a register range from the few steps that make use of it. If you can 
-do the same job with, say, a regulator, you can just give it a name, get it at 
-runtime using regulator_get() and define it outside of the sequence, in our 
-device node.
-
-Of course there might be scenarios where you really need to access a register 
-and there is no way to do otherwise, in this case I am open to discussion. But 
-before resorting to this I'd like to make that the existing abstraction cannot 
-cover the case already.
-
-Alex.
+Thanks, best regards,
+-- 
+Nicolas Ferre
