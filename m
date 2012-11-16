@@ -1,58 +1,41 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Patch v6 1/4] ARM: at91: atmel-ssc: add pinctrl support
-Date: Fri, 16 Nov 2012 10:03:11 +0900
-Message-ID: <20121116010310.GG4387@opensource.wolfsonmicro.com>
-References: <1352887751-21848-1-git-send-email-voice.shen@atmel.com>
- <1352887751-21848-2-git-send-email-voice.shen@atmel.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH -next] tty: of_serial: fix return value check in
+ of_platform_serial_setup()
+Date: Thu, 15 Nov 2012 17:22:32 -0800
+Message-ID: <20121116012232.GB12364@kroah.com>
+References: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
+ <20121115120811.B9EB63E0B12@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MrRUTeZlqqNo1jQ9"
-Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1352887751-21848-2-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <20121115120811.B9EB63E0B12@localhost>
+Sender: linux-serial-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Wei Yongjun <weiyj.lk@gmail.com>, alan@linux.intel.com, rob.herring@calxeda.com, seth.heasley@intel.com, stable@kernel.org, yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 15, 2012 at 12:08:11PM +0000, Grant Likely wrote:
+> On Thu, 1 Nov 2012 13:27:34 +0800, Wei Yongjun <weiyj.lk@gmail.com> wrote:
+> > From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> > 
+> > In case of error, the function clk_get() returns ERR_PTR()
+> > and never returns NULL. The NULL test in the return value
+> > check should be replaced with IS_ERR().
+> > 
+> > dpatch engine is used to auto generate this patch.
+> > (https://github.com/weiyj/dpatch)
+> > 
+> > Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> 
+> Looks correct to me.
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> 
+> Alan, which tree should this go through?
 
---MrRUTeZlqqNo1jQ9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+My tty tree, I'll take it.
 
-On Wed, Nov 14, 2012 at 06:09:08PM +0800, Bo Shen wrote:
-> Add pinctrl support for atmel ssc peripheral
->=20
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+thanks,
 
-This generates lots of conflicts in the pinctrl stuff in the DTS - looks
-like it was generated against -next.  Can you please regenerate against
-my atmel branch with just the changes to add the pinmux information on
-the SSC nodes?  Or possbily this can just be applied direct to the
-pinctrl branch (we'll get an add/add conflict with the SSC nodes though
-that should be simple to resolve, a cross merge might be helpful).
-
---MrRUTeZlqqNo1jQ9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQpZC3AAoJELSic+t+oim9LVIP+wfSXHZBOMfHDlLea+R7HxJp
-gBOmulLYK7kVEuRWFQimv8EruQRwUurQCXeXxbV8QGbrxV+BlUqFSJ5mPZLp6l9S
-No6VRIc7uqpZKLVUVtcuI78HeilV3Ffb9mgcPIPULx5XRhaiHK5ipT7459YIb4PA
-4t2OLjEiLNY1IEXR49Zk/oDBehSSCz8lGHVShSqpKbCkinWbb6vZGU6v4qVFscva
-CEkVQscW7R4/iUQz/BEo/kVwrm+DlvpfUDmOUFC/4C/N67RtbTaHmuk5VQ+thnMG
-Sd3XznyDlur2jJHBfG8YfodRr/l+rhLRQAg+OnMw62rh57ZAv5XngX9vVI595QwO
-GlZYmenvKur/OcA+Uco6sFYqBTGigI4p4EM91IoA31fM4J6pG0CXVLYsVeCos6p4
-n4VnhkZHPKDsfSjiQdPevBL0sUYWCZnRZ1LVGFRMaQBB5VHo4a+/NmFFTOUO5OXb
-nPAejNdgnW6G93tZyxT4PGO+ZpS4zFw59KfMpiBbJzmf2G22uXua1azR6iGREDGC
-VZuAeVPK3YVLeXH9rrUaylP+3o6NucOho9MO/aTciKLwHZYRFOK1uPfZyBUDWHIR
-o7FVbSkqyL+qSPQs/WMWeNBNQcp16pUYMwd4atx5nvppkbKKyiapgxT7GJwaWC6N
-S5N1Rm3PlLZ3u+ZaqZdE
-=/FNn
------END PGP SIGNATURE-----
-
---MrRUTeZlqqNo1jQ9--
+greg k-h
