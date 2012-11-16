@@ -1,79 +1,49 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
-Date: Fri, 16 Nov 2012 14:59:25 +0800
-Message-ID: <50A5E44D.6040501@atmel.com>
-References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com> <1353045837-19474-2-git-send-email-voice.shen@atmel.com> <20121116061250.GP4387@opensource.wolfsonmicro.com> <50A5DE4E.80206@atmel.com> <20121116064113.GQ4387@opensource.wolfsonmicro.com>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
+Date: Thu, 15 Nov 2012 23:26:43 -0800
+Message-ID: <20121116072642.GA22291@lizard>
+References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
+ <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <20121116064113.GQ4387@opensource.wolfsonmicro.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2012 14:41, Mark Brown wrote:
-> On Fri, Nov 16, 2012 at 02:33:50PM +0800, Bo Shen wrote:
->> On 11/16/2012 14:12, Mark Brown wrote:
->
->>> No, this isn't what was meant - the idea is to send only the addition of
->>> pinctrl data as one patch, based off the ASoC branch instead of -next.
->
->> What is the pinctrl data? (This patch can be applied on
->
-> The data you're adding in the device tree!
->
->> sound/topic/atmel branch without any conflicts)
->
-> That's not helpful to anyone doing bisection if there's nothing defining
-> the pin states, it means that the system won't be able to start the
-> driver as the API call will fail.
->
->> The other one add pinctrl nodes, must based on -next, or else I
->> don't know where should I add the pinctrl nodes.
->
-> What makes you say this?
+Hi Alexandre,
 
-For example, if I want to add pinctrl node
----<8---
-  ssc0 {
-	pinctrl_ssc0_tx: ssc0_tx-0 {
-         	atmel,pins = <1 16 0x1 0x0   /* PB16 periph A */
-                 	      1 17 0x1 0x0   /* PB17 periph A */
-                       	      1 18 0x1 0x0>; /* PB18 periph A */
-         };
---->8---
-This should be add into dtsi file as following
----<8---
-ahb {
-	apb {
-		pinctrl {
-			ssc0 {
-				pinctrl_ssc0_tx
-			}
-		}
-	}
-}
---->8---
+The code looks neat, thanks for you work!
 
-In the ASoC branch tree, I don't see any pinctrl related information. 
-So, I say I don't know where should I add the pinctrl nodes.
+Just a couple of comments...
 
-May be I misunderstanding, do you mean I should only add as followign 
-based on ASoC tree? And the upper go into pinctrl tree?
----<8---
-ssc0: ssc@fffbc000 {
-	compatible = "atmel,at91rm9200-ssc";
-         reg = <0xfffbc000 0x4000>;
-         interrupts = <14 4 5>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
-         status = "disable";
-};
---->8---
+On Fri, Nov 16, 2012 at 03:38:21PM +0900, Alexandre Courbot wrote:
+[...]
+> +
+> +#include "power_seq_delay.c"
+> +#include "power_seq_regulator.c"
+> +#include "power_seq_pwm.c"
+> +#include "power_seq_gpio.c"
 
-Best Regards
-Bo Shen
+This is odd, although I remember you already explained why you have to
+include the .c files, instead of linking them separately. But I forgot the
+reason. :) I think this deserves a comment in the code.
 
+> +static int of_power_seq_parse_step(struct device *dev,
+> +				   struct device_node *node,
+> +				   struct power_seq *seq,
+> +				   unsigned int step_nbr,
+> +				   struct list_head *resources)
+> +{
+> +	struct power_seq_step *step = &seq->steps[step_nbr];
+> +	struct power_seq_resource res, *res2;
+> +	const char *type;
+> +	int i, err;
 
+nit: one variable declaration per line.
+
+Thanks,
+Anton.
