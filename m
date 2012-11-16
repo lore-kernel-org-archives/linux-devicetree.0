@@ -1,59 +1,79 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
-Date: Fri, 16 Nov 2012 15:12:55 +0900
-Message-ID: <20121116061250.GP4387@opensource.wolfsonmicro.com>
-References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com>
- <1353045837-19474-2-git-send-email-voice.shen@atmel.com>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 2/4] rtc: OMAP: Add system pm_power_off to rtc driver
+Date: Fri, 16 Nov 2012 06:13:37 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA6D1A1@DBDE01.ent.ti.com>
+References: <1352108549-9341-1-git-send-email-anilkumar@ti.com>
+ <1352108549-9341-3-git-send-email-anilkumar@ti.com>
+ <B5906170F1614E41A8A28DE3B8D121433EC04226@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ccJhwVfaC+fHwTsl"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1353045837-19474-2-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>, "Bedia, Vaibhav" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Nov 12, 2012 at 15:17:48, AnilKumar, Chimata wrote:
+> On Tue, Nov 06, 2012 at 11:15:34, Bedia, Vaibhav wrote:
+> > On Mon, Nov 05, 2012 at 15:12:27, AnilKumar, Chimata wrote:
+> > [...]
+> > >  
+> > > +#define SHUTDOWN_TIME_SEC		2
+> > > +#define SECS_IN_MIN			60
+> > > +#define WAIT_AFTER			(SECS_IN_MIN - SHUTDOWN_TIME_SEC)
+> > > +#define WAIT_TIME_MS			(SHUTDOWN_TIME_SEC * 1000)
+> > > +
+> > >  static void __iomem	*rtc_base;
+> > >  
+> > [...]
+> > > +
+> > > +	/* Wait few seconds instead of rollover */
+> > > +	do {
+> > > +		omap_rtc_read_time(NULL, &tm);
+> > > +		if (WAIT_AFTER <= tm.tm_sec)
+> > > +			mdelay(WAIT_TIME_MS);
+> > > +	} while (WAIT_AFTER <= tm.tm_sec);
+> > 
+> > This hardcoded wait for rollover doesn't look good. I see some
+> > helper functions in rtc-lib.c which probably could be used for
+> > converting the current time to elapsed seconds, add the delay and
+> > then convert it back to the time to be programmed in RTC without
+> > worrying about rollover. Why not use that?
+> 
+> I am not aware of those APIs, can you point some?
 
---ccJhwVfaC+fHwTsl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I have gone through rtc-lib.c, these are the API's I am seeing
+in the library
 
-On Fri, Nov 16, 2012 at 02:03:57PM +0800, Bo Shen wrote:
-> Add pinctrl consumer for atmel ssc peripheral
->=20
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
-> ---
-> Resend:
->   Split one patch into two.
->     - one add pinctrl nodes
->     - one add pinctrl consumer
+1. rtc_time_to_tm: Convert seconds since 01-01-1970 00:00:00 to
+Gregorian date
+2. rtc_tm_to_time: Convert Gregorian date to seconds since
+01-01-1970 00:00:00
 
-No, this isn't what was meant - the idea is to send only the addition of
-pinctrl data as one patch, based off the ASoC branch instead of -next.
+Steps I followed:-
+================
+1: unsigned long time;
+2: omap_rtc_read_time(NULL, &tm);
+3: rtc_tm_to_time(tm, &time);
+4: pr_info("Time 1 %lu\n", time);
+5: time += 2; /* (2sec) */
+6: rtc_time_to_tm(time, tm);
+7: rtc_tm_to_time(tm, &time); /* Only for printing time value */
+8: pr_info("Time 2 %lu\n", time); 
 
---ccJhwVfaC+fHwTsl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+With the above steps I am seeing completely two different time
+values at step4 and step8
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQpdi0AAoJELSic+t+oim91p0P/3TCB/GbS4ggXmr4o/elHdlK
-xLu61R9v6JKRrD3Ldy5euqt2nPOroRf5NImSeIBsqC026iztWMWuOE412BucE8tr
-1WbgPmEJsQ2HogWlSUYmAzA//FvJ8qabjD/MWsxMNo/EYcNpVgb7N1AMYAKZvLmy
-q3cSfBeTUu2ms+oqm8Z//7IETX0lT/dnU7UyCw/lD09AZ7ht4jO/3cPy1fCSQ+ye
-LHnQ2Ln3KZD0unKmbe1OdThwguIbeFgnpw8wsjoHljDC9aINj9S/ZoYVOyQ5Euwj
-jbnTBBKC63Rh1j5mNp1KxdOmgc00O9CrC5ipH7sFSFf/TSO2zhUks2Ue9yIA3ukk
-DqklF1gcVzCYRP+DgKetm4FYmBCsxsGX3VCCXmf9lLasmREUYCiu0Syc1Upk5u6D
-kHaSYMfXaCatUvBi00I8AHGIGprvQ1PqY9YPB/chyuY4/PB+1aFs7jx/n2VCkFQJ
-l1wzKthOzPynCyfie7RwxmhrwoLdlYHSHtKUHTjeLYFhVEX5e1Nd2kZLTCuUfSLD
-G62pqIefcIJjwN5gNdTchx4QKV2nLuDa/Ys0xmcgOyM8GVH2BNNcSWvDK0+hG7J5
-BhEtOIaLqibdK/4TWj5pr9zmwAo35PDARSbyXJsHJVAPuBXlZWg2nNLpkMkBRuW1
-X0g57P5fL0rUy1lXjr7y
-=BOc6
------END PGP SIGNATURE-----
-
---ccJhwVfaC+fHwTsl--
+Thanks
+AnilKumar
