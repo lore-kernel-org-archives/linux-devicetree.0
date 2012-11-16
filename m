@@ -1,46 +1,68 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: [PATCH v8 3/3] Take maintainership of power sequences
-Date: Fri, 16 Nov 2012 15:38:23 +0900
-Message-ID: <1353047903-14363-4-git-send-email-acourbot@nvidia.com>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
+Date: Fri, 16 Nov 2012 15:41:15 +0900
+Message-ID: <20121116064113.GQ4387@opensource.wolfsonmicro.com>
+References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com>
+ <1353045837-19474-2-git-send-email-voice.shen@atmel.com>
+ <20121116061250.GP4387@opensource.wolfsonmicro.com>
+ <50A5DE4E.80206@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Leela Krishna Amudala <l.krishna@samsung.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XG0jWBK27HhJN4nS"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50A5DE4E.80206@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Add entry for power sequences into MAINTAINERS with all the needed
-contact and SCM info.
 
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+--XG0jWBK27HhJN4nS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 59203e7..c86a93b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5696,6 +5696,16 @@ F:	fs/timerfd.c
- F:	include/linux/timer*
- F:	kernel/*timer*
- 
-+POWER SEQUENCES
-+M:	Alexandre Courbot <acourbot@nvidia.com>
-+S:	Maintained
-+W:	https://github.com/Gnurou/linux-power-seqs
-+T:	git https://github.com/Gnurou/linux-power-seqs.git
-+F:	Documentation/devicetree/bindings/power/power_seq.txt
-+F:	Documentation/power/power_seq.txt
-+F:	include/linux/power_seq.h
-+F:	drivers/power/power_seq/
-+
- POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS
- M:	Anton Vorontsov <cbou@mail.ru>
- M:	David Woodhouse <dwmw2@infradead.org>
--- 
-1.8.0
+On Fri, Nov 16, 2012 at 02:33:50PM +0800, Bo Shen wrote:
+> On 11/16/2012 14:12, Mark Brown wrote:
 
+> >No, this isn't what was meant - the idea is to send only the addition of
+> >pinctrl data as one patch, based off the ASoC branch instead of -next.
+
+> What is the pinctrl data? (This patch can be applied on
+
+The data you're adding in the device tree!
+
+> sound/topic/atmel branch without any conflicts)
+
+That's not helpful to anyone doing bisection if there's nothing defining
+the pin states, it means that the system won't be able to start the
+driver as the API call will fail.
+
+> The other one add pinctrl nodes, must based on -next, or else I
+> don't know where should I add the pinctrl nodes.
+
+What makes you say this?
+
+--XG0jWBK27HhJN4nS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQpd/+AAoJELSic+t+oim9RIkP/1LYaeqQ/YCRJLbvg9KDIb+O
+AodflGN2SYcYdSo+8wDzUj1p4sMeHCGByMuNd5k432tFJXcEnRbIPDVHyHvkid6f
+ewazRMztFen2sii9RLUjAflqZoatAWg4T4fb5+gq1fZZ1thTr2xEzUPdNCLDzgzx
+tilrjyTspyUmDGngEQuOHOMgkOJloNYmC+OAAaPFk4WgYsermPh4v5JfTg2Aq9kM
+AcVTkqRLE4HOy7fBuAbIe38vTL8/2S85j7uqFmffx5QZrO9BBn8ywJrfJDajpLwd
+uoZx9XnPbWaJfpFoiAVMfPmGhVyCEpyh0JGHl2Wey56TcuJShPXLIjtZfgwR2Tun
+ykAQiXW6R5GhUeuuOOQJQUwhA9vDfFW7Vokt8BfsIDZsGDOWPFeYmrH9FHBCS0/g
+edXcfpRGRtONi846saI/RyvjSiawimNVcYDcdIZFmfp4QKIlIHZ0YobSgkiB1QNW
+/UD4vJmrnWeYLRAeLzZDtFwoa7AYi/4zVWKrkcDNIQK3gnprV8JOSq4dfwBC4CAD
+A4s56Qw7XmK5trBAwI2uMRTF9igj1vlJpj2CvKbUHqDauPYa9PNRvKNeqhSWF7NZ
+Hu1v+voUZrrqmalG+sX+t4rO1g9ErVq6qLyuiE3VlW26nSoe7a5/tsVVX0qSe1yX
+CJv8DOutxOtXYVUlzzRi
+=eftW
+-----END PGP SIGNATURE-----
+
+--XG0jWBK27HhJN4nS--
