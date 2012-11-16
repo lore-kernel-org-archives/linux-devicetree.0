@@ -1,135 +1,163 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH] backlight: Add of_find_backlight_by_node() function
-Date: Fri, 16 Nov 2012 22:34:21 +0100
-Message-ID: <20121116213420.GA27563@avionic-0098.mockup.avionic-design.de>
-References: <1352469878-4532-1-git-send-email-thierry.reding@avionic-design.de>
- <20121116131645.c979837c.akpm@linux-foundation.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V3 4/5] arm: mm: Added support for PJ4B cpu and init
+ routines
+Date: Fri, 16 Nov 2012 22:46:15 +0100
+Message-ID: <50A6B427.9080807@free-electrons.com>
+References: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
+ <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
+ <50A41BD3.9040509@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121116131645.c979837c.akpm@linux-foundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50A41BD3.9040509-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 11/14/2012 11:31 PM, Gregory CLEMENT wrote:
+> Hello Russell,
+> 
+> With the 2 changes I have done on according your comments
+> do you think you can give your acked-by for this patch?
+> 
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello Russell,
 
-On Fri, Nov 16, 2012 at 01:16:45PM -0800, Andrew Morton wrote:
-> On Fri,  9 Nov 2012 15:04:38 +0100
-> Thierry Reding <thierry.reding@avionic-design.de> wrote:
->=20
-> > This function finds the struct backlight_device for a given device tree
-> > node. A dummy function is provided so that it safely compiles out if OF
-> > support is disabled.
-> >=20
-> > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > ---
-> >  drivers/video/backlight/backlight.c | 17 +++++++++++++++++
-> >  include/linux/backlight.h           | 10 ++++++++++
-> >  2 files changed, 27 insertions(+)
-> >=20
-> > diff --git a/drivers/video/backlight/backlight.c b/drivers/video/backli=
-ght/backlight.c
-> > index 297db2f..0d1ed4f 100644
-> > --- a/drivers/video/backlight/backlight.c
-> > +++ b/drivers/video/backlight/backlight.c
-> > @@ -370,6 +370,23 @@ void backlight_device_unregister(struct backlight_=
-device *bd)
-> >  }
-> >  EXPORT_SYMBOL(backlight_device_unregister);
-> > =20
-> > +#if IS_ENABLED(CONFIG_OF)
->=20
-> Using IS_ENABLED() was odd.  We'll never support CONFIG_OF=3Dm, so can't
-> we use plain old "#ifdef CONFIG_OF" here?
->=20
-> --- a/drivers/video/backlight/backlight.c~backlight-add-of_find_backlight=
-_by_node-function-fix
-> +++ a/drivers/video/backlight/backlight.c
-> @@ -370,7 +370,7 @@ void backlight_device_unregister(struct=20
->  }
->  EXPORT_SYMBOL(backlight_device_unregister);
-> =20
-> -#if IS_ENABLED(CONFIG_OF)
-> +#ifdef CONFIG_OF
->  static int of_parent_match(struct device *dev, void *data)
->  {
->  	return dev->parent && dev->parent->of_node =3D=3D data;
-> --- a/include/linux/backlight.h~backlight-add-of_find_backlight_by_node-f=
-unction-fix
-> +++ a/include/linux/backlight.h
-> @@ -134,7 +134,7 @@ struct generic_bl_info {
->  	void (*kick_battery)(void);
->  };
-> =20
-> -#if IS_ENABLED(CONFIG_OF)
-> +#ifdef CONFIG_OF
->  struct backlight_device *of_find_backlight_by_node(struct device_node *n=
-ode);
->  #else
->  static inline struct backlight_device *
-> _
+I didn't have any feedback from you for this version.
+If you are fine with this, could you give your Acked-by?
 
-Yes, that should work.
 
-> > +static int of_parent_match(struct device *dev, void *data)
-> > +{
-> > +	return dev->parent && dev->parent->of_node =3D=3D data;
-> > +}
-> > +
-> > +struct backlight_device *of_find_backlight_by_node(struct device_node =
-*node)
-> > +{
-> > +	struct device *dev;
-> > +
-> > +	dev =3D class_find_device(backlight_class, NULL, node, of_parent_matc=
-h);
-> > +
-> > +	return dev ? to_backlight_device(dev) : NULL;
-> > +}
-> > +EXPORT_SYMBOL(of_find_backlight_by_node);
->=20
-> It's a global, exported-to-modules function.  We should document such
-> major interfaces.  Unless they are dead trivial, but I don't think this
-> one is that simple.  The semantics of the return value could be
-> explained, and callers should be told that of_find_backlight_by_node()
-> took a ref on the returned device, and that they need to run
-> put_device(retval->dev), if retval was not NULL.
->=20
-> And anything else which might be useful.
+Thanks again,
 
-Yes, I should have thought about that. I'll add some proper kerneldoc
-and repost.
+Gregory
 
-Thanks for reviewing,
-Thierry
 
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature
+> On 11/14/2012 11:20 PM, Gregory CLEMENT wrote:
+>> From: Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Signed-off-by: Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  arch/arm/mach-mvebu/Kconfig |    2 +-
+>>  arch/arm/mm/Kconfig         |    4 ++++
+>>  arch/arm/mm/proc-v7.S       |   51 +++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 56 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+>> index 17d246b..9bfaa0c 100644
+>> --- a/arch/arm/mach-mvebu/Kconfig
+>> +++ b/arch/arm/mach-mvebu/Kconfig
+>> @@ -22,7 +22,7 @@ config MVEBU_CLK_CPU
+>>  config MACH_ARMADA_370_XP
+>>  	bool
+>>  	select ARMADA_370_XP_TIMER
+>> -	select CPU_V7
+>> +	select CPU_PJ4B
+>>  
+>>  config MACH_ARMADA_370
+>>  	bool "Marvell Armada 370 boards"
+>> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
+>> index 94186b6..3fd629d 100644
+>> --- a/arch/arm/mm/Kconfig
+>> +++ b/arch/arm/mm/Kconfig
+>> @@ -352,6 +352,10 @@ config CPU_PJ4
+>>  	select ARM_THUMBEE
+>>  	select CPU_V7
+>>  
+>> +config CPU_PJ4B
+>> +	bool
+>> +	select CPU_V7
+>> +
+>>  # ARMv6
+>>  config CPU_V6
+>>  	bool "Support ARM V6 processor" if ARCH_INTEGRATOR || MACH_REALVIEW_EB || MACH_REALVIEW_PBX
+>> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+>> index 846d279..a4c0ccf 100644
+>> --- a/arch/arm/mm/proc-v7.S
+>> +++ b/arch/arm/mm/proc-v7.S
+>> @@ -169,6 +169,47 @@ __v7_ca15mp_setup:
+>>  	orreq	r0, r0, r10			@ Enable CPU-specific SMP bits
+>>  	mcreq	p15, 0, r0, c1, c0, 1
+>>  #endif
+>> +
+>> +__v7_pj4b_setup:
+>> +#ifdef CONFIG_CPU_PJ4B
+>> +
+>> +#define SNOOP_DATA    (1 << 25) /* Dont interleave write and snoop data */
+>> +#define CWF           (1 << 27) /* Disable Critical Word First feature */
+>> +#define OUTSANDING_NC (1 << 29) /* Disable outstanding non cacheable request */
+>> +#define L1_REP_RR     (1 << 30) /* L1 replacement - Strict round robin */
+>> +
+>> +#define AUX_DBG_CTRL2 (SNOOP_DATA | CWF | OUTSANDING_NC | L1_REP_RR)
+>> +
+>> +	/* Auxiliary Debug Modes Control 1 Register */
+>> +	mrc	p15, 1,	r0, c15, c1, 1
+>> +	orr     r0, r0, #(1 << 16)     @ Disable data transfer for clean line.
+>> +	orr     r0, r0, #(1 << 5)      @ Enable the back off of STREX instr
+>> +	orr     r0, r0, #(1 << 8)      @ Disable Internal Parity Handling
+>> +	bic	r0, r0, #(1 << 2)      @ Disable Static BP
+>> +	mcr	p15, 1,	r0, c15, c1, 1
+>> +
+>> +	/* Auxiliary Debug Modes Control 2 Register */
+>> +	mrc	p15, 1,	r0, c15, c1, 2
+>> +	bic	r0, r0, #(1 << 23)   @ Enable fast LDR.
+>> +	orr	r0, r0, #AUX_DBG_CTRL2
+>> +	mcr	p15, 1,	r0, c15, c1, 2
+>> +
+>> +	/* Auxiliary Functional Modes Control Register 0 */
+>> +	mrc	p15, 1,	r0, c15, c2, 0
+>> +#ifdef CONFIG_SMP
+>> +	orr	r0, r0, #(1 << 1)     @ Set SMP mode. Join the coherency fabric
+>> +#endif
+>> +	orr	r0, r0, #(1 << 2)     @ Support L1 parity checking
+>> +	orr	r0, r0, #(1 << 8)     @ Broadcast Cache and TLB maintenance
+>> +	mcr	p15, 1,	r0, c15, c2, 0
+>> +
+>> +	/* Auxiliary Debug Modes Control 0 Register */
+>> +	mrc	p15, 1,	r0, c15, c1, 0
+>> +	orr	r0, r0, #(1 << 22)   @ WFI/WFE - serve the DVM and back to idle
+>> +	mcr	p15, 1,	r0, c15, c1, 0
+>> +
+>> +#endif /* CONFIG_CPU_PJ4B */
+>> +
+>>  __v7_setup:
+>>  	adr	r12, __v7_setup_stack		@ the local stack
+>>  	stmia	r12, {r0-r5, r7, r9, r11, lr}
+>> @@ -342,6 +383,16 @@ __v7_ca9mp_proc_info:
+>>  	.long	0xff0ffff0
+>>  	__v7_proc __v7_ca9mp_setup
+>>  	.size	__v7_ca9mp_proc_info, . - __v7_ca9mp_proc_info
+>> +
+>> +	/*
+>> +	 * Marvell PJ4B processor.
+>> +	 */
+>> +	.type   __v7_pj4b_proc_info, #object
+>> +__v7_pj4b_proc_info:
+>> +	.long	0x562f5840
+>> +	.long	0xfffffff0
+>> +	__v7_proc __v7_pj4b_setup
+>> +	.size	__v7_pj4b_proc_info, . - __v7_pj4b_proc_info
+>>  #endif	/* CONFIG_ARM_LPAE */
+>>  
+>>  	/*
+>>
+> 
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQprFcAAoJEN0jrNd/PrOhejkP/3/KzP6+9e4fvJTya8qMKjnu
-JWfA+69Sz4o+3Lu573gpCjNW0gCTk0+7i6HEH7rqfJI9gR9L+Clqg8zpNISv3q6/
-53k1agXo1eU4RYe9Ikq3av3S5old3nahlQLuG4EsJ+kNxP+6j2ZKiiEBGpylISE7
-13zGCnLIUPvikrP+I3OYfJqpK/MR8JwE+hZWOqemTwXpa1Q3S2Wy7allR3V9VBbB
-FNTeiQZWPWNdTJML3H+Qi3RO/GQqhxXZfu3NqX8ViFJ2jUmtCQ5Qa9lV2HpJuBrl
-qzosH0BgSeIYt2WGldbEU3Xjjzvhn4p3X2ER/qIPeGeqkKHCsjkaA0bpjkKr/QD2
-zWm8j/yqNksm0X3KGHM5g3YqHiXPguO8r22NO9L1WeL8MCfOCy3pyVYNRWjJzuMK
-QZiQ/T2Bl/n/MEg5dzpNcu84b7C462BY6uNUk8UmjE14STVkVgNxlR8ZVOZMhKs8
-GMu9OiZEhaDjZZRYZE5a3VLxXHhSMaRpuKzw2Zp9Ul0/E9Ry3yJWujTrus63wRu2
-yZpQv6SKU5dV8VkRdAGLvk+WCvTZGxUzYNt8MBQSz2nqcqj5eqNseF5C5Wb5dP/n
-XrFY789zY9yCOv1ozLiBzIYmCqu8c9NkaLBCOYHKVC/GvNnGd5ImIB32zBfoXLQE
-WWC5SHbIcpedC7ua5aNR
-=2xc9
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
