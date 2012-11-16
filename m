@@ -1,110 +1,128 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
-Date: Fri, 16 Nov 2012 04:25:41 -0800
-Message-ID: <20121116122540.GA2198@lizard>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
- <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
- <20121116072642.GA22291@lizard>
- <50A60AF6.9080509@nvidia.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH] ARM: dts: add board dts file for Exynos4412 based SMDK board
+Date: Fri, 16 Nov 2012 18:03:15 +0530
+Message-ID: <CAJuYYwTo6MUUM3oN1XPpxuQ2ta67tEr-UqVjviXG=Yg6c3ywBg@mail.gmail.com>
+References: <1351954172-13645-1-git-send-email-thomas.abraham@linaro.org>
+	<1629120.eNASZVgxGi@amdc1227>
+	<CAJuYYwTRnjKPm7fopVOjBVtHEEV2TQhv6OFzQG6hqhHwq4BT+g@mail.gmail.com>
+	<3179451.csXCh8vt1v@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50A60AF6.9080509@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3179451.csXCh8vt1v@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, chaos.youn@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2012 at 06:44:22PM +0900, Alex Courbot wrote:
-> On 11/16/2012 04:26 PM, Anton Vorontsov wrote:
-> >>+#include "power_seq_delay.c"
-> >>+#include "power_seq_regulator.c"
-> >>+#include "power_seq_pwm.c"
-> >>+#include "power_seq_gpio.c"
-> >
-> >This is odd, although I remember you already explained why you have to
-> >include the .c files, instead of linking them separately. But I forgot the
-> >reason. :) I think this deserves a comment in the code.
-> 
-> This is because of the table right after these includes:
-> 
-> static const struct power_seq_res_ops power_seq_ops[POWER_SEQ_NUM_TYPES] = {
-> 	[POWER_SEQ_DELAY] = POWER_SEQ_DELAY_TYPE,
-> 	[POWER_SEQ_REGULATOR] = POWER_SEQ_REGULATOR_TYPE,
-> 	[POWER_SEQ_PWM] = POWER_SEQ_PWM_TYPE,
-> 	[POWER_SEQ_GPIO] = POWER_SEQ_GPIO_TYPE,
-> };
-> 
-> The POWER_SEQ_*_TYPE macros are defined in the C files. It's the
-> simplest way to initialize this table, and the code inside these C
-> files is short and simple enough that I thought I would be forgiven.
-> :)
+On 16 November 2012 16:41, Tomasz Figa <t.figa@samsung.com> wrote:
+> On Thursday 15 of November 2012 13:48:55 Thomas Abraham wrote:
+>> Hi Tomasz,
+>>
+>> Thanks for your comments.
+>>
+>> On 12 November 2012 19:37, Tomasz Figa <t.figa@samsung.com> wrote:
+>> > Hi Thomas,
+>> >
+>> > On Saturday 03 of November 2012 20:19:32 Thomas Abraham wrote:
+>> >> Add a minimal board dts file for Samsung Exynos4412 based SMDK board.
+>> >>
+>> >> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+>> >> ---
+>> >> This patch depends the on the following patch posted by Tomasz Figa.
+>> >> "ARM: dts: exynos4: Add support for Exynos4x12 SoCs"
+>> >>
+>> >>  arch/arm/boot/dts/Makefile                |    1 +
+>> >>  arch/arm/boot/dts/exynos4412-smdk4412.dts |   45
+>> >>
+>> >> +++++++++++++++++++++++++++++ 2 files changed, 46 insertions(+), 0
+>> >> deletions(-)
+>> >>
+>> >>  create mode 100644 arch/arm/boot/dts/exynos4412-smdk4412.dts
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> >> index f37cf9f..36488a5 100644
+>> >> --- a/arch/arm/boot/dts/Makefile
+>> >> +++ b/arch/arm/boot/dts/Makefile
+>> >> @@ -23,6 +23,7 @@ dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
+>> >>
+>> >>  dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>> >>
+>> >>       exynos4210-smdkv310.dtb \
+>> >>       exynos4210-trats.dtb \
+>> >>
+>> >> +     exynos4412-smdk4412.dtb \
+>> >>
+>> >>       exynos5250-smdk5250.dtb
+>> >>
+>> >>  dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb
+>> >>  dtb-$(CONFIG_ARCH_INTEGRATOR) += integratorap.dtb \
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts
+>> >> b/arch/arm/boot/dts/exynos4412-smdk4412.dts new file mode 100644
+>> >> index 0000000..f05bf57
+>> >> --- /dev/null
+>> >> +++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+>> >> @@ -0,0 +1,45 @@
+>> >> +/*
+>> >> + * Samsung's Exynos4412 based SMDK board device tree source
+>> >> + *
+>> >> + * Copyright (c) 2012-2013 Samsung Electronics Co., Ltd.
+>> >> + *           http://www.samsung.com
+>> >> + *
+>> >> + * Device tree source file for Samsung's SMDK4412 board which is
+>> >> based
+>> >> on + * Samsung's Exynos4412 SoC.
+>> >> + *
+>> >> + * This program is free software; you can redistribute it and/or
+>> >> modify + * it under the terms of the GNU General Public License
+>> >> version 2 as + * published by the Free Software Foundation.
+>> >> +*/
+>> >> +
+>> >> +/dts-v1/;
+>> >> +/include/ "exynos4412.dtsi"
+>> >> +
+>> >> +/ {
+>> >> +     model = "Samsung SMDK evaluation board based on Exynos4412";
+>> >> +     compatible = "samsung,smdk4412", "samsung,exynos4412";
+>> >> +
+>> >> +     memory {
+>> >> +             reg = <0x40000000 0x40000000>;
+>> >> +     };
+>> >
+>> > This will not boot, because section size limit is set to 256 MiB.
+>> >
+>> > It might work with CONFIG_ARM_ATAG_DTB_COMPAT enabled, because the
+>> > memory configuration from DT is ignored and values from ATAGs are
+>> > taken instead.
+>> >
+>> > I suggest you to change it to 4 banks of 256 MiB.
+>>
+>> Thanks for pointing this out. So are there any existing exynos based
+>> platforms that use sparse mem? If not, we should probably remove the
+>> section length configuration itself for mach-exynos. I suspect this
+>> setting might not help with the single kernel image support as well.
+>
+> Isn't sparse memory the only configuration available for ARCH_EXYNOS?
 
-I think in the header file you could just write
-
-extern ..... power_seq_delay_type;
-#ifndef ...
-#define power_seq_delay_type NULL
-#endif
-
-And then, in the .c file:
-
-static const struct power_seq_res_ops power_seq_ops[POWER_SEQ_NUM_TYPES] = {
-	[POWER_SEQ_DELAY] = power_seq_delay_type,
-	...
-};
-
-And then you can stop including the .c files directly, and link them
-instead.
-
-> At first everything was in power_seq.c and it was fine, then I
-> thought it would be better to move resource support code into their
-> own filesm and now everybody is asking. :P
-> 
-> But yeah, maybe it would be even better to not stop halfway and use
-> dynamic linking.
-> 
-> Comment added for the time being. ;)
-> 
-> >>+static int of_power_seq_parse_step(struct device *dev,
-> >>+				   struct device_node *node,
-> >>+				   struct power_seq *seq,
-> >>+				   unsigned int step_nbr,
-> >>+				   struct list_head *resources)
-> >>+{
-> >>+	struct power_seq_step *step = &seq->steps[step_nbr];
-> >>+	struct power_seq_resource res, *res2;
-> >>+	const char *type;
-> >>+	int i, err;
-> >
-> >nit: one variable declaration per line.
-> 
-> Fair enough - but is that a convention? checkpatch.pl was happy with these.
-
-It's not a rule, although there is a small passage about it in CodingStyle
-file when it describes commenting style. Though, some folks choose to
-ignore this suggestion quite frequently, especially if variables have no
-comments.
-
-Often, the multiple declarations per line are used to hide ugly functions
-w/ tons of variables, or just to confuse the reader for the fun of it.
-
-There are exceptions, of course. E.g.
-
-	int i, j, k; /* Our iterators. */
-
-Is perfectly fine.
-
-But
-	int i, err;
-
-At least to me seems weird, this stuff is logically disjunct.
-
-Only human can truly differentiate when the stuff "looks better" together
-or apart, so that's why checkpatch doesn't complain. Personally, I use
-this rule of thumb: when in doubt, use just one declaration per line, it
-is always OK. :)
+Yes, true. Since sparsemem is choosen as default for Exynos, flatmem
+option is not available. Theoretically, sparsemem could be used on
+Exynos platforms, but if all existing exynos4/5 based boards have no
+holes in memory, then why not use flatmem instead? If there are
+performance benefits of using flatmem over sparesmem on systems
+without any memory holes, then it is a compelling reason to stop using
+sparsemem on Exynos. But then, what if there is a new Exynos4/5 based
+board that comes up and that has a memory hole? Or, how about removing
+sparsemem as default option for ARCH_EXYNOS and enabling sparsemem for
+boards that need it.
 
 Thanks,
-Anton.
+Thomas.
+
+>
+> Best regards,
+> --
+> Tomasz Figa
+> Samsung Poland R&D Center
+> SW Solution Development, Linux Platform
+>
