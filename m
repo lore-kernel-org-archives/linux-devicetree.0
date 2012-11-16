@@ -1,56 +1,65 @@
-From: "Patil, Rachna" <rachna@ti.com>
-Subject: RE: [PATCH RESEND 0/7] MFD: ti_am335x_tscadc: DT support and TSC
- features addition
-Date: Fri, 16 Nov 2012 10:33:00 +0000
-Message-ID: <4CE347531D4CA947960AF71FF095B9323E96C54A@DBDE01.ent.ti.com>
-References: <1352271124-5513-1-git-send-email-rachna@ti.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v6 4/4] ARM: dts: add sram for imx53 and imx6q
+Date: Fri, 16 Nov 2012 11:30:17 +0100
+Message-ID: <1353061817-3207-5-git-send-email-p.zabel@pengutronix.de>
+References: <1353061817-3207-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352271124-5513-1-git-send-email-rachna@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Patil, Rachna" <rachna@ti.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Cc: Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Samuel Ortiz <sameo@linux.intel.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, Jonathan Cameron <jic23@cam.ac.uk>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353061817-3207-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Javier Martin <javier.martin-N4RbWZIug12MkV8/HQOAswC/G2K4zDHf@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53.dtsi |    5 +++++
+ arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
+ 2 files changed, 11 insertions(+)
 
-This is just a gentle reminder of the patch set I had posted earlier viz.
-"[PATCH RESEND 0/7] MFD: ti_am335x_tscadc: DT support and TSC features addition"
-Can this patch set be pulled in if there are no review comments.
-This patch set does not break anything existing, it just adds new features and DT support for the MFD core and its clients.
-
-Regards,
-Rachna
-
-On Wed, Nov 07, 2012 at 12:21:57, Patil, Rachna wrote:
-> This patch set is a cumulative set of [1] and [2] sent earlier.
-> 
-> Note that there are no code changes in either of the patch set, only rebased on top of MFD-next to make sure that all the patches apply without any conflicts.
-> 
-> This patch set has been tested on AM335x EVM and is based on top of [3].
-> 
-> [1] http://www.spinics.net/lists/linux-input/msg23060.html
-> [2] http://www.spinics.net/lists/linux-input/msg23090.html
-> [3] https://lkml.org/lkml/2012/11/6/67
-> 
-> Patil, Rachna (7):
->   input: ti_am335x_tsc: Step enable bits made configurable
->   input: ti_am335x_tsc: Order of TSC wires, made configurable
->   input: ti_am335x_tsc: Add variance filter
->   MFD: ti_am335x_tscadc: add device tree binding information
->   MFD: ti_am335x_tscadc: Add DT support
->   input: ti_am335x_tsc: Add DT support
->   IIO: ti_am335x_adc: Add DT support
-> 
->  .../devicetree/bindings/mfd/ti_am335x_tscadc.txt   |   35 +++
->  drivers/iio/adc/ti_am335x_adc.c                    |   24 ++-
->  drivers/input/touchscreen/ti_am335x_tsc.c          |  239 +++++++++++++++++---
->  drivers/mfd/ti_am335x_tscadc.c                     |   28 ++-
->  include/linux/input/ti_am335x_tsc.h                |   12 +
->  include/linux/mfd/ti_am335x_tscadc.h               |   11 +-
->  6 files changed, 308 insertions(+), 41 deletions(-)  create mode 100644 Documentation/devicetree/bindings/mfd/ti_am335x_tscadc.txt
-> 
-> 
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index 76ebb1a..7677218 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -541,5 +541,10 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		ocram: ocram@f8000000 {
++			compatible = "fsl,imx-ocram", "sram";
++			reg = <0xf8000000 0x20000>;
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index f3990b0..855ac25 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -116,6 +116,12 @@
+ 			status = "disabled";
+ 		};
+ 
++		ocram: ocram@00900000 {
++			compatible = "fsl,imx-ocram", "sram";
++			reg = <0x00900000 0x3f000>;
++			clocks = <&clks 142>;
++		};
++
+ 		timer@00a00600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x00a00600 0x20>;
+-- 
+1.7.10.4
