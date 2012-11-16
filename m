@@ -1,72 +1,68 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH 3.7.0-rc4] of/net/mdio-gpio: Fix pdev->id issue when using
- devicetrees.
-Date: Fri, 16 Nov 2012 09:54:47 +0000
-Message-ID: <50A60D67.6000100@st.com>
-References: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com> <20121114.185940.648295821386414260.davem@davemloft.net>
-Reply-To: srinivas.kandagatla@st.com
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/9] usb: chipidea: pci: mark platformdata as static and
+ __devinitdata
+Date: Fri, 16 Nov 2012 12:06:57 +0200
+Message-ID: <87haop7tfi.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-2-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20121114.185940.648295821386414260.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, Grant Likely <grant.likely@secretlab.ca>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352909950-32555-2-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/11/12 23:59, David Miller wrote:
-> From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-> Date: Tue, 13 Nov 2012 14:26:13 +0000
->
->> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->>
->> When the mdio-gpio driver is probed via device trees, the platform
->> device id is set as -1, However the id is re-used in the code while
->> creating an mdio bus.
->> So, setting up the id via aliases from device tree is a sensible
->> solution to fix this issue.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> This seems rather pointless unless you also update every single device
-> tree out there.
->
-> Also you need to describe what are the ramifications of this problem
-> otherwise it is impossible to figure out how serious this change is.
->
-> Does it prevent probing?  Does it cause a crash?
-I apologies, I should have explained the full use-case.
+Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
 
-use-case is if the mac driver want to connect via phy_connect() to
-mdio-gpio phy it would use bus name to do so.
-
-mdio-gpio phy bus name is formated as "gpio-<bus-number>:<phy-addr>.
-In the existing code the bus number for mdio-gpio if probed from device
-trees will be set to -1 which results in bus name set to
-"gpio-ffffffff:<phy-addr>" which is the problem here.
-fffffff is result of pdev->id set to -1 which should be set to a logical
-number, and this is only possible via aliases.
-
-Having fffffff as bus-id also means that we can't have two mdio-gpio
-buses via device trees as it will result in same bus-id.
-This patch attempts to fix this issue.
-So getting the id from alias would be a right choice.
-
-I also agree with Grant's comments about setting up pdev->id.
-
-Will send v2 patch with considering Grant's comments.
-
+> From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 >
-> Basically, what I'm saying is that this is a very poor submission and
-> you need to substantially improve it and communicate better.
->
-> If the problem is basically benign, then you should target this change
-> to net-next instead of the net tree, along with the necessary dt file
-> updates.
-I have looked in net-next and there are no dt files which use this driver.
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Thanks,
-srini
-> Thanks.
+static yes, __devinitdata -- probably not. These structs are used
+everywhere throughout the driver currently, not only at initialization
+time.
+
+> ---
+>  drivers/usb/chipidea/ci13xxx_pci.c |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
->
+> diff --git a/drivers/usb/chipidea/ci13xxx_pci.c b/drivers/usb/chipidea/ci13xxx_pci.c
+> index 918e149..97d25c8 100644
+> --- a/drivers/usb/chipidea/ci13xxx_pci.c
+> +++ b/drivers/usb/chipidea/ci13xxx_pci.c
+> @@ -23,17 +23,17 @@
+>  /******************************************************************************
+>   * PCI block
+>   *****************************************************************************/
+> -struct ci13xxx_platform_data pci_platdata = {
+> +static struct ci13xxx_platform_data pci_platdata __devinitdata = {
+>  	.name		= UDC_DRIVER_NAME,
+>  	.capoffset	= DEF_CAPOFFSET,
+>  };
+>  
+> -struct ci13xxx_platform_data langwell_pci_platdata = {
+> +static struct ci13xxx_platform_data langwell_pci_platdata __devinitdata = {
+>  	.name		= UDC_DRIVER_NAME,
+>  	.capoffset	= 0,
+>  };
+>  
+> -struct ci13xxx_platform_data penwell_pci_platdata = {
+> +static struct ci13xxx_platform_data penwell_pci_platdata __devinitdata = {
+>  	.name		= UDC_DRIVER_NAME,
+>  	.capoffset	= 0,
+>  	.power_budget	= 200,
+> -- 
+> 1.7.10.4
