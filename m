@@ -1,13 +1,13 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm: at91: add Ronetix pm9g45 board support
-Date: Fri, 16 Nov 2012 14:08:58 +0100
-Message-ID: <50A63AEA.2000706@atmel.com>
-References: <1350613168-22689-1-git-send-email-plagnioj@jcrosoft.com>
+From: Bharat Reddy <bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] of_i2c: I2C child node 10-bit client addressing
+Date: Fri, 16 Nov 2012 18:42:23 +0530
+Message-ID: <BLU002-W228A2064248B1A622AA97D6AC510@phx.gbl>
+References: <1352972157-21299-1-git-send-email-bharat_404@hotmail.com>,
+ <CACxGe6uSWy0-qZ3qYk5kfZzkxuyeZn0HMuzz+UU=6bGtGds1Hw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5332544189086656570=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1350613168-22689-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CACxGe6uSWy0-qZ3qYk5kfZzkxuyeZn0HMuzz+UU=6bGtGds1Hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,194 +18,146 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Bharat Reddy <bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/19/2012 04:19 AM, Jean-Christophe PLAGNIOL-VILLARD :
-> CPU Module with ATMEL AT91SAM9G45
-> http://www.ronetix.at/pm9g45.html
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+--===============5332544189086656570==
+Content-Type: multipart/alternative;
+	boundary="_53def906-b7ee-41e2-8294-c8212500a066_"
 
-Ok, queued in at91-3.8-dt branch.
+--_53def906-b7ee-41e2-8294-c8212500a066_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I had to modify the Makefile part of it to match current move to
-arch/arm/boot/dts/Makefile.
+I guess the I2C spec does not restricts.(A device to have an address that f=
+its in the first 7 bits=2C but still requires 10 bit address transactions)
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+But I don't think their will be any I2C slave doing this.=20
 
-> ---
->  arch/arm/boot/dts/Makefile   |    1 +
->  arch/arm/boot/dts/pm9g45.dts |  144 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 145 insertions(+)
->  create mode 100644 arch/arm/boot/dts/pm9g45.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index a9b051a..627b6ad 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_AT91) += tny_a9g20.dtb
->  dtb-$(CONFIG_ARCH_AT91) += usb_a9g20.dtb
->  # sam9g45
->  dtb-$(CONFIG_ARCH_AT91) += at91sam9m10g45ek.dtb
-> +dtb-$(CONFIG_ARCH_AT91) += pm9g45.dtb
->  # sam9n12
->  dtb-$(CONFIG_ARCH_AT91) += at91sam9n12ek.dtb
->  # sam9x5
-> diff --git a/arch/arm/boot/dts/pm9g45.dts b/arch/arm/boot/dts/pm9g45.dts
-> new file mode 100644
-> index 0000000..b0c258d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/pm9g45.dts
-> @@ -0,0 +1,144 @@
-> +/*
-> + * pm9g45.dts - Device Tree file for Ronetix pm9g45 board
-> + *
-> + *  Copyright (C) 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> + *
-> + * Licensed under GPLv2.
-> + */
-> +/dts-v1/;
-> +/include/ "at91sam9g45.dtsi"
-> +
-> +/ {
-> +	model = "Ronetix pm9g45";
-> +	compatible = "ronetix,pm9g45", "atmel,at91sam9g45", "atmel,at91sam9";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200";
-> +	};
-> +
-> +	memory {
-> +		reg = <0x70000000 0x8000000>;
-> +	};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		main_clock: clock@0 {
-> +			compatible = "atmel,osc", "fixed-clock";
-> +			clock-frequency = <12000000>;
-> +		};
-> +	};
-> +
-> +	ahb {
-> +		apb {
-> +			dbgu: serial@ffffee00 {
-> +				status = "okay";
-> +			};
-> +
-> +			pinctrl@fffff200 {
-> +
-> +				board {
-> +					pinctrl_board_nand: nand0-board {
-> +						atmel,pins =
-> +							<3 3 0x0 0x1	/* PD3 gpio RDY pin pull_up*/
-> +							 2 14 0x0 0x1>;	/* PC14 gpio enable pin pull_up */
-> +					};
-> +				};
-> +			};
-> +
-> +			macb0: ethernet@fffbc000 {
-> +				phy-mode = "rmii";
-> +				status = "okay";
-> +			};
-> +		};
-> +
-> +		nand0: nand@40000000 {
-> +			nand-bus-width = <8>;
-> +			nand-ecc-mode = "soft";
-> +			nand-on-flash-bbt;
-> +			pinctrl-0 = <&pinctrl_board_nand>;
-> +
-> +			gpios = <&pioD 3 0
-> +				 &pioC 14 0
-> +				 0
-> +				>;
-> +
-> +			status = "okay";
-> +
-> +			at91bootstrap@0 {
-> +				label = "at91bootstrap";
-> +				reg = <0x0 0x20000>;
-> +			};
-> +
-> +			barebox@20000 {
-> +				label = "barebox";
-> +				reg = <0x20000 0x40000>;
-> +			};
-> +
-> +			bareboxenv@60000 {
-> +				label = "bareboxenv";
-> +				reg = <0x60000 0x1A0000>;
-> +			};
-> +
-> +			kernel@200000 {
-> +				label = "bareboxenv2";
-> +				reg = <0x200000 0x300000>;
-> +			};
-> +
-> +			kernel@500000 {
-> +				label = "root";
-> +				reg = <0x500000 0x400000>;
-> +			};
-> +
-> +			data@900000 {
-> +				label = "data";
-> +				reg = <0x900000 0x8340000>;
-> +			};
-> +		};
-> +
-> +		usb0: ohci@00700000 {
-> +			status = "okay";
-> +			num-ports = <2>;
-> +		};
-> +
-> +		usb1: ehci@00800000 {
-> +			status = "okay";
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		led0 {
-> +			label = "led0";
-> +			gpios = <&pioD 0 1>;
-> +			linux,default-trigger = "nand-disk";
-> +		};
-> +
-> +		led1 {
-> +			label = "led1";
-> +			gpios = <&pioD 31 0>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		right {
-> +			label = "SW4";
-> +			gpios = <&pioE 7 1>;
-> +			linux,code = <106>;
-> +		};
-> +
-> +		up {
-> +			label = "SW3";
-> +			gpios = <&pioE 8 1>;
-> +			linux,code = <103>;
-> +		};
-> +	};
-> +};
-> 
+Why a 7 bit slave want to have extra byte for every transaction?
+
+Note: I am on vacation with limited e-mail access. I will be back on Nov 26=
+.
+
+Thanks=2C
+-Bharat
 
 
--- 
-Nicolas Ferre
+> From: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+> Date: Thu=2C 15 Nov 2012 16:53:59 +0000
+> Subject: Re: [PATCH] of_i2c: I2C child node 10-bit client addressing
+> To: bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org
+> CC: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org=3B jochen-NIgtFMG+Po8@public.gmane.org=3B jonsmirl@gm=
+ail.com
+>=20
+> On Thu=2C Nov 15=2C 2012 at 9:35 AM=2C  <bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org> wrote:
+> > From: Bharat Kumar Reddy <bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+> >
+> > I2C clients which has 10 bit address=2C struct i2c_board_info=2C
+> > member "flags =3D I2C_CLIENT_TEN" is needed.
+> >
+> > Signed-off-by: Bharat Kumar Reddy <bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+>=20
+> Did you see my questions from yesterday?
+>=20
+> g.
+>=20
+> >
+> > diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
+> > index 3550f3b..28c5566 100644
+> > --- a/drivers/of/of_i2c.c
+> > +++ b/drivers/of/of_i2c.c
+> > @@ -57=2C6 +57=2C10 @@ void of_i2c_register_devices(struct i2c_adapter =
+*adap)
+> >                         continue=3B
+> >                 }
+> >
+> > +               /* Support for i2c 10 bit client address */
+> > +               if ((info.addr > (1 << 7) - 1) && (info.addr <=3D (1 <<=
+ 10) - 1))
+> > +                       info.flags =3D I2C_CLIENT_TEN=3B
+> > +
+> >                 info.irq =3D irq_of_parse_and_map(node=2C 0)=3B
+> >                 info.of_node =3D of_node_get(node)=3B
+> >                 info.archdata =3D &dev_ad=3B
+> > --
+> > 1.7.6
+> >
+> >
+>=20
+>=20
+>=20
+> --=20
+> Grant Likely=2C B.Sc.=2C P.Eng.
+> Secret Lab Technologies Ltd.
+ 		 	   		  =
+
+--_53def906-b7ee-41e2-8294-c8212500a066_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<style><!--
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+font-size: 12pt=3B
+font-family:Calibri
+}
+--></style></head>
+<body class=3D'hmmessage'><div dir=3D'ltr'>I guess the I2C spec does not re=
+stricts.(A device to have an address that fits in the first 7 bits=2C but s=
+till requires 10 bit address transactions)<br><br>But I don't think their w=
+ill be any I2C slave doing this. <br><br>Why a 7 bit slave want to have ext=
+ra byte for every transaction?<br><br>Note: I am on vacation with limited e=
+-mail access. I will be back on Nov 26.<br><br>Thanks=2C<br>-Bharat<br><br>=
+<br><div>&gt=3B From: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org<br>&gt=3B Date: Thu=2C 15 N=
+ov 2012 16:53:59 +0000<br>&gt=3B Subject: Re: [PATCH] of_i2c: I2C child nod=
+e 10-bit client addressing<br>&gt=3B To: bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org<br>&gt=3B C=
+C: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org=3B jochen-NIgtFMG+Po8@public.gmane.org=3B jonsmirl@gmail=
+.com<br>&gt=3B <br>&gt=3B On Thu=2C Nov 15=2C 2012 at 9:35 AM=2C  &lt=3Bbha=
+rat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org&gt=3B wrote:<br>&gt=3B &gt=3B From: Bharat Kumar Reddy =
+&lt=3Bbharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org&gt=3B<br>&gt=3B &gt=3B<br>&gt=3B &gt=3B I2C cl=
+ients which has 10 bit address=2C struct i2c_board_info=2C<br>&gt=3B &gt=3B=
+ member "flags =3D I2C_CLIENT_TEN" is needed.<br>&gt=3B &gt=3B<br>&gt=3B &g=
+t=3B Signed-off-by: Bharat Kumar Reddy &lt=3Bbharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org&gt=3B<b=
+r>&gt=3B <br>&gt=3B Did you see my questions from yesterday?<br>&gt=3B <br>=
+&gt=3B g.<br>&gt=3B <br>&gt=3B &gt=3B<br>&gt=3B &gt=3B diff --git a/drivers=
+/of/of_i2c.c b/drivers/of/of_i2c.c<br>&gt=3B &gt=3B index 3550f3b..28c5566 =
+100644<br>&gt=3B &gt=3B --- a/drivers/of/of_i2c.c<br>&gt=3B &gt=3B +++ b/dr=
+ivers/of/of_i2c.c<br>&gt=3B &gt=3B @@ -57=2C6 +57=2C10 @@ void of_i2c_regis=
+ter_devices(struct i2c_adapter *adap)<br>&gt=3B &gt=3B                     =
+    continue=3B<br>&gt=3B &gt=3B                 }<br>&gt=3B &gt=3B<br>&gt=
+=3B &gt=3B +               /* Support for i2c 10 bit client address */<br>&=
+gt=3B &gt=3B +               if ((info.addr &gt=3B (1 &lt=3B&lt=3B 7) - 1) =
+&amp=3B&amp=3B (info.addr &lt=3B=3D (1 &lt=3B&lt=3B 10) - 1))<br>&gt=3B &gt=
+=3B +                       info.flags =3D I2C_CLIENT_TEN=3B<br>&gt=3B &gt=
+=3B +<br>&gt=3B &gt=3B                 info.irq =3D irq_of_parse_and_map(no=
+de=2C 0)=3B<br>&gt=3B &gt=3B                 info.of_node =3D of_node_get(n=
+ode)=3B<br>&gt=3B &gt=3B                 info.archdata =3D &amp=3Bdev_ad=3B=
+<br>&gt=3B &gt=3B --<br>&gt=3B &gt=3B 1.7.6<br>&gt=3B &gt=3B<br>&gt=3B &gt=
+=3B<br>&gt=3B <br>&gt=3B <br>&gt=3B <br>&gt=3B -- <br>&gt=3B Grant Likely=
+=2C B.Sc.=2C P.Eng.<br>&gt=3B Secret Lab Technologies Ltd.<br></div> 		 	  =
+ 		  </div></body>
+</html>=
+
+--_53def906-b7ee-41e2-8294-c8212500a066_--
+
+--===============5332544189086656570==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5332544189086656570==--
