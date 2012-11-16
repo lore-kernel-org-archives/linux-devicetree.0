@@ -1,230 +1,78 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] arm: at91: add Ronetix pm9g45 board support
-Date: Fri, 16 Nov 2012 14:32:11 +0100
-Message-ID: <50A6405B.7010301@atmel.com>
-References: <1350613168-22689-1-git-send-email-plagnioj@jcrosoft.com>
- <50A63AEA.2000706@atmel.com> <20121116132819.GG4398@game.jcrosoft.org>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 6/9] usb: chipidea: add PTW and PTS handling
+Date: Fri, 16 Nov 2012 15:34:23 +0200
+Message-ID: <87lie1659c.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-7-git-send-email-m.grzeschik@pengutronix.de> <87zk2h67ik.fsf@ashishki-desk.ger.corp.intel.com> <20121116131628.GA21447@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121116132819.GG4398-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121116131628.GA21447-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/16/2012 02:28 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> On 14:08 Fri 16 Nov     , Nicolas Ferre wrote:
->> On 10/19/2012 04:19 AM, Jean-Christophe PLAGNIOL-VILLARD :
->>> CPU Module with ATMEL AT91SAM9G45
->>> http://www.ronetix.at/pm9g45.html
->>>
->>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->>> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>
->> Ok, queued in at91-3.8-dt branch.
->>
->> I had to modify the Makefile part of it to match current move to
->> arch/arm/boot/dts/Makefile.
->>
->> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> I prefer to go via linus W I've other updte for the macb on the top of it
+Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
 
-Fine... Be careful about macb, there are many things happening right now
-in net-next for this interface!
+> On Fri, Nov 16, 2012 at 02:45:39PM +0200, Alexander Shishkin wrote:
+>> Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+>> 
+>> > This patch makes it possible to configure the PTW and PTS bits inside
+>> > the portsc register for host and device mode before the driver starts
+>> > and the phy can be addressed as hardware implementation is designed.
+>> >
+>> > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> > ---
+>> >  drivers/usb/chipidea/bits.h        |    3 +++
+>> >  drivers/usb/chipidea/ci.h          |    2 ++
+>> >  drivers/usb/chipidea/ci13xxx_imx.c |    1 +
+>> >  drivers/usb/chipidea/core.c        |   47 ++++++++++++++++++++++++++++++++++++
+>> >  drivers/usb/chipidea/host.c        |    4 +++
+>> >  include/linux/usb/chipidea.h       |    9 +++++++
+>> >  6 files changed, 66 insertions(+)
+>> >
+>> > diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
+>> > index 4b6ae3e..3cded5f 100644
+>> > --- a/drivers/usb/chipidea/bits.h
+>> > +++ b/drivers/usb/chipidea/bits.h
+>> > @@ -48,6 +48,9 @@
+>> >  #define PORTSC_SUSP           BIT(7)
+>> >  #define PORTSC_HSP            BIT(9)
+>> >  #define PORTSC_PTC            (0x0FUL << 16)
+>> > +#define PORTSC_PTS            (BIT(31) | BIT(30))
+>> > +#define PORTSC_PTW            BIT(28)
+>> > +#define PORTSC_STS            BIT(29)
+>> 
+>> Hm, my spec says these are actually in DEVLC register and only have this
+>> meaning in device mode. And in portsc these bits fall in device address
+>> bitfield. Can you refer me to your spec?
+>
+> You can find it here:
+> http://cache.freescale.com/files/32bit/doc/ref_manual/iMX53RM.pdf?fpsp=1
+> Page 4947
 
-> ditto for the rm9200
+Oh, but see, the offset is 0x184, which in chipidea spec (the version
+that I have) corresponds to DEVLC and not PORTSC. So in this driver's
+terminology it's DEVLC too, at least currently.
 
-Noted. Thanks.
+So have you tested this code and did it make any difference?
 
-Bye,
+> We as well do have the original documentation from Synopsys in which there
+> there is an DEVLC register in the index, but nowhere else in the Datasheet.
 
->>> ---
->>>  arch/arm/boot/dts/Makefile   |    1 +
->>>  arch/arm/boot/dts/pm9g45.dts |  144 ++++++++++++++++++++++++++++++++++++++++++
->>>  2 files changed, 145 insertions(+)
->>>  create mode 100644 arch/arm/boot/dts/pm9g45.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index a9b051a..627b6ad 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_AT91) += tny_a9g20.dtb
->>>  dtb-$(CONFIG_ARCH_AT91) += usb_a9g20.dtb
->>>  # sam9g45
->>>  dtb-$(CONFIG_ARCH_AT91) += at91sam9m10g45ek.dtb
->>> +dtb-$(CONFIG_ARCH_AT91) += pm9g45.dtb
->>>  # sam9n12
->>>  dtb-$(CONFIG_ARCH_AT91) += at91sam9n12ek.dtb
->>>  # sam9x5
->>> diff --git a/arch/arm/boot/dts/pm9g45.dts b/arch/arm/boot/dts/pm9g45.dts
->>> new file mode 100644
->>> index 0000000..b0c258d
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/pm9g45.dts
->>> @@ -0,0 +1,144 @@
->>> +/*
->>> + * pm9g45.dts - Device Tree file for Ronetix pm9g45 board
->>> + *
->>> + *  Copyright (C) 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->>> + *
->>> + * Licensed under GPLv2.
->>> + */
->>> +/dts-v1/;
->>> +/include/ "at91sam9g45.dtsi"
->>> +
->>> +/ {
->>> +	model = "Ronetix pm9g45";
->>> +	compatible = "ronetix,pm9g45", "atmel,at91sam9g45", "atmel,at91sam9";
->>> +
->>> +	chosen {
->>> +		bootargs = "console=ttyS0,115200";
->>> +	};
->>> +
->>> +	memory {
->>> +		reg = <0x70000000 0x8000000>;
->>> +	};
->>> +
->>> +	clocks {
->>> +		#address-cells = <1>;
->>> +		#size-cells = <1>;
->>> +		ranges;
->>> +
->>> +		main_clock: clock@0 {
->>> +			compatible = "atmel,osc", "fixed-clock";
->>> +			clock-frequency = <12000000>;
->>> +		};
->>> +	};
->>> +
->>> +	ahb {
->>> +		apb {
->>> +			dbgu: serial@ffffee00 {
->>> +				status = "okay";
->>> +			};
->>> +
->>> +			pinctrl@fffff200 {
->>> +
->>> +				board {
->>> +					pinctrl_board_nand: nand0-board {
->>> +						atmel,pins =
->>> +							<3 3 0x0 0x1	/* PD3 gpio RDY pin pull_up*/
->>> +							 2 14 0x0 0x1>;	/* PC14 gpio enable pin pull_up */
->>> +					};
->>> +				};
->>> +			};
->>> +
->>> +			macb0: ethernet@fffbc000 {
->>> +				phy-mode = "rmii";
->>> +				status = "okay";
->>> +			};
->>> +		};
->>> +
->>> +		nand0: nand@40000000 {
->>> +			nand-bus-width = <8>;
->>> +			nand-ecc-mode = "soft";
->>> +			nand-on-flash-bbt;
->>> +			pinctrl-0 = <&pinctrl_board_nand>;
->>> +
->>> +			gpios = <&pioD 3 0
->>> +				 &pioC 14 0
->>> +				 0
->>> +				>;
->>> +
->>> +			status = "okay";
->>> +
->>> +			at91bootstrap@0 {
->>> +				label = "at91bootstrap";
->>> +				reg = <0x0 0x20000>;
->>> +			};
->>> +
->>> +			barebox@20000 {
->>> +				label = "barebox";
->>> +				reg = <0x20000 0x40000>;
->>> +			};
->>> +
->>> +			bareboxenv@60000 {
->>> +				label = "bareboxenv";
->>> +				reg = <0x60000 0x1A0000>;
->>> +			};
->>> +
->>> +			kernel@200000 {
->>> +				label = "bareboxenv2";
->>> +				reg = <0x200000 0x300000>;
->>> +			};
->>> +
->>> +			kernel@500000 {
->>> +				label = "root";
->>> +				reg = <0x500000 0x400000>;
->>> +			};
->>> +
->>> +			data@900000 {
->>> +				label = "data";
->>> +				reg = <0x900000 0x8340000>;
->>> +			};
->>> +		};
->>> +
->>> +		usb0: ohci@00700000 {
->>> +			status = "okay";
->>> +			num-ports = <2>;
->>> +		};
->>> +
->>> +		usb1: ehci@00800000 {
->>> +			status = "okay";
->>> +		};
->>> +	};
->>> +
->>> +	leds {
->>> +		compatible = "gpio-leds";
->>> +
->>> +		led0 {
->>> +			label = "led0";
->>> +			gpios = <&pioD 0 1>;
->>> +			linux,default-trigger = "nand-disk";
->>> +		};
->>> +
->>> +		led1 {
->>> +			label = "led1";
->>> +			gpios = <&pioD 31 0>;
->>> +			linux,default-trigger = "heartbeat";
->>> +		};
->>> +	};
->>> +
->>> +	gpio_keys {
->>> +		compatible = "gpio-keys";
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +
->>> +		right {
->>> +			label = "SW4";
->>> +			gpios = <&pioE 7 1>;
->>> +			linux,code = <106>;
->>> +		};
->>> +
->>> +		up {
->>> +			label = "SW3";
->>> +			gpios = <&pioE 8 1>;
->>> +			linux,code = <103>;
->>> +		};
->>> +	};
->>> +};
->>>
->>
->>
->> -- 
->> Nicolas Ferre
-> 
-> 
+Maybe it's a leftover from the old terminology, which would explain the
+confusion.
 
+> June 2011 - Doc.Rev. 2.40a
+> USB 2.0 High Speed Atlantic Controller
 
--- 
-Nicolas Ferre
+Yes, mine is from 2009.
+
+Regards,
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
