@@ -1,72 +1,145 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] GPIO driver to turn power off
-Date: Fri, 16 Nov 2012 09:19:47 -0500
-Message-ID: <20121116141947.GN22106@titan.lakedaemon.net>
-References: <1352821485-10032-1-git-send-email-andrew@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1352821485-10032-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH v2] drivers/of: Constify device_node->name and ->path_component_name
+Date: Fri, 16 Nov 2012 14:20:25 +0000
+Message-ID: <1353075625-7755-1-git-send-email-grant.likely@secretlab.ca>
+Return-path: <sparclinux-owner@vger.kernel.org>
+Sender: sparclinux-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "David S. Miller" <davem@davemloft.net>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 13, 2012 at 04:44:42PM +0100, Andrew Lunn wrote:
-> A few of the Kirkwood systems use a GPIO line to turn the power off on
-> shutdown. They request the GPIO line in the board setup code,
-> optionally setting it as an output and driving it inactive. They then
-> register a function for pm_power_off. At the end of the shutdown, this
-> function is called. The GPIO line is configured as an output, if not
-> already so, and then driven active. In order to cover the use case of
-> edges rather then levels, triggering power off, the GPIO line is then
-> toggled active and later inactive. This should allow the driver to be
-> used by PXA which also has boards using the same scheme.
-> 
-> The driver code was initially developed by Jamie Lentin and extended
-> to cover the PXA case by Andrew Lunn.
-> 
-> v1 -> v2: Moved to drivers/power/reset
-> 
-> Andrew Lunn (2):
->   ARM: Kirkwood: Convert DNSKW to use gpio-poweroff.
->   ARM: Kirkwood: Convert IB62x0 to use gpio-poweroff.
-> 
-> Jamie Lentin (1):
->   power: Add simple poweroff-gpio driver
-> 
->  .../devicetree/bindings/gpio/gpio-poweroff.txt     |   22 ++++
->  arch/arm/boot/dts/kirkwood-dnskw.dtsi              |    5 +
->  arch/arm/boot/dts/kirkwood-ib62x0.dts              |    6 +
->  arch/arm/mach-kirkwood/Kconfig                     |    4 +
->  arch/arm/mach-kirkwood/board-dnskw.c               |   12 --
->  arch/arm/mach-kirkwood/board-ib62x0.c              |   13 --
->  drivers/power/Kconfig                              |    3 +
->  drivers/power/Makefile                             |    1 +
->  drivers/power/reset/Kconfig                        |   15 +++
->  drivers/power/reset/Makefile                       |    1 +
->  drivers/power/reset/gpio-poweroff.c                |  129 ++++++++++++++++++++
->  11 files changed, 186 insertions(+), 25 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
->  create mode 100644 drivers/power/reset/Kconfig
->  create mode 100644 drivers/power/reset/Makefile
->  create mode 100644 drivers/power/reset/gpio-poweroff.c
+Neither of these should ever be changed once set. Make them const and
+fix up the users that try to modify it in-place. In one case
+kmalloc+memcpy is replaced with kstrdup() to avoid modifying the string.
 
-Anton,
+Build tested with defconfigs on ARM, PowerPC, Sparc, MIPS, x86 among
+others.
 
-Is it ok if we take this through the arm-soc tree with your Ack?
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Julian Calaby <julian.calaby@gmail.com>
+---
 
-thx,
+v2 - fill out more information in the commit text.
 
-Jason.
+ arch/powerpc/platforms/powermac/pfunc_core.c |    2 +-
+ arch/powerpc/platforms/pseries/reconfig.c    |    3 +--
+ arch/powerpc/sysdev/fsl_pci.c                |    2 +-
+ arch/sparc/kernel/pci_impl.h                 |    2 +-
+ drivers/of/fdt.c                             |   10 +++++-----
+ include/linux/of.h                           |    4 ++--
+ 6 files changed, 11 insertions(+), 12 deletions(-)
+
+diff --git a/arch/powerpc/platforms/powermac/pfunc_core.c b/arch/powerpc/platforms/powermac/pfunc_core.c
+index b0c3777..d588e48 100644
+--- a/arch/powerpc/platforms/powermac/pfunc_core.c
++++ b/arch/powerpc/platforms/powermac/pfunc_core.c
+@@ -686,7 +686,7 @@ static int pmf_add_functions(struct pmf_device *dev, void *driverdata)
+ 	int count = 0;
+ 
+ 	for (pp = dev->node->properties; pp != 0; pp = pp->next) {
+-		char *name;
++		const char *name;
+ 		if (strncmp(pp->name, PP_PREFIX, plen) != 0)
+ 			continue;
+ 		name = pp->name + plen;
+diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
+index 39f71fb..2f46681 100644
+--- a/arch/powerpc/platforms/pseries/reconfig.c
++++ b/arch/powerpc/platforms/pseries/reconfig.c
+@@ -281,12 +281,11 @@ static struct property *new_property(const char *name, const int length,
+ 	if (!new)
+ 		return NULL;
+ 
+-	if (!(new->name = kmalloc(strlen(name) + 1, GFP_KERNEL)))
++	if (!(new->name = kstrdup(name, GFP_KERNEL)))
+ 		goto cleanup;
+ 	if (!(new->value = kmalloc(length + 1, GFP_KERNEL)))
+ 		goto cleanup;
+ 
+-	strcpy(new->name, name);
+ 	memcpy(new->value, value, length);
+ 	*(((char *)new->value) + length) = 0;
+ 	new->length = length;
+diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
+index ffb93ae..01b62a6 100644
+--- a/arch/powerpc/sysdev/fsl_pci.c
++++ b/arch/powerpc/sysdev/fsl_pci.c
+@@ -136,7 +136,7 @@ static void __init setup_pci_atmu(struct pci_controller *hose,
+ 	u32 pcicsrbar = 0, pcicsrbar_sz;
+ 	u32 piwar = PIWAR_EN | PIWAR_PF | PIWAR_TGI_LOCAL |
+ 			PIWAR_READ_SNOOP | PIWAR_WRITE_SNOOP;
+-	char *name = hose->dn->full_name;
++	const char *name = hose->dn->full_name;
+ 	const u64 *reg;
+ 	int len;
+ 
+diff --git a/arch/sparc/kernel/pci_impl.h b/arch/sparc/kernel/pci_impl.h
+index 918a203..5f68853 100644
+--- a/arch/sparc/kernel/pci_impl.h
++++ b/arch/sparc/kernel/pci_impl.h
+@@ -88,7 +88,7 @@ struct pci_pbm_info {
+ 	int				chip_revision;
+ 
+ 	/* Name used for top-level resources. */
+-	char				*name;
++	const char			*name;
+ 
+ 	/* OBP specific information. */
+ 	struct platform_device		*op;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index c2b08dc..c8be326 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -199,10 +199,10 @@ static unsigned long unflatten_dt_node(struct boot_param_header *blob,
+ 	np = unflatten_dt_alloc(&mem, sizeof(struct device_node) + allocl,
+ 				__alignof__(struct device_node));
+ 	if (allnextpp) {
++		char *fn;
+ 		memset(np, 0, sizeof(*np));
+-		np->full_name = ((char *)np) + sizeof(struct device_node);
++		np->full_name = fn = ((char *)np) + sizeof(*np);
+ 		if (new_format) {
+-			char *fn = np->full_name;
+ 			/* rebuild full path for new format */
+ 			if (dad && dad->parent) {
+ 				strcpy(fn, dad->full_name);
+@@ -216,9 +216,9 @@ static unsigned long unflatten_dt_node(struct boot_param_header *blob,
+ 				fn += strlen(fn);
+ 			}
+ 			*(fn++) = '/';
+-			memcpy(fn, pathp, l);
+-		} else
+-			memcpy(np->full_name, pathp, l);
++		}
++		memcpy(fn, pathp, l);
++
+ 		prev_pp = &np->properties;
+ 		**allnextpp = np;
+ 		*allnextpp = &np->allnext;
+diff --git a/include/linux/of.h b/include/linux/of.h
+index b4e50d5..857dde9 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -46,7 +46,7 @@ struct device_node {
+ 	const char *name;
+ 	const char *type;
+ 	phandle phandle;
+-	char	*full_name;
++	const char *full_name;
+ 
+ 	struct	property *properties;
+ 	struct	property *deadprops;	/* removed properties */
+@@ -60,7 +60,7 @@ struct device_node {
+ 	unsigned long _flags;
+ 	void	*data;
+ #if defined(CONFIG_SPARC)
+-	char	*path_component_name;
++	const char *path_component_name;
+ 	unsigned int unique_id;
+ 	struct of_irq_controller *irq_trans;
+ #endif
+-- 
+1.7.10.4
+
