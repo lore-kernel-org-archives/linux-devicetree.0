@@ -1,196 +1,107 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
-Date: Fri, 16 Nov 2012 10:35:11 +0000
-Message-ID: <20121116103511.GB16084@e106331-lin.cambridge.arm.com>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
- <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 3.7.0-rc4] of/net/mdio-gpio: Fix pdev->id issue when using
+ devicetrees.
+Date: Fri, 16 Nov 2012 10:33:59 +0000
+Message-ID: <1353062039-31336-1-git-send-email-srinivas.kandagatla@st.com>
+References: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Leela Krishna Amudala <l.krishna@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352816773-17837-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2012 at 06:38:21AM +0000, Alexandre Courbot wrote:
-> Some device drivers (e.g. panel or backlights) need to follow precise
-> sequences for powering on and off, involving GPIOs, regulators, PWMs
-> with a precise powering order and delays to respect between steps.
-> These sequences are device-specific, and do not belong to a particular
-> driver - therefore they have been performed by board-specific hook
-> functions to far.
-> 
-> With the advent of the device tree and of ARM kernels that are not
-> board-tied, we cannot rely on these board-specific hooks anymore but
-> need a way to implement these sequences in a portable manner. This patch
-> introduces a simple interpreter that can execute such power sequences
-> encoded either as platform data or within the device tree.
+From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-Given there are several ARM platforms that may have an interest in this, please
-consider posting this to the ARM mailing list:
-linux-arm-kernel@lists.infradead.org.
+When the mdio-gpio driver is probed via device trees, the platform
+device id is set as -1, However the pdev->id is re-used as bus-id for
+while creating mdio gpio bus.
+So
+For device tree case the mdio-gpio bus name appears as "gpio-ffffffff"
+where as
+for non-device tree case the bus name appears as "gpio-<bus-num>"
 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> Reviewed-by: Stephen Warren <swarren@wwwdotorg.org>
-> Reviewed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> ---
->  .../devicetree/bindings/power/power_seq.txt        | 121 +++++++
->  Documentation/power/power_seq.txt                  | 253 ++++++++++++++
->  drivers/power/Kconfig                              |   1 +
->  drivers/power/Makefile                             |   1 +
->  drivers/power/power_seq/Kconfig                    |   2 +
->  drivers/power/power_seq/Makefile                   |   1 +
->  drivers/power/power_seq/power_seq.c                | 376 +++++++++++++++++++++
->  drivers/power/power_seq/power_seq_delay.c          |  65 ++++
->  drivers/power/power_seq/power_seq_gpio.c           |  94 ++++++
->  drivers/power/power_seq/power_seq_pwm.c            |  82 +++++
->  drivers/power/power_seq/power_seq_regulator.c      |  83 +++++
->  include/linux/power_seq.h                          | 203 +++++++++++
->  12 files changed, 1282 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/power_seq.txt
->  create mode 100644 Documentation/power/power_seq.txt
->  create mode 100644 drivers/power/power_seq/Kconfig
->  create mode 100644 drivers/power/power_seq/Makefile
->  create mode 100644 drivers/power/power_seq/power_seq.c
->  create mode 100644 drivers/power/power_seq/power_seq_delay.c
->  create mode 100644 drivers/power/power_seq/power_seq_gpio.c
->  create mode 100644 drivers/power/power_seq/power_seq_pwm.c
->  create mode 100644 drivers/power/power_seq/power_seq_regulator.c
->  create mode 100644 include/linux/power_seq.h
-> 
-> diff --git a/Documentation/devicetree/bindings/power/power_seq.txt b/Documentation/devicetree/bindings/power/power_seq.txt
-> new file mode 100644
-> index 0000000..7880a6c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/power_seq.txt
-> @@ -0,0 +1,121 @@
-> +Runtime Interpreted Power Sequences
-> +===================================
-> +
-> +Power sequences are sequential descriptions of actions to be performed on
-> +power-related resources. Having these descriptions in a well-defined data format
-> +allows us to take much of the board- or device- specific power control code out
-> +of the kernel and place it into the device tree instead, making kernels less
-> +board-dependant.
-> +
-> +A device typically makes use of multiple power sequences, for different purposes
-> +such as powering on and off. All the power sequences of a given device are
-> +grouped into a set. In the device tree, this set is a sub-node of the device
-> +node named "power-sequences".
-> +
-> +Power Sequences Structure
-> +-------------------------
-> +Every device that makes use of power sequences must have a "power-sequences"
-> +node into which individual power sequences are declared as sub-nodes. The name
-> +of the node becomes the name of the sequence within the power sequences
-> +framework.
-> +
-> +Similarly, each power sequence declares its steps as sub-nodes of itself. Steps
-> +must be named sequentially, with the first step named step0, the second step1,
-> +etc. Failure to follow this rule will result in a parsing error.
+Which means the bus_id is fixed in device tree case, so we can't have
+two mdio gpio buses via device trees. Assigning a logical bus number
+via device tree solves the problem and the bus name is much consistent
+with non-device tree bus name.
 
-Could we not encode the step number in the unit-address? i.e. step@N rather than
-stepN.
+Without this patch
+1. we can't support two mdio-gpio buses via device trees.
+2. we should always pass gpio-ffffffff as bus name to phy_connect, very
+different to non-device tree bus name.
 
-If we ever add additional (non step) data to sequences it might make it easier
-to filter, as we only reserve one name rather than a class of names.
+So, setting up the bus_id via aliases from device tree is the right
+solution and other drivers do similar thing.
 
-> +
-> +Power Sequences Steps
-> +---------------------
-> +Steps of a sequence describe an action to be performed on a resource. They
-> +always include a "type" property which indicates what kind of resource this
-> +step works on. Depending on the resource type, additional properties are defined
-> +to control the action to be performed.
-> +
-> +"delay" type required properties:
-> +  - delay: delay to wait (in microseconds)
-> +
-> +"regulator" type required properties:
-> +  - id: name of the regulator to use.
-> +  - enable / disable: one of these two empty properties must be present to
-> +                      enable or disable the resource
-> +
-> +"pwm" type required properties:
-> +  - id: name of the PWM to use.
-> +  - enable / disable: one of these two empty properties must be present to
-> +                      enable or disable the resource
-> +
-> +"gpio" type required properties:
-> +  - gpio: phandle of the GPIO to use.
-> +  - value: value this GPIO should take. Must be 0 or 1.
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+---
+ .../devicetree/bindings/net/mdio-gpio.txt          |    9 ++++++++-
+ drivers/net/phy/mdio-gpio.c                        |   11 +++++++----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-Is there any reason for id to be a name rather than a phandle? It seems
-inconsistent with the gpio case.
-
-I also see from the example below that the gpio property is not just a phandle,
-as it has the gpio-specifier appended. Is there a better way of describing this
-format in the documentation?
-
-> +Example
-> +-------
-> +Here are example sequences declared within a backlight device that use all the
-> +supported resources types:
-> +
-> +       backlight {
-> +               compatible = "pwm-backlight";
-> +               ...
-> +
-> +               /* resources used by the power sequences */
-> +               pwms = <&pwm 2 5000000>;
-> +               pwm-names = "backlight";
-> +               power-supply = <&backlight_reg>;
-> +
-> +               power-sequences {
-> +                       power-on {
-> +                               step0 {
-> +                                       type = "regulator";
-> +                                       id = "power";
-> +                                       enable;
-> +                               };
-> +                               step1 {
-> +                                       type = "delay";
-> +                                       delay = <10000>;
-> +                               };
-> +                               step2 {
-> +                                       type = "pwm";
-> +                                       id = "backlight";
-> +                                       enable;
-> +                               };
-> +                               step3 {
-> +                                       type = "gpio";
-> +                                       gpio = <&gpio 28 0>;
-> +                                       value = <1>;
-> +                               };
-> +                       };
-> +
-> +                       power-off {
-> +                               step0 {
-> +                                       type = "gpio";
-> +                                       gpio = <&gpio 28 0>;
-> +                                       value = <0>;
-> +                               };
-> +                               step1 {
-> +                                       type = "pwm";
-> +                                       id = "backlight";
-> +                                       disable;
-> +                               };
-> +                               step2 {
-> +                                       type = "delay";
-> +                                       delay = <10000>;
-> +                               };
-> +                               step3 {
-> +                                       type = "regulator";
-> +                                       id = "power";
-> +                                       disable;
-> +                               };
-> +                       };
-> +               };
-> +       };
+diff --git a/Documentation/devicetree/bindings/net/mdio-gpio.txt b/Documentation/devicetree/bindings/net/mdio-gpio.txt
+index bc95495..c79bab0 100644
+--- a/Documentation/devicetree/bindings/net/mdio-gpio.txt
++++ b/Documentation/devicetree/bindings/net/mdio-gpio.txt
+@@ -8,9 +8,16 @@ gpios property as described in section VIII.1 in the following order:
  
-Thanks,
-Mark
-
+ MDC, MDIO.
+ 
++Note: Each gpio-mdio bus should have an alias correctly numbered in "aliases"
++node.
++
+ Example:
+ 
+-mdio {
++aliases {
++	mdio-gpio0 = <&mdio0>;
++};
++
++mdio0: mdio {
+ 	compatible = "virtual,mdio-gpio";
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+diff --git a/drivers/net/phy/mdio-gpio.c b/drivers/net/phy/mdio-gpio.c
+index 899274f..2ed1140 100644
+--- a/drivers/net/phy/mdio-gpio.c
++++ b/drivers/net/phy/mdio-gpio.c
+@@ -185,17 +185,20 @@ static int __devinit mdio_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct mdio_gpio_platform_data *pdata;
+ 	struct mii_bus *new_bus;
+-	int ret;
++	int ret, bus_id;
+ 
+-	if (pdev->dev.of_node)
++	if (pdev->dev.of_node) {
+ 		pdata = mdio_gpio_of_get_data(pdev);
+-	else
++		bus_id = of_alias_get_id(pdev->dev.of_node, "mdio-gpio");
++	} else {
+ 		pdata = pdev->dev.platform_data;
++		bus_id = pdev->id;
++	}
+ 
+ 	if (!pdata)
+ 		return -ENODEV;
+ 
+-	new_bus = mdio_gpio_bus_init(&pdev->dev, pdata, pdev->id);
++	new_bus = mdio_gpio_bus_init(&pdev->dev, pdata, bus_id);
+ 	if (!new_bus)
+ 		return -ENODEV;
+ 
+-- 
+1.7.0.4
