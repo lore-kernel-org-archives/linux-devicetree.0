@@ -1,117 +1,37 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [RFC PATCH v3 02/16] ARM: davinci: move private EDMA API to
- arm/common
-Date: Fri, 16 Nov 2012 11:49:30 -0500
-Message-ID: <20121116164930.GC20006@beef>
-References: <1350566815-409-1-git-send-email-mporter@ti.com>
- <1350566815-409-3-git-send-email-mporter@ti.com>
- <508CEA05.8060200@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v8 0/3] Runtime Interpreted Power Sequences
+Date: Fri, 16 Nov 2012 10:08:16 -0700
+Message-ID: <50A67300.2000001@wwwdotorg.org>
+References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <508CEA05.8060200@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353047903-14363-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 28, 2012 at 01:47:09PM +0530, Sekhar Nori wrote:
-> On 10/18/2012 6:56 PM, Matt Porter wrote:
-> > Move mach-davinci/dma.c to common/edma.c so it can be used
-> > by OMAP (specifically AM33xx) as well. This just moves the
-> > private EDMA API but does not support OMAP.
-> > 
-> > Signed-off-by: Matt Porter <mporter@ti.com>
-> > ---
+On 11/15/2012 11:38 PM, Alexandre Courbot wrote:
+> Hopefully the final series before the feature gets merged. Anton Vorontsov
+> kindly accepted to take it into his tree, so this series is mostly a call for
+> acks, tests and reviews notices before the merge window for 3.8 opens. If you
+> are interested in seeing this feature, please add your name.
 > 
-> > diff --git a/arch/arm/mach-davinci/devices.c b/arch/arm/mach-davinci/devices.c
-> > index 4c48a36..f45d591 100644
-> > --- a/arch/arm/mach-davinci/devices.c
-> > +++ b/arch/arm/mach-davinci/devices.c
-> > @@ -19,9 +19,10 @@
-> >  #include <mach/irqs.h>
-> >  #include <mach/cputype.h>
-> >  #include <mach/mux.h>
-> > -#include <mach/edma.h>
-> >  #include <linux/platform_data/mmc-davinci.h>
-> >  #include <mach/time.h>
-> > +#include <linux/platform_data/edma.h>
-> 
-> Can you please introduce a patch to clean this mixture of linux/ and
-> mach/ includes?
+> This series also adds an entry for the subsystem into MAINTAINERS, setting me as
+> the person in charge.
 
-Sure.
+The series,
+Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> 
-> > +
-> >  
-> >  #include "davinci.h"
-> >  #include "clock.h"
-> > @@ -141,10 +142,10 @@ static struct resource mmcsd0_resources[] = {
-> >  	},
-> >  	/* DMA channels: RX, then TX */
-> >  	{
-> > -		.start = EDMA_CTLR_CHAN(0, DAVINCI_DMA_MMCRXEVT),
-> > +		.start = EDMA_CTLR_CHAN(0, 26),
-> 
-> Instead of just replacing the event #defines with plain numbers, can you
-> introduce a mach-davinci local edma.h which can then be included in the
-> davinci platform files which refer to edma channel numbers?
-
-Yes.
-
-> > diff --git a/arch/arm/plat-omap/Kconfig b/arch/arm/plat-omap/Kconfig
-> > index 7cd56ed..153fab8 100644
-> > --- a/arch/arm/plat-omap/Kconfig
-> > +++ b/arch/arm/plat-omap/Kconfig
-> > @@ -28,6 +28,7 @@ config ARCH_OMAP2PLUS
-> >  	select OMAP_DM_TIMER
-> >  	select PROC_DEVICETREE if PROC_FS
-> >  	select SPARSE_IRQ
-> > +	select TI_PRIV_EDMA
-> 
-> This hunk does not seem to belong to subject of this patch.
-
-Yep, stray hunk..will move to the am335x enablement.
-
-> >  	select USE_OF
-> >  	help
-> >  	  "Systems based on OMAP2, OMAP3, OMAP4 or OMAP5"
-> 
-> > diff --git a/include/linux/platform_data/edma.h b/include/linux/platform_data/edma.h
-> > new file mode 100644
-> > index 0000000..7396f0b3
-> > --- /dev/null
-> > +++ b/include/linux/platform_data/edma.h
-> > @@ -0,0 +1,198 @@
-> > +/*
-> > + *  TI DAVINCI dma definitions
-> > + *
-> > + *  Copyright (C) 2006-2009 Texas Instruments.
-> > + *
-> > + *  This program is free software; you can redistribute  it and/or modify it
-> > + *  under  the terms of  the GNU General  Public License as published by the
-> > + *  Free Software Foundation;  either version 2 of the  License, or (at your
-> > + *  option) any later version.
-> > + *
-> > + *  THIS  SOFTWARE  IS PROVIDED   ``AS  IS'' AND   ANY  EXPRESS OR IMPLIED
-> > + *  WARRANTIES,   INCLUDING, BUT NOT  LIMITED  TO, THE IMPLIED WARRANTIES OF
-> > + *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
-> > + *  NO  EVENT  SHALL   THE AUTHOR  BE    LIABLE FOR ANY   DIRECT, INDIRECT,
-> > + *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> > + *  NOT LIMITED   TO, PROCUREMENT OF  SUBSTITUTE GOODS  OR SERVICES; LOSS OF
-> > + *  USE, DATA,  OR PROFITS; OR  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> > + *  ANY THEORY OF LIABILITY, WHETHER IN  CONTRACT, STRICT LIABILITY, OR TORT
-> > + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> > + *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> 
-> > + *  You should have received a copy of the  GNU General Public License along
-> > + *  with this program; if not, write  to the Free Software Foundation, Inc.,
-> > + *  675 Mass Ave, Cambridge, MA 02139, USA.
-> 
-> This part can be dropped, I suppose ;-)
-
-Ok :)
-
--Matt
+On Ventana.
