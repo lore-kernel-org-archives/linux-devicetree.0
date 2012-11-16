@@ -1,14 +1,16 @@
-From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] mtd: physmap_of: allow to specify the mtd name for
- retro compatiblity
-Date: Fri, 16 Nov 2012 11:02:00 +0200
-Message-ID: <1353056520.20111.9.camel@sauron.fi.intel.com>
-References: <20121107153216.GF4576@game.jcrosoft.org>
-Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
+Date: Fri, 16 Nov 2012 09:04:11 +0000
+Message-ID: <50A6018B.6030105@st.com>
+References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
+ <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
+ <50A5F225.6000200@st.com> <4423025.WvVzNKlS3r@percival>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2920275971327524303=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121107153216.GF4576-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+In-Reply-To: <4423025.WvVzNKlS3r@percival>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,69 +21,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 16/11/12 08:31, Alex Courbot wrote:
+> Hi Srinivas,
+>
+> On Friday 16 November 2012 15:58:29 Srinivas KANDAGATLA wrote:
+>> Hi Alex,
+>> I am looking forward for this feature to be mainlined,
+> *cough* Ack *cough* :)
+:-)
+>> but I have
+>> comment on the way the types are tied up to power seq infrastructure.
+>> I know your use case are limited to using type "delay", "pwm" and "gpio"
+>> and "regulator", However there are instances where the devices can be
+>> powered up or reset by writing to special registers or sysconfs or
+>> something else.
+>> So My suggestion would be to make these type register them selfs
+>> dynamically with the power_seq infrastructure so that in future this can
+>> be extended to other types as-well.
+>> This trivial change can make a lot of difference for the future chips
+>> which do thing bit differently.
+>> ST Microelectronics chips fit it in these category and I guess other
+>> Vendors have this similar chips.
+> The current implementation is (purposedly) minimal and will certainly be 
+> extended. There are other aspects of regulators for instance that should also 
+> be controllable (voltage comes to mind). And I am totally open to supporting 
+> new kinds of resources as usage broadens. For this first version I just wanted 
+> to introduce the feature and minimize the impact should anything (DT 
+> bindings?) need to change.
+Ok I agree. I was thinking more of to fit few things specific to our
+chip via power-seqs.
+>
+> I am a little bit skeptical about the purpose of directly accessing registers 
+> (or any part of the address space) from power sequences. It should at least be 
+> possible to involve some kind of abstraction. Not necessarily one of the 
+> currently supported types - but at least something.
+Yes, There is a level of abstraction (aka sysconf) in our case.. again
+it is not mainlined yet.
+>
+> The reason is that I'd like to try and avoid direct references to resources 
+> within sequences as much as possible to make them reusable. If your system has 
+> two identical devices, you should not need to duplicate their sequences just 
+> to change a register range from the few steps that make use of it. If you can 
+> do the same job with, say, a regulator, you can just give it a name, get it at 
+> runtime using regulator_get() and define it outside of the sequence, in our 
+> device node.
+>
+> Of course there might be scenarios where you really need to access a register 
+> and there is no way to do otherwise, in this case I am open to discussion. But 
+> before resorting to this I'd like to make that the existing abstraction cannot 
+> cover the case already.
+yep.
 
---===============2920275971327524303==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-+UwNshY8rJBEoNpARE1b"
-
-
---=-+UwNshY8rJBEoNpARE1b
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2012-11-07 at 16:32 +0100, Jean-Christophe PLAGNIOL-VILLARD
-wrote:
-> linux,mtd-name allow to specify the mtd name for retro capability with
-> physmap-flash drivers as boot loader pass the mtd partition via the old
-> device name physmap-flash.
->=20
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-
-Pushed to l2-mtd.git, thanks!
-
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-+UwNshY8rJBEoNpARE1b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJQpgEIAAoJECmIfjd9wqK06+oQAJkP7xk8jWbnCPhz+Nini4ai
-Zp5fF9JccxCinMPFRf3b+CzgyQMMHmclE7kvtntYHKNweONBbZBE7lSS0OknKgsi
-WXGqBus//El5yJCEDvv3jXwNORLz19Y27odEx6Z483OCvOsuOLt2a6OyZpQu1tzF
-lzhcU+bvEmXuwLjXMxufSsXzrY2xQY97YT2gsU+Me0DhRI4BBDmUAiHJpQt6vV9W
-9qFARy9zEOy+7XOjzgeH9b7wYo84bZcy9MCZA3HCVwvoueigkMoCE/TT1asoP6+e
-5/TK4UhOUWddKs2HapZ2UxCbP/mED7qfwvrXVC6YPPmXI8ez8K02qYb3tWNyTrJP
-7tWDoHUZXocbDBS4YUNQRVB4WAVXTtg0h2xslcBVNyDyZUoDkCFJRB/on8wpBx5e
-xBSUE7DAkt15uSdiP8kM7T/nr/MyCueJy7xMzR+fZUsOEVrS/OeCAojNGpEc/+O7
-CSe0Hxw8RlWKakDCtBsI2apPpSntBHMMe1xWWbsiyoYnzGNBEZoBGKyZW9MnKOiq
-7LLoRzVBiebEJO25B33jTMtSVHz+1arCPfI/RrfREIEj6pC3OYO3D9YNXGnRe+SG
-PVDb0GubbmhOD7t3Frbh5oUyFABuBYAc/dCN6Bvvlh0ecFWsPNKzdWX6IycxxvOy
-ZxC3T+dMMxaCbwdgyVdc
-=MJ43
------END PGP SIGNATURE-----
-
---=-+UwNshY8rJBEoNpARE1b--
-
-
---===============2920275971327524303==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2920275971327524303==--
+thanks,
+srini
+>
+> Alex.
+>
+>
