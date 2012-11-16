@@ -1,62 +1,54 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] usb: chipidea: usbmisc: add mx53 support
-Date: Fri, 16 Nov 2012 15:22:34 +0200
-Message-ID: <87obix65t1.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1352981028-14312-1-git-send-email-m.grzeschik@pengutronix.de> <1352981028-14312-7-git-send-email-m.grzeschik@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352981028-14312-7-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: [RFC PATCH 3.7.0-rc4 0/4] introduce of_simple_module_id_table macro
+Date: Fri, 16 Nov 2012 13:21:08 +0000
+Message-ID: <1353072068-17758-1-git-send-email-srinivas.kandagatla@st.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, viresh.linux@gmail.com, g.liakhovetski@gmx.de, ian@mnementh.co.uk, thomas.ab@samsung.com
+Cc: srinivas.kandagatla@st.com, spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-> This adds mx53 as the next user of the usbmisc driver and makes it
-> possible to disable the overcurrent-detection of the internal phy.
->
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/usb/chipidea/usbmisc_imx.c |   28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-> index 913e414..9718500 100644
-> --- a/drivers/usb/chipidea/usbmisc_imx.c
-> +++ b/drivers/usb/chipidea/usbmisc_imx.c
-> @@ -54,6 +54,29 @@ static struct usbmisc_usb_device *get_usbdev(struct device *dev)
->  	return &usbmisc->usbdev[i];
->  }
->  
-> +static int usbmisc_imx53_init(struct device *dev)
-> +{
-> +	struct usbmisc_usb_device *usbdev;
-> +	void __iomem *reg;
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	usbdev = get_usbdev(dev);
-> +	if (IS_ERR(usbdev))
-> +		return PTR_ERR(usbdev);
-> +
-> +	reg = usbmisc->base + usbdev->index * 8;
-> +
-> +	if (usbdev->disable_oc) {
-> +		spin_lock_irqsave(&usbmisc->lock, flags);
-> +		val = readl(reg);
-> +		writel(val | (1 << 5), reg);
+This patch series introduces of_simple_module_id_table macro and as an example
+uses this macro in 3 files.
 
-We know now that (1 << 5) probably means "disable overcurrent
-detection", but is there a definition for this register's bits
-somewhere?
+Most of the device tree supported drivers have of_device_id table setup with 
+single compatible entry, this use-case is very simple and common.
 
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+#ifdef CONFIG_OF
+static struct of_device_id xxx_of_match[] = {
+	{ .compatible = "yyy,zzz" },
+	{ },
+};
+MODULE_DEVICE_TABLE(of, xxx_of_match);
+#endif
+
+This patch adds a macro for this simple type of device table.
+Other subsystems like pm, platform, have similar macros in kernel for
+simplest cases.
+Now the user can just replace the above code with
+
+of_simple_module_id_table(xxx_of_match, "yyy,zzz");
+
+There are more than 200+ hits for this type of pattern in the current kernel.
+
+Am happy to run a script to generate cleanup patches for the hits,
+However I would like to know your overall opinion on this type of patch.
+
+Thanks,
+srini
+
+
+Srinivas Kandagatla (4):
+  of: introduce of_simple_module_id_table macro.
+  mm:exynos: use of_simple_module_id_table macro.
+  mm:sdhci-spear: use of_simple_module_id_table macro.
+  mm:shmobile: use of_simple_module_id_table macro.
+
+ drivers/mmc/host/dw_mmc-exynos.c  |    7 +------
+ drivers/mmc/host/sdhci-spear.c    |    8 +-------
+ drivers/mmc/host/sh_mobile_sdhi.c |    6 +-----
+ include/linux/of.h                |   10 ++++++++++
+ 4 files changed, 13 insertions(+), 18 deletions(-)
+
