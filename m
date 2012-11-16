@@ -1,34 +1,22 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH 5/9] usb: add phy connection by phy-mode
-Date: Fri, 16 Nov 2012 13:28:46 +0200
-Message-ID: <20121116112846.GB17793@arwen.pp.htv.fi>
+Date: Fri, 16 Nov 2012 13:31:49 +0200
+Message-ID: <20121116113149.GC17793@arwen.pp.htv.fi>
 References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
  <1352909950-32555-6-git-send-email-m.grzeschik@pengutronix.de>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0998631898238976997=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 In-Reply-To: <1352909950-32555-6-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0998631898238976997==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
-Content-Disposition: inline
-
---bCsyhTFzCvuiizWE
+--zCKi3GIZzVBPywwA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -42,9 +30,6 @@ On Wed, Nov 14, 2012 at 05:19:06PM +0100, Michael Grzeschik wrote:
 >=20
 > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-I think Kishon had sent some patches related to this. Kishon ?
-
 > ---
 >  drivers/of/Kconfig        |    4 ++++
 >  drivers/of/Makefile       |    1 +
@@ -107,6 +92,9 @@ I think Kishon had sent some patches related to this. Kishon ?
 > + * into the device tree binding of 'phy-mode', so that USB
 > + * device driver can get phy interface from device tree.
 > + */
+
+provide proper kernel-doc
+
 > +static const char *usbphy_modes[] =3D {
 > +	[USBPHY_INTERFACE_MODE_NA]	=3D "",
 > +	[USBPHY_INTERFACE_MODE_UTMI]	=3D "utmi",
@@ -114,7 +102,13 @@ I think Kishon had sent some patches related to this. Kishon ?
 > +	[USBPHY_INTERFACE_MODE_ULPI]	=3D "ulpi",
 > +	[USBPHY_INTERFACE_MODE_SERIAL]	=3D "fsls",
 > +};
-> +
+
+In fact, these would be better off as constants:
+
+#define USBPHY_INTERFACE_MODE_UTMI	1
+#define USBPHY_INTERFACE_MODE_UTMIW	2
+=2E..
+
 > +/**
 > + * of_get_phy_mode - Get phy mode for given device_node
 > + * @np:	Pointer to the given device_node
@@ -122,6 +116,10 @@ I think Kishon had sent some patches related to this. Kishon ?
 > + * The function gets phy interface string from property 'phy-mode',
 > + * and return its index in phy_modes table, or errno in error case.
 > + */
+
+why do you pass a string instead of passing an Integer ? This makes no
+sense to me.
+
 > +const int of_get_usbphy_mode(struct device_node *np)
 > +{
 > +	const char *pm;
@@ -174,54 +172,37 @@ I think Kishon had sent some patches related to this. Kishon ?
 > +	USBPHY_INTERFACE_MODE_ULPI,
 > +	USBPHY_INTERFACE_MODE_SERIAL,
 > +};
-> +
->  enum usb_phy_events {
->  	USB_EVENT_NONE,         /* no events or cable disconnected */
->  	USB_EVENT_VBUS,         /* vbus valid event */
-> --=20
-> 1.7.10.4
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+no documentation at all here... What does UTMIW mean ? Why do you mean
+the NA mode ?
 
 --=20
 balbi
 
---bCsyhTFzCvuiizWE
+--zCKi3GIZzVBPywwA
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQpiNuAAoJEIaOsuA1yqREPSgP/3pSFv0QGm8Oo6g4tqAQ27vD
-0i1csHeLWGX1VenEsllOtCMCK9i8GrGCGii6gZVM5xWGkNFz4XaazYs3GT2C/ZxD
-olimzHbAZPrbuw/d+SWGZfqLrI43W/NldjAFqqsqhBOzPe2EnDRvLGvwPTIr0diT
-14twV7NfXe31Yy42QLFFvo/3AA48CvqP/fFdUIru1YBkj0IbPdvnDLtNrTuA9DtA
-uBRILADKfrj5MJaEwyT/KeTqtJE4ISqgrk0vbjWKZUKE0g2WjCNwrSX8tkRczKtq
-KU48DAeglqA/FvpmHVBrLw9Z2MMm8fuzvxc9N02EY3PtSAEK75njB+mf6Utg5kn1
-tOu+APcUfcaDZPBXkepZd46WvqiLGXyPZ6yDJkoqSTn8QI/Qd9g8E1gt64790bMo
-ycwFUX0HlWErue0ijU9Ty/EGN8WLEsbN85XbF57VY73Cgsc8AUTuOTMhEwAtZpL6
-+3yJQ6vhJKZnjsJ+hiwi+vA8DE0r6sOYwMzPz/RCyK0iV1Xkg4pkkFsNEeD4zHJm
-IUp+i01mZgr98q6+Y3TvCnS5PJh6nzpPLQxuNceX5Sr+1Uy0Dzej8yIlp32kJv1Q
-D6pSBpoMps3cBSKz0tAgFktjrhT/bqd3pugOAH/i9daMQ5vMexJTNkSzD4BIArxh
-CVMZAiQ2Vc2b6VEBoWhI
-=60/O
+iQIcBAEBAgAGBQJQpiQlAAoJEIaOsuA1yqREcL0QAJGS1kgo7PI/ol/v3EZDJkD8
+E7akdYaKYxGWN3g/1JgtaZQLsx1oS/kgNhTWg0eDxfrlc9xYHaOLDJep8QTff0u5
+HxQpyiU7U63kjeb6CG6J8jfy639nDLqY5qX+i3OR9nrt2uQEUBccvj4LqOxxA2mH
+7Xnf/rJQaVoAzVmnokTdPCSAw8uAk+uuXLIa1Lz+9ImxThHqmXV5dMcK9aQZDQ+Q
+iJDgUE8Lvk5XpbdDqBzctZPe9taBLD4aIo8H1zEBu5d1r6m47WamiwRqZyGYEjJv
+ICAHwFsaUK9yOUrcdqEJs22vR6t6LlMl9/bbJNoYltZMcj83NXUwS1ZXtojc1qR5
+zKIrgIVer3Hi6SQIkKFP3GSJHiq1F0ZJ1I4qfUmpdegTO1j7TOvhaXTodWrEWXL1
+rNZ7rERLP8iK4qdxTqsT0JK99KyNpKryDkbC6UlOUkHlXdF/RWJVOtW1kM+VOvmn
+zGNlp/pSG1/NvIGGRBRi+MoWnbvy344wj/fHV16S2kUR2hu2TMOw6TL/A3KrDlzt
+ARuMvzP+BH+bAM4b3HYu15FXv3npwjuhEZh3nk8+XQoTGVE9k1+zTCkWhhrqh5YN
+ROh3kupfoGSfKR79Mk1cy2mEHVZr6duFcrvq7vzFWR7WAHhS3Zh+Ha1b5pFyyYsZ
+0AJnIT+iWwJ/1COOKKO4
+=xQop
 -----END PGP SIGNATURE-----
 
---bCsyhTFzCvuiizWE--
-
---===============0998631898238976997==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0998631898238976997==--
+--zCKi3GIZzVBPywwA--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
