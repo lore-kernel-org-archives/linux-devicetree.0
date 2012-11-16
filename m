@@ -1,101 +1,83 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 3/9] usb: chipidea: ci13xxx-imx: create dynamic platformdata
-Date: Fri, 16 Nov 2012 12:14:43 +0200
-Message-ID: <87ehjt7t2k.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-4-git-send-email-m.grzeschik@pengutronix.de>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] ARM: kernel: smp_setup_processor_id() updates
+Date: Fri, 16 Nov 2012 11:17:23 +0100
+Message-ID: <CAKfTPtBT9Hnv0Bop-RAg69zp=AcgTy4rvCbiXScdnU8QkoEBSQ@mail.gmail.com>
+References: <1352983614-22924-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352983614-22924-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20121115134951.GF5570@mudshark.cambridge.arm.com>
+ <20121115141808.GA23513@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352909950-32555-4-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121115141808.GA23513-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+On 15 November 2012 15:18, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> [CC'ed Vincent following MPIDR mask query]
+>
+> On Thu, Nov 15, 2012 at 01:49:51PM +0000, Will Deacon wrote:
+>> On Thu, Nov 15, 2012 at 12:46:50PM +0000, Lorenzo Pieralisi wrote:
+>> > This patch applies some basic changes to the smp_setup_processor_id()
+>> > ARM implementation to make the code that builds cpu_logical_map more
+>> > uniform across the kernel.
+>> >
+>> > The function now prints the full extent of the boot CPU MPIDR[23:0] and
+>> > initializes the cpu_logical_map for CPUs up to nr_cpu_ids.
+>> >
+>> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+>> > ---
+>> >  arch/arm/kernel/setup.c | 7 ++++---
+>> >  1 file changed, 4 insertions(+), 3 deletions(-)
+>> >
+>> > diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+>> > index da1d1aa..d0df6c8 100644
+>> > --- a/arch/arm/kernel/setup.c
+>> > +++ b/arch/arm/kernel/setup.c
+>> > @@ -426,13 +426,14 @@ int __cpu_logical_map[NR_CPUS];
+>> >  void __init smp_setup_processor_id(void)
+>> >  {
+>> >     int i;
+>> > -   u32 cpu = is_smp() ? read_cpuid_mpidr() & 0xff : 0;
+>> > +   u32 mpidr = is_smp() ? read_cpuid_mpidr() & 0xffffff : 0;
+>> > +   u32 cpu = mpidr & 0xff;
+>>
+>> Can we move the #defines out of topology.c and use those instead of magic
+>> masks please? You could use MPIDR_HWID_BITMASK, although the LEVEL mask
+>> definitions over there don't look right to me (MPIDR_LEVEL0_MASK is 0x3?)
+>
+> Yes, I should have done that, you are right. LEVEL0 and LEVEL1 masks look
+> wrong to me.
+>
+> #define MPIDR_LEVEL0_MASK 0x3
+> #define MPIDR_LEVEL1_MASK 0xF
+>
+> Vincent, why are they defined with those values ? They should all be
+> defined as 0xFF.
 
-> This patch removes the limitation of having only one instance of the
-> ci13xxx-imx platformdata and makes different configurations possible.
+IIRC, These field are defined to 8bits width by default in the ARM ARM
+but the Cortex A-9 implementation reduced the usage to 2 bits for CPU
+ID and 4 bits for cluster ID. I had choose this implementation because
+it was the only one available at the moment.
+Now we might come back to the full width range
 
-In more honest wording it should probably say: "makes using different
-phys possible", but this is fine too. :)
+Vincent
 
 >
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/usb/chipidea/ci13xxx_imx.c |   27 ++++++++++++++++-----------
->  1 file changed, 16 insertions(+), 11 deletions(-)
+> I will fix them and move them to a header file.
 >
-> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-> index 570aedf..7b99c96 100644
-> --- a/drivers/usb/chipidea/ci13xxx_imx.c
-> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
-> @@ -87,15 +87,6 @@ EXPORT_SYMBOL_GPL(usbmisc_get_init_data);
->  
->  /* End of common functions shared by usbmisc drivers*/
->  
-> -static struct ci13xxx_platform_data ci13xxx_imx_platdata __devinitdata  = {
-> -	.name			= "ci13xxx_imx",
-> -	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
-> -				  CI13XXX_PULLUP_ON_VBUS |
-> -				  CI13XXX_DISABLE_STREAMING |
-> -				  CI13XXX_REGS_SHARED,
-> -	.capoffset		= DEF_CAPOFFSET,
-> -};
-> -
->  static int ci13xxx_otg_set_vbus(struct usb_otg *otg, bool enabled)
->  {
->  
-> @@ -117,6 +108,7 @@ static int ci13xxx_otg_set_vbus(struct usb_otg *otg, bool enabled)
->  static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->  {
->  	struct ci13xxx_imx_data *data;
-> +	struct ci13xxx_platform_data *pdata;
->  	struct platform_device *plat_ci, *phy_pdev;
->  	struct ci13xxx	*ci;
->  	struct device_node *phy_np;
-> @@ -129,6 +121,19 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->  		&& !usbmisc_ops)
->  		return -EPROBE_DEFER;
->  
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata) {
-> +		dev_err(&pdev->dev, "Failed to allocate CI13xxx-IMX pdata!\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pdata->name = "ci13xxx_imx";
-> +	pdata->capoffset = DEF_CAPOFFSET;
-> +	pdata->flags = CI13XXX_REQUIRE_TRANSCEIVER |
-> +		       CI13XXX_PULLUP_ON_VBUS |
-> +		       CI13XXX_DISABLE_STREAMING |
-> +		       CI13XXX_REGS_SHARED,
-> +
->  	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->  	if (!data) {
->  		dev_err(&pdev->dev, "Failed to allocate CI13xxx-IMX data!\n");
-> @@ -209,7 +214,7 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->  	else
->  		reg_vbus = NULL;
->  
-> -	ci13xxx_imx_platdata.phy = data->phy;
-> +	pdata->phy = data->phy;
->  
->  	if (!pdev->dev.dma_mask) {
->  		pdev->dev.dma_mask = devm_kzalloc(&pdev->dev,
-> @@ -234,7 +239,7 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->  
->  	plat_ci = ci13xxx_add_device(&pdev->dev,
->  				pdev->resource, pdev->num_resources,
-> -				&ci13xxx_imx_platdata);
-> +				pdata);
->  	if (IS_ERR(plat_ci)) {
->  		ret = PTR_ERR(plat_ci);
->  		dev_err(&pdev->dev,
-> -- 
-> 1.7.10.4
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks,
+> Lorenzo
+>
