@@ -1,49 +1,38 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
-Date: Thu, 15 Nov 2012 23:26:43 -0800
-Message-ID: <20121116072642.GA22291@lizard>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
- <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 0/7] core, cpu and gated clocks for mvebu
+Date: Fri, 16 Nov 2012 08:32:20 +0100
+Message-ID: <20121116073220.GB24569@lunn.ch>
+References: <1353014906-31566-1-git-send-email-andrew@lunn.ch>
+ <20121115225425.6230f370@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
+In-Reply-To: <20121115225425.6230f370@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+> I had a quick look and made a few comments, but overall, it looks
+> really great. I really hope we can get this in 3.8.
 
-The code looks neat, thanks for you work!
+Hi Thomas
 
-Just a couple of comments...
+Thanks for the quick feedback.
 
-On Fri, Nov 16, 2012 at 03:38:21PM +0900, Alexandre Courbot wrote:
-[...]
-> +
-> +#include "power_seq_delay.c"
-> +#include "power_seq_regulator.c"
-> +#include "power_seq_pwm.c"
-> +#include "power_seq_gpio.c"
+It looks like i squashed some patches from Sebastian in the wrong
+place. I will fix this and your other comments. I will probably send
+out a new version tomorrow to give others chance to comment.
 
-This is odd, although I remember you already explained why you have to
-include the .c files, instead of linking them separately. But I forgot the
-reason. :) I think this deserves a comment in the code.
-
-> +static int of_power_seq_parse_step(struct device *dev,
-> +				   struct device_node *node,
-> +				   struct power_seq *seq,
-> +				   unsigned int step_nbr,
-> +				   struct list_head *resources)
-> +{
-> +	struct power_seq_step *step = &seq->steps[step_nbr];
-> +	struct power_seq_resource res, *res2;
-> +	const char *type;
-> +	int i, err;
-
-nit: one variable declaration per line.
-
-Thanks,
-Anton.
+    Andrew
