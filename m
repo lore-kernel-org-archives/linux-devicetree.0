@@ -1,84 +1,163 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
-Date: Fri, 16 Nov 2012 09:04:11 +0000
-Message-ID: <50A6018B.6030105@st.com>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
- <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
- <50A5F225.6000200@st.com> <4423025.WvVzNKlS3r@percival>
-Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 5/9] usb: add phy connection by phy-mode
+Date: Fri, 16 Nov 2012 11:25:39 +0200
+Message-ID: <87k3tl7vcc.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-6-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4423025.WvVzNKlS3r@percival>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352909950-32555-6-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16/11/12 08:31, Alex Courbot wrote:
-> Hi Srinivas,
->
-> On Friday 16 November 2012 15:58:29 Srinivas KANDAGATLA wrote:
->> Hi Alex,
->> I am looking forward for this feature to be mainlined,
-> *cough* Ack *cough* :)
-:-)
->> but I have
->> comment on the way the types are tied up to power seq infrastructure.
->> I know your use case are limited to using type "delay", "pwm" and "gpio"
->> and "regulator", However there are instances where the devices can be
->> powered up or reset by writing to special registers or sysconfs or
->> something else.
->> So My suggestion would be to make these type register them selfs
->> dynamically with the power_seq infrastructure so that in future this can
->> be extended to other types as-well.
->> This trivial change can make a lot of difference for the future chips
->> which do thing bit differently.
->> ST Microelectronics chips fit it in these category and I guess other
->> Vendors have this similar chips.
-> The current implementation is (purposedly) minimal and will certainly be 
-> extended. There are other aspects of regulators for instance that should also 
-> be controllable (voltage comes to mind). And I am totally open to supporting 
-> new kinds of resources as usage broadens. For this first version I just wanted 
-> to introduce the feature and minimize the impact should anything (DT 
-> bindings?) need to change.
-Ok I agree. I was thinking more of to fit few things specific to our
-chip via power-seqs.
->
-> I am a little bit skeptical about the purpose of directly accessing registers 
-> (or any part of the address space) from power sequences. It should at least be 
-> possible to involve some kind of abstraction. Not necessarily one of the 
-> currently supported types - but at least something.
-Yes, There is a level of abstraction (aka sysconf) in our case.. again
-it is not mainlined yet.
->
-> The reason is that I'd like to try and avoid direct references to resources 
-> within sequences as much as possible to make them reusable. If your system has 
-> two identical devices, you should not need to duplicate their sequences just 
-> to change a register range from the few steps that make use of it. If you can 
-> do the same job with, say, a regulator, you can just give it a name, get it at 
-> runtime using regulator_get() and define it outside of the sequence, in our 
-> device node.
->
-> Of course there might be scenarios where you really need to access a register 
-> and there is no way to do otherwise, in this case I am open to discussion. But 
-> before resorting to this I'd like to make that the existing abstraction cannot 
-> cover the case already.
-yep.
+Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
 
-thanks,
-srini
+> This patch makes it possible to set the connection of the usbphy to the
+> soc. It is derived from the oftree bindings for the ethernetphy and adds
+> similar helperfunctions.
 >
-> Alex.
+> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/of/Kconfig        |    4 ++++
+>  drivers/of/Makefile       |    1 +
+>  drivers/of/of_usbphy.c    |   49 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_usbphy.h |   15 ++++++++++++++
+>  include/linux/usb/phy.h   |    8 ++++++++
+>  5 files changed, 77 insertions(+)
+>  create mode 100644 drivers/of/of_usbphy.c
+>  create mode 100644 include/linux/of_usbphy.h
+
+This looks a bit like Felipe's call, cc'ing him.
+
 >
->
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index dfba3e6..28f99fb 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -67,6 +67,10 @@ config OF_MDIO
+>  	help
+>  	  OpenFirmware MDIO bus (Ethernet PHY) accessors
+>  
+> +config OF_USBPHY
+> +	depends on USB
+> +	def_bool y
+> +
+>  config OF_PCI
+>  	def_tristate PCI
+>  	depends on PCI
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index e027f44..fdcaf51 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_OF_IRQ)    += irq.o
+>  obj-$(CONFIG_OF_DEVICE) += device.o platform.o
+>  obj-$(CONFIG_OF_I2C)	+= of_i2c.o
+>  obj-$(CONFIG_OF_NET)	+= of_net.o
+> +obj-$(CONFIG_OF_USBPHY)	+= of_usbphy.o
+>  obj-$(CONFIG_OF_SELFTEST) += selftest.o
+>  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>  obj-$(CONFIG_OF_PCI)	+= of_pci.o
+> diff --git a/drivers/of/of_usbphy.c b/drivers/of/of_usbphy.c
+> new file mode 100644
+> index 0000000..2e71f7b
+> --- /dev/null
+> +++ b/drivers/of/of_usbphy.c
+> @@ -0,0 +1,49 @@
+> +/*
+> + * OF helpers for network devices.
+> + *
+> + * This file is released under the GPLv2
+> + *
+> + * Initially copied out of drivers/of/of_net.c
+> + */
+> +#include <linux/etherdevice.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_usbphy.h>
+> +#include <linux/usb/phy.h>
+> +#include <linux/export.h>
+> +
+> +/**
+> + * It maps 'enum usb_phy_interface' found in include/linux/usb/phy.h
+> + * into the device tree binding of 'phy-mode', so that USB
+> + * device driver can get phy interface from device tree.
+> + */
+> +static const char *usbphy_modes[] = {
+> +	[USBPHY_INTERFACE_MODE_NA]	= "",
+> +	[USBPHY_INTERFACE_MODE_UTMI]	= "utmi",
+> +	[USBPHY_INTERFACE_MODE_UTMIW]	= "utmiw",
+> +	[USBPHY_INTERFACE_MODE_ULPI]	= "ulpi",
+> +	[USBPHY_INTERFACE_MODE_SERIAL]	= "fsls",
+> +};
+> +
+> +/**
+> + * of_get_phy_mode - Get phy mode for given device_node
+> + * @np:	Pointer to the given device_node
+> + *
+> + * The function gets phy interface string from property 'phy-mode',
+> + * and return its index in phy_modes table, or errno in error case.
+> + */
+> +const int of_get_usbphy_mode(struct device_node *np)
+> +{
+> +	const char *pm;
+> +	int err, i;
+> +
+> +	err = of_property_read_string(np, "phy-mode", &pm);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(usbphy_modes); i++)
+> +		if (!strcasecmp(pm, usbphy_modes[i]))
+> +			return i;
+> +
+> +	return -ENODEV;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_usbphy_mode);
+> diff --git a/include/linux/of_usbphy.h b/include/linux/of_usbphy.h
+> new file mode 100644
+> index 0000000..9a4132d
+> --- /dev/null
+> +++ b/include/linux/of_usbphy.h
+> @@ -0,0 +1,15 @@
+> +/*
+> + * OF helpers for usb devices.
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_OF_USBPHY_H
+> +#define __LINUX_OF_USBPHY_H
+> +
+> +#ifdef CONFIG_OF_USBPHY
+> +#include <linux/of.h>
+> +extern const int of_get_usbphy_mode(struct device_node *np);
+> +#endif
+> +
+> +#endif /* __LINUX_OF_USBPHY_H */
+> diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
+> index a29ae1e..150eb69 100644
+> --- a/include/linux/usb/phy.h
+> +++ b/include/linux/usb/phy.h
+> @@ -12,6 +12,14 @@
+>  #include <linux/notifier.h>
+>  #include <linux/usb.h>
+>  
+> +enum usb_phy_interface {
+> +	USBPHY_INTERFACE_MODE_NA,
+> +	USBPHY_INTERFACE_MODE_UTMI,
+> +	USBPHY_INTERFACE_MODE_UTMIW,
+> +	USBPHY_INTERFACE_MODE_ULPI,
+> +	USBPHY_INTERFACE_MODE_SERIAL,
+> +};
+> +
+>  enum usb_phy_events {
+>  	USB_EVENT_NONE,         /* no events or cable disconnected */
+>  	USB_EVENT_VBUS,         /* vbus valid event */
+> -- 
+> 1.7.10.4
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
