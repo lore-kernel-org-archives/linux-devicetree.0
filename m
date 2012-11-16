@@ -1,81 +1,51 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 3/9] usb: chipidea: ci13xxx-imx: create dynamic platformdata
-Date: Fri, 16 Nov 2012 14:06:46 +0200
-Message-ID: <8762557nvt.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-4-git-send-email-m.grzeschik@pengutronix.de>
+From: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 4/4] ARM: dts: AM33XX: Enable system power off control in
+ am335x-bone
+Date: Fri, 16 Nov 2012 17:38:26 +0530
+Message-ID: <1353067706-29491-5-git-send-email-anilkumar@ti.com>
+References: <1353067706-29491-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352909950-32555-4-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353067706-29491-1-git-send-email-anilkumar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+Enable system power off control for BeagleBone in am335x-bone.dts file
+under rtc node. RTC is the incharge of controlling the system power.
+This flag is used by the driver to hook up the pm_power_off system call.
 
-> This patch removes the limitation of having only one instance of the
-> ci13xxx-imx platformdata and makes different configurations possible.
->
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/usb/chipidea/ci13xxx_imx.c |   27 ++++++++++++++++-----------
->  1 file changed, 16 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-> index 570aedf..7b99c96 100644
-> --- a/drivers/usb/chipidea/ci13xxx_imx.c
-> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
-> @@ -87,15 +87,6 @@ EXPORT_SYMBOL_GPL(usbmisc_get_init_data);
->  
->  /* End of common functions shared by usbmisc drivers*/
->  
-> -static struct ci13xxx_platform_data ci13xxx_imx_platdata __devinitdata  = {
-> -	.name			= "ci13xxx_imx",
-> -	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
-> -				  CI13XXX_PULLUP_ON_VBUS |
-> -				  CI13XXX_DISABLE_STREAMING |
-> -				  CI13XXX_REGS_SHARED,
-> -	.capoffset		= DEF_CAPOFFSET,
-> -};
-> -
->  static int ci13xxx_otg_set_vbus(struct usb_otg *otg, bool enabled)
->  {
->  
-> @@ -117,6 +108,7 @@ static int ci13xxx_otg_set_vbus(struct usb_otg *otg, bool enabled)
->  static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->  {
->  	struct ci13xxx_imx_data *data;
-> +	struct ci13xxx_platform_data *pdata;
->  	struct platform_device *plat_ci, *phy_pdev;
->  	struct ci13xxx	*ci;
->  	struct device_node *phy_np;
-> @@ -129,6 +121,19 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->  		&& !usbmisc_ops)
->  		return -EPROBE_DEFER;
->  
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata) {
-> +		dev_err(&pdev->dev, "Failed to allocate CI13xxx-IMX pdata!\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pdata->name = "ci13xxx_imx";
-> +	pdata->capoffset = DEF_CAPOFFSET;
-> +	pdata->flags = CI13XXX_REQUIRE_TRANSCEIVER |
-> +		       CI13XXX_PULLUP_ON_VBUS |
-> +		       CI13XXX_DISABLE_STREAMING |
-> +		       CI13XXX_REGS_SHARED,
+Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-bone.dts |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-Btw, I think you want to use semicolon instead of comma here.
-
-> +
->  	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index 1d55190..206c3eb 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -52,6 +52,10 @@
+ 			};
+ 
+ 		};
++
++		rtc@44e3e000 {
++			ti,system-power-controller;
++		};
+ 	};
+ 
+ 	leds {
+-- 
+1.7.9.5
