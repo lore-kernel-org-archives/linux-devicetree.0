@@ -1,31 +1,41 @@
 From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: Re: [PATCH] spi: omap2-mcspi: remove duplicated include from spi-omap2-mcspi.c
-Date: Fri, 16 Nov 2012 10:21:19 +0800
-Message-ID: <CAPgLHd-ouUjVdLKG331RX-Lh4bxKq2WfgXRfchoeV9_bSfTxpg@mail.gmail.com>
-References: <CAPgLHd_rNn_bJ8BJOwcq8EmEi-BQcoakHmQpHG+NdOdDgPSMpQ@mail.gmail.com>
-	<20121114155427.957923E0B1A@localhost>
+Subject: Re: [PATCH -next] tty: of_serial: fix return value check in of_platform_serial_setup()
+Date: Fri, 16 Nov 2012 10:21:20 +0800
+Message-ID: <CAPgLHd9demYGjb6mCWK-=mcLfw=Jo73WMfsLfa-3AxHwqpOEuA@mail.gmail.com>
+References: <CAPgLHd--dWeXNH_QVU34afv5Q1ju2MZJcwLKwyRr89+RvOTOBw@mail.gmail.com>
+	<20121115120811.B9EB63E0B12@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121114155427.957923E0B1A@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20121115120811.B9EB63E0B12@localhost>
+Sender: linux-serial-owner@vger.kernel.org
 To: grant.likely@secretlab.ca
-Cc: rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: alan@linux.intel.com, gregkh@linuxfoundation.org, rob.herring@calxeda.com, seth.heasley@intel.com, stable@kernel.org, yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/14/2012 11:54 PM, Grant Likely wrote:
-> On Sun, 7 Oct 2012 21:29:21 +0800, Wei Yongjun <weiyj.lk@gmail.com> wrote:
+On 11/15/2012 08:08 PM, Grant Likely wrote:
+> On Thu, 1 Nov 2012 13:27:34 +0800, Wei Yongjun <weiyj.lk@gmail.com> wrote:
 >> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 >>
->> Remove duplicated include.
-> Applied, thanks.
->
+>> In case of error, the function clk_get() returns ERR_PTR()
+>> and never returns NULL. The NULL test in the return value
+>> check should be replaced with IS_ERR().
+>>
 >> dpatch engine is used to auto generate this patch.
 >> (https://github.com/weiyj/dpatch)
-> Since I have to manually remove the above cruft from commit logs, can
-> you please omit it from the commit text when posting patches?
+>>
+>> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> Looks correct to me.
 >
-> Thanks,
-> g.
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+>
+> Alan, which tree should this go through?
+>
+> Wei, did you run into this causing a bug? Do you think it should go back
+> into linux-stable? It looks like it should to me.
 
-will do it, thanks.
+Hi,
+
+this only happens in the -next tree, so I think no need for stable.
+ 
+
