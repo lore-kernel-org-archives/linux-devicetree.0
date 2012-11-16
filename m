@@ -1,48 +1,220 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: [RFC RESEND PATCH 3.7.0-rc4 4/4] mmc:shmobile: use of_simple_module_id_table macro.
-Date: Fri, 16 Nov 2012 13:28:11 +0000
-Message-ID: <1353072491-22650-1-git-send-email-srinivas.kandagatla@st.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, viresh.linux@gmail.com, g.liakhovetski@gmx.de, ian@mnementh.co.uk, thomas.ab@samsung.com
-Cc: srinivas.kandagatla@st.com, spear-devel@list.st.com, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/1] arm: at91: add Ronetix pm9g45 board support
+Date: Fri, 16 Nov 2012 14:28:19 +0100
+Message-ID: <20121116132819.GG4398@game.jcrosoft.org>
+References: <1350613168-22689-1-git-send-email-plagnioj@jcrosoft.com>
+ <50A63AEA.2000706@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50A63AEA.2000706-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+On 14:08 Fri 16 Nov     , Nicolas Ferre wrote:
+> On 10/19/2012 04:19 AM, Jean-Christophe PLAGNIOL-VILLARD :
+> > CPU Module with ATMEL AT91SAM9G45
+> > http://www.ronetix.at/pm9g45.html
+> > 
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> 
+> Ok, queued in at91-3.8-dt branch.
+> 
+> I had to modify the Makefile part of it to match current move to
+> arch/arm/boot/dts/Makefile.
+> 
+> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+I prefer to go via linus W I've other updte for the macb on the top of it
 
-This patch uses of_simple_module_id_table macro to replace code like:
+ditto for the rm9200
 
-	static struct of_device_id xxx_of_match[] = {
-		{ .compatible = "yyy,zzz" },
-		{ },
-	};
-	MODULE_DEVICE_TABLE(of, xxx_of_match);
-
-with
-	of_simple_module_id_table(xxx_of_match, "yyy,zzz");
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
----
- drivers/mmc/host/sh_mobile_sdhi.c |    6 +-----
- 1 files changed, 1 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
-index 0bdc146..7535ee4 100644
---- a/drivers/mmc/host/sh_mobile_sdhi.c
-+++ b/drivers/mmc/host/sh_mobile_sdhi.c
-@@ -316,11 +316,7 @@ static const struct dev_pm_ops tmio_mmc_dev_pm_ops = {
- 	.runtime_resume = tmio_mmc_host_runtime_resume,
- };
- 
--static const struct of_device_id sh_mobile_sdhi_of_match[] = {
--	{ .compatible = "renesas,shmobile-sdhi" },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
-+of_simple_module_id_table(sh_mobile_sdhi_of_match, "renesas,shmobile-sdhi");
- 
- static struct platform_driver sh_mobile_sdhi_driver = {
- 	.driver		= {
--- 
-1.7.0.4
-
+Best Regards,
+J.
+> 
+> > ---
+> >  arch/arm/boot/dts/Makefile   |    1 +
+> >  arch/arm/boot/dts/pm9g45.dts |  144 ++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 145 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/pm9g45.dts
+> > 
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index a9b051a..627b6ad 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -19,6 +19,7 @@ dtb-$(CONFIG_ARCH_AT91) += tny_a9g20.dtb
+> >  dtb-$(CONFIG_ARCH_AT91) += usb_a9g20.dtb
+> >  # sam9g45
+> >  dtb-$(CONFIG_ARCH_AT91) += at91sam9m10g45ek.dtb
+> > +dtb-$(CONFIG_ARCH_AT91) += pm9g45.dtb
+> >  # sam9n12
+> >  dtb-$(CONFIG_ARCH_AT91) += at91sam9n12ek.dtb
+> >  # sam9x5
+> > diff --git a/arch/arm/boot/dts/pm9g45.dts b/arch/arm/boot/dts/pm9g45.dts
+> > new file mode 100644
+> > index 0000000..b0c258d
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/pm9g45.dts
+> > @@ -0,0 +1,144 @@
+> > +/*
+> > + * pm9g45.dts - Device Tree file for Ronetix pm9g45 board
+> > + *
+> > + *  Copyright (C) 2012 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * Licensed under GPLv2.
+> > + */
+> > +/dts-v1/;
+> > +/include/ "at91sam9g45.dtsi"
+> > +
+> > +/ {
+> > +	model = "Ronetix pm9g45";
+> > +	compatible = "ronetix,pm9g45", "atmel,at91sam9g45", "atmel,at91sam9";
+> > +
+> > +	chosen {
+> > +		bootargs = "console=ttyS0,115200";
+> > +	};
+> > +
+> > +	memory {
+> > +		reg = <0x70000000 0x8000000>;
+> > +	};
+> > +
+> > +	clocks {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges;
+> > +
+> > +		main_clock: clock@0 {
+> > +			compatible = "atmel,osc", "fixed-clock";
+> > +			clock-frequency = <12000000>;
+> > +		};
+> > +	};
+> > +
+> > +	ahb {
+> > +		apb {
+> > +			dbgu: serial@ffffee00 {
+> > +				status = "okay";
+> > +			};
+> > +
+> > +			pinctrl@fffff200 {
+> > +
+> > +				board {
+> > +					pinctrl_board_nand: nand0-board {
+> > +						atmel,pins =
+> > +							<3 3 0x0 0x1	/* PD3 gpio RDY pin pull_up*/
+> > +							 2 14 0x0 0x1>;	/* PC14 gpio enable pin pull_up */
+> > +					};
+> > +				};
+> > +			};
+> > +
+> > +			macb0: ethernet@fffbc000 {
+> > +				phy-mode = "rmii";
+> > +				status = "okay";
+> > +			};
+> > +		};
+> > +
+> > +		nand0: nand@40000000 {
+> > +			nand-bus-width = <8>;
+> > +			nand-ecc-mode = "soft";
+> > +			nand-on-flash-bbt;
+> > +			pinctrl-0 = <&pinctrl_board_nand>;
+> > +
+> > +			gpios = <&pioD 3 0
+> > +				 &pioC 14 0
+> > +				 0
+> > +				>;
+> > +
+> > +			status = "okay";
+> > +
+> > +			at91bootstrap@0 {
+> > +				label = "at91bootstrap";
+> > +				reg = <0x0 0x20000>;
+> > +			};
+> > +
+> > +			barebox@20000 {
+> > +				label = "barebox";
+> > +				reg = <0x20000 0x40000>;
+> > +			};
+> > +
+> > +			bareboxenv@60000 {
+> > +				label = "bareboxenv";
+> > +				reg = <0x60000 0x1A0000>;
+> > +			};
+> > +
+> > +			kernel@200000 {
+> > +				label = "bareboxenv2";
+> > +				reg = <0x200000 0x300000>;
+> > +			};
+> > +
+> > +			kernel@500000 {
+> > +				label = "root";
+> > +				reg = <0x500000 0x400000>;
+> > +			};
+> > +
+> > +			data@900000 {
+> > +				label = "data";
+> > +				reg = <0x900000 0x8340000>;
+> > +			};
+> > +		};
+> > +
+> > +		usb0: ohci@00700000 {
+> > +			status = "okay";
+> > +			num-ports = <2>;
+> > +		};
+> > +
+> > +		usb1: ehci@00800000 {
+> > +			status = "okay";
+> > +		};
+> > +	};
+> > +
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +
+> > +		led0 {
+> > +			label = "led0";
+> > +			gpios = <&pioD 0 1>;
+> > +			linux,default-trigger = "nand-disk";
+> > +		};
+> > +
+> > +		led1 {
+> > +			label = "led1";
+> > +			gpios = <&pioD 31 0>;
+> > +			linux,default-trigger = "heartbeat";
+> > +		};
+> > +	};
+> > +
+> > +	gpio_keys {
+> > +		compatible = "gpio-keys";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		right {
+> > +			label = "SW4";
+> > +			gpios = <&pioE 7 1>;
+> > +			linux,code = <106>;
+> > +		};
+> > +
+> > +		up {
+> > +			label = "SW3";
+> > +			gpios = <&pioE 8 1>;
+> > +			linux,code = <103>;
+> > +		};
+> > +	};
+> > +};
+> > 
+> 
+> 
+> -- 
+> Nicolas Ferre
