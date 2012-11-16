@@ -1,145 +1,137 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [PATCH v2] drivers/of: Constify device_node->name and ->path_component_name
-Date: Fri, 16 Nov 2012 14:20:25 +0000
-Message-ID: <1353075625-7755-1-git-send-email-grant.likely@secretlab.ca>
-Return-path: <sparclinux-owner@vger.kernel.org>
-Sender: sparclinux-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "David S. Miller" <davem@davemloft.net>, Julian Calaby <julian.calaby@gmail.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 5/9] usb: add phy connection by phy-mode
+Date: Fri, 16 Nov 2012 15:32:21 +0100
+Message-ID: <50A64E75.4060209@pengutronix.de>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-6-git-send-email-m.grzeschik@pengutronix.de> <20121116113149.GC17793@arwen.pp.htv.fi> <50A62713.5070407@pengutronix.de> <20121116134116.GA18527@arwen.pp.htv.fi>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enig9F82F5E4F905578F24866BE6"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121116134116.GA18527-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Neither of these should ever be changed once set. Make them const and
-fix up the users that try to modify it in-place. In one case
-kmalloc+memcpy is replaced with kstrdup() to avoid modifying the string.
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig9F82F5E4F905578F24866BE6
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Build tested with defconfigs on ARM, PowerPC, Sparc, MIPS, x86 among
-others.
+On 11/16/2012 02:41 PM, Felipe Balbi wrote:
+> Hi,
+>=20
+> On Fri, Nov 16, 2012 at 12:44:19PM +0100, Marc Kleine-Budde wrote:
+>>>> diff --git a/drivers/of/of_usbphy.c b/drivers/of/of_usbphy.c
+>>>> new file mode 100644
+>>>> index 0000000..2e71f7b
+>>>> --- /dev/null
+>>>> +++ b/drivers/of/of_usbphy.c
+>>>> @@ -0,0 +1,49 @@
+>>>> +/*
+>>>> + * OF helpers for network devices.
+>>>> + *
+>>>> + * This file is released under the GPLv2
+>>>> + *
+>>>> + * Initially copied out of drivers/of/of_net.c
+>>>> + */
+>>>> +#include <linux/etherdevice.h>
+>>>> +#include <linux/kernel.h>
+>>>> +#include <linux/of_usbphy.h>
+>>>> +#include <linux/usb/phy.h>
+>>>> +#include <linux/export.h>
+>>>> +
+>>>> +/**
+>>>> + * It maps 'enum usb_phy_interface' found in include/linux/usb/phy.=
+h
+>>>> + * into the device tree binding of 'phy-mode', so that USB
+>>>> + * device driver can get phy interface from device tree.
+>>>> + */
+>>>
+>>> provide proper kernel-doc
+>>>
+>>>> +static const char *usbphy_modes[] =3D {
+>>>> +	[USBPHY_INTERFACE_MODE_NA]	=3D "",
+>>>> +	[USBPHY_INTERFACE_MODE_UTMI]	=3D "utmi",
+>>>> +	[USBPHY_INTERFACE_MODE_UTMIW]	=3D "utmiw",
+>>>> +	[USBPHY_INTERFACE_MODE_ULPI]	=3D "ulpi",
+>>>> +	[USBPHY_INTERFACE_MODE_SERIAL]	=3D "fsls",
+>>>> +};
+>>>
+>>> In fact, these would be better off as constants:
+>>>
+>>> #define USBPHY_INTERFACE_MODE_UTMI	1
+>>> #define USBPHY_INTERFACE_MODE_UTMIW	2
+>>> ...
+>>
+>> Why are defines better than an enum? BTW: this code is a copy of the
+>=20
+> because with enums can change value if you add another one in the middl=
+e
+> and it's really easy to miss that sort of thing during review and cause=
 
-Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Julian Calaby <julian.calaby@gmail.com>
----
+> regressions to many DTS files.
 
-v2 - fill out more information in the commit text.
+Now I get it, you want to use integers instead of strings in the DT. Why
+do you want to have Integers in the DT? It seems to work with strings
+pretty well for the Ethernet phys, why invent a new concept here?
 
- arch/powerpc/platforms/powermac/pfunc_core.c |    2 +-
- arch/powerpc/platforms/pseries/reconfig.c    |    3 +--
- arch/powerpc/sysdev/fsl_pci.c                |    2 +-
- arch/sparc/kernel/pci_impl.h                 |    2 +-
- drivers/of/fdt.c                             |   10 +++++-----
- include/linux/of.h                           |    4 ++--
- 6 files changed, 11 insertions(+), 12 deletions(-)
+>> ethernet phy of-helper code.
+>=20
+> so ?
 
-diff --git a/arch/powerpc/platforms/powermac/pfunc_core.c b/arch/powerpc/platforms/powermac/pfunc_core.c
-index b0c3777..d588e48 100644
---- a/arch/powerpc/platforms/powermac/pfunc_core.c
-+++ b/arch/powerpc/platforms/powermac/pfunc_core.c
-@@ -686,7 +686,7 @@ static int pmf_add_functions(struct pmf_device *dev, void *driverdata)
- 	int count = 0;
- 
- 	for (pp = dev->node->properties; pp != 0; pp = pp->next) {
--		char *name;
-+		const char *name;
- 		if (strncmp(pp->name, PP_PREFIX, plen) != 0)
- 			continue;
- 		name = pp->name + plen;
-diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-index 39f71fb..2f46681 100644
---- a/arch/powerpc/platforms/pseries/reconfig.c
-+++ b/arch/powerpc/platforms/pseries/reconfig.c
-@@ -281,12 +281,11 @@ static struct property *new_property(const char *name, const int length,
- 	if (!new)
- 		return NULL;
- 
--	if (!(new->name = kmalloc(strlen(name) + 1, GFP_KERNEL)))
-+	if (!(new->name = kstrdup(name, GFP_KERNEL)))
- 		goto cleanup;
- 	if (!(new->value = kmalloc(length + 1, GFP_KERNEL)))
- 		goto cleanup;
- 
--	strcpy(new->name, name);
- 	memcpy(new->value, value, length);
- 	*(((char *)new->value) + length) = 0;
- 	new->length = length;
-diff --git a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
-index ffb93ae..01b62a6 100644
---- a/arch/powerpc/sysdev/fsl_pci.c
-+++ b/arch/powerpc/sysdev/fsl_pci.c
-@@ -136,7 +136,7 @@ static void __init setup_pci_atmu(struct pci_controller *hose,
- 	u32 pcicsrbar = 0, pcicsrbar_sz;
- 	u32 piwar = PIWAR_EN | PIWAR_PF | PIWAR_TGI_LOCAL |
- 			PIWAR_READ_SNOOP | PIWAR_WRITE_SNOOP;
--	char *name = hose->dn->full_name;
-+	const char *name = hose->dn->full_name;
- 	const u64 *reg;
- 	int len;
- 
-diff --git a/arch/sparc/kernel/pci_impl.h b/arch/sparc/kernel/pci_impl.h
-index 918a203..5f68853 100644
---- a/arch/sparc/kernel/pci_impl.h
-+++ b/arch/sparc/kernel/pci_impl.h
-@@ -88,7 +88,7 @@ struct pci_pbm_info {
- 	int				chip_revision;
- 
- 	/* Name used for top-level resources. */
--	char				*name;
-+	const char			*name;
- 
- 	/* OBP specific information. */
- 	struct platform_device		*op;
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index c2b08dc..c8be326 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -199,10 +199,10 @@ static unsigned long unflatten_dt_node(struct boot_param_header *blob,
- 	np = unflatten_dt_alloc(&mem, sizeof(struct device_node) + allocl,
- 				__alignof__(struct device_node));
- 	if (allnextpp) {
-+		char *fn;
- 		memset(np, 0, sizeof(*np));
--		np->full_name = ((char *)np) + sizeof(struct device_node);
-+		np->full_name = fn = ((char *)np) + sizeof(*np);
- 		if (new_format) {
--			char *fn = np->full_name;
- 			/* rebuild full path for new format */
- 			if (dad && dad->parent) {
- 				strcpy(fn, dad->full_name);
-@@ -216,9 +216,9 @@ static unsigned long unflatten_dt_node(struct boot_param_header *blob,
- 				fn += strlen(fn);
- 			}
- 			*(fn++) = '/';
--			memcpy(fn, pathp, l);
--		} else
--			memcpy(np->full_name, pathp, l);
-+		}
-+		memcpy(fn, pathp, l);
-+
- 		prev_pp = &np->properties;
- 		**allnextpp = np;
- 		*allnextpp = &np->allnext;
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b4e50d5..857dde9 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -46,7 +46,7 @@ struct device_node {
- 	const char *name;
- 	const char *type;
- 	phandle phandle;
--	char	*full_name;
-+	const char *full_name;
- 
- 	struct	property *properties;
- 	struct	property *deadprops;	/* removed properties */
-@@ -60,7 +60,7 @@ struct device_node {
- 	unsigned long _flags;
- 	void	*data;
- #if defined(CONFIG_SPARC)
--	char	*path_component_name;
-+	const char *path_component_name;
- 	unsigned int unique_id;
- 	struct of_irq_controller *irq_trans;
- #endif
--- 
-1.7.10.4
+reviewed core, proven to work, if the concept works for Ethernet phys it
+should work with USB phys, too.
 
+>=20
+>>>> +/**
+>>>> + * of_get_phy_mode - Get phy mode for given device_node
+>>>> + * @np:	Pointer to the given device_node
+>>>> + *
+>>>> + * The function gets phy interface string from property 'phy-mode',=
+
+>>>> + * and return its index in phy_modes table, or errno in error case.=
+
+>>>> + */
+>>>
+>>> why do you pass a string instead of passing an Integer ? This makes n=
+o
+>>> sense to me.
+>>
+>> This code returns an integer or rather an enum....see header file belo=
+w.
+>=20
+> I mean through DT, should've been more explicit. The dts files should
+> pass an integer, not a string. Then you don't need this silly conversio=
+n
+> helper.
+
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--------------enig9F82F5E4F905578F24866BE6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iEYEARECAAYFAlCmTngACgkQjTAFq1RaXHPuqgCfScm9BTVJReNPRFbnK+IcEeKb
+/8UAoI5JRQtQfqinlDQlJs837cVMM3QD
+=fiEV
+-----END PGP SIGNATURE-----
+
+--------------enig9F82F5E4F905578F24866BE6--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
