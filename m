@@ -1,65 +1,196 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 4/4] ARM: dts: add sram for imx53 and imx6q
-Date: Fri, 16 Nov 2012 11:30:17 +0100
-Message-ID: <1353061817-3207-5-git-send-email-p.zabel@pengutronix.de>
-References: <1353061817-3207-1-git-send-email-p.zabel@pengutronix.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
+Date: Fri, 16 Nov 2012 10:35:11 +0000
+Message-ID: <20121116103511.GB16084@e106331-lin.cambridge.arm.com>
+References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
+ <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353061817-3207-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Javier Martin <javier.martin-N4RbWZIug12MkV8/HQOAswC/G2K4zDHf@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Leela Krishna Amudala <l.krishna@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/imx53.dtsi |    5 +++++
- arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
- 2 files changed, 11 insertions(+)
+On Fri, Nov 16, 2012 at 06:38:21AM +0000, Alexandre Courbot wrote:
+> Some device drivers (e.g. panel or backlights) need to follow precise
+> sequences for powering on and off, involving GPIOs, regulators, PWMs
+> with a precise powering order and delays to respect between steps.
+> These sequences are device-specific, and do not belong to a particular
+> driver - therefore they have been performed by board-specific hook
+> functions to far.
+> 
+> With the advent of the device tree and of ARM kernels that are not
+> board-tied, we cannot rely on these board-specific hooks anymore but
+> need a way to implement these sequences in a portable manner. This patch
+> introduces a simple interpreter that can execute such power sequences
+> encoded either as platform data or within the device tree.
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 76ebb1a..7677218 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -541,5 +541,10 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		ocram: ocram@f8000000 {
-+			compatible = "fsl,imx-ocram", "sram";
-+			reg = <0xf8000000 0x20000>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index f3990b0..855ac25 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -116,6 +116,12 @@
- 			status = "disabled";
- 		};
+Given there are several ARM platforms that may have an interest in this, please
+consider posting this to the ARM mailing list:
+linux-arm-kernel@lists.infradead.org.
+
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> Reviewed-by: Stephen Warren <swarren@wwwdotorg.org>
+> Reviewed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> ---
+>  .../devicetree/bindings/power/power_seq.txt        | 121 +++++++
+>  Documentation/power/power_seq.txt                  | 253 ++++++++++++++
+>  drivers/power/Kconfig                              |   1 +
+>  drivers/power/Makefile                             |   1 +
+>  drivers/power/power_seq/Kconfig                    |   2 +
+>  drivers/power/power_seq/Makefile                   |   1 +
+>  drivers/power/power_seq/power_seq.c                | 376 +++++++++++++++++++++
+>  drivers/power/power_seq/power_seq_delay.c          |  65 ++++
+>  drivers/power/power_seq/power_seq_gpio.c           |  94 ++++++
+>  drivers/power/power_seq/power_seq_pwm.c            |  82 +++++
+>  drivers/power/power_seq/power_seq_regulator.c      |  83 +++++
+>  include/linux/power_seq.h                          | 203 +++++++++++
+>  12 files changed, 1282 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/power_seq.txt
+>  create mode 100644 Documentation/power/power_seq.txt
+>  create mode 100644 drivers/power/power_seq/Kconfig
+>  create mode 100644 drivers/power/power_seq/Makefile
+>  create mode 100644 drivers/power/power_seq/power_seq.c
+>  create mode 100644 drivers/power/power_seq/power_seq_delay.c
+>  create mode 100644 drivers/power/power_seq/power_seq_gpio.c
+>  create mode 100644 drivers/power/power_seq/power_seq_pwm.c
+>  create mode 100644 drivers/power/power_seq/power_seq_regulator.c
+>  create mode 100644 include/linux/power_seq.h
+> 
+> diff --git a/Documentation/devicetree/bindings/power/power_seq.txt b/Documentation/devicetree/bindings/power/power_seq.txt
+> new file mode 100644
+> index 0000000..7880a6c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/power_seq.txt
+> @@ -0,0 +1,121 @@
+> +Runtime Interpreted Power Sequences
+> +===================================
+> +
+> +Power sequences are sequential descriptions of actions to be performed on
+> +power-related resources. Having these descriptions in a well-defined data format
+> +allows us to take much of the board- or device- specific power control code out
+> +of the kernel and place it into the device tree instead, making kernels less
+> +board-dependant.
+> +
+> +A device typically makes use of multiple power sequences, for different purposes
+> +such as powering on and off. All the power sequences of a given device are
+> +grouped into a set. In the device tree, this set is a sub-node of the device
+> +node named "power-sequences".
+> +
+> +Power Sequences Structure
+> +-------------------------
+> +Every device that makes use of power sequences must have a "power-sequences"
+> +node into which individual power sequences are declared as sub-nodes. The name
+> +of the node becomes the name of the sequence within the power sequences
+> +framework.
+> +
+> +Similarly, each power sequence declares its steps as sub-nodes of itself. Steps
+> +must be named sequentially, with the first step named step0, the second step1,
+> +etc. Failure to follow this rule will result in a parsing error.
+
+Could we not encode the step number in the unit-address? i.e. step@N rather than
+stepN.
+
+If we ever add additional (non step) data to sequences it might make it easier
+to filter, as we only reserve one name rather than a class of names.
+
+> +
+> +Power Sequences Steps
+> +---------------------
+> +Steps of a sequence describe an action to be performed on a resource. They
+> +always include a "type" property which indicates what kind of resource this
+> +step works on. Depending on the resource type, additional properties are defined
+> +to control the action to be performed.
+> +
+> +"delay" type required properties:
+> +  - delay: delay to wait (in microseconds)
+> +
+> +"regulator" type required properties:
+> +  - id: name of the regulator to use.
+> +  - enable / disable: one of these two empty properties must be present to
+> +                      enable or disable the resource
+> +
+> +"pwm" type required properties:
+> +  - id: name of the PWM to use.
+> +  - enable / disable: one of these two empty properties must be present to
+> +                      enable or disable the resource
+> +
+> +"gpio" type required properties:
+> +  - gpio: phandle of the GPIO to use.
+> +  - value: value this GPIO should take. Must be 0 or 1.
+
+Is there any reason for id to be a name rather than a phandle? It seems
+inconsistent with the gpio case.
+
+I also see from the example below that the gpio property is not just a phandle,
+as it has the gpio-specifier appended. Is there a better way of describing this
+format in the documentation?
+
+> +Example
+> +-------
+> +Here are example sequences declared within a backlight device that use all the
+> +supported resources types:
+> +
+> +       backlight {
+> +               compatible = "pwm-backlight";
+> +               ...
+> +
+> +               /* resources used by the power sequences */
+> +               pwms = <&pwm 2 5000000>;
+> +               pwm-names = "backlight";
+> +               power-supply = <&backlight_reg>;
+> +
+> +               power-sequences {
+> +                       power-on {
+> +                               step0 {
+> +                                       type = "regulator";
+> +                                       id = "power";
+> +                                       enable;
+> +                               };
+> +                               step1 {
+> +                                       type = "delay";
+> +                                       delay = <10000>;
+> +                               };
+> +                               step2 {
+> +                                       type = "pwm";
+> +                                       id = "backlight";
+> +                                       enable;
+> +                               };
+> +                               step3 {
+> +                                       type = "gpio";
+> +                                       gpio = <&gpio 28 0>;
+> +                                       value = <1>;
+> +                               };
+> +                       };
+> +
+> +                       power-off {
+> +                               step0 {
+> +                                       type = "gpio";
+> +                                       gpio = <&gpio 28 0>;
+> +                                       value = <0>;
+> +                               };
+> +                               step1 {
+> +                                       type = "pwm";
+> +                                       id = "backlight";
+> +                                       disable;
+> +                               };
+> +                               step2 {
+> +                                       type = "delay";
+> +                                       delay = <10000>;
+> +                               };
+> +                               step3 {
+> +                                       type = "regulator";
+> +                                       id = "power";
+> +                                       disable;
+> +                               };
+> +                       };
+> +               };
+> +       };
  
-+		ocram: ocram@00900000 {
-+			compatible = "fsl,imx-ocram", "sram";
-+			reg = <0x00900000 0x3f000>;
-+			clocks = <&clks 142>;
-+		};
-+
- 		timer@00a00600 {
- 			compatible = "arm,cortex-a9-twd-timer";
- 			reg = <0x00a00600 0x20>;
--- 
-1.7.10.4
+Thanks,
+Mark
+
