@@ -1,79 +1,110 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 6/9] usb: chipidea: add PTW and PTS handling
-Date: Fri, 16 Nov 2012 14:18:48 +0200
-Message-ID: <8739097nbr.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-7-git-send-email-m.grzeschik@pengutronix.de>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
+Date: Fri, 16 Nov 2012 04:25:41 -0800
+Message-ID: <20121116122540.GA2198@lizard>
+References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
+ <1353047903-14363-2-git-send-email-acourbot@nvidia.com>
+ <20121116072642.GA22291@lizard>
+ <50A60AF6.9080509@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1352909950-32555-7-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50A60AF6.9080509@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alex Courbot <acourbot@nvidia.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+On Fri, Nov 16, 2012 at 06:44:22PM +0900, Alex Courbot wrote:
+> On 11/16/2012 04:26 PM, Anton Vorontsov wrote:
+> >>+#include "power_seq_delay.c"
+> >>+#include "power_seq_regulator.c"
+> >>+#include "power_seq_pwm.c"
+> >>+#include "power_seq_gpio.c"
+> >
+> >This is odd, although I remember you already explained why you have to
+> >include the .c files, instead of linking them separately. But I forgot the
+> >reason. :) I think this deserves a comment in the code.
+> 
+> This is because of the table right after these includes:
+> 
+> static const struct power_seq_res_ops power_seq_ops[POWER_SEQ_NUM_TYPES] = {
+> 	[POWER_SEQ_DELAY] = POWER_SEQ_DELAY_TYPE,
+> 	[POWER_SEQ_REGULATOR] = POWER_SEQ_REGULATOR_TYPE,
+> 	[POWER_SEQ_PWM] = POWER_SEQ_PWM_TYPE,
+> 	[POWER_SEQ_GPIO] = POWER_SEQ_GPIO_TYPE,
+> };
+> 
+> The POWER_SEQ_*_TYPE macros are defined in the C files. It's the
+> simplest way to initialize this table, and the code inside these C
+> files is short and simple enough that I thought I would be forgiven.
+> :)
 
-> This patch makes it possible to configure the PTW and PTS bits inside
-> the portsc register for host and device mode before the driver starts
-> and the phy can be addressed as hardware implementation is designed.
->
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/usb/chipidea/bits.h        |    3 +++
->  drivers/usb/chipidea/ci.h          |    2 ++
->  drivers/usb/chipidea/ci13xxx_imx.c |    1 +
->  drivers/usb/chipidea/core.c        |   47 ++++++++++++++++++++++++++++++++++++
->  drivers/usb/chipidea/host.c        |    4 +++
->  include/linux/usb/chipidea.h       |    9 +++++++
->  6 files changed, 66 insertions(+)
->
-> diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-> index 4b6ae3e..3cded5f 100644
-> --- a/drivers/usb/chipidea/bits.h
-> +++ b/drivers/usb/chipidea/bits.h
-> @@ -48,6 +48,9 @@
->  #define PORTSC_SUSP           BIT(7)
->  #define PORTSC_HSP            BIT(9)
->  #define PORTSC_PTC            (0x0FUL << 16)
-> +#define PORTSC_PTS            (BIT(31) | BIT(30))
-> +#define PORTSC_PTW            BIT(28)
-> +#define PORTSC_STS            BIT(29)
->  
->  /* DEVLC */
->  #define DEVLC_PSPD            (0x03UL << 25)
-> diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
-> index cd42b59..1439e51 100644
-> --- a/drivers/usb/chipidea/ci.h
-> +++ b/drivers/usb/chipidea/ci.h
-> @@ -314,6 +314,8 @@ static inline u32 hw_test_and_write(struct ci13xxx *ci, enum ci13xxx_regs reg,
->  	return (val & mask) >> ffs_nr(mask);
->  }
->  
-> +void hw_portsc_configure(struct ci13xxx *ci);
-> +
->  int hw_device_reset(struct ci13xxx *ci, u32 mode);
->  
->  int hw_port_test_set(struct ci13xxx *ci, u8 mode);
-> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-> index ee4dab0..a8257b8 100644
-> --- a/drivers/usb/chipidea/ci13xxx_imx.c
-> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
-> @@ -133,6 +133,7 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
->  		       CI13XXX_PULLUP_ON_VBUS |
->  		       CI13XXX_DISABLE_STREAMING |
->  		       CI13XXX_REGS_SHARED,
-> +	ci13xxx_get_dr_flags(pdev->dev.of_node, pdata);
+I think in the header file you could just write
 
-It will be a bit easier to read if this one and ci13xxx_get_dr_mode()
-calls are next to one another. Also my comment about get_dr_mode()
-probably applies here too.
+extern ..... power_seq_delay_type;
+#ifndef ...
+#define power_seq_delay_type NULL
+#endif
 
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And then, in the .c file:
+
+static const struct power_seq_res_ops power_seq_ops[POWER_SEQ_NUM_TYPES] = {
+	[POWER_SEQ_DELAY] = power_seq_delay_type,
+	...
+};
+
+And then you can stop including the .c files directly, and link them
+instead.
+
+> At first everything was in power_seq.c and it was fine, then I
+> thought it would be better to move resource support code into their
+> own filesm and now everybody is asking. :P
+> 
+> But yeah, maybe it would be even better to not stop halfway and use
+> dynamic linking.
+> 
+> Comment added for the time being. ;)
+> 
+> >>+static int of_power_seq_parse_step(struct device *dev,
+> >>+				   struct device_node *node,
+> >>+				   struct power_seq *seq,
+> >>+				   unsigned int step_nbr,
+> >>+				   struct list_head *resources)
+> >>+{
+> >>+	struct power_seq_step *step = &seq->steps[step_nbr];
+> >>+	struct power_seq_resource res, *res2;
+> >>+	const char *type;
+> >>+	int i, err;
+> >
+> >nit: one variable declaration per line.
+> 
+> Fair enough - but is that a convention? checkpatch.pl was happy with these.
+
+It's not a rule, although there is a small passage about it in CodingStyle
+file when it describes commenting style. Though, some folks choose to
+ignore this suggestion quite frequently, especially if variables have no
+comments.
+
+Often, the multiple declarations per line are used to hide ugly functions
+w/ tons of variables, or just to confuse the reader for the fun of it.
+
+There are exceptions, of course. E.g.
+
+	int i, j, k; /* Our iterators. */
+
+Is perfectly fine.
+
+But
+	int i, err;
+
+At least to me seems weird, this stuff is logically disjunct.
+
+Only human can truly differentiate when the stuff "looks better" together
+or apart, so that's why checkpatch doesn't complain. Personally, I use
+this rule of thumb: when in doubt, use just one declaration per line, it
+is always OK. :)
+
+Thanks,
+Anton.
