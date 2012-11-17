@@ -1,11 +1,13 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH v2 0/9]  core, cpu and gated clocks for mvebu
-Date: Sat, 17 Nov 2012 15:22:21 +0100
-Message-ID: <1353162150-522-1-git-send-email-andrew@lunn.ch>
+Subject: [PATCH v2 3/9] clk: armada-370-xp: add support for clock framework
+Date: Sat, 17 Nov 2012 15:22:24 +0100
+Message-ID: <1353162150-522-4-git-send-email-andrew@lunn.ch>
+References: <1353162150-522-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353162150-522-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,105 +19,138 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset combines code from Gregory Clement, Sebastian
-Hesselbarth and myself to implement core clks, cpu clock and gated
-clocks on Marvel MVEBU SoCs.
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-The Armada 370/XP core clock code is a refactored version of the
-already submitted and ACKed code from Gregory. It has been made to fit
-inside a framework developed by Sebastian which can handle all MVEBU
-SoCs. The Armada 370/XP SoCs have more core clocks than the older SoCs, and
-the framework needs to handle this. Rather than specify the clock
-frequencies in DT, a Sample At Reset register is used, which describes
-each core clock frequency.
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Tested-by Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-370.dtsi   |    7 ++++++
+ arch/arm/boot/dts/armada-xp.dtsi    |   42 +++++++++++++++++++++++++++++++++++
+ arch/arm/mach-mvebu/Kconfig         |    3 +++
+ arch/arm/mach-mvebu/armada-370-xp.c |    9 +++++++-
+ 4 files changed, 60 insertions(+), 1 deletion(-)
 
-Armada XP is an SMP processor, with each CPU having its own
-clock. Gregories code for this has been taken as is.
-
-The Armada 370/XP clock source has been converted to the common clock
-framework.
-
-Dove, Kirkword, and Armada 370/XP have the ability to gate
-clocks to various blocks. A clk-gate clock is created for each of the
-gateable clocks on Dove and Kirkwood and Armada 370/XP.
-
-This code has been tested on:
-
-Kirkwood based QNAP TS219
-Armada 370 based mirabox
-Armada XP based OpenBlocks
-Dove based Cubox.
-
-v1 -> v2
-  Moved some patch hunks into the correct patch
-  Added armada_ prefix to a number of symbols
-  renamed clk_gate to gate_clk
-  renamed *-clock-gating to *-gating-clock
-  Add gating-clock implementation for Armada 370/XP
-  Add Tested-by from Gregory
-  Documented required clock property in armada-370-xp-timer.txt
-
-Andrew Lunn (1):
-  ARM: Kirkwood: switch to DT clock providers
-
-Gregory CLEMENT (5):
-  clk: mvebu: add armada-370-xp CPU specific clocks
-  clk: armada-370-xp: add support for clock framework
-  clocksource: convert time-armada-370-xp to clk framework
-  clk: mvebu: armada 370/XP add clock gating control provider for DT
-  arm: mvebu: armada 370/XP adding clock gating support: dt binding
-
-Sebastian Hesselbarth (3):
-  clk: mvebu: add mvebu core clocks.
-  clk: mvebu: add clock gating control provider for DT
-  ARM: dove: switch to DT clock providers
-
- .../bindings/arm/armada-370-xp-timer.txt           |    1 +
- .../devicetree/bindings/clock/mvebu-core-clock.txt |   47 ++
- .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |   21 +
- .../bindings/clock/mvebu-gated-clock.txt           |  119 ++++
- arch/arm/Kconfig                                   |    1 +
- arch/arm/boot/dts/armada-370-db.dts                |    4 -
- arch/arm/boot/dts/armada-370-xp.dtsi               |    1 +
- arch/arm/boot/dts/armada-370.dtsi                  |   15 +
- arch/arm/boot/dts/armada-xp.dtsi                   |   49 ++
- arch/arm/boot/dts/dove.dtsi                        |   20 +
- arch/arm/boot/dts/kirkwood.dtsi                    |   22 +
- arch/arm/mach-dove/Kconfig                         |    2 +
- arch/arm/mach-dove/common.c                        |   64 +-
- arch/arm/mach-kirkwood/Kconfig                     |    2 +
- arch/arm/mach-kirkwood/board-dt.c                  |   72 ++-
- arch/arm/mach-mvebu/Kconfig                        |    4 +
- arch/arm/mach-mvebu/armada-370-xp.c                |    9 +-
- arch/arm/plat-orion/include/plat/common.h          |    1 +
- drivers/clk/Kconfig                                |    2 +
- drivers/clk/Makefile                               |    1 +
- drivers/clk/mvebu/Kconfig                          |    8 +
- drivers/clk/mvebu/Makefile                         |    3 +
- drivers/clk/mvebu/clk-core.c                       |  675 ++++++++++++++++++++
- drivers/clk/mvebu/clk-core.h                       |   18 +
- drivers/clk/mvebu/clk-cpu.c                        |  155 +++++
- drivers/clk/mvebu/clk-cpu.h                        |   18 +
- drivers/clk/mvebu/clk-gating-ctrl.c                |  238 +++++++
- drivers/clk/mvebu/clk.c                            |   37 ++
- drivers/clocksource/time-armada-370-xp.c           |   11 +-
- include/linux/clk/mvebu.h                          |   23 +
- 30 files changed, 1605 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
- create mode 100644 Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
- create mode 100644 drivers/clk/mvebu/Kconfig
- create mode 100644 drivers/clk/mvebu/Makefile
- create mode 100644 drivers/clk/mvebu/clk-core.c
- create mode 100644 drivers/clk/mvebu/clk-core.h
- create mode 100644 drivers/clk/mvebu/clk-cpu.c
- create mode 100644 drivers/clk/mvebu/clk-cpu.h
- create mode 100644 drivers/clk/mvebu/clk-gating-ctrl.c
- create mode 100644 drivers/clk/mvebu/clk.c
- create mode 100644 include/linux/clk/mvebu.h
-
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index 2069151..dae966c 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -75,5 +75,12 @@
+ 			#interrupts-cells = <2>;
+ 			interrupts = <91>;
+ 		};
++
++		coreclk: mvebu-sar@d0018230 {
++			compatible = "marvell,armada-370-core-clocks";
++			reg = <0xd0018230 0x08>;
++			#clock-cells = <1>;
++		};
++
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 71d6b5d..f8382a8 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -27,6 +27,35 @@
+ 		    <0xd0021870 0x58>;
+ 	};
+ 
++	cpus {
++	    #address-cells = <1>;
++	    #size-cells = <0>;
++
++	    cpu@0 {
++		compatible = "marvell,sheeva-v7";
++		reg = <0>;
++		clocks = <&cpuclk 0>;
++	    };
++
++	    cpu@1 {
++		compatible = "marvell,sheeva-v7";
++		reg = <1>;
++		clocks = <&cpuclk 1>;
++	    };
++
++	    cpu@2 {
++		compatible = "marvell,sheeva-v7";
++		reg = <2>;
++		clocks = <&cpuclk 2>;
++	    };
++
++	    cpu@3 {
++		compatible = "marvell,sheeva-v7";
++		reg = <3>;
++		clocks = <&cpuclk 3>;
++	    };
++	};
++
+ 	soc {
+ 		serial@d0012200 {
+ 				compatible = "ns16550";
+@@ -47,6 +76,19 @@
+ 				marvell,timer-25Mhz;
+ 		};
+ 
++		coreclk: mvebu-sar@d0018230 {
++			compatible = "marvell,armada-xp-core-clocks";
++			reg = <0xd0018230 0x08>;
++			#clock-cells = <1>;
++		};
++
++		cpuclk: clock-complex@d0018700 {
++			#clock-cells = <1>;
++			compatible = "marvell,armada-xp-cpu-clockctrl";
++			reg = <0xd0018700 0xA0>;
++			clocks = <&coreclk 1>;
++		};
++
+ 		system-controller@d0018200 {
+ 				compatible = "marvell,armada-370-xp-system-controller";
+ 				reg = <0xd0018200 0x500>;
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index 416d46e..c7b8404 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -9,6 +9,9 @@ config ARCH_MVEBU
+ 	select PINCTRL
+ 	select PLAT_ORION
+ 	select SPARSE_IRQ
++	select CLKDEV_LOOKUP
++	select MVEBU_CLK_CORE
++	select MVEBU_CLK_CPU
+ 
+ if ARCH_MVEBU
+ 
+diff --git a/arch/arm/mach-mvebu/armada-370-xp.c b/arch/arm/mach-mvebu/armada-370-xp.c
+index 49d7915..3292d6d 100644
+--- a/arch/arm/mach-mvebu/armada-370-xp.c
++++ b/arch/arm/mach-mvebu/armada-370-xp.c
+@@ -17,6 +17,7 @@
+ #include <linux/of_platform.h>
+ #include <linux/io.h>
+ #include <linux/time-armada-370-xp.h>
++#include <linux/clk/mvebu.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <asm/mach/time.h>
+@@ -37,8 +38,14 @@ void __init armada_370_xp_map_io(void)
+ 	iotable_init(armada_370_xp_io_desc, ARRAY_SIZE(armada_370_xp_io_desc));
+ }
+ 
++void __init armada_370_xp_timer_and_clk_init(void)
++{
++	mvebu_clocks_init();
++	armada_370_xp_timer_init();
++}
++
+ struct sys_timer armada_370_xp_timer = {
+-	.init		= armada_370_xp_timer_init,
++	.init		= armada_370_xp_timer_and_clk_init,
+ };
+ 
+ static void __init armada_370_xp_dt_init(void)
 -- 
 1.7.10.4
