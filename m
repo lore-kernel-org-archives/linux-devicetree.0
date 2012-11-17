@@ -1,55 +1,59 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH -next] iio: isl29018: fix to return error or 0 in isl29018_write_raw()
-Date: Sat, 17 Nov 2012 10:20:36 +0000
-Message-ID: <50A764F4.3040008@kernel.org>
-References: <CAPgLHd873xAvToL7reBbxmS-iEoJ9OqvjEoXf8RsG2esbTyo1A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPgLHd873xAvToL7reBbxmS-iEoJ9OqvjEoXf8RsG2esbTyo1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCHv9 0/3] Runtime Interpreted Power Sequences
+Date: Sat, 17 Nov 2012 19:55:44 +0900
+Message-ID: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/08/2012 09:05 AM, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
-> 
-> We had assigned the return value to 'ret' but ignored it when
-> return from isl29018_write_raw(), it's better to return 'ret'
-> instead of 0.
-> 
-> dpatch engine is used to auto generate this patch.
-> (https://github.com/weiyj/dpatch)
-> 
-Thanks - merged to togreg branch of
+Apologies for sending two patchsets in two days - the main purpose
+of this new revision is to add the linux-arm-kernel list to the
+audience. A few suggestions from v8 have also been added.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+Changelog from v8:
+- Compile resource support into different compilation units
+- Check that resource support is compiled in when resolving sequences
+- Now compilable as a module
+- Renamed source files to avoid repeated power_seq in their path
+- Add linux-arm-kernel list to audience as suggested by Mark Rutland
 
+Alexandre Courbot (3):
+  Runtime Interpreted Power Sequences
+  pwm_backlight: use power sequences
+  Take maintainership of power sequences
 
-> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
-> ---
->  drivers/staging/iio/light/isl29018.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/iio/light/isl29018.c b/drivers/staging/iio/light/isl29018.c
-> index 3b03f6f..1d5b294 100644
-> --- a/drivers/staging/iio/light/isl29018.c
-> +++ b/drivers/staging/iio/light/isl29018.c
-> @@ -356,7 +356,7 @@ static int isl29018_write_raw(struct iio_dev *indio_dev,
->  	}
->  	mutex_unlock(&chip->lock);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int isl29018_read_raw(struct iio_dev *indio_dev,
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+ .../devicetree/bindings/power/power_seq.txt        | 121 +++++++
+ .../bindings/video/backlight/pwm-backlight.txt     |  63 +++-
+ Documentation/power/power_seq.txt                  | 253 ++++++++++++++
+ MAINTAINERS                                        |  10 +
+ drivers/power/Kconfig                              |   1 +
+ drivers/power/Makefile                             |   1 +
+ drivers/power/power_seq/Kconfig                    |   2 +
+ drivers/power/power_seq/Makefile                   |   2 +
+ drivers/power/power_seq/core.c                     | 362 +++++++++++++++++++++
+ drivers/power/power_seq/delay.c                    |  66 ++++
+ drivers/power/power_seq/gpio.c                     |  95 ++++++
+ drivers/power/power_seq/power_seq_priv.h           |  56 ++++
+ drivers/power/power_seq/pwm.c                      |  85 +++++
+ drivers/power/power_seq/regulator.c                |  87 +++++
+ drivers/video/backlight/Kconfig                    |   1 +
+ drivers/video/backlight/pwm_bl.c                   | 160 +++++++--
+ include/linux/power_seq.h                          | 203 ++++++++++++
+ include/linux/pwm_backlight.h                      |  18 +-
+ 18 files changed, 1546 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power_seq.txt
+ create mode 100644 Documentation/power/power_seq.txt
+ create mode 100644 drivers/power/power_seq/Kconfig
+ create mode 100644 drivers/power/power_seq/Makefile
+ create mode 100644 drivers/power/power_seq/core.c
+ create mode 100644 drivers/power/power_seq/delay.c
+ create mode 100644 drivers/power/power_seq/gpio.c
+ create mode 100644 drivers/power/power_seq/power_seq_priv.h
+ create mode 100644 drivers/power/power_seq/pwm.c
+ create mode 100644 drivers/power/power_seq/regulator.c
+ create mode 100644 include/linux/power_seq.h
+
+-- 
+1.8.0
