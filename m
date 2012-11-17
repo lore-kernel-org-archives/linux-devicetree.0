@@ -1,97 +1,83 @@
-From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: Re: RFC: New release for DTC?
-Date: Sat, 17 Nov 2012 12:50:07 -0500
-Message-ID: <201211171250.08597.vapier@gentoo.org>
-References: <201208232015.39613.yann.morin.1998@free.fr>
- <20120824013625.GA8067@truffula.fritz.box>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving
+ omap_devices to mach-omap2)
+Date: Sat, 17 Nov 2012 23:27:18 +0100
+Message-ID: <20121117222718.GF31527@game.jcrosoft.org>
+References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com>
+ <50999145.2070306@wwwdotorg.org>
+ <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com>
+ <509D9089.7020407@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0983000935804960350=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20120824013625.GA8067-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <509D9089.7020407@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---===============0983000935804960350==
-Content-Type: multipart/signed;
-  boundary="nextPart8633822.OTPJloS4MA";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+On 16:23 Fri 09 Nov     , Stephen Warren wrote:
+> On 11/09/2012 09:28 AM, Grant Likely wrote:
+> > On Tue, Nov 6, 2012 at 10:37 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> ...
+> >> I do rather suspect this use-case is quite common. NVIDIA certainly has
+> >> a bunch of development boards with pluggable
+> >> PMIC/audio/WiFi/display/..., and I believe there's some ability to
+> >> re-use the pluggable components with a variety of base-boards.
+> >>
+> >> Given people within NVIDIA started talking about this recently, I asked
+> >> them to enumerate all the boards we have that support pluggable
+> >> components, and how common it is that some boards support being plugged
+> >> into different main boards. I don't know when that enumeration will
+> >> complete (or even start) but hopefully I can provide some feedback on
+> >> how common the use-case is for us once it's done.
+> > 
+> > From your perspective, is it important to use the exact same .dtb
+> > overlays for those add-on boards, or is it okay to have a separate
+> > build of the overlay for each base tree?
+> 
+> I certainly think it'd be extremely beneficial to use the exact same
+> child board .dtb with arbitrary base boards.
+> 
+> Consider something like the Arduino shield connector format, which I
+> /believe/ has been re-used across a wide variety of Arduino boards and
+> other compatible or imitation boards. Now consider a vendor of an
+> Arduino shield. The shield vendor probably wants to publish a single
+> .dtb file that works for users irrespective of which board they're using
+> it with.
+> 
+> (Well, I'm not sure that Arduino can run Linux; perhaps that's why you
+> picked BeagleBone capes for your document!)
+> 
+> I suppose it would be acceptable for the shield vendor to ship the .dts
+> file rather than the .dtb, and hence need to build the shield .dtb for a
+> specific base board.
+> 
+> However, I think the process for an end-user needs to be as simple as
+> "drop this .dts/.dtb file into some standard directory", and I imagine
+> it'll be much easier for distros/... to make that process work if
+> they're dealing with a .dtb that they can just blast into the kernel's
+> firmware loader interface, rather than having to also locate the
+> base-board .dts/.dtb file, and run dtc and/or other tools on both .dts
+> files together.
+I've exactly the same issue on Calao or the new atmel boards
 
---nextPart8633822.OTPJloS4MA
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+We have lego boards
 
-On Thursday 23 August 2012 21:36:25 David Gibson wrote:
-> On Thu, Aug 23, 2012 at 08:15:39PM +0200, Yann E. MORIN wrote:
-> > Following advice from Jon Loeliger, I would suggest that a new release
-> > of DTC be tagged and packaged.
-> >=20
-> > It is important for some projects to rely on a released version, rather
-> > than use a random cset from the repository. Comes to mind, the automated
-> > build-systems, such as buildroot.
-> >=20
-> > Of course, I can help, if need be! ;-)
-> >=20
-> > Are there any others who think that a release would make sense?
->=20
-> This has been a bit of a perrenial problem.  dtc development has been
-> sufficiently gradual that there haven't been many obvious points for
-> making new releases.  dtc developers (i.e. Jon and my, mostly) don't
-> feel much pain from the lack of releases, since the git snapshots
-> generally work well (thanks to limited scope and a good testsuite).
->=20
-> I wonder if we should move to a model of just making a release every 3
-> or 6 months from whatever happens to be in the tree at the time
-> (barring obvious known breakage, of course).
+with different cpu-modues running on differetn mother boards with
+diferrentdaugther boards
 
-yes please.  even just a version that uses datestamps would be fine.
-=2Dmike
+on atmel we are lucky enough we can identity via 1-wire all of them but
+on Calao no
 
---nextPart8633822.OTPJloS4MA
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+On Somfy platform we can detect hardware version and need different pinctrl
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (GNU/Linux)
+So personally I'll prefer to be able to request dtb from the kernel or push
+them from the userspace as it will depends where you will detect the hardware
+present
 
-iQIcBAABAgAGBQJQp85QAAoJEEFjO5/oN/WBw9IP/AoCztahedyivDokyXBAUTeR
-tvEMyAqLJ8P/S6rq5y/Xq9e2BbOVEq10dsVbTRsGpaMvD8X8OLF/shVWxLipLg82
-+IpcsEfXxKTx8GGvo7YLBv3PI7jlFSoTEX8bDdWddCnV275Jc5VUmg7Ht8Xm9g6x
-k+3FyMNq7mGRoDdDDK3iMd9QZ2nDGeC8J2k6FvPFlvp4BmmDsTHMtA6IR7QB/aCY
-2t/s/pGpGgF1UlHYBMVzR3pJTkHkVc19fKGVn5q0QCbzA0TMbdWdF7wt9YSLqkgd
-3xxA3pFp6sOgity2wTifdz8jFHG4mxY7u19MTv5Z7RzmkOOoxBuc9wpuTVXS5yWG
-b4/hgFSKXjtdnDMHDu+/PqnkrRiV9BlEtjvLPYaSWqVqwSqAQDlrKNMk6saAUW/W
-UVrKbFfjuLRWDKZilOqQjmKpy7T6ULVsoE5j4hguKnjeLU6op6ab5oDWcXvAJnDh
-vIhgcLJELvX59S+v3QDNjhOqarZZvTmtOeVTioDCal9Ughn3BfycmlbCuOUP0HNb
-p+hzc0UnN7G/EDX9NVfkiD/dm7c2gGXTUvIyBqE47sOnrUXowvi0xgnS8KH3IJV3
-srC88Y50gImIZHtCMxtcciq1IUidzjxV5PkLLVzKEy3g6Tp79p9qWgegfB3xhti/
-TCSPNtqsCBDgEwALmf8O
-=jbGz
------END PGP SIGNATURE-----
+The main concern will which part of the kenel will now handle hw detection?
 
---nextPart8633822.OTPJloS4MA--
-
---===============0983000935804960350==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0983000935804960350==--
+Best Regards,
+J.
