@@ -1,14 +1,13 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH v2 8/9] clk: mvebu: armada 370/XP add clock gating control
- provider for DT
-Date: Sat, 17 Nov 2012 15:22:29 +0100
-Message-ID: <1353162150-522-9-git-send-email-andrew@lunn.ch>
-References: <1353162150-522-1-git-send-email-andrew@lunn.ch>
+From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: Re: RFC: New release for DTC?
+Date: Sat, 17 Nov 2012 12:50:07 -0500
+Message-ID: <201211171250.08597.vapier@gentoo.org>
+References: <201208232015.39613.yann.morin.1998@free.fr>
+ <20120824013625.GA8067@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0983000935804960350=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353162150-522-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20120824013625.GA8067-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,164 +18,80 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--===============0983000935804960350==
+Content-Type: multipart/signed;
+  boundary="nextPart8633822.OTPJloS4MA";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
----
- .../bindings/clock/mvebu-gated-clock.txt           |   43 ++++++++++++++
- arch/arm/mach-mvebu/Kconfig                        |    1 +
- drivers/clk/mvebu/clk-gating-ctrl.c                |   61 ++++++++++++++++++++
- 3 files changed, 105 insertions(+)
+--nextPart8633822.OTPJloS4MA
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-index 4ad8ccd..7337005 100644
---- a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-@@ -6,6 +6,49 @@ the clock ID in its "clocks" phandle cell. The clock ID is directly mapped to
- the corresponding clock gating control bit in HW to ease manual clock lookup
- in datasheet.
- 
-+The following is a list of provided IDs for Armada 370:
-+ID	Clock	Peripheral
-+-----------------------------------
-+0	Audio	AC97 Cntrl
-+1	pex0_en	PCIe 0 Clock out
-+2	pex1_en	PCIe 1 Clock out
-+3	ge1	Gigabit Ethernet 1
-+4	ge0	Gigabit Ethernet 0
-+5	pex0	PCIe Cntrl 0
-+9	pex1	PCIe Cntrl 1
-+15	sata0	SATA Host 0
-+17	sdio	SDHCI Host
-+25	tdm	Time Division Mplx
-+28	ddr	DDR Cntrl
-+30	sata1	SATA Host 0
-+
-+The following is a list of provided IDs for Armada XP:
-+ID	Clock	Peripheral
-+-----------------------------------
-+0	audio	Audio Cntrl
-+1	ge3	Gigabit Ethernet 3
-+2	ge2	Gigabit Ethernet 2
-+3	ge1	Gigabit Ethernet 1
-+4	ge0	Gigabit Ethernet 0
-+5	pex0	PCIe Cntrl 0
-+6	pex1	PCIe Cntrl 1
-+7	pex2	PCIe Cntrl 2
-+8	pex3	PCIe Cntrl 3
-+13	bp
-+14	sata0lnk
-+15	sata0	SATA Host 0
-+16	lcd	LCD Cntrl
-+17	sdio	SDHCI Host
-+18	usb0	USB Host 0
-+19	usb1	USB Host 1
-+20	usb2	USB Host 2
-+22	xor0	XOR DMA 0
-+23	crypto	CESA engine
-+25	tdm	Time Division Mplx
-+28	xor1	XOR DMA 1
-+29	sata1lnk
-+30	sata1	SATA Host 0
-+
- The following is a list of provided IDs for Dove:
- ID	Clock	Peripheral
- -----------------------------------
-diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-index c7b8404..79299cd 100644
---- a/arch/arm/mach-mvebu/Kconfig
-+++ b/arch/arm/mach-mvebu/Kconfig
-@@ -12,6 +12,7 @@ config ARCH_MVEBU
- 	select CLKDEV_LOOKUP
- 	select MVEBU_CLK_CORE
- 	select MVEBU_CLK_CPU
-+	select MVEBU_CLK_GATING
- 
- if ARCH_MVEBU
- 
-diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-index 424faff..e640d5c 100644
---- a/drivers/clk/mvebu/clk-gating-ctrl.c
-+++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-@@ -101,6 +101,53 @@ static void __init mvebu_clk_gating_setup(
-  * SoC specific clock gating control
-  */
- 
-+#ifdef CONFIG_MACH_ARMADA_370
-+static const struct mvebu_soc_descr __initconst armada_370_gating_descr[] = {
-+	{ "audio", NULL, 0 },
-+	{ "pex0_en", NULL, 1 },
-+	{ "pex1_en", NULL,  2 },
-+	{ "ge1", NULL, 3 },
-+	{ "ge0", NULL, 4 },
-+	{ "pex0", NULL, 5 },
-+	{ "pex1", NULL, 9 },
-+	{ "sata0", NULL, 15 },
-+	{ "sdio", NULL, 17 },
-+	{ "tdm", NULL, 25 },
-+	{ "ddr", NULL, 28 },
-+	{ "sata1", NULL, 30 },
-+	{ }
-+};
-+#endif
-+
-+#ifdef CONFIG_MACH_ARMADA_XP
-+static const struct mvebu_soc_descr __initconst armada_xp_gating_descr[] = {
-+	{ "audio", NULL, 0 },
-+	{ "ge3", NULL, 1 },
-+	{ "ge2", NULL,  2 },
-+	{ "ge1", NULL, 3 },
-+	{ "ge0", NULL, 4 },
-+	{ "pex0", NULL, 5 },
-+	{ "pex1", NULL, 6 },
-+	{ "pex2", NULL, 7 },
-+	{ "pex3", NULL, 8 },
-+	{ "bp", NULL, 13 },
-+	{ "sata0lnk", NULL, 14 },
-+	{ "sata0", NULL, 15 },
-+	{ "lcd", NULL, 16 },
-+	{ "sdio", NULL, 17 },
-+	{ "usb0", NULL, 18 },
-+	{ "usb1", NULL, 19 },
-+	{ "usb2", NULL, 20 },
-+	{ "xor0", NULL, 22 },
-+	{ "crypto", NULL, 23 },
-+	{ "tdm", NULL, 25 },
-+	{ "xor1", NULL, 28 },
-+	{ "sata1lnk", NULL, 29 },
-+	{ "sata1", NULL, 30 },
-+	{ }
-+};
-+#endif
-+
- #ifdef CONFIG_ARCH_DOVE
- static const struct mvebu_soc_descr __initconst dove_gating_descr[] = {
- 	{ "usb0", NULL, 0 },
-@@ -147,6 +194,20 @@ static const struct mvebu_soc_descr __initconst kirkwood_gating_descr[] = {
- #endif
- 
- static const __initdata struct of_device_id clk_gating_match[] = {
-+#ifdef CONFIG_MACH_ARMADA_370
-+	{
-+		.compatible = "marvell,armada-370-gating-clock",
-+		.data = armada_370_gating_descr,
-+	},
-+#endif
-+
-+#ifdef CONFIG_MACH_ARMADA_XP
-+	{
-+		.compatible = "marvell,armada-xp-gating-clock",
-+		.data = armada_xp_gating_descr,
-+	},
-+#endif
-+
- #ifdef CONFIG_ARCH_DOVE
- 	{
- 		.compatible = "marvell,dove-gating-clock",
--- 
-1.7.10.4
+On Thursday 23 August 2012 21:36:25 David Gibson wrote:
+> On Thu, Aug 23, 2012 at 08:15:39PM +0200, Yann E. MORIN wrote:
+> > Following advice from Jon Loeliger, I would suggest that a new release
+> > of DTC be tagged and packaged.
+> >=20
+> > It is important for some projects to rely on a released version, rather
+> > than use a random cset from the repository. Comes to mind, the automated
+> > build-systems, such as buildroot.
+> >=20
+> > Of course, I can help, if need be! ;-)
+> >=20
+> > Are there any others who think that a release would make sense?
+>=20
+> This has been a bit of a perrenial problem.  dtc development has been
+> sufficiently gradual that there haven't been many obvious points for
+> making new releases.  dtc developers (i.e. Jon and my, mostly) don't
+> feel much pain from the lack of releases, since the git snapshots
+> generally work well (thanks to limited scope and a good testsuite).
+>=20
+> I wonder if we should move to a model of just making a release every 3
+> or 6 months from whatever happens to be in the tree at the time
+> (barring obvious known breakage, of course).
+
+yes please.  even just a version that uses datestamps would be fine.
+=2Dmike
+
+--nextPart8633822.OTPJloS4MA
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.17 (GNU/Linux)
+
+iQIcBAABAgAGBQJQp85QAAoJEEFjO5/oN/WBw9IP/AoCztahedyivDokyXBAUTeR
+tvEMyAqLJ8P/S6rq5y/Xq9e2BbOVEq10dsVbTRsGpaMvD8X8OLF/shVWxLipLg82
++IpcsEfXxKTx8GGvo7YLBv3PI7jlFSoTEX8bDdWddCnV275Jc5VUmg7Ht8Xm9g6x
+k+3FyMNq7mGRoDdDDK3iMd9QZ2nDGeC8J2k6FvPFlvp4BmmDsTHMtA6IR7QB/aCY
+2t/s/pGpGgF1UlHYBMVzR3pJTkHkVc19fKGVn5q0QCbzA0TMbdWdF7wt9YSLqkgd
+3xxA3pFp6sOgity2wTifdz8jFHG4mxY7u19MTv5Z7RzmkOOoxBuc9wpuTVXS5yWG
+b4/hgFSKXjtdnDMHDu+/PqnkrRiV9BlEtjvLPYaSWqVqwSqAQDlrKNMk6saAUW/W
+UVrKbFfjuLRWDKZilOqQjmKpy7T6ULVsoE5j4hguKnjeLU6op6ab5oDWcXvAJnDh
+vIhgcLJELvX59S+v3QDNjhOqarZZvTmtOeVTioDCal9Ughn3BfycmlbCuOUP0HNb
+p+hzc0UnN7G/EDX9NVfkiD/dm7c2gGXTUvIyBqE47sOnrUXowvi0xgnS8KH3IJV3
+srC88Y50gImIZHtCMxtcciq1IUidzjxV5PkLLVzKEy3g6Tp79p9qWgegfB3xhti/
+TCSPNtqsCBDgEwALmf8O
+=jbGz
+-----END PGP SIGNATURE-----
+
+--nextPart8633822.OTPJloS4MA--
+
+--===============0983000935804960350==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0983000935804960350==--
