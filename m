@@ -1,81 +1,55 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
-Date: Sat, 17 Nov 2012 19:12:45 +0900
-Message-ID: <CAAVeFuJ28=YFOx1Uvq+B33JQW2UxDYx2J8igUnVCbTEO0V-KKg@mail.gmail.com>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
- <1353047903-14363-2-git-send-email-acourbot@nvidia.com> <20121116072642.GA22291@lizard>
- <50A60AF6.9080509@nvidia.com> <20121116122540.GA2198@lizard>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH -next] iio: isl29018: fix to return error or 0 in isl29018_write_raw()
+Date: Sat, 17 Nov 2012 10:20:36 +0000
+Message-ID: <50A764F4.3040008@kernel.org>
+References: <CAPgLHd873xAvToL7reBbxmS-iEoJ9OqvjEoXf8RsG2esbTyo1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121116122540.GA2198@lizard>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPgLHd873xAvToL7reBbxmS-iEoJ9OqvjEoXf8RsG2esbTyo1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2012 at 9:25 PM, Anton Vorontsov <cbouatmailru@gmail.com> wrote:
->> The POWER_SEQ_*_TYPE macros are defined in the C files. It's the
->> simplest way to initialize this table, and the code inside these C
->> files is short and simple enough that I thought I would be forgiven.
->> :)
->
-> I think in the header file you could just write
->
-> extern ..... power_seq_delay_type;
-> #ifndef ...
-> #define power_seq_delay_type NULL
-> #endif
->
-> And then, in the .c file:
->
-> static const struct power_seq_res_ops power_seq_ops[POWER_SEQ_NUM_TYPES] = {
->         [POWER_SEQ_DELAY] = power_seq_delay_type,
->         ...
-> };
->
-> And then you can stop including the .c files directly, and link them
-> instead.
+On 11/08/2012 09:05 AM, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> 
+> We had assigned the return value to 'ret' but ignored it when
+> return from isl29018_write_raw(), it's better to return 'ret'
+> instead of 0.
+> 
+> dpatch engine is used to auto generate this patch.
+> (https://github.com/weiyj/dpatch)
+> 
+Thanks - merged to togreg branch of
 
-I have done something similar, but that avoids exporting resource ops
-into the header file. I am still not satisfied with it though - I'd
-rather have one init function per resource file that changes the
-pointer of the ops table from NULL to its own set of functions. That
-way the core could live without knowing anything about the different
-resources, and that would be nicer. Unfortunately modules only support
-one init function, so this is not doable here.
+git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
 
->> >nit: one variable declaration per line.
->>
->> Fair enough - but is that a convention? checkpatch.pl was happy with these.
->
-> It's not a rule, although there is a small passage about it in CodingStyle
-> file when it describes commenting style. Though, some folks choose to
-> ignore this suggestion quite frequently, especially if variables have no
-> comments.
->
-> Often, the multiple declarations per line are used to hide ugly functions
-> w/ tons of variables, or just to confuse the reader for the fun of it.
->
-> There are exceptions, of course. E.g.
->
->         int i, j, k; /* Our iterators. */
->
-> Is perfectly fine.
->
-> But
->         int i, err;
->
-> At least to me seems weird, this stuff is logically disjunct.
->
-> Only human can truly differentiate when the stuff "looks better" together
-> or apart, so that's why checkpatch doesn't complain. Personally, I use
-> this rule of thumb: when in doubt, use just one declaration per line, it
-> is always OK. :)
 
-That totally makes sense - thanks for the precision.
-
-Prepping another patchset with audience extended to linux-arm-kernel
-as Mark suggested.
-
-Alex.
+> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> ---
+>  drivers/staging/iio/light/isl29018.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/iio/light/isl29018.c b/drivers/staging/iio/light/isl29018.c
+> index 3b03f6f..1d5b294 100644
+> --- a/drivers/staging/iio/light/isl29018.c
+> +++ b/drivers/staging/iio/light/isl29018.c
+> @@ -356,7 +356,7 @@ static int isl29018_write_raw(struct iio_dev *indio_dev,
+>  	}
+>  	mutex_unlock(&chip->lock);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static int isl29018_read_raw(struct iio_dev *indio_dev,
+> 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
