@@ -1,262 +1,81 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
-Date: Sat, 17 Nov 2012 09:51:04 +0100
-Message-ID: <1353142266-1289-2-git-send-email-andrew@lunn.ch>
-References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH v8 1/3] Runtime Interpreted Power Sequences
+Date: Sat, 17 Nov 2012 19:12:45 +0900
+Message-ID: <CAAVeFuJ28=YFOx1Uvq+B33JQW2UxDYx2J8igUnVCbTEO0V-KKg@mail.gmail.com>
+References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
+ <1353047903-14363-2-git-send-email-acourbot@nvidia.com> <20121116072642.GA22291@lizard>
+ <50A60AF6.9080509@nvidia.com> <20121116122540.GA2198@lizard>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353142266-1289-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121116122540.GA2198@lizard>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+On Fri, Nov 16, 2012 at 9:25 PM, Anton Vorontsov <cbouatmailru@gmail.com> wrote:
+>> The POWER_SEQ_*_TYPE macros are defined in the C files. It's the
+>> simplest way to initialize this table, and the code inside these C
+>> files is short and simple enough that I thought I would be forgiven.
+>> :)
+>
+> I think in the header file you could just write
+>
+> extern ..... power_seq_delay_type;
+> #ifndef ...
+> #define power_seq_delay_type NULL
+> #endif
+>
+> And then, in the .c file:
+>
+> static const struct power_seq_res_ops power_seq_ops[POWER_SEQ_NUM_TYPES] = {
+>         [POWER_SEQ_DELAY] = power_seq_delay_type,
+>         ...
+> };
+>
+> And then you can stop including the .c files directly, and link them
+> instead.
 
-Given appropriate devicetree bindings, this driver registers a
-pm_power_off function to set a GPIO line high/low to power down
-your board.
+I have done something similar, but that avoids exporting resource ops
+into the header file. I am still not satisfied with it though - I'd
+rather have one init function per resource file that changes the
+pointer of the ops table from NULL to its own set of functions. That
+way the core could live without knowing anything about the different
+resources, and that would be nicer. Unfortunately modules only support
+one init function, so this is not doable here.
 
-Signed-off-by: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Tested-by:Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio-poweroff.txt     |   22 ++++
- drivers/power/Kconfig                              |    3 +
- drivers/power/Makefile                             |    1 +
- drivers/power/reset/Kconfig                        |   15 +++
- drivers/power/reset/Makefile                       |    1 +
- drivers/power/reset/gpio-poweroff.c                |  129 ++++++++++++++++++++
- 6 files changed, 171 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
- create mode 100644 drivers/power/reset/Kconfig
- create mode 100644 drivers/power/reset/Makefile
- create mode 100644 drivers/power/reset/gpio-poweroff.c
+>> >nit: one variable declaration per line.
+>>
+>> Fair enough - but is that a convention? checkpatch.pl was happy with these.
+>
+> It's not a rule, although there is a small passage about it in CodingStyle
+> file when it describes commenting style. Though, some folks choose to
+> ignore this suggestion quite frequently, especially if variables have no
+> comments.
+>
+> Often, the multiple declarations per line are used to hide ugly functions
+> w/ tons of variables, or just to confuse the reader for the fun of it.
+>
+> There are exceptions, of course. E.g.
+>
+>         int i, j, k; /* Our iterators. */
+>
+> Is perfectly fine.
+>
+> But
+>         int i, err;
+>
+> At least to me seems weird, this stuff is logically disjunct.
+>
+> Only human can truly differentiate when the stuff "looks better" together
+> or apart, so that's why checkpatch doesn't complain. Personally, I use
+> this rule of thumb: when in doubt, use just one declaration per line, it
+> is always OK. :)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-new file mode 100644
-index 0000000..558cdf3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-poweroff.txt
-@@ -0,0 +1,22 @@
-+GPIO line that should be set high/low to power off a device
-+
-+Required properties:
-+- compatible : should be "gpio-poweroff".
-+- gpios : The GPIO to set high/low, see "gpios property" in
-+  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
-+  low to power down the board set it to "Active Low", otherwise set
-+  gpio to "Active High".
-+
-+Optional properties:
-+- input : Initially configure the GPIO line as an input. Only reconfigure
-+  it to an output when the pm_power_off function is called. If this optional
-+  property is not specified, the GPIO is initialized as an output in its
-+  inactive state.
-+
-+
-+Examples:
-+
-+gpio-poweroff {
-+	compatible = "gpio-poweroff";
-+	gpios = <&gpio 4 0>; /* GPIO 4 Active Low */
-+};
-diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-index 49a8939..b1d956d 100644
---- a/drivers/power/Kconfig
-+++ b/drivers/power/Kconfig
-@@ -335,6 +335,9 @@ config AB8500_BATTERY_THERM_ON_BATCTRL
- 	help
- 	  Say Y to enable battery temperature measurements using
- 	  thermistor connected on BATCTRL ADC.
-+
-+source "drivers/power/reset/Kconfig"
-+
- endif # POWER_SUPPLY
- 
- source "drivers/power/avs/Kconfig"
-diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-index b949cf8..f1d99f4 100644
---- a/drivers/power/Makefile
-+++ b/drivers/power/Makefile
-@@ -49,3 +49,4 @@ obj-$(CONFIG_CHARGER_MAX8997)	+= max8997_charger.o
- obj-$(CONFIG_CHARGER_MAX8998)	+= max8998_charger.o
- obj-$(CONFIG_POWER_AVS)		+= avs/
- obj-$(CONFIG_CHARGER_SMB347)	+= smb347-charger.o
-+obj-$(CONFIG_POWER_RESET)	+= reset/
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-new file mode 100644
-index 0000000..6461b48
---- /dev/null
-+++ b/drivers/power/reset/Kconfig
-@@ -0,0 +1,15 @@
-+menuconfig POWER_RESET
-+	bool "Board level reset or power off"
-+	help
-+	  Provides a number of drivers which either reset a complete board
-+	  or shut it down, by manipulating the main power supply on the board.
-+
-+	  Say Y here to enable board reset and power off
-+
-+config POWER_RESET_GPIO
-+	bool "GPIO power-off driver"
-+	depends on OF_GPIO && POWER_RESET
-+	help
-+	  This driver supports turning off your board via a GPIO line.
-+	  If your board needs a GPIO high/low to power down, say Y and
-+	  create a binding in your devicetree.
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-new file mode 100644
-index 0000000..751488a
---- /dev/null
-+++ b/drivers/power/reset/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
-diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
-new file mode 100644
-index 0000000..0491e53
---- /dev/null
-+++ b/drivers/power/reset/gpio-poweroff.c
-@@ -0,0 +1,129 @@
-+/*
-+ * Toggles a GPIO pin to power down a device
-+ *
-+ * Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
-+ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-+ *
-+ * Copyright (C) 2012 Jamie Lentin
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/delay.h>
-+#include <linux/platform_device.h>
-+#include <linux/gpio.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_gpio.h>
-+#include <linux/module.h>
-+
-+/*
-+ * Hold configuration here, cannot be more than one instance of the driver
-+ * since pm_power_off itself is global.
-+ */
-+static int gpio_num = -1;
-+static int gpio_active_low;
-+
-+static void gpio_poweroff_do_poweroff(void)
-+{
-+	BUG_ON(gpio_num == -1);
-+
-+	/* drive it active */
-+	gpio_direction_output(gpio_num, !gpio_active_low);
-+	mdelay(100);
-+	/* rising edge or drive inactive */
-+	gpio_set_value(gpio_num, gpio_active_low);
-+	mdelay(100);
-+	/* falling edge */
-+	gpio_set_value(gpio_num, !gpio_active_low);
-+
-+	/* give it some time */
-+	mdelay(3000);
-+
-+	WARN_ON(1);
-+}
-+
-+static int __devinit gpio_poweroff_probe(struct platform_device *pdev)
-+{
-+	enum of_gpio_flags flags;
-+	bool input = false;
-+	int ret;
-+
-+	/* If a pm_power_off function has already been added, leave it alone */
-+	if (pm_power_off != NULL) {
-+		pr_err("%s: pm_power_off function already registered",
-+		       __func__);
-+		return -EBUSY;
-+	}
-+
-+	gpio_num = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
-+	if (gpio_num < 0) {
-+		pr_err("%s: Could not get GPIO configuration: %d",
-+		       __func__, gpio_num);
-+		return -ENODEV;
-+	}
-+	gpio_active_low = flags & OF_GPIO_ACTIVE_LOW;
-+
-+	if (of_get_property(pdev->dev.of_node, "input", NULL))
-+		input = true;
-+
-+	ret = gpio_request(gpio_num, "poweroff-gpio");
-+	if (ret) {
-+		pr_err("%s: Could not get GPIO %d", __func__, gpio_num);
-+		return ret;
-+	}
-+	if (input) {
-+		if (gpio_direction_input(gpio_num)) {
-+			pr_err("Could not set direction of GPIO %d to input",
-+			       gpio_num);
-+			goto err;
-+		}
-+	} else {
-+		if (gpio_direction_output(gpio_num, gpio_active_low)) {
-+			pr_err("Could not set direction of GPIO %d", gpio_num);
-+			goto err;
-+		}
-+	}
-+
-+	pm_power_off = &gpio_poweroff_do_poweroff;
-+	return 0;
-+
-+err:
-+	gpio_free(gpio_num);
-+	return -ENODEV;
-+}
-+
-+static int __devexit gpio_poweroff_remove(struct platform_device *pdev)
-+{
-+	if (gpio_num != -1)
-+		gpio_free(gpio_num);
-+	if (pm_power_off == &gpio_poweroff_do_poweroff)
-+		pm_power_off = NULL;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_gpio_poweroff_match[] = {
-+	{ .compatible = "gpio-poweroff", },
-+	{},
-+};
-+
-+static struct platform_driver gpio_poweroff_driver = {
-+	.probe = gpio_poweroff_probe,
-+	.remove = __devexit_p(gpio_poweroff_remove),
-+	.driver = {
-+		   .name = "poweroff-gpio",
-+		   .owner = THIS_MODULE,
-+		   .of_match_table = of_gpio_poweroff_match,
-+		   },
-+};
-+
-+module_platform_driver(gpio_poweroff_driver);
-+
-+MODULE_AUTHOR("Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>");
-+MODULE_DESCRIPTION("GPIO poweroff driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:poweroff-gpio");
--- 
-1.7.10.4
+That totally makes sense - thanks for the precision.
+
+Prepping another patchset with audience extended to linux-arm-kernel
+as Mark suggested.
+
+Alex.
