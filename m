@@ -1,7 +1,7 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: [PATCH v2 5/9] clk: mvebu: add clock gating control provider for DT
-Date: Sat, 17 Nov 2012 15:22:26 +0100
-Message-ID: <1353162150-522-6-git-send-email-andrew@lunn.ch>
+Subject: [PATCH v2 7/9] ARM: Kirkwood: switch to DT clock providers
+Date: Sat, 17 Nov 2012 15:22:28 +0100
+Message-ID: <1353162150-522-8-git-send-email-andrew@lunn.ch>
 References: <1353162150-522-1-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,320 +19,243 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+With true DT clock providers available switch Kirkwood clock setup in
+DT- enabled boards. While AUXDATA can be removed completely from bus
+probing, some devices still don't know about DT. Therefore, some clkdev
+aliases are created until these devices also move to DT.
 
-This driver allows to provide DT clocks for clock gates found on
-Marvell Dove and Kirkwood SoCs. The clock gates are referenced by
-the phandle index of the corresponding bit in the clock gating control
-register to ease lookup in the datasheet.
-
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 ---
- .../bindings/clock/mvebu-gated-clock.txt           |   76 +++++++++
- drivers/clk/mvebu/Kconfig                          |    2 +
- drivers/clk/mvebu/Makefile                         |    1 +
- drivers/clk/mvebu/clk-gating-ctrl.c                |  177 ++++++++++++++++++++
- include/linux/clk/mvebu.h                          |    1 +
- 5 files changed, 257 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
- create mode 100644 drivers/clk/mvebu/clk-gating-ctrl.c
+ arch/arm/boot/dts/kirkwood.dtsi           |   22 +++++++++
+ arch/arm/mach-kirkwood/Kconfig            |    2 +
+ arch/arm/mach-kirkwood/board-dt.c         |   72 +++++++++++++++++++++++------
+ arch/arm/plat-orion/include/plat/common.h |    1 +
+ 4 files changed, 84 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-new file mode 100644
-index 0000000..4ad8ccd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-@@ -0,0 +1,76 @@
-+* Gated Clock bindings for Marvell Orion SoCs
-+
-+Marvell Dove and Kirkwood allow some peripheral clocks to be gated to save
-+some power. The clock consumer should specify the desired clock by having
-+the clock ID in its "clocks" phandle cell. The clock ID is directly mapped to
-+the corresponding clock gating control bit in HW to ease manual clock lookup
-+in datasheet.
-+
-+The following is a list of provided IDs for Dove:
-+ID	Clock	Peripheral
-+-----------------------------------
-+0	usb0	USB Host 0
-+1	usb1	USB Host 1
-+2	ge	Gigabit Ethernet
-+3	sata	SATA Host
-+4	pex0	PCIe Cntrl 0
-+5	pex1	PCIe Cntrl 1
-+8	sdio0	SDHCI Host 0
-+9	sdio1	SDHCI Host 1
-+10	nand	NAND Cntrl
-+11	camera	Camera Cntrl
-+12	i2s0	I2S Cntrl 0
-+13	i2s1	I2S Cntrl 1
-+15	crypto	CESA engine
-+21	ac97	AC97 Cntrl
-+22	pdma	Peripheral DMA
-+23	xor0	XOR DMA 0
-+24	xor1	XOR DMA 1
-+30	gephy	Gigabit Ethernel PHY
-+Note: gephy(30) is implemented as a parent clock of ge(2)
-+
-+The following is a list of provided IDs for Kirkwood:
-+ID	Clock	Peripheral
-+-----------------------------------
-+0	ge0	Gigabit Ethernet 0
-+2	pex0	PCIe Cntrl 0
-+3	usb0	USB Host 0
-+4	sdio	SDIO Cntrl
-+5	tsu	Transp. Stream Unit
-+6	dunit	SDRAM Cntrl
-+7	runit	Runit
-+8	xor0	XOR DMA 0
-+9	audio	I2S Cntrl 0
-+14	sata0	SATA Host 0
-+15	sata1	SATA Host 1
-+16	xor1	XOR DMA 1
-+17	crypto	CESA engine
-+18	pex1	PCIe Cntrl 1
-+19	ge1	Gigabit Ethernet 0
-+20	tdm	Time Division Mplx
-+
-+Required properties:
-+- compatible : shall be one of the following:
-+	"marvell,dove-gating-clock" - for Dove SoC clock gating
-+	"marvell,kirkwood-gating-clock" - for Kirkwood SoC clock gating
-+- reg : shall be the register address of the Clock Gating Control register
-+- #clock-cells : from common clock binding; shall be set to 1
-+
-+Optional properties:
-+- clocks : default parent clock phandle (e.g. tclk)
-+
-+Example:
-+
-+gate_clk: clock-gating-control@d0038 {
-+	compatible = "marvell,dove-gating-clock";
-+	reg = <0xd0038 0x4>;
-+	/* default parent clock is tclk */
-+	clocks = <&core_clk 0>;
-+	#clock-cells = <1>;
-+};
-+
-+sdio0: sdio@92000 {
-+	compatible = "marvell,dove-sdhci";
-+	/* get clk gate bit 8 (sdio0) */
-+	clocks = <&gate_clk 8>;
-+};
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index 1dd93ad..57323fd 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -4,3 +4,5 @@ config MVEBU_CLK_CORE
- config MVEBU_CLK_CPU
-        bool
+diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+index 4e5b815..e5ebf42 100644
+--- a/arch/arm/boot/dts/kirkwood.dtsi
++++ b/arch/arm/boot/dts/kirkwood.dtsi
+@@ -19,6 +19,12 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
  
-+config MVEBU_CLK_GATING
-+       bool
-diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index 93da083..58df3dc 100644
---- a/drivers/clk/mvebu/Makefile
-+++ b/drivers/clk/mvebu/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_MVEBU_CLK_CORE) 	+= clk.o clk-core.o
- obj-$(CONFIG_MVEBU_CLK_CPU) 	+= clk-cpu.o
-+obj-$(CONFIG_MVEBU_CLK_GATING) 	+= clk-gating-ctrl.o
-diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-new file mode 100644
-index 0000000..424faff
---- /dev/null
-+++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-@@ -0,0 +1,177 @@
-+/*
-+ * Marvell MVEBU clock gating control.
-+ *
-+ * Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ * Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/bitops.h>
-+#include <linux/io.h>
-+#include <linux/clk.h>
-+#include <linux/clkdev.h>
++		core_clk: core-clocks@10030 {
++                	compatible = "marvell,kirkwood-core-clocks";
++			reg = <0x10030 0x4>;
++	        	#clock-cells = <1>;
++		};
++
+ 		gpio0: gpio@10100 {
+ 			compatible = "marvell,orion-gpio";
+ 			#gpio-cells = <2>;
+@@ -42,6 +48,7 @@
+ 			reg = <0x12000 0x100>;
+ 			reg-shift = <2>;
+ 			interrupts = <33>;
++			clocks = <&gate_clk 7>;
+ 			/* set clock-frequency in board dts */
+ 			status = "disabled";
+ 		};
+@@ -51,6 +58,7 @@
+ 			reg = <0x12100 0x100>;
+ 			reg-shift = <2>;
+ 			interrupts = <34>;
++			clocks = <&gate_clk 7>;
+ 			/* set clock-frequency in board dts */
+ 			status = "disabled";
+ 		};
+@@ -68,12 +76,21 @@
+ 			cell-index = <0>;
+ 			interrupts = <23>;
+ 			reg = <0x10600 0x28>;
++			clocks = <&gate_clk 7>;
+ 			status = "disabled";
+ 		};
+ 
++		gate_clk: clock-gating-control@2011c {
++			compatible = "marvell,kirkwood-gating-clock";
++			reg = <0x2011c 0x4>;
++			clocks = <&core_clk 0>;
++			#clock-cells = <1>;
++		};
++
+ 		wdt@20300 {
+ 			compatible = "marvell,orion-wdt";
+ 			reg = <0x20300 0x28>;
++			clocks = <&gate_clk 7>;
+ 			status = "okay";
+ 		};
+ 
+@@ -81,6 +98,8 @@
+ 			compatible = "marvell,orion-sata";
+ 			reg = <0x80000 0x5000>;
+ 			interrupts = <21>;
++			clocks = <&gate_clk 14>, <&gate_clk 15>;
++			clock-names = "0", "1";
+ 			status = "disabled";
+ 		};
+ 
+@@ -94,6 +113,7 @@
+ 			reg = <0x3000000 0x400>;
+ 			chip-delay = <25>;
+ 			/* set partition map and/or chip-delay in board dts */
++			clocks = <&gate_clk 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -104,6 +124,7 @@
+ 			#size-cells = <0>;
+ 			interrupts = <29>;
+ 			clock-frequency = <100000>;
++			clocks = <&gate_clk 7>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -113,6 +134,7 @@
+ 			      <0xf5000000 0x800>;
+ 			reg-names = "regs", "sram";
+ 			interrupts = <22>;
++			clocks = <&gate_clk 17>;
+ 			status = "okay";
+ 		};
+ 	};
+diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
+index 50bca50..2833492 100644
+--- a/arch/arm/mach-kirkwood/Kconfig
++++ b/arch/arm/mach-kirkwood/Kconfig
+@@ -46,6 +46,8 @@ config MACH_GURUPLUG
+ 
+ config ARCH_KIRKWOOD_DT
+ 	bool "Marvell Kirkwood Flattened Device Tree"
++	select MVEBU_CLK_CORE
++	select MVEBU_CLK_GATING
+ 	select USE_OF
+ 	help
+ 	  Say 'Y' here if you want your kernel to support the
+diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
+index d94872f..ffec16c 100644
+--- a/arch/arm/mach-kirkwood/board-dt.c
++++ b/arch/arm/mach-kirkwood/board-dt.c
+@@ -14,11 +14,15 @@
+ #include <linux/init.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
 +#include <linux/clk-provider.h>
 +#include <linux/clk/mvebu.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+struct mvebu_gating_ctrl {
-+	spinlock_t lock;
-+	struct clk **gates;
-+	int num_gates;
-+};
-+
-+struct mvebu_soc_descr {
-+	const char *name;
-+	const char *parent;
-+	int bit_idx;
-+};
-+
-+#define to_clk_gate(_hw) container_of(_hw, struct clk_gate, hw)
-+
-+static struct clk __init *mvebu_clk_gating_get_src(
-+	struct of_phandle_args *clkspec, void *data)
-+{
-+	struct mvebu_gating_ctrl *ctrl = (struct mvebu_gating_ctrl *)data;
-+	int n;
-+
-+	if (clkspec->args_count < 1)
-+		return ERR_PTR(-EINVAL);
-+
-+	for (n = 0; n < ctrl->num_gates; n++) {
-+		struct clk_gate *gate =
-+			to_clk_gate(__clk_get_hw(ctrl->gates[n]));
-+		if (clkspec->args[0] == gate->bit_idx)
-+			return ctrl->gates[n];
-+	}
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static void __init mvebu_clk_gating_setup(
-+	struct device_node *np, const struct mvebu_soc_descr *descr)
-+{
-+	struct mvebu_gating_ctrl *ctrl;
-+	struct clk *clk;
-+	void __iomem *base;
-+	const char *default_parent = NULL;
-+	int n;
-+
-+	base = of_iomap(np, 0);
-+
-+	clk = of_clk_get(np, 0);
-+	if (!IS_ERR(clk)) {
-+		default_parent = __clk_get_name(clk);
-+		clk_put(clk);
-+	}
-+
-+	ctrl = kzalloc(sizeof(struct mvebu_gating_ctrl), GFP_KERNEL);
-+	if (WARN_ON(!ctrl))
-+		return;
-+
-+	spin_lock_init(&ctrl->lock);
-+
-+	/*
-+	 * Count, allocate, and register clock gates
-+	 */
-+	for (n = 0; descr[n].name;)
-+		n++;
-+
-+	ctrl->num_gates = n;
-+	ctrl->gates = kzalloc(ctrl->num_gates * sizeof(struct clk *),
-+			      GFP_KERNEL);
-+	if (WARN_ON(!ctrl->gates)) {
-+		kfree(ctrl);
-+		return;
-+	}
-+
-+	for (n = 0; n < ctrl->num_gates; n++) {
-+		const char *parent =
-+			(descr[n].parent) ? descr[n].parent : default_parent;
-+		ctrl->gates[n] = clk_register_gate(NULL, descr[n].name, parent,
-+				   0, base, descr[n].bit_idx, 0, &ctrl->lock);
-+		WARN_ON(IS_ERR(ctrl->gates[n]));
-+	}
-+	of_clk_add_provider(np, mvebu_clk_gating_get_src, ctrl);
-+}
-+
+ #include <linux/kexec.h>
+ #include <asm/mach/arch.h>
+ #include <asm/mach/map.h>
+ #include <mach/bridge-regs.h>
++#include <linux/platform_data/usb-ehci-orion.h>
+ #include <plat/irq.h>
++#include <plat/common.h>
+ #include "common.h"
+ 
+ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
+@@ -26,16 +30,59 @@ static struct of_device_id kirkwood_dt_match_table[] __initdata = {
+ 	{ }
+ };
+ 
+-struct of_dev_auxdata kirkwood_auxdata_lookup[] __initdata = {
+-	OF_DEV_AUXDATA("marvell,orion-spi", 0xf1010600, "orion_spi.0", NULL),
+-	OF_DEV_AUXDATA("marvell,mv64xxx-i2c", 0xf1011000, "mv64xxx_i2c.0",
+-		       NULL),
+-	OF_DEV_AUXDATA("marvell,orion-wdt", 0xf1020300, "orion_wdt", NULL),
+-	OF_DEV_AUXDATA("marvell,orion-sata", 0xf1080000, "sata_mv.0", NULL),
+-	OF_DEV_AUXDATA("marvell,orion-nand", 0xf4000000, "orion_nand", NULL),
+-	OF_DEV_AUXDATA("marvell,orion-crypto", 0xf1030000, "mv_crypto", NULL),
+-	{},
+-};
 +/*
-+ * SoC specific clock gating control
-+ */
++ * There are still devices that doesn't know about DT yet.  Get clock
++ * gates here and add a clock lookup alias, so that old platform
++ * devices still work.
++*/
 +
-+#ifdef CONFIG_ARCH_DOVE
-+static const struct mvebu_soc_descr __initconst dove_gating_descr[] = {
-+	{ "usb0", NULL, 0 },
-+	{ "usb1", NULL, 1 },
-+	{ "ge", "gephy", 2 },
-+	{ "sata", NULL, 3 },
-+	{ "pex0", NULL, 4 },
-+	{ "pex1", NULL, 5 },
-+	{ "sdio0", NULL, 8 },
-+	{ "sdio1", NULL, 9 },
-+	{ "nand", NULL, 10 },
-+	{ "camera", NULL, 11 },
-+	{ "i2s0", NULL, 12 },
-+	{ "i2s1", NULL, 13 },
-+	{ "crypto", NULL, 15 },
-+	{ "ac97", NULL, 21 },
-+	{ "pdma", NULL, 22 },
-+	{ "xor0", NULL, 23 },
-+	{ "xor1", NULL, 24 },
-+	{ "gephy", NULL, 30 },
-+	{ }
-+};
-+#endif
-+
-+#ifdef CONFIG_ARCH_KIRKWOOD
-+static const struct mvebu_soc_descr __initconst kirkwood_gating_descr[] = {
-+	{ "ge0", NULL, 0 },
-+	{ "pex0", NULL, 2 },
-+	{ "usb0", NULL, 3 },
-+	{ "sdio", NULL, 4 },
-+	{ "tsu", NULL, 5 },
-+	{ "runit", NULL, 7 },
-+	{ "xor0", NULL, 8 },
-+	{ "audio", NULL, 9 },
-+	{ "sata0", NULL, 14 },
-+	{ "sata1", NULL, 15 },
-+	{ "xor1", NULL, 16 },
-+	{ "crypto", NULL, 17 },
-+	{ "pex1", NULL, 18 },
-+	{ "ge1", NULL, 19 },
-+	{ "tdm", NULL, 20 },
-+	{ }
-+};
-+#endif
-+
-+static const __initdata struct of_device_id clk_gating_match[] = {
-+#ifdef CONFIG_ARCH_DOVE
-+	{
-+		.compatible = "marvell,dove-gating-clock",
-+		.data = dove_gating_descr,
-+	},
-+#endif
-+
-+#ifdef CONFIG_ARCH_KIRKWOOD
-+	{
-+		.compatible = "marvell,kirkwood-gating-clock",
-+		.data = kirkwood_gating_descr,
-+	},
-+#endif
-+
-+	{ }
-+};
-+
-+void __init mvebu_clk_gating_init(void)
++static void __init kirkwood_legacy_clk_init(void)
 +{
-+	struct device_node *np;
 +
-+	for_each_matching_node(np, clk_gating_match) {
-+		const struct of_device_id *match =
-+			of_match_node(clk_gating_match, np);
-+		mvebu_clk_gating_setup(np,
-+		       (const struct mvebu_soc_descr *)match->data);
-+	}
++	struct device_node *np = of_find_compatible_node(
++		NULL, NULL, "marvell,kirkwood-gating-clock");
++
++	struct of_phandle_args clkspec;
++
++	clkspec.np = np;
++	clkspec.args_count = 1;
++
++	clkspec.args[0] = CGC_BIT_GE0;
++	orion_clkdev_add(NULL, "mv643xx_eth_port.0",
++			 of_clk_get_from_provider(&clkspec));
++
++	clkspec.args[0] = CGC_BIT_PEX0;
++	orion_clkdev_add("0", "pcie",
++			 of_clk_get_from_provider(&clkspec));
++
++	clkspec.args[0] = CGC_BIT_USB0;
++	orion_clkdev_add(NULL, "orion-ehci.0",
++			 of_clk_get_from_provider(&clkspec));
++
++	clkspec.args[0] = CGC_BIT_XOR0;
++	orion_clkdev_add(NULL, "mv_xor_shared.0",
++			 of_clk_get_from_provider(&clkspec));
++
++	clkspec.args[0] = CGC_BIT_XOR1;
++	orion_clkdev_add(NULL, "mv_xor_shared.1",
++			 of_clk_get_from_provider(&clkspec));
++
++	clkspec.args[0] = CGC_BIT_PEX1;
++	orion_clkdev_add("1", "pcie",
++			 of_clk_get_from_provider(&clkspec));
++
++	clkspec.args[0] = CGC_BIT_GE1;
++	orion_clkdev_add(NULL, "mv643xx_eth_port.1",
++			 of_clk_get_from_provider(&clkspec));
++
 +}
-diff --git a/include/linux/clk/mvebu.h b/include/linux/clk/mvebu.h
-index 8c4ae71..70c366f 100644
---- a/include/linux/clk/mvebu.h
-+++ b/include/linux/clk/mvebu.h
-@@ -18,5 +18,6 @@
- #define __CLK_MVEBU_H_
++
++static void __init kirkwood_of_clk_init(void)
++{
++	mvebu_clocks_init();
++	mvebu_clk_gating_init();
++	kirkwood_legacy_clk_init();
++}
  
- void __init mvebu_clocks_init(void);
-+void mvebu_clk_gating_init(void);
+ static void __init kirkwood_dt_init(void)
+ {
+@@ -54,7 +101,7 @@ static void __init kirkwood_dt_init(void)
+ 	kirkwood_l2_init();
  
- #endif
+ 	/* Setup root of clk tree */
+-	kirkwood_clk_init();
++	kirkwood_of_clk_init();
+ 
+ 	/* internal devices that every board has */
+ 	kirkwood_xor0_init();
+@@ -94,8 +141,7 @@ static void __init kirkwood_dt_init(void)
+ 	if (of_machine_is_compatible("keymile,km_kirkwood"))
+ 		km_kirkwood_init();
+ 
+-	of_platform_populate(NULL, kirkwood_dt_match_table,
+-			     kirkwood_auxdata_lookup, NULL);
++	of_platform_populate(NULL, kirkwood_dt_match_table, NULL, NULL);
+ }
+ 
+ static const char *kirkwood_dt_board_compat[] = {
+diff --git a/arch/arm/plat-orion/include/plat/common.h b/arch/arm/plat-orion/include/plat/common.h
+index 6bbc3fe..e06fc5f 100644
+--- a/arch/arm/plat-orion/include/plat/common.h
++++ b/arch/arm/plat-orion/include/plat/common.h
+@@ -12,6 +12,7 @@
+ #include <linux/mv643xx_eth.h>
+ 
+ struct dsa_platform_data;
++struct mv_sata_platform_data;
+ 
+ void __init orion_uart0_init(void __iomem *membase,
+ 			     resource_size_t mapbase,
 -- 
 1.7.10.4
