@@ -1,14 +1,15 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/16] gpio: SPEAr: add spi chipselect control driver
-Date: Sun, 18 Nov 2012 00:02:31 +0100
-Message-ID: <CACRpkda89OGRwJ74QHvyKfdnufYdRn90A8YK5tf0Jc41RpUxJA@mail.gmail.com>
-References: <4a92290e8a3b1a19c3a5e864edfa7badfc2af5d0.1352608333.git.viresh.kumar@linaro.org>
- <3702a1036f8e714e6d18e4726569bbb1eadd65bf.1353042873.git.viresh.kumar@linaro.org>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: RFC: New release for DTC?
+Date: Sun, 18 Nov 2012 00:00:13 +0000
+Message-ID: <20121118000013.6964A3E08F7@localhost>
+References: <201208232015.39613.yann.morin.1998@free.fr>
+ <20120824013625.GA8067@truffula.fritz.box>
+ <201211171250.08597.vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <3702a1036f8e714e6d18e4726569bbb1eadd65bf.1353042873.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <201211171250.08597.vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,35 +20,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2012 at 6:15 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Sat, 17 Nov 2012 12:50:07 -0500, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> wrote:
+> On Thursday 23 August 2012 21:36:25 David Gibson wrote:
+> > On Thu, Aug 23, 2012 at 08:15:39PM +0200, Yann E. MORIN wrote:
+> > > Following advice from Jon Loeliger, I would suggest that a new release
+> > > of DTC be tagged and packaged.
+> > > 
+> > > It is important for some projects to rely on a released version, rather
+> > > than use a random cset from the repository. Comes to mind, the automated
+> > > build-systems, such as buildroot.
+> > > 
+> > > Of course, I can help, if need be! ;-)
+> > > 
+> > > Are there any others who think that a release would make sense?
+> > 
+> > This has been a bit of a perrenial problem.  dtc development has been
+> > sufficiently gradual that there haven't been many obvious points for
+> > making new releases.  dtc developers (i.e. Jon and my, mostly) don't
+> > feel much pain from the lack of releases, since the git snapshots
+> > generally work well (thanks to limited scope and a good testsuite).
+> > 
+> > I wonder if we should move to a model of just making a release every 3
+> > or 6 months from whatever happens to be in the tree at the time
+> > (barring obvious known breakage, of course).
+> 
+> yes please.  even just a version that uses datestamps would be fine.
+> -mike
 
-> From: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
->
-> SPEAr platform provides a provision to control chipselects of ARM PL022
-> Prime Cell spi controller through its system registers, which otherwise
-> remains under PL022 control which some protocols do not want.
->
-> This commit intends to provide the spi chipselect control in software over
-> gpiolib interface. spi chip drivers can use the exported gpiolib interface to
-> define their chipselect through DT or platform data.
->
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
-> Reviewed-by: Vipin Kumar <vipin.kumar-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->
-> Hi Grant,
->
-> This patch was earlier sent as part of drivers/pinctrl/spear directory and after
-> some discussion over mainline it is moved to gpio now. It is already reviewed by
-> Linus and Arnd, though they haven't given their Reviewed-by's.
+Fine by me.
 
-I've applied it to my gpio tree with Arnd's ACK, thanks!
-
-Yours,
-Linus Walleij
+g.
