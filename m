@@ -1,47 +1,46 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: Add vendor prefix for Asahi Kasei Corp.
-Date: Mon, 19 Nov 2012 16:49:27 -0600
-Message-ID: <50AAB777.7060105@gmail.com>
-References: <1353364484-5741-1-git-send-email-swarren@wwwdotorg.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 3.7.0-rc4] of/net/mdio-gpio: Fix pdev->id issue when
+ using devicetrees.
+Date: Mon, 19 Nov 2012 18:58:08 -0500 (EST)
+Message-ID: <20121119.185808.1849458112621237233.davem@davemloft.net>
+References: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com>
+	<1353062039-31336-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1353364484-5741-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1353062039-31336-1-git-send-email-srinivas.kandagatla@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: srinivas.kandagatla@st.com
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2012 04:34 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Their stock ticker is 3407.T which wouldn't make a good DT vendor
-> prefix. Use the company name initials instead.
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Both patches ought to merge through the DT tree OK. If not, patch 2
-> could be taken through arm-soc.
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Date: Fri, 16 Nov 2012 10:33:59 +0000
 
-Applied both for 3.8.
+> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> 
+> When the mdio-gpio driver is probed via device trees, the platform
+> device id is set as -1, However the pdev->id is re-used as bus-id for
+> while creating mdio gpio bus.
+> So
+> For device tree case the mdio-gpio bus name appears as "gpio-ffffffff"
+> where as
+> for non-device tree case the bus name appears as "gpio-<bus-num>"
+> 
+> Which means the bus_id is fixed in device tree case, so we can't have
+> two mdio gpio buses via device trees. Assigning a logical bus number
+> via device tree solves the problem and the bus name is much consistent
+> with non-device tree bus name.
+> 
+> Without this patch
+> 1. we can't support two mdio-gpio buses via device trees.
+> 2. we should always pass gpio-ffffffff as bus name to phy_connect, very
+> different to non-device tree bus name.
+> 
+> So, setting up the bus_id via aliases from device tree is the right
+> solution and other drivers do similar thing.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
 
-Rob
-
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index deba8d0..05dc8eb 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -5,6 +5,7 @@ using them to avoid name-space collisions.
->  
->  ad	Avionic Design GmbH
->  adi	Analog Devices, Inc.
-> +ak	Asahi Kasei Corp.
->  amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
->  apm	Applied Micro Circuits Corporation (APM)
->  arm	ARM Ltd.
-> 
+Applied, thank you.
