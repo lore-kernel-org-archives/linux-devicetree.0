@@ -1,133 +1,81 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/5] ARM: kernel: add device tree init map function
-Date: Mon, 19 Nov 2012 11:02:35 +0000
-Message-ID: <20121119110155.GA2816@e106331-lin.cambridge.arm.com>
-References: <1352983614-22924-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1352983614-22924-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v2 1/4] mfd: tps65217: Set PMIC to shutdowm on PWR_EN
+ toggle
+Date: Mon, 19 Nov 2012 11:36:57 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA760FD@DBDE01.ent.ti.com>
+References: <1353067706-29491-1-git-send-email-anilkumar@ti.com>
+ <1353067706-29491-2-git-send-email-anilkumar@ti.com>
+ <87a9udn9xo.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1352983614-22924-3-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87a9udn9xo.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Nov 19, 2012 at 16:20:27, Peter Korsgaard wrote:
+> >>>>> "AnilKumar" == AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org> writes:
+> 
+> s/shutdowm/shutdown/ in the subject.
 
-Just a couple of comments on the binding documentation.
+I will change
 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> new file mode 100644
-> index 0000000..1fab07a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -0,0 +1,78 @@
-> +* ARM CPUs binding description
-> +
-> +The device tree allows to describe the layout of CPUs in a system through
-> +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> +defining properties for every cpu.
-> +
-> +Bindings for CPU nodes follow the ePAPR standard, available from:
-> +
-> +http://devicetree.org
-> +
-> +For the ARM architecture every CPU node must contain the following properties:
-> +
-> +- reg:		property matching the CPU MPIDR[23:0] register bits
-> +		reg[31:24] bits must be set to 0
-> +- compatible:	should be one of:
-> +		"arm,arm1020"
-> +		"arm,arm1020e"
-> +		"arm,arm1022"
-> +		"arm,arm1026"
-> +		"arm,arm720"
-> +		"arm,arm740"
-> +		"arm,arm7tdmi"
-> +		"arm,arm920"
-> +		"arm,arm922"
-> +		"arm,arm925"
-> +		"arm,arm926"
-> +		"arm,arm940"
-> +		"arm,arm946"
-> +		"arm,arm9tdmi"
-> +		"arm,cortex-a5"
-> +		"arm,cortex-a7"
-> +		"arm,cortex-a8"
-> +		"arm,cortex-a9"
-> +		"arm,cortex-a15"
-> +		"arm,arm1136"
-> +		"arm,arm1156"
-> +		"arm,arm1176"
-> +		"arm,arm11mpcore"
-> +		"faraday,fa526"
-> +		"intel,sa110"
-> +		"intel,sa1100"
-> +		"marvell,feroceon"
-> +		"marvell,mohawk"
-> +		"marvell,xsc3"
-> +		"marvell,xscale"
-> +
-> +Every cpu node is required to set its device_type to "cpu".
+> 
+>  AnilKumar> From: Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>
+>  AnilKumar> Set tps65217 PMIC status to OFF if power enable toggle is
+>  AnilKumar> supported. Also adds platform data flag, which should be
+>  AnilKumar> passed from board init data.
+> 
+> You're adding dt binding, not platform data.
 
-Should this not be described at the start of the properties list? e.g:
+I will change
 
-	- device_type:	must be "cpu"
+> 
+>  AnilKumar> Signed-off-by: Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>
+>  AnilKumar> [anilkumar-l0cyMroinI0@public.gmane.org: move the additions to tps65217 MFD driver]
+>  AnilKumar> Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+>  AnilKumar> ---
+>  AnilKumar>  .../devicetree/bindings/regulator/tps65217.txt     |    4 ++++
+>  AnilKumar>  drivers/mfd/tps65217.c                             |   12 ++++++++++++
+>  AnilKumar>  2 files changed, 16 insertions(+)
+> 
+>  AnilKumar> diff --git a/Documentation/devicetree/bindings/regulator/tps65217.txt b/Documentation/devicetree/bindings/regulator/tps65217.txt
+>  AnilKumar> index d316fb8..4f05d20 100644
+>  AnilKumar> --- a/Documentation/devicetree/bindings/regulator/tps65217.txt
+>  AnilKumar> +++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
+>  AnilKumar> @@ -11,6 +11,9 @@ Required properties:
+>  AnilKumar>    using the standard binding for regulators found at
+>  AnilKumar>    Documentation/devicetree/bindings/regulator/regulator.txt.
+>  
+>  AnilKumar> +Optional properties:
+>  AnilKumar> +- ti,pmic-shutdown-controller: Telling the PMIC to shutdown on PWR_EN toggle.
+> 
+> Ehh, I don't know the tps65217 particular well, but according to the
+> datasheet the REG_STATUS_OFF bit enables/disables the PB_IN pin, not
+> PWR_EN. It's also not only about powering down but also powering up
+> again.
+> 
+> I don't feel this property name is very clear. Perhaps something about
+> power button or push button monitor as it is called in the datasheet?
 
-It'd be more consistent and harder to miss that way.
+Here I am writing "TPS65217_STATUS_OFF" to status register, BIT(7).
+Description of this bit field: "OFF bit. Set this bit to 1 to enter OFF state
+when PWR_EN pin is pulled low. Bit is automatically reset to 0."
 
-> +Example:
-> +
-> +	cpus {
-> +		#size-cells = <0>;
-> +		#address-cells = <1>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = <arm, cortex-a15>;
-> +			reg = <0x0>;
-> +		};
-> +
-> +		CPU1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = <arm, cortex-a15>;
-> +			reg = <0x1>;
-> +		};
-> +
-> +		CPU2: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = <arm, cortex-a7>;
-> +			reg = <0x100>;
-> +		};
-> +
-> +		CPU3: cpu@101 {
-> +			device_type = "cpu";
-> +			compatible = <arm, cortex-a7>;
-> +			reg = <0x101>;
-> +		};
-> +	};
+PWR_EN pin pull-down is doing by RTC module.
 
-It looks like you missed the compatible strings here when fixing things up from
-v2. They should be:
-
-	compatible = "arm,cortex-a15";
-
-and:
-
-	compatible = "arm,cortex-a7";
-
-Otherwise, looks good!
-
-Thanks,
-Mark
+Regards
+AnilKumar
