@@ -1,56 +1,116 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v2 0/3] mtd: nand: OMAP: ELM error correction support
- for BCH ecc
-Date: Mon, 19 Nov 2012 12:44:22 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9E8178@DBDE01.ent.ti.com>
-References: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
- <1352978534.2221.33.camel@sauron.fi.intel.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v4 0/7] ARM: multi-cluster aware boot protocol
+Date: Mon, 19 Nov 2012 12:44:59 +0000
+Message-ID: <1353329106-24084-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1352978534.2221.33.camel@sauron.fi.intel.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Vincent Guittot <vincent.guittot@linaro.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiBUaHUsIE5vdiAxNSwgMjAxMiBhdCAxNjo1MjoxNCwgQXJ0ZW0gQml0eXV0c2tpeSB3cm90
-ZToNCj4gT24gV2VkLCAyMDEyLTEwLTMxIGF0IDEyOjM4ICswNTMwLCBQaGlsaXAsIEF2aW5hc2gg
-d3JvdGU6DQo+ID4gU3VwcG9ydCB0byB1c2UgRUxNIGFzIEJDSCA0ICYgOCBiaXQgZXJyb3IgY29y
-cmVjdGlvbiBtb2R1bGUuIEFsc28gcGVyZm9ybWFuY2UNCj4gPiBlbmhhbmNlbWVudCBieSBhZGRp
-bmcgc2luZ2xlIHNob3QgcmVhZF9wYWdlIGFuZCB3cml0ZV9wYWdlIGZ1bmN0aW9ucyBmb3IgdGhl
-DQo+ID4gbmFuZCBmbGFzaGVzIHdpdGggcGFnZSBzaXplIGxlc3MgdGhhbiA0IEtCLg0KPiA+IA0K
-PiA+IEVMTSBtb2R1bGUgY2FuIGJlIHVzZWQgdG8gY29ycmVjdCBlcnJvcnMgcmVwb3J0ZWQgYnkg
-QkNIIDQsIDggJiAxNiBiaXQNCj4gPiBFQ0Mgc2NoZW1lLiBGb3Igbm93IG9ubHkgNCAmIDggYml0
-IHN1cHBvcnQgaXMgYWRkZWQuDQo+ID4gDQo+ID4gQkNIIDQgJiA4IGJpdCBlcnJvciBkZXRlY3Rp
-b24gc3VwcG9ydCBpcyBhbHJlYWR5IGF2YWlsYWJsZSBpbiBtYWlubGluZQ0KPiA+IGtlcm5lbCBh
-bmQgd29ya3Mgd2l0aCBzb2Z0d2FyZSBlcnJvciBjb3JyZWN0aW9uLg0KPiA+IA0KPiA+IFRoaXMg
-c2VyaWVzIGlzIGJhc2VkIG9uIFsxXSBhbmQgdGVzdGVkIHdpdGggUkZDOiBPTUFQIEdQTUMgYmlu
-ZGluZ3MNCj4gPiBwYXRjaCBzZXJpZXMNCj4gPiANCj4gPiAxLiBsaW51eC1uZXh0LzIwMTIxMDMw
-DQo+IA0KPiBXb3VsZCB5b3UgcGxlYXNlIHJlLXNlbmQgYSB2ZXJzaW9uIHdoaWNoIGNsZWFubHkg
-YXBwbGllcyB0byB0aGUNCj4gbDItbXRkLmdpdCB0cmVlPyBUaGlzIHNlcmllcyBoYXMgbWFueSBj
-b25mbGljdHMuIFRoYW5rcyENCg0KQXJ0ZW0sDQoNCk9tYXAgbmFuZCBkcml2ZXIgaXMgYmVpbmcg
-Y2hhbmdlZCBjb25zaWRlcmFibHkgd2l0aCBBZnphbCdzIG9tYXAtZ3BtYyBjbGVhbnVwDQpzZXJp
-ZXMgZm9yIGNvbW1vbiBhcm0gekltYWdlIFsyXSBhbmQgdGhvc2UgY2hhbmdlcyBtb3ZlIG1hbnkN
-Cm9mIHRoZSBuYW5kIHJlbGF0ZWQgY29kZSBmcm9tIHBsYXRmb3JtIGZvbGRlcnMgdG8gb21hcCBu
-YW5kIGRyaXZlci4NCg0KT21hcC1ncG1jIGNoYW5nZXMgYXJlIHByZXNlbnQgaW4gVG9ueSdzICIg
-b21hcC1mb3ItdjMuOC9jbGVhbnVwLWhlYWRlcnMtZ3BtYyINCmJyYW5jaCBbM11hbmQgaXMgcHJl
-c2VudCBpbiBsaW51eC1uZXh0IGFsc28sIGJ1dCBpcyBub3QgcHJlc2VudCBpbiBsMi1tdGQuDQpU
-b255IGhhcyBzaWduZWQgdGFnIGluY2x1ZGluZyBvbWFwLWdwbWMgY2xlYW51cCBzZXJpZXMsDQoi
-b21hcC1mb3ItdjMuOC9jbGVhbnVwLWhlYWRlcnMtcHJlcGFyZS1tdWx0aXBsYXRmb3JtLXYzLXNp
-Z25lZCIgWzRdDQoNCklmIHRoaXMgc2VyaWVzIGlzIG1hZGUgb3ZlciBsMi1tdGQsIGFuZCBpdCB3
-b3VsZCBjYXVzZSBsb3Qgb2YgY29uZmxpY3QNCndpdGggb21hcC1ncG1jIGNsZWFudXAgc2VyaWVz
-Lg0KDQpJIGFtIG5vdCBzdXJlIGhvdyB0aGlzIGRlcGVuZGVuY3kgaGFzIHRvIGJlIGhhbmRsZWQg
-Zm9yIHRoaXMgc2VyaWVzLA0KbGV0IG1lIGtub3cgd2hldGhlciB5b3Ugc3RpbGwgd2FudCBpdCB0
-byBiZSBtYWRlIG92ZXIgbDItbXRkPw0KDQoyLiBodHRwOi8vbWFya21haWwub3JnL21lc3NhZ2Uv
-ZXY2N3dtN2lyZ2MycWM1ZCNxdWVyeTorcGFnZToxK21pZDp3Z2pkdjZmc2ZnaG51YTV6K3N0YXRl
-OnJlc3VsdHMNCjMuIGh0dHA6Ly9naXQua2VybmVsLm9yZy8/cD1saW51eC9rZXJuZWwvZ2l0L3Rt
-bGluZC9saW51eC1vbWFwLmdpdDthPXNob3J0bG9nO2g9cmVmcy9oZWFkcy9vbWFwLWZvci12My44
-L2NsZWFudXAtaGVhZGVycy1ncG1jDQo0LiBodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvP3A9bGludXgv
-a2VybmVsL2dpdC90bWxpbmQvbGludXgtb21hcC5naXQ7YT10YWc7aD1yZWZzL3RhZ3Mvb21hcC1m
-b3ItdjMuOC9jbGVhbnVwLWhlYWRlcnMtcHJlcGFyZS1tdWx0aXBsYXRmb3JtLXYzLXNpZ25lZA0K
-DQoNClRoYW5rcw0KQXZpbmFzaA0KDQo+IA0KPiBnaXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy91c2Vy
-cy9kZWRla2luZC9sMi1tdGQuZ2l0DQo+IA0KPiAtLSANCj4gQmVzdCBSZWdhcmRzLA0KPiBBcnRl
-bSBCaXR5dXRza2l5DQo+IA0KDQo=
+This series is v4, referred to this previous posting:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/132126.html
+
+Changes in v4:
+
+- Moved and cleaned up MPIDR masks from topology.c to asm/cputype.h
+- Applied some fixes to cpus.txt documentation
+- Patched code to use the new MPIDR accessors masks in smp_setup_processor_id()
+  and arm_dt_init_cpu_maps()
+
+Changes in v3:
+
+- Fixed compatible string list format and vendors in Documentation
+- Added check for MPIDR duplicates in the DT
+- Added is_smp() check before reading the MPIDR in smp_setup_processor_id()
+  and also arm_dt_init_cpu_maps()
+- Added check for 8 MSBs in arm_dt_init_cpu_maps()
+- Updated comments and commit logs
+
+Changes in v2:
+
+- Reworded and added compatible property to cpus.txt
+- Replaced while loop in arm_dt_init_cpu_maps() with a combination of
+  of_find_node_by_path and for_each_child_of_node
+- Replaced of_get_property with of_property_read_u32
+- Added further checks for DT /cpu nodes and implemented stashed array
+  to avoid overwriting the cpu_logical_map if DT contains errors
+- Added GIC CPU IF define in the GIC probing code
+- Removed printk for boot CPU MPIDR and added a patch that prints the full
+  extent of MPIDR in smp_setup_processor_id()
+- Updated smp_setup_processor_id() so that it uses nr_cpu_ids
+- Dropped RFC tag
+
+The introduction of multi-cluster ARM systems in SoC designs requires the
+kernel to become cluster aware, so that it can be booted on every CPU in the
+system and it can build an appropriate HW-to-logical cpu map.
+
+Current code in the kernel, in particular the boot sequence, hinges upon a
+sequential mapping of MPIDR values for cpus and related interrupt controller
+CPU interfaces to logical cpu indexing.
+This hypothesis is not valid when the concept of cluster is introduced since
+the MPIDR cannot be represented as a single index and interrupt controller
+CPU interfaces can be wired with a numbering scheme following per-SoC
+design parameters which can be only detected through probing or device
+tree representation.
+
+Through the device tree and "cpu" nodes bindings, the kernel is provided
+with HW values for MPIDR registers that allow the kernel to identify the
+HW CPU ids that are present in the platform.
+
+The GIC code has been extended to allow automatic detection of GIC CPU IF ids
+at boot. IPIs are broadcast to all possible CPUs, and every time a secondary
+CPU is booted, it initializes its own mask and clears itself from the mask of
+all other logical CPUs.
+
+The device tree bindings and GIC probing allow to boot the Linux kernel on any
+CPU of a multi-cluster system without relying on a platform specific hook to
+identify the number of CPUs and hypothesis on the sequential pattern of MPIDRs
+and relative GIC CPU IF ids.
+
+Pen release code for all converted platforms will need patching to extend the
+current MPIDR range check; this will take place as soon as the bindings and
+code for the multi-cluster boot protocol will be reviewed and accepted.
+
+The patchset has been tested on:
+
+- TC2 testchip
+
+to boot a 5-core dual-cluster system on every possible CPU.
+
+Lorenzo Pieralisi (6):
+  ARM: kernel: enhance MPIDR macro definitions
+  ARM: kernel: update topology to use new MPIDR macros
+  ARM: kernel: smp_setup_processor_id() updates
+  ARM: kernel: add device tree init map function
+  ARM: kernel: add cpu logical map DT init in setup_arch
+  ARM: kernel: add logical mappings look-up
+
+Nicolas Pitre (1):
+  ARM: gic: use a private mapping for CPU target interfaces
+
+ Documentation/devicetree/bindings/arm/cpus.txt |  77 +++++++++++++++++++
+ arch/arm/common/gic.c                          |  45 ++++++++---
+ arch/arm/include/asm/cputype.h                 |  13 ++++
+ arch/arm/include/asm/prom.h                    |   2 +
+ arch/arm/include/asm/smp_plat.h                |  17 +++++
+ arch/arm/kernel/devtree.c                      | 100 +++++++++++++++++++++++++
+ arch/arm/kernel/setup.c                        |   8 +-
+ arch/arm/kernel/topology.c                     |  42 ++---------
+ 8 files changed, 256 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
+
+-- 
+1.7.12
