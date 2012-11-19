@@ -1,146 +1,83 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 4/7] ARM: kernel: add device tree init map function
-Date: Mon, 19 Nov 2012 14:07:07 +0000
-Message-ID: <20121119140706.GB12518@e102568-lin.cambridge.arm.com>
-References: <1353329106-24084-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1353329106-24084-5-git-send-email-lorenzo.pieralisi@arm.com>
- <20121119135418.GB2816@e106331-lin.cambridge.arm.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/8] watchdog: dt: add support for the timeout-sec dt
+ property
+Date: Mon, 19 Nov 2012 15:10:35 +0100
+Message-ID: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121119135418.GB2816@e106331-lin.cambridge.arm.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <Mark.Rutland@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Vincent Guittot <vincent.guittot@linaro.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2012 at 01:54:18PM +0000, Mark Rutland wrote:
-> On Mon, Nov 19, 2012 at 12:45:03PM +0000, Lorenzo Pieralisi wrote:
-> > When booting through a device tree, the kernel cpu logical id map can be
-> > initialized using device tree data passed by FW or through an embedded blob.
-> > 
-> > This patch adds a function that parses device tree "cpu" nodes and
-> > retrieves the corresponding CPUs hardware identifiers (MPIDR).
-> > It sets the possible cpus and the cpu logical map values according to
-> > the number of CPUs defined in the device tree and respective properties.
-> > 
-> > The device tree HW identifiers are considered valid if all CPU nodes contain
-> > a "reg" property, there are no duplicate "reg" entries and the DT defines a
-> > CPU node whose "reg" property matches the MPIDR[23:0] of the boot CPU.
-> > 
-> > The primary CPU is assigned cpu logical number 0 to keep the current convention
-> > valid.
-> > 
-> > Current bindings documentation is included in the patch:
-> > 
-> > Documentation/devicetree/bindings/arm/cpus.txt
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Acked-by: Nicolas Pitre <nico@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt |  77 +++++++++++++++++++
-> >  arch/arm/include/asm/prom.h                    |   2 +
-> >  arch/arm/kernel/devtree.c                      | 100 +++++++++++++++++++++++++
-> >  3 files changed, 179 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > new file mode 100644
-> > index 0000000..46c3589
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > @@ -0,0 +1,77 @@
-> > +* ARM CPUs binding description
-> > +
-> > +The device tree allows to describe the layout of CPUs in a system through
-> > +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> > +defining properties for every cpu.
-> > +
-> > +Bindings for CPU nodes follow the ePAPR standard, available from:
-> > +
-> > +http://devicetree.org
-> > +
-> > +For the ARM architecture every CPU node must contain the following properties:
-> > +
-> > +- device_type:	must be "cpu"
-> > +- reg:		property matching the CPU MPIDR[23:0] register bits
-> > +		reg[31:24] bits must be set to 0
-> > +- compatible:	should be one of:
-> > +		"arm,arm1020"
-> > +		"arm,arm1020e"
-> > +		"arm,arm1022"
-> > +		"arm,arm1026"
-> > +		"arm,arm720"
-> > +		"arm,arm740"
-> > +		"arm,arm7tdmi"
-> > +		"arm,arm920"
-> > +		"arm,arm922"
-> > +		"arm,arm925"
-> > +		"arm,arm926"
-> > +		"arm,arm940"
-> > +		"arm,arm946"
-> > +		"arm,arm9tdmi"
-> > +		"arm,cortex-a5"
-> > +		"arm,cortex-a7"
-> > +		"arm,cortex-a8"
-> > +		"arm,cortex-a9"
-> > +		"arm,cortex-a15"
-> > +		"arm,arm1136"
-> > +		"arm,arm1156"
-> > +		"arm,arm1176"
-> > +		"arm,arm11mpcore"
-> > +		"faraday,fa526"
-> > +		"intel,sa110"
-> > +		"intel,sa1100"
-> > +		"marvell,feroceon"
-> > +		"marvell,mohawk"
-> > +		"marvell,xsc3"
-> > +		"marvell,xscale"
-> > +
-> > +Example:
-> > +
-> > +	cpus {
-> > +		#size-cells = <0>;
-> > +		#address-cells = <1>;
-> > +
-> > +		CPU0: cpu@0 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm, cortex-a15";
-> > +			reg = <0x0>;
-> > +		};
-> > +
-> > +		CPU1: cpu@1 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm, cortex-a15";
-> > +			reg = <0x1>;
-> > +		};
-> > +
-> > +		CPU2: cpu@100 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm, cortex-a7";
-> > +			reg = <0x100>;
-> > +		};
-> > +
-> > +		CPU3: cpu@101 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm, cortex-a7";
-> > +			reg = <0x101>;
-> > +		};
-> > +	};
-> 
-> Those spaces in the compatible strings shouldn't be there.
 
-Thanks for your patience, I missed that, now fixed.
+Hi all,
+this patchset add the timeout-sec property to the watchdog core,
+to the at91sam9_wdt driver and on all framework enabled watchdog driver
+with dt support.
+This patchset depends on the patchset already sent:
+"[PATCH v9 0/3 RESEND] watchdog: at91sam9_wdt: add device tree support"
 
-Thanks !
-Lorenzo
+The at91sam9_wdt is tested on evk-pr3,
+the other drivers are compile tested only.
+
+changes:
+v5:
+  - fix codestyle for compilance ti checkpatch.pl about
+    "ERROR: do not initialise statics to 0 or NULL"
+    for s3c2410_wdt.c:56 and at91sam9_wdt.c:63
+v4:
+  - add of_get_timeout_sec
+  - add s3c2410_wdt driver
+  - split driver patch
+  - fixed watchdog_init_timeout handling of min_timeout and max_timeout
+v3:
+  - rename watchdog_probe_dt_timeout ->  watchdog_init_timeout
+  - move the watchdog_init_timeout function from inline to watchdog_core.c
+  - add timeout parameter handling code to watchdog_init_timeout
+  - add timeout-sec property to the pnx4008-wdt driver
+  - add two small commit for fixup and cleanup
+v2:
+  - change "timeout" to "timeout-sec" as asked by Jean-Christophe
+  - at91sam9_wdt: use the new helper function
+  - at91sam9_wdt: add bounds checking
+  - watchdog.h: add bounds checking
+
+Fabio Porcedda (8):
+  dt: add helper inline for retrieving timeout-sec property
+  watchdog: core: dt: add support for the timeout-sec dt property
+  watchdog: orion_wdt: add timeout-sec property binding
+  watchdog: pnx4008: add timeout-sec property binding
+  watchdog: s3c2410_wdt: add timeout-sec property binding
+  watchdog: at91sam9_wdt: add timeout-sec property binding
+  watchdog: orion_wdt: move the min_timeout initialization
+  watchdog: WatchDog Timer Driver Core - fix comment
+
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |  4 +++
+ .../devicetree/bindings/watchdog/marvel.txt        |  5 +++
+ .../devicetree/bindings/watchdog/pnx4008-wdt.txt   |  4 +++
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |  3 ++
+ Documentation/watchdog/watchdog-kernel-api.txt     | 10 ++++++
+ drivers/watchdog/Kconfig                           |  1 +
+ drivers/watchdog/at91sam9_wdt.c                    | 16 ++++++++--
+ drivers/watchdog/orion_wdt.c                       | 10 +++---
+ drivers/watchdog/pnx4008_wdt.c                     |  7 ++--
+ drivers/watchdog/s3c2410_wdt.c                     |  6 ++--
+ drivers/watchdog/watchdog_core.c                   | 37 ++++++++++++++++++++++
+ include/linux/of.h                                 | 11 +++++++
+ include/linux/watchdog.h                           |  5 ++-
+ 13 files changed, 103 insertions(+), 16 deletions(-)
+
+-- 
+1.8.0
