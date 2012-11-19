@@ -1,56 +1,113 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH V3 4/5] arm: mm: Added support for PJ4B cpu and init
- routines
-Date: Mon, 19 Nov 2012 09:19:12 +0000
-Message-ID: <20121119091912.GC3290@n2100.arm.linux.org.uk>
-References: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
- <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
- <50A41BD3.9040509@free-electrons.com> <50A6B427.9080807@free-electrons.com>
- <20121119031210.GD22106@titan.lakedaemon.net>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/3] OF: Add helper for matching against linux,stdout-path
+Date: Mon, 19 Nov 2012 10:52:02 +0100
+Message-ID: <20121119095202.GL4398@game.jcrosoft.org>
+References: <1352971866-540-1-git-send-email-s.hauer@pengutronix.de>
+ <1352971866-540-2-git-send-email-s.hauer@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20121119031210.GD22106-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof@canonica>
+In-Reply-To: <1352971866-540-2-git-send-email-s.hauer@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Nov 18, 2012 at 10:12:10PM -0500, Jason Cooper wrote:
-> On Fri, Nov 16, 2012 at 10:46:15PM +0100, Gregory CLEMENT wrote:
-> > On 11/14/2012 11:31 PM, Gregory CLEMENT wrote:
-> > > Hello Russell,
-> > > 
-> > > With the 2 changes I have done on according your comments
-> > > do you think you can give your acked-by for this patch?
-> > > 
-> > 
-> > Hello Russell,
-> > 
-> > I didn't have any feedback from you for this version.
-> > If you are fine with this, could you give your Acked-by?
-> > 
-> > 
-> 
-> Gregory,
-> 
-> >From the looks of things, Russell has his head wrapped around buggy
-> sound driver code for the CuBox.  Perhaps Will Deacon or Catalin Marinas
-> would care to weigh in?  I'm reluctant to take the series without an
-> Acked-By from at least one of them.
+On 10:31 Thu 15 Nov     , Sascha Hauer wrote:
+> devicetrees may have a linux,stdout-path property in the chosen
+> node describing the console device. This adds a helper function
+> to match a device against this property so a driver can call
+> add_preferred_console for a matching device.
 
-Well, I would like to say - it should go through my tree, as it's generic
-ARM changes, and as very little (even generic stuff) seems to come through
-my tree anymore.  But that's going to make the remainder of your patches
-difficult to merge.
+I like it but I've an issue with it I cannot specify the option for
+
+as example I need to set the uart at 38400n8 or 115200n8 regarless of wath the
+booloader did
+
+Best Regards,
+J.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  drivers/of/base.c  |   28 ++++++++++++++++++++++++++++
+>  include/linux/of.h |    7 +++++++
+>  2 files changed, 35 insertions(+)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index af3b22a..737feb8 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1358,3 +1358,31 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
+>  	return curv;
+>  }
+>  EXPORT_SYMBOL_GPL(of_prop_next_string);
+> +
+> +/**
+> + * of_device_is_stdout_path - check if a device node matches the
+> + *                            linux,stdout-path property
+> + *
+> + * Check if this device node matches the linux,stdout-path property
+> + * in the chosen node. return true if yes, false otherwise.
+> + */
+> +int of_device_is_stdout_path(struct device_node *dn)
+> +{
+> +	const char *name;
+> +	struct device_node *dn_stdout;
+> +	int is_stdout = 0;
+> +
+> +	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+> +	if (name == NULL)
+> +		return 0;
+> +
+> +	dn_stdout = of_find_node_by_path(name);
+> +
+> +	if (dn_stdout && dn_stdout == dn)
+> +		is_stdout = 1;
+> +
+> +	of_node_put(dn_stdout);
+> +
+> +	return is_stdout;
+> +}
+> +EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index b4e50d5..5f857b5 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -310,6 +310,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
+>  		s;						\
+>  		s = of_prop_next_string(prop, s))
+>  
+> +int of_device_is_stdout_path(struct device_node *dn);
+> +
+>  #else /* CONFIG_OF */
+>  
+>  static inline const char* of_node_full_name(struct device_node *np)
+> @@ -437,6 +439,11 @@ static inline int of_machine_is_compatible(const char *compat)
+>  	return 0;
+>  }
+>  
+> +static inline int of_device_is_stdout_path(struct device_node *dn)
+> +{
+> +	return 0;
+> +}
+> +
+>  #define of_match_ptr(_ptr)	NULL
+>  #define of_match_node(_matches, _node)	NULL
+>  #define of_property_for_each_u32(np, propname, prop, p, u) \
+> -- 
+> 1.7.10.4
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
