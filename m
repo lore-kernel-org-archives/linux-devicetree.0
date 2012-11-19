@@ -1,66 +1,49 @@
-From: Bill Pemberton <wfp5p@virginia.edu>
-Subject: [PATCH 344/493] powerpc: remove use of __devinitdata
-Date: Mon, 19 Nov 2012 13:24:53 -0500
-Message-ID: <1353349642-3677-344-git-send-email-wfp5p@virginia.edu>
-References: <1353349642-3677-1-git-send-email-wfp5p@virginia.edu>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 1/2] of: Add vendor prefix for Asahi Kasei Corp.
+Date: Mon, 19 Nov 2012 15:34:43 -0700
+Message-ID: <1353364484-5741-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1353349642-3677-1-git-send-email-wfp5p@virginia.edu>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: gregkh@linuxfoundation.org
-Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CONFIG_HOTPLUG is going away as an option so __devinitdata is no
-longer needed.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Bill Pemberton <wfp5p@virginia.edu>
-Cc: Kumar Gala <galak@kernel.crashing.org> 
-Cc: Grant Likely <grant.likely@secretlab.ca> 
-Cc: Rob Herring <rob.herring@calxeda.com> 
-Cc: linuxppc-dev@lists.ozlabs.org 
-Cc: devicetree-discuss@lists.ozlabs.org 
+Their stock ticker is 3407.T which wouldn't make a good DT vendor
+prefix. Use the company name initials instead.
+
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 2 +-
- arch/powerpc/sysdev/bestcomm/bestcomm.c        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Both patches ought to merge through the DT tree OK. If not, patch 2
+could be taken through arm-soc.
 
-diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-index 712a436..e4be690 100644
---- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-+++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-@@ -216,7 +216,7 @@ static const struct i2c_device_id mcu_ids[] = {
- };
- MODULE_DEVICE_TABLE(i2c, mcu_ids);
+ Documentation/devicetree/bindings/vendor-prefixes.txt |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index deba8d0..05dc8eb 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -5,6 +5,7 @@ using them to avoid name-space collisions.
  
--static struct of_device_id mcu_of_match_table[] __devinitdata = {
-+static struct of_device_id mcu_of_match_table[] = {
- 	{ .compatible = "fsl,mcu-mpc8349emitx", },
- 	{ },
- };
-diff --git a/arch/powerpc/sysdev/bestcomm/bestcomm.c b/arch/powerpc/sysdev/bestcomm/bestcomm.c
-index 4c15b19..d913063 100644
---- a/arch/powerpc/sysdev/bestcomm/bestcomm.c
-+++ b/arch/powerpc/sysdev/bestcomm/bestcomm.c
-@@ -30,7 +30,7 @@
- #define DRIVER_NAME "bestcomm-core"
- 
- /* MPC5200 device tree match tables */
--static struct of_device_id mpc52xx_sram_ids[] __devinitdata = {
-+static struct of_device_id mpc52xx_sram_ids[] = {
- 	{ .compatible = "fsl,mpc5200-sram", },
- 	{ .compatible = "mpc5200-sram", },
- 	{}
+ ad	Avionic Design GmbH
+ adi	Analog Devices, Inc.
++ak	Asahi Kasei Corp.
+ amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+ apm	Applied Micro Circuits Corporation (APM)
+ arm	ARM Ltd.
 -- 
-1.8.0
+1.7.10.4
