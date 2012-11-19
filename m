@@ -1,8 +1,8 @@
 From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 2/8] watchdog: core: dt: add support for the timeout-sec dt
+Subject: [PATCH v5 1/8] dt: add helper inline for retrieving timeout-sec
  property
-Date: Mon, 19 Nov 2012 15:10:37 +0100
-Message-ID: <1353334243-16703-3-git-send-email-fabio.porcedda@gmail.com>
+Date: Mon, 19 Nov 2012 15:10:36 +0100
+Message-ID: <1353334243-16703-2-git-send-email-fabio.porcedda@gmail.com>
 References: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,101 +20,37 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/watchdog/watchdog-kernel-api.txt | 10 +++++++
- drivers/watchdog/watchdog_core.c               | 37 ++++++++++++++++++++++++++
- include/linux/watchdog.h                       |  3 +++
- 3 files changed, 50 insertions(+)
+The first user of this function is the watchdog framework.
 
-diff --git a/Documentation/watchdog/watchdog-kernel-api.txt b/Documentation/watchdog/watchdog-kernel-api.txt
-index 086638f..44098c2 100644
---- a/Documentation/watchdog/watchdog-kernel-api.txt
-+++ b/Documentation/watchdog/watchdog-kernel-api.txt
-@@ -212,3 +212,13 @@ driver specific data to and a pointer to the data itself.
- The watchdog_get_drvdata function allows you to retrieve driver specific data.
- The argument of this function is the watchdog device where you want to retrieve
- data from. The function returns the pointer to the driver specific data.
-+
-+To initialize the timeout field use the following function:
-+
-+extern void watchdog_init_timeout(struct watchdog_device *wdd,
-+                                  unsigned int parm_timeout,
-+                                  struct device_node *node);
-+
-+The watchdog_init_timeout function allows you to initialize the timeout field
-+using the module timeout parameter or retrieving the timeout-sec property from
-+the device tree.
-diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
-index 3796434..37dde68 100644
---- a/drivers/watchdog/watchdog_core.c
-+++ b/drivers/watchdog/watchdog_core.c
-@@ -36,12 +36,49 @@
- #include <linux/init.h>		/* For __init/__exit/... */
- #include <linux/idr.h>		/* For ida_* macros */
- #include <linux/err.h>		/* For IS_ERR macros */
-+#include <linux/of.h>		/* For of_get_timeout_sec */
- 
- #include "watchdog_core.h"	/* For watchdog_dev_register/... */
- 
- static DEFINE_IDA(watchdog_ida);
- static struct class *watchdog_class;
- 
-+static bool watchdog_is_valid_timeout(struct watchdog_device *wdd,
-+				      unsigned int t)
-+
-+{
-+	if (wdd->min_timeout < wdd->max_timeout)
-+		return (wdd->min_timeout <= t) && (t <= wdd->max_timeout);
-+	else
-+		return (t > 0);
-+}
-+
-+/**
-+ * watchdog_init_timeout() - initialize the timeout field
-+ * @parm: timeout module parameter, it takes precedence over the
-+ *        timeout-sec property.
-+ * @node: Retrieve the timeout-sec property only if the parm_timeout
-+ *        is out of bounds.
-+ */
-+void watchdog_init_timeout(struct watchdog_device *wdd, unsigned int parm,
-+			   struct device_node *node)
-+{
-+	unsigned int t = 0;
-+
-+	if (watchdog_is_valid_timeout(wdd, parm)) {
-+		wdd->timeout = parm;
-+		return;
-+	}
-+
-+	/* try to get the timeout_sec property */
-+	if (!node)
-+		return;
-+	of_get_timeout_sec(node, &t);
-+	if (watchdog_is_valid_timeout(wdd, t))
-+		wdd->timeout = t;
-+}
-+EXPORT_SYMBOL_GPL(watchdog_init_timeout);
-+
- /**
-  * watchdog_register_device() - register a watchdog device
-  * @wdd: watchdog device
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index b7f45d4..5cff9d6 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -130,6 +130,9 @@ static inline void *watchdog_get_drvdata(struct watchdog_device *wdd)
+Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+---
+ include/linux/of.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index b4e50d5..d60fde9 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -477,4 +477,15 @@ static inline int of_property_read_u32(const struct device_node *np,
+ 	return of_property_read_u32_array(np, propname, out_value, 1);
  }
  
- /* drivers/watchdog/core/watchdog_core.c */
-+extern void watchdog_init_timeout(struct watchdog_device *wdd,
-+				  unsigned int parm_timeout,
-+				  struct device_node *node);
- extern int watchdog_register_device(struct watchdog_device *);
- extern void watchdog_unregister_device(struct watchdog_device *);
- 
++/**
++ * of_get_timeout_sec() - Helper to read the timeout_sec property
++ * @np:		device node from which the property value is to be read.
++ * @timeout:	adress of the output value
++ */
++static inline int of_get_timeout_sec(const struct device_node *np,
++				     u32 *timeout)
++{
++	return of_property_read_u32(np, "timeout-sec", timeout);
++}
++
+ #endif /* _LINUX_OF_H */
 -- 
 1.8.0
