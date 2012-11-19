@@ -1,46 +1,104 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 3.7.0-rc4] of/net/mdio-gpio: Fix pdev->id issue when
- using devicetrees.
-Date: Mon, 19 Nov 2012 18:58:08 -0500 (EST)
-Message-ID: <20121119.185808.1849458112621237233.davem@davemloft.net>
-References: <1352816773-17837-1-git-send-email-srinivas.kandagatla@st.com>
-	<1353062039-31336-1-git-send-email-srinivas.kandagatla@st.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v5 3/8] watchdog: orion_wdt: add timeout-sec property
+ binding
+Date: Mon, 19 Nov 2012 11:06:43 -0500
+Message-ID: <20121119160643.GI22106@titan.lakedaemon.net>
+References: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
+ <1353334243-16703-4-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1353062039-31336-1-git-send-email-srinivas.kandagatla@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: srinivas.kandagatla@st.com
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1353334243-16703-4-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Date: Fri, 16 Nov 2012 10:33:59 +0000
+On Mon, Nov 19, 2012 at 03:10:38PM +0100, Fabio Porcedda wrote:
+> Only compile tested.
+> 
+> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/watchdog/marvel.txt | 5 +++++
+>  drivers/watchdog/orion_wdt.c                          | 8 +++-----
+>  2 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/marvel.txt
+> index 0b2503a..5dc8d30 100644
+> --- a/Documentation/devicetree/bindings/watchdog/marvel.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
+> @@ -5,10 +5,15 @@ Required Properties:
+>  - Compatibility : "marvell,orion-wdt"
+>  - reg		: Address of the timer registers
+>  
+> +Optional properties:
+> +
+> +- timeout-sec	: Contains the watchdog timeout in seconds
+> +
+>  Example:
+>  
+>  	wdt@20300 {
+>  		compatible = "marvell,orion-wdt";
+>  		reg = <0x20300 0x28>;
+> +		timeout-sec = <10>;
+>  		status = "okay";
+>  	};
+> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+> index c20f96b..446a3e9 100644
+> --- a/drivers/watchdog/orion_wdt.c
+> +++ b/drivers/watchdog/orion_wdt.c
+> @@ -162,12 +162,10 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+>  
+>  	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
+>  
+> -	if ((heartbeat < 1) || (heartbeat > wdt_max_duration))
+> -		heartbeat = wdt_max_duration;
+> -
+> -	orion_wdt.timeout = heartbeat;
+>  	orion_wdt.min_timeout = 1;
+> +	orion_wdt.timeout = wdt_max_duration;
+>  	orion_wdt.max_timeout = wdt_max_duration;
+> +	watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
 
-> From: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> 
-> When the mdio-gpio driver is probed via device trees, the platform
-> device id is set as -1, However the pdev->id is re-used as bus-id for
-> while creating mdio gpio bus.
-> So
-> For device tree case the mdio-gpio bus name appears as "gpio-ffffffff"
-> where as
-> for non-device tree case the bus name appears as "gpio-<bus-num>"
-> 
-> Which means the bus_id is fixed in device tree case, so we can't have
-> two mdio gpio buses via device trees. Assigning a logical bus number
-> via device tree solves the problem and the bus name is much consistent
-> with non-device tree bus name.
-> 
-> Without this patch
-> 1. we can't support two mdio-gpio buses via device trees.
-> 2. we should always pass gpio-ffffffff as bus name to phy_connect, very
-> different to non-device tree bus name.
-> 
-> So, setting up the bus_id via aliases from device tree is the right
-> solution and other drivers do similar thing.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+Hi Fabio,
 
-Applied, thank you.
+There are many boards using pdata, !CONFIG_OF.  Have you compile-tested
+this without CONFIG_OF?
+
+thx,
+
+Jason.
+
+>  
+>  	watchdog_set_nowayout(&orion_wdt, nowayout);
+>  	ret = watchdog_register_device(&orion_wdt);
+> @@ -177,7 +175,7 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	pr_info("Initial timeout %d sec%s\n",
+> -		heartbeat, nowayout ? ", nowayout" : "");
+> +		orion_wdt.timeout, nowayout ? ", nowayout" : "");
+>  	return 0;
+>  }
+>  
+> -- 
+> 1.8.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
