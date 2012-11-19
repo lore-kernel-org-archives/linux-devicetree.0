@@ -1,176 +1,36 @@
-From: Anton Vorontsov <anton.vorontsov@linaro.org>
-Subject: Re: [PATCH 4/7] mfd: max8925: support dt for power supply
-Date: Sun, 18 Nov 2012 16:24:47 -0800
-Message-ID: <20121119002447.GH29066@lizard.sbx05977.paloaca.wayport.net>
-References: <1352187764-9901-1-git-send-email-qingx@marvell.com>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Mon, 19 Nov 2012 11:29:05 +0900
+Message-ID: <8058793.mIXgB85Mso@percival>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1353149747-31871-2-git-send-email-acourbot@nvidia.com> <20121117113849.GA5228@lizard>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1352187764-9901-1-git-send-email-qingx@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: dwmw2@infradead.org, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121117113849.GA5228@lizard>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 06, 2012 at 03:42:44PM +0800, Qing Xu wrote:
-> From: Qing Xu <qingx@marvell.com>
->=20
-> Signed-off-by: Qing Xu <qingx@marvell.com>
-> ---
+On Saturday 17 November 2012 19:38:50 Anton Vorontsov wrote:
+> > +++ b/drivers/power/power_seq/Kconfig
+> > @@ -0,0 +1,2 @@
+> > +config POWER_SEQ
+> > +	tristate
+> 
+> This really needs a proper Kconfig description and a help text, shortly
+> describing the purpose of the subsystem.
 
-W/ this patch I'm getting this warning:
+Does it? The current state makes power seqs automatically selected by drivers 
+that need it, and they do not appear in the configuration menu. If we add a 
+description they will then become a visible item, so the logic would be to 
+make it user-selectable.
 
-  CC      drivers/power/max8925_power.o
-  drivers/power/max8925_power.c: In function =E2=80=98max8925_power_pro=
-be=E2=80=99:
-  drivers/power/max8925_power.c:479:3: warning: statement with no effec=
-t
-  [-Wunused-value]
+If that approach is preferred, I will also have to change pwm-backlight so 
+that it compiles without power sequences. Not that I mind, but I liked the 
+idea of not adding yet-another-option to the config menu.
 
->  drivers/power/max8925_power.c |   57 +++++++++++++++++++++++++++++++=
-+++++----
->  1 files changed, 51 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/power/max8925_power.c b/drivers/power/max8925_po=
-wer.c
-> index daa333b..dd2ac2d 100644
-> --- a/drivers/power/max8925_power.c
-> +++ b/drivers/power/max8925_power.c
-> @@ -426,14 +426,58 @@ static __devexit int max8925_deinit_charger(str=
-uct max8925_power_info *info)
->  	return 0;
->  }
-> =20
-> +#ifdef CONFIG_OF
-> +static int max8925_power_dt_init(struct platform_device *pdev,
-> +			      struct max8925_power_pdata *pdata)
-> +{
-> +	struct device_node *nproot =3D pdev->dev.parent->of_node, *np;
-> +	int batt_detect, topoff_threshold, fast_charge,
-> +		no_temp_support, no_insert_detect;
+Fixed the code according to all your other comments, thanks!
 
-One variable declaration per line please.
-
-> +
-> +	if (!nproot)
-> +		return -ENODEV;
-
-Please add an empty line here.
-
-> +	np =3D of_find_node_by_name(nproot, "charger");
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "failed to find charger node\n");
-> +		return -ENODEV;
-> +	}
-
-ditto.
-
-> +	of_property_read_u32(np, "topoff-threshold", &topoff_threshold);
-> +	of_property_read_u32(np, "batt-detect", &batt_detect);
-> +	of_property_read_u32(np, "fast-charge", &fast_charge);
-> +	of_property_read_u32(np, "no-insert-detect", &no_insert_detect);
-> +	of_property_read_u32(np, "no-temp-support", &no_temp_support);
-> +
-> +	pdata->batt_detect =3D batt_detect;
-> +	pdata->fast_charge =3D fast_charge;
-> +	pdata->topoff_threshold =3D topoff_threshold;
-> +	pdata->no_insert_detect =3D no_insert_detect;
-> +	pdata->no_temp_support =3D no_temp_support;
-
-ditto
-
-> +	pr_err("batt_detect%d, topoff_threshold%d, fast_charge%d,no_temp_su=
-pport%d, no_insert_detect%d\n",
-> +		batt_detect, topoff_threshold, fast_charge,
-> +		no_temp_support, no_insert_detect);
-
-pr_err, are you sure? :)
-
-> +	return 0;
-> +}
-> +#else
-> +#define max8925_power_dt_init(x, y)	(-1)
-
-You should make it static inline function to get rid of the warning abo=
-ve.
-
-> +#endif
-> +
-> +static char *power_supplicants[] =3D {
-> +	"max8925-battery",
-> +};
-> +
->  static __devinit int max8925_power_probe(struct platform_device *pde=
-v)
->  {
->  	struct max8925_chip *chip =3D dev_get_drvdata(pdev->dev.parent);
-> -	struct max8925_power_pdata *pdata =3D NULL;
-> +	struct max8925_power_pdata *pdata =3D pdev->dev.platform_data;
->  	struct max8925_power_info *info;
->  	int ret;
-> =20
-> -	pdata =3D pdev->dev.platform_data;
-> +	if (pdev->dev.parent->of_node && !pdata) {
-> +		pdata =3D devm_kzalloc(&pdev->dev,
-> +				     sizeof(struct max8925_power_pdata),
-> +				     GFP_KERNEL);
->
-
-Please move this logic into max8925_power_dt_init().
-So it will look like
-
-	if (!pdata)
-		pdata =3D max8925_power_dt_init(pdev);
-	if (!pdata) {
-		dev_err(...);
-		return ...;
-	}
-
-> +		max8925_power_dt_init(pdev, pdata);
-> +	}
->  	if (!pdata) {
->  		dev_err(&pdev->dev, "platform data isn't assigned to "
->  			"power supply\n");
-> @@ -453,8 +497,8 @@ static __devinit int max8925_power_probe(struct p=
-latform_device *pdev)
->  	info->ac.properties =3D max8925_ac_props;
->  	info->ac.num_properties =3D ARRAY_SIZE(max8925_ac_props);
->  	info->ac.get_property =3D max8925_ac_get_prop;
-> -	info->ac.supplied_to =3D pdata->supplied_to;
-> -	info->ac.num_supplicants =3D pdata->num_supplicants;
-> +	info->ac.supplied_to =3D power_supplicants;
-> +	info->ac.num_supplicants =3D ARRAY_SIZE(power_supplicants);
->  	ret =3D power_supply_register(&pdev->dev, &info->ac);
->  	if (ret)
->  		goto out;
-> @@ -465,8 +509,8 @@ static __devinit int max8925_power_probe(struct p=
-latform_device *pdev)
->  	info->usb.properties =3D max8925_usb_props;
->  	info->usb.num_properties =3D ARRAY_SIZE(max8925_usb_props);
->  	info->usb.get_property =3D max8925_usb_get_prop;
-> -	info->usb.supplied_to =3D pdata->supplied_to;
-> -	info->usb.num_supplicants =3D pdata->num_supplicants;
-> +	info->usb.supplied_to =3D power_supplicants;
-> +	info->usb.num_supplicants =3D ARRAY_SIZE(power_supplicants);
-> =20
->  	ret =3D power_supply_register(&pdev->dev, &info->usb);
->  	if (ret)
-> @@ -491,6 +535,7 @@ static __devinit int max8925_power_probe(struct p=
-latform_device *pdev)
->  	info->no_insert_detect =3D pdata->no_insert_detect;
-> =20
->  	max8925_init_charger(chip, info);
-> +
-
-This change is unrelated.
-
->  	return 0;
->  out_battery:
->  	power_supply_unregister(&info->battery);
-> --=20
-> 1.7.0.4
-
-Thanks,
-Anton.
+Alex.
