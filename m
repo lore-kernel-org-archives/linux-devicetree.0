@@ -1,99 +1,56 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [PATCH v4 1/7] ARM: kernel: enhance MPIDR macro definitions
-Date: Mon, 19 Nov 2012 12:45:00 +0000
-Message-ID: <1353329106-24084-2-git-send-email-lorenzo.pieralisi@arm.com>
-References: <1353329106-24084-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH v2 0/3] mtd: nand: OMAP: ELM error correction support
+ for BCH ecc
+Date: Mon, 19 Nov 2012 12:44:22 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3E9E8178@DBDE01.ent.ti.com>
+References: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
+ <1352978534.2221.33.camel@sauron.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1353329106-24084-1-git-send-email-lorenzo.pieralisi@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Vincent Guittot <vincent.guittot@linaro.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1352978534.2221.33.camel@sauron.fi.intel.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>
 List-Id: devicetree@vger.kernel.org
 
-Kernel subsystems other than the topology layer need the MPIDR
-mask definitions to access the MPIDR without relying on hardcoded
-masks. This patch moves the MPIDR register masks definition to
-a header file and defines a macro to simplify access to MPIDR bit fields
-representing affinity levels.
-
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
----
- arch/arm/include/asm/cputype.h | 13 +++++++++++++
- arch/arm/kernel/topology.c     | 27 +--------------------------
- 2 files changed, 14 insertions(+), 26 deletions(-)
-
-diff --git a/arch/arm/include/asm/cputype.h b/arch/arm/include/asm/cputype.h
-index cb47d28..a59dcb5 100644
---- a/arch/arm/include/asm/cputype.h
-+++ b/arch/arm/include/asm/cputype.h
-@@ -25,6 +25,19 @@
- #define CPUID_EXT_ISAR4	"c2, 4"
- #define CPUID_EXT_ISAR5	"c2, 5"
- 
-+#define MPIDR_SMP_BITMASK (0x3 << 30)
-+#define MPIDR_SMP_VALUE (0x2 << 30)
-+
-+#define MPIDR_MT_BITMASK (0x1 << 24)
-+
-+#define MPIDR_HWID_BITMASK 0xFFFFFF
-+
-+#define MPIDR_LEVEL_BITS 8
-+#define MPIDR_LEVEL_MASK ((1 << MPIDR_LEVEL_BITS) - 1)
-+
-+#define MPIDR_AFFINITY_LEVEL(mpidr, level) \
-+	((mpidr >> (MPIDR_LEVEL_BITS * level)) & MPIDR_LEVEL_MASK)
-+
- extern unsigned int processor_id;
- 
- #ifdef CONFIG_CPU_CP15
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 317dac6..4642c7d 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -196,32 +196,7 @@ static inline void parse_dt_topology(void) {}
- static inline void update_cpu_power(unsigned int cpuid, unsigned int mpidr) {}
- #endif
- 
--
--/*
-- * cpu topology management
-- */
--
--#define MPIDR_SMP_BITMASK (0x3 << 30)
--#define MPIDR_SMP_VALUE (0x2 << 30)
--
--#define MPIDR_MT_BITMASK (0x1 << 24)
--
--/*
-- * These masks reflect the current use of the affinity levels.
-- * The affinity level can be up to 16 bits according to ARM ARM
-- */
--#define MPIDR_HWID_BITMASK 0xFFFFFF
--
--#define MPIDR_LEVEL0_MASK 0x3
--#define MPIDR_LEVEL0_SHIFT 0
--
--#define MPIDR_LEVEL1_MASK 0xF
--#define MPIDR_LEVEL1_SHIFT 8
--
--#define MPIDR_LEVEL2_MASK 0xFF
--#define MPIDR_LEVEL2_SHIFT 16
--
--/*
-+ /*
-  * cpu topology table
-  */
- struct cputopo_arm cpu_topology[NR_CPUS];
--- 
-1.7.12
+DQpPbiBUaHUsIE5vdiAxNSwgMjAxMiBhdCAxNjo1MjoxNCwgQXJ0ZW0gQml0eXV0c2tpeSB3cm90
+ZToNCj4gT24gV2VkLCAyMDEyLTEwLTMxIGF0IDEyOjM4ICswNTMwLCBQaGlsaXAsIEF2aW5hc2gg
+d3JvdGU6DQo+ID4gU3VwcG9ydCB0byB1c2UgRUxNIGFzIEJDSCA0ICYgOCBiaXQgZXJyb3IgY29y
+cmVjdGlvbiBtb2R1bGUuIEFsc28gcGVyZm9ybWFuY2UNCj4gPiBlbmhhbmNlbWVudCBieSBhZGRp
+bmcgc2luZ2xlIHNob3QgcmVhZF9wYWdlIGFuZCB3cml0ZV9wYWdlIGZ1bmN0aW9ucyBmb3IgdGhl
+DQo+ID4gbmFuZCBmbGFzaGVzIHdpdGggcGFnZSBzaXplIGxlc3MgdGhhbiA0IEtCLg0KPiA+IA0K
+PiA+IEVMTSBtb2R1bGUgY2FuIGJlIHVzZWQgdG8gY29ycmVjdCBlcnJvcnMgcmVwb3J0ZWQgYnkg
+QkNIIDQsIDggJiAxNiBiaXQNCj4gPiBFQ0Mgc2NoZW1lLiBGb3Igbm93IG9ubHkgNCAmIDggYml0
+IHN1cHBvcnQgaXMgYWRkZWQuDQo+ID4gDQo+ID4gQkNIIDQgJiA4IGJpdCBlcnJvciBkZXRlY3Rp
+b24gc3VwcG9ydCBpcyBhbHJlYWR5IGF2YWlsYWJsZSBpbiBtYWlubGluZQ0KPiA+IGtlcm5lbCBh
+bmQgd29ya3Mgd2l0aCBzb2Z0d2FyZSBlcnJvciBjb3JyZWN0aW9uLg0KPiA+IA0KPiA+IFRoaXMg
+c2VyaWVzIGlzIGJhc2VkIG9uIFsxXSBhbmQgdGVzdGVkIHdpdGggUkZDOiBPTUFQIEdQTUMgYmlu
+ZGluZ3MNCj4gPiBwYXRjaCBzZXJpZXMNCj4gPiANCj4gPiAxLiBsaW51eC1uZXh0LzIwMTIxMDMw
+DQo+IA0KPiBXb3VsZCB5b3UgcGxlYXNlIHJlLXNlbmQgYSB2ZXJzaW9uIHdoaWNoIGNsZWFubHkg
+YXBwbGllcyB0byB0aGUNCj4gbDItbXRkLmdpdCB0cmVlPyBUaGlzIHNlcmllcyBoYXMgbWFueSBj
+b25mbGljdHMuIFRoYW5rcyENCg0KQXJ0ZW0sDQoNCk9tYXAgbmFuZCBkcml2ZXIgaXMgYmVpbmcg
+Y2hhbmdlZCBjb25zaWRlcmFibHkgd2l0aCBBZnphbCdzIG9tYXAtZ3BtYyBjbGVhbnVwDQpzZXJp
+ZXMgZm9yIGNvbW1vbiBhcm0gekltYWdlIFsyXSBhbmQgdGhvc2UgY2hhbmdlcyBtb3ZlIG1hbnkN
+Cm9mIHRoZSBuYW5kIHJlbGF0ZWQgY29kZSBmcm9tIHBsYXRmb3JtIGZvbGRlcnMgdG8gb21hcCBu
+YW5kIGRyaXZlci4NCg0KT21hcC1ncG1jIGNoYW5nZXMgYXJlIHByZXNlbnQgaW4gVG9ueSdzICIg
+b21hcC1mb3ItdjMuOC9jbGVhbnVwLWhlYWRlcnMtZ3BtYyINCmJyYW5jaCBbM11hbmQgaXMgcHJl
+c2VudCBpbiBsaW51eC1uZXh0IGFsc28sIGJ1dCBpcyBub3QgcHJlc2VudCBpbiBsMi1tdGQuDQpU
+b255IGhhcyBzaWduZWQgdGFnIGluY2x1ZGluZyBvbWFwLWdwbWMgY2xlYW51cCBzZXJpZXMsDQoi
+b21hcC1mb3ItdjMuOC9jbGVhbnVwLWhlYWRlcnMtcHJlcGFyZS1tdWx0aXBsYXRmb3JtLXYzLXNp
+Z25lZCIgWzRdDQoNCklmIHRoaXMgc2VyaWVzIGlzIG1hZGUgb3ZlciBsMi1tdGQsIGFuZCBpdCB3
+b3VsZCBjYXVzZSBsb3Qgb2YgY29uZmxpY3QNCndpdGggb21hcC1ncG1jIGNsZWFudXAgc2VyaWVz
+Lg0KDQpJIGFtIG5vdCBzdXJlIGhvdyB0aGlzIGRlcGVuZGVuY3kgaGFzIHRvIGJlIGhhbmRsZWQg
+Zm9yIHRoaXMgc2VyaWVzLA0KbGV0IG1lIGtub3cgd2hldGhlciB5b3Ugc3RpbGwgd2FudCBpdCB0
+byBiZSBtYWRlIG92ZXIgbDItbXRkPw0KDQoyLiBodHRwOi8vbWFya21haWwub3JnL21lc3NhZ2Uv
+ZXY2N3dtN2lyZ2MycWM1ZCNxdWVyeTorcGFnZToxK21pZDp3Z2pkdjZmc2ZnaG51YTV6K3N0YXRl
+OnJlc3VsdHMNCjMuIGh0dHA6Ly9naXQua2VybmVsLm9yZy8/cD1saW51eC9rZXJuZWwvZ2l0L3Rt
+bGluZC9saW51eC1vbWFwLmdpdDthPXNob3J0bG9nO2g9cmVmcy9oZWFkcy9vbWFwLWZvci12My44
+L2NsZWFudXAtaGVhZGVycy1ncG1jDQo0LiBodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvP3A9bGludXgv
+a2VybmVsL2dpdC90bWxpbmQvbGludXgtb21hcC5naXQ7YT10YWc7aD1yZWZzL3RhZ3Mvb21hcC1m
+b3ItdjMuOC9jbGVhbnVwLWhlYWRlcnMtcHJlcGFyZS1tdWx0aXBsYXRmb3JtLXYzLXNpZ25lZA0K
+DQoNClRoYW5rcw0KQXZpbmFzaA0KDQo+IA0KPiBnaXQ6Ly9naXQuaW5mcmFkZWFkLm9yZy91c2Vy
+cy9kZWRla2luZC9sMi1tdGQuZ2l0DQo+IA0KPiAtLSANCj4gQmVzdCBSZWdhcmRzLA0KPiBBcnRl
+bSBCaXR5dXRza2l5DQo+IA0KDQo=
