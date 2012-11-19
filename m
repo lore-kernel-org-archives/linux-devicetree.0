@@ -1,71 +1,133 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V3 4/5] arm: mm: Added support for PJ4B cpu and init
- routines
-Date: Mon, 19 Nov 2012 10:52:10 +0000
-Message-ID: <20121119105210.GD3205@mudshark.cambridge.arm.com>
-References: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
- <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
- <50A41BD3.9040509@free-electrons.com>
- <50A6B427.9080807@free-electrons.com>
- <20121119031210.GD22106@titan.lakedaemon.net>
- <50A9EA11.7050409@free-electrons.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/5] ARM: kernel: add device tree init map function
+Date: Mon, 19 Nov 2012 11:02:35 +0000
+Message-ID: <20121119110155.GA2816@e106331-lin.cambridge.arm.com>
+References: <1352983614-22924-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1352983614-22924-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1352983614-22924-3-git-send-email-lorenzo.pieralisi@arm.com>
 Content-Disposition: inline
-In-Reply-To: <50A9EA11.7050409-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <Leif.Lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWMP3drIcvDWNA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2012 at 08:13:05AM +0000, Gregory CLEMENT wrote:
-> On 11/19/2012 04:12 AM, Jason Cooper wrote:
-> > On Fri, Nov 16, 2012 at 10:46:15PM +0100, Gregory CLEMENT wrote:
-> >> On 11/14/2012 11:31 PM, Gregory CLEMENT wrote:
-> >>> Hello Russell,
-> >>>
-> >>> With the 2 changes I have done on according your comments
-> >>> do you think you can give your acked-by for this patch?
-> >>>
-> >>
-> >> Hello Russell,
-> >>
-> >> I didn't have any feedback from you for this version.
-> >> If you are fine with this, could you give your Acked-by?
-> >>
-> >>
-> > 
-> > Gregory,
-> > 
-> > From the looks of things, Russell has his head wrapped around buggy
-> > sound driver code for the CuBox.  Perhaps Will Deacon or Catalin Marinas
-> > would care to weigh in?  I'm reluctant to take the series without an
-> > Acked-By from at least one of them.
-> 
-> 
-> I am fine with this as Will already have done the review.
+Hi,
 
-I reviewed the thing, so you can add:
+Just a couple of comments on the binding documentation.
 
-  Reviewed-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> new file mode 100644
+> index 0000000..1fab07a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -0,0 +1,78 @@
+> +* ARM CPUs binding description
+> +
+> +The device tree allows to describe the layout of CPUs in a system through
+> +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+> +defining properties for every cpu.
+> +
+> +Bindings for CPU nodes follow the ePAPR standard, available from:
+> +
+> +http://devicetree.org
+> +
+> +For the ARM architecture every CPU node must contain the following properties:
+> +
+> +- reg:		property matching the CPU MPIDR[23:0] register bits
+> +		reg[31:24] bits must be set to 0
+> +- compatible:	should be one of:
+> +		"arm,arm1020"
+> +		"arm,arm1020e"
+> +		"arm,arm1022"
+> +		"arm,arm1026"
+> +		"arm,arm720"
+> +		"arm,arm740"
+> +		"arm,arm7tdmi"
+> +		"arm,arm920"
+> +		"arm,arm922"
+> +		"arm,arm925"
+> +		"arm,arm926"
+> +		"arm,arm940"
+> +		"arm,arm946"
+> +		"arm,arm9tdmi"
+> +		"arm,cortex-a5"
+> +		"arm,cortex-a7"
+> +		"arm,cortex-a8"
+> +		"arm,cortex-a9"
+> +		"arm,cortex-a15"
+> +		"arm,arm1136"
+> +		"arm,arm1156"
+> +		"arm,arm1176"
+> +		"arm,arm11mpcore"
+> +		"faraday,fa526"
+> +		"intel,sa110"
+> +		"intel,sa1100"
+> +		"marvell,feroceon"
+> +		"marvell,mohawk"
+> +		"marvell,xsc3"
+> +		"marvell,xscale"
+> +
+> +Every cpu node is required to set its device_type to "cpu".
 
-However, if Russell wants to take this via his tree then perhaps it's best
-for arm-soc to pull a branch from him containing this, like we've done in the
-past.
+Should this not be described at the start of the properties list? e.g:
 
-The alternative is to order the pull requests to Linus, but that sounds like
-a bad idea (although I suspect the rest of your series still at least compiles
-without this patch?).
+	- device_type:	must be "cpu"
 
-Will
+It'd be more consistent and harder to miss that way.
+
+> +Example:
+> +
+> +	cpus {
+> +		#size-cells = <0>;
+> +		#address-cells = <1>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a15>;
+> +			reg = <0x0>;
+> +		};
+> +
+> +		CPU1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a15>;
+> +			reg = <0x1>;
+> +		};
+> +
+> +		CPU2: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a7>;
+> +			reg = <0x100>;
+> +		};
+> +
+> +		CPU3: cpu@101 {
+> +			device_type = "cpu";
+> +			compatible = <arm, cortex-a7>;
+> +			reg = <0x101>;
+> +		};
+> +	};
+
+It looks like you missed the compatible strings here when fixing things up from
+v2. They should be:
+
+	compatible = "arm,cortex-a15";
+
+and:
+
+	compatible = "arm,cortex-a7";
+
+Otherwise, looks good!
+
+Thanks,
+Mark
