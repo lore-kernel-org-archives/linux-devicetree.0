@@ -1,72 +1,71 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/7] ARM: kernel: update topology to use new MPIDR
- macros
-Date: Mon, 19 Nov 2012 10:38:34 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1211191037450.1182@xanadu.home>
-References: <1353329106-24084-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1353329106-24084-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [GIT PULL] ARM: multi-cluster aware boot protocol
+Date: Mon, 19 Nov 2012 16:07:25 +0000
+Message-ID: <20121119160725.GA25721@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353329106-24084-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux@arm.linux.org.uk
+Cc: nicolas.pitre@linaro.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Nov 2012, Lorenzo Pieralisi wrote:
+Hi Russell,
 
-> This patch updates the topology initialization code to use the newly
-> defined accessors to retrieve the MPIDR affinity levels.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+please consider pulling this patch series that adds cluster awareness to
+the ARM cpu_logical_map, adds DT cpu bindings, introduces GIC autoprobing for
+CPU interfaces and cleans up the topology definitions based on the MPIDR
+register.
 
-Acked-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+It is a small step, though pivotal, towards cluster awareness in the ARM kernel
+that allows us to generalize the MPIDR concept for future systems and prepare
+for some changes that have been on the backburner for a while (eg MPIDR
+linearization in cpu_{suspend}/{resume}).
 
-> ---
->  arch/arm/kernel/topology.c | 15 +++++----------
->  1 file changed, 5 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-> index 4642c7d..cba99bd 100644
-> --- a/arch/arm/kernel/topology.c
-> +++ b/arch/arm/kernel/topology.c
-> @@ -262,19 +262,14 @@ void store_cpu_topology(unsigned int cpuid)
->  
->  		if (mpidr & MPIDR_MT_BITMASK) {
->  			/* core performance interdependency */
-> -			cpuid_topo->thread_id = (mpidr >> MPIDR_LEVEL0_SHIFT)
-> -				& MPIDR_LEVEL0_MASK;
-> -			cpuid_topo->core_id = (mpidr >> MPIDR_LEVEL1_SHIFT)
-> -				& MPIDR_LEVEL1_MASK;
-> -			cpuid_topo->socket_id = (mpidr >> MPIDR_LEVEL2_SHIFT)
-> -				& MPIDR_LEVEL2_MASK;
-> +			cpuid_topo->thread_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-> +			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 2);
->  		} else {
->  			/* largely independent cores */
->  			cpuid_topo->thread_id = -1;
-> -			cpuid_topo->core_id = (mpidr >> MPIDR_LEVEL0_SHIFT)
-> -				& MPIDR_LEVEL0_MASK;
-> -			cpuid_topo->socket_id = (mpidr >> MPIDR_LEVEL1_SHIFT)
-> -				& MPIDR_LEVEL1_MASK;
-> +			cpuid_topo->core_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
-> +			cpuid_topo->socket_id = MPIDR_AFFINITY_LEVEL(mpidr, 1);
->  		}
->  	} else {
->  		/*
-> -- 
-> 1.7.12
-> 
-> 
+Thank you very much indeed,
+Lorenzo
+
+The following changes since commit 77b67063bb6bce6d475e910d3b886a606d0d91f7:
+
+  Linux 3.7-rc5 (2012-11-11 13:44:33 +0100)
+
+are available in the git repository at:
+
+  git://linux-arm.org/linux-2.6-lp.git cluster-boot-protocol
+
+for you to fetch changes up to 384a290283fde63ba8dc671fca5420111cdac19a:
+
+  ARM: gic: use a private mapping for CPU target interfaces (2012-11-19 15:44:34 +0000)
+
+----------------------------------------------------------------
+Lorenzo Pieralisi (6):
+      ARM: kernel: enhance MPIDR macro definitions
+      ARM: kernel: update topology to use new MPIDR macros
+      ARM: kernel: smp_setup_processor_id() updates
+      ARM: kernel: add device tree init map function
+      ARM: kernel: add cpu logical map DT init in setup_arch
+      ARM: kernel: add logical mappings look-up
+
+Nicolas Pitre (1):
+      ARM: gic: use a private mapping for CPU target interfaces
+
+ Documentation/devicetree/bindings/arm/cpus.txt |  77 +++++++++++++++++++
+ arch/arm/common/gic.c                          |  45 ++++++++---
+ arch/arm/include/asm/cputype.h                 |  13 ++++
+ arch/arm/include/asm/prom.h                    |   2 +
+ arch/arm/include/asm/smp_plat.h                |  17 +++++
+ arch/arm/kernel/devtree.c                      | 100 +++++++++++++++++++++++++
+ arch/arm/kernel/setup.c                        |   8 +-
+ arch/arm/kernel/topology.c                     |  42 ++---------
+ 8 files changed, 256 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpus.txt
