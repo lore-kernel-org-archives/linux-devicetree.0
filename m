@@ -1,73 +1,61 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 0/14] fdt: Add various device tree utilities
-	and features
-Date: Mon, 19 Nov 2012 09:08:34 -0800
-Message-ID: <CAPnjgZ0NGbgJ8ak8u2rA-RY3aGz8ktqYQB9dMhhw0Dr=bhx5cg@mail.gmail.com>
-References: <1351218671-15228-1-git-send-email-sjg@chromium.org>
-	<50A83B7B.4080506@gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
+ variables & arrays
+Date: Mon, 19 Nov 2012 23:07:56 +0530
+Message-ID: <CAKohpo=grCNtQPUi2TzG+cCreETzEeBv5R9-0NLio1MRDAGDzA@mail.gmail.com>
+References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
+	<50991C41.50705@gmail.com>
+	<CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
+	<509FB25F.3030307@gmail.com>
+	<CAKohpoksQ4ShO_QFAQORO2_oEgNtOeENFnX1C3gN_5POQSGexg@mail.gmail.com>
+	<509FFF8B.3010707@gmail.com>
+	<CAKohponUFABC397w=dq7j+1f5QeiOX4BCOXv=OZSNOaOTmt9oQ@mail.gmail.com>
+	<CAKohponUt4264UaxM2Wr41=fbPJkUCFhKhOapjPQC=OYDuyMbQ@mail.gmail.com>
+	<CAB4BAks+eym9+qNZjxwkg7XxJrMwkaYFWGM5_YQk_TzfxyoHaw@mail.gmail.com>
+	<CAKohpo=U2xss6cZMBKsbLJ4G-AWeEnHz8V-HFw2NKx0fucTK8Q@mail.gmail.com>
+	<CAB4BAktsPviZ11QjSGgdzaV0uvLq3TLk4au6=dOgv7NtA9nc4Q@mail.gmail.com>
+	<CAKohpo=XZ_uXJPUr2dJFBQBWnkRyV2YepikrWZ2GdrPXEmEmYw@mail.gmail.com>
+	<50AA5E41.3040705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <50A83B7B.4080506@gmail.com>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Jerry Van Baren <gvb.uboot@gmail.com>
-Cc: Tom Rini <trini@ti.com>, U-Boot Mailing List <u-boot@lists.denx.de>, Jerry Van Baren <vanbaren@cideas.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50AA5E41.3040705@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Rajanikanth HV <rajanikanth.hv@linaro.org>, "linaro-dev@lists.linaro.org Devel" <linaro-dev@lists.linaro.org>, andriy.shevchenko@intel.com, Patch Tracking <patches@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerry,
+On 19 November 2012 21:58, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> Support for byte- and word- properties is relatively recent I believe
+> (or at least, the /bits/ syntax is). Which dtc version are you using?
 
-On Sat, Nov 17, 2012 at 5:35 PM, Jerry Van Baren <gvb.uboot@gmail.com> wrote:
-> Dear Simon,
->
-> Sorry for being so late on this (the patches were submitted before the
-> merge window closed).  I've applied the patches to the "next" branch in
-> the u-boot-fdt repo.
->   <http://git.denx.de/?p=u-boot/u-boot-fdt.git;a=shortlog;h=refs/heads/next>
->
-> I'm assuming these are still valid (Simon) and eligible to be applied to
-> the v2013.01 u-boot release (Tom).  If so, I'll submit a pull request.
+Ok, i was on a older version. I just saw this patch now:
 
-Yes still valid thank you. The only question is around the GPIO patch
-(http://patchwork.ozlabs.org/patch/194340/) since as Stephen pointed
-out there is discussion on the kernel list of whether to keep the
-polarity bit. I suppose we can always address that later if they
-decide to replace it with something else.
+commit cd296721a9645f9f28800a072490fa15458d1fb7
+Author: Stephen Warren <swarren@nvidia.com>
+Date:   Fri Sep 28 21:25:59 2012 +0000
 
->
-> On 10/25/2012 10:30 PM, Simon Glass wrote:
->> This series contains a number of features related to CONFIG_OF_CONTROL,
->> such as:
->>
->> - reading fdt values
->> - reading configuration from the fdt
->> - allowing the fdt to specify a boot command
->
-> [snip]
->
->>  README             |   11 +++++
->>  common/cmd_bootm.c |   11 +++++
->>  common/image.c     |  127 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->>  common/main.c      |  102 +++++++++++++++++++++++++++++++++++++++++-
->>  include/fdtdec.h   |  121 +++++++++++++++++++++++++++++++++++++++++++++++++
->>  include/image.h    |    1 +
->>  lib/fdtdec.c       |  107 +++++++++++++++++++++++++++++++++++++++++---
->>  7 files changed, 472 insertions(+), 8 deletions(-)
->
-> Again, my apologies,
+    dtc: import latest upstream dtc
 
-No problem, we all have plenty to do!
+    This updates scripts/dtc to commit 317a5d9 "dtc: zero out new label
+    objects" from git://git.jdl.com/software/dtc.git.
 
-> gvb
->
+    This adds features such as:
+    * /bits/ syntax for cell data.
+    * Math expressions within cell data.
+    * The ability to delete properties or nodes.
+    * Support for #line directives in the input file, which allows the use of
+      cpp on *.dts.
+    * -i command-line option (/include/ path)
+    * -W/-E command-line options for error/warning control.
+    * Removal of spew to STDOUT containing the filename being compiled.
+    * Many additions to the libfdt API.
 
-Regards,
-Simon
+    Signed-off-by: Stephen Warren <swarren@nvidia.com>
+    Acked-by: Jon Loeliger <jdl@jdl.com>
+    Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+
+Will try it tomorrow
+
+--
+viresh
