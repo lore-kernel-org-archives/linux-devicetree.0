@@ -1,68 +1,176 @@
-From: Shiraz Hashim <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: possibility of parent clock selection through DT
-Date: Sun, 18 Nov 2012 09:44:54 +0530
-Message-ID: <CAPub149DJ21zG27FSLC-MeQFdkYXtim4TbxnZx3Bg7gtxK9BiA@mail.gmail.com>
-References: <CAPub14-CPS48gQ1h8vvAYBpO_=egjheG_rMoZ894Y4XZ2CinUQ@mail.gmail.com>
- <CAPub148Bq=uwTuky25WzXn4yfCukJ+WacxkBvuyV5yTzGasGOQ@mail.gmail.com>
- <20121112212212.20034.78522@nucleus>
+From: Anton Vorontsov <anton.vorontsov@linaro.org>
+Subject: Re: [PATCH 4/7] mfd: max8925: support dt for power supply
+Date: Sun, 18 Nov 2012 16:24:47 -0800
+Message-ID: <20121119002447.GH29066@lizard.sbx05977.paloaca.wayport.net>
+References: <1352187764-9901-1-git-send-email-qingx@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121112212212.20034.78522@nucleus>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1352187764-9901-1-git-send-email-qingx@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qing Xu <qingx@marvell.com>
+Cc: dwmw2@infradead.org, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+On Tue, Nov 06, 2012 at 03:42:44PM +0800, Qing Xu wrote:
+> From: Qing Xu <qingx@marvell.com>
+>=20
+> Signed-off-by: Qing Xu <qingx@marvell.com>
+> ---
 
-On Tue, Nov 13, 2012 at 2:52 AM, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org> wrote:
-> Quoting Shiraz Hashim (2012-11-06 22:36:10)
->> On Wed, Nov 7, 2012 at 11:42 AM, Shiraz Hashim
->> <shiraz.linux.kernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > Hi Mike, Rob,
->> >
->> > Devices in a SoC can have multiple possible clock sources which is
->> > perfectly captured through clk framework.
->> >
->> > But the device itself may not be aware of the complex hierarchy above it.
->> > In this case how do you suggest a board (through DT) should select its
->> > preference.
->> >
->> > Is there some work already going on in this direction ?
->>
->> Just to make it clear, I already have referred the clock DT bindings and
->> Shawn Guo patch on removing clk look up registration from kernel code.
->>
->> Here I am talking about possibility of selecting desired clock hierarchy
->> by the boards about which device nodes are not aware.
->>
+W/ this patch I'm getting this warning:
+
+  CC      drivers/power/max8925_power.o
+  drivers/power/max8925_power.c: In function =E2=80=98max8925_power_pro=
+be=E2=80=99:
+  drivers/power/max8925_power.c:479:3: warning: statement with no effec=
+t
+  [-Wunused-value]
+
+>  drivers/power/max8925_power.c |   57 +++++++++++++++++++++++++++++++=
++++++----
+>  1 files changed, 51 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/power/max8925_power.c b/drivers/power/max8925_po=
+wer.c
+> index daa333b..dd2ac2d 100644
+> --- a/drivers/power/max8925_power.c
+> +++ b/drivers/power/max8925_power.c
+> @@ -426,14 +426,58 @@ static __devexit int max8925_deinit_charger(str=
+uct max8925_power_info *info)
+>  	return 0;
+>  }
+> =20
+> +#ifdef CONFIG_OF
+> +static int max8925_power_dt_init(struct platform_device *pdev,
+> +			      struct max8925_power_pdata *pdata)
+> +{
+> +	struct device_node *nproot =3D pdev->dev.parent->of_node, *np;
+> +	int batt_detect, topoff_threshold, fast_charge,
+> +		no_temp_support, no_insert_detect;
+
+One variable declaration per line please.
+
+> +
+> +	if (!nproot)
+> +		return -ENODEV;
+
+Please add an empty line here.
+
+> +	np =3D of_find_node_by_name(nproot, "charger");
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "failed to find charger node\n");
+> +		return -ENODEV;
+> +	}
+
+ditto.
+
+> +	of_property_read_u32(np, "topoff-threshold", &topoff_threshold);
+> +	of_property_read_u32(np, "batt-detect", &batt_detect);
+> +	of_property_read_u32(np, "fast-charge", &fast_charge);
+> +	of_property_read_u32(np, "no-insert-detect", &no_insert_detect);
+> +	of_property_read_u32(np, "no-temp-support", &no_temp_support);
+> +
+> +	pdata->batt_detect =3D batt_detect;
+> +	pdata->fast_charge =3D fast_charge;
+> +	pdata->topoff_threshold =3D topoff_threshold;
+> +	pdata->no_insert_detect =3D no_insert_detect;
+> +	pdata->no_temp_support =3D no_temp_support;
+
+ditto
+
+> +	pr_err("batt_detect%d, topoff_threshold%d, fast_charge%d,no_temp_su=
+pport%d, no_insert_detect%d\n",
+> +		batt_detect, topoff_threshold, fast_charge,
+> +		no_temp_support, no_insert_detect);
+
+pr_err, are you sure? :)
+
+> +	return 0;
+> +}
+> +#else
+> +#define max8925_power_dt_init(x, y)	(-1)
+
+You should make it static inline function to get rid of the warning abo=
+ve.
+
+> +#endif
+> +
+> +static char *power_supplicants[] =3D {
+> +	"max8925-battery",
+> +};
+> +
+>  static __devinit int max8925_power_probe(struct platform_device *pde=
+v)
+>  {
+>  	struct max8925_chip *chip =3D dev_get_drvdata(pdev->dev.parent);
+> -	struct max8925_power_pdata *pdata =3D NULL;
+> +	struct max8925_power_pdata *pdata =3D pdev->dev.platform_data;
+>  	struct max8925_power_info *info;
+>  	int ret;
+> =20
+> -	pdata =3D pdev->dev.platform_data;
+> +	if (pdev->dev.parent->of_node && !pdata) {
+> +		pdata =3D devm_kzalloc(&pdev->dev,
+> +				     sizeof(struct max8925_power_pdata),
+> +				     GFP_KERNEL);
 >
-> One way to achieve this is to use clk_set_rate as a way to switch
-> parents at run-time.  The OMAP CCF code currently does this when
-> relocking PLLs and makes use of __clk_reparent to update the clock
-> framework's representation of the hierarchy dynamically.
->
-> Maybe something like the following is helpful to you:
-> http://git.linaro.org/gitweb?p=people/mturquette/linux.git;a=blob;f=arch/arm/mach-omap2/dpll3xxx.c;h=f72dedb4eee892ce4cd5bdf22cc8c22510f3d526;hb=clk-omap-3.8#l542
 
-Thanks for the information.
+Please move this logic into max8925_power_dt_init().
+So it will look like
 
-So the generic SoC part can be handled through set_rate but
-what about boards preferences and restrictions. For e.g., it prefers
-to route a clock from a particular clk source only and wants its own
-fixed (as per its design) clk source selections.
+	if (!pdata)
+		pdata =3D max8925_power_dt_init(pdev);
+	if (!pdata) {
+		dev_err(...);
+		return ...;
+	}
 
--- 
-regards
-Shiraz Hashim
+> +		max8925_power_dt_init(pdev, pdata);
+> +	}
+>  	if (!pdata) {
+>  		dev_err(&pdev->dev, "platform data isn't assigned to "
+>  			"power supply\n");
+> @@ -453,8 +497,8 @@ static __devinit int max8925_power_probe(struct p=
+latform_device *pdev)
+>  	info->ac.properties =3D max8925_ac_props;
+>  	info->ac.num_properties =3D ARRAY_SIZE(max8925_ac_props);
+>  	info->ac.get_property =3D max8925_ac_get_prop;
+> -	info->ac.supplied_to =3D pdata->supplied_to;
+> -	info->ac.num_supplicants =3D pdata->num_supplicants;
+> +	info->ac.supplied_to =3D power_supplicants;
+> +	info->ac.num_supplicants =3D ARRAY_SIZE(power_supplicants);
+>  	ret =3D power_supply_register(&pdev->dev, &info->ac);
+>  	if (ret)
+>  		goto out;
+> @@ -465,8 +509,8 @@ static __devinit int max8925_power_probe(struct p=
+latform_device *pdev)
+>  	info->usb.properties =3D max8925_usb_props;
+>  	info->usb.num_properties =3D ARRAY_SIZE(max8925_usb_props);
+>  	info->usb.get_property =3D max8925_usb_get_prop;
+> -	info->usb.supplied_to =3D pdata->supplied_to;
+> -	info->usb.num_supplicants =3D pdata->num_supplicants;
+> +	info->usb.supplied_to =3D power_supplicants;
+> +	info->usb.num_supplicants =3D ARRAY_SIZE(power_supplicants);
+> =20
+>  	ret =3D power_supply_register(&pdev->dev, &info->usb);
+>  	if (ret)
+> @@ -491,6 +535,7 @@ static __devinit int max8925_power_probe(struct p=
+latform_device *pdev)
+>  	info->no_insert_detect =3D pdata->no_insert_detect;
+> =20
+>  	max8925_init_charger(chip, info);
+> +
+
+This change is unrelated.
+
+>  	return 0;
+>  out_battery:
+>  	power_supply_unregister(&info->battery);
+> --=20
+> 1.7.0.4
+
+Thanks,
+Anton.
