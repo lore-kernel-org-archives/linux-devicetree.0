@@ -1,18 +1,14 @@
-From: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-Subject: Re: [PATCH v6 3/4] media: coda: use genalloc API
-Date: Mon, 19 Nov 2012 10:21:05 -0500
-Message-ID: <50AA4E61.4070800@windriver.com>
-References: <1353061817-3207-1-git-send-email-p.zabel@pengutronix.de>
- <1353061817-3207-4-git-send-email-p.zabel@pengutronix.de>
- <50A656E2.707@windriver.com>
- <1353079273.2413.160.camel@pizza.hi.pengutronix.de>
- <50A66307.3080706@windriver.com>
- <1353084667.2413.414.camel@pizza.hi.pengutronix.de>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] ARM: kernel: enhance MPIDR macro definitions
+Date: Mon, 19 Nov 2012 10:37:36 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1211191037110.1182@xanadu.home>
+References: <1353329106-24084-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1353329106-24084-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353084667.2413.414.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+In-Reply-To: <1353329106-24084-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,76 +19,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Javier Martin <javier.martin-N4RbWZIug12MkV8/HQOAswC/G2K4zDHf@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-11-16 11:51 AM, Philipp Zabel wrote:
-> Am Freitag, den 16.11.2012, 11:00 -0500 schrieb Paul Gortmaker:
->> On 12-11-16 10:21 AM, Philipp Zabel wrote:
->>> Am Freitag, den 16.11.2012, 10:08 -0500 schrieb Paul Gortmaker:
->>>> On 12-11-16 05:30 AM, Philipp Zabel wrote:
->>>>> This patch depends on "genalloc: add a global pool list,
->>>>> allow to find pools by phys address", which provides the
->>>>> of_get_named_gen_pool function.
->>>>>
->>>>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>> ---
->>>>>  drivers/media/platform/Kconfig |    3 +--
->>>>>  drivers/media/platform/coda.c  |   47 ++++++++++++++++++++++++++++------------
->>>>>  2 files changed, 34 insertions(+), 16 deletions(-)
->>>>>
->>>>> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
->>>>> index 181c768..09d45c6 100644
->>>>> --- a/drivers/media/platform/Kconfig
->>>>> +++ b/drivers/media/platform/Kconfig
->>>>> @@ -130,10 +130,9 @@ if V4L_MEM2MEM_DRIVERS
->>>>>  
->>>>>  config VIDEO_CODA
->>>>>  	tristate "Chips&Media Coda multi-standard codec IP"
->>>>> -	depends on VIDEO_DEV && VIDEO_V4L2 && ARCH_MXC
->>>>> +	depends on VIDEO_DEV && VIDEO_V4L2
->>>>
->>>> What was the logic for reducing the dependency scope here?
->>>> Your commit log doesn't mention that at all, and when I see
->>>> things like that, I predict allyesconfig build failures,
->>>> unless there is a similar dependency elsewhere that isn't
->>>> visible in just the context of this patch alone.
->>>>
->>>> P.
->>>
->>> iram_alloc and iram_free are i.MX specific wrappers around
->>> gen_pool_alloc and gen_pool_free, located in <mach/iram.h>.
->>> Those were responsible for the dependency in the first place.
->>
->> So when I do an allyesconfig for sparc, or parisc or alpha,
->> and VIDEO_CODA gets selected, it will build just fine then?
+On Mon, 19 Nov 2012, Lorenzo Pieralisi wrote:
+
+> Kernel subsystems other than the topology layer need the MPIDR
+> mask definitions to access the MPIDR without relying on hardcoded
+> masks. This patch moves the MPIDR register masks definition to
+> a header file and defines a macro to simplify access to MPIDR bit fields
+> representing affinity levels.
 > 
-> I don't know, as I don't have compilers for those available right now.
-> I'd like to know if it doesn't, though. It builds fine on x86 and mips,
-> for example.
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 
-Probably worthwhile to watch the linux-next builds once you
-know your commit(s) will be present there, since it has a
-wide arch coverage.
+Acked-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
+> ---
+>  arch/arm/include/asm/cputype.h | 13 +++++++++++++
+>  arch/arm/kernel/topology.c     | 27 +--------------------------
+>  2 files changed, 14 insertions(+), 26 deletions(-)
 > 
->> My point was that when you remove the ARCH_MXC dep, this
->> probably gets opened up as a viable option to a _lot_ more
->> platforms than you might want it exposed to.
+> diff --git a/arch/arm/include/asm/cputype.h b/arch/arm/include/asm/cputype.h
+> index cb47d28..a59dcb5 100644
+> --- a/arch/arm/include/asm/cputype.h
+> +++ b/arch/arm/include/asm/cputype.h
+> @@ -25,6 +25,19 @@
+>  #define CPUID_EXT_ISAR4	"c2, 4"
+>  #define CPUID_EXT_ISAR5	"c2, 5"
+>  
+> +#define MPIDR_SMP_BITMASK (0x3 << 30)
+> +#define MPIDR_SMP_VALUE (0x2 << 30)
+> +
+> +#define MPIDR_MT_BITMASK (0x1 << 24)
+> +
+> +#define MPIDR_HWID_BITMASK 0xFFFFFF
+> +
+> +#define MPIDR_LEVEL_BITS 8
+> +#define MPIDR_LEVEL_MASK ((1 << MPIDR_LEVEL_BITS) - 1)
+> +
+> +#define MPIDR_AFFINITY_LEVEL(mpidr, level) \
+> +	((mpidr >> (MPIDR_LEVEL_BITS * level)) & MPIDR_LEVEL_MASK)
+> +
+>  extern unsigned int processor_id;
+>  
+>  #ifdef CONFIG_CPU_CP15
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index 317dac6..4642c7d 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -196,32 +196,7 @@ static inline void parse_dt_topology(void) {}
+>  static inline void update_cpu_power(unsigned int cpuid, unsigned int mpidr) {}
+>  #endif
+>  
+> -
+> -/*
+> - * cpu topology management
+> - */
+> -
+> -#define MPIDR_SMP_BITMASK (0x3 << 30)
+> -#define MPIDR_SMP_VALUE (0x2 << 30)
+> -
+> -#define MPIDR_MT_BITMASK (0x1 << 24)
+> -
+> -/*
+> - * These masks reflect the current use of the affinity levels.
+> - * The affinity level can be up to 16 bits according to ARM ARM
+> - */
+> -#define MPIDR_HWID_BITMASK 0xFFFFFF
+> -
+> -#define MPIDR_LEVEL0_MASK 0x3
+> -#define MPIDR_LEVEL0_SHIFT 0
+> -
+> -#define MPIDR_LEVEL1_MASK 0xF
+> -#define MPIDR_LEVEL1_SHIFT 8
+> -
+> -#define MPIDR_LEVEL2_MASK 0xFF
+> -#define MPIDR_LEVEL2_SHIFT 16
+> -
+> -/*
+> + /*
+>   * cpu topology table
+>   */
+>  struct cputopo_arm cpu_topology[NR_CPUS];
+> -- 
+> 1.7.12
 > 
-> I don't see the problem. Isn't this a good thing?
-
-Well, it can be, if it was intentional, and if the hardware
-is genuinely architecture agnostic.  On the other hand, I
-don't think it makes sense to be building arm specific drivers
-on sparc (or similar) just because we can.  It just adds to
-the overall build coverage overhead for minimal gain.
-
-Paul.
---
-
-> 
-> regards
-> Philipp
 > 
