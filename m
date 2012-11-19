@@ -1,61 +1,130 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
- variables & arrays
-Date: Mon, 19 Nov 2012 23:07:56 +0530
-Message-ID: <CAKohpo=grCNtQPUi2TzG+cCreETzEeBv5R9-0NLio1MRDAGDzA@mail.gmail.com>
-References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
-	<50991C41.50705@gmail.com>
-	<CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
-	<509FB25F.3030307@gmail.com>
-	<CAKohpoksQ4ShO_QFAQORO2_oEgNtOeENFnX1C3gN_5POQSGexg@mail.gmail.com>
-	<509FFF8B.3010707@gmail.com>
-	<CAKohponUFABC397w=dq7j+1f5QeiOX4BCOXv=OZSNOaOTmt9oQ@mail.gmail.com>
-	<CAKohponUt4264UaxM2Wr41=fbPJkUCFhKhOapjPQC=OYDuyMbQ@mail.gmail.com>
-	<CAB4BAks+eym9+qNZjxwkg7XxJrMwkaYFWGM5_YQk_TzfxyoHaw@mail.gmail.com>
-	<CAKohpo=U2xss6cZMBKsbLJ4G-AWeEnHz8V-HFw2NKx0fucTK8Q@mail.gmail.com>
-	<CAB4BAktsPviZ11QjSGgdzaV0uvLq3TLk4au6=dOgv7NtA9nc4Q@mail.gmail.com>
-	<CAKohpo=XZ_uXJPUr2dJFBQBWnkRyV2YepikrWZ2GdrPXEmEmYw@mail.gmail.com>
-	<50AA5E41.3040705@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
+Date: Mon, 19 Nov 2012 10:38:06 -0700
+Message-ID: <50AA6E7E.5060501@wwwdotorg.org>
+References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
+ <1353142266-1289-2-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50AA5E41.3040705@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Rajanikanth HV <rajanikanth.hv@linaro.org>, "linaro-dev@lists.linaro.org Devel" <linaro-dev@lists.linaro.org>, andriy.shevchenko@intel.com, Patch Tracking <patches@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353142266-1289-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 November 2012 21:58, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> Support for byte- and word- properties is relatively recent I believe
-> (or at least, the /bits/ syntax is). Which dtc version are you using?
+On 11/17/2012 01:51 AM, Andrew Lunn wrote:
+> Given appropriate devicetree bindings, this driver registers a
+> pm_power_off function to set a GPIO line high/low to power down
+> your board.
 
-Ok, i was on a older version. I just saw this patch now:
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
 
-commit cd296721a9645f9f28800a072490fa15458d1fb7
-Author: Stephen Warren <swarren@nvidia.com>
-Date:   Fri Sep 28 21:25:59 2012 +0000
+> +menuconfig POWER_RESET
+> +	bool "Board level reset or power off"
+> +	help
+> +	  Provides a number of drivers which either reset a complete board
+> +	  or shut it down, by manipulating the main power supply on the board.
+> +
+> +	  Say Y here to enable board reset and power off
+> +
+> +config POWER_RESET_GPIO
+> +	bool "GPIO power-off driver"
+> +	depends on OF_GPIO && POWER_RESET
 
-    dtc: import latest upstream dtc
+I assume CONFIG_POWER_RESET won't really provide any/much
+infra-structure itself. So, does it make sense to put all the individual
+drives inside "if POWER_RESET" or a menu definition, so they don't all
+have to depend on POWER_RESET explicitly?
 
-    This updates scripts/dtc to commit 317a5d9 "dtc: zero out new label
-    objects" from git://git.jdl.com/software/dtc.git.
+> diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
 
-    This adds features such as:
-    * /bits/ syntax for cell data.
-    * Math expressions within cell data.
-    * The ability to delete properties or nodes.
-    * Support for #line directives in the input file, which allows the use of
-      cpp on *.dts.
-    * -i command-line option (/include/ path)
-    * -W/-E command-line options for error/warning control.
-    * Removal of spew to STDOUT containing the filename being compiled.
-    * Many additions to the libfdt API.
+> +static void gpio_poweroff_do_poweroff(void)
+> +{
+> +	BUG_ON(gpio_num == -1);
 
-    Signed-off-by: Stephen Warren <swarren@nvidia.com>
-    Acked-by: Jon Loeliger <jdl@jdl.com>
-    Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Perhaps use gpio_is_valid() here?
 
-Will try it tomorrow
+> +	/* drive it active */
+> +	gpio_direction_output(gpio_num, !gpio_active_low);
 
---
-viresh
+The rest of the code below doesn't make a lot of sense to me. From
+reading the binding documentation, it seems like the GPIO is expected to
+be level-sensitive, and as such the above gpio_direction_output() call
+should be all that's needed. What is the code below doing? If this
+driver supports either a level-sensitive GPIO or generating a pulse on a
+GPIO, I think the binding should be enhanced to specify which signalling
+type is required. Also, all the delays should be specified as DT properties.
+
+> +	mdelay(100);
+> +	/* rising edge or drive inactive */
+
+You can't assume that an active->inactive edge is a rising edge if you
+allow the polarity to be configurable; I would remove that part of the
+comment. Same below for "falling edge".
+
+> +	gpio_set_value(gpio_num, gpio_active_low);
+> +	mdelay(100);
+> +	/* falling edge */
+> +	gpio_set_value(gpio_num, !gpio_active_low);
+> +
+> +	/* give it some time */
+> +	mdelay(3000);
+
+> +static int __devinit gpio_poweroff_probe(struct platform_device *pdev)
+
+> +	gpio_num = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
+> +	if (gpio_num < 0) {
+
+Perhaps use gpio_is_valid() here?
+
+> +		pr_err("%s: Could not get GPIO configuration: %d",
+> +		       __func__, gpio_num);
+> +		return -ENODEV;
+> +	}
+
+This doesn't handle deferred probe correctly; if gpio_num ==
+-EPROBE_DEFER, then this function needs to return -EPROBE_DEFER too; why
+not "return gpio_num" rather than "return -ENODEV" above?
+
+> +	gpio_active_low = flags & OF_GPIO_ACTIVE_LOW;
+> +
+> +	if (of_get_property(pdev->dev.of_node, "input", NULL))
+> +		input = true;
+
+Perhaps use of_property_read_bool() here.
+
+> +static int __devexit gpio_poweroff_remove(struct platform_device *pdev)
+> +{
+> +	if (gpio_num != -1)
+> +		gpio_free(gpio_num);
+
+Perhaps use gpio_is_valid() here? Actually, how could this happen;
+presumably if the GPIO is valid, probe() never succeeded, so you should
+always just free the GPIO.
+
+> +static struct platform_driver gpio_poweroff_driver = {
+> +	.probe = gpio_poweroff_probe,
+> +	.remove = __devexit_p(gpio_poweroff_remove),
+> +	.driver = {
+> +		   .name = "poweroff-gpio",
+> +		   .owner = THIS_MODULE,
+> +		   .of_match_table = of_gpio_poweroff_match,
+> +		   },
+
+There seems to be a mix of TAB/space indents there, and the closing }
+should probably be aligned with the start of ".driver"?
+
+> +MODULE_LICENSE("GPL");
+
+That should be "GPL v2".
