@@ -1,209 +1,66 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH V4 2/5] arm: mvebu: Added initial support for power
- managmement service unit
-Date: Mon, 19 Nov 2012 21:35:56 +0100
-Message-ID: <1353357360-7242-3-git-send-email-gregory.clement@free-electrons.com>
-References: <1353357360-7242-1-git-send-email-gregory.clement@free-electrons.com>
+From: Bill Pemberton <wfp5p@virginia.edu>
+Subject: [PATCH 344/493] powerpc: remove use of __devinitdata
+Date: Mon, 19 Nov 2012 13:24:53 -0500
+Message-ID: <1353349642-3677-344-git-send-email-wfp5p@virginia.edu>
+References: <1353349642-3677-1-git-send-email-wfp5p@virginia.edu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353357360-7242-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>S
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1353349642-3677-1-git-send-email-wfp5p@virginia.edu>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: gregkh@linuxfoundation.org
+Cc: devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+CONFIG_HOTPLUG is going away as an option so __devinitdata is no
+longer needed.
 
-Signed-off-by: Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Bill Pemberton <wfp5p@virginia.edu>
+Cc: Kumar Gala <galak@kernel.crashing.org> 
+Cc: Grant Likely <grant.likely@secretlab.ca> 
+Cc: Rob Herring <rob.herring@calxeda.com> 
+Cc: linuxppc-dev@lists.ozlabs.org 
+Cc: devicetree-discuss@lists.ozlabs.org 
 ---
- .../devicetree/bindings/arm/armada-370-xp-pmsu.txt |   20 ++++++
- arch/arm/boot/dts/armada-xp.dtsi                   |    6 ++
- arch/arm/mach-mvebu/Makefile                       |    2 +-
- arch/arm/mach-mvebu/common.h                       |    1 +
- arch/arm/mach-mvebu/pmsu.c                         |   75 ++++++++++++++++++++
- arch/arm/mach-mvebu/pmsu.h                         |   16 +++++
- 6 files changed, 119 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
- create mode 100644 arch/arm/mach-mvebu/pmsu.c
- create mode 100644 arch/arm/mach-mvebu/pmsu.h
+ arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 2 +-
+ arch/powerpc/sysdev/bestcomm/bestcomm.c        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-new file mode 100644
-index 0000000..926b4d6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
-@@ -0,0 +1,20 @@
-+Power Management Service Unit(PMSU)
-+-----------------------------------
-+Available on Marvell SOCs: Armada 370 and Armada XP
-+
-+Required properties:
-+
-+- compatible: "marvell,armada-370-xp-pmsu"
-+
-+- reg: Should contain PMSU registers location and length. First pair
-+  for the per-CPU SW Reset Control registers, second pair for the
-+  Power Management Service Unit.
-+
-+Example:
-+
-+armada-370-xp-pmsu@d0022000 {
-+	compatible = "marvell,armada-370-xp-pmsu";
-+	reg = <0xd0022100 0x430>,
-+	      <0xd0020800 0x20>;
-+};
-+
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index a564b52..f521ed8 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -27,6 +27,12 @@
- 		    <0xd0021870 0x58>;
- 	};
+diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+index 712a436..e4be690 100644
+--- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
++++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+@@ -216,7 +216,7 @@ static const struct i2c_device_id mcu_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, mcu_ids);
  
-+	armada-370-xp-pmsu@d0022000 {
-+		compatible = "marvell,armada-370-xp-pmsu";
-+		reg = <0xd0022100 0x430>,
-+		      <0xd0020800 0x20>;
-+	};
-+
- 	cpus {
- 	    #address-cells = <1>;
- 	    #size-cells = <0>;
-diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
-index 5ce4b42..2e3ec11 100644
---- a/arch/arm/mach-mvebu/Makefile
-+++ b/arch/arm/mach-mvebu/Makefile
-@@ -2,4 +2,4 @@ ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include \
- 	-I$(srctree)/arch/arm/plat-orion/include
+-static struct of_device_id mcu_of_match_table[] __devinitdata = {
++static struct of_device_id mcu_of_match_table[] = {
+ 	{ .compatible = "fsl,mcu-mpc8349emitx", },
+ 	{ },
+ };
+diff --git a/arch/powerpc/sysdev/bestcomm/bestcomm.c b/arch/powerpc/sysdev/bestcomm/bestcomm.c
+index 4c15b19..d913063 100644
+--- a/arch/powerpc/sysdev/bestcomm/bestcomm.c
++++ b/arch/powerpc/sysdev/bestcomm/bestcomm.c
+@@ -30,7 +30,7 @@
+ #define DRIVER_NAME "bestcomm-core"
  
- obj-y += system-controller.o
--obj-$(CONFIG_MACH_ARMADA_370_XP) += armada-370-xp.o irq-armada-370-xp.o addr-map.o coherency.o coherency_ll.o
-+obj-$(CONFIG_MACH_ARMADA_370_XP) += armada-370-xp.o irq-armada-370-xp.o addr-map.o coherency.o coherency_ll.o pmsu.o
-diff --git a/arch/arm/mach-mvebu/common.h b/arch/arm/mach-mvebu/common.h
-index ea08919..74ee0b2 100644
---- a/arch/arm/mach-mvebu/common.h
-+++ b/arch/arm/mach-mvebu/common.h
-@@ -23,4 +23,5 @@ void armada_370_xp_handle_irq(struct pt_regs *regs);
- 
- 
- int armada_370_xp_coherency_init(void);
-+int armada_370_xp_pmsu_init(void);
- #endif
-diff --git a/arch/arm/mach-mvebu/pmsu.c b/arch/arm/mach-mvebu/pmsu.c
-new file mode 100644
-index 0000000..3cc4bef
---- /dev/null
-+++ b/arch/arm/mach-mvebu/pmsu.c
-@@ -0,0 +1,75 @@
-+/*
-+ * Power Management Service Unit(PMSU) support for Armada 370/XP platforms.
-+ *
-+ * Copyright (C) 2012 Marvell
-+ *
-+ * Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-+ * Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ *
-+ * The Armada 370 and Armada XP SOCs have a power management service
-+ * unit which is responsible for powering down and waking up CPUs and
-+ * other SOC units
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/of_address.h>
-+#include <linux/io.h>
-+#include <linux/smp.h>
-+#include <asm/smp_plat.h>
-+
-+static void __iomem *pmsu_mp_base;
-+static void __iomem *pmsu_reset_base;
-+
-+#define PMSU_BOOT_ADDR_REDIRECT_OFFSET(cpu)	((cpu * 0x100) + 0x24)
-+#define PMSU_RESET_CTL_OFFSET(cpu)		(cpu * 0x8)
-+
-+static struct of_device_id of_pmsu_table[] = {
-+	{.compatible = "marvell,armada-370-xp-pmsu"},
-+	{ /* end of list */ },
-+};
-+
-+#ifdef CONFIG_SMP
-+int armada_xp_boot_cpu(unsigned int cpu_id, void *boot_addr)
-+{
-+	int reg, hw_cpu;
-+
-+	if (!pmsu_mp_base || !pmsu_reset_base) {
-+		pr_warn("Can't boot CPU. PMSU is uninitialized\n");
-+		return 1;
-+	}
-+
-+	hw_cpu = cpu_logical_map(cpu_id);
-+
-+	writel(virt_to_phys(boot_addr), pmsu_mp_base +
-+			PMSU_BOOT_ADDR_REDIRECT_OFFSET(hw_cpu));
-+
-+	/* Release CPU from reset by clearing reset bit*/
-+	reg = readl(pmsu_reset_base + PMSU_RESET_CTL_OFFSET(hw_cpu));
-+	reg &= (~0x1);
-+	writel(reg, pmsu_reset_base + PMSU_RESET_CTL_OFFSET(hw_cpu));
-+
-+	return 0;
-+}
-+#endif
-+
-+int __init armada_370_xp_pmsu_init(void)
-+{
-+	struct device_node *np;
-+
-+	np = of_find_matching_node(NULL, of_pmsu_table);
-+	if (np) {
-+		pr_info("Initializing Power Management Service Unit\n");
-+		pmsu_mp_base = of_iomap(np, 0);
-+		pmsu_reset_base = of_iomap(np, 1);
-+	}
-+
-+	return 0;
-+}
-+
-+early_initcall(armada_370_xp_pmsu_init);
-diff --git a/arch/arm/mach-mvebu/pmsu.h b/arch/arm/mach-mvebu/pmsu.h
-new file mode 100644
-index 0000000..07a737c
---- /dev/null
-+++ b/arch/arm/mach-mvebu/pmsu.h
-@@ -0,0 +1,16 @@
-+/*
-+ * Power Management Service Unit (PMSU) support for Armada 370/XP platforms.
-+ *
-+ * Copyright (C) 2012 Marvell
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#ifndef __MACH_MVEBU_PMSU_H
-+#define __MACH_MVEBU_PMSU_H
-+
-+int armada_xp_boot_cpu(unsigned int cpu_id, void *phys_addr);
-+
-+#endif	/* __MACH_370_XP_PMSU_H */
+ /* MPC5200 device tree match tables */
+-static struct of_device_id mpc52xx_sram_ids[] __devinitdata = {
++static struct of_device_id mpc52xx_sram_ids[] = {
+ 	{ .compatible = "fsl,mpc5200-sram", },
+ 	{ .compatible = "mpc5200-sram", },
+ 	{}
 -- 
-1.7.9.5
+1.8.0
