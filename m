@@ -1,82 +1,38 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v3 4/5] ARM: kernel: add logical mappings look-up
-Date: Sun, 18 Nov 2012 22:14:53 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1211182214250.1182@xanadu.home>
-References: <1352983614-22924-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1352983614-22924-5-git-send-email-lorenzo.pieralisi@arm.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH Resend V2] dt: add helper function to read u8 & u16
+ variables & arrays
+Date: Mon, 19 Nov 2012 09:24:58 +0530
+Message-ID: <CAKohponUt4264UaxM2Wr41=fbPJkUCFhKhOapjPQC=OYDuyMbQ@mail.gmail.com>
+References: <64c5278ebdec503f83e9b7002bf13affb7f3260f.1351225085.git.viresh.kumar@linaro.org>
+	<50991C41.50705@gmail.com>
+	<CAOh2x==LNuSFftB1r8cyJ6TOqOVJfExMTUVxKZnS16wL4B8eBA@mail.gmail.com>
+	<509FB25F.3030307@gmail.com>
+	<CAKohpoksQ4ShO_QFAQORO2_oEgNtOeENFnX1C3gN_5POQSGexg@mail.gmail.com>
+	<509FFF8B.3010707@gmail.com>
+	<CAKohponUFABC397w=dq7j+1f5QeiOX4BCOXv=OZSNOaOTmt9oQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1352983614-22924-5-git-send-email-lorenzo.pieralisi@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Dave Martin <dave.martin@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, devicetree-discuss@lists.ozlabs.org, Will Deacon <will.deacon@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, David Brown <davidb@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohponUFABC397w=dq7j+1f5QeiOX4BCOXv=OZSNOaOTmt9oQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: rob.herring@calxeda.com, grant.likely@secretlab.ca, linaro-dev@lists.linaro.org, andriy.shevchenko@intel.com, patches@linaro.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2012, Lorenzo Pieralisi wrote:
+On 12 November 2012 09:03, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 12 November 2012 01:12, Rob Herring <robherring2@gmail.com> wrote:
+>> I don't think the size is stored in the dtb. It is only in the dts. You
+>> need to define the size in the binding definitions and use '/bits/'
+>> annotation. With this the data is packed. Then the array function used
+>> should match what the binding defines.
 
-> In ARM SMP systems the MPIDR register ([23:0] bits) is used to uniquely
-> identify CPUs.
-> 
-> In order to retrieve the logical CPU index corresponding to a given
-> MPIDR value and guarantee a consistent translation throughout the kernel,
-> this patch adds a look-up based on the MPIDR[23:0] so that kernel subsystems
-> can use it whenever the logical cpu index corresponding to a given MPIDR
-> value is needed.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Acked-by: Will Deacon <will.deacon@arm.com>
+Hi Rob,
 
-Acked-by: Nicolas Pitre <nico@linaro.org>
+Can you please help me in getting the correct format to do this from dts.
+I tried:
 
-> ---
->  arch/arm/include/asm/smp_plat.h | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
-> index 558d6c8..aaa61b6 100644
-> --- a/arch/arm/include/asm/smp_plat.h
-> +++ b/arch/arm/include/asm/smp_plat.h
-> @@ -5,6 +5,9 @@
->  #ifndef __ASMARM_SMP_PLAT_H
->  #define __ASMARM_SMP_PLAT_H
->  
-> +#include <linux/cpumask.h>
-> +#include <linux/err.h>
-> +
->  #include <asm/cputype.h>
->  
->  /*
-> @@ -48,5 +51,19 @@ static inline int cache_ops_need_broadcast(void)
->   */
->  extern int __cpu_logical_map[];
->  #define cpu_logical_map(cpu)	__cpu_logical_map[cpu]
-> +/*
-> + * Retrieve logical cpu index corresponding to a given MPIDR[23:0]
-> + *  - mpidr: MPIDR[23:0] to be used for the look-up
-> + *
-> + * Returns the cpu logical index or -EINVAL on look-up error
-> + */
-> +static inline int get_logical_index(u32 mpidr)
-> +{
-> +	int cpu;
-> +	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
-> +		if (cpu_logical_map(cpu) == mpidr)
-> +			return cpu;
-> +	return -EINVAL;
-> +}
->  
->  #endif
-> -- 
-> 1.7.12
-> 
-> 
+data1 = /bits/ 8 <0x50 0x60 0x70>;
+
+as written in your earlier mail... but it didn't worked. Tried to
+search too, but
+couldn't find it.
