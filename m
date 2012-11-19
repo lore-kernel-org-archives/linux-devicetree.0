@@ -1,16 +1,20 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v5 3/8] watchdog: orion_wdt: add timeout-sec property
- binding
-Date: Mon, 19 Nov 2012 11:06:43 -0500
-Message-ID: <20121119160643.GI22106@titan.lakedaemon.net>
-References: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
- <1353334243-16703-4-git-send-email-fabio.porcedda@gmail.com>
+Subject: Re: [PATCH V3 4/5] arm: mm: Added support for PJ4B cpu and init
+ routines
+Date: Mon, 19 Nov 2012 04:23:41 -0500
+Message-ID: <20121119092341.GB22106@titan.lakedaemon.net>
+References: <1352931637-3405-1-git-send-email-gregory.clement@free-electrons.com>
+ <1352931637-3405-5-git-send-email-gregory.clement@free-electrons.com>
+ <50A41BD3.9040509@free-electrons.com>
+ <50A6B427.9080807@free-electrons.com>
+ <20121119031210.GD22106@titan.lakedaemon.net>
+ <20121119091912.GC3290@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1353334243-16703-4-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20121119091912.GC3290-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,84 +25,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof@canonica>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2012 at 03:10:38PM +0100, Fabio Porcedda wrote:
-> Only compile tested.
+On Mon, Nov 19, 2012 at 09:19:12AM +0000, Russell King - ARM Linux wrote:
+> On Sun, Nov 18, 2012 at 10:12:10PM -0500, Jason Cooper wrote:
+> > On Fri, Nov 16, 2012 at 10:46:15PM +0100, Gregory CLEMENT wrote:
+> > > On 11/14/2012 11:31 PM, Gregory CLEMENT wrote:
+> > > > Hello Russell,
+> > > > 
+> > > > With the 2 changes I have done on according your comments
+> > > > do you think you can give your acked-by for this patch?
+> > > > 
+> > > 
+> > > Hello Russell,
+> > > 
+> > > I didn't have any feedback from you for this version.
+> > > If you are fine with this, could you give your Acked-by?
+> > > 
+> > > 
+> > 
+> > Gregory,
+> > 
+> > >From the looks of things, Russell has his head wrapped around buggy
+> > sound driver code for the CuBox.  Perhaps Will Deacon or Catalin Marinas
+> > would care to weigh in?  I'm reluctant to take the series without an
+> > Acked-By from at least one of them.
 > 
-> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/watchdog/marvel.txt | 5 +++++
->  drivers/watchdog/orion_wdt.c                          | 8 +++-----
->  2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/marvel.txt
-> index 0b2503a..5dc8d30 100644
-> --- a/Documentation/devicetree/bindings/watchdog/marvel.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
-> @@ -5,10 +5,15 @@ Required Properties:
->  - Compatibility : "marvell,orion-wdt"
->  - reg		: Address of the timer registers
->  
-> +Optional properties:
-> +
-> +- timeout-sec	: Contains the watchdog timeout in seconds
-> +
->  Example:
->  
->  	wdt@20300 {
->  		compatible = "marvell,orion-wdt";
->  		reg = <0x20300 0x28>;
-> +		timeout-sec = <10>;
->  		status = "okay";
->  	};
-> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-> index c20f96b..446a3e9 100644
-> --- a/drivers/watchdog/orion_wdt.c
-> +++ b/drivers/watchdog/orion_wdt.c
-> @@ -162,12 +162,10 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
->  
->  	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
->  
-> -	if ((heartbeat < 1) || (heartbeat > wdt_max_duration))
-> -		heartbeat = wdt_max_duration;
-> -
-> -	orion_wdt.timeout = heartbeat;
->  	orion_wdt.min_timeout = 1;
-> +	orion_wdt.timeout = wdt_max_duration;
->  	orion_wdt.max_timeout = wdt_max_duration;
-> +	watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
+> Well, I would like to say - it should go through my tree, as it's generic
+> ARM changes, and as very little (even generic stuff) seems to come through
+> my tree anymore.  But that's going to make the remainder of your patches
+> difficult to merge.
 
-Hi Fabio,
-
-There are many boards using pdata, !CONFIG_OF.  Have you compile-tested
-this without CONFIG_OF?
+We'd really appreciate it if we could take it with your Ack.  This
+series and one more that depends on it are my only hold overs for v3.8.
 
 thx,
 
 Jason.
-
->  
->  	watchdog_set_nowayout(&orion_wdt, nowayout);
->  	ret = watchdog_register_device(&orion_wdt);
-> @@ -177,7 +175,7 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
->  	}
->  
->  	pr_info("Initial timeout %d sec%s\n",
-> -		heartbeat, nowayout ? ", nowayout" : "");
-> +		orion_wdt.timeout, nowayout ? ", nowayout" : "");
->  	return 0;
->  }
->  
-> -- 
-> 1.8.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
