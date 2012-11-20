@@ -1,86 +1,63 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
-Date: Tue, 20 Nov 2012 17:31:22 +0800
-Message-ID: <50AB4DEA.3090100@atmel.com>
-References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com> <1353045837-19474-2-git-send-email-voice.shen@atmel.com> <20121116061250.GP4387@opensource.wolfsonmicro.com> <50A5DE4E.80206@atmel.com> <20121116064113.GQ4387@opensource.wolfsonmicro.com> <50A5E44D.6040501@atmel.com>
+From: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 0/5] pm: Add power off control
+Date: Tue, 20 Nov 2012 15:18:42 +0530
+Message-ID: <1353404927-14412-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <50A5E44D.6040501@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Add PM power_off control to rtc driver and PMIC status is set to
+STATUS_OFF to shutdown PMIC if PWR_EN is toggled by RTC module.
 
-On 11/16/2012 14:59, Bo Shen wrote:
-> On 11/16/2012 14:41, Mark Brown wrote:
->> On Fri, Nov 16, 2012 at 02:33:50PM +0800, Bo Shen wrote:
->>> On 11/16/2012 14:12, Mark Brown wrote:
->>
->>>> No, this isn't what was meant - the idea is to send only the
->>>> addition of
->>>> pinctrl data as one patch, based off the ASoC branch instead of -next.
->>
->>> What is the pinctrl data? (This patch can be applied on
->>
->> The data you're adding in the device tree!
->>
->>> sound/topic/atmel branch without any conflicts)
->>
->> That's not helpful to anyone doing bisection if there's nothing defining
->> the pin states, it means that the system won't be able to start the
->> driver as the API call will fail.
->>
->>> The other one add pinctrl nodes, must based on -next, or else I
->>> don't know where should I add the pinctrl nodes.
->>
->> What makes you say this?
->
-> For example, if I want to add pinctrl node
-> ---<8---
->   ssc0 {
->      pinctrl_ssc0_tx: ssc0_tx-0 {
->              atmel,pins = <1 16 0x1 0x0   /* PB16 periph A */
->                            1 17 0x1 0x0   /* PB17 periph A */
->                                  1 18 0x1 0x0>; /* PB18 periph A */
->          };
-> --->8---
-> This should be add into dtsi file as following
-> ---<8---
-> ahb {
->      apb {
->          pinctrl {
->              ssc0 {
->                  pinctrl_ssc0_tx
->              }
->          }
->      }
-> }
-> --->8---
->
-> In the ASoC branch tree, I don't see any pinctrl related information.
-> So, I say I don't know where should I add the pinctrl nodes.
->
-> May be I misunderstanding, do you mean I should only add as followign
-> based on ASoC tree? And the upper go into pinctrl tree?
-> ---<8---
-> ssc0: ssc@fffbc000 {
->      compatible = "atmel,at91rm9200-ssc";
->          reg = <0xfffbc000 0x4000>;
->          interrupts = <14 4 5>;
-> +        pinctrl-names = "default";
-> +        pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
->          status = "disable";
-> };
-> --->8---
+System power off sequence:-
+* Set PMIC STATUS_OFF when PMIC_POWER_EN is pulled low
+* Enable PMIC_POWER_EN in rtc module
+* Set rtc ALARM2 time
+* Enable ALARM2 interrupt
 
-Any suggestion for this? what should I do with this patch for next?
+These patches were tested on am335x-bone (BeagleBone). First patch
+is based on linux-next, second patch is based on mfd/master and
+rest of the patches are based on linux-omap master.
 
-> Best Regards
-> Bo Shen
->
->
+Changes from v2:
+	- Incorporated Kevin's comment on v2
+	  * Enabled RTC in ompa2plus_defconfig
 
+Changes from v1:
+	- Incorporated Vaibhav's comments on v1
+	  * Changed the time rollover logic with the help of
+	    rtc-lib APIs
+
+AnilKumar Ch (3):
+  ARM: dts: AM33XX: Set pmic-shutdown-controller for BeagleBone
+  ARM: dts: AM33XX: Enable system power off control in am335x-bone
+  ARM: OMAP2+: omap2plus_defconfig: Enable RTC support
+
+Colin Foe-Parker (2):
+  rtc: OMAP: Add system pm_power_off to rtc driver
+  mfd: tps65217: Set PMIC to shutdown on PWR_EN toggle
+
+ .../devicetree/bindings/regulator/tps65217.txt     |    4 +
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |    5 ++
+ arch/arm/boot/dts/am335x-bone.dts                  |    6 ++
+ arch/arm/configs/omap2plus_defconfig               |    1 +
+ drivers/mfd/tps65217.c                             |   12 +++
+ drivers/rtc/rtc-omap.c                             |   81 +++++++++++++++++++-
+ 6 files changed, 108 insertions(+), 1 deletion(-)
+
+-- 
+1.7.9.5
