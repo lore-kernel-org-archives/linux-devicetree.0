@@ -1,115 +1,68 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: AM33XX: Add memory resource to d_can node
-Date: Tue, 20 Nov 2012 11:26:32 +0100
-Message-ID: <50AB5AD8.7060407@pengutronix.de>
-References: <1352916505-12343-1-git-send-email-anilkumar@ti.com>
- <1352916505-12343-4-git-send-email-anilkumar@ti.com>
- <50AB57B0.7040502@pengutronix.de>
- <331ABD5ECB02734CA317220B2BBEABC13EA7701D@DBDE01.ent.ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
+Date: Tue, 20 Nov 2012 19:27:38 +0900
+Message-ID: <20121120102712.GF10560@opensource.wolfsonmicro.com>
+References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com>
+ <1353045837-19474-2-git-send-email-voice.shen@atmel.com>
+ <20121116061250.GP4387@opensource.wolfsonmicro.com>
+ <50A5DE4E.80206@atmel.com>
+ <20121116064113.GQ4387@opensource.wolfsonmicro.com>
+ <50A5E44D.6040501@atmel.com>
+ <50AB4DEA.3090100@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8416709783757059190=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA7701D-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VRRZwUeiQeu7kZYj"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50AB4DEA.3090100@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---===============8416709783757059190==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig6F01BE00FA6B8D1ECFF72EF9"
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig6F01BE00FA6B8D1ECFF72EF9
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 11/20/2012 11:23 AM, AnilKumar, Chimata wrote:
-> On Tue, Nov 20, 2012 at 15:43:04, Marc Kleine-Budde wrote:
->> On 11/14/2012 07:08 PM, AnilKumar Ch wrote:
->>> Add a new address space/memory resource to d_can device tree node. D_=
-CAN
->>> RAM initialization is achieved through RAMINIT register which is part=
- of
->>> AM33XX control module address space. D_CAN RAM init or de-init should=
- be
->>> done by writing instance corresponding value to control module regist=
-er.
->>>
->>> Till we have a separate control module driver to write to control mod=
-ule,
->>> d_can driver will handle the register writes to control module by its=
-elf.
->>> So a new address space to represent this control module register is a=
-dded
->>> to d_can driver.
->>>
->>> Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
->>
->> This does not apply to net-next/master:
->>
->> Applying: ARM: dts: AM33XX: Add memory resource to d_can node
->> error: patch failed: arch/arm/boot/dts/am33xx.dtsi:227
->> error: arch/arm/boot/dts/am33xx.dtsi: patch does not apply
->> Patch failed at 0003 ARM: dts: AM33XX: Add memory resource to d_can no=
-de
->>
->=20
-> Marc,
->=20
-> Sorry about this DT changes are present in linux-omap.
->=20
-> Could you please take the driver changes only and ACK on remaining will=
-
-> help.
-
-Will do - I'm currently looking at the driver.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig6F01BE00FA6B8D1ECFF72EF9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with undefined - http://www.enigmail.net/
-
-iEYEARECAAYFAlCrWtwACgkQjTAFq1RaXHOcCQCfe8QMGgUHyTuTkT9wobvAUBMM
-aa8An0escyK3mjpJiG5ygWYuOOOtPX9P
-=jgmc
------END PGP SIGNATURE-----
-
---------------enig6F01BE00FA6B8D1ECFF72EF9--
-
---===============8416709783757059190==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+--VRRZwUeiQeu7kZYj
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+On Tue, Nov 20, 2012 at 05:31:22PM +0800, Bo Shen wrote:
 
---===============8416709783757059190==--
+> >based on ASoC tree? And the upper go into pinctrl tree?
+> >---<8---
+> >ssc0: ssc@fffbc000 {
+> >     compatible = "atmel,at91rm9200-ssc";
+> >         reg = <0xfffbc000 0x4000>;
+> >         interrupts = <14 4 5>;
+> >+        pinctrl-names = "default";
+> >+        pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+> >         status = "disable";
+> >};
+> >--->8---
+
+> Any suggestion for this? what should I do with this patch for next?
+
+Send it to pinctrl and we'll deal with the add/add.
+
+--VRRZwUeiQeu7kZYj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQq1sHAAoJELSic+t+oim9/i0P/3W3jjOR3W5mpBFNmUwfpqfc
+g0lZvI1fDvFknlG8dSdXZvkW0GE0/PyjXWsukmyIaX4fGMHOcxsmKmL41sgbBGEx
+BwKia4I90Qh2R8AP1cpZhwPgkiMQOo45PaVz0i78OJFBhWlRFhYrN7tgx4DD89hW
+ZcMX0ZWrOgyb6pR/sWzcFeNY0JFERxyjKHeXIGIkTcvZVdxWO/Sh9NZ6VG+idzVa
+cagEyV0mhApfJnwt7+9eNL2u/8jBjGLPtd7Baaz1LiNan3RnNs7/c0px6NTOoLql
+Ig1O7OF9v8MqLi4MvNGR3TLApjv9aBu3O9ZsB9D0jrVHr8fNZawHBWsG1Nk0hClf
+0BR778p/SFexg6uh2wAEc7CE58PY80mg+pQb2C7MWs3sc5126Y4Z3kdliybtcHMo
+XCb86X07b4Rgen4VSVLvnc4evLtHe4lufURIXMwI7bmJG9JFHu7PZLr0HAz3b32w
+HH0vnBfGx7fwsqmqBv/TvmnzxtzlFcGqHZ3f9jwwsKHk9jWAoAOm1d8iHUzLsCPN
+E+rU3uDwsL6s6vUh6olM+ZP+a/2+6/RUKlZuYpDwX0IiQsP1CqtpEQWiJrgpOz0n
+r1/mYrVCOhc7Jt7o6D4OK1skiafJUAvJZG31kzSTNQtMvS9m16Tyg7PDy1RXMiwv
+8vTHLmDo0lLuLUfvQnwB
+=idoa
+-----END PGP SIGNATURE-----
+
+--VRRZwUeiQeu7kZYj--
