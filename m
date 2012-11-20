@@ -1,42 +1,147 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] dt: add helper function to read u8 & u16 variables & arrays
-Date: Tue, 20 Nov 2012 13:55:03 +0530
-Message-ID: <CAKohpokkiawgUZvTKncj_15XC5BTsbi0s=WfxPwk6ci8VpqHAw@mail.gmail.com>
-References: <0ee5b74534a09d75c14b22c2d9330c4971ab30fb.1353386646.git.viresh.kumar@linaro.org>
-	<1353399661.20110.4.camel@smile>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
+Date: Tue, 20 Nov 2012 09:37:49 +0100
+Message-ID: <20121120083749.GM10259@lunn.ch>
+References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
+ <1353142266-1289-2-git-send-email-andrew@lunn.ch>
+ <50AA6E7E.5060501@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1353399661.20110.4.camel@smile>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "spear-devel@list.st.com" <spear-devel@list.st.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linaro-dev@lists.linaro.org" <linaro-dev@lists.linaro.org>, "patches@linaro.org" <patches@linaro.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50AA6E7E.5060501-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 November 2012 13:51, Shevchenko, Andriy
-<andriy.shevchenko@intel.com> wrote:
-> You could at least create macro to do a precheck if you want to.
->
-> Like
-> #define CHECK_PROP(prop, sz, out)
->
-> {
-> if (!prop)
->                 return -EINVAL;
->         if (!prop->value)
->                 return -ENODATA;
->         if ((sz * sizeof(*out)) > prop->length)
->                 return -EOVERFLOW;
-> }
+Hi Jason
 
-Hi Andriy,
+These are good comments from Stephan that i want to address. However,
+i also don't want to delay the pull-requests direction arm-soc, the
+merge window is getting close. Both Linus and Anton have Acked the
+current version, so please go with what you have and i will produce a
+patch over the top. If its available before Arnd pulls, you can squash
+it, otherwise send it upstream as a standalone patch.
 
-Initially i started with a macro for the complete routine, but later as types
-started to play important role in it, i have to split it to routines.
+    Thanks
+	Andrew
 
-I thought of this idea to do prop check in a macro, but then i thought
-it might cover a bigger range of files and so thought of doing that separately.
-For, simplicity left it this time.
 
---
-viresh
+On Mon, Nov 19, 2012 at 10:38:06AM -0700, Stephen Warren wrote:
+> On 11/17/2012 01:51 AM, Andrew Lunn wrote:
+> > Given appropriate devicetree bindings, this driver registers a
+> > pm_power_off function to set a GPIO line high/low to power down
+> > your board.
+> 
+> > diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> 
+> > +menuconfig POWER_RESET
+> > +	bool "Board level reset or power off"
+> > +	help
+> > +	  Provides a number of drivers which either reset a complete board
+> > +	  or shut it down, by manipulating the main power supply on the board.
+> > +
+> > +	  Say Y here to enable board reset and power off
+> > +
+> > +config POWER_RESET_GPIO
+> > +	bool "GPIO power-off driver"
+> > +	depends on OF_GPIO && POWER_RESET
+> 
+> I assume CONFIG_POWER_RESET won't really provide any/much
+> infra-structure itself. So, does it make sense to put all the individual
+> drives inside "if POWER_RESET" or a menu definition, so they don't all
+> have to depend on POWER_RESET explicitly?
+> 
+> > diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
+> 
+> > +static void gpio_poweroff_do_poweroff(void)
+> > +{
+> > +	BUG_ON(gpio_num == -1);
+> 
+> Perhaps use gpio_is_valid() here?
+> 
+> > +	/* drive it active */
+> > +	gpio_direction_output(gpio_num, !gpio_active_low);
+> 
+> The rest of the code below doesn't make a lot of sense to me. From
+> reading the binding documentation, it seems like the GPIO is expected to
+> be level-sensitive, and as such the above gpio_direction_output() call
+> should be all that's needed. What is the code below doing? If this
+> driver supports either a level-sensitive GPIO or generating a pulse on a
+> GPIO, I think the binding should be enhanced to specify which signalling
+> type is required. Also, all the delays should be specified as DT properties.
+> 
+> > +	mdelay(100);
+> > +	/* rising edge or drive inactive */
+> 
+> You can't assume that an active->inactive edge is a rising edge if you
+> allow the polarity to be configurable; I would remove that part of the
+> comment. Same below for "falling edge".
+> 
+> > +	gpio_set_value(gpio_num, gpio_active_low);
+> > +	mdelay(100);
+> > +	/* falling edge */
+> > +	gpio_set_value(gpio_num, !gpio_active_low);
+> > +
+> > +	/* give it some time */
+> > +	mdelay(3000);
+> 
+> > +static int __devinit gpio_poweroff_probe(struct platform_device *pdev)
+> 
+> > +	gpio_num = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
+> > +	if (gpio_num < 0) {
+> 
+> Perhaps use gpio_is_valid() here?
+> 
+> > +		pr_err("%s: Could not get GPIO configuration: %d",
+> > +		       __func__, gpio_num);
+> > +		return -ENODEV;
+> > +	}
+> 
+> This doesn't handle deferred probe correctly; if gpio_num ==
+> -EPROBE_DEFER, then this function needs to return -EPROBE_DEFER too; why
+> not "return gpio_num" rather than "return -ENODEV" above?
+> 
+> > +	gpio_active_low = flags & OF_GPIO_ACTIVE_LOW;
+> > +
+> > +	if (of_get_property(pdev->dev.of_node, "input", NULL))
+> > +		input = true;
+> 
+> Perhaps use of_property_read_bool() here.
+> 
+> > +static int __devexit gpio_poweroff_remove(struct platform_device *pdev)
+> > +{
+> > +	if (gpio_num != -1)
+> > +		gpio_free(gpio_num);
+> 
+> Perhaps use gpio_is_valid() here? Actually, how could this happen;
+> presumably if the GPIO is valid, probe() never succeeded, so you should
+> always just free the GPIO.
+> 
+> > +static struct platform_driver gpio_poweroff_driver = {
+> > +	.probe = gpio_poweroff_probe,
+> > +	.remove = __devexit_p(gpio_poweroff_remove),
+> > +	.driver = {
+> > +		   .name = "poweroff-gpio",
+> > +		   .owner = THIS_MODULE,
+> > +		   .of_match_table = of_gpio_poweroff_match,
+> > +		   },
+> 
+> There seems to be a mix of TAB/space indents there, and the closing }
+> should probably be aligned with the start of ".driver"?
+> 
+> > +MODULE_LICENSE("GPL");
+> 
+> That should be "GPL v2".
+> 
