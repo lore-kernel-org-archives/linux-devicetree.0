@@ -1,45 +1,30 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
-Date: Tue, 20 Nov 2012 10:11:18 -0700
-Message-ID: <50ABB9B6.1010506@wwwdotorg.org>
-References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
- <1353142266-1289-2-git-send-email-andrew@lunn.ch>
- <50AA6E7E.5060501@wwwdotorg.org> <20121120083749.GM10259@lunn.ch>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] dt: add helper function to read u8 & u16 variables &
+ arrays
+Date: Tue, 20 Nov 2012 10:21:40 -0700
+Message-ID: <50ABBC24.5000707@wwwdotorg.org>
+References: <0ee5b74534a09d75c14b22c2d9330c4971ab30fb.1353386646.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121120083749.GM10259-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0ee5b74534a09d75c14b22c2d9330c4971ab30fb.1353386646.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rob.herring@calxeda.com, grant.likely@secretlab.ca, spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com, linaro-dev@lists.linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2012 01:37 AM, Andrew Lunn wrote:
-> Hi Jason
+On 11/19/2012 09:45 PM, Viresh Kumar wrote:
+> This adds following helper routines:
+> - of_property_read_u8_array()
+> - of_property_read_u16_array()
+> - of_property_read_u8()
+> - of_property_read_u16()
 > 
-> These are good comments from Stephan that i want to address. However,
-> i also don't want to delay the pull-requests direction arm-soc, the
-> merge window is getting close. Both Linus and Anton have Acked the
-> current version, so please go with what you have and i will produce a
-> patch over the top. If its available before Arnd pulls, you can squash
-> it, otherwise send it upstream as a standalone patch.
+> This expects arrays from DT to be passed as:
+> - u8 array:
+> 	property = /bits/ 8 <0x50 0x60 0x70>;
+> - u16 array:
+> 	property = /bits/ 16 <0x5000 0x6000 0x7000>;
 
-I'm not sure I agree here; the comments I made re: the delays and
-pulse-vs-level may affect the definition of the DT binding, and that's
-something that should be correct from the start.
-
-The implementation of gpio_poweroff_do_poweroff() really doesn't seem to
-make sense; related to the above.
-
-Also, probe deferral doesn't work, which will likely make this code
-completely ineffective.
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
