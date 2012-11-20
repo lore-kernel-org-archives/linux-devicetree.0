@@ -1,68 +1,82 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
-Date: Tue, 20 Nov 2012 19:27:38 +0900
-Message-ID: <20121120102712.GF10560@opensource.wolfsonmicro.com>
-References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com>
- <1353045837-19474-2-git-send-email-voice.shen@atmel.com>
- <20121116061250.GP4387@opensource.wolfsonmicro.com>
- <50A5DE4E.80206@atmel.com>
- <20121116064113.GQ4387@opensource.wolfsonmicro.com>
- <50A5E44D.6040501@atmel.com>
- <50AB4DEA.3090100@atmel.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v11 0/6] of: add display helper
+Date: Tue, 20 Nov 2012 11:39:18 +0100
+Message-ID: <20121120103918.GB11249@pengutronix.de>
+References: <1352985312-18178-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VRRZwUeiQeu7kZYj"
-Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <50AB4DEA.3090100@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <1352985312-18178-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 15, 2012 at 02:15:06PM +0100, Steffen Trumtrar wrote:
+> Hi!
+> 
+> Changes since v10:
+> 	- fix function name (drm_)display_mode_from_videomode
+> 	- add acked-by, reviewed-by, tested-by
+> 
+> Regards,
+> Steffen
+> 
+> 
+> Steffen Trumtrar (6):
+>   video: add display_timing and videomode
+>   video: add of helper for videomode
+>   fbmon: add videomode helpers
+>   fbmon: add of_videomode helpers
+>   drm_modes: add videomode helpers
+>   drm_modes: add of_videomode helpers
+> 
+>  .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
+>  drivers/gpu/drm/drm_modes.c                        |   70 +++++++
+>  drivers/video/Kconfig                              |   19 ++
+>  drivers/video/Makefile                             |    4 +
+>  drivers/video/display_timing.c                     |   24 +++
+>  drivers/video/fbmon.c                              |   86 ++++++++
+>  drivers/video/of_display_timing.c                  |  212 ++++++++++++++++++++
+>  drivers/video/of_videomode.c                       |   47 +++++
+>  drivers/video/videomode.c                          |   45 +++++
+>  include/drm/drmP.h                                 |   12 ++
+>  include/linux/display_timing.h                     |   69 +++++++
+>  include/linux/fb.h                                 |   12 ++
+>  include/linux/of_display_timings.h                 |   20 ++
+>  include/linux/of_videomode.h                       |   17 ++
+>  include/linux/videomode.h                          |   40 ++++
+>  15 files changed, 784 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
+>  create mode 100644 drivers/video/display_timing.c
+>  create mode 100644 drivers/video/of_display_timing.c
+>  create mode 100644 drivers/video/of_videomode.c
+>  create mode 100644 drivers/video/videomode.c
+>  create mode 100644 include/linux/display_timing.h
+>  create mode 100644 include/linux/of_display_timings.h
+>  create mode 100644 include/linux/of_videomode.h
+>  create mode 100644 include/linux/videomode.h
+> 
+> -- 
+> 
+> 
+> 
 
---VRRZwUeiQeu7kZYj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ping!
 
-On Tue, Nov 20, 2012 at 05:31:22PM +0800, Bo Shen wrote:
+Any comments or taker for v11? Errors are fixed, driver is tested and working,
+DT binding got two ACKs. So, the series is finished as far as I can tell.
 
-> >based on ASoC tree? And the upper go into pinctrl tree?
-> >---<8---
-> >ssc0: ssc@fffbc000 {
-> >     compatible = "atmel,at91rm9200-ssc";
-> >         reg = <0xfffbc000 0x4000>;
-> >         interrupts = <14 4 5>;
-> >+        pinctrl-names = "default";
-> >+        pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
-> >         status = "disable";
-> >};
-> >--->8---
+As I'm not sure if I reached the right maintainers with the current CC, I did
+another get_maintainers and added Florian Schandinat and David Airlie to the
+list. If I need to resend the series, please tell.
 
-> Any suggestion for this? what should I do with this patch for next?
+Regards,
+Steffen
 
-Send it to pinctrl and we'll deal with the add/add.
-
---VRRZwUeiQeu7kZYj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQq1sHAAoJELSic+t+oim9/i0P/3W3jjOR3W5mpBFNmUwfpqfc
-g0lZvI1fDvFknlG8dSdXZvkW0GE0/PyjXWsukmyIaX4fGMHOcxsmKmL41sgbBGEx
-BwKia4I90Qh2R8AP1cpZhwPgkiMQOo45PaVz0i78OJFBhWlRFhYrN7tgx4DD89hW
-ZcMX0ZWrOgyb6pR/sWzcFeNY0JFERxyjKHeXIGIkTcvZVdxWO/Sh9NZ6VG+idzVa
-cagEyV0mhApfJnwt7+9eNL2u/8jBjGLPtd7Baaz1LiNan3RnNs7/c0px6NTOoLql
-Ig1O7OF9v8MqLi4MvNGR3TLApjv9aBu3O9ZsB9D0jrVHr8fNZawHBWsG1Nk0hClf
-0BR778p/SFexg6uh2wAEc7CE58PY80mg+pQb2C7MWs3sc5126Y4Z3kdliybtcHMo
-XCb86X07b4Rgen4VSVLvnc4evLtHe4lufURIXMwI7bmJG9JFHu7PZLr0HAz3b32w
-HH0vnBfGx7fwsqmqBv/TvmnzxtzlFcGqHZ3f9jwwsKHk9jWAoAOm1d8iHUzLsCPN
-E+rU3uDwsL6s6vUh6olM+ZP+a/2+6/RUKlZuYpDwX0IiQsP1CqtpEQWiJrgpOz0n
-r1/mYrVCOhc7Jt7o6D4OK1skiafJUAvJZG31kzSTNQtMvS9m16Tyg7PDy1RXMiwv
-8vTHLmDo0lLuLUfvQnwB
-=idoa
------END PGP SIGNATURE-----
-
---VRRZwUeiQeu7kZYj--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
