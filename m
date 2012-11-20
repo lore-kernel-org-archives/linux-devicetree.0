@@ -1,13 +1,16 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH V5 3/5] arm: mvebu: Added IPI support via doorbells
-Date: Tue, 20 Nov 2012 22:15:47 +0100
-Message-ID: <1353446150-10088-4-git-send-email-gregory.clement@free-electrons.com>
-References: <1353446150-10088-1-git-send-email-gregory.clement@free-electrons.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
+Date: Tue, 20 Nov 2012 14:17:24 -0700
+Message-ID: <50ABF364.1010004@wwwdotorg.org>
+References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
+ <1353142266-1289-2-git-send-email-andrew@lunn.ch>
+ <50AA6E7E.5060501@wwwdotorg.org> <20121120083749.GM10259@lunn.ch>
+ <50ABB9B6.1010506@wwwdotorg.org> <20121120203127.GX14643@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353446150-10088-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20121120203127.GX14643-g2DYL2Zd6BY@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,231 +21,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On 11/20/2012 01:31 PM, Andrew Lunn wrote:
+> On Tue, Nov 20, 2012 at 10:11:18AM -0700, Stephen Warren wrote:
+>> On 11/20/2012 01:37 AM, Andrew Lunn wrote:
+>>> Hi Jason
+>>>
+>>> These are good comments from Stephan that i want to address. However,
+>>> i also don't want to delay the pull-requests direction arm-soc, the
+>>> merge window is getting close. Both Linus and Anton have Acked the
+>>> current version, so please go with what you have and i will produce a
+>>> patch over the top. If its available before Arnd pulls, you can squash
+>>> it, otherwise send it upstream as a standalone patch.
+>>
+>> I'm not sure I agree here; the comments I made re: the delays and
+>> pulse-vs-level may affect the definition of the DT binding, and that's
+>> something that should be correct from the start.
+> 
+> Hi Stephen
+> 
+> There should be no need to change the binding is a none-backwards
+> compatible way. The current delays work for all current users.
 
-Signed-off-by: Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../devicetree/bindings/arm/armada-370-xp-mpic.txt |   12 ++-
- arch/arm/boot/dts/armada-xp.dtsi                   |    2 +-
- arch/arm/mach-mvebu/armada-370-xp.h                |    7 ++
- arch/arm/mach-mvebu/irq-armada-370-xp.c            |   92 ++++++++++++++++++--
- 4 files changed, 103 insertions(+), 10 deletions(-)
+Well, the binding isn't written for current users, the description is
+just a generic "GPIO to turn off the system".
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-mpic.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-mpic.txt
-index 70c0dc5..61df564 100644
---- a/Documentation/devicetree/bindings/arm/armada-370-xp-mpic.txt
-+++ b/Documentation/devicetree/bindings/arm/armada-370-xp-mpic.txt
-@@ -6,9 +6,15 @@ Required properties:
- - interrupt-controller: Identifies the node as an interrupt controller.
- - #interrupt-cells: The number of cells to define the interrupts. Should be 1.
-   The cell is the IRQ number
-+
- - reg: Should contain PMIC registers location and length. First pair
-   for the main interrupt registers, second pair for the per-CPU
--  interrupt registers
-+  interrupt registers. For this last pair, to be compliant with SMP
-+  support, the "virtual" must be use (For the record, these registers
-+  automatically map to the interrupt controller registers of the
-+  current CPU)
-+
-+
- 
- Example:
- 
-@@ -18,6 +24,6 @@ Example:
-               #address-cells = <1>;
-               #size-cells = <1>;
-               interrupt-controller;
--              reg = <0xd0020000 0x1000>,
--                    <0xd0021000 0x1000>;
-+              reg = <0xd0020a00 0x1d0>,
-+                    <0xd0021070 0x58>;
-         };
-diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
-index 1f95e22..e6db2b7 100644
---- a/arch/arm/boot/dts/armada-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-xp.dtsi
-@@ -24,7 +24,7 @@
- 
- 	mpic: interrupt-controller@d0020000 {
- 	      reg = <0xd0020a00 0x1d0>,
--		    <0xd0021870 0x58>;
-+		    <0xd0021070 0x58>;
- 	};
- 
- 	armada-370-xp-pmsu@d0022000 {
-diff --git a/arch/arm/mach-mvebu/armada-370-xp.h b/arch/arm/mach-mvebu/armada-370-xp.h
-index aac9beb..c6a7d74 100644
---- a/arch/arm/mach-mvebu/armada-370-xp.h
-+++ b/arch/arm/mach-mvebu/armada-370-xp.h
-@@ -19,4 +19,11 @@
- #define ARMADA_370_XP_REGS_VIRT_BASE	IOMEM(0xfeb00000)
- #define ARMADA_370_XP_REGS_SIZE		SZ_1M
- 
-+#ifdef CONFIG_SMP
-+#include <linux/cpumask.h>
-+
-+void armada_mpic_send_doorbell(const struct cpumask *mask, unsigned int irq);
-+void armada_xp_mpic_smp_cpu_init(void);
-+#endif
-+
- #endif /* __MACH_ARMADA_370_XP_H */
-diff --git a/arch/arm/mach-mvebu/irq-armada-370-xp.c b/arch/arm/mach-mvebu/irq-armada-370-xp.c
-index 5f5f939..549b684 100644
---- a/arch/arm/mach-mvebu/irq-armada-370-xp.c
-+++ b/arch/arm/mach-mvebu/irq-armada-370-xp.c
-@@ -24,6 +24,7 @@
- #include <linux/irqdomain.h>
- #include <asm/mach/arch.h>
- #include <asm/exception.h>
-+#include <asm/smp_plat.h>
- 
- /* Interrupt Controller Registers Map */
- #define ARMADA_370_XP_INT_SET_MASK_OFFS		(0x48)
-@@ -35,6 +36,12 @@
- 
- #define ARMADA_370_XP_CPU_INTACK_OFFS		(0x44)
- 
-+#define ARMADA_370_XP_SW_TRIG_INT_OFFS           (0x4)
-+#define ARMADA_370_XP_IN_DRBEL_MSK_OFFS          (0xc)
-+#define ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS        (0x8)
-+
-+#define ACTIVE_DOORBELLS			(8)
-+
- static void __iomem *per_cpu_int_base;
- static void __iomem *main_int_base;
- static struct irq_domain *armada_370_xp_mpic_domain;
-@@ -51,11 +58,22 @@ static void armada_370_xp_irq_unmask(struct irq_data *d)
- 	       per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
- }
- 
-+#ifdef CONFIG_SMP
-+static int armada_xp_set_affinity(struct irq_data *d,
-+				  const struct cpumask *mask_val, bool force)
-+{
-+	return 0;
-+}
-+#endif
-+
- static struct irq_chip armada_370_xp_irq_chip = {
- 	.name		= "armada_370_xp_irq",
- 	.irq_mask       = armada_370_xp_irq_mask,
- 	.irq_mask_ack   = armada_370_xp_irq_mask,
- 	.irq_unmask     = armada_370_xp_irq_unmask,
-+#ifdef CONFIG_SMP
-+	.irq_set_affinity = armada_xp_set_affinity,
-+#endif
- };
- 
- static int armada_370_xp_mpic_irq_map(struct irq_domain *h,
-@@ -72,6 +90,41 @@ static int armada_370_xp_mpic_irq_map(struct irq_domain *h,
- 	return 0;
- }
- 
-+#ifdef CONFIG_SMP
-+void armada_mpic_send_doorbell(const struct cpumask *mask, unsigned int irq)
-+{
-+	int cpu;
-+	unsigned long map = 0;
-+
-+	/* Convert our logical CPU mask into a physical one. */
-+	for_each_cpu(cpu, mask)
-+		map |= 1 << cpu_logical_map(cpu);
-+
-+	/*
-+	 * Ensure that stores to Normal memory are visible to the
-+	 * other CPUs before issuing the IPI.
-+	 */
-+	dsb();
-+
-+	/* submit softirq */
-+	writel((map << 8) | irq, main_int_base +
-+		ARMADA_370_XP_SW_TRIG_INT_OFFS);
-+}
-+
-+void armada_xp_mpic_smp_cpu_init(void)
-+{
-+	/* Clear pending IPIs */
-+	writel(0, per_cpu_int_base + ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS);
-+
-+	/* Enable first 8 IPIs */
-+	writel((1 << ACTIVE_DOORBELLS) - 1, per_cpu_int_base +
-+		ARMADA_370_XP_IN_DRBEL_MSK_OFFS);
-+
-+	/* Unmask IPI interrupt */
-+	writel(0, per_cpu_int_base + ARMADA_370_XP_INT_CLEAR_MASK_OFFS);
-+}
-+#endif /* CONFIG_SMP */
-+
- static struct irq_domain_ops armada_370_xp_mpic_irq_ops = {
- 	.map = armada_370_xp_mpic_irq_map,
- 	.xlate = irq_domain_xlate_onecell,
-@@ -91,13 +144,18 @@ static int __init armada_370_xp_mpic_of_init(struct device_node *node,
- 	control = readl(main_int_base + ARMADA_370_XP_INT_CONTROL);
- 
- 	armada_370_xp_mpic_domain =
--	    irq_domain_add_linear(node, (control >> 2) & 0x3ff,
--				  &armada_370_xp_mpic_irq_ops, NULL);
-+		irq_domain_add_linear(node, (control >> 2) & 0x3ff,
-+				&armada_370_xp_mpic_irq_ops, NULL);
- 
- 	if (!armada_370_xp_mpic_domain)
- 		panic("Unable to add Armada_370_Xp MPIC irq domain (DT)\n");
- 
- 	irq_set_default_host(armada_370_xp_mpic_domain);
-+
-+#ifdef CONFIG_SMP
-+	armada_xp_mpic_smp_cpu_init();
-+#endif
-+
- 	return 0;
- }
- 
-@@ -111,14 +169,36 @@ asmlinkage void __exception_irq_entry armada_370_xp_handle_irq(struct pt_regs
- 					ARMADA_370_XP_CPU_INTACK_OFFS);
- 		irqnr = irqstat & 0x3FF;
- 
--		if (irqnr < 1023) {
--			irqnr =
--			    irq_find_mapping(armada_370_xp_mpic_domain, irqnr);
-+		if (irqnr > 1022)
-+			break;
-+
-+		if (irqnr >= 8) {
-+			irqnr =	irq_find_mapping(armada_370_xp_mpic_domain,
-+					irqnr);
- 			handle_IRQ(irqnr, regs);
- 			continue;
- 		}
-+#ifdef CONFIG_SMP
-+		/* IPI Handling */
-+		if (irqnr == 0) {
-+			u32 ipimask, ipinr;
-+
-+			ipimask = readl_relaxed(per_cpu_int_base +
-+						ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS)
-+				& 0xFF;
-+
-+			writel(0x0, per_cpu_int_base +
-+				ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS);
-+
-+			/* Handle all pending doorbells */
-+			for (ipinr = 0; ipinr < ACTIVE_DOORBELLS; ipinr++) {
-+				if (ipimask & (0x1 << ipinr))
-+					handle_IPI(ipinr, regs);
-+			}
-+			continue;
-+		}
-+#endif
- 
--		break;
- 	} while (1);
- }
- 
--- 
-1.7.9.5
+> If some
+> other user comes along which needs longer delays, they can add an
+> optional property which specified a longer delay.
+
+The DT maintainers have in the past expressed a wish to define DT
+bindings completely, rather than incrementally adding stuff if at all
+possible. I guess they weren't CC'd on this patch; I've added them here
+for comment. I'll defer to whatever they think here.
+
+> The pulse-vs-level is needed for the potential PXA use case, which is
+> where i took this code from. When we first proposed this driver,
+> Russel King pointed to the PXA reset.c code and requested we create
+> something which PXA could use. The configuring the GPIO as an input
+> also come from PXA, which the current two uses user don't need.
+> 
+> I agree it need better documentation, but the current code covers all
+> bases. It will turn off a level based system, it will also turn off an
+> edge based system. There is no need to specify in the DT which is
+> needed, it will just work.
+
+I'm not convinced the pulse logic can be correct for arbitrary users who
+expect a level-sensitive GPIO; what if the MPU (or whatever the GPIO is
+connected to) is confused by the pulse and fails to power down when it
+sees a pulse (e.g. as a safety measure), but would have worked fine with
+just a regular level?
+
+>> The implementation of gpio_poweroff_do_poweroff() really doesn't seem to
+>> make sense; related to the above.
+>>
+>> Also, probe deferral doesn't work, which will likely make this code
+>> completely ineffective.
+> 
+> This code has been tested by the two current users. It works. However,
+> i agree about your comment here, and i will fix it in the follow up
+> patch.
+
+If this were a specific driver just for certain platforms, I think it
+might be OK. Yet the driver purports to be generic. As such, I think we
+need to make it explicitly work for the general case, not just happen to
+work for the platforms that have been tested so far.
