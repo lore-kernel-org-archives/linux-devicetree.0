@@ -1,93 +1,99 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: AM33XX: Add d_can instances to aliases
-Date: Tue, 20 Nov 2012 11:51:42 +0100
-Message-ID: <50AB60BE.1080002@pengutronix.de>
-References: <1352916505-12343-1-git-send-email-anilkumar@ti.com>
- <1352916505-12343-3-git-send-email-anilkumar@ti.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v11 0/6] of: add display helper
+Date: Tue, 20 Nov 2012 12:11:09 +0100
+Message-ID: <20121120111109.GC11249@pengutronix.de>
+References: <1352985312-18178-1-git-send-email-s.trumtrar@pengutronix.de>
+ <20121120103918.GB11249@pengutronix.de>
+ <5248190.b4XqndYeI2@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4694272490480711414=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1352916505-12343-3-git-send-email-anilkumar-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5248190.b4XqndYeI2@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---===============4694272490480711414==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig3B75AD3AC453A3D022E4E91C"
+On Tue, Nov 20, 2012 at 11:52:06AM +0100, Laurent Pinchart wrote:
+> Hi Steffen,
+> 
+> On Tuesday 20 November 2012 11:39:18 Steffen Trumtrar wrote:
+> > On Thu, Nov 15, 2012 at 02:15:06PM +0100, Steffen Trumtrar wrote:
+> > > Hi!
+> > > 
+> > > Changes since v10:
+> > > 	- fix function name (drm_)display_mode_from_videomode
+> > > 	- add acked-by, reviewed-by, tested-by
+> > > 
+> > > Regards,
+> > > Steffen
+> > > 
+> > > Steffen Trumtrar (6):
+> > >   video: add display_timing and videomode
+> > >   video: add of helper for videomode
+> > >   fbmon: add videomode helpers
+> > >   fbmon: add of_videomode helpers
+> > >   drm_modes: add videomode helpers
+> > >   drm_modes: add of_videomode helpers
+> > >  
+> > >  .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
+> > >  drivers/gpu/drm/drm_modes.c                        |   70 +++++++
+> > >  drivers/video/Kconfig                              |   19 ++
+> > >  drivers/video/Makefile                             |    4 +
+> > >  drivers/video/display_timing.c                     |   24 +++
+> > >  drivers/video/fbmon.c                              |   86 ++++++++
+> > >  drivers/video/of_display_timing.c                  |  212 +++++++++++++++
+> > >  drivers/video/of_videomode.c                       |   47 +++++
+> > >  drivers/video/videomode.c                          |   45 +++++
+> > >  include/drm/drmP.h                                 |   12 ++
+> > >  include/linux/display_timing.h                     |   69 +++++++
+> > >  include/linux/fb.h                                 |   12 ++
+> > >  include/linux/of_display_timings.h                 |   20 ++
+> > >  include/linux/of_videomode.h                       |   17 ++
+> > >  include/linux/videomode.h                          |   40 ++++
+> > >  15 files changed, 784 insertions(+)
+> > >  create mode 100644
+> > >  Documentation/devicetree/bindings/video/display-timings.txt create mode
+> > >  100644 drivers/video/display_timing.c
+> > >  create mode 100644 drivers/video/of_display_timing.c
+> > >  create mode 100644 drivers/video/of_videomode.c
+> > >  create mode 100644 drivers/video/videomode.c
+> > >  create mode 100644 include/linux/display_timing.h
+> > >  create mode 100644 include/linux/of_display_timings.h
+> > >  create mode 100644 include/linux/of_videomode.h
+> > >  create mode 100644 include/linux/videomode.h
+> > 
+> > Ping!
+> > 
+> > Any comments or taker for v11? Errors are fixed, driver is tested and
+> > working, DT binding got two ACKs. So, the series is finished as far as I
+> > can tell.
+> 
+> Just one last comment, sorry for not bringing this up earlier. Could you 
+> constify pointer arguments to functions where applicable ? For instance
+> 
+> int videomode_from_timing(struct display_timings *disp, struct videomode *vm,
+>                           unsigned int index);
+> 
+> The function shouldn't modify disp, so you can make it const. Same for most of 
+> the API functions.
+> 
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig3B75AD3AC453A3D022E4E91C
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Okay. Will do.
 
-On 11/14/2012 07:08 PM, AnilKumar Ch wrote:
-> Add d_can instances to aliases node to get the D_CAN instance number
-> from the driver. To initialize D_CAN message RAM, corresponding instanc=
-e
-> number is required.
->=20
-> To initialize instance 0 message RAM then 0x1 should be written and for=
+> You can then add my
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
 
-> instance 1 message RAM, 0x2 should be written to control module registe=
-r.
->=20
-> With device-tree framework ip instance number is "-1" by default for al=
-l
-> instances. To get device id/instance number then modules should be adde=
-d
-> to DT "aliases" node. of_alias_get_id() gives the device id number base=
-d
-> on number of alias nodes present in "aliases node".
->=20
-> Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+Thanks.
 
-Acked-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Regards,
+Steffen
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig3B75AD3AC453A3D022E4E91C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with undefined - http://www.enigmail.net/
-
-iEYEARECAAYFAlCrYL4ACgkQjTAFq1RaXHNq0wCfU1373zmRNgk3MpUSn9DY3w64
-v/wAn26Tvb6ZorUIQcbhMBlcg85xU3RC
-=f5IK
------END PGP SIGNATURE-----
-
---------------enig3B75AD3AC453A3D022E4E91C--
-
---===============4694272490480711414==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4694272490480711414==--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
