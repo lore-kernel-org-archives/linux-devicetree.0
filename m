@@ -1,46 +1,45 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH] mmc: sdhci-s3c: Use NULL instead of 0 for pointers
-Date: Tue, 20 Nov 2012 09:41:53 +0530
-Message-ID: <1353384713-21969-1-git-send-email-tushar.behera@linaro.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: cjb@laptop.org, thomas.abraham@linaro.org, patches@linaro.org
+From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] powerpc/85xx: p1022ds: Use NULL instead of 0 for pointers
+Date: Tue, 20 Nov 2012 10:01:51 +0530
+Message-ID: <1353385912-25882-1-git-send-email-tushar.behera@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The third argument for of_get_property() is a pointer, hence pass
 NULL instead of 0.
 
-Fixes following sparse warning.
-drivers/mmc/host/sdhci-s3c.c:452:48: warning: Using plain integer as
-NULL pointer
-drivers/mmc/host/sdhci-s3c.c:457:52: warning: Using plain integer as
-NULL pointer
-
-Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+Signed-off-by: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/mmc/host/sdhci-s3c.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/85xx/p1022_ds.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-s3c.c b/drivers/mmc/host/sdhci-s3c.c
-index a54dd5d..80b10f2 100644
---- a/drivers/mmc/host/sdhci-s3c.c
-+++ b/drivers/mmc/host/sdhci-s3c.c
-@@ -449,12 +449,12 @@ static int __devinit sdhci_s3c_parse_dt(struct device *dev,
- 		return -ENOMEM;
- 
- 	/* get the card detection method */
--	if (of_get_property(node, "broken-cd", 0)) {
-+	if (of_get_property(node, "broken-cd", NULL)) {
- 		pdata->cd_type = S3C_SDHCI_CD_NONE;
- 		goto setup_bus;
+diff --git a/arch/powerpc/platforms/85xx/p1022_ds.c b/arch/powerpc/platforms/85xx/p1022_ds.c
+index 8fb1257..7328b8d 100644
+--- a/arch/powerpc/platforms/85xx/p1022_ds.c
++++ b/arch/powerpc/platforms/85xx/p1022_ds.c
+@@ -249,7 +249,7 @@ static void p1022ds_set_monitor_port(enum fsl_diu_monitor_port port)
+ 		goto exit;
  	}
  
--	if (of_get_property(node, "non-removable", 0)) {
-+	if (of_get_property(node, "non-removable", NULL)) {
- 		pdata->cd_type = S3C_SDHCI_CD_PERMANENT;
- 		goto setup_bus;
- 	}
+-	iprop = of_get_property(law_node, "fsl,num-laws", 0);
++	iprop = of_get_property(law_node, "fsl,num-laws", NULL);
+ 	if (!iprop) {
+ 		pr_err("p1022ds: LAW node is missing fsl,num-laws property\n");
+ 		goto exit;
 -- 
 1.7.4.1
-
