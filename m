@@ -1,59 +1,40 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH 1/2] ASoC: atmel-ssc: add phybase in device
-	structure
-Date: Tue, 20 Nov 2012 16:38:17 +0800
-Message-ID: <1353400698-19384-1-git-send-email-voice.shen@atmel.com>
+From: Anton Vorontsov <cbouatmailru@gmail.com>
+Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
+Date: Tue, 20 Nov 2012 00:48:07 -0800
+Message-ID: <20121120084807.GA24287@lizard>
+References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
+ <1353142266-1289-2-git-send-email-andrew@lunn.ch>
+ <50AA6E7E.5060501@wwwdotorg.org> <20121120083749.GM10259@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@opensource.wolfsonmicro.com, plagnioj@jcrosoft.com, nicolas.ferre@atmel.com
-Cc: voice.shen@atmel.com, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20121120083749.GM10259@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: gmbnomis@gmail.com, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, jm@lentin.co.uk, linux ARM <linux-arm-kernel@lists.infradead.org>, Jason Cooper <jason@lakedaemon.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
+On Tue, Nov 20, 2012 at 09:37:49AM +0100, Andrew Lunn wrote:
+> These are good comments from Stephan that i want to address. However,
+> i also don't want to delay the pull-requests direction arm-soc, the
+> merge window is getting close. Both Linus and Anton have Acked the
+> current version, so please go with what you have and i will produce a
+> patch over the top. If its available before Arnd pulls, you can squash
+> it, otherwise send it upstream as a standalone patch.
 
-Useful for future dmaengine use.
+I agree. Furthermore, for the fixup patch, if it goes separately, you
+might want to add
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- drivers/misc/atmel-ssc.c  |    2 ++
- include/linux/atmel-ssc.h |    1 +
- 2 files changed, 3 insertions(+)
+ Suggested-by: Stephen Warren <swarren@wwwdotorg.org>
 
-diff --git a/drivers/misc/atmel-ssc.c b/drivers/misc/atmel-ssc.c
-index a769719..d07a9ed 100644
---- a/drivers/misc/atmel-ssc.c
-+++ b/drivers/misc/atmel-ssc.c
-@@ -157,6 +157,8 @@ static int ssc_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	ssc->phybase = regs->start;
-+
- 	ssc->clk = devm_clk_get(&pdev->dev, "pclk");
- 	if (IS_ERR(ssc->clk)) {
- 		dev_dbg(&pdev->dev, "no pclk clock defined\n");
-diff --git a/include/linux/atmel-ssc.h b/include/linux/atmel-ssc.h
-index 1ca0e32..deb0ae5 100644
---- a/include/linux/atmel-ssc.h
-+++ b/include/linux/atmel-ssc.h
-@@ -11,6 +11,7 @@ struct atmel_ssc_platform_data {
- 
- struct ssc_device {
- 	struct list_head	list;
-+	resource_size_t		phybase;
- 	void __iomem		*regs;
- 	struct platform_device	*pdev;
- 	struct atmel_ssc_platform_data *pdata;
--- 
-1.7.9.5
+to give a credit for the valuable comments. :)
