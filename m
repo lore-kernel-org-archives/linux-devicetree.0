@@ -1,108 +1,99 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Tue, 20 Nov 2012 16:48:18 +0200
-Message-ID: <50AB9832.90709@ti.com>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2] pwm: Device tree support for PWM polarity.
+Date: Tue, 20 Nov 2012 16:07:55 +0100
+Message-ID: <20121120150755.GB24545@avionic-0098.adnet.avionic-design.de>
+References: <1353347472-26863-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enigF62DFAACA269378853BB95CC"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1353149747-31871-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1353347472-26863-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
---------------enigF62DFAACA269378853BB95CC
-Content-Type: text/plain; charset=ISO-8859-1
+
+--FkmkrVfFsRoUs1wW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On 2012-11-17 12:55, Alexandre Courbot wrote:
-
-A few questions after looking at the documentation:
-
-> +Example
-> +-------
-> +Here are example sequences declared within a backlight device that use=
- all the
-> +supported resources types:
+On Mon, Nov 19, 2012 at 11:21:12PM +0530, Philip, Avinash wrote:
+[...]
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index 112b314..70756f2 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -78,6 +78,10 @@ enum {
+>  	PWMF_ENABLED =3D 1 << 1,
+>  };
+> =20
+> +/* flags in the third cell of the DT PWM specifier */
+> +#define PWM_SPEC_POLARITY	(1 << 0)
 > +
-> +	backlight {
-> +		compatible =3D "pwm-backlight";
-> +		...
 > +
-> +		/* resources used by the power sequences */
-> +		pwms =3D <&pwm 2 5000000>;
-> +		pwm-names =3D "backlight";
-> +		power-supply =3D <&backlight_reg>;
+
+This doesn't belong in this header. It should go into core.c in
+drivers/pwm.
+
+>  struct pwm_device {
+>  	const char		*label;
+>  	unsigned long		flags;
+> @@ -176,6 +180,8 @@ void pwm_put(struct pwm_device *pwm);
+> =20
+>  struct pwm_device *devm_pwm_get(struct device *dev, const char *consumer=
+);
+>  void devm_pwm_put(struct device *dev, struct pwm_device *pwm);
+> +struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
+> +		const struct of_phandle_args *args);
+
+The placement of this prototype is odd. I think a better place would be
+between pwm_request_from_chip() and pwm_get(), separated by blank lines
+to make it stand out as an OF specific function.
+
+>  #else
+>  static inline int pwm_set_chip_data(struct pwm_device *pwm, void *data)
+>  {
+> @@ -223,6 +229,12 @@ static inline struct pwm_device *devm_pwm_get(struct=
+ device *dev,
+>  static inline void devm_pwm_put(struct device *dev, struct pwm_device *p=
+wm)
+>  {
+>  }
 > +
-> +		power-sequences {
-> +			power-on {
-> +				step0 {
-> +					type =3D "regulator";
-> +					id =3D "power";
-> +					enable;
-> +				};
-> +				step1 {
-> +					type =3D "delay";
-> +					delay =3D <10000>;
-> +				};
-> +				step2 {
-> +					type =3D "pwm";
-> +					id =3D "backlight";
-> +					enable;
-> +				};
-> +				step3 {
-> +					type =3D "gpio";
-> +					gpio =3D <&gpio 28 0>;
-> +					value =3D <1>;
-> +				};
-> +			};
+> +static inline struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip=
+ *pc,
+> +		const struct of_phandle_args *args)
+> +{
+> +	return ERR_PTR(-ENODEV);
+> +}
 
-I guess there's a reason, but the above looks a bit inconsistent. For
-gpio you define the gpio resource inside the step. For power and pwm the
-resource is defined before the steps. Why wouldn't "pwm =3D <&pwm 2
-5000000>;" work in step2?
+This function should only be used by PWM drivers and therefore doesn't
+need to have a dummy implementation such as this.
 
-> +When a power sequence is run, its steps is executed one after the othe=
-r until
-> +one step fails or the end of the sequence is reached.
+Thierry
 
-The document doesn't give any hint of what the driver should do if
-running the power sequence fails. Run the "opposite" power sequence?
-Will that work for all resources? I'm mainly thinking of a case where
-each enable of the resource should be matched by a disable, i.e. you
-can't call disable if no enable was called.
-
- Tomi
-
-
-
---------------enigF62DFAACA269378853BB95CC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+--FkmkrVfFsRoUs1wW
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQq5gyAAoJEPo9qoy8lh71Q4wP/ishGG4j6CsP9aN9+MiI8HCA
-N1SS7vzaR8ozlor2yF2GuRmtQKHOavOV2k/GRoVB2ewdsJSpcuijyHELfXC+M4re
-vxdkhawlkWKn+xC8pNBMoWrhUZFKeo9/Xk7dTpxXaweKTvGzmIPHSiAZn62jvV7C
-ZEIafQqkOAtEVKI7GrDAXqSObNyUgA2ASP9VLAu6nRq3PpoYRqQtrRP1lGP9naCp
-xkYUYDoXzAAyjIw0nnyMDLtgex0KEpA10vTMknMbFOhB34cSATI13saZdhtEnLOl
-G9qo3m7eYAYfg5cngFINB80pJ5pv7frZwwsJZ2miUDOykw/PJpSk2RpQA1CxjqBC
-4yJkPPY7gbQQXh5G64BxoIuNEI4zVlJVfAzyTuurqJ0gRhmwdSz8AbRObAeT2Mbw
-YiDmk6xV8v+LP6nJzSAeOtV0+CJwz3BaCJMqfANkNsUoK/J5Ikr5I00KhPB4lCdM
-pPYVOHEh7fi9KcZnnJBH5vjEFZnP9x5ukLZbc/vdfukvQSg/yvL6NwZPoE5ZY56i
-Ojgy71IZ8K0HmJekmr0Ejlp7PLXl0XP2qZfDSX7FHey+ogCh7FKRcmEIgaun5ffw
-Ddm3t1QWZq1j/8Ht8Uy08BOOyrp48L7sHjrAUx38H9m7eTQKznJD0gPwqcfBwZju
-n4XHo9Z32v3RbP8Ht1EF
-=4xsL
+iQIcBAEBAgAGBQJQq5zLAAoJEN0jrNd/PrOhsz4P/39+Q2nTGeMPGW/4/vcQ8Abd
+tV6jOyB5XZupn38FKj3Ihb0Qy4Fp8fkPJ15k1MSjt3/Ea8HWDW6yf+K/ECVcJLH0
+JN0sKJL2foSyvdqPE69eYdLRY31Q79AT/W0gzqiuLtuWs4HUKVWitmvGEU9053+J
+oAgzp0eLXLQlmeOxUDoX7OC9G7+hu++4lRUwTBIB6K5FcR5th7iWXBrPT7LSGv6p
+FcQ4acI1I2qS8u2Z7VCwugc7DYw0XzaRgNKx+B4c5b0O+q7BHYfIeQVPPVwKCa/5
+TmewKZ03wkwCsXxMRMUlB4fKnGUg78sCC/vY4fn4gwvPVym3UVC/HAnsYEmqWs4A
+S3LceJ5Oo2ATK7z+jH+vZ82qLU7lB/Y4Qe9pOxftm2SINwWXpLet7VZ1IG6hSr04
+lNFxIiqT79CtbpZJJPbzCyFGVQbMX7EktZFZF+CKn7+K4kjVmzIhYsp4ID6JCcRy
+5S5to3ORBtUFqmHuL0oHIQYLBytYNgyHAcL3k3a1yfiw21F9bZmkVq5quL3oNmfC
+lH7V4OeXpEbemnbSDHTBNOTN0TMBlblDAiBxqLGDrdNPJlU5Rh7FnaXHOzTbIM0W
+fq2Hi1IhXmEeTiKE8vp5eg8pye02J6KDHxKuV/hfDxRQ7jBFbeQqu8rOTYiZsL2j
+pJc19LBvYtYCjpYwNCCQ
+=rVU2
 -----END PGP SIGNATURE-----
 
---------------enigF62DFAACA269378853BB95CC--
+--FkmkrVfFsRoUs1wW--
