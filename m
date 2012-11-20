@@ -1,91 +1,191 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
-Date: Tue, 20 Nov 2012 14:17:24 -0700
-Message-ID: <50ABF364.1010004@wwwdotorg.org>
-References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
- <1353142266-1289-2-git-send-email-andrew@lunn.ch>
- <50AA6E7E.5060501@wwwdotorg.org> <20121120083749.GM10259@lunn.ch>
- <50ABB9B6.1010506@wwwdotorg.org> <20121120203127.GX14643@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121120203127.GX14643-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Tue, 20 Nov 2012 21:54:29 +0000
+Message-ID: <20121120215429.B621F3E1821@localhost>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2012 01:31 PM, Andrew Lunn wrote:
-> On Tue, Nov 20, 2012 at 10:11:18AM -0700, Stephen Warren wrote:
->> On 11/20/2012 01:37 AM, Andrew Lunn wrote:
->>> Hi Jason
->>>
->>> These are good comments from Stephan that i want to address. However,
->>> i also don't want to delay the pull-requests direction arm-soc, the
->>> merge window is getting close. Both Linus and Anton have Acked the
->>> current version, so please go with what you have and i will produce a
->>> patch over the top. If its available before Arnd pulls, you can squash
->>> it, otherwise send it upstream as a standalone patch.
->>
->> I'm not sure I agree here; the comments I made re: the delays and
->> pulse-vs-level may affect the definition of the DT binding, and that's
->> something that should be correct from the start.
-> 
-> Hi Stephen
-> 
-> There should be no need to change the binding is a none-backwards
-> compatible way. The current delays work for all current users.
+On Sat, 17 Nov 2012 19:55:45 +0900, Alexandre Courbot <acourbot@nvidia.com> wrote:
+> Some device drivers (e.g. panel or backlights) need to follow precise
+> sequences for powering on and off, involving GPIOs, regulators, PWMs
+> and other power-related resources, with a defined powering order and
+> delays to respect between steps. These sequences are device-specific,
+> and do not belong to a particular driver - therefore they have been
+> performed by board-specific hook functions so far.
 
-Well, the binding isn't written for current users, the description is
-just a generic "GPIO to turn off the system".
+I must be honest, this series really makes me nervous...
 
-> If some
-> other user comes along which needs longer delays, they can add an
-> optional property which specified a longer delay.
+> With the advent of the device tree and of ARM kernels that are not
+> board-tied, we cannot rely on these board-specific hooks anymore but
 
-The DT maintainers have in the past expressed a wish to define DT
-bindings completely, rather than incrementally adding stuff if at all
-possible. I guess they weren't CC'd on this patch; I've added them here
-for comment. I'll defer to whatever they think here.
+This isn't strictly true. It is still perfectly fine to have board
+specific code when necessary. However, there is strong encouragement to
+enable that code in device drivers as much as possible and new board
+files need to have very strong justification.
 
-> The pulse-vs-level is needed for the potential PXA use case, which is
-> where i took this code from. When we first proposed this driver,
-> Russel King pointed to the PXA reset.c code and requested we create
-> something which PXA could use. The configuring the GPIO as an input
-> also come from PXA, which the current two uses user don't need.
-> 
-> I agree it need better documentation, but the current code covers all
-> bases. It will turn off a level based system, it will also turn off an
-> edge based system. There is no need to specify in the DT which is
-> needed, it will just work.
+> need a way to implement these sequences in a portable manner. This patch
+> introduces a simple interpreter that can execute such power sequences
+> encoded either as platform data or within the device tree. It also
+> introduces first support for regulator, GPIO and PWM resources.
 
-I'm not convinced the pulse logic can be correct for arbitrary users who
-expect a level-sensitive GPIO; what if the MPU (or whatever the GPIO is
-connected to) is confused by the pulse and fails to power down when it
-sees a pulse (e.g. as a safety measure), but would have worked fine with
-just a regular level?
+This is where I start getting nervous. Up to now I've strongly resisted
+adding any kind of interpreted code to the device tree. The model is to
+identify hardware, but require the driver to know how to control it. (as
+compared to ACPI which is entirely designed around executable
+bytecode).
 
->> The implementation of gpio_poweroff_do_poweroff() really doesn't seem to
->> make sense; related to the above.
->>
->> Also, probe deferral doesn't work, which will likely make this code
->> completely ineffective.
-> 
-> This code has been tested by the two current users. It works. However,
-> i agree about your comment here, and i will fix it in the follow up
-> patch.
+While the power sequences described here certainly cannot be confused
+with a Turing complete bytecode, it is a step in that direction. Plus,
+there will always be that new use case that needs just a "little new
+feature" to make this work for that too. Without thinking about how to
+handle that ahead of time is just asking for something to turn into a
+maintenance nightmare. It's just as important to specify what the limits
+of this approach are and when to punt to real driver code to handle a
+device.
 
-If this were a specific driver just for certain platforms, I think it
-might be OK. Yet the driver purports to be generic. As such, I think we
-need to make it explicitly work for the general case, not just happen to
-work for the platforms that have been tested so far.
+> +Power Sequences Steps
+> +---------------------
+> +Steps of a sequence describe an action to be performed on a resource. They
+> +always include a "type" property which indicates what kind of resource this
+> +step works on. Depending on the resource type, additional properties are defined
+> +to control the action to be performed.
+> +
+> +"delay" type required properties:
+> +  - delay: delay to wait (in microseconds)
+> +
+> +"regulator" type required properties:
+> +  - id: name of the regulator to use.
+> +  - enable / disable: one of these two empty properties must be present to
+> +                      enable or disable the resource
+> +
+> +"pwm" type required properties:
+> +  - id: name of the PWM to use.
+> +  - enable / disable: one of these two empty properties must be present to
+> +                      enable or disable the resource
+> +
+> +"gpio" type required properties:
+> +  - gpio: phandle of the GPIO to use.
+> +  - value: value this GPIO should take. Must be 0 or 1.
+> +
+> +Example
+> +-------
+> +Here are example sequences declared within a backlight device that use all the
+> +supported resources types:
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		...
+> +
+> +		/* resources used by the power sequences */
+> +		pwms = <&pwm 2 5000000>;
+> +		pwm-names = "backlight";
+> +		power-supply = <&backlight_reg>;
+> +
+> +		power-sequences {
+> +			power-on {
+> +				step0 {
+> +					type = "regulator";
+> +					id = "power";
+> +					enable;
+> +				};
+> +				step1 {
+> +					type = "delay";
+> +					delay = <10000>;
+> +				};
+> +				step2 {
+> +					type = "pwm";
+> +					id = "backlight";
+> +					enable;
+> +				};
+> +				step3 {
+> +					type = "gpio";
+> +					gpio = <&gpio 28 0>;
+> +					value = <1>;
+> +				};
+> +			};
+> +
+> +			power-off {
+> +				step0 {
+> +					type = "gpio";
+> +					gpio = <&gpio 28 0>;
+> +					value = <0>;
+> +				};
+> +				step1 {
+> +					type = "pwm";
+> +					id = "backlight";
+> +					disable;
+> +				};
+> +				step2 {
+> +					type = "delay";
+> +					delay = <10000>;
+> +				};
+> +				step3 {
+> +					type = "regulator";
+> +					id = "power";
+> +					disable;
+> +				};
+> +			};
+> +		};
+> +	};
+
+I think this will get very verbose in a hurry. Already this simple
+example is 45 lines long. Using the device tree structure to encode the
+language doesn't look like a very good fit. Not to mention that the
+order of operations is entirely based on the node name. Want to insert
+an operation between step0 and step1? Need to rename step1, step2, and
+step3 to do so.
+
+This implementation also isn't very consistent. The gpio is referenced
+with a phandle in step3/step0, but the regulator and pwm are referenced
+by id.
+
+As an alternative, what about something like the following?
+
+	backlight {
+		compatible = "pwm-backlight";
+		...
+
+		/* resources used by the power sequences */
+		pwms = <&pwm 2 5000000>;
+		pwm-names = "backlight";
+		regulators = <&backlight_reg>;
+		gpios = <&gpio 28 0>;
+
+		power-on-sequence = "r0e;d10000m;p0e;g0s";
+		power-off-sequence = "g0c;p0d;d10000m;r0d";
+	};
+
+I'm thinking about the scripts as trivial-to-parse ascii strings that
+have a very simple set of commands. The commands use resources already
+defined in the node. ie. 'g0' refers to the first entry in the gpios
+property. 'r0' for the regulator, 'p0' for the pwms, 'd' means delay. By
+no means take this as the format to use, it is just an example off the
+top of my head, but it is already way easier to work with than putting
+each command into a node.
+
+The trick is still to define a syntax that doesn't fall apart when it
+needs to be extended. I would also like to get opinions on whether or
+not conditionals or loops should be supported (ie. loop waiting for a
+status to change). If they should then we need to be a lot more careful
+about the design (and due to my aforementioned nervousness, somebody may
+need to get me therapy).
+
+(Mitch, I'll let you make the argument for using Forth here. To be
+honest, I'm not keen on defining any kind of new language, however
+simple, but neither am I keen to pull in Forth).
+
+> +Platform Data Format
+> +--------------------
+> +All relevant data structures for declaring power sequences are located in
+> +include/linux/power_seq.h.
+
+Hmm... If sequences are switched to a string instead, then platform_data
+should also use it. The power sequence data structures can be created at
+runtime by parsing the string.
+
+g.
