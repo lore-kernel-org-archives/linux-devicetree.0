@@ -1,21 +1,75 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCHv9 0/3] Runtime Interpreted Power Sequences
-Date: Tue, 20 Nov 2012 21:58:30 +0000
-Message-ID: <20121120215830.3A4C13E1821@localhost>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
+Date: Tue, 20 Nov 2012 22:00:32 +0000
+Message-ID: <20121120220032.5C8943E1821@localhost>
+References: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com> <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca> <50A52FEC.4080409@wwwdotorg.org> <CACxGe6tZOjMXR6CNDzDTSUkcERLiX-2+Qoad0bcPum5Z-Jxaaw@mail.gmail.com> <50A5350A.3070109@wwwdotorg.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <50A5350A.3070109@wwwdotorg.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-arch@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 17 Nov 2012 19:55:44 +0900, Alexandre Courbot <acourbot@nvidia.com> wrote:
-> Apologies for sending two patchsets in two days - the main purpose
-> of this new revision is to add the linux-arm-kernel list to the
-> audience. A few suggestions from v8 have also been added.
+On Thu, 15 Nov 2012 11:31:38 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 11/15/2012 11:20 AM, Grant Likely wrote:
+> > On Thu, Nov 15, 2012 at 6:09 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> >> On 11/15/2012 04:51 AM, Grant Likely wrote:
+> >>> Grant Likely wrote:
+> >>>> Or how about: I could pick up the patch with only the MIPS hunk and
+> >>>> every other user can be fixed up independently to use the new rule.
+> >>>
+> >>> Here's a trial patch to fix up ARM. Does this look correct? This patch
+> >>> depends on the generic dtb build rule already being applied.
+> >>
+> >> I think the patch looks OK technically, except for one minor comment below.
+> >>
+> >> One issue with this patch is that it moves *.dts from arch/arm/boot to
+> >> arch/arm/boot/dts, which means everyone has to adjust their scripts/...
+> >> that package/install/... the kernel. I guess it's an easy change for
+> >> people to make, but could easily catch people unawares if they do
+> >> incremental builds so that arch/arm/boot/*.dtb still exists but is stale.
+> > 
+> > True. We could temporarily remove or rename if the same file exists in
+> > the directory below to help people catch that problem. I really would
+> > like to clean up that build rule to be consistent though.
+> > 
+> > The other option is to move all the .dts files into the boot
+> > directory, but I don't think that is a good idea at all.
+> 
+> Maybe we can just add "rm *.dtb" to the following rules in
+> boot/Makefile, before calling the child make?
+> 
+> %.dtb: scripts
+> -	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
+> +	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
+> 
+>  dtbs: scripts
+> -	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
+> +	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
+> 
+> >>> +targets += dtbs
+> >>
+> >> Doesn't that make the "dtbs" target always run by default? Perhaps
+> >> that's reasonable though, and doesn't actually affect anything since the
+> >> make command for this directory always specifies an explicit target?
+> >>
+> >> Or, was that meant to be the following that got removed from ../Makefile?
+> >>
+> >> targets += $(dtb-y)
+> > 
+> > Yes it is supposed to be the same thing. Doesn't it effectively do the
+> > same since dtbs depends on $(dtb-y)?
+> 
+> Ah, I think so yes.
+> 
+> I guess anyway that $(targets) is presumably ignored if an explicit
+> build target is requested from make.
 
-Just to be clear from my previous reply, don't merge this series. The DT
-binding is not good.
+Can you pull into your series and get it working. The merge window is
+going to open this week, so I have to push it back to v3.9 anyway.
 
 g.
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
