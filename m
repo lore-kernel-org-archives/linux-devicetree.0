@@ -1,55 +1,52 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] ASoC: atmel-pcm: add dma support
-Date: Tue, 20 Nov 2012 17:57:30 +0900
-Message-ID: <20121120085728.GX10560@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/2] ASoC: atmel-ssc: add phybase in device structure
+Date: Tue, 20 Nov 2012 18:21:30 +0900
+Message-ID: <20121120092128.GA10560@opensource.wolfsonmicro.com>
 References: <1353400698-19384-1-git-send-email-voice.shen@atmel.com>
- <1353400698-19384-2-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mu6rDKe19l+MneQx"
+	protocol="application/pgp-signature"; boundary="UbqA5qh2E+WCbFAw"
 Return-path: <linux-sound-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1353400698-19384-2-git-send-email-voice.shen@atmel.com>
+In-Reply-To: <1353400698-19384-1-git-send-email-voice.shen@atmel.com>
 Sender: linux-sound-owner@vger.kernel.org
 To: Bo Shen <voice.shen@atmel.com>
 Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
 
---mu6rDKe19l+MneQx
+--UbqA5qh2E+WCbFAw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 20, 2012 at 04:38:18PM +0800, Bo Shen wrote:
-> Change xfer_size name to apply to PDC and DMA aswell.
-> Specify overrun bit in interrupt mask.
-> Add dmaengine specific routines and replace PDC ones in
-> pcm_ops if appropriate.
-> Uses cyclic DMA API for queuing samples.
+On Tue, Nov 20, 2012 at 04:38:17PM +0800, Bo Shen wrote:
+> From: Nicolas Ferre <nicolas.ferre@atmel.com>
+>=20
+> Useful for future dmaengine use.
 
-If you're using dmaengine you really need a *very* good reason not to
-use the core dmaengine support...
+Applied, thanks.
 
---mu6rDKe19l+MneQx
+--UbqA5qh2E+WCbFAw
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQq0XxAAoJELSic+t+oim9khoP/i2TYwmErCeIXa+V3s2dGZJH
-XBRTxpajBS7NJhHLV5S5M7cTe987kePpdEzmGoQqb/Z3UMeoyADPzitrEXJu19KZ
-bhGMLiRRmpRY/i0DQ1iQ3hFVVua1CFcQi+J2INHrXRt3k7QlajGwEF7F5lS/KiRO
-84OwgQ2ZaFFK1jbZwtSd2YhdPw0tD22VyEwhw+6Y2j3dd4KoS75CKTt/72O1aYkc
-fVvR1bZG+P6zkNtMATb9iqs0P5hsL4Hw40fhaXz4MuLTBmBZGstcHNWM3pjHgFY2
-nrpa68Rfj68gm017SaoyghoLpt5HJ/q7nJ76G2UQsIfPCbd4aKW1L+ycEANEwzku
-wZWQ1RAk4fMTE7aPZvOtrbepAawpQBJ66TBGJNOG0XMn/EFmolp5In1on8Oq59x4
-eBTh3+eQwlHy10lUdMWAeNSOF0upc04nXsRnCC6+Yueodi461sga+dwK0Nrzhldo
-Y/kzWn2oy5h3SW/PZPiPOMpXIUuWRcYmzV1EoxtJfGsUr/UD1TDTkwHh4bIl9mKQ
-//moeRgKf9MomVaVpRuVWbU02IrPVP6TBgB7RH4b+AtVRpLj4pxiG0JkyC5dWyca
-wxkdUfB5lhfcslBmdnJIY9jBhvXMYZtsvc3s7E9Sv2KWK8S/bYjcLFynvK2E/fCN
-TuQ67ZAE+cLw/GbtqRqH
-=xZYv
+iQIcBAEBAgAGBQJQq0uHAAoJELSic+t+oim9L1YP/ArHl7CnehQyJUVhBRqQhecb
+QGuQjCkXHB7rllj4p6GWjJNvI0IAri+PfWsGjCdPcht0VSayDvFgUU48QTFVg3/r
+t9yTJGTCOyjdB86nxUR/psON8w1lqihWHHMTG+ZAQrWNlzG3U6eXY2S0iGi23Cgg
+jHfMTmxVsGQ/IhcVlTltRXBF/GVqHBGe9s4vPLng3p47Q6n/AMg8sJoT608dB95R
+Qy0oEu3sCpr0HUT9FNyf2AWCxz82UWzj0AF4T0Y5PtSFxVrQr6+Bhiyge4EpSOik
+RD5YjO0v17TlTH6Js8L3GkzZHYkDj0uBHN9DOZzmS4Tmk7UREdNUYo30AQAwwhCm
+R8yMifBlNEWnJ2ha89i6SwctpnolV3TLom7HVie9NaOcuxWl5hpYl24fx+UhzMjU
+2IRFpXggnZ6WuhmhzNMCDUqcpBE+myWoljHps+DPiSTo5+RuWQl0Ros4Mj/ormi7
+VH8WJ85ctskYyLTvb9HKQd7liJ97pm695zjnxyPRvTDjXhUzK2kNVfXrUftLARsy
+1d0vMdNNygnfb6a1olZtWaEzENYD8AXFtXimWGZ4nuyDZQ5FLW2vNDVEdpsAwnML
+AbePJ/KYBLDQwJZ8hfnw2x9x+6jRcFCJF3H4bdjYNqp2d2iqFIyOTzIX3uBwVVyw
+v3wO38vWfxFiFd9bSKg+
+=EPCG
 -----END PGP SIGNATURE-----
 
---mu6rDKe19l+MneQx--
+--UbqA5qh2E+WCbFAw--
