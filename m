@@ -1,18 +1,16 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v5 3/8] watchdog: orion_wdt: add timeout-sec property
- binding
-Date: Tue, 20 Nov 2012 07:58:34 -0500
-Message-ID: <20121120125834.GU22106@titan.lakedaemon.net>
+Subject: Re: [PATCH v5 7/8] watchdog: orion_wdt: move the min_timeout
+ initialization
+Date: Tue, 20 Nov 2012 07:59:16 -0500
+Message-ID: <20121120125916.GV22106@titan.lakedaemon.net>
 References: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
- <1353334243-16703-4-git-send-email-fabio.porcedda@gmail.com>
- <20121119160643.GI22106@titan.lakedaemon.net>
- <CAHkwnC-2MXtNODnqjOvFuHt7ToqvMqeDjnqdGyGfMacKBWzoLw@mail.gmail.com>
+ <1353334243-16703-8-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAHkwnC-2MXtNODnqjOvFuHt7ToqvMqeDjnqdGyGfMacKBWzoLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1353334243-16703-8-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -27,53 +25,50 @@ To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBOb3YgMjAsIDIwMTIgYXQgMDE6NTA6NDZQTSArMDEwMCwgRmFiaW8gUG9yY2VkZGEg
-d3JvdGU6Cj4gT24gTW9uLCBOb3YgMTksIDIwMTIgYXQgNTowNiBQTSwgSmFzb24gQ29vcGVyIDxq
-YXNvbkBsYWtlZGFlbW9uLm5ldD4gd3JvdGU6Cj4gPiBPbiBNb24sIE5vdiAxOSwgMjAxMiBhdCAw
-MzoxMDozOFBNICswMTAwLCBGYWJpbyBQb3JjZWRkYSB3cm90ZToKPiA+PiBPbmx5IGNvbXBpbGUg
-dGVzdGVkLgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogRmFiaW8gUG9yY2VkZGEgPGZhYmlvLnBv
-cmNlZGRhQGdtYWlsLmNvbT4KPiA+PiBDYzogSmFzb24gQ29vcGVyIDxqYXNvbkBsYWtlZGFlbW9u
-Lm5ldD4KPiA+PiBDYzogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPgo+ID4+IC0tLQo+ID4+
-ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbWFydmVsLnR4dCB8
-IDUgKysrKysKPiA+PiAgZHJpdmVycy93YXRjaGRvZy9vcmlvbl93ZHQuYyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCA4ICsrKy0tLS0tCj4gPj4gIDIgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRp
-b25zKCspLCA1IGRlbGV0aW9ucygtKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tYXJ2ZWwudHh0IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL21hcnZlbC50eHQKPiA+PiBpbmRleCAwYjI1
-MDNhLi41ZGM4ZDMwIDEwMDY0NAo+ID4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy93YXRjaGRvZy9tYXJ2ZWwudHh0Cj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL21hcnZlbC50eHQKPiA+PiBAQCAtNSwxMCArNSwxNSBA
-QCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ID4+ICAtIENvbXBhdGliaWxpdHkgOiAibWFydmVsbCxv
-cmlvbi13ZHQiCj4gPj4gIC0gcmVnICAgICAgICAgICAgICAgIDogQWRkcmVzcyBvZiB0aGUgdGlt
-ZXIgcmVnaXN0ZXJzCj4gPj4KPiA+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+PiArCj4gPj4g
-Ky0gdGltZW91dC1zZWMgICAgICAgIDogQ29udGFpbnMgdGhlIHdhdGNoZG9nIHRpbWVvdXQgaW4g
-c2Vjb25kcwo+ID4+ICsKPiA+PiAgRXhhbXBsZToKPiA+Pgo+ID4+ICAgICAgIHdkdEAyMDMwMCB7
-Cj4gPj4gICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1hcnZlbGwsb3Jpb24td2R0IjsKPiA+
-PiAgICAgICAgICAgICAgIHJlZyA9IDwweDIwMzAwIDB4Mjg+Owo+ID4+ICsgICAgICAgICAgICAg
-dGltZW91dC1zZWMgPSA8MTA+Owo+ID4+ICAgICAgICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+
-ID4+ICAgICAgIH07Cj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvb3Jpb25fd2R0
-LmMgYi9kcml2ZXJzL3dhdGNoZG9nL29yaW9uX3dkdC5jCj4gPj4gaW5kZXggYzIwZjk2Yi4uNDQ2
-YTNlOSAxMDA2NDQKPiA+PiAtLS0gYS9kcml2ZXJzL3dhdGNoZG9nL29yaW9uX3dkdC5jCj4gPj4g
-KysrIGIvZHJpdmVycy93YXRjaGRvZy9vcmlvbl93ZHQuYwo+ID4+IEBAIC0xNjIsMTIgKzE2Miwx
-MCBAQCBzdGF0aWMgaW50IF9fZGV2aW5pdCBvcmlvbl93ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikKPiA+Pgo+ID4+ICAgICAgIHdkdF9tYXhfZHVyYXRpb24gPSBXRFRfTUFY
-X0NZQ0xFX0NPVU5UIC8gd2R0X3RjbGs7Cj4gPj4KPiA+PiAtICAgICBpZiAoKGhlYXJ0YmVhdCA8
-IDEpIHx8IChoZWFydGJlYXQgPiB3ZHRfbWF4X2R1cmF0aW9uKSkKPiA+PiAtICAgICAgICAgICAg
-IGhlYXJ0YmVhdCA9IHdkdF9tYXhfZHVyYXRpb247Cj4gPj4gLQo+ID4+IC0gICAgIG9yaW9uX3dk
-dC50aW1lb3V0ID0gaGVhcnRiZWF0Owo+ID4+ICAgICAgIG9yaW9uX3dkdC5taW5fdGltZW91dCA9
-IDE7Cj4gPj4gKyAgICAgb3Jpb25fd2R0LnRpbWVvdXQgPSB3ZHRfbWF4X2R1cmF0aW9uOwo+ID4+
-ICAgICAgIG9yaW9uX3dkdC5tYXhfdGltZW91dCA9IHdkdF9tYXhfZHVyYXRpb247Cj4gPj4gKyAg
-ICAgd2F0Y2hkb2dfaW5pdF90aW1lb3V0KCZvcmlvbl93ZHQsIGhlYXJ0YmVhdCwgcGRldi0+ZGV2
-Lm9mX25vZGUpOwo+ID4KPiA+IEhpIEZhYmlvLAo+ID4KPiA+IFRoZXJlIGFyZSBtYW55IGJvYXJk
-cyB1c2luZyBwZGF0YSwgIUNPTkZJR19PRi4gIEhhdmUgeW91IGNvbXBpbGUtdGVzdGVkCj4gPiB0
-aGlzIHdpdGhvdXQgQ09ORklHX09GPwo+IAo+IEhpIEphc29uLAo+IAo+IEkndmUgdGVzdGVkIHdp
-dGggYW5kIHdpdGhvdXQgdGhlIENPTkZJR19PRiBkZWZpbmUuCj4gCj4gVGhlIGZpcnN0IHRpbWUg
-SeKAmXZlIHVzZWQgdGhlIGtpcmt3b29kX2RlZmNvbmZpZyB3aXRob3V0IG1vZGlmaWNhdGlvbnMs
-Cj4gdGhlIHNlY29uZCB0aW1lIEnigJl2ZSBlbmFibGVkIG9ubHkgdGhlIENPTkZJR19NQUNIX1NI
-RUVWQVBMVUcgYW5kCj4gZGlzYWJsZWQgVVNFX09GLgo+IAo+IEluIGJvdGggY2FzZXMgdGhlIG9y
-aW9uX3dkdCBkcml2ZXIgY29tcGlsZSB3aXRob3V0IGFueSB3YXJuaW5nLgo+IAo+IFRoYW5rcyBm
-b3IgdGhlIHJldmlldy4KCkFja2VkLWJ5OiBKYXNvbiBDb29wZXIgPGphc29uQGxha2VkYWVtb24u
-bmV0PgoKZm9yIHRoZSBvcmlvbl93ZHQgYml0cy4KCnRoeCwKCkphc29uLgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFp
-bGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlz
-dHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Mon, Nov 19, 2012 at 03:10:42PM +0100, Fabio Porcedda wrote:
+> Move the min_timeout initialization inside the orion_wdt definition.
+> 
+> Only compile tested.
+> 
+> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+
+thx,
+
+Jason.
+
+> ---
+>  drivers/watchdog/orion_wdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
+> index 446a3e9..3b4e228 100644
+> --- a/drivers/watchdog/orion_wdt.c
+> +++ b/drivers/watchdog/orion_wdt.c
+> @@ -140,6 +140,7 @@ static const struct watchdog_ops orion_wdt_ops = {
+>  static struct watchdog_device orion_wdt = {
+>  	.info = &orion_wdt_info,
+>  	.ops = &orion_wdt_ops,
+> +	.min_timeout = 1,
+>  };
+>  
+>  static int __devinit orion_wdt_probe(struct platform_device *pdev)
+> @@ -162,7 +163,6 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+>  
+>  	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
+>  
+> -	orion_wdt.min_timeout = 1;
+>  	orion_wdt.timeout = wdt_max_duration;
+>  	orion_wdt.max_timeout = wdt_max_duration;
+>  	watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
+> -- 
+> 1.8.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
