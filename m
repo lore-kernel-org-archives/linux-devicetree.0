@@ -1,16 +1,15 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v5 7/8] watchdog: orion_wdt: move the min_timeout
- initialization
-Date: Tue, 20 Nov 2012 07:59:16 -0500
-Message-ID: <20121120125916.GV22106@titan.lakedaemon.net>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 6/8] watchdog: at91sam9_wdt: add timeout-sec property
+ binding
+Date: Tue, 20 Nov 2012 14:01:03 +0100
+Message-ID: <50AB7F0F.1090005@atmel.com>
 References: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
- <1353334243-16703-8-git-send-email-fabio.porcedda@gmail.com>
+ <1353334243-16703-7-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1353334243-16703-8-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1353334243-16703-7-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,53 +21,111 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2012 at 03:10:42PM +0100, Fabio Porcedda wrote:
-> Move the min_timeout initialization inside the orion_wdt definition.
-> 
-> Only compile tested.
+On 11/19/2012 03:10 PM, Fabio Porcedda :
+> Tested on at91sam9260 board (evk-pro3).
 > 
 > Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
+> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Seems good:
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-thx,
-
-Jason.
-
+> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 > ---
->  drivers/watchdog/orion_wdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/watchdog/atmel-wdt.txt |  4 ++++
+>  drivers/watchdog/Kconfig                                 |  1 +
+>  drivers/watchdog/at91sam9_wdt.c                          | 16 +++++++++++++---
+>  3 files changed, 18 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-> index 446a3e9..3b4e228 100644
-> --- a/drivers/watchdog/orion_wdt.c
-> +++ b/drivers/watchdog/orion_wdt.c
-> @@ -140,6 +140,7 @@ static const struct watchdog_ops orion_wdt_ops = {
->  static struct watchdog_device orion_wdt = {
->  	.info = &orion_wdt_info,
->  	.ops = &orion_wdt_ops,
-> +	.min_timeout = 1,
+> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> index 2957ebb..fcdd48f 100644
+> --- a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
+> @@ -7,9 +7,13 @@ Required properties:
+>  - reg: physical base address of the controller and length of memory mapped
+>    region.
+>  
+> +Optional properties:
+> +- timeout-sec: contains the watchdog timeout in seconds.
+> +
+>  Example:
+>  
+>  	watchdog@fffffd40 {
+>  		compatible = "atmel,at91sam9260-wdt";
+>  		reg = <0xfffffd40 0x10>;
+> +		timeout-sec = <10>;
+>  	};
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index ad1bb93..dda695f 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -114,6 +114,7 @@ config AT91RM9200_WATCHDOG
+>  config AT91SAM9X_WATCHDOG
+>  	tristate "AT91SAM9X / AT91CAP9 watchdog"
+>  	depends on ARCH_AT91 && !ARCH_AT91RM9200
+> +	select WATCHDOG_CORE
+>  	help
+>  	  Watchdog timer embedded into AT91SAM9X and AT91CAP9 chips. This will
+>  	  reboot your system when the timeout is reached.
+> diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
+> index dc42e44..d864dc4 100644
+> --- a/drivers/watchdog/at91sam9_wdt.c
+> +++ b/drivers/watchdog/at91sam9_wdt.c
+> @@ -57,8 +57,10 @@
+>  #define WDT_TIMEOUT	(HZ/2)
+>  
+>  /* User land timeout */
+> +#define MIN_HEARTBEAT 1
+> +#define MAX_HEARTBEAT 16
+>  #define WDT_HEARTBEAT 15
+> -static int heartbeat = WDT_HEARTBEAT;
+> +static int heartbeat;
+>  module_param(heartbeat, int, 0);
+>  MODULE_PARM_DESC(heartbeat, "Watchdog heartbeats in seconds. "
+>  	"(default = " __MODULE_STRING(WDT_HEARTBEAT) ")");
+> @@ -255,6 +257,12 @@ static struct miscdevice at91wdt_miscdev = {
+>  	.fops		= &at91wdt_fops,
 >  };
 >  
->  static int __devinit orion_wdt_probe(struct platform_device *pdev)
-> @@ -162,7 +163,6 @@ static int __devinit orion_wdt_probe(struct platform_device *pdev)
+> +static struct watchdog_device at91wdt_wdd __initdata = {
+> +	.timeout = WDT_HEARTBEAT,
+> +	.min_timeout = MIN_HEARTBEAT,
+> +	.max_timeout = MAX_HEARTBEAT,
+> +};
+> +
+>  static int __init at91wdt_probe(struct platform_device *pdev)
+>  {
+>  	struct resource	*r;
+> @@ -273,6 +281,8 @@ static int __init at91wdt_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
 >  
->  	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
+> +	watchdog_init_timeout(&at91wdt_wdd, heartbeat, pdev->dev.of_node);
+> +
+>  	/* Set watchdog */
+>  	res = at91_wdt_settimeout(ms_to_ticks(WDT_HW_TIMEOUT * 1000));
+>  	if (res)
+> @@ -282,12 +292,12 @@ static int __init at91wdt_probe(struct platform_device *pdev)
+>  	if (res)
+>  		return res;
 >  
-> -	orion_wdt.min_timeout = 1;
->  	orion_wdt.timeout = wdt_max_duration;
->  	orion_wdt.max_timeout = wdt_max_duration;
->  	watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
-> -- 
-> 1.8.0
+> -	at91wdt_private.next_heartbeat = jiffies + heartbeat * HZ;
+> +	at91wdt_private.next_heartbeat = jiffies + at91wdt_wdd.timeout * HZ;
+>  	setup_timer(&at91wdt_private.timer, at91_ping, 0);
+>  	mod_timer(&at91wdt_private.timer, jiffies + WDT_TIMEOUT);
+>  
+>  	pr_info("enabled (heartbeat=%d sec, nowayout=%d)\n",
+> -		heartbeat, nowayout);
+> +		at91wdt_wdd.timeout, nowayout);
+>  
+>  	return 0;
+>  }
 > 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+-- 
+Nicolas Ferre
