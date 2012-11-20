@@ -1,75 +1,128 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V5 1/2] kbuild: centralize .dts->.dtb rule
-Date: Tue, 20 Nov 2012 22:00:32 +0000
-Message-ID: <20121120220032.5C8943E1821@localhost>
-References: <CACxGe6vhd_4rcBbYyqtvbySVaY6XpNE+HQq42PZhKe5yt=zcaA@mail.gmail.com> <1352980284-2819-1-git-send-email-grant.likely@secretlab.ca> <50A52FEC.4080409@wwwdotorg.org> <CACxGe6tZOjMXR6CNDzDTSUkcERLiX-2+Qoad0bcPum5Z-Jxaaw@mail.gmail.com> <50A5350A.3070109@wwwdotorg.org>
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <50A5350A.3070109@wwwdotorg.org>
-Sender: linux-arch-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-arch@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
+Date: Tue, 20 Nov 2012 23:05:24 +0100
+Message-ID: <20121120220524.GZ14643@lunn.ch>
+References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
+ <1353142266-1289-2-git-send-email-andrew@lunn.ch>
+ <50AA6E7E.5060501@wwwdotorg.org> <20121120083749.GM10259@lunn.ch>
+ <50ABB9B6.1010506@wwwdotorg.org> <20121120203127.GX14643@lunn.ch>
+ <50ABF364.1010004@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50ABF364.1010004-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2012 11:31:38 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 11/15/2012 11:20 AM, Grant Likely wrote:
-> > On Thu, Nov 15, 2012 at 6:09 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> >> On 11/15/2012 04:51 AM, Grant Likely wrote:
-> >>> Grant Likely wrote:
-> >>>> Or how about: I could pick up the patch with only the MIPS hunk and
-> >>>> every other user can be fixed up independently to use the new rule.
+On Tue, Nov 20, 2012 at 02:17:24PM -0700, Stephen Warren wrote:
+> On 11/20/2012 01:31 PM, Andrew Lunn wrote:
+> > On Tue, Nov 20, 2012 at 10:11:18AM -0700, Stephen Warren wrote:
+> >> On 11/20/2012 01:37 AM, Andrew Lunn wrote:
+> >>> Hi Jason
 > >>>
-> >>> Here's a trial patch to fix up ARM. Does this look correct? This patch
-> >>> depends on the generic dtb build rule already being applied.
+> >>> These are good comments from Stephan that i want to address. However,
+> >>> i also don't want to delay the pull-requests direction arm-soc, the
+> >>> merge window is getting close. Both Linus and Anton have Acked the
+> >>> current version, so please go with what you have and i will produce a
+> >>> patch over the top. If its available before Arnd pulls, you can squash
+> >>> it, otherwise send it upstream as a standalone patch.
 > >>
-> >> I think the patch looks OK technically, except for one minor comment below.
-> >>
-> >> One issue with this patch is that it moves *.dts from arch/arm/boot to
-> >> arch/arm/boot/dts, which means everyone has to adjust their scripts/...
-> >> that package/install/... the kernel. I guess it's an easy change for
-> >> people to make, but could easily catch people unawares if they do
-> >> incremental builds so that arch/arm/boot/*.dtb still exists but is stale.
+> >> I'm not sure I agree here; the comments I made re: the delays and
+> >> pulse-vs-level may affect the definition of the DT binding, and that's
+> >> something that should be correct from the start.
 > > 
-> > True. We could temporarily remove or rename if the same file exists in
-> > the directory below to help people catch that problem. I really would
-> > like to clean up that build rule to be consistent though.
+> > Hi Stephen
 > > 
-> > The other option is to move all the .dts files into the boot
-> > directory, but I don't think that is a good idea at all.
+> > There should be no need to change the binding is a none-backwards
+> > compatible way. The current delays work for all current users.
 > 
-> Maybe we can just add "rm *.dtb" to the following rules in
-> boot/Makefile, before calling the child make?
+> Well, the binding isn't written for current users, the description is
+> just a generic "GPIO to turn off the system".
+
+The current binding documentation is maybe lacking. But the binding
+itself fits the current users.
+
+> > If some
+> > other user comes along which needs longer delays, they can add an
+> > optional property which specified a longer delay.
 > 
-> %.dtb: scripts
-> -	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-> +	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
-> 
->  dtbs: scripts
-> -	$(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $(boot)/$@
-> +	$(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) dtbs
-> 
-> >>> +targets += dtbs
-> >>
-> >> Doesn't that make the "dtbs" target always run by default? Perhaps
-> >> that's reasonable though, and doesn't actually affect anything since the
-> >> make command for this directory always specifies an explicit target?
-> >>
-> >> Or, was that meant to be the following that got removed from ../Makefile?
-> >>
-> >> targets += $(dtb-y)
+> The DT maintainers have in the past expressed a wish to define DT
+> bindings completely, rather than incrementally adding stuff if at all
+> possible. I guess they weren't CC'd on this patch; I've added them here
+> for comment. I'll defer to whatever they think here.
+
+They were CC: I learn't the hard way with a USB binding....
+
+> > The pulse-vs-level is needed for the potential PXA use case, which is
+> > where i took this code from. When we first proposed this driver,
+> > Russel King pointed to the PXA reset.c code and requested we create
+> > something which PXA could use. The configuring the GPIO as an input
+> > also come from PXA, which the current two uses user don't need.
 > > 
-> > Yes it is supposed to be the same thing. Doesn't it effectively do the
-> > same since dtbs depends on $(dtb-y)?
+> > I agree it need better documentation, but the current code covers all
+> > bases. It will turn off a level based system, it will also turn off an
+> > edge based system. There is no need to specify in the DT which is
+> > needed, it will just work.
 > 
-> Ah, I think so yes.
-> 
-> I guess anyway that $(targets) is presumably ignored if an explicit
-> build target is requested from make.
+> I'm not convinced the pulse logic can be correct for arbitrary users who
+> expect a level-sensitive GPIO; what if the MPU (or whatever the GPIO is
+> connected to) is confused by the pulse and fails to power down when it
+> sees a pulse (e.g. as a safety measure), but would have worked fine with
+> just a regular level?
 
-Can you pull into your series and get it working. The merge window is
-going to open this week, so I have to push it back to v3.9 anyway.
+Lets go through the sequence for a regular level off.....
 
-g.
+At driver load time, assuming the optional input properties is not
+present, the GPIO line is driven inactive. At power down time, its
+driven active. One of four things can happen:
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+1) The power goes off. End of story 
+
+2) The delay is not long enough. In that case it goes inactive again,
+there is a short pause, and it goes active again, and the power goes
+off. End of story.
+
+3) The delay is not long enough. In that case it goes inactive again,
+there is a short pause, and it goes active again. There is another
+pause, this time much longer.  Still the power does not go off and we
+hit the WARN_ON(1); Some time after that, the power goes off. Not so
+nice, but at least the power went off eventually.
+
+4) The delay is not long enough. In that case it goes inactive again,
+there is a short pause, and it goes active again. There is another
+pause, this time much longer.  Still the power does not go off and we
+hit the WARN_ON(1); The power remains on, until somebody pulls the
+plug.
+
+Your scenario is that a 100ms pulse confuses the MPU, and after that,
+it won't turn off given a much longer period of the gpio being
+active. We run into 4). Is that really likely? a 100ms is a long
+time. I could imaging a MPU ignoring a 1us pulse, or even a 1ms
+pulse. But a 100ms pulse? Also, after such a pulse, it simply refuses
+to turn off all together after 3000ms of active GPIO? Is that a
+general purpose piece of hardware which can be driven by a general
+purpose driver, or is it a specific piece of hardware which needs its
+own driver?
+
+> If this were a specific driver just for certain platforms, I think it
+> might be OK. Yet the driver purports to be generic. As such, I think we
+> need to make it explicitly work for the general case, not just happen to
+> work for the platforms that have been tested so far.
+
+And as i keep saying, i will submit a patch to fix this issue. It
+won't be tomorrow, but it won't be longer than a week.
+
+      Andrew
