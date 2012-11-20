@@ -1,46 +1,63 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [RFC] Device Tree Overlays Proposal (Was Re: capebus moving omap_devices to mach-omap2)
-Date: Tue, 20 Nov 2012 17:09:39 +0000
-Message-ID: <20121120170939.4F0043E102F@localhost>
-References: <CACxGe6vu8ek7-K-yDDMXyg9x-oKiFt_cSz+Pz-yZf5U5vwe=0g@mail.gmail.com> <50999145.2070306@wwwdotorg.org> <CACxGe6v=+8UKerzp9z5cZo6TbXJQ4Nb=fpKgfkuvib_B-BoVdw@mail.gmail.com> <509D9089.7020407@wwwdotorg.org> <20121117222718.GF31527@game.jcrosoft.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121117222718.GF31527@game.jcrosoft.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Kevin Hilman <khilman@ti.com>, Matt Porter <mporter@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <panto@antoniou-consulting.com>, linux-kernel <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Deepak Saxena <dsaxena@linaro.org>, Scott Wood <scottwood@freescale.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V4 5/5] arm: mvebu: Added SMP support for Armada XP
+Date: Tue, 20 Nov 2012 17:09:44 +0000
+Message-ID: <20121120170944.GH27765@mudshark.cambridge.arm.com>
+References: <1353357360-7242-1-git-send-email-gregory.clement@free-electrons.com>
+ <1353357360-7242-6-git-send-email-gregory.clement@free-electrons.com>
+ <20121120164058.GB27765@mudshark.cambridge.arm.com>
+ <50ABB499.6090508@free-electrons.com>
+ <20121120170127.GE27765@mudshark.cambridge.arm.com>
+ <20121120180759.27df512f@skate>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121120180759.27df512f@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <Leif.Lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWOunwaRDDq4rA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 17 Nov 2012 23:27:18 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com> wrote:
-> On 16:23 Fri 09 Nov     , Stephen Warren wrote:
-> > On 11/09/2012 09:28 AM, Grant Likely wrote:
-> > However, I think the process for an end-user needs to be as simple as
-> > "drop this .dts/.dtb file into some standard directory", and I imagine
-> > it'll be much easier for distros/... to make that process work if
-> > they're dealing with a .dtb that they can just blast into the kernel's
-> > firmware loader interface, rather than having to also locate the
-> > base-board .dts/.dtb file, and run dtc and/or other tools on both .dts
-> > files together.
-> I've exactly the same issue on Calao or the new atmel boards
-> 
-> We have lego boards
-> 
-> with different cpu-modues running on differetn mother boards with
-> diferrentdaugther boards
-> 
-> on atmel we are lucky enough we can identity via 1-wire all of them but
-> on Calao no
-> 
-> On Somfy platform we can detect hardware version and need different pinctrl
-> 
-> So personally I'll prefer to be able to request dtb from the kernel or push
-> them from the userspace as it will depends where you will detect the hardware
-> present
-> 
-> The main concern will which part of the kenel will now handle hw detection?
+On Tue, Nov 20, 2012 at 05:07:59PM +0000, Thomas Petazzoni wrote:
+> Dear Will Deacon,
+> =
 
-Along the lines of what you said above, it will depend on the board. If
-the board /can/ be detected, then the kernel should do so and request
-the appropriate configuration. If it cannot, then it simply must be left
-up to either userspace or something explicit in the boot devicetree.
+> On Tue, 20 Nov 2012 17:01:27 +0000, Will Deacon wrote:
+> =
 
-g.
+> > > I prefer to keep them separate, as we can use coherency without SMP.
+> > > That's why I create the coherency_ll.S file instead of putting
+> > > everything in this file.
+> > =
+
+> > Hmm, can you elaborate a bit more on coherency without SMP please? Do
+> > these controls also affect IO coherency?
+> =
+
+> The coherency unit does coherency between CPUs, but also between the
+> CPU and the devices for DMA. So for example the MV78230 is a single-core
+> variant of the Armada XP, so having CONFIG_SMP for it is useless, but
+> you still want the CPU to join the coherency fabric in order to provide
+> coherency with I/O.
+> =
+
+> Thanks to the coherency unit, we have an almost DMA coherent
+> architecture (see the HW I/O coherency patches from Gr=E9gory for
+> details).
+
+Ok, gotcha -- I didn't realise it was all controlled by the same register on
+the CPU side.
+
+Thanks for the explanation,
+
+Will
