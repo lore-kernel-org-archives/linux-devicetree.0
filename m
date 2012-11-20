@@ -1,56 +1,50 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v12 0/6] of: add display helper
-Date: Tue, 20 Nov 2012 16:54:50 +0100
-Message-ID: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH v3 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
+Date: Tue, 20 Nov 2012 16:59:48 +0100
+Message-ID: <87mwycjmdn.fsf@dell.be.48ers.dk>
+References: <1351869956-2787-1-git-send-email-zonque@gmail.com>
+	<1351869956-2787-5-git-send-email-zonque@gmail.com>
+	<518397C60809E147AF5323E0420B992E3E9DA81F@DBDE01.ent.ti.com>
+	<5097B7EE.3000508@gmail.com>
+	<518397C60809E147AF5323E0420B992E3E9DC1F1@DBDE01.ent.ti.com>
+	<509A2E75.5060307@gmail.com>
+	<518397C60809E147AF5323E0420B992E3E9DE420@DBDE01.ent.ti.com>
+	<509EA360.2050504@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <509EA360.2050504@gmail.com> (Daniel Mack's message of "Sat, 10
+	Nov 2012 19:56:32 +0100")
+Sender: linux-omap-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: "Philip, Avinash" <avinashphilip@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "paul@pwsan.com" <paul@pwsan.com>, "Mohammed, Afzal" <afzal@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "Hunter, Jon" <jon-hunter@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+>>>>> "Daniel" == Daniel Mack <zonque@gmail.com> writes:
 
-Changes since v11:
-	- make pointers const where applicable
-	- add reviewed-by Laurent Pinchart
+Hi,
 
-Regards,
-Steffen
+ >>>> In omap2 driver NAND_ECC_HW ecc mode supports 3 ecc layout
+ >>>> OMAP_ECC_HAMMING_CODE_HW_ROMCODE
+ >>>> OMAP_ECC_BCH4_CODE_HW
+ >>>> OMAP_ECC_BCH8_CODE_HW
+ >>>> 
+ >>>> So selection of ecc layout data should come from DT not ecc mode.
+ >>> 
+ >>> Ok, I see. I would still like to set them by string rather than magic
+ >>> numbers that map to enum entries. Valid values would be "none", "hw",
+ >>> "hw-romcode", "bch4" and "bch8". Are you ok with that?
+ >> 
+ >> Ok, that's nice. Better use ecc_opt instead of ecc_mode.
 
+ Daniel> I did some more extensive tests that include reading the same
+ Daniel> nand pages from both U-Boot and the kernel with BCH8 ECC, and
+ Daniel> it turns out that -> is_elm_used needs to be set in the pdata
+ Daniel> in order to make this work.
 
-Steffen Trumtrar (6):
-  video: add display_timing and videomode
-  video: add of helper for videomode
-  fbmon: add videomode helpers
-  fbmon: add of_videomode helpers
-  drm_modes: add videomode helpers
-  drm_modes: add of_videomode helpers
-
- .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
- drivers/gpu/drm/drm_modes.c                        |   70 +++++++
- drivers/video/Kconfig                              |   19 ++
- drivers/video/Makefile                             |    4 +
- drivers/video/display_timing.c                     |   24 +++
- drivers/video/fbmon.c                              |   86 ++++++++
- drivers/video/of_display_timing.c                  |  216 ++++++++++++++++++++
- drivers/video/of_videomode.c                       |   48 +++++
- drivers/video/videomode.c                          |   46 +++++
- include/drm/drmP.h                                 |   12 ++
- include/linux/display_timing.h                     |   70 +++++++
- include/linux/fb.h                                 |   13 ++
- include/linux/of_display_timings.h                 |   20 ++
- include/linux/of_videomode.h                       |   18 ++
- include/linux/videomode.h                          |   40 ++++
- 15 files changed, 793 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
- create mode 100644 drivers/video/display_timing.c
- create mode 100644 drivers/video/of_display_timing.c
- create mode 100644 drivers/video/of_videomode.c
- create mode 100644 drivers/video/videomode.c
- create mode 100644 include/linux/display_timing.h
- create mode 100644 include/linux/of_display_timings.h
- create mode 100644 include/linux/of_videomode.h
- create mode 100644 include/linux/videomode.h
+So what you're saying is that the choice of ELM or not is not just an
+optimization, it really changes the ECC layout? Perhaps it should be
+treated as a seperate layout (E.G. bch8-elm) then?
 
 -- 
-1.7.10.4
+Bye, Peter Korsgaard
