@@ -1,16 +1,18 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 Subject: Re: [PATCH v5 3/8] watchdog: orion_wdt: add timeout-sec property
  binding
-Date: Tue, 20 Nov 2012 13:50:46 +0100
-Message-ID: <CAHkwnC-2MXtNODnqjOvFuHt7ToqvMqeDjnqdGyGfMacKBWzoLw@mail.gmail.com>
+Date: Tue, 20 Nov 2012 07:58:34 -0500
+Message-ID: <20121120125834.GU22106@titan.lakedaemon.net>
 References: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
  <1353334243-16703-4-git-send-email-fabio.porcedda@gmail.com>
  <20121119160643.GI22106@titan.lakedaemon.net>
+ <CAHkwnC-2MXtNODnqjOvFuHt7ToqvMqeDjnqdGyGfMacKBWzoLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121119160643.GI22106-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHkwnC-2MXtNODnqjOvFuHt7ToqvMqeDjnqdGyGfMacKBWzoLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,105 +23,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 19, 2012 at 5:06 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> On Mon, Nov 19, 2012 at 03:10:38PM +0100, Fabio Porcedda wrote:
->> Only compile tested.
->>
->> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
->> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/watchdog/marvel.txt | 5 +++++
->>  drivers/watchdog/orion_wdt.c                          | 8 +++-----
->>  2 files changed, 8 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Doc=
-umentation/devicetree/bindings/watchdog/marvel.txt
->> index 0b2503a..5dc8d30 100644
->> --- a/Documentation/devicetree/bindings/watchdog/marvel.txt
->> +++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
->> @@ -5,10 +5,15 @@ Required Properties:
->>  - Compatibility : "marvell,orion-wdt"
->>  - reg                : Address of the timer registers
->>
->> +Optional properties:
->> +
->> +- timeout-sec        : Contains the watchdog timeout in seconds
->> +
->>  Example:
->>
->>       wdt@20300 {
->>               compatible =3D "marvell,orion-wdt";
->>               reg =3D <0x20300 0x28>;
->> +             timeout-sec =3D <10>;
->>               status =3D "okay";
->>       };
->> diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
->> index c20f96b..446a3e9 100644
->> --- a/drivers/watchdog/orion_wdt.c
->> +++ b/drivers/watchdog/orion_wdt.c
->> @@ -162,12 +162,10 @@ static int __devinit orion_wdt_probe(struct platfo=
-rm_device *pdev)
->>
->>       wdt_max_duration =3D WDT_MAX_CYCLE_COUNT / wdt_tclk;
->>
->> -     if ((heartbeat < 1) || (heartbeat > wdt_max_duration))
->> -             heartbeat =3D wdt_max_duration;
->> -
->> -     orion_wdt.timeout =3D heartbeat;
->>       orion_wdt.min_timeout =3D 1;
->> +     orion_wdt.timeout =3D wdt_max_duration;
->>       orion_wdt.max_timeout =3D wdt_max_duration;
->> +     watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
->
-> Hi Fabio,
->
-> There are many boards using pdata, !CONFIG_OF.  Have you compile-tested
-> this without CONFIG_OF?
-
-Hi Jason,
-
-I've tested with and without the CONFIG_OF define.
-
-The first time I=92ve used the kirkwood_defconfig without modifications,
-the second time I=92ve enabled only the CONFIG_MACH_SHEEVAPLUG and
-disabled USE_OF.
-
-In both cases the orion_wdt driver compile without any warning.
-
-Thanks for the review.
-
-Best regards
-
-> thx,
->
-> Jason.
->
->>
->>       watchdog_set_nowayout(&orion_wdt, nowayout);
->>       ret =3D watchdog_register_device(&orion_wdt);
->> @@ -177,7 +175,7 @@ static int __devinit orion_wdt_probe(struct platform=
-_device *pdev)
->>       }
->>
->>       pr_info("Initial timeout %d sec%s\n",
->> -             heartbeat, nowayout ? ", nowayout" : "");
->> +             orion_wdt.timeout, nowayout ? ", nowayout" : "");
->>       return 0;
->>  }
->>
->> --
->> 1.8.0
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---
-Fabio Porcedda
+T24gVHVlLCBOb3YgMjAsIDIwMTIgYXQgMDE6NTA6NDZQTSArMDEwMCwgRmFiaW8gUG9yY2VkZGEg
+d3JvdGU6Cj4gT24gTW9uLCBOb3YgMTksIDIwMTIgYXQgNTowNiBQTSwgSmFzb24gQ29vcGVyIDxq
+YXNvbkBsYWtlZGFlbW9uLm5ldD4gd3JvdGU6Cj4gPiBPbiBNb24sIE5vdiAxOSwgMjAxMiBhdCAw
+MzoxMDozOFBNICswMTAwLCBGYWJpbyBQb3JjZWRkYSB3cm90ZToKPiA+PiBPbmx5IGNvbXBpbGUg
+dGVzdGVkLgo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogRmFiaW8gUG9yY2VkZGEgPGZhYmlvLnBv
+cmNlZGRhQGdtYWlsLmNvbT4KPiA+PiBDYzogSmFzb24gQ29vcGVyIDxqYXNvbkBsYWtlZGFlbW9u
+Lm5ldD4KPiA+PiBDYzogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPgo+ID4+IC0tLQo+ID4+
+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvbWFydmVsLnR4dCB8
+IDUgKysrKysKPiA+PiAgZHJpdmVycy93YXRjaGRvZy9vcmlvbl93ZHQuYyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCA4ICsrKy0tLS0tCj4gPj4gIDIgZmlsZXMgY2hhbmdlZCwgOCBpbnNlcnRp
+b25zKCspLCA1IGRlbGV0aW9ucygtKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tYXJ2ZWwudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL21hcnZlbC50eHQKPiA+PiBpbmRleCAwYjI1
+MDNhLi41ZGM4ZDMwIDEwMDY0NAo+ID4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy93YXRjaGRvZy9tYXJ2ZWwudHh0Cj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3dhdGNoZG9nL21hcnZlbC50eHQKPiA+PiBAQCAtNSwxMCArNSwxNSBA
+QCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ID4+ICAtIENvbXBhdGliaWxpdHkgOiAibWFydmVsbCxv
+cmlvbi13ZHQiCj4gPj4gIC0gcmVnICAgICAgICAgICAgICAgIDogQWRkcmVzcyBvZiB0aGUgdGlt
+ZXIgcmVnaXN0ZXJzCj4gPj4KPiA+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPiA+PiArCj4gPj4g
+Ky0gdGltZW91dC1zZWMgICAgICAgIDogQ29udGFpbnMgdGhlIHdhdGNoZG9nIHRpbWVvdXQgaW4g
+c2Vjb25kcwo+ID4+ICsKPiA+PiAgRXhhbXBsZToKPiA+Pgo+ID4+ICAgICAgIHdkdEAyMDMwMCB7
+Cj4gPj4gICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1hcnZlbGwsb3Jpb24td2R0IjsKPiA+
+PiAgICAgICAgICAgICAgIHJlZyA9IDwweDIwMzAwIDB4Mjg+Owo+ID4+ICsgICAgICAgICAgICAg
+dGltZW91dC1zZWMgPSA8MTA+Owo+ID4+ICAgICAgICAgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+
+ID4+ICAgICAgIH07Cj4gPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvd2F0Y2hkb2cvb3Jpb25fd2R0
+LmMgYi9kcml2ZXJzL3dhdGNoZG9nL29yaW9uX3dkdC5jCj4gPj4gaW5kZXggYzIwZjk2Yi4uNDQ2
+YTNlOSAxMDA2NDQKPiA+PiAtLS0gYS9kcml2ZXJzL3dhdGNoZG9nL29yaW9uX3dkdC5jCj4gPj4g
+KysrIGIvZHJpdmVycy93YXRjaGRvZy9vcmlvbl93ZHQuYwo+ID4+IEBAIC0xNjIsMTIgKzE2Miwx
+MCBAQCBzdGF0aWMgaW50IF9fZGV2aW5pdCBvcmlvbl93ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldikKPiA+Pgo+ID4+ICAgICAgIHdkdF9tYXhfZHVyYXRpb24gPSBXRFRfTUFY
+X0NZQ0xFX0NPVU5UIC8gd2R0X3RjbGs7Cj4gPj4KPiA+PiAtICAgICBpZiAoKGhlYXJ0YmVhdCA8
+IDEpIHx8IChoZWFydGJlYXQgPiB3ZHRfbWF4X2R1cmF0aW9uKSkKPiA+PiAtICAgICAgICAgICAg
+IGhlYXJ0YmVhdCA9IHdkdF9tYXhfZHVyYXRpb247Cj4gPj4gLQo+ID4+IC0gICAgIG9yaW9uX3dk
+dC50aW1lb3V0ID0gaGVhcnRiZWF0Owo+ID4+ICAgICAgIG9yaW9uX3dkdC5taW5fdGltZW91dCA9
+IDE7Cj4gPj4gKyAgICAgb3Jpb25fd2R0LnRpbWVvdXQgPSB3ZHRfbWF4X2R1cmF0aW9uOwo+ID4+
+ICAgICAgIG9yaW9uX3dkdC5tYXhfdGltZW91dCA9IHdkdF9tYXhfZHVyYXRpb247Cj4gPj4gKyAg
+ICAgd2F0Y2hkb2dfaW5pdF90aW1lb3V0KCZvcmlvbl93ZHQsIGhlYXJ0YmVhdCwgcGRldi0+ZGV2
+Lm9mX25vZGUpOwo+ID4KPiA+IEhpIEZhYmlvLAo+ID4KPiA+IFRoZXJlIGFyZSBtYW55IGJvYXJk
+cyB1c2luZyBwZGF0YSwgIUNPTkZJR19PRi4gIEhhdmUgeW91IGNvbXBpbGUtdGVzdGVkCj4gPiB0
+aGlzIHdpdGhvdXQgQ09ORklHX09GPwo+IAo+IEhpIEphc29uLAo+IAo+IEkndmUgdGVzdGVkIHdp
+dGggYW5kIHdpdGhvdXQgdGhlIENPTkZJR19PRiBkZWZpbmUuCj4gCj4gVGhlIGZpcnN0IHRpbWUg
+SeKAmXZlIHVzZWQgdGhlIGtpcmt3b29kX2RlZmNvbmZpZyB3aXRob3V0IG1vZGlmaWNhdGlvbnMs
+Cj4gdGhlIHNlY29uZCB0aW1lIEnigJl2ZSBlbmFibGVkIG9ubHkgdGhlIENPTkZJR19NQUNIX1NI
+RUVWQVBMVUcgYW5kCj4gZGlzYWJsZWQgVVNFX09GLgo+IAo+IEluIGJvdGggY2FzZXMgdGhlIG9y
+aW9uX3dkdCBkcml2ZXIgY29tcGlsZSB3aXRob3V0IGFueSB3YXJuaW5nLgo+IAo+IFRoYW5rcyBm
+b3IgdGhlIHJldmlldy4KCkFja2VkLWJ5OiBKYXNvbiBDb29wZXIgPGphc29uQGxha2VkYWVtb24u
+bmV0PgoKZm9yIHRoZSBvcmlvbl93ZHQgYml0cy4KCnRoeCwKCkphc29uLgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFp
+bGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlz
+dHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
