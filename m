@@ -1,131 +1,218 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 6/8] watchdog: at91sam9_wdt: add timeout-sec property
- binding
-Date: Tue, 20 Nov 2012 14:01:03 +0100
-Message-ID: <50AB7F0F.1090005@atmel.com>
-References: <1353334243-16703-1-git-send-email-fabio.porcedda@gmail.com>
- <1353334243-16703-7-git-send-email-fabio.porcedda@gmail.com>
+From: "AnilKumar, Chimata" <anilkumar@ti.com>
+Subject: RE: [PATCH 1/3] can: c_can: Add d_can raminit support
+Date: Tue, 20 Nov 2012 13:05:47 +0000
+Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EA771E9@DBDE01.ent.ti.com>
+References: <1352916505-12343-1-git-send-email-anilkumar@ti.com>
+ <1352916505-12343-2-git-send-email-anilkumar@ti.com>
+ <50AB6081.9060701@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353334243-16703-7-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50AB6081.9060701@pengutronix.de>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "wg@grandegger.com" <wg@grandegger.com>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/19/2012 03:10 PM, Fabio Porcedda :
-> Tested on at91sam9260 board (evk-pro3).
+On Tue, Nov 20, 2012 at 16:20:41, Marc Kleine-Budde wrote:
+> On 11/14/2012 07:08 PM, AnilKumar Ch wrote:
+> > Add D_CAN raminit support to C_CAN driver to enable D_CAN RAM,
+> > which holds all the message objects during transmission or
+> > receiving of data. This initialization/de-initialization should
+> > be done in synchronous with D_CAN clock.
+> > 
+> > In case of AM335X-EVM (active user of D_CAN driver) message RAM is
+> > controlled through control module register for both instances. So
+> > control module register details is required to initialization or
+> > de-initialization of message RAM according to instance number.
+> > 
+> > Control module memory resource is obtained from D_CAN dt node and
+> > instance number obtained from device tree aliases node.
+> > 
+> > Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
 > 
-> Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Some nitpicks inline.
 
-Seems good:
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/watchdog/atmel-wdt.txt |  4 ++++
->  drivers/watchdog/Kconfig                                 |  1 +
->  drivers/watchdog/at91sam9_wdt.c                          | 16 +++++++++++++---
->  3 files changed, 18 insertions(+), 3 deletions(-)
+Thanks for the review.
+ 
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> index 2957ebb..fcdd48f 100644
-> --- a/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/atmel-wdt.txt
-> @@ -7,9 +7,13 @@ Required properties:
->  - reg: physical base address of the controller and length of memory mapped
->    region.
->  
-> +Optional properties:
-> +- timeout-sec: contains the watchdog timeout in seconds.
-> +
->  Example:
->  
->  	watchdog@fffffd40 {
->  		compatible = "atmel,at91sam9260-wdt";
->  		reg = <0xfffffd40 0x10>;
-> +		timeout-sec = <10>;
->  	};
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index ad1bb93..dda695f 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -114,6 +114,7 @@ config AT91RM9200_WATCHDOG
->  config AT91SAM9X_WATCHDOG
->  	tristate "AT91SAM9X / AT91CAP9 watchdog"
->  	depends on ARCH_AT91 && !ARCH_AT91RM9200
-> +	select WATCHDOG_CORE
->  	help
->  	  Watchdog timer embedded into AT91SAM9X and AT91CAP9 chips. This will
->  	  reboot your system when the timeout is reached.
-> diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
-> index dc42e44..d864dc4 100644
-> --- a/drivers/watchdog/at91sam9_wdt.c
-> +++ b/drivers/watchdog/at91sam9_wdt.c
-> @@ -57,8 +57,10 @@
->  #define WDT_TIMEOUT	(HZ/2)
->  
->  /* User land timeout */
-> +#define MIN_HEARTBEAT 1
-> +#define MAX_HEARTBEAT 16
->  #define WDT_HEARTBEAT 15
-> -static int heartbeat = WDT_HEARTBEAT;
-> +static int heartbeat;
->  module_param(heartbeat, int, 0);
->  MODULE_PARM_DESC(heartbeat, "Watchdog heartbeats in seconds. "
->  	"(default = " __MODULE_STRING(WDT_HEARTBEAT) ")");
-> @@ -255,6 +257,12 @@ static struct miscdevice at91wdt_miscdev = {
->  	.fops		= &at91wdt_fops,
->  };
->  
-> +static struct watchdog_device at91wdt_wdd __initdata = {
-> +	.timeout = WDT_HEARTBEAT,
-> +	.min_timeout = MIN_HEARTBEAT,
-> +	.max_timeout = MAX_HEARTBEAT,
-> +};
-> +
->  static int __init at91wdt_probe(struct platform_device *pdev)
->  {
->  	struct resource	*r;
-> @@ -273,6 +281,8 @@ static int __init at91wdt_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
->  
-> +	watchdog_init_timeout(&at91wdt_wdd, heartbeat, pdev->dev.of_node);
-> +
->  	/* Set watchdog */
->  	res = at91_wdt_settimeout(ms_to_ticks(WDT_HW_TIMEOUT * 1000));
->  	if (res)
-> @@ -282,12 +292,12 @@ static int __init at91wdt_probe(struct platform_device *pdev)
->  	if (res)
->  		return res;
->  
-> -	at91wdt_private.next_heartbeat = jiffies + heartbeat * HZ;
-> +	at91wdt_private.next_heartbeat = jiffies + at91wdt_wdd.timeout * HZ;
->  	setup_timer(&at91wdt_private.timer, at91_ping, 0);
->  	mod_timer(&at91wdt_private.timer, jiffies + WDT_TIMEOUT);
->  
->  	pr_info("enabled (heartbeat=%d sec, nowayout=%d)\n",
-> -		heartbeat, nowayout);
-> +		at91wdt_wdd.timeout, nowayout);
->  
->  	return 0;
->  }
+> > ---
+> >  drivers/net/can/c_can/c_can.c          |   12 +++++++++++
+> >  drivers/net/can/c_can/c_can.h          |    3 +++
+> >  drivers/net/can/c_can/c_can_platform.c |   34 +++++++++++++++++++++++++++++++-
+> >  3 files changed, 48 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/net/can/c_can/c_can.c b/drivers/net/can/c_can/c_can.c
+> > index e5180df..c15830c 100644
+> > --- a/drivers/net/can/c_can/c_can.c
+> > +++ b/drivers/net/can/c_can/c_can.c
+> > @@ -233,6 +233,12 @@ static inline void c_can_pm_runtime_put_sync(const struct c_can_priv *priv)
+> >  		pm_runtime_put_sync(priv->device);
+> >  }
+> >  
+> > +static inline void c_can_reset_ram(const struct c_can_priv *priv, bool enable)
+> > +{
+> > +	if (priv->ram_init)
+> > +		priv->ram_init(priv, enable);
+> > +}
+> > +
+> >  static inline int get_tx_next_msg_obj(const struct c_can_priv *priv)
+> >  {
+> >  	return (priv->tx_next & C_CAN_NEXT_MSG_OBJ_MASK) +
+> > @@ -1090,6 +1096,7 @@ static int c_can_open(struct net_device *dev)
+> >  	struct c_can_priv *priv = netdev_priv(dev);
+> >  
+> >  	c_can_pm_runtime_get_sync(priv);
+> > +	c_can_reset_ram(priv, true);
+> >  
+> >  	/* open the can device */
+> >  	err = open_candev(dev);
+> > @@ -1118,6 +1125,7 @@ static int c_can_open(struct net_device *dev)
+> >  exit_irq_fail:
+> >  	close_candev(dev);
+> >  exit_open_fail:
+> > +	c_can_reset_ram(priv, false);
+> >  	c_can_pm_runtime_put_sync(priv);
+> >  	return err;
+> >  }
+> > @@ -1131,6 +1139,8 @@ static int c_can_close(struct net_device *dev)
+> >  	c_can_stop(dev);
+> >  	free_irq(dev->irq, dev);
+> >  	close_candev(dev);
+> > +
+> > +	c_can_reset_ram(priv, false);
+> >  	c_can_pm_runtime_put_sync(priv);
+> >  
+> >  	return 0;
+> > @@ -1188,6 +1198,7 @@ int c_can_power_down(struct net_device *dev)
+> >  
+> >  	c_can_stop(dev);
+> >  
+> > +	c_can_reset_ram(priv, false);
+> >  	c_can_pm_runtime_put_sync(priv);
+> >  
+> >  	return 0;
+> > @@ -1206,6 +1217,7 @@ int c_can_power_up(struct net_device *dev)
+> >  	WARN_ON(priv->type != BOSCH_D_CAN);
+> >  
+> >  	c_can_pm_runtime_get_sync(priv);
+> > +	c_can_reset_ram(priv, true);
+> >  
+> >  	/* Clear PDR and INIT bits */
+> >  	val = priv->read_reg(priv, C_CAN_CTRL_EX_REG);
+> > diff --git a/drivers/net/can/c_can/c_can.h b/drivers/net/can/c_can/c_can.h
+> > index e5ed41d..419de5c 100644
+> > --- a/drivers/net/can/c_can/c_can.h
+> > +++ b/drivers/net/can/c_can/c_can.h
+> > @@ -169,6 +169,9 @@ struct c_can_priv {
+> >  	void *priv;		/* for board-specific data */
+> >  	u16 irqstatus;
+> >  	enum c_can_dev_id type;
+> > +	u32 __iomem *raminit_ctrlreg;
+> > +	unsigned int instance;
+> > +	void (*ram_init) (const struct c_can_priv *priv, bool enable);
+> >  };
+> >  
+> >  struct net_device *alloc_c_can_dev(void);
+> > diff --git a/drivers/net/can/c_can/c_can_platform.c b/drivers/net/can/c_can/c_can_platform.c
+> > index ee141613..2e61d69 100644
+> > --- a/drivers/net/can/c_can/c_can_platform.c
+> > +++ b/drivers/net/can/c_can/c_can_platform.c
+> > @@ -38,6 +38,8 @@
+> >  
+> >  #include "c_can.h"
+> >  
+> > +#define CAN_RAMINIT_START_MASK(i)	(1 << (i))
+> > +
+> >  /*
+> >   * 16-bit c_can registers can be arranged differently in the memory
+> >   * architecture of different implementations. For example: 16-bit
+> > @@ -68,6 +70,24 @@ static void c_can_plat_write_reg_aligned_to_32bit(struct c_can_priv *priv,
+> >  	writew(val, priv->base + 2 * priv->regs[index]);
+> >  }
+> >  
+> > +static void c_can_hw_raminit(const struct c_can_priv *priv, bool enable)
+> > +{
+> > +	u32 val;
+> > +
+> > +	if (!priv->raminit_ctrlreg || (priv->instance < 0))
+> > +		return;
 > 
+> Can you move this sanity check to the probe function and only assign
+> priv->ram_init if the above is true?
 
+Sure, I will change
 
--- 
-Nicolas Ferre
+> 
+> > +
+> > +	val = readl(priv->raminit_ctrlreg);
+> > +	if (enable) {
+> > +		val &= ~CAN_RAMINIT_START_MASK(priv->instance);
+> > +		val |= CAN_RAMINIT_START_MASK(priv->instance);
+> > +		writel(val, priv->raminit_ctrlreg);
+> > +	} else {
+> > +		val &= ~CAN_RAMINIT_START_MASK(priv->instance);
+> > +		writel(val, priv->raminit_ctrlreg);
+> > +	}
+> > +}
+> > +
+> >  static struct platform_device_id c_can_id_table[] = {
+> >  	[BOSCH_C_CAN_PLATFORM] = {
+> >  		.name = KBUILD_MODNAME,
+> > @@ -99,7 +119,7 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+> >  	const struct of_device_id *match;
+> >  	const struct platform_device_id *id;
+> >  	struct pinctrl *pinctrl;
+> > -	struct resource *mem;
+> > +	struct resource *mem, *res;
+> >  	int irq;
+> >  	struct clk *clk;
+> >  
+> > @@ -178,6 +198,18 @@ static int __devinit c_can_plat_probe(struct platform_device *pdev)
+> >  		priv->can.ctrlmode_supported |= CAN_CTRLMODE_3_SAMPLES;
+> >  		priv->read_reg = c_can_plat_read_reg_aligned_to_16bit;
+> >  		priv->write_reg = c_can_plat_write_reg_aligned_to_16bit;
+> > +
+> > +		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > +		priv->raminit_ctrlreg =
+> > +				devm_request_and_ioremap(&pdev->dev, res);
+> 
+> What happens if there isn't a second IORESOURCE_MEM region? devm_request
+> will print an error in this case and any other error, too [1]. Do we
+> need streamlining here?
+> 
+> [1] http://lxr.free-electrons.com/source/drivers/base/platform.c#L59
+
+I did not get what the point is.
+
+In most of the cases above two API's returns NULL. Even res is NULL
+nothing to worry, first condition in devm_request_and_ioremap() is
+NULL pointer check of res. If "res" is NULL then devm_xx will return
+NULL which result into printing of below warning.
+
+> 
+> > +		if (!priv->raminit_ctrlreg)
+> > +			dev_warn(&pdev->dev, "failed to obtain control memory\n");
+
+I will change this warning to info
+
+if (!priv->raminit_ctrlreg)
+	dev_info(&pdev->dev, "control memory is not used for raminit\n");
+
+> > +
+> > +		if (pdev->dev.of_node)
+> > +			pdev->id = of_alias_get_id(pdev->dev.of_node, "d_can");
+> > +
+> > +		priv->instance = pdev->id;
+> 
+> Please do not modify the pdev, better you use something like this:
+> 
+>     pdev->id < 0 ? of_alias_get_id(pdev->dev.of_node, "d_can") :
+>         pdev->id;
+
+I will change accordingly.
+
+Thanks
+AnilKumar
