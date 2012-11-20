@@ -1,40 +1,55 @@
-From: Anton Vorontsov <cbouatmailru@gmail.com>
-Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
-Date: Tue, 20 Nov 2012 00:48:07 -0800
-Message-ID: <20121120084807.GA24287@lizard>
-References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
- <1353142266-1289-2-git-send-email-andrew@lunn.ch>
- <50AA6E7E.5060501@wwwdotorg.org> <20121120083749.GM10259@lunn.ch>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/2] ASoC: atmel-pcm: add dma support
+Date: Tue, 20 Nov 2012 17:57:30 +0900
+Message-ID: <20121120085728.GX10560@opensource.wolfsonmicro.com>
+References: <1353400698-19384-1-git-send-email-voice.shen@atmel.com>
+ <1353400698-19384-2-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mu6rDKe19l+MneQx"
+Return-path: <linux-sound-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121120083749.GM10259@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: gmbnomis@gmail.com, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, jm@lentin.co.uk, linux ARM <linux-arm-kernel@lists.infradead.org>, Jason Cooper <jason@lakedaemon.net>
+In-Reply-To: <1353400698-19384-2-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 20, 2012 at 09:37:49AM +0100, Andrew Lunn wrote:
-> These are good comments from Stephan that i want to address. However,
-> i also don't want to delay the pull-requests direction arm-soc, the
-> merge window is getting close. Both Linus and Anton have Acked the
-> current version, so please go with what you have and i will produce a
-> patch over the top. If its available before Arnd pulls, you can squash
-> it, otherwise send it upstream as a standalone patch.
 
-I agree. Furthermore, for the fixup patch, if it goes separately, you
-might want to add
+--mu6rDKe19l+MneQx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- Suggested-by: Stephen Warren <swarren@wwwdotorg.org>
+On Tue, Nov 20, 2012 at 04:38:18PM +0800, Bo Shen wrote:
+> Change xfer_size name to apply to PDC and DMA aswell.
+> Specify overrun bit in interrupt mask.
+> Add dmaengine specific routines and replace PDC ones in
+> pcm_ops if appropriate.
+> Uses cyclic DMA API for queuing samples.
 
-to give a credit for the valuable comments. :)
+If you're using dmaengine you really need a *very* good reason not to
+use the core dmaengine support...
+
+--mu6rDKe19l+MneQx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQq0XxAAoJELSic+t+oim9khoP/i2TYwmErCeIXa+V3s2dGZJH
+XBRTxpajBS7NJhHLV5S5M7cTe987kePpdEzmGoQqb/Z3UMeoyADPzitrEXJu19KZ
+bhGMLiRRmpRY/i0DQ1iQ3hFVVua1CFcQi+J2INHrXRt3k7QlajGwEF7F5lS/KiRO
+84OwgQ2ZaFFK1jbZwtSd2YhdPw0tD22VyEwhw+6Y2j3dd4KoS75CKTt/72O1aYkc
+fVvR1bZG+P6zkNtMATb9iqs0P5hsL4Hw40fhaXz4MuLTBmBZGstcHNWM3pjHgFY2
+nrpa68Rfj68gm017SaoyghoLpt5HJ/q7nJ76G2UQsIfPCbd4aKW1L+ycEANEwzku
+wZWQ1RAk4fMTE7aPZvOtrbepAawpQBJ66TBGJNOG0XMn/EFmolp5In1on8Oq59x4
+eBTh3+eQwlHy10lUdMWAeNSOF0upc04nXsRnCC6+Yueodi461sga+dwK0Nrzhldo
+Y/kzWn2oy5h3SW/PZPiPOMpXIUuWRcYmzV1EoxtJfGsUr/UD1TDTkwHh4bIl9mKQ
+//moeRgKf9MomVaVpRuVWbU02IrPVP6TBgB7RH4b+AtVRpLj4pxiG0JkyC5dWyca
+wxkdUfB5lhfcslBmdnJIY9jBhvXMYZtsvc3s7E9Sv2KWK8S/bYjcLFynvK2E/fCN
+TuQ67ZAE+cLw/GbtqRqH
+=xZYv
+-----END PGP SIGNATURE-----
+
+--mu6rDKe19l+MneQx--
