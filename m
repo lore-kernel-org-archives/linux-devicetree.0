@@ -1,99 +1,59 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2] pwm: Device tree support for PWM polarity.
-Date: Tue, 20 Nov 2012 16:07:55 +0100
-Message-ID: <20121120150755.GB24545@avionic-0098.adnet.avionic-design.de>
-References: <1353347472-26863-1-git-send-email-avinashphilip@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] usb: chipidea: usbmisc: add support for ahb, ipg
+ and per clock
+Date: Tue, 20 Nov 2012 16:09:34 +0100
+Message-ID: <20121120150934.GF24458@pengutronix.de>
+References: <1352981028-14312-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352981028-14312-6-git-send-email-m.grzeschik@pengutronix.de>
+ <87r4nt6610.fsf@ashishki-desk.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1353347472-26863-1-git-send-email-avinashphilip@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com
+In-Reply-To: <87r4nt6610.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 16, 2012 at 03:17:47PM +0200, Alexander Shishkin wrote:
+> Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> 
+> > From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> > This patch adds support for a second and third clock to the usbmisc driver. On
+> > modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
+> > "ipg" and "per") must be enabled in order to access the USB core.
+> >
+> > ahb - AMBA High-Performance Bus clock domain
+> > ipg - IP-Bus Gate clock domain
+> > per - Peripheral clock domain
+> 
+> Looks like usbmisc_imx and ci13xxx_imx are growing more and more common
+> code.
+> Btw, shouldn't there be a way to specify platform's clock tree
+> configuration via devicetree or whatnot so that each platform driver
+> didn't have to request platform specific clocks?
 
---FkmkrVfFsRoUs1wW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In theory that is the case. The clocks should be modeled after the input
+clocks of the device (ci13xxx). Every SoC should have them, but on some
+SoCs some of them may not be software controllable, so they have to
+provide dummy clocks for these.
+So when everyting is done correctly in the driver, the calls to clk_get
+could be in the core instead of ci13xxx_imx. That said, we do not have
+good insights into the SoC, so we do not know exactly which clock inputs
+the ci13xx has and where they are connected in the SoCs clock module.
+There are some guesses in there.
 
-On Mon, Nov 19, 2012 at 11:21:12PM +0530, Philip, Avinash wrote:
-[...]
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 112b314..70756f2 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -78,6 +78,10 @@ enum {
->  	PWMF_ENABLED =3D 1 << 1,
->  };
-> =20
-> +/* flags in the third cell of the DT PWM specifier */
-> +#define PWM_SPEC_POLARITY	(1 << 0)
-> +
-> +
+Sascha
 
-This doesn't belong in this header. It should go into core.c in
-drivers/pwm.
 
->  struct pwm_device {
->  	const char		*label;
->  	unsigned long		flags;
-> @@ -176,6 +180,8 @@ void pwm_put(struct pwm_device *pwm);
-> =20
->  struct pwm_device *devm_pwm_get(struct device *dev, const char *consumer=
-);
->  void devm_pwm_put(struct device *dev, struct pwm_device *pwm);
-> +struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
-> +		const struct of_phandle_args *args);
-
-The placement of this prototype is odd. I think a better place would be
-between pwm_request_from_chip() and pwm_get(), separated by blank lines
-to make it stand out as an OF specific function.
-
->  #else
->  static inline int pwm_set_chip_data(struct pwm_device *pwm, void *data)
->  {
-> @@ -223,6 +229,12 @@ static inline struct pwm_device *devm_pwm_get(struct=
- device *dev,
->  static inline void devm_pwm_put(struct device *dev, struct pwm_device *p=
-wm)
->  {
->  }
-> +
-> +static inline struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip=
- *pc,
-> +		const struct of_phandle_args *args)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-
-This function should only be used by PWM drivers and therefore doesn't
-need to have a dummy implementation such as this.
-
-Thierry
-
---FkmkrVfFsRoUs1wW
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQq5zLAAoJEN0jrNd/PrOhsz4P/39+Q2nTGeMPGW/4/vcQ8Abd
-tV6jOyB5XZupn38FKj3Ihb0Qy4Fp8fkPJ15k1MSjt3/Ea8HWDW6yf+K/ECVcJLH0
-JN0sKJL2foSyvdqPE69eYdLRY31Q79AT/W0gzqiuLtuWs4HUKVWitmvGEU9053+J
-oAgzp0eLXLQlmeOxUDoX7OC9G7+hu++4lRUwTBIB6K5FcR5th7iWXBrPT7LSGv6p
-FcQ4acI1I2qS8u2Z7VCwugc7DYw0XzaRgNKx+B4c5b0O+q7BHYfIeQVPPVwKCa/5
-TmewKZ03wkwCsXxMRMUlB4fKnGUg78sCC/vY4fn4gwvPVym3UVC/HAnsYEmqWs4A
-S3LceJ5Oo2ATK7z+jH+vZ82qLU7lB/Y4Qe9pOxftm2SINwWXpLet7VZ1IG6hSr04
-lNFxIiqT79CtbpZJJPbzCyFGVQbMX7EktZFZF+CKn7+K4kjVmzIhYsp4ID6JCcRy
-5S5to3ORBtUFqmHuL0oHIQYLBytYNgyHAcL3k3a1yfiw21F9bZmkVq5quL3oNmfC
-lH7V4OeXpEbemnbSDHTBNOTN0TMBlblDAiBxqLGDrdNPJlU5Rh7FnaXHOzTbIM0W
-fq2Hi1IhXmEeTiKE8vp5eg8pye02J6KDHxKuV/hfDxRQ7jBFbeQqu8rOTYiZsL2j
-pJc19LBvYtYCjpYwNCCQ
-=rVU2
------END PGP SIGNATURE-----
-
---FkmkrVfFsRoUs1wW--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
