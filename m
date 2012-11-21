@@ -1,131 +1,283 @@
-From: Matthieu CASTET <matthieu.castet-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/9] usb: chipidea: add PTW and PTS handling
-Date: Wed, 21 Nov 2012 17:06:26 +0100
-Message-ID: <50ACFC02.9010805@parrot.com>
-References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de> <1352909950-32555-7-git-send-email-m.grzeschik@pengutronix.de> <87zk2h67ik.fsf@ashishki-desk.ger.corp.intel.com> <20121116131628.GA21447@pengutronix.de> <87lie1659c.fsf@ashishki-desk.ger.corp.intel.com> <20121116135743.GB21447@pengutronix.de> <87ip9563r8.fsf@ashishki-desk.ger.corp.intel.com> <50A651E1.5030001@parrot.com> <87fw495zgh.fsf@ashishki-desk.ger.corp.intel.com> <20121121155723.GA16409@pengutronix.de>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v12 1/6] video: add display_timing and videomode
+Date: Wed, 21 Nov 2012 17:11:03 +0100
+Message-ID: <20121121161103.GA12657@pengutronix.de>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353426896-6045-2-git-send-email-s.trumtrar@pengutronix.de>
+ <50ACBCE4.60701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121121155723.GA16409-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50ACBCE4.60701@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik a =E9crit :
-> On Fri, Nov 16, 2012 at 05:39:42PM +0200, Alexander Shishkin wrote:
->> Matthieu CASTET <matthieu.castet-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> writes:
->>
->>> Alexander Shishkin a =E9crit :
->>>> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->>>>
->>>>> On Fri, Nov 16, 2012 at 03:34:23PM +0200, Alexander Shishkin wrot=
-e:
->>>>>> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->>>>>>
->>>>>>> On Fri, Nov 16, 2012 at 02:45:39PM +0200, Alexander Shishkin wr=
-ote:
->>>>>>>> Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->>>>>>>>
->>>>>>>>> This patch makes it possible to configure the PTW and PTS bit=
-s inside
->>>>>>>>> the portsc register for host and device mode before the drive=
-r starts
->>>>>>>>> and the phy can be addressed as hardware implementation is de=
-signed.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>>>>>> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>>>>>> ---
->>>>>>>>>  drivers/usb/chipidea/bits.h        |    3 +++
->>>>>>>>>  drivers/usb/chipidea/ci.h          |    2 ++
->>>>>>>>>  drivers/usb/chipidea/ci13xxx_imx.c |    1 +
->>>>>>>>>  drivers/usb/chipidea/core.c        |   47 ++++++++++++++++++=
-++++++++++++++++++
->>>>>>>>>  drivers/usb/chipidea/host.c        |    4 +++
->>>>>>>>>  include/linux/usb/chipidea.h       |    9 +++++++
->>>>>>>>>  6 files changed, 66 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipid=
-ea/bits.h
->>>>>>>>> index 4b6ae3e..3cded5f 100644
->>>>>>>>> --- a/drivers/usb/chipidea/bits.h
->>>>>>>>> +++ b/drivers/usb/chipidea/bits.h
->>>>>>>>> @@ -48,6 +48,9 @@
->>>>>>>>>  #define PORTSC_SUSP           BIT(7)
->>>>>>>>>  #define PORTSC_HSP            BIT(9)
->>>>>>>>>  #define PORTSC_PTC            (0x0FUL << 16)
->>>>>>>>> +#define PORTSC_PTS            (BIT(31) | BIT(30))
->>>>>>>>> +#define PORTSC_PTW            BIT(28)
->>>>>>>>> +#define PORTSC_STS            BIT(29)
->>>>>>>> Hm, my spec says these are actually in DEVLC register and only=
- have this
->>>>>>>> meaning in device mode. And in portsc these bits fall in devic=
-e address
->>>>>>>> bitfield. Can you refer me to your spec?
->>>>>>> You can find it here:
->>>>>>> http://cache.freescale.com/files/32bit/doc/ref_manual/iMX53RM.p=
-df?fpsp=3D1
->>>>>>> Page 4947
->>>>>> Oh, but see, the offset is 0x184, which in chipidea spec (the ve=
-rsion
->>>>>> that I have) corresponds to DEVLC and not PORTSC. So in this dri=
-ver's
->>>>>> terminology it's DEVLC too, at least currently.
->>>>>>
->>>>>> So have you tested this code and did it make any difference?
->>>>> Yes, i have tested this code with MX25, MX28, MX35 and MX53. In e=
-very
->>>>> SoCs Datasheet the PORTSC register is defined on PORTBASE+0x184. =
-Without
->>>>> this proper configuration its not possible to communicate with th=
-e PHY.
->>>> No, I mean, you're writing DEVLC (using present driver's terminolo=
-gy)
->>>> bits to PORTSC register. It *shouldn't* work. I suppose, it does
->>>> something, but not exactly what you intended.
->>>>
->>> I confirm in our datasheet we have PTW, PTS, STS in this register  =
-PORTSCx with
->>> this mapping.
->>>
->>> In later design that support lpm, these bits have to move in anothe=
-r register
->>> because ehci 1.1 use them [1].
->> Ahh, I didn't realize imxes were nolpm. Now it makes more sense. Thi=
-s
->> means that, as you suggested in the other mail, these portsc/devlc
->> accesses should be done conditionally based on ci->hw_bank.lpm.
->=20
-> To handle lpm devices in this patch, we need some register layout of =
-the
-> lpm core. Probably only te DEVLC register. Is there some documentatio=
-n
-> available?
+Hi,
 
-In include/linux/usb/langwell_udc.h before it was removed, you could fi=
-nd the
-mapping :
+On Wed, Nov 21, 2012 at 01:37:08PM +0200, Tomi Valkeinen wrote:
+> Hi,
+> 
+> On 2012-11-20 17:54, Steffen Trumtrar wrote:
+> > Add display_timing structure and the according helper functions. This allows
+> > the description of a display via its supported timing parameters.
+> > 
+> > Every timing parameter can be specified as a single value or a range
+> > <min typ max>.
+> > 
+> > Also, add helper functions to convert from display timings to a generic videomode
+> > structure. This videomode can then be converted to the corresponding subsystem
+> > mode representation (e.g. fb_videomode).
+> 
+> Sorry for reviewing this so late.
+> 
+> One thing I'd like to see is some explanation of the structs involved.
+> For example, in this patch you present structs videomode, display_timing
+> and display_timings without giving any hint what they represent.
+> 
+> I'm not asking for you to write a long documentation, but perhaps the
+> header files could include a few lines of comments above the structs,
+> explaining the idea.
+> 
 
-    u32 devlc;      /* control LPM and each USB port behavior */
-/* bits 31:29, parallel transceiver select */
-#define LPM_PTS(d)  (((d)>>29)&7)
-#define LPM_STS     BIT(28) /* serial transceiver select */
-#define LPM_PTW     BIT(27) /* parallel transceiver width */
-#define LPM_PSPD(d) (((d)>>25)&3)   /* bits 26:25, port speed */
-#define LPM_PSPD_MASK   (BIT(26) | BIT(25))
-#define LPM_SPEED_FULL  0
-#define LPM_SPEED_LOW   1
-#define LPM_SPEED_HIGH  2
-#define LPM_SRT     BIT(24) /* shorten reset time */
-#define LPM_PFSC    BIT(23) /* port force full speed connect */
-#define LPM_PHCD    BIT(22) /* PHY low power suspend clock disable */
-#define LPM_STL     BIT(16) /* STALL reply to LPM token */
-#define LPM_BA(d)   \
-    (((d)>>1)&0x7ff)    /* bits 11:1, BmAttributes */
-#define LPM_NYT_ACK BIT(0)  /* NYET/ACK reply to LPM token */
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay. Will do.
+
+> > +void display_timings_release(struct display_timings *disp)
+> > +{
+> > +	if (disp->timings) {
+> > +		unsigned int i;
+> > +
+> > +		for (i = 0; i < disp->num_timings; i++)
+> > +			kfree(disp->timings[i]);
+> > +		kfree(disp->timings);
+> > +	}
+> > +	kfree(disp);
+> > +}
+> > +EXPORT_SYMBOL_GPL(display_timings_release);
+> 
+> Perhaps this will become clearer after reading the following patches,
+> but it feels a bit odd to add a release function, without anything in
+> this patch that would actually allocate the timings.
+> 
+
+2/6 uses this function. And as this does not belong to the DT part, it
+is added in this patch.
+
+> > diff --git a/drivers/video/videomode.c b/drivers/video/videomode.c
+> > new file mode 100644
+> > index 0000000..e24f879
+> > --- /dev/null
+> > +++ b/drivers/video/videomode.c
+> > @@ -0,0 +1,46 @@
+> > +/*
+> > + * generic display timing functions
+> > + *
+> > + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pengutronix
+> > + *
+> > + * This file is released under the GPLv2
+> > + */
+> > +
+> > +#include <linux/export.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/display_timing.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/videomode.h>
+> > +
+> > +int videomode_from_timing(const struct display_timings *disp,
+> > +			  struct videomode *vm, unsigned int index)
+> > +{
+> > +	struct display_timing *dt;
+> > +
+> > +	dt = display_timings_get(disp, index);
+> > +	if (!dt)
+> > +		return -EINVAL;
+> > +
+> > +	vm->pixelclock = display_timing_get_value(&dt->pixelclock, 0);
+> > +	vm->hactive = display_timing_get_value(&dt->hactive, 0);
+> > +	vm->hfront_porch = display_timing_get_value(&dt->hfront_porch, 0);
+> > +	vm->hback_porch = display_timing_get_value(&dt->hback_porch, 0);
+> > +	vm->hsync_len = display_timing_get_value(&dt->hsync_len, 0);
+> > +
+> > +	vm->vactive = display_timing_get_value(&dt->vactive, 0);
+> > +	vm->vfront_porch = display_timing_get_value(&dt->vfront_porch, 0);
+> > +	vm->vback_porch = display_timing_get_value(&dt->vback_porch, 0);
+> > +	vm->vsync_len = display_timing_get_value(&dt->vsync_len, 0);
+> 
+> Shouldn't all these calls get the typical value, with index 1?
+> 
+
+Yes. I omitted the indexing until now. So it didn't matter what value was used.
+But I will integrate it in the next version.
+
+> > +
+> > +	vm->vah = dt->vsync_pol_active;
+> > +	vm->hah = dt->hsync_pol_active;
+> > +	vm->de = dt->de_pol_active;
+> > +	vm->pixelclk_pol = dt->pixelclk_pol;
+> > +
+> > +	vm->interlaced = dt->interlaced;
+> > +	vm->doublescan = dt->doublescan;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +EXPORT_SYMBOL_GPL(videomode_from_timing);
+> > diff --git a/include/linux/display_timing.h b/include/linux/display_timing.h
+> > new file mode 100644
+> > index 0000000..d5bf03f
+> > --- /dev/null
+> > +++ b/include/linux/display_timing.h
+> > @@ -0,0 +1,70 @@
+> > +/*
+> > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > + *
+> > + * description of display timings
+> > + *
+> > + * This file is released under the GPLv2
+> > + */
+> > +
+> > +#ifndef __LINUX_DISPLAY_TIMINGS_H
+> > +#define __LINUX_DISPLAY_TIMINGS_H
+> > +
+> > +#include <linux/types.h>
+> 
+> What is this needed for? u32? I don't see it defined in types.h
+> 
+
+Yes, u32. What would be the right header for that if not types.h?
+
+> > +
+> > +struct timing_entry {
+> > +	u32 min;
+> > +	u32 typ;
+> > +	u32 max;
+> > +};
+> > +
+> > +struct display_timing {
+> > +	struct timing_entry pixelclock;
+> > +
+> > +	struct timing_entry hactive;
+> > +	struct timing_entry hfront_porch;
+> > +	struct timing_entry hback_porch;
+> > +	struct timing_entry hsync_len;
+> > +
+> > +	struct timing_entry vactive;
+> > +	struct timing_entry vfront_porch;
+> > +	struct timing_entry vback_porch;
+> > +	struct timing_entry vsync_len;
+> > +
+> > +	unsigned int vsync_pol_active;
+> > +	unsigned int hsync_pol_active;
+> > +	unsigned int de_pol_active;
+> > +	unsigned int pixelclk_pol;
+> > +	bool interlaced;
+> > +	bool doublescan;
+> > +};
+> > +
+> > +struct display_timings {
+> > +	unsigned int num_timings;
+> > +	unsigned int native_mode;
+> > +
+> > +	struct display_timing **timings;
+> > +};
+> > +
+> > +/*
+> > + * placeholder function until ranges are really needed
+> > + * the index parameter should then be used to select one of [min typ max]
+> > + */
+> > +static inline u32 display_timing_get_value(const struct timing_entry *te,
+> > +					   unsigned int index)
+> > +{
+> > +	return te->typ;
+> > +}
+> 
+> Why did you opt for a placeholder here? It feels trivial to me to have
+> support to get the min/typ/max value properly.
+> 
+
+I will add that in the next version.
+
+> > +static inline struct display_timing *display_timings_get(const struct
+> > +							 display_timings *disp,
+> > +							 unsigned int index)
+> > +{
+> > +	if (disp->num_timings > index)
+> > +		return disp->timings[index];
+> > +	else
+> > +		return NULL;
+> > +}
+> > +
+> > +void display_timings_release(struct display_timings *disp);
+> > +
+> > +#endif
+> > diff --git a/include/linux/videomode.h b/include/linux/videomode.h
+> > new file mode 100644
+> > index 0000000..5d3e796
+> > --- /dev/null
+> > +++ b/include/linux/videomode.h
+> > @@ -0,0 +1,40 @@
+> > +/*
+> > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > + *
+> > + * generic videomode description
+> > + *
+> > + * This file is released under the GPLv2
+> > + */
+> > +
+> > +#ifndef __LINUX_VIDEOMODE_H
+> > +#define __LINUX_VIDEOMODE_H
+> > +
+> > +#include <linux/display_timing.h>
+> 
+> This is not needed, just add:
+> 
+> struct display_timings;
+> 
+
+Okay.
+
+> > +struct videomode {
+> > +	u32 pixelclock;
+> > +	u32 refreshrate;
+> > +
+> > +	u32 hactive;
+> > +	u32 hfront_porch;
+> > +	u32 hback_porch;
+> > +	u32 hsync_len;
+> > +
+> > +	u32 vactive;
+> > +	u32 vfront_porch;
+> > +	u32 vback_porch;
+> > +	u32 vsync_len;
+> > +
+> > +	u32 hah;
+> > +	u32 vah;
+> > +	u32 de;
+> > +	u32 pixelclk_pol;
+> > +
+> > +	bool interlaced;
+> > +	bool doublescan;
+> > +};
+> > +
+> > +int videomode_from_timing(const struct display_timings *disp,
+> > +			  struct videomode *vm, unsigned int index);
+> > +
+> 
+> Are this and the few other functions above meant to be used from
+> drivers? If so, some explanation of the parameters here would be nice.
+> If they are just framework internal, they don't probably need that.
+>
+
+Okay. I will add some more documentation.
+
+Regards,
+Steffen
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
