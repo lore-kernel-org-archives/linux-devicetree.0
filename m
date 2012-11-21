@@ -1,74 +1,75 @@
-From: Bill Pemberton <wfp5p@virginia.edu>
-Subject: [PATCH 3/9] powerpc/PCI: Remove CONFIG_HOTPLUG ifdefs
-Date: Wed, 21 Nov 2012 15:34:54 -0500
-Message-ID: <1353530100-728-4-git-send-email-wfp5p@virginia.edu>
-References: <1353530100-728-1-git-send-email-wfp5p@virginia.edu>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1353530100-728-1-git-send-email-wfp5p@virginia.edu>
-Sender: linux-pci-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: linux-pci@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Bjorn Helgaas <bhelgaas@google.com>, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: Device tree node to major/minor?
+Date: Wed, 21 Nov 2012 12:48:09 -0800
+Message-ID: <CAPnjgZ3W3YfJLwfmg41oM4HvM+JnH2qiwmDN6Yhf3G8KnBFRhw@mail.gmail.com>
+References: <CAPnjgZ0+8MbjmW7XKsSW0O0n2ob7XcUZokLd8b=1LkSUJ+tQEA@mail.gmail.com>
+	<CACxGe6t-ROJe+KXZh-nah50M2buM4yjncs=7musv39=C+73_FQ@mail.gmail.com>
+	<CAPnjgZ3jF7bdwqDCNzJXvSrwoP0PZVjcFO+nGOiLACLDX07Z7A@mail.gmail.com>
+	<20121121154758.93CE43E0AE2@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121121154758.93CE43E0AE2@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: lk <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Che-liang Chiou <clchiou@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove conditional code based on CONFIG_HOTPLUG being false.  It's
-always on now in preparation of it going away as an option.
+Hi Grant,
 
-Signed-off-by: Bill Pemberton <wfp5p@virginia.edu>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: devicetree-discuss@lists.ozlabs.org
----
- arch/powerpc/kernel/pci-common.c | 4 ----
- arch/powerpc/kernel/pci_64.c     | 4 ----
- 2 files changed, 8 deletions(-)
+On Wed, Nov 21, 2012 at 7:47 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Tue, 20 Nov 2012 15:48:24 -0800, Simon Glass <sjg@chromium.org> wrote:
+>> Hi Grant,
+>>
+>> On Tue, Nov 20, 2012 at 2:32 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+>> > On Tue, Nov 20, 2012 at 10:23 PM, Simon Glass <sjg@chromium.org> wrote:
+>> >> Hi,
+>> >>
+>> >> I hope this is a stupid question with an easy answer, but I cannot find it.
+>> >>
+>> >> I have a device tree node for an mmc block device and I want to use
+>> >> that block device from another driver. I have a phandle which lets me
+>> >> get the node of the mmc device, but I am not sure how to convert that
+>> >> into a block_device. In order to do so, I think I need a major/minor
+>> >> number. Of course the phandle might in fact point to a SCSI driver and
+>> >> I want that to work correctly also.
+>> >>
+>> >> I imagine I might be able to search through the wonders of sysfs in
+>> >> user space, but is there a better way?
+>> >
+>> > Do you /want/ to do it from userspace? What is your use case? Mounting
+>> > the rootfs?
+>>
+>> The use case is storing some raw data on a block device from within a
+>> driver in the kernel. It is used to keep track of the verified boot
+>> state.
+>>
+>> >
+>> > Regardless, userspace can monitor the uevents when devices are added
+>> > (that's what udev does) and watch for the full path of the node you
+>> > want in the uevent attribute. Then you can look for the child device
+>> > with the block major/minor numbers in it.
+>>
+>> So is there a way to do this entirely in the kernel ex post? It might
+>> need to happen during kernel boot, before user space.
+>
+> Yes, it is certainly doable within the kernel. First, you'll need to use
+> a notifier to get called back whenever a new device is created. Then
+> you'll need to look at the dev->of_node(->full_name) to see if it is the
+> node you actually want. You might need/want to resolve it from an alias
+> or something, but I presume you already have a way to find the
+> device_node before seaching for a struct device.
 
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index 7f94f76..abc0d08 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -1428,8 +1428,6 @@ void __init pcibios_resource_survey(void)
- 		ppc_md.pcibios_fixup();
- }
- 
--#ifdef CONFIG_HOTPLUG
--
- /* This is used by the PCI hotplug driver to allocate resource
-  * of newly plugged busses. We can try to consolidate with the
-  * rest of the code later, for now, keep it as-is as our main
-@@ -1488,8 +1486,6 @@ void pcibios_finish_adding_to_bus(struct pci_bus *bus)
- }
- EXPORT_SYMBOL_GPL(pcibios_finish_adding_to_bus);
- 
--#endif /* CONFIG_HOTPLUG */
--
- int pcibios_enable_device(struct pci_dev *dev, int mask)
- {
- 	if (ppc_md.pcibios_enable_device_hook)
-diff --git a/arch/powerpc/kernel/pci_64.c b/arch/powerpc/kernel/pci_64.c
-index 4ff190f..2cbe676 100644
---- a/arch/powerpc/kernel/pci_64.c
-+++ b/arch/powerpc/kernel/pci_64.c
-@@ -74,8 +74,6 @@ static int __init pcibios_init(void)
- 
- subsys_initcall(pcibios_init);
- 
--#ifdef CONFIG_HOTPLUG
--
- int pcibios_unmap_io_space(struct pci_bus *bus)
- {
- 	struct pci_controller *hose;
-@@ -124,8 +122,6 @@ int pcibios_unmap_io_space(struct pci_bus *bus)
- }
- EXPORT_SYMBOL_GPL(pcibios_unmap_io_space);
- 
--#endif /* CONFIG_HOTPLUG */
--
- static int __devinit pcibios_map_phb_io_space(struct pci_controller *hose)
- {
- 	struct vm_struct *area;
--- 
-1.8.0
+OK thank you. Was hoping to find a simple way to find a block device
+from a device tree node (yes I know the right one) but I suppose in
+general this is impossible, since nodes may create more than one
+device, and each has its own data structures leading to the block
+device.
+
+So it seems like a notifier is the best way. Thanks for looking at this Grant.
+
+Regards,
+Simon
+
+>
+> g.
