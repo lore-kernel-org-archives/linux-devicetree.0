@@ -1,88 +1,140 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v12 4/6] fbmon: add of_videomode helpers
-Date: Wed, 21 Nov 2012 17:24:36 +0100
-Message-ID: <20121121162436.GB12657@pengutronix.de>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-5-git-send-email-s.trumtrar@pengutronix.de>
- <50ACCDDA.2070606@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50ACCDDA.2070606@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3] pwm: Device tree support for PWM polarity.
+Date: Wed, 21 Nov 2012 16:32:46 +0000
+Message-ID: <20121121163246.B20163E0AE2@localhost>
+References: <1353483644-32711-1-git-send-email-avinashphilip@ti.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1353483644-32711-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: thierry.reding@avionic-design.de, rob.herring@calxeda.com, rob@landley.net
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 02:49:30PM +0200, Tomi Valkeinen wrote:
-> On 2012-11-20 17:54, Steffen Trumtrar wrote:
-> > Add helper to get fb_videomode from devicetree.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> >  drivers/video/fbmon.c |   42 +++++++++++++++++++++++++++++++++++++++++-
-> >  include/linux/fb.h    |    7 +++++++
-> >  2 files changed, 48 insertions(+), 1 deletion(-)
+On Wed, 21 Nov 2012 13:10:44 +0530, "Philip, Avinash" <avinashphilip@ti.com> wrote:
+> Add support for encoding PWM properties in bit encoded form with
+> of_pwm_xlate_with_flags() function support. Platforms require platform
+> specific PWM properties has to populate in 3rd cell of the pwm-specifier
+> and PWM driver should also set .of_xlate support with this function.
+> Currently PWM property polarity encoded in bit position 0 of the third
+> cell in pwm-specifier.
 > 
+> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+
+Looks okay to me.
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
+> ---
+> Changes since v2:
+> 	- Move PWM_SPEC_POLARITY to core.c
+> 	- Remove dummy function
 > 
-> > diff --git a/include/linux/fb.h b/include/linux/fb.h
-> > index 920cbe3..41b5e49 100644
-> > --- a/include/linux/fb.h
-> > +++ b/include/linux/fb.h
-> > @@ -15,6 +15,8 @@
-> >  #include <linux/slab.h>
-> >  #include <asm/io.h>
-> >  #include <linux/videomode.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_videomode.h>
+> Changes since v1:
+> 	- of_pwm_xlate_with_flags function support added.
+> 	- Documentation update
 > 
-> Guess what? =)
+> :100644 100644 73ec962... 04b0dc4... M	Documentation/devicetree/bindings/pwm/pwm.txt
+> :100644 100644 f5acdaa... 780cb6b... M	drivers/pwm/core.c
+> :100644 100644 112b314... 6d661f3... M	include/linux/pwm.h
+>  Documentation/devicetree/bindings/pwm/pwm.txt |   18 +++++++++++++--
+>  drivers/pwm/core.c                            |   28 +++++++++++++++++++++++++
+>  include/linux/pwm.h                           |    3 ++
+>  3 files changed, 46 insertions(+), 3 deletions(-)
 > 
-> To be honest, I don't know what the general opinion is about including
-> header files from header files. But I always leave them out if they are
-> not strictly needed.
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
+> index 73ec962..04b0dc4 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
+> @@ -37,10 +37,22 @@ device:
+>  		pwm-names = "backlight";
+>  	};
+>  
+> +Note that in the example above, specifying the "pwm-names" is redundant
+> +because the name "backlight" would be used as fallback anyway.
+> +
+>  pwm-specifier typically encodes the chip-relative PWM number and the PWM
+> -period in nanoseconds. Note that in the example above, specifying the
+> -"pwm-names" is redundant because the name "backlight" would be used as
+> -fallback anyway.
+> +period in nanoseconds.
+> +
+> +Optionally, the pwm-specifier can encode a number of flags in a third cell:
+> +- bit 0: PWM signal polarity (0: normal polarity, 1: inverse polarity)
+> +
+> +Example with optional PWM specifier for inverse polarity
+> +
+> +	bl: backlight {
+> +		pwms = <&pwm 0 5000000 1>;
+> +		pwm-names = "backlight";
+> +	};
+> +
+>  
+>  2) PWM controller nodes
+>  -----------------------
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index f5acdaa..780cb6b 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -32,6 +32,9 @@
+>  
+>  #define MAX_PWMS 1024
+>  
+> +/* flags in the third cell of the DT PWM specifier */
+> +#define PWM_SPEC_POLARITY	(1 << 0)
+> +
+>  static DEFINE_MUTEX(pwm_lookup_lock);
+>  static LIST_HEAD(pwm_lookup_list);
+>  static DEFINE_MUTEX(pwm_lock);
+> @@ -129,6 +132,31 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
+>  	return 0;
+>  }
+>  
+> +struct pwm_device *
+> +of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_args *args)
+> +{
+> +	struct pwm_device *pwm;
+> +
+> +	if (pc->of_pwm_n_cells < 3)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	if (args->args[0] >= pc->npwm)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	pwm = pwm_request_from_chip(pc, args->args[0], NULL);
+> +	if (IS_ERR(pwm))
+> +		return pwm;
+> +
+> +	pwm_set_period(pwm, args->args[1]);
+> +
+> +	if (args->args[2] & PWM_SPEC_POLARITY)
+> +		pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
+> +	else
+> +		pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
+> +
+> +	return pwm;
+> +}
+> +
+>  static struct pwm_device *
+>  of_pwm_simple_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
+>  {
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index 112b314..6d661f3 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -171,6 +171,9 @@ struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
+>  					 unsigned int index,
+>  					 const char *label);
+>  
+> +struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
+> +		const struct of_phandle_args *args);
+> +
+>  struct pwm_device *pwm_get(struct device *dev, const char *consumer);
+>  void pwm_put(struct pwm_device *pwm);
+>  
+> -- 
+> 1.7.0.4
 > 
-
-Okay. Seems to fit with the rest of the file;
-
-> >  struct vm_area_struct;
-> >  struct fb_info;
-> > @@ -715,6 +717,11 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
-> >  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
-> >  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
-> >  
-> > +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-> > +extern int of_get_fb_videomode(const struct device_node *np,
-> > +			       struct fb_videomode *fb,
-> > +			       unsigned int index);
-> > +#endif
-> >  #if IS_ENABLED(CONFIG_VIDEOMODE)
-> >  extern int fb_videomode_from_videomode(const struct videomode *vm,
-> >  				       struct fb_videomode *fbmode);
-> 
-> Do you really need these #ifs in the header files? They do make it look
-> a bit messy. If somebody uses the functions and CONFIG_VIDEOMODE is not
-> enabled, he'll get a linker error anyway.
-> 
-
-Well, I don't remember at the moment who requested this, but it was not my
-idea to put them there. So, this is a matter of style I guess.
-But maybe I understood that wrong.
-
-
-Regards,
-Steffen
-
-
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
