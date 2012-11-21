@@ -1,91 +1,69 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v12 1/6] video: add display_timing and videomode
-Date: Wed, 21 Nov 2012 18:42:21 +0200
-Message-ID: <50AD046D.1050201@ti.com>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-2-git-send-email-s.trumtrar@pengutronix.de>
- <50ACBCE4.60701@ti.com> <20121121161103.GA12657@pengutronix.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH] ARM: kernel: fix nr_cpu_ids check in DT logical map init
+Date: Wed, 21 Nov 2012 16:42:56 +0000
+Message-ID: <1353516176-12929-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1209739556801913027=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121121161103.GA12657-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux@arm.linux.org.uk
+Cc: devicetree-discuss@lists.ozlabs.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1209739556801913027==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enig0CF1414206811AEE10D77671"
+If a kernel is configured with a DT containing more /cpu nodes than
+nr_cpu_ids, the number of cpus must be capped in the DT parsing
+code. Current code carries out the check, but fails to cap the
+value and the check is executed after the cpu logical index is used,
+which can lead to memory corruption due to index overflow.
 
---------------enig0CF1414206811AEE10D77671
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+This patch refactors the check against nr_cpu_ids and move it before
+any computed index is used in the parsing code.
 
-On 2012-11-21 18:11, Steffen Trumtrar wrote:
-> Hi,
->=20
-> On Wed, Nov 21, 2012 at 01:37:08PM +0200, Tomi Valkeinen wrote:
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reported-by: Mark Rutland <mark.rutland@arm.com>
+---
+Russell,
 
->>> +#include <linux/types.h>
->>
->> What is this needed for? u32? I don't see it defined in types.h
->>
->=20
-> Yes, u32. What would be the right header for that if not types.h?
+while refactoring the DT loop over nodes, I unfortunately missed this niggle
+in the parsing loop that Mark reported. Here is the fix, sorry for the
+additional commit, if it is ok for you I will add it to your patch system.
 
-Yes, it looks like u32 comes via linux/types.h. It's defined elsewhere,
-but linux/types.h sounds like the most reasonable header for it.
+Apologies and thanks,
+Lorenzo
 
- Tomi
+ arch/arm/kernel/devtree.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-
-
---------------enig0CF1414206811AEE10D77671
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJQrQRtAAoJEPo9qoy8lh71eloP/juLnJjbo5y2FUJ04qMJ+df7
-MkNVVYEtjD4rceufjzwihFGQ1EQX1HowLyFGe2/Wljn8xbFkNvNh20fnbq3O1p0I
-KMcUUCGppacHs6kWu5RvFRVjHX6BOu4XkVMzfcFnbtFocHZiTSXWa+JxhFF7I96U
-o4hkfJ8+Jy4znNmrfYPDMliEbFaM5JaeXbmPKQ81Oe75pvk+9mmDOONURmDS0xPB
-Zi+kVZ70C4V1fWlu/vO+ukeUlKBRXgTdjGM0MUZUbHHKYio4KY8WN3j5Za2XDpN0
-8PTJsLPvxaSouuXlXl6LznwxjkTET/bTj1FN4PIR/CEz4KybtjkVHx6zeo0NCyfp
-Sp+GSVDmyN1psGhWtJyYj9d3IbZBCvplaXHiaKansq/BkiiQfrpmqTRQH5RDOpgn
-ii4Odde5Hc98z2O/g+rZYMVKrk1V8cS70HwC02LCyLuc+39CVz8+YzhMTId6C4OX
-lVMFPIN+vDtypsWim7HsFU97ZoNf7Mhh3SbQctkKdXfUTJXGvbFn6X36Tyzj1IUQ
-QPud8W4NQ+wFafRiutcQ8FXmqsdoGngpWd35U6HgR/O3SreXH0kf/90P1HcGS7FZ
-/kK5ojz/NheUeo4+MZtbul81f5fvktR5gKauWJ2Vfve7wf3Cn6gsrl3EWqUqGzWe
-YHTfS+riAeffBkD2Bn9y
-=5nJE
------END PGP SIGNATURE-----
-
---------------enig0CF1414206811AEE10D77671--
-
---===============1209739556801913027==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1209739556801913027==--
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index aaf9add..70f1bde 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -139,10 +139,14 @@ void __init arm_dt_init_cpu_maps(void)
+ 			i = cpuidx++;
+ 		}
+ 
+-		tmp_map[i] = hwid;
+-
+-		if (cpuidx > nr_cpu_ids)
++		if (WARN(cpuidx > nr_cpu_ids, "DT /cpu %u nodes greater than "
++					       "max cores %u, capping them\n",
++					       cpuidx, nr_cpu_ids)) {
++			cpuidx = nr_cpu_ids;
+ 			break;
++		}
++
++		tmp_map[i] = hwid;
+ 	}
+ 
+ 	if (WARN(!bootcpu_valid, "DT missing boot CPU MPIDR[23:0], "
+-- 
+1.7.12
