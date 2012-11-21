@@ -1,44 +1,170 @@
 From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 0/7] support other fsl SoCs with usbmisc + small fixes
-Date: Wed, 21 Nov 2012 15:06:26 +0100
-Message-ID: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
+Subject: [PATCH v3 7/7] usb: chipidea: usbmisc: add post handling and errata fix for mx25
+Date: Wed, 21 Nov 2012 15:06:33 +0100
+Message-ID: <1353506793-8354-8-git-send-email-m.grzeschik@pengutronix.de>
+References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1353506793-8354-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Nearly every SoC from Freescale has this non-core usb registers. This series
-adds support for more users of this driver.
+This adds a post handling routine which is called after
+ci13xxx_add_device was called. The first user is the mx25, which has to
+disable the external-vbus-divider after the ude has started.
 
-This series is based on Peter Chen's work. Its needed to merge his master branch
-before applying this series:
+Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+Changes since v2:
+* added defines for register offsets and bitmasks
 
-https://github.com/hzpeterchen/linux-usb.git
+ .../devicetree/bindings/usb/ci13xxx-imx.txt        |    2 ++
+ drivers/usb/chipidea/ci13xxx_imx.c                 |   12 +++++++
+ drivers/usb/chipidea/ci13xxx_imx.h                 |    3 ++
+ drivers/usb/chipidea/usbmisc_imx.c                 |   33 ++++++++++++++++++++
+ 4 files changed, 50 insertions(+)
 
-Marc Kleine-Budde (4):
-  usb: chipidea: usbmisc: unset global varibale usbmisc on driver
-    remove
-  usb: chipidea: usbmisc: fix a potential race condition
-  usb: chipidea: usbmisc: prepare driver to handle more than one soc
-  usb: chipidea: usbmisc: add support for ahb, ipg and per clock
-
-Michael Grzeschik (3):
-  usb: chipidea: usbmisc: rename file, struct and functions to
-    usbmisc_imx
-  usb: chipidea: usbmisc: add mx53 support
-  usb: chipidea: usbmisc: add post handling and errata fix for mx25
-
- .../devicetree/bindings/usb/ci13xxx-imx.txt        |    2 +
- drivers/usb/chipidea/Makefile                      |    2 +-
- drivers/usb/chipidea/ci13xxx_imx.c                 |   12 +
- drivers/usb/chipidea/ci13xxx_imx.h                 |    3 +
- drivers/usb/chipidea/usbmisc_imx.c                 |  282 ++++++++++++++++++++
- drivers/usb/chipidea/usbmisc_imx6q.c               |  162 -----------
- 6 files changed, 300 insertions(+), 163 deletions(-)
- create mode 100644 drivers/usb/chipidea/usbmisc_imx.c
- delete mode 100644 drivers/usb/chipidea/usbmisc_imx6q.c
-
+diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+index 5778b9c..1c04a4c 100644
+--- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
++++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
+@@ -11,6 +11,7 @@ Optional properties:
+   that indicate usb controller index
+ - vbus-supply: regulator for vbus
+ - disable-over-current: disable over current detect
++- external-vbus-divider: enables off-chip resistor divider for Vbus
+ 
+ Examples:
+ usb@02184000 { /* USB OTG */
+@@ -20,4 +21,5 @@ usb@02184000 { /* USB OTG */
+ 	fsl,usbphy = <&usbphy1>;
+ 	fsl,usbmisc = <&usbmisc 0>;
+ 	disable-over-current;
++	external-vbus-divider;
+ };
+diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
+index 935de97..d346c99 100644
+--- a/drivers/usb/chipidea/ci13xxx_imx.c
++++ b/drivers/usb/chipidea/ci13xxx_imx.c
+@@ -79,6 +79,9 @@ int usbmisc_get_init_data(struct device *dev, struct usbmisc_usb_device *usbdev)
+ 	if (of_find_property(np, "disable-over-current", NULL))
+ 		usbdev->disable_oc = 1;
+ 
++	if (of_find_property(np, "external-vbus-divider", NULL))
++		usbdev->evdo = 1;
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(usbmisc_get_init_data);
+@@ -213,6 +216,15 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
+ 		goto put_np;
+ 	}
+ 
++	if (usbmisc_ops && usbmisc_ops->post) {
++		ret = usbmisc_ops->post(&pdev->dev);
++		if (ret) {
++			dev_err(&pdev->dev,
++				"usbmisc post failed, ret=%d\n", ret);
++			goto put_np;
++		}
++	}
++
+ 	data->ci_pdev = plat_ci;
+ 	platform_set_drvdata(pdev, data);
+ 
+diff --git a/drivers/usb/chipidea/ci13xxx_imx.h b/drivers/usb/chipidea/ci13xxx_imx.h
+index 2e88acc..d065273 100644
+--- a/drivers/usb/chipidea/ci13xxx_imx.h
++++ b/drivers/usb/chipidea/ci13xxx_imx.h
+@@ -13,6 +13,8 @@
+ struct usbmisc_ops {
+ 	/* It's called once when probe a usb device */
+ 	int (*init)(struct device *dev);
++	/* It's called once after adding a usb device */
++	int (*post)(struct device *dev);
+ };
+ 
+ struct usbmisc_usb_device {
+@@ -20,6 +22,7 @@ struct usbmisc_usb_device {
+ 	int index;
+ 
+ 	int disable_oc:1; /* over current detect disabled */
++	int evdo:1; /* set external vbus divider option */
+ };
+ 
+ int usbmisc_set_ops(const struct usbmisc_ops *ops);
+diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+index b1811df..8c947c1 100644
+--- a/drivers/usb/chipidea/usbmisc_imx.c
++++ b/drivers/usb/chipidea/usbmisc_imx.c
+@@ -14,11 +14,15 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
++#include <linux/delay.h>
+ 
+ #include "ci13xxx_imx.h"
+ 
+ #define USB_DEV_MAX 4
+ 
++#define MX25_USB_PHY_CTRL_OFFSET	0x08;
++#define MX25_BM_EXTERNAL_VBUS_DIVIDER	BIT(23)
++
+ #define MX53_USB_OTG_PHY_CTRL_0_OFFSET	0x08;
+ #define MX53_USB_UH2_CTRL_OFFSET	0x14;
+ #define MX53_USB_UH3_CTRL_OFFSET	0x18;
+@@ -61,6 +65,30 @@ static struct usbmisc_usb_device *get_usbdev(struct device *dev)
+ 	return &usbmisc->usbdev[i];
+ }
+ 
++static int usbmisc_imx25_post(struct device *dev)
++{
++	struct usbmisc_usb_device *usbdev;
++	void __iomem *reg;
++	unsigned long flags;
++	u32 val;
++
++	usbdev = get_usbdev(dev);
++	if (IS_ERR(usbdev))
++		return PTR_ERR(usbdev);
++
++	reg = usbmisc->base + MX25_USB_PHY_CTRL_OFFSET;
++
++	if (usbdev->evdo) {
++		spin_lock_irqsave(&usbmisc->lock, flags);
++		val = readl(reg);
++		writel(val | MX25_BM_EXTERNAL_VBUS_DIVIDER, reg);
++		spin_unlock_irqrestore(&usbmisc->lock, flags);
++		mdelay(5); /* needed to stabilize voltage */
++	}
++
++	return 0;
++}
++
+ static int usbmisc_imx53_init(struct device *dev)
+ {
+ 	struct usbmisc_usb_device *usbdev;
+@@ -122,6 +150,10 @@ static int usbmisc_imx6q_init(struct device *dev)
+ 	return 0;
+ }
+ 
++static const struct usbmisc_ops imx25_usbmisc_ops = {
++	.post = usbmisc_imx25_post,
++};
++
+ static const struct usbmisc_ops imx53_usbmisc_ops = {
+ 	.init = usbmisc_imx53_init,
+ };
+@@ -131,6 +163,7 @@ static const struct usbmisc_ops imx6q_usbmisc_ops = {
+ };
+ 
+ static const struct of_device_id usbmisc_imx_dt_ids[] = {
++	{ .compatible = "fsl,imx25-usbmisc", .data = (void *)&imx25_usbmisc_ops },
+ 	{ .compatible = "fsl,imx53-usbmisc", .data = (void *)&imx53_usbmisc_ops },
+ 	{ .compatible = "fsl,imx6q-usbmisc", .data = (void *)&imx6q_usbmisc_ops },
+ 	{ /* sentinel */ }
 -- 
 1.7.10.4
 
