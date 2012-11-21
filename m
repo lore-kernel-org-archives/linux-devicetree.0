@@ -1,17 +1,16 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v12 2/6] video: add of helper for videomode
-Date: Wed, 21 Nov 2012 16:13:14 +0100
-Message-ID: <20121121151314.GB4048@avionic-0098.adnet.avionic-design.de>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-3-git-send-email-s.trumtrar@pengutronix.de>
- <A73F36158E33644199EB82C5EC81C7BC3E9FA7A0@DBDE01.ent.ti.com>
- <20121121114843.GC14013@pengutronix.de>
- <20121121115236.GA8886@avionic-0098.adnet.avionic-design.de>
- <50ACED4A.5040806@gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V6 1/5] arm: mvebu: Add support for coherency fabric in
+ mach-mvebu
+Date: Wed, 21 Nov 2012 15:15:56 +0000
+Message-ID: <20121121151556.GO11990@mudshark.cambridge.arm.com>
+References: <1353509970-5237-1-git-send-email-gregory.clement@free-electrons.com>
+ <1353509970-5237-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1549529268898163219=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50ACED4A.5040806-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1353509970-5237-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,137 +21,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, "Valkeinen,
- Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <Leif.Lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWOunwaRDDq4rA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 21, 2012 at 02:59:26PM +0000, Gregory CLEMENT wrote:
+> diff --git a/arch/arm/mach-mvebu/coherency_ll.S b/arch/arm/mach-mvebu/coherency_ll.S
+> new file mode 100644
+> index 0000000..74272b6
+> --- /dev/null
+> +++ b/arch/arm/mach-mvebu/coherency_ll.S
+> @@ -0,0 +1,49 @@
+> +/*
+> + * Coherency fabric: low level functions
+> + *
+> + * Copyright (C) 2012 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + *
+> + * This file implements the assembly function to add a CPU to the
+> + * coherency fabric. This function is called by each of the secondary
+> + * CPUs during their early boot in an SMP kernel, this why this
+> + * function have to callable from assembly. It can also be called by a
+> + * primary CPU from C code during its boot.
+> + */
+> +
+> +#include <linux/linkage.h>
+> +#define ARMADA_XP_CFB_CTL_REG_OFFSET 0x0
+> +#define ARMADA_XP_CFB_CFG_REG_OFFSET 0x4
+> +
+> +	.text
+> +/*
+> + * r0: Coherency fabric base register address
+> + * r1: HW CPU id
+> + */
+> +ENTRY(ll_set_cpu_coherent)
+> +	/* Create bit by cpu index */
+> +	mov	r3, #(1 << 24)
+> +	lsl     r1, r3, r1
+> +
+> +	/* Add CPU to SMP group - Atomic */
+> +	add	r3, r0, #ARMADA_XP_CFB_CTL_REG_OFFSET
+> +	ldr     r2, [r3]
+> +	orr     r2, r2, r1
+> +	str	r2, [r0]
 
---===============1549529268898163219==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
-Content-Disposition: inline
+This should be storing to [r3] but you get away with it because your
+immediate offset evaluates to zero.
 
+If you fix that:
 
---dTy3Mrz/UPE2dbVg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  Reviewed-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 
-On Wed, Nov 21, 2012 at 09:03:38AM -0600, Rob Herring wrote:
-> On 11/21/2012 05:52 AM, Thierry Reding wrote:
-> > On Wed, Nov 21, 2012 at 12:48:43PM +0100, Steffen Trumtrar wrote:
-> >> Hi!
-> >>
-> >> On Wed, Nov 21, 2012 at 10:12:43AM +0000, Manjunathappa, Prakash wrote:
-> >>> Hi Steffen,
-> >>>
-> >>> On Tue, Nov 20, 2012 at 21:24:52, Steffen Trumtrar wrote:
-> >>>> +/**
-> >>>> + * of_get_display_timings - parse all display_timing entries from a=
- device_node
-> >>>> + * @np: device_node with the subnodes
-> >>>> + **/
-> >>>> +struct display_timings *of_get_display_timings(const struct device_=
-node *np)
-> >>>> +{
-> >>>> +	struct device_node *timings_np;
-> >>>> +	struct device_node *entry;
-> >>>> +	struct device_node *native_mode;
-> >>>> +	struct display_timings *disp;
-> >>>> +
-> >>>> +	if (!np) {
-> >>>> +		pr_err("%s: no devicenode given\n", __func__);
-> >>>> +		return NULL;
-> >>>> +	}
-> >>>> +
-> >>>> +	timings_np =3D of_find_node_by_name(np, "display-timings");
-> >>>
-> >>> I get below build warnings on this line
-> >>> drivers/video/of_display_timing.c: In function 'of_get_display_timing=
-s':
-> >>> drivers/video/of_display_timing.c:109:2: warning: passing argument 1 =
-of 'of_find_node_by_name' discards qualifiers from pointer target type
-> >>> include/linux/of.h:167:28: note: expected 'struct device_node *' but =
-argument is of type 'const struct device_node *'
-> >>>
-> >>>> + * of_display_timings_exists - check if a display-timings node is p=
-rovided
-> >>>> + * @np: device_node with the timing
-> >>>> + **/
-> >>>> +int of_display_timings_exists(const struct device_node *np)
-> >>>> +{
-> >>>> +	struct device_node *timings_np;
-> >>>> +
-> >>>> +	if (!np)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	timings_np =3D of_parse_phandle(np, "display-timings", 0);
-> >>>
-> >>> Also here:
-> >>> drivers/video/of_display_timing.c: In function 'of_display_timings_ex=
-ists':
-> >>> drivers/video/of_display_timing.c:209:2: warning: passing argument 1 =
-of 'of_parse_phandle' discards qualifiers from pointer target type
-> >>> include/linux/of.h:258:28: note: expected 'struct device_node *' but =
-argument is of type 'const struct device_node *'
-> >>>
-> >>
-> >> The warnings are because the of-functions do not use const pointers wh=
-ere they
-> >> should. I had two options: don't use const pointers even if they shoul=
-d be and
-> >> have no warnings or use const pointers and have a correct API. (Third =
-option:
-> >> send patches for of-functions). I chose the second option.
-> >=20
-> > Maybe a better approach would be a combination of 1 and 3: don't use
-> > const pointers for struct device_node for now and bring the issue up
-> > with the OF maintainers, possibly with patches attached that fix the
-> > problematic functions.
->=20
-> Why does this need to be const? Since some DT functions increment
-> refcount the node, I'm not sure that making struct device_node const in
-> general is right thing to do. I do think it should be okay for
-> of_parse_phandle.
-
-I wasn't proposing to do it everywhere but only where possible. If the
-node is modified in some way then obviously it shouldn't be const.
-
-Thierry
-
---dTy3Mrz/UPE2dbVg
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQrO+KAAoJEN0jrNd/PrOhMiAQAJ4fJdlH+VJ6hrGAPKLMP4mW
-BYFJIr//pDah93mSpvG2a07FgbGJNdIIHL8XERZSXy+m06lxDM0BIjlxZpKuo0n0
-sEeNVfwQP6H/S0/pyqsMG2NqgGswzEzayNy+o7YkNTnFk33J1QU6csE48QpmQz6x
-hS14W58T01Pv8mJ9gh0edix2vC1S5ORDUXE8EMPL4jQBiJ0vjobwcfmnJasfbNy9
-mhhs8Mv3lFYqMlotmCcnZilQKXzR74TUkxnhopRNLLJIuL102jKYfVikhuTlul06
-XoXwUlNF743IywoE8Tr/vfvewN4YA3oEA+a5kDkkmszpgd8Ue2kmsdK1d7sIeU7q
-6B+PkoFm/VIA7rSMKIZAPANn9aW04MydilNXpaIEoUX5OW1/YnvHYQmiiy3TgPb5
-YNGgvk0RoYGEW14yaIkMVZpTTMyzdVhKUXXrYuSx/jlh/T3myRdIOJXsSFZOW5Yw
-kFAGDh9vWt1yT1OfJ1jpUrYAIeePM0cmH88QVMLbhQhReYVNAdPfjt71Bn1MB/2Y
-rX1PpARF4LhAHWUNXJzNKhURAx19HR5N0RmYKyZwV7HPmXsml4cETbg1qzWLc4uv
-vOSAJ+Y30K920DMHULhT9pGtwE/rvA5P0mO2+m4O8/f5VOCVrW84oirWEWdh33Xh
-fTVVUGuM/uKJcEkzFbsq
-=HrgX
------END PGP SIGNATURE-----
-
---dTy3Mrz/UPE2dbVg--
-
---===============1549529268898163219==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1549529268898163219==--
+Will
