@@ -1,49 +1,139 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Wed, 21 Nov 2012 19:00:32 +0900
-Message-ID: <4275468.QAmZy3xUK6@percival>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1699753.ZQsWMHINxd@percival> <50AC956D.7020303@ti.com>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: RE: [PATCH v12 3/6] fbmon: add videomode helpers
+Date: Wed, 21 Nov 2012 10:09:51 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3E9FA769@DBDE01.ent.ti.com>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353426896-6045-4-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50AC956D.7020303@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1353426896-6045-4-git-send-email-s.trumtrar@pengutronix.de>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 November 2012 16:48:45 Tomi Valkeinen wrote:
-> If the power-off sequence disables a regulator that was supposed to be
-> enabled by the power-on sequence (but wasn't enabled because of an
-> error), the regulator_disable is still called when the driver runs the
-> power-off sequence, isn't it? Regulator enables and disables are ref
-> counted, and the enables should match the disables.
+Hi Steffen,
 
-And there collapses my theory.
+I am trying to add DT support for da8xx-fb driver on top of your patches.
+Encountered below build error. Sorry for reporting it late.
 
-> > Failures might be better handled if sequences have some "recovery policy"
-> > about what to do when they fail, as mentioned in the link above. As you
-> > pointed out, the driver might not always know enough about the resources
-> > involved to do the right thing.
+On Tue, Nov 20, 2012 at 21:24:53, Steffen Trumtrar wrote:
+> Add a function to convert from the generic videomode to a fb_videomode.
 > 
-> Yes, I think such recovery policy would be needed.
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  drivers/video/fbmon.c |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/fb.h    |    6 ++++++
+>  2 files changed, 52 insertions(+)
+> 
+> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> index cef6557..c1939a6 100644
+> --- a/drivers/video/fbmon.c
+> +++ b/drivers/video/fbmon.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <video/edid.h>
+> +#include <linux/videomode.h>
+>  #ifdef CONFIG_PPC_OF
+>  #include <asm/prom.h>
+>  #include <asm/pci-bridge.h>
+> @@ -1373,6 +1374,51 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
+>  	kfree(timings);
+>  	return err;
+>  }
+> +
+> +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> +int fb_videomode_from_videomode(const struct videomode *vm,
+> +				struct fb_videomode *fbmode)
+> +{
+> +	unsigned int htotal, vtotal;
+> +
+> +	fbmode->xres = vm->hactive;
+> +	fbmode->left_margin = vm->hback_porch;
+> +	fbmode->right_margin = vm->hfront_porch;
+> +	fbmode->hsync_len = vm->hsync_len;
+> +
+> +	fbmode->yres = vm->vactive;
+> +	fbmode->upper_margin = vm->vback_porch;
+> +	fbmode->lower_margin = vm->vfront_porch;
+> +	fbmode->vsync_len = vm->vsync_len;
+> +
+> +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> +
+> +	fbmode->sync = 0;
+> +	fbmode->vmode = 0;
+> +	if (vm->hah)
+> +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> +	if (vm->vah)
+> +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> +	if (vm->interlaced)
+> +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> +	if (vm->doublescan)
+> +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> +	if (vm->de)
+> +		fbmode->sync |= FB_SYNC_DATA_ENABLE_HIGH_ACT;
 
-Indeed, from your last paragraph this makes even more sense now.
+"FB_SYNC_DATA_ENABLE_HIGH_ACT" seems to be mxsfb specific flag, I am getting
+build error on this. Please let me know if I am missing something.
 
-Oh, and I noticed I forgot to reply to this:
+Thanks,
+Prakash
 
-> This I didn't understand. Doesn't "<&pwm 2 xyz>" point to a single
-> device, no matter where and how many times it's used?
-
-That's true - however when dereferencing the phandle, the underlying framework 
-will try to acquire the PWM, which will result in failure if the same resource 
-is referenced several times.
-
-One could compare the phandles to avoid this, but in your example you must 
-know that for PWMs the "xyz" part is not relevant for comparison.
-
-This makes referencing of resources by name much easier to implement and more 
-elegant with respect to frameworks leveraging.
-
-Alex.
+> +	fbmode->flag = 0;
+> +
+> +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
+> +		 vm->hsync_len;
+> +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
+> +		 vm->vsync_len;
+> +	fbmode->refresh = (vm->pixelclock * 1000) / (htotal * vtotal);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+> +#endif
+> +
+> +
+>  #else
+>  int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+>  {
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index c7a9571..920cbe3 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -14,6 +14,7 @@
+>  #include <linux/backlight.h>
+>  #include <linux/slab.h>
+>  #include <asm/io.h>
+> +#include <linux/videomode.h>
+>  
+>  struct vm_area_struct;
+>  struct fb_info;
+> @@ -714,6 +715,11 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+>  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+>  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+>  
+> +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> +extern int fb_videomode_from_videomode(const struct videomode *vm,
+> +				       struct fb_videomode *fbmode);
+> +#endif
+> +
+>  /* drivers/video/modedb.c */
+>  #define VESA_MODEDB_SIZE 34
+>  extern void fb_var_to_videomode(struct fb_videomode *mode,
+> -- 
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
