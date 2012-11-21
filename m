@@ -1,74 +1,58 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: [PATCH v4 11/11] ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evmsk
-Date: Wed, 21 Nov 2012 18:41:08 +0530
-Message-ID: <1353503469-18634-12-git-send-email-avinashphilip@ti.com>
-References: <1353503469-18634-1-git-send-email-avinashphilip@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v12 0/6] of: add display helper
+Date: Wed, 21 Nov 2012 14:18:05 +0100
+Message-ID: <2518217.KnCDQR760l@avalon>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de> <20121120193531.GB27186@avionic-0098.adnet.avionic-design.de> <20121121082822.GB14013@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1353503469-18634-1-git-send-email-avinashphilip@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@avionic-design.de, paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, b-cousson@ti.com
-Cc: hvaibhav@ti.com, anilkumar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, vaibhav.bedia@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20121121082822.GB14013@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Robert Schwebel <r.schwebel@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-PWM output from ecap2 uses as backlight source. Also adds low threshold
-value to have a uniform divisions in brightness-levels scales with
-inverse polarity.
+On Wednesday 21 November 2012 09:28:22 Steffen Trumtrar wrote:
+> On Tue, Nov 20, 2012 at 08:35:31PM +0100, Thierry Reding wrote:
+> > On Tue, Nov 20, 2012 at 07:11:29PM +0100, Robert Schwebel wrote:
+> > > On Tue, Nov 20, 2012 at 05:13:19PM +0100, Laurent Pinchart wrote:
+> > > > On Tuesday 20 November 2012 16:54:50 Steffen Trumtrar wrote:
+> > > > > Hi!
+> > > > > 
+> > > > > Changes since v11:
+> > > > > 	- make pointers const where applicable
+> > > > > 	- add reviewed-by Laurent Pinchart
+> > > > 
+> > > > Looks good to me.
+> > > > 
+> > > > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > 
+> > > > Through which tree do you plan to push this ?
+> > > 
+> > > We have no idea yet, and none of the people on Cc: have volunteered
+> > > so far... what do you think?
+> > 
+> > The customary approach would be to take the patches through separate
+> > trees, but I think this particular series is sufficiently interwoven to
+> > warrant taking them all through one tree. However the least that we
+> > should do is collect Acked-by's from the other tree maintainers.
+> > 
+> > Given that most of the patches modify files in drivers/video, Florian's
+> > fbdev tree would be the most obvious candidate, right? If Florian agrees
+> > to take the patches, all we would need is David's Acked-by.
+> > 
+> > How does that sound?
+> > 
+> > Thierry
+> 
+> Hi!
+> 
+> That is exactly the way I thought this could happen.
 
-Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
----
-:100644 100644 f5a6162... 6f3de83... M	arch/arm/boot/dts/am335x-evmsk.dts
- arch/arm/boot/dts/am335x-evmsk.dts |   23 +++++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
+Sounds good to me as well.
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index f5a6162..6f3de83 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -51,6 +51,12 @@
- 				0x9c 0x27	/* gpmc_ben0_cle.gpio2_5, INPUT | MODE7 */
- 			>;
- 		};
-+
-+		ecap2_pins: backlight_pins {
-+			pinctrl-single,pins = <
-+				0x19c 0x4	/* mcasp0_ahclkr.ecap2_in_pwm2_out MODE4 */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -94,6 +100,16 @@
- 				st,max-limit-z = <750>;
- 			};
- 		};
-+
-+		epwmss2: epwmss@48304000 {
-+			status = "okay";
-+
-+			ecap2: ecap@48304100 {
-+				status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&ecap2_pins>;
-+			};
-+		};
- 	};
- 
- 	vbat: fixedregulator@0 {
-@@ -170,6 +186,13 @@
- 			gpios = <&gpio3 5 0>;
- 		};
- 	};
-+
-+	backlight {
-+		compatible	= "pwm-backlight";
-+		pwms = <&ecap2 0 50000 1>;
-+		brightness-levels = <0 58 61 66 75 90 125 170 255>;
-+		default-brightness-level = <8>;
-+	};
- };
- 
- /include/ "tps65910.dtsi"
 -- 
-1.7.0.4
+Regards,
+
+Laurent Pinchart
