@@ -1,95 +1,41 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v12 5/6] drm_modes: add videomode helpers
-Date: Wed, 21 Nov 2012 14:50:38 +0200
-Message-ID: <50ACCE1E.4030707@ti.com>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de> <1353426896-6045-6-git-send-email-s.trumtrar@pengutronix.de>
+From: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: dts: AM33XX: Rename I2C and GPIO nodes
+Date: Wed, 21 Nov 2012 13:47:59 +0100
+Message-ID: <871ufni0lc.fsf@dell.be.48ers.dk>
+References: <1353498737-21174-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enig8214106EC427CEF349D81767"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1353426896-6045-6-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353498737-21174-1-git-send-email-anilkumar-l0cyMroinI0@public.gmane.org> (AnilKumar
+ Ch's message of "Wed, 21 Nov 2012 17:22:17 +0530")
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---------------enig8214106EC427CEF349D81767
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+>>>>> "A" == AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org> writes:
 
-On 2012-11-20 17:54, Steffen Trumtrar wrote:
-> Add conversion from videomode to drm_display_mode
->=20
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> ---
->  drivers/gpu/drm/drm_modes.c |   37 +++++++++++++++++++++++++++++++++++=
-++
->  include/drm/drmP.h          |    6 ++++++
->  2 files changed, 43 insertions(+)
->=20
+ A> Rename I2C and GPIO nodes according to AM33XX TRM. According to
+ A> AM33XX TRM device instances are starting from "0" like i2c0, i2c1
+ A> and i2c3.
 
-> diff --git a/include/drm/drmP.h b/include/drm/drmP.h
-> index 3fd8280..de2f6cf 100644
-> --- a/include/drm/drmP.h
-> +++ b/include/drm/drmP.h
-> @@ -56,6 +56,7 @@
->  #include <linux/cdev.h>
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
-> +#include <linux/videomode.h>
->  #if defined(__alpha__) || defined(__powerpc__)
->  #include <asm/pgtable.h>	/* For pte_wrprotect */
->  #endif
-> @@ -1454,6 +1455,11 @@ extern struct drm_display_mode *
->  drm_mode_create_from_cmdline_mode(struct drm_device *dev,
->  				  struct drm_cmdline_mode *cmd);
-> =20
-> +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> +extern int drm_display_mode_from_videomode(const struct videomode *vm,=
+ A> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+ A> [panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org: initial patch by pantelis's]
+ A> Signed-off-by: AnilKumar Ch <anilkumar-l0cyMroinI0@public.gmane.org>
 
-> +					   struct drm_display_mode *dmode);
-> +#endif
-> +
->  /* Modesetting support */
->  extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
->  extern void drm_vblank_post_modeset(struct drm_device *dev, int crtc);=
+Thanks!
 
->=20
+Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
 
-And the same comments apply to this header file.
-
- Tomi
-
-
-
---------------enig8214106EC427CEF349D81767
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJQrM4eAAoJEPo9qoy8lh71L8EP/A9fQOMiK/l9aZ9naaO0Unbg
-xqiyCTEM+kA3UEoJaNvbPNMtjvDD5pQGX7yvRChpEBDchjfg3CJXR/raqLbbfLgf
-kDOdkux8ZGleCLmg7tKo/LwOVigPEI0CMVK3NfOZk6Cvw9+SiL+7rxDP+PwQacm0
-LpxuWLAs8yen/dWkKdax2mEK3GmY4yBQ+4by5zAwG5jZM38gzGlgxZcn1h2jd+Wa
-SlHZfuF43+XyyAlgZMxDOJUV8PEnLMY3WOBvuxkdMIZx1A51pJDT84NS/SVsp5PT
-unYdOME2B6ho3/a4NeBD7xIP/5o2RMMU21jI3ZpuKusTZC0c/dEnDgil4tDf+Czb
-F470mxES0OFOnjArV84Afw1JQi0MLE5I/wBiKqi0sMKWVEeFrMgtGy9XsFsLrNrH
-EBFCxXCjtk9RId7FtwELJIjbocVCQy0SkoYfvEe3js4QfSoCSXyOlBDAV4W/9zdJ
-hBtMl7adAQFDrs9Pf43cBfYYiJ4Ow0JF4QEkUTKWvREvkxJaZoH4cBGxo6FuHVLe
-x2E3SGkYk5LuWWUH3GkQPnfswCxHL0gfIWJmGhervlIkMPK/Civ1EIIGXc5NFZU8
-KVMcXA7R2lSfMoISXSbA++fNCxgfEY+682ltIn5BhmIQhuuC6668CKGbDumkA6Ec
-KgbIs4e8OsyoN8b1WjqJ
-=j45y
------END PGP SIGNATURE-----
-
---------------enig8214106EC427CEF349D81767--
+-- 
+Bye, Peter Korsgaard
