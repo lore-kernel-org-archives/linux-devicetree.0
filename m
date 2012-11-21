@@ -1,60 +1,149 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 4/4] tty: Atmel serial: add linux,stdout-path support
-Date: Wed, 21 Nov 2012 16:57:08 +0100
-Message-ID: <1353513428-25697-4-git-send-email-plagnioj@jcrosoft.com>
-References: <20121121155312.GX4398@game.jcrosoft.org>
- <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH V7 0/5] SMP support for Armada XP
+Date: Wed, 21 Nov 2012 17:00:11 +0100
+Message-ID: <1353513616-10139-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Grant Likely <grant.likely@secretlab.ca>, kernel@pengutronix.de, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Alan Cox <alan@linux.intel.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TaqPxH82wqD4g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: linux-serial@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: kernel@pengutronix.de
-Cc: Alan Cox <alan@linux.intel.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- drivers/tty/serial/atmel_serial.c |    5 +++++
- 1 file changed, 5 insertions(+)
+Hello,
 
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index 5608b6b..f62a3c3 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -1427,6 +1427,7 @@ static struct uart_ops atmel_pops = {
- static void __devinit atmel_of_init_port(struct atmel_uart_port *atmel_port,
- 					 struct device_node *np)
- {
-+	char *option = NULL;
- 	u32 rs485_delay[2];
- 
- 	/* DMA/PDC usage specification */
-@@ -1453,6 +1454,10 @@ static void __devinit atmel_of_init_port(struct atmel_uart_port *atmel_port,
- 
- 		if (of_get_property(np, "linux,rs485-enabled-at-boot-time", NULL))
- 			rs485conf->flags |= SER_RS485_ENABLED;
-+	} else if (of_device_is_stdout_path(np, &option)) {
-+		pr_info("add preferred console %s%d option=%s\n",
-+			ATMEL_DEVICENAME, atmel_port->uart.line, option);
-+		add_preferred_console(ATMEL_DEVICENAME, atmel_port->uart.line, option);
- 	}
- }
- 
+The purpose of this patch set is to add the SMP support for the Armada
+XP SoCs. Beside the SMP support itself brought by the last 3 patches,
+this patch set also adds the support for the coherency fabric unit and
+the power management service unit.
+
+The coherency fabric is responsible for ensuring hardware coherency
+between all CPUs and between CPUs and I/O masters. This unit is also
+available for Armada 370 and will be used in an incoming patch set
+for hardware I/O cache coherency.
+
+The power management service unit is responsible for powering down and
+waking up CPUs and other SOC units.
+
+The original code is from Yehuda Yitschak, it was reworked by myself
+and reviewed by Yehuda.
+
+This patch set is based on the tag marvell-mvebu-clk-3.8 to ease the
+incoming git pull.
+The git branch called ArmadaXP-SMP-for-3.8-V7 is also available at
+https://github.com/MISL-EBU-System-SW/mainline-public.git.
+
+Changelog:
+V6->V7:
+- used the correct register for offset in ll_set_cpu_coherent (r3
+  instead of r0)
+- Suffixed all the macro introduced in proc-V7.S by PJ4B
+- Added reviewed-by from Will Deacon on patch 1 and 5.
+
+V5->V6:
+- Used 'bl' instead of 'mov lr,pc' and then 'b'
+- Added a 'dsb' at the end ll_set_cpu_coherent
+- Changed the ownership of the patches due to all the change done
+  since the 1st version
+- Improved all the commit logs
+
+v4->V5:
+- Rebased on to marvell-mvebu-clk-3.8
+- Fixed bug in coherency_ll.S, use r2 instead of r4 as it can lead to
+  unexpected crash if r4 is not restored properly.
+- Fixed typo and improve assembly code in coherency_ll.S
+- Use for_each_node_by_type instead of a while loop and
+  of_find_node_by_type
+
+V3->V4:
+- Rebased on to v3.7-rc6
+- the function to setup the coherency of the CPU is now share between
+  SMP and coherency part and no more duplicate. Most of the code of
+  headsmp.S have been moved in coherency_ll.S and the redundant code
+  have been deleted from coherency.c.
+- Fixed cosmetic inconsistency in code added to proc-v7, only macros
+  are used and no more immediate values.
+- Added reviewed-by and acked-by for the patch 4.
+
+V2 -> V3:
+- Rebased on to v3.7-rc5
+- removed the unnecessary used of __iomem flag for a pointer to a
+  function. the second parameter of armada_xp_boot_cpu is now just a
+  void *.
+- removed the dsb() call in armada_xp_boot_cpu(), as the following
+  writel calls dsb if needed.
+- Change the PJ4B mask for proc_info in arch/arm/mm/proc-v7.S to be
+  less restrictive, the last 4 bits contain revision information
+- Merge the multiple 'or' instruction in a single instruction in
+  __v7_pj4b_setup
+
+V1 -> V2:
+- Rebased on to v3.7-rc3
+- Fixed typos found by Alexandre Belloni
+- Added clk_prepare_enable() before getting rate clk in
+  set_secondary_cpus_clock()
+- Add explanation in the binding documentation about the per-CPU
+  interrupt registers: the address of the virtual register must be
+  used.
+- Removed the armada_xp prefix in the coherency.c file to be more
+  compliant with the name convention of the other files.
+- Coherency_init is now called from armada_370_xp_dt_init() and is no
+  more an early_init() call. As the device tree is not available from
+  an early_init(), it was useless to call coherency_init() so
+  early. The need to be able to call some function very early during
+  the boot were already resolved by using the hard code address of the
+  register.
+
+Gregory CLEMENT (5):
+  arm: mvebu: Add support for coherency fabric in mach-mvebu
+  arm: mvebu: Add initial support for power managmement service unit
+  arm: mvebu: Add IPI support via doorbells
+  arm: mm: Add support for PJ4B cpu and init routines
+  arm: mvebu: Add SMP support for Armada XP
+
+ .../devicetree/bindings/arm/armada-370-xp-mpic.txt |   12 +-
+ .../devicetree/bindings/arm/armada-370-xp-pmsu.txt |   20 ++++
+ .../devicetree/bindings/arm/coherency-fabric.txt   |   16 +++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    5 +
+ arch/arm/boot/dts/armada-xp.dtsi                   |    8 +-
+ arch/arm/configs/mvebu_defconfig                   |    3 +
+ arch/arm/mach-mvebu/Kconfig                        |    3 +-
+ arch/arm/mach-mvebu/Makefile                       |    4 +-
+ arch/arm/mach-mvebu/armada-370-xp.c                |    3 +
+ arch/arm/mach-mvebu/armada-370-xp.h                |    7 ++
+ arch/arm/mach-mvebu/coherency.c                    |   82 +++++++++++++
+ arch/arm/mach-mvebu/coherency.h                    |   24 ++++
+ arch/arm/mach-mvebu/coherency_ll.S                 |   49 ++++++++
+ arch/arm/mach-mvebu/common.h                       |    5 +
+ arch/arm/mach-mvebu/headsmp.S                      |   49 ++++++++
+ arch/arm/mach-mvebu/hotplug.c                      |   30 +++++
+ arch/arm/mach-mvebu/irq-armada-370-xp.c            |   92 ++++++++++++++-
+ arch/arm/mach-mvebu/platsmp.c                      |  122 ++++++++++++++++++++
+ arch/arm/mach-mvebu/pmsu.c                         |   75 ++++++++++++
+ arch/arm/mach-mvebu/pmsu.h                         |   16 +++
+ arch/arm/mm/Kconfig                                |    4 +
+ arch/arm/mm/proc-v7.S                              |   67 +++++++++++
+ 22 files changed, 684 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-pmsu.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/coherency-fabric.txt
+ create mode 100644 arch/arm/mach-mvebu/coherency.c
+ create mode 100644 arch/arm/mach-mvebu/coherency.h
+ create mode 100644 arch/arm/mach-mvebu/coherency_ll.S
+ create mode 100644 arch/arm/mach-mvebu/headsmp.S
+ create mode 100644 arch/arm/mach-mvebu/hotplug.c
+ create mode 100644 arch/arm/mach-mvebu/platsmp.c
+ create mode 100644 arch/arm/mach-mvebu/pmsu.c
+ create mode 100644 arch/arm/mach-mvebu/pmsu.h
+
 -- 
-1.7.10.4
+1.7.9.5
