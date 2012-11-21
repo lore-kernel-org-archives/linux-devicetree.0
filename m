@@ -1,61 +1,50 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [Resend v6 PATCH 2/2] ASoC: atmel-ssc: add pinctrl consumer
-Date: Wed, 21 Nov 2012 10:46:38 +0900
-Message-ID: <20121121014636.GH4673@opensource.wolfsonmicro.com>
-References: <1353045837-19474-1-git-send-email-voice.shen@atmel.com>
- <1353045837-19474-2-git-send-email-voice.shen@atmel.com>
- <20121116061250.GP4387@opensource.wolfsonmicro.com>
- <50A5DE4E.80206@atmel.com>
- <20121116064113.GQ4387@opensource.wolfsonmicro.com>
- <50A5E44D.6040501@atmel.com>
- <50AB4DEA.3090100@atmel.com>
- <20121120102712.GF10560@opensource.wolfsonmicro.com>
- <50AC31C5.2000504@atmel.com>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Wed, 21 Nov 2012 10:56:36 +0900
+Message-ID: <4316169.5QXVzv7peZ@percival>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1353149747-31871-2-git-send-email-acourbot@nvidia.com> <50AB9832.90709@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AzNpbZlgThVzWita"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50AC31C5.2000504@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50AB9832.90709-l0cyMroinI0@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tomi,
 
---AzNpbZlgThVzWita
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tuesday 20 November 2012 22:48:18 Tomi Valkeinen wrote:
+> I guess there's a reason, but the above looks a bit inconsistent. For
+> gpio you define the gpio resource inside the step. For power and pwm the
+> resource is defined before the steps. Why wouldn't "pwm = <&pwm 2
+> 5000000>;" work in step2?
 
-On Wed, Nov 21, 2012 at 09:43:33AM +0800, Bo Shen wrote:
+That's mostly a framework issue. Most frameworks do not export a function that 
+allow to dereference a phandle - they expect resources to be declared right 
+under the device node and accessed by name through foo_get(device, name). So 
+using phandles in power sequences would require to export these additional 
+functions and also opens the door to some inconsistencies - for instance, your 
+PWM phandle could be referenced a second time in the sequence with a different 
+period - how do you know that these are actually referring the same PWM 
+device?
 
-> So, should I keep these two patches [1] and [2] and then send to
-> pinctrl again, or I need keep it in one patch as [3] which i sent
-> first.
+> > +When a power sequence is run, its steps is executed one after the other
+> > until +one step fails or the end of the sequence is reached.
+> 
+> The document doesn't give any hint of what the driver should do if
+> running the power sequence fails. Run the "opposite" power sequence?
+> Will that work for all resources? I'm mainly thinking of a case where
+> each enable of the resource should be matched by a disable, i.e. you
+> can't call disable if no enable was called.
 
-Please send something coherent which can be applied without breaking the
-branch it is applied to.
+We discussed that issue already (around v5 I think) and the conclusion was 
+that it should be up to the driver. When we simply enable/disable resources it 
+is easy to revert, but in the future non-boolean properties will likely be 
+introduced, and these cannot easily be reverted. Moreover some drivers might 
+have more complex recovery needs. This deserves more discussion I think, as 
+I'd like to have some "generic" recovery mechanism that covers most of the 
+cases.
 
---AzNpbZlgThVzWita
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQrDJcAAoJELSic+t+oim9sbgP/3iy4GSNPxx+B/mlB/3KgOZs
-oVqFceV/MiFKvXudSTNNW0E6iQgg64o4fPAvfgjRDWctwrm8aG7fI6md+zkglhLe
-AUTy5VtCsmrbXZ6FYmDAdhVm0bMEpOcPEZFFVxIIOotz/UnosLc5cJyGYiqLdHtG
-pipNQ9kfgE3H27p0NANW6eMJ03TRuNP1r7cERygAQX6JDECHvI05N0/NTmfktY/M
-JS2gQIv6zArYiERJ/zbDB96534tVABdh6RVNHFzK1VJLF+w+4y2dnhHB1KE0emrR
-C5CGdOEQTfug+lWmM354w++6tOnLwOlCbtNKmMfdVSLguX7HpagSpNty40gwccU8
-LFzzLMS8VU+wARbfCag1lgPU8i03CHkRj5bYgwPCT2vJrhF6TT+CqASafGmNEm5o
-+1CMgxswKliRrASwsLV8LTPk3T1/rllaUK/eDHHtBokDk0ux1c/0V7rqAvDv9feH
-04vAyZgk7oTZ7mWon+L2YUBasWfPJZDuDuq0RwtxYkN3M6d9TlZj89eZ9hUzReTg
-yOewMjHFOaxdEWI9AbuGdGYoIIvQg571g+lWUHO8bWcvYwXr2CudIP3/d98KKmSJ
-/zqRFH4xTd4+DCAgCMAwbydCdhwJhpgwV3Cdp5UJFelrjbW6NgGU2pB8FjyutRbi
-E2X8pV2em9PxK68xNw97
-=AHVA
------END PGP SIGNATURE-----
-
---AzNpbZlgThVzWita--
+Alex.
