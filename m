@@ -1,13 +1,13 @@
 From: Bill Pemberton <wfp5p@virginia.edu>
-Subject: [PATCH 1/9] microblaze/PCI: Remove CONFIG_HOTPLUG ifdefs
-Date: Wed, 21 Nov 2012 15:34:52 -0500
-Message-ID: <1353530100-728-2-git-send-email-wfp5p@virginia.edu>
+Subject: [PATCH 2/9] mips/PCI: Remove CONFIG_HOTPLUG ifdefs
+Date: Wed, 21 Nov 2012 15:34:53 -0500
+Message-ID: <1353530100-728-3-git-send-email-wfp5p@virginia.edu>
 References: <1353530100-728-1-git-send-email-wfp5p@virginia.edu>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1353530100-728-1-git-send-email-wfp5p@virginia.edu>
 Sender: linux-pci-owner@vger.kernel.org
 To: gregkh@linuxfoundation.org
-Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <monstr@monstr.eu>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Ralf Baechle <ralf@linux-mips.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 Remove conditional code based on CONFIG_HOTPLUG being false.  It's
@@ -15,36 +15,29 @@ always on now in preparation of it going away as an option.
 
 Signed-off-by: Bill Pemberton <wfp5p@virginia.edu>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: microblaze-uclinux@itee.uq.edu.au
+Cc: linux-mips@linux-mips.org
 Cc: devicetree-discuss@lists.ozlabs.org
 ---
- arch/microblaze/pci/pci-common.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/mips/pci/pci.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index 4dbb505..a1c5b99 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -1346,8 +1346,6 @@ void __init pcibios_resource_survey(void)
- 	pci_assign_unassigned_resources();
+diff --git a/arch/mips/pci/pci.c b/arch/mips/pci/pci.c
+index 04e35bc..4040416 100644
+--- a/arch/mips/pci/pci.c
++++ b/arch/mips/pci/pci.c
+@@ -313,10 +313,8 @@ void __devinit pcibios_fixup_bus(struct pci_bus *bus)
+ 	}
  }
  
 -#ifdef CONFIG_HOTPLUG
--
- /* This is used by the PCI hotplug driver to allocate resource
-  * of newly plugged busses. We can try to consolidate with the
-  * rest of the code later, for now, keep it as-is as our main
-@@ -1407,8 +1405,6 @@ void pcibios_finish_adding_to_bus(struct pci_bus *bus)
- }
- EXPORT_SYMBOL_GPL(pcibios_finish_adding_to_bus);
+ EXPORT_SYMBOL(PCIBIOS_MIN_IO);
+ EXPORT_SYMBOL(PCIBIOS_MIN_MEM);
+-#endif
  
--#endif /* CONFIG_HOTPLUG */
--
- int pcibios_enable_device(struct pci_dev *dev, int mask)
- {
- 	return pci_enable_resources(dev, mask);
+ int pci_mmap_page_range(struct pci_dev *dev, struct vm_area_struct *vma,
+ 			enum pci_mmap_state mmap_state, int write_combine)
 -- 
 1.8.0
