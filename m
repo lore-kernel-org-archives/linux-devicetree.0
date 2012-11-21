@@ -1,78 +1,278 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v12 2/6] video: add of helper for videomode
-Date: Wed, 21 Nov 2012 12:48:43 +0100
-Message-ID: <20121121114843.GC14013@pengutronix.de>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-3-git-send-email-s.trumtrar@pengutronix.de>
- <A73F36158E33644199EB82C5EC81C7BC3E9FA7A0@DBDE01.ent.ti.com>
+From: AnilKumar Ch <anilkumar@ti.com>
+Subject: [PATCH RESEND] ARM: dts: AM33XX: Rename I2C and GPIO nodes
+Date: Wed, 21 Nov 2012 17:22:17 +0530
+Message-ID: <1353498737-21174-1-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3E9FA7A0@DBDE01.ent.ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: b-cousson@ti.com, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, AnilKumar Ch <anilkumar@ti.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Rename I2C and GPIO nodes according to AM33XX TRM. According to
+AM33XX TRM device instances are starting from "0" like i2c0, i2c1
+and i2c3.
 
-On Wed, Nov 21, 2012 at 10:12:43AM +0000, Manjunathappa, Prakash wrote:
-> Hi Steffen,
-> 
-> On Tue, Nov 20, 2012 at 21:24:52, Steffen Trumtrar wrote:
-> > +/**
-> > + * of_get_display_timings - parse all display_timing entries from a device_node
-> > + * @np: device_node with the subnodes
-> > + **/
-> > +struct display_timings *of_get_display_timings(const struct device_node *np)
-> > +{
-> > +	struct device_node *timings_np;
-> > +	struct device_node *entry;
-> > +	struct device_node *native_mode;
-> > +	struct display_timings *disp;
-> > +
-> > +	if (!np) {
-> > +		pr_err("%s: no devicenode given\n", __func__);
-> > +		return NULL;
-> > +	}
-> > +
-> > +	timings_np = of_find_node_by_name(np, "display-timings");
-> 
-> I get below build warnings on this line
-> drivers/video/of_display_timing.c: In function 'of_get_display_timings':
-> drivers/video/of_display_timing.c:109:2: warning: passing argument 1 of 'of_find_node_by_name' discards qualifiers from pointer target type
-> include/linux/of.h:167:28: note: expected 'struct device_node *' but argument is of type 'const struct device_node *'
-> 
-> > + * of_display_timings_exists - check if a display-timings node is provided
-> > + * @np: device_node with the timing
-> > + **/
-> > +int of_display_timings_exists(const struct device_node *np)
-> > +{
-> > +	struct device_node *timings_np;
-> > +
-> > +	if (!np)
-> > +		return -EINVAL;
-> > +
-> > +	timings_np = of_parse_phandle(np, "display-timings", 0);
-> 
-> Also here:
-> drivers/video/of_display_timing.c: In function 'of_display_timings_exists':
-> drivers/video/of_display_timing.c:209:2: warning: passing argument 1 of 'of_parse_phandle' discards qualifiers from pointer target type
-> include/linux/of.h:258:28: note: expected 'struct device_node *' but argument is of type 'const struct device_node *'
-> 
+Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+[panto@antoniou-consulting.com: initial patch by pantelis's]
+Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+---
+Changes from first version:
+	- Updated pantelis's patch
+	  * Modified based on linux-omap/master
+	  * Added GPIO nodes renaming as well
 
-The warnings are because the of-functions do not use const pointers where they
-should. I had two options: don't use const pointers even if they should be and
-have no warnings or use const pointers and have a correct API. (Third option:
-send patches for of-functions). I chose the second option.
+ arch/arm/boot/dts/am335x-bone.dts  |   10 +++++-----
+ arch/arm/boot/dts/am335x-evm.dts   |   18 +++++++++---------
+ arch/arm/boot/dts/am335x-evmsk.dts |   18 +++++++++---------
+ arch/arm/boot/dts/am33xx.dtsi      |   14 +++++++-------
+ 4 files changed, 30 insertions(+), 30 deletions(-)
 
-Regards,
-Steffen
-
-
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index 2c33888..77b4352 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -43,7 +43,7 @@
+ 			status = "okay";
+ 		};
+ 
+-		i2c1: i2c@44e0b000 {
++		i2c0: i2c@44e0b000 {
+ 			status = "okay";
+ 			clock-frequency = <400000>;
+ 
+@@ -59,27 +59,27 @@
+ 
+ 		led@2 {
+ 			label = "beaglebone:green:heartbeat";
+-			gpios = <&gpio2 21 0>;
++			gpios = <&gpio1 21 0>;
+ 			linux,default-trigger = "heartbeat";
+ 			default-state = "off";
+ 		};
+ 
+ 		led@3 {
+ 			label = "beaglebone:green:mmc0";
+-			gpios = <&gpio2 22 0>;
++			gpios = <&gpio1 22 0>;
+ 			linux,default-trigger = "mmc0";
+ 			default-state = "off";
+ 		};
+ 
+ 		led@4 {
+ 			label = "beaglebone:green:usr2";
+-			gpios = <&gpio2 23 0>;
++			gpios = <&gpio1 23 0>;
+ 			default-state = "off";
+ 		};
+ 
+ 		led@5 {
+ 			label = "beaglebone:green:usr3";
+-			gpios = <&gpio2 24 0>;
++			gpios = <&gpio1 24 0>;
+ 			default-state = "off";
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 9f65f17..705a9c5 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -51,7 +51,7 @@
+ 			status = "okay";
+ 		};
+ 
+-		i2c1: i2c@44e0b000 {
++		i2c0: i2c@44e0b000 {
+ 			status = "okay";
+ 			clock-frequency = <400000>;
+ 
+@@ -60,7 +60,7 @@
+ 			};
+ 		};
+ 
+-		i2c2: i2c@4802a000 {
++		i2c1: i2c@4802a000 {
+ 			status = "okay";
+ 			clock-frequency = <100000>;
+ 
+@@ -123,12 +123,12 @@
+ 		debounce-delay-ms = <5>;
+ 		col-scan-delay-us = <2>;
+ 
+-		row-gpios = <&gpio2 25 0	/* Bank1, pin25 */
+-			     &gpio2 26 0	/* Bank1, pin26 */
+-			     &gpio2 27 0>;	/* Bank1, pin27 */
++		row-gpios = <&gpio1 25 0	/* Bank1, pin25 */
++			     &gpio1 26 0	/* Bank1, pin26 */
++			     &gpio1 27 0>;	/* Bank1, pin27 */
+ 
+-		col-gpios = <&gpio2 21 0	/* Bank1, pin21 */
+-			     &gpio2 22 0>;	/* Bank1, pin22 */
++		col-gpios = <&gpio1 21 0	/* Bank1, pin21 */
++			     &gpio1 22 0>;	/* Bank1, pin22 */
+ 
+ 		linux,keymap = <0x0000008b	/* MENU */
+ 				0x0100009e	/* BACK */
+@@ -147,14 +147,14 @@
+ 		switch@9 {
+ 			label = "volume-up";
+ 			linux,code = <115>;
+-			gpios = <&gpio1 2 1>;
++			gpios = <&gpio0 2 1>;
+ 			gpio-key,wakeup;
+ 		};
+ 
+ 		switch@10 {
+ 			label = "volume-down";
+ 			linux,code = <114>;
+-			gpios = <&gpio1 3 1>;
++			gpios = <&gpio0 3 1>;
+ 			gpio-key,wakeup;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index f5a6162..f67c360 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -58,7 +58,7 @@
+ 			status = "okay";
+ 		};
+ 
+-		i2c1: i2c@44e0b000 {
++		i2c0: i2c@44e0b000 {
+ 			status = "okay";
+ 			clock-frequency = <400000>;
+ 
+@@ -115,26 +115,26 @@
+ 
+ 		led@1 {
+ 			label = "evmsk:green:usr0";
+-			gpios = <&gpio2 4 0>;
++			gpios = <&gpio1 4 0>;
+ 			default-state = "off";
+ 		};
+ 
+ 		led@2 {
+ 			label = "evmsk:green:usr1";
+-			gpios = <&gpio2 5 0>;
++			gpios = <&gpio1 5 0>;
+ 			default-state = "off";
+ 		};
+ 
+ 		led@3 {
+ 			label = "evmsk:green:mmc0";
+-			gpios = <&gpio2 6 0>;
++			gpios = <&gpio1 6 0>;
+ 			linux,default-trigger = "mmc0";
+ 			default-state = "off";
+ 		};
+ 
+ 		led@4 {
+ 			label = "evmsk:green:heartbeat";
+-			gpios = <&gpio2 7 0>;
++			gpios = <&gpio1 7 0>;
+ 			linux,default-trigger = "heartbeat";
+ 			default-state = "off";
+ 		};
+@@ -148,26 +148,26 @@
+ 		switch@1 {
+ 			label = "button0";
+ 			linux,code = <0x100>;
+-			gpios = <&gpio3 3 0>;
++			gpios = <&gpio2 3 0>;
+ 		};
+ 
+ 		switch@2 {
+ 			label = "button1";
+ 			linux,code = <0x101>;
+-			gpios = <&gpio3 2 0>;
++			gpios = <&gpio2 2 0>;
+ 		};
+ 
+ 		switch@3 {
+ 			label = "button2";
+ 			linux,code = <0x102>;
+-			gpios = <&gpio1 30 0>;
++			gpios = <&gpio0 30 0>;
+ 			gpio-key,wakeup;
+ 		};
+ 
+ 		switch@4 {
+ 			label = "button3";
+ 			linux,code = <0x103>;
+-			gpios = <&gpio3 5 0>;
++			gpios = <&gpio2 5 0>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 5dfd682..2ad01c7 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -87,7 +87,7 @@
+ 			reg = <0x48200000 0x1000>;
+ 		};
+ 
+-		gpio1: gpio@44e07000 {
++		gpio0: gpio@44e07000 {
+ 			compatible = "ti,omap4-gpio";
+ 			ti,hwmods = "gpio1";
+ 			gpio-controller;
+@@ -98,7 +98,7 @@
+ 			interrupts = <96>;
+ 		};
+ 
+-		gpio2: gpio@4804c000 {
++		gpio1: gpio@4804c000 {
+ 			compatible = "ti,omap4-gpio";
+ 			ti,hwmods = "gpio2";
+ 			gpio-controller;
+@@ -109,7 +109,7 @@
+ 			interrupts = <98>;
+ 		};
+ 
+-		gpio3: gpio@481ac000 {
++		gpio2: gpio@481ac000 {
+ 			compatible = "ti,omap4-gpio";
+ 			ti,hwmods = "gpio3";
+ 			gpio-controller;
+@@ -120,7 +120,7 @@
+ 			interrupts = <32>;
+ 		};
+ 
+-		gpio4: gpio@481ae000 {
++		gpio3: gpio@481ae000 {
+ 			compatible = "ti,omap4-gpio";
+ 			ti,hwmods = "gpio4";
+ 			gpio-controller;
+@@ -185,7 +185,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		i2c1: i2c@44e0b000 {
++		i2c0: i2c@44e0b000 {
+ 			compatible = "ti,omap4-i2c";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -195,7 +195,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		i2c2: i2c@4802a000 {
++		i2c1: i2c@4802a000 {
+ 			compatible = "ti,omap4-i2c";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -205,7 +205,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		i2c3: i2c@4819c000 {
++		i2c2: i2c@4819c000 {
+ 			compatible = "ti,omap4-i2c";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.9.5
+
