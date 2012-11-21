@@ -1,130 +1,125 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] usb: chipidea: add PTW and PTS handling
-Date: Wed, 21 Nov 2012 16:57:23 +0100
-Message-ID: <20121121155723.GA16409@pengutronix.de>
-References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
- <1352909950-32555-7-git-send-email-m.grzeschik@pengutronix.de>
- <87zk2h67ik.fsf@ashishki-desk.ger.corp.intel.com>
- <20121116131628.GA21447@pengutronix.de>
- <87lie1659c.fsf@ashishki-desk.ger.corp.intel.com>
- <20121116135743.GB21447@pengutronix.de>
- <87ip9563r8.fsf@ashishki-desk.ger.corp.intel.com>
- <50A651E1.5030001@parrot.com>
- <87fw495zgh.fsf@ashishki-desk.ger.corp.intel.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/4] OF: Add helper for matching against linux,stdout-path
+Date: Wed, 21 Nov 2012 16:57:05 +0100
+Message-ID: <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
+References: <20121121155312.GX4398@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87fw495zgh.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Matthieu CASTET <matthieu.castet-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121121155312.GX4398-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 16, 2012 at 05:39:42PM +0200, Alexander Shishkin wrote:
-> Matthieu CASTET <matthieu.castet-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> writes:
->=20
-> > Alexander Shishkin a =E9crit :
-> >> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> >>=20
-> >>> On Fri, Nov 16, 2012 at 03:34:23PM +0200, Alexander Shishkin wrot=
-e:
-> >>>> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> >>>>
-> >>>>> On Fri, Nov 16, 2012 at 02:45:39PM +0200, Alexander Shishkin wr=
-ote:
-> >>>>>> Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> >>>>>>
-> >>>>>>> This patch makes it possible to configure the PTW and PTS bit=
-s inside
-> >>>>>>> the portsc register for host and device mode before the drive=
-r starts
-> >>>>>>> and the phy can be addressed as hardware implementation is de=
-signed.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>>>>>> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >>>>>>> ---
-> >>>>>>>  drivers/usb/chipidea/bits.h        |    3 +++
-> >>>>>>>  drivers/usb/chipidea/ci.h          |    2 ++
-> >>>>>>>  drivers/usb/chipidea/ci13xxx_imx.c |    1 +
-> >>>>>>>  drivers/usb/chipidea/core.c        |   47 ++++++++++++++++++=
-++++++++++++++++++
-> >>>>>>>  drivers/usb/chipidea/host.c        |    4 +++
-> >>>>>>>  include/linux/usb/chipidea.h       |    9 +++++++
-> >>>>>>>  6 files changed, 66 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipid=
-ea/bits.h
-> >>>>>>> index 4b6ae3e..3cded5f 100644
-> >>>>>>> --- a/drivers/usb/chipidea/bits.h
-> >>>>>>> +++ b/drivers/usb/chipidea/bits.h
-> >>>>>>> @@ -48,6 +48,9 @@
-> >>>>>>>  #define PORTSC_SUSP           BIT(7)
-> >>>>>>>  #define PORTSC_HSP            BIT(9)
-> >>>>>>>  #define PORTSC_PTC            (0x0FUL << 16)
-> >>>>>>> +#define PORTSC_PTS            (BIT(31) | BIT(30))
-> >>>>>>> +#define PORTSC_PTW            BIT(28)
-> >>>>>>> +#define PORTSC_STS            BIT(29)
-> >>>>>> Hm, my spec says these are actually in DEVLC register and only=
- have this
-> >>>>>> meaning in device mode. And in portsc these bits fall in devic=
-e address
-> >>>>>> bitfield. Can you refer me to your spec?
-> >>>>> You can find it here:
-> >>>>> http://cache.freescale.com/files/32bit/doc/ref_manual/iMX53RM.p=
-df?fpsp=3D1
-> >>>>> Page 4947
-> >>>> Oh, but see, the offset is 0x184, which in chipidea spec (the ve=
-rsion
-> >>>> that I have) corresponds to DEVLC and not PORTSC. So in this dri=
-ver's
-> >>>> terminology it's DEVLC too, at least currently.
-> >>>>
-> >>>> So have you tested this code and did it make any difference?
-> >>> Yes, i have tested this code with MX25, MX28, MX35 and MX53. In e=
-very
-> >>> SoCs Datasheet the PORTSC register is defined on PORTBASE+0x184. =
-Without
-> >>> this proper configuration its not possible to communicate with th=
-e PHY.
-> >>=20
-> >> No, I mean, you're writing DEVLC (using present driver's terminolo=
-gy)
-> >> bits to PORTSC register. It *shouldn't* work. I suppose, it does
-> >> something, but not exactly what you intended.
-> >>=20
-> > I confirm in our datasheet we have PTW, PTS, STS in this register  =
-PORTSCx with
-> > this mapping.
-> >
-> > In later design that support lpm, these bits have to move in anothe=
-r register
-> > because ehci 1.1 use them [1].
->=20
-> Ahh, I didn't realize imxes were nolpm. Now it makes more sense. This
-> means that, as you suggested in the other mail, these portsc/devlc
-> accesses should be done conditionally based on ci->hw_bank.lpm.
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-To handle lpm devices in this patch, we need some register layout of th=
-e
-lpm core. Probably only te DEVLC register. Is there some documentation
-available?
+devicetrees may have a linux,stdout-path or stdout-path property
+in the chosen node describing the console device. This adds a helper
+function to match a device against this property and retrieve the options
+so a driver can call add_preferred_console for a matching device.
 
-Regards,
-Michael
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/base.c  |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h |    7 +++++++
+ 2 files changed, 53 insertions(+)
 
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index f2f63c8..72c49ce 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1470,3 +1470,49 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
+ 	return curv;
+ }
+ EXPORT_SYMBOL_GPL(of_prop_next_string);
++
++/**
++ * of_device_is_stdout_path - check if a device node matches the
++ *			      linux,stdout-path property
++ * @np:		Pointer to the given device_node
++ * @option:	parsed option
++ *
++ * Check if this device node matches the linux,stdout-path property
++ * in the chosen node. return true if yes, false otherwise.
++ */
++int of_device_is_stdout_path(struct device_node *dn, char **option)
++{
++	const char *name;
++	struct device_node *dn_stdout;
++	bool is_stdout = 0;
++	const char *tmp;
++	const char *tmp_option;
++
++	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
++	if (name == NULL)
++		name = of_get_property(of_chosen, "stdout-path", NULL);
++
++	if (name == NULL)
++		return 0;
++
++	tmp_option = strchr(name, ':');
++
++	tmp = kstrndup(name, strlen(name) - strlen(tmp_option), GFP_KERNEL);
++	if (!tmp)
++		return 0;
++
++	dn_stdout = of_find_node_by_path(tmp);
++
++	if (dn_stdout && dn_stdout == dn) {
++		is_stdout = 1;
++		tmp_option++;
++		*option = kstrdup(tmp_option, GFP_KERNEL);
++	}
++
++	of_node_put(dn_stdout);
++
++	kfree(tmp);
++
++	return is_stdout;
++}
++EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 681a6c8..6a82e3f 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -323,6 +323,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
+ 		s;						\
+ 		s = of_prop_next_string(prop, s))
+ 
++int of_device_is_stdout_path(struct device_node *dn, char **option);
++
+ #else /* CONFIG_OF */
+ 
+ static inline const char* of_node_full_name(struct device_node *np)
+@@ -450,6 +452,11 @@ static inline int of_machine_is_compatible(const char *compat)
+ 	return 0;
+ }
+ 
++static inline int of_device_is_stdout_path(struct device_node *dn, char **option)
++{
++	return 0;
++}
++
+ #define of_match_ptr(_ptr)	NULL
+ #define of_match_node(_matches, _node)	NULL
+ #define of_property_for_each_u32(np, propname, prop, p, u) \
+-- 
+1.7.10.4
