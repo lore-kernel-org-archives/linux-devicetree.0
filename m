@@ -1,7 +1,7 @@
 From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 2/7] usb: chipidea: usbmisc: unset global varibale usbmisc on driver remove
-Date: Wed, 21 Nov 2012 15:06:28 +0100
-Message-ID: <1353506793-8354-3-git-send-email-m.grzeschik@pengutronix.de>
+Subject: [PATCH v3 3/7] usb: chipidea: usbmisc: fix a potential race condition
+Date: Wed, 21 Nov 2012 15:06:29 +0100
+Message-ID: <1353506793-8354-4-git-send-email-m.grzeschik@pengutronix.de>
 References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1353506793-8354-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -12,8 +12,10 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-The probe function checks usbmisc to be NULL in the beginning. Without
-this patch the can only be loaded once.
+This fixes a potential race condition where the ci13xxx_imx glue code
+could be fast enough to call one of the usbmisc_ops before he got a
+valid value on the static usbmisc pointer. To fix that we first set
+usbmisc, then call usbmisc_set_ops().
 
 Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -21,25 +23,23 @@ Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gman
 Changes since v1:
 * split previous patch into two seperate.
 
- drivers/usb/chipidea/usbmisc_imx.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/chipidea/usbmisc_imx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index 5da379a..552c63f 100644
+index 552c63f..9145e04 100644
 --- a/drivers/usb/chipidea/usbmisc_imx.c
 +++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -131,6 +131,7 @@ static int __devexit usbmisc_imx_remove(struct platform_device *pdev)
- {
- 	usbmisc_unset_ops(&imx6q_usbmisc_ops);
- 	clk_disable_unprepare(usbmisc->clk);
-+	usbmisc = NULL;
- 	return 0;
- }
+@@ -116,14 +116,14 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++	usbmisc = data;
+ 	ret = usbmisc_set_ops(&imx6q_usbmisc_ops);
+ 	if (ret) {
++		usbmisc = NULL;
+ 		clk_disable_unprepare(data->clk);
+ 		return ret;
+ 	}
+ 
+-	usbmisc = data;
