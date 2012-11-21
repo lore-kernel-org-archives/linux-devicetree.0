@@ -1,210 +1,115 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH V5 5/5] arm: mvebu: Added SMP support for Armada XP
-Date: Wed, 21 Nov 2012 12:57:12 +0100
-Message-ID: <50ACC198.5030300@free-electrons.com>
-References: <1353446150-10088-1-git-send-email-gregory.clement@free-electrons.com>
- <1353446150-10088-6-git-send-email-gregory.clement@free-electrons.com>
- <20121121104132.GD11990@mudshark.cambridge.arm.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v12 3/6] fbmon: add videomode helpers
+Date: Wed, 21 Nov 2012 12:58:18 +0100
+Message-ID: <20121121115818.GD14013@pengutronix.de>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353426896-6045-4-git-send-email-s.trumtrar@pengutronix.de>
+ <A73F36158E33644199EB82C5EC81C7BC3E9FA769@DBDE01.ent.ti.com>
+ <CAL1wa8dQ4QL0SzbXdo8nogBfBjQ8GpaJ134v6zu_iMkWQeXefA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20121121104132.GD11990@mudshark.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, Ian Molton <ian.molton@codethink.co.uk>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <Leif.Lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, "jcm@redhat.com" <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL1wa8dQ4QL0SzbXdo8nogBfBjQ8GpaJ134v6zu_iMkWQeXefA@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Leela Krishna Amudala <leelakrishna.a@gmail.com>
+Cc: "Manjunathappa, Prakash" <prakash.pm@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2012 11:41 AM, Will Deacon wrote:
-> On Tue, Nov 20, 2012 at 09:15:49PM +0000, Gregory CLEMENT wrote:
->> From: Yehuda Yitschak <yehuday@marvell.com>
->>
->> 1. added smp init functions in platsmp.c
->> 2. added secondary cpu entry point in headsmp.S
->> 3. added hotplog initial support in hotplug.c
-> 
-> hotplug
-> 
->> 4. added SMP support for PJ4B cpu
-> 
-> Again, I think the commit message could probably be improved from a numbered
-> list...
-> 
->> Signed-off-by: Yehuda Yitschak <yehuday@marvell.com>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> ---
->>  arch/arm/configs/mvebu_defconfig    |    3 +
->>  arch/arm/mach-mvebu/Kconfig         |    1 +
->>  arch/arm/mach-mvebu/Makefile        |    2 +
->>  arch/arm/mach-mvebu/armada-370-xp.c |    3 +
->>  arch/arm/mach-mvebu/common.h        |    3 +
->>  arch/arm/mach-mvebu/headsmp.S       |   50 +++++++++++++++
->>  arch/arm/mach-mvebu/hotplug.c       |   30 +++++++++
->>  arch/arm/mach-mvebu/platsmp.c       |  121 +++++++++++++++++++++++++++++++++++
->>  8 files changed, 213 insertions(+)
->>  create mode 100644 arch/arm/mach-mvebu/headsmp.S
->>  create mode 100644 arch/arm/mach-mvebu/hotplug.c
->>  create mode 100644 arch/arm/mach-mvebu/platsmp.c
->>
->> diff --git a/arch/arm/configs/mvebu_defconfig b/arch/arm/configs/mvebu_defconfig
->> index 3458752..da598d3 100644
->> --- a/arch/arm/configs/mvebu_defconfig
->> +++ b/arch/arm/configs/mvebu_defconfig
->> @@ -12,6 +12,9 @@ CONFIG_ARCH_MVEBU=y
->>  CONFIG_MACH_ARMADA_370=y
->>  CONFIG_MACH_ARMADA_XP=y
->>  # CONFIG_CACHE_L2X0 is not set
->> +# CONFIG_SWP_EMULATE is not set
->> +CONFIG_SMP=y
->> +# CONFIG_LOCAL_TIMERS is not set
->>  CONFIG_AEABI=y
->>  CONFIG_HIGHMEM=y
->>  # CONFIG_COMPACTION is not set
->> diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
->> index f4c3bf8..c934e1d 100644
->> --- a/arch/arm/mach-mvebu/Kconfig
->> +++ b/arch/arm/mach-mvebu/Kconfig
->> @@ -21,6 +21,7 @@ menu "Marvell SOC with device tree"
->>  config MACH_ARMADA_370_XP
->>  	bool
->>  	select ARMADA_370_XP_TIMER
->> +	select HAVE_SMP
->>  	select CPU_PJ4B
->>  
->>  config MACH_ARMADA_370
->> diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
->> index 2e3ec11..5dcb369 100644
->> --- a/arch/arm/mach-mvebu/Makefile
->> +++ b/arch/arm/mach-mvebu/Makefile
->> @@ -3,3 +3,5 @@ ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include \
->>  
->>  obj-y += system-controller.o
->>  obj-$(CONFIG_MACH_ARMADA_370_XP) += armada-370-xp.o irq-armada-370-xp.o addr-map.o coherency.o coherency_ll.o pmsu.o
->> +obj-$(CONFIG_SMP)                += platsmp.o headsmp.o
->> +obj-$(CONFIG_HOTPLUG_CPU)        += hotplug.o
->> diff --git a/arch/arm/mach-mvebu/armada-370-xp.c b/arch/arm/mach-mvebu/armada-370-xp.c
->> index 3292d6d..472e70f 100644
->> --- a/arch/arm/mach-mvebu/armada-370-xp.c
->> +++ b/arch/arm/mach-mvebu/armada-370-xp.c
->> @@ -23,6 +23,7 @@
->>  #include <asm/mach/time.h>
->>  #include "armada-370-xp.h"
->>  #include "common.h"
->> +#include "coherency.h"
->>  
->>  static struct map_desc armada_370_xp_io_desc[] __initdata = {
->>  	{
->> @@ -51,6 +52,7 @@ struct sys_timer armada_370_xp_timer = {
->>  static void __init armada_370_xp_dt_init(void)
->>  {
->>  	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
->> +	coherency_init();
->>  }
->>  
->>  static const char * const armada_370_xp_dt_board_dt_compat[] = {
->> @@ -60,6 +62,7 @@ static const char * const armada_370_xp_dt_board_dt_compat[] = {
->>  };
->>  
->>  DT_MACHINE_START(ARMADA_XP_DT, "Marvell Aramada 370/XP (Device Tree)")
->> +	.smp		= smp_ops(armada_xp_smp_ops),
->>  	.init_machine	= armada_370_xp_dt_init,
->>  	.map_io		= armada_370_xp_map_io,
->>  	.init_irq	= armada_370_xp_init_irq,
->> diff --git a/arch/arm/mach-mvebu/common.h b/arch/arm/mach-mvebu/common.h
->> index b5cd7e7..b711869 100644
->> --- a/arch/arm/mach-mvebu/common.h
->> +++ b/arch/arm/mach-mvebu/common.h
->> @@ -20,7 +20,10 @@ void mvebu_restart(char mode, const char *cmd);
->>  void armada_370_xp_init_irq(void);
->>  void armada_370_xp_handle_irq(struct pt_regs *regs);
->>  
->> +void armada_xp_cpu_die(unsigned int cpu);
->>  
->>  int armada_370_xp_coherency_init(void);
->>  int armada_370_xp_pmsu_init(void);
->> +void armada_xp_secondary_startup(void);
->> +extern struct smp_operations armada_xp_smp_ops;
->>  #endif
->> diff --git a/arch/arm/mach-mvebu/headsmp.S b/arch/arm/mach-mvebu/headsmp.S
->> new file mode 100644
->> index 0000000..994eecc
->> --- /dev/null
->> +++ b/arch/arm/mach-mvebu/headsmp.S
->> @@ -0,0 +1,50 @@
->> +/*
->> + * SMP support: Entry point for secondary CPUs
->> + *
->> + * Copyright (C) 2012 Marvell
->> + *
->> + * Yehuda Yitschak <yehuday@marvell.com>
->> + * Gregory CLEMENT <gregory.clement@free-electrons.com>
->> + * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + *
->> + * This file implements the assembly entry point for secondary CPUs in
->> + * an SMP kernel. The only thing we need to do is to add the CPU to
->> + * the coherency fabric by writing to 2 registers. Currently the base
->> + * register addresses are hard coded due to the early initialisation
->> + * problems.
->> + */
->> +
->> +#include <linux/linkage.h>
->> +#include <linux/init.h>
->> +
->> +/*
->> + * At this stage the secondary CPUs don't have acces yet to the MMU, so
->> + * we have to provide physical addresses
->> + */
->> +#define ARMADA_XP_CFB_BASE	     0xD0020200
->> +
->> +	__CPUINIT
->> +
->> +/*
->> + * Armada XP specific entry point for secondary CPUs.
->> + * We add the CPU to the coherency fabric and then jump to secondary
->> + * startup
->> + */
->> +ENTRY(armada_xp_secondary_startup)
->> +
->> +	/* Read CPU id */
->> + 	mrc     p15, 0, r1, c0, c0, 5
->> +	and     r1, r1, #0xF
->> +
->> +	/* Add CPU to coherency fabric */
->> +	ldr     r0, = ARMADA_XP_CFB_BASE
->> +	mov	lr, pc
->> +
->> +	b	ll_set_cpu_coherent
->> +	b	secondary_startup
-> 
-> Why didn't you use my adr suggestion here?
+Hi!
 
-Because when I used BSYM(secondary_startup), I get the following
-message during compilation:
-
-Error: undefined symbol secondary_startup used as an immediate value
-
-And I didn't want to miss the merge window for something which could be
-fixed during the v3.8-rc1 if needed.
-
+On Wed, Nov 21, 2012 at 04:39:01PM +0530, Leela Krishna Amudala wrote:
+> Yes,
+> Even I got the same build error.
+> later I fixed it by including "#include <linux/mxsfb.h>"
 > 
-> Will
+> Best Wishes,
+> Leela Krishna.
 > 
+> On Wed, Nov 21, 2012 at 3:39 PM, Manjunathappa, Prakash
+> <prakash.pm@ti.com> wrote:
+> > Hi Steffen,
+> >
+> > I am trying to add DT support for da8xx-fb driver on top of your patches.
+> > Encountered below build error. Sorry for reporting it late.
+> >
+> > On Tue, Nov 20, 2012 at 21:24:53, Steffen Trumtrar wrote:
+> >> Add a function to convert from the generic videomode to a fb_videomode.
+> >>
+> >> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> >> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> >> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> >> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> >> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >> ---
+> >>  drivers/video/fbmon.c |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+> >>  include/linux/fb.h    |    6 ++++++
+> >>  2 files changed, 52 insertions(+)
+> >>
+> >> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> >> index cef6557..c1939a6 100644
+> >> --- a/drivers/video/fbmon.c
+> >> +++ b/drivers/video/fbmon.c
+> >> @@ -31,6 +31,7 @@
+> >>  #include <linux/pci.h>
+> >>  #include <linux/slab.h>
+> >>  #include <video/edid.h>
+> >> +#include <linux/videomode.h>
+> >>  #ifdef CONFIG_PPC_OF
+> >>  #include <asm/prom.h>
+> >>  #include <asm/pci-bridge.h>
+> >> @@ -1373,6 +1374,51 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
+> >>       kfree(timings);
+> >>       return err;
+> >>  }
+> >> +
+> >> +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> >> +int fb_videomode_from_videomode(const struct videomode *vm,
+> >> +                             struct fb_videomode *fbmode)
+> >> +{
+> >> +     unsigned int htotal, vtotal;
+> >> +
+> >> +     fbmode->xres = vm->hactive;
+> >> +     fbmode->left_margin = vm->hback_porch;
+> >> +     fbmode->right_margin = vm->hfront_porch;
+> >> +     fbmode->hsync_len = vm->hsync_len;
+> >> +
+> >> +     fbmode->yres = vm->vactive;
+> >> +     fbmode->upper_margin = vm->vback_porch;
+> >> +     fbmode->lower_margin = vm->vfront_porch;
+> >> +     fbmode->vsync_len = vm->vsync_len;
+> >> +
+> >> +     fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> >> +
+> >> +     fbmode->sync = 0;
+> >> +     fbmode->vmode = 0;
+> >> +     if (vm->hah)
+> >> +             fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> >> +     if (vm->vah)
+> >> +             fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> >> +     if (vm->interlaced)
+> >> +             fbmode->vmode |= FB_VMODE_INTERLACED;
+> >> +     if (vm->doublescan)
+> >> +             fbmode->vmode |= FB_VMODE_DOUBLE;
+> >> +     if (vm->de)
+> >> +             fbmode->sync |= FB_SYNC_DATA_ENABLE_HIGH_ACT;
+> >
+> > "FB_SYNC_DATA_ENABLE_HIGH_ACT" seems to be mxsfb specific flag, I am getting
+> > build error on this. Please let me know if I am missing something.
+> >
+> > Thanks,
+> > Prakash
+> >
 
+I compile-tested the series and didn't have that error. But obviously I should
+have. As this is a mxsfs flag, I will throw it out.
+
+Regards,
+Steffen
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
