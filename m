@@ -1,118 +1,125 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH] of: use platform_device_add
-Date: Wed, 21 Nov 2012 18:15:59 +0000
-Message-ID: <1353521759-28263-1-git-send-email-grant.likely@secretlab.ca>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND 6/7] input: ti_am335x_tsc: Add DT support
+Date: Wed, 21 Nov 2012 10:32:23 -0800
+Message-ID: <20121121183223.GA18950@core.coreip.homeip.net>
+References: <1352271124-5513-1-git-send-email-rachna@ti.com>
+ <1352271124-5513-7-git-send-email-rachna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1352271124-5513-7-git-send-email-rachna-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Patil, Rachna" <rachna-l0cyMroinI0@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This allows platform_device_add a chance to call insert_resource on all
-of the resources from OF. At a minimum this fills in proc/iomem and
-presumably makes resource tracking and conflict detection work better.
-However, it has the side effect of moving all OF generated platform
-devices from /sys/devices to /sys/devices/platform/. It /shouldn't/
-break userspace because userspace is not supposed to depend on the full
-path (because userspace always does what it is supposed to, right?).
+Hi Rachna,
 
-It also has a backup call to of_device_add() when running on PowerPC to
-catch any devices that have overlapping regions. It will complain about
-them, but it will not fail to register the device.
+On Wed, Nov 07, 2012 at 12:22:03PM +0530, Patil, Rachna wrote:
+> Add DT support for client touchscreen driver
+> 
+> Signed-off-by: Patil, Rachna <rachna-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/input/touchscreen/ti_am335x_tsc.c |   60 ++++++++++++++++++++++++-----
+>  1 files changed, 50 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/touchscreen/ti_am335x_tsc.c
+> index 7a26810..c063cf6 100644
+> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
+> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
+> @@ -26,6 +26,8 @@
+>  #include <linux/io.h>
+>  #include <linux/input/ti_am335x_tsc.h>
+>  #include <linux/delay.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <linux/mfd/ti_am335x_tscadc.h>
+>  
+> @@ -398,12 +400,18 @@ static int __devinit titsc_probe(struct platform_device *pdev)
+>  	struct titsc *ts_dev;
+>  	struct input_dev *input_dev;
+>  	struct ti_tscadc_dev *tscadc_dev = pdev->dev.platform_data;
+> -	struct mfd_tscadc_board	*pdata;
+> -	int err;
+> -
+> -	pdata = tscadc_dev->dev->platform_data;
+> -
+> -	if (!pdata) {
+> +	int err, i;
+> +	struct mfd_tscadc_board	*pdata = NULL;
+> +	struct device_node *node = NULL;
+> +	u32 val32, wires_conf[4];
+> +
+> +	if (tscadc_dev->dev->of_node) {
+> +		node = tscadc_dev->dev->of_node;
+> +		node = of_find_node_by_name(node, "tsc");
+> +	} else
+> +		pdata = tscadc_dev->dev->platform_data;
+> +
+> +	if (!pdata && !node) {
+>  		dev_err(&pdev->dev, "Could not find platform data\n");
+>  		return -EINVAL;
+>  	}
+> @@ -421,11 +429,43 @@ static int __devinit titsc_probe(struct platform_device *pdev)
+>  	ts_dev->mfd_tscadc = tscadc_dev;
+>  	ts_dev->input = input_dev;
+>  	ts_dev->irq = tscadc_dev->irq;
+> -	ts_dev->wires = pdata->tsc_init->wires;
+> -	ts_dev->x_plate_resistance = pdata->tsc_init->x_plate_resistance;
+> -	ts_dev->steps_to_configure = pdata->tsc_init->steps_to_configure;
+> -	memcpy(ts_dev->config_inp, pdata->tsc_init->wire_config,
+> +
+> +	if (node) {
+> +		err = of_property_read_u32(node, "wires", &val32);
+> +		if (err < 0)
+> +			goto err_free_mem;
+> +		else
+> +			ts_dev->wires = val32;
+> +
+> +		err = of_property_read_u32(node, "x-plate-resistance", &val32);
+> +		if (err < 0)
+> +			goto err_free_mem;
+> +		else
+> +			ts_dev->x_plate_resistance = val32;
+> +
+> +		err = of_property_read_u32(node, "steps-to-configure", &val32);
+> +		if (err < 0)
+> +			goto err_free_mem;
+> +		else
+> +			ts_dev->steps_to_configure = val32;
+> +
+> +		err = of_property_read_u32_array(node, "wire-config",
+> +				wires_conf, ARRAY_SIZE(wires_conf));
+> +		if (err < 0)
+> +			goto err_free_mem;
+> +		else {
+> +			for (i = 0; i < ARRAY_SIZE(wires_conf); i++)
+> +				ts_dev->config_inp[i] = wires_conf[i];
+> +		}
+> +	} else {
+> +		ts_dev->wires = pdata->tsc_init->wires;
+> +		ts_dev->x_plate_resistance =
+> +			pdata->tsc_init->x_plate_resistance;
+> +		ts_dev->steps_to_configure =
+> +			pdata->tsc_init->steps_to_configure;
+> +		memcpy(ts_dev->config_inp, pdata->tsc_init->wire_config,
+>  			sizeof(pdata->tsc_init->wire_config));
 
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
+I believe if platform data is supplied it should take precedence over DT
+data so that parameters can be adjusted if really needed.
 
-Greg, do you mind taking a look at this? The reason the OF code hasn't been
-calling platform_device_add() directly to this point is:
-a) there are some trees with resource overlays
-b) I want the devices in /sys/devices not /sys/devices/platform.
+> +	}
+>  
+>  	err = request_irq(ts_dev->irq, titsc_irq,
+>  			  0, pdev->dev.driver->name, ts_dev);
+> -- 
+> 1.7.0.4
+> 
+> 
 
-I could easily add exceptions to platform_device_add() for both those cases, but
-I don't like adding DT exceptions to the common code. However, I still need to
-support the platforms that unfortunately have overlapping resources. This patch
-does that by still calling the old path if platform_device_add() fails, but it
-isn't nice either because of_device_add() has to duplicate
-platform_device_add(). Blech. Plus the exception only applies for PowerPC.
+Thanks.
 
-So, how do you feel about having a 'relaxed' mode for platform_device_add()
-which means it won't fail if resources overlap and maybe won't do the silly
-platform_bus parent thing. Thoughts?
-
-g.
-
- drivers/of/platform.c |   28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b80891b..3d7ba40 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -203,6 +203,7 @@ struct platform_device *of_platform_device_create_pdata(
- 					struct device *parent)
- {
- 	struct platform_device *dev;
-+	int rc;
- 
- 	if (!of_device_is_available(np))
- 		return NULL;
-@@ -214,16 +215,39 @@ struct platform_device *of_platform_device_create_pdata(
- #if defined(CONFIG_MICROBLAZE)
- 	dev->archdata.dma_mask = 0xffffffffUL;
- #endif
-+	dev->name = dev_name(&dev->dev);
- 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
--	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
-+	dev->dev.id = PLATFORM_DEVID_NONE;
-+	/* device_add will assume that this device is on the same node as
-+	 * the parent. If there is no parent defined, set the node
-+	 * explicitly */
-+	if (!parent)
-+		set_dev_node(&dev->dev, of_node_to_nid(np));
- 
- 	/* We do not fill the DMA ops for platform devices by default.
- 	 * This is currently the responsibility of the platform code
- 	 * to do such, possibly using a device notifier
- 	 */
- 
--	if (of_device_add(dev) != 0) {
-+	rc = platform_device_add(dev);
-+#ifdef CONFIG_POWERPC
-+	/*
-+	 * This POWERPC block isn't pretty, but the commit that adds it is a
-+	 * little risky. There are possibly some powerpc platforms that have
-+	 * overlapping resources in the device tree. If so, then I want to find
-+	 * them, but I don't want to break support in the process. So, if
-+	 * platform_device_add() fails, then register the device anyway, but
-+	 * complain about it. Hopefully we can find and fix and problem
-+	 * platforms before removing this code.
-+	 */
-+	if (rc == -EBUSY) {
-+		dev_warn(&dev->dev, "WARNING: resource overlap in DT node %s\n",
-+			np->full_name);
-+		rc = of_device_add(dev);
-+	}
-+#endif
-+	if (rc) {
- 		platform_device_put(dev);
- 		return NULL;
- 	}
 -- 
-1.7.10.4
+Dmitry
