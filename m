@@ -1,104 +1,118 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v6 1/4] genalloc: add a global pool list, allow to find
- pools by phys address
-Date: Tue, 20 Nov 2012 23:46:13 -0800
-Message-ID: <20121120234613.47d8183c.akpm@linux-foundation.org>
-References: <1353061817-3207-1-git-send-email-p.zabel@pengutronix.de>
-	<1353061817-3207-2-git-send-email-p.zabel@pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Wed, 21 Nov 2012 10:13:47 +0200
+Message-ID: <50AC8D3B.6040300@ti.com>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1353149747-31871-2-git-send-email-acourbot@nvidia.com> <50AB9832.90709@ti.com> <4316169.5QXVzv7peZ@percival>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1353061817-3207-2-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig403A57F02E04A77E078F8D06"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4316169.5QXVzv7peZ@percival>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Nov 2012 11:30:14 +0100 Philipp Zabel <p.zabel@pengutronix.de> wrote:
+--------------enig403A57F02E04A77E078F8D06
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> This patch keeps all created pools in a global list and adds two
-> functions that allow to retrieve the gen_pool pointer from a known
-> physical address and from a device tree node.
->
-> ...
->
-> +/*
-> + * gen_pool_find_by_phys - find a pool by physical start address
-> + * @phys: physical address as added with gen_pool_add_virt
-> + *
-> + * Returns the pool that contains the chunk starting at phys,
-> + * or NULL if not found.
-> + */
-> +struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys)
-> +{
-> +	struct gen_pool *pool, *found = NULL;
-> +	struct gen_pool_chunk *chunk;
-> +
-> +	rcu_read_lock();
-> +	list_for_each_entry_rcu(pool, &pools, next_pool) {
-> +		list_for_each_entry_rcu(chunk, &pool->chunks, next_chunk) {
-> +			if (phys == chunk->phys_addr) {
-> +				found = pool;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +
-> +	return found;
-> +}
-> +EXPORT_SYMBOL_GPL(gen_pool_find_by_phys);
+On 2012-11-21 03:56, Alex Courbot wrote:
+> Hi Tomi,
+>=20
+> On Tuesday 20 November 2012 22:48:18 Tomi Valkeinen wrote:
+>> I guess there's a reason, but the above looks a bit inconsistent. For
+>> gpio you define the gpio resource inside the step. For power and pwm t=
+he
+>> resource is defined before the steps. Why wouldn't "pwm =3D <&pwm 2
+>> 5000000>;" work in step2?
+>=20
+> That's mostly a framework issue. Most frameworks do not export a functi=
+on that=20
+> allow to dereference a phandle - they expect resources to be declared r=
+ight=20
+> under the device node and accessed by name through foo_get(device, name=
+). So=20
+> using phandles in power sequences would require to export these additio=
+nal=20
 
-It is rather pointless to use the fancy super-fast RCU locking
-around a linear search!  We have various data structures which can be
-used to make this search much more efficient.  radix-tree is one, if
-the search keys are unique (which is the case here).
+Right, I expected something like that.
 
-Secondly, that whole "phys" concept doesn't need to be in there.  It
-would be better to implement a far more general
-gen_pool_find_by_key(unsigned long key) and then do the phys->ulong
-specialization elsewhere.
+> functions and also opens the door to some inconsistencies - for instanc=
+e, your=20
+> PWM phandle could be referenced a second time in the sequence with a di=
+fferent=20
+> period - how do you know that these are actually referring the same PWM=
+=20
+> device?
 
-Finally the changelog gives no indication *why* you feel the kernel
-needs this feature.  What is it for?  What are the use cases?  This is
-the most important information for reviewers, hence it should be up
-there front and center, in lavish detail.
+This I didn't understand. Doesn't "<&pwm 2 xyz>" point to a single
+device, no matter where and how many times it's used?
 
-Because once this is understood:
+>>> +When a power sequence is run, its steps is executed one after the ot=
+her
+>>> until +one step fails or the end of the sequence is reached.
+>>
+>> The document doesn't give any hint of what the driver should do if
+>> running the power sequence fails. Run the "opposite" power sequence?
+>> Will that work for all resources? I'm mainly thinking of a case where
+>> each enable of the resource should be matched by a disable, i.e. you
+>> can't call disable if no enable was called.
+>=20
+> We discussed that issue already (around v5 I think) and the conclusion =
+was=20
+> that it should be up to the driver. When we simply enable/disable resou=
+rces it=20
+> is easy to revert, but in the future non-boolean properties will likely=
+ be=20
+> introduced, and these cannot easily be reverted. Moreover some drivers =
+might=20
+> have more complex recovery needs. This deserves more discussion I think=
+, as=20
+> I'd like to have some "generic" recovery mechanism that covers most of =
+the=20
+> cases.
 
-a) people might be able to suggest alternatives.  Can't do that
-   without the required info and
+Ok. I'll need to dig up the conversation. Did you consider any examples
+of how some driver could handle the error cases?
 
-b) people might then be interested in merging the patch into a kernel!
+What I'm worried about is that, as far as I understand, the power
+sequence is kinda like black box to the driver. The driver just does
+"power-up", without knowing what really goes on in there.
 
-> +#ifdef CONFIG_OF
-> +/**
-> + * of_get_named_gen_pool - find a pool by phandle property
-> + * @np: device node
-> + * @propname: property name containing phandle(s)
-> + * @index: index into the phandle array
-> + *
-> + * Returns the pool that contains the chunk starting at the physical
-> + * address of the device tree node pointed at by the phandle property,
-> + * or NULL if not found.
-> + */
-> +struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-> +	const char *propname, int index)
-> +{
-> +	struct device_node *np_pool;
-> +	struct resource res;
-> +	int ret;
-> +
-> +	np_pool = of_parse_phandle(np, propname, index);
-> +	if (!np_pool)
-> +		return NULL;
-> +	ret = of_address_to_resource(np_pool, 0, &res);
-> +	if (ret < 0)
-> +		return NULL;
-> +	return gen_pool_find_by_phys((phys_addr_t) res.start);
-> +}
-> +EXPORT_SYMBOL_GPL(of_get_named_gen_pool);
+And if it doesn't know what goes on in there, nor what's in "power-down"
+sequence, how can it do anything when an error happens? The only option
+I see is that the driver doesn't do anything, which will leave some
+resources enabled, or it can run the power-down sequence, which may or
+may not work.
 
-Seems rather inappropriate that this should be in lib/genpool.c. 
-Put it somewhere such as drivers/of/base.c, perhaps.
+ Tomi
+
+
+
+--------------enig403A57F02E04A77E078F8D06
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJQrI0/AAoJEPo9qoy8lh712M0P+gIChgVfl7Gu5kAIKRNg10G8
+rxxs1RmpSJFHATQJpteeLCpuQV+8HgyE0mAznCOxXymB+kM7qQ5E1VBY+COk2r2k
+IoBc3kPYjeGzQHNwOYiS8+CTu7zveQN+7cCs4UOtCWHPX2MmkPHcv5B0uWX2Cx9j
+BQdRDQb61xo3BhpG3M4krqW0wvemfYvlZYe3UL7DEFgHojvv3UBulOQlI7v7UeVd
+SJ3UjET7CL3yRVPoKE+LAGLbDWN153hIKSBdsMGplL7iWseFlFSOncDcEyvgeJ/y
+JljHXcjDDNEGrAXtrVZ+Mgmk68zm7uj/UzFdawShmsplL7jok9rvh/9zfKxjBW++
+Xb7Yso89fytQM03ys8yJpFZS3zSTsGOXM0YD8QFldYnC09V4cuSM6G2uCKBd26Qa
+EBPtKd4wgJOGHBkXAmI/4pj0cW/XJXvybLhlBKuBC7QElau86mT2ie7abfzFl6eY
+jvfiIKg312QvnG/44TNUMDUQBcSnhoyodQMk/54D2xkZiKrgDNYsMHkohVGWQP7D
+Y2W8WLrAqeSWdcG3dKp2nKua0c9O2UBn7QNqNtFivMafelAn74Q/PQDcLv5uMFz7
+t95g7zl7isRneYCB5bVwXrHpr24lJ5PAirPrrDNxwP9/U1KOth0nK2oeCuKIn8XS
+b99Gejfh3zdY0QTTEX5u
+=g1w0
+-----END PGP SIGNATURE-----
+
+--------------enig403A57F02E04A77E078F8D06--
