@@ -1,140 +1,91 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v3] pwm: Device tree support for PWM polarity.
-Date: Wed, 21 Nov 2012 16:32:46 +0000
-Message-ID: <20121121163246.B20163E0AE2@localhost>
-References: <1353483644-32711-1-git-send-email-avinashphilip@ti.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1353483644-32711-1-git-send-email-avinashphilip@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: thierry.reding@avionic-design.de, rob.herring@calxeda.com, rob@landley.net
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v12 1/6] video: add display_timing and videomode
+Date: Wed, 21 Nov 2012 18:42:21 +0200
+Message-ID: <50AD046D.1050201@ti.com>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353426896-6045-2-git-send-email-s.trumtrar@pengutronix.de>
+ <50ACBCE4.60701@ti.com> <20121121161103.GA12657@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1209739556801913027=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121121161103.GA12657-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Nov 2012 13:10:44 +0530, "Philip, Avinash" <avinashphilip@ti.com> wrote:
-> Add support for encoding PWM properties in bit encoded form with
-> of_pwm_xlate_with_flags() function support. Platforms require platform
-> specific PWM properties has to populate in 3rd cell of the pwm-specifier
-> and PWM driver should also set .of_xlate support with this function.
-> Currently PWM property polarity encoded in bit position 0 of the third
-> cell in pwm-specifier.
-> 
-> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+--===============1209739556801913027==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig0CF1414206811AEE10D77671"
 
-Looks okay to me.
+--------------enig0CF1414206811AEE10D77671
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+On 2012-11-21 18:11, Steffen Trumtrar wrote:
+> Hi,
+>=20
+> On Wed, Nov 21, 2012 at 01:37:08PM +0200, Tomi Valkeinen wrote:
 
-> ---
-> Changes since v2:
-> 	- Move PWM_SPEC_POLARITY to core.c
-> 	- Remove dummy function
-> 
-> Changes since v1:
-> 	- of_pwm_xlate_with_flags function support added.
-> 	- Documentation update
-> 
-> :100644 100644 73ec962... 04b0dc4... M	Documentation/devicetree/bindings/pwm/pwm.txt
-> :100644 100644 f5acdaa... 780cb6b... M	drivers/pwm/core.c
-> :100644 100644 112b314... 6d661f3... M	include/linux/pwm.h
->  Documentation/devicetree/bindings/pwm/pwm.txt |   18 +++++++++++++--
->  drivers/pwm/core.c                            |   28 +++++++++++++++++++++++++
->  include/linux/pwm.h                           |    3 ++
->  3 files changed, 46 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
-> index 73ec962..04b0dc4 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm.txt
-> @@ -37,10 +37,22 @@ device:
->  		pwm-names = "backlight";
->  	};
->  
-> +Note that in the example above, specifying the "pwm-names" is redundant
-> +because the name "backlight" would be used as fallback anyway.
-> +
->  pwm-specifier typically encodes the chip-relative PWM number and the PWM
-> -period in nanoseconds. Note that in the example above, specifying the
-> -"pwm-names" is redundant because the name "backlight" would be used as
-> -fallback anyway.
-> +period in nanoseconds.
-> +
-> +Optionally, the pwm-specifier can encode a number of flags in a third cell:
-> +- bit 0: PWM signal polarity (0: normal polarity, 1: inverse polarity)
-> +
-> +Example with optional PWM specifier for inverse polarity
-> +
-> +	bl: backlight {
-> +		pwms = <&pwm 0 5000000 1>;
-> +		pwm-names = "backlight";
-> +	};
-> +
->  
->  2) PWM controller nodes
->  -----------------------
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index f5acdaa..780cb6b 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -32,6 +32,9 @@
->  
->  #define MAX_PWMS 1024
->  
-> +/* flags in the third cell of the DT PWM specifier */
-> +#define PWM_SPEC_POLARITY	(1 << 0)
-> +
->  static DEFINE_MUTEX(pwm_lookup_lock);
->  static LIST_HEAD(pwm_lookup_list);
->  static DEFINE_MUTEX(pwm_lock);
-> @@ -129,6 +132,31 @@ static int pwm_device_request(struct pwm_device *pwm, const char *label)
->  	return 0;
->  }
->  
-> +struct pwm_device *
-> +of_pwm_xlate_with_flags(struct pwm_chip *pc, const struct of_phandle_args *args)
-> +{
-> +	struct pwm_device *pwm;
-> +
-> +	if (pc->of_pwm_n_cells < 3)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	if (args->args[0] >= pc->npwm)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	pwm = pwm_request_from_chip(pc, args->args[0], NULL);
-> +	if (IS_ERR(pwm))
-> +		return pwm;
-> +
-> +	pwm_set_period(pwm, args->args[1]);
-> +
-> +	if (args->args[2] & PWM_SPEC_POLARITY)
-> +		pwm_set_polarity(pwm, PWM_POLARITY_INVERSED);
-> +	else
-> +		pwm_set_polarity(pwm, PWM_POLARITY_NORMAL);
-> +
-> +	return pwm;
-> +}
-> +
->  static struct pwm_device *
->  of_pwm_simple_xlate(struct pwm_chip *pc, const struct of_phandle_args *args)
->  {
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 112b314..6d661f3 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -171,6 +171,9 @@ struct pwm_device *pwm_request_from_chip(struct pwm_chip *chip,
->  					 unsigned int index,
->  					 const char *label);
->  
-> +struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
-> +		const struct of_phandle_args *args);
-> +
->  struct pwm_device *pwm_get(struct device *dev, const char *consumer);
->  void pwm_put(struct pwm_device *pwm);
->  
-> -- 
-> 1.7.0.4
-> 
+>>> +#include <linux/types.h>
+>>
+>> What is this needed for? u32? I don't see it defined in types.h
+>>
+>=20
+> Yes, u32. What would be the right header for that if not types.h?
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Yes, it looks like u32 comes via linux/types.h. It's defined elsewhere,
+but linux/types.h sounds like the most reasonable header for it.
+
+ Tomi
+
+
+
+--------------enig0CF1414206811AEE10D77671
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJQrQRtAAoJEPo9qoy8lh71eloP/juLnJjbo5y2FUJ04qMJ+df7
+MkNVVYEtjD4rceufjzwihFGQ1EQX1HowLyFGe2/Wljn8xbFkNvNh20fnbq3O1p0I
+KMcUUCGppacHs6kWu5RvFRVjHX6BOu4XkVMzfcFnbtFocHZiTSXWa+JxhFF7I96U
+o4hkfJ8+Jy4znNmrfYPDMliEbFaM5JaeXbmPKQ81Oe75pvk+9mmDOONURmDS0xPB
+Zi+kVZ70C4V1fWlu/vO+ukeUlKBRXgTdjGM0MUZUbHHKYio4KY8WN3j5Za2XDpN0
+8PTJsLPvxaSouuXlXl6LznwxjkTET/bTj1FN4PIR/CEz4KybtjkVHx6zeo0NCyfp
+Sp+GSVDmyN1psGhWtJyYj9d3IbZBCvplaXHiaKansq/BkiiQfrpmqTRQH5RDOpgn
+ii4Odde5Hc98z2O/g+rZYMVKrk1V8cS70HwC02LCyLuc+39CVz8+YzhMTId6C4OX
+lVMFPIN+vDtypsWim7HsFU97ZoNf7Mhh3SbQctkKdXfUTJXGvbFn6X36Tyzj1IUQ
+QPud8W4NQ+wFafRiutcQ8FXmqsdoGngpWd35U6HgR/O3SreXH0kf/90P1HcGS7FZ
+/kK5ojz/NheUeo4+MZtbul81f5fvktR5gKauWJ2Vfve7wf3Cn6gsrl3EWqUqGzWe
+YHTfS+riAeffBkD2Bn9y
+=5nJE
+-----END PGP SIGNATURE-----
+
+--------------enig0CF1414206811AEE10D77671--
+
+--===============1209739556801913027==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1209739556801913027==--
