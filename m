@@ -1,44 +1,98 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH RESEND 0/7] MFD: ti_am335x_tscadc: DT support and TSC
- features addition
-Date: Wed, 21 Nov 2012 18:00:21 +0100
-Message-ID: <20121121170021.GE18738@sortiz-mobl>
-References: <1352271124-5513-1-git-send-email-rachna@ti.com>
- <4CE347531D4CA947960AF71FF095B9323E96C54A@DBDE01.ent.ti.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH 1/4] OF: Add helper for matching against linux,stdout-path
+Date: Wed, 21 Nov 2012 18:26:31 +0100
+Message-ID: <20121121172631.GV10369@pengutronix.de>
+References: <20121121155312.GX4398@game.jcrosoft.org>
+ <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4CE347531D4CA947960AF71FF095B9323E96C54A-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Patil, Rachna" <rachna-l0cyMroinI0@public.gmane.org>
-Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pengutronix.de, Alan Cox <alan@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rachna,
-
-On Fri, Nov 16, 2012 at 10:33:00AM +0000, Patil, Rachna wrote:
-> Hi,
+On Wed, Nov 21, 2012 at 04:57:05PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> From: Sascha Hauer <s.hauer@pengutronix.de>
 > 
-> This is just a gentle reminder of the patch set I had posted earlier viz.
-> "[PATCH RESEND 0/7] MFD: ti_am335x_tscadc: DT support and TSC features addition"
-> Can this patch set be pulled in if there are no review comments.
-> This patch set does not break anything existing, it just adds new features and DT support for the MFD core and its clients.
-I'm fine with the MFD part, but did you get Dmitry's ACK on the input ones ?
+> devicetrees may have a linux,stdout-path or stdout-path property
+> in the chosen node describing the console device. This adds a helper
+> function to match a device against this property and retrieve the options
+> so a driver can call add_preferred_console for a matching device.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> Cc: linux-serial@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: kernel@pengutronix.de
+> Cc: Alan Cox <alan@linux.intel.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+>  drivers/of/base.c  |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h |    7 +++++++
+>  2 files changed, 53 insertions(+)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index f2f63c8..72c49ce 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1470,3 +1470,49 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
+>  	return curv;
+>  }
+>  EXPORT_SYMBOL_GPL(of_prop_next_string);
+> +
+> +/**
+> + * of_device_is_stdout_path - check if a device node matches the
+> + *			      linux,stdout-path property
+> + * @np:		Pointer to the given device_node
+> + * @option:	parsed option
+> + *
+> + * Check if this device node matches the linux,stdout-path property
+> + * in the chosen node. return true if yes, false otherwise.
+> + */
+> +int of_device_is_stdout_path(struct device_node *dn, char **option)
+> +{
+> +	const char *name;
+> +	struct device_node *dn_stdout;
+> +	bool is_stdout = 0;
+> +	const char *tmp;
+> +	const char *tmp_option;
+> +
+> +	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+> +	if (name == NULL)
+> +		name = of_get_property(of_chosen, "stdout-path", NULL);
+> +
+> +	if (name == NULL)
+> +		return 0;
+> +
+> +	tmp_option = strchr(name, ':');
+> +
+> +	tmp = kstrndup(name, strlen(name) - strlen(tmp_option), GFP_KERNEL);
 
-Cheers,
-Samuel.
+tmp_option may be NULL.
+
+> +	if (!tmp)
+> +		return 0;
+> +
+> +	dn_stdout = of_find_node_by_path(tmp);
+> +
+> +	if (dn_stdout && dn_stdout == dn) {
+> +		is_stdout = 1;
+> +		tmp_option++;
+> +		*option = kstrdup(tmp_option, GFP_KERNEL);
+> +	}
+> +
+> +	of_node_put(dn_stdout);
+
+dn_stdout may be NULL aswell.
+
+Sascha
 
 -- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
