@@ -1,73 +1,87 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Wed, 21 Nov 2012 16:44:04 +0000
-Message-ID: <20121121164404.E04EF3E0AE2@localhost>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1353149747-31871-2-git-send-email-acourbot@nvidia.com> <20121120215429.B621F3E1821@localhost> <20121121013133.GE4673@opensource.wolfsonmicro.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20121121013133.GE4673@opensource.wolfsonmicro.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v12 4/6] fbmon: add of_videomode helpers
+Date: Wed, 21 Nov 2012 18:47:53 +0200
+Message-ID: <50AD05B9.9040909@ti.com>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de> <1353426896-6045-5-git-send-email-s.trumtrar@pengutronix.de> <50ACCDDA.2070606@ti.com> <20121121162436.GB12657@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enigC7763C51364F1D39676A556E"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20121121162436.GB12657@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Nov 2012 10:31:34 +0900, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
-> On Tue, Nov 20, 2012 at 09:54:29PM +0000, Grant Likely wrote:
-> > On Sat, 17 Nov 2012 19:55:45 +0900, Alexandre Courbot <acourbot@nvidia.com> wrote:
-> 
-> > > With the advent of the device tree and of ARM kernels that are not
-> > > board-tied, we cannot rely on these board-specific hooks anymore but
-> 
-> > This isn't strictly true. It is still perfectly fine to have board
-> > specific code when necessary. However, there is strong encouragement to
-> > enable that code in device drivers as much as possible and new board
-> > files need to have very strong justification.
-> 
-> This isn't the message that's gone over, and even for device drivers
-> everyone seems to be taking the whole device tree thing as a move to
-> pull all data out of the kernel.  In some cases there are some real
-> practical advantages to doing this but a lot of the people making these
-> changes seem to view having things in DT as a goal in itself.
+--------------enigC7763C51364F1D39676A556E
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I know, and I do apologize for my part in not communicating and
-shepherding enough. For anyone reading; please be pragmatic on putting
-things into the DT. If a binding starts to look really complex, ask
-whether or not it helps things.
+On 2012-11-21 18:24, Steffen Trumtrar wrote:
+> On Wed, Nov 21, 2012 at 02:49:30PM +0200, Tomi Valkeinen wrote:
 
-> > I'm thinking about the scripts as trivial-to-parse ascii strings that
-> > have a very simple set of commands. The commands use resources already
-> > defined in the node. ie. 'g0' refers to the first entry in the gpios
-> > property. 'r0' for the regulator, 'p0' for the pwms, 'd' means delay. By
-> > no means take this as the format to use, it is just an example off the
-> > top of my head, but it is already way easier to work with than putting
-> > each command into a node.
-> 
-> It does appear to have some legibility challenges, especially with using
-> the indexes into the arrays of resources.  On the other hand the arrays
-> should be fairly small.
+>>> @@ -715,6 +717,11 @@ extern void fb_destroy_modedb(struct fb_videomod=
+e *modedb);
+>>>  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, =
+int rb);
+>>>  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+>>> =20
+>>> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+>>> +extern int of_get_fb_videomode(const struct device_node *np,
+>>> +			       struct fb_videomode *fb,
+>>> +			       unsigned int index);
+>>> +#endif
+>>>  #if IS_ENABLED(CONFIG_VIDEOMODE)
+>>>  extern int fb_videomode_from_videomode(const struct videomode *vm,
+>>>  				       struct fb_videomode *fbmode);
+>>
+>> Do you really need these #ifs in the header files? They do make it loo=
+k
+>> a bit messy. If somebody uses the functions and CONFIG_VIDEOMODE is no=
+t
+>> enabled, he'll get a linker error anyway.
+>>
+>=20
+> Well, I don't remember at the moment who requested this, but it was not=
+ my
+> idea to put them there. So, this is a matter of style I guess.
+> But maybe I understood that wrong.
 
-This is merely an example off the top of my head. I'm in no way wed to
-the syntax.
+Right, one reviewer says this way, and another says that way =3D).
 
-> > > +Platform Data Format
-> > > +--------------------
-> > > +All relevant data structures for declaring power sequences are located in
-> > > +include/linux/power_seq.h.
-> 
-> > Hmm... If sequences are switched to a string instead, then platform_data
-> > should also use it. The power sequence data structures can be created at
-> > runtime by parsing the string.
-> 
-> Seems like a step backwards to me - why not let people store the more
-> parsed version of the data?  It's going to be less convenient for users
-> on non-DT systems.
-> 
-> As I said in my earlier reviews I think this is a useful thing to have
-> as a utility library for drivers independantly of the DT bindings, it
-> would allow drivers to become more data driven.  Perhaps we can rework
-> the series so that the DT bindings are added as a final patch?  All the
-> rest of the code seems OK.
+With the header files I've made I only use #ifs with #else, when I want
+to give a static inline empty/no-op implementation for the function in
+case the feature is not compiled into the kernel.
 
-I'm fine with that if the bindings don't get merged yet.
+As you said, matter of taste. Up to you.
 
-g.
+ Tomi
 
+
+
+--------------enigC7763C51364F1D39676A556E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJQrQW5AAoJEPo9qoy8lh71K8YP/2FV39JzQG+Wr/vQhLzk5Uh/
+QaMhCx33KHJ0U/Z0iqxiR9X24IUXex2c4qj2xccmEOs1BKQC/vT5HXMFgIHhHAs/
+DO5yB3eVPsMe+ymXeSe0TM6QpfLZLbIgX6GkuZ32w9TtXsO32cZb+ohxRtdOsRpW
+NDG0oR5leJAQOhFjuQj+9M4AFjuML4o6/LMorX4zxRpUU0L8FUBDvL9c3MiwqLR5
+MZR1rpaELel5aP6TJNqSMshiHW5HZrp2XgoTU4/6GoBZ+nLDzxTmvztDVkoNqXK0
+V6Edbe9KraIqnyQfFBtu9rsAR7wPWkAQxYbLOi1l6SbNGGvPGKORfIwXq/IxPwsz
+rbfILzcGfTMzL9KUQ13PyZh9ruiGmpcZAPsJ02Zou6qaG+OAl14d1kpyooT0z7El
+mQk2a+9q0UsM52VjJd8PhOG1sL7AXNPv25Gq8NZMDWEzR/0O4En2MVYXTzYimYMR
+S5e+HONIMkdvqL7i/JMia6ml2hIi9tULUPL1qSAfvgPODFPJA4jCezRriKDXxX35
+Z5rdkukuWHPHt89CPmOK2G9if3PB6WjuC6c3YUxQVXnJJkKn8uNkxeVnie0iTYJN
+9VugOpfdqODgSD4d+HlCII3gnhrwQi/JeNZP5zft7jvdcC06rqmNFoWF33tUrO+c
+GmOu+dfYxA7yYA5CBMHM
+=PB4R
+-----END PGP SIGNATURE-----
+
+--------------enigC7763C51364F1D39676A556E--
