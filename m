@@ -1,46 +1,43 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of/i2c: check status property for i2c client
-Date: Wed, 21 Nov 2012 07:42:36 -0600
-Message-ID: <50ACDA4C.2030900@gmail.com>
-References: <1353488270-14723-1-git-send-email-bongkyu.kim@lge.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH v3 2/5] mfd: tps65217: Set PMIC to shutdown on PWR_EN
+ toggle
+Date: Wed, 21 Nov 2012 14:47:58 +0100
+Message-ID: <20121121134758.GS18738@sortiz-mobl>
+References: <1353404927-14412-1-git-send-email-anilkumar@ti.com>
+ <1353404927-14412-3-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1353488270-14723-1-git-send-email-bongkyu.kim@lge.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bongkyu Kim <bongkyu.kim@lge.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1353404927-14412-3-git-send-email-anilkumar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: AnilKumar Ch <anilkumar@ti.com>
+Cc: a.zummo@towertech.it, tony@atomide.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rtc-linux@googlegroups.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Colin Foe-Parker <colin.foeparker@logicpd.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2012 02:57 AM, Bongkyu Kim wrote:
-> Because of_i2c_register_devices() do not check status property,
-> all i2c clients are registered.
-> 
-> This patch add checking status property for i2c client.
-> After this patch, if status property is absent or "okay" or "ok",
-> i2c client will be registered.
-> 
-> Signed-off-by: Bongkyu Kim <bongkyu.kim@lge.com>
+Hi Anilkumar,
 
-Applied.
-
+On Tue, Nov 20, 2012 at 03:18:44PM +0530, AnilKumar Ch wrote:
+> From: Colin Foe-Parker <colin.foeparker@logicpd.com>
+> 
+> Set tps65217 PMIC status to OFF if power enable toggle is supported.
+> By setting this bit to 1 to enter PMIC to OFF state when PWR_EN pin
+> is pulled low. Also adds a DT flag to specify that device pmic
+> supports shutdown control or not.
+> 
+> Signed-off-by: Colin Foe-Parker <colin.foeparker@logicpd.com>
+> [anilkumar@ti.com: move the additions to tps65217 MFD driver]
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
 > ---
->  drivers/of/of_i2c.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-> index 3550f3b..2552fc5 100644
-> --- a/drivers/of/of_i2c.c
-> +++ b/drivers/of/of_i2c.c
-> @@ -37,6 +37,9 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  
->  		dev_dbg(&adap->dev, "of_i2c: register %s\n", node->full_name);
->  
-> +		if (!of_device_is_available(node))
-> +			continue;
-> +
->  		if (of_modalias_node(node, info.type, sizeof(info.type)) < 0) {
->  			dev_err(&adap->dev, "of_i2c: modalias failure on %s\n",
->  				node->full_name);
-> 
+>  .../devicetree/bindings/regulator/tps65217.txt     |    4 ++++
+>  drivers/mfd/tps65217.c                             |   12 ++++++++++++
+>  2 files changed, 16 insertions(+)
+Applied, thanks.
+I suppose you're not expecting the whole patchset to go through one tree ?
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
