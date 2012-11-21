@@ -1,151 +1,313 @@
-From: Leela Krishna Amudala <leelakrishna.a@gmail.com>
-Subject: Re: [PATCH v12 3/6] fbmon: add videomode helpers
-Date: Wed, 21 Nov 2012 16:39:01 +0530
-Message-ID: <CAL1wa8dQ4QL0SzbXdo8nogBfBjQ8GpaJ134v6zu_iMkWQeXefA@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v12 1/6] video: add display_timing and videomode
+Date: Wed, 21 Nov 2012 13:37:08 +0200
+Message-ID: <50ACBCE4.60701@ti.com>
 References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-4-git-send-email-s.trumtrar@pengutronix.de> <A73F36158E33644199EB82C5EC81C7BC3E9FA769@DBDE01.ent.ti.com>
+ <1353426896-6045-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3E9FA769@DBDE01.ent.ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============7591600863261540772=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353426896-6045-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Yes,
-Even I got the same build error.
-later I fixed it by including "#include <linux/mxsfb.h>"
+--===============7591600863261540772==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig7B8E20EC1036AA7EB2975329"
 
-Best Wishes,
-Leela Krishna.
+--------------enig7B8E20EC1036AA7EB2975329
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 21, 2012 at 3:39 PM, Manjunathappa, Prakash
-<prakash.pm@ti.com> wrote:
-> Hi Steffen,
->
-> I am trying to add DT support for da8xx-fb driver on top of your patches.
-> Encountered below build error. Sorry for reporting it late.
->
-> On Tue, Nov 20, 2012 at 21:24:53, Steffen Trumtrar wrote:
->> Add a function to convert from the generic videomode to a fb_videomode.
->>
->> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
->> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
->> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
->> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
->> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
->> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> ---
->>  drivers/video/fbmon.c |   46 ++++++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/fb.h    |    6 ++++++
->>  2 files changed, 52 insertions(+)
->>
->> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
->> index cef6557..c1939a6 100644
->> --- a/drivers/video/fbmon.c
->> +++ b/drivers/video/fbmon.c
->> @@ -31,6 +31,7 @@
->>  #include <linux/pci.h>
->>  #include <linux/slab.h>
->>  #include <video/edid.h>
->> +#include <linux/videomode.h>
->>  #ifdef CONFIG_PPC_OF
->>  #include <asm/prom.h>
->>  #include <asm/pci-bridge.h>
->> @@ -1373,6 +1374,51 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
->>       kfree(timings);
->>       return err;
->>  }
->> +
->> +#if IS_ENABLED(CONFIG_VIDEOMODE)
->> +int fb_videomode_from_videomode(const struct videomode *vm,
->> +                             struct fb_videomode *fbmode)
->> +{
->> +     unsigned int htotal, vtotal;
->> +
->> +     fbmode->xres = vm->hactive;
->> +     fbmode->left_margin = vm->hback_porch;
->> +     fbmode->right_margin = vm->hfront_porch;
->> +     fbmode->hsync_len = vm->hsync_len;
->> +
->> +     fbmode->yres = vm->vactive;
->> +     fbmode->upper_margin = vm->vback_porch;
->> +     fbmode->lower_margin = vm->vfront_porch;
->> +     fbmode->vsync_len = vm->vsync_len;
->> +
->> +     fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
->> +
->> +     fbmode->sync = 0;
->> +     fbmode->vmode = 0;
->> +     if (vm->hah)
->> +             fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
->> +     if (vm->vah)
->> +             fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
->> +     if (vm->interlaced)
->> +             fbmode->vmode |= FB_VMODE_INTERLACED;
->> +     if (vm->doublescan)
->> +             fbmode->vmode |= FB_VMODE_DOUBLE;
->> +     if (vm->de)
->> +             fbmode->sync |= FB_SYNC_DATA_ENABLE_HIGH_ACT;
->
-> "FB_SYNC_DATA_ENABLE_HIGH_ACT" seems to be mxsfb specific flag, I am getting
-> build error on this. Please let me know if I am missing something.
->
-> Thanks,
-> Prakash
->
->> +     fbmode->flag = 0;
->> +
->> +     htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
->> +              vm->hsync_len;
->> +     vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
->> +              vm->vsync_len;
->> +     fbmode->refresh = (vm->pixelclock * 1000) / (htotal * vtotal);
->> +
->> +     return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
->> +#endif
->> +
->> +
->>  #else
->>  int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
->>  {
->> diff --git a/include/linux/fb.h b/include/linux/fb.h
->> index c7a9571..920cbe3 100644
->> --- a/include/linux/fb.h
->> +++ b/include/linux/fb.h
->> @@ -14,6 +14,7 @@
->>  #include <linux/backlight.h>
->>  #include <linux/slab.h>
->>  #include <asm/io.h>
->> +#include <linux/videomode.h>
->>
->>  struct vm_area_struct;
->>  struct fb_info;
->> @@ -714,6 +715,11 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
->>  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
->>  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
->>
->> +#if IS_ENABLED(CONFIG_VIDEOMODE)
->> +extern int fb_videomode_from_videomode(const struct videomode *vm,
->> +                                    struct fb_videomode *fbmode);
->> +#endif
->> +
->>  /* drivers/video/modedb.c */
->>  #define VESA_MODEDB_SIZE 34
->>  extern void fb_var_to_videomode(struct fb_videomode *mode,
->> --
->> 1.7.10.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Hi,
+
+On 2012-11-20 17:54, Steffen Trumtrar wrote:
+> Add display_timing structure and the according helper functions. This a=
+llows
+> the description of a display via its supported timing parameters.
+>=20
+> Every timing parameter can be specified as a single value or a range
+> <min typ max>.
+>=20
+> Also, add helper functions to convert from display timings to a generic=
+ videomode
+> structure. This videomode can then be converted to the corresponding su=
+bsystem
+> mode representation (e.g. fb_videomode).
+
+Sorry for reviewing this so late.
+
+One thing I'd like to see is some explanation of the structs involved.
+For example, in this patch you present structs videomode, display_timing
+and display_timings without giving any hint what they represent.
+
+I'm not asking for you to write a long documentation, but perhaps the
+header files could include a few lines of comments above the structs,
+explaining the idea.
+
+> +void display_timings_release(struct display_timings *disp)
+> +{
+> +	if (disp->timings) {
+> +		unsigned int i;
+> +
+> +		for (i =3D 0; i < disp->num_timings; i++)
+> +			kfree(disp->timings[i]);
+> +		kfree(disp->timings);
+> +	}
+> +	kfree(disp);
+> +}
+> +EXPORT_SYMBOL_GPL(display_timings_release);
+
+Perhaps this will become clearer after reading the following patches,
+but it feels a bit odd to add a release function, without anything in
+this patch that would actually allocate the timings.
+
+> diff --git a/drivers/video/videomode.c b/drivers/video/videomode.c
+> new file mode 100644
+> index 0000000..e24f879
+> --- /dev/null
+> +++ b/drivers/video/videomode.c
+> @@ -0,0 +1,46 @@
+> +/*
+> + * generic display timing functions
+> + *
+> + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pe=
+ngutronix
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#include <linux/export.h>
+> +#include <linux/errno.h>
+> +#include <linux/display_timing.h>
+> +#include <linux/kernel.h>
+> +#include <linux/videomode.h>
+> +
+> +int videomode_from_timing(const struct display_timings *disp,
+> +			  struct videomode *vm, unsigned int index)
+> +{
+> +	struct display_timing *dt;
+> +
+> +	dt =3D display_timings_get(disp, index);
+> +	if (!dt)
+> +		return -EINVAL;
+> +
+> +	vm->pixelclock =3D display_timing_get_value(&dt->pixelclock, 0);
+> +	vm->hactive =3D display_timing_get_value(&dt->hactive, 0);
+> +	vm->hfront_porch =3D display_timing_get_value(&dt->hfront_porch, 0);
+> +	vm->hback_porch =3D display_timing_get_value(&dt->hback_porch, 0);
+> +	vm->hsync_len =3D display_timing_get_value(&dt->hsync_len, 0);
+> +
+> +	vm->vactive =3D display_timing_get_value(&dt->vactive, 0);
+> +	vm->vfront_porch =3D display_timing_get_value(&dt->vfront_porch, 0);
+> +	vm->vback_porch =3D display_timing_get_value(&dt->vback_porch, 0);
+> +	vm->vsync_len =3D display_timing_get_value(&dt->vsync_len, 0);
+
+Shouldn't all these calls get the typical value, with index 1?
+
+> +
+> +	vm->vah =3D dt->vsync_pol_active;
+> +	vm->hah =3D dt->hsync_pol_active;
+> +	vm->de =3D dt->de_pol_active;
+> +	vm->pixelclk_pol =3D dt->pixelclk_pol;
+> +
+> +	vm->interlaced =3D dt->interlaced;
+> +	vm->doublescan =3D dt->doublescan;
+> +
+> +	return 0;
+> +}
+> +
+> +EXPORT_SYMBOL_GPL(videomode_from_timing);
+> diff --git a/include/linux/display_timing.h b/include/linux/display_tim=
+ing.h
+> new file mode 100644
+> index 0000000..d5bf03f
+> --- /dev/null
+> +++ b/include/linux/display_timing.h
+> @@ -0,0 +1,70 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * description of display timings
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_DISPLAY_TIMINGS_H
+> +#define __LINUX_DISPLAY_TIMINGS_H
+> +
+> +#include <linux/types.h>
+
+What is this needed for? u32? I don't see it defined in types.h
+
+> +
+> +struct timing_entry {
+> +	u32 min;
+> +	u32 typ;
+> +	u32 max;
+> +};
+> +
+> +struct display_timing {
+> +	struct timing_entry pixelclock;
+> +
+> +	struct timing_entry hactive;
+> +	struct timing_entry hfront_porch;
+> +	struct timing_entry hback_porch;
+> +	struct timing_entry hsync_len;
+> +
+> +	struct timing_entry vactive;
+> +	struct timing_entry vfront_porch;
+> +	struct timing_entry vback_porch;
+> +	struct timing_entry vsync_len;
+> +
+> +	unsigned int vsync_pol_active;
+> +	unsigned int hsync_pol_active;
+> +	unsigned int de_pol_active;
+> +	unsigned int pixelclk_pol;
+> +	bool interlaced;
+> +	bool doublescan;
+> +};
+> +
+> +struct display_timings {
+> +	unsigned int num_timings;
+> +	unsigned int native_mode;
+> +
+> +	struct display_timing **timings;
+> +};
+> +
+> +/*
+> + * placeholder function until ranges are really needed
+> + * the index parameter should then be used to select one of [min typ m=
+ax]
+> + */
+> +static inline u32 display_timing_get_value(const struct timing_entry *=
+te,
+> +					   unsigned int index)
+> +{
+> +	return te->typ;
+> +}
+
+Why did you opt for a placeholder here? It feels trivial to me to have
+support to get the min/typ/max value properly.
+
+> +static inline struct display_timing *display_timings_get(const struct
+> +							 display_timings *disp,
+> +							 unsigned int index)
+> +{
+> +	if (disp->num_timings > index)
+> +		return disp->timings[index];
+> +	else
+> +		return NULL;
+> +}
+> +
+> +void display_timings_release(struct display_timings *disp);
+> +
+> +#endif
+> diff --git a/include/linux/videomode.h b/include/linux/videomode.h
+> new file mode 100644
+> index 0000000..5d3e796
+> --- /dev/null
+> +++ b/include/linux/videomode.h
+> @@ -0,0 +1,40 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * generic videomode description
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_VIDEOMODE_H
+> +#define __LINUX_VIDEOMODE_H
+> +
+> +#include <linux/display_timing.h>
+
+This is not needed, just add:
+
+struct display_timings;
+
+> +struct videomode {
+> +	u32 pixelclock;
+> +	u32 refreshrate;
+> +
+> +	u32 hactive;
+> +	u32 hfront_porch;
+> +	u32 hback_porch;
+> +	u32 hsync_len;
+> +
+> +	u32 vactive;
+> +	u32 vfront_porch;
+> +	u32 vback_porch;
+> +	u32 vsync_len;
+> +
+> +	u32 hah;
+> +	u32 vah;
+> +	u32 de;
+> +	u32 pixelclk_pol;
+> +
+> +	bool interlaced;
+> +	bool doublescan;
+> +};
+> +
+> +int videomode_from_timing(const struct display_timings *disp,
+> +			  struct videomode *vm, unsigned int index);
+> +
+
+Are this and the few other functions above meant to be used from
+drivers? If so, some explanation of the parameters here would be nice.
+If they are just framework internal, they don't probably need that.
+
+ Tomi
+
+
+
+--------------enig7B8E20EC1036AA7EB2975329
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJQrLzkAAoJEPo9qoy8lh71vWsP+gLWZMn8izCWAj3Zddv24QTW
+4tPZofzo9nLeruUYn+seelY5lYlEZAQv4bjoFAyVJJFoKaLvj8DLGiL00Vkv6TqZ
+TC2yRDwj6HT0CIxFxP8544qN31F2VE00ZX1mezChn1U3eiInxCceUJF3L0fu4vhX
+Of3S46p89sLCT6DUeuOPdbTNOWbgayTAyUjJ6vZRDyuqAnWy7BNuv3RZPzh4Lo1B
+JoBl1nmH8d3t/BAuVKJC1bdTSPIHeqwcC5YFHX9zZQ5KJFVUr+6zoavvtD3jSHux
+ekoBy0d6D1K+HXG8SAPRS5NTM0aYfTVDsamg/7BxCGocBkbQmnuOui8Y9Yl27TwB
+Rb6Ram9xM/4gEcMSYCfF1Cddjv3rBLD5dhrPkFLD91pTm5AjMPAA/UuHvpRBCmcN
+xN8Ho+sijDDMa1yzrENERVLa3ZFxrG+LbP/G5nY+ilTefnV4NLeN/bUED5q+OZcs
+w0rg98loQEk5atjE9JtMlDXbJdiI1ahvY88MBzjKg7l7sn4Zdk8e3OfmcwRLsTh/
+HiCVW6DTymRetxVo6UiMqSNXec+IJ9FbRsMwEkH9yi6ftAWOFco5SndljjPSeCyo
+M8wH0b3ZtG0EmNSJ5nyWDvV2txlV7Y6HWgb6bMqNllopN0f8nBlyEGdPsToumWAB
+uxaQV2eO7TDLLwPtf3wV
+=b69s
+-----END PGP SIGNATURE-----
+
+--------------enig7B8E20EC1036AA7EB2975329--
+
+--===============7591600863261540772==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7591600863261540772==--
