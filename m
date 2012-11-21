@@ -1,92 +1,55 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [linux-keystone] Re: [linux-keystone] [PATCH] spi: davinci: add OF support for the spi controller
-Date: Wed, 21 Nov 2012 15:33:39 +0000
-Message-ID: <20121121153339.A4B233E0A47@localhost>
-References: <1352755702-21488-1-git-send-email-m-karicheri2@ti.com> <20121115162042.A24F13E194B@localhost> <50A66AAE.3070707@ti.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50A66AAE.3070707@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, davinci-linux-open-source@linux.davincidsp.com, linux-keystone@list.ti.com
+Subject: Re: Device tree node to major/minor?
+Date: Wed, 21 Nov 2012 15:47:58 +0000
+Message-ID: <20121121154758.93CE43E0AE2@localhost>
+References: <CAPnjgZ0+8MbjmW7XKsSW0O0n2ob7XcUZokLd8b=1LkSUJ+tQEA@mail.gmail.com> <CACxGe6t-ROJe+KXZh-nah50M2buM4yjncs=7musv39=C+73_FQ@mail.gmail.com> <CAPnjgZ3jF7bdwqDCNzJXvSrwoP0PZVjcFO+nGOiLACLDX07Z7A@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPnjgZ3jF7bdwqDCNzJXvSrwoP0PZVjcFO+nGOiLACLDX07Z7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Glass <sjg@chromium.org>
+Cc: lk <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Che-liang Chiou <clchiou@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Nov 2012 11:32:46 -0500, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> On 11/15/2012 11:20 AM, Grant Likely wrote:
-> > On Mon, 12 Nov 2012 16:28:22 -0500, Murali Karicheri <m-karicheri2@ti.com> wrote:
-> >> This adds OF support to DaVinci SPI controller to configure platform
-> >> data through device bindings.
+On Tue, 20 Nov 2012 15:48:24 -0800, Simon Glass <sjg@chromium.org> wrote:
+> Hi Grant,
+> 
+> On Tue, Nov 20, 2012 at 2:32 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> > On Tue, Nov 20, 2012 at 10:23 PM, Simon Glass <sjg@chromium.org> wrote:
+> >> Hi,
 > >>
-> >> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> > Hi Murali,
-> >
-> > Comments below...
-> >
-> >> ---
-> >>   .../devicetree/bindings/spi/spi-davinci.txt        |   50 ++++++++++++
-> >>   drivers/spi/spi-davinci.c                          |   80 +++++++++++++++++++-
-> >>   2 files changed, 126 insertions(+), 4 deletions(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
+> >> I hope this is a stupid question with an easy answer, but I cannot find it.
 > >>
-> >> diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-> >> new file mode 100644
-> >> index 0000000..0369369
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-> >> @@ -0,0 +1,50 @@
-> >> +Davinci SPI controller device bindings
-> >> +
-> >> +Required properties:
-> >> +- #address-cells: number of cells required to define a chip select
-> >> +	address on the SPI bus.
-> > Will this *ever* be something other than '1'?
-> Will add "should be set to 1" as only once cell is used for this.
-> >> +- #size-cells: should be zero.
-> >> +- compatible:
-> >> +	- "ti,davinci-spi"
-> > Please use the actual model of the chip here. Don't try to be generic
-> > with the compatible string. A driver can bind against more than one
-> > compatible value and new devices can claim compatiblity with old by
-> > including the old compatible string in this list.
+> >> I have a device tree node for an mmc block device and I want to use
+> >> that block device from another driver. I have a phandle which lets me
+> >> get the node of the mmc device, but I am not sure how to convert that
+> >> into a block_device. In order to do so, I think I need a major/minor
+> >> number. Of course the phandle might in fact point to a SCSI driver and
+> >> I want that to work correctly also.
+> >>
+> >> I imagine I might be able to search through the wonders of sysfs in
+> >> user space, but is there a better way?
 > >
-> >> +- reg: Offset and length of SPI controller register space
-> >> +- ti,davinci-spi-version: SPI version :- "1.0" or "2.0"
-> > Usually this is determined from the compatible value directly (which is
-> > why compatible strings shouldn't be generic). Don't use a separate
-> > property for it.
-> Ok. Based on the ablve two comments, I think I will remove 
-> davinci-spi-version property. So driver will add two compatibility 
-> strings "ti,davinci-spi1" and "ti,davinci-spi2" amd match data for 
-> ti,davinci-spi2 will have the version set to 2 so that driver can use it 
-> to behave differently. This way DTS file for a board can set the 
-> compatibility string to use different version of the IP for the driver. 
-> Do you think I got you right?
+> > Do you /want/ to do it from userspace? What is your use case? Mounting
+> > the rootfs?
+> 
+> The use case is storing some raw data on a block device from within a
+> driver in the kernel. It is used to keep track of the verified boot
+> state.
+> 
+> >
+> > Regardless, userspace can monitor the uevents when devices are added
+> > (that's what udev does) and watch for the full path of the node you
+> > want in the uevent attribute. Then you can look for the child device
+> > with the block major/minor numbers in it.
+> 
+> So is there a way to do this entirely in the kernel ex post? It might
+> need to happen during kernel boot, before user space.
 
-Mostly, but what would be better is something like:
-
-"ti,davinci(model)-spi" and "ti,keystone(model)-spi" replacing (model)
-with the actual chip part number.
-
-It is always better to use real part names than to make up meaninless
-'1', '2' numbers. Newer devices can include the older compatible part
-in the compatible property. For example:
-
-	compatible = "ti,keystone-gen2-spi", "ti,keystone-original-spi";
-
-(I'm making up part names here, but you get the idea). So a driver that
-binds against "ti,keystone-original-spi" will work with a newer
-keystone gen2.
-
-> >> +- ti,davinci-spi-num-cs: Number of chip selects
-> >> +- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
-> >> +	IP to the ARM interrupt controller withn the SoC. Possible values
-> >> +	are 0 and 1.
-> > ? Isn't that what the interrupts property is for? I don't understand why
-> > this is needed from the description.
-> Based on the IP manual, there are two interrupt lines coming from the IP 
-> and only one of them is tied to the interrupt controller in a specific 
-> SoC. There is a register to program which interrupt line is used based 
-> on the SoC configuration. So this is different from interrupts.
-
-Okay.
+Yes, it is certainly doable within the kernel. First, you'll need to use
+a notifier to get called back whenever a new device is created. Then
+you'll need to look at the dev->of_node(->full_name) to see if it is the
+node you actually want. You might need/want to resolve it from an alias
+or something, but I presume you already have a way to find the
+device_node before seaching for a struct device.
 
 g.
