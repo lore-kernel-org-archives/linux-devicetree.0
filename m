@@ -1,98 +1,81 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH 1/4] OF: Add helper for matching against linux,stdout-path
-Date: Wed, 21 Nov 2012 18:26:31 +0100
-Message-ID: <20121121172631.GV10369@pengutronix.de>
-References: <20121121155312.GX4398@game.jcrosoft.org>
- <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather
+ than device_add
+Date: Wed, 21 Nov 2012 10:44:53 -0700
+Message-ID: <20121121174453.GD6406@obsidianresearch.com>
+References: <20121121072448.GG19837@obsidianresearch.com>
+ <20121121155104.726B83E0AE2@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kernel@pengutronix.de, Alan Cox <alan@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Nicolas Ferre <nicolas.ferre@atmel.com>
+In-Reply-To: <20121121155104.726B83E0AE2@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 04:57:05PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> From: Sascha Hauer <s.hauer@pengutronix.de>
+On Wed, Nov 21, 2012 at 03:51:04PM +0000, Grant Likely wrote:
+> On Wed, 21 Nov 2012 00:24:48 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> > This allows platform_device_add a chance to call insert_resource
+> > on all of the resources from OF. At a minimum this fills in proc/iomem
+> > and presumably makes resource tracking and conflict detection work
+> > better.
+> > 
+> > Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> >  drivers/of/device.c |    2 +-
+> >  1 files changed, 1 insertions(+), 1 deletions(-)
+> > 
+> > Tested on PPC32 and ARM32 embedded kernels.
+> > 
+> > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > index 4c74e4f..a5b67dc 100644
+> > +++ b/drivers/of/device.c
+> > @@ -62,7 +62,7 @@ int of_device_add(struct platform_device *ofdev)
+> >  	if (!ofdev->dev.parent)
+> >  		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
+> >  
+> > -	return device_add(&ofdev->dev);
+> > +	return platform_device_add(ofdev);
+> >  }
+> >  
+> >  int of_device_register(struct platform_device *pdev)
 > 
-> devicetrees may have a linux,stdout-path or stdout-path property
-> in the chosen node describing the console device. This adds a helper
-> function to match a device against this property and retrieve the options
-> so a driver can call add_preferred_console for a matching device.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Cc: linux-serial@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: kernel@pengutronix.de
-> Cc: Alan Cox <alan@linux.intel.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
->  drivers/of/base.c  |   46 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h |    7 +++++++
->  2 files changed, 53 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index f2f63c8..72c49ce 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1470,3 +1470,49 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
->  	return curv;
->  }
->  EXPORT_SYMBOL_GPL(of_prop_next_string);
-> +
-> +/**
-> + * of_device_is_stdout_path - check if a device node matches the
-> + *			      linux,stdout-path property
-> + * @np:		Pointer to the given device_node
-> + * @option:	parsed option
-> + *
-> + * Check if this device node matches the linux,stdout-path property
-> + * in the chosen node. return true if yes, false otherwise.
-> + */
-> +int of_device_is_stdout_path(struct device_node *dn, char **option)
-> +{
-> +	const char *name;
-> +	struct device_node *dn_stdout;
-> +	bool is_stdout = 0;
-> +	const char *tmp;
-> +	const char *tmp_option;
-> +
-> +	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-> +	if (name == NULL)
-> +		name = of_get_property(of_chosen, "stdout-path", NULL);
-> +
-> +	if (name == NULL)
-> +		return 0;
-> +
-> +	tmp_option = strchr(name, ':');
-> +
-> +	tmp = kstrndup(name, strlen(name) - strlen(tmp_option), GFP_KERNEL);
+> This has the side effect of moving all devices at the root of the tree
+> from /sys/devices/ to /sys/devices/platform. It also has the possibility
+> of breaking if any devices get registered with overlapping regions. I
+> think there are some powerpc 5200 boards that do this, and I'm not sure
+> about the larger Power boxen.
 
-tmp_option may be NULL.
+Okay, I'll try to test your patch.
 
-> +	if (!tmp)
-> +		return 0;
-> +
-> +	dn_stdout = of_find_node_by_path(tmp);
-> +
-> +	if (dn_stdout && dn_stdout == dn) {
-> +		is_stdout = 1;
-> +		tmp_option++;
-> +		*option = kstrdup(tmp_option, GFP_KERNEL);
-> +	}
-> +
-> +	of_node_put(dn_stdout);
+I know sensible overlapping seems to work:
 
-dn_stdout may be NULL aswell.
+e0000000-e7ffffff : PCIe 0 MEM
+  e0000000-e000ffff : 0000:00:01.0
+    e0000000-e0000fff : /pex@e0000000/chip@0/chip_control@0
+      e0000008-e000000b : dat
+        e0000008-e000000b : dat
+      e000000c-e000000f : set
+        e000000c-e000000f : set
+      e0000010-e0000013 : dirin
+        e0000010-e0000013 : dirin
 
-Sascha
+Which is nesting the generic gpio driver under a larger region..
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+And:
+f1010100-f101013f : /internal@f1000000/gpio@10100
+  f1010100-f1010103 : /internal@f1000000/chip_cfg@0
+
+Which is nesting a register set for one OF platform_device under
+another.
+
+It seems to be handled automatically.
+
+My motivations are two fold:
+ - Having a mostly empty /proc/iomem isn't great for diagnostics
+ - I'll send a patch today that adds some more code to
+   platform_device_add
+
+Thanks Grant,
+Jason
