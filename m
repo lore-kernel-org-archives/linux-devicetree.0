@@ -1,283 +1,64 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v12 1/6] video: add display_timing and videomode
-Date: Wed, 21 Nov 2012 17:11:03 +0100
-Message-ID: <20121121161103.GA12657@pengutronix.de>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-2-git-send-email-s.trumtrar@pengutronix.de>
- <50ACBCE4.60701@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather
+ than device_add
+Date: Wed, 21 Nov 2012 16:05:23 +0000
+Message-ID: <CACxGe6v4qJ6jp43=i2aAhht2GuZsuLLPz8oSPUk4rCp92mQXNQ@mail.gmail.com>
+References: <20121121072448.GG19837@obsidianresearch.com> <20121121155104.726B83E0AE2@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50ACBCE4.60701@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121121155104.726B83E0AE2@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Nov 21, 2012 at 01:37:08PM +0200, Tomi Valkeinen wrote:
-> Hi,
-> 
-> On 2012-11-20 17:54, Steffen Trumtrar wrote:
-> > Add display_timing structure and the according helper functions. This allows
-> > the description of a display via its supported timing parameters.
-> > 
-> > Every timing parameter can be specified as a single value or a range
-> > <min typ max>.
-> > 
-> > Also, add helper functions to convert from display timings to a generic videomode
-> > structure. This videomode can then be converted to the corresponding subsystem
-> > mode representation (e.g. fb_videomode).
-> 
-> Sorry for reviewing this so late.
-> 
-> One thing I'd like to see is some explanation of the structs involved.
-> For example, in this patch you present structs videomode, display_timing
-> and display_timings without giving any hint what they represent.
-> 
-> I'm not asking for you to write a long documentation, but perhaps the
-> header files could include a few lines of comments above the structs,
-> explaining the idea.
-> 
-
-Okay. Will do.
-
-> > +void display_timings_release(struct display_timings *disp)
-> > +{
-> > +	if (disp->timings) {
-> > +		unsigned int i;
-> > +
-> > +		for (i = 0; i < disp->num_timings; i++)
-> > +			kfree(disp->timings[i]);
-> > +		kfree(disp->timings);
-> > +	}
-> > +	kfree(disp);
-> > +}
-> > +EXPORT_SYMBOL_GPL(display_timings_release);
-> 
-> Perhaps this will become clearer after reading the following patches,
-> but it feels a bit odd to add a release function, without anything in
-> this patch that would actually allocate the timings.
-> 
-
-2/6 uses this function. And as this does not belong to the DT part, it
-is added in this patch.
-
-> > diff --git a/drivers/video/videomode.c b/drivers/video/videomode.c
-> > new file mode 100644
-> > index 0000000..e24f879
-> > --- /dev/null
-> > +++ b/drivers/video/videomode.c
-> > @@ -0,0 +1,46 @@
-> > +/*
-> > + * generic display timing functions
-> > + *
-> > + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pengutronix
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +
-> > +#include <linux/export.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/display_timing.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/videomode.h>
-> > +
-> > +int videomode_from_timing(const struct display_timings *disp,
-> > +			  struct videomode *vm, unsigned int index)
-> > +{
-> > +	struct display_timing *dt;
-> > +
-> > +	dt = display_timings_get(disp, index);
-> > +	if (!dt)
-> > +		return -EINVAL;
-> > +
-> > +	vm->pixelclock = display_timing_get_value(&dt->pixelclock, 0);
-> > +	vm->hactive = display_timing_get_value(&dt->hactive, 0);
-> > +	vm->hfront_porch = display_timing_get_value(&dt->hfront_porch, 0);
-> > +	vm->hback_porch = display_timing_get_value(&dt->hback_porch, 0);
-> > +	vm->hsync_len = display_timing_get_value(&dt->hsync_len, 0);
-> > +
-> > +	vm->vactive = display_timing_get_value(&dt->vactive, 0);
-> > +	vm->vfront_porch = display_timing_get_value(&dt->vfront_porch, 0);
-> > +	vm->vback_porch = display_timing_get_value(&dt->vback_porch, 0);
-> > +	vm->vsync_len = display_timing_get_value(&dt->vsync_len, 0);
-> 
-> Shouldn't all these calls get the typical value, with index 1?
-> 
-
-Yes. I omitted the indexing until now. So it didn't matter what value was used.
-But I will integrate it in the next version.
-
-> > +
-> > +	vm->vah = dt->vsync_pol_active;
-> > +	vm->hah = dt->hsync_pol_active;
-> > +	vm->de = dt->de_pol_active;
-> > +	vm->pixelclk_pol = dt->pixelclk_pol;
-> > +
-> > +	vm->interlaced = dt->interlaced;
-> > +	vm->doublescan = dt->doublescan;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +EXPORT_SYMBOL_GPL(videomode_from_timing);
-> > diff --git a/include/linux/display_timing.h b/include/linux/display_timing.h
-> > new file mode 100644
-> > index 0000000..d5bf03f
-> > --- /dev/null
-> > +++ b/include/linux/display_timing.h
-> > @@ -0,0 +1,70 @@
-> > +/*
-> > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > + *
-> > + * description of display timings
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +
-> > +#ifndef __LINUX_DISPLAY_TIMINGS_H
-> > +#define __LINUX_DISPLAY_TIMINGS_H
-> > +
-> > +#include <linux/types.h>
-> 
-> What is this needed for? u32? I don't see it defined in types.h
-> 
-
-Yes, u32. What would be the right header for that if not types.h?
-
-> > +
-> > +struct timing_entry {
-> > +	u32 min;
-> > +	u32 typ;
-> > +	u32 max;
-> > +};
-> > +
-> > +struct display_timing {
-> > +	struct timing_entry pixelclock;
-> > +
-> > +	struct timing_entry hactive;
-> > +	struct timing_entry hfront_porch;
-> > +	struct timing_entry hback_porch;
-> > +	struct timing_entry hsync_len;
-> > +
-> > +	struct timing_entry vactive;
-> > +	struct timing_entry vfront_porch;
-> > +	struct timing_entry vback_porch;
-> > +	struct timing_entry vsync_len;
-> > +
-> > +	unsigned int vsync_pol_active;
-> > +	unsigned int hsync_pol_active;
-> > +	unsigned int de_pol_active;
-> > +	unsigned int pixelclk_pol;
-> > +	bool interlaced;
-> > +	bool doublescan;
-> > +};
-> > +
-> > +struct display_timings {
-> > +	unsigned int num_timings;
-> > +	unsigned int native_mode;
-> > +
-> > +	struct display_timing **timings;
-> > +};
-> > +
-> > +/*
-> > + * placeholder function until ranges are really needed
-> > + * the index parameter should then be used to select one of [min typ max]
-> > + */
-> > +static inline u32 display_timing_get_value(const struct timing_entry *te,
-> > +					   unsigned int index)
-> > +{
-> > +	return te->typ;
-> > +}
-> 
-> Why did you opt for a placeholder here? It feels trivial to me to have
-> support to get the min/typ/max value properly.
-> 
-
-I will add that in the next version.
-
-> > +static inline struct display_timing *display_timings_get(const struct
-> > +							 display_timings *disp,
-> > +							 unsigned int index)
-> > +{
-> > +	if (disp->num_timings > index)
-> > +		return disp->timings[index];
-> > +	else
-> > +		return NULL;
-> > +}
-> > +
-> > +void display_timings_release(struct display_timings *disp);
-> > +
-> > +#endif
-> > diff --git a/include/linux/videomode.h b/include/linux/videomode.h
-> > new file mode 100644
-> > index 0000000..5d3e796
-> > --- /dev/null
-> > +++ b/include/linux/videomode.h
-> > @@ -0,0 +1,40 @@
-> > +/*
-> > + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > + *
-> > + * generic videomode description
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +
-> > +#ifndef __LINUX_VIDEOMODE_H
-> > +#define __LINUX_VIDEOMODE_H
-> > +
-> > +#include <linux/display_timing.h>
-> 
-> This is not needed, just add:
-> 
-> struct display_timings;
-> 
-
-Okay.
-
-> > +struct videomode {
-> > +	u32 pixelclock;
-> > +	u32 refreshrate;
-> > +
-> > +	u32 hactive;
-> > +	u32 hfront_porch;
-> > +	u32 hback_porch;
-> > +	u32 hsync_len;
-> > +
-> > +	u32 vactive;
-> > +	u32 vfront_porch;
-> > +	u32 vback_porch;
-> > +	u32 vsync_len;
-> > +
-> > +	u32 hah;
-> > +	u32 vah;
-> > +	u32 de;
-> > +	u32 pixelclk_pol;
-> > +
-> > +	bool interlaced;
-> > +	bool doublescan;
-> > +};
-> > +
-> > +int videomode_from_timing(const struct display_timings *disp,
-> > +			  struct videomode *vm, unsigned int index);
-> > +
-> 
-> Are this and the few other functions above meant to be used from
-> drivers? If so, some explanation of the parameters here would be nice.
-> If they are just framework internal, they don't probably need that.
+On Wed, Nov 21, 2012 at 3:51 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Wed, 21 Nov 2012 00:24:48 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+>> This allows platform_device_add a chance to call insert_resource
+>> on all of the resources from OF. At a minimum this fills in proc/iomem
+>> and presumably makes resource tracking and conflict detection work
+>> better.
+>>
+>> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+>> ---
+>>  drivers/of/device.c |    2 +-
+>>  1 files changed, 1 insertions(+), 1 deletions(-)
+>>
+>> Tested on PPC32 and ARM32 embedded kernels.
+>>
+>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> index 4c74e4f..a5b67dc 100644
+>> --- a/drivers/of/device.c
+>> +++ b/drivers/of/device.c
+>> @@ -62,7 +62,7 @@ int of_device_add(struct platform_device *ofdev)
+>>       if (!ofdev->dev.parent)
+>>               set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
+>>
+>> -     return device_add(&ofdev->dev);
+>> +     return platform_device_add(ofdev);
+>>  }
+>>
+>>  int of_device_register(struct platform_device *pdev)
 >
+> This has the side effect of moving all devices at the root of the tree
+> from /sys/devices/ to /sys/devices/platform. It also has the possibility
+> of breaking if any devices get registered with overlapping regions. I
+> think there are some powerpc 5200 boards that do this, and I'm not sure
+> about the larger Power boxen.
+>
+> I've got a more nuanced version of this patch that I'm trying to get
+> published today for review. I'll add you to the cc list.
 
-Okay. I will add some more documentation.
+However, while on this topic;
 
-Regards,
-Steffen
+Ben. Do you have any objections to registering all OF generated
+platform devices under /sys/devices/platform instead of /sys/devices?
+I don't much like the platform directory, but it would make the code
+more consistent for DT and non-DT users.
 
+g.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
