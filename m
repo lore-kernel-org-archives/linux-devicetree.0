@@ -1,15 +1,17 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V6 4/5] arm: mm: Add support for PJ4B cpu and init routines
-Date: Wed, 21 Nov 2012 15:13:07 +0000
-Message-ID: <20121121151307.GN11990@mudshark.cambridge.arm.com>
-References: <1353509970-5237-1-git-send-email-gregory.clement@free-electrons.com>
- <1353509970-5237-5-git-send-email-gregory.clement@free-electrons.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v12 2/6] video: add of helper for videomode
+Date: Wed, 21 Nov 2012 16:13:14 +0100
+Message-ID: <20121121151314.GB4048@avionic-0098.adnet.avionic-design.de>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353426896-6045-3-git-send-email-s.trumtrar@pengutronix.de>
+ <A73F36158E33644199EB82C5EC81C7BC3E9FA7A0@DBDE01.ent.ti.com>
+ <20121121114843.GC14013@pengutronix.de>
+ <20121121115236.GA8886@avionic-0098.adnet.avionic-design.de>
+ <50ACED4A.5040806@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1549529268898163219=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1353509970-5237-5-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <50ACED4A.5040806-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,92 +22,137 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <Leif.Lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWOunwaRDDq4rA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, "Valkeinen,
+ Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 02:59:29PM +0000, Gregory CLEMENT wrote:
-> PJ4B is an implementation of the ARMv7 (such as the Cortex A9 for
-> example) released by Marvell. This CPU is currently found in
-> Armada 370 and Armada XP SoCs. This patch provides a support for the
-> specific initialization of this CPU.
-> 
-> Signed-off-by: Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Reviewed-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/mach-mvebu/Kconfig |    2 +-
->  arch/arm/mm/Kconfig         |    4 +++
->  arch/arm/mm/proc-v7.S       |   66 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 71 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-> index 79299cd..f4c3bf8 100644
-> --- a/arch/arm/mach-mvebu/Kconfig
-> +++ b/arch/arm/mach-mvebu/Kconfig
-> @@ -21,7 +21,7 @@ menu "Marvell SOC with device tree"
->  config MACH_ARMADA_370_XP
->  	bool
->  	select ARMADA_370_XP_TIMER
-> -	select CPU_V7
-> +	select CPU_PJ4B
->  
->  config MACH_ARMADA_370
->  	bool "Marvell Armada 370 boards"
-> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
-> index 94186b6..3fd629d 100644
-> --- a/arch/arm/mm/Kconfig
-> +++ b/arch/arm/mm/Kconfig
-> @@ -352,6 +352,10 @@ config CPU_PJ4
->  	select ARM_THUMBEE
->  	select CPU_V7
->  
-> +config CPU_PJ4B
-> +	bool
-> +	select CPU_V7
-> +
->  # ARMv6
->  config CPU_V6
->  	bool "Support ARM V6 processor" if ARCH_INTEGRATOR || MACH_REALVIEW_EB || MACH_REALVIEW_PBX
-> diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
-> index 846d279..1aa3891 100644
-> --- a/arch/arm/mm/proc-v7.S
-> +++ b/arch/arm/mm/proc-v7.S
-> @@ -169,6 +169,62 @@ __v7_ca15mp_setup:
->  	orreq	r0, r0, r10			@ Enable CPU-specific SMP bits
->  	mcreq	p15, 0, r0, c1, c0, 1
->  #endif
-> +
-> +__v7_pj4b_setup:
-> +#ifdef CONFIG_CPU_PJ4B
-> +
-> +/* Auxiliary Debug Modes Control 1 Register */
-> +#define STATIC_BP     (1 << 2) /* Enable Static BP */
-> +#define INTER_PARITY  (1 << 8) /* Disable Internal Parity Handling */
-> +#define BCK_OFF_STREX (1 << 5) /* Enable the back off of STREX instr */
-> +#define CLEAN_LINE    (1 << 16) /* Disable data transfer for clean line */
-> +
-> +/* Auxiliary Debug Modes Control 2 Register */
-> +#define FAST_LDR      (1 << 23) /* Disable fast LDR */
-> +#define SNOOP_DATA    (1 << 25) /* Do not interleave write and snoop data */
-> +#define CWF           (1 << 27) /* Disable Critical Word First feature */
-> +#define OUTSANDING_NC (1 << 29) /* Disable outstanding non cacheable request */
 
-OUTSTANDING
+--===============1549529268898163219==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
+Content-Disposition: inline
 
-> +#define L1_REP_RR     (1 << 30) /* L1 replacement - Strict round robin */
-> +#define AUX_DBG_CTRL2 (SNOOP_DATA | CWF | OUTSANDING_NC | L1_REP_RR)
-> +
-> +/* Auxiliary Functional Modes Control Register 0 */
-> +#define SMP_CFB         (1 << 1) /* Set SMP mode. Join the coherency fabric */
-> +#define L1_PAR_CHK      (1 << 2) /* Support L1 parity checking */
-> +#define BROADCAST_CACHE (1 << 8) /* Broadcast Cache and TLB maintenance */
-> +
-> +/* Auxiliary Debug Modes Control 0 Register */
-> +#define WFI_WFE         (1 << 22) /* WFI/WFE - serve the DVM and back to idle */
 
-It's probably worth prefixing these with PJ4B as well, since they don't
-apply to other CPUs supported in this file.
+--dTy3Mrz/UPE2dbVg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will
+On Wed, Nov 21, 2012 at 09:03:38AM -0600, Rob Herring wrote:
+> On 11/21/2012 05:52 AM, Thierry Reding wrote:
+> > On Wed, Nov 21, 2012 at 12:48:43PM +0100, Steffen Trumtrar wrote:
+> >> Hi!
+> >>
+> >> On Wed, Nov 21, 2012 at 10:12:43AM +0000, Manjunathappa, Prakash wrote:
+> >>> Hi Steffen,
+> >>>
+> >>> On Tue, Nov 20, 2012 at 21:24:52, Steffen Trumtrar wrote:
+> >>>> +/**
+> >>>> + * of_get_display_timings - parse all display_timing entries from a=
+ device_node
+> >>>> + * @np: device_node with the subnodes
+> >>>> + **/
+> >>>> +struct display_timings *of_get_display_timings(const struct device_=
+node *np)
+> >>>> +{
+> >>>> +	struct device_node *timings_np;
+> >>>> +	struct device_node *entry;
+> >>>> +	struct device_node *native_mode;
+> >>>> +	struct display_timings *disp;
+> >>>> +
+> >>>> +	if (!np) {
+> >>>> +		pr_err("%s: no devicenode given\n", __func__);
+> >>>> +		return NULL;
+> >>>> +	}
+> >>>> +
+> >>>> +	timings_np =3D of_find_node_by_name(np, "display-timings");
+> >>>
+> >>> I get below build warnings on this line
+> >>> drivers/video/of_display_timing.c: In function 'of_get_display_timing=
+s':
+> >>> drivers/video/of_display_timing.c:109:2: warning: passing argument 1 =
+of 'of_find_node_by_name' discards qualifiers from pointer target type
+> >>> include/linux/of.h:167:28: note: expected 'struct device_node *' but =
+argument is of type 'const struct device_node *'
+> >>>
+> >>>> + * of_display_timings_exists - check if a display-timings node is p=
+rovided
+> >>>> + * @np: device_node with the timing
+> >>>> + **/
+> >>>> +int of_display_timings_exists(const struct device_node *np)
+> >>>> +{
+> >>>> +	struct device_node *timings_np;
+> >>>> +
+> >>>> +	if (!np)
+> >>>> +		return -EINVAL;
+> >>>> +
+> >>>> +	timings_np =3D of_parse_phandle(np, "display-timings", 0);
+> >>>
+> >>> Also here:
+> >>> drivers/video/of_display_timing.c: In function 'of_display_timings_ex=
+ists':
+> >>> drivers/video/of_display_timing.c:209:2: warning: passing argument 1 =
+of 'of_parse_phandle' discards qualifiers from pointer target type
+> >>> include/linux/of.h:258:28: note: expected 'struct device_node *' but =
+argument is of type 'const struct device_node *'
+> >>>
+> >>
+> >> The warnings are because the of-functions do not use const pointers wh=
+ere they
+> >> should. I had two options: don't use const pointers even if they shoul=
+d be and
+> >> have no warnings or use const pointers and have a correct API. (Third =
+option:
+> >> send patches for of-functions). I chose the second option.
+> >=20
+> > Maybe a better approach would be a combination of 1 and 3: don't use
+> > const pointers for struct device_node for now and bring the issue up
+> > with the OF maintainers, possibly with patches attached that fix the
+> > problematic functions.
+>=20
+> Why does this need to be const? Since some DT functions increment
+> refcount the node, I'm not sure that making struct device_node const in
+> general is right thing to do. I do think it should be okay for
+> of_parse_phandle.
+
+I wasn't proposing to do it everywhere but only where possible. If the
+node is modified in some way then obviously it shouldn't be const.
+
+Thierry
+
+--dTy3Mrz/UPE2dbVg
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQrO+KAAoJEN0jrNd/PrOhMiAQAJ4fJdlH+VJ6hrGAPKLMP4mW
+BYFJIr//pDah93mSpvG2a07FgbGJNdIIHL8XERZSXy+m06lxDM0BIjlxZpKuo0n0
+sEeNVfwQP6H/S0/pyqsMG2NqgGswzEzayNy+o7YkNTnFk33J1QU6csE48QpmQz6x
+hS14W58T01Pv8mJ9gh0edix2vC1S5ORDUXE8EMPL4jQBiJ0vjobwcfmnJasfbNy9
+mhhs8Mv3lFYqMlotmCcnZilQKXzR74TUkxnhopRNLLJIuL102jKYfVikhuTlul06
+XoXwUlNF743IywoE8Tr/vfvewN4YA3oEA+a5kDkkmszpgd8Ue2kmsdK1d7sIeU7q
+6B+PkoFm/VIA7rSMKIZAPANn9aW04MydilNXpaIEoUX5OW1/YnvHYQmiiy3TgPb5
+YNGgvk0RoYGEW14yaIkMVZpTTMyzdVhKUXXrYuSx/jlh/T3myRdIOJXsSFZOW5Yw
+kFAGDh9vWt1yT1OfJ1jpUrYAIeePM0cmH88QVMLbhQhReYVNAdPfjt71Bn1MB/2Y
+rX1PpARF4LhAHWUNXJzNKhURAx19HR5N0RmYKyZwV7HPmXsml4cETbg1qzWLc4uv
+vOSAJ+Y30K920DMHULhT9pGtwE/rvA5P0mO2+m4O8/f5VOCVrW84oirWEWdh33Xh
+fTVVUGuM/uKJcEkzFbsq
+=HrgX
+-----END PGP SIGNATURE-----
+
+--dTy3Mrz/UPE2dbVg--
+
+--===============1549529268898163219==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1549529268898163219==--
