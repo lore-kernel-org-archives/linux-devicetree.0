@@ -1,21 +1,54 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] Documentation: Move common leds properties description to separate file.
-Date: Wed, 21 Nov 2012 15:21:17 +0000
-Message-ID: <20121121152117.C8A613E0A47@localhost>
-References: <1353016316-6966-1-git-send-email-marek.belisko@open-nandra.com> <50A56E72.1070708@wwwdotorg.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50A56E72.1070708@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Marek Belisko <marek.belisko@open-nandra.com>
-Cc: rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] script: dtc: clean generated files
+Date: Wed, 21 Nov 2012 15:22:56 +0000
+Message-ID: <20121121152256.90B673E0A47@localhost>
+References: <1353048794-11221-1-git-send-email-horms@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353048794-11221-1-git-send-email-horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Nov 2012 15:36:34 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 11/15/2012 02:51 PM, Marek Belisko wrote:
+On Fri, 16 Nov 2012 15:53:14 +0900, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> From: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
 > 
-> A commit description might be nice. Aside from that,
+> Fix "make distclean" to clean up generated dtc files.
+> 
+> Without this patch the following files are left around:
+>  - dtc-lexer.lex.c
+>  - dtc-parser.tab.c
+>  - dtc-parser.tab.h
+> 
+> Signed-off-by: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> Reviewed-by: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> ---
+>  scripts/dtc/Makefile |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> index 6d1c6bb..2a48022 100644
+> --- a/scripts/dtc/Makefile
+> +++ b/scripts/dtc/Makefile
+> @@ -27,3 +27,5 @@ HOSTCFLAGS_dtc-parser.tab.o := $(HOSTCFLAGS_DTC)
+>  # dependencies on generated files need to be listed explicitly
+>  $(obj)/dtc-lexer.lex.o: $(obj)/dtc-parser.tab.h
+>  
+> +# generated files need to be cleaned explicitly
+> +clean-files	:= dtc-lexer.lex.c dtc-parser.tab.c dtc-parser.tab.h
 
-Indeed. I've applied the patch and written a commit description, but please take pity on a poor maintainer and write propper commit messages in future patches.
+Applied, thanks
 
-Thanks,
 g.
