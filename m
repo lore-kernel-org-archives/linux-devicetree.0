@@ -1,57 +1,46 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather than device_add
-Date: Wed, 21 Nov 2012 15:51:04 +0000
-Message-ID: <20121121155104.726B83E0AE2@localhost>
-References: <20121121072448.GG19837@obsidianresearch.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121121072448.GG19837@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree-discuss@lists.ozlabs.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH v5] linux,stdout-path helper
+Date: Wed, 21 Nov 2012 16:53:12 +0100
+Message-ID: <20121121155312.GX4398@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-serial@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Nov 2012 00:24:48 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> This allows platform_device_add a chance to call insert_resource
-> on all of the resources from OF. At a minimum this fills in proc/iomem
-> and presumably makes resource tracking and conflict detection work
-> better.
-> 
-> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-> ---
->  drivers/of/device.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> Tested on PPC32 and ARM32 embedded kernels.
-> 
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 4c74e4f..a5b67dc 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -62,7 +62,7 @@ int of_device_add(struct platform_device *ofdev)
->  	if (!ofdev->dev.parent)
->  		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
->  
-> -	return device_add(&ofdev->dev);
-> +	return platform_device_add(ofdev);
->  }
->  
->  int of_device_register(struct platform_device *pdev)
+The following adds a helper for matching the linux,stdout-path property
+in the chosen node and makes use of it in the i.MX serial and Atmel serial driver.
 
-This has the side effect of moving all devices at the root of the tree
-from /sys/devices/ to /sys/devices/platform. It also has the possibility
-of breaking if any devices get registered with overlapping regions. I
-think there are some powerpc 5200 boards that do this, and I'm not sure
-about the larger Power boxen.
+changes since v4:
 
-I've got a more nuanced version of this patch that I'm trying to get
-published today for review. I'll add you to the cc list.
+ - add option support and check stdout-path too
 
-g.
+changes since v3:
 
-> -- 
-> 1.7.4.1
-> 
+- move code from separate files to drivers/of/base.c and include/linux/of.h
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+changes since v2:
+
+- move helper to OF core and make it independent of serial devices
+
+changes since v1:
+
+- move it out of the i.MX serial driver and make it generic for serial
+  devices.
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss@lists.ozlabs.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
