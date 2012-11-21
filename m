@@ -1,104 +1,87 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v12 4/6] fbmon: add of_videomode helpers
-Date: Wed, 21 Nov 2012 14:08:38 +0100
-Message-ID: <10179127.YBNtqAP453@avalon>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de> <1353426896-6045-5-git-send-email-s.trumtrar@pengutronix.de> <50ACCDDA.2070606@ti.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: [PATCH v4 00/11] Support for AM33xx PWM Subsystem
+Date: Wed, 21 Nov 2012 18:40:57 +0530
+Message-ID: <1353503469-18634-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1659085.vgPrB2GWIs"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <50ACCDDA.2070606@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: thierry.reding@avionic-design.de, paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, b-cousson@ti.com
+Cc: hvaibhav@ti.com, anilkumar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, vaibhav.bedia@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+In AM33xx PWM sub modules like ECAP, EHRPWM & EQEP are  integrated to
+PWM subsystem. All these submodules shares the resources (clock) & has
+a clock gating register in PWM Subsystem. This patch series creates a
+parent PWM Subsystem driver to handle access synchronization of shared
+resources & clock gating from PWM Subsystem configuration space.
+Also Device tree nodes populated to support parent child relation
+between PWMSS, ECAP & EHRPWM submodules.
+In addition EHRPWM module requires explicit clock gating from control
+module & is handled by patch #2 & 8.
 
---nextPart1659085.vgPrB2GWIs
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+As suggested by  Thierry for handling clock gating for PWM submodules
+should handle with a global function. This requires config space
+handling done independent from driver and is done at parent driver.
 
-Hi Tomi,
+So the parent<->child relation adopted to handle
+1. pm runtime synchronization
+2. PWM subsystem common config space clock gating for PWM submodules.
 
-On Wednesday 21 November 2012 14:49:30 Tomi Valkeinen wrote:
-> On 2012-11-20 17:54, Steffen Trumtrar wrote:
-> > Add helper to get fb_videomode from devicetree.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> > 
-> >  drivers/video/fbmon.c |   42 +++++++++++++++++++++++++++++++++++++++++-
-> >  include/linux/fb.h    |    7 +++++++
-> >  2 files changed, 48 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/include/linux/fb.h b/include/linux/fb.h
-> > index 920cbe3..41b5e49 100644
-> > --- a/include/linux/fb.h
-> > +++ b/include/linux/fb.h
-> > @@ -15,6 +15,8 @@
-> > 
-> >  #include <linux/slab.h>
-> >  #include <asm/io.h>
-> >  #include <linux/videomode.h>
-> > 
-> > +#include <linux/of.h>
-> > +#include <linux/of_videomode.h>
-> 
-> Guess what? =)
-> 
-> To be honest, I don't know what the general opinion is about including
-> header files from header files. But I always leave them out if they are
-> not strictly needed.
+Patches supports
+- Driver support for parent child relation handled patch #1
+- Optional EHRPWM tb clock in patch #2
+- Parent child in HWMOD handled at patch #3
+- Device tree binding support handled in patch #4, 6 &8
+- pinctrl support in patch #5 & 7.
+- DT node populated in patch #9 ,10 & 11.
 
-I agree, I favor structure declaration as well when possible.
+This patch series based on omap_dt/for_3.8/dts_part2 and tested
+on am335x-evm & am335x-evmsk.
 
-> >  struct vm_area_struct;
-> >  struct fb_info;
-> > 
-> > @@ -715,6 +717,11 @@ extern void fb_destroy_modedb(struct fb_videomode
-> > *modedb);> 
-> >  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int
-> >  rb); extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
-> > 
-> > +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-> > +extern int of_get_fb_videomode(const struct device_node *np,
-> > +			       struct fb_videomode *fb,
-> > +			       unsigned int index);
-> > +#endif
-> > 
-> >  #if IS_ENABLED(CONFIG_VIDEOMODE)
-> >  extern int fb_videomode_from_videomode(const struct videomode *vm,
-> >  
-> >  				       struct fb_videomode *fbmode);
-> 
-> Do you really need these #ifs in the header files? They do make it look
-> a bit messy. If somebody uses the functions and CONFIG_VIDEOMODE is not
-> enabled, he'll get a linker error anyway.
+It depends on [1]
 
--- 
-Regards,
+1. https://lkml.org/lkml/2012/11/21/70
+pwm: Device tree support for PWM polarity
 
-Laurent Pinchart
+Changes since v3:
+	- Rebased on top of omap_dt/for_3.8/dts_part2
+	- Add pwm backlight for am335xevm_sk
+	- Moved tipwmss.h to pwm-tipwmss.h
 
---nextPart1659085.vgPrB2GWIs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
+Philip, Avinash (11):
+  PWMSS: Add PWM Subsystem driver for parent<->child relationship
+  ARM: am33xx: clk: Add optional clock for EHRPWM
+  ARM: OMAP: AM33xx hwmod: Add parent-child relationship for PWM
+    subsystem
+  pwm: pwm-tiecap: Add device-tree binding support for APWM driver
+  pwm: pwm-tiecap: pinctrl support
+  pwm: pwm-tiehrpwm: Add device-tree binding support for EHRPWM driver
+  pwm: pwm-tiehrpwm: pinctrl support
+  pwm: pwm-tiehrpwm: Adding TBCLK gating support.
+  ARM: dts: AM33XX: Add PWMSS device tree nodes
+  ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evm
+  ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evmsk
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+ .../devicetree/bindings/pwm/pwm-tiecap.txt         |   23 ++
+ .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   23 ++
+ .../devicetree/bindings/pwm/pwm-tipwmss.txt        |   31 ++
+ arch/arm/boot/dts/am335x-evm.dts                   |   23 ++
+ arch/arm/boot/dts/am335x-evmsk.dts                 |   23 ++
+ arch/arm/boot/dts/am33xx.dtsi                      |   84 ++++
+ arch/arm/mach-omap2/clock33xx_data.c               |   37 ++
+ arch/arm/mach-omap2/control.h                      |    8 +
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c         |  419 +++++++++++++-------
+ drivers/pwm/Kconfig                                |   11 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-tiecap.c                           |   50 +++-
+ drivers/pwm/pwm-tiehrpwm.c                         |   65 +++-
+ drivers/pwm/pwm-tipwmss.c                          |  143 +++++++
+ drivers/pwm/pwm-tipwmss.h                          |   39 ++
+ 15 files changed, 835 insertions(+), 145 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+ create mode 100644 drivers/pwm/pwm-tipwmss.c
+ create mode 100644 drivers/pwm/pwm-tipwmss.h
 
-iQEcBAABAgAGBQJQrNJgAAoJEIkPb2GL7hl1+n0IAIwcErVb/UkPyQ/59qqZNlkn
-A5E/H2P2Jusk7RLIRbTDCq25Uc2Tdu4SdkOhFKGwxMD/4hb0IObvXWLuLnfDXigr
-Tt8Il7HWHKWdULdl4LXJxTx9moosnewa3leAJiJpb64pefR7BiJOAIKgZNuTBt28
-ETw31xySKhYvj4CESJ92rAASe382WQQ4JsjnOWvgcIrIE8zz5zl7E3zLprqhFn48
-Zm9QgD9Yar/BzpuRh0dYKzPrHN+a5f24yzPuxJStpY9Ew9zcWdTAO9UWgFIiL+gQ
-iOJTnJh3eXUjkx38YzWP7l1Dre4Csp+KUyX/YAMSNigy/ZUlzXUGbKB6GlBYins=
-=Q873
------END PGP SIGNATURE-----
-
---nextPart1659085.vgPrB2GWIs--
