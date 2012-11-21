@@ -1,55 +1,57 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Device tree node to major/minor?
-Date: Wed, 21 Nov 2012 15:47:58 +0000
-Message-ID: <20121121154758.93CE43E0AE2@localhost>
-References: <CAPnjgZ0+8MbjmW7XKsSW0O0n2ob7XcUZokLd8b=1LkSUJ+tQEA@mail.gmail.com> <CACxGe6t-ROJe+KXZh-nah50M2buM4yjncs=7musv39=C+73_FQ@mail.gmail.com> <CAPnjgZ3jF7bdwqDCNzJXvSrwoP0PZVjcFO+nGOiLACLDX07Z7A@mail.gmail.com>
+Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather than device_add
+Date: Wed, 21 Nov 2012 15:51:04 +0000
+Message-ID: <20121121155104.726B83E0AE2@localhost>
+References: <20121121072448.GG19837@obsidianresearch.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPnjgZ3jF7bdwqDCNzJXvSrwoP0PZVjcFO+nGOiLACLDX07Z7A@mail.gmail.com>
+In-Reply-To: <20121121072448.GG19837@obsidianresearch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Glass <sjg@chromium.org>
-Cc: lk <linux-kernel@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Che-liang Chiou <clchiou@chromium.org>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Nov 2012 15:48:24 -0800, Simon Glass <sjg@chromium.org> wrote:
-> Hi Grant,
+On Wed, 21 Nov 2012 00:24:48 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> This allows platform_device_add a chance to call insert_resource
+> on all of the resources from OF. At a minimum this fills in proc/iomem
+> and presumably makes resource tracking and conflict detection work
+> better.
 > 
-> On Tue, Nov 20, 2012 at 2:32 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
-> > On Tue, Nov 20, 2012 at 10:23 PM, Simon Glass <sjg@chromium.org> wrote:
-> >> Hi,
-> >>
-> >> I hope this is a stupid question with an easy answer, but I cannot find it.
-> >>
-> >> I have a device tree node for an mmc block device and I want to use
-> >> that block device from another driver. I have a phandle which lets me
-> >> get the node of the mmc device, but I am not sure how to convert that
-> >> into a block_device. In order to do so, I think I need a major/minor
-> >> number. Of course the phandle might in fact point to a SCSI driver and
-> >> I want that to work correctly also.
-> >>
-> >> I imagine I might be able to search through the wonders of sysfs in
-> >> user space, but is there a better way?
-> >
-> > Do you /want/ to do it from userspace? What is your use case? Mounting
-> > the rootfs?
+> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> ---
+>  drivers/of/device.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
 > 
-> The use case is storing some raw data on a block device from within a
-> driver in the kernel. It is used to keep track of the verified boot
-> state.
+> Tested on PPC32 and ARM32 embedded kernels.
 > 
-> >
-> > Regardless, userspace can monitor the uevents when devices are added
-> > (that's what udev does) and watch for the full path of the node you
-> > want in the uevent attribute. Then you can look for the child device
-> > with the block major/minor numbers in it.
-> 
-> So is there a way to do this entirely in the kernel ex post? It might
-> need to happen during kernel boot, before user space.
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 4c74e4f..a5b67dc 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -62,7 +62,7 @@ int of_device_add(struct platform_device *ofdev)
+>  	if (!ofdev->dev.parent)
+>  		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
+>  
+> -	return device_add(&ofdev->dev);
+> +	return platform_device_add(ofdev);
+>  }
+>  
+>  int of_device_register(struct platform_device *pdev)
 
-Yes, it is certainly doable within the kernel. First, you'll need to use
-a notifier to get called back whenever a new device is created. Then
-you'll need to look at the dev->of_node(->full_name) to see if it is the
-node you actually want. You might need/want to resolve it from an alias
-or something, but I presume you already have a way to find the
-device_node before seaching for a struct device.
+This has the side effect of moving all devices at the root of the tree
+from /sys/devices/ to /sys/devices/platform. It also has the possibility
+of breaking if any devices get registered with overlapping regions. I
+think there are some powerpc 5200 boards that do this, and I'm not sure
+about the larger Power boxen.
+
+I've got a more nuanced version of this patch that I'm trying to get
+published today for review. I'll add you to the cc list.
 
 g.
+
+> -- 
+> 1.7.4.1
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
