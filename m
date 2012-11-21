@@ -1,49 +1,104 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v12 0/6] of: add display helper
-Date: Wed, 21 Nov 2012 08:41:16 +0100
-Message-ID: <20121121074116.GA14013@pengutronix.de>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1501232.SOApmW1MhU@avalon>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v6 1/4] genalloc: add a global pool list, allow to find
+ pools by phys address
+Date: Tue, 20 Nov 2012 23:46:13 -0800
+Message-ID: <20121120234613.47d8183c.akpm@linux-foundation.org>
+References: <1353061817-3207-1-git-send-email-p.zabel@pengutronix.de>
+	<1353061817-3207-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1501232.SOApmW1MhU@avalon>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1353061817-3207-2-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 20, 2012 at 05:13:19PM +0100, Laurent Pinchart wrote:
-> On Tuesday 20 November 2012 16:54:50 Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > Changes since v11:
-> > 	- make pointers const where applicable
-> > 	- add reviewed-by Laurent Pinchart
-> 
-> Looks good to me.
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> 
+On Fri, 16 Nov 2012 11:30:14 +0100 Philipp Zabel <p.zabel@pengutronix.de> wrote:
 
-Thanks.
+> This patch keeps all created pools in a global list and adds two
+> functions that allow to retrieve the gen_pool pointer from a known
+> physical address and from a device tree node.
+>
+> ...
+>
+> +/*
+> + * gen_pool_find_by_phys - find a pool by physical start address
+> + * @phys: physical address as added with gen_pool_add_virt
+> + *
+> + * Returns the pool that contains the chunk starting at phys,
+> + * or NULL if not found.
+> + */
+> +struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys)
+> +{
+> +	struct gen_pool *pool, *found = NULL;
+> +	struct gen_pool_chunk *chunk;
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(pool, &pools, next_pool) {
+> +		list_for_each_entry_rcu(chunk, &pool->chunks, next_chunk) {
+> +			if (phys == chunk->phys_addr) {
+> +				found = pool;
+> +				break;
+> +			}
+> +		}
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	return found;
+> +}
+> +EXPORT_SYMBOL_GPL(gen_pool_find_by_phys);
 
-Regards,
-Steffen
+It is rather pointless to use the fancy super-fast RCU locking
+around a linear search!  We have various data structures which can be
+used to make this search much more efficient.  radix-tree is one, if
+the search keys are unique (which is the case here).
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Secondly, that whole "phys" concept doesn't need to be in there.  It
+would be better to implement a far more general
+gen_pool_find_by_key(unsigned long key) and then do the phys->ulong
+specialization elsewhere.
+
+Finally the changelog gives no indication *why* you feel the kernel
+needs this feature.  What is it for?  What are the use cases?  This is
+the most important information for reviewers, hence it should be up
+there front and center, in lavish detail.
+
+Because once this is understood:
+
+a) people might be able to suggest alternatives.  Can't do that
+   without the required info and
+
+b) people might then be interested in merging the patch into a kernel!
+
+> +#ifdef CONFIG_OF
+> +/**
+> + * of_get_named_gen_pool - find a pool by phandle property
+> + * @np: device node
+> + * @propname: property name containing phandle(s)
+> + * @index: index into the phandle array
+> + *
+> + * Returns the pool that contains the chunk starting at the physical
+> + * address of the device tree node pointed at by the phandle property,
+> + * or NULL if not found.
+> + */
+> +struct gen_pool *of_get_named_gen_pool(struct device_node *np,
+> +	const char *propname, int index)
+> +{
+> +	struct device_node *np_pool;
+> +	struct resource res;
+> +	int ret;
+> +
+> +	np_pool = of_parse_phandle(np, propname, index);
+> +	if (!np_pool)
+> +		return NULL;
+> +	ret = of_address_to_resource(np_pool, 0, &res);
+> +	if (ret < 0)
+> +		return NULL;
+> +	return gen_pool_find_by_phys((phys_addr_t) res.start);
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_named_gen_pool);
+
+Seems rather inappropriate that this should be in lib/genpool.c. 
+Put it somewhere such as drivers/of/base.c, perhaps.
