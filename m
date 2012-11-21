@@ -1,145 +1,170 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Wed, 21 Nov 2012 14:04:17 +0200
-Message-ID: <50ACC341.3090204@ti.com>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <1353149747-31871-2-git-send-email-acourbot@nvidia.com> <20121120215429.B621F3E1821@localhost> <13540495.epaCf4JVn9@percival> <50ACB59B.4090404@iki.fi> <20121121114018.GA31576@avionic-0098.adnet.avionic-design.de>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v12 2/6] video: add of helper for videomode
+Date: Wed, 21 Nov 2012 14:22:25 +0200
+Message-ID: <50ACC781.7010502@ti.com>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353426896-6045-3-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enigBA0C6782130B92F7F6253164"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20121121114018.GA31576@avionic-0098.adnet.avionic-design.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Tomi Valkeinen <tomba@iki.fi>, Alex Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: multipart/mixed; boundary="===============2158714360832828957=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353426896-6045-3-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---------------enigBA0C6782130B92F7F6253164
-Content-Type: text/plain; charset=ISO-8859-1
+--===============2158714360832828957==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig12E9ABBEA5C99874EEA541A7"
+
+--------------enig12E9ABBEA5C99874EEA541A7
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On 2012-11-21 13:40, Thierry Reding wrote:
-> On Wed, Nov 21, 2012 at 01:06:03PM +0200, Tomi Valkeinen wrote:
+On 2012-11-20 17:54, Steffen Trumtrar wrote:
 
-(sorry for bouncing back and forth with my private and my @ti addresses.
-I can't find an option in thunderbird to only use one sender address,
-and I always forget to change it when responding...)
+> +timings subnode
+> +---------------
+> +
+> +required properties:
+> + - hactive, vactive: Display resolution
+> + - hfront-porch, hback-porch, hsync-len: Horizontal Display timing par=
+ameters
+> +   in pixels
+> +   vfront-porch, vback-porch, vsync-len: Vertical display timing param=
+eters in
+> +   lines
+> + - clock-frequency: display clock in Hz
+> +
+> +optional properties:
+> + - hsync-active: Hsync pulse is active low/high/ignored
+> + - vsync-active: Vsync pulse is active low/high/ignored
+> + - de-active: Data-Enable pulse is active low/high/ignored
+> + - pixelclk-inverted: pixelclock is inverted/non-inverted/ignored
 
->> My suggestion would be to go forward with an in-driver solution, and
->> look at the DT based solution later if we are seeing an increasing blo=
-at
->> in the drivers.
+Inverted related to what? And isn't this a bool? Pixel clock is either
+normal (whatever that is), or inverted. It can't be "not used".
+
+I guess normal case is "pixel data is driven on the rising edge of pixel
+clock"? If that's common knowledge, I guess it doesn't need to be
+mentioned. But I always have to verify from the documentation what
+"normal" means on this particular panel/soc =3D).
+
+> + - interlaced (bool)
+> + - doublescan (bool)
+> +
+> +All the optional properties that are not bool follow the following log=
+ic:
+> +    <1>: high active
+> +    <0>: low active
+> +    omitted: not used on hardware
+
+Perhaps it's obvious, but no harm being explicit: mention that the bool
+properties are off is omitted.
+
+And I didn't read the rest of the patches yet, so perhaps this is
+already correct, but as I think this framework is usable without DT
+also, the meanings of the fields in the structs should be explained in
+the header files also in case they are not obvious.
+
+> +Example:
+> +
+> +	display-timings {
+> +		native-mode =3D <&timing0>;
+> +		timing0: 1920p24 {
+
+This should still be 1080p24, not 1920p24 =3D).
+
+> +			/* 1920x1080p24 */
+> +			clock-frequency =3D <52000000>;
+> +			hactive =3D <1920>;
+> +			vactive =3D <1080>;
+> +			hfront-porch =3D <25>;
+> +			hback-porch =3D <25>;
+> +			hsync-len =3D <25>;
+> +			vback-porch =3D <2>;
+> +			vfront-porch =3D <2>;
+> +			vsync-len =3D <2>;
+> +			hsync-active =3D <1>;
+> +		};
+> +	};
+> +
+
+> diff --git a/include/linux/of_display_timings.h b/include/linux/of_disp=
+lay_timings.h
+> new file mode 100644
+> index 0000000..2b4fa0a
+> --- /dev/null
+> +++ b/include/linux/of_display_timings.h
+> @@ -0,0 +1,20 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * display timings of helpers
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_OF_DISPLAY_TIMINGS_H
+> +#define __LINUX_OF_DISPLAY_TIMINGS_H
+> +
+> +#include <linux/display_timing.h>
+> +#include <linux/of.h>
+
+No need to include these, just add "struct ...;".
+
+> +#define OF_USE_NATIVE_MODE -1
+> +
+> +struct display_timings *of_get_display_timings(const struct device_nod=
+e *np);
+> +int of_display_timings_exists(const struct device_node *np);
+> +
+> +#endif
+> diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.=
+h
+> new file mode 100644
+> index 0000000..4de5fcc
+> --- /dev/null
+> +++ b/include/linux/of_videomode.h
+> @@ -0,0 +1,18 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * videomode of-helpers
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_OF_VIDEOMODE_H
+> +#define __LINUX_OF_VIDEOMODE_H
+> +
+> +#include <linux/videomode.h>
+> +#include <linux/of.h>
+
+Same here.
+
+> +int of_get_videomode(const struct device_node *np, struct videomode *v=
+m,
+> +		     int index);
+> +
+> +#endif /* __LINUX_OF_VIDEOMODE_H */
 >=20
-> Assuming we go with your approach, what's the plan? We're actually
-> facing this problem right now for Tegra. Basically we have a DRM driver=
-
-> that can drive the panel, but we're still missing a way to hook up the
-> backlight and panel enabling code. So we effectively can't support any
-> of the LVDS devices out there without this series.
-
-Could you describe the hardware setup you have related to the LCD and
-backlight? Is it a public board with public schematics?
-
-I've understood that you don't have anything special in your board, just
-an LCD and a backlight, and the power sequences are related to powering
-up the LCD and the backlight, without anything board specific. If so,
-there's no need for board specific code, but just improving the panel
-and backlight drivers to support the models you use.
-
-> As I understand it, what you propose is similar to what ASoC does. For =
-a
-> specific board, you'd have to write a driver, presumably for the new
-> panel/display framework, that provides code to power the panel on and
-> off. That means we'll have to have a driver for each panel out there
-> basically, or we'd need to write generic drivers that can be configured=
-
-> to some degree (via platform data or DT). This is similar to how ASoC
-> works, where we have a driver that provides support for a specific code=
-c
-> connected to the Tegra SoC. For the display framework things could be
-> done in a similar way I suppose, so that Tegra could have one display
-> driver to handle all aspects of powering on and off the various panels
-> for the various boards out there.
-
-I think we should only need the board drivers for very special cases. If
-there's just a panel and a backlight, without any special dynamic muxing
-or other trickery needed, I don't see a need for a board driver. I
-presume this is the case for most of the boards.
-
-> Obviously, a lot of the code will be similar for other SoCs, but maybe
-> that's just the way things are if we choose that approach. There's also=
-
-> the potential for factoring out large chunks of common code later on
-> once we start to see common patterns.
->=20
-> One thing that's not very clear is how the backlight subsystem should b=
-e
-> wired up with the display framework. I have a patch on top of the Tegra=
-
-> DRM driver which adds some ad-hoc display support using this power
-> sequences series and the pwm-backlight.
-
-I think that's a separate issue: how to associate the lcd device and
-backlight device together. I don't have a clear answer to this.
-
-There are many ways the backlight may be handled. In some cases the
-panel and the backlight are truly independent, and you can use the other
-without using the other (not very practical, though =3D).
-
-But then with some LCDs the backlight may be controlled by sending
-commands to the panel, and in this case the two may be quite linked.
-Changing the backlight requires the panel driver to be up and running,
-and sometimes the sending the backlight commands may need to be (say,
-DSI display, with backlight commands going over the DSI bus).
-
-So my feeling is that the panel driver should know about the related
-backlight device. In the first case the panel driver would just call
-enable/disable in the backlight device when the panel is turned on.
-
-In the second case of the DSI panel... I'm not sure. I've implemented it
-so that the panel driver creates the backlight device, and implements
-the backlight callbacks. It then sends the DSI commands from those
-callbacks.
-
-> From reading the proposal for the panel/display framework, it sounds
-> like a lot more is planned than just enabling or disabling panels, but
-> it also seems like a lot of code needs to be written to support things
-> like DSI, DBI or other control busses.
->=20
-> At least for Tegra, and I think the same holds for a wide variety of
-> other SoCs, dumb panels would be enough for a start. In the interest of=
-
-> getting a working solution for those setups, maybe we can start small
-> and add just enough framework to register dumb panel drivers to along
-> with code to wire up a backlight to light up the display. Then we could=
-
-> possibly still make it to have a proper solution to support the various=
-
-> LVDS panels for Tegra with 3.9.
-
-Yes, we (Laurent and me) both agree that we should start simple.
-
-However, the common panel framework is not strictly needed for this. I'm
-not sure of the current architecture for Tegra, but for OMAP we already
-have panel drivers (omap specific ones, though). The panel drivers may
-support multiple models, (for example,
-drivers/video/omap2/displays/panel-generic-dpi.c).
-
-I don't see any problem with adding small Tegra specific panel drivers
-for the time being, with the intention of converting to common panel
-framework when that's available.
-
-Of course, the DT side is an issue. If you now create DT bindings for a
-temporary model, and need to change it again later, you'll have some
-headaches trying managing that without breaking the old bindings... This
-is why I haven't pushed DT bindings for OMAP, as I know I have to change
-them in the near future.
 
  Tomi
 
 
 
---------------enigBA0C6782130B92F7F6253164
+--------------enig12E9ABBEA5C99874EEA541A7
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -148,19 +173,32 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.11 (GNU/Linux)
 Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJQrMNBAAoJEPo9qoy8lh71mM8P/1Phj5ZXucIt6yiaqeYVJk1S
-A6hELegvncLVOlCpiW5/DneMv2yY5Up6ovyfrXE7OvxLLVnTLKR32cGlv9fZI5lm
-1USyQ4NwctedIEAaUV/Ri4fMYsk1OmRPiQUEfxxy0iK0awtIhVSKzJocsPKEUmU/
-mi8zikJhdnL2rvPpuD4k78F3dIV4klbv2Y43/11YOVxSCX7x+LVWzi0tWF4KtOhV
-zc/gT3J2HMcXwuYJZGf5/vFnSz8EUtCCc+nlCCF/XPe9CHFR7dQ10CWCScxz0XTm
-+/tGikGIxWytdUuk/UByWzhaknpzPWGOm//LUVg82Szb0zpEK332qGNAFRT0PBA1
-1YoGs0jo0uYK83O0hdED/efa5HPn8SDetWraRaLcI8aKVGRoK+zja+UJt9KfLwqD
-69F5ROIZXB+6+a3RtVCEc/YR3qf5YtUMolvTTo4xSdeYqTR6JYhZQvuVUQu+FxEN
-N0s5+cEY7KYyjQNWk84pZz9btnIUor+JP0hNqgvuUSxI7OM2ng4uRIJ+tgxpn3TY
-5FfjKVlLjhrueXEEqNKpngtGxwMsL+2IyCRNxOgYXhV7BNd7n4vIx123SMq4wG0i
-EXU418kpczXF0w/DXHgWsFyyGLaOuDLKcqU+e675n3IwhF0WwDrLMoYmnhLx7yIM
-MXW8qiC7d4qjGI7/aB1O
-=8x2N
+iQIcBAEBAgAGBQJQrMeBAAoJEPo9qoy8lh71i+QQAJf9vz9dhW7LwdL8cNrrLG/J
+fzKj70w79KPvu7c48IqFi2YlanB/WDhpdgJzoGXNADzvzd2iHgks3T6FQ2Q10ebg
+PWFtSK+KqxaYQZzX98hjaMQgrx2zuFYC/TANa5WSLJ+0SsCqwVgKmXxCbPkYMGuY
+LGwKTZmbg/Bc/kOxR50OKURPJOpk8UrfixbRrGOhhJV9kkG/AFnsDcAWrSkam6he
+zwBPmdOfBPe/y/0xAkaY39tvPefop/rIQnRopQEymRCPS6jDdVN6vEPmJjAJfKww
+VHG8X9CSIvuvnm08eXKKLZJUOSnxdnsymQ0JPeBUoGK7WwkaBkTCBtb2CTwa3m+l
+MPQV4KI3AFaBdX0lqQdZZbfr2lAmFEswBAphSTACDS/FGjo4w3d0YfiI9+BedSQc
+PNVqUhZKo5bC6ygPU+ojYqTFaZpdgeFQX+EwLHxBKO3aGhXzA4LC0dxB9DsgMi4G
+eKaZphvN7fOEJ1sIcCUjLUcYfb17WNawnW6Iq7e7USErG7xt84jOBcF1tT/JbUI3
+cvhqTjmTUZQ6FNHy7FvyMlsoewZGfbZ5qbyofzzKON8S3iwfoliWJ+6TO3B8BRCl
+Hg/QUhPn0aa1OBafi5mJbyj3baw66+8hIkNF4w2OFStPwwH1Usc+lZSGHoQd602s
+M+TrueDNuXOhiMVBtmfs
+=ERtZ
 -----END PGP SIGNATURE-----
 
---------------enigBA0C6782130B92F7F6253164--
+--------------enig12E9ABBEA5C99874EEA541A7--
+
+--===============2158714360832828957==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2158714360832828957==--
