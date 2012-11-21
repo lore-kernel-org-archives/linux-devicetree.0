@@ -1,71 +1,132 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather
- than device_add
-Date: Wed, 21 Nov 2012 18:07:46 +0000
-Message-ID: <CACxGe6u2Kfm+x5KsFzNPt7voyeD0x_4V6EO4add=tBwMKJ6VWQ@mail.gmail.com>
-References: <20121121072448.GG19837@obsidianresearch.com> <20121121155104.726B83E0AE2@localhost>
- <20121121174453.GD6406@obsidianresearch.com>
+Subject: Re: [PATCH 1/4] OF: Add helper for matching against linux,stdout-path
+Date: Wed, 21 Nov 2012 18:03:29 +0000
+Message-ID: <CACxGe6tyPpjx4OtjHmhB9Cvnb7OwAjPEE4=K+wgWKYHcAV-ESQ@mail.gmail.com>
+References: <20121121155312.GX4398@game.jcrosoft.org> <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121121174453.GD6406@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <kernel@pengutronix.de>, Alan Cox <alan@linux.intel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 5:44 PM, Jason Gunthorpe
-<jgunthorpe@obsidianresearch.com> wrote:
-> On Wed, Nov 21, 2012 at 03:51:04PM +0000, Grant Likely wrote:
->> On Wed, 21 Nov 2012 00:24:48 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
->> > This allows platform_device_add a chance to call insert_resource
->> > on all of the resources from OF. At a minimum this fills in proc/iomem
->> > and presumably makes resource tracking and conflict detection work
->> > better.
->> >
->> > Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
->> >  drivers/of/device.c |    2 +-
->> >  1 files changed, 1 insertions(+), 1 deletions(-)
->> >
->> > Tested on PPC32 and ARM32 embedded kernels.
->> >
->> > diff --git a/drivers/of/device.c b/drivers/of/device.c
->> > index 4c74e4f..a5b67dc 100644
->> > +++ b/drivers/of/device.c
->> > @@ -62,7 +62,7 @@ int of_device_add(struct platform_device *ofdev)
->> >     if (!ofdev->dev.parent)
->> >             set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
->> >
->> > -   return device_add(&ofdev->dev);
->> > +   return platform_device_add(ofdev);
->> >  }
->> >
->> >  int of_device_register(struct platform_device *pdev)
->>
->> This has the side effect of moving all devices at the root of the tree
->> from /sys/devices/ to /sys/devices/platform. It also has the possibility
->> of breaking if any devices get registered with overlapping regions. I
->> think there are some powerpc 5200 boards that do this, and I'm not sure
->> about the larger Power boxen.
+On Wed, Nov 21, 2012 at 3:57 PM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj@jcrosoft.com> wrote:
+> From: Sascha Hauer <s.hauer@pengutronix.de>
 >
-> Okay, I'll try to test your patch.
->
-> I know sensible overlapping seems to work:
->
-> e0000000-e7ffffff : PCIe 0 MEM
->   e0000000-e000ffff : 0000:00:01.0
->     e0000000-e0000fff : /pex@e0000000/chip@0/chip_control@0
->       e0000008-e000000b : dat
->         e0000008-e000000b : dat
->       e000000c-e000000f : set
->         e000000c-e000000f : set
->       e0000010-e0000013 : dirin
->         e0000010-e0000013 : dirin
->
-> Which is nesting the generic gpio driver under a larger region..
+> devicetrees may have a linux,stdout-path or stdout-path property
+> in the chosen node describing the console device. This adds a helper
+> function to match a device against this property and retrieve the options
+> so a driver can call add_preferred_console for a matching device.
 
-Try two sibling nodes with overlapping addresses. There are powerpc
-device trees doing that even though it isn't legal by the ofw and
-epapr specs.
+NIce. Looks like the right behaviour, but is a little inefficient.
+Since the stdout property doesn't change this code could be called
+once right after the tree is unflattened and then cache the pointer to
+the node and arguments. Can you add the code to of_alias_scan()?
 
 g.
+
+>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> Cc: linux-serial@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: kernel@pengutronix.de
+> Cc: Alan Cox <alan@linux.intel.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> ---
+>  drivers/of/base.c  |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h |    7 +++++++
+>  2 files changed, 53 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index f2f63c8..72c49ce 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1470,3 +1470,49 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
+>         return curv;
+>  }
+>  EXPORT_SYMBOL_GPL(of_prop_next_string);
+> +
+> +/**
+> + * of_device_is_stdout_path - check if a device node matches the
+> + *                           linux,stdout-path property
+> + * @np:                Pointer to the given device_node
+> + * @option:    parsed option
+> + *
+> + * Check if this device node matches the linux,stdout-path property
+> + * in the chosen node. return true if yes, false otherwise.
+> + */
+> +int of_device_is_stdout_path(struct device_node *dn, char **option)
+> +{
+> +       const char *name;
+> +       struct device_node *dn_stdout;
+> +       bool is_stdout = 0;
+> +       const char *tmp;
+> +       const char *tmp_option;
+> +
+> +       name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+> +       if (name == NULL)
+> +               name = of_get_property(of_chosen, "stdout-path", NULL);
+> +
+> +       if (name == NULL)
+> +               return 0;
+> +
+> +       tmp_option = strchr(name, ':');
+> +
+> +       tmp = kstrndup(name, strlen(name) - strlen(tmp_option), GFP_KERNEL);
+> +       if (!tmp)
+> +               return 0;
+> +
+> +       dn_stdout = of_find_node_by_path(tmp);
+> +
+> +       if (dn_stdout && dn_stdout == dn) {
+> +               is_stdout = 1;
+> +               tmp_option++;
+> +               *option = kstrdup(tmp_option, GFP_KERNEL);
+> +       }
+> +
+> +       of_node_put(dn_stdout);
+> +
+> +       kfree(tmp);
+> +
+> +       return is_stdout;
+> +}
+> +EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 681a6c8..6a82e3f 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -323,6 +323,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
+>                 s;                                              \
+>                 s = of_prop_next_string(prop, s))
+>
+> +int of_device_is_stdout_path(struct device_node *dn, char **option);
+> +
+>  #else /* CONFIG_OF */
+>
+>  static inline const char* of_node_full_name(struct device_node *np)
+> @@ -450,6 +452,11 @@ static inline int of_machine_is_compatible(const char *compat)
+>         return 0;
+>  }
+>
+> +static inline int of_device_is_stdout_path(struct device_node *dn, char **option)
+> +{
+> +       return 0;
+> +}
+> +
+>  #define of_match_ptr(_ptr)     NULL
+>  #define of_match_node(_matches, _node) NULL
+>  #define of_property_for_each_u32(np, propname, prop, p, u) \
+> --
+> 1.7.10.4
+>
+
+
+
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
