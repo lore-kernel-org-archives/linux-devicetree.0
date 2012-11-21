@@ -1,73 +1,52 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] of: use platform_device_add
-Date: Wed, 21 Nov 2012 10:34:03 -0800
-Message-ID: <20121121183403.GA7657@kroah.com>
-References: <1353521759-28263-1-git-send-email-grant.likely@secretlab.ca>
+From: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] usb: chipidea: usbmisc: add mx53 support
+Date: Wed, 21 Nov 2012 23:28:36 +0300
+Message-ID: <50AD3974.4000608@mvista.com>
+References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de> <1353506793-8354-7-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1353521759-28263-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1353506793-8354-7-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 06:15:59PM +0000, Grant Likely wrote:
-> This allows platform_device_add a chance to call insert_resource on all
-> of the resources from OF. At a minimum this fills in proc/iomem and
-> presumably makes resource tracking and conflict detection work better.
-> However, it has the side effect of moving all OF generated platform
-> devices from /sys/devices to /sys/devices/platform/. It /shouldn't/
-> break userspace because userspace is not supposed to depend on the full
-> path (because userspace always does what it is supposed to, right?).
-> 
-> It also has a backup call to of_device_add() when running on PowerPC to
-> catch any devices that have overlapping regions. It will complain about
-> them, but it will not fail to register the device.
-> 
-> Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Hello.
+
+On 11/21/2012 05:06 PM, Michael Grzeschik wrote:
+
+> This adds mx53 as the next user of the usbmisc driver and makes it
+> possible to disable the overcurrent-detection of the internal phy.
+
+> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
-> 
-> Greg, do you mind taking a look at this? The reason the OF code hasn't been
-> calling platform_device_add() directly to this point is:
-> a) there are some trees with resource overlays
-> b) I want the devices in /sys/devices not /sys/devices/platform.
+> Changes since v2:
+> * added defines for register offsets and bitmasks
+> * fixed disable_oc option for all ports
 
-Putting the devices all in the "flat" location of /sys/devices/ is a bit
-worrisome to me.  What's wrong with platform/ ?  That is what they are,
-right?  Why change this?
+>  drivers/usb/chipidea/usbmisc_imx.c |   51 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 
-> I could easily add exceptions to platform_device_add() for both those cases, but
-> I don't like adding DT exceptions to the common code. However, I still need to
-> support the platforms that unfortunately have overlapping resources. This patch
-> does that by still calling the old path if platform_device_add() fails, but it
-> isn't nice either because of_device_add() has to duplicate
-> platform_device_add(). Blech. Plus the exception only applies for PowerPC.
-> 
-> So, how do you feel about having a 'relaxed' mode for platform_device_add()
-> which means it won't fail if resources overlap and maybe won't do the silly
-> platform_bus parent thing. Thoughts?
+> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
+> index e090e0f..b1811df 100644
+> --- a/drivers/usb/chipidea/usbmisc_imx.c
+> +++ b/drivers/usb/chipidea/usbmisc_imx.c
+> @@ -19,6 +19,13 @@
+>  
+>  #define USB_DEV_MAX 4
+>  
+> +#define MX53_USB_OTG_PHY_CTRL_0_OFFSET	0x08;
+> +#define MX53_USB_UH2_CTRL_OFFSET	0x14;
+> +#define MX53_USB_UH3_CTRL_OFFSET	0x18;
 
-I have no objection for the resource issue, if you assure me it will not
-be abused :)
+   Semicolons here? This can't be right.
 
-But the sysfs location is still an issue, sorry.
+WBR, Sergei
 
-thanks,
-
-greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
