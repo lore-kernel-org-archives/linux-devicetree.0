@@ -1,116 +1,94 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] power: Add simple poweroff-gpio driver
-Date: Tue, 20 Nov 2012 17:17:58 -0700
-Message-ID: <50AC1DB6.2080602@wwwdotorg.org>
-References: <1353142266-1289-1-git-send-email-andrew@lunn.ch>
- <1353142266-1289-2-git-send-email-andrew@lunn.ch>
- <50AA6E7E.5060501@wwwdotorg.org> <20121120083749.GM10259@lunn.ch>
- <50ABB9B6.1010506@wwwdotorg.org> <20121120203127.GX14643@lunn.ch>
- <50ABF364.1010004@wwwdotorg.org> <20121120220524.GZ14643@lunn.ch>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Wed, 21 Nov 2012 10:31:34 +0900
+Message-ID: <20121121013133.GE4673@opensource.wolfsonmicro.com>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
+ <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+ <20121120215429.B621F3E1821@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121120220524.GZ14643-g2DYL2Zd6BY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="a1QUDc0q7S3U7/Jg"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121120215429.B621F3E1821@localhost>
+Sender: linux-pm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11/20/2012 03:05 PM, Andrew Lunn wrote:
-> On Tue, Nov 20, 2012 at 02:17:24PM -0700, Stephen Warren wrote:
->> On 11/20/2012 01:31 PM, Andrew Lunn wrote:
->>> On Tue, Nov 20, 2012 at 10:11:18AM -0700, Stephen Warren wrote:
->>>> On 11/20/2012 01:37 AM, Andrew Lunn wrote:
->>>>> Hi Jason
->>>>>
->>>>> These are good comments from Stephan that i want to address. However,
->>>>> i also don't want to delay the pull-requests direction arm-soc, the
->>>>> merge window is getting close. Both Linus and Anton have Acked the
->>>>> current version, so please go with what you have and i will produce a
->>>>> patch over the top. If its available before Arnd pulls, you can squash
->>>>> it, otherwise send it upstream as a standalone patch.
->>>>
->>>> I'm not sure I agree here; the comments I made re: the delays and
->>>> pulse-vs-level may affect the definition of the DT binding, and that's
->>>> something that should be correct from the start.
->>>
->>> Hi Stephen
->>>
->>> There should be no need to change the binding is a none-backwards
->>> compatible way. The current delays work for all current users.
->>
->> Well, the binding isn't written for current users, the description is
->> just a generic "GPIO to turn off the system".
-> 
-> The current binding documentation is maybe lacking. But the binding
-> itself fits the current users.
-> 
->>> If some
->>> other user comes along which needs longer delays, they can add an
->>> optional property which specified a longer delay.
->>
->> The DT maintainers have in the past expressed a wish to define DT
->> bindings completely, rather than incrementally adding stuff if at all
->> possible. I guess they weren't CC'd on this patch; I've added them here
->> for comment. I'll defer to whatever they think here.
-> 
-> They were CC: I learn't the hard way with a USB binding....
 
-Sorry to be picky, but I checked the original postings of the first rev
-and V3 and they didn't appear to be CC'd. The mailing list was, but not
-the people. I guess Grant did comment on the first rev though. He didn't
-give an opinion on the DT binding that I can find.
+--a1QUDc0q7S3U7/Jg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->>> The pulse-vs-level is needed for the potential PXA use case, which is
->>> where i took this code from. When we first proposed this driver,
->>> Russel King pointed to the PXA reset.c code and requested we create
->>> something which PXA could use. The configuring the GPIO as an input
->>> also come from PXA, which the current two uses user don't need.
->>>
->>> I agree it need better documentation, but the current code covers all
->>> bases. It will turn off a level based system, it will also turn off an
->>> edge based system. There is no need to specify in the DT which is
->>> needed, it will just work.
->>
->> I'm not convinced the pulse logic can be correct for arbitrary users who
->> expect a level-sensitive GPIO; what if the MPU (or whatever the GPIO is
->> connected to) is confused by the pulse and fails to power down when it
->> sees a pulse (e.g. as a safety measure), but would have worked fine with
->> just a regular level?
-> 
-> Lets go through the sequence for a regular level off.....
-> 
-> At driver load time, assuming the optional input properties is not
-> present, the GPIO line is driven inactive. At power down time, its
-> driven active. One of four things can happen:
-...
-> 4) The delay is not long enough. In that case it goes inactive again,
-> there is a short pause, and it goes active again. There is another
-> pause, this time much longer.  Still the power does not go off and we
-> hit the WARN_ON(1); The power remains on, until somebody pulls the
-> plug.
-> 
-> Your scenario is that a 100ms pulse confuses the MPU, and after that,
-> it won't turn off given a much longer period of the gpio being
-> active. We run into 4). Is that really likely?
+On Tue, Nov 20, 2012 at 09:54:29PM +0000, Grant Likely wrote:
+> On Sat, 17 Nov 2012 19:55:45 +0900, Alexandre Courbot <acourbot@nvidia.com> wrote:
 
-Yes, (4) is my concern.
+> > With the advent of the device tree and of ARM kernels that are not
+> > board-tied, we cannot rely on these board-specific hooks anymore but
 
-Honestly, I don't know if it's likely. It's certainly theoretically
-possible. Either way though, I'd rather the kernel explicitly drive the
-signal in the fashion that the specific HW expects it to be driven,
-rather than wiggling the GPIO in a way that by luck happens to work for
-a variety of disparate requirements.
+> This isn't strictly true. It is still perfectly fine to have board
+> specific code when necessary. However, there is strong encouragement to
+> enable that code in device drivers as much as possible and new board
+> files need to have very strong justification.
 
-Anyway, I've made my opinion clear. Whoever would merge this patch can
-choose to ignore it or not.
+This isn't the message that's gone over, and even for device drivers
+everyone seems to be taking the whole device tree thing as a move to
+pull all data out of the kernel.  In some cases there are some real
+practical advantages to doing this but a lot of the people making these
+changes seem to view having things in DT as a goal in itself.
+
+> I'm thinking about the scripts as trivial-to-parse ascii strings that
+> have a very simple set of commands. The commands use resources already
+> defined in the node. ie. 'g0' refers to the first entry in the gpios
+> property. 'r0' for the regulator, 'p0' for the pwms, 'd' means delay. By
+> no means take this as the format to use, it is just an example off the
+> top of my head, but it is already way easier to work with than putting
+> each command into a node.
+
+It does appear to have some legibility challenges, especially with using
+the indexes into the arrays of resources.  On the other hand the arrays
+should be fairly small.
+
+> > +Platform Data Format
+> > +--------------------
+> > +All relevant data structures for declaring power sequences are located in
+> > +include/linux/power_seq.h.
+
+> Hmm... If sequences are switched to a string instead, then platform_data
+> should also use it. The power sequence data structures can be created at
+> runtime by parsing the string.
+
+Seems like a step backwards to me - why not let people store the more
+parsed version of the data?  It's going to be less convenient for users
+on non-DT systems.
+
+As I said in my earlier reviews I think this is a useful thing to have
+as a utility library for drivers independantly of the DT bindings, it
+would allow drivers to become more data driven.  Perhaps we can rework
+the series so that the DT bindings are added as a final patch?  All the
+rest of the code seems OK.
+
+--a1QUDc0q7S3U7/Jg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQrC7uAAoJELSic+t+oim9NTgP/3oUSoRnG5DR736OIwo3IEcq
+lR9QRSr43anEyTnX1ZzIAgJm9byAvH3TRcCG0RlCKb0JPlPvMcuiWnExeR5Xweoj
+d30s7bJ+btF2lk1LJPx6uFS6rhkPswW2eNCNG88z/ogDJnRg+mUlBaJFoMZBJ5MI
+DuP0WnVKrFXt7ixTm0/57z3tLBcXu9YyOttIoBR20Uk6sLOz4RWpbBjNEkit+2Kb
+Exrfxlbj4zEK0dVCjE2NFG/X77kXBoBHI1qplFdz5L+yEPIwAhyE+hjDVzR/H3G3
+x9MUP/LF8ttuKvl0kWfn3mN6/BObK/pGirFdk9+l/HhLS0jzVewZiZQr72K0pIql
+RVTEkc8kw4hiVMMZkzXsUy1LLDSH2C6SlrMMT2yZO2VekKfy9Fw6Kfbxl3ik2Px1
+Fg+lApYi1QrYfERBmUXPwr5ez1YZyL+TgLbZ87AC9gcDgCqHA/hGhv35A82m6ACQ
+Xp8wVxnPcUcDjvHCcvHDiL4UVa+qW1pxx5cZr5FUQENnl2n5byWcxLdH1rvwC9J3
+r2VRmVSyunIBaBi3bZc+BOE8UhiXAT0g59mIOkdVQGfSo5B1WeiAdSXawJWO835p
+I+dkhBA+uWIx5tPMan396vMqGaxydwtpA9iOsCjz9l2q+2sYflvJKUrdAzdU9xDh
+6PLj38T+S4Nw2nVEUU7N
+=EhhC
+-----END PGP SIGNATURE-----
+
+--a1QUDc0q7S3U7/Jg--
