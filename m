@@ -1,95 +1,74 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v12 4/6] fbmon: add of_videomode helpers
-Date: Wed, 21 Nov 2012 14:49:30 +0200
-Message-ID: <50ACCDDA.2070606@ti.com>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-5-git-send-email-s.trumtrar@pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v12 5/6] drm_modes: add videomode helpers
+Date: Wed, 21 Nov 2012 14:50:38 +0200
+Message-ID: <50ACCE1E.4030707@ti.com>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de> <1353426896-6045-6-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0447903399396754886=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353426896-6045-5-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-List-Id: devicetree@vger.kernel.org
-
---===============0447903399396754886==
 Content-Type: multipart/signed; micalg=pgp-sha1;
 	protocol="application/pgp-signature";
-	boundary="------------enig09241D6A5698903053C1AEA5"
+	boundary="------------enig8214106EC427CEF349D81767"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1353426896-6045-6-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+List-Id: devicetree@vger.kernel.org
 
---------------enig09241D6A5698903053C1AEA5
+--------------enig8214106EC427CEF349D81767
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
 On 2012-11-20 17:54, Steffen Trumtrar wrote:
-> Add helper to get fb_videomode from devicetree.
+> Add conversion from videomode to drm_display_mode
 >=20
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Acked-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Tested-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > ---
->  drivers/video/fbmon.c |   42 +++++++++++++++++++++++++++++++++++++++++=
--
->  include/linux/fb.h    |    7 +++++++
->  2 files changed, 48 insertions(+), 1 deletion(-)
+>  drivers/gpu/drm/drm_modes.c |   37 +++++++++++++++++++++++++++++++++++=
+++
+>  include/drm/drmP.h          |    6 ++++++
+>  2 files changed, 43 insertions(+)
+>=20
 
-
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> index 920cbe3..41b5e49 100644
-> --- a/include/linux/fb.h
-> +++ b/include/linux/fb.h
-> @@ -15,6 +15,8 @@
+> diff --git a/include/drm/drmP.h b/include/drm/drmP.h
+> index 3fd8280..de2f6cf 100644
+> --- a/include/drm/drmP.h
+> +++ b/include/drm/drmP.h
+> @@ -56,6 +56,7 @@
+>  #include <linux/cdev.h>
+>  #include <linux/mutex.h>
 >  #include <linux/slab.h>
->  #include <asm/io.h>
->  #include <linux/videomode.h>
-> +#include <linux/of.h>
-> +#include <linux/of_videomode.h>
-
-Guess what? =3D)
-
-To be honest, I don't know what the general opinion is about including
-header files from header files. But I always leave them out if they are
-not strictly needed.
-
->  struct vm_area_struct;
->  struct fb_info;
-> @@ -715,6 +717,11 @@ extern void fb_destroy_modedb(struct fb_videomode =
-*modedb);
->  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, in=
-t rb);
->  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+> +#include <linux/videomode.h>
+>  #if defined(__alpha__) || defined(__powerpc__)
+>  #include <asm/pgtable.h>	/* For pte_wrprotect */
+>  #endif
+> @@ -1454,6 +1455,11 @@ extern struct drm_display_mode *
+>  drm_mode_create_from_cmdline_mode(struct drm_device *dev,
+>  				  struct drm_cmdline_mode *cmd);
 > =20
-> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-> +extern int of_get_fb_videomode(const struct device_node *np,
-> +			       struct fb_videomode *fb,
-> +			       unsigned int index);
-> +#endif
->  #if IS_ENABLED(CONFIG_VIDEOMODE)
->  extern int fb_videomode_from_videomode(const struct videomode *vm,
->  				       struct fb_videomode *fbmode);
+> +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> +extern int drm_display_mode_from_videomode(const struct videomode *vm,=
 
-Do you really need these #ifs in the header files? They do make it look
-a bit messy. If somebody uses the functions and CONFIG_VIDEOMODE is not
-enabled, he'll get a linker error anyway.
+> +					   struct drm_display_mode *dmode);
+> +#endif
+> +
+>  /* Modesetting support */
+>  extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
+>  extern void drm_vblank_post_modeset(struct drm_device *dev, int crtc);=
+
+>=20
+
+And the same comments apply to this header file.
 
  Tomi
 
 
 
---------------enig09241D6A5698903053C1AEA5
+--------------enig8214106EC427CEF349D81767
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -98,32 +77,19 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.11 (GNU/Linux)
 Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJQrM3aAAoJEPo9qoy8lh71UA4QAIsNHXhDVDdpYMaHRr31ywwQ
-Rw97qMUy85bOg1TJ8BFXSAV2Lp3sTgSSBolPcYksauFsKeCupiB3UtKaBUAhDatn
-ZKFx3vPbVHh5yu9D+cybOJy5YeN43wyPVZwIZVVAZzcG+XI/X6TqMkGKUoTbh9OO
-L6gqMqlIOHdYI4eDkNBO+hJilGXPYhKD5sYz3sTcraAsw+MlwSa4aQqwHh+w9azY
-3NAWSamFqVlpeK7j3ALJDC0axwVprFa21K1LyUqUSdVJyj0dxyuv+nBCop7+sQme
-lo/3R/YPwA34E3F/Df8FANaNaFqHJ9eOCIqOpgf55fcjCcCvMw59uaAYTSXgx8mY
-rbnjcQcIy4tEsCYH8diz1SMGRkFcyg1FXw66b3uuh8xX76w59zftPO3o9hsqfrvO
-HvBc0/8upNMY/ZNLb1rhAVTn4fzfmN0XEYd/a7gwX3+w8HoF/oszYPDpzRAhujjX
-4rZM4W6hS2z/ZswxycqEj9U08tr2mcyizFGN77li3PXliH/UI2JkREQmtIvtRPb9
-VO7UX8iu85qgCIxqop2xXbnSG24EWBmpFwwiLG5NZJsdPwdx4KDdv1x6+cx1WF/H
-69j1RAqhk0ATiJD5jfaj3SfYGm1BnOdo5yjRvhau56Lyb/ahYjBgX8U52SRehrKZ
-Mr7FzgNL7Zz/0pmen0+o
-=Q6T5
+iQIcBAEBAgAGBQJQrM4eAAoJEPo9qoy8lh71L8EP/A9fQOMiK/l9aZ9naaO0Unbg
+xqiyCTEM+kA3UEoJaNvbPNMtjvDD5pQGX7yvRChpEBDchjfg3CJXR/raqLbbfLgf
+kDOdkux8ZGleCLmg7tKo/LwOVigPEI0CMVK3NfOZk6Cvw9+SiL+7rxDP+PwQacm0
+LpxuWLAs8yen/dWkKdax2mEK3GmY4yBQ+4by5zAwG5jZM38gzGlgxZcn1h2jd+Wa
+SlHZfuF43+XyyAlgZMxDOJUV8PEnLMY3WOBvuxkdMIZx1A51pJDT84NS/SVsp5PT
+unYdOME2B6ho3/a4NeBD7xIP/5o2RMMU21jI3ZpuKusTZC0c/dEnDgil4tDf+Czb
+F470mxES0OFOnjArV84Afw1JQi0MLE5I/wBiKqi0sMKWVEeFrMgtGy9XsFsLrNrH
+EBFCxXCjtk9RId7FtwELJIjbocVCQy0SkoYfvEe3js4QfSoCSXyOlBDAV4W/9zdJ
+hBtMl7adAQFDrs9Pf43cBfYYiJ4Ow0JF4QEkUTKWvREvkxJaZoH4cBGxo6FuHVLe
+x2E3SGkYk5LuWWUH3GkQPnfswCxHL0gfIWJmGhervlIkMPK/Civ1EIIGXc5NFZU8
+KVMcXA7R2lSfMoISXSbA++fNCxgfEY+682ltIn5BhmIQhuuC6668CKGbDumkA6Ec
+KgbIs4e8OsyoN8b1WjqJ
+=j45y
 -----END PGP SIGNATURE-----
 
---------------enig09241D6A5698903053C1AEA5--
-
---===============0447903399396754886==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0447903399396754886==--
+--------------enig8214106EC427CEF349D81767--
