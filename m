@@ -1,121 +1,201 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v12 6/6] drm_modes: add of_videomode helpers
-Date: Wed, 21 Nov 2012 14:52:50 +0200
-Message-ID: <50ACCEA2.5060401@ti.com>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353426896-6045-7-git-send-email-s.trumtrar@pengutronix.de>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Wed, 21 Nov 2012 14:00:39 +0100
+Message-ID: <20121121130039.GA12191@avionic-0098.adnet.avionic-design.de>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
+ <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+ <20121120215429.B621F3E1821@localhost>
+ <13540495.epaCf4JVn9@percival>
+ <50ACB59B.4090404@iki.fi>
+ <20121121114018.GA31576@avionic-0098.adnet.avionic-design.de>
+ <50ACC341.3090204@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2774200243000698141=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353426896-6045-7-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50ACC341.3090204@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Tomi Valkeinen <tomba@iki.fi>, Alex Courbot <acourbot@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
---===============2774200243000698141==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enig47A2311AA235F0CD0772E217"
 
---------------enig47A2311AA235F0CD0772E217
-Content-Type: text/plain; charset=ISO-8859-1
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 2012-11-20 17:54, Steffen Trumtrar wrote:
-> Add helper to get drm_display_mode from devicetree.
+On Wed, Nov 21, 2012 at 02:04:17PM +0200, Tomi Valkeinen wrote:
+> On 2012-11-21 13:40, Thierry Reding wrote:
+> > On Wed, Nov 21, 2012 at 01:06:03PM +0200, Tomi Valkeinen wrote:
 >=20
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Acked-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Tested-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> ---
->  drivers/gpu/drm/drm_modes.c |   35 ++++++++++++++++++++++++++++++++++-=
-
->  include/drm/drmP.h          |    6 ++++++
->  2 files changed, 40 insertions(+), 1 deletion(-)
+> (sorry for bouncing back and forth with my private and my @ti addresses.
+> I can't find an option in thunderbird to only use one sender address,
+> and I always forget to change it when responding...)
 >=20
+> >> My suggestion would be to go forward with an in-driver solution, and
+> >> look at the DT based solution later if we are seeing an increasing blo=
+at
+> >> in the drivers.
+> >=20
+> > Assuming we go with your approach, what's the plan? We're actually
+> > facing this problem right now for Tegra. Basically we have a DRM driver
+> > that can drive the panel, but we're still missing a way to hook up the
+> > backlight and panel enabling code. So we effectively can't support any
+> > of the LVDS devices out there without this series.
+>=20
+> Could you describe the hardware setup you have related to the LCD and
+> backlight? Is it a public board with public schematics?
 
-> diff --git a/include/drm/drmP.h b/include/drm/drmP.h
-> index de2f6cf..377280f 100644
-> --- a/include/drm/drmP.h
-> +++ b/include/drm/drmP.h
-> @@ -56,6 +56,7 @@
->  #include <linux/cdev.h>
->  #include <linux/mutex.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  #include <linux/videomode.h>
->  #if defined(__alpha__) || defined(__powerpc__)
->  #include <asm/pgtable.h>	/* For pte_wrprotect */
-> @@ -1459,6 +1460,11 @@ drm_mode_create_from_cmdline_mode(struct drm_dev=
-ice *dev,
->  extern int drm_display_mode_from_videomode(const struct videomode *vm,=
+I don't think any of the schematics are public. The Tamonten Evaluation
+Carrier is available publicly from our website and the schematics are
+available on demand as well. If required I can probably arrange to send
+you a copy.
 
->  					   struct drm_display_mode *dmode);
->  #endif
-> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-> +extern int of_get_drm_display_mode(const struct device_node *np,
-> +				   struct drm_display_mode *dmode,
-> +				   unsigned int index);
-> +#endif
-> =20
->  /* Modesetting support */
->  extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
+> I've understood that you don't have anything special in your board, just
+> an LCD and a backlight, and the power sequences are related to powering
+> up the LCD and the backlight, without anything board specific. If so,
+> there's no need for board specific code, but just improving the panel
+> and backlight drivers to support the models you use.
 
-And the same comments here also.
+Correct. Basically we have two GPIOs that each enable the panel or the
+backlight respectively and one PWM to control the brightness. Are the
+panel drivers that you refer to those in drivers/video? I'm not sure if
+adding more ad-hoc drivers there just to move them to a generic
+framework in the next cycle is a good idea. I'd rather spend some time
+on helping to get the framework right and have drivers for that instead.
 
- Tomi
+=46rom what I understand by looking at the OMAP display drivers, they also
+provide the timings for the displays. Steffen's videomode helpers can be
+used to represent these easily in DT, but I suppose if all of those per-
+panel specifics are represented in the drivers then that won't be needed
+anymore either.
 
+> > As I understand it, what you propose is similar to what ASoC does. For a
+> > specific board, you'd have to write a driver, presumably for the new
+> > panel/display framework, that provides code to power the panel on and
+> > off. That means we'll have to have a driver for each panel out there
+> > basically, or we'd need to write generic drivers that can be configured
+> > to some degree (via platform data or DT). This is similar to how ASoC
+> > works, where we have a driver that provides support for a specific codec
+> > connected to the Tegra SoC. For the display framework things could be
+> > done in a similar way I suppose, so that Tegra could have one display
+> > driver to handle all aspects of powering on and off the various panels
+> > for the various boards out there.
+>=20
+> I think we should only need the board drivers for very special cases. If
+> there's just a panel and a backlight, without any special dynamic muxing
+> or other trickery needed, I don't see a need for a board driver. I
+> presume this is the case for most of the boards.
 
+For Tegra ASoC, the way to provide for this is to allow a specific board
+to introduce a separate compatible value to enable per-board quirks or
+special handling if it cannot be supported by the generic driver and
+configuration mechanisms.
 
+> > Obviously, a lot of the code will be similar for other SoCs, but maybe
+> > that's just the way things are if we choose that approach. There's also
+> > the potential for factoring out large chunks of common code later on
+> > once we start to see common patterns.
+> >=20
+> > One thing that's not very clear is how the backlight subsystem should be
+> > wired up with the display framework. I have a patch on top of the Tegra
+> > DRM driver which adds some ad-hoc display support using this power
+> > sequences series and the pwm-backlight.
+>=20
+> I think that's a separate issue: how to associate the lcd device and
+> backlight device together. I don't have a clear answer to this.
+>=20
+> There are many ways the backlight may be handled. In some cases the
+> panel and the backlight are truly independent, and you can use the other
+> without using the other (not very practical, though =3D).
 
---------------enig47A2311AA235F0CD0772E217
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+At least for DT I think we can easily wire that up. I've actually posted
+a patch recently that does so. I think in most cases it makes sense to
+control them together, such as on DPMS changes, where you really want to
+turn both the backlight and the LCD off, independent of how they are
+tied together.
+
+> But then with some LCDs the backlight may be controlled by sending
+> commands to the panel, and in this case the two may be quite linked.
+> Changing the backlight requires the panel driver to be up and running,
+> and sometimes the sending the backlight commands may need to be (say,
+> DSI display, with backlight commands going over the DSI bus).
+>=20
+> So my feeling is that the panel driver should know about the related
+> backlight device. In the first case the panel driver would just call
+> enable/disable in the backlight device when the panel is turned on.
+
+Exactly.
+
+> In the second case of the DSI panel... I'm not sure. I've implemented it
+> so that the panel driver creates the backlight device, and implements
+> the backlight callbacks. It then sends the DSI commands from those
+> callbacks.
+
+That certainly sounds like the right approach to me.
+
+> > From reading the proposal for the panel/display framework, it sounds
+> > like a lot more is planned than just enabling or disabling panels, but
+> > it also seems like a lot of code needs to be written to support things
+> > like DSI, DBI or other control busses.
+> >=20
+> > At least for Tegra, and I think the same holds for a wide variety of
+> > other SoCs, dumb panels would be enough for a start. In the interest of
+> > getting a working solution for those setups, maybe we can start small
+> > and add just enough framework to register dumb panel drivers to along
+> > with code to wire up a backlight to light up the display. Then we could
+> > possibly still make it to have a proper solution to support the various
+> > LVDS panels for Tegra with 3.9.
+>=20
+> Yes, we (Laurent and me) both agree that we should start simple.
+>=20
+> However, the common panel framework is not strictly needed for this. I'm
+> not sure of the current architecture for Tegra, but for OMAP we already
+> have panel drivers (omap specific ones, though). The panel drivers may
+> support multiple models, (for example,
+> drivers/video/omap2/displays/panel-generic-dpi.c).
+>=20
+> I don't see any problem with adding small Tegra specific panel drivers
+> for the time being, with the intention of converting to common panel
+> framework when that's available.
+
+I can take a look at how such a driver could be implemented, but again,
+I'm a bit reluctant to add something ad-hoc now when maybe we can have
+it supported in a proper framework not too far away in the future.
+
+> Of course, the DT side is an issue. If you now create DT bindings for a
+> temporary model, and need to change it again later, you'll have some
+> headaches trying managing that without breaking the old bindings... This
+> is why I haven't pushed DT bindings for OMAP, as I know I have to change
+> them in the near future.
+
+We're already keeping back on this and none of the patches that define
+the bindings have been merged yet. Although bindings have been known to
+change every once in a while even for code that is already in mainline.
+
+Thierry
+
+--YiEDa0DAkWCtVeE4
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://www.enigmail.net/
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQrM6iAAoJEPo9qoy8lh71aU0P/iMMN8FZf5o0NLDAOoWjvSlY
-Il8Z1z4NssYUvu+R3f7IS6NIzEE+Sz/Dox/LjCocZDdMfdU/UE+Xee64FmKe027l
-qdLT6NGS5JzcZT265ELXsQzfBuLQmnWpUU/NDM7dNK1UWXVcaanIuAKkDqxgkTNq
-1mTMuajq/XtQRkM5c9lst0UbahD+nNfvkT6WoVW516z1Z8E0DjOJaeaIgUpMKkZF
-NcU143x+lZKZ/vOJs4ZJ4z3FzG8iDvjwKw0QRkfdSkL3sEBe1yVJaiCoi2RkDhsW
-Wi/W3JTvrpvmG2MO/5Ftbs6Cq0jVho/elnU0tlFGYeP1doneR6TAUc85pMneTipG
-FTsDL5S/AgQvx5UI07C8UCU2EV9kOEnPRFi+8xhLOsFav7l3Ze8Y89xuamhc264i
-tNPRE4E5mAJqMLptRyXGzi+iy9UBdONoe2EjlZ3Hy8Kj1khT51C/7Mf1H3BEQ8H7
-C0yUdAmRTmeyRB/dKEPKnZsM6912FCQbcPo3D9it9m2nrZf/Yt/p+YzxZILssbKJ
-HQdLblHfFOVAq3LqIhhtqvfsceEUqijccUs6RxQQaxekk5Tz7jKGXEPX2giRjypf
-HBR4uh/y+xNK7C+Bh4uWg44SzqqpYA3MQQm8i5v7pk7i3C4sUrryegesvfzyaclA
-WvoWLwOZ/ou/Uafx8+IM
-=AX3l
+iQIcBAEBAgAGBQJQrNB3AAoJEN0jrNd/PrOh5DYQAIzlPEji9P1q3ToLewnuGdmP
+WlCds86dAUJ3kKINOs8PMaNWWb4DzZvfV5NRTUhof1LiKh28ZcnovgOpxaM2aYDQ
+p7VwqyiTtT5xcx50Ekae++ZrXGivooLddQCk5tVADX080R+6VWGSRrWRCW04EPJ1
+9JGKe16l/U+rZrgh/vHA5lTlPUlFLNe3NR02fSUFVZygUwWB+q6z4ERuuyR/Aa87
+w4lEDRcKDjwy3xPrSlYml/BmzRANMengCEHnnbYsLGeH34v1S36U3B2xz9b/KvA4
+N60ECKlWEHklVv3+xf+2BG4dNi4/+oGc8OL3zvIzq0DErsSH+2q6lNW2US96yIv1
+sBqgYpGUkejRqkBWt1mTUfjvywY6W5ThR/xetOSw80YAjT83W78cie3Lt5b95STo
+KQ7S0sDh5cRwfRRxUpKf+DWSI9dwMlsu3ZXRCRvsZ2TzMdb7mkIzJ5SLVJ09AQ55
+56sB4d+VflXHz91tEwBxVR+SX2JN6hIjdE7yWc4guyiDdETuW+I0DdtcujhpBrKX
+BqwY/rtC1e0f5bsOO74L9519xvYzI/HsgcMLbQHjTdVYhbY/ncVPkpa22XkIy1GK
+IsUfMWLbAAIYGbjpmxhdWeOs6kHgz/57Zpik6EHWE4AJGttzQ036A2mZjLLnRoq8
+hX9HSMkH4J41Bj9SpWMd
+=wZk1
 -----END PGP SIGNATURE-----
 
---------------enig47A2311AA235F0CD0772E217--
-
---===============2774200243000698141==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2774200243000698141==--
+--YiEDa0DAkWCtVeE4--
