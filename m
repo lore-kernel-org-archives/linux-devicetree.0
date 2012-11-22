@@ -1,14 +1,12 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: use platform_device_add
-Date: Thu, 22 Nov 2012 21:19:09 +0000
-Message-ID: <20121122211909.9B1E03E129E@localhost>
-References: <1353521759-28263-1-git-send-email-grant.likely@secretlab.ca>
- <20121121183403.GA7657@kroah.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3] pwm: Device tree support for PWM polarity.
+Date: Thu, 22 Nov 2012 22:29:41 +0100
+Message-ID: <20121122212941.GL16716@avionic-0098.adnet.avionic-design.de>
+References: <1353483644-32711-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============3837442556938045892=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121121183403.GA7657-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1353483644-32711-1-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,81 +17,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Nov 2012 10:34:03 -0800, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Wed, Nov 21, 2012 at 06:15:59PM +0000, Grant Likely wrote:
-> > This allows platform_device_add a chance to call insert_resource on all
-> > of the resources from OF. At a minimum this fills in proc/iomem and
-> > presumably makes resource tracking and conflict detection work better.
-> > However, it has the side effect of moving all OF generated platform
-> > devices from /sys/devices to /sys/devices/platform/. It /shouldn't/
-> > break userspace because userspace is not supposed to depend on the full
-> > path (because userspace always does what it is supposed to, right?).
-> > 
-> > It also has a backup call to of_device_add() when running on PowerPC to
-> > catch any devices that have overlapping regions. It will complain about
-> > them, but it will not fail to register the device.
-> > 
-> > Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> > Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> > Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > ---
-> > 
-> > Greg, do you mind taking a look at this? The reason the OF code hasn't been
-> > calling platform_device_add() directly to this point is:
-> > a) there are some trees with resource overlays
-> > b) I want the devices in /sys/devices not /sys/devices/platform.
-> 
-> Putting the devices all in the "flat" location of /sys/devices/ is a bit
-> worrisome to me.  What's wrong with platform/ ?  That is what they are,
-> right?  Why change this?
 
-Hahaha. *You* encouraged me to write the patch to remove
-/sys/devices/platform/ when I was waffling over whether or not it was a
-good idea. Granted, that was well over a year ago, but it takes me a
-while to get around to some of the things on my todo list. :-)
+--===============3837442556938045892==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9JSHP372f+2dzJ8X"
+Content-Disposition: inline
 
-It's not so much that there is anything wrong with platform/ other than
-it is nonsensical. For example, a core system bus is often represented by an
-platform device of it's own with a bunch of peripherals as children of
-that. For example a PCI host controller. It doesn't make much sense to me for
-some core devices to be at /sys/devices and others to be gathered
-together under /sys/devices/platform.
 
-However, all that mildly feels 'wrong' to me but isn't that big deal. A
-bigger problem with b) (which I didn't describe well) is that existing
-PowerPC support roots the platform devices hierarchy at /sys/devices, not
-/sys/devices/platform and I'm nervous that changing it will break
-things. If I commit the change that makes the move, and somebody
-complains that I broke their userspace, then I need to have an exception
-for those system or revert the patch entirely.
+--9JSHP372f+2dzJ8X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regardless, I'm no longer happy with DT and non-DT platform device
-registration having separate code paths. I would /like/ for
-sys/device/platform to disappear, but that is merely a side issue.
-The real issue is whether or not existing PowerPC userspace breaks. If
-it does, there needs to be an exception to keep things under
-/sys/devices.
+On Wed, Nov 21, 2012 at 01:10:44PM +0530, Philip, Avinash wrote:
+> Add support for encoding PWM properties in bit encoded form with
+> of_pwm_xlate_with_flags() function support. Platforms require platform
+> specific PWM properties has to populate in 3rd cell of the pwm-specifier
+> and PWM driver should also set .of_xlate support with this function.
+> Currently PWM property polarity encoded in bit position 0 of the third
+> cell in pwm-specifier.
+>=20
+> Signed-off-by: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
 
-> > I could easily add exceptions to platform_device_add() for both those cases, but
-> > I don't like adding DT exceptions to the common code. However, I still need to
-> > support the platforms that unfortunately have overlapping resources. This patch
-> > does that by still calling the old path if platform_device_add() fails, but it
-> > isn't nice either because of_device_add() has to duplicate
-> > platform_device_add(). Blech. Plus the exception only applies for PowerPC.
-> > 
-> > So, how do you feel about having a 'relaxed' mode for platform_device_add()
-> > which means it won't fail if resources overlap and maybe won't do the silly
-> > platform_bus parent thing. Thoughts?
-> 
-> I have no objection for the resource issue, if you assure me it will not
-> be abused :)
+Applied with two minor stylistic cleanups, thanks.
 
-I can make that assurance. It will be powerpc-only also.
+Thierry
 
-g.
+--9JSHP372f+2dzJ8X
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQrplFAAoJEN0jrNd/PrOhaTgP/iAnnHegKeb2v0YdYpEA4an/
+zfxRMvbrDpkuZzx2G08WRL/nNdx6kl0nO/iKV/20X7dFoueedb/cr1ZFHj6V0sQj
+ArT1EmGNQewLvdj2w9Jwmwc+V7dtxeh4NsWWZbk1veJm5chIoUK+lJEFYcltLgD0
+GaQ6OkYaGvNI9aQwj7I722ypH0AYXD9CGrl+l1ULyx5nOosg8FTQE5vd9aCFx6mY
+lUcwiAWs2t52o848XhjRsMXIt4VJ+9W50UeETtAwyneGkDpHXm/n6Gp3RpIEEsmK
+jPGv2CWr/lr6aS7hd+jTfv48eOrIu2zMI3Heu/vSv5nJFdPFf21c6KHo0CI58/ib
+7Xl1LbUO3mhFK4evd024jEZW4rQaUVnQGJPVmQYvDhpST3F+2oa6EXj2hmPsPpHP
+gvW8G72LvNNfSeCX5qtDV2TbdHBoOeR+tpMq3WyAygPbRUd7AjKdPjk4V7IwhrJs
+5ZAq6g7lcO4FuY/yOXyq5GQcz9694w5BsWmdsIjYi7kSOx5BHEHwNy5Sh+ldeoUC
+TOjVsZdSPBjFhiLAlFno4FqvFygE7xIo4MPBzEX9ba+Z59fUYN4xhWo2qDQhqDKt
+T1y5eg+sBxi+P/LpJ0V7nUT4tc4ZjWs7ok5xRGqzDo4klTW881uqqN8fwZyw21sf
+kmfm7uuRsWCajTpj5zKZ
+=2ipj
+-----END PGP SIGNATURE-----
+
+--9JSHP372f+2dzJ8X--
+
+--===============3837442556938045892==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3837442556938045892==--
