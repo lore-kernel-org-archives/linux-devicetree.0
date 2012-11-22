@@ -1,14 +1,15 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCHv13 4/7] fbmon: add videomode helpers
-Date: Thu, 22 Nov 2012 19:31:39 +0100
-Message-ID: <2107534.vAYnU9M0ZA@avalon>
-References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353600015-6974-5-git-send-email-s.trumtrar@pengutronix.de>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
+Date: Fri, 23 Nov 2012 00:01:45 +0530
+Message-ID: <CAKohpo=7NRGH+XcgY3Adb8pestDLCnFiTJ-B3P61QAHN4Y_Kvg@mail.gmail.com>
+References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
+ <b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
+ <20121122112451.GE4328@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353600015-6974-5-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20121122112451.GE4328-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,123 +20,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+On 22 November 2012 16:54, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+>> +Optional properties:
+>> +- irq-trigger: IRQ trigger to use for the interrupt to the host
+>> +- irq-invert-polarity: bool, IRQ line is connected with reversed polarity
+>
+> Are these new?
+>
+> When adding new bindings, ask yourself:
 
-On Thursday 22 November 2012 17:00:12 Steffen Trumtrar wrote:
-> Add a function to convert from the generic videomode to a fb_videomode.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Acked-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Tested-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/video/fbmon.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/fb.h    |    6 ++++++
->  2 files changed, 50 insertions(+)
-> 
-> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
-> index cef6557..a6a564d 100644
-> --- a/drivers/video/fbmon.c
-> +++ b/drivers/video/fbmon.c
-> @@ -31,6 +31,7 @@
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <video/edid.h>
-> +#include <linux/videomode.h>
->  #ifdef CONFIG_PPC_OF
->  #include <asm/prom.h>
->  #include <asm/pci-bridge.h>
-> @@ -1373,6 +1374,49 @@ int fb_get_mode(int flags, u32 val, struct
-> fb_var_screeninfo *var, struct fb_inf kfree(timings);
->  	return err;
->  }
-> +
-> +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> +int fb_videomode_from_videomode(const struct videomode *vm,
-> +				struct fb_videomode *fbmode)
-> +{
-> +	unsigned int htotal, vtotal;
-> +
-> +	fbmode->xres = vm->hactive;
-> +	fbmode->left_margin = vm->hback_porch;
-> +	fbmode->right_margin = vm->hfront_porch;
-> +	fbmode->hsync_len = vm->hsync_len;
-> +
-> +	fbmode->yres = vm->vactive;
-> +	fbmode->upper_margin = vm->vback_porch;
-> +	fbmode->lower_margin = vm->vfront_porch;
-> +	fbmode->vsync_len = vm->vsync_len;
-> +
-> +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+I was trying to get information of these two bindings from other sources,
+but couldn't find. The only other place can be the interrupts field, right?
 
-This results in a division by 0 if vm->pixelclock is equal to zero. As the 
-information is missing from many board files, what would you think about the 
-following ?
+Because interrupts field depends on the interrupt controller, which can
+be a wide variety of controllers in our case, we can't use that. Also,
+the cells of interrupts field will have something that is required to be
+programmed in the interrupt controller and not in the user of IC.
 
-	fbmode->pixclock = vm->pixelclock ? KHZ2PICOS(vm->pixelclock / 1000) : 0;
+But here we are talking about programming stmpe and so these bindings
+are very much required in stmpe only.
 
-> +
-> +	fbmode->sync = 0;
-> +	fbmode->vmode = 0;
-> +	if (vm->hah)
-> +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
-> +	if (vm->vah)
-> +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
-> +	if (vm->interlaced)
-> +		fbmode->vmode |= FB_VMODE_INTERLACED;
-> +	if (vm->doublescan)
-> +		fbmode->vmode |= FB_VMODE_DOUBLE;
-> +	fbmode->flag = 0;
-> +
-> +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
-> +		 vm->hsync_len;
-> +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
-> +		 vm->vsync_len;
-> +	fbmode->refresh = vm->pixelclock / (htotal * vtotal);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
-> +#endif
-> +
-> +
->  #else
->  int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
->  {
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> index c7a9571..4404ec2 100644
-> --- a/include/linux/fb.h
-> +++ b/include/linux/fb.h
-> @@ -19,6 +19,7 @@ struct vm_area_struct;
->  struct fb_info;
->  struct device;
->  struct file;
-> +struct videomode;
-> 
->  /* Definitions below are used in the parsed monitor specs */
->  #define FB_DPMS_ACTIVE_OFF	1
-> @@ -714,6 +715,11 @@ extern void fb_destroy_modedb(struct fb_videomode
-> *modedb); extern int fb_find_mode_cvt(struct fb_videomode *mode, int
-> margins, int rb); extern unsigned char *fb_ddc_read(struct i2c_adapter
-> *adapter);
-> 
-> +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> +extern int fb_videomode_from_videomode(const struct videomode *vm,
-> +				       struct fb_videomode *fbmode);
-> +#endif
-> +
->  /* drivers/video/modedb.c */
->  #define VESA_MODEDB_SIZE 34
->  extern void fb_var_to_videomode(struct fb_videomode *mode,
--- 
-Regards,
+Comments??
 
-Laurent Pinchart
+--
+viresh
