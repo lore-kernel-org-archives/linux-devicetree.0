@@ -1,14 +1,19 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v12 3/6] fbmon: add videomode helpers
-Date: Thu, 22 Nov 2012 10:07:07 +0100
-Message-ID: <2254661.PBsclu7Klj@avalon>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v12 2/6] video: add of helper for videomode
+Date: Thu, 22 Nov 2012 10:10:59 +0100
+Message-ID: <20121122091059.GA4428@pengutronix.de>
 References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <1554720.pFHYnMF1G4@avalon> <20121122085342.GB10369@pengutronix.de>
+ <1353426896-6045-3-git-send-email-s.trumtrar@pengutronix.de>
+ <A73F36158E33644199EB82C5EC81C7BC3E9FA7A0@DBDE01.ent.ti.com>
+ <20121121114843.GC14013@pengutronix.de>
+ <20121121115236.GA8886@avionic-0098.adnet.avionic-design.de>
+ <50ACED4A.5040806@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121122085342.GB10369-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50ACED4A.5040806-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,44 +24,89 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, "Valkeinen,
+ Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 November 2012 09:53:42 Sascha Hauer wrote:
-> On Thu, Nov 22, 2012 at 09:50:10AM +0100, Laurent Pinchart wrote:
-> > On Thursday 22 November 2012 07:20:00 Sascha Hauer wrote:
-> > > On Wed, Nov 21, 2012 at 11:02:44PM +0100, Laurent Pinchart wrote:
-> > > > Hi Steffen,
-> > > > 
-> > > > > +
-> > > > > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
-> > > > > +		 vm->hsync_len;
-> > > > > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
-> > > > > +		 vm->vsync_len;
-> > > > > +	fbmode->refresh = (vm->pixelclock * 1000) / (htotal * vtotal);
-> > > > 
-> > > > This will fail if vm->pixelclock >= ((1 << 32) / 1000). The easiest
-> > > > solution is probably to use 64-bit computation.
-> > > 
-> > > You have displays with a pixelclock > 4GHz?
+Hi!
+
+On Wed, Nov 21, 2012 at 09:03:38AM -0600, Rob Herring wrote:
+> On 11/21/2012 05:52 AM, Thierry Reding wrote:
+> > On Wed, Nov 21, 2012 at 12:48:43PM +0100, Steffen Trumtrar wrote:
+> >> Hi!
+> >>
+> >> On Wed, Nov 21, 2012 at 10:12:43AM +0000, Manjunathappa, Prakash wrote:
+> >>> Hi Steffen,
+> >>>
+> >>> On Tue, Nov 20, 2012 at 21:24:52, Steffen Trumtrar wrote:
+> >>>> +/**
+> >>>> + * of_get_display_timings - parse all display_timing entries from a device_node
+> >>>> + * @np: device_node with the subnodes
+> >>>> + **/
+> >>>> +struct display_timings *of_get_display_timings(const struct device_node *np)
+> >>>> +{
+> >>>> +	struct device_node *timings_np;
+> >>>> +	struct device_node *entry;
+> >>>> +	struct device_node *native_mode;
+> >>>> +	struct display_timings *disp;
+> >>>> +
+> >>>> +	if (!np) {
+> >>>> +		pr_err("%s: no devicenode given\n", __func__);
+> >>>> +		return NULL;
+> >>>> +	}
+> >>>> +
+> >>>> +	timings_np = of_find_node_by_name(np, "display-timings");
+> >>>
+> >>> I get below build warnings on this line
+> >>> drivers/video/of_display_timing.c: In function 'of_get_display_timings':
+> >>> drivers/video/of_display_timing.c:109:2: warning: passing argument 1 of 'of_find_node_by_name' discards qualifiers from pointer target type
+> >>> include/linux/of.h:167:28: note: expected 'struct device_node *' but argument is of type 'const struct device_node *'
+> >>>
+> >>>> + * of_display_timings_exists - check if a display-timings node is provided
+> >>>> + * @np: device_node with the timing
+> >>>> + **/
+> >>>> +int of_display_timings_exists(const struct device_node *np)
+> >>>> +{
+> >>>> +	struct device_node *timings_np;
+> >>>> +
+> >>>> +	if (!np)
+> >>>> +		return -EINVAL;
+> >>>> +
+> >>>> +	timings_np = of_parse_phandle(np, "display-timings", 0);
+> >>>
+> >>> Also here:
+> >>> drivers/video/of_display_timing.c: In function 'of_display_timings_exists':
+> >>> drivers/video/of_display_timing.c:209:2: warning: passing argument 1 of 'of_parse_phandle' discards qualifiers from pointer target type
+> >>> include/linux/of.h:258:28: note: expected 'struct device_node *' but argument is of type 'const struct device_node *'
+> >>>
+> >>
+> >> The warnings are because the of-functions do not use const pointers where they
+> >> should. I had two options: don't use const pointers even if they should be and
+> >> have no warnings or use const pointers and have a correct API. (Third option:
+> >> send patches for of-functions). I chose the second option.
 > > 
-> > vm->pixelclock is expressed in Hz. vm->pixelclock * 1000 will thus
-> > overflow if the clock frequency is >= ~4.3 MHz. I have displays with a
-> > clock frequency higher than that :-)
+> > Maybe a better approach would be a combination of 1 and 3: don't use
+> > const pointers for struct device_node for now and bring the issue up
+> > with the OF maintainers, possibly with patches attached that fix the
+> > problematic functions.
 > 
-> If vm->pixelclock is in Hz, then the * 1000 above is wrong.
+> Why does this need to be const? Since some DT functions increment
+> refcount the node, I'm not sure that making struct device_node const in
+> general is right thing to do. I do think it should be okay for
+> of_parse_phandle.
+> 
 
-My bad, I though refresh was expressed in mHz. So yes, the above computation 
-is wrong.
+Okay, that seems right. I went a little to far with const'ing.
+I will send a patch for of_parse_phandle as this function does
+not seem to change the pointer it is given, but returns a new one
+on which the refcount gets incremented.
 
-BTW it seems that the refreshrate field in struct videomode isn't used. It 
-should then be removed.
-
-I've just realized that the struct videomode fields are not documented. 
-kerneldoc in include/linux/videomode.h would be a good addition.
+Regards,
+Steffen
 
 -- 
-Regards,
-
-Laurent Pinchart
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
