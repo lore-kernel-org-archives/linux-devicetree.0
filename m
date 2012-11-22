@@ -1,50 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/14] ARM: SPEAr: DT updates
-Date: Thu, 22 Nov 2012 10:47:38 +0100
-Message-ID: <CACRpkdbsDzYuUJpVAS=ujv7EEq_nA-kAzHnN1F0d3WqoMEeCUg@mail.gmail.com>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
- <201211121521.58766.arnd@arndb.de>
- <CAKohpom0kMjuHx5jO-LTPKQhy_-r4khKi7UBPB_O-50K42FOeQ@mail.gmail.com>
- <20121121202405.GA15549@quad.lixom.net>
- <CAKohpokMUTQja6tCz1RmKXFgu+X7MGFAi1+UWLgKhpViOuiMSA@mail.gmail.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Thu, 22 Nov 2012 18:55:16 +0900
+Message-ID: <CAAVeFuLL28y89VGU4EfPdW-fKDZCFnyQ37UdhGpeZE3cn0Cbzg@mail.gmail.com>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
+ <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+ <20121120215429.B621F3E1821@localhost>
+ <20121121013133.GE4673@opensource.wolfsonmicro.com>
+ <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKohpokMUTQja6tCz1RmKXFgu+X7MGFAi1+UWLgKhpViOuiMSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ola LILJA2 <ola.o.lilja@stericsson.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Anton Vorontsov <cbouatmailru@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2012 at 4:19 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
-> Last week i had chat with Arnd and Linus over Hangout, and following is
-> the status:
-> - Dependency patch of pinctrl is:
+On Thu, Nov 22, 2012 at 5:57 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> I have the same (limited by experience) opinion. Working sort of
+> near som audio drivers I have understood that power sequencing
+> is a big issue not only for things like this backlight example, but
+> even more so in the area of audio to avoid clicks and pops.
 >
-> commit 4ddb1c295752252f61670e35c791bf16e58bbce6
-> Author: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date:   Sat Oct 27 15:21:39 2012 +0530
->
->     ARM: SPEAr: Add plgpio node in device tree dtsi files
->
-> And is already in pinctrl/devel branch. And this branch is stable as per Linus.
+> Is it correct to assume that this library will be useful also for ALSA
+> SoC type of devices?
 
-Well, famous last words. But that commit and below should
-be perfectly fine to pull into ARM SoC if need be. As long
-as we don't create too big a cobweb ... with linux-next not
-being done this week I'd watch it for this kind of stuff at this
-stage.
+There should be nothing against that - provided ALSA's needs remain
+similar to the current set of actions (regulators, gpios, ...) it
+should be perfectly usable. Can you think of any usage that involves
+more than dumb regulator/gpio manipulation?
 
-Yours,
-Linus Walleij
+If power seqs are to be used this way (as opposed to through the DT),
+it will become urgent to implement that gpio handlers library we were
+talking about in another thread, as we don't want to have GPIO numbers
+hard-coded into the sequences.
+
+Alex.
