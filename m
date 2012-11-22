@@ -1,20 +1,14 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather
- than device_add
-Date: Thu, 22 Nov 2012 10:30:20 -0700
-Message-ID: <20121122173020.GA8473@obsidianresearch.com>
-References: <20121121072448.GG19837@obsidianresearch.com>
- <20121121155104.726B83E0AE2@localhost>
- <20121121174453.GD6406@obsidianresearch.com>
- <CACxGe6u2Kfm+x5KsFzNPt7voyeD0x_4V6EO4add=tBwMKJ6VWQ@mail.gmail.com>
- <20121121181430.GE6406@obsidianresearch.com>
- <20121122153621.452CA3E129E@localhost>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCHv13 5/7] fbmon: add of_videomode helpers
+Date: Thu, 22 Nov 2012 18:58:09 +0100
+Message-ID: <2117247.Eyo66IqYf0@avalon>
+References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353600015-6974-6-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121122153621.452CA3E129E@localhost>
+In-Reply-To: <1353600015-6974-6-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,36 +19,123 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2012 at 03:36:21PM +0000, Grant Likely wrote:
+Hi Steffen,
 
-> Hmm... I've not tried it with assigned-address. I tried with two sibling
-> platform devices using just the 'reg' property. That the kernel will
-> complain about. For powerpc-only, the patch I posted allows the device
-> to get registered anyway even though the range incorrectly overlaps.
+On Thursday 22 November 2012 17:00:13 Steffen Trumtrar wrote:
+> Add helper to get fb_videomode from devicetree.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Reviewed-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> Acked-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> Tested-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-My second example was done with the reg property..
+This patch results in the following build warning:
 
-                gpio0: gpio@10100 {
-                        compatible = "marvell,orion-gpio";
-                        #gpio-cells = <2>;
-                        gpio-controller;
-                        reg = <0x10100 0x40>;
-                }
-                chip_cfg@0 {
-                        compatible = "orc,chip_config";
-                        // Doubles up on gpio0
-                        reg = <0x10100 0x4>;
-                };
+drivers/video/fbmon.c: In function 'of_get_fb_videomode':
+drivers/video/fbmon.c:1445: warning: passing argument 1 of 'of_get_videomode' 
+discards qualifiers from pointer target type
+include/linux/of_videomode.h:15: note: expected 'struct device_node *' but 
+argument is of type 'const struct device_node *'
 
-
-f1010100-f101013f : /internal@f1000000/gpio@10100
-  f1010100-f1010103 : /internal@f1000000/chip_cfg@0
-
-What did you try? Maybe order matters?
-
+> ---
+>  drivers/video/fbmon.c |   42 +++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/fb.h    |    6 ++++++
+>  2 files changed, 47 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> index a6a564d..cd0a035 100644
+> --- a/drivers/video/fbmon.c
+> +++ b/drivers/video/fbmon.c
+> @@ -31,7 +31,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <video/edid.h>
+> -#include <linux/videomode.h>
+> +#include <linux/of_videomode.h>
+>  #ifdef CONFIG_PPC_OF
+>  #include <asm/prom.h>
+>  #include <asm/pci-bridge.h>
+> @@ -1416,6 +1416,46 @@ int fb_videomode_from_videomode(const struct
+> videomode *vm, EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+>  #endif
+> 
+> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+> +static inline void dump_fb_videomode(const struct fb_videomode *m)
+> +{
+> +	pr_debug("fb_videomode = %ux%u@%uHz (%ukHz) %u %u %u %u %u %u %u %u 
+%u\n",
+> +		 m->xres, m->yres, m->refresh, m->pixclock, m->left_margin,
+> +		 m->right_margin, m->upper_margin, m->lower_margin,
+> +		 m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
+> +}
+> +
+> +/**
+> + * of_get_fb_videomode - get a fb_videomode from devicetree
+> + * @np: device_node with the timing specification
+> + * @fb: will be set to the return value
+> + * @index: index into the list of display timings in devicetree
+> + *
+> + * DESCRIPTION:
+> + * This function is expensive and should only be used, if only one mode is
+> to be + * read from DT. To get multiple modes start with
+> of_get_display_timings ond + * work with that instead.
+> + */
+> +int of_get_fb_videomode(const struct device_node *np, struct fb_videomode
+> *fb, +			unsigned int index)
+> +{
+> +	struct videomode vm;
+> +	int ret;
+> +
+> +	ret = of_get_videomode(np, &vm, index);
+> +	if (ret)
+> +		return ret;
+> +
+> +	fb_videomode_from_videomode(&vm, fb);
+> +
+> +	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
+> +		vm.vactive, np->name);
+> +	dump_fb_videomode(fb);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_fb_videomode);
+> +#endif
+> 
+>  #else
+>  int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index 4404ec2..43a2f81 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -20,6 +20,7 @@ struct fb_info;
+>  struct device;
+>  struct file;
+>  struct videomode;
+> +struct device_node;
+> 
+>  /* Definitions below are used in the parsed monitor specs */
+>  #define FB_DPMS_ACTIVE_OFF	1
+> @@ -715,6 +716,11 @@ extern void fb_destroy_modedb(struct fb_videomode
+> *modedb); extern int fb_find_mode_cvt(struct fb_videomode *mode, int
+> margins, int rb); extern unsigned char *fb_ddc_read(struct i2c_adapter
+> *adapter);
+> 
+> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+> +extern int of_get_fb_videomode(const struct device_node *np,
+> +			       struct fb_videomode *fb,
+> +			       unsigned int index);
+> +#endif
+>  #if IS_ENABLED(CONFIG_VIDEOMODE)
+>  extern int fb_videomode_from_videomode(const struct videomode *vm,
+>  				       struct fb_videomode *fbmode);
+-- 
 Regards,
-Jason
+
+Laurent Pinchart
