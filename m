@@ -1,51 +1,97 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/4] OF: Add helper for matching against linux,stdout-path
-Date: Thu, 22 Nov 2012 21:21:02 +0000
-Message-ID: <CACxGe6tD=1tL3dTXSnHusSVCh2T1UN86igNZBm=q3pL77nkJfA@mail.gmail.com>
-References: <20121121155312.GX4398@game.jcrosoft.org> <1353513428-25697-1-git-send-email-plagnioj@jcrosoft.com>
- <CACxGe6tyPpjx4OtjHmhB9Cvnb7OwAjPEE4=K+wgWKYHcAV-ESQ@mail.gmail.com>
- <20121122054138.GY4398@game.jcrosoft.org> <20121122153152.2B9CB3E129E@localhost>
- <20121122193521.GA4398@game.jcrosoft.org>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv13 4/7] fbmon: add videomode helpers
+Date: Fri, 23 Nov 2012 00:09:49 +0100
+Message-ID: <20121122230949.GA8698@pengutronix.de>
+References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353600015-6974-5-git-send-email-s.trumtrar@pengutronix.de>
+ <2107534.vAYnU9M0ZA@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20121122193521.GA4398@game.jcrosoft.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Sascha Hauer <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alan Cox <alan@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2107534.vAYnU9M0ZA@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, devicetree-discuss@lists.ozlabs.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2012 at 7:35 PM, Jean-Christophe PLAGNIOL-VILLARD
-<plagnioj@jcrosoft.com> wrote:
-> On 15:31 Thu 22 Nov     , Grant Likely wrote:
->> On Thu, 22 Nov 2012 06:41:38 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com> wrote:
->> > On 18:03 Wed 21 Nov     , Grant Likely wrote:
->> > > On Wed, Nov 21, 2012 at 3:57 PM, Jean-Christophe PLAGNIOL-VILLARD
->> > > <plagnioj@jcrosoft.com> wrote:
->> > > > From: Sascha Hauer <s.hauer@pengutronix.de>
->> > > >
->> > > > devicetrees may have a linux,stdout-path or stdout-path property
->> > > > in the chosen node describing the console device. This adds a helper
->> > > > function to match a device against this property and retrieve the options
->> > > > so a driver can call add_preferred_console for a matching device.
->> > >
->> > > NIce. Looks like the right behaviour, but is a little inefficient.
->> > > Since the stdout property doesn't change this code could be called
->> > > once right after the tree is unflattened and then cache the pointer to
->> > > the node anarguments. Can you add the code to of_alias_scan()?
->> > do we assume that we can have only one stdout-path?
->> >
->> > I think we could have more serial, framebuffer console
->>
->> Nope. stdout-path as currently defined is only one device. Someone would
->> need to propose an extension for multiple stdout's before I'd bother
->> trying to support that.
-> ok for this version I do not put it but I need it
->
-> I want to have 2 console uart and framebuffer
->
-> Personnaly I'd just allow multiple instance of stdout-path
+On Thu, Nov 22, 2012 at 07:31:39PM +0100, Laurent Pinchart wrote:
+> Hi Steffen,
+> 
+> On Thursday 22 November 2012 17:00:12 Steffen Trumtrar wrote:
+> > Add a function to convert from the generic videomode to a fb_videomode.
+> > 
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > ---
+> >  drivers/video/fbmon.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/fb.h    |    6 ++++++
+> >  2 files changed, 50 insertions(+)
+> > 
+> > diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> > index cef6557..a6a564d 100644
+> > --- a/drivers/video/fbmon.c
+> > +++ b/drivers/video/fbmon.c
+> > @@ -31,6 +31,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/slab.h>
+> >  #include <video/edid.h>
+> > +#include <linux/videomode.h>
+> >  #ifdef CONFIG_PPC_OF
+> >  #include <asm/prom.h>
+> >  #include <asm/pci-bridge.h>
+> > @@ -1373,6 +1374,49 @@ int fb_get_mode(int flags, u32 val, struct
+> > fb_var_screeninfo *var, struct fb_inf kfree(timings);
+> >  	return err;
+> >  }
+> > +
+> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > +int fb_videomode_from_videomode(const struct videomode *vm,
+> > +				struct fb_videomode *fbmode)
+> > +{
+> > +	unsigned int htotal, vtotal;
+> > +
+> > +	fbmode->xres = vm->hactive;
+> > +	fbmode->left_margin = vm->hback_porch;
+> > +	fbmode->right_margin = vm->hfront_porch;
+> > +	fbmode->hsync_len = vm->hsync_len;
+> > +
+> > +	fbmode->yres = vm->vactive;
+> > +	fbmode->upper_margin = vm->vback_porch;
+> > +	fbmode->lower_margin = vm->vfront_porch;
+> > +	fbmode->vsync_len = vm->vsync_len;
+> > +
+> > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> 
+> This results in a division by 0 if vm->pixelclock is equal to zero. As the 
+> information is missing from many board files, what would you think about the 
+> following ?
+> 
+> 	fbmode->pixclock = vm->pixelclock ? KHZ2PICOS(vm->pixelclock / 1000) : 0;
+> 
 
-Propose a binding extension.
+Grrr...you are right. I will fix that...
 
-g.
+> > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
+> > +		 vm->hsync_len;
+> > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
+> > +		 vm->vsync_len;
+> > +	fbmode->refresh = vm->pixelclock / (htotal * vtotal);
+> > +
+
+...and obviously this, too.
+
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
