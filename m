@@ -1,22 +1,11 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Thu, 22 Nov 2012 13:39:57 +0000
-Message-ID: <CACxGe6tSp=YDDO28Edu4ZO1y96mdnK69ujM=dC=9LExw_FKrbQ@mail.gmail.com>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
- <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
- <20121120215429.B621F3E1821@localhost>
- <13540495.epaCf4JVn9@percival> <50ACB59B.4090404@iki.fi>
- <20121121114018.GA31576@avionic-0098.adnet.avionic-design.de>
- <50ACC341.3090204@ti.com>
- <20121121130039.GA12191@avionic-0098.adnet.avionic-design.de>
- <50ACD7DC.5060405@ti.com>
- <CAAVeFuJofYwj926=3v0ApBCq_vNhCdC1PnzDc-B3d=LL_L40Uw@mail.gmail.com>
- <20121121151209.GA4048@avionic-0098.adnet.avionic-design.de>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] gpio: New driver for GPO emulation using PWM generators
+Date: Thu, 22 Nov 2012 14:42:03 +0100
+Message-ID: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121121151209.GA4048-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -27,32 +16,411 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Tomi Valkeinen <tomba-X3B1VOXEql0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 3:12 PM, Thierry Reding
-<thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
-> On Thu, Nov 22, 2012 at 12:02:47AM +0900, Alexandre Courbot wrote:
->> Mmmm so maybe I am misinterpreting things, but it looks like we
->> have just buried the power sequences here, haven't we?
->
-> I don't think so. In fact I was just starting to think that maybe for
-> Tegra we could have a generic panel driver which used power sequences
-> to abstract away the pin differences for powering up the panel. Since
-> most likely that will be where the differences are there is a lot of
-> potential to factor things out into sequences.
->
-> Perhaps what we may want to postpone for now is the DT representation
-> since that's what Tomi and Grant seem to be mostly opposed to.
+There seams to be board designs using PWM generators as enable/disable signals.
+For these boards we used to have custom code as hacks to deal with such a
+situations.
+With the gpio-pwm driver we can emulate the GPIO functionality using PWM
+generators via standard interfaces. The PWM will be configured to be off
+when the GPIO is off and to full duty cycle when the GPIO is requested to be
+on.
 
-Don't give up. I'm am being cautions and trying to think of all the
-implications because that is what I have to do as a maintainer. I'm
-not opposed to the feature but I need a good level of confidence that
-it has been fully thought out.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+---
+Hi Linus,
 
-g.
+So this is the driver I came up regarding to the issue that some boards
+(BeagleBoard for example) are using the PWM generators as enable/disable signal.
 
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+On BeagleBoard the situation is like this:
+TWL4030 PWMA -> TWL4030 LEDA -> nUSBHOST_PWR_EN -> external power switch -> USB
+host hub power.
+
+So I have tested this driver on BeagleBoard:
+- Custom code to toggle the GPIO just to see if it switches correctly
+
+- Real life usecase:
+fixed voltage regulator with GPIO control (the gpio is the gpio-pwm provided).
+ehci-omap has been modified to allow deferred probe.
+the regulator is used by ehci-omap.
+
+All works fine.
+
+Regards,
+Peter
+
+ .../devicetree/bindings/gpio/gpio-pwm.txt          |  29 +++
+ drivers/gpio/Kconfig                               |  12 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-pwm.c                            | 264 +++++++++++++++++++++
+ include/linux/platform_data/gpio-pwm.h             |  16 ++
+ 5 files changed, 322 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pwm.txt
+ create mode 100644 drivers/gpio/gpio-pwm.c
+ create mode 100644 include/linux/platform_data/gpio-pwm.h
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pwm.txt b/Documentation/devicetree/bindings/gpio/gpio-pwm.txt
+new file mode 100644
+index 0000000..2569cd5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-pwm.txt
+@@ -0,0 +1,29 @@
++GPO driver using PWM generators
++
++Required properties:
++- compatible : "pwm-gpo"
++- #gpio-cells : Should be one.
++- gpio-controller : Marks the device node as a GPIO controller.
++- pwms : PWM property, please refer to:
++  Documentation/devicetree/bindings/pwm/pwm.txt
++- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
++
++Example:
++
++twl_pwm: pwm {
++	compatible = "ti,twl4030-pwmled";
++	#pwm-cells = <2>;
++};
++
++pwm_gpo1: gpo1 {
++	compatible = "pwm-gpo";
++	#gpio-cells = <1>;
++	gpio-controller;
++	pwms = <&twl_pwm 0 7812500>;
++	pwm-names = "nUSBHOST_PWR_EN";
++};
++
++user@1 {
++	compatible = "example,testuser";
++	gpios = <&pwm_gpo1 0>;
++};
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 47150f5..d68c429 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -649,4 +649,16 @@ config GPIO_MSIC
+ 	  Enable support for GPIO on intel MSIC controllers found in
+ 	  intel MID devices
+ 
++comment "Miscellaneous GPIO implementations"
++
++config GPIO_PWM
++	tristate "GPO emulation using PWM generators"
++	depends on PWM
++	help
++	  When a signal from a PWM generator is used as enable/disable signal
++	  this driver will emulate a GPIO over the PWM driver.
++	  When the GPIO is requested to be on the PWM will be configured for
++	  full duty cycle, when the GPIO is requested to be off the PWM will be
++	  turned off.
++
+ endif
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 9aeed67..f507901 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_GPIO_PCA953X)	+= gpio-pca953x.o
+ obj-$(CONFIG_GPIO_PCF857X)	+= gpio-pcf857x.o
+ obj-$(CONFIG_GPIO_PCH)		+= gpio-pch.o
+ obj-$(CONFIG_GPIO_PL061)	+= gpio-pl061.o
++obj-$(CONFIG_GPIO_PWM)		+= gpio-pwm.o
+ obj-$(CONFIG_GPIO_PXA)		+= gpio-pxa.o
+ obj-$(CONFIG_GPIO_RC5T583)	+= gpio-rc5t583.o
+ obj-$(CONFIG_GPIO_RDC321X)	+= gpio-rdc321x.o
+diff --git a/drivers/gpio/gpio-pwm.c b/drivers/gpio/gpio-pwm.c
+new file mode 100644
+index 0000000..de38d8b
+--- /dev/null
++++ b/drivers/gpio/gpio-pwm.c
+@@ -0,0 +1,264 @@
++/*
++ * Simple driver to allow PWMs to be used as GPO (General Purpose Output)
++ *
++ * The PWM will be turned off completely or configured for full on based on the
++ * gpio state request.
++ *
++ * Copyright (C) 2012 Texas Instruments, Inc.
++ *
++ * Author: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/gpio.h>
++#include <linux/pwm.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/platform_data/gpio-pwm.h>
++
++struct gpo_pwm_data {
++	const char *name;
++	struct pwm_device *pwm;
++	unsigned int pwm_period_ns;
++	bool enabled;
++};
++
++struct gpo_pwm_priv {
++	struct gpio_chip gpio_chip;
++	int num_gpos;
++	struct gpo_pwm_data gpos[];
++};
++
++static inline struct gpo_pwm_priv *to_pwm_gpo(struct gpio_chip *chip)
++{
++	return container_of(chip, struct gpo_pwm_priv, gpio_chip);
++}
++
++static int gpo_pwm_request(struct gpio_chip *chip, unsigned offset)
++{
++	struct gpo_pwm_priv *priv = to_pwm_gpo(chip);
++	struct gpo_pwm_data *gpo = &priv->gpos[offset];
++	int ret;
++
++	if (gpo->pwm) {
++		dev_err(chip->dev, "GPIO%d has been already requested\n",
++			chip->base + offset);
++		return -EBUSY;
++	}
++	gpo->pwm = pwm_get(chip->dev, gpo->name);
++	ret = IS_ERR(gpo->pwm);
++	if (ret) {
++		gpo->pwm = NULL;
++		return ret;
++	}
++
++	/* If period_ns is not set yet, try to get it via pwm framework */
++	if (!gpo->pwm_period_ns)
++		gpo->pwm_period_ns = pwm_get_period(gpo->pwm);
++
++	return ret;
++}
++
++static void gpo_pwm_free(struct gpio_chip *chip, unsigned offset)
++{
++	struct gpo_pwm_priv *priv = to_pwm_gpo(chip);
++
++	if (priv->gpos[offset].pwm) {
++		pwm_put(priv->gpos[offset].pwm);
++		priv->gpos[offset].pwm = NULL;
++	}
++}
++
++static void gpo_pwm_set(struct gpio_chip *chip, unsigned offset, int value)
++{
++	struct gpo_pwm_priv *priv = to_pwm_gpo(chip);
++	struct gpo_pwm_data *gpo = &priv->gpos[offset];
++
++	if (!gpo->pwm) {
++		dev_err(chip->dev, "GPIO%d has not been requested\n",
++			chip->base + offset);
++		return;
++	}
++
++	if (unlikely(!gpo->pwm_period_ns)) {
++		dev_err(chip->dev, "pwm period_ns is not set for GPIO%d\n",
++			chip->base + offset);
++		return;
++	}
++
++	if (value) {
++		/* Set PWM to full on */
++		pwm_config(gpo->pwm, gpo->pwm_period_ns, gpo->pwm_period_ns);
++		pwm_enable(gpo->pwm);
++		gpo->enabled = 1;
++	} else {
++		/* Disable PWM */
++		pwm_config(gpo->pwm, 0, gpo->pwm_period_ns);
++		pwm_disable(gpo->pwm);
++		gpo->enabled = 0;
++	}
++}
++
++static int gpo_pwm_get(struct gpio_chip *chip, unsigned offset)
++{
++	struct gpo_pwm_priv *priv = to_pwm_gpo(chip);
++
++	return priv->gpos[offset].enabled;
++}
++
++static int gpo_pwm_direction_out(struct gpio_chip *chip, unsigned offset,
++				    int value)
++{
++	/* This only drives GPOs, and can't change direction */
++	gpo_pwm_set(chip, offset, value);
++	return 0;
++}
++
++static struct gpio_chip template_chip = {
++	.label			= "pwm-gpo",
++	.owner			= THIS_MODULE,
++	.request		= gpo_pwm_request,
++	.free			= gpo_pwm_free,
++	.get			= gpo_pwm_get,
++	.direction_output	= gpo_pwm_direction_out,
++	.set			= gpo_pwm_set,
++	.can_sleep		= 1,
++};
++
++static inline int sizeof_gpo_pwm_priv(int num_gpos)
++{
++	return sizeof(struct gpo_pwm_priv) +
++		      (sizeof(struct gpo_pwm_data) * num_gpos);
++}
++
++static struct gpo_pwm_priv *gpo_pwm_create_of(struct platform_device *pdev)
++{
++	struct gpo_pwm_priv *priv;
++
++	/* With DT boot we support one GPO per gpo-pwm device */
++	priv = devm_kzalloc(&pdev->dev, sizeof_gpo_pwm_priv(1),
++			    GFP_KERNEL);
++	if (!priv)
++		return NULL;
++
++	priv->gpio_chip = template_chip;
++	priv->gpio_chip.base = -1;
++#ifdef CONFIG_OF_GPIO
++	priv->gpio_chip.of_node = pdev->dev.of_node;
++#endif
++
++	return priv;
++}
++
++static int __devinit gpo_pwm_probe(struct platform_device *pdev)
++{
++	struct gpio_pwm_pdata *pdata = pdev->dev.platform_data;
++	struct gpo_pwm_priv *priv;
++	int i, ret = 0;
++
++	if (pdata && pdata->num_gpos) {
++		priv = devm_kzalloc(&pdev->dev,
++				    sizeof_gpo_pwm_priv(pdata->num_gpos),
++				    GFP_KERNEL);
++		if (!priv)
++			return -ENOMEM;
++
++		for (i = 0; i < pdata->num_gpos; i++) {
++			struct gpio_pwm *cur_gpo = &pdata->gpos[i];
++			struct gpo_pwm_data *gpo = &priv->gpos[i];
++
++			gpo->name = cur_gpo->name;
++			gpo->pwm_period_ns = cur_gpo->pwm_period_ns;
++		}
++
++		priv->num_gpos = pdata->num_gpos;
++		priv->gpio_chip = template_chip;
++		priv->gpio_chip.base = pdata->gpio_base ? pdata->gpio_base : -1;
++	} else if (pdev->dev.of_node) {
++		priv = gpo_pwm_create_of(pdev);
++		if (!priv)
++			return -ENODEV;
++	} else {
++		dev_err(&pdev->dev, "missing pdata\n");
++		return -ENODEV;
++	}
++
++	priv->gpio_chip.ngpio = priv->num_gpos;
++	priv->gpio_chip.dev = &pdev->dev;
++
++	/*
++	 * Try to get the PWMs at probe time to see if the drivers are loaded.
++	 * This way we can take advantage of deferred probe to make sure that
++	 * the needed PWM drivers are in place.
++	 */
++	for (i = 0; i < priv->num_gpos; i++) {
++		struct gpo_pwm_data *gpo = &priv->gpos[i];
++
++		gpo->pwm = devm_pwm_get(&pdev->dev, gpo->name);
++		if (IS_ERR(gpo->pwm)) {
++			dev_err(&pdev->dev, "unable to request PWM\n");
++			return PTR_ERR(gpo->pwm);
++		}
++		pwm_put(gpo->pwm);
++		gpo->pwm = NULL;
++	}
++
++	ret = gpiochip_add(&priv->gpio_chip);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "could not register gpiochip, %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	if (pdata && pdata->setup)
++		ret = pdata->setup(&pdev->dev, priv->gpio_chip.base,
++				   priv->num_gpos);
++
++	return ret;
++}
++
++static int __devexit gpo_pwm_remove(struct platform_device *pdev)
++{
++	struct gpo_pwm_priv *priv = platform_get_drvdata(pdev);
++
++	return gpiochip_remove(&priv->gpio_chip);
++}
++
++static const struct of_device_id of_gpo_pwm_match[] = {
++	{ .compatible = "pwm-gpo", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_gpo_pwm_match);
++
++static struct platform_driver gpo_pwm_driver = {
++	.driver = {
++		.name	= "pwm-gpo",
++		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(of_gpo_pwm_match),
++	},
++	.probe		= gpo_pwm_probe,
++	.remove		= gpo_pwm_remove,
++};
++
++module_platform_driver(gpo_pwm_driver);
++
++MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>");
++MODULE_DESCRIPTION("Driver for PWM generators used as GPO");
++MODULE_ALIAS("platform:pwm-gpo");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/platform_data/gpio-pwm.h b/include/linux/platform_data/gpio-pwm.h
+new file mode 100644
+index 0000000..824301b
+--- /dev/null
++++ b/include/linux/platform_data/gpio-pwm.h
+@@ -0,0 +1,16 @@
++#ifndef __GPIO_PWM_H__
++#define __GPIO_PWM_H__
++
++struct gpio_pwm {
++	char *name; /* to be used as unique string when requesting the PWM */
++	unsigned int pwm_period_ns;
++};
++
++struct gpio_pwm_pdata {
++	int gpio_base;
++	int num_gpos;
++	struct gpio_pwm	*gpos;
++	int (*setup)(struct device *dev, unsigned gpio, unsigned ngpio);
++};
++
++#endif /* __GPIO_PWM_H__ */
+-- 
+1.8.0
