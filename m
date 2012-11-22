@@ -1,11 +1,16 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] of: add 'const' for of_parse_phandle parameter *np
-Date: Thu, 22 Nov 2012 12:16:43 +0100
-Message-ID: <1353583003-4560-1-git-send-email-s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v12 3/6] fbmon: add videomode helpers
+Date: Thu, 22 Nov 2012 12:23:31 +0100
+Message-ID: <20121122112331.GA24990@pengutronix.de>
+References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1554720.pFHYnMF1G4@avalon> <20121122085342.GB10369@pengutronix.de>
+ <2254661.PBsclu7Klj@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2254661.PBsclu7Klj@avalon>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,67 +21,56 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Grant Likely <grant.likely-LR4i4eoOvxHyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The existing function does not change the passed device_node pointer. It is
-only handed to of_get_property which itself takes a const struct device_node.
+On Thu, Nov 22, 2012 at 10:07:07AM +0100, Laurent Pinchart wrote:
+> On Thursday 22 November 2012 09:53:42 Sascha Hauer wrote:
+> > On Thu, Nov 22, 2012 at 09:50:10AM +0100, Laurent Pinchart wrote:
+> > > On Thursday 22 November 2012 07:20:00 Sascha Hauer wrote:
+> > > > On Wed, Nov 21, 2012 at 11:02:44PM +0100, Laurent Pinchart wrote:
+> > > > > Hi Steffen,
+> > > > > 
+> > > > > > +
+> > > > > > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
+> > > > > > +		 vm->hsync_len;
+> > > > > > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
+> > > > > > +		 vm->vsync_len;
+> > > > > > +	fbmode->refresh = (vm->pixelclock * 1000) / (htotal * vtotal);
+> > > > > 
+> > > > > This will fail if vm->pixelclock >= ((1 << 32) / 1000). The easiest
+> > > > > solution is probably to use 64-bit computation.
+> > > > 
+> > > > You have displays with a pixelclock > 4GHz?
+> > > 
+> > > vm->pixelclock is expressed in Hz. vm->pixelclock * 1000 will thus
+> > > overflow if the clock frequency is >= ~4.3 MHz. I have displays with a
+> > > clock frequency higher than that :-)
+> > 
+> > If vm->pixelclock is in Hz, then the * 1000 above is wrong.
+> 
+> My bad, I though refresh was expressed in mHz. So yes, the above computation 
+> is wrong.
+>
 
-of_parse_phandle can therefore take a const pointer as well.
+Okay. I will fix that with the next version...
 
-Cc: Grant Likely <grant.likely-LR4i4eoOvxHyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/of/base.c  |    5 +++--
- include/linux/of.h |    4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+> BTW it seems that the refreshrate field in struct videomode isn't used. It 
+> should then be removed.
+> 
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index af3b22a..eca45b1 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -893,8 +893,8 @@ EXPORT_SYMBOL_GPL(of_property_count_strings);
-  * Returns the device_node pointer with refcount incremented.  Use
-  * of_node_put() on it when done.
-  */
--struct device_node *
--of_parse_phandle(struct device_node *np, const char *phandle_name, int index)
-+struct device_node *of_parse_phandle(const struct device_node *np,
-+				     const char *phandle_name, int index)
- {
- 	const __be32 *phandle;
- 	int size;
-@@ -905,6 +905,7 @@ of_parse_phandle(struct device_node *np, const char *phandle_name, int index)
- 
- 	return of_find_node_by_phandle(be32_to_cpup(phandle + index));
- }
-+
- EXPORT_SYMBOL(of_parse_phandle);
- 
- /**
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b4e50d5..634b03f 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -255,7 +255,7 @@ extern int of_n_size_cells(struct device_node *np);
- extern const struct of_device_id *of_match_node(
- 	const struct of_device_id *matches, const struct device_node *node);
- extern int of_modalias_node(struct device_node *node, char *modalias, int len);
--extern struct device_node *of_parse_phandle(struct device_node *np,
-+extern struct device_node *of_parse_phandle(const struct device_node *np,
- 					    const char *phandle_name,
- 					    int index);
- extern int of_parse_phandle_with_args(struct device_node *np,
-@@ -411,7 +411,7 @@ static inline int of_property_match_string(struct device_node *np,
- 	return -ENOSYS;
- }
- 
--static inline struct device_node *of_parse_phandle(struct device_node *np,
-+static inline struct device_node *of_parse_phandle(const struct device_node *np,
- 						   const char *phandle_name,
- 						   int index)
- {
+...and remove this field.
+
+> I've just realized that the struct videomode fields are not documented. 
+> kerneldoc in include/linux/videomode.h would be a good addition.
+> 
+
+Regards,
+Steffen
+
 -- 
-1.7.10.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
