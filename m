@@ -1,16 +1,16 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v12 3/6] fbmon: add videomode helpers
-Date: Thu, 22 Nov 2012 09:53:42 +0100
-Message-ID: <20121122085342.GB10369@pengutronix.de>
-References: <1353426896-6045-1-git-send-email-s.trumtrar@pengutronix.de>
- <96696218.4l3uYOulV3@avalon>
- <20121122062000.GW10369@pengutronix.de> <1554720.pFHYnMF1G4@avalon>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Thu, 22 Nov 2012 09:57:22 +0100
+Message-ID: <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
+ <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+ <20121120215429.B621F3E1821@localhost>
+ <20121121013133.GE4673@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1554720.pFHYnMF1G4@avalon>
+In-Reply-To: <20121121013133.GE4673-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,39 +21,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ola LILJA2 <ola.o.lilja-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2012 at 09:50:10AM +0100, Laurent Pinchart wrote:
-> Hi Sascha,
-> 
-> On Thursday 22 November 2012 07:20:00 Sascha Hauer wrote:
-> > On Wed, Nov 21, 2012 at 11:02:44PM +0100, Laurent Pinchart wrote:
-> > > Hi Steffen,
-> > > 
-> > > > +
-> > > > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
-> > > > +		 vm->hsync_len;
-> > > > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
-> > > > +		 vm->vsync_len;
-> > > > +	fbmode->refresh = (vm->pixelclock * 1000) / (htotal * vtotal);
-> > > 
-> > > This will fail if vm->pixelclock >= ((1 << 32) / 1000). The easiest
-> > > solution is probably to use 64-bit computation.
-> > 
-> > You have displays with a pixelclock > 4GHz?
-> 
-> vm->pixelclock is expressed in Hz. vm->pixelclock * 1000 will thus overflow if 
-> the clock frequency is >= ~4.3 MHz. I have displays with a clock frequency 
-> higher than that :-)
+On Wed, Nov 21, 2012 at 2:31 AM, Mark Brown
+<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
 
-If vm->pixelclock is in Hz, then the * 1000 above is wrong.
+> As I said in my earlier reviews I think this is a useful thing to have
+> as a utility library for drivers independantly of the DT bindings, it
+> would allow drivers to become more data driven.  Perhaps we can rework
+> the series so that the DT bindings are added as a final patch?  All the
+> rest of the code seems OK.
 
-Sascha
+I have the same (limited by experience) opinion. Working sort of
+near som audio drivers I have understood that power sequencing
+is a big issue not only for things like this backlight example, but
+even more so in the area of audio to avoid clicks and pops.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Is it correct to assume that this library will be useful also for ALSA
+SoC type of devices?
+
+Then whether to couple that to DT or ACPI or SFI or whatever
+is a different discussion altogether.
+
+Yours,
+Linus Walleij
