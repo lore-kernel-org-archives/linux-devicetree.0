@@ -1,47 +1,52 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Thu, 22 Nov 2012 18:55:16 +0900
-Message-ID: <CAAVeFuLL28y89VGU4EfPdW-fKDZCFnyQ37UdhGpeZE3cn0Cbzg@mail.gmail.com>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
- <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
- <20121120215429.B621F3E1821@localhost>
- <20121121013133.GE4673@opensource.wolfsonmicro.com>
- <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] mfd: stmpe: Use devm_*() routines
+Date: Thu, 22 Nov 2012 10:27:10 +0000
+Message-ID: <20121122102710.GD4328@gmail.com>
+References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ola LILJA2 <ola.o.lilja@stericsson.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Anton Vorontsov <cbouatmailru@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2012 at 5:57 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> I have the same (limited by experience) opinion. Working sort of
-> near som audio drivers I have understood that power sequencing
-> is a big issue not only for things like this backlight example, but
-> even more so in the area of audio to avoid clicks and pops.
->
-> Is it correct to assume that this library will be useful also for ALSA
-> SoC type of devices?
-
-There should be nothing against that - provided ALSA's needs remain
-similar to the current set of actions (regulators, gpios, ...) it
-should be perfectly usable. Can you think of any usage that involves
-more than dumb regulator/gpio manipulation?
-
-If power seqs are to be used this way (as opposed to through the DT),
-it will become urgent to implement that gpio handlers library we were
-talking about in another thread, as we don't want to have GPIO numbers
-hard-coded into the sequences.
-
-Alex.
+T24gVGh1LCAyMiBOb3YgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBUaGlzIHBhdGNoIGZy
+ZWVzIHN0bXBlIGRyaXZlciBmcm9tIHRlbnNpb24gb2YgZnJlZWluZyByZXNvdXJjZXMgOikKPiBk
+ZXZtXyogZGVyaXZhdGl2ZXMgb2YgbXVsdGlwbGUgcm91dGluZXMgYXJlIHVzZWQgd2hpbGUgYWxs
+b2NhdGluZyByZXNvdXJjZXMsCj4gd2hpY2ggd291bGQgYmUgZnJlZWQgYXV0b21hdGljYWxseSBi
+eSBrZXJuZWwuCj4gCj4gU2lnbmVkLW9mZi1ieTogVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJA
+bGluYXJvLm9yZz4KPiAtLS0KPiAKPiBWMS0+VjI6Cj4gLS0tLS0tCj4gLSBSZWJhc2VkIG92ZXIg
+bGF0ZXN0IGZvci1uZXh0IGZyb20gU2FtdWVsCj4gLSB1cGRhdGVkIGFkZGl0aW9uYWwga3phbGxv
+YyB3aXRoIGRldm1fa3phbGxvYygpLCBmaXJzdCBvbmUgc2VlbiBiZWxvdy4KPiAKPiAgZHJpdmVy
+cy9tZmQvc3RtcGUuYyB8IDYwICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCAzOSBk
+ZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvc3RtcGUuYyBiL2RyaXZl
+cnMvbWZkL3N0bXBlLmMKPiBpbmRleCBiYTE1N2Q0Li5jMGRmNGI5IDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvbWZkL3N0bXBlLmMKPiArKysgYi9kcml2ZXJzL21mZC9zdG1wZS5jCj4gQEAgLTEwNTIs
+MTcgKzEwNTIsMTcgQEAgaW50IF9fZGV2aW5pdCBzdG1wZV9wcm9iZShzdHJ1Y3Qgc3RtcGVfY2xp
+ZW50X2luZm8gKmNpLCBpbnQgcGFydG51bSkKPiAgCWludCByZXQ7Cj4gIAo+ICAJaWYgKCFwZGF0
+YSkgewo+IC0JCWlmIChucCkgewo+IC0JCQlwZGF0YSA9IGt6YWxsb2Moc2l6ZW9mKCpwZGF0YSks
+IEdGUF9LRVJORUwpOwo+IC0JCQlpZiAoIXBkYXRhKQo+IC0JCQkJcmV0dXJuIC1FTk9NRU07Cj4g
+LQo+IC0JCQlzdG1wZV9vZl9wcm9iZShwZGF0YSwgbnApOwo+IC0JCX0gZWxzZQo+ICsJCWlmICgh
+bnApCgpJJ20gYXNzdW1pbmcgeW91J3ZlIHJldmVyc2VkIHRoZSBzZW1hbnRpY3MgaGVyZSBmb3Ig
+PjgwIGNoYXJzIHJlYXNvbnM/CgpJIHNlZSBubyBoYXJtIGluIGl0IHRob3VnaC4KCkFja2VkLWJ5
+OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgoKLS0gCkxlZSBKb25lcwpMaW5hcm8g
+U1QtRXJpY3Nzb24gTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ug
+c29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8
+IEJsb2cKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2
+aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3ps
+YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNj
+dXNzCg==
