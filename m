@@ -1,63 +1,50 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v3 0/7] support other fsl SoCs with usbmisc + small fixes
-Date: Thu, 22 Nov 2012 17:31:44 +0800
-Message-ID: <20121122093143.GA22420@nchen-desktop>
-References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
- <87y5hu3s83.fsf@ashishki-desk.ger.corp.intel.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 00/14] ARM: SPEAr: DT updates
+Date: Thu, 22 Nov 2012 10:47:38 +0100
+Message-ID: <CACRpkdbsDzYuUJpVAS=ujv7EEq_nA-kAzHnN1F0d3WqoMEeCUg@mail.gmail.com>
+References: <cover.1352608333.git.viresh.kumar@linaro.org>
+ <201211121521.58766.arnd@arndb.de>
+ <CAKohpom0kMjuHx5jO-LTPKQhy_-r4khKi7UBPB_O-50K42FOeQ@mail.gmail.com>
+ <20121121202405.GA15549@quad.lixom.net>
+ <CAKohpokMUTQja6tCz1RmKXFgu+X7MGFAi1+UWLgKhpViOuiMSA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <87y5hu3s83.fsf@ashishki-desk.ger.corp.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: fabio.estevam@freescale.com, Michael Grzeschik <m.grzeschik@pengutronix.de>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, mkl@pengutronix.de, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKohpokMUTQja6tCz1RmKXFgu+X7MGFAi1+UWLgKhpViOuiMSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2012 at 11:24:44AM +0200, Alexander Shishkin wrote:
-> Michael Grzeschik <m.grzeschik@pengutronix.de> writes:
-> 
-> > Nearly every SoC from Freescale has this non-core usb registers. This series
-> > adds support for more users of this driver.
-> >
-> > This series is based on Peter Chen's work. Its needed to merge his master branch
-> > before applying this series:
-> >
-> > https://github.com/hzpeterchen/linux-usb.git
-> >
-> > Marc Kleine-Budde (4):
-> >   usb: chipidea: usbmisc: unset global varibale usbmisc on driver
-> >     remove
-> >   usb: chipidea: usbmisc: fix a potential race condition
-> >   usb: chipidea: usbmisc: prepare driver to handle more than one soc
-> >   usb: chipidea: usbmisc: add support for ahb, ipg and per clock
-> >
-> > Michael Grzeschik (3):
-> >   usb: chipidea: usbmisc: rename file, struct and functions to
-> >     usbmisc_imx
-> >   usb: chipidea: usbmisc: add mx53 support
-> >   usb: chipidea: usbmisc: add post handling and errata fix for mx25
-> 
-> Cc'ing Peter Chen, in case he didn't see this. Peter, can you have a
-> look and give your Tested-by/Reviewed-by where appropriate?
+On Thu, Nov 22, 2012 at 4:19 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-OK, I will have a look tomorrow or the beginning of next week.
-> 
-> Regards,
-> --
-> Alex
-> 
+> Last week i had chat with Arnd and Linus over Hangout, and following is
+> the status:
+> - Dependency patch of pinctrl is:
+>
+> commit 4ddb1c295752252f61670e35c791bf16e58bbce6
+> Author: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Date:   Sat Oct 27 15:21:39 2012 +0530
+>
+>     ARM: SPEAr: Add plgpio node in device tree dtsi files
+>
+> And is already in pinctrl/devel branch. And this branch is stable as per Linus.
 
--- 
+Well, famous last words. But that commit and below should
+be perfectly fine to pull into ARM SoC if need be. As long
+as we don't create too big a cobweb ... with linux-next not
+being done this week I'd watch it for this kind of stuff at this
+stage.
 
-Best Regards,
-Peter Chen
+Yours,
+Linus Walleij
