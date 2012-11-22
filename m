@@ -1,14 +1,18 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: kernel: fix nr_cpu_ids check in DT logical map init
-Date: Thu, 22 Nov 2012 15:33:36 +0000
-Message-ID: <20121122153337.083D73E129E@localhost>
-References: <1353516176-12929-1-git-send-email-lorenzo.pieralisi@arm.com>
- <20121122120843.GA16972@e102568-lin.cambridge.arm.com>
+Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather
+ than device_add
+Date: Thu, 22 Nov 2012 15:36:21 +0000
+Message-ID: <20121122153621.452CA3E129E@localhost>
+References: <20121121072448.GG19837@obsidianresearch.com>
+ <20121121155104.726B83E0AE2@localhost>
+ <20121121174453.GD6406@obsidianresearch.com>
+ <CACxGe6u2Kfm+x5KsFzNPt7voyeD0x_4V6EO4add=tBwMKJ6VWQ@mail.gmail.com>
+ <20121121181430.GE6406@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121122120843.GA16972-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <20121121181430.GE6406-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,65 +23,48 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Nov 2012 12:08:43 +0000, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Russell,
+On Wed, 21 Nov 2012 11:14:30 -0700, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
+> On Wed, Nov 21, 2012 at 06:07:46PM +0000, Grant Likely wrote:
 > 
-> On Wed, Nov 21, 2012 at 04:42:56PM +0000, Lorenzo Pieralisi wrote:
-> > If a kernel is configured with a DT containing more /cpu nodes than
-> > nr_cpu_ids, the number of cpus must be capped in the DT parsing
-> > code. Current code carries out the check, but fails to cap the
-> > value and the check is executed after the cpu logical index is used,
-> > which can lead to memory corruption due to index overflow.
+> > > Which is nesting the generic gpio driver under a larger region..
 > > 
-> > This patch refactors the check against nr_cpu_ids and move it before
-> > any computed index is used in the parsing code.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > Reported-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> > Russell,
-> > 
-> > while refactoring the DT loop over nodes, I unfortunately missed this niggle
-> > in the parsing loop that Mark reported. Here is the fix, sorry for the
-> > additional commit, if it is ok for you I will add it to your patch system.
-> > 
-> > Apologies and thanks,
-> > Lorenzo
-> > 
-> >  arch/arm/kernel/devtree.c | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> > index aaf9add..70f1bde 100644
-> > --- a/arch/arm/kernel/devtree.c
-> > +++ b/arch/arm/kernel/devtree.c
-> > @@ -139,10 +139,14 @@ void __init arm_dt_init_cpu_maps(void)
-> >  			i = cpuidx++;
-> >  		}
-> >  
-> > -		tmp_map[i] = hwid;
-> > -
-> > -		if (cpuidx > nr_cpu_ids)
-> > +		if (WARN(cpuidx > nr_cpu_ids, "DT /cpu %u nodes greater than "
-> > +					       "max cores %u, capping them\n",
-> > +					       cpuidx, nr_cpu_ids)) {
-> > +			cpuidx = nr_cpu_ids;
-> >  			break;
-> > +		}
-> > +
-> > +		tmp_map[i] = hwid;
-> >  	}
-> >  
-> >  	if (WARN(!bootcpu_valid, "DT missing boot CPU MPIDR[23:0], "
+> > Try two sibling nodes with overlapping addresses. There are powerpc
+> > device trees doing that even though it isn't legal by the ofw and
+> > epapr specs.
 > 
-> If it looks fine to you, can I queue this simple fix in your patch
-> system please ?
+> Both my examples were using sibling nodes in the OF tree.
 > 
-> Thanks and apologies for the extra commit,
-> Lorenzo
+> 	pex@e0000000 {
+> 		device_type = "pci";
+> 		ranges = <0x02000000 0x00000000 0x00000000  0xe0000000  0x0 0x8000000>;
+> 		bus-range = <0x0 0xFF>;
+> 		chip@0 {
+> 			ranges = <0x02000000 0x00000000 0x00000000  0x02000000 0x00000000 0x00000000  0x0 0x8000000>;
+> 			chip_control@0 {
+> 				compatible = "orc,chip,control";
+> 				assigned-addresses = <0x02000000 0x0 0x0  0x0 4096>;
+> 			};
+> 
+> 			gpio3: chip_gpio@8 {
+> 			        #gpio-cells = <2>;
+> 				compatible = "linux,basic-mmio-gpio";
+> 				gpio-controller;
+> 				reg-names = "dat", "set", "dirin";
+> 				assigned-addresses = <0x02000000 0x0 0x8  0x0 4>,
+> 				                     <0x02000000 0x0 0xc  0x0 4>,
+> 				                     <0x02000000 0x0 0x10  0x0 4>;
+> 			};
+> 
+> Non-conformant yes, but it is the simplest way to get linux to bind
+> two drivers to the same memory space.
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Hmm... I've not tried it with assigned-address. I tried with two sibling
+platform devices using just the 'reg' property. That the kernel will
+complain about. For powerpc-only, the patch I posted allows the device
+to get registered anyway even though the range incorrectly overlaps.
+
+g.
