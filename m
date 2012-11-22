@@ -1,64 +1,56 @@
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v4 01/11] PWMSS: Add PWM Subsystem driver for
- parent<->child relationship
-Date: Thu, 22 Nov 2012 21:47:04 +0100
-Message-ID: <20121122204704.GA16716@avionic-0098.adnet.avionic-design.de>
+Subject: Re: [PATCH v4 04/11] pwm: pwm-tiecap: Add device-tree binding
+ support for APWM driver
+Date: Thu, 22 Nov 2012 21:57:33 +0100
+Message-ID: <20121122205732.GB16716@avionic-0098.adnet.avionic-design.de>
 References: <1353503469-18634-1-git-send-email-avinashphilip@ti.com>
- <1353503469-18634-2-git-send-email-avinashphilip@ti.com>
+ <1353503469-18634-5-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+	protocol="application/pgp-signature"; boundary="wzJLGUyc3ArbnUjN"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1353503469-18634-2-git-send-email-avinashphilip@ti.com>
+In-Reply-To: <1353503469-18634-5-git-send-email-avinashphilip@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, b-cousson@ti.com, hvaibhav@ti.com, anilkumar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, vaibhav.bedia@ti.com
+Cc: paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, b-cousson@ti.com, hvaibhav@ti.com, anilkumar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, vaibhav.bedia@ti.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
 
---6TrnltStXW4iwmi0
+--wzJLGUyc3ArbnUjN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Nov 21, 2012 at 06:40:58PM +0530, Philip, Avinash wrote:
+On Wed, Nov 21, 2012 at 06:41:01PM +0530, Philip, Avinash wrote:
 [...]
-> +static const struct of_device_id pwmss_of_match[] = {
+> +static const struct of_device_id ecap_of_match[] = {
 > +	{
-> +		.compatible	= "ti,am33xx-pwmss",
+> +		.compatible	= "ti,am33xx-ecap",
 > +	},
 
-For consistency with other drivers this should be all on one line.
-
-> +static const struct dev_pm_ops pwmss_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(pwmss_suspend, pwmss_resume)
-> +};
-
-This could be even shorter:
-
-static SIMPLE_DEV_PM_OPS(pwmss_pm_ops, pwmss_suspend, pwmss_resume);
+Same here, can be shorter by putting it on one line instead of three.
 
 Thierry
 
---6TrnltStXW4iwmi0
+--wzJLGUyc3ArbnUjN
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQro9IAAoJEN0jrNd/PrOhYCAQAIcrU+FUhnK62NOazWRsB27c
-vwcg05hwGy0qGCLP8fjkHCAR7bjvbuXTUAT9K7XsEP2bdvs3XfQrgX3LT6lGiTkO
-8DwHgHmKmpUxPIclKx/8FFGyGP/lPO/Z1lvvim7q1LSb0B0Se59WkjMZVC3eH4CH
-nEMVAKJSjFR51DceEiSMSVTJ/Lwd5hv9JR70SDEsfdDR2TV5Wai7X+2O8+Yt4dbl
-FAi/7TDdzsaukmKncabuNkPhxJrwZXFKvXdzcYAmoK3SeSxneW1yzkhd62vVOPTO
-DtlujllVm738iBeK5iSVt0Ec1/Jj4Gwe1nDHBcSHMLVu6vn2iKVB79i2RFmZTRVa
-Id4U+/h1AuRJwmI13pE75RO+N7z1H3EgBWKrkN5ALDq2m0Bf9egzdQzQbwBbhqJs
-59/3MwxYtxhDJ4GBQPDK9HA/uH0MZsnHy5q4mUk7Cza01tOPAhPpT7bCEFQ6wn/N
-txipuErF9H8T0Q+HcALXE/eIo9DIX1LCQ+MHN0rDMPQ1U73Yrilkk8ZQIQOAGASn
-IAnLHEePOJkvPWVbheaRVFKNHT27MA70EzmOdbP5wY4jx2fTSrBofFAk9bHzzc19
-6LOtY1kua91Ct7XIMAjGQ3aRD2lskNxYkU8zFRZY0V5Cbxo8sGHSQMAbT1pN7jrc
-ZUk3CkVlkrdSp++356xw
-=k8vX
+iQIcBAEBAgAGBQJQrpG8AAoJEN0jrNd/PrOhaf4QAMCySG9oIcWyadnrDf+uEbVK
+lc1jDrWL2HLEDc/ZWAyGnqUaO4NIyz7MM4bFcyOI7/6MqIxKZdxewKrT+o2UQ5Kk
+Ubmr7GjiOoUbnGPuyy/e8B1BqfKByp7AdE0g/ju8OpKk2MP/OBvIfGsecWchkO/k
+0mAWSo6anaVcTVjXvvfLfu+HJph0cnUDxMxGeUV2BRqclB3GWVs3rHxcSi9pPWTy
+06OpPGPxIP/vB0tBZIf+45MsOK//lBQ0Y+QVAD9meGIsI5HcU06QxwNTHjayjaBO
+bY4Svc2ugp03aiT/QZgQmivKeF9n4ZLOUOX9A5UNIE0YG8iWItk6bXcHq5l/L1Gj
+MsjtzuR5DmqaiE9X8z2PAv6Zo5+E7eTF1sYiy16s2zOsTkhH8elbXDent7+ed6oY
+yZ+6t6W/+Rq1fGEQsLrIqG4wU4iu1zf45+mW2LgbcqeXRkk1p7mqE38/2ob5DcQu
+5XPzZqgq4tqy1bKHr7Up7iddjUSX8nQLi0i8DFoqolkZ9FrIT6jisCGapB7CxGIA
+8VSkgg2+YaY+3x+yzhtRxVIqv7tG5Jsh/+z9qTuSM82m5CO9KxsZ785/QL6RFFcA
+StmvZ7aRpk8fBq9JERp56fXPj6zaT996WWzgP7DRtIIW8kKUK06lzxwjzUQFr/Rk
+5R1gy8pF+7SVYAZZQSEs
+=0mxx
 -----END PGP SIGNATURE-----
 
---6TrnltStXW4iwmi0--
+--wzJLGUyc3ArbnUjN--
