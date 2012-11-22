@@ -1,12 +1,14 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v4 00/11] Support for AM33xx PWM Subsystem
-Date: Thu, 22 Nov 2012 22:16:16 +0100
-Message-ID: <20121122211616.GK16716@avionic-0098.adnet.avionic-design.de>
-References: <1353503469-18634-1-git-send-email-avinashphilip@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] of: use platform_device_add
+Date: Thu, 22 Nov 2012 21:19:09 +0000
+Message-ID: <20121122211909.9B1E03E129E@localhost>
+References: <1353521759-28263-1-git-send-email-grant.likely@secretlab.ca>
+ <20121121183403.GA7657@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7484964914938128951=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353503469-18634-1-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20121121183403.GA7657-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,117 +19,81 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, vaibhav.bedia-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 21 Nov 2012 10:34:03 -0800, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Wed, Nov 21, 2012 at 06:15:59PM +0000, Grant Likely wrote:
+> > This allows platform_device_add a chance to call insert_resource on all
+> > of the resources from OF. At a minimum this fills in proc/iomem and
+> > presumably makes resource tracking and conflict detection work better.
+> > However, it has the side effect of moving all OF generated platform
+> > devices from /sys/devices to /sys/devices/platform/. It /shouldn't/
+> > break userspace because userspace is not supposed to depend on the full
+> > path (because userspace always does what it is supposed to, right?).
+> > 
+> > It also has a backup call to of_device_add() when running on PowerPC to
+> > catch any devices that have overlapping regions. It will complain about
+> > them, but it will not fail to register the device.
+> > 
+> > Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> > Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> > Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > ---
+> > 
+> > Greg, do you mind taking a look at this? The reason the OF code hasn't been
+> > calling platform_device_add() directly to this point is:
+> > a) there are some trees with resource overlays
+> > b) I want the devices in /sys/devices not /sys/devices/platform.
+> 
+> Putting the devices all in the "flat" location of /sys/devices/ is a bit
+> worrisome to me.  What's wrong with platform/ ?  That is what they are,
+> right?  Why change this?
 
---===============7484964914938128951==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Qo8f1a4rgWw9S/zY"
-Content-Disposition: inline
+Hahaha. *You* encouraged me to write the patch to remove
+/sys/devices/platform/ when I was waffling over whether or not it was a
+good idea. Granted, that was well over a year ago, but it takes me a
+while to get around to some of the things on my todo list. :-)
 
+It's not so much that there is anything wrong with platform/ other than
+it is nonsensical. For example, a core system bus is often represented by an
+platform device of it's own with a bunch of peripherals as children of
+that. For example a PCI host controller. It doesn't make much sense to me for
+some core devices to be at /sys/devices and others to be gathered
+together under /sys/devices/platform.
 
---Qo8f1a4rgWw9S/zY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+However, all that mildly feels 'wrong' to me but isn't that big deal. A
+bigger problem with b) (which I didn't describe well) is that existing
+PowerPC support roots the platform devices hierarchy at /sys/devices, not
+/sys/devices/platform and I'm nervous that changing it will break
+things. If I commit the change that makes the move, and somebody
+complains that I broke their userspace, then I need to have an exception
+for those system or revert the patch entirely.
 
-On Wed, Nov 21, 2012 at 06:40:57PM +0530, Philip, Avinash wrote:
-> In AM33xx PWM sub modules like ECAP, EHRPWM & EQEP are  integrated to
-> PWM subsystem. All these submodules shares the resources (clock) & has
-> a clock gating register in PWM Subsystem. This patch series creates a
-> parent PWM Subsystem driver to handle access synchronization of shared
-> resources & clock gating from PWM Subsystem configuration space.
-> Also Device tree nodes populated to support parent child relation
-> between PWMSS, ECAP & EHRPWM submodules.
-> In addition EHRPWM module requires explicit clock gating from control
-> module & is handled by patch #2 & 8.
->=20
-> As suggested by  Thierry for handling clock gating for PWM submodules
-> should handle with a global function. This requires config space
-> handling done independent from driver and is done at parent driver.
->=20
-> So the parent<->child relation adopted to handle
-> 1. pm runtime synchronization
-> 2. PWM subsystem common config space clock gating for PWM submodules.
->=20
-> Patches supports
-> - Driver support for parent child relation handled patch #1
-> - Optional EHRPWM tb clock in patch #2
-> - Parent child in HWMOD handled at patch #3
-> - Device tree binding support handled in patch #4, 6 &8
-> - pinctrl support in patch #5 & 7.
-> - DT node populated in patch #9 ,10 & 11.
->=20
-> This patch series based on omap_dt/for_3.8/dts_part2 and tested
-> on am335x-evm & am335x-evmsk.
->=20
-> It depends on [1]
->=20
-> 1. https://lkml.org/lkml/2012/11/21/70
-> pwm: Device tree support for PWM polarity
->=20
-> Changes since v3:
-> 	- Rebased on top of omap_dt/for_3.8/dts_part2
-> 	- Add pwm backlight for am335xevm_sk
-> 	- Moved tipwmss.h to pwm-tipwmss.h
->=20
-> Philip, Avinash (11):
->   PWMSS: Add PWM Subsystem driver for parent<->child relationship
->   ARM: am33xx: clk: Add optional clock for EHRPWM
->   ARM: OMAP: AM33xx hwmod: Add parent-child relationship for PWM
->     subsystem
->   pwm: pwm-tiecap: Add device-tree binding support for APWM driver
->   pwm: pwm-tiecap: pinctrl support
->   pwm: pwm-tiehrpwm: Add device-tree binding support for EHRPWM driver
->   pwm: pwm-tiehrpwm: pinctrl support
->   pwm: pwm-tiehrpwm: Adding TBCLK gating support.
->   ARM: dts: AM33XX: Add PWMSS device tree nodes
->   ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evm
->   ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evmsk
+Regardless, I'm no longer happy with DT and non-DT platform device
+registration having separate code paths. I would /like/ for
+sys/device/platform to disappear, but that is merely a side issue.
+The real issue is whether or not existing PowerPC userspace breaks. If
+it does, there needs to be an exception to keep things under
+/sys/devices.
 
-Hi,
+> > I could easily add exceptions to platform_device_add() for both those cases, but
+> > I don't like adding DT exceptions to the common code. However, I still need to
+> > support the platforms that unfortunately have overlapping resources. This patch
+> > does that by still calling the old path if platform_device_add() fails, but it
+> > isn't nice either because of_device_add() has to duplicate
+> > platform_device_add(). Blech. Plus the exception only applies for PowerPC.
+> > 
+> > So, how do you feel about having a 'relaxed' mode for platform_device_add()
+> > which means it won't fail if resources overlap and maybe won't do the silly
+> > platform_bus parent thing. Thoughts?
+> 
+> I have no objection for the resource issue, if you assure me it will not
+> be abused :)
 
-So how do you want to get this merged? Should I take patches 1, 4, 5, 6,
-7 and 8 while the rest go through some ARM tree? Can we still merge this
-for 3.8? The patches don't seem to have build dependencies on each other
-but how about runtime dependencies?
+I can make that assurance. It will be powerpc-only also.
 
-Thierry
-
---Qo8f1a4rgWw9S/zY
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQrpYgAAoJEN0jrNd/PrOhx04QALld4zdyK4uzCc10EXZBF8Qy
-s+eYwWUVMnV8FMb0xi3rU9PrKq51CPydX+JhjFGDMRjAYlnIOdjwvOX60OSfsE/K
-z0LVCghVsivnGP76PFjeYt9fHd+dmAFEWoTQo6R4BHLDhogt+OwwQvkdK5DZwbU+
-X+XWPQ13pTkio4Y7IXHCGAdBLazNw/L0cfmwJMtbMfia4HI3HSgmu5YZxGDguUs4
-VqqaS4i/Qt3eIw3Q8Yf2Xkrp/8HZkt8qza4zfwsOdU3El8BkiWAby9keHGJsdSXH
-KS7W2jClSxAE4+R/zimz6Vk1MUyoHXMJ73vgc4C3N2caYcIrPYzn3LjcCo9fIifs
-80hAM6FMdg4JkAYxE48OlTFEmm6Nx22GYQFxcxI9BxmKkecRH9twTUa/h+sdGAUU
-fO2bWH2plaYTIdDQzKpB8OAIz12Bofr5ls2Ckm8WlC35hNn30vQDiDYrUuR1isS4
-hrf/BIq99lePmNoXLA5gnBM+rWMBi0eshLIxSenVrrtZPWV5gPtdi5BmtG7GFwoa
-byCokYRSiKcufa9H03tiscDnWTYWpVkBID8C8N054XOxMPPk2sZ6wQwWlZr8rNEN
-VS+myT9lx7LfzsFdM32y/0NKfYQ3AV73EZ36zfXdctMg63rPc5X2znWGCHG4bGBa
-3yzGmffBKYCgD9X8tiXZ
-=oJFt
------END PGP SIGNATURE-----
-
---Qo8f1a4rgWw9S/zY--
-
---===============7484964914938128951==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7484964914938128951==--
+g.
