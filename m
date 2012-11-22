@@ -1,14 +1,14 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH V2 1/2] mfd: stmpe: Use devm_*() routines
-Date: Thu, 22 Nov 2012 10:27:10 +0000
-Message-ID: <20121122102710.GD4328@gmail.com>
+Date: Thu, 22 Nov 2012 16:00:20 +0530
+Message-ID: <CAKohponbF9urMVyerdikCeMy4uKChVKSDXub7nJtH+zFbJ9Qsg@mail.gmail.com>
 References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
+ <20121122102710.GD4328@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20121122102710.GD4328-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,34 +19,15 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMiBOb3YgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBUaGlzIHBhdGNoIGZy
-ZWVzIHN0bXBlIGRyaXZlciBmcm9tIHRlbnNpb24gb2YgZnJlZWluZyByZXNvdXJjZXMgOikKPiBk
-ZXZtXyogZGVyaXZhdGl2ZXMgb2YgbXVsdGlwbGUgcm91dGluZXMgYXJlIHVzZWQgd2hpbGUgYWxs
-b2NhdGluZyByZXNvdXJjZXMsCj4gd2hpY2ggd291bGQgYmUgZnJlZWQgYXV0b21hdGljYWxseSBi
-eSBrZXJuZWwuCj4gCj4gU2lnbmVkLW9mZi1ieTogVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJA
-bGluYXJvLm9yZz4KPiAtLS0KPiAKPiBWMS0+VjI6Cj4gLS0tLS0tCj4gLSBSZWJhc2VkIG92ZXIg
-bGF0ZXN0IGZvci1uZXh0IGZyb20gU2FtdWVsCj4gLSB1cGRhdGVkIGFkZGl0aW9uYWwga3phbGxv
-YyB3aXRoIGRldm1fa3phbGxvYygpLCBmaXJzdCBvbmUgc2VlbiBiZWxvdy4KPiAKPiAgZHJpdmVy
-cy9tZmQvc3RtcGUuYyB8IDYwICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCAzOSBk
-ZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvc3RtcGUuYyBiL2RyaXZl
-cnMvbWZkL3N0bXBlLmMKPiBpbmRleCBiYTE1N2Q0Li5jMGRmNGI5IDEwMDY0NAo+IC0tLSBhL2Ry
-aXZlcnMvbWZkL3N0bXBlLmMKPiArKysgYi9kcml2ZXJzL21mZC9zdG1wZS5jCj4gQEAgLTEwNTIs
-MTcgKzEwNTIsMTcgQEAgaW50IF9fZGV2aW5pdCBzdG1wZV9wcm9iZShzdHJ1Y3Qgc3RtcGVfY2xp
-ZW50X2luZm8gKmNpLCBpbnQgcGFydG51bSkKPiAgCWludCByZXQ7Cj4gIAo+ICAJaWYgKCFwZGF0
-YSkgewo+IC0JCWlmIChucCkgewo+IC0JCQlwZGF0YSA9IGt6YWxsb2Moc2l6ZW9mKCpwZGF0YSks
-IEdGUF9LRVJORUwpOwo+IC0JCQlpZiAoIXBkYXRhKQo+IC0JCQkJcmV0dXJuIC1FTk9NRU07Cj4g
-LQo+IC0JCQlzdG1wZV9vZl9wcm9iZShwZGF0YSwgbnApOwo+IC0JCX0gZWxzZQo+ICsJCWlmICgh
-bnApCgpJJ20gYXNzdW1pbmcgeW91J3ZlIHJldmVyc2VkIHRoZSBzZW1hbnRpY3MgaGVyZSBmb3Ig
-PjgwIGNoYXJzIHJlYXNvbnM/CgpJIHNlZSBubyBoYXJtIGluIGl0IHRob3VnaC4KCkFja2VkLWJ5
-OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgoKLS0gCkxlZSBKb25lcwpMaW5hcm8g
-U1QtRXJpY3Nzb24gTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ug
-c29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8
-IEJsb2cKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2
-aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3ps
-YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNj
-dXNzCg==
+On 22 November 2012 15:57, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> I'm assuming you've reversed the semantics here for >80 chars reasons?
+
+Not for 80 chars reason :)
+I did it to decrease nesting level of if/else statements :)
+
+--
+viresh
