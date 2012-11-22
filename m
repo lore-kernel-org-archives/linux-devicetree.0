@@ -1,15 +1,12 @@
 From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
-Date: Fri, 23 Nov 2012 00:01:45 +0530
-Message-ID: <CAKohpo=7NRGH+XcgY3Adb8pestDLCnFiTJ-B3P61QAHN4Y_Kvg@mail.gmail.com>
-References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
- <b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
- <20121122112451.GE4328@gmail.com>
+Subject: [PATCH V1 1/3] mfd: stmpe: Arrange #include <header files> in
+ alphabetical order
+Date: Fri, 23 Nov 2012 00:26:18 +0530
+Message-ID: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121122112451.GE4328-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,32 +17,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 November 2012 16:54, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
->> +Optional properties:
->> +- irq-trigger: IRQ trigger to use for the interrupt to the host
->> +- irq-invert-polarity: bool, IRQ line is connected with reversed polarity
->
-> Are these new?
->
-> When adding new bindings, ask yourself:
+This helps managing them better and also reduces chances of adding an header
+file twice.
 
-I was trying to get information of these two bindings from other sources,
-but couldn't find. The only other place can be the interrupts field, right?
+Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/mfd/stmpe-spi.c | 2 +-
+ drivers/mfd/stmpe.c     | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Because interrupts field depends on the interrupt controller, which can
-be a wide variety of controllers in our case, we can't use that. Also,
-the cells of interrupts field will have something that is required to be
-programmed in the interrupt controller and not in the user of IC.
-
-But here we are talking about programming stmpe and so these bindings
-are very much required in stmpe only.
-
-Comments??
-
---
-viresh
+diff --git a/drivers/mfd/stmpe-spi.c b/drivers/mfd/stmpe-spi.c
+index 9edfe86..f86e3fc 100644
+--- a/drivers/mfd/stmpe-spi.c
++++ b/drivers/mfd/stmpe-spi.c
+@@ -7,10 +7,10 @@
+  * Author: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> for ST Microelectronics
+  */
+ 
+-#include <linux/spi/spi.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/spi/spi.h>
+ #include <linux/types.h>
+ #include "stmpe.h"
+ 
+diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
+index 8a4247b..6086481 100644
+--- a/drivers/mfd/stmpe.c
++++ b/drivers/mfd/stmpe.c
+@@ -7,15 +7,15 @@
+  * Author: Rabin Vincent <rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org> for ST-Ericsson
+  */
+ 
+-#include <linux/gpio.h>
+ #include <linux/export.h>
+-#include <linux/kernel.h>
++#include <linux/gpio.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/kernel.h>
++#include <linux/mfd/core.h>
+ #include <linux/pm.h>
+ #include <linux/slab.h>
+-#include <linux/mfd/core.h>
+ #include "stmpe.h"
+ 
+ static int __stmpe_enable(struct stmpe *stmpe, unsigned int blocks)
+-- 
+1.7.12.rc2.18.g61b472e
