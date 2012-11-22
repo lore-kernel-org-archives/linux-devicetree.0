@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCHv13 1/7] viafb: rename display_timing to via_display_timing
-Date: Thu, 22 Nov 2012 17:00:09 +0100
-Message-ID: <1353600015-6974-2-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCHv13 5/7] fbmon: add of_videomode helpers
+Date: Thu, 22 Nov 2012 17:00:13 +0100
+Message-ID: <1353600015-6974-6-git-send-email-s.trumtrar@pengutronix.de>
 References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,138 +22,103 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The struct display_timing is specific to the via subsystem. The naming leads to
-collisions with the new struct display_timing, that is supposed to be a shared
-struct between different subsystems.
-To clean this up, prepend the existing struct with the subsystem it is specific
-to.
+Add helper to get fb_videomode from devicetree.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Acked-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Tested-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 ---
- drivers/video/via/hw.c              |    6 +++---
- drivers/video/via/hw.h              |    2 +-
- drivers/video/via/lcd.c             |    2 +-
- drivers/video/via/share.h           |    2 +-
- drivers/video/via/via_modesetting.c |    8 ++++----
- drivers/video/via/via_modesetting.h |    6 +++---
- 6 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/video/fbmon.c |   42 +++++++++++++++++++++++++++++++++++++++++-
+ include/linux/fb.h    |    6 ++++++
+ 2 files changed, 47 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/via/hw.c b/drivers/video/via/hw.c
-index 898590d..5563c67 100644
---- a/drivers/video/via/hw.c
-+++ b/drivers/video/via/hw.c
-@@ -1467,10 +1467,10 @@ void viafb_set_vclock(u32 clk, int set_iga)
- 	via_write_misc_reg_mask(0x0C, 0x0C); /* select external clock */
- }
+diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+index a6a564d..cd0a035 100644
+--- a/drivers/video/fbmon.c
++++ b/drivers/video/fbmon.c
+@@ -31,7 +31,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <video/edid.h>
+-#include <linux/videomode.h>
++#include <linux/of_videomode.h>
+ #ifdef CONFIG_PPC_OF
+ #include <asm/prom.h>
+ #include <asm/pci-bridge.h>
+@@ -1416,6 +1416,46 @@ int fb_videomode_from_videomode(const struct videomode *vm,
+ EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+ #endif
  
--struct display_timing var_to_timing(const struct fb_var_screeninfo *var,
-+struct via_display_timing var_to_timing(const struct fb_var_screeninfo *var,
- 	u16 cxres, u16 cyres)
- {
--	struct display_timing timing;
-+	struct via_display_timing timing;
- 	u16 dx = (var->xres - cxres) / 2, dy = (var->yres - cyres) / 2;
++#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
++static inline void dump_fb_videomode(const struct fb_videomode *m)
++{
++	pr_debug("fb_videomode = %ux%u@%uHz (%ukHz) %u %u %u %u %u %u %u %u %u\n",
++		 m->xres, m->yres, m->refresh, m->pixclock, m->left_margin,
++		 m->right_margin, m->upper_margin, m->lower_margin,
++		 m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
++}
++
++/**
++ * of_get_fb_videomode - get a fb_videomode from devicetree
++ * @np: device_node with the timing specification
++ * @fb: will be set to the return value
++ * @index: index into the list of display timings in devicetree
++ *
++ * DESCRIPTION:
++ * This function is expensive and should only be used, if only one mode is to be
++ * read from DT. To get multiple modes start with of_get_display_timings ond
++ * work with that instead.
++ */
++int of_get_fb_videomode(const struct device_node *np, struct fb_videomode *fb,
++			unsigned int index)
++{
++	struct videomode vm;
++	int ret;
++
++	ret = of_get_videomode(np, &vm, index);
++	if (ret)
++		return ret;
++
++	fb_videomode_from_videomode(&vm, fb);
++
++	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
++		vm.vactive, np->name);
++	dump_fb_videomode(fb);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_get_fb_videomode);
++#endif
  
- 	timing.hor_addr = cxres;
-@@ -1491,7 +1491,7 @@ struct display_timing var_to_timing(const struct fb_var_screeninfo *var,
- void viafb_fill_crtc_timing(const struct fb_var_screeninfo *var,
- 	u16 cxres, u16 cyres, int iga)
- {
--	struct display_timing crt_reg = var_to_timing(var,
-+	struct via_display_timing crt_reg = var_to_timing(var,
- 		cxres ? cxres : var->xres, cyres ? cyres : var->yres);
+ #else
+ int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 4404ec2..43a2f81 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -20,6 +20,7 @@ struct fb_info;
+ struct device;
+ struct file;
+ struct videomode;
++struct device_node;
  
- 	if (iga == IGA1)
-diff --git a/drivers/video/via/hw.h b/drivers/video/via/hw.h
-index 6be243c..c3f2572 100644
---- a/drivers/video/via/hw.h
-+++ b/drivers/video/via/hw.h
-@@ -637,7 +637,7 @@ extern int viafb_LCD_ON;
- extern int viafb_DVI_ON;
- extern int viafb_hotplug;
+ /* Definitions below are used in the parsed monitor specs */
+ #define FB_DPMS_ACTIVE_OFF	1
+@@ -715,6 +716,11 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+ extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+ extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
  
--struct display_timing var_to_timing(const struct fb_var_screeninfo *var,
-+struct via_display_timing var_to_timing(const struct fb_var_screeninfo *var,
- 	u16 cxres, u16 cyres);
- void viafb_fill_crtc_timing(const struct fb_var_screeninfo *var,
- 	u16 cxres, u16 cyres, int iga);
-diff --git a/drivers/video/via/lcd.c b/drivers/video/via/lcd.c
-index 1650379..022b0df 100644
---- a/drivers/video/via/lcd.c
-+++ b/drivers/video/via/lcd.c
-@@ -549,7 +549,7 @@ void viafb_lcd_set_mode(const struct fb_var_screeninfo *var, u16 cxres,
- 	int panel_hres = plvds_setting_info->lcd_panel_hres;
- 	int panel_vres = plvds_setting_info->lcd_panel_vres;
- 	u32 clock;
--	struct display_timing timing;
-+	struct via_display_timing timing;
- 	struct fb_var_screeninfo panel_var;
- 	const struct fb_videomode *mode_crt_table, *panel_crt_table;
- 
-diff --git a/drivers/video/via/share.h b/drivers/video/via/share.h
-index 3158dfc..65c65c6 100644
---- a/drivers/video/via/share.h
-+++ b/drivers/video/via/share.h
-@@ -319,7 +319,7 @@ struct crt_mode_table {
- 	int refresh_rate;
- 	int h_sync_polarity;
- 	int v_sync_polarity;
--	struct display_timing crtc;
-+	struct via_display_timing crtc;
- };
- 
- struct io_reg {
-diff --git a/drivers/video/via/via_modesetting.c b/drivers/video/via/via_modesetting.c
-index 0e431ae..0b414b0 100644
---- a/drivers/video/via/via_modesetting.c
-+++ b/drivers/video/via/via_modesetting.c
-@@ -30,9 +30,9 @@
- #include "debug.h"
- 
- 
--void via_set_primary_timing(const struct display_timing *timing)
-+void via_set_primary_timing(const struct via_display_timing *timing)
- {
--	struct display_timing raw;
-+	struct via_display_timing raw;
- 
- 	raw.hor_total = timing->hor_total / 8 - 5;
- 	raw.hor_addr = timing->hor_addr / 8 - 1;
-@@ -88,9 +88,9 @@ void via_set_primary_timing(const struct display_timing *timing)
- 	via_write_reg_mask(VIACR, 0x17, 0x80, 0x80);
- }
- 
--void via_set_secondary_timing(const struct display_timing *timing)
-+void via_set_secondary_timing(const struct via_display_timing *timing)
- {
--	struct display_timing raw;
-+	struct via_display_timing raw;
- 
- 	raw.hor_total = timing->hor_total - 1;
- 	raw.hor_addr = timing->hor_addr - 1;
-diff --git a/drivers/video/via/via_modesetting.h b/drivers/video/via/via_modesetting.h
-index 06e09fe..f6a6503 100644
---- a/drivers/video/via/via_modesetting.h
-+++ b/drivers/video/via/via_modesetting.h
-@@ -33,7 +33,7 @@
- #define VIA_PITCH_MAX	0x3FF8
- 
- 
--struct display_timing {
-+struct via_display_timing {
- 	u16 hor_total;
- 	u16 hor_addr;
- 	u16 hor_blank_start;
-@@ -49,8 +49,8 @@ struct display_timing {
- };
- 
- 
--void via_set_primary_timing(const struct display_timing *timing);
--void via_set_secondary_timing(const struct display_timing *timing);
-+void via_set_primary_timing(const struct via_display_timing *timing);
-+void via_set_secondary_timing(const struct via_display_timing *timing);
- void via_set_primary_address(u32 addr);
- void via_set_secondary_address(u32 addr);
- void via_set_primary_pitch(u32 pitch);
++#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
++extern int of_get_fb_videomode(const struct device_node *np,
++			       struct fb_videomode *fb,
++			       unsigned int index);
++#endif
+ #if IS_ENABLED(CONFIG_VIDEOMODE)
+ extern int fb_videomode_from_videomode(const struct videomode *vm,
+ 				       struct fb_videomode *fbmode);
 -- 
 1.7.10.4
