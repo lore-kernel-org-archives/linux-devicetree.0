@@ -1,121 +1,92 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
-Date: Thu, 22 Nov 2012 22:31:48 +0530
-Message-ID: <CAKohpok6v65TH5yZAthyxcH7bCVgF8A8m2bY_mp3yS_Y_yH1Xw@mail.gmail.com>
-References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
- <b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
- <20121122112451.GE4328@gmail.com>
- <CAKohpo=F91sZ7St3XVXqwAEgmSWXjAxxXwRs1RD5qPyW99P1vA@mail.gmail.com>
- <20121122154612.GC10986@gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] ARM: kernel: fix nr_cpu_ids check in DT logical map init
+Date: Thu, 22 Nov 2012 17:05:39 +0000
+Message-ID: <20121122170538.GF16972@e102568-lin.cambridge.arm.com>
+References: <1353516176-12929-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <20121122120843.GA16972@e102568-lin.cambridge.arm.com>
+ <20121122153337.083D73E129E@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121122154612.GC10986-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121122153337.083D73E129E@localhost>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 November 2012 21:16, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> >> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
->> >> +- irq-over-gpio: bool, true if gpio is used to get irq
->> >> +- irq-gpios: gpio number over which irq will be requested (significant only if
->> >> +  irq-over-gpio is true)
->> >
->> > You don't need these. Use gpio_to_irq() instead.
->>
->> I am passing gpio numbers here and am doing gpio_to_irq() in driver.
->> Didn't get this one :(
->
-> For a start you have 'irq-over-gpio' in the binding document and Device Tree
-> and 'irq_over_gpio' in the code. Has it even been tested?
->
-> GPIOs are used as IRQ lines in many other previously DT:ed drivers. Take a
-> look to see how they are handled without adding unnecessary DT bindings.
+On Thu, Nov 22, 2012 at 03:33:36PM +0000, Grant Likely wrote:
+> On Thu, 22 Nov 2012 12:08:43 +0000, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
+> > Hi Russell,
+> > 
+> > On Wed, Nov 21, 2012 at 04:42:56PM +0000, Lorenzo Pieralisi wrote:
+> > > If a kernel is configured with a DT containing more /cpu nodes than
+> > > nr_cpu_ids, the number of cpus must be capped in the DT parsing
+> > > code. Current code carries out the check, but fails to cap the
+> > > value and the check is executed after the cpu logical index is used,
+> > > which can lead to memory corruption due to index overflow.
+> > > 
+> > > This patch refactors the check against nr_cpu_ids and move it before
+> > > any computed index is used in the parsing code.
+> > > 
+> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Reported-by: Mark Rutland <mark.rutland@arm.com>
+> > > ---
+> > > Russell,
+> > > 
+> > > while refactoring the DT loop over nodes, I unfortunately missed this niggle
+> > > in the parsing loop that Mark reported. Here is the fix, sorry for the
+> > > additional commit, if it is ok for you I will add it to your patch system.
+> > > 
+> > > Apologies and thanks,
+> > > Lorenzo
+> > > 
+> > >  arch/arm/kernel/devtree.c | 10 +++++++---
+> > >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> > > index aaf9add..70f1bde 100644
+> > > --- a/arch/arm/kernel/devtree.c
+> > > +++ b/arch/arm/kernel/devtree.c
+> > > @@ -139,10 +139,14 @@ void __init arm_dt_init_cpu_maps(void)
+> > >  			i = cpuidx++;
+> > >  		}
+> > >  
+> > > -		tmp_map[i] = hwid;
+> > > -
+> > > -		if (cpuidx > nr_cpu_ids)
+> > > +		if (WARN(cpuidx > nr_cpu_ids, "DT /cpu %u nodes greater than "
+> > > +					       "max cores %u, capping them\n",
+> > > +					       cpuidx, nr_cpu_ids)) {
+> > > +			cpuidx = nr_cpu_ids;
+> > >  			break;
+> > > +		}
+> > > +
+> > > +		tmp_map[i] = hwid;
+> > >  	}
+> > >  
+> > >  	if (WARN(!bootcpu_valid, "DT missing boot CPU MPIDR[23:0], "
+> > 
+> > If it looks fine to you, can I queue this simple fix in your patch
+> > system please ?
+> > 
+> > Thanks and apologies for the extra commit,
+> > Lorenzo
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-I already knew it, should have picked that up. :(
+Thanks a lot Grant.
 
->> stmpe is an interrupt controller for the IP's which are present inside
->> it: gpio, adc.
->> But interrupt lines for them are managed by stmpe driver internally. So should
->> we really add interrupt-controller for it?
->
-> You can't manage IRQ lines internally, you have to go through
-> the IRQ subsystem. When you request an IRQ via device tree you
-> will do so like this:
+Queued with ID: 7585/1
 
-By that i meant, there is no external node which would have stmpe as
-interrupt controller. Because all of them would be its child node.
-
-This is guaranteed because stmpe is an external device is present on board.
-So, it will have its entry in board dts file, and so wouldn't be
-scattered in different
-files.
-
-> The STMPE GPIO controller can't be used by Device Tree yet in any case,
-> because it doesn't have an IRQ domain. This is compulsory, or it won't
-> work. Have you tried to test this functionality yet?
-
-I don't have SPEAr board to test it anymore. I have moved out of ST now and
-working in linaro as ARM asignee. Just pushing these as an part time activity.
-
-Though ST guys would have tested stmpe, but stmpe-gpio, i am not sure about.
-
-> Okay, I've just had a look at my tested bindings.
->
-> We already have these:
->
->   debounce-interval   /* This is a generic binding */
->   st,scan-count       /* These are vendor specific */
->   st,no-autorepeat    /*            "              */
->
-> Vendor specific bindings should be "<vendor>,<binding>", rather than
-> "<type_of_driver>,<binding>"
-
-Will take care of these.
-
->> >> +             reg = <0>;
->> >
->> > You have reg twice here. Also reg should never be '0'.
->>
->> For SPI, there are chip selects and there is no reg offset.
->
-> I understand the addressing issues, but you have 'reg' twice.
->
-> Which one should be used?
-
-I haven't replied on that, because it was accepted. Only one
-definition should be there for reg.
-
-> I didn't go through them, but are you sure that:
->
-> 1. Can I do without them?
->    1.1 Can I derive the configuration from other things?
->    2.2 Are they _really_ required, or am I just blindly copying platform data?
-> 2. Does a similar binding already exist?
-> 3. Can other drivers make use of them?
->    3.1 If so, create a generic binding
->    3.2 If not, prepend the binding with "<vendor>,"
-
-I will go through them again.
-
->> >> diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
->> Because i wanted to keep all DT stuff together. Obviously i have seen keypad
->> driver earlier :)
->
-> If you had, you'd realise that these bindings already exist. ;)
-
-Ok. I had seen it during my V1 and missed these bindings. will fix them now.
-
---
-viresh
+Thanks,
+Lorenzo
