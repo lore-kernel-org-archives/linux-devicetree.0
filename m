@@ -1,45 +1,68 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V3 0/2] ARM: Exynos: Enable I2S platform support for Exynos5
-Date: Fri, 23 Nov 2012 16:51:38 +0530
-Message-ID: <CAAgF-BdP=eTV40UyO9iqMAyvSmA3R2yxWbGL8jmm4VwOwfPguA@mail.gmail.com>
-References: <1352177084-16339-1-git-send-email-padma.v@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1352177084-16339-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: [PATCH] of/address: sparc: Declare of_iomap as an extern function for sparc again
+Date: Fri, 23 Nov 2012 12:24:09 +0100
+Message-ID: <1353669849-23697-1-git-send-email-andreas@gaisler.com>
+Return-path: <sparclinux-owner@vger.kernel.org>
+Sender: sparclinux-owner@vger.kernel.org
+To: davem@davemloft.net
+Cc: sam@ravnborg.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-cc'ing Mark Brown
+This bug-fix makes sure that of_iomap is defined extern for sparc so that the
+sparc-specific implementation of_iomap is once again used when including
+include/linux/of_address.h in a sparc context. OF_GPIO that is now available for
+sparc relies on this.
 
-On Tue, Nov 6, 2012 at 10:14 AM, Padmavathi Venna <padma.v@samsung.com> wrote:
-> Changes since V2:
->         - Rebased to 3.7-rc3
->         - Custom DT bindings are prefixed with samsung
->         - idma address is moved from dts file dtsi file as it is soc specific
->           property
->
-> Changes since V1:
->         - Rebased to 3.6-rc6
->
-> This patch set enables device tree based platform support for the three I2S
-> controllers on Samsung's Exynos5 SoC's.
->
-> Padmavathi Venna (2):
->   ARM: dts: Add nodes for i2s controllers for Samsung Exynos5 platforms
->   ARM: EXYNOS: Enable platform support for I2S controllers
->
->  arch/arm/boot/dts/exynos5250-smdk5250.dts |   15 +++++++++++++++
->  arch/arm/boot/dts/exynos5250.dtsi         |   28 ++++++++++++++++++++++++++++
->  arch/arm/mach-exynos/mach-exynos5-dt.c    |    6 ++++++
->  3 files changed, 49 insertions(+), 0 deletions(-)
->
-> --
-> 1.7.4.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The bug was inadvertently introduced in a850a75, "of/address: add empty static
+inlines for !CONFIG_OF", that added a static dummy inline for of_iomap when
+!CONFIG_OF_ADDRESS. However, CONFIG_OF_ADDRESS is never defined for sparc, but
+there is a sparc-specific implementation /arch/sparc/kernel/of_device_common.c.
+
+This fix takes the same approach as 0bce04b that solved the equivalent problem
+for of_address_to_resource.
+
+Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+---
+ arch/sparc/include/asm/prom.h |    5 ++++-
+ include/linux/of_address.h    |    2 ++
+ 2 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
+index f930031..67c6257 100644
+--- a/arch/sparc/include/asm/prom.h
++++ b/arch/sparc/include/asm/prom.h
+@@ -63,10 +63,13 @@ extern char *of_console_options;
+ extern void irq_trans_init(struct device_node *dp);
+ extern char *build_path_component(struct device_node *dp);
+ 
+-/* SPARC has a local implementation */
++/* SPARC has local implementations */
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ #define of_address_to_resource of_address_to_resource
+ 
++void __iomem *of_iomap(struct device_node *node, int index);
++#define of_iomap of_iomap
++
+ #endif /* __KERNEL__ */
+ #endif /* _SPARC_PROM_H */
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index e20e3af..0506eb5 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -42,10 +42,12 @@ static inline struct device_node *of_find_matching_node_by_address(
+ {
+ 	return NULL;
+ }
++#ifndef of_iomap
+ static inline void __iomem *of_iomap(struct device_node *device, int index)
+ {
+ 	return NULL;
+ }
++#endif
+ static inline const __be32 *of_get_address(struct device_node *dev, int index,
+ 					u64 *size, unsigned int *flags)
+ {
+-- 
+1.7.0.4
+
