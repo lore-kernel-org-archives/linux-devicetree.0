@@ -1,83 +1,90 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] usb: chipidea: usbmisc: add support for ahb,
- ipg and per clock
-Date: Fri, 23 Nov 2012 17:20:51 +0100
-Message-ID: <20121123162051.GA31008@pengutronix.de>
-References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
- <1353506793-8354-6-git-send-email-m.grzeschik@pengutronix.de>
- <20121123065115.GC22420@nchen-desktop>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
+Date: Fri, 23 Nov 2012 23:03:47 +0530
+Message-ID: <CAKohpomAM2pw9kgB6khtHzQ2WCXKZ9_pi1_sOH2dQToVS8ep4w@mail.gmail.com>
+References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
+	<7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
+	<20121123094132.EFCB73E07BE@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121123065115.GC22420@nchen-desktop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121123094132.EFCB73E07BE@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, Grant Likely <grant.likely@secretlab.ca>
+Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2012 at 02:51:16PM +0800, Peter Chen wrote:
-> On Wed, Nov 21, 2012 at 03:06:31PM +0100, Michael Grzeschik wrote:
-> > From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > 
-> > This patch adds support for a second and third clock to the usbmisc driver. On
-> > modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
-> > "ipg" and "per") must be enabled in order to access the USB core.
-> 
-> The imx6q usb's clock structure is different with old mxc serials (mx3x, mx5x)
-> due to different PHY. This patch will cause mx6q's probe fail, the message
-> like below:
-> 
-> imx_usb 2184000.usb: Failed to get clock, err=-2
-> imx_usb: probe of 2184000.usb failed with error -2
-> 
-> The mx5x (50, 51, 53) and mx6q's clock structure like below:
-> 
-> mx5x:
-> - usboh3_ipg_ahb: CCGR2(index13), used to access register
-> (like your ahb)
+On 23 November 2012 15:11, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Fri, 23 Nov 2012 00:26:20 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-That is probably the one, which already gets enabled inside the
-ci13xxx_imx code.
+>> + - irq-trigger                       : IRQ trigger to use for the interrupt to the host
+>> + - irq-invert-polarity               : bool, IRQ line is connected with reversed polarity
+>
+> This looks odd. Normally the interrupt polarity should be encoded in the irq
+> specifier flags field.
 
-> - usboh3_60M: CCGR2(index14), used to access register at serial phy mode
-> as the phy is at serial mode, we need to use it at the first before the phy
-> goes to other modes.
-> (like your ipg)
+Hi Grant and Lee Jones,
 
+This looks odd because stmpe is odd, i am taking the discussion held
+with Lee jones to this thread.
 
+So, how interrupt stuff works currently in DT..
+We have a interrupt controller IC:
 
-> usbphy: used to transfer data
-> (like your per)
+	ic: interrupt-controller@40008000 {
+		compatible = "foo";
+		interrupt-controller;
+		#interrupt-cells = <2>;
+                ...
+	};
 
-The "per" clk is a different clk than the usbphy. We have an usbphy clk
-aswell on the mx5x. As discussed before [1], we need a solution to enable
-the usbphy clk. The current approach is to let the nop-xceiver enable
-this.
+And we have a user of this IC:
 
-[1] http://www.spinics.net/lists/linux-usb/msg74489.html
+	foo-peripheral@40048000 {
+		compatible = "foo-peripheral";
+		interrupt-parent = <&ic>;
+		interrupts = <39 4>;
+	};
 
-> mx6q:
-> - usboh3(Index 162 at DT), used to access register
-> - usbphy(Index 182 for otg port at DT), at phy controller
+Here first field of "interrupts" gives interrupt line number and the second one
+gives polarity, interrupt type etc..
 
-> So, we may consider a way to consolidate both mx6q (mx28) and mxc (mx5x, mx3x)
-> platforms.
+All is good till now. Now, every interrupt controller supports the first
+field, but the second one depends on its capabilities. An interrupt controller
+might not have registers to configure interrupt polarity, type, etc of
+the interrupt
+it will service and so the second field wouldn't be available for them.
 
-Yes, we will discuss a real clktree solution in the usbmisc driver for
-the different cores. The first thoughts are, that the clk configuration
-has completely to be done inside the usbmisc driver. For this, the
-usbmisc needs to become a hard dependency for the ci13xxx_imx glue code.
+For now just think stmpe is not a MFD and not a interrupt controller
+either. It is
+just a simple device, dev-foo.
 
-Regards,
-Michael
+It will declare values of its interrupts field based on the type of
+interrupt controller
+that will service its interrupt and that can be anything like VIC/GIC/GPIO
+controller.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Obviously nobody else than the parent IC driver can parse interrupts field
+of dev-foo, because only that driver understands the real meaning of
+these fields.
+
+Now, stmpe has a special property. It can decide the way its output
+interrupt line
+will work. i.e. its polarity and interrupt type - edle/level, etc..
+This is not commonly
+seen in any peripheral. Now my original bindings and the real question here is
+about passing this information to stmpe driver.
+
+I can't pass it in interrupts field of stmpe node, as that field
+belongs to parent
+interrupt controller of stmpe.
+
+I can't pass that from child nodes of stmpe, as we are programming the interrupt
+coming out of stmpe and not the interrupt coming out of stmpe-gpio or
+stmpe-keypad.
+
+And that's why i added these bindings. Please suggest me if i am still missing
+something.
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
