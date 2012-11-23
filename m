@@ -1,56 +1,106 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v4 05/11] pwm: pwm-tiecap: pinctrl support
-Date: Fri, 23 Nov 2012 11:12:15 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9EEAAA@DBDE01.ent.ti.com>
-References: <1353503469-18634-1-git-send-email-avinashphilip@ti.com>
- <1353503469-18634-6-git-send-email-avinashphilip@ti.com>
- <20121122205944.GC16716@avionic-0098.adnet.avionic-design.de>
- <518397C60809E147AF5323E0420B992E3E9EE991@DBDE01.ent.ti.com>
- <20121123105110.GA6884@avionic-0098.adnet.avionic-design.de>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V3 1/2] ARM: dts: Add nodes for i2s controllers for
+ Samsung Exynos5 platforms
+Date: Fri, 23 Nov 2012 16:44:15 +0530
+Message-ID: <CAAgF-Be=m2ZrupCWV-iTGCT=AkMzxZOQGhJ-2fF3L_YeqS_FaQ@mail.gmail.com>
+References: <1352177084-16339-1-git-send-email-padma.v@samsung.com>
+	<1352177084-16339-2-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20121123105110.GA6884@avionic-0098.adnet.avionic-design.de>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: "paul@pwsan.com" <paul@pwsan.com>, "tony@atomide.com" <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Bedia, Vaibhav" <vaibhav.bedia@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1352177084-16339-2-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, Mark Brown <broonie@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2012 at 16:21:10, Thierry Reding wrote:
-> On Fri, Nov 23, 2012 at 10:34:02AM +0000, Philip, Avinash wrote:
-> > On Fri, Nov 23, 2012 at 02:29:44, Thierry Reding wrote:
-> > > On Wed, Nov 21, 2012 at 06:41:02PM +0530, Philip, Avinash wrote:
-> > > [...]
-> > > > +	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
-> > > > +	if (IS_ERR(pinctrl))
-> > > > +		dev_warn(&pdev->dev, "failed to configure pins from driver\n");
-> > > 
-> > > I think we already discussed this, but shouldn't this be a fatal error?
-> > 
-> > I had checked relevant discussion and found this can be warning message.
-> > This is because most boards don't have pinctrl implemented at this point,
-> > or may never have.
-> > 
-> > https://lkml.org/lkml/2012/9/11/369
-> > 
-> > Any way I will change to
-> > dev_warn(&pdev->dev, "unable to select pin group\n");
-> > as in other drivers.
-> 
-> But in case pinctrl isn't implemented, shouldn't the implementation of
-> devm_pinctrl_get_select_default() just be a no-op?
+cc'ing Mark Brown.
 
-So driver can still exist but pin mux functionality missing. Then warning
-message will give hints.
-I am also ok with error message & failure of driver with EPROBE_DEFER,
-if you want?
-
-Thanks
-Avinash
-
-> 
-> Thierry
-> 
-
+On Tue, Nov 6, 2012 at 10:14 AM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> Add device nodes for the three instances of i2s controllers in Exynos5
+> platforms. Enable instance i2s 0 for exynos5250 board and disable all
+> other i2s instances.
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts |   14 ++++++++++++++
+>  arch/arm/boot/dts/exynos5250.dtsi         |   29 +++++++++++++++++++++++++++++
+>  2 files changed, 43 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> index 405009c..3b2a3c9 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -193,4 +193,18 @@
+>         hdmi {
+>                 hpd-gpio = <&gpx3 7 0xf 1 3>;
+>         };
+> +
+> +       i2s_0: i2s@03830000 {
+> +               gpios = <&gpz 0 2 0 0>, <&gpz 1 2 0 0>, <&gpz 2 2 0 0>,
+> +                       <&gpz 3 2 0 0>, <&gpz 4 2 0 0>, <&gpz 5 2 0 0>,
+> +                       <&gpz 6 2 0 0>;
+> +       };
+> +
+> +       i2s_1: i2s@12D60000 {
+> +               status = "disabled";
+> +       };
+> +
+> +       i2s_2: i2s@12D70000 {
+> +               status = "disabled";
+> +       };
+>  };
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index cf6a02d..a168e98 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -31,6 +31,9 @@
+>                 gsc1 = &gsc_1;
+>                 gsc2 = &gsc_2;
+>                 gsc3 = &gsc_3;
+> +               i2s0 = &i2s_0;
+> +               i2s1 = &i2s_1;
+> +               i2s2 = &i2s_2;
+>         };
+>
+>         gic:interrupt-controller@10481000 {
+> @@ -238,6 +241,32 @@
+>                 #size-cells = <0>;
+>         };
+>
+> +       i2s_0: i2s@03830000 {
+> +               compatible = "samsung,samsung-i2s";
+> +               reg = <0x03830000 0x100>;
+> +               tx-dma-channel-secondary = <&pdma0 8>; /* preliminary */
+> +               tx-dma-channel = <&pdma0 10>; /* preliminary */
+> +               rx-dma-channel = <&pdma0 9>; /* preliminary */
+> +               samsung,supports-6ch;
+> +               samsung,supports-rstclr;
+> +               samsung,supports-secdai;
+> +               samsung,idma-addr = <0x03000000>;
+> +       };
+> +
+> +       i2s_1: i2s@12D60000 {
+> +               compatible = "samsung,samsung-i2s";
+> +               reg = <0x12D60000 0x100>;
+> +               tx-dma-channel = <&pdma1 12>; /* preliminary */
+> +               rx-dma-channel = <&pdma1 11>; /* preliminary */
+> +       };
+> +
+> +       i2s_2: i2s@12D70000 {
+> +               compatible = "samsung,samsung-i2s";
+> +               reg = <0x12D70000 0x100>;
+> +               tx-dma-channel = <&pdma0 12>; /* preliminary */
+> +               rx-dma-channel = <&pdma0 11>; /* preliminary */
+> +       };
+> +
+>         amba {
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+> --
+> 1.7.4.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
