@@ -1,162 +1,117 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] usb: chipidea: usbmisc: add support for ahb,
- ipg and per clock
-Date: Fri, 23 Nov 2012 14:51:16 +0800
-Message-ID: <20121123065115.GC22420@nchen-desktop>
+Subject: Re: [PATCH v3 6/7] usb: chipidea: usbmisc: add mx53 support
+Date: Fri, 23 Nov 2012 14:53:41 +0800
+Message-ID: <20121123065340.GD22420@nchen-desktop>
 References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
- <1353506793-8354-6-git-send-email-m.grzeschik@pengutronix.de>
+ <1353506793-8354-7-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1353506793-8354-6-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1353506793-8354-7-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 03:06:31PM +0100, Michael Grzeschik wrote:
-> From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Wed, Nov 21, 2012 at 03:06:32PM +0100, Michael Grzeschik wrote:
+> This adds mx53 as the next user of the usbmisc driver and makes it
+> possible to disable the overcurrent-detection of the internal phy.
 > 
-> This patch adds support for a second and third clock to the usbmisc driver. On
-> modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
-> "ipg" and "per") must be enabled in order to access the USB core.
-
-The imx6q usb's clock structure is different with old mxc serials (mx3x, mx5x)
-due to different PHY. This patch will cause mx6q's probe fail, the message
-like below:
-
-imx_usb 2184000.usb: Failed to get clock, err=-2
-imx_usb: probe of 2184000.usb failed with error -2
-
-The mx5x (50, 51, 53) and mx6q's clock structure like below:
-
-mx5x:
-- usboh3_ipg_ahb: CCGR2(index13), used to access register
-(like your ahb)
-- usboh3_60M: CCGR2(index14), used to access register at serial phy mode
-as the phy is at serial mode, we need to use it at the first before the phy
-goes to other modes.
-(like your ipg)
-usbphy: used to transfer data
-(like your per)
-
-mx6q:
-- usboh3(Index 162 at DT), used to access register
-- usbphy(Index 182 for otg port at DT), at phy controller
-
-So, we may consider a way to consolidate both mx6q (mx28) and mxc (mx5x, mx3x)
-platforms.
-> 
-> ahb - AMBA High-Performance Bus clock domain
-> ipg - IP-Bus Gate clock domain
-> per - Peripheral clock domain
-> 
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
-> Changes since v1:
-> * changed patch description
+> Changes since v2:
+> * added defines for register offsets and bitmasks
+> * fixed disable_oc option for all ports
 > 
->  drivers/usb/chipidea/usbmisc_imx.c |   60 +++++++++++++++++++++++++++---------
->  1 file changed, 45 insertions(+), 15 deletions(-)
+>  drivers/usb/chipidea/usbmisc_imx.c |   51 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 > 
 > diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-> index d0c7a03..e090e0f 100644
+> index e090e0f..b1811df 100644
 > --- a/drivers/usb/chipidea/usbmisc_imx.c
 > +++ b/drivers/usb/chipidea/usbmisc_imx.c
-> @@ -24,7 +24,9 @@
+> @@ -19,6 +19,13 @@
+>  
+>  #define USB_DEV_MAX 4
+>  
+> +#define MX53_USB_OTG_PHY_CTRL_0_OFFSET	0x08;
+> +#define MX53_USB_UH2_CTRL_OFFSET	0x14;
+> +#define MX53_USB_UH3_CTRL_OFFSET	0x18;
+> +#define MX53_BM_OVER_CUR_DIS_H1		BIT(5)
+> +#define MX53_BM_OVER_CUR_DIS_OTG	BIT(8)
+> +#define MX53_BM_OVER_CUR_DIS_UHx	BIT(30)
+> +
+>  #define MX6_BM_OVER_CUR_DIS		BIT(7)
+
+As every SoC platform's non-core register mapping is different,
+it is better to use .h to put register bit definition
+>  
 >  struct imx_usbmisc {
->  	void __iomem *base;
->  	spinlock_t lock;
-> -	struct clk *clk;
-> +	struct clk *clk_ahb;
-> +	struct clk *clk_ipg;
-> +	struct clk *clk_per;
->  	struct usbmisc_usb_device usbdev[USB_DEV_MAX];
->  	const struct usbmisc_ops *ops;
->  };
-> @@ -104,38 +106,66 @@ static int __devinit usbmisc_imx_probe(struct platform_device *pdev)
->  	if (!data->base)
->  		return -EADDRNOTAVAIL;
+> @@ -54,6 +61,45 @@ static struct usbmisc_usb_device *get_usbdev(struct device *dev)
+>  	return &usbmisc->usbdev[i];
+>  }
 >  
-> -	data->clk = devm_clk_get(&pdev->dev, NULL);
-> -	if (IS_ERR(data->clk)) {
-> +	data->clk_ahb = devm_clk_get(&pdev->dev, "ahb");
-> +	if (IS_ERR(data->clk_ahb)) {
->  		dev_err(&pdev->dev,
-> -			"failed to get clock, err=%ld\n", PTR_ERR(data->clk));
-> -		return PTR_ERR(data->clk);
-> +			"failed to get ahb clock, err=%ld\n", PTR_ERR(data->clk_ahb));
-> +		return PTR_ERR(data->clk_ahb);
->  	}
->  
-> -	ret = clk_prepare_enable(data->clk);
-> -	if (ret) {
-> +	data->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
-> +	if (IS_ERR(data->clk_ipg)) {
->  		dev_err(&pdev->dev,
-> -			"clk_prepare_enable failed, err=%d\n", ret);
-> -		return ret;
-> +			"failed to get ipg clock, err=%ld\n", PTR_ERR(data->clk_ipg));
-> +		return PTR_ERR(data->clk_ipg);
->  	}
->  
-> +	data->clk_per = devm_clk_get(&pdev->dev, "per");
-> +	if (IS_ERR(data->clk_per)) {
-> +		dev_err(&pdev->dev,
-> +			"failed to get per clock, err=%ld\n", PTR_ERR(data->clk_per));
-> +		return PTR_ERR(data->clk_per);
+> +static int usbmisc_imx53_init(struct device *dev)
+> +{
+> +	struct usbmisc_usb_device *usbdev;
+> +	void __iomem *reg;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	usbdev = get_usbdev(dev);
+> +	if (IS_ERR(usbdev))
+> +		return PTR_ERR(usbdev);
+> +
+> +	if (usbdev->disable_oc) {
+> +		spin_lock_irqsave(&usbmisc->lock, flags);
+> +		switch (usbdev->index) {
+> +		case 0:
+> +			reg = usbmisc->base + MX53_USB_OTG_PHY_CTRL_0_OFFSET;
+> +			val = readl(reg) | MX53_BM_OVER_CUR_DIS_OTG;
+> +			break;
+> +		case 1:
+> +			reg = usbmisc->base + MX53_USB_OTG_PHY_CTRL_0_OFFSET;
+> +			val = readl(reg) | MX53_BM_OVER_CUR_DIS_H1;
+> +			break;
+> +		case 2:
+> +			reg = usbmisc->base + MX53_USB_UH2_CTRL_OFFSET;
+> +			val = readl(reg) | MX53_BM_OVER_CUR_DIS_UHx;
+> +			break;
+> +		case 3:
+> +			reg = usbmisc->base + MX53_USB_UH3_CTRL_OFFSET;
+> +			val = readl(reg) | MX53_BM_OVER_CUR_DIS_UHx;
+> +			break;
+> +		}
+> +		if (reg && val)
+> +			writel(val, reg);
+> +		spin_unlock_irqrestore(&usbmisc->lock, flags);
 > +	}
 > +
-> +	ret = clk_prepare_enable(data->clk_ahb);
-> +	if (ret)
-> +		return ret;
+> +	return 0;
+> +}
 > +
-> +	ret = clk_prepare_enable(data->clk_ipg);
-> +	if (ret)
-> +		goto err_ipg_failed;
-> +
-> +	ret = clk_prepare_enable(data->clk_per);
-> +	if (ret)
-> +		goto err_per_failed;
-> +
->  	tmp_dev = (struct of_device_id *)
->  		of_match_device(usbmisc_imx_dt_ids, &pdev->dev);
->  	data->ops = (const struct usbmisc_ops *)tmp_dev->data;
->  	usbmisc = data;
->  	ret = usbmisc_set_ops(data->ops);
-> -	if (ret) {
-> -		usbmisc = NULL;
-> -		clk_disable_unprepare(data->clk);
-> -		return ret;
-> -	}
-> +	if (ret)
-> +		goto err_set_ops_failed;
->  
->  	return 0;
-> +
-> + err_set_ops_failed:
-> +	usbmisc = NULL;
-> +	clk_disable_unprepare(data->clk_per);
-> + err_per_failed:
-> +	clk_disable_unprepare(data->clk_ipg);
-> + err_ipg_failed:
-> +	clk_disable_unprepare(data->clk_ahb);
-> +
-> +	return ret;
->  }
->  
->  static int __devexit usbmisc_imx_remove(struct platform_device *pdev)
+>  static int usbmisc_imx6q_init(struct device *dev)
 >  {
->  	usbmisc_unset_ops(usbmisc->ops);
-> -	clk_disable_unprepare(usbmisc->clk);
-> +	clk_disable_unprepare(usbmisc->clk_per);
-> +	clk_disable_unprepare(usbmisc->clk_ipg);
-> +	clk_disable_unprepare(usbmisc->clk_ahb);
->  	usbmisc = NULL;
+>  
+> @@ -76,11 +122,16 @@ static int usbmisc_imx6q_init(struct device *dev)
 >  	return 0;
 >  }
+>  
+> +static const struct usbmisc_ops imx53_usbmisc_ops = {
+> +	.init = usbmisc_imx53_init,
+> +};
+> +
+>  static const struct usbmisc_ops imx6q_usbmisc_ops = {
+>  	.init = usbmisc_imx6q_init,
+>  };
+>  
+>  static const struct of_device_id usbmisc_imx_dt_ids[] = {
+> +	{ .compatible = "fsl,imx53-usbmisc", .data = (void *)&imx53_usbmisc_ops },
+>  	{ .compatible = "fsl,imx6q-usbmisc", .data = (void *)&imx6q_usbmisc_ops },
+>  	{ /* sentinel */ }
+>  };
 > -- 
 > 1.7.10.4
 > 
