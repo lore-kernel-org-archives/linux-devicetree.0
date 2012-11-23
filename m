@@ -1,68 +1,82 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH] of/address: sparc: Declare of_iomap as an extern function for sparc again
-Date: Fri, 23 Nov 2012 12:24:09 +0100
-Message-ID: <1353669849-23697-1-git-send-email-andreas@gaisler.com>
-Return-path: <sparclinux-owner@vger.kernel.org>
-Sender: sparclinux-owner@vger.kernel.org
-To: davem@davemloft.net
-Cc: sam@ravnborg.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [RFC PATCH] ASoC: Samsung: Register the audio dma platform device
+Date: Fri, 23 Nov 2012 17:01:01 +0530
+Message-ID: <CAAgF-Bed1=kGHjWYzYvKXY6GhiYFr4kRqeJp2iJmL-GwGscMCg@mail.gmail.com>
+References: <1352894960-17434-1-git-send-email-padma.v@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1352894960-17434-1-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, Mark Brown <broonie@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-This bug-fix makes sure that of_iomap is defined extern for sparc so that the
-sparc-specific implementation of_iomap is once again used when including
-include/linux/of_address.h in a sparc context. OF_GPIO that is now available for
-sparc relies on this.
+cc'ing Mark Brown
 
-The bug was inadvertently introduced in a850a75, "of/address: add empty static
-inlines for !CONFIG_OF", that added a static dummy inline for of_iomap when
-!CONFIG_OF_ADDRESS. However, CONFIG_OF_ADDRESS is never defined for sparc, but
-there is a sparc-specific implementation /arch/sparc/kernel/of_device_common.c.
-
-This fix takes the same approach as 0bce04b that solved the equivalent problem
-for of_address_to_resource.
-
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
----
- arch/sparc/include/asm/prom.h |    5 ++++-
- include/linux/of_address.h    |    2 ++
- 2 files changed, 6 insertions(+), 1 deletions(-)
-
-diff --git a/arch/sparc/include/asm/prom.h b/arch/sparc/include/asm/prom.h
-index f930031..67c6257 100644
---- a/arch/sparc/include/asm/prom.h
-+++ b/arch/sparc/include/asm/prom.h
-@@ -63,10 +63,13 @@ extern char *of_console_options;
- extern void irq_trans_init(struct device_node *dp);
- extern char *build_path_component(struct device_node *dp);
- 
--/* SPARC has a local implementation */
-+/* SPARC has local implementations */
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
- #define of_address_to_resource of_address_to_resource
- 
-+void __iomem *of_iomap(struct device_node *node, int index);
-+#define of_iomap of_iomap
-+
- #endif /* __KERNEL__ */
- #endif /* _SPARC_PROM_H */
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index e20e3af..0506eb5 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -42,10 +42,12 @@ static inline struct device_node *of_find_matching_node_by_address(
- {
- 	return NULL;
- }
-+#ifndef of_iomap
- static inline void __iomem *of_iomap(struct device_node *device, int index)
- {
- 	return NULL;
- }
-+#endif
- static inline const __be32 *of_get_address(struct device_node *dev, int index,
- 					u64 *size, unsigned int *flags)
- {
--- 
-1.7.0.4
-
+On Wed, Nov 14, 2012 at 5:39 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> Audio dma device is not a hardware peripherial.
+> So this device can't be added in the dt devices list.
+> So expanded the module_platform_driver and registered
+> this device using "platform_device_register_simple".
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
+>  sound/soc/samsung/dma.c |   30 +++++++++++++++++++++++++++++-
+>  1 files changed, 29 insertions(+), 1 deletions(-)
+>
+> diff --git a/sound/soc/samsung/dma.c b/sound/soc/samsung/dma.c
+> index 359708c..17ae9c0 100644
+> --- a/sound/soc/samsung/dma.c
+> +++ b/sound/soc/samsung/dma.c
+> @@ -444,6 +444,8 @@ static int __devexit samsung_asoc_platform_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +static struct platform_device *asoc_dma_device;
+> +
+>  static struct platform_driver asoc_dma_driver = {
+>         .driver = {
+>                 .name = "samsung-audio",
+> @@ -454,7 +456,33 @@ static struct platform_driver asoc_dma_driver = {
+>         .remove = __devexit_p(samsung_asoc_platform_remove),
+>  };
+>
+> -module_platform_driver(asoc_dma_driver);
+> +static int __init asoc_dma_init(void)
+> +{
+> +       int ret;
+> +
+> +       ret = platform_driver_register(&asoc_dma_driver);
+> +       if (ret) {
+> +               pr_err("unable to register driver\n");
+> +               return ret;
+> +       }
+> +
+> +       asoc_dma_device = platform_device_register_simple("samsung-audio", -1, NULL, 0);
+> +       if (IS_ERR(asoc_dma_device)) {
+> +               platform_driver_unregister(&asoc_dma_driver);
+> +               return PTR_ERR(asoc_dma_device);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void __exit asoc_dma_exit(void)
+> +{
+> +       platform_device_unregister(asoc_dma_device);
+> +       platform_driver_unregister(&asoc_dma_driver);
+> +}
+> +
+> +module_init(asoc_dma_init);
+> +module_exit(asoc_dma_exit);
+>
+>  MODULE_AUTHOR("Ben Dooks, <ben@simtec.co.uk>");
+>  MODULE_DESCRIPTION("Samsung ASoC DMA Driver");
+> --
+> 1.7.4.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
