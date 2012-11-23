@@ -1,69 +1,26 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 3/7] mfd: max8925: fix onkey driver irq base
-Date: Thu, 22 Nov 2012 23:41:58 -0800
-Message-ID: <20121123074158.GD12631@core.coreip.homeip.net>
-References: <1352187570-9803-1-git-send-email-qingx@marvell.com>
- <50AF23AB.3010002@marvell.com>
+Subject: Re: [PATCH] input: stmpe-ts: Add DT support for stmpe touchscreen
+Date: Thu, 22 Nov 2012 23:46:30 -0800
+Message-ID: <20121123074630.GE12631@core.coreip.homeip.net>
+References: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <50AF23AB.3010002@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>
+In-Reply-To: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Qing,
-
-On Fri, Nov 23, 2012 at 03:20:11PM +0800, Qing Xu wrote:
-> On 11/06/2012 03:39 PM, Qing Xu wrote:
-> >From: Qing Xu <qingx@marvell.com>
-> >
-> >update onkey driver's irq base, it should get from max8925,
-> >but not save in a private value
-> >
-> >Signed-off-by: Qing Xu <qingx@marvell.com>
-> >---
-> >  drivers/input/misc/max8925_onkey.c |    3 ---
-> >  drivers/mfd/max8925-core.c         |    2 +-
-> >  2 files changed, 1 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/drivers/input/misc/max8925_onkey.c b/drivers/input/misc/max8925_onkey.c
-> >index 0a12b74..6527789 100644
-> >--- a/drivers/input/misc/max8925_onkey.c
-> >+++ b/drivers/input/misc/max8925_onkey.c
-> >@@ -100,9 +100,6 @@ static int __devinit max8925_onkey_probe(struct platform_device *pdev)
-> >  	input->dev.parent = &pdev->dev;
-> >  	input_set_capability(input, EV_KEY, KEY_POWER);
-> >-	irq[0] += chip->irq_base;
-> >-	irq[1] += chip->irq_base;
-> >-
-> >  	error = request_threaded_irq(irq[0], NULL, max8925_onkey_handler,
-> >  				     IRQF_ONESHOT, "onkey-down", info);
-> >  	if (error < 0) {
-> >diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
-> >index b1eacae..37a372d 100644
-> >--- a/drivers/mfd/max8925-core.c
-> >+++ b/drivers/mfd/max8925-core.c
-> >@@ -881,7 +881,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
-> >  	ret = mfd_add_devices(chip->dev, 0, &onkey_devs[0],
-> >  			      ARRAY_SIZE(onkey_devs),
-> >-			      NULL, 0, NULL);
-> >+			      NULL, chip->irq_base, NULL);
-> >  	if (ret < 0) {
-> >  		dev_err(chip->dev, "Failed to add onkey subdev\n");
-> >  		goto out_dev;
-> Hi Dmitry,
+On Fri, Nov 23, 2012 at 11:59:46AM +0530, Viresh Kumar wrote:
+> From: Vipul Kumar Samar <vipulkumar.samar@st.com>
 > 
-> Could you help to review my patch? Thanks a lot!
-> 
+> This patch allows the STMPE Touchscreen driver to be successfully probed and
+> initialised when Device Tree support is enabled. Bindings are mentioned in
+> Documentation too.
 
-Looks good to me.
-
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-Thanks.
+Applied, thank you Viresh.
 
 -- 
 Dmitry
