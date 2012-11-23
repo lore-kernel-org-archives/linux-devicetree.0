@@ -1,56 +1,56 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Fri, 23 Nov 2012 10:44:44 +0900
-Message-ID: <20121123014443.GD4385@opensource.wolfsonmicro.com>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
- <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
- <20121120215429.B621F3E1821@localhost>
- <20121121013133.GE4673@opensource.wolfsonmicro.com>
- <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
+From: Shiraz Hashim <shiraz.hashim@st.com>
+Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
+Date: Fri, 23 Nov 2012 09:15:58 +0530
+Message-ID: <20121123034557.GB5384@localhost.localdomain>
+References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
+ <b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
+ <20121122112451.GE4328@gmail.com>
+ <CAKohpo=F91sZ7St3XVXqwAEgmSWXjAxxXwRs1RD5qPyW99P1vA@mail.gmail.com>
+ <20121122154612.GC10986@gmail.com>
+ <CAKohpok6v65TH5yZAthyxcH7bCVgF8A8m2bY_mp3yS_Y_yH1Xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jL2BoiuKMElzg3CS"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
+In-Reply-To: <CAKohpok6v65TH5yZAthyxcH7bCVgF8A8m2bY_mp3yS_Y_yH1Xw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Ola LILJA2 <ola.o.lilja@stericsson.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Nov 22, 2012 at 10:31:48PM +0530, Viresh Kumar wrote:
+> On 22 November 2012 21:16, Lee Jones <lee.jones@linaro.org> wrote:
+> > The STMPE GPIO controller can't be used by Device Tree yet in
+> > any case, because it doesn't have an IRQ domain. This is
+> > compulsory, or it won't work. Have you tried to test this
+> > functionality yet?
+> 
+> I don't have SPEAr board to test it anymore. I have moved out of
+> ST now and working in linaro as ARM asignee. Just pushing these
+> as an part time activity.
+> 
+> Though ST guys would have tested stmpe, but stmpe-gpio, i am not
+> sure about.
 
---jL2BoiuKMElzg3CS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Let me bring some more information here. I totally understand
+Jones concerns, but the way stmpe (and may be other mfd devices)
+are handled is this that the parent block (i.e. stmpe) decides on
+the variants (say by probing device itself) and then prepares
+associated data for the (probed) variant and creates a platform
+device for the same.
 
-On Thu, Nov 22, 2012 at 09:57:22AM +0100, Linus Walleij wrote:
+For the interrupts case also, it is stmpe which registers the
+irq domain. This is because, stmpe driver probes variant and
+populates its platform data and stmpe-gpio may not be aware of the
+variant it serves. At the same time, it (stmpe) needs few of the
+(virtual) interrupts for its internal purpose also.
 
-> Is it correct to assume that this library will be useful also for ALSA
-> SoC type of devices?
+Hence stmpe passes irq_base to the stmpe-gpio driver while
+allocating and registering irq domain by itself.
 
-ASoC has facilities for autogenerating the bulk of the sequences which
-with modern devices is all that you really need.
+With this approach we have tested the functionality on SPEAr
+platform.
 
---jL2BoiuKMElzg3CS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQrtUFAAoJELSic+t+oim9or0P/jeRd4BYe3ocqxtkm+e8e60Y
-blALWfdQExTsYg1gmoEASiBFm5vhQg9TDcmM1MdojCRV0+IfPem+a/Zo8DuLinqO
-QqNNY5pw/j7KLM2FflzoiFPtwz5w4Tg85eMZD9nsmmAUw//t+hlB1uCI6qo1RAQ7
-GAR4L6jCTNqe9q7osV5ydEw3rrKKTqo99MMO0inZ788wp+xzSCHcP5wljRwHZwSI
-3Q8vL3dQw+IGa6/XJM9pMAOd/IFwW8+5QCl89Z6hRLza9V+K9Ax7/Xgj4uv/E2CG
-ASe9HZ4hInv6kwJX0yUN4dQJPt5CH+ABnuRnB9WBEhxZ5EIeYDy3JIHfCBxevGiN
-j8g8mLQ8ihXQ3GcLHgHk6cXtxI/5EZhaOWDCN13sZ3FTnxKfm1xDQ9iQoEx/CTgR
-oirZajqnKJyVBI2j431JLtzwzsI37dS9gS12MLtudXTCMuuib/RZ1CtpqvUfV0Hq
-mTUaKqiUXl67Pu+nbbIlwUuvicPugTjMBJepjhQlXlrDwvOXGj6p2rX0ZHEJYel4
-/mzD0ZIlwhcHgfh7RUQefuDldbr2DLJSDveAi6mWPnS1/GuNn4KIKwJuKgRqNGgW
-dQvoKBvH5qEQvZpwEehl7HAt7UQ5blr8zcWMz4iQxv9q3WY4G3SmmgUIYLH9E+Qw
-31wJ1bVSScBxeHLbdGqf
-=yrHA
------END PGP SIGNATURE-----
-
---jL2BoiuKMElzg3CS--
+--
+regards
+Shiraz
