@@ -1,89 +1,135 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [RFC PATCH] ASoC: Samsung: Register the audio platform device
-Date: Fri, 23 Nov 2012 17:01:52 +0530
-Message-ID: <CAAgF-Bct96a_G=7Da6VseTgqzAymPkHsWK8o7OetKG0Khgp0Bg@mail.gmail.com>
-References: <1352894960-17434-1-git-send-email-padma.v@samsung.com>
-	<1352894960-17434-2-git-send-email-padma.v@samsung.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv14 4/7] fbmon: add videomode helpers
+Date: Fri, 23 Nov 2012 13:02:08 +0100
+Message-ID: <20121123120208.GB1106@pengutronix.de>
+References: <1353661467-28545-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353661467-28545-5-git-send-email-s.trumtrar@pengutronix.de>
+ <2828625.Bdym394lFc@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1352894960-17434-2-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, Mark Brown <broonie@opensource.wolfsonmicro.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2828625.Bdym394lFc@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-cc'ing Mark Brown
+Hi Laurent,
 
-On Wed, Nov 14, 2012 at 5:39 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
-> Audio platform device is not a hardware peripherial.
-> So this device can't be added in the dt devices list.
-> So expanded the module_platform_driver and registered
-> this device using "platform_device_register_simple".
->
-> Also added the soc-core pm ops structure in the audio
-> platform driver.
->
-> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-> ---
->  sound/soc/samsung/smdk_wm8994.c |   31 ++++++++++++++++++++++++++++++-
->  1 files changed, 30 insertions(+), 1 deletions(-)
->
-> diff --git a/sound/soc/samsung/smdk_wm8994.c b/sound/soc/samsung/smdk_wm8994.c
-> index 48dd4dd..7f97969 100644
-> --- a/sound/soc/samsung/smdk_wm8994.c
-> +++ b/sound/soc/samsung/smdk_wm8994.c
-> @@ -173,16 +173,45 @@ static int __devexit smdk_audio_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static struct platform_device *smdk_audio_device;
-> +
->  static struct platform_driver smdk_audio_driver = {
->         .driver         = {
->                 .name   = "smdk-audio",
->                 .owner  = THIS_MODULE,
-> +               .pm     = &snd_soc_pm_ops,
->         },
->         .probe          = smdk_audio_probe,
->         .remove         = __devexit_p(smdk_audio_remove),
->  };
->
-> -module_platform_driver(smdk_audio_driver);
-> +static int __init smdk_audio_init(void)
-> +{
-> +       int ret;
-> +
-> +       ret = platform_driver_register(&smdk_audio_driver);
-> +       if (ret) {
-> +               pr_err("unable to register driver\n");
-> +               return ret;
-> +       }
-> +
-> +       smdk_audio_device = platform_device_register_simple("smdk-audio", -1, NULL, 0);
-> +       if (IS_ERR(smdk_audio_device)) {
-> +               platform_driver_unregister(&smdk_audio_driver);
-> +               return PTR_ERR(smdk_audio_device);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void __exit smdk_audio_exit(void)
-> +{
-> +       platform_device_unregister(smdk_audio_device);
-> +       platform_driver_unregister(&smdk_audio_driver);
-> +}
-> +
-> +module_init(smdk_audio_init);
-> +module_exit(smdk_audio_exit);
->
->  MODULE_DESCRIPTION("ALSA SoC SMDK WM8994");
->  MODULE_LICENSE("GPL");
-> --
-> 1.7.4.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Nov 23, 2012 at 11:53:10AM +0100, Laurent Pinchart wrote:
+> Hi Steffen,
+> 
+> On Friday 23 November 2012 10:04:24 Steffen Trumtrar wrote:
+> > Add a function to convert from the generic videomode to a fb_videomode.
+> > 
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> >  drivers/video/fbmon.c |   49 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/fb.h    |    6 ++++++
+> >  2 files changed, 55 insertions(+)
+> > 
+> > diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> > index cef6557..bcbfe8f 100644
+> > --- a/drivers/video/fbmon.c
+> > +++ b/drivers/video/fbmon.c
+> > @@ -31,6 +31,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/slab.h>
+> >  #include <video/edid.h>
+> > +#include <linux/videomode.h>
+> 
+> You could move this one line up to keep headers sorted alphabetically 
+> (assuming they are in the first place).
+> 
+
+Because of the careless mistake below, I will do that.
+
+> >  #ifdef CONFIG_PPC_OF
+> >  #include <asm/prom.h>
+> >  #include <asm/pci-bridge.h>
+> > @@ -1373,6 +1374,54 @@ int fb_get_mode(int flags, u32 val, struct
+> > fb_var_screeninfo *var, struct fb_inf kfree(timings);
+> >  	return err;
+> >  }
+> > +
+> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > +int fb_videomode_from_videomode(const struct videomode *vm,
+> > +				struct fb_videomode *fbmode)
+> 
+> This is inside the #if CONFIG_FB_MODE_HELPERS block, is that intentional ?
+> 
+
+Yes. Intentional. It is a fb_mode helper, that is why ... oh, wait. I should
+add a "depends on" to the Kconfig then.
+
+> > +{
+> > +	unsigned int htotal, vtotal;
+> > +
+> > +	fbmode->xres = vm->hactive;
+> > +	fbmode->left_margin = vm->hback_porch;
+> > +	fbmode->right_margin = vm->hfront_porch;
+> > +	fbmode->hsync_len = vm->hsync_len;
+> > +
+> > +	fbmode->yres = vm->vactive;
+> > +	fbmode->upper_margin = vm->vback_porch;
+> > +	fbmode->lower_margin = vm->vfront_porch;
+> > +	fbmode->vsync_len = vm->vsync_len;
+> > +
+> > +	/* prevent division by zero in KHZ2PICOS macro */
+> > +	fbmode->pixclock = vm->pixelclock ? KHZ2PICOS(vm->pixelclock / 1000) : 0;
+> > +
+> > +	fbmode->sync = 0;
+> > +	fbmode->vmode = 0;
+> > +	if (vm->hah)
+> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> > +	if (vm->vah)
+> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> > +	if (vm->interlaced)
+> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> > +	if (vm->doublescan)
+> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> > +	fbmode->flag = 0;
+> > +
+> > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
+> > +		 vm->hsync_len;
+> > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
+> > +		 vm->vsync_len;
+> > +	/* prevent division by zero */
+> > +	if (htotal && vtotal)
+> > +		fbmode->refresh = vm->pixelclock / (htotal * vtotal);
+> > +	else
+> > +		fbmode->refresh = vm->pixelclock;
+> 
+> What about returning an error if htotal * vtotal == 0 ? The input is clearly 
+> invalid in that case. I would then set fbmode->refresh to 0, setting it to vm-
+> >pixelclock doesn't really make sense.
+> 
+
+Yes, pixelclock makes no sense. It was supposed to be 0. I was careless here.
+
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+> > +#endif
+> > +
+> > +
+> 
+> A single blank line should be enough.
+> 
+
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
