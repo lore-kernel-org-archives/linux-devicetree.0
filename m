@@ -1,66 +1,69 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] usb: chipidea: usbmisc: add mx53 support
-Date: Fri, 23 Nov 2012 08:39:39 +0100
-Message-ID: <20121123073939.GK10369@pengutronix.de>
-References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
- <1353506793-8354-7-git-send-email-m.grzeschik@pengutronix.de>
- <20121123065340.GD22420@nchen-desktop>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 3/7] mfd: max8925: fix onkey driver irq base
+Date: Thu, 22 Nov 2012 23:41:58 -0800
+Message-ID: <20121123074158.GD12631@core.coreip.homeip.net>
+References: <1352187570-9803-1-git-send-email-qingx@marvell.com>
+ <50AF23AB.3010002@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121123065340.GD22420@nchen-desktop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <50AF23AB.3010002@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qing Xu <qingx@marvell.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2012 at 02:53:41PM +0800, Peter Chen wrote:
-> On Wed, Nov 21, 2012 at 03:06:32PM +0100, Michael Grzeschik wrote:
-> > This adds mx53 as the next user of the usbmisc driver and makes it
-> > possible to disable the overcurrent-detection of the internal phy.
-> > 
-> > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> > Changes since v2:
-> > * added defines for register offsets and bitmasks
-> > * fixed disable_oc option for all ports
-> > 
-> >  drivers/usb/chipidea/usbmisc_imx.c |   51 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> > 
-> > diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-> > index e090e0f..b1811df 100644
-> > --- a/drivers/usb/chipidea/usbmisc_imx.c
-> > +++ b/drivers/usb/chipidea/usbmisc_imx.c
-> > @@ -19,6 +19,13 @@
-> >  
-> >  #define USB_DEV_MAX 4
-> >  
-> > +#define MX53_USB_OTG_PHY_CTRL_0_OFFSET	0x08;
-> > +#define MX53_USB_UH2_CTRL_OFFSET	0x14;
-> > +#define MX53_USB_UH3_CTRL_OFFSET	0x18;
-> > +#define MX53_BM_OVER_CUR_DIS_H1		BIT(5)
-> > +#define MX53_BM_OVER_CUR_DIS_OTG	BIT(8)
-> > +#define MX53_BM_OVER_CUR_DIS_UHx	BIT(30)
-> > +
-> >  #define MX6_BM_OVER_CUR_DIS		BIT(7)
+Hi Qing,
+
+On Fri, Nov 23, 2012 at 03:20:11PM +0800, Qing Xu wrote:
+> On 11/06/2012 03:39 PM, Qing Xu wrote:
+> >From: Qing Xu <qingx@marvell.com>
+> >
+> >update onkey driver's irq base, it should get from max8925,
+> >but not save in a private value
+> >
+> >Signed-off-by: Qing Xu <qingx@marvell.com>
+> >---
+> >  drivers/input/misc/max8925_onkey.c |    3 ---
+> >  drivers/mfd/max8925-core.c         |    2 +-
+> >  2 files changed, 1 insertions(+), 4 deletions(-)
+> >
+> >diff --git a/drivers/input/misc/max8925_onkey.c b/drivers/input/misc/max8925_onkey.c
+> >index 0a12b74..6527789 100644
+> >--- a/drivers/input/misc/max8925_onkey.c
+> >+++ b/drivers/input/misc/max8925_onkey.c
+> >@@ -100,9 +100,6 @@ static int __devinit max8925_onkey_probe(struct platform_device *pdev)
+> >  	input->dev.parent = &pdev->dev;
+> >  	input_set_capability(input, EV_KEY, KEY_POWER);
+> >-	irq[0] += chip->irq_base;
+> >-	irq[1] += chip->irq_base;
+> >-
+> >  	error = request_threaded_irq(irq[0], NULL, max8925_onkey_handler,
+> >  				     IRQF_ONESHOT, "onkey-down", info);
+> >  	if (error < 0) {
+> >diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
+> >index b1eacae..37a372d 100644
+> >--- a/drivers/mfd/max8925-core.c
+> >+++ b/drivers/mfd/max8925-core.c
+> >@@ -881,7 +881,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
+> >  	ret = mfd_add_devices(chip->dev, 0, &onkey_devs[0],
+> >  			      ARRAY_SIZE(onkey_devs),
+> >-			      NULL, 0, NULL);
+> >+			      NULL, chip->irq_base, NULL);
+> >  	if (ret < 0) {
+> >  		dev_err(chip->dev, "Failed to add onkey subdev\n");
+> >  		goto out_dev;
+> Hi Dmitry,
 > 
-> As every SoC platform's non-core register mapping is different,
-> it is better to use .h to put register bit definition
+> Could you help to review my patch? Thanks a lot!
+> 
 
-What do the different register mapping have to do with putting the
-definitions in .h files or not?
+Looks good to me.
 
-Sascha
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+
+Thanks.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
