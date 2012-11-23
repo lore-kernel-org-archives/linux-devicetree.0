@@ -1,90 +1,38 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
-Date: Fri, 23 Nov 2012 23:03:47 +0530
-Message-ID: <CAKohpomAM2pw9kgB6khtHzQ2WCXKZ9_pi1_sOH2dQToVS8ep4w@mail.gmail.com>
-References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
-	<7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
-	<20121123094132.EFCB73E07BE@localhost>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] of/address: sparc: Declare of_iomap as an extern
+ function for sparc again
+Date: Fri, 23 Nov 2012 14:21:10 -0500 (EST)
+Message-ID: <20121123.142110.835354734152648777.davem@davemloft.net>
+References: <1353669849-23697-1-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121123094132.EFCB73E07BE@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, Grant Likely <grant.likely@secretlab.ca>
-Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <1353669849-23697-1-git-send-email-andreas@gaisler.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: andreas@gaisler.com
+Cc: sam@ravnborg.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On 23 November 2012 15:11, Grant Likely <grant.likely@secretlab.ca> wrote:
-> On Fri, 23 Nov 2012 00:26:20 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+From: Andreas Larsson <andreas@gaisler.com>
+Date: Fri, 23 Nov 2012 12:24:09 +0100
 
->> + - irq-trigger                       : IRQ trigger to use for the interrupt to the host
->> + - irq-invert-polarity               : bool, IRQ line is connected with reversed polarity
->
-> This looks odd. Normally the interrupt polarity should be encoded in the irq
-> specifier flags field.
+> This bug-fix makes sure that of_iomap is defined extern for sparc so that the
+> sparc-specific implementation of_iomap is once again used when including
+> include/linux/of_address.h in a sparc context. OF_GPIO that is now available for
+> sparc relies on this.
+> 
+> The bug was inadvertently introduced in a850a75, "of/address: add empty static
+> inlines for !CONFIG_OF", that added a static dummy inline for of_iomap when
+> !CONFIG_OF_ADDRESS. However, CONFIG_OF_ADDRESS is never defined for sparc, but
+> there is a sparc-specific implementation /arch/sparc/kernel/of_device_common.c.
+> 
+> This fix takes the same approach as 0bce04b that solved the equivalent problem
+> for of_address_to_resource.
+> 
+> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
 
-Hi Grant and Lee Jones,
+Grant, can you possibly merge this to Linus while I'm travelling?
+That would help me a lot.
 
-This looks odd because stmpe is odd, i am taking the discussion held
-with Lee jones to this thread.
-
-So, how interrupt stuff works currently in DT..
-We have a interrupt controller IC:
-
-	ic: interrupt-controller@40008000 {
-		compatible = "foo";
-		interrupt-controller;
-		#interrupt-cells = <2>;
-                ...
-	};
-
-And we have a user of this IC:
-
-	foo-peripheral@40048000 {
-		compatible = "foo-peripheral";
-		interrupt-parent = <&ic>;
-		interrupts = <39 4>;
-	};
-
-Here first field of "interrupts" gives interrupt line number and the second one
-gives polarity, interrupt type etc..
-
-All is good till now. Now, every interrupt controller supports the first
-field, but the second one depends on its capabilities. An interrupt controller
-might not have registers to configure interrupt polarity, type, etc of
-the interrupt
-it will service and so the second field wouldn't be available for them.
-
-For now just think stmpe is not a MFD and not a interrupt controller
-either. It is
-just a simple device, dev-foo.
-
-It will declare values of its interrupts field based on the type of
-interrupt controller
-that will service its interrupt and that can be anything like VIC/GIC/GPIO
-controller.
-
-Obviously nobody else than the parent IC driver can parse interrupts field
-of dev-foo, because only that driver understands the real meaning of
-these fields.
-
-Now, stmpe has a special property. It can decide the way its output
-interrupt line
-will work. i.e. its polarity and interrupt type - edle/level, etc..
-This is not commonly
-seen in any peripheral. Now my original bindings and the real question here is
-about passing this information to stmpe driver.
-
-I can't pass it in interrupts field of stmpe node, as that field
-belongs to parent
-interrupt controller of stmpe.
-
-I can't pass that from child nodes of stmpe, as we are programming the interrupt
-coming out of stmpe and not the interrupt coming out of stmpe-gpio or
-stmpe-keypad.
-
-And that's why i added these bindings. Please suggest me if i am still missing
-something.
-
---
-viresh
+Thanks!
