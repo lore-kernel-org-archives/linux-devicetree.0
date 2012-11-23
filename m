@@ -1,628 +1,513 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v3 03/10] ARM: OMAP: AM33xx hwmod: Add parent-child
- relationship for PWM subsystem
-Date: Fri, 23 Nov 2012 11:06:06 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9EEA8C@DBDE01.ent.ti.com>
-References: <1353387831-31538-1-git-send-email-avinashphilip@ti.com>
- <1353387831-31538-4-git-send-email-avinashphilip@ti.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V3] ASoC: SAMSUNG: Add DT support for i2s
+Date: Fri, 23 Nov 2012 16:43:25 +0530
+Message-ID: <CAAgF-BdbUDiHHO-hsqfrfFv2WG6R+CXXaNYijEk0zT4UVc5jmA@mail.gmail.com>
+References: <1352176896-16288-1-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1353387831-31538-4-git-send-email-avinashphilip@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "paul@pwsan.com" <paul@pwsan.com>, "tony@atomide.com" <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "Hiremath, Vaibhav" <hvaibhav@ti.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Bedia, Vaibhav" <vaibhav.bedia@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1352176896-16288-1-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, Mark Brown <broonie@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 20, 2012 at 10:33:44, Philip, Avinash wrote:
-> As part of PWM subsystem integration, PWM subsystem are sharing
-> resources like clock across submodules (ECAP, EQEP & EHRPWM).
-> To handle resource sharing & IP integration
-> 1. Rework on parent child relation between PWMSS and
->    ECAP, EQEP & EHRPWM child devices to support runtime PM.
-> 2. Add support for opt_clks in EHRPWM HWMOD entry to handle additional
->    clock gating from control module.
-> 3. Add HWMOD entries for EQEP PWM submodule.
-> 
+cc'ing Mark Brown.
 
-Is there any review on this patch?
-This patch depends on ECAP & EHRPWM to work in am335x.
-
-Thanks
-Avinash
-
-> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+On Tue, Nov 6, 2012 at 10:11 AM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> Add support for device based discovery.
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 > ---
-> Changes since v1:
-> 	- Remove ADDR_TYPE_RT for PWM sub module register entries.
-> 
-> :100644 100644 ad8d43b... de2301c... M	arch/arm/mach-omap2/omap_hwmod_33xx_data.c
->  arch/arm/mach-omap2/omap_hwmod_33xx_data.c |  419 ++++++++++++++++++----------
->  1 files changed, 276 insertions(+), 143 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-> index ad8d43b..de2301c 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_33xx_data.c
-> @@ -768,9 +768,7 @@ static struct omap_hwmod am33xx_elm_hwmod = {
->  	},
+>
+> Changes since V2:
+>         - Rebased on 3.7-rc3
+>         - Custom DT bindings are prefixed with samsung
+>         - As generic device tree DMA helpers not yet mainlined
+>           I am still using custom dma bindings. So added a
+>           priliminary statement regarding the same. I will rework
+>           on my patch once generic DMA helpers are mainlined.
+>
+> Chnages since V1:
+>         - Rebased on 3.6-rc6
+>
+>  .../devicetree/bindings/sound/samsung-i2s.txt      |   69 ++++++
+>  sound/soc/samsung/dma.c                            |    1 +
+>  sound/soc/samsung/dma.h                            |    1 +
+>  sound/soc/samsung/i2s.c                            |  234 ++++++++++++++++----
+>  4 files changed, 256 insertions(+), 49 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+>
+> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> new file mode 100644
+> index 0000000..dca61a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> @@ -0,0 +1,69 @@
+> +* Samsung I2S controller
+> +
+> +Required SoC Specific Properties:
+> +
+> +- compatible : "samsung,samsung-i2s"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +[PRELIMINARY: the dma channel allocation will change once there are
+> +official DMA bindings]
+> +
+> +- tx-dma-channel-secondary: The dma channel specifier for secondary tx
+> +  operations. The format of the dma specifier depends on the dma
+> +  controller.
+> +- tx-dma-channel: The dma channel specifier for tx operations. The format of
+> +  the dma specifier depends on the dma controller.
+> +- rx-dma-channel: The dma channel specifier for rx operations. The format of
+> +  the dma specifier depends on the dma controller.
+> +
+> +Optional SoC Specific Properties:
+> +
+> +- samsung,supports-6ch: If the I2S Primary sound source has 5.1 Channel
+> +  support, this flag is enabled.
+> +- samsung,supports-rstclr: This flag should be set if I2S software reset bit
+> +  control is required. When this flag is set I2S software reset bit will be
+> +  enabled or disabled based on need.
+> +- samsung,supports-secdai:If I2S block has a secondary FIFO and internal DMA,
+> +  then this flag is enabled.
+> +- samsung,idma-addr: Internal DMA register base address of the audio
+> +  sub system(used in secondary sound source).
+> +
+> +Required Board Specific Properties:
+> +
+> +- gpios: The gpio specifier for data out,data in, LRCLK, CDCLK and SCLK
+> +  interface lines. The format of the gpio specifier depends on the gpio
+> +  controller.
+> +
+> +Aliases:
+> +
+> +- All the I2S controller nodes should be represented in the aliases node using
+> +  the following format 'i2s{n}' where n is a unique number for the alias.
+> +
+> +Example:
+> +
+> +- SoC Specific Portion:
+> +
+> +i2s@03830000 {
+> +       compatible = "samsung,samsung-i2s";
+> +       reg = <0x03830000 0x100>;
+> +       tx-dma-channel-secondary = <&pdma0 8>;
+> +       tx-dma-channel = <&pdma0 10>;
+> +       rx-dma-channel = <&pdma0 9>;
+> +       samsung,supports-6ch;
+> +       samsung,supports-rstclr;
+> +       samsung,supports-secdai;
+> +       samsung,idma-addr = <0x03000000>;
+> +};
+> +
+> +- Board Specific Portion:
+> +
+> +i2s_0: i2s@03830000 {
+> +       gpios = <&gpz 0 2 0 0>,
+> +               <&gpz 1 2 0 0>,
+> +               <&gpz 2 2 0 0>,
+> +               <&gpz 3 2 0 0>,
+> +               <&gpz 4 2 0 0>,
+> +               <&gpz 5 2 0 0>,
+> +               <&gpz 6 2 0 0>;
+> +};
+> diff --git a/sound/soc/samsung/dma.c b/sound/soc/samsung/dma.c
+> index b70964e..359708c 100644
+> --- a/sound/soc/samsung/dma.c
+> +++ b/sound/soc/samsung/dma.c
+> @@ -168,6 +168,7 @@ static int dma_hw_params(struct snd_pcm_substream *substream,
+>                 req.cap = (samsung_dma_has_circular() ?
+>                         DMA_CYCLIC : DMA_SLAVE);
+>                 req.client = prtd->params->client;
+> +               req.dt_dmach_prop = prtd->params->dma_prop;
+>                 config.direction =
+>                         (substream->stream == SNDRV_PCM_STREAM_PLAYBACK
+>                         ? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM);
+> diff --git a/sound/soc/samsung/dma.h b/sound/soc/samsung/dma.h
+> index 7d1ead7..2e60415 100644
+> --- a/sound/soc/samsung/dma.h
+> +++ b/sound/soc/samsung/dma.h
+> @@ -19,6 +19,7 @@ struct s3c_dma_params {
+>         int dma_size;                   /* Size of the DMA transfer */
+>         unsigned ch;
+>         struct samsung_dma_ops *ops;
+> +       struct property *dma_prop;
 >  };
->  
-> -/*
-> - * 'epwmss' class: ecap0,1,2,  ehrpwm0,1,2
-> - */
-> +/* pwmss */
->  static struct omap_hwmod_class_sysconfig am33xx_epwmss_sysc = {
->  	.rev_offs	= 0x0,
->  	.sysc_offs	= 0x4,
-> @@ -786,18 +784,23 @@ static struct omap_hwmod_class am33xx_epwmss_hwmod_class = {
->  	.sysc		= &am33xx_epwmss_sysc,
+>
+>  #endif
+> diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
+> index 40b00a1..f9d55e5 100644
+> --- a/sound/soc/samsung/i2s.c
+> +++ b/sound/soc/samsung/i2s.c
+> @@ -15,11 +15,15 @@
+>  #include <linux/clk.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/pm_runtime.h>
+>
+>  #include <sound/soc.h>
+>  #include <sound/pcm_params.h>
+>
+> +#include <mach/dma.h>
+> +
+>  #include <linux/platform_data/asoc-s3c.h>
+>
+>  #include "dma.h"
+> @@ -49,8 +53,6 @@ struct i2s_dai {
+>         struct clk *clk;
+>         /* Clock for generating I2S signals */
+>         struct clk *op_clk;
+> -       /* Array of clock names for op_clk */
+> -       const char **src_clk;
+>         /* Pointer to the Primary_Fifo if this is Sec_Fifo, NULL otherwise */
+>         struct i2s_dai *pri_dai;
+>         /* Pointer to the Secondary_Fifo if it has one, NULL otherwise */
+> @@ -68,6 +70,8 @@ struct i2s_dai {
+>         u32     suspend_i2smod;
+>         u32     suspend_i2scon;
+>         u32     suspend_i2spsr;
+> +       unsigned long gpios[7]; /* i2s gpio line numbers */
+> +       int     dev_id;         /* i2s dev id */
 >  };
->  
-> -/* ehrpwm0 */
-> -static struct omap_hwmod_irq_info am33xx_ehrpwm0_irqs[] = {
-> -	{ .name = "int", .irq = 86 + OMAP_INTC_START, },
-> -	{ .name = "tzint", .irq = 58 + OMAP_INTC_START, },
-> -	{ .irq = -1 },
+>
+>  /* Lock for cross i/f checks */
+> @@ -385,6 +389,7 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
+>         struct i2s_dai *i2s = to_info(dai);
+>         struct i2s_dai *other = i2s->pri_dai ? : i2s->sec_dai;
+>         u32 mod = readl(i2s->addr + I2SMOD);
+> +       char clk_name[16];
+>
+>         switch (clk_id) {
+>         case SAMSUNG_I2S_CDCLK:
+> @@ -432,8 +437,9 @@ static int i2s_set_sysclk(struct snd_soc_dai *dai,
+>                                 }
+>                         }
+>
+> +                       sprintf(clk_name, "i2s_opclk%d", clk_id);
+>                         i2s->op_clk = clk_get(&i2s->pdev->dev,
+> -                                               i2s->src_clk[clk_id]);
+> +                                               clk_name);
+>                         clk_enable(i2s->op_clk);
+>                         i2s->rclk_srcrate = clk_get_rate(i2s->op_clk);
+>
+> @@ -980,8 +986,9 @@ struct i2s_dai *i2s_alloc_dai(struct platform_device *pdev, bool sec)
+>                 i2s->i2s_dai_drv.capture.formats = SAMSUNG_I2S_FMTS;
+>         } else {        /* Create a new platform_device for Secondary */
+>                 i2s->pdev = platform_device_register_resndata(NULL,
+> -                               pdev->name, pdev->id + SAMSUNG_I2S_SECOFF,
+> -                               NULL, 0, NULL, 0);
+> +                               "samsung-i2s",
+> +                               i2s->dev_id + SAMSUNG_I2S_SECOFF, NULL, 0,
+> +                               NULL, 0);
+>                 if (IS_ERR(i2s->pdev))
+>                         return NULL;
+>         }
+> @@ -992,49 +999,154 @@ struct i2s_dai *i2s_alloc_dai(struct platform_device *pdev, bool sec)
+>         return i2s;
+>  }
+>
+> +#ifdef CONFIG_OF
+> +static int samsung_i2s_parse_dt_gpio(struct i2s_dai *i2s)
+> +{
+> +       struct device *dev = &i2s->pdev->dev;
+> +       int index, gpio, ret;
 > +
-> +static struct omap_hwmod_class am33xx_ecap_hwmod_class = {
-> +	.name		= "ecap",
+> +       for (index = 0; index < 7; index++) {
+> +               gpio = of_get_gpio(dev->of_node, index);
+> +               if (!gpio_is_valid(gpio)) {
+> +                       dev_err(dev, "invalid gpio[%d]: %d\n", index, gpio);
+> +                       goto free_gpio;
+> +               }
+> +
+> +               ret = gpio_request(gpio, dev_name(dev));
+> +               if (ret) {
+> +                       dev_err(dev, "gpio [%d] request failed\n", gpio);
+> +                       goto free_gpio;
+> +               }
+> +               i2s->gpios[index] = gpio;
+> +       }
+> +       return 0;
+> +
+> +free_gpio:
+> +       while (--index >= 0)
+> +               gpio_free(i2s->gpios[index]);
+> +       return -EINVAL;
+> +}
+> +
+> +static void samsung_i2s_dt_gpio_free(struct i2s_dai *i2s)
+> +{
+> +       unsigned int index;
+> +       for (index = 0; index < 7; index++)
+> +               gpio_free(i2s->gpios[index]);
+> +}
+> +#else
+> +static int samsung_i2s_parse_dt_gpio(struct i2s_dai *dai)
+> +{
+> +       return -EINVAL;
+> +}
+> +
+> +static void samsung_i2s_dt_gpio_free(struct i2s_dai *dai)
+> +{
+> +}
+> +
+> +#endif
+> +
+>  static __devinit int samsung_i2s_probe(struct platform_device *pdev)
+>  {
+> -       u32 dma_pl_chan, dma_cp_chan, dma_pl_sec_chan;
+> +       u32 dma_pl_chan, dma_cp_chan;
+> +       u32 dma_pl_sec_chan = 0;
+>         struct i2s_dai *pri_dai, *sec_dai = NULL;
+> -       struct s3c_audio_pdata *i2s_pdata;
+> -       struct samsung_i2s *i2s_cfg;
+> +       struct s3c_audio_pdata *i2s_pdata = pdev->dev.platform_data;
+> +       struct samsung_i2s *i2s_cfg = NULL;
+>         struct resource *res;
+> -       u32 regs_base, quirks;
+> -       int ret = 0;
+> +       u32 regs_base, quirks = 0, idma_addr = 0;
+> +       struct property *prop;
+> +       struct device_node *np = pdev->dev.of_node;
+> +       int ret = 0, id;
+>
+>         /* Call during Seconday interface registration */
+> -       if (pdev->id >= SAMSUNG_I2S_SECOFF) {
+> +       if (np) {
+> +               id = of_alias_get_id(np, "i2s");
+> +               if (id < 0) {
+> +                       dev_err(&pdev->dev, "failed to get alias id:%d\n", id);
+> +                       return id;
+> +               }
+> +       } else {
+> +               id = pdev->id;
+> +       }
+> +
+> +       if (id >= SAMSUNG_I2S_SECOFF) {
+>                 sec_dai = dev_get_drvdata(&pdev->dev);
+>                 snd_soc_register_dai(&sec_dai->pdev->dev,
+>                         &sec_dai->i2s_dai_drv);
+>                 return 0;
+>         }
+>
+> -       i2s_pdata = pdev->dev.platform_data;
+> -       if (i2s_pdata == NULL) {
+> -               dev_err(&pdev->dev, "Can't work without s3c_audio_pdata\n");
+> -               return -EINVAL;
+> +       pri_dai = i2s_alloc_dai(pdev, false);
+> +       if (!pri_dai) {
+> +               dev_err(&pdev->dev, "Unable to alloc I2S_pri\n");
+> +               return -ENOMEM;
+>         }
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Unable to get I2S-TX dma resource\n");
+> -               return -ENXIO;
+> -       }
+> -       dma_pl_chan = res->start;
+> +       if (!np) {
+> +               res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+> +               if (!res) {
+> +                       dev_err(&pdev->dev,
+> +                               "Unable to get I2S-TX dma resource\n");
+> +                       return -ENXIO;
+> +               }
+> +               dma_pl_chan = res->start;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
+> -       if (!res) {
+> -               dev_err(&pdev->dev, "Unable to get I2S-RX dma resource\n");
+> -               return -ENXIO;
+> -       }
+> -       dma_cp_chan = res->start;
+> +               res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
+> +               if (!res) {
+> +                       dev_err(&pdev->dev,
+> +                               "Unable to get I2S-RX dma resource\n");
+> +                       return -ENXIO;
+> +               }
+> +               dma_cp_chan = res->start;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_DMA, 2);
+> -       if (res)
+> -               dma_pl_sec_chan = res->start;
+> -       else
+> -               dma_pl_sec_chan = 0;
+> +               res = platform_get_resource(pdev, IORESOURCE_DMA, 2);
+> +               if (res)
+> +                       dma_pl_sec_chan = res->start;
+> +
+> +               if (&i2s_pdata->type)
+> +                       i2s_cfg = &i2s_pdata->type.i2s;
+> +
+> +               if (i2s_cfg) {
+> +                       quirks = i2s_cfg->quirks;
+> +                       idma_addr = i2s_cfg->idma_addr;
+> +               }
+> +       } else {
+> +               prop = of_find_property(np, "tx-dma-channel", NULL);
+> +               if (!prop) {
+> +                       dev_err(&pdev->dev, "tx dma channel property not"\
+> +                                       "specified\n");
+> +                       return -ENXIO;
+> +               }
+> +               dma_pl_chan = DMACH_DT_PROP;
+> +               pri_dai->dma_playback.dma_prop = prop;
+> +
+> +               prop = of_find_property(np, "rx-dma-channel", NULL);
+> +               if (!prop) {
+> +                       dev_err(&pdev->dev, "tx dma channel property not"\
+> +                                       "specified\n");
+> +                       return -ENXIO;
+> +               }
+> +               dma_cp_chan = DMACH_DT_PROP;
+> +               pri_dai->dma_capture.dma_prop = prop;
+> +
+> +               if (of_find_property(np, "samsung,supports-6ch", NULL))
+> +                       quirks |= QUIRK_PRI_6CHAN;
+> +
+> +               if (of_find_property(np, "samsung,supports-secdai", NULL))
+> +                       quirks |= QUIRK_SEC_DAI;
+> +
+> +               if (of_find_property(np, "samsung,supports-rstclr", NULL))
+> +                       quirks |= QUIRK_NEED_RSTCLR;
+> +
+> +               if (of_property_read_u32(np, "samsung,idma-addr",
+> +                                        &idma_addr)) {
+> +                       if (quirks & QUIRK_SEC_DAI) {
+> +                               dev_err(&pdev->dev, "idma address is not"\
+> +                                               "specified");
+> +                               return -EINVAL;
+> +                       }
+> +               }
+> +       }
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>         if (!res) {
+> @@ -1049,16 +1161,6 @@ static __devinit int samsung_i2s_probe(struct platform_device *pdev)
+>         }
+>         regs_base = res->start;
+>
+> -       i2s_cfg = &i2s_pdata->type.i2s;
+> -       quirks = i2s_cfg->quirks;
+> -
+> -       pri_dai = i2s_alloc_dai(pdev, false);
+> -       if (!pri_dai) {
+> -               dev_err(&pdev->dev, "Unable to alloc I2S_pri\n");
+> -               ret = -ENOMEM;
+> -               goto err;
+> -       }
+> -
+>         pri_dai->dma_playback.dma_addr = regs_base + I2STXD;
+>         pri_dai->dma_capture.dma_addr = regs_base + I2SRXD;
+>         pri_dai->dma_playback.client =
+> @@ -1067,11 +1169,11 @@ static __devinit int samsung_i2s_probe(struct platform_device *pdev)
+>                 (struct s3c2410_dma_client *)&pri_dai->dma_capture;
+>         pri_dai->dma_playback.channel = dma_pl_chan;
+>         pri_dai->dma_capture.channel = dma_cp_chan;
+> -       pri_dai->src_clk = i2s_cfg->src_clk;
+>         pri_dai->dma_playback.dma_size = 4;
+>         pri_dai->dma_capture.dma_size = 4;
+>         pri_dai->base = regs_base;
+>         pri_dai->quirks = quirks;
+> +       pri_dai->dev_id = id;
+>
+>         if (quirks & QUIRK_PRI_6CHAN)
+>                 pri_dai->i2s_dai_drv.playback.channels_max = 6;
+> @@ -1086,21 +1188,42 @@ static __devinit int samsung_i2s_probe(struct platform_device *pdev)
+>                 sec_dai->dma_playback.dma_addr = regs_base + I2STXDS;
+>                 sec_dai->dma_playback.client =
+>                         (struct s3c2410_dma_client *)&sec_dai->dma_playback;
+> +
+> +               if (np) {
+> +                       prop = of_find_property(np, "tx-dma-channel-secondary",
+> +                                               NULL);
+> +                       if (!prop) {
+> +                               dev_err(&pdev->dev, "tx dma channel property"\
+> +                                               "not specified\n");
+> +                               ret = -ENXIO;
+> +                               goto err;
+> +                       }
+> +                       sec_dai->dma_playback.dma_prop = prop;
+> +               }
+> +
+>                 /* Use iDMA always if SysDMA not provided */
+>                 sec_dai->dma_playback.channel = dma_pl_sec_chan ? : -1;
+> -               sec_dai->src_clk = i2s_cfg->src_clk;
+>                 sec_dai->dma_playback.dma_size = 4;
+>                 sec_dai->base = regs_base;
+>                 sec_dai->quirks = quirks;
+> -               sec_dai->idma_playback.dma_addr = i2s_cfg->idma_addr;
+> +               sec_dai->dev_id = id;
+> +               sec_dai->idma_playback.dma_addr = idma_addr;
+>                 sec_dai->pri_dai = pri_dai;
+>                 pri_dai->sec_dai = sec_dai;
+>         }
+>
+> -       if (i2s_pdata->cfg_gpio && i2s_pdata->cfg_gpio(pdev)) {
+> -               dev_err(&pdev->dev, "Unable to configure gpio\n");
+> -               ret = -EINVAL;
+> -               goto err;
+> +       if (np) {
+> +               if (samsung_i2s_parse_dt_gpio(pri_dai)) {
+> +                       dev_err(&pdev->dev, "Unable to configure gpio\n");
+> +                       ret = -EINVAL;
+> +                       goto err;
+> +               }
+> +       } else {
+> +               if (i2s_pdata->cfg_gpio && i2s_pdata->cfg_gpio(pdev)) {
+> +                       dev_err(&pdev->dev, "Unable to configure gpio\n");
+> +                       ret = -EINVAL;
+> +                       goto err;
+> +               }
+>         }
+>
+>         snd_soc_register_dai(&pri_dai->pdev->dev, &pri_dai->i2s_dai_drv);
+> @@ -1118,10 +1241,14 @@ static __devexit int samsung_i2s_remove(struct platform_device *pdev)
+>  {
+>         struct i2s_dai *i2s, *other;
+>         struct resource *res;
+> +       struct s3c_audio_pdata *i2s_pdata = pdev->dev.platform_data;
+>
+>         i2s = dev_get_drvdata(&pdev->dev);
+>         other = i2s->pri_dai ? : i2s->sec_dai;
+>
+> +       if (!i2s_pdata->cfg_gpio && pdev->dev.of_node)
+> +               samsung_i2s_dt_gpio_free(i2s->pri_dai);
+> +
+>         if (other) {
+>                 other->pri_dai = NULL;
+>                 other->sec_dai = NULL;
+> @@ -1140,12 +1267,21 @@ static __devexit int samsung_i2s_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id exynos_i2s_match[] = {
+> +       { .compatible = "samsung,samsung-i2s" },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_i2s_match);
+> +#endif
+> +
+>  static struct platform_driver samsung_i2s_driver = {
+>         .probe  = samsung_i2s_probe,
+>         .remove = __devexit_p(samsung_i2s_remove),
+>         .driver = {
+>                 .name = "samsung-i2s",
+>                 .owner = THIS_MODULE,
+> +               .of_match_table = of_match_ptr(exynos_i2s_match),
+>         },
 >  };
->  
-> -static struct omap_hwmod am33xx_ehrpwm0_hwmod = {
-> -	.name		= "ehrpwm0",
-> +static struct omap_hwmod_class am33xx_eqep_hwmod_class = {
-> +	.name		= "eqep",
-> +};
-> +
-> +static struct omap_hwmod_class am33xx_ehrpwm_hwmod_class = {
-> +	.name		= "ehrpwm",
-> +};
-> +/* epwmss0 */
-> +static struct omap_hwmod am33xx_epwmss0_hwmod = {
-> +	.name		= "epwmss0",
->  	.class		= &am33xx_epwmss_hwmod_class,
->  	.clkdm_name	= "l4ls_clkdm",
-> -	.mpu_irqs	= am33xx_ehrpwm0_irqs,
->  	.main_clk	= "l4ls_gclk",
->  	.prcm		= {
->  		.omap4	= {
-> @@ -807,63 +810,68 @@ static struct omap_hwmod am33xx_ehrpwm0_hwmod = {
->  	},
->  };
->  
-> -/* ehrpwm1 */
-> -static struct omap_hwmod_irq_info am33xx_ehrpwm1_irqs[] = {
-> -	{ .name = "int", .irq = 87 + OMAP_INTC_START, },
-> -	{ .name = "tzint", .irq = 59 + OMAP_INTC_START, },
-> +/* ecap0 */
-> +static struct omap_hwmod_irq_info am33xx_ecap0_irqs[] = {
-> +	{ .irq = 31 + OMAP_INTC_START, },
->  	{ .irq = -1 },
->  };
->  
-> -static struct omap_hwmod am33xx_ehrpwm1_hwmod = {
-> -	.name		= "ehrpwm1",
-> -	.class		= &am33xx_epwmss_hwmod_class,
-> +static struct omap_hwmod am33xx_ecap0_hwmod = {
-> +	.name		= "ecap0",
-> +	.class		= &am33xx_ecap_hwmod_class,
->  	.clkdm_name	= "l4ls_clkdm",
-> -	.mpu_irqs	= am33xx_ehrpwm1_irqs,
-> +	.mpu_irqs	= am33xx_ecap0_irqs,
->  	.main_clk	= "l4ls_gclk",
-> -	.prcm		= {
-> -		.omap4	= {
-> -			.clkctrl_offs	= AM33XX_CM_PER_EPWMSS1_CLKCTRL_OFFSET,
-> -			.modulemode	= MODULEMODE_SWCTRL,
-> -		},
-> -	},
->  };
->  
-> -/* ehrpwm2 */
-> -static struct omap_hwmod_irq_info am33xx_ehrpwm2_irqs[] = {
-> -	{ .name = "int", .irq = 39 + OMAP_INTC_START, },
-> -	{ .name = "tzint", .irq = 60 + OMAP_INTC_START, },
-> +/* eqep0 */
-> +static struct omap_hwmod_irq_info am33xx_eqep0_irqs[] = {
-> +	{ .irq = 79 + OMAP_INTC_START, },
->  	{ .irq = -1 },
->  };
->  
-> -static struct omap_hwmod am33xx_ehrpwm2_hwmod = {
-> -	.name		= "ehrpwm2",
-> -	.class		= &am33xx_epwmss_hwmod_class,
-> +static struct omap_hwmod am33xx_eqep0_hwmod = {
-> +	.name		= "eqep0",
-> +	.class		= &am33xx_eqep_hwmod_class,
->  	.clkdm_name	= "l4ls_clkdm",
-> -	.mpu_irqs	= am33xx_ehrpwm2_irqs,
-> +	.mpu_irqs	= am33xx_eqep0_irqs,
->  	.main_clk	= "l4ls_gclk",
-> -	.prcm		= {
-> -		.omap4	= {
-> -			.clkctrl_offs	= AM33XX_CM_PER_EPWMSS2_CLKCTRL_OFFSET,
-> -			.modulemode	= MODULEMODE_SWCTRL,
-> -		},
-> -	},
->  };
->  
-> -/* ecap0 */
-> -static struct omap_hwmod_irq_info am33xx_ecap0_irqs[] = {
-> -	{ .irq = 31 + OMAP_INTC_START, },
-> +/* ehrpwm0 */
-> +static struct omap_hwmod_irq_info am33xx_ehrpwm0_irqs[] = {
-> +	{ .name = "int", .irq = 86 + OMAP_INTC_START, },
-> +	{ .name = "tzint", .irq = 58 + OMAP_INTC_START, },
->  	{ .irq = -1 },
->  };
->  
-> -static struct omap_hwmod am33xx_ecap0_hwmod = {
-> -	.name		= "ecap0",
-> +/*
-> + * Optional clock entry is provided to support additional clock
-> + * gating for EHRPWM module functional from control module.
-> + */
-> +static struct omap_hwmod_opt_clk ehrpwm0_opt_clks[] = {
-> +	{ .role = "tbclk", .clk = "ehrpwm0_tbclk" },
-> +};
-> +
-> +static struct omap_hwmod am33xx_ehrpwm0_hwmod = {
-> +	.name		= "ehrpwm0",
-> +	.class		= &am33xx_ehrpwm_hwmod_class,
-> +	.clkdm_name	= "l4ls_clkdm",
-> +	.mpu_irqs	= am33xx_ehrpwm0_irqs,
-> +	.main_clk	= "l4ls_gclk",
-> +	.opt_clks	= ehrpwm0_opt_clks,
-> +	.opt_clks_cnt	= ARRAY_SIZE(ehrpwm0_opt_clks),
-> +};
-> +
-> +/* epwmss1 */
-> +static struct omap_hwmod am33xx_epwmss1_hwmod = {
-> +	.name		= "epwmss1",
->  	.class		= &am33xx_epwmss_hwmod_class,
->  	.clkdm_name	= "l4ls_clkdm",
-> -	.mpu_irqs	= am33xx_ecap0_irqs,
->  	.main_clk	= "l4ls_gclk",
->  	.prcm		= {
->  		.omap4	= {
-> -			.clkctrl_offs	= AM33XX_CM_PER_EPWMSS0_CLKCTRL_OFFSET,
-> +			.clkctrl_offs	= AM33XX_CM_PER_EPWMSS1_CLKCTRL_OFFSET,
->  			.modulemode	= MODULEMODE_SWCTRL,
->  		},
->  	},
-> @@ -877,13 +885,60 @@ static struct omap_hwmod_irq_info am33xx_ecap1_irqs[] = {
->  
->  static struct omap_hwmod am33xx_ecap1_hwmod = {
->  	.name		= "ecap1",
-> -	.class		= &am33xx_epwmss_hwmod_class,
-> +	.class		= &am33xx_ecap_hwmod_class,
->  	.clkdm_name	= "l4ls_clkdm",
->  	.mpu_irqs	= am33xx_ecap1_irqs,
->  	.main_clk	= "l4ls_gclk",
-> +};
-> +
-> +/* eqep1 */
-> +static struct omap_hwmod_irq_info am33xx_eqep1_irqs[] = {
-> +	{ .irq = 88 + OMAP_INTC_START, },
-> +	{ .irq = -1 },
-> +};
-> +
-> +static struct omap_hwmod am33xx_eqep1_hwmod = {
-> +	.name		= "eqep1",
-> +	.class		= &am33xx_eqep_hwmod_class,
-> +	.clkdm_name	= "l4ls_clkdm",
-> +	.mpu_irqs	= am33xx_eqep1_irqs,
-> +	.main_clk	= "l4ls_gclk",
-> +};
-> +
-> +/* ehrpwm1 */
-> +static struct omap_hwmod_irq_info am33xx_ehrpwm1_irqs[] = {
-> +	{ .name = "int", .irq = 87 + OMAP_INTC_START, },
-> +	{ .name = "tzint", .irq = 59 + OMAP_INTC_START, },
-> +	{ .irq = -1 },
-> +};
-> +
-> +/*
-> + * Optional clock entry is provided to support additional clock
-> + * gating for EHRPWM module functional from control module.
-> + */
-> +static struct omap_hwmod_opt_clk ehrpwm1_opt_clks[] = {
-> +	{ .role = "tbclk", .clk = "ehrpwm1_tbclk" },
-> +};
-> +
-> +static struct omap_hwmod am33xx_ehrpwm1_hwmod = {
-> +	.name		= "ehrpwm1",
-> +	.class		= &am33xx_ehrpwm_hwmod_class,
-> +	.clkdm_name	= "l4ls_clkdm",
-> +	.mpu_irqs	= am33xx_ehrpwm1_irqs,
-> +	.main_clk	= "l4ls_gclk",
-> +	.opt_clks	= ehrpwm1_opt_clks,
-> +	.opt_clks_cnt	= ARRAY_SIZE(ehrpwm1_opt_clks),
-> +};
-> +
-> +/* epwmss2 */
-> +static struct omap_hwmod am33xx_epwmss2_hwmod = {
-> +	.name		= "epwmss2",
-> +	.class		= &am33xx_epwmss_hwmod_class,
-> +	.clkdm_name	= "l4ls_clkdm",
-> +	.main_clk	= "l4ls_gclk",
->  	.prcm		= {
->  		.omap4	= {
-> -			.clkctrl_offs	= AM33XX_CM_PER_EPWMSS1_CLKCTRL_OFFSET,
-> +			.clkctrl_offs	= AM33XX_CM_PER_EPWMSS2_CLKCTRL_OFFSET,
->  			.modulemode	= MODULEMODE_SWCTRL,
->  		},
->  	},
-> @@ -897,16 +952,49 @@ static struct omap_hwmod_irq_info am33xx_ecap2_irqs[] = {
->  
->  static struct omap_hwmod am33xx_ecap2_hwmod = {
->  	.name		= "ecap2",
-> +	.class		= &am33xx_ecap_hwmod_class,
-> +	.clkdm_name	= "l4ls_clkdm",
->  	.mpu_irqs	= am33xx_ecap2_irqs,
-> -	.class		= &am33xx_epwmss_hwmod_class,
-> +	.main_clk	= "l4ls_gclk",
-> +};
-> +
-> +/* eqep2 */
-> +static struct omap_hwmod_irq_info am33xx_eqep2_irqs[] = {
-> +	{ .irq = 89 + OMAP_INTC_START, },
-> +	{ .irq = -1 },
-> +};
-> +
-> +static struct omap_hwmod am33xx_eqep2_hwmod = {
-> +	.name		= "eqep2",
-> +	.class		= &am33xx_eqep_hwmod_class,
->  	.clkdm_name	= "l4ls_clkdm",
-> +	.mpu_irqs	= am33xx_eqep2_irqs,
->  	.main_clk	= "l4ls_gclk",
-> -	.prcm		= {
-> -		.omap4	= {
-> -			.clkctrl_offs	= AM33XX_CM_PER_EPWMSS2_CLKCTRL_OFFSET,
-> -			.modulemode	= MODULEMODE_SWCTRL,
-> -		},
-> -	},
-> +};
-> +
-> +/* ehrpwm2 */
-> +static struct omap_hwmod_irq_info am33xx_ehrpwm2_irqs[] = {
-> +	{ .name = "int", .irq = 39 + OMAP_INTC_START, },
-> +	{ .name = "tzint", .irq = 60 + OMAP_INTC_START, },
-> +	{ .irq = -1 },
-> +};
-> +
-> +/*
-> + * Optional clock entry is provided to support additional clock
-> + * gating for EHRPWM module functional from control module.
-> + */
-> +static struct omap_hwmod_opt_clk ehrpwm2_opt_clks[] = {
-> +	{ .role = "tbclk", .clk = "ehrpwm2_tbclk" },
-> +};
-> +
-> +static struct omap_hwmod am33xx_ehrpwm2_hwmod = {
-> +	.name		= "ehrpwm2",
-> +	.class		= &am33xx_ehrpwm_hwmod_class,
-> +	.clkdm_name	= "l4ls_clkdm",
-> +	.mpu_irqs	= am33xx_ehrpwm2_irqs,
-> +	.main_clk	= "l4ls_gclk",
-> +	.opt_clks	= ehrpwm2_opt_clks,
-> +	.opt_clks_cnt	= ARRAY_SIZE(ehrpwm2_opt_clks),
->  };
->  
->  /*
-> @@ -2518,162 +2606,201 @@ static struct omap_hwmod_ocp_if am33xx_l4_ls__elm = {
->  	.user		= OCP_USER_MPU,
->  };
->  
-> -/*
-> - * Splitting the resources to handle access of PWMSS config space
-> - * and module specific part independently
-> - */
-> -static struct omap_hwmod_addr_space am33xx_ehrpwm0_addr_space[] = {
-> +static struct omap_hwmod_addr_space am33xx_epwmss0_addr_space[] = {
->  	{
->  		.pa_start	= 0x48300000,
->  		.pa_end		= 0x48300000 + SZ_16 - 1,
->  		.flags		= ADDR_TYPE_RT
->  	},
-> -	{
-> -		.pa_start	= 0x48300200,
-> -		.pa_end		= 0x48300200 + SZ_256 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> -	},
->  	{ }
->  };
->  
-> -static struct omap_hwmod_ocp_if am33xx_l4_ls__ehrpwm0 = {
-> +static struct omap_hwmod_ocp_if am33xx_l4_ls__epwmss0 = {
->  	.master		= &am33xx_l4_ls_hwmod,
-> -	.slave		= &am33xx_ehrpwm0_hwmod,
-> +	.slave		= &am33xx_epwmss0_hwmod,
->  	.clk		= "l4ls_gclk",
-> -	.addr		= am33xx_ehrpwm0_addr_space,
-> +	.addr		= am33xx_epwmss0_addr_space,
->  	.user		= OCP_USER_MPU,
->  };
->  
-> -/*
-> - * Splitting the resources to handle access of PWMSS config space
-> - * and module specific part independently
-> - */
-> -static struct omap_hwmod_addr_space am33xx_ehrpwm1_addr_space[] = {
-> -	{
-> -		.pa_start	= 0x48302000,
-> -		.pa_end		= 0x48302000 + SZ_16 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> -	},
-> +static struct omap_hwmod_addr_space am33xx_ecap0_addr_space[] = {
->  	{
-> -		.pa_start	= 0x48302200,
-> -		.pa_end		= 0x48302200 + SZ_256 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> +		.pa_start	= 0x48300100,
-> +		.pa_end		= 0x48300100 + SZ_128 - 1,
->  	},
->  	{ }
->  };
->  
-> -static struct omap_hwmod_ocp_if am33xx_l4_ls__ehrpwm1 = {
-> -	.master		= &am33xx_l4_ls_hwmod,
-> -	.slave		= &am33xx_ehrpwm1_hwmod,
-> +static struct omap_hwmod_ocp_if am33xx_epwmss0__ecap0 = {
-> +	.master		= &am33xx_epwmss0_hwmod,
-> +	.slave		= &am33xx_ecap0_hwmod,
->  	.clk		= "l4ls_gclk",
-> -	.addr		= am33xx_ehrpwm1_addr_space,
-> +	.addr		= am33xx_ecap0_addr_space,
->  	.user		= OCP_USER_MPU,
->  };
->  
-> -/*
-> - * Splitting the resources to handle access of PWMSS config space
-> - * and module specific part independently
-> - */
-> -static struct omap_hwmod_addr_space am33xx_ehrpwm2_addr_space[] = {
-> +static struct omap_hwmod_addr_space am33xx_eqep0_addr_space[] = {
->  	{
-> -		.pa_start	= 0x48304000,
-> -		.pa_end		= 0x48304000 + SZ_16 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> -	},
-> -	{
-> -		.pa_start	= 0x48304200,
-> -		.pa_end		= 0x48304200 + SZ_256 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> +		.pa_start	= 0x48300180,
-> +		.pa_end		= 0x48300180 + SZ_128 - 1,
->  	},
->  	{ }
->  };
->  
-> -static struct omap_hwmod_ocp_if am33xx_l4_ls__ehrpwm2 = {
-> -	.master		= &am33xx_l4_ls_hwmod,
-> -	.slave		= &am33xx_ehrpwm2_hwmod,
-> +static struct omap_hwmod_ocp_if am33xx_epwmss0__eqep0 = {
-> +	.master		= &am33xx_epwmss0_hwmod,
-> +	.slave		= &am33xx_eqep0_hwmod,
->  	.clk		= "l4ls_gclk",
-> -	.addr		= am33xx_ehrpwm2_addr_space,
-> +	.addr		= am33xx_eqep0_addr_space,
->  	.user		= OCP_USER_MPU,
->  };
->  
-> -/*
-> - * Splitting the resources to handle access of PWMSS config space
-> - * and module specific part independently
-> - */
-> -static struct omap_hwmod_addr_space am33xx_ecap0_addr_space[] = {
-> -	{
-> -		.pa_start	= 0x48300000,
-> -		.pa_end		= 0x48300000 + SZ_16 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> -	},
-> +static struct omap_hwmod_addr_space am33xx_ehrpwm0_addr_space[] = {
->  	{
-> -		.pa_start	= 0x48300100,
-> -		.pa_end		= 0x48300100 + SZ_256 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> +		.pa_start	= 0x48300200,
-> +		.pa_end		= 0x48300200 + SZ_128 - 1,
->  	},
->  	{ }
->  };
->  
-> -static struct omap_hwmod_ocp_if am33xx_l4_ls__ecap0 = {
-> -	.master		= &am33xx_l4_ls_hwmod,
-> -	.slave		= &am33xx_ecap0_hwmod,
-> +static struct omap_hwmod_ocp_if am33xx_epwmss0__ehrpwm0 = {
-> +	.master		= &am33xx_epwmss0_hwmod,
-> +	.slave		= &am33xx_ehrpwm0_hwmod,
->  	.clk		= "l4ls_gclk",
-> -	.addr		= am33xx_ecap0_addr_space,
-> +	.addr		= am33xx_ehrpwm0_addr_space,
->  	.user		= OCP_USER_MPU,
->  };
->  
-> -/*
-> - * Splitting the resources to handle access of PWMSS config space
-> - * and module specific part independently
-> - */
-> -static struct omap_hwmod_addr_space am33xx_ecap1_addr_space[] = {
-> +static struct omap_hwmod_addr_space am33xx_epwmss1_addr_space[] = {
->  	{
->  		.pa_start	= 0x48302000,
->  		.pa_end		= 0x48302000 + SZ_16 - 1,
->  		.flags		= ADDR_TYPE_RT
->  	},
-> +	{ }
-> +};
-> +
-> +static struct omap_hwmod_ocp_if am33xx_l4_ls__epwmss1 = {
-> +	.master		= &am33xx_l4_ls_hwmod,
-> +	.slave		= &am33xx_epwmss1_hwmod,
-> +	.clk		= "l4ls_gclk",
-> +	.addr		= am33xx_epwmss1_addr_space,
-> +	.user		= OCP_USER_MPU,
-> +};
-> +
-> +static struct omap_hwmod_addr_space am33xx_ecap1_addr_space[] = {
->  	{
->  		.pa_start	= 0x48302100,
-> -		.pa_end		= 0x48302100 + SZ_256 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> +		.pa_end		= 0x48302100 + SZ_128 - 1,
->  	},
->  	{ }
->  };
->  
-> -static struct omap_hwmod_ocp_if am33xx_l4_ls__ecap1 = {
-> -	.master		= &am33xx_l4_ls_hwmod,
-> +static struct omap_hwmod_ocp_if am33xx_epwmss1__ecap1 = {
-> +	.master		= &am33xx_epwmss1_hwmod,
->  	.slave		= &am33xx_ecap1_hwmod,
->  	.clk		= "l4ls_gclk",
->  	.addr		= am33xx_ecap1_addr_space,
->  	.user		= OCP_USER_MPU,
->  };
->  
-> -/*
-> - * Splitting the resources to handle access of PWMSS config space
-> - * and module specific part independently
-> - */
-> -static struct omap_hwmod_addr_space am33xx_ecap2_addr_space[] = {
-> +static struct omap_hwmod_addr_space am33xx_eqep1_addr_space[] = {
-> +	{
-> +		.pa_start	= 0x48302180,
-> +		.pa_end		= 0x48302180 + SZ_128 - 1,
-> +	},
-> +	{ }
-> +};
-> +
-> +static struct omap_hwmod_ocp_if am33xx_epwmss1__eqep1 = {
-> +	.master		= &am33xx_epwmss1_hwmod,
-> +	.slave		= &am33xx_eqep1_hwmod,
-> +	.clk		= "l4ls_gclk",
-> +	.addr		= am33xx_eqep1_addr_space,
-> +	.user		= OCP_USER_MPU,
-> +};
-> +
-> +static struct omap_hwmod_addr_space am33xx_ehrpwm1_addr_space[] = {
-> +	{
-> +		.pa_start	= 0x48302200,
-> +		.pa_end		= 0x48302200 + SZ_128 - 1,
-> +	},
-> +	{ }
-> +};
-> +
-> +static struct omap_hwmod_ocp_if am33xx_epwmss1__ehrpwm1 = {
-> +	.master		= &am33xx_epwmss1_hwmod,
-> +	.slave		= &am33xx_ehrpwm1_hwmod,
-> +	.clk		= "l4ls_gclk",
-> +	.addr		= am33xx_ehrpwm1_addr_space,
-> +	.user		= OCP_USER_MPU,
-> +};
-> +
-> +static struct omap_hwmod_addr_space am33xx_epwmss2_addr_space[] = {
->  	{
->  		.pa_start	= 0x48304000,
->  		.pa_end		= 0x48304000 + SZ_16 - 1,
->  		.flags		= ADDR_TYPE_RT
->  	},
-> +	{ }
-> +};
-> +
-> +static struct omap_hwmod_ocp_if am33xx_l4_ls__epwmss2 = {
-> +	.master		= &am33xx_l4_ls_hwmod,
-> +	.slave		= &am33xx_epwmss2_hwmod,
-> +	.clk		= "l4ls_gclk",
-> +	.addr		= am33xx_epwmss2_addr_space,
-> +	.user		= OCP_USER_MPU,
-> +};
-> +
-> +static struct omap_hwmod_addr_space am33xx_ecap2_addr_space[] = {
->  	{
->  		.pa_start	= 0x48304100,
-> -		.pa_end		= 0x48304100 + SZ_256 - 1,
-> -		.flags		= ADDR_TYPE_RT
-> +		.pa_end		= 0x48304100 + SZ_128 - 1,
->  	},
->  	{ }
->  };
->  
-> -static struct omap_hwmod_ocp_if am33xx_l4_ls__ecap2 = {
-> -	.master		= &am33xx_l4_ls_hwmod,
-> +static struct omap_hwmod_ocp_if am33xx_epwmss2__ecap2 = {
-> +	.master		= &am33xx_epwmss2_hwmod,
->  	.slave		= &am33xx_ecap2_hwmod,
->  	.clk		= "l4ls_gclk",
->  	.addr		= am33xx_ecap2_addr_space,
->  	.user		= OCP_USER_MPU,
->  };
->  
-> +static struct omap_hwmod_addr_space am33xx_eqep2_addr_space[] = {
-> +	{
-> +		.pa_start	= 0x48304180,
-> +		.pa_end		= 0x48304180 + SZ_128 - 1,
-> +	},
-> +	{ }
-> +};
-> +
-> +static struct omap_hwmod_ocp_if am33xx_epwmss2__eqep2 = {
-> +	.master		= &am33xx_epwmss2_hwmod,
-> +	.slave		= &am33xx_eqep2_hwmod,
-> +	.clk		= "l4ls_gclk",
-> +	.addr		= am33xx_eqep2_addr_space,
-> +	.user		= OCP_USER_MPU,
-> +};
-> +
-> +static struct omap_hwmod_addr_space am33xx_ehrpwm2_addr_space[] = {
-> +	{
-> +		.pa_start	= 0x48304200,
-> +		.pa_end		= 0x48304200 + SZ_128 - 1,
-> +	},
-> +	{ }
-> +};
-> +
-> +static struct omap_hwmod_ocp_if am33xx_epwmss2__ehrpwm2 = {
-> +	.master		= &am33xx_epwmss2_hwmod,
-> +	.slave		= &am33xx_ehrpwm2_hwmod,
-> +	.clk		= "l4ls_gclk",
-> +	.addr		= am33xx_ehrpwm2_addr_space,
-> +	.user		= OCP_USER_MPU,
-> +};
-> +
->  /* l3s cfg -> gpmc */
->  static struct omap_hwmod_addr_space am33xx_gpmc_addr_space[] = {
->  	{
-> @@ -3356,12 +3483,18 @@ static struct omap_hwmod_ocp_if *am33xx_hwmod_ocp_ifs[] __initdata = {
->  	&am33xx_l4_ls__uart6,
->  	&am33xx_l4_ls__spinlock,
->  	&am33xx_l4_ls__elm,
-> -	&am33xx_l4_ls__ehrpwm0,
-> -	&am33xx_l4_ls__ehrpwm1,
-> -	&am33xx_l4_ls__ehrpwm2,
-> -	&am33xx_l4_ls__ecap0,
-> -	&am33xx_l4_ls__ecap1,
-> -	&am33xx_l4_ls__ecap2,
-> +	&am33xx_l4_ls__epwmss0,
-> +	&am33xx_epwmss0__ecap0,
-> +	&am33xx_epwmss0__eqep0,
-> +	&am33xx_epwmss0__ehrpwm0,
-> +	&am33xx_l4_ls__epwmss1,
-> +	&am33xx_epwmss1__ecap1,
-> +	&am33xx_epwmss1__eqep1,
-> +	&am33xx_epwmss1__ehrpwm1,
-> +	&am33xx_l4_ls__epwmss2,
-> +	&am33xx_epwmss2__ecap2,
-> +	&am33xx_epwmss2__eqep2,
-> +	&am33xx_epwmss2__ehrpwm2,
->  	&am33xx_l3_s__gpmc,
->  	&am33xx_l3_main__lcdc,
->  	&am33xx_l4_ls__mcspi0,
-> -- 
-> 1.7.0.4
-> 
-> 
+>
+> --
+> 1.7.4.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
