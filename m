@@ -1,84 +1,37 @@
-From: Qing Xu <qingx@marvell.com>
+From: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Subject: Re: [PATCH 6/7] mfd: max8925: support dt for backlight
-Date: Fri, 23 Nov 2012 15:23:21 +0800
-Message-ID: <50AF2469.7040309@marvell.com>
+Date: Fri, 23 Nov 2012 15:25:35 +0800
+Message-ID: <50AF24EF.50107@marvell.com>
 References: <1352188034-9982-1-git-send-email-qingx@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352188034-9982-1-git-send-email-qingx@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "FlorianSchandinat@gmx.de" <FlorianSchandinat@gmx.de>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1352188034-9982-1-git-send-email-qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org" <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Chao Xie <cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 11/06/2012 03:47 PM, Qing Xu wrote:
-> From: Qing Xu <qingx@marvell.com>
+> From: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 >
-> Signed-off-by: Qing Xu <qingx@marvell.com>
+> Signed-off-by: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
 >   drivers/video/backlight/max8925_bl.c |   31 ++++++++++++++++++++++++++++++-
 >   1 files changed, 30 insertions(+), 1 deletions(-)
 >
-> diff --git a/drivers/video/backlight/max8925_bl.c b/drivers/video/backlight/max8925_bl.c
-> index f72ba54..7de02ed 100644
-> --- a/drivers/video/backlight/max8925_bl.c
-> +++ b/drivers/video/backlight/max8925_bl.c
-> @@ -101,6 +101,29 @@ static const struct backlight_ops max8925_backlight_ops = {
->   	.get_brightness	= max8925_backlight_get_brightness,
->   };
->   
-> +#ifdef CONFIG_OF
-> +static int max8925_backlight_dt_init(struct platform_device *pdev,
-> +			      struct max8925_backlight_pdata *pdata)
-> +{
-> +	struct device_node *nproot = pdev->dev.parent->of_node, *np;
-> +	int dual_string;
-> +
-> +	if (!nproot)
-> +		return -ENODEV;
-> +	np = of_find_node_by_name(nproot, "backlight");
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "failed to find backlight node\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	of_property_read_u32(np, "dual-string", &dual_string);
-> +	pdata->dual_string = dual_string;
-> +	return 0;
-> +}
-> +#else
-> +#define max8925_backlight_dt_init(x, y)	(-1)
-> +#endif
-> +
->   static int __devinit max8925_backlight_probe(struct platform_device *pdev)
->   {
->   	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-> @@ -150,6 +173,13 @@ static int __devinit max8925_backlight_probe(struct platform_device *pdev)
->   	platform_set_drvdata(pdev, bl);
->   
->   	value = 0;
-> +	if (pdev->dev.parent->of_node && !pdata) {
-> +		pdata = devm_kzalloc(&pdev->dev,
-> +				     sizeof(struct max8925_backlight_pdata),
-> +				     GFP_KERNEL);
-> +		max8925_backlight_dt_init(pdev, pdata);
-> +	}
-> +
->   	if (pdata) {
->   		if (pdata->lxw_scl)
->   			value |= (1 << 7);
-> @@ -161,7 +191,6 @@ static int __devinit max8925_backlight_probe(struct platform_device *pdev)
->   	ret = max8925_set_bits(chip->i2c, data->reg_mode_cntl, 0xfe, value);
->   	if (ret < 0)
->   		goto out_brt;
-> -
->   	backlight_update_status(bl);
->   	return 0;
->   out_brt:
-Hi Liam, Mark,
+Hi Richard, Florian,
 
-Could you help me review this patch, Thanks a lot!
+Could you help to review this patch, thanks a lot!
 
 -Qing
