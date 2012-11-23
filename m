@@ -1,64 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] gpio: stmpe: Add DT support for stmpe gpio
-Date: Fri, 23 Nov 2012 12:14:13 +0000
-Message-ID: <20121123121413.GB22268@gmail.com>
-References: <912d88b8906ce87cf5459cf3d5798e03bfce34c7.1353649737.git.viresh.kumar@linaro.org>
- <20121123103400.GO17471@gmail.com>
- <CAKohponW-Wd+Vrnj8mbdFMmJvwQgPq1jFCZRipBFoEhTknStHQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohponW-Wd+Vrnj8mbdFMmJvwQgPq1jFCZRipBFoEhTknStHQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linus.walleij@linaro.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
+From: Praveen Paneri <p.paneri@samsung.com>
+Subject: [PATCH v9 0/3] ARM: Exynos/S3C64XX: usb phy driver support for S3C64XX
+ and EXYNOS4210
+Date: Fri, 23 Nov 2012 18:02:29 +0530
+Message-ID: <1353673952-13537-1-git-send-email-p.paneri@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, t.figa@samsung.com, gautam.vivek@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-> >> -     stmpe_gpio->chip.base =3D pdata ? pdata->gpio_base : -1;
-> >
-> > Why have you deleted this?
-> >
-> >> +
-> >> +     if (pdata) {
-> >> +             stmpe_gpio->norequest_mask =3D pdata->norequest_mask=
-;
-> >> +             stmpe_gpio->chip.base =3D pdata->gpio_base;
-> >
-> > Then added this?
-> >
-> >> +     } else {
-> >> +             stmpe_gpio->chip.base =3D -1;
-> >
-> > And this?
->=20
-> To group all non-DT assignments in a single if block, instead of two.
+This patch series enables usb phy driver for S3C64XX and EXYNOS4210.
+The phy driver patches are already sent to linux-usb.
 
-That assignment has nothing to do with DT.
+Changes From v8:
+Switched the patch order; removing old phy setup code after enabling
+phy driver for s3c64xx machines.
+added usb phy platdata structure in arch/arm/mach-s3c64xx/setup-usb-phy.c
+and used it for all the boards.
 
-> > Just leave the top line in and it saves you lots of complecations.
->=20
-> Sorry, Couldn't get this one.
+Changes From v7:
+Resolved build errors with s3c6400_defconfig, s5pv210_defconfig and
+exynos_defconfig.
+Tested with all other samsung configs as well.
+Reformed PATCH 3 (PATCH 5 of last series) with proper subject.
+Separated these arch patches from the driver patches.
 
-I'm saying, just leave it where it is.
+Changes from v4:
+Changed the platform data code to use __initdata
 
-> >> +             if (np)
-> >> +                     of_property_read_u32(np, "st,norequest-mask"=
-,
-> >> +                                     &pdata->norequest_mask);
-> >
-> > Can you explain to me what this does?
->=20
-> You mean pdata->norequest_mask?  It marks few gpios as unusable.
-> Because these pads might be used by other blocks of stmpe.
+Changes from v2:
+Changed 's3c' to 'samsung' for platform device as well as platform data
+Moved platform data structure to a separate file
 
-I'm not sure if that should be set with DT or not.
+Praveen Paneri (3):
+  ARM: S3C64XX: Enabling samsung-usbphy driver
+  ARM: S3C64XX: Removing old phy setup code
+  ARM: EXYNOS: Enabling samsung-usbphy driver for EXYNOS4210
 
-Second opinion anyone?
-
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ arch/arm/Kconfig                             |    1 +
+ arch/arm/boot/dts/exynos4210-smdkv310.dts    |    5 ++
+ arch/arm/mach-exynos/Kconfig                 |    1 +
+ arch/arm/mach-exynos/include/mach/map.h      |    1 +
+ arch/arm/mach-exynos/mach-exynos4-dt.c       |    8 +++
+ arch/arm/mach-exynos/setup-usb-phy.c         |   13 ++++
+ arch/arm/mach-s3c64xx/include/mach/map.h     |    2 +
+ arch/arm/mach-s3c64xx/mach-crag6410.c        |    6 +-
+ arch/arm/mach-s3c64xx/mach-smartq.c          |    6 +-
+ arch/arm/mach-s3c64xx/mach-smdk6410.c        |    6 +-
+ arch/arm/mach-s3c64xx/setup-usb-phy.c        |   83 ++++----------------------
+ arch/arm/plat-samsung/Kconfig                |    5 ++
+ arch/arm/plat-samsung/devs.c                 |   26 ++++++++
+ arch/arm/plat-samsung/include/plat/devs.h    |    1 +
+ arch/arm/plat-samsung/include/plat/usb-phy.h |    3 +
+ 15 files changed, 88 insertions(+), 79 deletions(-)
