@@ -1,57 +1,56 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv13 5/7] fbmon: add of_videomode helpers
-Date: Fri, 23 Nov 2012 08:54:07 +0100
-Message-ID: <20121123075407.GA20282@pengutronix.de>
-References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353600015-6974-6-git-send-email-s.trumtrar@pengutronix.de>
- <2117247.Eyo66IqYf0@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2117247.Eyo66IqYf0@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
+Date: Fri, 23 Nov 2012 07:55:37 +0000
+Message-ID: <20121123075537.A14713E0A91@localhost>
+References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Thu, Nov 22, 2012 at 06:58:09PM +0100, Laurent Pinchart wrote:
-> Hi Steffen,
+On Thu, 22 Nov 2012 14:42:03 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> There seams to be board designs using PWM generators as enable/disable signals.
+> For these boards we used to have custom code as hacks to deal with such a
+> situations.
+> With the gpio-pwm driver we can emulate the GPIO functionality using PWM
+> generators via standard interfaces. The PWM will be configured to be off
+> when the GPIO is off and to full duty cycle when the GPIO is requested to be
+> on.
 > 
-> On Thursday 22 November 2012 17:00:13 Steffen Trumtrar wrote:
-> > Add helper to get fb_videomode from devicetree.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi Linus,
 > 
-> This patch results in the following build warning:
+> So this is the driver I came up regarding to the issue that some boards
+> (BeagleBoard for example) are using the PWM generators as enable/disable signal.
 > 
-> drivers/video/fbmon.c: In function 'of_get_fb_videomode':
-> drivers/video/fbmon.c:1445: warning: passing argument 1 of 'of_get_videomode' 
-> discards qualifiers from pointer target type
-> include/linux/of_videomode.h:15: note: expected 'struct device_node *' but 
-> argument is of type 'const struct device_node *'
+> On BeagleBoard the situation is like this:
+> TWL4030 PWMA -> TWL4030 LEDA -> nUSBHOST_PWR_EN -> external power switch -> USB
+> host hub power.
 > 
+> So I have tested this driver on BeagleBoard:
+> - Custom code to toggle the GPIO just to see if it switches correctly
+> 
+> - Real life usecase:
+> fixed voltage regulator with GPIO control (the gpio is the gpio-pwm provided).
+> ehci-omap has been modified to allow deferred probe.
+> the regulator is used by ehci-omap.
+> 
+> All works fine.
 
-This I don't get. Well, looking at the code, the warning is correct. I fixed
-that now. But, I do not get the warning. Just tried it again before fixing:
-cleaned, cleaned and touching file, just "make drivers/video/fbmon.o". Nothing.
-Weird.
+Ugh. and this is why I wanted the PWM and GPIO subsystems to use the
+same namespace and binding. <grumble, mutter> But that's not your fault.
 
-So, thanks for reporting it.
+It's pretty horrible to have a separate translator node to convert a PWM
+into a GPIO (with output only of course). The gpio properties should
+appear directly in the PWM node itself and the translation code should
+be in either the pwm or the gpio core. I don't think it should look like
+a separate device.
 
-Regards,
-Steffen
+g.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
