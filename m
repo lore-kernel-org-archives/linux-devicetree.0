@@ -1,56 +1,51 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 3/3] ASoC: atmel-pcm: add dma support
-Date: Fri, 23 Nov 2012 23:27:48 +0900
-Message-ID: <20121123142747.GP4529@opensource.wolfsonmicro.com>
-References: <1353651257-2476-1-git-send-email-voice.shen@atmel.com>
- <1353651257-2476-4-git-send-email-voice.shen@atmel.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 0/3] regulator: max8997: minor updates and device tree
+ support
+Date: Fri, 23 Nov 2012 16:35:41 +0100
+Message-ID: <2301414.MvZtGCMDhm@amdc1227>
+References: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fqIB0bRxfTYxTb/F"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1353651257-2476-4-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+On Friday 23 of November 2012 13:33:12 Thomas Abraham wrote:
+> This patch series includes two minor updates to the gpio dvs code in
+> max8997 regulator driver and adds device tree support for the same
+> driver.
+> 
+> Thomas Abraham (3):
+>   regulator: max8997: reorder buck1/2/5 dvs setup code
+>   regulator: max8997: limit the number of dvs registers programmed in
+> non-dvs mode regulator: add device tree support for max8997
+> 
+>  .../bindings/regulator/max8997-regulator.txt       |  146
+> ++++++++++++++++ drivers/mfd/max8997.c                              |  
+> 73 ++++++++- drivers/regulator/max8997.c                        |  181
+> ++++++++++++++++++-- include/linux/mfd/max8997-private.h               
+> |    1 +
+>  include/linux/mfd/max8997.h                        |    1 +
+>  5 files changed, 384 insertions(+), 18 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/regulator/max8997-regulator.txt
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe
+> linux-samsung-soc" in the body of a message to
+> majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
---fqIB0bRxfTYxTb/F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For whole series:
 
-On Fri, Nov 23, 2012 at 02:14:17PM +0800, Bo Shen wrote:
-> Add dmaengine specific routines and replace PDC ones in
-> pcm_ops if appropriate.
->=20
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> [voice.shen@atmel.com: adapt to soc dmaengine framework]
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-Why is this not just two separate drivers?
-
---fqIB0bRxfTYxTb/F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQr4fNAAoJELSic+t+oim9/cIP/19P545nZNKhPdg3r0rU/Yvs
-zqiT0Q7BDpabIb7B0oohvUox4KUIkZvvt/umqayp0dwaS2EBNB334Iq6X4VggaY3
-dQi4UBdHC0MZorkKzG17GeLI+W4noS0H0f/WsfGlYvlLEZPOOENd/sr6nMF0L7FJ
-UetEmMf3rgMNWt5kI4T8PqCPvr3EtQC3DqCNQ4fCl7LwngBK+MrfvBLR5O3LkfVf
-vLmGUWEi89I+B/qoMfKRK/BMzXpOP/vmDcL1gm6s9v5zl7mk+3y42YeeOorexZmS
-9s162/wQhakMfVa4Dv2SGd/05B+3Puapn0boDthWOZh2X4fBnK+kUb96zIPwyn5w
-Zn/l0BEYCkGtDgvkBYbEfVGDDNahXJVOfgnXcx21vrXIDHLSNgKAe8xOQGI3NXg1
-f6xMUBf8/MEFn5Q+94RDifnORNzGugBygO+gmYoiAzfZk/lZ7hG9Ec+XjOyXlAmq
-TT8BSC/0lrvpaPB/6yXmZ/V47sDtPq7loS/2/O9Qg846Tg/oGdhrRueZn0He2SBW
-SdvkChKfgu5X2ac+umrJWEG36hyVNHKXXz5+bv541CHREd/0pEZNTNG6ohZ/HiQN
-lHeBaYZIC5F9Snytt4NJPRJ5dHIF1Jp/bXp3Le3TvT5MdQDYroixOjIjn/Y4w76J
-yqHAm+0zcinh1Nszcf5C
-=TedW
------END PGP SIGNATURE-----
-
---fqIB0bRxfTYxTb/F--
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Linux Platform
