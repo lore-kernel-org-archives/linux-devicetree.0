@@ -1,71 +1,48 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/3] regulator: max8997: limit the number of dvs registers
- programmed in non-dvs mode
-Date: Fri, 23 Nov 2012 13:33:14 +0530
-Message-ID: <1353657795-1725-3-git-send-email-thomas.abraham@linaro.org>
-References: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] usb: chipidea: usbmisc: fix a potential race
+ condition
+Date: Fri, 23 Nov 2012 08:37:11 +0100
+Message-ID: <20121123073711.GJ10369@pengutronix.de>
+References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1353506793-8354-4-git-send-email-m.grzeschik@pengutronix.de>
+ <20121123053635.GB22420@nchen-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1353657795-1725-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121123053635.GB22420@nchen-desktop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In case the gpio based volatage selection mode is not used for either of
-buck 1/2/5, then only the BUCKxDVS1 register need to be programmed. So
-determine whether dvs mode is used and limit the loop count appropriately.
+On Fri, Nov 23, 2012 at 01:36:36PM +0800, Peter Chen wrote:
+> On Wed, Nov 21, 2012 at 03:06:29PM +0100, Michael Grzeschik wrote:
+> > From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > 
+> > This fixes a potential race condition where the ci13xxx_imx glue code
+> > could be fast enough to call one of the usbmisc_ops before he got a
+> > valid value on the static usbmisc pointer. To fix that we first set
+> > usbmisc, then call usbmisc_set_ops().
+> 
+> usbmisc is subsys_initcall, and cil13xxx_imx is module_init. Any
+> potential situation that the ci13xxx_imx's probe is ran before the
+> usbmisc's probe is completed?
 
-Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/regulator/max8997.c |    9 ++++++---
- 1 files changed, 6 insertions(+), 3 deletions(-)
+Not having looked at the code you are referring to at all I just want
+to say that: drivers can be modules (don't know if that's true for
+chipidea) and sooner or later we'll probably get devicetree overlays, so
+the devicetree nodes might just appear during runtime. Depending on
+initcall order is generally not a good idea.
 
-diff --git a/drivers/regulator/max8997.c b/drivers/regulator/max8997.c
-index 8901371..231fcdb 100644
---- a/drivers/regulator/max8997.c
-+++ b/drivers/regulator/max8997.c
-@@ -941,7 +941,7 @@ static int max8997_pmic_probe(struct platform_device *pdev)
- 	struct regulator_dev **rdev;
- 	struct max8997_data *max8997;
- 	struct i2c_client *i2c;
--	int i, ret, size;
-+	int i, ret, size, nr_dvs;
- 	u8 max_buck1 = 0, max_buck2 = 0, max_buck5 = 0;
- 
- 	if (!pdata) {
-@@ -973,7 +973,10 @@ static int max8997_pmic_probe(struct platform_device *pdev)
- 	memcpy(max8997->buck125_gpios, pdata->buck125_gpios, sizeof(int) * 3);
- 	max8997->ignore_gpiodvs_side_effect = pdata->ignore_gpiodvs_side_effect;
- 
--	for (i = 0; i < 8; i++) {
-+	nr_dvs = (pdata->buck1_gpiodvs || pdata->buck2_gpiodvs ||
-+			pdata->buck5_gpiodvs) ? 8 : 1;
-+
-+	for (i = 0; i < nr_dvs; i++) {
- 		max8997->buck1_vol[i] = ret =
- 			max8997_get_voltage_proper_val(
- 					&buck1245_voltage_map_desc,
-@@ -1020,7 +1023,7 @@ static int max8997_pmic_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Initialize all the DVS related BUCK registers */
--	for (i = 0; i < 8; i++) {
-+	for (i = 0; i < nr_dvs; i++) {
- 		max8997_update_reg(i2c, MAX8997_REG_BUCK1DVS1 + i,
- 				max8997->buck1_vol[i],
- 				0x3f);
+Sascha
+
 -- 
-1.6.6.rc2
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
