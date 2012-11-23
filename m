@@ -1,148 +1,115 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
-Date: Fri, 23 Nov 2012 10:13:05 +0100
-Message-ID: <50AF3E21.4000009@ti.com>
-References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
- <20121123075537.A14713E0A91@localhost>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
+Date: Fri, 23 Nov 2012 09:23:28 +0000
+Message-ID: <20121123092328.GB17471@gmail.com>
+References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
+ <b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
+ <20121122112451.GE4328@gmail.com>
+ <CAKohpo=F91sZ7St3XVXqwAEgmSWXjAxxXwRs1RD5qPyW99P1vA@mail.gmail.com>
+ <20121122154612.GC10986@gmail.com>
+ <CAKohpok6v65TH5yZAthyxcH7bCVgF8A8m2bY_mp3yS_Y_yH1Xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121123075537.A14713E0A91@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpok6v65TH5yZAthyxcH7bCVgF8A8m2bY_mp3yS_Y_yH1Xw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Thu, 22 Nov 2012, Viresh Kumar wrote:
 
-On 11/23/2012 08:55 AM, Grant Likely wrote:
-> Ugh. and this is why I wanted the PWM and GPIO subsystems to use the
-> same namespace and binding. <grumble, mutter> But that's not your fault.
-> =
+> On 22 November 2012 21:16, Lee Jones <lee.jones@linaro.org> wrote:
+> >> >> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/=
+Documentation/devicetree/bindings/mfd/stmpe.txt
+> >> >> +- irq-over-gpio: bool, true if gpio is used to get irq
+> >> >> +- irq-gpios: gpio number over which irq will be requested (sig=
+nificant only if
+> >> >> +  irq-over-gpio is true)
+> >> >
+> >> > You don't need these. Use gpio_to_irq() instead.
+> >>
+> >> I am passing gpio numbers here and am doing gpio_to_irq() in drive=
+r.
+> >> Didn't get this one :(
+> >
+> > For a start you have 'irq-over-gpio' in the binding document and De=
+vice Tree
+> > and 'irq_over_gpio' in the code. Has it even been tested?
+> >
+> > GPIOs are used as IRQ lines in many other previously DT:ed drivers.=
+ Take a
+> > look to see how they are handled without adding unnecessary DT bind=
+ings.
+>=20
+> I already knew it, should have picked that up. :(
+>=20
+> >> stmpe is an interrupt controller for the IP's which are present in=
+side
+> >> it: gpio, adc.
+> >> But interrupt lines for them are managed by stmpe driver internall=
+y. So should
+> >> we really add interrupt-controller for it?
+> >
+> > You can't manage IRQ lines internally, you have to go through
+> > the IRQ subsystem. When you request an IRQ via device tree you
+> > will do so like this:
+>=20
+> By that i meant, there is no external node which would have stmpe as
+> interrupt controller. Because all of them would be its child node.
+>=20
+> This is guaranteed because stmpe is an external device is present on =
+board.
+> So, it will have its entry in board dts file, and so wouldn't be
+> scattered in different
+> files.
 
-> It's pretty horrible to have a separate translator node to convert a PWM
-> into a GPIO (with output only of course). The gpio properties should
-> appear directly in the PWM node itself and the translation code should
-> be in either the pwm or the gpio core. I don't think it should look like
-> a separate device.
+It doesn't matter how it's wired up.=20
 
-Let me see if I understand your suggestion correctly. In the DT you suggest
-something like this:
+If another node references it as it's IRQ controller you have to
+declare it as one using the interrupt-controller binding.
 
-twl_pwmled: pwmled {
-	compatible =3D "ti,twl4030-pwmled";
-	#pwm-cells =3D <2>;
-	#gpio-cells =3D <2>;
-	gpio-controller;
-};
+> > The STMPE GPIO controller can't be used by Device Tree yet in any c=
+ase,
+> > because it doesn't have an IRQ domain. This is compulsory, or it wo=
+n't
+> > work. Have you tried to test this functionality yet?
+>=20
+> I don't have SPEAr board to test it anymore. I have moved out of ST n=
+ow and
+> working in linaro as ARM asignee. Just pushing these as an part time =
+activity.
 
-led_user {
-	compatible =3D "pwm-leds";
-	pwms =3D <&twl_pwmled 1 7812500>; /* PWMB/LEDB from twl4030 */
-	pwm-names =3D "PMU_STAT LED";
+Surely you can't push patches which haven't been tested?!
 
-	label =3D "beagleboard::pmu_stat";
-	max-brightness =3D <127>;
-};
+Try to get yourself some hardware. Does anyone near you have an HREF?
 
-vdd_usbhost: fixedregulator-vdd-usbhost {
-	compatible =3D "regulator-fixed";
-	regulator-name =3D "USBHOST_POWER";
-	regulator-min-microvolt =3D <5000000>;
-	regulator-max-microvolt =3D <5000000>;
-	gpio =3D <&twl_pwmled 0 7812500>; /* PWMA/LEDA from twl4030 */
-	enable-active-high;
-	regulator-boot-on;
-};
+In the mean-time, I will write you an IRQ domain.
 
-With this I think this is what should happen in code level:
-- the "pwm-gpo" driver does not have of_match_table at all.
-- the driver for the "ti,twl4030-pwmled" is loaded.
-- it prepares and calls pwmchip_add() to add the PWM chip.
-- the of_pwmchip_add() will look for gpio-controller property of the node
- - if it is found it prepares the pdata (based on the PWM chip information)
-for the "pwm-gpo" driver and registers the platform_device for it.
- - the "pwm-gpo" driver will use:
-    priv->gpio_chip.of_node =3D pdev->dev.parent->of_node;
+> Though ST guys would have tested stmpe, but stmpe-gpio, i am not sure=
+ about.
 
-In DT boot we are fine with this I think.
+It needs to be tested before being accpeted.
 
-When it comes to legacy boot (boot without DT) I think we should still have
-the two layers to avoid big changes which would affect all existing pwm
-drivers. Something like this in the board files:
+> > I didn't go through them, but are you sure that:
+> >
+> > 1. Can I do without them?
+> >    1.1 Can I derive the configuration from other things?
+> >    2.2 Are they _really_ required, or am I just blindly copying pla=
+tform data?
+> > 2. Does a similar binding already exist?
+> > 3. Can other drivers make use of them?
+> >    3.1 If so, create a generic binding
+> >    3.2 If not, prepend the binding with "<vendor>,"
+>=20
+> I will go through them again.
 
-static struct pwm_lookup pwm_lookup[] =3D {
-	/* LEDA ->  nUSBHOST_PWR_EN */
-	PWM_LOOKUP("twl-pwmled", 0, "pwm-gpo", "nUSBHOST_PWR_EN"),
-	/* LEDB -> PMU_STAT */
-	PWM_LOOKUP("twl-pwmled", 1, "leds_pwm", "beagleboard::pmu_stat"),
-};
+Thanks.
 
-/* for the LED user of PWM */
-static struct led_pwm pwm_leds[] =3D {
-	{
-		.name		=3D "beagleboard::pmu_stat",
-		.max_brightness	=3D 127,
-		.pwm_period_ns	=3D 7812500,
-	},
-};
-
-static struct led_pwm_platform_data pwm_data =3D {
-	.num_leds	=3D ARRAY_SIZE(pwm_leds),
-	.leds		=3D pwm_leds,
-};
-
-static struct platform_device leds_pwm =3D {
-	.name	=3D "leds_pwm",
-	.id	=3D -1,
-	.dev	=3D {
-		.platform_data =3D &pwm_data,
-	},
-};
-
-/* for the GPIO user of PWM */
-static struct gpio_pwm pwm_gpios[] =3D {
-	{
-		.name		=3D "nUSBHOST_PWR_EN",
-		.pwm_period_ns	=3D 7812500,
-	},
-};
-
-static struct gpio_pwm_pdata pwm_gpio_data =3D {
-	.num_gpos	=3D ARRAY_SIZE(pwm_gpios),
-	.gpos		=3D pwm_gpios,
-	.setup		=3D beagle_pwm_gpio_setup, /*to get the gpio base	*/
-};
-
-static struct platform_device gpos_pwm =3D {
-	.name	=3D "pwm-gpo",
-	.id	=3D -1,
-	.dev	=3D {
-		.platform_data =3D &pwm_gpio_data,
-	},
-};
-
-static int beagle_pwm_gpio_setup(struct device *dev, unsigned gpio,
-				 unsigned ngpio)
-{
-	beagle_usbhub_pdata.gpio =3D gpio; /* fixed_voltage_config struct */
-
-	platform_device_register(&beagle_usbhub);
-	return 0;
-}
-
-What do you think?
-
--- =
-
-P=E9ter
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
