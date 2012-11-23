@@ -1,49 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] input: stmpe-ts: Add DT support for stmpe touchscreen
-Date: Fri, 23 Nov 2012 10:46:20 +0000
-Message-ID: <20121123104620.GQ17471@gmail.com>
-References: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] gpio: stmpe: Add DT support for stmpe gpio
+Date: Fri, 23 Nov 2012 16:17:09 +0530
+Message-ID: <CAKohpom7Sqj7BeTFdsg04iGvZz1jnqB=UZTLdRNK7X-0ivknsQ@mail.gmail.com>
+References: <912d88b8906ce87cf5459cf3d5798e03bfce34c7.1353649737.git.viresh.kumar@linaro.org>
+ <20121123103400.GO17471@gmail.com>
+ <20121123104140.GP17471@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121123104140.GP17471-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
-> @@ -0,0 +1,43 @@
-> +STMPE Touchscreen
-> +----------------
-> +
-> +Required properties:
-> + - compatible: "st,stmpe-ts"
+On 23 November 2012 16:11, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > +++ b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+>> > @@ -0,0 +1,18 @@
+>> > +STMPE gpio
+>> > +----------
+>> > +
+>> > +Required properties:
+>> > + - compatible: "st,stmpe-gpio"
+>
+> ... but this is wrong.
+>
+>> > +Example:
+>> > +   stmpe_gpio {
+>> > +           compatible = "st,stmpe-gpio";
+>> > +           st,norequest-mask = <0x20>;     //gpio 5 can't be used
+>> > +   };
+>
+> As is the example.
+>
+> So will be the the DT - if you've already written it.
 
-You shouldn't be specifying a compatible string in the DT.
+Again, I believe these are required by the code you wrote in mfd-core.c
 
-> +Example:
-> +
-> +	stmpe_touchscreen {
-> +		compatible =3D "st,stmpe-ts";
+        if (parent->of_node && cell->of_compatible) {
+                for_each_child_of_node(parent->of_node, np) {
+                        if (of_device_is_compatible(np, cell->of_compatible)) {
+                                pdev->dev.of_node = np;
+                                break;
+                        }
+                }
+        }
 
-This needs to be removed.
+This matches compatible of child node with compatible of cell. And that's
+why you have added that in your keypad mappings as well.
 
-> +		st,sample-time =3D <4>;
-> +		st,mod-12b =3D <1>;
-> +		st,ref-sel =3D <0>;
-> +		st,adc-freq =3D <1>;
-> +		st,ave-ctrl =3D <1>;
-> +		st,touch-det-delay =3D <2>;
-> +		st,settling =3D <2>;
-> +		st,fraction-z =3D <7>;
-> +		st,i-drive =3D <1>;
-> +	};
-
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+viresh
