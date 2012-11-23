@@ -1,87 +1,107 @@
 From: Haojian Zhuang <haojian.zhuang@gmail.com>
-Subject: Re: [PATCH 2/7] mfd: max8925: fix mfd device register failure
-Date: Fri, 23 Nov 2012 16:41:56 +0800
-Message-ID: <CAN1soZyGVaASo2zakxr9EgMdSqVvQyVt0bLDOmFNmN9+NhXWUg@mail.gmail.com>
-References: <1352187498-9754-1-git-send-email-qingx@marvell.com>
+Subject: Re: [PATCH 7/7] mfd: max8925: add dts
+Date: Fri, 23 Nov 2012 16:45:08 +0800
+Message-ID: <CAN1soZy+JCfsroyUBFe9M_MW-sakcWwuqQMT5h0=+Haq+SJ5fw@mail.gmail.com>
+References: <1352188180-10028-1-git-send-email-qingx@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352187498-9754-1-git-send-email-qingx@marvell.com>
+In-Reply-To: <1352188180-10028-1-git-send-email-qingx@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Qing Xu <qingx@marvell.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, cxie4@marvell.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
+Cc: Linux Russell <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, cxie4@marvell.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 6, 2012 at 3:38 PM, Qing Xu <qingx@marvell.com> wrote:
+On Tue, Nov 6, 2012 at 3:49 PM, Qing Xu <qingx@marvell.com> wrote:
 > From: Qing Xu <qingx@marvell.com>
 >
-> we encounter rtc/power/touch driver registry failure, root cause
-> it is resources confilict in insert_resouce, solved by changing
-> mfd_add_devices 5th parameter to NULL
+> add max8925 dts support into mmp2 brownstone platform
 >
-Since resources are not used in power/rtc driver and touch driver
-isn't implemented,
-it's OK to avoid use resources. Please remove those resources in
-max8925-core.c also.
-
-
 > Signed-off-by: Qing Xu <qingx@marvell.com>
 > ---
->  drivers/mfd/max8925-core.c |   22 ++++++++++------------
->  1 files changed, 10 insertions(+), 12 deletions(-)
+>  arch/arm/boot/dts/mmp2-brownstone.dts |  166 +++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/mmp2.dtsi           |    4 +-
+>  2 files changed, 169 insertions(+), 1 deletions(-)
 >
-> diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
-> index dcc218a..b1eacae 100644
-> --- a/drivers/mfd/max8925-core.c
-> +++ b/drivers/mfd/max8925-core.c
-> @@ -873,7 +873,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
+> diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
+> index c9b4f27..e22f58c 100644
+> --- a/arch/arm/boot/dts/mmp2-brownstone.dts
+> +++ b/arch/arm/boot/dts/mmp2-brownstone.dts
+> @@ -29,6 +29,172 @@
+>                         };
+>                         twsi1: i2c@d4011000 {
+>                                 status = "okay";
+> +                               pmic: max8925@3c {
+> +                                       compatible = "marvell,max8925";
+> +                                       reg = <0x3c>;
+> +                                       interrupts = <1 0>;
+> +                                       interrupt-parent = <&intcmux4>;
+> +                                       interrupt-controller;
+> +                                       #interrupt-cells = <1>;
+> +
+> +                                       regulators {
+> +                                               SDV1 {
+> +                                                       regulator-min-microvolt = <637500>;
+> +                                                       regulator-max-microvolt = <1425000>;
+> +                                                       regulator-boot-on;
+> +                                                       regulator-always-on;
+> +                                               };
+> +                                               SDV2 {
+> +                                                       regulator-min-microvolt = <650000>;
+> +                                                       regulator-max-microvolt = <2225000>;
+> +                                                       regulator-boot-on;
+> +                                                       regulator-always-on;
+> +                                               };
+> +                                       };
+> +                                       backlight {
+> +                                               dual-string = <0>;
+> +                                       };
+> +                                       charger {
+> +                                               batt-detect = <0>;
+> +                                               topoff-threshold = <1>;
+> +                                               fast-charge = <7>;
+> +                                               no-temp-support = <0>;
+> +                                               no-insert-detect = <0>;
+> +                                       };
+> +                                       rtc {
+> +
+> +                                       };
+> +                                       onkey {
+> +
+> +                                       };
+> +                                       touch {
+> +
+> +                                       };
+
+Please remove these empty entries. Those mfd client drivers didn't parse any
+property from DTS file.
+
+> +                               };
+>                         };
+>                         rtc: rtc@d4010000 {
+>                                 status = "okay";
+> diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+> index 80f74e2..2165a17 100644
+> --- a/arch/arm/boot/dts/mmp2.dtsi
+> +++ b/arch/arm/boot/dts/mmp2.dtsi
+> @@ -41,7 +41,7 @@
+>                                 mrvl,intc-nr-irqs = <64>;
+>                         };
 >
->         ret = mfd_add_devices(chip->dev, 0, &rtc_devs[0],
->                               ARRAY_SIZE(rtc_devs),
-> -                             &rtc_resources[0], chip->irq_base, NULL);
-> +                             NULL, chip->irq_base, NULL);
->         if (ret < 0) {
->                 dev_err(chip->dev, "Failed to add rtc subdev\n");
->                 goto out;
-> @@ -881,7 +881,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
->
->         ret = mfd_add_devices(chip->dev, 0, &onkey_devs[0],
->                               ARRAY_SIZE(onkey_devs),
-> -                             &onkey_resources[0], 0, NULL);
-> +                             NULL, 0, NULL);
->         if (ret < 0) {
->                 dev_err(chip->dev, "Failed to add onkey subdev\n");
->                 goto out_dev;
-> @@ -900,21 +900,19 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
->                 goto out_dev;
->         }
->
-> -       if (pdata && pdata->power) {
-> -               ret = mfd_add_devices(chip->dev, 0, &power_devs[0],
-> -                                       ARRAY_SIZE(power_devs),
-> -                                       &power_supply_resources[0], 0, NULL);
-> -               if (ret < 0) {
-> -                       dev_err(chip->dev, "Failed to add power supply "
-> -                               "subdev\n");
-> -                       goto out_dev;
-> -               }
-> +       ret = mfd_add_devices(chip->dev, 0, &power_devs[0],
-> +                               ARRAY_SIZE(power_devs),
-> +                               NULL, 0, NULL);
-> +       if (ret < 0) {
-> +               dev_err(chip->dev, "Failed to add power supply "
-> +                       "subdev, err = %d\n", ret);
-> +               goto out_dev;
->         }
->
->         if (pdata && pdata->touch) {
->                 ret = mfd_add_devices(chip->dev, 0, &touch_devs[0],
->                                       ARRAY_SIZE(touch_devs),
-> -                                     &touch_resources[0], 0, NULL);
-> +                                     NULL, chip->tsc_irq_base, NULL);
->                 if (ret < 0) {
->                         dev_err(chip->dev, "Failed to add touch subdev\n");
->                         goto out_dev;
+> -                       intcmux4@d4282150 {
+> +                       intcmux4: intcmux4@d4282150 {
+>                                 compatible = "mrvl,mmp2-mux-intc";
+>                                 interrupts = <4>;
+>                                 interrupt-controller;
+> @@ -196,6 +196,8 @@
+>                                 compatible = "mrvl,mmp-twsi";
+>                                 reg = <0xd4011000 0x1000>;
+>                                 interrupts = <7>;
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+>                                 mrvl,i2c-fast-mode;
+>                                 status = "disabled";
+>                         };
 > --
 > 1.7.0.4
 >
