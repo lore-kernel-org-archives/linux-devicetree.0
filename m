@@ -1,31 +1,25 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH 7/7] mfd: max8925: add dts
-Date: Fri, 23 Nov 2012 15:29:28 +0800
-Message-ID: <50AF25D8.6000004@marvell.com>
-References: <1352188180-10028-1-git-send-email-qingx@marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1352188180-10028-1-git-send-email-qingx@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 0/3] regulator: max8997: minor updates and device tree support
+Date: Fri, 23 Nov 2012 13:33:12 +0530
+Message-ID: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/2012 03:49 PM, Qing Xu wrote:
-> From: Qing Xu <qingx@marvell.com>
->
-> add max8925 dts support into mmp2 brownstone platform
->
-> Signed-off-by: Qing Xu <qingx@marvell.com>
-> ---
->   arch/arm/boot/dts/mmp2-brownstone.dts |  166 +++++++++++++++++++++++++++++++++
->   arch/arm/boot/dts/mmp2.dtsi           |    4 +-
->   2 files changed, 169 insertions(+), 1 deletions(-)
+This patch series includes two minor updates to the gpio dvs code in max8997
+regulator driver and adds device tree support for the same driver.
 
-Hi Russell, Haojian,
+Thomas Abraham (3):
+  regulator: max8997: reorder buck1/2/5 dvs setup code
+  regulator: max8997: limit the number of dvs registers programmed in non-dvs mode
+  regulator: add device tree support for max8997
 
-Could you help to review my patch, thanks a lot!
-
--Qing
+ .../bindings/regulator/max8997-regulator.txt       |  146 ++++++++++++++++
+ drivers/mfd/max8997.c                              |   73 ++++++++-
+ drivers/regulator/max8997.c                        |  181 ++++++++++++++++++--
+ include/linux/mfd/max8997-private.h                |    1 +
+ include/linux/mfd/max8997.h                        |    1 +
+ 5 files changed, 384 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/max8997-regulator.txt
