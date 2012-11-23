@@ -1,33 +1,114 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
-Date: Fri, 23 Nov 2012 21:15:43 +0530
-Message-ID: <CAKohpok_PghpJ11DfqFrhL6j3UJ6BeozZyB4ioUU5aL01xheag@mail.gmail.com>
-References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
-	<b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
-	<20121122112451.GE4328@gmail.com>
-	<CAKohpo=EWFNddjMNwHO4u4-bi1AQ4cvsJ4DfFOgaFv3oVfheZg@mail.gmail.com>
-	<20121123093633.GD17471@gmail.com>
-	<CAKohpo=4orAgwVRRvukj+tu67CyVvoUegsJ7eXaCMA9exruqEA@mail.gmail.com>
-	<20121123154311.GA28552@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Subject: [PATCH Resend] gpio: stmpe: Add DT support for stmpe gpio
+Date: Fri, 23 Nov 2012 21:44:43 +0530
+Message-ID: <c0badc4f4021029a5de4393d7e3ca71494edb8ea.1353686946.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121123154311.GA28552@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
+To: linus.walleij@linaro.org, grant.likely@secretlab.ca
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 November 2012 21:13, Lee Jones <lee.jones@linaro.org> wrote:
-> No, in DT devices named as part of the hiearchy, so you'd have:
->
-> soc-u9500/i2c@80004000/stmpe1601@40/stmpe_keypad
-> soc-u9500/i2c@80004000/stmpe1601@41/stmpe_keypad
-> ... etc
+From: Vipul Kumar Samar <vipulkumar.samar@st.com>
 
-Obviously. How could i miss this naming :(
+This patch allows the STMPE GPIO driver to be successfully probed and
+initialised when Device Tree support is enabled. Bindings are mentioned in
+Documentation too.
 
-Okay, so i need to pass -1 and that would be enough. Right?
+Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V1->Resend:
+----------
+- Don't move asignment of stmpe_gpio->chip.base to if (pdata) block.
 
---
-viresh
+ Documentation/devicetree/bindings/gpio/gpio-stmpe.txt | 18 ++++++++++++++++++
+ drivers/gpio/gpio-stmpe.c                             | 10 ++++++++--
+ drivers/mfd/stmpe.c                                   |  2 ++
+ 3 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+new file mode 100644
+index 0000000..7f010e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+@@ -0,0 +1,18 @@
++STMPE gpio
++----------
++
++Required properties:
++ - compatible: "st,stmpe-gpio"
++
++Optional properties:
++ - norequest-mask: bitmask specifying which GPIOs should _not_ be requestable
++   due to different usage (e.g. touch, keypad)
++
++Node name must be stmpe_gpio and should be child node of stmpe node to which it
++belongs.
++
++Example:
++	stmpe_gpio {
++		compatible = "st,stmpe-gpio";
++		st,norequest-mask = <0x20>;	//gpio 5 can't be used
++	};
+diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
+index dce3472..522c90e 100644
+--- a/drivers/gpio/gpio-stmpe.c
++++ b/drivers/gpio/gpio-stmpe.c
+@@ -12,6 +12,7 @@
+ #include <linux/gpio.h>
+ #include <linux/irq.h>
+ #include <linux/interrupt.h>
++#include <linux/of.h>
+ #include <linux/mfd/stmpe.h>
+ 
+ /*
+@@ -304,6 +305,7 @@ static void stmpe_gpio_irq_remove(struct stmpe_gpio *stmpe_gpio)
+ static int __devinit stmpe_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct stmpe *stmpe = dev_get_drvdata(pdev->dev.parent);
++	struct device_node *np = pdev->dev.of_node;
+ 	struct stmpe_gpio_platform_data *pdata;
+ 	struct stmpe_gpio *stmpe_gpio;
+ 	int ret;
+@@ -321,13 +323,17 @@ static int __devinit stmpe_gpio_probe(struct platform_device *pdev)
+ 
+ 	stmpe_gpio->dev = &pdev->dev;
+ 	stmpe_gpio->stmpe = stmpe;
+-	stmpe_gpio->norequest_mask = pdata ? pdata->norequest_mask : 0;
+-
+ 	stmpe_gpio->chip = template_chip;
+ 	stmpe_gpio->chip.ngpio = stmpe->num_gpios;
+ 	stmpe_gpio->chip.dev = &pdev->dev;
+ 	stmpe_gpio->chip.base = pdata ? pdata->gpio_base : -1;
+ 
++	if (pdata)
++		stmpe_gpio->norequest_mask = pdata->norequest_mask;
++	else if (np)
++		of_property_read_u32(np, "st,norequest-mask",
++				&stmpe_gpio->norequest_mask);
++
+ 	if (irq >= 0)
+ 		stmpe_gpio->irq_base = stmpe->irq_base + STMPE_INT_GPIO(0);
+ 	else
+diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
+index fd64efc..3e3ca9c 100644
+--- a/drivers/mfd/stmpe.c
++++ b/drivers/mfd/stmpe.c
+@@ -298,12 +298,14 @@ static struct resource stmpe_gpio_resources[] = {
+ 
+ static struct mfd_cell stmpe_gpio_cell = {
+ 	.name		= "stmpe-gpio",
++	.of_compatible	= "st,stmpe-gpio",
+ 	.resources	= stmpe_gpio_resources,
+ 	.num_resources	= ARRAY_SIZE(stmpe_gpio_resources),
+ };
+ 
+ static struct mfd_cell stmpe_gpio_cell_noirq = {
+ 	.name		= "stmpe-gpio",
++	.of_compatible	= "st,stmpe-gpio",
+ 	/* gpio cell resources consist of an irq only so no resources here */
+ };
+ 
+-- 
+1.7.12.rc2.18.g61b472e
