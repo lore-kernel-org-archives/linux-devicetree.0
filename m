@@ -1,120 +1,272 @@
 From: Praveen Paneri <p.paneri@samsung.com>
-Subject: Re: [PATCH v8 3/3] ARM: EXYNOS: Enabling samsung-usbphy driver for EXYNOS4210
-Date: Fri, 23 Nov 2012 10:18:18 +0530
-Message-ID: <CAD6zSYNmqq6rWjiD9Td3gepPBeaZLgsBeaZrXw9DiiPVMYooAA@mail.gmail.com>
+Subject: Re: [PATCH v8 2/3] ARM: S3C64XX: Enabling samsung-usbphy driver
+Date: Fri, 23 Nov 2012 10:24:47 +0530
+Message-ID: <CAD6zSYOZ_Wovk1JXOUV3RqOuYbYj8FOeS09Obi+GbH1mETwfYg@mail.gmail.com>
 References: <1352889938-17311-1-git-send-email-p.paneri@samsung.com>
-	<1352889938-17311-4-git-send-email-p.paneri@samsung.com>
-	<27075802.CQr6a3IPJm@flatron>
+	<1352889938-17311-3-git-send-email-p.paneri@samsung.com>
+	<37603299.oO7KtPJhEd@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <27075802.CQr6a3IPJm@flatron>
+In-Reply-To: <37603299.oO7KtPJhEd@flatron>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Tomasz Figa <tomasz.figa@gmail.com>
 Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, gregkh@linuxfoundation.org, Thomas Abraham <thomas.abraham@linaro.org>, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, Lukasz Majewski <l.majewski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, t.figa@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 22, 2012 at 1:16 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+On Thu, Nov 22, 2012 at 1:54 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
 > Hi Praveen,
 >
-> On Wednesday 14 of November 2012 16:15:38 Praveen Paneri wrote:
->> Adding usbphy node for Exynos4210 along with the platform data.
+> On Wednesday 14 of November 2012 16:15:37 Praveen Paneri wrote:
+>> Adding platform device for samsung-usbphy driver. Enabling it for
+>> s3c64xx based machines using s3c-hsotg.
 >>
 >> Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
 >> ---
->>  arch/arm/boot/dts/exynos4210-smdkv310.dts |    5 +++++
->>  arch/arm/mach-exynos/Kconfig              |    1 +
->>  arch/arm/mach-exynos/include/mach/map.h   |    1 +
->>  arch/arm/mach-exynos/mach-exynos4-dt.c    |    8 ++++++++
->>  arch/arm/mach-exynos/setup-usb-phy.c      |   13 +++++++++++++
->>  5 files changed, 28 insertions(+), 0 deletions(-)
+>>  arch/arm/mach-s3c64xx/include/mach/map.h     |    2 +
+>>  arch/arm/mach-s3c64xx/mach-crag6410.c        |    7 ++++++
+>>  arch/arm/mach-s3c64xx/mach-smartq.c          |    8 +++++++
+>>  arch/arm/mach-s3c64xx/mach-smdk6410.c        |    7 ++++++
+>>  arch/arm/mach-s3c64xx/setup-usb-phy.c        |   14 +++++++++++++
+>>  arch/arm/plat-samsung/devs.c                 |   28
+>> ++++++++++++++++++++++++++ arch/arm/plat-samsung/include/plat/devs.h
+>> |    1 +
+>>  arch/arm/plat-samsung/include/plat/usb-phy.h |    1 +
+>>  8 files changed, 68 insertions(+), 0 deletions(-)
 >>
->> diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts
->> b/arch/arm/boot/dts/exynos4210-smdkv310.dts index 9b23a82..550903a
+>> diff --git a/arch/arm/mach-s3c64xx/include/mach/map.h
+>> b/arch/arm/mach-s3c64xx/include/mach/map.h index 8e2097b..dc482bb
 >> 100644
->> --- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
->> +++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
->> @@ -59,6 +59,11 @@
->>               status = "okay";
->>       };
+>> --- a/arch/arm/mach-s3c64xx/include/mach/map.h
+>> +++ b/arch/arm/mach-s3c64xx/include/mach/map.h
+>> @@ -65,6 +65,7 @@
 >>
->> +     usbphy@125B0000 {
->> +             compatible = "samsung,exynos4210-usbphy";
->> +             reg = <0x125B0000 0x100>;
->> +     };
->> +
->>       keypad@100A0000 {
->>               samsung,keypad-num-rows = <2>;
->>               samsung,keypad-num-columns = <8>;
->> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
->> index bb3b09a..315308c 100644
->> --- a/arch/arm/mach-exynos/Kconfig
->> +++ b/arch/arm/mach-exynos/Kconfig
->> @@ -410,6 +410,7 @@ config MACH_EXYNOS4_DT
->>       select PINCTRL
->>       select PINCTRL_EXYNOS4
->>       select USE_OF
->> +     select EXYNOS4_SETUP_USB_PHY
->>       help
->>         Machine support for Samsung Exynos4 machine with device tree
->> enabled. Select this if a fdt blob is available for the Exynos4 SoC
->> based board. diff --git a/arch/arm/mach-exynos/include/mach/map.h
->> b/arch/arm/mach-exynos/include/mach/map.h index ef4958b..e64fe1c 100644
->> --- a/arch/arm/mach-exynos/include/mach/map.h
->> +++ b/arch/arm/mach-exynos/include/mach/map.h
->> @@ -244,6 +244,7 @@
->>  #define S3C_PA_SPI1                  EXYNOS4_PA_SPI1
->>  #define S3C_PA_SPI2                  EXYNOS4_PA_SPI2
->>  #define S3C_PA_USB_HSOTG             EXYNOS4_PA_HSOTG
->> +#define S3C_PA_USB_PHY                       EXYNOS4_PA_HSPHY
+>>  #define S3C64XX_PA_NAND              (0x70200000)
+>>  #define S3C64XX_PA_FB                (0x77100000)
+>> +#define S3C64XX_PA_USB_HSPHY (0x7C100000)
+>>  #define S3C64XX_PA_USB_HSOTG (0x7C000000)
+>>  #define S3C64XX_PA_WATCHDOG  (0x7E004000)
+>>  #define S3C64XX_PA_RTC               (0x7E005000)
+>> @@ -113,6 +114,7 @@
+>>  #define S3C_PA_FB            S3C64XX_PA_FB
+>>  #define S3C_PA_USBHOST               S3C64XX_PA_USBHOST
+>>  #define S3C_PA_USB_HSOTG     S3C64XX_PA_USB_HSOTG
+>> +#define S3C_PA_USB_PHY               S3C64XX_PA_USB_HSPHY
+>>  #define S3C_PA_RTC           S3C64XX_PA_RTC
+>>  #define S3C_PA_WDT           S3C64XX_PA_WATCHDOG
+>>  #define S3C_PA_SPI0          S3C64XX_PA_SPI0
+>> diff --git a/arch/arm/mach-s3c64xx/mach-crag6410.c
+>> b/arch/arm/mach-s3c64xx/mach-crag6410.c index 48f4a2d..c602379 100644
+>> --- a/arch/arm/mach-s3c64xx/mach-crag6410.c
+>> +++ b/arch/arm/mach-s3c64xx/mach-crag6410.c
+>> @@ -31,6 +31,7 @@
+>>  #include <linux/spi/spi.h>
 >>
->>  #define S5P_PA_EHCI                  EXYNOS4_PA_EHCI
->>  #define S5P_PA_FIMC0                 EXYNOS4_PA_FIMC0
->> diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c
->> b/arch/arm/mach-exynos/mach-exynos4-dt.c index 8858068..f7887e5 100644
->> --- a/arch/arm/mach-exynos/mach-exynos4-dt.c
->> +++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
->> @@ -13,6 +13,7 @@
->>
->>  #include <linux/of_platform.h>
->>  #include <linux/serial_core.h>
+>>  #include <linux/i2c/pca953x.h>
 >> +#include <linux/platform_data/samsung-usbphy.h>
 >>
->>  #include <asm/mach/arch.h>
->>  #include <asm/hardware/gic.h>
->> @@ -20,9 +21,14 @@
+>>  #include <video/platform_lcd.h>
 >>
->>  #include <plat/cpu.h>
->>  #include <plat/regs-serial.h>
+>> @@ -69,6 +70,7 @@
+>>  #include <plat/adc.h>
+>>  #include <linux/platform_data/i2c-s3c2410.h>
+>>  #include <plat/pm.h>
 >> +#include <plat/usb-phy.h>
 >>
 >>  #include "common.h"
 >>
->> +static struct samsung_usbphy_data exynos4_usbphy_pdata = {
+>> @@ -353,6 +355,7 @@ static struct platform_device wallvdd_device = {
+>>  };
+>>
+>>  static struct platform_device *crag6410_devices[] __initdata = {
+>> +     &samsung_device_usbphy,
+>>       &s3c_device_hsmmc0,
+>>       &s3c_device_hsmmc2,
+>>       &s3c_device_i2c0,
+>> @@ -804,6 +807,9 @@ static const struct gpio_led_platform_data
+>> gpio_leds_pdata = { .num_leds = ARRAY_SIZE(gpio_leds),
+>>  };
+>>
+>> +static struct samsung_usbphy_data crag6410_usbphy_pdata __initdata = {
+>> +     .pmu_isolation = s5p_usb_phy_pmu_isolation,
+>> +};
+>
+> Why not define default platform data somewhere and always use it for
+> s3c64xx, without redefining the same structure in all boards?
+>
+>>  static void __init crag6410_machine_init(void)
+>>  {
+>> @@ -829,6 +835,7 @@ static void __init crag6410_machine_init(void)
+>>       s3c_i2c0_set_platdata(&i2c0_pdata);
+>>       s3c_i2c1_set_platdata(&i2c1_pdata);
+>>       s3c_fb_set_platdata(&crag6410_lcd_pdata);
+>> +     samsung_usbphy_set_pdata(&crag6410_usbphy_pdata);
+>>
+>>       i2c_register_board_info(0, i2c_devs0, ARRAY_SIZE(i2c_devs0));
+>>       i2c_register_board_info(1, i2c_devs1, ARRAY_SIZE(i2c_devs1));
+>> diff --git a/arch/arm/mach-s3c64xx/mach-smartq.c
+>> b/arch/arm/mach-s3c64xx/mach-smartq.c index 59bb34c..f18a0ab 100644
+>> --- a/arch/arm/mach-s3c64xx/mach-smartq.c
+>> +++ b/arch/arm/mach-s3c64xx/mach-smartq.c
+>> @@ -18,6 +18,7 @@
+>>  #include <linux/serial_core.h>
+>>  #include <linux/spi/spi_gpio.h>
+>>  #include <linux/usb/gpio_vbus.h>
+>> +#include <linux/platform_data/samsung-usbphy.h>
+>>
+>>  #include <asm/mach-types.h>
+>>  #include <asm/mach/map.h>
+>> @@ -36,6 +37,7 @@
+>>  #include <linux/platform_data/usb-ohci-s3c2410.h>
+>>  #include <plat/sdhci.h>
+>>  #include <linux/platform_data/touchscreen-s3c2410.h>
+>> +#include <plat/usb-phy.h>
+>>
+>>  #include <video/platform_lcd.h>
+>>
+>> @@ -234,6 +236,7 @@ static struct i2c_board_info smartq_i2c_devs[]
+>> __initdata = { };
+>>
+>>  static struct platform_device *smartq_devices[] __initdata = {
+>> +     &samsung_device_usbphy,
+>>       &s3c_device_hsmmc1,     /* Init iNAND first, ... */
+>>       &s3c_device_hsmmc0,     /* ... then the external SD card */
+>>       &s3c_device_hsmmc2,
+>> @@ -380,9 +383,14 @@ void __init smartq_map_io(void)
+>>       smartq_lcd_mode_set();
+>>  }
+>>
+>> +static struct samsung_usbphy_data smartq_usbphy_pdata __initdata = {
 >> +     .pmu_isolation = s5p_usb_phy_pmu_isolation,
 >> +};
 >> +
->>  /*
->>   * The following lookup table is used to override device names when
->> devices * are registered from device tree. This is temporarily added to
->> enable @@ -79,6 +85,8 @@ static const struct of_dev_auxdata
->> exynos4_auxdata_lookup[] __initconst = { OF_DEV_AUXDATA("arm,pl330",
->> EXYNOS4_PA_PDMA1, "dma-pl330.1", NULL),
->> OF_DEV_AUXDATA("samsung,exynos4210-tmu", EXYNOS4_PA_TMU,
->>                               "exynos-tmu", NULL),
->> +     OF_DEV_AUXDATA("samsung,exynos4210-usbphy", EXYNOS4_PA_HSPHY,
->> +                     "s3c-usbphy", &exynos4_usbphy_pdata),
+>>  void __init smartq_machine_init(void)
+>>  {
+>>       s3c_i2c0_set_platdata(NULL);
+>> +     samsung_usbphy_set_pdata(&smartq_usbphy_pdata);
+>>       s3c_hwmon_set_platdata(&smartq_hwmon_pdata);
+>>       s3c_sdhci1_set_platdata(&smartq_internal_hsmmc_pdata);
+>>       s3c_sdhci2_set_platdata(&smartq_internal_hsmmc_pdata);
+>> diff --git a/arch/arm/mach-s3c64xx/mach-smdk6410.c
+>> b/arch/arm/mach-s3c64xx/mach-smdk6410.c index 123f452..00e46a6 100644
+>> --- a/arch/arm/mach-s3c64xx/mach-smdk6410.c
+>> +++ b/arch/arm/mach-s3c64xx/mach-smdk6410.c
+>> @@ -30,6 +30,7 @@
+>>  #include <linux/regulator/fixed.h>
+>>  #include <linux/regulator/machine.h>
+>>  #include <linux/pwm_backlight.h>
+>> +#include <linux/platform_data/samsung-usbphy.h>
+>>
+>>  #ifdef CONFIG_SMDK6410_WM1190_EV1
+>>  #include <linux/mfd/wm8350/core.h>
+>> @@ -72,6 +73,7 @@
+>>  #include <linux/platform_data/touchscreen-s3c2410.h>
+>>  #include <plat/keypad.h>
+>>  #include <plat/backlight.h>
+>> +#include <plat/usb-phy.h>
+>>
+>>  #include "common.h"
+>>
+>> @@ -263,6 +265,7 @@ static struct samsung_keypad_platdata
+>> smdk6410_keypad_data __initdata = { static struct map_desc
+>> smdk6410_iodesc[] = {};
+>>
+>>  static struct platform_device *smdk6410_devices[] __initdata = {
+>> +     &samsung_device_usbphy,
+>>  #ifdef CONFIG_SMDK6410_SD_CH0
+>>       &s3c_device_hsmmc0,
+>>  #endif
+>> @@ -626,6 +629,9 @@ static struct platform_pwm_backlight_data
+>> smdk6410_bl_data = { .pwm_id = 1,
+>>  };
+>>
+>> +static struct samsung_usbphy_data smdk6410_usbphy_pdata __initdata = {
+>> +     .pmu_isolation = s5p_usb_phy_pmu_isolation,
+>> +};
+>>
+>>  static void __init smdk6410_map_io(void)
+>>  {
+>> @@ -655,6 +661,7 @@ static void __init smdk6410_machine_init(void)
+>>       s3c_i2c0_set_platdata(NULL);
+>>       s3c_i2c1_set_platdata(NULL);
+>>       s3c_fb_set_platdata(&smdk6410_lcd_pdata);
+>> +     samsung_usbphy_set_pdata(&smdk6410_usbphy_pdata);
+>>
+>>       samsung_keypad_set_platdata(&smdk6410_keypad_data);
+>>
+>> diff --git a/arch/arm/mach-s3c64xx/setup-usb-phy.c
+>> b/arch/arm/mach-s3c64xx/setup-usb-phy.c index 7a09553..3aee778 100644
+>> --- a/arch/arm/mach-s3c64xx/setup-usb-phy.c
+>> +++ b/arch/arm/mach-s3c64xx/setup-usb-phy.c
+>> @@ -9,3 +9,17 @@
+>>   *
+>>   */
+>>
+>> +#include <linux/io.h>
+>> +#include <mach/map.h>
+>> +#include <mach/regs-sys.h>
+>> +
+>> +void s5p_usb_phy_pmu_isolation(int on)
+>> +{
+>> +     if (on) {
+>> +             writel(readl(S3C64XX_OTHERS) & ~S3C64XX_OTHERS_USBMASK,
+>> +                     S3C64XX_OTHERS);
+>> +     } else {
+>> +             writel(readl(S3C64XX_OTHERS) | S3C64XX_OTHERS_USBMASK,
+>> +                     S3C64XX_OTHERS);
+>> +     }
 >
-> You should consider reworking the usb phy driver to avoid the need to
-> specify platform data through of auxdata, because auxdata array in mach-
-> exynos4-dt is going to be removed after including common clock framework
-> support for Exynos4.
-I am aware of this. We had some discussion earlier
-https://patchwork.kernel.org/patch/1266221/
-Please suggest a way for the same, that will be helpful.
-
-Regards,
-
+> nitpick: Unnecessary braces for one line if/else.
+>
+>> +}
+>> diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
+>> index bc50b20..4031c77 100644
+>> --- a/arch/arm/plat-samsung/devs.c
+>> +++ b/arch/arm/plat-samsung/devs.c
+>> @@ -31,6 +31,7 @@
+>>  #include <linux/ioport.h>
+>>  #include <linux/platform_data/s3c-hsudc.h>
+>>  #include <linux/platform_data/s3c-hsotg.h>
+>> +#include <linux/platform_data/samsung-usbphy.h>
+>>
+>>  #include <media/s5p_hdmi.h>
+>>
+>> @@ -1367,6 +1368,30 @@ struct platform_device s5p_device_mixer = {
+>>
+>>  /* USB */
+>>
+>> +#ifdef CONFIG_ARCH_S3C64XX
+>> +/* USB PHY*/
+>> +static struct resource samsung_usbphy_resource[] = {
+>> +     [0] = {
+>> +             .start = S3C_PA_USB_PHY,
+>> +             .end   = S3C_PA_USB_PHY + SZ_16 - 1,
+>> +             .flags = IORESOURCE_MEM,
+>> +     },
+>> +};
+>> +
+>> +struct platform_device samsung_device_usbphy = {
+>> +     .name           = "s3c64xx-usbphy",
+>> +     .id             = -1,
+>> +     .num_resources  = ARRAY_SIZE(samsung_usbphy_resource),
+>> +     .resource       = samsung_usbphy_resource,
+>> +};
+>> +
+>> +void __init samsung_usbphy_set_pdata(struct samsung_usbphy_data *pd)
+>> +{
+>> +     s3c_set_platdata(pd, sizeof(struct samsung_usbphy_data),
+>> +                     &samsung_device_usbphy);
+>> +}
+>
+> This is strange. samsung_usbphy_set_pdata is declared unconditionally in
+> linux/platform_data/samsung-usbphy.h , but it's defined only for S3C64XX?
+>
+> Maybe the condition should be CONFIG_SAMSUNG_USBPHY not
+> CONFIG_ARCH_S3C64XX and in case of CONFIG_SAMSUNG_USBPHY disabled a dummy
+> inline samsung_usphy_set_pdata should be defined in the header?
+Will update accordingly
+Thanks,
+Praveen
 >
 > Best regards,
 > Tomasz Figa
