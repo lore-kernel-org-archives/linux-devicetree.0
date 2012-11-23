@@ -1,113 +1,373 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH] gpio: stmpe: Add DT support for stmpe gpio
-Date: Fri, 23 Nov 2012 11:21:01 +0530
-Message-ID: <912d88b8906ce87cf5459cf3d5798e03bfce34c7.1353649737.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, grant.likely@secretlab.ca
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>, Viresh Kumar <viresh.kumar@linaro.org>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH 3/3] ASoC: atmel-pcm: add dma support
+Date: Fri, 23 Nov 2012 14:14:17 +0800
+Message-ID: <1353651257-2476-4-git-send-email-voice.shen@atmel.com>
+References: <1353651257-2476-1-git-send-email-voice.shen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1353651257-2476-1-git-send-email-voice.shen@atmel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@opensource.wolfsonmicro.com, plagnioj@jcrosoft.com, nicolas.ferre@atmel.com
+Cc: Bo Shen <voice.shen@atmel.com>, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vipul Kumar Samar <vipulkumar.samar@st.com>
+Add dmaengine specific routines and replace PDC ones in
+pcm_ops if appropriate.
 
-This patch allows the STMPE GPIO driver to be successfully probed and
-initialised when Device Tree support is enabled. Bindings are mentioned in
-Documentation too.
-
-Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+[voice.shen@atmel.com: adapt to soc dmaengine framework]
+Signed-off-by: Bo Shen <voice.shen@atmel.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio-stmpe.txt | 18 ++++++++++++++++++
- drivers/gpio/gpio-stmpe.c                             | 15 ++++++++++++---
- drivers/mfd/stmpe.c                                   |  2 ++
- 3 files changed, 32 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+ sound/soc/atmel/atmel-pcm.c |  215 ++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 201 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
-new file mode 100644
-index 0000000..7f010e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
-@@ -0,0 +1,18 @@
-+STMPE gpio
-+----------
-+
-+Required properties:
-+ - compatible: "st,stmpe-gpio"
-+
-+Optional properties:
-+ - norequest-mask: bitmask specifying which GPIOs should _not_ be requestable
-+   due to different usage (e.g. touch, keypad)
-+
-+Node name must be stmpe_gpio and should be child node of stmpe node to which it
-+belongs.
-+
-+Example:
-+	stmpe_gpio {
-+		compatible = "st,stmpe-gpio";
-+		st,norequest-mask = <0x20>;	//gpio 5 can't be used
-+	};
-diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
-index dce3472..91455d4 100644
---- a/drivers/gpio/gpio-stmpe.c
-+++ b/drivers/gpio/gpio-stmpe.c
-@@ -12,6 +12,7 @@
- #include <linux/gpio.h>
- #include <linux/irq.h>
- #include <linux/interrupt.h>
-+#include <linux/of.h>
- #include <linux/mfd/stmpe.h>
+diff --git a/sound/soc/atmel/atmel-pcm.c b/sound/soc/atmel/atmel-pcm.c
+index a3471e9..d18a241 100644
+--- a/sound/soc/atmel/atmel-pcm.c
++++ b/sound/soc/atmel/atmel-pcm.c
+@@ -37,15 +37,19 @@
+ #include <linux/slab.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/atmel_pdc.h>
++#include <linux/dmaengine.h>
+ #include <linux/atmel-ssc.h>
++#include <linux/platform_data/dma-atmel.h>
  
- /*
-@@ -304,6 +305,7 @@ static void stmpe_gpio_irq_remove(struct stmpe_gpio *stmpe_gpio)
- static int __devinit stmpe_gpio_probe(struct platform_device *pdev)
- {
- 	struct stmpe *stmpe = dev_get_drvdata(pdev->dev.parent);
-+	struct device_node *np = pdev->dev.of_node;
- 	struct stmpe_gpio_platform_data *pdata;
- 	struct stmpe_gpio *stmpe_gpio;
- 	int ret;
-@@ -321,12 +323,19 @@ static int __devinit stmpe_gpio_probe(struct platform_device *pdev)
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
++#include <sound/dmaengine_pcm.h>
  
- 	stmpe_gpio->dev = &pdev->dev;
- 	stmpe_gpio->stmpe = stmpe;
--	stmpe_gpio->norequest_mask = pdata ? pdata->norequest_mask : 0;
--
- 	stmpe_gpio->chip = template_chip;
- 	stmpe_gpio->chip.ngpio = stmpe->num_gpios;
- 	stmpe_gpio->chip.dev = &pdev->dev;
--	stmpe_gpio->chip.base = pdata ? pdata->gpio_base : -1;
+ #include "atmel-pcm.h"
+ 
++static int use_dma;
+ 
+ /*--------------------------------------------------------------------------*\
+  * Hardware definition
+@@ -66,6 +70,20 @@ static const struct snd_pcm_hardware atmel_pcm_pdc_hardware = {
+ 	.buffer_bytes_max	= 32 * 1024,
+ };
+ 
++static const struct snd_pcm_hardware atmel_pcm_dma_hardware = {
++	.info			= SNDRV_PCM_INFO_MMAP |
++				  SNDRV_PCM_INFO_MMAP_VALID |
++				  SNDRV_PCM_INFO_INTERLEAVED |
++				  SNDRV_PCM_INFO_RESUME |
++				  SNDRV_PCM_INFO_PAUSE,
++	.formats		= SNDRV_PCM_FMTBIT_S16_LE,
++	.period_bytes_min	= 256,		/* lighting DMA overhead */
++	.period_bytes_max	= 2 * 0xffff,	/* if 2 bytes format */
++	.periods_min		= 8,
++	.periods_max		= 1024,		/* no limit */
++	.buffer_bytes_max	= 64 * 1024,	/* 64KiB */
++};
 +
-+	if (pdata) {
-+		stmpe_gpio->norequest_mask = pdata->norequest_mask;
-+		stmpe_gpio->chip.base = pdata->gpio_base;
+ static const struct snd_pcm_hardware *atmel_pcm_hardware;
+ 
+ 
+@@ -85,6 +103,9 @@ struct atmel_runtime_data {
+ 	u32 pdc_xcr_save;
+ 	u32 pdc_xnpr_save;
+ 	u32 pdc_xncr_save;
++
++	/* dmaengine data */
++	struct at_dma_slave atslave;
+ };
+ 
+ 
+@@ -164,6 +185,101 @@ static void atmel_pcm_pdc_irq(u32 ssc_sr,
+ 	snd_pcm_period_elapsed(substream);
+ }
+ 
++/**
++ * atmel_pcm_dma_irq: SSC interrupt handler for DMAENGINE enabled SSC
++ *
++ * We use DMAENGINE to send/receive data to/from SSC so this ISR is only to
++ * check if any overrun occured.
++ */
++static void atmel_pcm_dma_irq(u32 ssc_sr,
++	struct snd_pcm_substream *substream)
++{
++	struct atmel_runtime_data *prtd = snd_dmaengine_pcm_get_data(substream);
++	struct atmel_pcm_dma_params *params = prtd->params;
++
++	if (ssc_sr & params->mask->ssc_error) {
++		if (snd_pcm_running(substream))
++			pr_warn("atmel-pcm: buffer %s on %s (SSC_SR=%#x)\n",
++				substream->stream == SNDRV_PCM_STREAM_PLAYBACK
++				? "underrun" : "overrun", params->name,
++				ssc_sr);
++
++		/* stop RX and capture: will be enabled again at restart */
++		ssc_writex(params->ssc->regs, SSC_CR,
++				params->mask->ssc_disable);
++		snd_pcm_stop(substream, SNDRV_PCM_STATE_XRUN);
++
++		/* now drain RHR and read status to remove xrun condition */
++		ssc_readx(params->ssc->regs, SSC_RHR);
++		ssc_readx(params->ssc->regs, SSC_SR);
++	}
++}
++
++/*--------------------------------------------------------------------------*\
++ * DMAENGINE operations
++\*--------------------------------------------------------------------------*/
++static bool filter(struct dma_chan *chan, void *slave)
++{
++	struct at_dma_slave *sl = slave;
++
++	if (sl->dma_dev == chan->device->dev) {
++		chan->private = sl;
++		return true;
 +	} else {
-+		stmpe_gpio->chip.base = -1;
-+		if (np)
-+			of_property_read_u32(np, "st,norequest-mask",
-+					&pdata->norequest_mask);
++		return false;
++	}
++}
++
++static int atmel_pcm_configure_dma(struct snd_pcm_substream *substream,
++	struct snd_pcm_hw_params *params)
++{
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct atmel_runtime_data *prtd = runtime->private_data;
++	struct ssc_device *ssc = prtd->params->ssc;
++	struct dma_chan *dma_chan;
++	struct dma_slave_config slave_config;
++	struct at_dma_slave *sdata = NULL;
++	int ret;
++
++	if (ssc->pdev)
++		sdata = ssc->pdev->dev.platform_data;
++
++	ret = snd_dmaengine_pcm_open(substream, filter, sdata);
++	if (ret) {
++		pr_err("atmel-pcm: dmaengine pcm open failed\n");
++		return -EINVAL;
++	}
++	snd_dmaengine_pcm_set_data(substream, prtd);
++
++	ret = snd_hwparams_to_dma_slave_config(substream, params,
++			&slave_config);
++	if (ret) {
++		pr_err("atmel-pcm: hwparams to dma slave configure failed\n");
++		goto err;
++	}
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		slave_config.dst_addr = (dma_addr_t)ssc->phybase + SSC_THR;
++		slave_config.dst_maxburst = 1;
++	} else {
++		slave_config.src_addr = (dma_addr_t)ssc->phybase + SSC_RHR;
++		slave_config.src_maxburst = 1;
++	}
++	slave_config.device_fc = false;
++
++	dma_chan = snd_dmaengine_pcm_get_chan(substream);
++	if (dmaengine_slave_config(dma_chan, &slave_config)) {
++		pr_err("atmel-pcm: failed to configure dma channel\n");
++		ret = -EBUSY;
++		goto err;
++	}
++
++	return 0;
++
++err:
++	snd_dmaengine_pcm_close(substream);
++	return ret;
++}
+ 
+ /*--------------------------------------------------------------------------*\
+  * PCM operations
+@@ -174,43 +290,74 @@ static int atmel_pcm_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct atmel_runtime_data *prtd = runtime->private_data;
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct dma_chan *dma_chan = NULL;
++	int ret;
+ 
+ 	/* this may get called several times by oss emulation
+ 	 * with different params */
+ 
+ 	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
+-	runtime->dma_bytes = params_buffer_bytes(params);
+ 
+ 	prtd->params = snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
+-	prtd->params->dma_intr_handler = atmel_pcm_pdc_irq;
+ 
+ 	prtd->dma_buffer = runtime->dma_addr;
+ 	prtd->dma_buffer_end = runtime->dma_addr + runtime->dma_bytes;
+ 	prtd->period_size = params_period_bytes(params);
+ 
++	if (use_dma) {
++		ret = atmel_pcm_configure_dma(substream, params);
++		if (ret) {
++			pr_err("atmel-pcm: failed to configure dma");
++			return ret;
++		}
++
++		dma_chan = snd_dmaengine_pcm_get_chan(substream);
++
++		prtd->params->dma_intr_handler = atmel_pcm_dma_irq;
++	} else {
++		prtd->params->dma_intr_handler = atmel_pcm_pdc_irq;
++	}
++
+ 	pr_debug("atmel-pcm: "
+-		"hw_params: DMA for %s initialized "
++		"hw_params: %s%s for %s initialized "
+ 		"(dma_bytes=%u, period_size=%u)\n",
++		dma_chan ? "DMA " : "PDC",
++		dma_chan ? dma_chan_name(dma_chan) : "",
+ 		prtd->params->name,
+ 		runtime->dma_bytes,
+ 		prtd->period_size);
++
+ 	return 0;
+ }
+ 
+ static int atmel_pcm_hw_free(struct snd_pcm_substream *substream)
+ {
+-	struct atmel_runtime_data *prtd = substream->runtime->private_data;
+-	struct atmel_pcm_dma_params *params = prtd->params;
++	struct atmel_runtime_data *prtd;
++	struct atmel_pcm_dma_params *params;
+ 
+-	if (params != NULL) {
+-		ssc_writex(params->ssc->regs, SSC_PDC_PTCR,
+-			   params->mask->pdc_disable);
+-		prtd->params->dma_intr_handler = NULL;
++	if (use_dma) {
++		prtd = snd_dmaengine_pcm_get_data(substream);
++		params = prtd->params;
++
++		if (params != NULL)
++			prtd->params->dma_intr_handler = NULL;
++	} else {
++		prtd = substream->runtime->private_data;
++		params = prtd->params;
++
++		if (params != NULL) {
++			ssc_writex(params->ssc->regs, SSC_PDC_PTCR,
++				   params->mask->pdc_disable);
++			prtd->params->dma_intr_handler = NULL;
++		}
+ 	}
+ 
+ 	return 0;
+ }
+ 
++/*--------------------------------------------------------------------------*\
++ * PCM callbacks using PDC
++\*--------------------------------------------------------------------------*/
+ static int atmel_pcm_pdc_prepare(struct snd_pcm_substream *substream)
+ {
+ 	struct atmel_runtime_data *prtd = substream->runtime->private_data;
+@@ -307,6 +454,22 @@ static snd_pcm_uframes_t atmel_pcm_pdc_pointer(
+ 	return x;
+ }
+ 
++/*--------------------------------------------------------------------------*\
++ * PCM callbacks using DMAENGINE
++\*--------------------------------------------------------------------------*/
++static int atmel_pcm_dma_prepare(struct snd_pcm_substream *substream)
++{
++	struct atmel_runtime_data *prtd = snd_dmaengine_pcm_get_data(substream);
++	struct atmel_pcm_dma_params *params = prtd->params;
++
++	ssc_writex(params->ssc->regs, SSC_IER, params->mask->ssc_error);
++	ssc_writex(params->ssc->regs, SSC_CR, params->mask->ssc_enable);
++	return 0;
++}
++
++/*--------------------------------------------------------------------------*\
++ * PCM open/close/mmap
++\*--------------------------------------------------------------------------*/
+ static int atmel_pcm_open(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+@@ -334,7 +497,14 @@ static int atmel_pcm_open(struct snd_pcm_substream *substream)
+ 
+ static int atmel_pcm_close(struct snd_pcm_substream *substream)
+ {
+-	struct atmel_runtime_data *prtd = substream->runtime->private_data;
++	struct atmel_runtime_data *prtd;
++
++	if (use_dma) {
++		prtd = snd_dmaengine_pcm_get_data(substream);
++		snd_dmaengine_pcm_close(substream);
++	} else {
++		prtd = substream->runtime->private_data;
 +	}
  
- 	if (irq >= 0)
- 		stmpe_gpio->irq_base = stmpe->irq_base + STMPE_INT_GPIO(0);
-diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
-index e2c0dda..c757ac3 100644
---- a/drivers/mfd/stmpe.c
-+++ b/drivers/mfd/stmpe.c
-@@ -298,12 +298,14 @@ static struct resource stmpe_gpio_resources[] = {
+ 	kfree(prtd);
+ 	return 0;
+@@ -426,12 +596,14 @@ static int atmel_pcm_suspend(struct snd_soc_dai *dai)
+ 	if (!runtime)
+ 		return 0;
  
- static struct mfd_cell stmpe_gpio_cell = {
- 	.name		= "stmpe-gpio",
-+	.of_compatible	= "st,stmpe-gpio",
- 	.resources	= stmpe_gpio_resources,
- 	.num_resources	= ARRAY_SIZE(stmpe_gpio_resources),
- };
++	if (!use_dma)
++		return 0;
++
+ 	prtd = runtime->private_data;
+ 	params = prtd->params;
  
- static struct mfd_cell stmpe_gpio_cell_noirq = {
- 	.name		= "stmpe-gpio",
-+	.of_compatible	= "st,stmpe-gpio",
- 	/* gpio cell resources consist of an irq only so no resources here */
- };
+ 	/* disable the PDC and save the PDC registers */
+-
+-	ssc_writel(params->ssc->regs, PDC_PTCR, params->mask->pdc_disable);
++	ssc_writel(params->ssc->regs, PDC_PTCR,	params->mask->pdc_disable);
  
+ 	prtd->pdc_xpr_save = ssc_readx(params->ssc->regs, params->pdc->xpr);
+ 	prtd->pdc_xcr_save = ssc_readx(params->ssc->regs, params->pdc->xcr);
+@@ -450,6 +622,9 @@ static int atmel_pcm_resume(struct snd_soc_dai *dai)
+ 	if (!runtime)
+ 		return 0;
+ 
++	if (use_dma)
++		return 0;
++
+ 	prtd = runtime->private_data;
+ 	params = prtd->params;
+ 
+@@ -458,8 +633,8 @@ static int atmel_pcm_resume(struct snd_soc_dai *dai)
+ 	ssc_writex(params->ssc->regs, params->pdc->xcr, prtd->pdc_xcr_save);
+ 	ssc_writex(params->ssc->regs, params->pdc->xnpr, prtd->pdc_xnpr_save);
+ 	ssc_writex(params->ssc->regs, params->pdc->xncr, prtd->pdc_xncr_save);
+-
+ 	ssc_writel(params->ssc->regs, PDC_PTCR, params->mask->pdc_enable);
++
+ 	return 0;
+ }
+ #else
+@@ -477,7 +652,19 @@ static struct snd_soc_platform_driver atmel_soc_platform = {
+ 
+ int atmel_pcm_platform_register(struct device *dev)
+ {
+-	atmel_pcm_hardware = &atmel_pcm_pdc_hardware;
++	struct platform_device *pdev = to_platform_device(dev);
++	struct ssc_device *ssc = platform_get_drvdata(pdev);
++
++	if (ssc->pdata->use_dma) {
++		use_dma = 1;
++		atmel_pcm_ops.prepare = atmel_pcm_dma_prepare;
++		atmel_pcm_ops.trigger = snd_dmaengine_pcm_trigger;
++		atmel_pcm_ops.pointer = snd_dmaengine_pcm_pointer_no_residue;
++
++		atmel_pcm_hardware = &atmel_pcm_dma_hardware;
++	} else {
++		atmel_pcm_hardware = &atmel_pcm_pdc_hardware;
++	}
+ 
+ 	return snd_soc_register_platform(dev, &atmel_soc_platform);
+ }
 -- 
-1.7.12.rc2.18.g61b472e
+1.7.9.5
