@@ -1,51 +1,97 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 0/3] regulator: max8997: minor updates and device tree
- support
-Date: Fri, 23 Nov 2012 16:35:41 +0100
-Message-ID: <2301414.MvZtGCMDhm@amdc1227>
-References: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
+Date: Fri, 23 Nov 2012 15:43:11 +0000
+Message-ID: <20121123154311.GA28552@gmail.com>
+References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
+ <b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
+ <20121122112451.GE4328@gmail.com>
+ <CAKohpo=EWFNddjMNwHO4u4-bi1AQ4cvsJ4DfFOgaFv3oVfheZg@mail.gmail.com>
+ <20121123093633.GD17471@gmail.com>
+ <CAKohpo=4orAgwVRRvukj+tu67CyVvoUegsJ7eXaCMA9exruqEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpo=4orAgwVRRvukj+tu67CyVvoUegsJ7eXaCMA9exruqEA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 of November 2012 13:33:12 Thomas Abraham wrote:
-> This patch series includes two minor updates to the gpio dvs code in
-> max8997 regulator driver and adds device tree support for the same
-> driver.
-> 
-> Thomas Abraham (3):
->   regulator: max8997: reorder buck1/2/5 dvs setup code
->   regulator: max8997: limit the number of dvs registers programmed in
-> non-dvs mode regulator: add device tree support for max8997
-> 
->  .../bindings/regulator/max8997-regulator.txt       |  146
-> ++++++++++++++++ drivers/mfd/max8997.c                              |  
-> 73 ++++++++- drivers/regulator/max8997.c                        |  181
-> ++++++++++++++++++-- include/linux/mfd/max8997-private.h               
-> |    1 +
->  include/linux/mfd/max8997.h                        |    1 +
->  5 files changed, 384 insertions(+), 18 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/regulator/max8997-regulator.txt
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe
-> linux-samsung-soc" in the body of a message to
-> majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, 23 Nov 2012, Viresh Kumar wrote:
 
-For whole series:
+> On 23 November 2012 15:06, Lee Jones <lee.jones@linaro.org> wrote:
+> > On Fri, 23 Nov 2012, Viresh Kumar wrote:
+> >>       pdev =3D platform_device_alloc(cell->name, id + cell->id);
+> >>
+> >> This is required when we have multiple instances of MFD device pre=
+sent
+> >> on board. How do you want me to handle this ?
+> >
+> > There are lots of examples of this already. I have to leave somethi=
+ng
+> > to the imagination, or I'll be requesting a cut of your salary. :D
+>=20
+> My manager already reduced my salary by 20% after reading this mail :=
+(
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+Ah, Good.=20
 
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+Tell your manager I'll send my offshore bank details over soon. :)
+
+> Ok, this is what my understanding of whole this is. Platform devices =
+are
+> named like:
+> - pdev-name: if id passed in pdev.id is -1
+> - pdev-name.0[1|2|...]: if id passed is 0[1|2|...]
+> - pdev-name.<dynamically allocated by kernel>: if id passed is -2
+>=20
+> Now, we don't declare cell->id fields and they are currently zero and=
+ so
+> value is passed from pdata->id field. So, for example with multiple i=
+nstances
+> of stmpe on a board, we have:
+>=20
+> - stmpe-0: //Name just for reference...
+>    - stmpe-gpio.0
+>    - stmpe-ts.0
+> - stmpe-1:
+>    - stmpe-gpio.1
+>    - stmpe-ts.1
+> - stmpe-2:
+>    - stmpe-gpio.2
+>    - stmpe-ts.2
+>=20
+> I main idea is to distinguish various instances of sub modules, like =
+stmpe-gpio.
+> And this works well with non-DT support we have currently.
+
+Yes, when !DT, then passing ID is no problem.
+
+> With DT, i am not sure how should we pass id field to mfd_add_devices=
+(). If
+> we pass it -1, then multiple instances will have same name: "stmpe-gp=
+io"
+
+No, in DT devices named as part of the hiearchy, so you'd have:
+
+soc-u9500/i2c@80004000/stmpe1601@40/stmpe_keypad
+soc-u9500/i2c@80004000/stmpe1601@41/stmpe_keypad
+=2E.. etc
+
+The only time we need to be concerned is if one stmpe device can
+handle more than one keypad, gpio controller, etc. Which I don't
+think is the case.
+
+> Sorry, for my lack of knowledge. Don't send another mail with salary =
+cut
+> suggestion as that will make it -40% in total ;)
+
+Ah, I promise I'll spend it wisely. :)
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
