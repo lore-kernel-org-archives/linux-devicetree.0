@@ -1,88 +1,155 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] usb: chipidea: usbmisc: add mx53 support
-Date: Fri, 23 Nov 2012 11:02:13 +0100
-Message-ID: <50AF49A5.6030708@pengutronix.de>
-References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de> <1353506793-8354-7-git-send-email-m.grzeschik@pengutronix.de> <20121123065340.GD22420@nchen-desktop>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
+Date: Fri, 23 Nov 2012 10:03:59 +0000
+Message-ID: <20121123100359.GK17471@gmail.com>
+References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
+ <7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="------------enig8BDE0C1F2E77B6031F1AB7EE"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121123065340.GD22420@nchen-desktop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig8BDE0C1F2E77B6031F1AB7EE
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 11/23/2012 07:53 AM, Peter Chen wrote:
-> On Wed, Nov 21, 2012 at 03:06:32PM +0100, Michael Grzeschik wrote:
->> This adds mx53 as the next user of the usbmisc driver and makes it
->> possible to disable the overcurrent-detection of the internal phy.
->>
->> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->> Changes since v2:
->> * added defines for register offsets and bitmasks
->> * fixed disable_oc option for all ports
->>
->>  drivers/usb/chipidea/usbmisc_imx.c |   51 +++++++++++++++++++++++++++=
-+++++++++
->>  1 file changed, 51 insertions(+)
->>
->> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea=
-/usbmisc_imx.c
->> index e090e0f..b1811df 100644
->> --- a/drivers/usb/chipidea/usbmisc_imx.c
->> +++ b/drivers/usb/chipidea/usbmisc_imx.c
->> @@ -19,6 +19,13 @@
->> =20
->>  #define USB_DEV_MAX 4
->> =20
->> +#define MX53_USB_OTG_PHY_CTRL_0_OFFSET	0x08;
->> +#define MX53_USB_UH2_CTRL_OFFSET	0x14;
->> +#define MX53_USB_UH3_CTRL_OFFSET	0x18;
->> +#define MX53_BM_OVER_CUR_DIS_H1		BIT(5)
->> +#define MX53_BM_OVER_CUR_DIS_OTG	BIT(8)
->> +#define MX53_BM_OVER_CUR_DIS_UHx	BIT(30)
->> +
->>  #define MX6_BM_OVER_CUR_DIS		BIT(7)
->=20
-> As every SoC platform's non-core register mapping is different,
-> it is better to use .h to put register bit definition
-
-AFAIK in the kernel we don't make extra .h files any more, if there is
-only a single user of the contents.
-
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---------------enig8BDE0C1F2E77B6031F1AB7EE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with undefined - http://www.enigmail.net/
-
-iEYEARECAAYFAlCvSaUACgkQjTAFq1RaXHOGBgCgl8GzdMwdFfHwtV5TTSGNfP4V
-Ob4Aniund2GlL/vKOxSHa5NuJQ+oODTB
-=wpOX
------END PGP SIGNATURE-----
-
---------------enig8BDE0C1F2E77B6031F1AB7EE--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMyBOb3YgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBGcm9tOiBWaXB1bCBL
+dW1hciBTYW1hciA8dmlwdWxrdW1hci5zYW1hckBzdC5jb20+Cj4gCj4gVGhpcyBwYXRjaCBleHRl
+bmRzIGV4aXN0aW5nIERUIHN1cHBvcnQgZm9yIHN0bXBlIGRldmljZXMuIFRoaXMgdXBkYXRlczoK
+PiAtIERUIHN1cHBvcnQgZnJvbSBzdG1wZSBTUEkgYW5kIEkyQyBkcml2ZXJzCj4gLSBtaXNzaW5n
+IGhlYWRlciBmaWxlcyBpbiBzdG1wZS5jCj4gLSBzdG1wZV9vZl9wcm9iZSgpIHdpdGggcHdtLCBy
+b3RhdG9yIGFuZCBuZXcgYmluZGluZ3MuCj4gLSBCaW5kaW5ncyBhcmUgdXBkYXRlZCBpbiBiaW5k
+aW5nIGRvY3VtZW50Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFZpcHVsIEt1bWFyIFNhbWFyIDx2aXB1
+bGt1bWFyLnNhbWFyQHN0LmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBWaXJlc2ggS3VtYXIgPHZpcmVz
+aC5rdW1hckBsaW5hcm8ub3JnPgo+IC0tLQo+IFYyLT5WMzoKPiAtLS0tLS0KPiAtIFJlbW92ZWQg
+c3ViLW1vZHVsZXMgRFQgYmluZGluZ3MgZnJvbSB0aGlzIHBhdGNoCj4gLSBSZXRhaW4gb3JpZ2lu
+YWwgd29yayBkb25lIGJ5IExlZSBKb25lcwo+IAo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWZkL3N0bXBlLnR4dCB8IDEyICsrKysrKysrLS0tLQo+ICBkcml2ZXJzL21mZC9z
+dG1wZS1pMmMuYyAgICAgICAgICAgICAgICAgICAgICAgICB8IDE1ICsrKysrKysrKysrKysrKwo+
+ICBkcml2ZXJzL21mZC9zdG1wZS1zcGkuYyAgICAgICAgICAgICAgICAgICAgICAgICB8IDE1ICsr
+KysrKysrKysrKysrKwo+ICBkcml2ZXJzL21mZC9zdG1wZS5jICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8IDIxICsrKysrKysrKysrKysrKy0tLS0tLQo+ICA0IGZpbGVzIGNoYW5nZWQsIDUz
+IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0bXBlLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3RtcGUudHh0Cj4gaW5kZXggOGYwYWVkYS4uOGY2NWM4
+ZCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0
+bXBlLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Rt
+cGUudHh0Cj4gQEAgLTEsMTMgKzEsMTcgQEAKPiAtKiBTVE1QRSBNdWx0aS1GdW5jdGlvbmFsIERl
+dmljZQo+ICsqIFNUIE1pY3JvZWxlY3Ryb25pY3MgU1RNUEUgTXVsdGktRnVuY3Rpb25hbCBEZXZp
+Y2UKPiArCj4gK1NUTVBFIGlzIGFuIE1GRCBkZXZpY2Ugd2hpY2ggbWF5IGV4cG9zZSBmb2xsb3dp
+bmcgaW5idWlsdCBkZXZpY2VzOiBncGlvLCBrZXlwYWQsCj4gK3RvdWNoc2NyZWVuLCBhZGMsIHB3
+bSwgcm90YXRvci4KPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gLSAtIGNvbXBhdGlibGUg
+ICAgICAgICAgICAgICAgICAgOiAic3Qsc3RtcGVbODExfDE2MDF8MjQwMXwyNDAzXSIKPiAtIC0g
+cmVnICAgICAgICAgICAgICAgICAgICAgICAgICA6IEkyQyBhZGRyZXNzIG9mIHRoZSBkZXZpY2UK
+PiArIC0gY29tcGF0aWJsZSAgICAgICAgICAgICAgICAgICA6ICJzdCxzdG1wZVs2MTB8ODAxfDgx
+MXwxNjAxfDI0MDF8MjQwM10iCj4gKyAtIHJlZyAgICAgICAgICAgICAgICAgICAgICAgICAgOiBJ
+MkMvU1BJIGFkZHJlc3Mgb2YgdGhlIGRldmljZQo+ICAKPiAgT3B0aW9uYWwgcHJvcGVydGllczoK
+PiAgIC0gaW50ZXJydXB0cyAgICAgICAgICAgICAgICAgICA6IFRoZSBpbnRlcnJ1cHQgb3V0cHV0
+cyBmcm9tIHRoZSBjb250cm9sbGVyCj4gLSAtIGludGVycnVwdC1jb250cm9sbGVyICAgICAgICAg
+OiBNYXJrcyB0aGUgZGV2aWNlIG5vZGUgYXMgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIKCk9uIGNs
+b3NlciBpbnNwZWN0aW9uLCB0aGlzIGlzIGFjdHVhbGx5IGluY29ycmVjdC4KClRoZSBTVE1QRSBf
+aXNfIGFuIGludGVycnVwdC1jb250cm9sbGVyLgoKPiAgIC0gaW50ZXJydXB0LXBhcmVudCAgICAg
+ICAgICAgICA6IFNwZWNpZmllcyB3aGljaCBJUlEgY29udHJvbGxlciB3ZSdyZSBjb25uZWN0ZWQg
+dG8KPiArIC0gaXJxLXRyaWdnZXIJCQk6IElSUSB0cmlnZ2VyIHRvIHVzZSBmb3IgdGhlIGludGVy
+cnVwdCB0byB0aGUgaG9zdAo+ICsgLSBpcnEtaW52ZXJ0LXBvbGFyaXR5CQk6IGJvb2wsIElSUSBs
+aW5lIGlzIGNvbm5lY3RlZCB3aXRoIHJldmVyc2VkIHBvbGFyaXR5CgpJJ3ZlIHRvbGQgeW91IGFi
+b3V0IHRoaXMgYWxyZWFkeS4gOykKCj4gICAtIGkyYy1jbGllbnQtd2FrZSAgICAgICAgICAgICAg
+OiBNYXJrcyB0aGUgaW5wdXQgZGV2aWNlIGFzIHdha2FibGUKPiAgIC0gc3QsYXV0b3NsZWVwLXRp
+bWVvdXQgICAgICAgICA6IFZhbGlkIGVudHJpZXMgKG1zKTsgNCwgMTYsIDMyLCA2NCwgMTI4LCAy
+NTYsIDUxMiBhbmQgMTAyNAo+ICAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvc3RtcGUtaTJj
+LmMgYi9kcml2ZXJzL21mZC9zdG1wZS1pMmMuYwo+IGluZGV4IGM3MzRkYzMuLjAwM2M0OWIgMTAw
+NjQ0Cj4gLS0tIGEvZHJpdmVycy9tZmQvc3RtcGUtaTJjLmMKPiArKysgYi9kcml2ZXJzL21mZC9z
+dG1wZS1pMmMuYwo+IEBAIC0xMyw2ICsxMyw3IEBACj4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1
+cHQuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+ICAjaW5jbHVkZSA8bGludXgvbW9k
+dWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICAjaW5jbHVkZSA8bGludXgvdHlwZXMu
+aD4KPiAgI2luY2x1ZGUgInN0bXBlLmgiCj4gIAo+IEBAIC04MSw2ICs4MiwxOSBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgc3RtcGVfaTJjX2lkW10gPSB7Cj4gIH07Cj4gIE1P
+RFVMRV9ERVZJQ0VfVEFCTEUoaTJjLCBzdG1wZV9pZCk7Cj4gIAo+ICsjaWZkZWYgQ09ORklHX09G
+Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHN0bXBlX2R0X2lkc1tdID0gewo+
+ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTYxMCIsIC5kYXRhID0gJnN0bXBlX2kyY19pZFsw
+XSwgfSwKPiArCXsgLmNvbXBhdGlibGUgPSAic3Qsc3RtcGU4MDEiLCAuZGF0YSA9ICZzdG1wZV9p
+MmNfaWRbMV0sIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInN0LHN0bXBlODExIiwgLmRhdGEgPSAm
+c3RtcGVfaTJjX2lkWzJdLCB9LAo+ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTE2MDEiLCAu
+ZGF0YSA9ICZzdG1wZV9pMmNfaWRbM10sIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInN0LHN0bXBl
+MjQwMSIsIC5kYXRhID0gJnN0bXBlX2kyY19pZFs0XSwgfSwKPiArCXsgLmNvbXBhdGlibGUgPSAi
+c3Qsc3RtcGUyNDAzIiwgLmRhdGEgPSAmc3RtcGVfaTJjX2lkWzVdLCB9LAo+ICsJeyB9Cj4gK307
+Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHN0bXBlX2R0X2lkcyk7Cj4gKyNlbmRpZgo+ICsK
+PiAgc3RhdGljIHN0cnVjdCBpMmNfZHJpdmVyIHN0bXBlX2kyY19kcml2ZXIgPSB7Cj4gIAkuZHJp
+dmVyID0gewo+ICAJCS5uYW1lID0gInN0bXBlLWkyYyIsCj4gQEAgLTg4LDYgKzEwMiw3IEBAIHN0
+YXRpYyBzdHJ1Y3QgaTJjX2RyaXZlciBzdG1wZV9pMmNfZHJpdmVyID0gewo+ICAjaWZkZWYgQ09O
+RklHX1BNCj4gIAkJLnBtID0gJnN0bXBlX2Rldl9wbV9vcHMsCj4gICNlbmRpZgo+ICsJCS5vZl9t
+YXRjaF90YWJsZSA9IG9mX21hdGNoX3B0cihzdG1wZV9kdF9pZHMpLAo+ICAJfSwKPiAgCS5wcm9i
+ZQkJPSBzdG1wZV9pMmNfcHJvYmUsCj4gIAkucmVtb3ZlCQk9IF9fZGV2ZXhpdF9wKHN0bXBlX2ky
+Y19yZW1vdmUpLAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9zdG1wZS1zcGkuYyBiL2RyaXZl
+cnMvbWZkL3N0bXBlLXNwaS5jCj4gaW5kZXggZjg2ZTNmYy4uZTQ4MmY1ZiAxMDA2NDQKPiAtLS0g
+YS9kcml2ZXJzL21mZC9zdG1wZS1zcGkuYwo+ICsrKyBiL2RyaXZlcnMvbWZkL3N0bXBlLXNwaS5j
+Cj4gQEAgLTEwLDYgKzEwLDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+ICAj
+aW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAr
+I2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9zcGkvc3BpLmg+Cj4gICNp
+bmNsdWRlIDxsaW51eC90eXBlcy5oPgo+ICAjaW5jbHVkZSAic3RtcGUuaCIKPiBAQCAtMTE5LDYg
+KzEyMCwxOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNwaV9kZXZpY2VfaWQgc3RtcGVfc3BpX2lk
+W10gPSB7Cj4gIH07Cj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUoc3BpLCBzdG1wZV9pZCk7Cj4gIAo+
+ICsjaWZkZWYgQ09ORklHX09GCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHN0
+bXBlX2R0X2lkc1tdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTYxMCIsIC5kYXRh
+ID0gKHZvaWQgKilTVE1QRTYxMCwgfSwKPiArCXsgLmNvbXBhdGlibGUgPSAic3Qsc3RtcGU4MDEi
+LCAuZGF0YSA9ICh2b2lkICopU1RNUEU4MDEsIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInN0LHN0
+bXBlODExIiwgLmRhdGEgPSAodm9pZCAqKVNUTVBFODExLCB9LAo+ICsJeyAuY29tcGF0aWJsZSA9
+ICJzdCxzdG1wZTE2MDEiLCAuZGF0YSA9ICh2b2lkICopU1RNUEUxNjAxLCB9LAo+ICsJeyAuY29t
+cGF0aWJsZSA9ICJzdCxzdG1wZTI0MDEiLCAuZGF0YSA9ICh2b2lkICopU1RNUEUyNDAxLCB9LAo+
+ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTI0MDMiLCAuZGF0YSA9ICh2b2lkICopU1RNUEUy
+NDAzLCB9LAo+ICsJeyB9Cj4gK307Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHN0bXBlX2R0
+X2lkcyk7Cj4gKyNlbmRpZgo+ICsKPiAgc3RhdGljIHN0cnVjdCBzcGlfZHJpdmVyIHN0bXBlX3Nw
+aV9kcml2ZXIgPSB7Cj4gIAkuZHJpdmVyID0gewo+ICAJCS5uYW1lCT0gInN0bXBlLXNwaSIsCj4g
+QEAgLTEyNiw2ICsxNDAsNyBAQCBzdGF0aWMgc3RydWN0IHNwaV9kcml2ZXIgc3RtcGVfc3BpX2Ry
+aXZlciA9IHsKPiAgI2lmZGVmIENPTkZJR19QTQo+ICAJCS5wbQk9ICZzdG1wZV9kZXZfcG1fb3Bz
+LAo+ICAjZW5kaWYKPiArCQkub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIoc3RtcGVfZHRf
+aWRzKSwKPiAgCX0sCj4gIAkucHJvYmUJCT0gc3RtcGVfc3BpX3Byb2JlLAo+ICAJLnJlbW92ZQkJ
+PSBfX2RldmV4aXRfcChzdG1wZV9zcGlfcmVtb3ZlKSwKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
+ZmQvc3RtcGUuYyBiL2RyaXZlcnMvbWZkL3N0bXBlLmMKPiBpbmRleCA2MDg2NDgxLi5lMmMwZGRh
+IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbWZkL3N0bXBlLmMKPiArKysgYi9kcml2ZXJzL21mZC9z
+dG1wZS5jCj4gQEAgLTcsNiArNyw3IEBACj4gICAqIEF1dGhvcjogUmFiaW4gVmluY2VudCA8cmFi
+aW4udmluY2VudEBzdGVyaWNzc29uLmNvbT4gZm9yIFNULUVyaWNzc29uCj4gICAqLwo+ICAKPiAr
+I2luY2x1ZGUgPGxpbnV4L2Vyci5oPgo+ICAjaW5jbHVkZSA8bGludXgvZXhwb3J0Lmg+Cj4gICNp
+bmNsdWRlIDxsaW51eC9ncGlvLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4KPiBA
+QCAtMTQsNiArMTUsOCBAQAo+ICAjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+Cj4gICNpbmNs
+dWRlIDxsaW51eC9rZXJuZWwuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L21mZC9jb3JlLmg+Cj4gKyNp
+bmNsdWRlIDxsaW51eC9vZi5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3Bpby5oPgo+ICAjaW5j
+bHVkZSA8bGludXgvcG0uaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPiAgI2luY2x1ZGUg
+InN0bXBlLmgiCj4gQEAgLTEwMjgsMTggKzEwMzEsMjQgQEAgdm9pZCBfX2RldmluaXQgc3RtcGVf
+b2ZfcHJvYmUoc3RydWN0IHN0bXBlX3BsYXRmb3JtX2RhdGEgKnBkYXRhLAo+ICAKPiAgCXBkYXRh
+LT5hdXRvc2xlZXAgPSAocGRhdGEtPmF1dG9zbGVlcF90aW1lb3V0KSA/IHRydWUgOiBmYWxzZTsK
+PiAgCj4gKwlvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImlycS10cmlnZ2VyIiwgJnBkYXRhLT5p
+cnFfdHJpZ2dlcik7Cj4gKwo+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImlycS1p
+bnZlcnQtcG9sYXJpdHkiKSkKPiArCQlwZGF0YS0+aXJxX2ludmVydF9wb2xhcml0eSA9IHRydWU7
+Cj4gKwoKWW91IGRvbid0IG5lZWQgdGhlc2UuCgo+ICAJZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZShu
+cCwgY2hpbGQpIHsKPiAgCQlpZiAoIXN0cmNtcChjaGlsZC0+bmFtZSwgInN0bXBlX2dwaW8iKSkg
+ewo+ICAJCQlwZGF0YS0+YmxvY2tzIHw9IFNUTVBFX0JMT0NLX0dQSU87Cj4gLQkJfQo+IC0JCWlm
+ICghc3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfa2V5cGFkIikpIHsKPiArCQl9IGVsc2UgaWYg
+KCFzdHJjbXAoY2hpbGQtPm5hbWUsICJzdG1wZV9rZXlwYWQiKSkgewo+ICAJCQlwZGF0YS0+Ymxv
+Y2tzIHw9IFNUTVBFX0JMT0NLX0tFWVBBRDsKPiAtCQl9Cj4gLQkJaWYgKCFzdHJjbXAoY2hpbGQt
+Pm5hbWUsICJzdG1wZV90b3VjaHNjcmVlbiIpKSB7Cj4gKwkJfSBlbHNlIGlmICghc3RyY21wKGNo
+aWxkLT5uYW1lLCAic3RtcGVfdG91Y2hzY3JlZW4iKSkgewo+ICAJCQlwZGF0YS0+YmxvY2tzIHw9
+IFNUTVBFX0JMT0NLX1RPVUNIU0NSRUVOOwo+IC0JCX0KPiAtCQlpZiAoIXN0cmNtcChjaGlsZC0+
+bmFtZSwgInN0bXBlX2FkYyIpKSB7Cj4gKwkJfSBlbHNlIGlmICghc3RyY21wKGNoaWxkLT5uYW1l
+LCAic3RtcGVfYWRjIikpIHsKPiAgCQkJcGRhdGEtPmJsb2NrcyB8PSBTVE1QRV9CTE9DS19BREM7
+Cj4gKwkJfSBlbHNlIGlmICghc3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfcHdtIikpIHsKPiAr
+CQkJcGRhdGEtPmJsb2NrcyB8PSBTVE1QRV9CTE9DS19QV007Cj4gKwkJfSBlbHNlIGlmICghc3Ry
+Y21wKGNoaWxkLT5uYW1lLCAic3RtcGVfcm90YXRvciIpKSB7Cj4gKwkJCXBkYXRhLT5ibG9ja3Mg
+fD0gU1RNUEVfQkxPQ0tfUk9UQVRPUjsKPiAgCQl9Cj4gIAl9Cj4gIH0KPiAtLSAKPiAxLjcuMTIu
+cmMyLjE4Lmc2MWI0NzJlCj4gCgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5k
+aW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJN
+IFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3Mg
+bWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
+bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
