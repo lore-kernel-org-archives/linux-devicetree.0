@@ -1,89 +1,48 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] usb: chipidea: usbmisc: add post handling and
- errata fix for mx25
-Date: Fri, 23 Nov 2012 14:59:38 +0800
-Message-ID: <20121123065937.GE22420@nchen-desktop>
-References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
- <1353506793-8354-8-git-send-email-m.grzeschik@pengutronix.de>
+From: Qing Xu <qingx@marvell.com>
+Subject: Re: [PATCH 0/7] mfd: update on max8925 for DT support
+Date: Fri, 23 Nov 2012 15:12:45 +0800
+Message-ID: <50AF21ED.4090103@marvell.com>
+References: <1352187305-9660-1-git-send-email-qingx@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1353506793-8354-8-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1352187305-9660-1-git-send-email-qingx@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qing Xu <qingx@marvell.com>
+Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "haojian.zhuang@gmail.com" <haojian.zhuang@gmail.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 21, 2012 at 03:06:33PM +0100, Michael Grzeschik wrote:
-> This adds a post handling routine which is called after
-> ci13xxx_add_device was called. The first user is the mx25, which has to
-> disable the external-vbus-divider after the ude has started.
-udc has started?
-> 
->  
-> +static int usbmisc_imx25_post(struct device *dev)
-> +{
-> +	struct usbmisc_usb_device *usbdev;
-> +	void __iomem *reg;
-> +	unsigned long flags;
-> +	u32 val;
-> +
-> +	usbdev = get_usbdev(dev);
-> +	if (IS_ERR(usbdev))
-> +		return PTR_ERR(usbdev);
-> +
-> +	reg = usbmisc->base + MX25_USB_PHY_CTRL_OFFSET;
-> +
-> +	if (usbdev->evdo) {
-> +		spin_lock_irqsave(&usbmisc->lock, flags);
-> +		val = readl(reg);
-> +		writel(val | MX25_BM_EXTERNAL_VBUS_DIVIDER, reg);
-> +		spin_unlock_irqrestore(&usbmisc->lock, flags);
-> +		mdelay(5); /* needed to stabilize voltage */
-better use usleep_range to avoid busy-wait.
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int usbmisc_imx53_init(struct device *dev)
->  {
->  	struct usbmisc_usb_device *usbdev;
-> @@ -122,6 +150,10 @@ static int usbmisc_imx6q_init(struct device *dev)
->  	return 0;
->  }
->  
-> +static const struct usbmisc_ops imx25_usbmisc_ops = {
-> +	.post = usbmisc_imx25_post,
-> +};
-> +
->  static const struct usbmisc_ops imx53_usbmisc_ops = {
->  	.init = usbmisc_imx53_init,
->  };
-> @@ -131,6 +163,7 @@ static const struct usbmisc_ops imx6q_usbmisc_ops = {
->  };
->  
->  static const struct of_device_id usbmisc_imx_dt_ids[] = {
-> +	{ .compatible = "fsl,imx25-usbmisc", .data = (void *)&imx25_usbmisc_ops },
->  	{ .compatible = "fsl,imx53-usbmisc", .data = (void *)&imx53_usbmisc_ops },
->  	{ .compatible = "fsl,imx6q-usbmisc", .data = (void *)&imx6q_usbmisc_ops },
->  	{ /* sentinel */ }
-> -- 
-> 1.7.10.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+On 11/06/2012 03:35 PM, Qing Xu wrote:
+> From: Qing Xu <qingx@marvell.com>
+>
+> 1. add irqdomain for max8925, it is necessary for dt support
+> 2. bug fix in max8925 mfd devices'irq base and device registry failure
+> 3. support DT for max8925 mfd devices
+>
+> Qing Xu (7):
+>    mfd: max8925: add irqdomain for dt
+>    mfd: max8925: fix mfd device register failure
+>    mfd: max8925: fix onkey driver irq base
+>    mfd: max8925: support dt for power supply
+>    mfd: max8925: support dt for regulator
+>    mfd: max8925: support dt for backlight
+>    mfd: max8925: add dts
+>
+>   arch/arm/boot/dts/mmp2-brownstone.dts |  166 +++++++++++++++++++++++++++++++++
+>   arch/arm/boot/dts/mmp2.dtsi           |    4 +-
+>   drivers/input/misc/max8925_onkey.c    |    3 -
+>   drivers/mfd/max8925-core.c            |  107 +++++++++++++--------
+>   drivers/mfd/max8925-i2c.c             |   32 ++++++-
+>   drivers/power/max8925_power.c         |   57 ++++++++++-
+>   drivers/regulator/max8925-regulator.c |   35 +++++++-
+>   drivers/video/backlight/max8925_bl.c  |   31 ++++++-
+>   include/linux/mfd/max8925.h           |   12 ++-
+>   9 files changed, 389 insertions(+), 58 deletions(-)
+>
+Hi Haojian, Sameo,
 
--- 
+Could you help to review my patches? Can it be merged?
 
-Best Regards,
-Peter Chen
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks a lot!
+-Qing
