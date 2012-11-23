@@ -1,151 +1,61 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v7 1/4] genalloc: add a global pool list, allow to find pools by phys address
-Date: Fri, 23 Nov 2012 15:24:12 +0100
-Message-ID: <1353680655-21624-2-git-send-email-p.zabel@pengutronix.de>
-References: <1353680655-21624-1-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v7 0/4] Add generic driver for on-chip SRAM
+Date: Fri, 23 Nov 2012 15:24:11 +0100
+Message-ID: <1353680655-21624-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1353680655-21624-1-git-send-email-p.zabel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This patch keeps all created pools in a global list and adds two
-functions that allow to retrieve the gen_pool pointer from a known
-physical address and from a device tree node.
+These patches add support to configure on-chip SRAM via device-tree
+node or platform data and to obtain the resulting genalloc pool from
+the physical address or a phandle pointing at the device tree node.
+This allows drivers to allocate SRAM with the genalloc API without
+hard-coding the genalloc pool pointer.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+The on-chip SRAM on i.MX53 and i.MX6q can be registered via device tree
+and changed to use the simple generic SRAM driver:
+
+                ocram: ocram@00900000 {
+                        compatible = "fsl,imx-ocram", "sram";
+                        reg = <0x00900000 0x3f000>;
+                };
+
+A driver that needs to allocate SRAM buffers, like the video processing
+unit on i.MX53, can retrieve the genalloc pool from a phandle in the
+device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
+
+                vpu@63ff4000 {
+                        /* ... */
+                        iram = <&ocram>;
+                };
+
+The allocation granularity is hard-coded to 32 bytes for now,
+until a way to configure it can be agreed upon. There is overhead
+for bigger SRAMs, where only a much coarser allocation granularity
+is needed: At 32 bytes minimum allocation size, a 256 KiB SRAM
+needs a 1 KiB bitmap to track allocations.
+
+Once everybody is ok with it, could the first two patches be merged
+through the char-misc tree? I'll resend the i.MX and coda patches to
+the respective lists afterwards.
+
+Changes since v6:
+ - Reduced the hard coded allocation granularity to 32 bytes.
+
+regards
+Philipp
+
 ---
- include/linux/genalloc.h |   14 ++++++++++
- lib/genalloc.c           |   67 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 81 insertions(+)
-
-diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
-index dd7c569..91d606e 100644
---- a/include/linux/genalloc.h
-+++ b/include/linux/genalloc.h
-@@ -47,6 +47,7 @@ typedef unsigned long (*genpool_algo_t)(unsigned long *map,
-  *  General purpose special memory pool descriptor.
-  */
- struct gen_pool {
-+	struct list_head next_pool;	/* pool in global list */
- 	spinlock_t lock;
- 	struct list_head chunks;	/* list of chunks in this pool */
- 	int min_alloc_order;		/* minimum allocation order */
-@@ -105,4 +106,17 @@ extern unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
- extern unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data);
- 
-+extern struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys);
-+
-+struct device_node;
-+#ifdef CONFIG_OF
-+extern struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-+	const char *propname, int index);
-+#else
-+inline struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-+	const char *propname, int index)
-+{
-+	return NULL;
-+}
-+#endif
- #endif /* __GENALLOC_H__ */
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index 5492043..edf4bf3 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -34,6 +34,11 @@
- #include <linux/rculist.h>
- #include <linux/interrupt.h>
- #include <linux/genalloc.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+
-+static LIST_HEAD(pools);
-+static DEFINE_SPINLOCK(list_lock);
- 
- static int set_bits_ll(unsigned long *addr, unsigned long mask_to_set)
- {
-@@ -154,6 +159,9 @@ struct gen_pool *gen_pool_create(int min_alloc_order, int nid)
- 		pool->min_alloc_order = min_alloc_order;
- 		pool->algo = gen_pool_first_fit;
- 		pool->data = NULL;
-+		spin_lock(&list_lock);
-+		list_add_rcu(&pool->next_pool, &pools);
-+		spin_unlock(&list_lock);
- 	}
- 	return pool;
- }
-@@ -236,6 +244,9 @@ void gen_pool_destroy(struct gen_pool *pool)
- 	int order = pool->min_alloc_order;
- 	int bit, end_bit;
- 
-+	spin_lock(&list_lock);
-+	list_del_rcu(&pool->next_pool);
-+	spin_unlock(&list_lock);
- 	list_for_each_safe(_chunk, _next_chunk, &pool->chunks) {
- 		chunk = list_entry(_chunk, struct gen_pool_chunk, next_chunk);
- 		list_del(&chunk->next_chunk);
-@@ -480,3 +491,59 @@ unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 	return start_bit;
- }
- EXPORT_SYMBOL(gen_pool_best_fit);
-+
-+/*
-+ * gen_pool_find_by_phys - find a pool by physical start address
-+ * @phys: physical address as added with gen_pool_add_virt
-+ *
-+ * Returns the pool that contains the chunk starting at phys,
-+ * or NULL if not found.
-+ */
-+struct gen_pool *gen_pool_find_by_phys(phys_addr_t phys)
-+{
-+	struct gen_pool *pool, *found = NULL;
-+	struct gen_pool_chunk *chunk;
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(pool, &pools, next_pool) {
-+		list_for_each_entry_rcu(chunk, &pool->chunks, next_chunk) {
-+			if (phys == chunk->phys_addr) {
-+				found = pool;
-+				break;
-+			}
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return found;
-+}
-+EXPORT_SYMBOL_GPL(gen_pool_find_by_phys);
-+
-+#ifdef CONFIG_OF
-+/**
-+ * of_get_named_gen_pool - find a pool by phandle property
-+ * @np: device node
-+ * @propname: property name containing phandle(s)
-+ * @index: index into the phandle array
-+ *
-+ * Returns the pool that contains the chunk starting at the physical
-+ * address of the device tree node pointed at by the phandle property,
-+ * or NULL if not found.
-+ */
-+struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-+	const char *propname, int index)
-+{
-+	struct device_node *np_pool;
-+	struct resource res;
-+	int ret;
-+
-+	np_pool = of_parse_phandle(np, propname, index);
-+	if (!np_pool)
-+		return NULL;
-+	ret = of_address_to_resource(np_pool, 0, &res);
-+	if (ret < 0)
-+		return NULL;
-+	return gen_pool_find_by_phys((phys_addr_t) res.start);
-+}
-+EXPORT_SYMBOL_GPL(of_get_named_gen_pool);
-+#endif /* CONFIG_OF */
--- 
-1.7.10.4
+ Documentation/devicetree/bindings/misc/sram.txt |   17 ++++
+ arch/arm/boot/dts/imx53.dtsi                    |    5 +
+ arch/arm/boot/dts/imx6q.dtsi                    |    6 ++
+ drivers/media/platform/Kconfig                  |    3 +-
+ drivers/media/platform/coda.c                   |   47 ++++++---
+ drivers/misc/Kconfig                            |    9 ++
+ drivers/misc/Makefile                           |    1 +
+ drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
+ include/linux/genalloc.h                        |   14 +++
+ lib/genalloc.c                                  |   67 +++++++++++++
+ 10 files changed, 274 insertions(+), 16 deletions(-)
