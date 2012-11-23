@@ -1,155 +1,410 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
-Date: Fri, 23 Nov 2012 10:03:59 +0000
-Message-ID: <20121123100359.GK17471@gmail.com>
-References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
- <7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
+From: Leela Krishna Amudala <l.krishna@samsung.com>
+Subject: Re: [PATCHv14 3/7] video: add of helper for display timings/videomode
+Date: Fri, 23 Nov 2012 15:49:37 +0530
+Message-ID: <CAL1wa8e1KBrikuP-CQdM3hO_LaNN-1=XuPe728XKqRERQm-EFg@mail.gmail.com>
+References: <1353661467-28545-1-git-send-email-s.trumtrar@pengutronix.de> <1353661467-28545-4-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1353661467-28545-4-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMyBOb3YgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBGcm9tOiBWaXB1bCBL
-dW1hciBTYW1hciA8dmlwdWxrdW1hci5zYW1hckBzdC5jb20+Cj4gCj4gVGhpcyBwYXRjaCBleHRl
-bmRzIGV4aXN0aW5nIERUIHN1cHBvcnQgZm9yIHN0bXBlIGRldmljZXMuIFRoaXMgdXBkYXRlczoK
-PiAtIERUIHN1cHBvcnQgZnJvbSBzdG1wZSBTUEkgYW5kIEkyQyBkcml2ZXJzCj4gLSBtaXNzaW5n
-IGhlYWRlciBmaWxlcyBpbiBzdG1wZS5jCj4gLSBzdG1wZV9vZl9wcm9iZSgpIHdpdGggcHdtLCBy
-b3RhdG9yIGFuZCBuZXcgYmluZGluZ3MuCj4gLSBCaW5kaW5ncyBhcmUgdXBkYXRlZCBpbiBiaW5k
-aW5nIGRvY3VtZW50Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFZpcHVsIEt1bWFyIFNhbWFyIDx2aXB1
-bGt1bWFyLnNhbWFyQHN0LmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBWaXJlc2ggS3VtYXIgPHZpcmVz
-aC5rdW1hckBsaW5hcm8ub3JnPgo+IC0tLQo+IFYyLT5WMzoKPiAtLS0tLS0KPiAtIFJlbW92ZWQg
-c3ViLW1vZHVsZXMgRFQgYmluZGluZ3MgZnJvbSB0aGlzIHBhdGNoCj4gLSBSZXRhaW4gb3JpZ2lu
-YWwgd29yayBkb25lIGJ5IExlZSBKb25lcwo+IAo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWZkL3N0bXBlLnR4dCB8IDEyICsrKysrKysrLS0tLQo+ICBkcml2ZXJzL21mZC9z
-dG1wZS1pMmMuYyAgICAgICAgICAgICAgICAgICAgICAgICB8IDE1ICsrKysrKysrKysrKysrKwo+
-ICBkcml2ZXJzL21mZC9zdG1wZS1zcGkuYyAgICAgICAgICAgICAgICAgICAgICAgICB8IDE1ICsr
-KysrKysrKysrKysrKwo+ICBkcml2ZXJzL21mZC9zdG1wZS5jICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB8IDIxICsrKysrKysrKysrKysrKy0tLS0tLQo+ICA0IGZpbGVzIGNoYW5nZWQsIDUz
-IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0bXBlLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3RtcGUudHh0Cj4gaW5kZXggOGYwYWVkYS4uOGY2NWM4
-ZCAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0
-bXBlLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Rt
-cGUudHh0Cj4gQEAgLTEsMTMgKzEsMTcgQEAKPiAtKiBTVE1QRSBNdWx0aS1GdW5jdGlvbmFsIERl
-dmljZQo+ICsqIFNUIE1pY3JvZWxlY3Ryb25pY3MgU1RNUEUgTXVsdGktRnVuY3Rpb25hbCBEZXZp
-Y2UKPiArCj4gK1NUTVBFIGlzIGFuIE1GRCBkZXZpY2Ugd2hpY2ggbWF5IGV4cG9zZSBmb2xsb3dp
-bmcgaW5idWlsdCBkZXZpY2VzOiBncGlvLCBrZXlwYWQsCj4gK3RvdWNoc2NyZWVuLCBhZGMsIHB3
-bSwgcm90YXRvci4KPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gLSAtIGNvbXBhdGlibGUg
-ICAgICAgICAgICAgICAgICAgOiAic3Qsc3RtcGVbODExfDE2MDF8MjQwMXwyNDAzXSIKPiAtIC0g
-cmVnICAgICAgICAgICAgICAgICAgICAgICAgICA6IEkyQyBhZGRyZXNzIG9mIHRoZSBkZXZpY2UK
-PiArIC0gY29tcGF0aWJsZSAgICAgICAgICAgICAgICAgICA6ICJzdCxzdG1wZVs2MTB8ODAxfDgx
-MXwxNjAxfDI0MDF8MjQwM10iCj4gKyAtIHJlZyAgICAgICAgICAgICAgICAgICAgICAgICAgOiBJ
-MkMvU1BJIGFkZHJlc3Mgb2YgdGhlIGRldmljZQo+ICAKPiAgT3B0aW9uYWwgcHJvcGVydGllczoK
-PiAgIC0gaW50ZXJydXB0cyAgICAgICAgICAgICAgICAgICA6IFRoZSBpbnRlcnJ1cHQgb3V0cHV0
-cyBmcm9tIHRoZSBjb250cm9sbGVyCj4gLSAtIGludGVycnVwdC1jb250cm9sbGVyICAgICAgICAg
-OiBNYXJrcyB0aGUgZGV2aWNlIG5vZGUgYXMgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIKCk9uIGNs
-b3NlciBpbnNwZWN0aW9uLCB0aGlzIGlzIGFjdHVhbGx5IGluY29ycmVjdC4KClRoZSBTVE1QRSBf
-aXNfIGFuIGludGVycnVwdC1jb250cm9sbGVyLgoKPiAgIC0gaW50ZXJydXB0LXBhcmVudCAgICAg
-ICAgICAgICA6IFNwZWNpZmllcyB3aGljaCBJUlEgY29udHJvbGxlciB3ZSdyZSBjb25uZWN0ZWQg
-dG8KPiArIC0gaXJxLXRyaWdnZXIJCQk6IElSUSB0cmlnZ2VyIHRvIHVzZSBmb3IgdGhlIGludGVy
-cnVwdCB0byB0aGUgaG9zdAo+ICsgLSBpcnEtaW52ZXJ0LXBvbGFyaXR5CQk6IGJvb2wsIElSUSBs
-aW5lIGlzIGNvbm5lY3RlZCB3aXRoIHJldmVyc2VkIHBvbGFyaXR5CgpJJ3ZlIHRvbGQgeW91IGFi
-b3V0IHRoaXMgYWxyZWFkeS4gOykKCj4gICAtIGkyYy1jbGllbnQtd2FrZSAgICAgICAgICAgICAg
-OiBNYXJrcyB0aGUgaW5wdXQgZGV2aWNlIGFzIHdha2FibGUKPiAgIC0gc3QsYXV0b3NsZWVwLXRp
-bWVvdXQgICAgICAgICA6IFZhbGlkIGVudHJpZXMgKG1zKTsgNCwgMTYsIDMyLCA2NCwgMTI4LCAy
-NTYsIDUxMiBhbmQgMTAyNAo+ICAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvc3RtcGUtaTJj
-LmMgYi9kcml2ZXJzL21mZC9zdG1wZS1pMmMuYwo+IGluZGV4IGM3MzRkYzMuLjAwM2M0OWIgMTAw
-NjQ0Cj4gLS0tIGEvZHJpdmVycy9tZmQvc3RtcGUtaTJjLmMKPiArKysgYi9kcml2ZXJzL21mZC9z
-dG1wZS1pMmMuYwo+IEBAIC0xMyw2ICsxMyw3IEBACj4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1
-cHQuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPgo+ICAjaW5jbHVkZSA8bGludXgvbW9k
-dWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICAjaW5jbHVkZSA8bGludXgvdHlwZXMu
-aD4KPiAgI2luY2x1ZGUgInN0bXBlLmgiCj4gIAo+IEBAIC04MSw2ICs4MiwxOSBAQCBzdGF0aWMg
-Y29uc3Qgc3RydWN0IGkyY19kZXZpY2VfaWQgc3RtcGVfaTJjX2lkW10gPSB7Cj4gIH07Cj4gIE1P
-RFVMRV9ERVZJQ0VfVEFCTEUoaTJjLCBzdG1wZV9pZCk7Cj4gIAo+ICsjaWZkZWYgQ09ORklHX09G
-Cj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHN0bXBlX2R0X2lkc1tdID0gewo+
-ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTYxMCIsIC5kYXRhID0gJnN0bXBlX2kyY19pZFsw
-XSwgfSwKPiArCXsgLmNvbXBhdGlibGUgPSAic3Qsc3RtcGU4MDEiLCAuZGF0YSA9ICZzdG1wZV9p
-MmNfaWRbMV0sIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInN0LHN0bXBlODExIiwgLmRhdGEgPSAm
-c3RtcGVfaTJjX2lkWzJdLCB9LAo+ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTE2MDEiLCAu
-ZGF0YSA9ICZzdG1wZV9pMmNfaWRbM10sIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInN0LHN0bXBl
-MjQwMSIsIC5kYXRhID0gJnN0bXBlX2kyY19pZFs0XSwgfSwKPiArCXsgLmNvbXBhdGlibGUgPSAi
-c3Qsc3RtcGUyNDAzIiwgLmRhdGEgPSAmc3RtcGVfaTJjX2lkWzVdLCB9LAo+ICsJeyB9Cj4gK307
-Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHN0bXBlX2R0X2lkcyk7Cj4gKyNlbmRpZgo+ICsK
-PiAgc3RhdGljIHN0cnVjdCBpMmNfZHJpdmVyIHN0bXBlX2kyY19kcml2ZXIgPSB7Cj4gIAkuZHJp
-dmVyID0gewo+ICAJCS5uYW1lID0gInN0bXBlLWkyYyIsCj4gQEAgLTg4LDYgKzEwMiw3IEBAIHN0
-YXRpYyBzdHJ1Y3QgaTJjX2RyaXZlciBzdG1wZV9pMmNfZHJpdmVyID0gewo+ICAjaWZkZWYgQ09O
-RklHX1BNCj4gIAkJLnBtID0gJnN0bXBlX2Rldl9wbV9vcHMsCj4gICNlbmRpZgo+ICsJCS5vZl9t
-YXRjaF90YWJsZSA9IG9mX21hdGNoX3B0cihzdG1wZV9kdF9pZHMpLAo+ICAJfSwKPiAgCS5wcm9i
-ZQkJPSBzdG1wZV9pMmNfcHJvYmUsCj4gIAkucmVtb3ZlCQk9IF9fZGV2ZXhpdF9wKHN0bXBlX2ky
-Y19yZW1vdmUpLAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21mZC9zdG1wZS1zcGkuYyBiL2RyaXZl
-cnMvbWZkL3N0bXBlLXNwaS5jCj4gaW5kZXggZjg2ZTNmYy4uZTQ4MmY1ZiAxMDA2NDQKPiAtLS0g
-YS9kcml2ZXJzL21mZC9zdG1wZS1zcGkuYwo+ICsrKyBiL2RyaXZlcnMvbWZkL3N0bXBlLXNwaS5j
-Cj4gQEAgLTEwLDYgKzEwLDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgo+ICAj
-aW5jbHVkZSA8bGludXgva2VybmVsLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAr
-I2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9zcGkvc3BpLmg+Cj4gICNp
-bmNsdWRlIDxsaW51eC90eXBlcy5oPgo+ICAjaW5jbHVkZSAic3RtcGUuaCIKPiBAQCAtMTE5LDYg
-KzEyMCwxOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNwaV9kZXZpY2VfaWQgc3RtcGVfc3BpX2lk
-W10gPSB7Cj4gIH07Cj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUoc3BpLCBzdG1wZV9pZCk7Cj4gIAo+
-ICsjaWZkZWYgQ09ORklHX09GCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHN0
-bXBlX2R0X2lkc1tdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTYxMCIsIC5kYXRh
-ID0gKHZvaWQgKilTVE1QRTYxMCwgfSwKPiArCXsgLmNvbXBhdGlibGUgPSAic3Qsc3RtcGU4MDEi
-LCAuZGF0YSA9ICh2b2lkICopU1RNUEU4MDEsIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInN0LHN0
-bXBlODExIiwgLmRhdGEgPSAodm9pZCAqKVNUTVBFODExLCB9LAo+ICsJeyAuY29tcGF0aWJsZSA9
-ICJzdCxzdG1wZTE2MDEiLCAuZGF0YSA9ICh2b2lkICopU1RNUEUxNjAxLCB9LAo+ICsJeyAuY29t
-cGF0aWJsZSA9ICJzdCxzdG1wZTI0MDEiLCAuZGF0YSA9ICh2b2lkICopU1RNUEUyNDAxLCB9LAo+
-ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG1wZTI0MDMiLCAuZGF0YSA9ICh2b2lkICopU1RNUEUy
-NDAzLCB9LAo+ICsJeyB9Cj4gK307Cj4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHN0bXBlX2R0
-X2lkcyk7Cj4gKyNlbmRpZgo+ICsKPiAgc3RhdGljIHN0cnVjdCBzcGlfZHJpdmVyIHN0bXBlX3Nw
-aV9kcml2ZXIgPSB7Cj4gIAkuZHJpdmVyID0gewo+ICAJCS5uYW1lCT0gInN0bXBlLXNwaSIsCj4g
-QEAgLTEyNiw2ICsxNDAsNyBAQCBzdGF0aWMgc3RydWN0IHNwaV9kcml2ZXIgc3RtcGVfc3BpX2Ry
-aXZlciA9IHsKPiAgI2lmZGVmIENPTkZJR19QTQo+ICAJCS5wbQk9ICZzdG1wZV9kZXZfcG1fb3Bz
-LAo+ICAjZW5kaWYKPiArCQkub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIoc3RtcGVfZHRf
-aWRzKSwKPiAgCX0sCj4gIAkucHJvYmUJCT0gc3RtcGVfc3BpX3Byb2JlLAo+ICAJLnJlbW92ZQkJ
-PSBfX2RldmV4aXRfcChzdG1wZV9zcGlfcmVtb3ZlKSwKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-ZmQvc3RtcGUuYyBiL2RyaXZlcnMvbWZkL3N0bXBlLmMKPiBpbmRleCA2MDg2NDgxLi5lMmMwZGRh
-IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbWZkL3N0bXBlLmMKPiArKysgYi9kcml2ZXJzL21mZC9z
-dG1wZS5jCj4gQEAgLTcsNiArNyw3IEBACj4gICAqIEF1dGhvcjogUmFiaW4gVmluY2VudCA8cmFi
-aW4udmluY2VudEBzdGVyaWNzc29uLmNvbT4gZm9yIFNULUVyaWNzc29uCj4gICAqLwo+ICAKPiAr
-I2luY2x1ZGUgPGxpbnV4L2Vyci5oPgo+ICAjaW5jbHVkZSA8bGludXgvZXhwb3J0Lmg+Cj4gICNp
-bmNsdWRlIDxsaW51eC9ncGlvLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4KPiBA
-QCAtMTQsNiArMTUsOCBAQAo+ICAjaW5jbHVkZSA8bGludXgvaXJxZG9tYWluLmg+Cj4gICNpbmNs
-dWRlIDxsaW51eC9rZXJuZWwuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L21mZC9jb3JlLmg+Cj4gKyNp
-bmNsdWRlIDxsaW51eC9vZi5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3Bpby5oPgo+ICAjaW5j
-bHVkZSA8bGludXgvcG0uaD4KPiAgI2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4KPiAgI2luY2x1ZGUg
-InN0bXBlLmgiCj4gQEAgLTEwMjgsMTggKzEwMzEsMjQgQEAgdm9pZCBfX2RldmluaXQgc3RtcGVf
-b2ZfcHJvYmUoc3RydWN0IHN0bXBlX3BsYXRmb3JtX2RhdGEgKnBkYXRhLAo+ICAKPiAgCXBkYXRh
-LT5hdXRvc2xlZXAgPSAocGRhdGEtPmF1dG9zbGVlcF90aW1lb3V0KSA/IHRydWUgOiBmYWxzZTsK
-PiAgCj4gKwlvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImlycS10cmlnZ2VyIiwgJnBkYXRhLT5p
-cnFfdHJpZ2dlcik7Cj4gKwo+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImlycS1p
-bnZlcnQtcG9sYXJpdHkiKSkKPiArCQlwZGF0YS0+aXJxX2ludmVydF9wb2xhcml0eSA9IHRydWU7
-Cj4gKwoKWW91IGRvbid0IG5lZWQgdGhlc2UuCgo+ICAJZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZShu
-cCwgY2hpbGQpIHsKPiAgCQlpZiAoIXN0cmNtcChjaGlsZC0+bmFtZSwgInN0bXBlX2dwaW8iKSkg
-ewo+ICAJCQlwZGF0YS0+YmxvY2tzIHw9IFNUTVBFX0JMT0NLX0dQSU87Cj4gLQkJfQo+IC0JCWlm
-ICghc3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfa2V5cGFkIikpIHsKPiArCQl9IGVsc2UgaWYg
-KCFzdHJjbXAoY2hpbGQtPm5hbWUsICJzdG1wZV9rZXlwYWQiKSkgewo+ICAJCQlwZGF0YS0+Ymxv
-Y2tzIHw9IFNUTVBFX0JMT0NLX0tFWVBBRDsKPiAtCQl9Cj4gLQkJaWYgKCFzdHJjbXAoY2hpbGQt
-Pm5hbWUsICJzdG1wZV90b3VjaHNjcmVlbiIpKSB7Cj4gKwkJfSBlbHNlIGlmICghc3RyY21wKGNo
-aWxkLT5uYW1lLCAic3RtcGVfdG91Y2hzY3JlZW4iKSkgewo+ICAJCQlwZGF0YS0+YmxvY2tzIHw9
-IFNUTVBFX0JMT0NLX1RPVUNIU0NSRUVOOwo+IC0JCX0KPiAtCQlpZiAoIXN0cmNtcChjaGlsZC0+
-bmFtZSwgInN0bXBlX2FkYyIpKSB7Cj4gKwkJfSBlbHNlIGlmICghc3RyY21wKGNoaWxkLT5uYW1l
-LCAic3RtcGVfYWRjIikpIHsKPiAgCQkJcGRhdGEtPmJsb2NrcyB8PSBTVE1QRV9CTE9DS19BREM7
-Cj4gKwkJfSBlbHNlIGlmICghc3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfcHdtIikpIHsKPiAr
-CQkJcGRhdGEtPmJsb2NrcyB8PSBTVE1QRV9CTE9DS19QV007Cj4gKwkJfSBlbHNlIGlmICghc3Ry
-Y21wKGNoaWxkLT5uYW1lLCAic3RtcGVfcm90YXRvciIpKSB7Cj4gKwkJCXBkYXRhLT5ibG9ja3Mg
-fD0gU1RNUEVfQkxPQ0tfUk9UQVRPUjsKPiAgCQl9Cj4gIAl9Cj4gIH0KPiAtLSAKPiAxLjcuMTIu
-cmMyLjE4Lmc2MWI0NzJlCj4gCgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5k
-aW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJN
-IFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3Mg
-bWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8v
-bGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Hello Steffen,
+
+On Fri, Nov 23, 2012 at 2:34 PM, Steffen Trumtrar
+<s.trumtrar@pengutronix.de> wrote:
+> This adds support for reading display timings from DT into a struct
+> display_timings. The of_display_timing implementation supports multiple
+> subnodes. All children are read into an array, that can be queried.
+>
+> If no native mode is specified, the first subnode will be used.
+>
+> For cases, where the graphics drivers knows, there can be only one
+> mode description or where the driver only supports one mode, a helper
+> function of_get_videomode is added, that gets a struct videomode from DT.
+> (As this function is implemented in an expensive fashion, it should only
+> be used in the aforementioned case).
+>
+> This also demonstrates how of_display_timings may be utilized.
+>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Acked-by: Stephen Warren <swarren@nvidia.com>
+> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  .../devicetree/bindings/video/display-timings.txt  |  107 ++++++++++
+>  drivers/video/Kconfig                              |   15 ++
+>  drivers/video/Makefile                             |    2 +
+>  drivers/video/of_display_timing.c                  |  223 ++++++++++++++++++++
+>  drivers/video/of_videomode.c                       |   48 +++++
+>  include/linux/of_display_timings.h                 |   20 ++
+>  include/linux/of_videomode.h                       |   18 ++
+>  7 files changed, 433 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/display-timings.txt
+>  create mode 100644 drivers/video/of_display_timing.c
+>  create mode 100644 drivers/video/of_videomode.c
+>  create mode 100644 include/linux/of_display_timings.h
+>  create mode 100644 include/linux/of_videomode.h
+>
+
+<<<snip>>>
+
+> diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_display_timing.c
+> new file mode 100644
+> index 0000000..645f43d
+> --- /dev/null
+> +++ b/drivers/video/of_display_timing.c
+> @@ -0,0 +1,223 @@
+> +/*
+> + * OF helpers for parsing display timings
+> + *
+> + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pengutronix
+> + *
+> + * based on of_videomode.c by Sascha Hauer <s.hauer@pengutronix.de>
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +#include <linux/of.h>
+> +#include <linux/slab.h>
+> +#include <linux/export.h>
+> +#include <linux/of_display_timings.h>
+> +
+> +/**
+> + * parse_property - parse timing_entry from device_node
+> + * @np: device_node with the property
+> + * @name: name of the property
+> + * @result: will be set to the return value
+> + *
+> + * DESCRIPTION:
+> + * Every display_timing can be specified with either just the typical value or
+> + * a range consisting of min/typ/max. This function helps handling this
+> + **/
+> +static int parse_property(const struct device_node *np, const char *name,
+> +                         struct timing_entry *result)
+> +{
+> +       struct property *prop;
+> +       int length, cells, ret;
+> +
+> +       prop = of_find_property(np, name, &length);
+> +       if (!prop) {
+> +               pr_err("%s: could not find property %s\n", __func__, name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       cells = length / sizeof(u32);
+> +       if (cells == 1) {
+> +               ret = of_property_read_u32(np, name, &result->typ);
+> +               result->min = result->typ;
+> +               result->max = result->typ;
+> +       } else if (cells == 3) {
+> +               ret = of_property_read_u32_array(np, name, &result->min, cells);
+> +       } else {
+> +               pr_err("%s: illegal timing specification in %s\n", __func__,
+> +                       name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+> +/**
+> + * of_get_display_timing - parse display_timing entry from device_node
+> + * @np: device_node with the properties
+> + **/
+> +static struct display_timing *of_get_display_timing(const struct device_node
+> +                                                   *np)
+> +{
+> +       struct display_timing *dt;
+> +       int ret = 0;
+> +
+> +       dt = kzalloc(sizeof(*dt), GFP_KERNEL);
+> +       if (!dt) {
+> +               pr_err("%s: could not allocate display_timing struct\n",
+> +                       __func__);
+> +               return NULL;
+> +       }
+> +
+> +       ret |= parse_property(np, "hback-porch", &dt->hback_porch);
+> +       ret |= parse_property(np, "hfront-porch", &dt->hfront_porch);
+> +       ret |= parse_property(np, "hactive", &dt->hactive);
+> +       ret |= parse_property(np, "hsync-len", &dt->hsync_len);
+> +       ret |= parse_property(np, "vback-porch", &dt->vback_porch);
+> +       ret |= parse_property(np, "vfront-porch", &dt->vfront_porch);
+> +       ret |= parse_property(np, "vactive", &dt->vactive);
+> +       ret |= parse_property(np, "vsync-len", &dt->vsync_len);
+> +       ret |= parse_property(np, "clock-frequency", &dt->pixelclock);
+> +
+> +       of_property_read_u32(np, "vsync-active", &dt->vsync_pol_active);
+> +       of_property_read_u32(np, "hsync-active", &dt->hsync_pol_active);
+> +       of_property_read_u32(np, "de-active", &dt->de_pol_active);
+> +       of_property_read_u32(np, "pixelclk-inverted", &dt->pixelclk_pol);
+> +       dt->interlaced = of_property_read_bool(np, "interlaced");
+> +       dt->doublescan = of_property_read_bool(np, "doublescan");
+> +
+> +       if (ret) {
+> +               pr_err("%s: error reading timing properties\n", __func__);
+> +               kfree(dt);
+> +               return NULL;
+> +       }
+> +
+> +       return dt;
+> +}
+> +
+> +/**
+> + * of_get_display_timings - parse all display_timing entries from a device_node
+> + * @np: device_node with the subnodes
+> + **/
+> +struct display_timings *of_get_display_timings(struct device_node *np)
+> +{
+> +       struct device_node *timings_np;
+> +       struct device_node *entry;
+> +       struct device_node *native_mode;
+> +       struct display_timings *disp;
+> +
+> +       if (!np) {
+> +               pr_err("%s: no devicenode given\n", __func__);
+> +               return NULL;
+> +       }
+> +
+> +       timings_np = of_find_node_by_name(np, "display-timings");
+> +       if (!timings_np) {
+> +               pr_err("%s: could not find display-timings node\n", __func__);
+> +               return NULL;
+> +       }
+> +
+> +       disp = kzalloc(sizeof(*disp), GFP_KERNEL);
+> +       if (!disp) {
+> +               pr_err("%s: could not allocate struct disp'\n", __func__);
+> +               goto dispfail;
+> +       }
+> +
+> +       entry = of_parse_phandle(timings_np, "native-mode", 0);
+> +       /* assume first child as native mode if none provided */
+> +       if (!entry)
+> +               entry = of_get_next_child(np, NULL);
+> +       /* if there is no child, it is useless to go on */
+> +       if (!entry) {
+> +               pr_err("%s: no timing specifications given\n", __func__);
+> +               goto entryfail;
+> +       }
+> +
+> +       pr_info("%s: using %s as default timing\n", __func__, entry->name);
+> +
+> +       native_mode = entry;
+> +
+> +       disp->num_timings = of_get_child_count(timings_np);
+> +       if (disp->num_timings == 0) {
+> +               /* should never happen, as entry was already found above */
+> +               pr_err("%s: no timings specified\n", __func__);
+> +               goto entryfail;
+> +       }
+> +
+> +       disp->timings = kzalloc(sizeof(struct display_timing *) * disp->num_timings,
+> +                               GFP_KERNEL);
+> +       if (!disp->timings) {
+> +               pr_err("%s: could not allocate timings array\n", __func__);
+> +               goto entryfail;
+> +       }
+> +
+> +       disp->num_timings = 0;
+> +       disp->native_mode = 0;
+> +
+> +       for_each_child_of_node(timings_np, entry) {
+> +               struct display_timing *dt;
+> +
+> +               dt = of_get_display_timing(entry);
+> +               if (!dt) {
+> +                       /*
+> +                        * to not encourage wrong devicetrees, fail in case of
+> +                        * an error
+> +                        */
+> +                       pr_err("%s: error in timing %d\n", __func__,
+> +                              disp->num_timings + 1);
+> +                       goto timingfail;
+> +               }
+> +
+> +               if (native_mode == entry)
+> +                       disp->native_mode = disp->num_timings;
+> +
+> +               disp->timings[disp->num_timings] = dt;
+> +               disp->num_timings++;
+> +       }
+> +       of_node_put(timings_np);
+> +       /*
+> +        * native_mode points to the device_node returned by of_parse_phandle
+> +        * therefore call of_node_put on it
+> +        */
+> +       of_node_put(native_mode);
+> +
+> +       if (disp->num_timings > 0)
+> +               pr_info("%s: got %d timings. Using timing #%d as default\n",
+> +                       __func__, disp->num_timings, disp->native_mode + 1);
+> +       else {
+> +               pr_err("%s: no valid timings specified\n", __func__);
+> +               display_timings_release(disp);
+> +               return NULL;
+> +       }
+> +       return disp;
+> +
+> +timingfail:
+> +       if (native_mode)
+> +               of_node_put(native_mode);
+> +       display_timings_release(disp);
+> +entryfail:
+> +       if (disp)
+> +               kfree(disp);
+> +dispfail:
+> +       of_node_put(timings_np);
+> +       return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_display_timings);
+> +
+> +/**
+> + * of_display_timings_exists - check if a display-timings node is provided
+> + * @np: device_node with the timing
+> + **/
+> +int of_display_timings_exists(const struct device_node *np)
+> +{
+> +       struct device_node *timings_np;
+> +
+> +       if (!np)
+> +               return -EINVAL;
+> +
+> +       timings_np = of_parse_phandle(np, "display-timings", 0);
+
+I'm seeing warning for the above call
+"passing argument 1 of 'of_parse_phandle' discards qualifiers from
+pointer target type
+expected 'struct device_node *' but argument is of type 'const struct
+device_node *' "
+Please take care of it.
+
+Best Wishes,
+Leela Krishna Amudala
+
+> +       if (!timings_np)
+> +               return -EINVAL;
+> +
+> +       of_node_put(timings_np);
+> +       return 1;
+> +}
+> +EXPORT_SYMBOL_GPL(of_display_timings_exists);
+> diff --git a/drivers/video/of_videomode.c b/drivers/video/of_videomode.c
+> new file mode 100644
+> index 0000000..358aa56
+> --- /dev/null
+> +++ b/drivers/video/of_videomode.c
+> @@ -0,0 +1,48 @@
+> +/*
+> + * generic videomode helper
+> + *
+> + * Copyright (c) 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>, Pengutronix
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +#include <linux/of.h>
+> +#include <linux/of_display_timings.h>
+> +#include <linux/of_videomode.h>
+> +#include <linux/export.h>
+> +
+> +/**
+> + * of_get_videomode - get the videomode #<index> from devicetree
+> + * @np - devicenode with the display_timings
+> + * @vm - set to return value
+> + * @index - index into list of display_timings
+> + * DESCRIPTION:
+> + * Get a list of all display timings and put the one
+> + * specified by index into *vm. This function should only be used, if
+> + * only one videomode is to be retrieved. A driver that needs to work
+> + * with multiple/all videomodes should work with
+> + * of_get_display_timings instead.
+> + **/
+> +int of_get_videomode(struct device_node *np, struct videomode *vm,
+> +                    int index)
+> +{
+> +       struct display_timings *disp;
+> +       int ret;
+> +
+> +       disp = of_get_display_timings(np);
+> +       if (!disp) {
+> +               pr_err("%s: no timings specified\n", __func__);
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (index == OF_USE_NATIVE_MODE)
+> +               index = disp->native_mode;
+> +
+> +       ret = videomode_from_timing(disp, vm, index);
+> +       if (ret)
+> +               return ret;
+> +
+> +       display_timings_release(disp);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_videomode);
+> diff --git a/include/linux/of_display_timings.h b/include/linux/of_display_timings.h
+> new file mode 100644
+> index 0000000..b3e3455
+> --- /dev/null
+> +++ b/include/linux/of_display_timings.h
+> @@ -0,0 +1,20 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> + *
+> + * display timings of helpers
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_OF_DISPLAY_TIMINGS_H
+> +#define __LINUX_OF_DISPLAY_TIMINGS_H
+> +
+> +#include <linux/display_timing.h>
+> +#include <linux/of.h>
+> +
+> +#define OF_USE_NATIVE_MODE -1
+> +
+> +struct display_timings *of_get_display_timings(struct device_node *np);
+> +int of_display_timings_exists(const struct device_node *np);
+> +
+> +#endif
+> diff --git a/include/linux/of_videomode.h b/include/linux/of_videomode.h
+> new file mode 100644
+> index 0000000..a72ad78
+> --- /dev/null
+> +++ b/include/linux/of_videomode.h
+> @@ -0,0 +1,18 @@
+> +/*
+> + * Copyright 2012 Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> + *
+> + * videomode of-helpers
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#ifndef __LINUX_OF_VIDEOMODE_H
+> +#define __LINUX_OF_VIDEOMODE_H
+> +
+> +#include <linux/videomode.h>
+> +#include <linux/of.h>
+> +
+> +int of_get_videomode(struct device_node *np, struct videomode *vm,
+> +                    int index);
+> +
+> +#endif /* __LINUX_OF_VIDEOMODE_H */
+> --
+> 1.7.10.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
