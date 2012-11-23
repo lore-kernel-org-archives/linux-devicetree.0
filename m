@@ -1,56 +1,115 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
-Date: Fri, 23 Nov 2012 07:55:37 +0000
-Message-ID: <20121123075537.A14713E0A91@localhost>
-References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv13 4/7] fbmon: add videomode helpers
+Date: Fri, 23 Nov 2012 09:03:19 +0100
+Message-ID: <20121123080319.GB20282@pengutronix.de>
+References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de>
+ <2107534.vAYnU9M0ZA@avalon>
+ <20121122230949.GA8698@pengutronix.de>
+ <2692338.s0PjnOCRb5@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2692338.s0PjnOCRb5@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, devicetree-discuss@lists.ozlabs.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Nov 2012 14:42:03 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> There seams to be board designs using PWM generators as enable/disable signals.
-> For these boards we used to have custom code as hacks to deal with such a
-> situations.
-> With the gpio-pwm driver we can emulate the GPIO functionality using PWM
-> generators via standard interfaces. The PWM will be configured to be off
-> when the GPIO is off and to full duty cycle when the GPIO is requested to be
-> on.
+On Fri, Nov 23, 2012 at 12:52:08AM +0100, Laurent Pinchart wrote:
+> On Friday 23 November 2012 00:09:49 Steffen Trumtrar wrote:
+> > On Thu, Nov 22, 2012 at 07:31:39PM +0100, Laurent Pinchart wrote:
+> > > On Thursday 22 November 2012 17:00:12 Steffen Trumtrar wrote:
+> > > > Add a function to convert from the generic videomode to a fb_videomode.
+> > > > 
+> > > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > > > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > > > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > > > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > > > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > > > ---
+> > > > 
+> > > >  drivers/video/fbmon.c |   44 ++++++++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/fb.h    |    6 ++++++
+> > > >  2 files changed, 50 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> > > > index cef6557..a6a564d 100644
+> > > > --- a/drivers/video/fbmon.c
+> > > > +++ b/drivers/video/fbmon.c
+> > > > @@ -31,6 +31,7 @@
+> > > > 
+> > > >  #include <linux/pci.h>
+> > > >  #include <linux/slab.h>
+> > > >  #include <video/edid.h>
+> > > > 
+> > > > +#include <linux/videomode.h>
+> > > > 
+> > > >  #ifdef CONFIG_PPC_OF
+> > > >  #include <asm/prom.h>
+> > > >  #include <asm/pci-bridge.h>
+> > > > 
+> > > > @@ -1373,6 +1374,49 @@ int fb_get_mode(int flags, u32 val, struct
+> > > > fb_var_screeninfo *var, struct fb_inf kfree(timings);
+> > > > 
+> > > >  	return err;
+> > > >  
+> > > >  }
+> > > > 
+> > > > +
+> > > > +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> > > > +int fb_videomode_from_videomode(const struct videomode *vm,
+> > > > +				struct fb_videomode *fbmode)
+> > > > +{
+> > > > +	unsigned int htotal, vtotal;
+> > > > +
+> > > > +	fbmode->xres = vm->hactive;
+> > > > +	fbmode->left_margin = vm->hback_porch;
+> > > > +	fbmode->right_margin = vm->hfront_porch;
+> > > > +	fbmode->hsync_len = vm->hsync_len;
+> > > > +
+> > > > +	fbmode->yres = vm->vactive;
+> > > > +	fbmode->upper_margin = vm->vback_porch;
+> > > > +	fbmode->lower_margin = vm->vfront_porch;
+> > > > +	fbmode->vsync_len = vm->vsync_len;
+> > > > +
+> > > > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
+> > > 
+> > > This results in a division by 0 if vm->pixelclock is equal to zero. As the
+> > > information is missing from many board files, what would you think about
+> > > the following ?
+> > > 
+> > > 	fbmode->pixclock = vm->pixelclock ? KHZ2PICOS(vm->pixelclock / 1000) : 0;
+> > 
+> > Grrr...you are right. I will fix that...
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
-> Hi Linus,
+> Thank you.
 > 
-> So this is the driver I came up regarding to the issue that some boards
-> (BeagleBoard for example) are using the PWM generators as enable/disable signal.
-> 
-> On BeagleBoard the situation is like this:
-> TWL4030 PWMA -> TWL4030 LEDA -> nUSBHOST_PWR_EN -> external power switch -> USB
-> host hub power.
-> 
-> So I have tested this driver on BeagleBoard:
-> - Custom code to toggle the GPIO just to see if it switches correctly
-> 
-> - Real life usecase:
-> fixed voltage regulator with GPIO control (the gpio is the gpio-pwm provided).
-> ehci-omap has been modified to allow deferred probe.
-> the regulator is used by ehci-omap.
-> 
-> All works fine.
 
-Ugh. and this is why I wanted the PWM and GPIO subsystems to use the
-same namespace and binding. <grumble, mutter> But that's not your fault.
+I have to thank you for bulletproofing my code o/\o
 
-It's pretty horrible to have a separate translator node to convert a PWM
-into a GPIO (with output only of course). The gpio properties should
-appear directly in the PWM node itself and the translation code should
-be in either the pwm or the gpio core. I don't think it should look like
-a separate device.
+> > > > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
+> > > > +		 vm->hsync_len;
+> > > > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
+> > > > +		 vm->vsync_len;
+> > > > +	fbmode->refresh = vm->pixelclock / (htotal * vtotal);
+> > > > +
+> > 
+> > ...and obviously this, too.
+> 
+> That one is less of an issue in my opinion. A mode with a zero htotal or 
+> vtotal is clearly invalid, while we have modes with no pixel clock value.
+> 
 
-g.
+Yes, you I are right. But while I'm on it, might as well prevent an error.
 
+Regards,
+Steffen
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
