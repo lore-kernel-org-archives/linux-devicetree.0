@@ -1,63 +1,131 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
-Date: Fri, 23 Nov 2012 18:09:23 +0530
-Message-ID: <CAKohpo=4orAgwVRRvukj+tu67CyVvoUegsJ7eXaCMA9exruqEA@mail.gmail.com>
-References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
-	<b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
-	<20121122112451.GE4328@gmail.com>
-	<CAKohpo=EWFNddjMNwHO4u4-bi1AQ4cvsJ4DfFOgaFv3oVfheZg@mail.gmail.com>
-	<20121123093633.GD17471@gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 1/1] spi/atmel: add DT support
+Date: Fri, 23 Nov 2012 13:44:39 +0100
+Message-ID: <1353674679-13158-1-git-send-email-plagnioj@jcrosoft.com>
+References: <20121121151713.1F8873E0A47@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121123093633.GD17471@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20121121151713.1F8873E0A47@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23 November 2012 15:06, Lee Jones <lee.jones@linaro.org> wrote:
-> On Fri, 23 Nov 2012, Viresh Kumar wrote:
->>       pdev = platform_device_alloc(cell->name, id + cell->id);
->>
->> This is required when we have multiple instances of MFD device present
->> on board. How do you want me to handle this ?
->
-> There are lots of examples of this already. I have to leave something
-> to the imagination, or I'll be requesting a cut of your salary. :D
+the atmel_spi use only gpio for chip select
 
-My manager already reduced my salary by 20% after reading this mail :(
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: spi-devel-general@lists.sourceforge.net
+Cc: Grant Likely <grant.likely@secretlab.ca>
+---
+Hi Grant,
 
-Ok, this is what my understanding of whole this is. Platform devices are
-named like:
-- pdev-name: if id passed in pdev.id is -1
-- pdev-name.0[1|2|...]: if id passed is 0[1|2|...]
-- pdev-name.<dynamically allocated by kernel>: if id passed is -2
+	can we have this for 3.8
+	This patch is presetnt on the ML sing Feb 2012 and was depinding on
+	the cs-gpio dt that you just apply
 
-Now, we don't declare cell->id fields and they are currently zero and so
-value is passed from pdata->id field. So, for example with multiple instances
-of stmpe on a board, we have:
+Best Regards,
+J.
+ .../devicetree/bindings/spi/spi_atmel.txt          |   26 ++++++++++++++++++++
+ drivers/spi/spi-atmel.c                            |   17 ++++++++++++-
+ 2 files changed, 42 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel.txt
 
-- stmpe-0: //Name just for reference...
-   - stmpe-gpio.0
-   - stmpe-ts.0
-- stmpe-1:
-   - stmpe-gpio.1
-   - stmpe-ts.1
-- stmpe-2:
-   - stmpe-gpio.2
-   - stmpe-ts.2
-
-I main idea is to distinguish various instances of sub modules, like stmpe-gpio.
-And this works well with non-DT support we have currently.
-
-With DT, i am not sure how should we pass id field to mfd_add_devices(). If
-we pass it -1, then multiple instances will have same name: "stmpe-gpio"
-
-Sorry, for my lack of knowledge. Don't send another mail with salary cut
-suggestion as that will make it -40% in total ;)
-
-Thanks for reviewing :)
-
---
-viresh
+diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
+new file mode 100644
+index 0000000..07e04cd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
+@@ -0,0 +1,26 @@
++Atmel SPI device
++
++Required properties:
++- compatible : should be "atmel,at91rm9200-spi".
++- reg: Address and length of the register set for the device
++- interrupts: Should contain spi interrupt
++- cs-gpios: chipselects
++
++Example:
++
++spi1: spi@fffcc000 {
++	compatible = "atmel,at91rm9200-spi";
++	reg = <0xfffcc000 0x4000>;
++	interrupts = <13 4 5>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	cs-gpios = <&pioB 3 0>;
++	status = "okay";
++
++	mmc-slot@0 {
++		compatible = "mmc-spi-slot";
++		reg = <0>;
++		gpios = <&pioC 4 0>;	/* CD */
++		spi-max-frequency = <25000000>;
++	};
++};
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index 61fb0ec..1615222 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -20,6 +20,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/slab.h>
+ #include <linux/platform_data/atmel.h>
++#include <linux/of.h>
+ 
+ #include <asm/io.h>
+ #include <asm/gpio.h>
+@@ -768,6 +769,10 @@ static int atmel_spi_setup(struct spi_device *spi)
+ 
+ 	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
+ 	npcs_pin = (unsigned int)spi->controller_data;
++
++	if (gpio_is_valid(spi->cs_gpio))
++		npcs_pin = spi->cs_gpio;
++
+ 	asd = spi->controller_state;
+ 	if (!asd) {
+ 		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
+@@ -937,8 +942,9 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
+ 	/* the spi->mode bits understood by this driver: */
+ 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+ 
++	master->dev.of_node = pdev->dev.of_node;
+ 	master->bus_num = pdev->id;
+-	master->num_chipselect = 4;
++	master->num_chipselect = master->dev.of_node ? 0 : 4;
+ 	master->setup = atmel_spi_setup;
+ 	master->transfer = atmel_spi_transfer;
+ 	master->cleanup = atmel_spi_cleanup;
+@@ -1064,11 +1070,20 @@ static int atmel_spi_resume(struct platform_device *pdev)
+ #define	atmel_spi_resume	NULL
+ #endif
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id atmel_spi_dt_ids[] = {
++	{ .compatible = "atmel,at91rm9200-spi" },
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
++#endif
+ 
+ static struct platform_driver atmel_spi_driver = {
+ 	.driver		= {
+ 		.name	= "atmel_spi",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
+ 	},
+ 	.suspend	= atmel_spi_suspend,
+ 	.resume		= atmel_spi_resume,
+-- 
+1.7.10.4
