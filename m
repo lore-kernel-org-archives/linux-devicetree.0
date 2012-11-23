@@ -1,75 +1,52 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH V2 2/2] mfd: stmpe: Extend DT support in stmpe driver
-Date: Fri, 23 Nov 2012 09:33:52 +0000
-Message-ID: <20121123093352.GC17471@gmail.com>
+Date: Fri, 23 Nov 2012 09:36:33 +0000
+Message-ID: <20121123093633.GD17471@gmail.com>
 References: <f1d508c64a01dfd492a1ab1fda28af4b7647d8ab.1353560936.git.viresh.kumar@linaro.org>
  <b81641051dad9660b72b0028d001e5620d901160.1353560936.git.viresh.kumar@linaro.org>
  <20121122112451.GE4328@gmail.com>
- <CAKohpo=F91sZ7St3XVXqwAEgmSWXjAxxXwRs1RD5qPyW99P1vA@mail.gmail.com>
- <20121122154612.GC10986@gmail.com>
- <CAKohpok6v65TH5yZAthyxcH7bCVgF8A8m2bY_mp3yS_Y_yH1Xw@mail.gmail.com>
- <20121123034557.GB5384@localhost.localdomain>
+ <CAKohpo=EWFNddjMNwHO4u4-bi1AQ4cvsJ4DfFOgaFv3oVfheZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121123034557.GB5384-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAKohpo=EWFNddjMNwHO4u4-bi1AQ4cvsJ4DfFOgaFv3oVfheZg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMyBOb3YgMjAxMiwgU2hpcmF6IEhhc2hpbSB3cm90ZToKCj4gT24gVGh1LCBOb3Yg
-MjIsIDIwMTIgYXQgMTA6MzE6NDhQTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdyb3RlOgo+ID4gT24g
-MjIgTm92ZW1iZXIgMjAxMiAyMToxNiwgTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4g
-d3JvdGU6Cj4gPiA+IFRoZSBTVE1QRSBHUElPIGNvbnRyb2xsZXIgY2FuJ3QgYmUgdXNlZCBieSBE
-ZXZpY2UgVHJlZSB5ZXQgaW4KPiA+ID4gYW55IGNhc2UsIGJlY2F1c2UgaXQgZG9lc24ndCBoYXZl
-IGFuIElSUSBkb21haW4uIFRoaXMgaXMKPiA+ID4gY29tcHVsc29yeSwgb3IgaXQgd29uJ3Qgd29y
-ay4gSGF2ZSB5b3UgdHJpZWQgdG8gdGVzdCB0aGlzCj4gPiA+IGZ1bmN0aW9uYWxpdHkgeWV0Pwo+
-ID4gCj4gPiBJIGRvbid0IGhhdmUgU1BFQXIgYm9hcmQgdG8gdGVzdCBpdCBhbnltb3JlLiBJIGhh
-dmUgbW92ZWQgb3V0IG9mCj4gPiBTVCBub3cgYW5kIHdvcmtpbmcgaW4gbGluYXJvIGFzIEFSTSBh
-c2lnbmVlLiBKdXN0IHB1c2hpbmcgdGhlc2UKPiA+IGFzIGFuIHBhcnQgdGltZSBhY3Rpdml0eS4K
-PiA+IAo+ID4gVGhvdWdoIFNUIGd1eXMgd291bGQgaGF2ZSB0ZXN0ZWQgc3RtcGUsIGJ1dCBzdG1w
-ZS1ncGlvLCBpIGFtIG5vdAo+ID4gc3VyZSBhYm91dC4KPiAKPiBMZXQgbWUgYnJpbmcgc29tZSBt
-b3JlIGluZm9ybWF0aW9uIGhlcmUuIEkgdG90YWxseSB1bmRlcnN0YW5kCj4gSm9uZXMgY29uY2Vy
-bnMsIGJ1dCB0aGUgd2F5IHN0bXBlIChhbmQgbWF5IGJlIG90aGVyIG1mZCBkZXZpY2VzKQo+IGFy
-ZSBoYW5kbGVkIGlzIHRoaXMgdGhhdCB0aGUgcGFyZW50IGJsb2NrIChpLmUuIHN0bXBlKSBkZWNp
-ZGVzIG9uCj4gdGhlIHZhcmlhbnRzIChzYXkgYnkgcHJvYmluZyBkZXZpY2UgaXRzZWxmKSBhbmQg
-dGhlbiBwcmVwYXJlcwo+IGFzc29jaWF0ZWQgZGF0YSBmb3IgdGhlIChwcm9iZWQpIHZhcmlhbnQg
-YW5kIGNyZWF0ZXMgYSBwbGF0Zm9ybQo+IGRldmljZSBmb3IgdGhlIHNhbWUuCgpJIHJlYWxpc2Ug
-dGhpcywgYnV0IG5vdyB3ZSdyZSB1c2luZyBEZXZpY2UgVHJlZSwgdGhlcmUncyBubyBuZWVkCnRv
-IHN0dWZmIHBkYXRhIGluIHRoZSBwYXJlbnQgZHJpdmVyIG5vdy4gSXQncyBiZXR0ZXIgdGhhdCB0
-aGUKY2hpbGQgZGV2aWNlcyBhcmUgc2VsZiBzdWZmaWNpZW50LgoKPiBGb3IgdGhlIGludGVycnVw
-dHMgY2FzZSBhbHNvLCBpdCBpcyBzdG1wZSB3aGljaCByZWdpc3RlcnMgdGhlCj4gaXJxIGRvbWFp
-bi4gVGhpcyBpcyBiZWNhdXNlLCBzdG1wZSBkcml2ZXIgcHJvYmVzIHZhcmlhbnQgYW5kCj4gcG9w
-dWxhdGVzIGl0cyBwbGF0Zm9ybSBkYXRhIGFuZCBzdG1wZS1ncGlvIG1heSBub3QgYmUgYXdhcmUg
-b2YgdGhlCj4gdmFyaWFudCBpdCBzZXJ2ZXMuIEF0IHRoZSBzYW1lIHRpbWUsIGl0IChzdG1wZSkg
-bmVlZHMgZmV3IG9mIHRoZQo+ICh2aXJ0dWFsKSBpbnRlcnJ1cHRzIGZvciBpdHMgaW50ZXJuYWwg
-cHVycG9zZSBhbHNvLgoKSSBrbm93LiBJIHdyb3RlIHRoZSBJUlEgZG9tYWluIGZvciBTVE1QRS4g
-OykKClNUTVBFIG5lZWRzIGl0cyBvd24gb25lIHRvbywgd2hpY2ggSSB3aWxsIHdvcmsgb24gbm93
-LgoKU1RNUEUtR1BJTyBkb2Vzbid0IG5lZWQgdG8gYmUgYXdhcmUgb2YgYW55dGhpbmcsIHRoZSBk
-ZXZpY2UKd2hpY2ggd2lzaGVzIHRvIHVzZSBpdHMgR1BJT3MvSVJRcyB3aWxsIHJlZmVyZW5jZSBp
-dCBmcm9tCkRldmljZSBUcmVlIGluIHRoZSBtYW5vciBwcmV2aW91c2x5IGV4cGxhaW5lZC4KCj4g
-SGVuY2Ugc3RtcGUgcGFzc2VzIGlycV9iYXNlIHRvIHRoZSBzdG1wZS1ncGlvIGRyaXZlciB3aGls
-ZQo+IGFsbG9jYXRpbmcgYW5kIHJlZ2lzdGVyaW5nIGlycSBkb21haW4gYnkgaXRzZWxmLgoKTm90
-IGFueW1vcmUgaXQgZG9lc24ndC4gVGhlcmUgYXJlIG5vIGlycV9iYXNlOnMgd2l0aCBEVC4gQWxs
-CklSUXMgYXJlIGR5bmFtaWMsIGhlbmNlIHdoeSBTVE1QRSByZXF1aXJlcyBpdHMgb3duIGRvbWFp
-biB0bwpwbGF5IHdpdGguIEkgY2FuIGZpeCB0aGF0LgoKPiBXaXRoIHRoaXMgYXBwcm9hY2ggd2Ug
-aGF2ZSB0ZXN0ZWQgdGhlIGZ1bmN0aW9uYWxpdHkgb24gU1BFQXIKPiBwbGF0Zm9ybS4KCllvdSds
-bCBuZWVkIHRvIHRlc3QgaXQgYWdhaW4gd2l0aCB0aGUgbmV3IERUIGFwcHJvYWNoIHRvby4gOikK
-Ci0tIApMZWUgSm9uZXMKTGluYXJvIFNULUVyaWNzc29uIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFy
-by5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJv
-OiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNl
-dHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
-c3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Fri, 23 Nov 2012, Viresh Kumar wrote:
+
+> On 22 November 2012 16:54, Lee Jones <lee.jones@linaro.org> wrote:
+> >> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Doc=
+umentation/devicetree/bindings/mfd/stmpe.txt
+> >>       stmpe1601: stmpe1601@40 {
+>=20
+> >> +             id =3D <0>;
+> >
+> > Don't do this. Device IDs are Linux specific.
+>=20
+> Hi Lee,
+>=20
+> This is id of the mfd device that we need to pass to mfd_add_device()
+> and is used in following:
+
+MFD devices are Linux specific, whereas DT is cross-platform. Thus
+you can't put it in the DTS(I) files.
+
+> 	pdev =3D platform_device_alloc(cell->name, id + cell->id);
+>=20
+> This is required when we have multiple instances of MFD device presen=
+t
+> on board. How do you want me to handle this ?
+
+There are lots of examples of this already. I have to leave something
+to the imagination, or I'll be requesting a cut of your salary. :D
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
