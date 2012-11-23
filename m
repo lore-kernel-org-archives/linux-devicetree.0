@@ -1,165 +1,67 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
-Date: Fri, 23 Nov 2012 10:44:36 +0100
-Message-ID: <50AF4584.7020604@ti.com>
-References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com> <20121123075537.A14713E0A91@localhost> <50AF3E21.4000009@ti.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] usb: chipidea: usbmisc: fix a potential race condition
+Date: Fri, 23 Nov 2012 11:00:21 +0100
+Message-ID: <50AF4935.4000707@pengutronix.de>
+References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de> <1353506793-8354-4-git-send-email-m.grzeschik@pengutronix.de> <20121123053635.GB22420@nchen-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50AF3E21.4000009@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="------------enig702F4C0D02A5AC94506B97D5"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20121123053635.GB22420@nchen-desktop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig702F4C0D02A5AC94506B97D5
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 11/23/2012 10:13 AM, Peter Ujfalusi wrote:
-> Hi Grant,
->=20
-> On 11/23/2012 08:55 AM, Grant Likely wrote:
->> Ugh. and this is why I wanted the PWM and GPIO subsystems to use the
->> same namespace and binding. <grumble, mutter> But that's not your fa=
-ult.
+On 11/23/2012 06:36 AM, Peter Chen wrote:
+> On Wed, Nov 21, 2012 at 03:06:29PM +0100, Michael Grzeschik wrote:
+>> From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 >>
->> It's pretty horrible to have a separate translator node to convert a=
- PWM
->> into a GPIO (with output only of course). The gpio properties should
->> appear directly in the PWM node itself and the translation code shou=
-ld
->> be in either the pwm or the gpio core. I don't think it should look =
-like
->> a separate device.
+>> This fixes a potential race condition where the ci13xxx_imx glue code
+>> could be fast enough to call one of the usbmisc_ops before he got a
+>> valid value on the static usbmisc pointer. To fix that we first set
+>> usbmisc, then call usbmisc_set_ops().
 >=20
-> Let me see if I understand your suggestion correctly. In the DT you s=
-uggest
-> something like this:
->=20
-> twl_pwmled: pwmled {
-> 	compatible =3D "ti,twl4030-pwmled";
-> 	#pwm-cells =3D <2>;
-> 	#gpio-cells =3D <2>;
-> 	gpio-controller;
-> };
+> usbmisc is subsys_initcall, and cil13xxx_imx is module_init. Any
+> potential situation that the ci13xxx_imx's probe is ran before the
+> usbmisc's probe is completed? Besides, there is usbmisc_ops value
+> check at the beginning of cil13xxx_imx's probe.
 
-After I thought about this.. Is this what we really want?
-After all what we have here is a PWM generator used to emulate a GPIO s=
-ignal.
-The PWM itself can be used for driving a LED (standard LED or backlight=
- and we
-have DT bindings for these already), vibra motor, or other things.
-If we combine the PWM with GPIO we should go and 'bloat' the DT node to=
- also
-include all sort of other uses of PWM at once?
+It's bad practice to rely your code on some external ordering mechanism,
+even more if the correct solution is so simple. And as Sascha pointed
+out everything might be build as modules and loaded individually.
 
-IMHO it is better to keep them as separate things.
-pwm node to describe the PWM generator,
-separate nodes to describe it's uses like led, backlight, motor and gpi=
-o.
+Marc
 
 --=20
-P=E9ter
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
->=20
-> led_user {
-> 	compatible =3D "pwm-leds";
-> 	pwms =3D <&twl_pwmled 1 7812500>; /* PWMB/LEDB from twl4030 */
-> 	pwm-names =3D "PMU_STAT LED";
->=20
-> 	label =3D "beagleboard::pmu_stat";
-> 	max-brightness =3D <127>;
-> };
->=20
-> vdd_usbhost: fixedregulator-vdd-usbhost {
-> 	compatible =3D "regulator-fixed";
-> 	regulator-name =3D "USBHOST_POWER";
-> 	regulator-min-microvolt =3D <5000000>;
-> 	regulator-max-microvolt =3D <5000000>;
-> 	gpio =3D <&twl_pwmled 0 7812500>; /* PWMA/LEDA from twl4030 */
-> 	enable-active-high;
-> 	regulator-boot-on;
-> };
->=20
-> With this I think this is what should happen in code level:
-> - the "pwm-gpo" driver does not have of_match_table at all.
-> - the driver for the "ti,twl4030-pwmled" is loaded.
-> - it prepares and calls pwmchip_add() to add the PWM chip.
-> - the of_pwmchip_add() will look for gpio-controller property of the =
-node
->  - if it is found it prepares the pdata (based on the PWM chip inform=
-ation)
-> for the "pwm-gpo" driver and registers the platform_device for it.
->  - the "pwm-gpo" driver will use:
->     priv->gpio_chip.of_node =3D pdev->dev.parent->of_node;
->=20
-> In DT boot we are fine with this I think.
->=20
-> When it comes to legacy boot (boot without DT) I think we should stil=
-l have
-> the two layers to avoid big changes which would affect all existing p=
-wm
-> drivers. Something like this in the board files:
->=20
-> static struct pwm_lookup pwm_lookup[] =3D {
-> 	/* LEDA ->  nUSBHOST_PWR_EN */
-> 	PWM_LOOKUP("twl-pwmled", 0, "pwm-gpo", "nUSBHOST_PWR_EN"),
-> 	/* LEDB -> PMU_STAT */
-> 	PWM_LOOKUP("twl-pwmled", 1, "leds_pwm", "beagleboard::pmu_stat"),
-> };
->=20
-> /* for the LED user of PWM */
-> static struct led_pwm pwm_leds[] =3D {
-> 	{
-> 		.name		=3D "beagleboard::pmu_stat",
-> 		.max_brightness	=3D 127,
-> 		.pwm_period_ns	=3D 7812500,
-> 	},
-> };
->=20
-> static struct led_pwm_platform_data pwm_data =3D {
-> 	.num_leds	=3D ARRAY_SIZE(pwm_leds),
-> 	.leds		=3D pwm_leds,
-> };
->=20
-> static struct platform_device leds_pwm =3D {
-> 	.name	=3D "leds_pwm",
-> 	.id	=3D -1,
-> 	.dev	=3D {
-> 		.platform_data =3D &pwm_data,
-> 	},
-> };
->=20
-> /* for the GPIO user of PWM */
-> static struct gpio_pwm pwm_gpios[] =3D {
-> 	{
-> 		.name		=3D "nUSBHOST_PWR_EN",
-> 		.pwm_period_ns	=3D 7812500,
-> 	},
-> };
->=20
-> static struct gpio_pwm_pdata pwm_gpio_data =3D {
-> 	.num_gpos	=3D ARRAY_SIZE(pwm_gpios),
-> 	.gpos		=3D pwm_gpios,
-> 	.setup		=3D beagle_pwm_gpio_setup, /*to get the gpio base	*/
-> };
->=20
-> static struct platform_device gpos_pwm =3D {
-> 	.name	=3D "pwm-gpo",
-> 	.id	=3D -1,
-> 	.dev	=3D {
-> 		.platform_data =3D &pwm_gpio_data,
-> 	},
-> };
->=20
-> static int beagle_pwm_gpio_setup(struct device *dev, unsigned gpio,
-> 				 unsigned ngpio)
-> {
-> 	beagle_usbhub_pdata.gpio =3D gpio; /* fixed_voltage_config struct */
->=20
-> 	platform_device_register(&beagle_usbhub);
-> 	return 0;
-> }
->=20
-> What do you think?
->=20
+
+--------------enig702F4C0D02A5AC94506B97D5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with undefined - http://www.enigmail.net/
+
+iEYEARECAAYFAlCvSTUACgkQjTAFq1RaXHMSdgCggmZuLyxeWkcrSdzB/1agS5BC
+AcMAn3457oTuq8RfaokKbWvTR1NqDfci
+=1kVD
+-----END PGP SIGNATURE-----
+
+--------------enig702F4C0D02A5AC94506B97D5--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
