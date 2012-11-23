@@ -1,102 +1,56 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCHv13 4/7] fbmon: add videomode helpers
-Date: Fri, 23 Nov 2012 00:52:08 +0100
-Message-ID: <2692338.s0PjnOCRb5@avalon>
-References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de> <2107534.vAYnU9M0ZA@avalon> <20121122230949.GA8698@pengutronix.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
+Date: Fri, 23 Nov 2012 10:44:44 +0900
+Message-ID: <20121123014443.GD4385@opensource.wolfsonmicro.com>
+References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
+ <1353149747-31871-2-git-send-email-acourbot@nvidia.com>
+ <20121120215429.B621F3E1821@localhost>
+ <20121121013133.GE4673@opensource.wolfsonmicro.com>
+ <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20121122230949.GA8698@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, devicetree-discuss@lists.ozlabs.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jL2BoiuKMElzg3CS"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaNmBpfONDpt7zFqLaqfiGm+ELpO-v5gZmM0rEi_AzijQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>, Ola LILJA2 <ola.o.lilja@stericsson.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 November 2012 00:09:49 Steffen Trumtrar wrote:
-> On Thu, Nov 22, 2012 at 07:31:39PM +0100, Laurent Pinchart wrote:
-> > On Thursday 22 November 2012 17:00:12 Steffen Trumtrar wrote:
-> > > Add a function to convert from the generic videomode to a fb_videomode.
-> > > 
-> > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > > ---
-> > > 
-> > >  drivers/video/fbmon.c |   44 ++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/fb.h    |    6 ++++++
-> > >  2 files changed, 50 insertions(+)
-> > > 
-> > > diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
-> > > index cef6557..a6a564d 100644
-> > > --- a/drivers/video/fbmon.c
-> > > +++ b/drivers/video/fbmon.c
-> > > @@ -31,6 +31,7 @@
-> > > 
-> > >  #include <linux/pci.h>
-> > >  #include <linux/slab.h>
-> > >  #include <video/edid.h>
-> > > 
-> > > +#include <linux/videomode.h>
-> > > 
-> > >  #ifdef CONFIG_PPC_OF
-> > >  #include <asm/prom.h>
-> > >  #include <asm/pci-bridge.h>
-> > > 
-> > > @@ -1373,6 +1374,49 @@ int fb_get_mode(int flags, u32 val, struct
-> > > fb_var_screeninfo *var, struct fb_inf kfree(timings);
-> > > 
-> > >  	return err;
-> > >  
-> > >  }
-> > > 
-> > > +
-> > > +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> > > +int fb_videomode_from_videomode(const struct videomode *vm,
-> > > +				struct fb_videomode *fbmode)
-> > > +{
-> > > +	unsigned int htotal, vtotal;
-> > > +
-> > > +	fbmode->xres = vm->hactive;
-> > > +	fbmode->left_margin = vm->hback_porch;
-> > > +	fbmode->right_margin = vm->hfront_porch;
-> > > +	fbmode->hsync_len = vm->hsync_len;
-> > > +
-> > > +	fbmode->yres = vm->vactive;
-> > > +	fbmode->upper_margin = vm->vback_porch;
-> > > +	fbmode->lower_margin = vm->vfront_porch;
-> > > +	fbmode->vsync_len = vm->vsync_len;
-> > > +
-> > > +	fbmode->pixclock = KHZ2PICOS(vm->pixelclock / 1000);
-> > 
-> > This results in a division by 0 if vm->pixelclock is equal to zero. As the
-> > information is missing from many board files, what would you think about
-> > the following ?
-> > 
-> > 	fbmode->pixclock = vm->pixelclock ? KHZ2PICOS(vm->pixelclock / 1000) : 0;
-> 
-> Grrr...you are right. I will fix that...
 
-Thank you.
+--jL2BoiuKMElzg3CS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
-> > > +		 vm->hsync_len;
-> > > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
-> > > +		 vm->vsync_len;
-> > > +	fbmode->refresh = vm->pixelclock / (htotal * vtotal);
-> > > +
-> 
-> ...and obviously this, too.
+On Thu, Nov 22, 2012 at 09:57:22AM +0100, Linus Walleij wrote:
 
-That one is less of an issue in my opinion. A mode with a zero htotal or 
-vtotal is clearly invalid, while we have modes with no pixel clock value.
+> Is it correct to assume that this library will be useful also for ALSA
+> SoC type of devices?
 
--- 
-Regards,
+ASoC has facilities for autogenerating the bulk of the sequences which
+with modern devices is all that you really need.
 
-Laurent Pinchart
+--jL2BoiuKMElzg3CS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQrtUFAAoJELSic+t+oim9or0P/jeRd4BYe3ocqxtkm+e8e60Y
+blALWfdQExTsYg1gmoEASiBFm5vhQg9TDcmM1MdojCRV0+IfPem+a/Zo8DuLinqO
+QqNNY5pw/j7KLM2FflzoiFPtwz5w4Tg85eMZD9nsmmAUw//t+hlB1uCI6qo1RAQ7
+GAR4L6jCTNqe9q7osV5ydEw3rrKKTqo99MMO0inZ788wp+xzSCHcP5wljRwHZwSI
+3Q8vL3dQw+IGa6/XJM9pMAOd/IFwW8+5QCl89Z6hRLza9V+K9Ax7/Xgj4uv/E2CG
+ASe9HZ4hInv6kwJX0yUN4dQJPt5CH+ABnuRnB9WBEhxZ5EIeYDy3JIHfCBxevGiN
+j8g8mLQ8ihXQ3GcLHgHk6cXtxI/5EZhaOWDCN13sZ3FTnxKfm1xDQ9iQoEx/CTgR
+oirZajqnKJyVBI2j431JLtzwzsI37dS9gS12MLtudXTCMuuib/RZ1CtpqvUfV0Hq
+mTUaKqiUXl67Pu+nbbIlwUuvicPugTjMBJepjhQlXlrDwvOXGj6p2rX0ZHEJYel4
+/mzD0ZIlwhcHgfh7RUQefuDldbr2DLJSDveAi6mWPnS1/GuNn4KIKwJuKgRqNGgW
+dQvoKBvH5qEQvZpwEehl7HAt7UQ5blr8zcWMz4iQxv9q3WY4G3SmmgUIYLH9E+Qw
+31wJ1bVSScBxeHLbdGqf
+=yrHA
+-----END PGP SIGNATURE-----
+
+--jL2BoiuKMElzg3CS--
