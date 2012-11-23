@@ -1,26 +1,57 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] input: stmpe-ts: Add DT support for stmpe touchscreen
-Date: Thu, 22 Nov 2012 23:46:30 -0800
-Message-ID: <20121123074630.GE12631@core.coreip.homeip.net>
-References: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv13 5/7] fbmon: add of_videomode helpers
+Date: Fri, 23 Nov 2012 08:54:07 +0100
+Message-ID: <20121123075407.GA20282@pengutronix.de>
+References: <1353600015-6974-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353600015-6974-6-git-send-email-s.trumtrar@pengutronix.de>
+ <2117247.Eyo66IqYf0@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
+In-Reply-To: <2117247.Eyo66IqYf0@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2012 at 11:59:46AM +0530, Viresh Kumar wrote:
-> From: Vipul Kumar Samar <vipulkumar.samar@st.com>
-> 
-> This patch allows the STMPE Touchscreen driver to be successfully probed and
-> initialised when Device Tree support is enabled. Bindings are mentioned in
-> Documentation too.
+Hi Laurent,
 
-Applied, thank you Viresh.
+On Thu, Nov 22, 2012 at 06:58:09PM +0100, Laurent Pinchart wrote:
+> Hi Steffen,
+> 
+> On Thursday 22 November 2012 17:00:13 Steffen Trumtrar wrote:
+> > Add helper to get fb_videomode from devicetree.
+> > 
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> This patch results in the following build warning:
+> 
+> drivers/video/fbmon.c: In function 'of_get_fb_videomode':
+> drivers/video/fbmon.c:1445: warning: passing argument 1 of 'of_get_videomode' 
+> discards qualifiers from pointer target type
+> include/linux/of_videomode.h:15: note: expected 'struct device_node *' but 
+> argument is of type 'const struct device_node *'
+> 
+
+This I don't get. Well, looking at the code, the warning is correct. I fixed
+that now. But, I do not get the warning. Just tried it again before fixing:
+cleaned, cleaned and touching file, just "make drivers/video/fbmon.o". Nothing.
+Weird.
+
+So, thanks for reporting it.
+
+Regards,
+Steffen
 
 -- 
-Dmitry
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
