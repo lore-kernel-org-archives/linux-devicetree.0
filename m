@@ -1,67 +1,64 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] input: stmpe-ts: Add DT support for stmpe touchscreen
-Date: Fri, 23 Nov 2012 12:05:01 +0000
-Message-ID: <20121123120501.GA22268@gmail.com>
-References: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
- <20121123104620.GQ17471@gmail.com>
- <CAKohpon+iU93sviKrkR+sdCJk0Z6rz0FcvTNsh9Ap88+Qy2mVw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: stmpe: Add DT support for stmpe gpio
+Date: Fri, 23 Nov 2012 12:14:13 +0000
+Message-ID: <20121123121413.GB22268@gmail.com>
+References: <912d88b8906ce87cf5459cf3d5798e03bfce34c7.1353649737.git.viresh.kumar@linaro.org>
+ <20121123103400.GO17471@gmail.com>
+ <CAKohponW-Wd+Vrnj8mbdFMmJvwQgPq1jFCZRipBFoEhTknStHQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKohpon+iU93sviKrkR+sdCJk0Z6rz0FcvTNsh9Ap88+Qy2mVw@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
+In-Reply-To: <CAKohponW-Wd+Vrnj8mbdFMmJvwQgPq1jFCZRipBFoEhTknStHQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
+Cc: linus.walleij@linaro.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-> >> +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.tx=
-t
-> >> @@ -0,0 +1,43 @@
-> >> +STMPE Touchscreen
-> >> +----------------
+> >> -     stmpe_gpio->chip.base =3D pdata ? pdata->gpio_base : -1;
+> >
+> > Why have you deleted this?
+> >
 > >> +
-> >> +Required properties:
-> >> + - compatible: "st,stmpe-ts"
+> >> +     if (pdata) {
+> >> +             stmpe_gpio->norequest_mask =3D pdata->norequest_mask=
+;
+> >> +             stmpe_gpio->chip.base =3D pdata->gpio_base;
 > >
-> > You shouldn't be specifying a compatible string in the DT.
+> > Then added this?
 > >
-> >> +Example:
-> >> +
-> >> +     stmpe_touchscreen {
-> >> +             compatible =3D "st,stmpe-ts";
+> >> +     } else {
+> >> +             stmpe_gpio->chip.base =3D -1;
 > >
-> > This needs to be removed.
+> > And this?
 >=20
-> Copying my earlier reply from stmpe-gpio patch for others to know
-> what i have to say on this :)
->=20
-> I believe these are required by the code you wrote in mfd-core.c
->=20
->         if (parent->of_node && cell->of_compatible) {
->                 for_each_child_of_node(parent->of_node, np) {
->                         if (of_device_is_compatible(np, cell->of_comp=
-atible)) {
->                                 pdev->dev.of_node =3D np;
->                                 break;
->                         }
->                 }
->         }
->=20
-> This matches compatible of child node with compatible of cell. And th=
-at's
-> why you have added that in your keypad mappings as well.
+> To group all non-DT assignments in a single if block, instead of two.
 
-Yes, you're right. Please ignore this comment.
+That assignment has nothing to do with DT.
+
+> > Just leave the top line in and it saves you lots of complecations.
+>=20
+> Sorry, Couldn't get this one.
+
+I'm saying, just leave it where it is.
+
+> >> +             if (np)
+> >> +                     of_property_read_u32(np, "st,norequest-mask"=
+,
+> >> +                                     &pdata->norequest_mask);
+> >
+> > Can you explain to me what this does?
+>=20
+> You mean pdata->norequest_mask?  It marks few gpios as unusable.
+> Because these pads might be used by other blocks of stmpe.
+
+I'm not sure if that should be set with DT or not.
+
+Second opinion anyone?
 
 --=20
 Lee Jones
 Linaro ST-Ericsson Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
