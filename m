@@ -1,135 +1,67 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv14 4/7] fbmon: add videomode helpers
-Date: Fri, 23 Nov 2012 13:02:08 +0100
-Message-ID: <20121123120208.GB1106@pengutronix.de>
-References: <1353661467-28545-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353661467-28545-5-git-send-email-s.trumtrar@pengutronix.de>
- <2828625.Bdym394lFc@avalon>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] input: stmpe-ts: Add DT support for stmpe touchscreen
+Date: Fri, 23 Nov 2012 12:05:01 +0000
+Message-ID: <20121123120501.GA22268@gmail.com>
+References: <f56ddb18f4e9c92f6a94c6d3ae3f5fe30e0bd892.1353652106.git.viresh.kumar@linaro.org>
+ <20121123104620.GQ17471@gmail.com>
+ <CAKohpon+iU93sviKrkR+sdCJk0Z6rz0FcvTNsh9Ap88+Qy2mVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2828625.Bdym394lFc@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+In-Reply-To: <CAKohpon+iU93sviKrkR+sdCJk0Z6rz0FcvTNsh9Ap88+Qy2mVw@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+> >> +++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.tx=
+t
+> >> @@ -0,0 +1,43 @@
+> >> +STMPE Touchscreen
+> >> +----------------
+> >> +
+> >> +Required properties:
+> >> + - compatible: "st,stmpe-ts"
+> >
+> > You shouldn't be specifying a compatible string in the DT.
+> >
+> >> +Example:
+> >> +
+> >> +     stmpe_touchscreen {
+> >> +             compatible =3D "st,stmpe-ts";
+> >
+> > This needs to be removed.
+>=20
+> Copying my earlier reply from stmpe-gpio patch for others to know
+> what i have to say on this :)
+>=20
+> I believe these are required by the code you wrote in mfd-core.c
+>=20
+>         if (parent->of_node && cell->of_compatible) {
+>                 for_each_child_of_node(parent->of_node, np) {
+>                         if (of_device_is_compatible(np, cell->of_comp=
+atible)) {
+>                                 pdev->dev.of_node =3D np;
+>                                 break;
+>                         }
+>                 }
+>         }
+>=20
+> This matches compatible of child node with compatible of cell. And th=
+at's
+> why you have added that in your keypad mappings as well.
 
-On Fri, Nov 23, 2012 at 11:53:10AM +0100, Laurent Pinchart wrote:
-> Hi Steffen,
-> 
-> On Friday 23 November 2012 10:04:24 Steffen Trumtrar wrote:
-> > Add a function to convert from the generic videomode to a fb_videomode.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> >  drivers/video/fbmon.c |   49 ++++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/fb.h    |    6 ++++++
-> >  2 files changed, 55 insertions(+)
-> > 
-> > diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
-> > index cef6557..bcbfe8f 100644
-> > --- a/drivers/video/fbmon.c
-> > +++ b/drivers/video/fbmon.c
-> > @@ -31,6 +31,7 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/slab.h>
-> >  #include <video/edid.h>
-> > +#include <linux/videomode.h>
-> 
-> You could move this one line up to keep headers sorted alphabetically 
-> (assuming they are in the first place).
-> 
+Yes, you're right. Please ignore this comment.
 
-Because of the careless mistake below, I will do that.
-
-> >  #ifdef CONFIG_PPC_OF
-> >  #include <asm/prom.h>
-> >  #include <asm/pci-bridge.h>
-> > @@ -1373,6 +1374,54 @@ int fb_get_mode(int flags, u32 val, struct
-> > fb_var_screeninfo *var, struct fb_inf kfree(timings);
-> >  	return err;
-> >  }
-> > +
-> > +#if IS_ENABLED(CONFIG_VIDEOMODE)
-> > +int fb_videomode_from_videomode(const struct videomode *vm,
-> > +				struct fb_videomode *fbmode)
-> 
-> This is inside the #if CONFIG_FB_MODE_HELPERS block, is that intentional ?
-> 
-
-Yes. Intentional. It is a fb_mode helper, that is why ... oh, wait. I should
-add a "depends on" to the Kconfig then.
-
-> > +{
-> > +	unsigned int htotal, vtotal;
-> > +
-> > +	fbmode->xres = vm->hactive;
-> > +	fbmode->left_margin = vm->hback_porch;
-> > +	fbmode->right_margin = vm->hfront_porch;
-> > +	fbmode->hsync_len = vm->hsync_len;
-> > +
-> > +	fbmode->yres = vm->vactive;
-> > +	fbmode->upper_margin = vm->vback_porch;
-> > +	fbmode->lower_margin = vm->vfront_porch;
-> > +	fbmode->vsync_len = vm->vsync_len;
-> > +
-> > +	/* prevent division by zero in KHZ2PICOS macro */
-> > +	fbmode->pixclock = vm->pixelclock ? KHZ2PICOS(vm->pixelclock / 1000) : 0;
-> > +
-> > +	fbmode->sync = 0;
-> > +	fbmode->vmode = 0;
-> > +	if (vm->hah)
-> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
-> > +	if (vm->vah)
-> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
-> > +	if (vm->interlaced)
-> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
-> > +	if (vm->doublescan)
-> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
-> > +	fbmode->flag = 0;
-> > +
-> > +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
-> > +		 vm->hsync_len;
-> > +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
-> > +		 vm->vsync_len;
-> > +	/* prevent division by zero */
-> > +	if (htotal && vtotal)
-> > +		fbmode->refresh = vm->pixelclock / (htotal * vtotal);
-> > +	else
-> > +		fbmode->refresh = vm->pixelclock;
-> 
-> What about returning an error if htotal * vtotal == 0 ? The input is clearly 
-> invalid in that case. I would then set fbmode->refresh to 0, setting it to vm-
-> >pixelclock doesn't really make sense.
-> 
-
-Yes, pixelclock makes no sense. It was supposed to be 0. I was careless here.
-
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
-> > +#endif
-> > +
-> > +
-> 
-> A single blank line should be enough.
-> 
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
