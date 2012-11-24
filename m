@@ -1,29 +1,44 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] of/address: sparc: Declare of_iomap as an extern
- function for sparc again
-Date: Fri, 23 Nov 2012 15:55:44 -0800
-Message-ID: <20121123235544.GA1407@kroah.com>
-References: <1353669849-23697-1-git-send-email-andreas@gaisler.com>
- <20121123.142110.835354734152648777.davem@davemloft.net>
- <20121123215947.02DDC3E1EC4@localhost>
- <61dbc2ab-5fa4-4095-bbba-11f146ad89a5@email.android.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <sparclinux-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <61dbc2ab-5fa4-4095-bbba-11f146ad89a5@email.android.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: David Miller <davem@davemloft.net>, andreas@gaisler.com, sam@ravnborg.org, rob.herring@calxeda.com, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com, stable <stable@vger.kernel.org>
+From: Cesar Eduardo Barros <cesarb@cesarb.net>
+Subject: [PATCH 21/24] MAINTAINERS: fix drivers/rtc/rtc-sec.c
+Date: Fri, 23 Nov 2012 22:26:45 -0200
+Message-ID: <1353716808-16375-22-git-send-email-cesarb@cesarb.net>
+References: <1353716808-16375-1-git-send-email-cesarb@cesarb.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1353716808-16375-1-git-send-email-cesarb@cesarb.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Cesar Eduardo Barros <cesarb@cesarb.net>, Sangbeom Kim <sbkim73@samsung.com>, Alessandro Zummo <a.zummo@towertech.it>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, rtc-linux@googlegroups.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Nov 23, 2012 at 11:34:20PM +0000, Grant Likely wrote:
-> Cc'ing stable since this should go into previous kernels too.
+Added by commit f69d3a1 (Add maintainer for samsung mfd driver). I could
+not find any trace of that file being ever added to the repository.
 
-<formletter>
+I am guessing that this was a typo for rtc-s3c. Please NACK this patch
+if I am wrong.
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read Documentation/stable_kernel_rules.txt
-for how to do this properly.
+Cc: Sangbeom Kim <sbkim73@samsung.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: rtc-linux@googlegroups.com
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Cesar Eduardo Barros <cesarb@cesarb.net>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-</formletter>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 331b3a2..fb245ea 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6354,7 +6354,7 @@ S:	Supported
+ F:	drivers/mfd/sec*.c
+ F:	drivers/regulator/s2m*.c
+ F:	drivers/regulator/s5m*.c
+-F:	drivers/rtc/rtc-sec.c
++F:	drivers/rtc/rtc-s3c.c
+ F:	include/linux/mfd/samsung/
+ 
+ SERIAL DRIVERS
+-- 
+1.7.11.7
